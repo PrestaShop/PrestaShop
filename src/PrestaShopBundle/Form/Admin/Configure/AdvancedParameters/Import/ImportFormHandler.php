@@ -59,10 +59,10 @@ class ImportFormHandler implements ImportFormHandlerInterface
     private $hookName;
 
     /**
-     * @param FormBuilderInterface            $formBuilder
-     * @param HookDispatcherInterface         $hookDispatcher
+     * @param FormBuilderInterface $formBuilder
+     * @param HookDispatcherInterface $hookDispatcher
      * @param ImportFormDataProviderInterface $formDataProvider
-     * @param string                          $hookName
+     * @param string $hookName
      */
     public function __construct(
         FormBuilderInterface $formBuilder,

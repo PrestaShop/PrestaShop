@@ -86,12 +86,12 @@ class CategoryDataProvider
      *
      * @param null|int $root_category
      * @param bool|int $id_lang
-     * @param bool     $active
+     * @param bool $active
      * @param null|int $groups
-     * @param bool     $use_shop_restriction
-     * @param string   $sql_filter
-     * @param string   $sql_sort
-     * @param string   $sql_limit
+     * @param bool $use_shop_restriction
+     * @param string $sql_filter
+     * @param string $sql_sort
+     * @param string $sql_limit
      *
      * @return array categories
      */
@@ -109,9 +109,9 @@ class CategoryDataProvider
      *
      * @param null|int $root_category
      * @param bool|int $id_lang
-     * @param bool     $active        return only active categories
+     * @param bool $active return only active categories
      * @param $groups
-     * @param bool   $use_shop_restriction
+     * @param bool $use_shop_restriction
      * @param string $sql_filter
      * @param string $sql_sort
      * @param string $sql_limit
@@ -179,7 +179,7 @@ class CategoryDataProvider
     /**
      * Construct the breadcrumb using the already constructed list of all categories.
      *
-     * @param int    $categoryId
+     * @param int $categoryId
      * @param string $delimiter
      *
      * @return string
@@ -224,11 +224,11 @@ class CategoryDataProvider
         if (empty($query)) {
             $query = '';
         } else {
-            $query = "AND cl.name LIKE '%".pSQL($query)."%'";
+            $query = "AND cl.name LIKE '%" . pSQL($query) . "%'";
         }
 
         if (is_integer($limit)) {
-            $limit = 'LIMIT '.$limit;
+            $limit = 'LIMIT ' . $limit;
         } else {
             $limit = '';
         }
@@ -259,7 +259,7 @@ class CategoryDataProvider
     }
 
     /**
-     * @param null|int  $idLang
+     * @param null|int $idLang
      * @param null|Shop $shop
      *
      * @return Category

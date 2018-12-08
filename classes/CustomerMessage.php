@@ -95,7 +95,7 @@ class CustomerMessageCore extends ObjectModel
     /**
      * Get CustomerMessages by Order ID.
      *
-     * @param int  $idOrder Order ID
+     * @param int $idOrder Order ID
      * @param bool $private Private
      *
      * @return null|array|false|mysqli_result|PDOStatement|resource
@@ -109,15 +109,15 @@ class CustomerMessageCore extends ObjectModel
 				e.`firstname` AS efirstname,
 				e.`lastname` AS elastname,
 				(COUNT(cm.id_customer_message) = 0 AND ct.id_customer != 0) AS is_new_for_me
-			FROM `'._DB_PREFIX_.'customer_message` cm
-			LEFT JOIN `'._DB_PREFIX_.'customer_thread` ct
+			FROM `' . _DB_PREFIX_ . 'customer_message` cm
+			LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct
 				ON ct.`id_customer_thread` = cm.`id_customer_thread`
-			LEFT JOIN `'._DB_PREFIX_.'customer` c
+			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
 				ON ct.`id_customer` = c.`id_customer`
-			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e
+			LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e
 				ON e.`id_employee` = cm.`id_employee`
-			WHERE ct.id_order = '.(int) $idOrder.'
-			'.(!$private ? 'AND cm.`private` = 0' : '').'
+			WHERE ct.id_order = ' . (int) $idOrder . '
+			' . (!$private ? 'AND cm.`private` = 0' : '') . '
 			GROUP BY cm.id_customer_message
 			ORDER BY cm.date_add DESC
 		');
@@ -136,17 +136,17 @@ class CustomerMessageCore extends ObjectModel
             return (int) Db::getInstance()->getValue(
                 '
 				SELECT COUNT(*)
-				FROM '._DB_PREFIX_.'customer_message
-				LEFT JOIN `'._DB_PREFIX_.'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
-				WHERE 1'.Shop::addSqlRestriction()
+				FROM ' . _DB_PREFIX_ . 'customer_message
+				LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
+				WHERE 1' . Shop::addSqlRestriction()
             );
         } else {
             return (int) Db::getInstance()->getValue(
                 '
 				SELECT COUNT(*)
-				FROM '._DB_PREFIX_.'customer_message cm
-				LEFT JOIN `'._DB_PREFIX_.'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
-				WHERE '.$where.Shop::addSqlRestriction()
+				FROM ' . _DB_PREFIX_ . 'customer_message cm
+				LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
+				WHERE ' . $where . Shop::addSqlRestriction()
             );
         }
     }
@@ -155,13 +155,13 @@ class CustomerMessageCore extends ObjectModel
      * Deletes current CustomerMessage from the database.
      *
      * @throws PrestaShopException
-     * @return bool `true` if delete was successful
      *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {
         if (!empty($this->file_name)) {
-            @unlink(_PS_UPLOAD_DIR_.$this->file_name);
+            @unlink(_PS_UPLOAD_DIR_ . $this->file_name);
         }
 
         return parent::delete();
@@ -179,8 +179,8 @@ class CustomerMessageCore extends ObjectModel
         return (string) Db::getInstance()->getValue(
             '
             SELECT message
-            FROM '._DB_PREFIX_.'customer_message
-            WHERE id_customer_thread = '.(int) $id_customer_thread.'
+            FROM ' . _DB_PREFIX_ . 'customer_message
+            WHERE id_customer_thread = ' . (int) $id_customer_thread . '
             ORDER BY date_add DESC'
         );
     }

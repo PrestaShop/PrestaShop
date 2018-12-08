@@ -228,8 +228,8 @@ class ContextCore
      * Checks if mobile context is possible.
      *
      * @throws PrestaShopException
-     * @return bool
      *
+     * @return bool
      */
     protected function checkMobileContext()
     {
@@ -251,7 +251,7 @@ class ContextCore
         }
 
         return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
-             
+
             && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
             && !Context::getContext()->cookie->no_mobile;
@@ -329,7 +329,7 @@ class ContextCore
         $this->cart->id_customer = (int) $customer->id;
 
         if (isset($idCarrier) && $idCarrier) {
-            $deliveryOption = [$this->cart->id_address_delivery => $idCarrier.','];
+            $deliveryOption = [$this->cart->id_address_delivery => $idCarrier . ','];
             $this->cart->setDeliveryOption($deliveryOption);
         }
 
@@ -363,7 +363,7 @@ class ContextCore
      */
     public function getTranslatorFromLocale($locale)
     {
-        $cacheDir = _PS_CACHE_DIR_.'translations';
+        $cacheDir = _PS_CACHE_DIR_ . 'translations';
         $translator = new Translator($locale, null, $cacheDir, false);
 
         // In case we have at least 1 translated message, we return the current translator.
@@ -381,7 +381,7 @@ class ContextCore
                 ->files()
                 ->in($cacheDir)
                 ->depth('==0')
-                ->name('*.'.$locale.'.*')
+                ->name('*.' . $locale . '.*')
             ;
             (new Filesystem())->remove($cache_file);
         }
@@ -399,7 +399,7 @@ class ContextCore
 
         $finder = Finder::create()
             ->files()
-            ->name('*.'.$locale.'.xlf')
+            ->name('*.' . $locale . '.xlf')
             ->notName($notName)
             ->in($this->getTranslationResourcesDirectories())
         ;
@@ -409,7 +409,7 @@ class ContextCore
 
             $translator->addResource($format, $file, $locale, $domain);
             if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
-                $translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
+                $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
             }
         }
 
@@ -421,10 +421,10 @@ class ContextCore
      */
     protected function getTranslationResourcesDirectories()
     {
-        $locations = array(_PS_ROOT_DIR_.'/app/Resources/translations');
+        $locations = array(_PS_ROOT_DIR_ . '/app/Resources/translations');
 
         if (!is_null($this->shop)) {
-            $activeThemeLocation = _PS_ROOT_DIR_.'/themes/'.$this->shop->theme_name.'/translations';
+            $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';
             if (is_dir($activeThemeLocation)) {
                 $locations[] = $activeThemeLocation;
             }

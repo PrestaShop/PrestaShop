@@ -138,7 +138,7 @@ abstract class QueryParamsCollection
     }
 
     /**
-     * @param array   $queryParams
+     * @param array $queryParams
      * @param Request $request
      *
      * @return array
@@ -293,16 +293,16 @@ abstract class QueryParamsCollection
             $descendingOrder = false !== strpos($order, 'desc');
             $filterColumn = $this->removeDirection($order);
 
-            $orderFiltered = '{'.$filterColumn.'}';
+            $orderFiltered = '{' . $filterColumn . '}';
 
             if ($descendingOrder) {
-                $orderFiltered = $orderFiltered.' DESC';
+                $orderFiltered = $orderFiltered . ' DESC';
             }
 
             $implodableOrder[] = $orderFiltered;
         }
 
-        return 'ORDER BY '.implode(', ', $implodableOrder).' ';
+        return 'ORDER BY ' . implode(', ', $implodableOrder) . ' ';
     }
 
     /**
@@ -375,7 +375,7 @@ abstract class QueryParamsCollection
         }
 
         $placeholders = array_map(function ($index) use ($column) {
-            return ':'.$column.'_'.$index;
+            return ':' . $column . '_' . $index;
         }, array_keys($value));
 
         $filters[] = sprintf('AND {%s} IN (%s)', $column, implode(',', $placeholders));
@@ -469,7 +469,7 @@ abstract class QueryParamsCollection
         }
 
         array_map(function ($index, $value) use (&$sqlParams, $column) {
-            $sqlParams[$column.'_'.$index] = (int) $value;
+            $sqlParams[$column . '_' . $index] = (int) $value;
         }, array_keys($value), $value);
 
         return $sqlParams;
@@ -521,11 +521,11 @@ abstract class QueryParamsCollection
 
         if (array_key_exists('sup', $dateAdd)) {
             $search = ($this->isTimestamp($dateAdd['sup']) ? 'UNIX_TIMESTAMP(%s)' : '%s');
-            $filters[] = sprintf('AND '.$search.' >= %s', '{date_add}', ':date_add_sup');
+            $filters[] = sprintf('AND ' . $search . ' >= %s', '{date_add}', ':date_add_sup');
         }
         if (array_key_exists('inf', $dateAdd)) {
             $search = ($this->isTimestamp($dateAdd['inf']) ? 'UNIX_TIMESTAMP(%s)' : '%s');
-            $filters[] = sprintf('AND '.$search.' <= %s', '{date_add}', ':date_add_inf');
+            $filters[] = sprintf('AND ' . $search . ' <= %s', '{date_add}', ':date_add_inf');
         }
 
         return $filters;
@@ -625,8 +625,8 @@ abstract class QueryParamsCollection
 
         array_map(function ($index, $value) use (&$sqlParams) {
             list($idAttributeGroup, $idAttribute) = explode(':', $value);
-            $sqlParams['attribute_id_'.$index] = strval($idAttribute);
-            $sqlParams['attribute_group_id_'.$index] = strval($idAttributeGroup);
+            $sqlParams['attribute_id_' . $index] = strval($idAttribute);
+            $sqlParams['attribute_group_id_' . $index] = strval($idAttributeGroup);
         }, range(0, count($value) - 1), $value);
 
         return $sqlParams;
@@ -681,8 +681,8 @@ abstract class QueryParamsCollection
 
         array_map(function ($index, $value) use (&$sqlParams) {
             list($idFeature, $idFeatureValue) = explode(':', $value);
-            $sqlParams['feature_id_'.$index] = strval($idFeature);
-            $sqlParams['feature_value_id_'.$index] = strval($idFeatureValue);
+            $sqlParams['feature_id_' . $index] = strval($idFeature);
+            $sqlParams['feature_value_id_' . $index] = strval($idFeatureValue);
         }, range(0, count($value) - 1), $value);
 
         return $sqlParams;
@@ -705,11 +705,11 @@ abstract class QueryParamsCollection
 
         $parts = array_map(function ($index) {
             return sprintf(
-                'AND ('.
-                '{supplier_name} LIKE :keyword_%d OR '.
-                '{product_reference} LIKE :keyword_%d OR '.
-                '{product_name} LIKE :keyword_%d OR '.
-                '{combination_name} LIKE :keyword_%d'.
+                'AND (' .
+                '{supplier_name} LIKE :keyword_%d OR ' .
+                '{product_reference} LIKE :keyword_%d OR ' .
+                '{product_name} LIKE :keyword_%d OR ' .
+                '{combination_name} LIKE :keyword_%d' .
                 ')',
                 $index,
                 $index,
@@ -730,7 +730,7 @@ abstract class QueryParamsCollection
         }
 
         array_map(function ($index, $value) use (&$sqlParams) {
-            $sqlParams['keyword_'.$index] = strval('%'.$value.'%');
+            $sqlParams['keyword_' . $index] = strval('%' . $value . '%');
         }, range(0, count($value) - 1), $value);
 
         return $sqlParams;

@@ -97,6 +97,7 @@ class StockCore extends ObjectModel
 
     /**
      * @see ObjectModel::update()
+     *
      * @param mixed $null_values
      */
     public function update($null_values = false)
@@ -108,6 +109,7 @@ class StockCore extends ObjectModel
 
     /**
      * @see ObjectModel::add()
+     *
      * @param mixed $autodate
      * @param mixed $null_values
      */
@@ -129,8 +131,8 @@ class StockCore extends ObjectModel
             $query = new DbQuery();
             $query->select('reference, ean13, isbn, upc');
             $query->from('product_attribute');
-            $query->where('id_product = '.(int) $this->id_product);
-            $query->where('id_product_attribute = '.(int) $this->id_product_attribute);
+            $query->where('id_product = ' . (int) $this->id_product);
+            $query->where('id_product_attribute = ' . (int) $this->id_product_attribute);
             $rows = Db::getInstance()->executeS($query);
 
             if (!is_array($rows)) {
@@ -173,7 +175,7 @@ class StockCore extends ObjectModel
             return false;
         }
 
-        return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'stock WHERE `id_product` = '.(int) $id_product.' AND `id_product_attribute` = '.(int) $id_product_attribute);
+        return Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'stock WHERE `id_product` = ' . (int) $id_product . ' AND `id_product_attribute` = ' . (int) $id_product_attribute);
     }
 
     public static function productIsPresentInStock($id_product = 0, $id_product_attribute = 0, $id_warehouse = 0)
@@ -182,8 +184,8 @@ class StockCore extends ObjectModel
             return false;
         }
 
-        $result = Db::getInstance()->executeS('SELECT `id_stock` FROM '._DB_PREFIX_.'stock
-			WHERE `id_warehouse` = '.(int) $id_warehouse.' AND `id_product` = '.(int) $id_product.((int) $id_product_attribute ? ' AND `id_product_attribute` = '.$id_product_attribute : ''));
+        $result = Db::getInstance()->executeS('SELECT `id_stock` FROM ' . _DB_PREFIX_ . 'stock
+			WHERE `id_warehouse` = ' . (int) $id_warehouse . ' AND `id_product` = ' . (int) $id_product . ((int) $id_product_attribute ? ' AND `id_product_attribute` = ' . $id_product_attribute : ''));
 
         return is_array($result) && !empty($result) ? true : false;
     }

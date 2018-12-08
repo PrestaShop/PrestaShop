@@ -222,7 +222,7 @@ class CustomerPersisterCore
                 '{email}' => $customer->email,
             ),
             $customer->email,
-            $customer->firstname.' '.$customer->lastname
+            $customer->firstname . ' ' . $customer->lastname
         );
     }
 }

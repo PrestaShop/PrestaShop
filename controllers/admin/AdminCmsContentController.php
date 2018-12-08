@@ -104,18 +104,18 @@ class AdminCmsContentControllerCore extends AdminController
 
         if ('list' == $this->display) {
             $this->page_header_toolbar_btn['new_cms_category'] = array(
-                'href' => self::$currentIndex.'&addcms_category&token='.$this->token,
+                'href' => self::$currentIndex . '&addcms_category&token=' . $this->token,
                 'desc' => $this->trans('Add new page category', array(), 'Admin.Design.Help'),
                 'icon' => 'process-icon-new',
             );
             $this->page_header_toolbar_btn['new_cms_page'] = array(
-                'href' => self::$currentIndex.'&addcms&id_cms_category='.(int) $id_cms_category.'&token='.$this->token,
+                'href' => self::$currentIndex . '&addcms&id_cms_category=' . (int) $id_cms_category . '&token=' . $this->token,
                 'desc' => $this->trans('Add new page', array(), 'Admin.Design.Help'),
                 'icon' => 'process-icon-new',
             );
         }
 
-        $this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
+        $this->page_header_toolbar_title = implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ', $this->toolbar_title);
 
         if (is_array($this->page_header_toolbar_btn)
             && $this->page_header_toolbar_btn instanceof Traversable
@@ -141,8 +141,8 @@ class AdminCmsContentControllerCore extends AdminController
             // Cleaning links
             $cat_bar_index = self::$currentIndex;
             foreach ($cms_tabs as $tab) {
-                if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway')) {
-                    $cat_bar_index = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
+                if (Tools::getValue($tab . 'Orderby') && Tools::getValue($tab . 'Orderway')) {
+                    $cat_bar_index = preg_replace('/&' . $tab . 'Orderby=([a-z _]*)&' . $tab . 'Orderway=([a-z]*)/i', '', self::$currentIndex);
                 }
             }
             $this->context->smarty->assign(array(
@@ -227,7 +227,7 @@ class AdminCmsContentControllerCore extends AdminController
             if (is_array($positions)) {
                 foreach ($positions as $key => $value) {
                     $pos = explode('_', $value);
-                    if ((isset($pos[1], $pos[2])  ) && ($pos[1] == $id_category && $pos[2] == $id_cms)) {
+                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category && $pos[2] == $id_cms)) {
                         $position = $key;
                         break;
                     }
@@ -256,7 +256,7 @@ class AdminCmsContentControllerCore extends AdminController
             if (is_array($positions)) {
                 foreach ($positions as $key => $value) {
                     $pos = explode('_', $value);
-                    if ((isset($pos[1], $pos[2])  ) && ($pos[1] == $id_cms_category_parent && $pos[2] == $id_cms_category_to_move)) {
+                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_cms_category_parent && $pos[2] == $id_cms_category_to_move)) {
                         $position = $key;
                         break;
                     }
@@ -279,7 +279,7 @@ class AdminCmsContentControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             if ($id_cms = (int) Tools::getValue('id_cms')) {
-                $bo_cms_url = _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/index.php?tab=AdminCmsContent&id_cms='.(int) $id_cms.'&updatecms&token='.$this->token;
+                $bo_cms_url = _PS_BASE_URL_ . __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/index.php?tab=AdminCmsContent&id_cms=' . (int) $id_cms . '&updatecms&token=' . $this->token;
 
                 if (Tools::getValue('redirect')) {
                     die($bo_cms_url);

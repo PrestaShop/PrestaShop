@@ -70,7 +70,7 @@ abstract class AbstractCategoryHandler
     /**
      * Populate Category's object model with data from command so it can be used to create simple or root category.
      *
-     * @param Category                $category
+     * @param Category $category
      * @param AbstractCategoryCommand $command
      *
      * @return Category
@@ -114,7 +114,7 @@ abstract class AbstractCategoryHandler
     }
 
     /**
-     * @param Category                $category
+     * @param Category $category
      * @param AbstractCategoryCommand $command
      */
     protected function uploadImages(Category $category, AbstractCategoryCommand $command)

@@ -44,7 +44,7 @@ class Tools
      * @deprecated use linkRewrite
      *
      * @param string $str
-     * @param bool   $utf8Decode (deprecated)
+     * @param bool $utf8Decode (deprecated)
      *
      * @return string
      */
@@ -57,7 +57,7 @@ class Tools
      * Return the friendly url from the provided string.
      *
      * @param string $str
-     * @param bool   $utf8Decode (deprecated)
+     * @param bool $utf8Decode (deprecated)
      *
      * @return string
      */
@@ -74,6 +74,7 @@ class Tools
      * Polyfill for bcadd if BC Math extension is not installed.
      *
      * @deprecated since 1.7.2.2 - Use PrestaShop\Decimal\Number instead
+     *
      * @param mixed $left_operand
      * @param mixed $right_operand
      * @param null|mixed $scale
@@ -92,9 +93,9 @@ class Tools
     }
 
     /**
-     * @param string      $html
+     * @param string $html
      * @param null|string $uri_unescape
-     * @param bool        $allow_style
+     * @param bool $allow_style
      *
      * @return string
      */
@@ -177,7 +178,7 @@ class Tools
      * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
      *
      * @param float $value
-     * @param int   $precision
+     * @param int $precision
      * @param null|mixed $round_mode
      *
      * @return float
@@ -190,7 +191,7 @@ class Tools
     /**
      * Return domain name according to configuration and depending on ssl activation.
      *
-     * @param bool $http     if true, return domain name with protocol
+     * @param bool $http if true, return domain name with protocol
      * @param bool $entities if true, convert special chars to HTML entities
      *
      * @return string domain

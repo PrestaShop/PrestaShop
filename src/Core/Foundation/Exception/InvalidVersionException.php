@@ -42,7 +42,7 @@ class InvalidVersionException extends Exception
     public function __construct($version)
     {
         $message = sprintf(
-            'You provided an invalid version string ("%s"). A valid version string '.
+            'You provided an invalid version string ("%s"). A valid version string ' .
             'must contain numeric characters separated by "." characters, for example "1.7.4.0".',
             $version
         );

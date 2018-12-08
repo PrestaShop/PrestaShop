@@ -53,17 +53,17 @@ class AdminOrdersControllerCore extends AdminController
 		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
 		osl.`name` AS `osname`,
 		os.`color`,
-		IF((SELECT so.id_order FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer AND so.id_order < a.id_order LIMIT 1) > 0, 0, 1) as new,
+		IF((SELECT so.id_order FROM `' . _DB_PREFIX_ . 'orders` so WHERE so.id_customer = a.id_customer AND so.id_order < a.id_order LIMIT 1) > 0, 0, 1) as new,
 		country_lang.name as cname,
 		IF(a.valid, 1, 0) badge_success';
 
         $this->_join = '
-		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
-		INNER JOIN `'._DB_PREFIX_.'address` address ON address.id_address = a.id_address_delivery
-		INNER JOIN `'._DB_PREFIX_.'country` country ON address.id_country = country.id_country
-		INNER JOIN `'._DB_PREFIX_.'country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = '.(int) $this->context->language->id.')
-		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = a.`current_state`)
-		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int) $this->context->language->id.')';
+		LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (c.`id_customer` = a.`id_customer`)
+		INNER JOIN `' . _DB_PREFIX_ . 'address` address ON address.id_address = a.id_address_delivery
+		INNER JOIN `' . _DB_PREFIX_ . 'country` country ON address.id_country = country.id_country
+		INNER JOIN `' . _DB_PREFIX_ . 'country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = ' . (int) $this->context->language->id . ')
+		LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON (os.`id_order_state` = a.`current_state`)
+		LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $this->context->language->id . ')';
         $this->_orderBy = 'id_order';
         $this->_orderWay = 'DESC';
         $this->_use_found_rows = true;
@@ -144,11 +144,11 @@ class AdminOrdersControllerCore extends AdminController
         if (Country::isCurrentlyUsed('country', true)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT DISTINCT c.id_country, cl.`name`
-			FROM `'._DB_PREFIX_.'orders` o
-			'.Shop::addSqlAssociation('orders', 'o').'
-			INNER JOIN `'._DB_PREFIX_.'address` a ON a.id_address = o.id_address_delivery
-			INNER JOIN `'._DB_PREFIX_.'country` c ON a.id_country = c.id_country
-			INNER JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int) $this->context->language->id.')
+			FROM `' . _DB_PREFIX_ . 'orders` o
+			' . Shop::addSqlAssociation('orders', 'o') . '
+			INNER JOIN `' . _DB_PREFIX_ . 'address` a ON a.id_address = o.id_address_delivery
+			INNER JOIN `' . _DB_PREFIX_ . 'country` c ON a.id_country = c.id_country
+			INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')
 			ORDER BY cl.name ASC');
 
             $country_array = array();
@@ -202,7 +202,7 @@ class AdminOrdersControllerCore extends AdminController
 
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_order'] = array(
-                'href' => self::$currentIndex.'&addorder&token='.$this->token,
+                'href' => self::$currentIndex . '&addorder&token=' . $this->token,
                 'desc' => $this->trans('Add new order', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -337,12 +337,12 @@ class AdminOrdersControllerCore extends AdminController
         parent::setMedia($isNewTheme);
 
         $this->addJqueryUI('ui.datepicker');
-        $this->addJS(_PS_JS_DIR_.'vendor/d3.v3.min.js');
+        $this->addJS(_PS_JS_DIR_ . 'vendor/d3.v3.min.js');
         $this->addJS('https://maps.googleapis.com/maps/api/js?v=3.exp');
 
         if ($this->access('edit') && 'view' == $this->display) {
-            $this->addJS(_PS_JS_DIR_.'admin/orders.js');
-            $this->addJS(_PS_JS_DIR_.'tools.js');
+            $this->addJS(_PS_JS_DIR_ . 'admin/orders.js');
+            $this->addJS(_PS_JS_DIR_ . 'tools.js');
             $this->addJqueryPlugin('autocomplete');
         }
     }
@@ -429,16 +429,16 @@ class AdminOrdersControllerCore extends AdminController
                 }
             }
             if (!count($this->errors)) {
-                Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
+                Tools::redirectAdmin(self::$currentIndex . '&conf=4&token=' . $this->token);
             }
         }
     }
 
     public function renderList()
     {
-        if (Tools::isSubmit('submitBulkupdateOrderStatus'.$this->table)) {
+        if (Tools::isSubmit('submitBulkupdateOrderStatus' . $this->table)) {
             if (Tools::getIsset('cancel')) {
-                Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
+                Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
             }
 
             $this->tpl_list_vars['updateOrderStatus_mode'] = true;
@@ -506,7 +506,7 @@ class AdminOrdersControllerCore extends AdminController
                                     'carrier' => $carrier,
                                 ), null, false, true, false, $order->id_shop);
 
-                                Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+                                Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=4&token=' . $this->token);
                             } else {
                                 $this->errors[] = $this->trans('An error occurred while sending an email to the customer.', array(), 'Admin.Orderscustomers.Notification');
                             }
@@ -556,7 +556,7 @@ class AdminOrdersControllerCore extends AdminController
                                 }
                             }
 
-                            Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int) $order->id.'&vieworder&token='.$this->token);
+                            Tools::redirectAdmin(self::$currentIndex . '&id_order=' . (int) $order->id . '&vieworder&token=' . $this->token);
                         }
                         $this->errors[] = $this->trans('An error occurred while changing order status, or we were unable to send an email to the customer.', array(), 'Admin.Orderscustomers.Notification');
                     } else {
@@ -579,7 +579,7 @@ class AdminOrdersControllerCore extends AdminController
                     $rules = call_user_func(array('Message', 'getValidationRules'), 'Message');
                     foreach ($rules['required'] as $field) {
                         if (false == ($value = Tools::getValue($field)) && '0' != (string) $value) {
-                            if (!Tools::getValue('id_'.$this->table) || 'passwd' != $field) {
+                            if (!Tools::getValue('id_' . $this->table) || 'passwd' != $field) {
                                 $this->errors[] = $this->trans('field %s is required.', array('%s' => $field), 'Admin.Orderscustomers.Notification');
                             }
                         }
@@ -631,7 +631,7 @@ class AdminOrdersControllerCore extends AdminController
                         if (!$customer_message->add()) {
                             $this->errors[] = $this->trans('An error occurred while saving the message.', array(), 'Admin.Notifications.Error');
                         } elseif ($customer_message->private) {
-                            Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int) $order->id.'&vieworder&conf=11&token='.$this->token);
+                            Tools::redirectAdmin(self::$currentIndex . '&id_order=' . (int) $order->id . '&vieworder&conf=11&token=' . $this->token);
                         } else {
                             $message = $customer_message->message;
                             if (Mail::TYPE_TEXT != Configuration::get('PS_MAIL_TYPE', null, null, $order->id_shop)) {
@@ -659,7 +659,7 @@ class AdminOrdersControllerCore extends AdminController
                                     ),
                                     $varsTpl,
                                     $customer->email,
-                                    $customer->firstname.' '.$customer->lastname,
+                                    $customer->firstname . ' ' . $customer->lastname,
                                     null,
                                     null,
                                     null,
@@ -669,7 +669,7 @@ class AdminOrdersControllerCore extends AdminController
                                     (int) $order->id_shop
                                 )
                             ) {
-                                Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
+                                Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=11' . '&token=' . $this->token);
                             }
                         }
                         $this->errors[] = $this->trans('An error occurred while sending an email to the customer.', array(), 'Admin.Orderscustomers.Notification');
@@ -749,7 +749,7 @@ class AdminOrdersControllerCore extends AdminController
                     if (Validate::isLoadedObject($order_carrier)) {
                         $order_carrier->weight = (float) $order->getTotalWeight();
                         if ($order_carrier->update()) {
-                            $order->weight = sprintf('%.3f '.Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
+                            $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
                         }
                     }
 
@@ -782,7 +782,7 @@ class AdminOrdersControllerCore extends AdminController
                                 ),
                                 $params,
                                 $customer->email,
-                                $customer->firstname.' '.$customer->lastname,
+                                $customer->firstname . ' ' . $customer->lastname,
                                 null,
                                 null,
                                 null,
@@ -860,7 +860,7 @@ class AdminOrdersControllerCore extends AdminController
                                         ),
                                         $params,
                                         $customer->email,
-                                        $customer->firstname.' '.$customer->lastname,
+                                        $customer->firstname . ' ' . $customer->lastname,
                                         null,
                                         null,
                                         null,
@@ -882,7 +882,7 @@ class AdminOrdersControllerCore extends AdminController
 
                     // Redirect if no errors
                     if (!count($this->errors)) {
-                        Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=30&token='.$this->token);
+                        Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=30&token=' . $this->token);
                     }
                 } else {
                     $this->errors[] = $this->trans('The partial refund data is incorrect.', array(), 'Admin.Orderscustomers.Notification');
@@ -981,14 +981,14 @@ class AdminOrdersControllerCore extends AdminController
                                 // Delete product
                                 $order_detail = new OrderDetail((int) $id_order_detail);
                                 if (!$order->deleteProduct($order, $order_detail, $qty_cancel_product)) {
-                                    $this->errors[] = $this->trans('An error occurred while attempting to delete the product.', array(), 'Admin.Orderscustomers.Notification').' <span class="bold">'.$order_detail->product_name.'</span>';
+                                    $this->errors[] = $this->trans('An error occurred while attempting to delete the product.', array(), 'Admin.Orderscustomers.Notification') . ' <span class="bold">' . $order_detail->product_name . '</span>';
                                 }
                                 // Update weight SUM
                                 $order_carrier = new OrderCarrier((int) $order->getIdOrderCarrier());
                                 if (Validate::isLoadedObject($order_carrier)) {
                                     $order_carrier->weight = (float) $order->getTotalWeight();
                                     if ($order_carrier->update()) {
-                                        $order->weight = sprintf('%.3f '.Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
+                                        $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
                                     }
                                 }
 
@@ -1003,7 +1003,7 @@ class AdminOrdersControllerCore extends AdminController
                                 $order_detail = new OrderDetail((int) ($id_order_detail));
                                 $qtyCancelProduct = abs($customizationQtyList[$id_customization]);
                                 if (!$order->deleteCustomization($id_customization, $qtyCancelProduct, $order_detail)) {
-                                    $this->errors[] = $this->trans('An error occurred while attempting to delete product customization.', array(), 'Admin.Orderscustomers.Notification').' '.$id_customization;
+                                    $this->errors[] = $this->trans('An error occurred while attempting to delete product customization.', array(), 'Admin.Orderscustomers.Notification') . ' ' . $id_customization;
                                 }
                             }
                         }
@@ -1056,7 +1056,7 @@ class AdminOrdersControllerCore extends AdminController
                                     ),
                                     $params,
                                     $customer->email,
-                                    $customer->firstname.' '.$customer->lastname,
+                                    $customer->firstname . ' ' . $customer->lastname,
                                     null,
                                     null,
                                     null,
@@ -1075,10 +1075,10 @@ class AdminOrdersControllerCore extends AdminController
                             $cartrule->description = $this->trans('Credit card slip for order #%d', array('#%d' => $order->id), 'Admin.Orderscustomers.Feature');
                             foreach ($language_ids as $id_lang) {
                                 // Define a temporary name
-                                $cartrule->name[$id_lang] = 'V0C'.(int) ($order->id_customer).'O'.(int) ($order->id);
+                                $cartrule->name[$id_lang] = 'V0C' . (int) ($order->id_customer) . 'O' . (int) ($order->id);
                             }
                             // Define a temporary code
-                            $cartrule->code = 'V0C'.(int) ($order->id_customer).'O'.(int) ($order->id);
+                            $cartrule->code = 'V0C' . (int) ($order->id_customer) . 'O' . (int) ($order->id);
 
                             $cartrule->quantity = 1;
                             $cartrule->quantity_per_user = 1;
@@ -1116,9 +1116,9 @@ class AdminOrdersControllerCore extends AdminController
                             } else {
                                 // Update the voucher code and name
                                 foreach ($language_ids as $id_lang) {
-                                    $cartrule->name[$id_lang] = 'V'.(int) ($cartrule->id).'C'.(int) ($order->id_customer).'O'.$order->id;
+                                    $cartrule->name[$id_lang] = 'V' . (int) ($cartrule->id) . 'C' . (int) ($order->id_customer) . 'O' . $order->id;
                                 }
-                                $cartrule->code = 'V'.(int) ($cartrule->id).'C'.(int) ($order->id_customer).'O'.$order->id;
+                                $cartrule->code = 'V' . (int) ($cartrule->id) . 'C' . (int) ($order->id_customer) . 'O' . $order->id;
                                 if (!$cartrule->update()) {
                                     $this->errors[] = $this->trans('You cannot generate a voucher.', array(), 'Admin.Orderscustomers.Notification');
                                 } else {
@@ -1137,7 +1137,7 @@ class AdminOrdersControllerCore extends AdminController
                                         ),
                                         $params,
                                         $customer->email,
-                                        $customer->firstname.' '.$customer->lastname,
+                                        $customer->firstname . ' ' . $customer->lastname,
                                         null,
                                         null,
                                         null,
@@ -1155,7 +1155,7 @@ class AdminOrdersControllerCore extends AdminController
 
                     // Redirect if no errors
                     if (!count($this->errors)) {
-                        Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=31&token='.$this->token);
+                        Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=31&token=' . $this->token);
                     }
                 }
             } else {
@@ -1192,7 +1192,7 @@ class AdminOrdersControllerCore extends AdminController
                     if (!$order->addOrderPayment($amount, Tools::getValue('payment_method'), Tools::getValue('payment_transaction_id'), $currency, Tools::getValue('payment_date'), $order_invoice)) {
                         $this->errors[] = $this->trans('An error occurred during payment.', array(), 'Admin.Orderscustomers.Notification');
                     } else {
-                        Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+                        Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=4&token=' . $this->token);
                     }
                 }
             } else {
@@ -1205,7 +1205,7 @@ class AdminOrdersControllerCore extends AdminController
                 if ($this->access('edit')) {
                     $order_invoice->note = $note;
                     if ($order_invoice->save()) {
-                        Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order_invoice->id_order.'&vieworder&conf=4&token='.$this->token);
+                        Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order_invoice->id_order . '&vieworder&conf=4&token=' . $this->token);
                     } else {
                         $this->errors[] = $this->trans('The invoice note was not saved.', array(), 'Admin.Orderscustomers.Notification');
                     }
@@ -1244,15 +1244,15 @@ class AdminOrdersControllerCore extends AdminController
                         (int) $id_order_state,
                         $cart->getOrderTotal(true, Cart::BOTH),
                         $payment_module->displayName,
-                        $this->trans('Manual order -- Employee:', array(), 'Admin.Orderscustomers.Feature').' '.
-                        substr($employee->firstname, 0, 1).'. '.$employee->lastname,
+                        $this->trans('Manual order -- Employee:', array(), 'Admin.Orderscustomers.Feature') . ' ' .
+                        substr($employee->firstname, 0, 1) . '. ' . $employee->lastname,
                         array(),
                         null,
                         false,
                         $cart->secure_key
                     );
                     if ($payment_module->currentOrder) {
-                        Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
+                        Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $payment_module->currentOrder . '&vieworder' . '&token=' . $this->token);
                     }
                 }
             } else {
@@ -1271,7 +1271,7 @@ class AdminOrdersControllerCore extends AdminController
                     $order->update();
                     $order->refreshShippingCost();
 
-                    Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+                    Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=4&token=' . $this->token);
                 } else {
                     $this->errors[] = $this->trans('This address can\'t be loaded', array(), 'Admin.Orderscustomers.Notification');
                 }
@@ -1380,7 +1380,7 @@ class AdminOrdersControllerCore extends AdminController
                 $this->errors[] = $this->trans('This order already has an invoice.', array(), 'Admin.Orderscustomers.Notification');
             } else {
                 $order->setInvoice(true);
-                Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+                Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=4&token=' . $this->token);
             }
         } elseif (Tools::isSubmit('submitDeleteVoucher') && isset($order)) {
             if ($this->access('edit')) {
@@ -1415,7 +1415,7 @@ class AdminOrdersControllerCore extends AdminController
                     // Delete Order Cart Rule and update Order
                     $order_cart_rule->delete();
                     $order->update();
-                    Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+                    Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=4&token=' . $this->token);
                 } else {
                     $this->errors[] = $this->trans('You cannot edit this cart rule.', array(), 'Admin.Orderscustomers.Notification');
                 }
@@ -1484,7 +1484,7 @@ class AdminOrdersControllerCore extends AdminController
                                 foreach ($order_invoices_collection as $order_invoice) {
                                     /** @var OrderInvoice $order_invoice */
                                     if ($discount_value > $order_invoice->total_paid_tax_incl) {
-                                        $this->errors[] = $this->trans('The discount value is greater than the order invoice total.', array(), 'Admin.Orderscustomers.Notification').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int) $order->id_shop).')';
+                                        $this->errors[] = $this->trans('The discount value is greater than the order invoice total.', array(), 'Admin.Orderscustomers.Notification') . $order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int) $order->id_shop) . ')';
                                     } else {
                                         $cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
                                         $cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
@@ -1582,7 +1582,7 @@ class AdminOrdersControllerCore extends AdminController
                     }
 
                     if ($res) {
-                        Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+                        Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=4&token=' . $this->token);
                     } else {
                         $this->errors[] = $this->trans('An error occurred during the OrderCartRule creation', array(), 'Admin.Orderscustomers.Notification');
                     }
@@ -1606,7 +1606,7 @@ class AdminOrdersControllerCore extends AdminController
                     }
 
                     if ($history->sendEmail($order, $templateVars)) {
-                        Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=10&token='.$this->token);
+                        Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=10&token=' . $this->token);
                     } else {
                         $this->errors[] = $this->trans('An error occurred while sending the e-mail to the customer.', array(), 'Admin.Orderscustomers.Notification');
                     }
@@ -1639,7 +1639,7 @@ class AdminOrdersControllerCore extends AdminController
         if (false !== ConfigurationKPI::get('CONVERSION_RATE_CHART')) {
             $helper->data = ConfigurationKPI::get('CONVERSION_RATE_CHART');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=conversion_rate';
         $helper->refresh = (bool) (ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -1649,11 +1649,11 @@ class AdminOrdersControllerCore extends AdminController
         $helper->color = 'color2';
         $helper->title = $this->trans('Abandoned Carts', array(), 'Admin.Global');
         $helper->subtitle = $this->trans('Today', array(), 'Admin.Global');
-        $helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
+        $helper->href = $this->context->link->getAdminLink('AdminCarts') . '&action=filterOnlyAbandonedCarts';
         if (false !== ConfigurationKPI::get('ABANDONED_CARTS')) {
             $helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=abandoned_cart';
         $helper->refresh = (bool) (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -1666,7 +1666,7 @@ class AdminOrdersControllerCore extends AdminController
         if (false !== ConfigurationKPI::get('AVG_ORDER_VALUE')) {
             $helper->value = $this->trans('%amount% tax excl.', array('%amount%' => ConfigurationKPI::get('AVG_ORDER_VALUE')), 'Admin.Orderscustomers.Feature');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=average_order_value';
         $helper->refresh = (bool) (ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -1679,7 +1679,7 @@ class AdminOrdersControllerCore extends AdminController
         if (false !== ConfigurationKPI::get('NETPROFIT_VISIT')) {
             $helper->value = ConfigurationKPI::get('NETPROFIT_VISIT');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visit';
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=netprofit_visit';
         $helper->refresh = (bool) (ConfigurationKPI::get('NETPROFIT_VISIT_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -1739,7 +1739,7 @@ class AdminOrdersControllerCore extends AdminController
         );
         if (Shop::isFeatureActive()) {
             $shop = new Shop((int) $order->id_shop);
-            $this->toolbar_title .= ' - '.$this->trans('Shop: %shop_name%', array('%shop_name%' => $shop->name), 'Admin.Orderscustomers.Feature');
+            $this->toolbar_title .= ' - ' . $this->trans('Shop: %shop_name%', array('%shop_name%' => $shop->name), 'Admin.Orderscustomers.Feature');
         }
 
         // gets warehouses to ship products, if and only if advanced stock management is activated
@@ -1801,7 +1801,7 @@ class AdminOrdersControllerCore extends AdminController
 
             // if the current stock requires a warning
             if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
-                $this->displayWarning($this->trans('This product is out of stock: ', array(), 'Admin.Orderscustomers.Notification').' '.$product['product_name']);
+                $this->displayWarning($this->trans('This product is out of stock: ', array(), 'Admin.Orderscustomers.Notification') . ' ' . $product['product_name']);
             }
             if (0 != $product['id_warehouse']) {
                 $warehouse = new Warehouse((int) $product['id_warehouse']);
@@ -1829,15 +1829,15 @@ class AdminOrdersControllerCore extends AdminController
                 $pack_item['current_stock'] = StockAvailable::getQuantityAvailableByProduct($pack_item['id_product'], $pack_item['id_product_attribute'], $pack_item['id_shop']);
                 // if the current stock requires a warning
                 if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
-                    $this->displayWarning($this->trans('This product, included in package ('.$product['product_name'].') is out of stock: ', array(), 'Admin.Orderscustomers.Notification').' '.$pack_item['product_name']);
+                    $this->displayWarning($this->trans('This product, included in package (' . $product['product_name'] . ') is out of stock: ', array(), 'Admin.Orderscustomers.Notification') . ' ' . $pack_item['product_name']);
                 }
                 $this->setProductImageInformations($pack_item);
                 if (null != $pack_item['image']) {
-                    $name = 'product_mini_'.(int) $pack_item['id_product'].(isset($pack_item['id_product_attribute']) ? '_'.(int) $pack_item['id_product_attribute'] : '').'.jpg';
+                    $name = 'product_mini_' . (int) $pack_item['id_product'] . (isset($pack_item['id_product_attribute']) ? '_' . (int) $pack_item['id_product_attribute'] : '') . '.jpg';
                     // generate image cache, only for back office
-                    $pack_item['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$pack_item['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg');
-                    if (file_exists(_PS_TMP_IMG_DIR_.$name)) {
-                        $pack_item['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
+                    $pack_item['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_ . 'p/' . $pack_item['image']->getExistingImgPath() . '.jpg', $name, 45, 'jpg');
+                    if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
+                        $pack_item['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
                     } else {
                         $pack_item['image_size'] = false;
                     }
@@ -1971,7 +1971,7 @@ class AdminOrdersControllerCore extends AdminController
                     if (!isset($combinations[$attribute['id_product_attribute']]['attributes'])) {
                         $combinations[$attribute['id_product_attribute']]['attributes'] = '';
                     }
-                    $combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'].' - ';
+                    $combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'] . ' - ';
                     $combinations[$attribute['id_product_attribute']]['id_product_attribute'] = $attribute['id_product_attribute'];
                     $combinations[$attribute['id_product_attribute']]['default_on'] = $attribute['default_on'];
                     if (!isset($combinations[$attribute['id_product_attribute']]['price'])) {
@@ -2032,7 +2032,7 @@ class AdminOrdersControllerCore extends AdminController
                 $customer = new Customer((int) $cart->id_customer);
                 if (Validate::isLoadedObject($customer)) {
                     $mailVars = array(
-                        '{order_link}' => Context::getContext()->link->getPageLink('order', false, (int) $cart->id_lang, 'step=3&recover_cart='.(int) $cart->id.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.(int) $cart->id)),
+                        '{order_link}' => Context::getContext()->link->getPageLink('order', false, (int) $cart->id_lang, 'step=3&recover_cart=' . (int) $cart->id . '&token_cart=' . md5(_COOKIE_KEY_ . 'recover_cart_' . (int) $cart->id)),
                         '{firstname}' => $customer->firstname,
                         '{lastname}' => $customer->lastname,
                     );
@@ -2049,7 +2049,7 @@ class AdminOrdersControllerCore extends AdminController
                             ),
                             $mailVars,
                             $customer->email,
-                            $customer->firstname.' '.$customer->lastname,
+                            $customer->firstname . ' ' . $customer->lastname,
                             null,
                             null,
                             null,
@@ -2312,7 +2312,7 @@ class AdminOrdersControllerCore extends AdminController
         if (Validate::isLoadedObject($order_carrier)) {
             $order_carrier->weight = (float) $order->getTotalWeight();
             if ($order_carrier->update()) {
-                $order->weight = sprintf('%.3f '.Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
+                $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
             }
         }
 
@@ -2486,7 +2486,7 @@ class AdminOrdersControllerCore extends AdminController
         if (is_array(Tools::getValue('product_quantity'))) {
             foreach (Tools::getValue('product_quantity') as $id_customization => $qty) {
                 // Update quantity of each customization
-                Db::getInstance()->update('customization', array('quantity' => (int) $qty), 'id_customization = '.(int) $id_customization);
+                Db::getInstance()->update('customization', array('quantity' => (int) $qty), 'id_customization = ' . (int) $id_customization);
                 // Calculate the real quantity of the product
                 $product_quantity += $qty;
             }
@@ -2572,7 +2572,7 @@ class AdminOrdersControllerCore extends AdminController
             $order_carrier->weight = (float) $order->getTotalWeight();
             $res &= $order_carrier->update();
             if ($res) {
-                $order->weight = sprintf('%.3f '.Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
+                $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
             }
         }
 
@@ -2705,7 +2705,7 @@ class AdminOrdersControllerCore extends AdminController
             $order_carrier->weight = (float) $order->getTotalWeight();
             $res &= $order_carrier->update();
             if ($res) {
-                $order->weight = sprintf('%.3f '.Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
+                $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
             }
         }
 
@@ -2865,11 +2865,11 @@ class AdminOrdersControllerCore extends AdminController
 
         foreach ($products as &$product) {
             if (null != $product['image']) {
-                $name = 'product_mini_'.(int) $product['product_id'].(isset($product['product_attribute_id']) ? '_'.(int) $product['product_attribute_id'] : '').'.jpg';
+                $name = 'product_mini_' . (int) $product['product_id'] . (isset($product['product_attribute_id']) ? '_' . (int) $product['product_attribute_id'] : '') . '.jpg';
                 // generate image cache, only for back office
-                $product['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$product['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg');
-                if (file_exists(_PS_TMP_IMG_DIR_.$name)) {
-                    $product['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
+                $product['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_ . 'p/' . $product['image']->getExistingImgPath() . '.jpg', $name, 45, 'jpg');
+                if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
+                    $product['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
                 } else {
                     $product['image_size'] = false;
                 }
@@ -2883,8 +2883,8 @@ class AdminOrdersControllerCore extends AdminController
 
     /**
      * @param OrderDetail $order_detail
-     * @param int         $qty_cancel_product
-     * @param bool        $delete
+     * @param int $qty_cancel_product
+     * @param bool $delete
      */
     protected function reinjectQuantity($order_detail, $qty_cancel_product, $delete = false)
     {
@@ -3003,8 +3003,8 @@ class AdminOrdersControllerCore extends AdminController
 
     /**
      * @param OrderInvoice $order_invoice
-     * @param float        $value_tax_incl
-     * @param float        $value_tax_excl
+     * @param float $value_tax_incl
+     * @param float $value_tax_excl
      */
     protected function applyDiscountOnInvoice($order_invoice, $value_tax_incl, $value_tax_excl)
     {
@@ -3058,18 +3058,18 @@ class AdminOrdersControllerCore extends AdminController
         if (isset($pack_item['id_product_attribute']) && $pack_item['id_product_attribute']) {
             $id_image = Db::getInstance()->getValue('
                 SELECT `image_shop`.id_image
-                FROM `'._DB_PREFIX_.'product_attribute_image` pai'.
-                Shop::addSqlAssociation('image', 'pai', true).'
-                WHERE id_product_attribute = '.(int) $pack_item['id_product_attribute']);
+                FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai' .
+                Shop::addSqlAssociation('image', 'pai', true) . '
+                WHERE id_product_attribute = ' . (int) $pack_item['id_product_attribute']);
         }
 
         if (!isset($id_image) || !$id_image) {
             $id_image = Db::getInstance()->getValue(
                 '
                 SELECT `image_shop`.id_image
-                FROM `'._DB_PREFIX_.'image` i'.
-                Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
-                WHERE i.id_product = '.(int) $pack_item['id_product']
+                FROM `' . _DB_PREFIX_ . 'image` i' .
+                Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
+                WHERE i.id_product = ' . (int) $pack_item['id_product']
             );
         }
 

@@ -62,11 +62,11 @@ class StockRepository extends StockManagementRepository
      * StockRepository constructor.
      *
      * @param ContainerInterface $container
-     * @param Connection         $connection
-     * @param EntityManager      $entityManager
-     * @param ContextAdapter     $contextAdapter
-     * @param ImageManager       $imageManager
-     * @param StockManager       $stockManager
+     * @param Connection $connection
+     * @param EntityManager $entityManager
+     * @param ContextAdapter $contextAdapter
+     * @param ImageManager $imageManager
+     * @param StockManager $stockManager
      * @param $tablePrefix
      */
     public function __construct(
@@ -110,7 +110,7 @@ class StockRepository extends StockManagementRepository
 
     /**
      * @param Movement $movement
-     * @param bool     $syncStock
+     * @param bool $syncStock
      *
      * @return mixed
      */
@@ -147,6 +147,7 @@ class StockRepository extends StockManagementRepository
 
     /**
      * Sync all stock with Manager.
+     *
      * @param mixed $idProduct
      */
     private function syncAllStock($idProduct)
@@ -228,7 +229,7 @@ class StockRepository extends StockManagementRepository
     /**
      * @param string $andWhereClause
      * @param string $having
-     * @param null   $orderByClause
+     * @param null $orderByClause
      *
      * @return mixed
      */
@@ -359,7 +360,7 @@ class StockRepository extends StockManagementRepository
     {
         if (!isset($this->totalCombinations[$row['product_id']])) {
             $query = 'SELECT COUNT(*) total_combinations
-                        FROM '.$this->tablePrefix.'product_attribute pa
+                        FROM ' . $this->tablePrefix . 'product_attribute pa
                         WHERE id_product=:id_product';
             $statement = $this->connection->prepare($query);
             $statement->bindValue('id_product', (int) $row['product_id'], \PDO::PARAM_INT);

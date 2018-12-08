@@ -47,7 +47,7 @@ class OrdersInformation
     private $totalSpent;
 
     /**
-     * @param string             $totalSpent
+     * @param string $totalSpent
      * @param OrderInformation[] $validOrders
      * @param OrderInformation[] $invalidOrders
      */

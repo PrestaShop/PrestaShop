@@ -67,9 +67,9 @@ class Reader implements ReaderInterface
      *
      * @throws LocalizationException
      *                               When the locale code is unknown or invalid
+     *
      * @return LocaleData
      *                    A LocaleData object
-     *
      */
     public function readLocaleData($localeCode)
     {
@@ -118,9 +118,9 @@ class Reader implements ReaderInterface
         // Supplemental data about currencies, languages and parent locales
         if (!isset($this->supplementalXml)) {
             $supplementalPath = realpath(
-                _PS_ROOT_DIR_.'/'
-                .self::CLDR_SUPPLEMENTAL
-                .'supplementalData.xml'
+                _PS_ROOT_DIR_ . '/'
+                . self::CLDR_SUPPLEMENTAL
+                . 'supplementalData.xml'
             );
             $this->supplementalXml = simplexml_load_file($supplementalPath);
         }
@@ -128,9 +128,9 @@ class Reader implements ReaderInterface
         // This file contains special digits for non-occidental numbering systems
         if (!isset($this->numberingSystemsXml)) {
             $numberingSystemsPath = realpath(
-                _PS_ROOT_DIR_.'/'
-                .self::CLDR_SUPPLEMENTAL
-                .'numberingSystems.xml'
+                _PS_ROOT_DIR_ . '/'
+                . self::CLDR_SUPPLEMENTAL
+                . 'numberingSystems.xml'
             );
             $this->numberingSystemsXml = simplexml_load_file($numberingSystemsPath);
         }
@@ -144,6 +144,7 @@ class Reader implements ReaderInterface
      *
      * @throws LocalizationException
      *                               When locale code is invalid or unknown
+     *
      * @return array
      *               The lookup
      *               ['root', <intermediate codes>, $localeCode]
@@ -169,9 +170,9 @@ class Reader implements ReaderInterface
      *  eg.: en, fr, en_GB, fr_FR...
      *
      * @throws LocalizationException
+     *
      * @return string|null
      *                     The parent locale code (CLDR filenames' style). Null if no parent.
-     *
      */
     protected function getParentLocale($localeCode)
     {
@@ -235,13 +236,13 @@ class Reader implements ReaderInterface
      *
      * @throws LocalizationException
      *                               If this locale code has no corresponding xml file
+     *
      * @return SimplexmlElement
      *                          The locale data
-     *
      */
     protected function getMainXmlData($localeCode)
     {
-        return simplexml_load_file($this->mainPath($localeCode.'.xml'));
+        return simplexml_load_file($this->mainPath($localeCode . '.xml'));
     }
 
     /**
@@ -251,12 +252,12 @@ class Reader implements ReaderInterface
      * @param string $filename (Optional) The filename to be added to the path
      *
      * @throws LocalizationException
-     * @return string The realpath of CLDR main data folder
      *
+     * @return string The realpath of CLDR main data folder
      */
     protected function mainPath($filename = '')
     {
-        $path = realpath(_PS_ROOT_DIR_.'/'.self::CLDR_MAIN.($filename ? $filename : ''));
+        $path = realpath(_PS_ROOT_DIR_ . '/' . self::CLDR_MAIN . ($filename ? $filename : ''));
         if (false === $path) {
             throw new LocalizationException("The file $filename does not exist");
         }
@@ -271,8 +272,8 @@ class Reader implements ReaderInterface
      * @param string $localeTag The wanted locale. Can be either a language code (e.g.: fr) of an IETF tag (e.g.: en-US)
      *
      * @throws LocalizationException
-     * @return LocaleData
      *
+     * @return LocaleData
      */
     protected function getLocaleData($localeTag)
     {
@@ -286,9 +287,9 @@ class Reader implements ReaderInterface
      * Maps locale data from SimplexmlElement to a LocaleData object.
      *
      * @param SimplexmlElement $xmlLocaleData
-     *                                           XML locale data
-     * @param array            $supplementalData
-     *                                           Supplemental locale data
+     *                                        XML locale data
+     * @param array $supplementalData
+     *                                Supplemental locale data
      *
      * @return LocaleData
      *                    The mapped locale data
@@ -304,7 +305,7 @@ class Reader implements ReaderInterface
             $localeData->localeCode = (string) $xmlLocaleData->identity->language['type'];
         }
         if (isset($xmlLocaleData->identity->territory)) {
-            $localeData->localeCode .= '-'.$xmlLocaleData->identity->territory['type'];
+            $localeData->localeCode .= '-' . $xmlLocaleData->identity->territory['type'];
         }
         $numbersData = $xmlLocaleData->numbers;
         // Default numbering system.
@@ -482,7 +483,7 @@ class Reader implements ReaderInterface
      * Extract parent locale code.
      *
      * @param SimplexmlElement $parentLocaleXmlData
-     * @param string           $localeTag
+     * @param string $localeTag
      *
      * @return mixed|string
      */
@@ -495,7 +496,7 @@ class Reader implements ReaderInterface
         if (empty($parts['region'])) {
             return self::CLDR_ROOT_LOCALE;
         }
-        $code = $parts['language'].'_'.$parts['region'];
+        $code = $parts['language'] . '_' . $parts['region'];
         $results = $parentLocaleXmlData->xpath("//parentLocale[contains(@locales, '$code')]");
         if (empty($results)) {
             return $parts['language'];

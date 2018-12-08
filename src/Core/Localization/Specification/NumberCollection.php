@@ -72,8 +72,8 @@ class NumberCollection implements IteratorAggregate, Countable
     /**
      * Adds a Number specification item at the end of the collection.
      *
-     * @param int|string                   $index
-     *                                                          The item index
+     * @param int|string $index
+     *                          The item index
      * @param numberSpecificationInterface $numberSpecification
      *                                                          The Number specification item to add
      *

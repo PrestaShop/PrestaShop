@@ -60,8 +60,8 @@ class DatabaseTablesList
      * @param array $tables
      *
      * @throws SqlRequestException
-     * @return self
      *
+     * @return self
      */
     private function setTables(array $tables)
     {

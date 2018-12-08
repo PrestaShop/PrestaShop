@@ -52,7 +52,7 @@ final class LegacyUrlConverter
     /**
      * LegacyUrlConverter constructor.
      *
-     * @param RouterInterface              $router
+     * @param RouterInterface $router
      * @param LegacyRouteProviderInterface $legacyRouteProvider
      */
     public function __construct(RouterInterface $router, LegacyRouteProviderInterface $legacyRouteProvider)
@@ -66,8 +66,8 @@ final class LegacyUrlConverter
      *
      * @throws ArgumentException
      * @throws RouteNotFoundException
-     * @return string
      *
+     * @return string
      */
     public function convertByParameters(array $parameters)
     {
@@ -87,8 +87,8 @@ final class LegacyUrlConverter
      *
      * @throws ArgumentException
      * @throws RouteNotFoundException
-     * @return string
      *
+     * @return string
      */
     public function convertByUrl($url)
     {
@@ -111,8 +111,8 @@ final class LegacyUrlConverter
      *
      * @throws ArgumentException
      * @throws RouteNotFoundException
-     * @return string
      *
+     * @return string
      */
     public function convertByRequest(Request $request)
     {
@@ -123,7 +123,7 @@ final class LegacyUrlConverter
     }
 
     /**
-     * @param array       $parameters
+     * @param array $parameters
      * @param LegacyRoute $legacyRoute
      *
      * @return array
@@ -140,7 +140,7 @@ final class LegacyUrlConverter
         }
 
         unset($parameters['controller'], $parameters['action'], $parameters[$legacyAction]);
-        
+
         return $parameters;
     }
 
@@ -148,8 +148,8 @@ final class LegacyUrlConverter
      * @param array $parameters
      *
      * @throws RouteNotFoundException
-     * @return LegacyRoute
      *
+     * @return LegacyRoute
      */
     private function findLegacyRouteNameByParameters(array $parameters)
     {

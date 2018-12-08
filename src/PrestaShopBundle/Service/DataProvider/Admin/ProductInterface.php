@@ -66,8 +66,8 @@ interface ProductInterface
     /**
      * Combines new filter values with old ones (persisted), then persists the combination and returns it.
      *
-     * @param null|string[] $paramsIn         New filter params values to take into account. If not given, the method will simply return persisted values.
-     * @param bool          $avoidPersistence true to avoid persisting these preferences (for an export for example)
+     * @param null|string[] $paramsIn New filter params values to take into account. If not given, the method will simply return persisted values.
+     * @param bool $avoidPersistence true to avoid persisting these preferences (for an export for example)
      *
      * @return string[] The new filter params values
      */
@@ -76,13 +76,13 @@ interface ProductInterface
     /**
      * Returns a collection of products, using default language, currency and others, from Context.
      *
-     * @param int|string $offset           an offset, or the 'last' token
-     * @param int|string $limit            a limit, or the 'last' token
-     * @param string     $orderBy          Field name to sort during SQL query
-     * @param string     $sortOrder        'asc' or 'desc'
-     * @param string[]   $post             filter params values to take into acount (often comes from POST data)
-     * @param bool       $avoidPersistence True to avoid persisting these preferences (for an export for example)
-     * @param bool       $formatCldr       False to avoid CLDR formatting (heavy memory usage)
+     * @param int|string $offset an offset, or the 'last' token
+     * @param int|string $limit a limit, or the 'last' token
+     * @param string $orderBy Field name to sort during SQL query
+     * @param string $sortOrder 'asc' or 'desc'
+     * @param string[] $post filter params values to take into acount (often comes from POST data)
+     * @param bool $avoidPersistence True to avoid persisting these preferences (for an export for example)
+     * @param bool $formatCldr False to avoid CLDR formatting (heavy memory usage)
      *
      * @return array[mixed[]] A list of products, as an array of arrays of raw data
      */

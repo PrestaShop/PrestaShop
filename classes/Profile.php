@@ -51,22 +51,23 @@ class ProfileCore extends ObjectModel
      * Get all available profiles.
      *
      * @param mixed $idLang
+     *
      * @return array Profiles
      */
     public static function getProfiles($idLang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT p.`id_profile`, `name`
-		FROM `'._DB_PREFIX_.'profile` p
-		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = '.(int) $idLang.')
+		FROM `' . _DB_PREFIX_ . 'profile` p
+		LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = ' . (int) $idLang . ')
 		ORDER BY `id_profile` ASC');
     }
 
     /**
      * Get the current profile name.
      *
-     * @param int  $idProfile Profile ID
-     * @param null $idLang    Language ID
+     * @param int $idProfile Profile ID
+     * @param null $idLang Language ID
      *
      * @return string Profile
      */
@@ -79,10 +80,10 @@ class ProfileCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
             '
 			SELECT `name`
-			FROM `'._DB_PREFIX_.'profile` p
-			LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
-			WHERE p.`id_profile` = '.(int) $idProfile.'
-			AND pl.`id_lang` = '.(int) $idLang
+			FROM `' . _DB_PREFIX_ . 'profile` p
+			LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
+			WHERE p.`id_profile` = ' . (int) $idProfile . '
+			AND pl.`id_lang` = ' . (int) $idLang
         );
     }
 
@@ -95,8 +96,8 @@ class ProfileCore extends ObjectModel
     {
         if (parent::delete()) {
             return
-                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int) $this->id)
-                && Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int) $this->id)
+                Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'access` WHERE `id_profile` = ' . (int) $this->id)
+                && Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_access` WHERE `id_profile` = ' . (int) $this->id)
             ;
         }
 
@@ -107,7 +108,7 @@ class ProfileCore extends ObjectModel
      * Get access profile.
      *
      * @param int $idProfile Profile ID
-     * @param int $idTab     Tab ID
+     * @param int $idTab Tab ID
      *
      * @return bool
      */
@@ -122,8 +123,8 @@ class ProfileCore extends ObjectModel
     /**
      * Get access profiles.
      *
-     * @param int    $idProfile Profile ID
-     * @param string $type      Type
+     * @param int $idProfile Profile ID
+     * @param string $type Type
      *
      * @return bool
      */
@@ -171,9 +172,9 @@ class ProfileCore extends ObjectModel
                                     `slug` LIKE "%READ" as "view",
                                     `slug` LIKE "%UPDATE" as "edit",
                                     `slug` LIKE "%DELETE" as "delete"
-				FROM `'._DB_PREFIX_.'authorization_role` a
-				LEFT JOIN `'._DB_PREFIX_.'access` j ON j.id_authorization_role = a.id_authorization_role
-				WHERE j.`id_profile` = '.(int) $idProfile);
+				FROM `' . _DB_PREFIX_ . 'authorization_role` a
+				LEFT JOIN `' . _DB_PREFIX_ . 'access` j ON j.id_authorization_role = a.id_authorization_role
+				WHERE j.`id_profile` = ' . (int) $idProfile);
 
                 foreach ($result as $row) {
                     $tab = self::findTabTypeInformationByAuthSlug($type, $row['slug']);
@@ -192,9 +193,9 @@ class ProfileCore extends ObjectModel
     }
 
     /**
-     * @param int    $idProfile Profile ID
-     * @param string $type      Type
-     * @param array  $cacheData Cached data
+     * @param int $idProfile Profile ID
+     * @param string $type Type
+     * @param array $cacheData Cached data
      */
     private static function fillCacheAccesses($idProfile, $type, $cacheData = [])
     {
@@ -226,9 +227,9 @@ class ProfileCore extends ObjectModel
         );
 
         $result = Db::getInstance()->getRow('
-            SELECT `'.$type.'`
-            FROM `'._DB_PREFIX_.'tab` t
-            WHERE UCASE(`class_name`) = "'.$matches['classname'].'"
+            SELECT `' . $type . '`
+            FROM `' . _DB_PREFIX_ . 'tab` t
+            WHERE UCASE(`class_name`) = "' . $matches['classname'] . '"
         ');
 
         return $result[$type];

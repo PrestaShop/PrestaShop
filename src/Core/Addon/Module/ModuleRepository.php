@@ -149,7 +149,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         list($isoLang) = explode('-', $translator->getLocale());
 
         // Cache related variables
-        $this->cacheFilePath = $isoLang.'_local_modules';
+        $this->cacheFilePath = $isoLang . '_local_modules';
         $this->cacheProvider = $cacheProvider;
         $this->loadedModules = new ArrayCache();
 
@@ -202,7 +202,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     /**
      * @param AddonListFilter $filter
-     * @param bool            $skip_main_class_attributes
+     * @param bool $skip_main_class_attributes
      *
      * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
      */
@@ -411,8 +411,8 @@ class ModuleRepository implements ModuleRepositoryInterface
      * Get the new module presenter class of the specified name provided.
      * It contains data from its instance, the disk, the database and from the marketplace if exists.
      *
-     * @param string $name                       The technical name of the module
-     * @param bool   $skip_main_class_attributes
+     * @param string $name The technical name of the module
+     * @param bool $skip_main_class_attributes
      *
      * @return Module
      */
@@ -422,8 +422,8 @@ class ModuleRepository implements ModuleRepositoryInterface
             return $this->loadedModules->fetch($name);
         }
 
-        $path = $this->modulePath.$name;
-        $php_file_path = $path.'/'.$name.'.php';
+        $path = $this->modulePath . $name;
+        $php_file_path = $path . '/' . $name . '.php';
 
         /* Data which design the module class */
         $attributes = array('name' => $name);
@@ -556,7 +556,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         foreach ($modulesDirsList as $moduleDir) {
             $moduleName = $moduleDir->getFilename();
-            if (!file_exists($this->modulePath.$moduleName.'/'.$moduleName.'.php')) {
+            if (!file_exists($this->modulePath . $moduleName . '/' . $moduleName . '.php')) {
                 continue;
             }
             try {
@@ -625,7 +625,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getInstalledModulesPaths()
     {
         $paths = array();
-        $modulesFiles = Finder::create()->directories()->in(__DIR__.'/../../../../modules')->depth(0);
+        $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../../modules')->depth(0);
         $installedModules = array_keys($this->getInstalledModules());
 
         foreach ($modulesFiles as $moduleFile) {

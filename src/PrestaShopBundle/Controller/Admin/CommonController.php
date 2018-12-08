@@ -61,10 +61,10 @@ class CommonController extends FrameworkBundleAdminController
      * @Template("@PrestaShop/Admin/Common/pagination.html.twig")
      *
      * @param Request $request
-     * @param int     $limit
-     * @param int     $offset
-     * @param int     $total
-     * @param string  $view    full|quicknav To change default template used to render the content
+     * @param int $limit
+     * @param int $offset
+     * @param int $total
+     * @param string $view full|quicknav To change default template used to render the content
      *
      * @return array|Response
      */
@@ -147,7 +147,7 @@ class CommonController extends FrameworkBundleAdminController
             'limit_choices' => $limitChoices,
         );
         if ('full' != $view) {
-            return $this->render('@PrestaShop/Admin/Common/pagination_'.$view.'.html.twig', $vars);
+            return $this->render('@PrestaShop/Admin/Common/pagination_' . $view . '.html.twig', $vars);
         }
 
         return $vars;
@@ -159,8 +159,8 @@ class CommonController extends FrameworkBundleAdminController
      * @Template("@PrestaShop/Admin/Common/recommendedModules.html.twig")
      *
      * @param string $domain
-     * @param int    $limit
-     * @param int    $randomize
+     * @param int $limit
+     * @param int $randomize
      *
      * @return array Template vars
      */
@@ -239,8 +239,8 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $action
      *
      * @throws \LogicException
-     * @return JsonResponse
      *
+     * @return JsonResponse
      */
     public function resetSearchAction($controller, $action)
     {
@@ -275,7 +275,7 @@ class CommonController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', [
             'form' => $form->getForm()->get($formName)->get($fieldName)->createView(),
-            'formId' => $formName.'_'.$fieldName.'_rendered',
+            'formId' => $formName . '_' . $fieldName . '_rendered',
         ]);
     }
 
@@ -283,9 +283,9 @@ class CommonController extends FrameworkBundleAdminController
      * Process Grid search.
      *
      * @param Request $request
-     * @param string  $gridDefinitionFactoryService
-     * @param string  $redirectRoute
-     * @param array   $redirectQueryParamsToKeep
+     * @param string $gridDefinitionFactoryService
+     * @param string $redirectRoute
+     * @param array $redirectQueryParamsToKeep
      *
      * @return RedirectResponse
      */

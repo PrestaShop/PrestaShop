@@ -56,8 +56,8 @@ class SetUpUrlType extends AbstractType
      * SetUpUrlType constructor.
      *
      * @param array $canonicalUrlChoices
-     * @param bool  $isHtaccessFileWritable
-     * @param bool  $isHostMode
+     * @param bool $isHtaccessFileWritable
+     * @param bool $isHostMode
      */
     public function __construct(
         array $canonicalUrlChoices,

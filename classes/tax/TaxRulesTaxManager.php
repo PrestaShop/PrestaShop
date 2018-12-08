@@ -41,7 +41,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 
     /**
      * @param Address $address
-     * @param mixed   $type    An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
+     * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
      */
     public function __construct(Address $address, $type, \PrestaShop\PrestaShop\Core\ConfigurationInterface $configurationManager = null)
     {
@@ -93,19 +93,19 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
             $postcode = $this->address->postcode;
         }
 
-        $cache_id = (int) $this->address->id_country.'-'.(int) $this->address->id_state.'-'.$postcode.'-'.(int) $this->type;
+        $cache_id = (int) $this->address->id_country . '-' . (int) $this->address->id_state . '-' . $postcode . '-' . (int) $this->type;
 
         if (!Cache::isStored($cache_id)) {
             $rows = Db::getInstance()->executeS('
 				SELECT tr.*
-				FROM `'._DB_PREFIX_.'tax_rule` tr
-				JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (tr.`id_tax_rules_group` = trg.`id_tax_rules_group`)
+				FROM `' . _DB_PREFIX_ . 'tax_rule` tr
+				JOIN `' . _DB_PREFIX_ . 'tax_rules_group` trg ON (tr.`id_tax_rules_group` = trg.`id_tax_rules_group`)
 				WHERE trg.`active` = 1
-				AND tr.`id_country` = '.(int) $this->address->id_country.'
-				AND tr.`id_tax_rules_group` = '.(int) $this->type.'
-				AND tr.`id_state` IN (0, '.(int) $this->address->id_state.')
-				AND (\''.pSQL($postcode).'\' BETWEEN tr.`zipcode_from` AND tr.`zipcode_to`
-					OR (tr.`zipcode_to` = 0 AND tr.`zipcode_from` IN(0, \''.pSQL($postcode).'\')))
+				AND tr.`id_country` = ' . (int) $this->address->id_country . '
+				AND tr.`id_tax_rules_group` = ' . (int) $this->type . '
+				AND tr.`id_state` IN (0, ' . (int) $this->address->id_state . ')
+				AND (\'' . pSQL($postcode) . '\' BETWEEN tr.`zipcode_from` AND tr.`zipcode_to`
+					OR (tr.`zipcode_to` = 0 AND tr.`zipcode_from` IN(0, \'' . pSQL($postcode) . '\')))
 				ORDER BY tr.`zipcode_from` DESC, tr.`zipcode_to` DESC, tr.`id_state` DESC, tr.`id_country` DESC');
 
             $behavior = 0;

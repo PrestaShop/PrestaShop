@@ -48,7 +48,7 @@ final class LanguageGridDataFactory implements GridDataFactoryInterface
 
     /**
      * @param GridDataFactoryInterface $doctrineLanguageDataFactory
-     * @param ImageProviderInterface   $languageFlagThumbnailProvider
+     * @param ImageProviderInterface $languageFlagThumbnailProvider
      */
     public function __construct(
         GridDataFactoryInterface $doctrineLanguageDataFactory,

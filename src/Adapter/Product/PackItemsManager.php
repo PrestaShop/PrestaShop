@@ -39,7 +39,7 @@ class PackItemsManager
      * Get the Products contained in the given Pack.
      *
      * @param \Pack $pack
-     * @param int   $id_lang Optional
+     * @param int $id_lang Optional
      *
      * @return array(Product) The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
      */
@@ -56,9 +56,9 @@ class PackItemsManager
     /**
      * Get all Packs that contains the given item in the corresponding declination.
      *
-     * @param Product  $item
-     * @param int      $item_attribute_id
-     * @param bool|int $id_lang           Optional
+     * @param Product $item
+     * @param int $item_attribute_id
+     * @param bool|int $id_lang Optional
      *
      * @return array(Pack) The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
      */
@@ -90,7 +90,7 @@ class PackItemsManager
      * else this method will match a product if at least one of all its combination is in a pack.
      *
      * @param Product $product
-     * @param int     $id_product_attribute Optional combination of the product
+     * @param int $id_product_attribute Optional combination of the product
      *
      * @return bool
      */

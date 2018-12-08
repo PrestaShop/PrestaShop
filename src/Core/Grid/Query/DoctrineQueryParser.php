@@ -43,7 +43,7 @@ final class DoctrineQueryParser implements QueryParserInterface
             if (!is_string($key)) {
                 throw new UnsupportedParameterException('Only named parameters are supported in prepared queries.');
             }
-            $values[':'.$key] = $this->parseValue($value);
+            $values[':' . $key] = $this->parseValue($value);
         }
 
         return strtr($query, $values);
@@ -53,8 +53,8 @@ final class DoctrineQueryParser implements QueryParserInterface
      * @param mixed $value the parameter value
      *
      * @throws UnsupportedParameterException
-     * @return string the partial raw parameter
      *
+     * @return string the partial raw parameter
      */
     private function parseValue($value)
     {
@@ -78,7 +78,7 @@ final class DoctrineQueryParser implements QueryParserInterface
             return 'NULL';
         }
 
-        throw new UnsupportedParameterException('Unsupported value type: '.gettype($value));
+        throw new UnsupportedParameterException('Unsupported value type: ' . gettype($value));
     }
 
     /**
@@ -88,7 +88,7 @@ final class DoctrineQueryParser implements QueryParserInterface
      */
     private function parseStringParameter($value)
     {
-        return "'".addslashes($value)."'";
+        return "'" . addslashes($value) . "'";
     }
 
     /**
@@ -108,7 +108,7 @@ final class DoctrineQueryParser implements QueryParserInterface
      */
     private function parseArrayParameter(array $value)
     {
-        return "'".implode("', '", array_map('addslashes', $value))."'";
+        return "'" . implode("', '", array_map('addslashes', $value)) . "'";
     }
 
     /**

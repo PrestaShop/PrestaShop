@@ -179,13 +179,13 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         unset($product->id, $product->id_product);
-        
+
         $product->indexed = 0;
         $product->active = 0;
 
         // change product name to prefix it
         foreach ($product->name as $langKey => $oldName) {
-            if (!preg_match('/^'.str_replace('%s', '.*', preg_quote($namePattern, '/').'$/'), $oldName)) {
+            if (!preg_match('/^' . str_replace('%s', '.*', preg_quote($namePattern, '/') . '$/'), $oldName)) {
                 $newName = sprintf($namePattern, $oldName);
                 if (mb_strlen($newName, 'UTF-8') <= 127) {
                     $product->name[$langKey] = $newName;
@@ -288,22 +288,22 @@ class AdminProductDataUpdater implements ProductInterface
         $fields = implode(',', $positionsMatcher);
 
         // update current pages.
-        $updatePositions = 'UPDATE `'._DB_PREFIX_.'category_product` cp
-            INNER JOIN `'._DB_PREFIX_.'product` p ON (cp.`id_product` = p.`id_product`)
-            '.Shop::addSqlAssociation('product', 'p').'
-            SET cp.`position` = ELT(cp.`position`, '.$fields.'),
-                p.`date_upd` = "'.date('Y-m-d H:i:s').'",
-                product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
-            WHERE cp.`id_category` = '.(int) $categoryId.' AND cp.`id_product` IN ('.implode(',', array_map('intval', array_keys($productList))).')';
+        $updatePositions = 'UPDATE `' . _DB_PREFIX_ . 'category_product` cp
+            INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (cp.`id_product` = p.`id_product`)
+            ' . Shop::addSqlAssociation('product', 'p') . '
+            SET cp.`position` = ELT(cp.`position`, ' . $fields . '),
+                p.`date_upd` = "' . date('Y-m-d H:i:s') . '",
+                product_shop.`date_upd` = "' . date('Y-m-d H:i:s') . '"
+            WHERE cp.`id_category` = ' . (int) $categoryId . ' AND cp.`id_product` IN (' . implode(',', array_map('intval', array_keys($productList))) . ')';
 
         Db::getInstance()->execute($updatePositions);
 
         // Fixes duplicates on all pages
         Db::getInstance()->query('SET @i := 0');
-        $selectPositions = 'UPDATE`'._DB_PREFIX_.'category_product` cp
+        $selectPositions = 'UPDATE`' . _DB_PREFIX_ . 'category_product` cp
             SET cp.`position` = (SELECT @i := @i + 1)
-            WHERE cp.`id_category` = '.(int) $categoryId.'
-            ORDER BY cp.`id_product` NOT IN ('.implode(',', array_map('intval', array_keys($productList))).'), cp.`position` ASC';
+            WHERE cp.`id_category` = ' . (int) $categoryId . '
+            ORDER BY cp.`id_product` NOT IN (' . implode(',', array_map('intval', array_keys($productList))) . '), cp.`position` ASC';
         Db::getInstance()->execute($selectPositions);
 
         return true;

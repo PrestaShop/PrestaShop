@@ -53,8 +53,8 @@ final class PageLayoutCustomizationFormFactory implements PageLayoutCustomizatio
 
     /**
      * @param FormFactoryInterface $formFactory
-     * @param ThemeRepository      $themeRepository
-     * @param string               $shopThemeName
+     * @param ThemeRepository $themeRepository
+     * @param string $shopThemeName
      */
     public function __construct(
         FormFactoryInterface $formFactory,
@@ -81,7 +81,7 @@ final class PageLayoutCustomizationFormFactory implements PageLayoutCustomizatio
     }
 
     /**
-     * @param Theme                     $theme
+     * @param Theme $theme
      * @param LayoutCustomizationPage[] $customizationPages
      *
      * @return array

@@ -66,7 +66,7 @@ class LanguageList
     public function __construct()
     {
         // English language is required
-        if (!file_exists(_PS_INSTALL_LANGS_PATH_.'en/language.xml')) {
+        if (!file_exists(_PS_INSTALL_LANGS_PATH_ . 'en/language.xml')) {
             throw new PrestashopInstallerException('English language is missing');
         }
 
@@ -97,7 +97,7 @@ class LanguageList
     public function setLanguage($iso)
     {
         if (!in_array($iso, $this->getIsoList())) {
-            throw new PrestashopInstallerException('Language '.$iso.' not found');
+            throw new PrestashopInstallerException('Language ' . $iso . ' not found');
         }
         $this->language = $iso;
     }
@@ -116,6 +116,7 @@ class LanguageList
      * Get current language.
      *
      * @param null|mixed $iso
+     *
      * @return Language
      */
     public function getLanguage($iso = null)
@@ -155,7 +156,7 @@ class LanguageList
             $countries = array();
             $countries_lang = $this->getLanguage()->getCountries();
             $countries_default = $this->getLanguage(self::DEFAULT_ISO)->getCountries();
-            $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_.'xml/country.xml');
+            $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_ . 'xml/country.xml');
             if ($xml) {
                 foreach ($xml->entities->country as $country) {
                     $iso = strtolower((string) $country['iso_code']);
@@ -182,8 +183,8 @@ class LanguageList
         }
 
         foreach ($split_languages as $lang) {
-            $pattern = '/^(?P<primarytag>[a-zA-Z]{2,8})'.
-                '(?:-(?P<subtag>[a-zA-Z]{2,8}))?(?:(?:;q=)'.
+            $pattern = '/^(?P<primarytag>[a-zA-Z]{2,8})' .
+                '(?:-(?P<subtag>[a-zA-Z]{2,8}))?(?:(?:;q=)' .
                 '(?P<quantifier>\d\.\d))?$/';
             if (preg_match($pattern, $lang, $m)) {
                 if (in_array($m['primarytag'], $this->getIsoList())) {

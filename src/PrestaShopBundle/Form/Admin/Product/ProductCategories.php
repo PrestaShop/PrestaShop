@@ -48,10 +48,10 @@ class ProductCategories extends TranslatorAwareType
     private $languageId;
 
     /**
-     * @param TranslatorInterface  $translator
+     * @param TranslatorInterface $translator
      * @param CategoryDataProvider $categoryDataProvider
-     * @param array                $languages
-     * @param int                  $languageId
+     * @param array $languages
+     * @param int $languageId
      */
     public function __construct(
         TranslatorInterface $translator,

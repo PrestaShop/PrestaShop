@@ -43,7 +43,7 @@ abstract class ModuleAdminControllerCore extends AdminController
 
         $tab = new Tab($this->id);
         if (!$tab->module) {
-            throw new PrestaShopException('Admin tab '.get_class($this).' is not a module tab');
+            throw new PrestaShopException('Admin tab ' . get_class($this) . ' is not a module tab');
         }
 
         $this->module = Module::getInstanceByName($tab->module);
@@ -61,10 +61,10 @@ abstract class ModuleAdminControllerCore extends AdminController
      */
     public function createTemplate($tpl_name)
     {
-        if (file_exists(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/admin/'.$tpl_name) && $this->viewAccess()) {
-            return $this->context->smarty->createTemplate(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/admin/'.$tpl_name, $this->context->smarty);
-        } elseif (file_exists($this->getTemplatePath().$this->override_folder.$tpl_name) && $this->viewAccess()) {
-            return $this->context->smarty->createTemplate($this->getTemplatePath().$this->override_folder.$tpl_name, $this->context->smarty);
+        if (file_exists(_PS_THEME_DIR_ . 'modules/' . $this->module->name . '/views/templates/admin/' . $tpl_name) && $this->viewAccess()) {
+            return $this->context->smarty->createTemplate(_PS_THEME_DIR_ . 'modules/' . $this->module->name . '/views/templates/admin/' . $tpl_name, $this->context->smarty);
+        } elseif (file_exists($this->getTemplatePath() . $this->override_folder . $tpl_name) && $this->viewAccess()) {
+            return $this->context->smarty->createTemplate($this->getTemplatePath() . $this->override_folder . $tpl_name, $this->context->smarty);
         }
 
         return parent::createTemplate($tpl_name);
@@ -77,6 +77,6 @@ abstract class ModuleAdminControllerCore extends AdminController
      */
     public function getTemplatePath()
     {
-        return _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/';
+        return _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/';
     }
 }

@@ -62,9 +62,9 @@ class LastConnectionInformation
     private $ipAddress;
 
     /**
-     * @param int    $connectionId
+     * @param int $connectionId
      * @param string $connectionDate
-     * @param int    $pagesViewed
+     * @param int $pagesViewed
      * @param string $totalTime
      * @param string $httpReferer
      * @param string $ipAddress

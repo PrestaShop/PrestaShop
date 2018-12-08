@@ -52,7 +52,7 @@ trait TranslatorAwareTrait
      * Shortcut method to translate text.
      *
      * @param string $id
-     * @param array  $options
+     * @param array $options
      * @param string $domain
      *
      * @return string

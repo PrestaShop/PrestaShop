@@ -54,8 +54,8 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
 
     /**
      * @param GridDataFactoryInterface $customerDoctrineGridDataFactory
-     * @param Repository               $cldrRepository
-     * @param string                   $contextCurrencyIsoCode
+     * @param Repository $cldrRepository
+     * @param string $contextCurrencyIsoCode
      */
     public function __construct(
         GridDataFactoryInterface $customerDoctrineGridDataFactory,

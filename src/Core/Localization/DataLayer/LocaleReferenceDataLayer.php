@@ -77,10 +77,10 @@ class LocaleReferenceDataLayer extends AbstractDataLayer implements LocaleDataLa
     /**
      * CLDR files are read only. Nothing can be written there.
      *
-     * @param string     $localeCode
-     *                               The LocaleData object identifier
+     * @param string $localeCode
+     *                           The LocaleData object identifier
      * @param LocaleData $data
-     *                               The LocaleData object to be written
+     *                         The LocaleData object to be written
      */
     protected function doWrite($localeCode, $data)
     {

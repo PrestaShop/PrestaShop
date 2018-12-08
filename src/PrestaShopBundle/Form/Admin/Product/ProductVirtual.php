@@ -83,7 +83,7 @@ class ProductVirtual extends CommonAbstractType
                     'required' => false,
                     'label' => $this->translator->trans('File', [], 'Admin.Global'),
                     'constraints' => [
-                        new Assert\File(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M']),
+                        new Assert\File(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M']),
                     ],
                 ]
             )

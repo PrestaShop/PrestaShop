@@ -43,7 +43,7 @@ final class RenderedHook implements RenderedHookInterface
 
     /**
      * @param HookInterface $hook
-     * @param array         $content
+     * @param array $content
      */
     public function __construct(HookInterface $hook, array $content = [])
     {

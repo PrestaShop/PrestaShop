@@ -50,7 +50,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
 
     /**
      * @param Connection $connection
-     * @param string     $dbPrefix
+     * @param string $dbPrefix
      */
     public function __construct(
         Connection $connection,
@@ -67,14 +67,14 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->from($this->dbPrefix.$positionDefinition->getTable(), 't')
-            ->select('t.'.$positionDefinition->getIdField().', t.'.$positionDefinition->getPositionField())
-            ->addOrderBy('t.'.$positionDefinition->getPositionField(), 'ASC')
+            ->from($this->dbPrefix . $positionDefinition->getTable(), 't')
+            ->select('t.' . $positionDefinition->getIdField() . ', t.' . $positionDefinition->getPositionField())
+            ->addOrderBy('t.' . $positionDefinition->getPositionField(), 'ASC')
         ;
 
         if (null !== $parentId && null !== $positionDefinition->getParentIdField()) {
             $qb
-                ->andWhere('t.'.$positionDefinition->getParentIdField().' = :parentId')
+                ->andWhere('t.' . $positionDefinition->getParentIdField() . ' = :parentId')
                 ->setParameter('parentId', $parentId)
             ;
         }
@@ -100,9 +100,9 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
             foreach ($newPositions as $rowId => $newPosition) {
                 $qb = $this->connection->createQueryBuilder();
                 $qb
-                    ->update($this->dbPrefix.$positionDefinition->getTable())
+                    ->update($this->dbPrefix . $positionDefinition->getTable())
                     ->set($positionDefinition->getPositionField(), ':position')
-                    ->andWhere($positionDefinition->getIdField().' = :rowId')
+                    ->andWhere($positionDefinition->getIdField() . ' = :rowId')
                     ->setParameter('rowId', $rowId)
                     ->setParameter('position', $positionIndex)
                 ;

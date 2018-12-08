@@ -40,8 +40,8 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
      * @param string $sqlString
      *
      * @throws \PrestaShopDatabaseException
-     * @return array|false
      *
+     * @return array|false
      */
     public function select($sqlString)
     {
@@ -64,8 +64,8 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
      * Returns a value from the first row, first column of a SELECT query.
      *
      * @param DbQuery|string $sql
-     * @param bool           $useMaster
-     * @param bool           $useCache
+     * @param bool $useMaster
+     * @param bool $useCache
      *
      * @return null|false|string
      */

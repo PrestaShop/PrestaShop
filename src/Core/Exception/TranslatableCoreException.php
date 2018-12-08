@@ -47,10 +47,10 @@ class TranslatableCoreException extends CoreException
     private $parameters = [];
 
     /**
-     * @param string                   $key
-     * @param string                   $domain
-     * @param array                    $parameters
-     * @param int                      $code
+     * @param string $key
+     * @param string $domain
+     * @param array $parameters
+     * @param int $code
      * @param null|Exception|Throwable $previous
      */
     public function __construct(

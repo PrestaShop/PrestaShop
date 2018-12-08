@@ -35,7 +35,7 @@ use Twig\Loader\FilesystemLoader;
 class ModuleTemplateLoader extends FilesystemLoader
 {
     /**
-     * @param array $namespaces  a collection of path namespaces with namespace names
+     * @param array $namespaces a collection of path namespaces with namespace names
      * @param array $modulePaths A path or an array of paths where to look for module templates
      */
     public function __construct(array $namespaces, array $modulePaths = array())
@@ -57,7 +57,7 @@ class ModuleTemplateLoader extends FilesystemLoader
             $templatePaths = array();
 
             foreach ($modulePaths as $path) {
-                if (is_dir($dir = $path.'/views/PrestaShop/'.$namespacePath)) {
+                if (is_dir($dir = $path . '/views/PrestaShop/' . $namespacePath)) {
                     $templatePaths[] = $dir;
                 }
             }

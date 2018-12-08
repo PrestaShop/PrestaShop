@@ -365,7 +365,7 @@ class HelperTreeCategoriesCore extends TreeCore
         if ($this->useSearch()) {
             $this->addAction(new TreeToolbarSearchCategories(
                 'Find a category:',
-                $this->getId().'-categories-search'
+                $this->getId() . '-categories-search'
             ));
             $this->setAttribute('use_search', $this->useSearch());
         }
@@ -373,17 +373,17 @@ class HelperTreeCategoriesCore extends TreeCore
         $collapse_all = new TreeToolbarLink(
             'Collapse All',
             '#',
-            '$(\'#'.$this->getId().'\').tree(\'collapseAll\');$(\'#collapse-all-'.$this->getId().'\').hide();$(\'#expand-all-'.$this->getId().'\').show(); return false;',
+            '$(\'#' . $this->getId() . '\').tree(\'collapseAll\');$(\'#collapse-all-' . $this->getId() . '\').hide();$(\'#expand-all-' . $this->getId() . '\').show(); return false;',
             'icon-collapse-alt'
         );
-        $collapse_all->setAttribute('id', 'collapse-all-'.$this->getId());
+        $collapse_all->setAttribute('id', 'collapse-all-' . $this->getId());
         $expand_all = new TreeToolbarLink(
             'Expand All',
             '#',
-            '$(\'#'.$this->getId().'\').tree(\'expandAll\');$(\'#collapse-all-'.$this->getId().'\').show();$(\'#expand-all-'.$this->getId().'\').hide(); return false;',
+            '$(\'#' . $this->getId() . '\').tree(\'expandAll\');$(\'#collapse-all-' . $this->getId() . '\').show();$(\'#expand-all-' . $this->getId() . '\').hide(); return false;',
             'icon-expand-alt'
         );
-        $expand_all->setAttribute('id', 'expand-all-'.$this->getId());
+        $expand_all->setAttribute('id', 'expand-all-' . $this->getId());
         $this->addAction($collapse_all);
         $this->addAction($expand_all);
 
@@ -391,17 +391,17 @@ class HelperTreeCategoriesCore extends TreeCore
             $check_all = new TreeToolbarLink(
                 'Check All',
                 '#',
-                'checkAllAssociatedCategories($(\'#'.$this->getId().'\')); return false;',
+                'checkAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
                 'icon-check-sign'
             );
-            $check_all->setAttribute('id', 'check-all-'.$this->getId());
+            $check_all->setAttribute('id', 'check-all-' . $this->getId());
             $uncheck_all = new TreeToolbarLink(
                 'Uncheck All',
                 '#',
-                'uncheckAllAssociatedCategories($(\'#'.$this->getId().'\')); return false;',
+                'uncheckAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
                 'icon-check-empty'
             );
-            $uncheck_all->setAttribute('id', 'uncheck-all-'.$this->getId());
+            $uncheck_all->setAttribute('id', 'uncheck-all-' . $this->getId());
             $this->addAction($check_all);
             $this->addAction($uncheck_all);
             $this->setNodeFolderTemplate('tree_node_folder_checkbox.tpl');

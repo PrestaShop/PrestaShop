@@ -56,7 +56,7 @@ class RecommendedModules
     /**
      * Gets all recommended modules for a specific domain.
      *
-     * @param string     $domain    The given domain to filter recommended modules
+     * @param string $domain The given domain to filter recommended modules
      * @param bool|false $randomize To shuffle results
      *
      * @return array A list of modules names (identifiers)

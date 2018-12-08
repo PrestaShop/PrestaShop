@@ -40,10 +40,10 @@ class StockMovementRepository extends StockManagementRepository
      * StockMovementRepository constructor.
      *
      * @param ContainerInterface $container
-     * @param Connection         $connection
-     * @param EntityManager      $entityManager
-     * @param ContextAdapter     $contextAdapter
-     * @param ImageManager       $imageManager
+     * @param Connection $connection
+     * @param EntityManager $entityManager
+     * @param ContextAdapter $contextAdapter
+     * @param ImageManager $imageManager
      * @param $tablePrefix
      */
     public function __construct(
@@ -67,7 +67,7 @@ class StockMovementRepository extends StockManagementRepository
     /**
      * @param string $andWhereClause
      * @param string $having
-     * @param null   $orderByClause
+     * @param null $orderByClause
      *
      * @return mixed
      */
@@ -261,7 +261,7 @@ class StockMovementRepository extends StockManagementRepository
         $query = str_replace(
             '{table_prefix}',
             $this->tablePrefix,
-            'SELECT '.$select.'
+            'SELECT ' . $select . '
             FROM {table_prefix}stock_mvt sm
             INNER JOIN {table_prefix}stock_available sa ON (sa.id_stock_available = sm.id_stock)
             INNER JOIN {table_prefix}stock_mvt_reason_lang smrl ON (
@@ -269,7 +269,7 @@ class StockMovementRepository extends StockManagementRepository
               AND smrl.id_lang = :language_id)
             WHERE
             sa.id_shop = :shop_id
-            '.$groupBy.'
+            ' . $groupBy . '
             ORDER BY name ASC'
         );
 

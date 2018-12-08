@@ -68,7 +68,7 @@ class StylesheetGenerator
     private $rtlSuffix;
 
     /**
-     * @param string $fileType  [default='css'] File type (CSS or SCSS)
+     * @param string $fileType [default='css'] File type (CSS or SCSS)
      * @param string $rtlSuffix [default='_rtl'] Suffix to add to transformed RTL files
      */
     public function __construct($fileType = self::DEFAULT_FILE_TYPE, $rtlSuffix = self::DEFAULT_RTL_SUFFIX)
@@ -80,8 +80,8 @@ class StylesheetGenerator
     /**
      * Creates an RTL version of all the files in the selected path recursively.
      *
-     * @param string $directory  Path to process. All CSS files in this directory will be processed.
-     * @param bool   $regenerate [default=false] Indicates if RTL files should be re-generated even if they exist
+     * @param string $directory Path to process. All CSS files in this directory will be processed.
+     * @param bool $regenerate [default=false] Indicates if RTL files should be re-generated even if they exist
      *
      * @throws GenerationException
      */
@@ -90,8 +90,8 @@ class StylesheetGenerator
         $allFiles = $this->getFilesInDirectory($directory);
 
         foreach ($allFiles as $file) {
-            if ($this->shouldProcessFile($directory.'/'.$file, $regenerate)) {
-                $this->processFile($directory.'/'.$file);
+            if ($this->shouldProcessFile($directory . '/' . $file, $regenerate)) {
+                $this->processFile($directory . '/' . $file);
             }
         }
     }
@@ -99,8 +99,8 @@ class StylesheetGenerator
     /**
      * Indicates if a file should be processed or not.
      *
-     * @param string $file       File path
-     * @param bool   $regenerate Indicates if RTL files should be re-generated even if they exist
+     * @param string $file File path
+     * @param bool $regenerate Indicates if RTL files should be re-generated even if they exist
      *
      * @return bool
      */
@@ -109,7 +109,7 @@ class StylesheetGenerator
         return
             false === strpos($file, '/node_modules/')
             // does not end with .rtlfix
-            && substr(rtrim($file, '.'.$this->fileType), -4) !== $this->rtlSuffix
+            && substr(rtrim($file, '.' . $this->fileType), -4) !== $this->rtlSuffix
             // RTL file does not exist or we are regenerating them
             && ($regenerate || !file_exists($this->getRtlFileName($file)))
         ;
@@ -174,7 +174,7 @@ class StylesheetGenerator
     {
         $path = pathinfo($filePath);
 
-        return $path['dirname'].'/'.$path['filename'];
+        return $path['dirname'] . '/' . $path['filename'];
     }
 
     /**
@@ -186,24 +186,24 @@ class StylesheetGenerator
      */
     private function getRtlFileName($baseFileName)
     {
-        return $this->getFilePathWithoutExtension($baseFileName).$this->rtlSuffix.'.'.$this->fileType;
+        return $this->getFilePathWithoutExtension($baseFileName) . $this->rtlSuffix . '.' . $this->fileType;
     }
 
     /**
      * Appends the content of an .rtlfix file to $content.
      *
-     * @param string $content  Base content
+     * @param string $content Base content
      * @param string $baseFile Path to the processed file
      *
      * @throws GenerationException If unable to read from .rtlfix file
-     * @return string Content with RTL fix applied
      *
+     * @return string Content with RTL fix applied
      */
     private function appendRtlFixIfNecessary($content, $baseFile)
     {
         $filePath = $this->getFilePathWithoutExtension($baseFile);
 
-        $rtlFixFilePath = $filePath.'.'.self::RTLFIX_EXTENSION;
+        $rtlFixFilePath = $filePath . '.' . self::RTLFIX_EXTENSION;
 
         if (file_exists($rtlFixFilePath)) {
             $rtlFixContent = file_get_contents($rtlFixFilePath);
@@ -217,7 +217,7 @@ class StylesheetGenerator
                 );
             }
 
-            return $content.PHP_EOL.$rtlFixContent;
+            return $content . PHP_EOL . $rtlFixContent;
         }
 
         return $content;
@@ -226,7 +226,7 @@ class StylesheetGenerator
     /**
      * Saves $content the appropriate file based on the name of the original file.
      *
-     * @param string $content  Content to save
+     * @param string $content Content to save
      * @param string $baseFile Name of the original file
      *
      * @throws GenerationException If unable to write to file

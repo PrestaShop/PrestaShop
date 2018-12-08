@@ -185,8 +185,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Delete a specific price.
      *
-     * @param int     $idSpecificPrice The specific price ID
-     * @param Request $request         The request
+     * @param int $idSpecificPrice The specific price ID
+     * @param Request $request The request
      *
      * @return string
      */
@@ -207,7 +207,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param int            $id
+     * @param int $id
      * @param \SpecificPrice $price
      *
      * @return array
@@ -254,8 +254,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
      * @param string $dateAsString
      *
      * @throws \PrestaShopDatabaseExceptionCore if date is not valid
-     * @return null|string If date is 0000-00-00 00:00:00, null is returned
      *
+     * @return null|string If date is 0000-00-00 00:00:00, null is returned
      */
     private static function formatForDatePicker($dateAsString)
     {

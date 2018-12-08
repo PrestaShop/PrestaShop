@@ -155,19 +155,19 @@ class ModuleManagerBuilder
             return;
         }
 
-        $phpConfigFile = $this->getConfigDir().'/config.php';
+        $phpConfigFile = $this->getConfigDir() . '/config.php';
         if (file_exists($phpConfigFile)
-            && filemtime($phpConfigFile) >= filemtime($this->getConfigDir().DIRECTORY_SEPARATOR.'config.yml')) {
+            && filemtime($phpConfigFile) >= filemtime($this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml')) {
             $config = require $phpConfigFile;
         } else {
             $config = Yaml::parse(
                 file_get_contents(
-                    $this->getConfigDir().DIRECTORY_SEPARATOR.'config.yml'
+                    $this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml'
                 )
             );
             try {
                 $filesystem = new Filesystem();
-                $filesystem->dumpFile($phpConfigFile, '<?php return '.var_export($config, true).';'."\n");
+                $filesystem->dumpFile($phpConfigFile, '<?php return ' . var_export($config, true) . ';' . "\n");
             } catch (IOException $e) {
                 return false;
             }
@@ -175,7 +175,7 @@ class ModuleManagerBuilder
 
         $prestashopAddonsConfig = Yaml::parse(
             file_get_contents(
-                $this->getConfigDir().DIRECTORY_SEPARATOR.'addons/categories.yml'
+                $this->getConfigDir() . DIRECTORY_SEPARATOR . 'addons/categories.yml'
             )
         );
         $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
@@ -192,8 +192,8 @@ class ModuleManagerBuilder
         );
 
         $marketPlaceClient->setSslVerification(_PS_CACHE_CA_CERT_FILE_);
-        if (file_exists($this->getConfigDir().'/parameters.php')) {
-            $parameters = require $this->getConfigDir().'/parameters.php';
+        if (file_exists($this->getConfigDir() . '/parameters.php')) {
+            $parameters = require $this->getConfigDir() . '/parameters.php';
             if (array_key_exists('addons.api_client.verify_ssl', $parameters['parameters'])) {
                 $marketPlaceClient->setSslVerification($parameters['parameters']['addons.api_client.verify_ssl']);
             }
@@ -202,13 +202,13 @@ class ModuleManagerBuilder
         self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator, new NullDispatcher());
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
-        $kernelDir = realpath($this->getConfigDir().'/../../var');
-        self::$addonsDataProvider->cacheDir = $kernelDir.'/cache/prod';
+        $kernelDir = realpath($this->getConfigDir() . '/../../var');
+        self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/prod';
         if (_PS_MODE_DEV_) {
-            self::$addonsDataProvider->cacheDir = $kernelDir.'/cache/dev';
+            self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/dev';
         }
 
-        self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir.'/doctrine');
+        self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir . '/doctrine');
 
         $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
         $themeName = Context::getContext()->shop->theme_name;
@@ -261,7 +261,7 @@ class ModuleManagerBuilder
 
     protected function getConfigDir()
     {
-        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config';
+        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config';
     }
 
     /**

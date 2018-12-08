@@ -95,10 +95,10 @@ class UploaderCore
 
         $pathInfo = pathinfo($fileName);
         if (isset($pathInfo['extension'])) {
-            $fileName = $pathInfo['filename'].'.'.Tools::strtolower($pathInfo['extension']);
+            $fileName = $pathInfo['filename'] . '.' . Tools::strtolower($pathInfo['extension']);
         }
 
-        return $this->getSavePath().$fileName;
+        return $this->getSavePath() . $fileName;
     }
 
     /**
@@ -371,7 +371,7 @@ class UploaderCore
 
     /**
      * @param string $filePath
-     * @param bool   $clearStatCache
+     * @param bool $clearStatCache
      *
      * @return int
      *
@@ -384,7 +384,7 @@ class UploaderCore
 
     /**
      * @param string $filePath
-     * @param bool   $clearStatCache
+     * @param bool $clearStatCache
      *
      * @return int
      *

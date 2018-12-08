@@ -48,8 +48,8 @@ class FormHandlerResult implements FormHandlerResultInterface
 
     /**
      * @param null|int $identifiableObjectId ID of identifiable object or null if it does not exist
-     * @param bool     $isSubmitted
-     * @param bool     $isValid
+     * @param bool $isSubmitted
+     * @param bool $isValid
      */
     private function __construct($identifiableObjectId, $isSubmitted, $isValid)
     {

@@ -75,7 +75,7 @@ class LanguageController extends AbstractAdminController
     /**
      * Show language edit form page and handle its submit.
      *
-     * @param int     $languageId
+     * @param int $languageId
      * @param Request $request
      *
      * @return Response

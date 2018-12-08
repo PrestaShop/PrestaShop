@@ -124,14 +124,14 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * Parameters can be set manually into twig template or sent from controller
      * For details : check Resources/views/Admin/Layout.html.twig
      *
-     * @param string       $controllerName    The legacy controller name
-     * @param string       $title             The page title to override default one
-     * @param array        $headerToolbarBtn  The header toolbar to override
-     * @param string       $displayType       The legacy display type variable
-     * @param bool         $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value
-     * @param array|string $headerTabContent  Tabs labels
-     * @param bool         $enableSidebar     Allow to use right sidebar to display docs for instance
-     * @param string       $helpLink          If specified, will be used instead of legacy one
+     * @param string $controllerName The legacy controller name
+     * @param string $title The page title to override default one
+     * @param array $headerToolbarBtn The header toolbar to override
+     * @param string $displayType The legacy display type variable
+     * @param bool $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value
+     * @param array|string $headerTabContent Tabs labels
+     * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
+     * @param string $helpLink If specified, will be used instead of legacy one
      *
      * @throws Exception if legacy layout has no $content var replacement
      *
@@ -194,7 +194,7 @@ EOF;
                  {% block content %}{% endblock %}
                  {% block content_footer %}{% endblock %}
                  {% block sidebar_right %}{% endblock %}',
-                'var currentIndex = \''.$this->context->getAdminLink($controllerName).'\';',
+                'var currentIndex = \'' . $this->context->getAdminLink($controllerName) . '\';',
                 '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>',
                 '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>',
             ),
@@ -207,8 +207,8 @@ EOF;
     /**
      * This is a Twig port of the Smarty {$link->getAdminLink()} function.
      *
-     * @param string        $controller  the controller name
-     * @param bool          $withToken
+     * @param string $controller the controller name
+     * @param bool $withToken
      * @param array[string] $extraParams
      * @param mixed $controllerName
      *
@@ -221,13 +221,14 @@ EOF;
 
     /**
      * KISS function to get an embeded iframe from Youtube.
+     *
      * @param mixed $watchUrl
      */
     public function getYoutubeLink($watchUrl)
     {
         $embedUrl = str_replace(array('watch?v=', 'youtu.be/'), array('embed/', 'youtube.com/embed/'), $watchUrl);
 
-        return '<iframe width="560" height="315" src="'.$embedUrl.
+        return '<iframe width="560" height="315" src="' . $embedUrl .
             '" frameborder="0" allowfullscreen class="youtube-iframe m-x-auto"></iframe>';
     }
 

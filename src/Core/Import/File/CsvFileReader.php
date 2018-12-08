@@ -57,7 +57,7 @@ final class CsvFileReader implements FileReaderInterface
 
     /**
      * @param string $delimiter
-     * @param int    $length
+     * @param int $length
      * @param string $enclosure
      * @param string $escape
      */

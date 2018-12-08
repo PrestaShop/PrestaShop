@@ -45,7 +45,7 @@ class DefaultGroup
 
     /**
      * @param GroupId $groupId
-     * @param string  $name
+     * @param string $name
      */
     public function __construct(GroupId $groupId, $name)
     {

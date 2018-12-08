@@ -204,7 +204,7 @@ class FrontControllerCore extends Controller
             new ConfigurationAdapter()
         );
         $this->cccReducer = new CccReducer(
-            _PS_THEME_DIR_.'assets/cache/',
+            _PS_THEME_DIR_ . 'assets/cache/',
             new ConfigurationAdapter(),
             new Filesystem()
         );
@@ -307,7 +307,7 @@ class FrontControllerCore extends Controller
         }
 
         if ($this->auth && !$this->context->customer->isLogged($this->guestAllowed)) {
-            Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
+            Tools::redirect('index.php?controller=authentication' . ($this->authRedirection ? '&back=' . $this->authRedirection : ''));
         }
 
         /* Theme is missing */
@@ -525,8 +525,8 @@ class FrontControllerCore extends Controller
      *
      * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
      * @throws PrestaShopException
-     * @return array Variables to be inserted in the "prestashop" javascript object
      *
+     * @return array Variables to be inserted in the "prestashop" javascript object
      */
     protected function buildFrontEndObject($object)
     {
@@ -652,8 +652,8 @@ class FrontControllerCore extends Controller
      *
      * @throws Exception
      * @throws SmartyException
-     * @return bool
      *
+     * @return bool
      */
     public function display()
     {
@@ -767,9 +767,9 @@ class FrontControllerCore extends Controller
             header('HTTP/1.1 301 Moved Permanently');
             header('Cache-Control: no-cache');
             if ($this->ssl) {
-                header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
+                header('Location: ' . Tools::getShopDomainSsl(true) . $_SERVER['REQUEST_URI']);
             } else {
-                header('Location: '.Tools::getShopDomain(true).$_SERVER['REQUEST_URI']);
+                header('Location: ' . Tools::getShopDomain(true) . $_SERVER['REQUEST_URI']);
             }
             exit();
         }
@@ -788,8 +788,8 @@ class FrontControllerCore extends Controller
 
         $canonical_url = preg_replace('/#.*$/', '', $canonical_url);
 
-        $match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
-        if (!preg_match('/^'.Tools::pRegexp(rawurldecode($canonical_url), '/').'([&?].*)?$/', $match_url)) {
+        $match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        if (!preg_match('/^' . Tools::pRegexp(rawurldecode($canonical_url), '/') . '([&?].*)?$/', $match_url)) {
             $params = array();
             $url_details = parse_url($canonical_url);
 
@@ -809,7 +809,7 @@ class FrontControllerCore extends Controller
 
             $str_params = http_build_query($params, '', '&');
             if (!empty($str_params)) {
-                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url).'?'.$str_params;
+                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url) . '?' . $str_params;
             } else {
                 $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url);
             }
@@ -817,11 +817,11 @@ class FrontControllerCore extends Controller
             // Don't send any cookie
             Context::getContext()->cookie->disallowWriting();
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && __PS_BASE_URI__ != $_SERVER['REQUEST_URI']) {
-                die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$final_url.'">'.$final_url.'</a>');
+                die('[Debug] This page has moved<br />Please use the following URL instead: <a href="' . $final_url . '">' . $final_url . '</a>');
             }
 
             $redirect_type = 2 == Configuration::get('PS_CANONICAL_REDIRECT') ? '301' : '302';
-            header('HTTP/1.0 '.$redirect_type.' Moved');
+            header('HTTP/1.0 ' . $redirect_type . ' Moved');
             header('Cache-Control: no-cache');
             Tools::redirectLink($final_url);
         }
@@ -838,9 +838,9 @@ class FrontControllerCore extends Controller
     {
         if (!in_array(Tools::getRemoteAddr(), array('localhost', '127.0.0.1', '::1'))) {
             /* Check if Maxmind Database exists */
-            if (@filemtime(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_)) {
+            if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
-                    $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_);
+                    $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
                     try {
                         $record = $reader->city(Tools::getRemoteAddr());
                     } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
@@ -943,8 +943,8 @@ class FrontControllerCore extends Controller
      * Sets and returns customer groups that the current customer(visitor) belongs to.
      *
      * @throws PrestaShopDatabaseException
-     * @return array
      *
+     * @return array
      */
     public static function getCurrentCustomerGroups()
     {
@@ -959,7 +959,7 @@ class FrontControllerCore extends Controller
 
         if (!is_array(self::$currentCustomerGroups)) {
             self::$currentCustomerGroups = array();
-            $result = Db::getInstance()->executeS('SELECT id_group FROM '._DB_PREFIX_.'customer_group WHERE id_customer = '.(int) $context->customer->id);
+            $result = Db::getInstance()->executeS('SELECT id_group FROM ' . _DB_PREFIX_ . 'customer_group WHERE id_customer = ' . (int) $context->customer->id);
             foreach ($result as $row) {
                 self::$currentCustomerGroups[] = $row['id_group'];
             }
@@ -998,7 +998,7 @@ class FrontControllerCore extends Controller
         $ips = array_map('trim', $ips);
         if (is_array($ips) && count($ips)) {
             foreach ($ips as $ip) {
-                if (!empty($ip) && preg_match('/^'.$ip.'.*/', $user_ip)) {
+                if (!empty($ip) && preg_match('/^' . $ip . '.*/', $user_ip)) {
                     $allowed = true;
                 }
             }
@@ -1025,6 +1025,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 use $this->registerJavascript() and $this->registerStylesheet() to manage your assets.
+     *
      * @param mixed $media_uri
      * @param null|mixed $css_media_type
      * @param null|mixed $offset
@@ -1041,6 +1042,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 this method has not effect with PrestaShop 1.7+
+     *
      * @param mixed $media_uri
      * @param null|mixed $css_media_type
      * @param mixed $check_path
@@ -1102,6 +1104,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function shouldn't be used, use $this->registerStylesheet() instead
+     *
      * @param mixed $css_uri
      * @param mixed $css_media_type
      * @param null|mixed $offset
@@ -1127,6 +1130,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterStylesheet() instead
+     *
      * @param mixed $css_uri
      * @param mixed $css_media_type
      * @param mixed $check_path
@@ -1151,6 +1155,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() instead
+     *
      * @param mixed $js_uri
      * @param mixed $check_path
      */
@@ -1174,6 +1179,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterJavascript() instead
+     *
      * @param mixed $js_uri
      * @param mixed $check_path
      */
@@ -1198,6 +1204,7 @@ class FrontControllerCore extends Controller
     /**
      * @deprecated 1.7  This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core on every theme.
      *                  Have a look at the /themes/_core folder.
+     *
      * @param null|mixed $version
      * @param null|mixed $folder
      * @param mixed $minifier
@@ -1214,13 +1221,13 @@ class FrontControllerCore extends Controller
      * Adds jQuery UI component(s) to queued JS file list.
      *
      * @param array|string $component
-     * @param string       $theme
-     * @param bool         $check_dependencies
+     * @param string $theme
+     * @param bool $check_dependencies
      */
     public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
     {
-        $css_theme_path = '/js/jquery/ui/themes/'.$theme.'/minified/jquery.ui.theme.min.css';
-        $css_path = '/js/jquery/ui/themes/'.$theme.'/minified/jquery-ui.min.css';
+        $css_theme_path = '/js/jquery/ui/themes/' . $theme . '/minified/jquery.ui.theme.min.css';
+        $css_path = '/js/jquery/ui/themes/' . $theme . '/minified/jquery-ui.min.css';
         $js_path = '/js/jquery/ui/jquery-ui.min.js';
 
         $this->registerStylesheet('jquery-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
@@ -1246,8 +1253,8 @@ class FrontControllerCore extends Controller
      * Adds jQuery plugin(s) to queued JS file list.
      *
      * @param array|string $name
-     * @param string null  $folder
-     * @param bool         $css
+     * @param string null $folder
+     * @param bool $css
      */
     public function addJqueryPlugin($name, $folder = null, $css = true)
     {
@@ -1260,14 +1267,14 @@ class FrontControllerCore extends Controller
 
             if (!empty($plugin_path['js'])) {
                 $this->registerJavascript(
-                    str_replace(_PS_JS_DIR_.'jquery/plugins/', '', $plugin_path['js']),
+                    str_replace(_PS_JS_DIR_ . 'jquery/plugins/', '', $plugin_path['js']),
                     str_replace(_PS_JS_DIR_, 'js/', $plugin_path['js']),
                     array('position' => 'bottom', 'priority' => 100)
                 );
             }
             if ($css && !empty($plugin_path['css'])) {
                 $this->registerStylesheet(
-                    str_replace(_PS_JS_DIR_.'jquery/plugins/', '', key($plugin_path['css'])),
+                    str_replace(_PS_JS_DIR_ . 'jquery/plugins/', '', key($plugin_path['css'])),
                     str_replace(_PS_JS_DIR_, 'js/', key($plugin_path['css'])),
                     array('media' => 'all', 'priority' => 100)
                 );
@@ -1282,7 +1289,7 @@ class FrontControllerCore extends Controller
      */
     protected function recoverCart()
     {
-        if (($id_cart = (int) Tools::getValue('recover_cart')) && Tools::getValue('token_cart') == md5(_COOKIE_KEY_.'recover_cart_'.$id_cart)) {
+        if (($id_cart = (int) Tools::getValue('recover_cart')) && Tools::getValue('token_cart') == md5(_COOKIE_KEY_ . 'recover_cart_' . $id_cart)) {
             $cart = new Cart((int) $id_cart);
             if (Validate::isLoadedObject($cart)) {
                 $customer = new Customer((int) $cart->id_customer);
@@ -1437,13 +1444,13 @@ class FrontControllerCore extends Controller
      */
     public function addColorsToProductList(&$products)
     {
-        if (!is_array($products) || !count($products) || !file_exists(_PS_THEME_DIR_.'product-list-colors.tpl')) {
+        if (!is_array($products) || !count($products) || !file_exists(_PS_THEME_DIR_ . 'product-list-colors.tpl')) {
             return;
         }
 
         $products_need_cache = array();
         foreach ($products as &$product) {
-            if (!$this->isCached(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']))) {
+            if (!$this->isCached(_PS_THEME_DIR_ . 'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']))) {
                 $products_need_cache[] = (int) $product['id_product'];
             }
         }
@@ -1457,7 +1464,7 @@ class FrontControllerCore extends Controller
 
         Tools::enableCache();
         foreach ($products as &$product) {
-            $tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
+            $tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_ . 'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
             $tpl->assign(array(
                 'id_product' => $product['id_product'],
                 'colors_list' => isset($colors[$product['id_product']]) ? $colors[$product['id_product']] : null,
@@ -1465,7 +1472,7 @@ class FrontControllerCore extends Controller
                 'img_col_dir' => _THEME_COL_DIR_,
                 'col_img_dir' => _PS_COL_IMG_DIR_,
             ));
-            $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
+            $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_ . 'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
         }
         Tools::restoreCacheSettings();
     }
@@ -1489,7 +1496,7 @@ class FrontControllerCore extends Controller
 
         $urls = array(
             'base_url' => $base_url,
-            'current_url' => $this->context->shop->getBaseURL(true, false).$_SERVER['REQUEST_URI'],
+            'current_url' => $this->context->shop->getBaseURL(true, false) . $_SERVER['REQUEST_URI'],
             'shop_domain_url' => $this->context->shop->getBaseURL(true, false),
         );
 
@@ -1511,7 +1518,7 @@ class FrontControllerCore extends Controller
 
         foreach ($assign_array as $assign_key => $assign_value) {
             if ('/' == substr($assign_value, 0, 1) || $this->ssl) {
-                $urls[$assign_key] = $http.Tools::getMediaServer($assign_value).$assign_value;
+                $urls[$assign_key] = $http . Tools::getMediaServer($assign_value) . $assign_value;
             } else {
                 $urls[$assign_key] = $assign_value;
             }
@@ -1535,7 +1542,7 @@ class FrontControllerCore extends Controller
 
         $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
 
-        $urls['theme_assets'] = __PS_BASE_URI__.'themes/'.$this->context->shop->theme->getName().'/assets/';
+        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->getName() . '/assets/';
 
         $urls['actions'] = array(
             'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
@@ -1597,7 +1604,7 @@ class FrontControllerCore extends Controller
         }
 
         unset($cust['secure_key'], $cust['passwd'], $cust['show_public_prices'], $cust['deleted'], $cust['id_lang']);
-        
+
         $cust['is_logged'] = $this->context->customer->isLogged(true);
 
         $cust['gender'] = $this->objectPresenter->present(new Gender($cust['id_gender']));
@@ -1627,9 +1634,9 @@ class FrontControllerCore extends Controller
             'long' => Configuration::get('PS_STORES_CENTER_LONG'),
             'lat' => Configuration::get('PS_STORES_CENTER_LAT'),
 
-            'logo' => (Configuration::get('PS_LOGO')) ? _PS_IMG_.Configuration::get('PS_LOGO') : '',
-            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? _PS_IMG_.Configuration::get('PS_STORES_ICON') : '',
-            'favicon' => (Configuration::get('PS_FAVICON')) ? _PS_IMG_.Configuration::get('PS_FAVICON') : '',
+            'logo' => (Configuration::get('PS_LOGO')) ? _PS_IMG_ . Configuration::get('PS_LOGO') : '',
+            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? _PS_IMG_ . Configuration::get('PS_STORES_ICON') : '',
+            'favicon' => (Configuration::get('PS_FAVICON')) ? _PS_IMG_ . Configuration::get('PS_FAVICON') : '',
             'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 
             'address' => array(
@@ -1666,13 +1673,13 @@ class FrontControllerCore extends Controller
         );
 
         $body_classes = array(
-            'lang-'.$this->context->language->iso_code => true,
+            'lang-' . $this->context->language->iso_code => true,
             'lang-rtl' => (bool) $this->context->language->is_rtl,
-            'country-'.$this->context->country->iso_code => true,
-            'currency-'.$this->context->currency->iso_code => true,
+            'country-' . $this->context->country->iso_code => true,
+            'currency-' . $this->context->currency->iso_code => true,
             $this->context->shop->theme->getLayoutNameForPage($this->php_self) => true,
-            'page-'.$this->php_self => true,
-            'tax-display-'.($this->getDisplayTaxesLabel() ? 'enabled' : 'disabled') => true,
+            'page-' . $this->php_self => true,
+            'tax-display-' . ($this->getDisplayTaxesLabel() ? 'enabled' : 'disabled') => true,
         );
 
         if (in_array($this->php_self, $my_account_controllers)) {
@@ -1751,7 +1758,7 @@ class FrontControllerCore extends Controller
     protected function updateQueryString(array $extraParams = null)
     {
         $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
-        $url = Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$uriWithoutParams;
+        $url = Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $uriWithoutParams;
         $params = array();
         $paramsFromUri = '';
         if (false !== strpos($_SERVER['REQUEST_URI'], '?')) {
@@ -1781,12 +1788,12 @@ class FrontControllerCore extends Controller
 
         $queryString = str_replace('%2F', '/', http_build_query($params, '', '&'));
 
-        return $url.($queryString ? "?$queryString" : '');
+        return $url . ($queryString ? "?$queryString" : '');
     }
 
     protected function getCurrentURL()
     {
-        return Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        return Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
 
     public function getPageName()
@@ -1803,12 +1810,12 @@ class FrontControllerCore extends Controller
             $page_name = $this->php_self;
         } elseif ('module' == Tools::getValue('fc') && '' != $module_name && (Module::getInstanceByName($module_name) instanceof PaymentModule)) {
             $page_name = 'module-payment-submit';
-        } elseif (preg_match('#^'.preg_quote($this->context->shop->physical_uri, '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m)) {
+        } elseif (preg_match('#^' . preg_quote($this->context->shop->physical_uri, '#') . 'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m)) {
             // @retrocompatibility Are we in a module ?
-            $page_name = 'module-'.$m[1].'-'.str_replace(array('.php', '/'), array('', '-'), $m[2]);
+            $page_name = 'module-' . $m[1] . '-' . str_replace(array('.php', '/'), array('', '-'), $m[2]);
         } else {
             $page_name = Dispatcher::getInstance()->getController();
-            $page_name = (preg_match('/^[0-9]/', $page_name) ? 'page_'.$page_name : $page_name);
+            $page_name = (preg_match('/^[0-9]/', $page_name) ? 'page_' . $page_name : $page_name);
         }
 
         return $page_name;

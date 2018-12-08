@@ -56,9 +56,9 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
 
         foreach ($this->getModulesPaths() as $modulePath) {
             if (in_array($modulePath->getFilename(), $installedModules)
-                && file_exists($modulePath.'/config/services.yml')
+                && file_exists($modulePath . '/config/services.yml')
             ) {
-                $loader = new YamlFileLoader($container, new FileLocator($modulePath.'/config/'));
+                $loader = new YamlFileLoader($container, new FileLocator($modulePath . '/config/'));
                 $loader->load('services.yml');
             }
         }
@@ -69,6 +69,6 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
      */
     private function getModulesPaths()
     {
-        return Finder::create()->directories()->in(__DIR__.'/../../../../modules')->depth(0);
+        return Finder::create()->directories()->in(__DIR__ . '/../../../../modules')->depth(0);
     }
 }

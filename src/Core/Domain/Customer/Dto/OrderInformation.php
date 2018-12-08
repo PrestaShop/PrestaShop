@@ -62,11 +62,11 @@ class OrderInformation
     private $totalPaid;
 
     /**
-     * @param int    $orderId
+     * @param int $orderId
      * @param string $orderPlacedDate
      * @param string $paymentMethodName
      * @param string $orderStatus
-     * @param int    $orderProductsCount
+     * @param int $orderProductsCount
      * @param string $totalPaid
      */
     public function __construct($orderId, $orderPlacedDate, $paymentMethodName, $orderStatus, $orderProductsCount, $totalPaid)

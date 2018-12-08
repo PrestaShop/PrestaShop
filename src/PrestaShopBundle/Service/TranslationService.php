@@ -55,8 +55,8 @@ class TranslationService
      * @param $locale
      *
      * @throws Exception
-     * @return mixed
      *
+     * @return mixed
      */
     public function findLanguageByLocale($locale)
     {
@@ -73,14 +73,14 @@ class TranslationService
 
     /**
      * @throws Exception
-     * @return mixed
      *
+     * @return mixed
      */
     private function getLangToLocalesMapping()
     {
         $translationsDirectory = $this->getResourcesDirectory();
 
-        $legacyToStandardLocalesJson = file_get_contents($translationsDirectory.'/legacy-to-standard-locales.json');
+        $legacyToStandardLocalesJson = file_get_contents($translationsDirectory . '/legacy-to-standard-locales.json');
         $legacyToStandardLocales = json_decode($legacyToStandardLocalesJson, true);
 
         $jsonLastErrorCode = json_last_error();
@@ -96,7 +96,7 @@ class TranslationService
      */
     private function getResourcesDirectory()
     {
-        return $this->container->getParameter('kernel.root_dir').'/Resources';
+        return $this->container->getParameter('kernel.root_dir') . '/Resources';
     }
 
     /**

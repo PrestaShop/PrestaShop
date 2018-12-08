@@ -54,10 +54,10 @@ trait AssetUrlGeneratorTrait
     protected function getPathFromUri($fullUri)
     {
         if ('' !== ($trimmedUri = rtrim($this->configuration->get('__PS_BASE_URI__'), '/'))) {
-            return $this->configuration->get('_PS_ROOT_DIR_').preg_replace('#\\'.$trimmedUri.'#', '', $fullUri, 1);
+            return $this->configuration->get('_PS_ROOT_DIR_') . preg_replace('#\\' . $trimmedUri . '#', '', $fullUri, 1);
         }
 
-        return $this->configuration->get('_PS_ROOT_DIR_').$fullUri;
+        return $this->configuration->get('_PS_ROOT_DIR_') . $fullUri;
     }
 
     /**

@@ -58,10 +58,10 @@ class PreferencesType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array               $locales
-     * @param bool                $isMultistoreUsed
-     * @param bool                $isSingleShopContext
-     * @param bool                $isAllShopContext
+     * @param array $locales
+     * @param bool $isMultistoreUsed
+     * @param bool $isSingleShopContext
+     * @param bool $isAllShopContext
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -167,6 +167,7 @@ class PreferencesType extends TranslatorAwareType
      * Enabled only if the form is accessed using HTTPS protocol.
      *
      * @var bool
+     *
      * @param mixed $isSecure
      */
     public function setIsSecure($isSecure)

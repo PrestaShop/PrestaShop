@@ -114,7 +114,7 @@ class FloatParser
         $decimal = array_pop($split);
 
         // reconstruct the number using dot as decimal separator
-        $value = implode('', $split).'.'.$decimal;
+        $value = implode('', $split) . '.' . $decimal;
 
         return (float) $value;
     }

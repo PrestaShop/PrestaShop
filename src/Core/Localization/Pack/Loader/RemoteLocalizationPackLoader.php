@@ -46,7 +46,7 @@ final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
 
     /**
      * @param ConfigurationInterface $configuration
-     * @param Version                $version
+     * @param Version $version
      */
     public function __construct(ConfigurationInterface $configuration, Version $version)
     {
@@ -61,7 +61,7 @@ final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
     {
         $apiUrl = $this->configuration->get('_PS_API_URL_');
 
-        $xmlLocalizationPacks = $this->loadXml($apiUrl.'/rss/localization.xml');
+        $xmlLocalizationPacks = $this->loadXml($apiUrl . '/rss/localization.xml');
         if (!$xmlLocalizationPacks) {
             return null;
         }

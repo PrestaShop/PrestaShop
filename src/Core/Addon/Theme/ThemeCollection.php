@@ -188,7 +188,7 @@ class ThemeCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Add an Addon with a specified key in the collection.
      *
-     * @param mixed $key   the key
+     * @param mixed $key the key
      * @param Addon $addon the specified addon
      */
     public function set($key, Addon $addon)

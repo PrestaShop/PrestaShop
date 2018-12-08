@@ -68,16 +68,16 @@ class TaxRuleCore extends ObjectModel
 
         return Db::getInstance()->execute(
             '
-			DELETE FROM `'._DB_PREFIX_.'tax_rule`
-			WHERE `id_tax_rules_group` = '.(int) $id_group
+			DELETE FROM `' . _DB_PREFIX_ . 'tax_rule`
+			WHERE `id_tax_rules_group` = ' . (int) $id_group
         );
     }
 
     public static function retrieveById($id_tax_rule)
     {
         return Db::getInstance()->getRow('
-			SELECT * FROM `'._DB_PREFIX_.'tax_rule`
-			WHERE `id_tax_rule` = '.(int) $id_tax_rule);
+			SELECT * FROM `' . _DB_PREFIX_ . 'tax_rule`
+			WHERE `id_tax_rule` = ' . (int) $id_tax_rule);
     }
 
     public static function getTaxRulesByGroupId($id_lang, $id_group)
@@ -93,11 +93,11 @@ class TaxRuleCore extends ObjectModel
 				 g.`behavior`,
 				 g.`id_country`,
 				 g.`id_state`
-		FROM `'._DB_PREFIX_.'tax_rule` g
-		LEFT JOIN `'._DB_PREFIX_.'country_lang` c ON (g.`id_country` = c.`id_country` AND `id_lang` = '.(int) $id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'state` s ON (g.`id_state` = s.`id_state`)
-		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (g.`id_tax` = t.`id_tax`)
-		WHERE `id_tax_rules_group` = '.(int) $id_group.'
+		FROM `' . _DB_PREFIX_ . 'tax_rule` g
+		LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` c ON (g.`id_country` = c.`id_country` AND `id_lang` = ' . (int) $id_lang . ')
+		LEFT JOIN `' . _DB_PREFIX_ . 'state` s ON (g.`id_state` = s.`id_state`)
+		LEFT JOIN `' . _DB_PREFIX_ . 'tax` t ON (g.`id_tax` = t.`id_tax`)
+		WHERE `id_tax_rules_group` = ' . (int) $id_group . '
 		ORDER BY `country_name` ASC, `state_name` ASC, `zipcode_from` ASC, `zipcode_to` ASC'
         );
     }
@@ -106,13 +106,14 @@ class TaxRuleCore extends ObjectModel
     {
         return Db::getInstance()->execute(
             '
-			DELETE FROM `'._DB_PREFIX_.'tax_rule`
-			WHERE `id_tax` = '.(int) $id_tax
+			DELETE FROM `' . _DB_PREFIX_ . 'tax_rule`
+			WHERE `id_tax` = ' . (int) $id_tax
         );
     }
 
     /**
      * @deprecated since 1.5
+     *
      * @param mixed $id_county
      */
     public static function deleteTaxRuleByIdCounty($id_county)
@@ -129,9 +130,9 @@ class TaxRuleCore extends ObjectModel
      */
     public static function isTaxInUse($id_tax)
     {
-        $cache_id = 'TaxRule::isTaxInUse_'.(int) $id_tax;
+        $cache_id = 'TaxRule::isTaxInUse_' . (int) $id_tax;
         if (!Cache::isStored($cache_id)) {
-            $result = (int) Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'tax_rule` WHERE `id_tax` = '.(int) $id_tax);
+            $result = (int) Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'tax_rule` WHERE `id_tax` = ' . (int) $id_tax);
             Cache::store($cache_id, $result);
 
             return $result;
@@ -180,9 +181,9 @@ class TaxRuleCore extends ObjectModel
     {
         return Db::getInstance()->execute(
             '
-		UPDATE `'._DB_PREFIX_.'tax_rule`
-		SET `id_tax` = '.(int) $new_id.'
-		WHERE `id_tax` = '.(int) $old_id
+		UPDATE `' . _DB_PREFIX_ . 'tax_rule`
+		SET `id_tax` = ' . (int) $new_id . '
+		WHERE `id_tax` = ' . (int) $old_id
         );
     }
 }

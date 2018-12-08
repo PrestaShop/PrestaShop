@@ -55,7 +55,7 @@ class TaxCalculatorCore
 
     /**
      * @param array $taxes
-     * @param int   $computation_method (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
+     * @param int $computation_method (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
      */
     public function __construct(array $taxes = array(), $computation_method = TaxCalculator::COMBINE_METHOD)
     {
@@ -121,7 +121,7 @@ class TaxCalculatorCore
     {
         $name = '';
         foreach ($this->taxes as $tax) {
-            $name .= $tax->name[(int) Context::getContext()->language->id].' - ';
+            $name .= $tax->name[(int) Context::getContext()->language->id] . ' - ';
         }
 
         $name = rtrim($name, ' - ');

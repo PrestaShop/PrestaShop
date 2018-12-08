@@ -230,7 +230,7 @@ class ProductOptions extends CommonAbstractType
 
         foreach ($this->suppliers as $supplier => $id) {
             $builder->add(
-                'supplier_combination_'.$id,
+                'supplier_combination_' . $id,
                 FormType\CollectionType::class,
                 [
                     'entry_type' => ProductSupplierCombination::class,
@@ -285,7 +285,7 @@ class ProductOptions extends CommonAbstractType
             if (!isset($data['suppliers']) || 0 == count($data['suppliers'])) {
                 $form = $event->getForm();
                 foreach ($this->suppliers as $supplier => $id) {
-                    $form->remove('supplier_combination_'.$id);
+                    $form->remove('supplier_combination_' . $id);
                 }
             }
         });

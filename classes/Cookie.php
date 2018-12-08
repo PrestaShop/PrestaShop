@@ -70,17 +70,17 @@ class CookieCore
         $this->_content = array();
         $this->_standalone = $standalone;
         $this->_expire = is_null($expire) ? time() + 1728000 : (int) $expire;
-        $this->_path = trim(($this->_standalone ? '' : Context::getContext()->shop->physical_uri).$path, '/\\').'/';
+        $this->_path = trim(($this->_standalone ? '' : Context::getContext()->shop->physical_uri) . $path, '/\\') . '/';
         if ('/' != $this->_path[0]) {
-            $this->_path = '/'.$this->_path;
+            $this->_path = '/' . $this->_path;
         }
         $this->_path = rawurlencode($this->_path);
         $this->_path = str_replace('%2F', '/', $this->_path);
         $this->_path = str_replace('%7E', '~', $this->_path);
         $this->_domain = $this->getDomain($shared_urls);
-        $this->_name = 'PrestaShop-'.md5(($this->_standalone ? '' : _PS_VERSION_).$name.$this->_domain);
+        $this->_name = 'PrestaShop-' . md5(($this->_standalone ? '' : _PS_VERSION_) . $name . $this->_domain);
         $this->_allow_writing = true;
-        $this->_salt = $this->_standalone ? str_pad('', 8, md5('ps'.__FILE__)) : _COOKIE_IV_;
+        $this->_salt = $this->_standalone ? str_pad('', 8, md5('ps' . __FILE__)) : _COOKIE_IV_;
 
         if ($this->_standalone) {
             $asciiSafeString = \Defuse\Crypto\Encoding::saveBytesToChecksummedAsciiSafeString(Key::KEY_CURRENT_VERSION, str_pad($name, Key::KEY_BYTE_SIZE, __FILE__));
@@ -107,8 +107,8 @@ class CookieCore
             return false;
         }
 
-        if (preg_match('/^(((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]{1}[0-9]|[1-9]).)'.
-            '{1}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]).)'.
+        if (preg_match('/^(((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]{1}[0-9]|[1-9]).)' .
+            '{1}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]).)' .
             '{2}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]){1}))$/', $out[4])) {
             return false;
         }
@@ -123,7 +123,7 @@ class CookieCore
                     continue;
                 }
                 if (preg_match('/^(?:.*\.)?([^.]*(?:.{2,4})?\..{2,3})$/Ui', $shared_url, $res)) {
-                    $domain = '.'.$res[1];
+                    $domain = '.' . $res[1];
                     break;
                 }
             }
@@ -172,8 +172,8 @@ class CookieCore
     /**
      * Magic method which adds data into _content array.
      *
-     * @param string $key   Access key for the value
-     * @param mixed  $value Value corresponding to the key
+     * @param string $key Access key for the value
+     * @param mixed $value Value corresponding to the key
      *
      * @throws Exception
      */
@@ -182,7 +182,7 @@ class CookieCore
         if (is_array($value)) {
             die(Tools::displayError());
         }
-        if (preg_match('/¤|\|/', $key.$value)) {
+        if (preg_match('/¤|\|/', $key . $value)) {
             throw new Exception('Forbidden chars in cookie');
         }
         if (!$this->_modified && (!array_key_exists($key, $this->_content) || $this->_content[$key] != $value)) {
@@ -210,6 +210,7 @@ class CookieCore
      * @deprecated as of version 1.5 use Customer::isLogged() instead
      *
      * @param mixed $withGuest
+     *
      * @return bool customer validity
      */
     public function isLogged($withGuest = false)
@@ -265,20 +266,21 @@ class CookieCore
     public function mylogout()
     {
         unset($this->_content['id_customer'], $this->_content['id_guest'], $this->_content['is_guest'], $this->_content['id_connections'], $this->_content['customer_lastname'], $this->_content['customer_firstname'], $this->_content['passwd'], $this->_content['logged'], $this->_content['email'], $this->_content['id_cart'], $this->_content['id_address_invoice'], $this->_content['id_address_delivery']);
-        
+
         $this->_modified = true;
     }
 
     public function makeNewLog()
     {
         unset($this->_content['id_customer'], $this->_content['id_guest']);
-        
+
         Guest::setNewGuest($this);
         $this->_modified = true;
     }
 
     /**
      * Get cookie content.
+     *
      * @param mixed $nullValues
      */
     public function update($nullValues = false)
@@ -291,8 +293,8 @@ class CookieCore
             /* Get cookie checksum */
             $tmpTab = explode('¤', $content);
             array_pop($tmpTab);
-            $content_for_checksum = implode('¤', $tmpTab).'¤';
-            $checksum = crc32($this->_salt.$content_for_checksum);
+            $content_for_checksum = implode('¤', $tmpTab) . '¤';
+            $checksum = crc32($this->_salt . $content_for_checksum);
             //printf("\$checksum = %s<br />", $checksum);
 
             /* Unserialize cookie content */
@@ -385,11 +387,11 @@ class CookieCore
             unset($this->_content['checksum']);
         }
         foreach ($this->_content as $key => $value) {
-            $cookie .= $key.'|'.$value.'¤';
+            $cookie .= $key . '|' . $value . '¤';
         }
 
         /* Add checksum to cookie */
-        $cookie .= 'checksum|'.crc32($this->_salt.$cookie);
+        $cookie .= 'checksum|' . crc32($this->_salt . $cookie);
         $this->_modified = false;
         /* Cookies are encrypted for evident security reasons */
         return $this->encryptAndSetCookie($cookie);
@@ -397,6 +399,7 @@ class CookieCore
 
     /**
      * Get a family of variables (e.g. "filter_").
+     *
      * @param mixed $origin
      */
     public function getFamily($origin)

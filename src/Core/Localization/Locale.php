@@ -80,16 +80,16 @@ class Locale implements LocaleInterface
     /**
      * Locale constructor.
      *
-     * @param string                $localeCode
-     *                                                   The locale code (simplified IETF tag syntax)
-     *                                                   Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
-     *                                                   eg: fr-FR, en-US
-     * @param NumberSpecification   $numberSpecification
-     *                                                   Number specification used when formatting a number
+     * @param string $localeCode
+     *                           The locale code (simplified IETF tag syntax)
+     *                           Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
+     *                           eg: fr-FR, en-US
+     * @param NumberSpecification $numberSpecification
+     *                                                 Number specification used when formatting a number
      * @param PriceSpecificationMap $priceSpecifications
      *                                                   Collection of Price specifications (one per installed currency)
-     * @param NumberFormatter       $formatter
-     *                                                   This number formatter will use stored number / price specs
+     * @param NumberFormatter $formatter
+     *                                   This number formatter will use stored number / price specs
      */
     public function __construct(
         $localeCode,
@@ -122,9 +122,9 @@ class Locale implements LocaleInterface
      *                                 The number to be formatted
      *
      * @throws Exception\LocalizationException
+     *
      * @return string
      *                The formatted number
-     *
      */
     public function formatNumber($number)
     {
@@ -138,14 +138,14 @@ class Locale implements LocaleInterface
      * Format a number as a price.
      *
      * @param float|int|string $number
-     *                                       Number to be formatted as a price
-     * @param string           $currencyCode
-     *                                       Currency of the price
+     *                                 Number to be formatted as a price
+     * @param string $currencyCode
+     *                             Currency of the price
      *
      * @throws Exception\LocalizationException
+     *
      * @return string
      *                The formatted price
-     *
      */
     public function formatPrice($number, $currencyCode)
     {
@@ -153,7 +153,7 @@ class Locale implements LocaleInterface
         $priceSpec = $this->priceSpecifications->get($currencyCode);
         if (null === $priceSpec) {
             throw new LocalizationException(
-                'Price specification not found for currency "'.$currencyCode.'"'
+                'Price specification not found for currency "' . $currencyCode . '"'
             );
         }
 

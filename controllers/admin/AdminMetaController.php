@@ -54,8 +54,8 @@ class AdminMetaControllerCore extends AdminController
 
         $this->bootstrap = true;
         $this->identifier_name = 'page';
-        $this->ht_file = _PS_ROOT_DIR_.'/.htaccess';
-        $this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
+        $this->ht_file = _PS_ROOT_DIR_ . '/.htaccess';
+        $this->rb_file = _PS_ROOT_DIR_ . '/robots.txt';
 
         parent::__construct();
 
@@ -79,7 +79,7 @@ class AdminMetaControllerCore extends AdminController
         $this->_where = ' AND a.configurable = 1';
         $this->_group = 'GROUP BY a.id_meta';
 
-        $this->sm_file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$this->context->shop->id.'_index_sitemap.xml';
+        $this->sm_file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $this->context->shop->id . '_index_sitemap.xml';
         // Options to generate friendly urls
         $mod_rewrite = Tools::modRewriteActive();
         $general_fields = array(
@@ -93,7 +93,7 @@ class AdminMetaControllerCore extends AdminController
             ),
             'PS_ALLOW_ACCENTED_CHARS_URL' => array(
                 'title' => $this->trans('Accented URL', array(), 'Admin.Shopparameters.Feature'),
-                'hint' => $this->trans('Enable this option if you want to allow accented characters in your friendly URLs.', array(), 'Admin.Shopparameters.Help').' '.$this->trans('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.', array(), 'Admin.Shopparameters.Help'),
+                'hint' => $this->trans('Enable this option if you want to allow accented characters in your friendly URLs.', array(), 'Admin.Shopparameters.Help') . ' ' . $this->trans('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.', array(), 'Admin.Shopparameters.Help'),
                 'validation' => 'isBool',
                 'cast' => 'intval',
                 'type' => 'bool',
@@ -228,7 +228,7 @@ class AdminMetaControllerCore extends AdminController
                 $this->addAllRouteFields();
             }
             $this->fields_options['routes']['title'] = $this->trans('Schema of URLs', array(), 'Admin.Shopparameters.Feature');
-            $this->fields_options['routes']['description'] = $this->trans('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.', array(), 'Admin.Shopparameters.Notification').'<br />'.$this->trans('There are several available keywords for each route listed below; note that keywords with * are required!', array(), 'Admin.Shopparameters.Notification').'<br />'.$this->trans('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.', array(), 'Admin.Shopparameters.Notification');
+            $this->fields_options['routes']['description'] = $this->trans('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.', array(), 'Admin.Shopparameters.Notification') . '<br />' . $this->trans('There are several available keywords for each route listed below; note that keywords with * are required!', array(), 'Admin.Shopparameters.Notification') . '<br />' . $this->trans('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.', array(), 'Admin.Shopparameters.Notification');
             $this->fields_options['routes']['submit'] = array('title' => $this->trans('Save', array(), 'Admin.Actions'));
         }
 
@@ -239,7 +239,7 @@ class AdminMetaControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_meta'] = array(
-                'href' => self::$currentIndex.'&addmeta&token='.$this->token,
+                'href' => self::$currentIndex . '&addmeta&token=' . $this->token,
                 'desc' => $this->trans('Add a new page', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -268,10 +268,10 @@ class AdminMetaControllerCore extends AdminController
     {
         $keywords = array();
         foreach (Dispatcher::getInstance()->default_routes[$route_id]['keywords'] as $keyword => $data) {
-            $keywords[] = ((isset($data['param'])) ? '<span class="red">'.$keyword.'*</span>' : $keyword);
+            $keywords[] = ((isset($data['param'])) ? '<span class="red">' . $keyword . '*</span>' : $keyword);
         }
 
-        $this->fields_options['routes']['fields']['PS_ROUTE_'.$route_id] = array(
+        $this->fields_options['routes']['fields']['PS_ROUTE_' . $route_id] = array(
             'title' => $title,
             'desc' => $this->trans('Keywords: %keywords%', array('%keywords%' => implode(', ', $keywords)), 'Admin.Shopparameters.Feature'),
             'validation' => 'isString',
@@ -349,7 +349,7 @@ class AdminMetaControllerCore extends AdminController
                     'lang' => true,
                     'hint' => array(
                         $this->trans('Title of this page.', array(), 'Admin.Shopparameters.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.Shopparameters.Help').' &lt;&gt;;=#{}',
+                        $this->trans('Invalid characters:', array(), 'Admin.Shopparameters.Help') . ' &lt;&gt;;=#{}',
                     ),
                 ),
                 array(
@@ -359,7 +359,7 @@ class AdminMetaControllerCore extends AdminController
                     'lang' => true,
                     'hint' => array(
                         $this->trans('A short description of your shop.', array(), 'Admin.Shopparameters.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
+                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                     ),
                 ),
                 array(
@@ -370,7 +370,7 @@ class AdminMetaControllerCore extends AdminController
                     'hint' => array(
                         $this->trans('List of keywords for search engines.', array(), 'Admin.Shopparameters.Help'),
                         $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', array(), 'Admin.Shopparameters.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
+                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                     ),
                 ),
                 array(
@@ -407,10 +407,10 @@ class AdminMetaControllerCore extends AdminController
         if (Tools::isSubmit('submitAddmeta')) {
             $default_language = Configuration::get('PS_LANG_DEFAULT');
             if ('index' != Tools::getValue('page')) {
-                $defaultLangIsValidated = Validate::isLinkRewrite(Tools::getValue('url_rewrite_'.$default_language));
+                $defaultLangIsValidated = Validate::isLinkRewrite(Tools::getValue('url_rewrite_' . $default_language));
                 $englishLangIsValidated = Validate::isLinkRewrite(Tools::getValue('url_rewrite_1'));
             } else {    // index.php can have empty rewrite rule
-                $defaultLangIsValidated = !Tools::getValue('url_rewrite_'.$default_language) || Validate::isLinkRewrite(Tools::getValue('url_rewrite_'.$default_language));
+                $defaultLangIsValidated = !Tools::getValue('url_rewrite_' . $default_language) || Validate::isLinkRewrite(Tools::getValue('url_rewrite_' . $default_language));
                 $englishLangIsValidated = !Tools::getValue('url_rewrite_1') || Validate::isLinkRewrite(Tools::getValue('url_rewrite_1'));
             }
 
@@ -419,13 +419,13 @@ class AdminMetaControllerCore extends AdminController
             }
 
             foreach (Language::getIDs(false) as $id_lang) {
-                $current = Tools::getValue('url_rewrite_'.$id_lang);
+                $current = Tools::getValue('url_rewrite_' . $id_lang);
                 if (0 == strlen($current)) {
                     // Prioritize default language first
                     if ($defaultLangIsValidated) {
-                        $_POST['url_rewrite_'.$id_lang] = Tools::getValue('url_rewrite_'.$default_language);
+                        $_POST['url_rewrite_' . $id_lang] = Tools::getValue('url_rewrite_' . $default_language);
                     } else {
-                        $_POST['url_rewrite_'.$id_lang] = Tools::getValue('url_rewrite_1');
+                        $_POST['url_rewrite_' . $id_lang] = Tools::getValue('url_rewrite_1');
                     }
                 }
             }
@@ -447,7 +447,7 @@ class AdminMetaControllerCore extends AdminController
         if (!Tools::generateRobotsFile(true)) {
             $this->errors[] = $this->trans('Cannot write into file: %filename%. Please check write permissions.', array('%filename' => $this->rb_file), 'Admin.Notifications.Error');
         } else {
-            $this->redirect_after = self::$currentIndex.'&conf=4&token='.$this->token;
+            $this->redirect_after = self::$currentIndex . '&conf=4&token=' . $this->token;
         }
     }
 
@@ -477,12 +477,12 @@ class AdminMetaControllerCore extends AdminController
             return;
         }
 
-        $rule = Tools::getValue('PS_ROUTE_'.$route_id);
+        $rule = Tools::getValue('PS_ROUTE_' . $route_id);
         if (!Validate::isRoutePattern($rule)) {
             $this->errors[] = sprintf('The route %s is not valid', htmlspecialchars($rule));
         } else {
             if (!$rule || $rule == $default_routes[$route_id]['rule']) {
-                Configuration::updateValue('PS_ROUTE_'.$route_id, '');
+                Configuration::updateValue('PS_ROUTE_' . $route_id, '');
 
                 return;
             }
@@ -493,7 +493,7 @@ class AdminMetaControllerCore extends AdminController
                     $this->errors[] = sprintf('Keyword "{%1$s}" required for route "%2$s" (rule: "%3$s")', $error, $route_id, htmlspecialchars($rule));
                 }
             } else {
-                Configuration::updateValue('PS_ROUTE_'.$route_id, $rule);
+                Configuration::updateValue('PS_ROUTE_' . $route_id, $rule);
             }
         }
     }
@@ -521,8 +521,8 @@ class AdminMetaControllerCore extends AdminController
             Configuration::updateValue('PS_REWRITING_SETTINGS', 0);
             // Message copied/pasted from the information tip
             $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.Shopparameters.Notification');
-            $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.Shopparameters.Notification');
-            $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Shopparameters.Notification');
+            $message .= '<br />- ' . $this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.Shopparameters.Notification');
+            $message .= '<br />- ' . $this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Shopparameters.Notification');
             $this->errors[] = $message;
         }
     }

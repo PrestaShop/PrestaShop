@@ -67,7 +67,7 @@ class WebserviceOutputBuilderCore
     public function __construct($ws_url)
     {
         $this->statusInt = 200;
-        $this->status = $_SERVER['SERVER_PROTOCOL'].' 200 OK';
+        $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 200 OK';
         $this->wsUrl = $ws_url;
         $this->wsParamOverrides = array();
     }
@@ -80,8 +80,8 @@ class WebserviceOutputBuilderCore
      * @throw WebserviceException if the object render is not an instance of WebserviceOutputInterface
      *
      * @throws WebserviceException
-     * @return WebserviceOutputBuilder
      *
+     * @return WebserviceOutputBuilder
      */
     public function setObjectRender(WebserviceOutputInterface $obj_render)
     {
@@ -136,19 +136,19 @@ class WebserviceOutputBuilderCore
         $return = array();
         $return[] = $this->status;
         foreach ($this->headerParams as $key => $param) {
-            $return[] = trim($key).': '.$param;
+            $return[] = trim($key) . ': ' . $param;
         }
 
         return $return;
     }
 
     /**
-     * @param string $key   The normalized key expected for an http response
+     * @param string $key The normalized key expected for an http response
      * @param string $value
      *
      * @throws WebserviceException If the key or the value are corrupted (use Validate::isCleanHtml method)
-     * @return WebserviceOutputBuilder
      *
+     * @return WebserviceOutputBuilder
      */
     public function setHeaderParams($key, $value)
     {
@@ -221,40 +221,40 @@ class WebserviceOutputBuilderCore
         $this->statusInt = (int) $num;
         switch ($num) {
             case 200:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 200 OK';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 200 OK';
                 break;
             case 201:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 201 Created';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 201 Created';
                 break;
             case 204:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 204 No Content';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 204 No Content';
                 break;
             case 304:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 304 Not Modified';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified';
                 break;
             case 400:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 400 Bad Request';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request';
                 break;
             case 401:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 401 Unauthorized';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized';
                 break;
             case 403:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 403 Forbidden';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden';
                 break;
             case 404:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 404 Not Found';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found';
                 break;
             case 405:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 405 Method Not Allowed';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed';
                 break;
             case 500:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error';
                 break;
             case 501:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 501 Not Implemented';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 501 Not Implemented';
                 break;
             case 503:
-                $this->status = $_SERVER['SERVER_PROTOCOL'].' 503 Service Unavailable';
+                $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 503 Service Unavailable';
                 break;
         }
     }
@@ -281,7 +281,7 @@ class WebserviceOutputBuilderCore
                 $str_output .= $this->objectRender->renderErrorsFooter();
                 $str_output = $this->objectRender->overrideContent($str_output);
             } else {
-                $str_output = '<pre>'.print_r($errors, true).'</pre>';
+                $str_output = '<pre>' . print_r($errors, true) . '</pre>';
             }
         }
 
@@ -306,7 +306,7 @@ class WebserviceOutputBuilderCore
         foreach ($this->wsResource as $resourceName => $resource) {
             if (in_array($resourceName, array_keys($key_permissions))) {
                 $more_attr = array(
-                    'xlink_resource' => $this->wsUrl.$resourceName,
+                    'xlink_resource' => $this->wsUrl . $resourceName,
                     'get' => (in_array('GET', $key_permissions[$resourceName]) ? 'true' : 'false'),
                     'put' => (in_array('PUT', $key_permissions[$resourceName]) ? 'true' : 'false'),
                     'post' => (in_array('POST', $key_permissions[$resourceName]) ? 'true' : 'false'),
@@ -321,12 +321,12 @@ class WebserviceOutputBuilderCore
 
                 if (!isset($resource['specific_management']) || !$resource['specific_management']) {
                     $more_attr_schema = array(
-                        'xlink_resource' => $this->wsUrl.$resourceName.'?schema=blank',
+                        'xlink_resource' => $this->wsUrl . $resourceName . '?schema=blank',
                         'type' => 'blank',
                     );
                     $output .= $this->objectRender->renderNodeHeader('schema', array(), $more_attr_schema, false);
                     $more_attr_schema = array(
-                        'xlink_resource' => $this->wsUrl.$resourceName.'?schema=synopsis',
+                        'xlink_resource' => $this->wsUrl . $resourceName . '?schema=synopsis',
                         'type' => 'synopsis',
                     );
                     $output .= $this->objectRender->renderNodeHeader('schema', array(), $more_attr_schema, false);
@@ -356,10 +356,10 @@ class WebserviceOutputBuilderCore
      *
      *        @see WebserviceOutputBuilder::executeEntityGetAndHead
      *
-     * @param null|string  $schema_to_display if null display the entities list or entity details
+     * @param null|string $schema_to_display if null display the entities list or entity details
      * @param array|string $fields_to_display the fields allow for the output
-     * @param int          $depth             depth for the tree diagram output
-     * @param int          $type_of_view      use the 2 constants WebserviceOutputBuilder::VIEW_LIST WebserviceOutputBuilder::VIEW_DETAILS
+     * @param int $depth depth for the tree diagram output
+     * @param int $type_of_view use the 2 constants WebserviceOutputBuilder::VIEW_LIST WebserviceOutputBuilder::VIEW_DETAILS
      * @param mixed $override
      *
      * @return string in the output format specified by WebserviceOutputBuilder::objectRender
@@ -391,7 +391,7 @@ class WebserviceOutputBuilderCore
 
         // If a list is asked, need to wrap with a plural node
         if (self::VIEW_LIST === $type_of_view) {
-            $output .= $this->setIndent($depth).$this->objectRender->renderNodeHeader($ws_params['objectsNodeName'], $ws_params);
+            $output .= $this->setIndent($depth) . $this->objectRender->renderNodeHeader($ws_params['objectsNodeName'], $ws_params);
         }
 
         if (is_null($this->schemaToDisplay)) {
@@ -410,7 +410,7 @@ class WebserviceOutputBuilderCore
 
         // If a list is asked, need to wrap with a plural node
         if (self::VIEW_LIST === $type_of_view) {
-            $output .= $this->setIndent($depth).$this->objectRender->renderNodeFooter($ws_params['objectsNodeName'], $ws_params);
+            $output .= $this->setIndent($depth) . $this->objectRender->renderNodeFooter($ws_params['objectsNodeName'], $ws_params);
         }
 
         if ($override) {
@@ -424,7 +424,7 @@ class WebserviceOutputBuilderCore
      * Create the tree diagram with no details.
      *
      * @param ObjectModel $object create by the entity
-     * @param int         $depth  the depth for the tree diagram
+     * @param int $depth the depth for the tree diagram
      *
      * @return string
      */
@@ -437,8 +437,8 @@ class WebserviceOutputBuilderCore
         $ws_params = WebserviceOutputBuilder::$_cache_ws_parameters[$class];
 
         $more_attr['id'] = $object->id;
-        $more_attr['xlink_resource'] = $this->wsUrl.$ws_params['objectsNodeName'].'/'.$object->id;
-        $output = $this->setIndent($depth).$this->objectRender->renderNodeHeader($ws_params['objectNodeName'], $ws_params, $more_attr, false);
+        $more_attr['xlink_resource'] = $this->wsUrl . $ws_params['objectsNodeName'] . '/' . $object->id;
+        $output = $this->setIndent($depth) . $this->objectRender->renderNodeHeader($ws_params['objectNodeName'], $ws_params, $more_attr, false);
 
         return $output;
     }
@@ -446,8 +446,8 @@ class WebserviceOutputBuilderCore
     /**
      * Build a schema blank or synopsis.
      *
-     * @param ObjectModel $object    create by the entity
-     * @param array       $ws_params webserviceParams from the entity
+     * @param ObjectModel $object create by the entity
+     * @param array $ws_params webserviceParams from the entity
      *
      * @return string
      */
@@ -470,7 +470,7 @@ class WebserviceOutputBuilderCore
      * Build the entity detail.
      *
      * @param ObjectModel $object create by the entity
-     * @param int         $depth  the depth for the tree diagram
+     * @param int $depth the depth for the tree diagram
      *
      * @return string
      */
@@ -488,7 +488,7 @@ class WebserviceOutputBuilderCore
             $o = $p['object'];
             $ws_params = $o->{$p['method']}($ws_params);
         }
-        $output .= $this->setIndent($depth).$this->objectRender->renderNodeHeader($ws_params['objectNodeName'], $ws_params);
+        $output .= $this->setIndent($depth) . $this->objectRender->renderNodeHeader($ws_params['objectNodeName'], $ws_params);
 
         if (0 != $object->id) {
             // This to add virtual Fields for a particular entity.
@@ -521,7 +521,7 @@ class WebserviceOutputBuilderCore
             $output .= $this->renderAssociations($object, $depth, $ws_params['associations'], $ws_params);
         }
 
-        $output .= $this->setIndent($depth).$this->objectRender->renderNodeFooter($ws_params['objectNodeName'], $ws_params);
+        $output .= $this->setIndent($depth) . $this->objectRender->renderNodeFooter($ws_params['objectNodeName'], $ws_params);
 
         return $output;
     }
@@ -529,11 +529,11 @@ class WebserviceOutputBuilderCore
     /**
      * Build a field and use recursivity depend on the depth parameter.
      *
-     * @param ObjectModel $object     create by the entity
-     * @param array       $ws_params  webserviceParams from the entity
-     * @param string      $field_name
-     * @param array       $field
-     * @param int         $depth
+     * @param ObjectModel $object create by the entity
+     * @param array $ws_params webserviceParams from the entity
+     * @param string $field_name
+     * @param array $field
+     * @param int $depth
      *
      * @return string
      */
@@ -590,7 +590,7 @@ class WebserviceOutputBuilderCore
 
         // don't display the node id for a synopsis schema
         if ($show_field) {
-            $output .= $this->setIndent($depth - 1).$this->objectRender->renderField($field);
+            $output .= $this->setIndent($depth - 1) . $this->objectRender->renderField($field);
         }
 
         return $output;
@@ -668,11 +668,11 @@ class WebserviceOutputBuilderCore
                     }
                 }
                 if ('' != $output_details) {
-                    $output .= $this->setIndent($depth).$this->objectRender->renderAssociationHeader($object, $ws_params, $assoc_name);
+                    $output .= $this->setIndent($depth) . $this->objectRender->renderAssociationHeader($object, $ws_params, $assoc_name);
                     $output .= $output_details;
-                    $output .= $this->setIndent($depth).$this->objectRender->renderAssociationFooter($object, $ws_params, $assoc_name);
+                    $output .= $this->setIndent($depth) . $this->objectRender->renderAssociationFooter($object, $ws_params, $assoc_name);
                 } else {
-                    $output .= $this->setIndent($depth).$this->objectRender->renderAssociationHeader($object, $ws_params, $assoc_name, true);
+                    $output .= $this->setIndent($depth) . $this->objectRender->renderAssociationHeader($object, $ws_params, $assoc_name, true);
                 }
             }
         }
@@ -688,15 +688,15 @@ class WebserviceOutputBuilderCore
         if (isset($this->wsResource[$assoc_name]) && is_null($this->schemaToDisplay)) {
             if ('images' == $assoc_name) {
                 if ('combinations' == $parent_details['entities_name']) {
-                    $more_attr['xlink_resource'] = $this->wsUrl.$assoc_name.'/products/'.$object->id_product.'/'.$object_assoc['id'];
+                    $more_attr['xlink_resource'] = $this->wsUrl . $assoc_name . '/products/' . $object->id_product . '/' . $object_assoc['id'];
                 } else {
-                    $more_attr['xlink_resource'] = $this->wsUrl.$assoc_name.'/'.$parent_details['entities_name'].'/'.$parent_details['object_id'].'/'.$object_assoc['id'];
+                    $more_attr['xlink_resource'] = $this->wsUrl . $assoc_name . '/' . $parent_details['entities_name'] . '/' . $parent_details['object_id'] . '/' . $object_assoc['id'];
                 }
             } else {
-                $more_attr['xlink_resource'] = $this->wsUrl.$assoc_name.'/'.$object_assoc['id'];
+                $more_attr['xlink_resource'] = $this->wsUrl . $assoc_name . '/' . $object_assoc['id'];
             }
         }
-        $output .= $this->setIndent($depth - 1).$this->objectRender->renderNodeHeader($resource_name, array(), $more_attr);
+        $output .= $this->setIndent($depth - 1) . $this->objectRender->renderNodeHeader($resource_name, array(), $more_attr);
 
         foreach ($fields_assoc as $field_name => $field) {
             if (!is_array($this->fieldsToDisplay) || in_array($field_name, $this->fieldsToDisplay[$assoc_name])) {
@@ -714,10 +714,10 @@ class WebserviceOutputBuilderCore
                     $field['synopsis_details'] = $this->getSynopsisDetails($field);
                 }
                 $field['is_association'] = true;
-                $output .= $this->setIndent($depth - 1).$this->objectRender->renderField($field);
+                $output .= $this->setIndent($depth - 1) . $this->objectRender->renderField($field);
             }
         }
-        $output .= $this->setIndent($depth - 1).$this->objectRender->renderNodeFooter($resource_name, array());
+        $output .= $this->setIndent($depth - 1) . $this->objectRender->renderNodeFooter($resource_name, array());
 
         return $output;
     }
@@ -754,14 +754,14 @@ class WebserviceOutputBuilderCore
 
     /**
      * @param object|string $object
-     * @param string        $method
+     * @param string $method
      * @param $field_name
      * @param $entity_name
      *
      * @throws Exception
      * @throws WebserviceException
-     * @return WebserviceOutputBuilder
      *
+     * @return WebserviceOutputBuilder
      */
     public function setSpecificField($object, $method, $field_name, $entity_name)
     {
@@ -779,10 +779,10 @@ class WebserviceOutputBuilderCore
     protected function validateObjectAndMethod($object, $method)
     {
         if (is_string($object) && !class_exists($object)) {
-            throw new WebserviceException('The object you want to set in '.__METHOD__.' is not allowed.', array(98, 500));
+            throw new WebserviceException('The object you want to set in ' . __METHOD__ . ' is not allowed.', array(98, 500));
         }
         if (!method_exists($object, $method)) {
-            throw new WebserviceException('The method you want to set in '.__METHOD__.' is not allowed.', array(99, 500));
+            throw new WebserviceException('The method you want to set in ' . __METHOD__ . ' is not allowed.', array(99, 500));
         }
     }
 

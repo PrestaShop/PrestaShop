@@ -36,7 +36,7 @@ class GetFileControllerCore extends FrontController
             if (!Validate::isSha1($filename)) {
                 die(Tools::displayError());
             }
-            $file = _PS_DOWNLOAD_DIR_.strval(preg_replace('/\.{2,}/', '.', $filename));
+            $file = _PS_DOWNLOAD_DIR_ . strval(preg_replace('/\.{2,}/', '.', $filename));
             $filename = ProductDownload::getFilenameFromFilename(Tools::getValue('file'));
             if (empty($filename)) {
                 $newFileName = Tools::getValue('filename');
@@ -57,7 +57,7 @@ class GetFileControllerCore extends FrontController
 
             Tools::setCookieLanguage();
             if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
-                Tools::redirect('index.php?controller=authentication&back=get-file.php&key='.$key);
+                Tools::redirect('index.php?controller=authentication&back=get-file.php&key=' . $key);
             } elseif (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order')) {
                 $order = new Order((int) Tools::getValue('id_order'));
                 if (!Validate::isLoadedObject($order)) {
@@ -93,11 +93,11 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This product has been deleted.');
             }
 
-            if (!Validate::isFileName($info['filename']) || !file_exists(_PS_DOWNLOAD_DIR_.$info['filename'])) {
+            if (!Validate::isFileName($info['filename']) || !file_exists(_PS_DOWNLOAD_DIR_ . $info['filename'])) {
                 $this->displayCustomError('This file no longer exists.');
             }
 
-            if (isset($info['product_quantity_refunded'], $info['product_quantity_return'])   &&
+            if (isset($info['product_quantity_refunded'], $info['product_quantity_return']) &&
                 ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
                 $this->displayCustomError('This product has been refunded.');
             }
@@ -121,7 +121,7 @@ class GetFileControllerCore extends FrontController
             /* Access is authorized -> increment download value for the customer */
             OrderDetail::incrementDownload($info['id_order_detail']);
 
-            $file = _PS_DOWNLOAD_DIR_.$info['filename'];
+            $file = _PS_DOWNLOAD_DIR_ . $info['filename'];
             $filename = $info['display_filename'];
         }
 
@@ -134,12 +134,12 @@ class GetFileControllerCore extends FrontController
         } elseif (function_exists('mime_content_type')) {
             $mimeType = @mime_content_type($file);
         } elseif (function_exists('exec')) {
-            $mimeType = trim(@exec('file -b --mime-type '.escapeshellarg($file)));
+            $mimeType = trim(@exec('file -b --mime-type ' . escapeshellarg($file)));
             if (!$mimeType) {
-                $mimeType = trim(@exec('file --mime '.escapeshellarg($file)));
+                $mimeType = trim(@exec('file --mime ' . escapeshellarg($file)));
             }
             if (!$mimeType) {
-                $mimeType = trim(@exec('file -bi '.escapeshellarg($file)));
+                $mimeType = trim(@exec('file -bi ' . escapeshellarg($file)));
             }
         }
 
@@ -290,9 +290,9 @@ class GetFileControllerCore extends FrontController
 
         /* Set headers for download */
         header('Content-Transfer-Encoding: binary');
-        header('Content-Type: '.$mimeType);
-        header('Content-Length: '.filesize($file));
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        header('Content-Type: ' . $mimeType);
+        header('Content-Length: ' . filesize($file));
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
         //prevents max execution timeout, when reading large files
         @set_time_limit(0);
         $fp = fopen($file, 'rb');

@@ -37,7 +37,7 @@ class FeatureDataProvider
     /**
      * Get all features for a given language.
      *
-     * @param int  $id_lang   Language id
+     * @param int $id_lang Language id
      * @param bool $with_shop
      *
      * @return array Multiple arrays with feature's data
@@ -50,8 +50,8 @@ class FeatureDataProvider
     /**
      * Get all values for a given feature and language.
      *
-     * @param int  $id_lang    Language id
-     * @param int  $id_feature Feature id
+     * @param int $id_lang Language id
+     * @param int $id_feature Feature id
      * @param bool $custom
      *
      * @return array Array with feature's values

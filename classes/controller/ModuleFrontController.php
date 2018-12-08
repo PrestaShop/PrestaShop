@@ -39,7 +39,7 @@ class ModuleFrontControllerCore extends FrontController
             Tools::redirect('index');
         }
 
-        $this->page_name = 'module-'.$this->module->name.'-'.Dispatcher::getInstance()->getController();
+        $this->page_name = 'module-' . $this->module->name . '-' . Dispatcher::getInstance()->getController();
 
         parent::__construct();
 
@@ -84,11 +84,11 @@ class ModuleFrontControllerCore extends FrontController
      *
      * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
      *
-     * @param string       $string       Term or expression in english
-     * @param false|string $specific     Specific name, only for ModuleFrontController
-     * @param null|string  $class        Name of the class
-     * @param bool         $addslashes   If set to true, the return value will pass through addslashes(). Otherwise, stripslashes()
-     * @param bool         $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+     * @param string $string Term or expression in english
+     * @param false|string $specific Specific name, only for ModuleFrontController
+     * @param null|string $class Name of the class
+     * @param bool $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes()
+     * @param bool $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
      *
      * @return string The translation if available, or the english default text
      */

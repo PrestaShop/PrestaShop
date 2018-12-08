@@ -48,7 +48,7 @@ class BackupController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param Request       $request
+     * @param Request $request
      * @param BackupFilters $filters
      *
      * @return Response
@@ -92,7 +92,7 @@ class BackupController extends FrameworkBundleAdminController
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
-     * @param string  $downloadFileName
+     * @param string $downloadFileName
      *
      * @return Response
      */

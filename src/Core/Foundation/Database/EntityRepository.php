@@ -92,8 +92,8 @@ class EntityRepository
      * Return ID field name.
      *
      * @throws Exception
-     * @return mixed
      *
+     * @return mixed
      */
     protected function getIdFieldName()
     {
@@ -125,7 +125,7 @@ class EntityRepository
      */
     protected function getTableNameWithPrefix()
     {
-        return $this->db->escape($this->tablesPrefix.$this->entityMetaData->getTableName());
+        return $this->db->escape($this->tablesPrefix . $this->entityMetaData->getTableName());
     }
 
     /**
@@ -193,14 +193,14 @@ class EntityRepository
      * @param array $cumulativeConditions
      *
      * @throws Exception
-     * @return null|array|mixed
      *
+     * @return null|array|mixed
      */
     private function doFind($one, array $cumulativeConditions)
     {
         $whereClause = $this->queryBuilder->buildWhereConditions('AND', $cumulativeConditions);
 
-        $sql = 'SELECT * FROM '.$this->getTableNameWithPrefix().' WHERE '.$whereClause;
+        $sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix() . ' WHERE ' . $whereClause;
 
         $rows = $this->db->select($sql);
 
@@ -217,8 +217,8 @@ class EntityRepository
      * @param $id
      *
      * @throws Exception
-     * @return null|array|mixed
      *
+     * @return null|array|mixed
      */
     public function findOne($id)
     {
@@ -235,7 +235,7 @@ class EntityRepository
      */
     public function findAll()
     {
-        $sql = 'SELECT * FROM '.$this->getTableNameWithPrefix();
+        $sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix();
 
         return $this->hydrateMany($this->db->select($sql));
     }

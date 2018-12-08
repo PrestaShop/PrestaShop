@@ -92,8 +92,8 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
             'name' => $attribute['attributeName'],
             'texture' => '',
         );
-        if (@file_exists(_PS_COL_IMG_DIR_.$attribute['id'].'.jpg')) {
-            $attributes['texture'] = _THEME_COL_DIR_.$attribute['id'].'.jpg';
+        if (@file_exists(_PS_COL_IMG_DIR_ . $attribute['id'] . '.jpg')) {
+            $attributes['texture'] = _THEME_COL_DIR_ . $attribute['id'] . '.jpg';
         }
 
         return $attributes;

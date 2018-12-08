@@ -33,6 +33,7 @@ class FileSystem
     /**
      * Replaces directory separators with the system's native one
      * and trims the trailing separator.
+     *
      * @param mixed $path
      */
     public function normalizePath($path)
@@ -45,7 +46,7 @@ class FileSystem
 
     private function joinTwoPaths($a, $b)
     {
-        return $this->normalizePath($a).DIRECTORY_SEPARATOR.$this->normalizePath($b);
+        return $this->normalizePath($a) . DIRECTORY_SEPARATOR . $this->normalizePath($b);
     }
 
     /**
@@ -82,6 +83,7 @@ class FileSystem
      * and return it in an array.
      *
      * @param mixed $path
+     *
      * @return an array of SplFileInfo object indexed by file path
      */
     public function listEntriesRecursively($path)
@@ -137,6 +139,7 @@ class FileSystem
 
     /**
      * Same as listEntriesRecursively but returns only files.
+     *
      * @param mixed $path
      */
     public function listFilesRecursively($path)

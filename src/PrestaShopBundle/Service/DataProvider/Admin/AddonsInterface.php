@@ -37,7 +37,7 @@ interface AddonsInterface
      * Send a request to addons.prestashop.com to retrieve Modules/Addons data.
      *
      * @param string $action the query type
-     * @param array  $params the request parameters
+     * @param array $params the request parameters
      */
     public function request($action, $params);
 }

@@ -290,10 +290,10 @@ class CartControllerCore extends FrontController
     protected function processDeleteProductInCart()
     {
         $customization_product = Db::getInstance()->executeS(
-            'SELECT * FROM `'._DB_PREFIX_.'customization`'
-            .' WHERE `id_cart` = '.(int) $this->context->cart->id
-            .' AND `id_product` = '.(int) $this->id_product
-            .' AND `id_customization` != '.(int) $this->customization_id
+            'SELECT * FROM `' . _DB_PREFIX_ . 'customization`'
+            . ' WHERE `id_cart` = ' . (int) $this->context->cart->id
+            . ' AND `id_product` = ' . (int) $this->id_product
+            . ' AND `id_customization` != ' . (int) $this->customization_id
         );
 
         if (count($customization_product)) {
@@ -569,7 +569,7 @@ class CartControllerCore extends FrontController
      * Check product quantity availability.
      *
      * @param Product $product
-     * @param int     $qtyToCheck
+     * @param int $qtyToCheck
      *
      * @return bool
      */

@@ -104,7 +104,7 @@ class Admin
         }
 
         //redirect to admin home page
-        header('Location: '.$this->context->getAdminLink('', false));
+        header('Location: ' . $this->context->getAdminLink('', false));
         exit();
     }
 }

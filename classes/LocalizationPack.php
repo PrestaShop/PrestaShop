@@ -38,10 +38,10 @@ class LocalizationPackCore
     /**
      * Loads localization pack.
      *
-     * @param SimpleXMLElement|string $pack                  Localization pack as SimpleXMLElement or plain XML string
-     * @param array                   $selection             Content to import selection
-     * @param bool                    $install_mode          Whether mode is installation or not
-     * @param null|string             $iso_localization_pack Country Alpha-2 ISO code
+     * @param SimpleXMLElement|string $pack Localization pack as SimpleXMLElement or plain XML string
+     * @param array $selection Content to import selection
+     * @param bool $install_mode Whether mode is installation or not
+     * @param null|string $iso_localization_pack Country Alpha-2 ISO code
      *
      * @return bool
      */
@@ -118,7 +118,7 @@ class LocalizationPackCore
         } else {
             foreach ($selection as $selected) {
                 // No need to specify the install_mode because if the selection mode is used, then it's not the install
-                $res &= Validate::isLocalizationPackSelection($selected) ? $this->{'_install'.$selected}($xml) : false;
+                $res &= Validate::isLocalizationPackSelection($selected) ? $this->{'_install' . $selected}($xml) : false;
             }
         }
 
@@ -127,7 +127,7 @@ class LocalizationPackCore
             foreach ($xml->languages->language as $lang) {
                 //use this to get correct language code ex : qc become fr
                 $languageCode = explode('-', Language::getLanguageCodeByIso($lang['iso_code']));
-                $isoCode = $languageCode[0].'-'.strtoupper($iso_localization_pack);
+                $isoCode = $languageCode[0] . '-' . strtoupper($iso_localization_pack);
 
                 $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
                 $cldrUpdate->fetchLocale($isoCode);
@@ -141,8 +141,8 @@ class LocalizationPackCore
      * @param SimpleXMLElement $xml
      *
      * @throws PrestaShopException
-     * @return bool
      *
+     * @return bool
      */
     protected function _installStates($xml)
     {
@@ -213,8 +213,8 @@ class LocalizationPackCore
      * @param SimpleXMLElement $xml
      *
      * @throws PrestaShopException
-     * @return bool
      *
+     * @return bool
      */
     protected function _installTaxes($xml)
     {
@@ -233,7 +233,7 @@ class LocalizationPackCore
                 $tax->active = 1;
 
                 if (true !== ($error = $tax->validateFields(false, true)) || true !== ($error = $tax->validateFieldsLang(false, true))) {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid tax properties.', array(), 'Admin.International.Notification').' '.$error;
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid tax properties.', array(), 'Admin.International.Notification') . ' ' . $error;
 
                     return false;
                 }
@@ -321,11 +321,11 @@ class LocalizationPackCore
 
     /**
      * @param SimpleXMLElement $xml
-     * @param bool             $install_mode
+     * @param bool $install_mode
      *
      * @throws PrestaShopException
-     * @return bool
      *
+     * @return bool
      */
     protected function _installCurrencies($xml, $install_mode = false)
     {
@@ -377,7 +377,7 @@ class LocalizationPackCore
 
     /**
      * @param SimpleXMLElement $xml
-     * @param bool             $install_mode
+     * @param bool $install_mode
      *
      * @return bool
      */
@@ -496,7 +496,7 @@ class LocalizationPackCore
                 $attributes = $data->attributes();
                 $name = (string) $attributes['name'];
 
-                if (isset($name, $attributes['value'])   && false !== Configuration::get($name)) {
+                if (isset($name, $attributes['value']) && false !== Configuration::get($name)) {
                     if (!Configuration::updateValue($name, (string) $attributes['value'])) {
                         $this->_errors[] = Context::getContext()->getTranslator()->trans(
                             'An error occurred during the configuration setup: %1$s',

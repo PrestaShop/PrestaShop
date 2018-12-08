@@ -60,8 +60,8 @@ class UpgraderCore
      */
     public function __construct($autoload = false)
     {
-        $this->rss_version_link = _PS_API_URL_.'/xml/upgrader.xml';
-        $this->rss_md5file_link_dir = _PS_API_URL_.'/xml/md5/';
+        $this->rss_version_link = _PS_API_URL_ . '/xml/upgrader.xml';
+        $this->rss_md5file_link_dir = _PS_API_URL_ . '/xml/md5/';
 
         if ($autoload) {
             $this->loadFromConfig();
@@ -80,7 +80,7 @@ class UpgraderCore
     /**
      * downloadLast download the last version of PrestaShop and save it in $dest/$filename.
      *
-     * @param string $dest     directory where to save the file
+     * @param string $dest directory where to save the file
      * @param string $filename new filename
      *
      * @return bool
@@ -93,7 +93,7 @@ class UpgraderCore
             $this->checkPSVersion();
         }
 
-        $destPath = realpath($dest).DIRECTORY_SEPARATOR.$filename;
+        $destPath = realpath($dest) . DIRECTORY_SEPARATOR . $filename;
         if (@copy($this->link, $destPath)) {
             return true;
         } else {
@@ -117,6 +117,7 @@ class UpgraderCore
      * checkPSVersion ask to prestashop.com if there is a new version. return an array if yes, false otherwise.
      *
      * @param mixed $force
+     *
      * @return mixed
      */
     public function checkPSVersion($force = false)
@@ -227,7 +228,7 @@ class UpgraderCore
     {
         if (is_array($this->changed_files) && 0 == count($this->changed_files)) {
             libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
-            $checksum = @simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
+            $checksum = @simplexml_load_file($this->rss_md5file_link_dir . _PS_VERSION_ . '.xml');
             if (false == $checksum) {
                 $this->changed_files = false;
             } else {
@@ -276,7 +277,7 @@ class UpgraderCore
     /**
      * @param $node
      * @param array $currentPath
-     * @param int   $level
+     * @param int $level
      */
     protected function browseXmlAndCompare($node, &$currentPath = array(), $level = 1)
     {
@@ -290,15 +291,15 @@ class UpgraderCore
                 // absolute path is only used for file_exists and compare
                 $relativePath = '';
                 for ($i = 1; $i < $level; ++$i) {
-                    $relativePath .= $currentPath[$i].'/';
+                    $relativePath .= $currentPath[$i] . '/';
                 }
                 $relativePath .= (string) $child['name'];
-                $fullpath = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$relativePath;
+                $fullpath = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $relativePath;
 
                 $fullpath = str_replace('ps_root_dir', _PS_ROOT_DIR_, $fullpath);
 
                 // replace default admin dir by current one
-                $fullpath = str_replace(_PS_ROOT_DIR_.'/admin', _PS_ADMIN_DIR_, $fullpath);
+                $fullpath = str_replace(_PS_ROOT_DIR_ . '/admin', _PS_ADMIN_DIR_, $fullpath);
                 if (!file_exists($fullpath)) {
                     $this->addMissingFile($relativePath);
                 } elseif (!$this->compareChecksum($fullpath, (string) $child)) {

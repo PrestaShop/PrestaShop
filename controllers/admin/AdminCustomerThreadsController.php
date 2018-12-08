@@ -195,37 +195,37 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         'type' => 'bool',
                     ),
                     'PS_SAV_IMAP_OPT_POP3' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/pop3)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/pop3)',
                         'hint' => $this->trans('Use POP3 instead of IMAP.', array(), 'Admin.Catalog.Help'),
                         'type' => 'bool',
                     ),
                     'PS_SAV_IMAP_OPT_NORSH' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/norsh)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/norsh)',
                         'type' => 'bool',
                         'hint' => $this->trans('Do not use RSH or SSH to establish a preauthenticated IMAP sessions.', array(), 'Admin.Catalog.Help'),
                     ),
                     'PS_SAV_IMAP_OPT_SSL' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/ssl)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/ssl)',
                         'type' => 'bool',
                         'hint' => $this->trans('Use the Secure Socket Layer (TLS/SSL) to encrypt the session.', array(), 'Admin.Catalog.Help'),
                     ),
                     'PS_SAV_IMAP_OPT_VALIDATE-CERT' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/validate-cert)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/validate-cert)',
                         'type' => 'bool',
                         'hint' => $this->trans('Validate certificates from the TLS/SSL server.', array(), 'Admin.Catalog.Help'),
                     ),
                     'PS_SAV_IMAP_OPT_NOVALIDATE-CERT' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/novalidate-cert)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/novalidate-cert)',
                         'type' => 'bool',
                         'hint' => $this->trans('Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates.', array(), 'Admin.Catalog.Help'),
                     ),
                     'PS_SAV_IMAP_OPT_TLS' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/tls)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/tls)',
                         'type' => 'bool',
                         'hint' => $this->trans('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.', array(), 'Admin.Catalog.Help'),
                     ),
                     'PS_SAV_IMAP_OPT_NOTLS' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/notls)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/notls)',
                         'type' => 'bool',
                         'hint' => $this->trans('Do not use start-TLS to encrypt the session, even with servers that support it.', array(), 'Admin.Catalog.Help'),
                     ),
@@ -247,8 +247,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages, cm.private,
 			(
 				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
-				FROM `'._DB_PREFIX_.'customer_message` cm2
-				INNER JOIN '._DB_PREFIX_.'employee e
+				FROM `' . _DB_PREFIX_ . 'customer_message` cm2
+				INNER JOIN ' . _DB_PREFIX_ . 'employee e
 					ON e.`id_employee` = cm2.`id_employee`
 				WHERE cm2.id_employee > 0
 					AND cm2.`id_customer_thread` = a.`id_customer_thread`
@@ -256,17 +256,17 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			) as employee';
 
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'customer` c
+			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
 				ON c.`id_customer` = a.`id_customer`
-			LEFT JOIN `'._DB_PREFIX_.'customer_message` cm
+			LEFT JOIN `' . _DB_PREFIX_ . 'customer_message` cm
 				ON cm.`id_customer_thread` = a.`id_customer_thread`
-			LEFT JOIN `'._DB_PREFIX_.'lang` l
+			LEFT JOIN `' . _DB_PREFIX_ . 'lang` l
 				ON l.`id_lang` = a.`id_lang`
-			LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl
-				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = '.(int) $this->context->language->id.')';
+			LEFT JOIN `' . _DB_PREFIX_ . 'contact_lang` cl
+				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')';
 
         if ($id_order = Tools::getValue('id_order')) {
-            $this->_where .= ' AND id_order = '.(int) $id_order;
+            $this->_where .= ' AND id_order = ' . (int) $id_order;
         }
 
         $this->_group = 'GROUP BY cm.id_customer_thread';
@@ -312,9 +312,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
             if (($id_contact = (int) Tools::getValue('id_contact'))) {
                 $result = Db::getInstance()->execute(
                     '
-					UPDATE '._DB_PREFIX_.'customer_thread
-					SET id_contact = '.$id_contact.'
-					WHERE id_customer_thread = '.$id_customer_thread
+					UPDATE ' . _DB_PREFIX_ . 'customer_thread
+					SET id_contact = ' . $id_contact . '
+					WHERE id_customer_thread = ' . $id_customer_thread
                 );
                 if ($result) {
                     $this->object->id_contact = $id_contact;
@@ -323,9 +323,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
             if ($id_status = (int) Tools::getValue('setstatus')) {
                 $status_array = array(1 => 'open', 2 => 'closed', 3 => 'pending1', 4 => 'pending2');
                 $result = Db::getInstance()->execute('
-					UPDATE '._DB_PREFIX_.'customer_thread
-					SET status = "'.$status_array[$id_status].'"
-					WHERE id_customer_thread = '.$id_customer_thread.' LIMIT 1
+					UPDATE ' . _DB_PREFIX_ . 'customer_thread
+					SET status = "' . $status_array[$id_status] . '"
+					WHERE id_customer_thread = ' . $id_customer_thread . ' LIMIT 1
 				');
                 if ($result) {
                     $this->object->status = $status_array[$id_status];
@@ -335,16 +335,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $messages = Db::getInstance()->getRow('
 					SELECT ct.*, cm.*, cl.name subject, CONCAT(e.firstname, \' \', e.lastname) employee_name,
 						CONCAT(c.firstname, \' \', c.lastname) customer_name, c.firstname
-					FROM '._DB_PREFIX_.'customer_thread ct
-					LEFT JOIN '._DB_PREFIX_.'customer_message cm
+					FROM ' . _DB_PREFIX_ . 'customer_thread ct
+					LEFT JOIN ' . _DB_PREFIX_ . 'customer_message cm
 						ON (ct.id_customer_thread = cm.id_customer_thread)
-					LEFT JOIN '._DB_PREFIX_.'contact_lang cl
-						ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int) $this->context->language->id.')
-					LEFT OUTER JOIN '._DB_PREFIX_.'employee e
+					LEFT JOIN ' . _DB_PREFIX_ . 'contact_lang cl
+						ON (cl.id_contact = ct.id_contact AND cl.id_lang = ' . (int) $this->context->language->id . ')
+					LEFT OUTER JOIN ' . _DB_PREFIX_ . 'employee e
 						ON e.id_employee = cm.id_employee
-					LEFT OUTER JOIN '._DB_PREFIX_.'customer c
+					LEFT OUTER JOIN ' . _DB_PREFIX_ . 'customer c
 						ON (c.email = ct.email)
-					WHERE ct.id_customer_thread = '.(int) Tools::getValue('id_customer_thread').'
+					WHERE ct.id_customer_thread = ' . (int) Tools::getValue('id_customer_thread') . '
 					ORDER BY cm.date_add DESC
 				');
                 $output = $this->displayMessage($messages, true, (int) Tools::getValue('id_employee_forward'));
@@ -362,7 +362,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 } elseif ($id_employee && $employee && Validate::isLoadedObject($employee)) {
                     $params = array(
                         '{messages}' => stripslashes($output),
-                        '{employee}' => $current_employee->firstname.' '.$current_employee->lastname,
+                        '{employee}' => $current_employee->firstname . ' ' . $current_employee->lastname,
                         '{comment}' => stripslashes(Tools::nl2br($_POST['message_forward'])),
                         '{firstname}' => $employee->firstname,
                         '{lastname}' => $employee->lastname,
@@ -379,22 +379,22 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         ),
                         $params,
                         $employee->email,
-                        $employee->firstname.' '.$employee->lastname,
+                        $employee->firstname . ' ' . $employee->lastname,
                         $current_employee->email,
-                        $current_employee->firstname.' '.$current_employee->lastname,
+                        $current_employee->firstname . ' ' . $current_employee->lastname,
                         null,
                         null,
                         _PS_MAIL_DIR_,
                         true
                     )) {
                         $cm->private = 1;
-                        $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature').' '.$employee->firstname.' '.$employee->lastname."\n".$this->trans('Comment:').' '.$message;
+                        $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature') . ' ' . $employee->firstname . ' ' . $employee->lastname . "\n" . $this->trans('Comment:') . ' ' . $message;
                         $cm->add();
                     }
                 } elseif ($email && Validate::isEmail($email)) {
                     $params = array(
                         '{messages}' => Tools::nl2br(stripslashes($output)),
-                        '{employee}' => $current_employee->firstname.' '.$current_employee->lastname,
+                        '{employee}' => $current_employee->firstname . ' ' . $current_employee->lastname,
                         '{comment}' => stripslashes($_POST['message_forward']),
                         '{firstname}' => '',
                         '{lastname}' => '',
@@ -413,17 +413,17 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $email,
                         null,
                         $current_employee->email,
-                        $current_employee->firstname.' '.$current_employee->lastname,
+                        $current_employee->firstname . ' ' . $current_employee->lastname,
                         null,
                         null,
                         _PS_MAIL_DIR_,
                         true
                     )) {
-                        $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature').' '.$email."\n".$this->trans('Comment:').' '.$message;
+                        $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature') . ' ' . $email . "\n" . $this->trans('Comment:') . ' ' . $message;
                         $cm->add();
                     }
                 } else {
-                    $this->errors[] = '<div class="alert error">'.$this->trans('The email address is invalid.', array(), 'Admin.Notifications.Error').'</div>';
+                    $this->errors[] = '<div class="alert error">' . $this->trans('The email address is invalid.', array(), 'Admin.Notifications.Error') . '</div>';
                 }
             }
             if (Tools::isSubmit('submitReply')) {
@@ -452,7 +452,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         '{reply}' => Tools::nl2br(Tools::getValue('reply_message')),
                         '{link}' => Tools::url(
                             $this->context->link->getPageLink('contact', true, null, null, false, $ct->id_shop),
-                            'id_customer_thread='.(int) $ct->id.'&token='.$ct->token
+                            'id_customer_thread=' . (int) $ct->id . '&token=' . $ct->token
                         ),
                         '{firstname}' => $customer->firstname,
                         '{lastname}' => $customer->lastname,
@@ -497,7 +497,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $ct->update();
                     }
                     Tools::redirectAdmin(
-                        self::$currentIndex.'&id_customer_thread='.(int) $id_customer_thread.'&viewcustomer_thread&token='.Tools::getValue('token')
+                        self::$currentIndex . '&id_customer_thread=' . (int) $id_customer_thread . '&viewcustomer_thread&token=' . Tools::getValue('token')
                     );
                 } else {
                     $this->errors[] = $this->trans('An error occurred. Your message was not sent. Please contact your system administrator.', array(), 'Admin.Orderscustomers.Notification');
@@ -510,7 +510,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
     public function initContent()
     {
-        if (isset($_GET['filename']) && file_exists(_PS_UPLOAD_DIR_.$_GET['filename']) && Validate::isFileName($_GET['filename'])) {
+        if (isset($_GET['filename']) && file_exists(_PS_UPLOAD_DIR_ . $_GET['filename']) && Validate::isFileName($_GET['filename'])) {
             AdminCustomerThreadsController::openUploadedFile();
         }
 
@@ -549,9 +549,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if (ob_get_level() && ob_get_length() > 0) {
             ob_end_clean();
         }
-        header('Content-Type: '.$extension);
-        header('Content-Disposition:attachment;filename="'.$filename.'"');
-        readfile(_PS_UPLOAD_DIR_.$filename);
+        header('Content-Type: ' . $extension);
+        header('Content-Disposition:attachment;filename="' . $filename . '"');
+        readfile(_PS_UPLOAD_DIR_ . $filename);
         die;
     }
 
@@ -571,7 +571,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if (false !== ConfigurationKPI::get('PENDING_MESSAGES')) {
             $helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=pending_messages';
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=pending_messages';
         $helper->refresh = (bool) (ConfigurationKPI::get('PENDING_MESSAGES_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -584,7 +584,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if (false !== ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME')) {
             $helper->value = ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_msg_response_time';
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=avg_msg_response_time';
         $helper->refresh = (bool) (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -597,7 +597,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if (false !== ConfigurationKPI::get('MESSAGES_PER_THREAD')) {
             $helper->value = ConfigurationKPI::get('MESSAGES_PER_THREAD');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=messages_per_thread';
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=messages_per_thread';
         $helper->refresh = (bool) (ConfigurationKPI::get('MESSAGES_PER_THREAD_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -629,7 +629,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $messages[$key]['employee_image'] = $employee->getImage();
             }
             if (isset($mess['file_name']) && '' != $mess['file_name']) {
-                $messages[$key]['file_name'] = _THEME_PROD_PIC_DIR_.$mess['file_name'];
+                $messages[$key]['file_name'] = _THEME_PROD_PIC_DIR_ . $mess['file_name'];
             } else {
                 unset($messages[$key]['file_name']);
             }
@@ -638,7 +638,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $product = new Product((int) $mess['id_product'], false, $this->context->language->id);
                 if (Validate::isLoadedObject($product)) {
                     $messages[$key]['product_name'] = $product->name;
-                    $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts').'&updateproduct&id_product='.(int) $product->id;
+                    $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts') . '&updateproduct&id_product=' . (int) $product->id;
                 }
             }
         }
@@ -651,21 +651,21 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         if ($next_thread) {
             $next_thread = array(
-                'href' => self::$currentIndex.'&id_customer_thread='.(int) $next_thread.'&viewcustomer_thread&token='.$this->token,
+                'href' => self::$currentIndex . '&id_customer_thread=' . (int) $next_thread . '&viewcustomer_thread&token=' . $this->token,
                 'name' => $this->trans('Reply to the next unanswered message in this thread', array(), 'Admin.Catalog.Feature'),
             );
         }
 
         if ('closed' != $thread->status) {
             $actions['closed'] = array(
-                'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.(int) Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+                'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=2&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
                 'label' => $this->trans('Mark as "handled"', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 2,
             );
         } else {
             $actions['open'] = array(
-                'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int) Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+                'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=1&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
                 'label' => $this->trans('Re-open', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 1,
@@ -674,14 +674,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         if ('pending1' != $thread->status) {
             $actions['pending1'] = array(
-                'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.(int) Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+                'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=3&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
                 'label' => $this->trans('Mark as "pending 1" (will be answered later)', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 3,
             );
         } else {
             $actions['pending1'] = array(
-                'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int) Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+                'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=1&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
                 'label' => $this->trans('Disable pending status', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 1,
@@ -690,14 +690,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         if ('pending2' != $thread->status) {
             $actions['pending2'] = array(
-                'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.(int) Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+                'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=4&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
                 'label' => $this->trans('Mark as "pending 2" (will be answered later)', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 4,
             );
         } else {
             $actions['pending2'] = array(
-                'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int) Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+                'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=1&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
                 'label' => $this->trans('Disable pending status', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 1,
@@ -773,14 +773,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $timeline = array();
         foreach ($messages as $message) {
             $product = new Product((int) $message['id_product'], false, $this->context->language->id);
-            $link_product = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int) $product->id;
+            $link_product = $this->context->link->getAdminLink('AdminOrders') . '&vieworder&id_order=' . (int) $product->id;
 
             $content = '';
             if (!$message['private']) {
-                $content .= $this->trans('Message to: ', array(), 'Admin.Catalog.Feature').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>';
+                $content .= $this->trans('Message to: ', array(), 'Admin.Catalog.Feature') . ' <span class="badge">' . (!$message['id_employee'] ? $message['subject'] : $message['customer_name']) . '</span><br/>';
             }
             if (Validate::isLoadedObject($product)) {
-                $content .= '<br/>'.$this->trans('Product: ', array(), 'Admin.Catalog.Feature').'<span class="label label-info">'.$product->name.'</span><br/><br/>';
+                $content .= '<br/>' . $this->trans('Product: ', array(), 'Admin.Catalog.Feature') . '<span class="label label-info">' . $product->name . '</span><br/><br/>';
             }
             $content .= Tools::safeOutput($message['message']);
 
@@ -797,11 +797,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if (Validate::isLoadedObject($order)) {
             $order_history = $order->getHistory($this->context->language->id);
             foreach ($order_history as $history) {
-                $link_order = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int) $order->id;
+                $link_order = $this->context->link->getAdminLink('AdminOrders') . '&vieworder&id_order=' . (int) $order->id;
 
-                $content = '<a class="badge" target="_blank" href="'.Tools::safeOutput($link_order).'">'.$this->trans('Order', array(), 'Admin.Global').' #'.(int) $order->id.'</a><br/><br/>';
+                $content = '<a class="badge" target="_blank" href="' . Tools::safeOutput($link_order) . '">' . $this->trans('Order', array(), 'Admin.Global') . ' #' . (int) $order->id . '</a><br/><br/>';
 
-                $content .= '<span>'.$this->trans('Status:', array(), 'Admin.Catalog.Feature').' '.$history['ostate_name'].'</span>';
+                $content .= '<span>' . $this->trans('Status:', array(), 'Admin.Catalog.Feature') . ' ' . $history['ostate_name'] . '</span>';
 
                 $timeline[$history['date_add']][] = array(
                     'arrow' => 'right',
@@ -854,9 +854,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         $tpl->assign(array(
-            'thread_url' => Tools::getAdminUrl(basename(_PS_ADMIN_DIR_).'/'.
-                $this->context->link->getAdminLink('AdminCustomerThreads').'&amp;id_customer_thread='
-                .(int) $message['id_customer_thread'].'&amp;viewcustomer_thread=1'),
+            'thread_url' => Tools::getAdminUrl(basename(_PS_ADMIN_DIR_) . '/' .
+                $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
+                . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1'),
             'link' => Context::getContext()->link,
             'current' => self::$currentIndex,
             'token' => $this->token,
@@ -865,7 +865,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             'email' => $email,
             'id_employee' => $id_employee,
             'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME'),
-            'file_name' => file_exists(_PS_UPLOAD_DIR_.$message['file_name']),
+            'file_name' => file_exists(_PS_UPLOAD_DIR_ . $message['file_name']),
             'contacts' => $contacts,
             'is_valid_order_id' => $is_valid_order_id,
         ));
@@ -875,7 +875,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
     protected function displayButton($content)
     {
-        return '<div><p>'.$content.'</p></div>';
+        return '<div><p>' . $content . '</p></div>';
     }
 
     public function renderOptions()
@@ -897,12 +897,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
      *
      * @see AdminController::getList()
      *
-     * @param int         $id_lang
+     * @param int $id_lang
      * @param null|string $order_by
      * @param null|string $order_way
-     * @param int         $start
-     * @param null|int    $limit
-     * @param bool|int    $id_lang_shop
+     * @param int $start
+     * @param null|int $limit
+     * @param bool|int $id_lang_shop
      *
      * @throws PrestaShopException
      */
@@ -938,7 +938,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $id_thread = Tools::getValue('id_thread');
         $messages = CustomerThread::getMessageCustomerThreads($id_thread);
         if (count($messages)) {
-            Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer_message` set `read` = 1 WHERE `id_employee` = '.(int) $this->context->employee->id.' AND `id_customer_thread` = '.(int) $id_thread);
+            Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customer_message` set `read` = 1 WHERE `id_employee` = ' . (int) $this->context->employee->id . ' AND `id_customer_thread` = ' . (int) $id_thread);
         }
     }
 
@@ -1031,7 +1031,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             return array('hasError' => true, 'errors' => array('imap is not installed on this server'));
         }
 
-        $mbox = @imap_open('{'.$url.':'.$port.$conf_str.'}', $user, $password);
+        $mbox = @imap_open('{' . $url . ':' . $port . $conf_str . '}', $user, $password);
 
         //checks if there is no error when connecting imap server
         $errors = imap_errors();
@@ -1044,13 +1044,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if (count($errors) && is_array($errors)) {
             $str_errors = '';
             foreach ($errors as $error) {
-                $str_errors .= $error.', ';
+                $str_errors .= $error . ', ';
             }
             $str_errors = rtrim(trim($str_errors), ',');
         }
         //checks if imap connexion is active
         if (!$mbox) {
-            return array('hasError' => true, 'errors' => array('Cannot connect to the mailbox :<br />'.($str_errors)));
+            return array('hasError' => true, 'errors' => array('Cannot connect to the mailbox :<br />' . ($str_errors)));
         }
 
         //Returns information about the current mailbox. Returns FALSE on failure.
@@ -1073,11 +1073,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $subject = '';
             }
             //Creating an md5 to check if message has been allready processed
-            $md5 = md5($overview->date.$overview->from.$subject.$overview->msgno);
+            $md5 = md5($overview->date . $overview->from . $subject . $overview->msgno);
             $exist = Db::getInstance()->getValue(
                 'SELECT `md5_header`
-						 FROM `'._DB_PREFIX_.'customer_message_sync_imap`
-						 WHERE `md5_header` = \''.pSQL($md5).'\''
+						 FROM `' . _DB_PREFIX_ . 'customer_message_sync_imap`
+						 WHERE `md5_header` = \'' . pSQL($md5) . '\''
             );
             if ($exist) {
                 if (Configuration::get('PS_SAV_IMAP_DELETE_MSG')) {
@@ -1090,7 +1090,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 preg_match('/\#ct([0-9]*)/', $subject, $matches1);
                 preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
                 $match_found = false;
-                if (isset($matches1[1], $matches2[1])  ) {
+                if (isset($matches1[1], $matches2[1])) {
                     $match_found = true;
                 }
 
@@ -1102,7 +1102,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         // parse from attribute and fix it if needed
                         $from_parsed = array();
                         if (!isset($overview->from)
-                            || (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $from_parsed)
+                            || (!preg_match('/<(' . Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+') . ')>/', $overview->from, $from_parsed)
                             && !Validate::isEmail($overview->from))) {
                             $message_errors[] = $this->trans('Cannot create message in a new thread.', array(), 'Admin.Orderscustomers.Notification');
                             continue;
@@ -1190,21 +1190,21 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     }
                 }
                 if ($fetch_succeed) {
-                    Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` (`md5_header`) VALUES (\''.pSQL($md5).'\')');
+                    Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_message_sync_imap` (`md5_header`) VALUES (\'' . pSQL($md5) . '\')');
                 }
             }
         }
         imap_expunge($mbox);
         imap_close($mbox);
         if (sizeof($message_errors) > 0) {
-            if (($more_error = $str_errors.$str_error_delete) && strlen($more_error) > 0) {
+            if (($more_error = $str_errors . $str_error_delete) && strlen($more_error) > 0) {
                 $message_errors = array_merge(array($more_error), $message_errors);
             }
 
             return array('hasError' => true, 'errors' => $message_errors);
         }
-        if ($str_errors.$str_error_delete) {
-            return array('hasError' => true, 'errors' => array($str_errors.$str_error_delete));
+        if ($str_errors . $str_error_delete) {
+            return array('hasError' => true, 'errors' => array($str_errors . $str_error_delete));
         } else {
             return array('hasError' => false, 'errors' => '');
         }

@@ -397,7 +397,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * Generated URLs will include the page number, obviously,
      * but also the sort order and the "q" (facets) parameters.
      *
-     * @param ProductSearchQuery  $query
+     * @param ProductSearchQuery $query
      * @param ProductSearchResult $result
      *
      * @return an array that makes rendering the pagination very easy
@@ -457,7 +457,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * but not the page number because normally when you change the sort order
      * you want to go back to page one.
      *
-     * @param array  $sortOrders                   the available sort orders
+     * @param array $sortOrders the available sort orders
      * @param string $currentSortOrderURLParameter used to know which of the sort orders (if any) is active
      *
      * @return array

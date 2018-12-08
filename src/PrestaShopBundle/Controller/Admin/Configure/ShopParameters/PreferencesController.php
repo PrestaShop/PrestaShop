@@ -44,14 +44,14 @@ class PreferencesController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminPreferences';
 
     /**
-     * @param Request            $request
+     * @param Request $request
      * @param null|FormInterface $form
      *
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/preferences.html.twig")
      *
      * @throws \LogicException
-     * @return array
      *
+     * @return array
      */
     public function indexAction(Request $request, FormInterface $form = null)
     {
@@ -63,7 +63,7 @@ class PreferencesController extends FrameworkBundleAdminController
         $toolsAdapter = $this->get('prestashop.adapter.tools');
 
         // SSL URI is used for the merchant to check if he has SSL enabled
-        $sslUri = 'https://'.$toolsAdapter->getShopDomainSsl().$request->getRequestUri();
+        $sslUri = 'https://' . $toolsAdapter->getShopDomainSsl() . $request->getRequestUri();
 
         return array(
             'layoutHeaderToolbarBtn' => array(),
@@ -86,8 +86,8 @@ class PreferencesController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @throws \LogicException
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function processFormAction(Request $request)
     {

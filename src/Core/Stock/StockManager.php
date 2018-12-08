@@ -50,10 +50,10 @@ class StockManager
     /**
      * This will update a Pack quantity and will decrease the quantity of containing Products if needed.
      *
-     * @param Product        $product         A product pack object to update its quantity
+     * @param Product $product A product pack object to update its quantity
      * @param StockAvailable $stock_available the stock of the product to fix with correct quantity
-     * @param int            $delta_quantity  The movement of the stock (negative for a decrease)
-     * @param null|int       $id_shop         Optional shop ID
+     * @param int $delta_quantity The movement of the stock (negative for a decrease)
+     * @param null|int $id_shop Optional shop ID
      */
     public function updatePackQuantity($product, $stock_available, $delta_quantity, $id_shop = null)
     {
@@ -76,7 +76,7 @@ class StockManager
                 $productStockAvailable->quantity = $productStockAvailable->quantity + ($delta_quantity * $product_pack->pack_quantity);
                 $productStockAvailable->update();
 
-                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int) $product_pack->id.'*');
+                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $product_pack->id . '*');
             }
         }
 
@@ -98,10 +98,10 @@ class StockManager
      * This will decrease (if needed) Packs containing this product
      * (with the right declination) if there is not enough product in stocks.
      *
-     * @param Product        $product              A product object to update its quantity
-     * @param int            $id_product_attribute The product attribute to update
-     * @param StockAvailable $stock_available      the stock of the product to fix with correct quantity
-     * @param null|int       $id_shop              Optional shop ID
+     * @param Product $product A product object to update its quantity
+     * @param int $id_product_attribute The product attribute to update
+     * @param StockAvailable $stock_available the stock of the product to fix with correct quantity
+     * @param null|int $id_shop Optional shop ID
      */
     public function updatePacksQuantityContainingProduct($product, $id_product_attribute, $stock_available, $id_shop = null)
     {
@@ -134,7 +134,7 @@ class StockManager
                 $stock_available_pack->quantity = $max_pack_quantity;
                 $stock_available_pack->update();
 
-                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int) $pack->id.'*');
+                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $pack->id . '*');
             }
         }
     }
@@ -143,12 +143,12 @@ class StockManager
      * Will update Product available stock int he given declinaison. If product is a Pack, could decrease the sub products.
      * If Product is contained in a Pack, Pack could be decreased or not (only if sub product stocks become not sufficient).
      *
-     * @param Product  $product              The product to update its stockAvailable
-     * @param int      $id_product_attribute The declinaison to update (null if not)
-     * @param int      $delta_quantity       The quantity change (positive or negative)
-     * @param null|int $id_shop              Optional
-     * @param bool     $add_movement         Optional
-     * @param array    $params               Optional
+     * @param Product $product The product to update its stockAvailable
+     * @param int $id_product_attribute The declinaison to update (null if not)
+     * @param int $delta_quantity The quantity change (positive or negative)
+     * @param null|int $id_shop Optional
+     * @param bool $add_movement Optional
+     * @param array $params Optional
      */
     public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = array())
     {
@@ -197,13 +197,13 @@ class StockManager
             $this->sendLowStockAlert($product, $id_product_attribute, $stockAvailable->quantity);
         }
 
-        $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int) $product->id.'*');
+        $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $product->id . '*');
     }
 
     /**
      * @param Product $product
-     * @param int     $id_product_attribute
-     * @param int     $newQuantity
+     * @param int $id_product_attribute
+     * @param int $newQuantity
      *
      * @return bool
      */
@@ -232,7 +232,7 @@ class StockManager
 
     /**
      * @param Product $product
-     * @param int     $newQuantity
+     * @param int $newQuantity
      *
      * @return bool
      */
@@ -252,7 +252,7 @@ class StockManager
 
     /**
      * @param Combination $combination
-     * @param int         $newQuantity
+     * @param int $newQuantity
      *
      * @return bool
      */
@@ -272,8 +272,8 @@ class StockManager
 
     /**
      * @param Product $product
-     * @param int     $id_product_attribute
-     * @param int     $newQuantity
+     * @param int $id_product_attribute
+     * @param int $newQuantity
      *
      * @throws \Exception
      * @throws \PrestaShopException
@@ -328,7 +328,7 @@ class StockManager
                 (string) $configuration['PS_SHOP_NAME'],
                 null,
                 null,
-                dirname(__FILE__).'/mails/',
+                dirname(__FILE__) . '/mails/',
                 false,
                 $idShop
             );

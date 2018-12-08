@@ -38,8 +38,8 @@ trait TranslationFinderTrait
      * @param null $pattern
      *
      * @throws \Exception
-     * @return MessageCatalogue
      *
+     * @return MessageCatalogue
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {
@@ -59,7 +59,7 @@ trait TranslationFinderTrait
             if (false !== strpos($file->getBasename('.xlf'), $locale)) {
                 $domain = $file->getBasename('.xlf');
             } else {
-                $domain = $file->getBasename('.xlf').'.'.$locale;
+                $domain = $file->getBasename('.xlf') . '.' . $locale;
             }
 
             $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);

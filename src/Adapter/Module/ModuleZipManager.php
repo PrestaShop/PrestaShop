@@ -81,8 +81,8 @@ class ModuleZipManager
      * @param string $source
      *
      * @throws Exception If unable to find the module name
-     * @return string
      *
+     * @return string
      */
     public function getName($source)
     {
@@ -134,13 +134,13 @@ class ModuleZipManager
             // Inside of this folder, we MUST have a file called <module name>.php
             $moduleFolder = Finder::create()
                 ->files()
-                ->in($sandboxPath.$moduleName)
+                ->in($sandboxPath . $moduleName)
                 ->depth('== 0')
                 ->exclude(['__MACOSX'])
                 ->ignoreVCS(true)
             ;
             foreach (iterator_to_array($moduleFolder) as $file) {
-                if ($file->getFileName() === $moduleName.'.php') {
+                if ($file->getFileName() === $moduleName . '.php') {
                     $validModuleStructure = true;
                     break;
                 }
@@ -171,10 +171,10 @@ class ModuleZipManager
         $name = $this->getName($source);
         $sandboxPath = $this->getSandboxPath($source);
         // Now we are sure to have a valid module, we copy it to the modules folder
-        $modulePath = _PS_MODULE_DIR_.$name;
+        $modulePath = _PS_MODULE_DIR_ . $name;
         $this->filesystem->mkdir($modulePath);
         $this->filesystem->mirror(
-            $sandboxPath.$name,
+            $sandboxPath . $name,
             $modulePath,
             null,
             array('override' => true)
@@ -198,7 +198,7 @@ class ModuleZipManager
     {
         $sandboxPath = $this->getSource($source)->getSandboxPath();
         if (null === $sandboxPath) {
-            $sandboxPath = _PS_CACHE_DIR_.'sandbox/'.uniqid().'/';
+            $sandboxPath = _PS_CACHE_DIR_ . 'sandbox/' . uniqid() . '/';
             $this->filesystem->mkdir($sandboxPath);
             $this->getSource($source)->setSandboxPath($sandboxPath);
         }

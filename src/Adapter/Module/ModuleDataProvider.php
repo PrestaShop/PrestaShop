@@ -93,7 +93,7 @@ class ModuleDataProvider
      */
     public function findByName($name)
     {
-        $result = Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
+        $result = Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"');
         if ($result) {
             $result['installed'] = 1;
             $result['active'] = $this->isEnabled($name);
@@ -169,10 +169,10 @@ class ModuleDataProvider
         // ToDo: Load list of all installed modules ?
 
         $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
-        FROM `'._DB_PREFIX_.'module` m
-        LEFT JOIN `'._DB_PREFIX_.'module_shop` ms ON m.`id_module` = ms.`id_module`
-        WHERE `name` = "'.pSQL($name).'"
-        AND ms.`id_shop` IN ('.implode(',', array_map('intval', $id_shops)).')');
+        FROM `' . _DB_PREFIX_ . 'module` m
+        LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
+        WHERE `name` = "' . pSQL($name) . '"
+        AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')');
         if ($result) {
             return (bool) ($result['active'] && $result['shop_active']);
         } else {
@@ -183,7 +183,7 @@ class ModuleDataProvider
     public function isInstalled($name)
     {
         // ToDo: Load list of all installed modules ?
-        return (bool) Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
+        return (bool) Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"');
     }
 
     /**
@@ -199,7 +199,7 @@ class ModuleDataProvider
             return false;
         }
 
-        $file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
+        $file_path = _PS_MODULE_DIR_ . $name . '/' . $name . '.php';
         // Check if file exists (slightly faster than file_exists)
         if (!(int) @filemtime($file_path)) {
             return false;
@@ -258,7 +258,7 @@ class ModuleDataProvider
      */
     public function isOnDisk($name)
     {
-        $path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
+        $path = _PS_MODULE_DIR_ . $name . '/' . $name . '.php';
 
         return file_exists($path);
     }
@@ -276,10 +276,10 @@ class ModuleDataProvider
         // ToDo: Load list of all installed modules ?
 
         $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`
-            FROM `'._DB_PREFIX_.'module` m
-            LEFT JOIN `'._DB_PREFIX_.'module_shop` ms ON m.`id_module` = ms.`id_module`
-            WHERE `name` = "'.pSQL($name).'"
-            AND ms.`id_shop` IN ('.implode(',', array_map('intval', $id_shops)).')');
+            FROM `' . _DB_PREFIX_ . 'module` m
+            LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
+            WHERE `name` = "' . pSQL($name) . '"
+            AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')');
         if ($result) {
             return (int) $result['enable_device'];
         }

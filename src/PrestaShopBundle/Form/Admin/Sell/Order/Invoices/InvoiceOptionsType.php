@@ -57,10 +57,10 @@ class InvoiceOptionsType extends TranslatorAwareType
     private $nextInvoiceNumber;
 
     /**
-     * @param TranslatorInterface         $translator
-     * @param array                       $locales
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param FormChoiceProviderInterface $invoiceModelChoiceProvider
-     * @param int                         $nextInvoiceNumber          the next available invoice number
+     * @param int $nextInvoiceNumber the next available invoice number
      */
     public function __construct(
         TranslatorInterface $translator,

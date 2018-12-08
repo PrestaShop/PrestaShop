@@ -46,7 +46,7 @@ final class FormBuilderFactory implements FormBuilderFactoryInterface
     private $hookDispatcher;
 
     /**
-     * @param FormFactoryInterface    $formFactory
+     * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(

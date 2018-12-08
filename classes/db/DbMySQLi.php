@@ -43,8 +43,8 @@ class DbMySQLiCore extends Db
      * @see DbCore::connect()
      *
      * @throws PrestaShopDatabaseException
-     * @return mysqli
      *
+     * @return mysqli
      */
     public function connect()
     {
@@ -86,11 +86,11 @@ class DbMySQLiCore extends Db
     /**
      * Tries to connect and create a new database.
      *
-     * @param string      $host
+     * @param string $host
      * @param null|string $user
      * @param null|string $password
      * @param null|string $database
-     * @param bool        $dropit   if true, drops the created database
+     * @param bool $dropit if true, drops the created database
      *
      * @return bool|mysqli_result
      */
@@ -102,8 +102,8 @@ class DbMySQLiCore extends Db
         } else {
             $link = @new mysqli($host, $user, $password);
         }
-        $success = $link->query('CREATE DATABASE `'.str_replace('`', '\\`', $database).'`');
-        if ($dropit && (false !== $link->query('DROP DATABASE `'.str_replace('`', '\\`', $database).'`'))) {
+        $success = $link->query('CREATE DATABASE `' . str_replace('`', '\\`', $database) . '`');
+        if ($dropit && (false !== $link->query('DROP DATABASE `' . str_replace('`', '\\`', $database) . '`'))) {
             return true;
         }
 
@@ -289,7 +289,7 @@ class DbMySQLiCore extends Db
      */
     public function set_db($db_name)
     {
-        return $this->link->query('USE `'.bqSQL($db_name).'`');
+        return $this->link->query('USE `' . bqSQL($db_name) . '`');
     }
 
     /**
@@ -298,9 +298,9 @@ class DbMySQLiCore extends Db
      * @see Db::hasTableWithSamePrefix()
      *
      * @param string $server Server address
-     * @param string $user   Login for database connection
-     * @param string $pwd    Password for database connection
-     * @param string $db     Database name
+     * @param string $user Login for database connection
+     * @param string $pwd Password for database connection
+     * @param string $db Database name
      * @param string $prefix Tables prefix
      *
      * @return bool
@@ -312,7 +312,7 @@ class DbMySQLiCore extends Db
             return false;
         }
 
-        $sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
+        $sql = 'SHOW TABLES LIKE \'' . $prefix . '%\'';
         $result = $link->query($sql);
 
         return (bool) $result->fetch_assoc();
@@ -323,13 +323,13 @@ class DbMySQLiCore extends Db
      *
      * @see Db::checkConnection()
      *
-     * @param string      $server    Server address
-     * @param string      $user      Login for database connection
-     * @param string      $pwd       Password for database connection
-     * @param string      $db        Database name
-     * @param bool        $newDbLink
+     * @param string $server Server address
+     * @param string $user Login for database connection
+     * @param string $pwd Password for database connection
+     * @param string $db Database name
+     * @param bool $newDbLink
      * @param bool|string $engine
-     * @param int         $timeout
+     * @param int $timeout
      * @param mixed $new_db_link
      *
      * @return int Error code or 0 if connection was successful
@@ -392,11 +392,11 @@ class DbMySQLiCore extends Db
     /**
      * Tries to connect to the database and create a table (checking creation privileges).
      *
-     * @param string      $server
-     * @param string      $user
-     * @param string      $pwd
-     * @param string      $db
-     * @param string      $prefix
+     * @param string $server
+     * @param string $user
+     * @param string $pwd
+     * @param string $db
+     * @param string $prefix
      * @param null|string $engine Table engine
      *
      * @return bool|string True, false or error
@@ -413,15 +413,15 @@ class DbMySQLiCore extends Db
         }
 
         $result = $link->query('
-		CREATE TABLE `'.$prefix.'test` (
+		CREATE TABLE `' . $prefix . 'test` (
 			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE='.$engine);
+		) ENGINE=' . $engine);
 
         if (!$result) {
             return $link->error;
         }
 
-        $link->query('DROP TABLE `'.$prefix.'test`');
+        $link->query('DROP TABLE `' . $prefix . 'test`');
 
         return true;
     }
@@ -432,8 +432,8 @@ class DbMySQLiCore extends Db
      * @see Db::checkEncoding()
      *
      * @param string $server Server address
-     * @param string $user   Login for database connection
-     * @param string $pwd    Password for database connection
+     * @param string $user Login for database connection
+     * @param string $pwd Password for database connection
      *
      * @return bool
      */

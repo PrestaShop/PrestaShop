@@ -67,7 +67,7 @@ final class UrlFileChecker implements UrlFileCheckerInterface
      */
     private function isFileWritable($fileName)
     {
-        $filePath = $this->fileDir.DIRECTORY_SEPARATOR.$fileName;
+        $filePath = $this->fileDir . DIRECTORY_SEPARATOR . $fileName;
 
         if (file_exists($filePath)) {
             return is_writable($filePath);

@@ -202,7 +202,7 @@ class CategoriesProvider
      * @param $menu
      * @param $name
      * @param array $moduleIds
-     * @param null  $tab
+     * @param null $tab
      *
      * @return object
      */
@@ -221,7 +221,7 @@ class CategoriesProvider
      * Find module type.
      *
      * @param ApiModule $installedProduct Installed product
-     * @param array     $modulesTheme     Modules theme
+     * @param array $modulesTheme Modules theme
      */
     private function findModuleType(ApiModule $installedProduct, array $modulesTheme)
     {
@@ -236,7 +236,7 @@ class CategoriesProvider
      * Find module category.
      *
      * @param ApiModule $installedProduct Installed product
-     * @param array     $categories       Available categories
+     * @param array $categories Available categories
      */
     private function findModuleCategory(ApiModule $installedProduct, array $categories)
     {

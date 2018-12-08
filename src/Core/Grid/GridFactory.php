@@ -53,7 +53,7 @@ final class GridFactory implements GridFactoryInterface
 
     /**
      * @param GridDefinitionFactoryInterface $definitionFactory
-     * @param GridDataFactoryInterface       $dataFactory
+     * @param GridDataFactoryInterface $dataFactory
      * @param GridFilterFormFactoryInterface $filterFormFactory
      */
     public function __construct(

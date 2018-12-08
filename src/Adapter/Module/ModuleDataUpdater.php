@@ -79,7 +79,7 @@ class ModuleDataUpdater
     {
         $fs = new FileSystem();
         try {
-            $fs->remove(_PS_MODULE_DIR_.'/'.$name);
+            $fs->remove(_PS_MODULE_DIR_ . '/' . $name);
 
             return true;
         } catch (IOException $e) {

@@ -37,8 +37,8 @@ class ObjectPresenter implements PresenterInterface
      * @param ObjectModel $object
      *
      * @throws Exception
-     * @return array
      *
+     * @return array
      */
     public function present($object)
     {

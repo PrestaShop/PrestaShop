@@ -133,8 +133,8 @@ class TaxCore extends ObjectModel
         return Db::getInstance()->getValue(
             '
 		SELECT `id_tax`
-		FROM `'._DB_PREFIX_.'order_detail_tax`
-		WHERE `id_tax` = '.(int) $this->id
+		FROM `' . _DB_PREFIX_ . 'order_detail_tax`
+		WHERE `id_tax` = ' . (int) $this->id
         );
     }
 
@@ -143,6 +143,7 @@ class TaxCore extends ObjectModel
      *
      * @param mixed $id_lang
      * @param mixed $active_only
+     *
      * @return array Taxes
      */
     public static function getTaxes($id_lang = false, $active_only = true)
@@ -154,7 +155,7 @@ class TaxCore extends ObjectModel
 
         if ($id_lang) {
             $sql->select('tl.name, tl.id_lang');
-            $sql->leftJoin('tax_lang', 'tl', 't.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int) $id_lang);
+            $sql->leftJoin('tax_lang', 'tl', 't.`id_tax` = tl.`id_tax` AND tl.`id_lang` = ' . (int) $id_lang);
             $sql->orderBy('`name` ASC');
         }
 
@@ -174,15 +175,15 @@ class TaxCore extends ObjectModel
      * Return the tax id associated to the specified name.
      *
      * @param string $tax_name
-     * @param bool   $active   (true by default)
+     * @param bool $active (true by default)
      */
     public static function getTaxIdByName($tax_name, $active = 1)
     {
         $tax = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT t.`id_tax`
-			FROM `'._DB_PREFIX_.'tax` t
-			LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (tl.id_tax = t.id_tax)
-			WHERE tl.`name` = \''.pSQL($tax_name).'\' '.
+			FROM `' . _DB_PREFIX_ . 'tax` t
+			LEFT JOIN `' . _DB_PREFIX_ . 'tax_lang` tl ON (tl.id_tax = t.id_tax)
+			WHERE tl.`name` = \'' . pSQL($tax_name) . '\' ' .
             (1 == $active ? ' AND t.`active` = 1' : ''));
 
         return $tax ? (int) $tax['id_tax'] : false;
@@ -242,12 +243,12 @@ class TaxCore extends ObjectModel
     {
         Tools::displayAsDeprecated();
 
-        if (!isset(self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$id_state.'-'.$zipcode])) {
+        if (!isset(self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $id_state . '-' . $zipcode])) {
             $tax_rate = TaxRulesGroup::getTaxesRate((int) Product::getIdTaxRulesGroupByIdProduct((int) $id_product), (int) $id_country, (int) $id_state, $zipcode);
-            self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode] = $tax_rate;
+            self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $zipcode] = $tax_rate;
         }
 
-        return self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode];
+        return self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $zipcode];
     }
 
     /**

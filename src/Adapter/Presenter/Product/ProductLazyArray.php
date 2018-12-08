@@ -209,8 +209,8 @@ class ProductLazyArray extends AbstractLazyArray
      * @arrayAccess
      *
      * @throws InvalidArgumentException
-     * @return array|bool
      *
+     * @return array|bool
      */
     public function getCondition()
     {
@@ -299,8 +299,8 @@ class ProductLazyArray extends AbstractLazyArray
      * @arrayAccess
      *
      * @throws \ReflectionException
-     * @return array
      *
+     * @return array
      */
     public function getAttachments()
     {
@@ -382,8 +382,8 @@ class ProductLazyArray extends AbstractLazyArray
      * @arrayAccess
      *
      * @throws InvalidArgumentException
-     * @return array
      *
+     * @return array
      */
     public function getLabels()
     {
@@ -419,8 +419,8 @@ class ProductLazyArray extends AbstractLazyArray
      * @arrayAccess
      *
      * @throws InvalidArgumentException
-     * @return array
      *
+     * @return array
      */
     public function getFlags()
     {
@@ -540,7 +540,7 @@ class ProductLazyArray extends AbstractLazyArray
      * and customer groups with active "Show price" option.
      *
      * @param ProductPresentationSettings $settings
-     * @param array                       $product
+     * @param array $product
      *
      * @return bool
      */
@@ -621,8 +621,8 @@ class ProductLazyArray extends AbstractLazyArray
             $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
 
             // TODO: add percent sign according to locale preferences
-            $this->product['discount_percentage'] = Tools::displayNumber($presNegativeReduction).'%';
-            $this->product['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction).'%';
+            $this->product['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
+            $this->product['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
             if ($settings->include_taxes) {
                 $regular_price = $product['price_without_reduction'];
                 $this->product['discount_amount'] = $this->priceFormatter->format(
@@ -634,7 +634,7 @@ class ProductLazyArray extends AbstractLazyArray
                     $product['reduction_without_tax']
                 );
             }
-            $this->product['discount_amount_to_display'] = '-'.$this->product['discount_amount'];
+            $this->product['discount_amount_to_display'] = '-' . $this->product['discount_amount'];
         }
 
         $this->product['price_amount'] = $price;
@@ -651,14 +651,14 @@ class ProductLazyArray extends AbstractLazyArray
         if (isset($product['unit_price']) && $product['unit_price']) {
             $this->product['unit_price'] = $this->priceFormatter->format($product['unit_price']);
             $this->product['unit_price_full'] = $this->priceFormatter->format($product['unit_price'])
-                .' '.$product['unity'];
+                . ' ' . $product['unity'];
         } else {
             $this->product['unit_price'] = $this->product['unit_price_full'] = '';
         }
     }
 
     /**
-     * @param array                       $product
+     * @param array $product
      * @param ProductPresentationSettings $settings
      *
      * @return bool
@@ -704,9 +704,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * {@inheritdoc}
      *
-     * @param array    $product
+     * @param array $product
      * @param Language $language
-     * @param bool     $canonical
+     * @param bool $canonical
      *
      * @return string
      */
@@ -735,8 +735,8 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @param ProductPresentationSettings $settings
-     * @param array                       $product
-     * @param Language                    $language
+     * @param array $product
+     * @param Language $language
      */
     public function addQuantityInformation(
         ProductPresentationSettings $settings,

@@ -30,7 +30,7 @@ use ConfigurationTest;
 use Requirement;
 use SymfonyRequirements;
 
-require_once __DIR__.'/../../../var/SymfonyRequirements.php';
+require_once __DIR__ . '/../../../var/SymfonyRequirements.php';
 
 class System extends AbstractInstall
 {

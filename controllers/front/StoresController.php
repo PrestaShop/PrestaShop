@@ -72,7 +72,7 @@ class StoresControllerCore extends FrontController
                 $field_item = trim($field_item);
                 if (!in_array($field_item, $ignore_field) && !empty($store[$field_item])) {
                     $addr_out[] = ('city' == $field_item && $state && isset($state->iso_code) && strlen($state->iso_code)) ?
-                        $store[$field_item].', '.$state->iso_code : $store[$field_item];
+                        $store[$field_item] . ', ' . $state->iso_code : $store[$field_item];
                     $data_fields_mod = true;
                 }
             }
@@ -99,22 +99,22 @@ class StoresControllerCore extends FrontController
 
         $stores = Db::getInstance()->executeS('
         SELECT s.*, cl.name country, st.iso_code state,
-        ('.(int) $multiplicator.'
+        (' . (int) $multiplicator . '
             * acos(
-                cos(radians('.(float) Tools::getValue('latitude').'))
+                cos(radians(' . (float) Tools::getValue('latitude') . '))
                 * cos(radians(latitude))
-                * cos(radians(longitude) - radians('.(float) Tools::getValue('longitude').'))
-                + sin(radians('.(float) Tools::getValue('latitude').'))
+                * cos(radians(longitude) - radians(' . (float) Tools::getValue('longitude') . '))
+                + sin(radians(' . (float) Tools::getValue('latitude') . '))
                 * sin(radians(latitude))
             )
         ) distance,
         cl.id_country id_country
-        FROM '._DB_PREFIX_.'store s
-        '.Shop::addSqlAssociation('store', 's').'
-        LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
-        LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
-        WHERE s.active = 1 AND cl.id_lang = '.(int) $this->context->language->id.'
-        HAVING distance < '.(int) $distance.'
+        FROM ' . _DB_PREFIX_ . 'store s
+        ' . Shop::addSqlAssociation('store', 's') . '
+        LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON (cl.id_country = s.id_country)
+        LEFT JOIN ' . _DB_PREFIX_ . 'state st ON (st.id_state = s.id_state)
+        WHERE s.active = 1 AND cl.id_lang = ' . (int) $this->context->language->id . '
+        HAVING distance < ' . (int) $distance . '
         ORDER BY distance ASC
         LIMIT 0,20');
 
@@ -142,7 +142,7 @@ class StoresControllerCore extends FrontController
             $newnode->addAttribute('other', $other);
             $newnode->addAttribute('phone', $store['phone']);
             $newnode->addAttribute('id_store', (int) $store['id_store']);
-            $newnode->addAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_.(int) $store['id_store'].'.jpg'));
+            $newnode->addAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_ . (int) $store['id_store'] . '.jpg'));
             $newnode->addAttribute('lat', (float) $store['latitude']);
             $newnode->addAttribute('lng', (float) $store['longitude']);
             if (isset($store['distance'])) {

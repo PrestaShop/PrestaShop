@@ -46,12 +46,12 @@ class ImportMatchRepository implements RepositoryInterface
 
     /**
      * @param Connection $connection
-     * @param string     $tablePrefix
+     * @param string $tablePrefix
      */
     public function __construct(Connection $connection, $tablePrefix)
     {
         $this->connection = $connection;
-        $this->importMatchTable = $tablePrefix.'import_match';
+        $this->importMatchTable = $tablePrefix . 'import_match';
     }
 
     /**

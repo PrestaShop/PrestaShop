@@ -56,9 +56,9 @@ abstract class AbstractCategoryType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array               $locales
-     * @param array               $customerGroupChoices
-     * @param FeatureInterface    $multistoreFeature
+     * @param array $locales
+     * @param array $customerGroupChoices
+     * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
         TranslatorInterface $translator,

@@ -53,8 +53,8 @@ class HtaccessFileGenerator
      * HtaccessFileGenerator constructor.
      *
      * @param CacheClearer $cacheClearer
-     * @param Tools        $tools
-     * @param bool         $multipleViewsConfiguration
+     * @param Tools $tools
+     * @param bool $multipleViewsConfiguration
      */
     public function __construct(CacheClearer $cacheClearer, Tools $tools, $multipleViewsConfiguration)
     {

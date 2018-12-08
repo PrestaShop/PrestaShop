@@ -136,27 +136,27 @@ class NumberSymbolList
      * NumberSymbolList constructor.
      *
      * @param string $decimal
-     *                                       Decimal separator character
+     *                        Decimal separator character
      * @param string $group
-     *                                       Digits group separator character
+     *                      Digits group separator character
      * @param string $list
-     *                                       List elements separator character
+     *                     List elements separator character
      * @param string $percentSign
-     *                                       Percent sign character
+     *                            Percent sign character
      * @param string $minusSign
-     *                                       Minus sign character
+     *                          Minus sign character
      * @param string $plusSign
-     *                                       Plus sign character
+     *                         Plus sign character
      * @param string $exponential
-     *                                       Exponential character
+     *                            Exponential character
      * @param string $superscriptingExponent
      *                                       Superscripting exponent character
      * @param string $perMille
-     *                                       Permille sign character
+     *                         Permille sign character
      * @param string $infinity
-     *                                       The infinity sign. Corresponds to the IEEE infinity bit pattern.
+     *                         The infinity sign. Corresponds to the IEEE infinity bit pattern.
      * @param string $nan
-     *                                       The NaN (Not A Number) sign. Corresponds to the IEEE NaN bit pattern.
+     *                    The NaN (Not A Number) sign. Corresponds to the IEEE NaN bit pattern.
      *
      * @throws LocalizationException
      */

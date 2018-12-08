@@ -43,7 +43,7 @@ class GeneralInformation
 
     /**
      * @param string $privateNote
-     * @param bool   $customerBySameEmailExists
+     * @param bool $customerBySameEmailExists
      */
     public function __construct($privateNote, $customerBySameEmailExists)
     {

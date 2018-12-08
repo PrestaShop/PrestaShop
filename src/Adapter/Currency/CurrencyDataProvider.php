@@ -56,6 +56,7 @@ class CurrencyDataProvider
      * @param mixed $object
      * @param mixed $active
      * @param mixed $group_by
+     *
      * @return array Currencies
      */
     public function getCurrencies($object = false, $active = true, $group_by = false)
@@ -66,11 +67,11 @@ class CurrencyDataProvider
     /**
      * Get a Currency entity instance by ISO code.
      *
-     * @param string   $isoCode
-     *                          An ISO 4217 currency code
+     * @param string $isoCode
+     *                        An ISO 4217 currency code
      * @param null|int $idLang
-     *                          Set this parameter if you want the currency in a specific language.
-     *                          If null, default language will be used
+     *                         Set this parameter if you want the currency in a specific language.
+     *                         If null, default language will be used
      *
      * @return null|currency
      *                       The asked Currency object, or null if not found
@@ -93,11 +94,11 @@ class CurrencyDataProvider
      * Get a Currency entity instance.
      * If the passed ISO code is known, this Currency entity will be loaded with known data.
      *
-     * @param string   $isoCode
-     *                          An ISO 4217 currency code
+     * @param string $isoCode
+     *                        An ISO 4217 currency code
      * @param null|int $idLang
-     *                          Set this parameter if you want the currency in a specific language.
-     *                          If null, default language will be used
+     *                         Set this parameter if you want the currency in a specific language.
+     *                         If null, default language will be used
      *
      * @return currency
      *                  The asked Currency object, loaded with relevant data if passed ISO code is known
@@ -126,7 +127,7 @@ class CurrencyDataProvider
      * @throws PrestaShopException
      *                             If something wrong happened with DB when saving $currencyEntity
      * @throws Exception
-     *                             If an unexpected result is retrieved when saving $currencyEntity
+     *                   If an unexpected result is retrieved when saving $currencyEntity
      */
     public function saveCurrency(Currency $currencyEntity)
     {

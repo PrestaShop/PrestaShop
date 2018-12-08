@@ -36,7 +36,7 @@ class GroupDataProvider
     /**
      * Return available groups.
      *
-     * @param int  $id_lang
+     * @param int $id_lang
      * @param bool $id_shop
      *
      * @return array Groups
