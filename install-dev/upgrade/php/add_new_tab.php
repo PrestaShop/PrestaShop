@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,17 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Security\Voter\PageVoter;
 
 /**
- * Common method to handle the tab registration
+ * Common method to handle the tab registration.
+ *
  * @internal
  */
 function register_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
-    if (!is_null($parentTab) && !empty($parentTab) && strtolower(trim($parentTab)) !== 'null') {
-        $id_parent = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
+    if (!is_null($parentTab) && !empty($parentTab) && 'null' !== strtolower(trim($parentTab))) {
+        $id_parent = (int) Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
     }
 
     $array = array();
@@ -42,16 +42,16 @@ function register_tab($className, $name, $id_parent, $returnId = false, $parentT
         $array[$temp[0]] = $temp[1];
     }
 
-    if (!(int)Db::getInstance()->getValue('SELECT count(id_tab) FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($className).'\' ')) {
-        Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tab` (`id_parent`, `class_name`, `module`, `position`) VALUES ('.(int)$id_parent.', \''.pSQL($className).'\', \''.pSQL($module).'\',
-									(SELECT IFNULL(MAX(t.position),0)+ 1 FROM `'._DB_PREFIX_.'tab` t WHERE t.id_parent = '.(int)$id_parent.'))');
+    if (!(int) Db::getInstance()->getValue('SELECT count(id_tab) FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($className).'\' ')) {
+        Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tab` (`id_parent`, `class_name`, `module`, `position`) VALUES ('.(int) $id_parent.', \''.pSQL($className).'\', \''.pSQL($module).'\',
+									(SELECT IFNULL(MAX(t.position),0)+ 1 FROM `'._DB_PREFIX_.'tab` t WHERE t.id_parent = '.(int) $id_parent.'))');
     }
 
     $languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `'._DB_PREFIX_.'lang`');
     foreach ($languages as $lang) {
         Db::getInstance()->execute('
 		INSERT IGNORE INTO `'._DB_PREFIX_.'tab_lang` (`id_lang`, `id_tab`, `name`)
-		VALUES ('.(int)$lang['id_lang'].', (
+		VALUES ('.(int) $lang['id_lang'].', (
 				SELECT `id_tab`
 				FROM `'._DB_PREFIX_.'tab`
 				WHERE `class_name` = \''.pSQL($className).'\' LIMIT 0,1
@@ -61,25 +61,26 @@ function register_tab($className, $name, $id_parent, $returnId = false, $parentT
 }
 
 /**
- * Common method for getting the new tab ID
+ * Common method for getting the new tab ID.
+ *
  * @internal
  */
 function get_new_tab_id($className, $returnId = false)
 {
-    if ($returnId && strtolower(trim($returnId)) !== 'false') {
-        return (int)Db::getInstance()->getValue('SELECT `id_tab`
+    if ($returnId && 'false' !== strtolower(trim($returnId))) {
+        return (int) Db::getInstance()->getValue('SELECT `id_tab`
 								FROM `'._DB_PREFIX_.'tab`
 								WHERE `class_name` = \''.pSQL($className).'\'');
     }
 }
 
 /**
- * Entrypoint for adding new tabs prior 1.7 versions of PrestaShop
+ * Entrypoint for adding new tabs prior 1.7 versions of PrestaShop.
  *
  * @param string $className
- * @param string $name Pipe-separated translated values
- * @param int $id_parent
- * @param bool $returnId
+ * @param string $name      Pipe-separated translated values
+ * @param int    $id_parent
+ * @param bool   $returnId
  * @param string $parentTab
  * @param string $module
  *
@@ -100,12 +101,12 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
 }
 
 /**
- * Entrypoint for adding new tabs on +1.7 versions of PrestaShop
+ * Entrypoint for adding new tabs on +1.7 versions of PrestaShop.
  *
  * @param string $className
- * @param string $name Pipe-separated translated values
- * @param int $id_parent
- * @param bool $returnId
+ * @param string $name      Pipe-separated translated values
+ * @param int    $id_parent
+ * @param bool   $returnId
  * @param string $parentTab
  * @param string $module
  *
@@ -136,7 +137,7 @@ function add_new_tab_17($className, $name, $id_parent, $returnId = false, $paren
         if (!empty($parentClassName) && !empty($newID)) {
             $parentRole = strtoupper('ROLE_MOD_TAB_'.pSQL($parentClassName).'_'.$role);
             Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
-                SELECT a.`id_profile`, '. (int)$newID .' as `id_authorization_role`
+                SELECT a.`id_profile`, '.(int) $newID.' as `id_authorization_role`
                 FROM `'._DB_PREFIX_.'access` a join `'._DB_PREFIX_.'authorization_role` ar on a.`id_authorization_role` = ar.`id_authorization_role`
                 WHERE ar.`slug` = "'.pSQL($parentRole).'"'
             );

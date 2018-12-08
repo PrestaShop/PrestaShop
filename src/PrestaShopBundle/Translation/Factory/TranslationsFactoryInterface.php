@@ -37,7 +37,7 @@ interface TranslationsFactoryInterface
      * Generates extract of global Catalogue, using domain's identifiers.
      *
      * @param string $identifier Domain identifier
-     * @param string $locale Locale identifier
+     * @param string $locale     Locale identifier
      *
      * @return MessageCatalogue
      */
@@ -47,9 +47,9 @@ interface TranslationsFactoryInterface
      * Generates Translation tree in Back Office.
      *
      * @param string $domainIdentifier Domain identifier
-     * @param string $locale Locale identifier
-     * @param null $theme
-     * @param null $search
+     * @param string $locale           Locale identifier
+     * @param null   $theme
+     * @param null   $search
      *
      * @@return array Translation tree structure
      */

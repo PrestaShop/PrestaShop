@@ -102,10 +102,10 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     {
         $logo = '';
 
-        if (Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID()))) {
-            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID());
-        } elseif (Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID()))) {
-            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID());
+        if (false != Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID()) && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID()))) {
+            $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID());
+        } elseif (false != Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID()) && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID()))) {
+            $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID());
         }
 
         return $logo;
@@ -124,7 +124,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return 'supply-order-form-' . sprintf('%06d', $this->supply_order->reference) . '.pdf';
+        return 'supply-order-form-'.sprintf('%06d', $this->supply_order->reference).'.pdf';
     }
 
     /**
@@ -143,7 +143,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
             SUM(tax_value_with_order_discount) as total_tax_value
         ');
         $query->from('supply_order_detail');
-        $query->where('id_supply_order = ' . (int) $this->supply_order->id);
+        $query->where('id_supply_order = '.(int) $this->supply_order->id);
         $query->groupBy('tax_rate');
 
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -174,7 +174,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
         $this->smarty->assign(array(
             'logo_path' => $path_logo,
-            'img_ps_dir' => 'http://' . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
+            'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'title' => $this->title,
             'reference' => $this->supply_order->reference,

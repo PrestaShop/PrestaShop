@@ -49,8 +49,8 @@ final class ThemePageLayoutsCustomizer implements ThemePageLayoutsCustomizerInte
     private $smartyCacheClearer;
 
     /**
-     * @param Theme $theme
-     * @param ThemeManager $themeManager
+     * @param Theme                 $theme
+     * @param ThemeManager          $themeManager
      * @param CacheClearerInterface $smartyCacheClearer
      */
     public function __construct(Theme $theme, ThemeManager $themeManager, CacheClearerInterface $smartyCacheClearer)

@@ -79,10 +79,10 @@ class AdminWebserviceControllerCore extends AdminController
                     'title' => $this->trans('Configuration', array(), 'Admin.Global'),
                     'fields' => array(
                         'PS_WEBSERVICE' => array('title' => $this->trans('Enable PrestaShop\'s webservice', array(), 'Admin.Advparameters.Feature'),
-                            'desc' => $this->trans('Before activating the webservice, you must be sure to: ', array(), 'Admin.Advparameters.Help') .
+                            'desc' => $this->trans('Before activating the webservice, you must be sure to: ', array(), 'Admin.Advparameters.Help').
                                                 '<ol>
-													<li>' . $this->trans('Check that URL rewriting is available on this server.', array(), 'Admin.Advparameters.Help') . '</li>
-													<li>' . $this->trans('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.', array(), 'Admin.Advparameters.Help') . '</li>
+													<li>'.$this->trans('Check that URL rewriting is available on this server.', array(), 'Admin.Advparameters.Help').'</li>
+													<li>'.$this->trans('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.', array(), 'Admin.Advparameters.Help').'</li>
 												</ol>',
                             'cast' => 'intval',
                             'type' => 'bool', ),
@@ -105,7 +105,7 @@ class AdminWebserviceControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_webservice'] = array(
-                'href' => self::$currentIndex . '&addwebservice_account&token=' . $this->token,
+                'href' => self::$currentIndex.'&addwebservice_account&token='.$this->token,
                 'desc' => $this->trans('Add new webservice key', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -206,7 +206,7 @@ class AdminWebserviceControllerCore extends AdminController
 
     public function initContent()
     {
-        if ($this->display != 'add' && $this->display != 'edit') {
+        if ('add' != $this->display && 'edit' != $this->display) {
             $this->checkForWarning();
         }
 
@@ -238,7 +238,7 @@ class AdminWebserviceControllerCore extends AdminController
     {
         parent::initProcess();
         // This is a composite page, we don't want the "options" display mode
-        if ($this->display == 'options') {
+        if ('options' == $this->display) {
             $this->display = '';
         }
     }
@@ -269,7 +269,7 @@ class AdminWebserviceControllerCore extends AdminController
 
     public function checkForWarning()
     {
-        if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false) {
+        if (false === strpos($_SERVER['SERVER_SOFTWARE'], 'Apache')) {
             $this->warnings[] = $this->trans('To avoid operating problems, please use an Apache server.', array(), 'Admin.Advparameters.Notification');
             if (function_exists('apache_get_modules')) {
                 $apache_modules = apache_get_modules();

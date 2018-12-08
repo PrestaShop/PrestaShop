@@ -71,8 +71,8 @@ class CsvResponse extends StreamedResponse
      * Constructor.
      *
      * @param callable|null $callback A valid PHP callback or null to set it later
-     * @param int $status The response status code
-     * @param array $headers An array of response headers
+     * @param int           $status   The response status code
+     * @param array         $headers  An array of response headers
      */
     public function __construct($callback = null, $status = 200, $headers = array())
     {
@@ -82,7 +82,7 @@ class CsvResponse extends StreamedResponse
             $this->setCallback(array($this, 'processData'));
         }
 
-        $this->setFileName('export_' . date('Y-m-d_His') . '.csv');
+        $this->setFileName('export_'.date('Y-m-d_His').'.csv');
         $this->headers->set('Content-Type', 'text/csv; charset=utf-8');
     }
 
@@ -217,7 +217,7 @@ class CsvResponse extends StreamedResponse
             $data = call_user_func_array($this->data, array($this->start, $this->limit));
 
             $count = count($data);
-            if ($count === 0) {
+            if (0 === $count) {
                 break;
             }
 

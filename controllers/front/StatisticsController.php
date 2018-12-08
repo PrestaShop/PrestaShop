@@ -37,9 +37,9 @@ class StatisticsControllerCore extends FrontController
             die;
         }
 
-        if ($_POST['type'] == 'navinfo') {
+        if ('navinfo' == $_POST['type']) {
             $this->processNavigationStats();
-        } elseif ($_POST['type'] == 'pagetime') {
+        } elseif ('pagetime' == $_POST['type']) {
             $this->processPageTime();
         } else {
             exit;
@@ -52,7 +52,7 @@ class StatisticsControllerCore extends FrontController
     protected function processNavigationStats()
     {
         $id_guest = (int) Tools::getValue('id_guest');
-        if (sha1($id_guest . _COOKIE_KEY_) != $this->param_token) {
+        if (sha1($id_guest._COOKIE_KEY_) != $this->param_token) {
             die;
         }
 
@@ -80,7 +80,7 @@ class StatisticsControllerCore extends FrontController
         $time_start = Tools::getValue('time_start');
         $id_page = (int) Tools::getValue('id_page');
 
-        if (sha1($id_connection . $id_page . $time_start . _COOKIE_KEY_) != $this->param_token) {
+        if (sha1($id_connection.$id_page.$time_start._COOKIE_KEY_) != $this->param_token) {
             die;
         }
 

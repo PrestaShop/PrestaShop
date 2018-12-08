@@ -68,7 +68,7 @@ final class CategoryThumbnailImageUploader extends AbstractImageUploader
 
             if (!ImageManager::resize(
                 $tmpName,
-                _PS_CAT_IMG_DIR_ . $id . '-' . stripslashes($imagesType['name']) . '.jpg',
+                _PS_CAT_IMG_DIR_.$id.'-'.stripslashes($imagesType['name']).'.jpg',
                 (int) $imagesType['width'],
                 (int) $imagesType['height']
             )) {
@@ -78,7 +78,7 @@ final class CategoryThumbnailImageUploader extends AbstractImageUploader
             if (($imageSize = getimagesize($tmpName)) && is_array($imageSize)) {
                 ImageManager::resize(
                     $tmpName,
-                    _PS_CAT_IMG_DIR_ . $id . '_thumb.jpg',
+                    _PS_CAT_IMG_DIR_.$id.'_thumb.jpg',
                     (int) $imageSize[0],
                     (int) $imageSize[1]
                 );

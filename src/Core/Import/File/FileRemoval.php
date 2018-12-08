@@ -52,6 +52,6 @@ final class FileRemoval
     public function remove($filename)
     {
         $fs = new Filesystem();
-        $fs->remove($this->importDirectory . $filename);
+        $fs->remove($this->importDirectory.$filename);
     }
 }

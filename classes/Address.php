@@ -232,18 +232,18 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * removes the address from carts using it, to avoid errors on not existing address
+     * removes the address from carts using it, to avoid errors on not existing address.
      */
     protected function deleteCartAddress()
     {
         // keep pending carts, but unlink it from current address
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
+        $sql = 'UPDATE '._DB_PREFIX_.'cart
                     SET id_address_delivery = 0
-                    WHERE id_address_delivery = ' . $this->id;
+                    WHERE id_address_delivery = '.$this->id;
         Db::getInstance()->execute($sql);
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
+        $sql = 'UPDATE '._DB_PREFIX_.'cart
                     SET id_address_invoice = 0
-                    WHERE id_address_invoice = ' . $this->id;
+                    WHERE id_address_invoice = '.$this->id;
         Db::getInstance()->execute($sql);
     }
 
@@ -289,10 +289,10 @@ class AddressCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT s.`id_zone` AS id_zone_state, c.`id_zone`
-			FROM `' . _DB_PREFIX_ . 'address` a
-			LEFT JOIN `' . _DB_PREFIX_ . 'country` c ON c.`id_country` = a.`id_country`
-			LEFT JOIN `' . _DB_PREFIX_ . 'state` s ON s.`id_state` = a.`id_state`
-			WHERE a.`id_address` = ' . (int) $id_address);
+			FROM `'._DB_PREFIX_.'address` a
+			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
+			LEFT JOIN `'._DB_PREFIX_.'state` s ON s.`id_state` = a.`id_state`
+			WHERE a.`id_address` = '.(int) $id_address);
 
         self::$_idZones[$id_address] = (int) ((int) $result['id_zone_state'] ? $result['id_zone_state'] : $result['id_zone']);
 
@@ -312,13 +312,13 @@ class AddressCore extends ObjectModel
             return false;
         }
 
-        $cache_id = 'Address::isCountryActiveById_' . (int) $id_address;
+        $cache_id = 'Address::isCountryActiveById_'.(int) $id_address;
         if (!Cache::isStored($cache_id)) {
             $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT c.`active`
-			FROM `' . _DB_PREFIX_ . 'address` a
-			LEFT JOIN `' . _DB_PREFIX_ . 'country` c ON c.`id_country` = a.`id_country`
-			WHERE a.`id_address` = ' . (int) $id_address);
+			FROM `'._DB_PREFIX_.'address` a
+			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
+			WHERE a.`id_address` = '.(int) $id_address);
             Cache::store($cache_id, $result);
 
             return $result;
@@ -340,9 +340,9 @@ class AddressCore extends ObjectModel
 
         $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(`id_order`) AS used
-		FROM `' . _DB_PREFIX_ . 'orders`
-		WHERE `id_address_delivery` = ' . (int) $this->id . '
-		OR `id_address_invoice` = ' . (int) $this->id);
+		FROM `'._DB_PREFIX_.'orders`
+		WHERE `id_address_delivery` = '.(int) $this->id.'
+		OR `id_address_invoice` = '.(int) $this->id);
 
         return $result > 0 ? (int) $result : false;
     }
@@ -361,8 +361,8 @@ class AddressCore extends ObjectModel
         }
         if ($id_address) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT `id_country`, `id_state`, `vat_number`, `postcode` FROM `' . _DB_PREFIX_ . 'address`
-			WHERE `id_address` = ' . (int) $id_address);
+			SELECT `id_country`, `id_state`, `vat_number`, `postcode` FROM `'._DB_PREFIX_.'address`
+			WHERE `id_address` = '.(int) $id_address);
         } else {
             $result = false;
         }
@@ -380,9 +380,9 @@ class AddressCore extends ObjectModel
      */
     public static function addressExists($id_address)
     {
-        $key = 'address_exists_' . (int) $id_address;
+        $key = 'address_exists_'.(int) $id_address;
         if (!Cache::isStored($key)) {
-            $id_address = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_address` FROM ' . _DB_PREFIX_ . 'address a WHERE a.`id_address` = ' . (int) $id_address);
+            $id_address = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_address` FROM '._DB_PREFIX_.'address a WHERE a.`id_address` = '.(int) $id_address);
             Cache::store($key, (bool) $id_address);
 
             return (bool) $id_address;
@@ -402,8 +402,8 @@ class AddressCore extends ObjectModel
     {
         $id_address = (int) $id_address;
         $isValid = Db::getInstance()->getValue('
-            SELECT `id_address` FROM ' . _DB_PREFIX_ . 'address a
-            WHERE a.`id_address` = ' . $id_address . ' AND a.`deleted` = 0 AND a.`active` = 1
+            SELECT `id_address` FROM '._DB_PREFIX_.'address a
+            WHERE a.`id_address` = '.$id_address.' AND a.`deleted` = 0 AND a.`active` = 1
         ');
 
         return (bool) $isValid;
@@ -412,8 +412,8 @@ class AddressCore extends ObjectModel
     /**
      * Get the first address id of the customer.
      *
-     * @param int $id_customer Customer id
-     * @param bool $active Active addresses only
+     * @param int  $id_customer Customer id
+     * @param bool $active      Active addresses only
      *
      * @return bool|int|null
      */
@@ -422,12 +422,12 @@ class AddressCore extends ObjectModel
         if (!$id_customer) {
             return false;
         }
-        $cache_id = 'Address::getFirstCustomerAddressId_' . (int) $id_customer . '-' . (bool) $active;
+        $cache_id = 'Address::getFirstCustomerAddressId_'.(int) $id_customer.'-'.(bool) $active;
         if (!Cache::isStored($cache_id)) {
             $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `id_address`
-				FROM `' . _DB_PREFIX_ . 'address`
-				WHERE `id_customer` = ' . (int) $id_customer . ' AND `deleted` = 0' . ($active ? ' AND `active` = 1' : '')
+				FROM `'._DB_PREFIX_.'address`
+				WHERE `id_customer` = '.(int) $id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
             );
             Cache::store($cache_id, $result);
 
@@ -441,7 +441,7 @@ class AddressCore extends ObjectModel
      * Initialize an address corresponding to the specified id address or if empty to the
      * default shop configuration.
      *
-     * @param int $id_address
+     * @param int  $id_address
      * @param bool $with_geoloc
      *
      * @return Address address
@@ -455,13 +455,13 @@ class AddressCore extends ObjectModel
         if ($id_address) {
             $context_hash = (int) $id_address;
         } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
-            $context_hash = md5((int) $context->customer->geoloc_id_country . '-' . (int) $context->customer->id_state . '-' .
+            $context_hash = md5((int) $context->customer->geoloc_id_country.'-'.(int) $context->customer->id_state.'-'.
                                 $context->customer->postcode);
         } else {
             $context_hash = md5((int) $context->country->id);
         }
 
-        $cache_id = 'Address::initialize_' . $context_hash;
+        $cache_id = 'Address::initialize_'.$context_hash;
 
         if (!Cache::isStored($cache_id)) {
             // if an id_address has been specified retrieve the address
@@ -469,7 +469,7 @@ class AddressCore extends ObjectModel
                 $address = new Address((int) $id_address);
 
                 if (!Validate::isLoadedObject($address)) {
-                    throw new PrestaShopException('Invalid address #' . (int) $id_address);
+                    throw new PrestaShopException('Invalid address #'.(int) $id_address);
                 }
             } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
                 $address = new Address();
@@ -516,7 +516,7 @@ class AddressCore extends ObjectModel
         $query = new DbQuery();
         $query->select('id_address');
         $query->from('address');
-        $query->where('id_supplier = ' . (int) $id_supplier);
+        $query->where('id_supplier = '.(int) $id_supplier);
         $query->where('deleted = 0');
         $query->where('id_customer = 0');
         $query->where('id_manufacturer = 0');
@@ -528,9 +528,9 @@ class AddressCore extends ObjectModel
     /**
      * Check if the alias already exists.
      *
-     * @param string $alias Alias of an address
-     * @param int $id_address Address id
-     * @param int $id_customer Customer id
+     * @param string $alias       Alias of an address
+     * @param int    $id_address  Address id
+     * @param int    $id_customer Customer id
      *
      * @return false|null|string Amount of aliases found
      * @todo: Find out if we shouldn't be returning an int instead? (breaking change)
@@ -540,9 +540,9 @@ class AddressCore extends ObjectModel
         $query = new DbQuery();
         $query->select('count(*)');
         $query->from('address');
-        $query->where('alias = \'' . pSQL($alias) . '\'');
-        $query->where('id_address != ' . (int) $id_address);
-        $query->where('id_customer = ' . (int) $id_customer);
+        $query->where('alias = \''.pSQL($alias).'\'');
+        $query->where('id_address != '.(int) $id_address);
+        $query->where('id_customer = '.(int) $id_customer);
         $query->where('deleted = 0');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);

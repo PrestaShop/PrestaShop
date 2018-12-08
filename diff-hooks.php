@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,15 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 $path_to_16 = $argv[1];
 $path_to_17 = $argv[2];
 
-$grep = "grep -ri --exclude-dir=.git --exclude-dir=bin --exclude-dir=cache --exclude-dir=modules --exclude-dir=tests --exclude-dir=vendor --exclude=diff-hooks.php --exclude=diff-hooks.html";
+$grep = 'grep -ri --exclude-dir=.git --exclude-dir=bin --exclude-dir=cache --exclude-dir=modules --exclude-dir=tests --exclude-dir=vendor --exclude=diff-hooks.php --exclude=diff-hooks.html';
 
-exec("$grep 'hook h=' ".$path_to_16."/themes", $hookHIn16);
-exec("$grep 'hook h=' ".$path_to_17."/themes", $hookHIn17);
+exec("$grep 'hook h=' ".$path_to_16.'/themes', $hookHIn16);
+exec("$grep 'hook h=' ".$path_to_17.'/themes', $hookHIn17);
 
 exec("$grep 'Hook::exec' ".$path_to_16, $hookExecIn16);
 exec("$grep 'Hook::exec' ".$path_to_17, $hookExecIn17);
@@ -62,7 +60,7 @@ function generateJSON($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
 
 function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks17)
 {
-    $html  =  '
+    $html = '
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -76,7 +74,7 @@ function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
   <body>
     <div class="container">';
 
-    $html .=  '<h1>Common hooks</h1>';
+    $html .= '<h1>Common hooks</h1>';
     $html .= '<table class="table table-bordered">';
     $html .= '<thead>';
     $html .= '<tr>';
@@ -153,7 +151,7 @@ function getFormattedHookList($hookList, $folder)
 
     foreach ($hookList as $hook) {
         $line = explode(':', $hook, 2);
-        if (count($line) !== 2) {
+        if (2 !== count($line)) {
             echo "Warning, could not parse hook in:\n$hook\n\n";
             continue;
         }

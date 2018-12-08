@@ -86,7 +86,7 @@ class CombinationDataProvider
      * Retrieve combinations data for a specific language id.
      *
      * @param array $combinationIds
-     * @param int $languageId
+     * @param int   $languageId
      *
      * @return array a list of formatted combinations
      *
@@ -113,7 +113,7 @@ class CombinationDataProvider
     }
 
     /**
-     * @param array $attributesCombinations
+     * @param array   $attributesCombinations
      * @param Product $product
      *
      * @return array
@@ -186,7 +186,7 @@ class CombinationDataProvider
         $name = array();
 
         foreach ($attributesCombinations as $attribute) {
-            $name[] = $attribute['group_name'] . ' - ' . $attribute['attribute_name'];
+            $name[] = $attribute['group_name'].' - '.$attribute['attribute_name'];
         }
 
         return implode(', ', $name);

@@ -51,7 +51,7 @@ class RouteValidator
      * Check if a route rule contain all required keywords of default route definition.
      *
      * @param string $routeId
-     * @param string $rule Rule to verify
+     * @param string $rule    Rule to verify
      *
      * @return array - returns list of missing keywords
      *

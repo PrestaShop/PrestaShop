@@ -52,7 +52,7 @@ class OrderReturnControllerCore extends FrontController
             if (Validate::isLoadedObject($order_return) && $order_return->id_customer == $this->context->cookie->id_customer) {
                 $order = new Order((int) ($order_return->id_order));
                 if (Validate::isLoadedObject($order)) {
-                    if ($order_return->state == 1) {
+                    if (1 == $order_return->state) {
                         $this->warning[] = $this->trans('You must wait for confirmation before returning any merchandise.', array(), 'Shop.Notifications.Warning');
                     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function p15015_blockadvertising_extension()
 {
     if (!defined('_PS_ROOT_DIR_')) {
@@ -32,7 +31,7 @@ function p15015_blockadvertising_extension()
 
     // Try to update with the extension of the image that exists in the module directory
     if (@file_exists(_PS_ROOT_DIR_.'/modules/blockadvertising')) {
-        foreach (@scandir(_PS_ROOT_DIR_ . '/modules/blockadvertising', SCANDIR_SORT_NONE) as $file) {
+        foreach (@scandir(_PS_ROOT_DIR_.'/modules/blockadvertising', SCANDIR_SORT_NONE) as $file) {
             if (in_array($file, array('advertising.jpg', 'advertising.gif', 'advertising.png'))) {
                 $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'BLOCKADVERT_IMG_EXT\'');
                 if ($exist) {
@@ -43,5 +42,6 @@ function p15015_blockadvertising_extension()
             }
         }
     }
+
     return true;
 }

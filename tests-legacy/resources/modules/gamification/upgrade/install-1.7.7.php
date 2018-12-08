@@ -33,17 +33,17 @@ function upgrade_module_1_7_7($object)
     $cols = array(
         'start_day' => array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` ADD `start_day` INT NULL DEFAULT 0 '),
         'stop_day' => array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` ADD `stop_day` INT NULL DEFAULT 0 '),
-        'start_date' =>  array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `start_date`'),
-        'stop_date' =>  array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `stop_date`'),
+        'start_date' => array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `start_date`'),
+        'stop_date' => array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `stop_date`'),
     );
-    
+
     $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'._DB_PREFIX_.'advice` ');
     foreach ($columns as $c) {
         if (in_array($c['Field'], array_keys($cols))) {
             $cols[$c['Field']]['exist'] = true;
         }
     }
-    
+
     foreach ($cols as $name => $co) {
         if (in_array($name, array('start_day', 'stop_day'))) {
             if (!$co['exist']) {

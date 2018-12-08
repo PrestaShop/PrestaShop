@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -97,7 +97,7 @@ class ThemeTranslationsFactoryTest extends TestCase
         return array(
             array(
                 self::TEST_THEME,
-                self::TEST_LOCALE
+                self::TEST_LOCALE,
             ),
         );
     }
@@ -142,11 +142,11 @@ class ThemeTranslationsFactoryTest extends TestCase
             array(
                 'DefaultDomain.'.self::TEST_LOCALE => array(
                     'Default message' => 'Default MESSAGE',
-                    'Default message bis' => 'Bis'
+                    'Default message bis' => 'Bis',
                 ),
                 'ShopFront.'.self::TEST_LOCALE => array(
                     'Add to Cart' => 'Add to Cart',
-                    'Edit product' => 'Edit it'
+                    'Edit product' => 'Edit it',
                 ),
                 'messages.'.self::TEST_LOCALE => array(
                     'foo' => 'Foo',
@@ -239,18 +239,17 @@ class ThemeTranslationsFactoryTest extends TestCase
         return $providerMock;
     }
 
-
     protected function assertPropertiesTranslations($locale)
     {
         $this->assertInternalType('array', $this->translations);
 
-        $domain = 'messages.' . $locale;
+        $domain = 'messages.'.$locale;
         $this->assertArrayHasKey($domain, $this->translations);
 
-        $domain = 'ShopFront.' . $locale;
+        $domain = 'ShopFront.'.$locale;
         $this->assertArrayHasKey($domain, $this->translations);
 
-        $domain = 'DefaultDomain.' . $locale;
+        $domain = 'DefaultDomain.'.$locale;
         $this->assertArrayHasKey($domain, $this->translations);
     }
 
@@ -264,7 +263,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => null,
                 'db' => null,
             ),
-            $this->translations['DefaultDomain.' . $locale]['Default message bis'],
+            $this->translations['DefaultDomain.'.$locale]['Default message bis'],
             'It should provide with default translations.'
         );
 
@@ -273,7 +272,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => null,
                 'db' => null,
             ),
-            $this->translations['messages.' . $locale]['foo'],
+            $this->translations['messages.'.$locale]['foo'],
             'It should provide with default translations.'
         );
     }
@@ -288,7 +287,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => 'Add to Cart override xliff',
                 'db' => null,
             ),
-            $this->translations['ShopFront.' . $locale]['Add to Cart'],
+            $this->translations['ShopFront.'.$locale]['Add to Cart'],
             'It should provide with translations from XLIFF catalogue overriding the defaults.'
         );
 
@@ -297,7 +296,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => 'Bar override xlif',
                 'db' => null,
             ),
-            $this->translations['messages.' . $locale]['bar'],
+            $this->translations['messages.'.$locale]['bar'],
             'It should provide with translations from XLIFF catalogue overriding the defaults.'
         );
     }
@@ -312,7 +311,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => 'Default MESSAGE override xliff',
                 'db' => 'Default override database',
             ),
-            $this->translations['DefaultDomain.' . $locale]['Default message'],
+            $this->translations['DefaultDomain.'.$locale]['Default message'],
             'It should provide with translations from XLIFF catalogue overriding the defaults and database overrides.'
         );
 
@@ -321,7 +320,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => 'Baz override xliff',
                 'db' => 'Baz is updated from database!',
             ),
-            $this->translations['messages.' . $locale]['baz'],
+            $this->translations['messages.'.$locale]['baz'],
             'It should provide with translations from XLIFF catalogue overriding the defaults and database overrides.'
         );
     }

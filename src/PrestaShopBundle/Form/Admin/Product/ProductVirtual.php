@@ -83,7 +83,7 @@ class ProductVirtual extends CommonAbstractType
                     'required' => false,
                     'label' => $this->translator->trans('File', [], 'Admin.Global'),
                     'constraints' => [
-                        new Assert\File(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M']),
+                        new Assert\File(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M']),
                     ],
                 ]
             )
@@ -145,7 +145,7 @@ class ProductVirtual extends CommonAbstractType
             if ($form->getParent()) {
                 $event->setData([]);
                 $form->add('name', FormType\TextType::class, ['mapped' => false]);
-            } elseif ($data['is_virtual_file'] == 0) {
+            } elseif (0 == $data['is_virtual_file']) {
                 //disable name mapping when is virtual not defined to yes
                 $form->add('name', FormType\TextType::class, ['mapped' => false]);
             }

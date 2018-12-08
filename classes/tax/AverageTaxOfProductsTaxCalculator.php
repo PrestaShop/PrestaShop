@@ -41,11 +41,11 @@ class AverageTaxOfProductsTaxCalculator
     {
         $prefix = $this->configuration->get('_DB_PREFIX_');
 
-        $sql = 'SELECT t.id_tax, t.rate, od.total_price_tax_excl FROM ' . $prefix . 'orders o
-                INNER JOIN ' . $prefix . 'order_detail od ON od.id_order = o.id_order
-                INNER JOIN ' . $prefix . 'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail
-                INNER JOIN ' . $prefix . 'tax t ON t.id_tax = odt.id_tax
-                WHERE o.id_order = ' . (int) $this->id_order;
+        $sql = 'SELECT t.id_tax, t.rate, od.total_price_tax_excl FROM '.$prefix.'orders o
+                INNER JOIN '.$prefix.'order_detail od ON od.id_order = o.id_order
+                INNER JOIN '.$prefix.'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail
+                INNER JOIN '.$prefix.'tax t ON t.id_tax = odt.id_tax
+                WHERE o.id_order = '.(int) $this->id_order;
 
         return $this->db->select($sql);
     }

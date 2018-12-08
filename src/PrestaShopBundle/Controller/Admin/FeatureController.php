@@ -46,13 +46,13 @@ class FeatureController extends FrameworkBundleAdminController
         $locales = $this->get('prestashop.adapter.legacy.context')->getLanguages();
         $data = array();
 
-        if ($idFeature == 0) {
+        if (0 == $idFeature) {
             return $response;
         }
 
         $featuresValues = $this->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($locales[0]['id_lang'], $idFeature);
 
-        if (count($featuresValues) !== 0) {
+        if (0 !== count($featuresValues)) {
             $data['0'] = array(
                 'id' => 0,
                 'value' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
@@ -60,7 +60,7 @@ class FeatureController extends FrameworkBundleAdminController
         }
 
         foreach ($featuresValues as $featureValue) {
-            if (isset($featureValue['custom']) && $featureValue['custom'] == 1) {
+            if (isset($featureValue['custom']) && 1 == $featureValue['custom']) {
                 continue;
             }
             $data[] = array(

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -49,7 +49,7 @@ abstract class ApiTestCase extends WebTestCase
     protected $oldContext;
 
     /**
-     * Symfony\Component\DependencyInjection\ContainerInterface
+     * Symfony\Component\DependencyInjection\ContainerInterface.
      */
     protected static $container;
 
@@ -93,7 +93,7 @@ abstract class ApiTestCase extends WebTestCase
                 'getEmployeeLanguageIso',
                 'getEmployeeCurrency',
                 'getRootUrl',
-                'getLanguage'
+                'getLanguage',
             ))
             ->getMock()
         ;
@@ -244,6 +244,7 @@ abstract class ApiTestCase extends WebTestCase
 
     /**
      * @param $expectedStatusCode
+     *
      * @return mixed
      */
     protected function assertResponseBodyValidJson($expectedStatusCode)

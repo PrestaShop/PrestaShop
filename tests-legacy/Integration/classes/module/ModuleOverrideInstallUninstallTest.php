@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,6 @@
  */
 
 namespace LegacyTests\Integration;
-
 
 use Module;
 use PrestaShopAutoload;
@@ -56,7 +55,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $this->moduleManager = $this->moduleManagerBuilder->build();
 
-        $this->moduleNames= [
+        $this->moduleNames = [
             'pscsx3241',
             'pscsx32412',
        ];
@@ -76,12 +75,12 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
 
     public function testInstall()
     {
-        /**
+        /*
          * Both modules install overrides in the same files.
          * This test only checks that modules are installed properly.
          */
         foreach ($this->moduleNames as $name) {
-            $this->assertTrue((bool)$this->moduleManager->install($name), "Could not install $name");
+            $this->assertTrue((bool) $this->moduleManager->install($name), "Could not install $name");
         }
     }
 
@@ -92,8 +91,9 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
      */
     private function cleanup($str)
     {
-        $withoutDate        = preg_replace('#\* date: .*?\n#m', '', $str);
-        $withoutBlankLines  = preg_replace('#\n?^(?:\s*)$#m', "", $withoutDate);
+        $withoutDate = preg_replace('#\* date: .*?\n#m', '', $str);
+        $withoutBlankLines = preg_replace('#\n?^(?:\s*)$#m', '', $withoutDate);
+
         return $withoutBlankLines;
     }
 
@@ -103,7 +103,6 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
          * This tests first checks that the overrides installed in the previous step
          * resulted in the expected merged files.
          */
-
         $ressource_path = realpath(dirname(__FILE__).'/../../../resources/ModulesOverrideInstallUninstallTest/');
         $override_path_cart = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('Cart');
         $override_path_admin_product_controller = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('AdminProductsController');
@@ -125,11 +124,11 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
             'AdminProductsController.php file different'
         );
 
-        /** Then it checks that the overrides are removed once the modules are
+        /* Then it checks that the overrides are removed once the modules are
          *  uninstalled.
          */
         foreach ($this->moduleNames as $name) {
-            $this->assertTrue((bool)$this->moduleManager->uninstall($name), "Could not uninstall $name");
+            $this->assertTrue((bool) $this->moduleManager->uninstall($name), "Could not uninstall $name");
         }
 
         $this->assertFileNotExists($override_path_cart);

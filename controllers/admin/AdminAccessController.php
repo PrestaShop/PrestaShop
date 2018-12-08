@@ -140,7 +140,7 @@ class AdminAccessControllerCore extends AdminController
         if (_PS_MODE_DEMO_) {
             throw new PrestaShopException($this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error'));
         }
-        if ($this->access('edit') != '1') {
+        if ('1' != $this->access('edit')) {
             throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
         }
 
@@ -165,7 +165,7 @@ class AdminAccessControllerCore extends AdminController
         if (_PS_MODE_DEMO_) {
             throw new PrestaShopException($this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error'));
         }
-        if ($this->access('edit') != '1') {
+        if ('1' != $this->access('edit')) {
             throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
         }
 

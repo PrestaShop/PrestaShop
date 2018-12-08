@@ -305,7 +305,7 @@ class AdminFilter
                     $subjectWithoutOperator = str_replace($operator, '', $subject);
 
                     $flag = FILTER_DEFAULT;
-                    if ($filter === FILTER_SANITIZE_NUMBER_FLOAT) {
+                    if (FILTER_SANITIZE_NUMBER_FLOAT === $filter) {
                         $flag = FILTER_FLAG_ALLOW_FRACTION;
                     }
 
@@ -314,7 +314,7 @@ class AdminFilter
                         $filteredSubjectWithoutOperator = 0;
                     }
 
-                    return $operator . $filteredSubjectWithoutOperator;
+                    return $operator.$filteredSubjectWithoutOperator;
                 }
             };
         };

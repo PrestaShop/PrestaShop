@@ -52,7 +52,7 @@ final class LegacyUrlConverter
     /**
      * LegacyUrlConverter constructor.
      *
-     * @param RouterInterface $router
+     * @param RouterInterface              $router
      * @param LegacyRouteProviderInterface $legacyRouteProvider
      */
     public function __construct(RouterInterface $router, LegacyRouteProviderInterface $legacyRouteProvider)
@@ -123,7 +123,7 @@ final class LegacyUrlConverter
     }
 
     /**
-     * @param array $parameters
+     * @param array       $parameters
      * @param LegacyRoute $legacyRoute
      *
      * @return array
@@ -190,7 +190,7 @@ final class LegacyUrlConverter
         //interpreted as an action.. but some old link need this feature, ?controller=AdminModulesPositions&addToHook)
         if (null === $legacyAction) {
             foreach ($parameters as $parameter => $value) {
-                if ($value === '' || 1 === (int) $value) {
+                if ('' === $value || 1 === (int) $value) {
                     //Avoid confusing an entity/row id with an action
                     // e.g.
                     //  create=1 is an action

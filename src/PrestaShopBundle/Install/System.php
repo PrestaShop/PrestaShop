@@ -30,7 +30,7 @@ use ConfigurationTest;
 use Requirement;
 use SymfonyRequirements;
 
-require_once __DIR__ . '/../../../var/SymfonyRequirements.php';
+require_once __DIR__.'/../../../var/SymfonyRequirements.php';
 
 class System extends AbstractInstall
 {
@@ -61,7 +61,7 @@ class System extends AbstractInstall
         $failedRecommendations = $symfonyRequirements->getFailedRecommendations();
 
         return array_filter($failedRecommendations, function (Requirement $requirement) {
-            if ($requirement->getTestMessage() === 'Requirements file should be up-to-date') {
+            if ('Requirements file should be up-to-date' === $requirement->getTestMessage()) {
                 // this warning is not relevant
                 return false;
             }
@@ -76,7 +76,7 @@ class System extends AbstractInstall
 
         $success = true;
         foreach ($tests as $result) {
-            $success &= ($result == 'ok') ? true : false;
+            $success &= ('ok' == $result) ? true : false;
         }
 
         return array(

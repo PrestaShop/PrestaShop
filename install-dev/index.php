@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 require_once 'install_version.php';
 
 if (
@@ -39,12 +38,12 @@ if (
     exit();
 }
 
-require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'init.php');
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'init.php';
 require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
 
 try {
-    require_once(_PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'controllerHttp.php');
-    require_once(_PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'HttpConfigureInterface.php');
+    require_once _PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'controllerHttp.php';
+    require_once _PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'HttpConfigureInterface.php';
     InstallControllerHttp::execute();
 } catch (PrestashopInstallerException $e) {
     $e->displayMessage();

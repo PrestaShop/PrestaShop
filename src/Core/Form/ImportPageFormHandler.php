@@ -36,12 +36,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 class ImportPageFormHandler extends FormHandler
 {
     /**
-     * @param FormBuilderInterface $formBuilder
-     * @param HookDispatcherInterface $hookDispatcher
+     * @param FormBuilderInterface      $formBuilder
+     * @param HookDispatcherInterface   $hookDispatcher
      * @param FormDataProviderInterface $formDataProvider
-     * @param array $formTypes
-     * @param string $hookName
-     * @param string $formName
+     * @param array                     $formTypes
+     * @param string                    $hookName
+     * @param string                    $formName
      */
     public function __construct(
         FormBuilderInterface $formBuilder,

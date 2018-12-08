@@ -44,7 +44,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
      * Generates extract of global Catalogue, using domain's identifiers.
      *
      * @param string $domainIdentifier Domain identifier
-     * @param string $locale Locale identifier
+     * @param string $locale           Locale identifier
      *
      * @return MessageCatalogue A MessageCatalogue instance
      *
@@ -65,8 +65,8 @@ class TranslationsFactory implements TranslationsFactoryInterface
      * Used to generate Translation tree in Back Office.
      *
      * @param string $domainIdentifier Domain identifier
-     * @param string $locale Locale identifier
-     * @param string $theme Theme name
+     * @param string $locale           Locale identifier
+     * @param string $theme            Theme name
      *
      * @return array Translation tree structure
      *

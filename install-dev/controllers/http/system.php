@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,11 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Install\System;
 
 /**
- * Step 2 : check system configuration (permissions on folders, PHP version, etc.)
+ * Step 2 : check system configuration (permissions on folders, PHP version, etc.).
  */
 class InstallControllerHttpSystem extends InstallControllerHttp implements HttpConfigureInterface
 {
@@ -55,7 +54,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
     }
 
     /**
-     * Required tests must be passed to validate this step
+     * Required tests must be passed to validate this step.
      *
      * @see HttpConfigureInterface::validate()
      */
@@ -67,7 +66,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
     }
 
     /**
-     * Display system step
+     * Display system step.
      */
     public function display()
     {
@@ -103,21 +102,21 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'simplexml' => $this->translator->trans('SimpleXML extension is not loaded', array(), 'Install'),
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
                         'fileinfo' => $this->translator->trans('Fileinfo extension is not enabled', array(), 'Install'),
-                    )
+                    ),
                 ),
                 array(
                     'title' => $this->translator->trans('Required Apache configuration', array(), 'Install'),
                     'success' => 1,
                     'checks' => array(
                         'apache_mod_rewrite' => $this->translator->trans('Enable the Apache mod_rewrite module', array(), 'Install'),
-                    )
+                    ),
                 ),
                 array(
                     'title' => $this->translator->trans('Files', array(), 'Install'),
                     'success' => 1,
                     'checks' => array(
                         'files' => $this->translator->trans('Not all files were successfully uploaded on your server', array(), 'Install'),
-                    )
+                    ),
                 ),
                 array(
                     'title' => $this->translator->trans('Permissions on files and folders', array(), 'Install'),
@@ -137,7 +136,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'virtual_products_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/download/'), 'Install'),
                         'config_sf2_dir' => $this->translator->trans('Write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/config/'), 'Install'),
                         'translations_sf2' => $this->translator->trans('Write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/Resources/translations/'), 'Install'),
-                    )
+                    ),
                 ),
             ),
             'optional' => array(
@@ -149,7 +148,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'mbstring' => $this->translator->trans('Mbstring extension is not enabled', array(), 'Install'),
                         'dom' => $this->translator->trans('Dom extension is not loaded', array(), 'Install'),
                         'fopen' => $this->translator->trans('Cannot open external URLs (requires allow_url_fopen as On)', array(), 'Install'),
-                    )
+                    ),
                 ),
             ),
         );
@@ -166,7 +165,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
 
         foreach ($this->tests_render['required'] as &$category) {
             foreach ($category['checks'] as $id => $check) {
-                if (!isset($this->tests['required']['checks'][$id]) || $this->tests['required']['checks'][$id] != 'ok') {
+                if (!isset($this->tests['required']['checks'][$id]) || 'ok' != $this->tests['required']['checks'][$id]) {
                     $category['success'] = 0;
                 }
             }

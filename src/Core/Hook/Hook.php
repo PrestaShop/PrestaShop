@@ -43,7 +43,7 @@ final class Hook implements HookInterface
 
     /**
      * @param string $name
-     * @param array $parameters
+     * @param array  $parameters
      */
     public function __construct($name, array $parameters = [])
     {

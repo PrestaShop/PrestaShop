@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function attribute_group_clean_combinations()
 {
     $attributeCombinations = Db::getInstance()->executeS('SELECT
@@ -33,15 +32,17 @@ function attribute_group_clean_combinations()
 			ON (pa.`id_product_attribute` = pac.`id_product_attribute`)');
     $toRemove = array();
     foreach ($attributeCombinations as $attributeCombination) {
-        if ((int)($attributeCombination['id_attribute']) == 0) {
-            $toRemove[] = (int)($attributeCombination['id_product_attribute']);
+        if (0 == (int) ($attributeCombination['id_attribute'])) {
+            $toRemove[] = (int) ($attributeCombination['id_product_attribute']);
         }
     }
 
     if (!empty($toRemove)) {
         $res = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_attribute`
 			WHERE `id_product_attribute` IN ('.implode(', ', $toRemove).')');
+
         return $res;
     }
+
     return true;
 }

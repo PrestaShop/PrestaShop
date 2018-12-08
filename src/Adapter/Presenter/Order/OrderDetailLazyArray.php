@@ -97,7 +97,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
      */
     public function getDetailsUrl()
     {
-        return $this->context->link->getPageLink('order-detail', true, null, 'id_order=' . $this->order->id);
+        return $this->context->link->getPageLink('order-detail', true, null, 'id_order='.$this->order->id);
     }
 
     /**
@@ -210,7 +210,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
                 $orderShipping[$shippingId]['shipping_date'] =
                     Tools::displayDate($shipping['date_add'], null, false);
                 $orderShipping[$shippingId]['shipping_weight'] =
-                    ($shipping['weight'] > 0) ? sprintf('%.3f', $shipping['weight']) . ' ' .
+                    ($shipping['weight'] > 0) ? sprintf('%.3f', $shipping['weight']).' '.
                         Configuration::get('PS_WEIGHT_UNIT') : '-';
                 $shippingCost =
                     (!$order->getTaxCalculationMethod()) ? $shipping['shipping_cost_tax_excl']
@@ -222,11 +222,11 @@ class OrderDetailLazyArray extends AbstractLazyArray
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {
                     if ($shipping['url'] && $shipping['tracking_number']) {
-                        $tracking_line = '<a href="' . str_replace(
+                        $tracking_line = '<a href="'.str_replace(
                             '@',
                             $shipping['tracking_number'],
                             $shipping['url']
-                        ) . '" target="_blank">' . $shipping['tracking_number'] . '</a>';
+                        ).'" target="_blank">'.$shipping['tracking_number'].'</a>';
                     } else {
                         $tracking_line = $shipping['tracking_number'];
                     }

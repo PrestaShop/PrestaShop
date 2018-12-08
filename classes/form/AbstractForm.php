@@ -163,7 +163,7 @@ abstract class AbstractFormCore implements FormInterface
             if (array_key_exists($field->getName(), $params)) {
                 // overwrite it if necessary
                 $field->setValue($params[$field->getName()]);
-            } elseif ($field->getType() === 'checkbox') {
+            } elseif ('checkbox' === $field->getType()) {
                 // checkboxes that are not submitted
                 // are interpreted as booleans switched off
                 $field->setValue(false);

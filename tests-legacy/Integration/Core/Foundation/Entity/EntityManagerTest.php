@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,10 +29,8 @@ namespace LegacyTests\Integration\Core\Foundation\Entity;
 use LegacyTests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use CMSRole;
-use CMSRoleRepository;
 use Db;
 use LegacyTests\Unit\ContextMocker;
-use Product;
 
 class EntityManagerTest extends IntegrationTestCase
 {
@@ -80,11 +78,11 @@ class EntityManagerTest extends IntegrationTestCase
     {
         $repository = $this->entityManager->getRepository('CMSRole');
 
-        $entity = new CMSRole;
+        $entity = new CMSRole();
 
-        $name = "Yo CMS Role " . rand();
+        $name = 'Yo CMS Role '.rand();
 
-        $entity->name    = $name;
+        $entity->name = $name;
         $entity->id_cms = 6666;
 
         $this->entityManager->save($entity);

@@ -53,9 +53,9 @@ final class PositionDefinition implements PositionDefinitionInterface
     private $parentIdField;
 
     /**
-     * @param string $table
-     * @param string $idField
-     * @param string $positionField
+     * @param string      $table
+     * @param string      $idField
+     * @param string      $positionField
      * @param string|null $parentIdField
      */
     public function __construct(

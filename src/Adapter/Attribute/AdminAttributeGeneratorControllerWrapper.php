@@ -57,7 +57,7 @@ class AdminAttributeGeneratorControllerWrapper
      * Generate product attributes.
      *
      * @param object $product The product
-     * @param array $options The array with all attributes combinations
+     * @param array  $options The array with all attributes combinations
      */
     public function processGenerate($product, $options)
     {
@@ -82,7 +82,7 @@ class AdminAttributeGeneratorControllerWrapper
      * Delete a product attribute.
      *
      * @param int $idAttribute The attribute ID
-     * @param int $idProduct The product ID
+     * @param int $idProduct   The product ID
      *
      * @return array
      */

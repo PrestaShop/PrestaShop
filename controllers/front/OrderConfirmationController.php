@@ -59,7 +59,7 @@ class OrderConfirmationControllerCore extends FrontController
         $order = new Order((int) ($this->id_order));
 
         if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
-            Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
+            Tools::redirect($redirectLink.(Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
         $this->reference = $order->reference;
         if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key) {
@@ -132,7 +132,7 @@ class OrderConfirmationControllerCore extends FrontController
     protected function checkFreeOrder()
     {
         $cart = $this->context->cart;
-        if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0) {
+        if (0 == $cart->id_customer || 0 == $cart->id_address_delivery || 0 == $cart->id_address_invoice) {
             Tools::redirect($this->context->link->getPageLink('order'));
         }
 

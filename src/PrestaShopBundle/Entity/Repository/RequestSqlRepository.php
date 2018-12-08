@@ -56,7 +56,7 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
     {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
-        $this->requestSqlTable = $dbPrefix . 'request_sql';
+        $this->requestSqlTable = $dbPrefix.'request_sql';
     }
 
     /**
@@ -131,7 +131,7 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
             }
 
             $qb->andWhere("`$filterName` LIKE :$filterName");
-            $qb->setParameter($filterName, '%' . $value . '%');
+            $qb->setParameter($filterName, '%'.$value.'%');
         }
 
         return $qb;

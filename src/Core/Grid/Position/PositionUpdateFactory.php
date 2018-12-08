@@ -110,7 +110,7 @@ final class PositionUpdateFactory implements PositionUpdateFactoryInterface
     }
 
     /**
-     * @param array $data
+     * @param array              $data
      * @param PositionDefinition $positionDefinition
      *
      * @throws PositionDataException
@@ -119,14 +119,14 @@ final class PositionUpdateFactory implements PositionUpdateFactoryInterface
     {
         if (empty($data[$this->positionsField])) {
             throw new PositionDataException(
-                'Missing ' . $this->positionsField . ' in your data.',
+                'Missing '.$this->positionsField.' in your data.',
                 'Admin.Notifications.Failure'
             );
         }
 
         if (null !== $positionDefinition->getParentIdField() && empty($data[$this->parentIdField])) {
             throw new PositionDataException(
-                'Missing ' . $this->parentIdField . ' in your data.',
+                'Missing '.$this->parentIdField.' in your data.',
                 'Admin.Notifications.Failure'
             );
         }
@@ -136,7 +136,7 @@ final class PositionUpdateFactory implements PositionUpdateFactoryInterface
      * Validate the position format, throw a PositionDataException if is not correct.
      *
      * @param array $position
-     * @param int $index
+     * @param int   $index
      *
      * @throws PositionDataException
      */

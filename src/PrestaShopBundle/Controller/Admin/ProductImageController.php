@@ -41,7 +41,7 @@ class ProductImageController extends FrameworkBundleAdminController
     /**
      * Manage upload for product image.
      *
-     * @param int $idProduct
+     * @param int     $idProduct
      * @param Request $request
      *
      * @return string
@@ -52,7 +52,7 @@ class ProductImageController extends FrameworkBundleAdminController
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $return_data = [];
 
-        if ($idProduct == 0 || !$request->isXmlHttpRequest()) {
+        if (0 == $idProduct || !$request->isXmlHttpRequest()) {
             return $response;
         }
 
@@ -61,7 +61,7 @@ class ProductImageController extends FrameworkBundleAdminController
                 'error_bubbling' => true,
                 'constraints' => [
                     new Assert\NotNull(array('message' => $this->trans('Please select a file', 'Admin.Catalog.Feature'))),
-                    new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M')),
+                    new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
                 ],
             ))
             ->getForm();
@@ -124,7 +124,7 @@ class ProductImageController extends FrameworkBundleAdminController
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
 
-        if ($idImage == 0 || !$request->isXmlHttpRequest()) {
+        if (0 == $idImage || !$request->isXmlHttpRequest()) {
             return new Response();
         }
 
@@ -174,7 +174,7 @@ class ProductImageController extends FrameworkBundleAdminController
     /**
      * Delete an image from its ID.
      *
-     * @param int $idImage
+     * @param int     $idImage
      * @param Request $request
      *
      * @return JsonResponse

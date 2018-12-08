@@ -32,10 +32,10 @@ class OrderDiscountCore extends OrderCartRule
     public function __get($key)
     {
         Tools::displayAsDeprecated();
-        if ($key == 'id_order_discount') {
+        if ('id_order_discount' == $key) {
             return $this->id_order_cart_rule;
         }
-        if ($key == 'id_discount') {
+        if ('id_discount' == $key) {
             return $this->id_cart_rule;
         }
 
@@ -45,10 +45,10 @@ class OrderDiscountCore extends OrderCartRule
     public function __set($key, $value)
     {
         Tools::displayAsDeprecated();
-        if ($key == 'id_order_discount') {
+        if ('id_order_discount' == $key) {
             $this->id_order_cart_rule = $value;
         }
-        if ($key == 'id_discount') {
+        if ('id_discount' == $key) {
             $this->id_cart_rule = $value;
         }
         $this->{$key} = $value;

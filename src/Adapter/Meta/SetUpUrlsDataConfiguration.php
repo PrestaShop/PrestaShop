@@ -55,9 +55,9 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
     /**
      * SetUpUrlsDataConfiguration constructor.
      *
-     * @param Configuration $configuration
+     * @param Configuration         $configuration
      * @param HtaccessFileGenerator $htaccessFileGenerator
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface   $translator
      */
     public function __construct(
         Configuration $configuration,

@@ -39,7 +39,7 @@ class ModuleFrontControllerCore extends FrontController
             Tools::redirect('index');
         }
 
-        $this->page_name = 'module-' . $this->module->name . '-' . Dispatcher::getInstance()->getController();
+        $this->page_name = 'module-'.$this->module->name.'-'.Dispatcher::getInstance()->getController();
 
         parent::__construct();
 
@@ -55,7 +55,7 @@ class ModuleFrontControllerCore extends FrontController
      */
     public function setTemplate($template, $params = array(), $locale = null)
     {
-        if (strpos($template, 'module:') === 0) {
+        if (0 === strpos($template, 'module:')) {
             $this->template = $template;
         } else {
             parent::setTemplate($template, $params, $locale);
@@ -64,7 +64,7 @@ class ModuleFrontControllerCore extends FrontController
 
     public function initContent()
     {
-        if (Tools::isSubmit('module') && Tools::getValue('controller') == 'payment') {
+        if (Tools::isSubmit('module') && 'payment' == Tools::getValue('controller')) {
             $currency = Currency::getCurrency((int) $this->context->cart->id_currency);
             $minimalPurchase = Tools::convertPrice((float) Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
             Hook::exec('overrideMinimalPurchasePrice', array(
@@ -82,11 +82,11 @@ class ModuleFrontControllerCore extends FrontController
      *
      * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
      *
-     * @param string $string Term or expression in english
-     * @param false|string $specific Specific name, only for ModuleFrontController
-     * @param string|null $class Name of the class
-     * @param bool $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes()
-     * @param bool $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+     * @param string       $string       Term or expression in english
+     * @param false|string $specific     Specific name, only for ModuleFrontController
+     * @param string|null  $class        Name of the class
+     * @param bool         $addslashes   If set to true, the return value will pass through addslashes(). Otherwise, stripslashes()
+     * @param bool         $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
      *
      * @return string The translation if available, or the english default text
      */

@@ -61,9 +61,9 @@ class CategoryViewDataProvider
 
     /**
      * @param ConfigurationInterface $configuration
-     * @param FeatureInterface $multishopFeature
-     * @param Context $shopContext
-     * @param int $contextLangId
+     * @param FeatureInterface       $multishopFeature
+     * @param Context                $shopContext
+     * @param int                    $contextLangId
      */
     public function __construct(
         ConfigurationInterface $configuration,

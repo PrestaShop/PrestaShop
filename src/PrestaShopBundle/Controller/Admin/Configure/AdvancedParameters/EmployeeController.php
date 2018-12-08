@@ -43,7 +43,7 @@ class EmployeeController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
-     * @param Request $request
+     * @param Request         $request
      * @param EmployeeFilters $filters
      *
      * @return Response

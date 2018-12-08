@@ -61,10 +61,10 @@ class CommonController extends FrameworkBundleAdminController
      * @Template("@PrestaShop/Admin/Common/pagination.html.twig")
      *
      * @param Request $request
-     * @param int $limit
-     * @param int $offset
-     * @param int $total
-     * @param string $view full|quicknav To change default template used to render the content
+     * @param int     $limit
+     * @param int     $offset
+     * @param int     $total
+     * @param string  $view    full|quicknav To change default template used to render the content
      *
      * @return array|Response
      */
@@ -80,7 +80,7 @@ class CommonController extends FrameworkBundleAdminController
         // urls from route
         $callerParameters = $request->attributes->get('caller_parameters', array());
         foreach ($callerParameters as $k => $v) {
-            if (strpos($k, '_') === 0) {
+            if (0 === strpos($k, '_')) {
                 unset($callerParameters[$k]);
             }
         }
@@ -93,14 +93,14 @@ class CommonController extends FrameworkBundleAdminController
             )
         ));
 
-        $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
+        $previousPageUrl = (!$routeName || (0 == $offset)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => max(0, $offset - $limit),
                 'limit' => $limit,
             )
         ));
-        $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
+        $firstPageUrl = (!$routeName || (0 == $offset)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
@@ -146,8 +146,8 @@ class CommonController extends FrameworkBundleAdminController
             'jump_page_url' => $jumpPageUrl,
             'limit_choices' => $limitChoices,
         );
-        if ($view != 'full') {
-            return $this->render('@PrestaShop/Admin/Common/pagination_' . $view . '.html.twig', $vars);
+        if ('full' != $view) {
+            return $this->render('@PrestaShop/Admin/Common/pagination_'.$view.'.html.twig', $vars);
         }
 
         return $vars;
@@ -159,8 +159,8 @@ class CommonController extends FrameworkBundleAdminController
      * @Template("@PrestaShop/Admin/Common/recommendedModules.html.twig")
      *
      * @param string $domain
-     * @param int $limit
-     * @param int $randomize
+     * @param int    $limit
+     * @param int    $randomize
      *
      * @return array Template vars
      */
@@ -168,7 +168,7 @@ class CommonController extends FrameworkBundleAdminController
     {
         $recommendedModules = $this->get('prestashop.data_provider.modules.recommended');
         /* @var $recommendedModules RecommendedModules */
-        $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
+        $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, (1 == $randomize));
 
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         /* @var $modulesProvider AdminModuleDataProvider */
@@ -184,7 +184,7 @@ class CommonController extends FrameworkBundleAdminController
             $modules[] = $module;
         }
 
-        if ($randomize == 1) {
+        if (1 == $randomize) {
             shuffle($modules);
         }
 
@@ -275,7 +275,7 @@ class CommonController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', [
             'form' => $form->getForm()->get($formName)->get($fieldName)->createView(),
-            'formId' => $formName . '_' . $fieldName . '_rendered',
+            'formId' => $formName.'_'.$fieldName.'_rendered',
         ]);
     }
 
@@ -283,9 +283,9 @@ class CommonController extends FrameworkBundleAdminController
      * Process Grid search.
      *
      * @param Request $request
-     * @param string $gridDefinitionFactoryService
-     * @param string $redirectRoute
-     * @param array $redirectQueryParamsToKeep
+     * @param string  $gridDefinitionFactoryService
+     * @param string  $redirectRoute
+     * @param array   $redirectQueryParamsToKeep
      *
      * @return RedirectResponse
      */

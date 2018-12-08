@@ -96,7 +96,7 @@ class StylesheetManagerCore extends AbstractAssetManager
             $uri = $fullPath;
             $type = 'external';
         } else {
-            $uri = $this->getFQDN() . $this->getUriFromPath($fullPath);
+            $uri = $this->getFQDN().$this->getUriFromPath($fullPath);
             $type = ($inline) ? 'inline' : 'external';
         }
 
@@ -136,7 +136,7 @@ class StylesheetManagerCore extends AbstractAssetManager
     {
         foreach ($this->list['inline'] as &$item) {
             $item['content'] =
-                '/* ---- ' . $item['id'] . ' @ ' . $item['path'] . ' ---- */' . "\r\n" .
+                '/* ---- '.$item['id'].' @ '.$item['path'].' ---- */'."\r\n".
                 file_get_contents($item['path']);
         }
     }

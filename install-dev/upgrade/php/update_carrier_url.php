@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function update_carrier_url()
 {
     // Get all carriers
@@ -38,7 +37,7 @@ function update_carrier_url()
             Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'carrier`
 				SET `url` = \'\'
-				WHERE  `id_carrier`= '.(int)($carrier['id_carrier']));
+				WHERE  `id_carrier`= '.(int) ($carrier['id_carrier']));
         }
     }
 }

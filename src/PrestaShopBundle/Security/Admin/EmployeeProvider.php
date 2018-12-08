@@ -121,6 +121,6 @@ class EmployeeProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'PrestaShopBundle\Security\Admin\Employee';
+        return 'PrestaShopBundle\Security\Admin\Employee' === $class;
     }
 }

@@ -69,11 +69,11 @@ final class SearchCriteriaWithCategoryParentIdFilterFactory implements Decorated
     private $contextShopCategoryId;
 
     /**
-     * @param Configuration $configuration
-     * @param Context $shopContext
-     * @param FeatureInterface $multistoreFeature
+     * @param Configuration                     $configuration
+     * @param Context                           $shopContext
+     * @param FeatureInterface                  $multistoreFeature
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
-     * @param int $contextShopCategoryId
+     * @param int                               $contextShopCategoryId
      */
     public function __construct(
         Configuration $configuration,
@@ -135,7 +135,7 @@ final class SearchCriteriaWithCategoryParentIdFilterFactory implements Decorated
             && !$this->multistoreContextChecker->isSingleShopContext()
         ) {
             if ($this->multistoreFeature->isActive()
-                && count($this->shopContext->getShops(true, true)) === 1
+                && 1 === count($this->shopContext->getShops(true, true))
             ) {
                 return $this->contextShopCategoryId;
             }

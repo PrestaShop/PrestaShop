@@ -88,7 +88,7 @@ class ModuleZipManager
     {
         $this->initSource($source);
 
-        if ($this->getSource($source)->getName($source) !== null) {
+        if (null !== $this->getSource($source)->getName($source)) {
             return $this->getSource($source)->getName($source);
         }
 
@@ -102,7 +102,7 @@ class ModuleZipManager
 
         $sandboxPath = $this->getSandboxPath($source);
         $zip = new ZipArchive();
-        if ($zip->open($source) === false || !$zip->extractTo($sandboxPath) || !$zip->close()) {
+        if (false === $zip->open($source) || !$zip->extractTo($sandboxPath) || !$zip->close()) {
             throw new Exception(
                 $this->translator->trans(
                     'Cannot extract module in %path% to get its name. %error%',
@@ -122,19 +122,19 @@ class ModuleZipManager
 
         $validModuleStructure = false;
         // We must have only one folder in the zip, which contains the module files
-        if (iterator_count($directories->directories()) == 1) {
+        if (1 == iterator_count($directories->directories())) {
             $directories = iterator_to_array($directories);
             $moduleName = basename(current($directories)->getFileName());
 
             // Inside of this folder, we MUST have a file called <module name>.php
             $moduleFolder = Finder::create()
                     ->files()
-                    ->in($sandboxPath . $moduleName)
+                    ->in($sandboxPath.$moduleName)
                     ->depth('== 0')
                     ->exclude(['__MACOSX'])
                     ->ignoreVCS(true);
             foreach (iterator_to_array($moduleFolder) as $file) {
-                if ($file->getFileName() === $moduleName . '.php') {
+                if ($file->getFileName() === $moduleName.'.php') {
                     $validModuleStructure = true;
                     break;
                 }
@@ -164,10 +164,10 @@ class ModuleZipManager
         $name = $this->getName($source);
         $sandboxPath = $this->getSandboxPath($source);
         // Now we are sure to have a valid module, we copy it to the modules folder
-        $modulePath = _PS_MODULE_DIR_ . $name;
+        $modulePath = _PS_MODULE_DIR_.$name;
         $this->filesystem->mkdir($modulePath);
         $this->filesystem->mirror(
-            $sandboxPath . $name,
+            $sandboxPath.$name,
             $modulePath,
             null,
             array('override' => true)
@@ -190,8 +190,8 @@ class ModuleZipManager
     private function getSandboxPath($source)
     {
         $sandboxPath = $this->getSource($source)->getSandboxPath();
-        if ($sandboxPath === null) {
-            $sandboxPath = _PS_CACHE_DIR_ . 'sandbox/' . uniqid() . '/';
+        if (null === $sandboxPath) {
+            $sandboxPath = _PS_CACHE_DIR_.'sandbox/'.uniqid().'/';
             $this->filesystem->mkdir($sandboxPath);
             $this->getSource($source)->setSandboxPath($sandboxPath);
         }
@@ -226,7 +226,7 @@ class ModuleZipManager
             $source = Tools::createFileFromUrl($source);
         }
 
-        if ($this->getSource($source) === null) {
+        if (null === $this->getSource($source)) {
             self::$sources[$source] = new ModuleZip($source);
         }
     }

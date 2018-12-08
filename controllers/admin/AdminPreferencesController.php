@@ -38,7 +38,7 @@ class AdminPreferencesControllerCore extends AdminController
         parent::__construct();
 
         // Prevent classes which extend AdminPreferences to load useless data
-        if (get_class($this) == 'AdminPreferencesController') {
+        if ('AdminPreferencesController' == get_class($this)) {
             $round_mode = array(
                 array(
                     'value' => PS_ROUND_HALF_UP,
@@ -219,10 +219,10 @@ class AdminPreferencesControllerCore extends AdminController
                 }
 
                 $fields['PS_SSL_ENABLED']['type'] = 'disabled';
-                $fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://' .
-                    Tools::getShopDomainSsl() .
-                    Tools::safeOutput($requestUri) . '">' .
-                    $this->trans('Please click here to check if your shop supports HTTPS.', array(), 'Admin.Shopparameters.Feature') . '</a>';
+                $fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://'.
+                    Tools::getShopDomainSsl().
+                    Tools::safeOutput($requestUri).'">'.
+                    $this->trans('Please click here to check if your shop supports HTTPS.', array(), 'Admin.Shopparameters.Feature').'</a>';
             }
 
             $this->fields_options = array(

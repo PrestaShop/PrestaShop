@@ -67,8 +67,8 @@ class SupplierProductSearchProvider implements ProductSearchProviderInterface
 
     /**
      * @param ProductSearchContext $context
-     * @param ProductSearchQuery $query
-     * @param string $type
+     * @param ProductSearchQuery   $query
+     * @param string               $type
      *
      * @return array|bool
      */
@@ -84,7 +84,7 @@ class SupplierProductSearchProvider implements ProductSearchProviderInterface
             $query->getResultsPerPage(),
             $query->getSortOrder()->toLegacyOrderBy(),
             $query->getSortOrder()->toLegacyOrderWay(),
-            $type !== 'products'
+            'products' !== $type
         );
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function add_column_order_state_deleted_if_not_exists()
 {
-    $res  = true;
+    $res = true;
     $column = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'order_state` LIKE "deleted"');
 
     if (empty($column)) {
@@ -36,5 +35,6 @@ function add_column_order_state_deleted_if_not_exists()
     if (!$res) {
         return array('error' => Db::getInstance()->getNumberError(), 'msg' => Db::getInstance()->getMsgError());
     }
+
     return true;
 }

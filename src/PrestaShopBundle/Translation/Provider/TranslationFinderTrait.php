@@ -51,15 +51,15 @@ trait TranslationFinderTrait
             $finder->name($pattern);
         }
         $translationFiles = $finder->files()->notName('index.php')->in($paths);
-        if (count($translationFiles) === 0) {
+        if (0 === count($translationFiles)) {
             throw new \Exception('There is no translation file available.');
         }
 
         foreach ($translationFiles as $file) {
-            if (strpos($file->getBasename('.xlf'), $locale) !== false) {
+            if (false !== strpos($file->getBasename('.xlf'), $locale)) {
                 $domain = $file->getBasename('.xlf');
             } else {
-                $domain = $file->getBasename('.xlf') . '.' . $locale;
+                $domain = $file->getBasename('.xlf').'.'.$locale;
             }
 
             $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);

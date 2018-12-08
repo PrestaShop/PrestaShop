@@ -126,7 +126,7 @@ class InvoicesController extends FrameworkBundleAdminController
      * Processes the form in a generic way.
      *
      * @param FormHandlerInterface $formHandler
-     * @param Request $request
+     * @param Request              $request
      *
      * @return bool false if an error occurred, true otherwise
      */

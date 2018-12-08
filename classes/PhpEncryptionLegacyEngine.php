@@ -70,13 +70,13 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         $cipherText = mcrypt_encrypt(
             $this->cipher,
             $this->key,
-            $plaintext . str_repeat(chr($pad), $pad),
+            $plaintext.str_repeat(chr($pad), $pad),
             $this->mode,
             $this->iv
         );
-        $cipherText = $this->iv . $cipherText;
+        $cipherText = $this->iv.$cipherText;
 
-        return $this->generateHmac($cipherText) . ':' . base64_encode($cipherText);
+        return $this->generateHmac($cipherText).':'.base64_encode($cipherText);
     }
 
     /**
@@ -92,7 +92,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
     public function decrypt($cipherText)
     {
         $data = explode(':', $cipherText);
-        if (count($data) != 2) {
+        if (2 != count($data)) {
             return false;
         }
 
@@ -132,7 +132,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
 
         return hash_hmac(
             'sha256',
-            $this->hmacIv . $this->cipher . $encrypted,
+            $this->hmacIv.$this->cipher.$encrypted,
             $macKey
         );
     }
@@ -144,7 +144,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      * @param string $hash
      * @param string $password
      * @param string $salt
-     * @param int $bytes
+     * @param int    $bytes
      *
      * @return string
      */
@@ -154,7 +154,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         foreach (range(0, ceil($bytes / strlen(hash($hash, null, true))) - 1) as $i) {
             $result .= hash(
                 $hash,
-                str_repeat("\0", $i) . str_pad(substr($salt, 0, 8), 8, "\0", STR_PAD_RIGHT) . $password,
+                str_repeat("\0", $i).str_pad(substr($salt, 0, 8), 8, "\0", STR_PAD_RIGHT).$password,
                 true
             );
         }

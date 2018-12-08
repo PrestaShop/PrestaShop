@@ -179,7 +179,7 @@ class CartPresenter implements PresenterInterface
 
     /**
      * @param array $products
-     * @param Cart $cart
+     * @param Cart  $cart
      *
      * @return array
      */
@@ -345,7 +345,7 @@ class CartPresenter implements PresenterInterface
         }
 
         if ($cart->gift) {
-            $giftWrappingPrice = ($cart->getGiftWrappingPrice($this->includeTaxes()) != 0)
+            $giftWrappingPrice = (0 != $cart->getGiftWrappingPrice($this->includeTaxes()))
                 ? $cart->getGiftWrappingPrice($this->includeTaxes())
                 : 0;
 
@@ -368,7 +368,7 @@ class CartPresenter implements PresenterInterface
             'type' => 'shipping',
             'label' => $this->translator->trans('Shipping', array(), 'Shop.Theme.Checkout'),
             'amount' => $shippingCost,
-            'value' => $shippingCost != 0
+            'value' => 0 != $shippingCost
                 ? $this->priceFormatter->format($shippingCost)
                 : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
         );
@@ -413,7 +413,7 @@ class CartPresenter implements PresenterInterface
             return $count + $product['quantity'];
         }, 0);
 
-        $summary_string = $products_count === 1 ?
+        $summary_string = 1 === $products_count ?
             $this->translator->trans('1 item', array(), 'Shop.Theme.Checkout') :
             $this->translator->trans('%count% items', array('%count%' => $products_count), 'Shop.Theme.Checkout')
         ;
@@ -489,7 +489,7 @@ class CartPresenter implements PresenterInterface
 
             // Voucher reduction depending of the cart tax rule
             // if $cartHasTax & voucher is tax excluded, set amount voucher to tax included
-            if ($cartHasTax && $cartVoucher['reduction_tax'] == '0') {
+            if ($cartHasTax && '0' == $cartVoucher['reduction_tax']) {
                 $cartVoucher['reduction_amount'] = $cartVoucher['reduction_amount'] * (1 + $cartHasTax / 100);
             }
 
@@ -499,13 +499,13 @@ class CartPresenter implements PresenterInterface
                 $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
             }
 
-            if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
-                $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
+            if (isset($cartVoucher['reduction_percent']) && '0.00' == $cartVoucher['reduction_amount']) {
+                $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'].'%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
                 $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cartVoucher['reduction_amount']);
             }
 
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-' . $cartVoucher['reduction_formatted'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-'.$cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
                 true,
@@ -533,10 +533,10 @@ class CartPresenter implements PresenterInterface
     protected function getAttributesArrayFromString($attributes)
     {
         $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
-        $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)' . $separator . '+(?!' . $separator . '([^:' . $separator . '])+:))/';
+        $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)'.$separator.'+(?!'.$separator.'([^:'.$separator.'])+:))/';
         $attributesArray = array();
         $matches = array();
-        if (!preg_match_all($pattern, $attributes . $separator, $matches)) {
+        if (!preg_match_all($pattern, $attributes.$separator, $matches)) {
             return $attributesArray;
         }
 

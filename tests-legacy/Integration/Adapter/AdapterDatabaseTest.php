@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,18 +34,18 @@ class AdapterDatabaseTest extends IntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->db = new Database;
+        $this->db = new Database();
     }
 
     public function test_values_are_escaped_dataProvider()
     {
         return array(
-            array( 'hello'       , 'hello'    ),
-            array( '\\\'inject'  , '\'inject' ),
-            array( '\\"inject'   , '"inject'  ),
-            array( 42            , 42         ),
-            array( 4.2           , 4.2        ),
-            array( '4\\\'200'    , '4\'200'   ),
+            array('hello', 'hello'),
+            array('\\\'inject', '\'inject'),
+            array('\\"inject', '"inject'),
+            array(42, 42),
+            array(4.2, 4.2),
+            array('4\\\'200', '4\'200'),
         );
     }
 

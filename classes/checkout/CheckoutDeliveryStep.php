@@ -97,7 +97,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
 
     public function getGiftCostForLabel()
     {
-        if ($this->getGiftCost() != 0) {
+        if (0 != $this->getGiftCost()) {
             $taxLabel = '';
             $priceFormatter = new PriceFormatter();
 

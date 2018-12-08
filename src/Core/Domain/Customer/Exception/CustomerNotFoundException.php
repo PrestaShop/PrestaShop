@@ -40,9 +40,9 @@ class CustomerNotFoundException extends CustomerException
 
     /**
      * @param CustomerId $customerId
-     * @param string $message
-     * @param int $code
-     * @param null $previouse
+     * @param string     $message
+     * @param int        $code
+     * @param null       $previouse
      */
     public function __construct(CustomerId $customerId, $message = '', $code = 0, $previouse = null)
     {

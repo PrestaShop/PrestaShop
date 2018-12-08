@@ -60,7 +60,7 @@ class EntityRepository
             throw new Exception(sprintf('Undefind method %s.', $method));
         }
 
-        if (count($arguments) !== 1) {
+        if (1 !== count($arguments)) {
             throw new Exception(sprintf('Method %s takes exactly one argument.', $method));
         }
 
@@ -99,7 +99,7 @@ class EntityRepository
     {
         $primary = $this->entityMetaData->getPrimaryKeyFieldnames();
 
-        if (count($primary) === 0) {
+        if (0 === count($primary)) {
             throw new Exception(
                 sprintf(
                     'No primary key defined in entity `%s`.',
@@ -125,7 +125,7 @@ class EntityRepository
      */
     protected function getTableNameWithPrefix()
     {
-        return $this->db->escape($this->tablesPrefix . $this->entityMetaData->getTableName());
+        return $this->db->escape($this->tablesPrefix.$this->entityMetaData->getTableName());
     }
 
     /**
@@ -161,7 +161,7 @@ class EntityRepository
      */
     protected function hydrateOne(array $rows)
     {
-        if (count($rows) === 0) {
+        if (0 === count($rows)) {
             return null;
         } elseif (count($rows) > 1) {
             throw new Exception('Too many rows returned.');
@@ -200,7 +200,7 @@ class EntityRepository
     {
         $whereClause = $this->queryBuilder->buildWhereConditions('AND', $cumulativeConditions);
 
-        $sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix() . ' WHERE ' . $whereClause;
+        $sql = 'SELECT * FROM '.$this->getTableNameWithPrefix().' WHERE '.$whereClause;
 
         $rows = $this->db->select($sql);
 
@@ -235,7 +235,7 @@ class EntityRepository
      */
     public function findAll()
     {
-        $sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix();
+        $sql = 'SELECT * FROM '.$this->getTableNameWithPrefix();
 
         return $this->hydrateMany($this->db->select($sql));
     }

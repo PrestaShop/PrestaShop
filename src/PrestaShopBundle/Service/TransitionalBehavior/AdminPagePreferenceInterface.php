@@ -47,8 +47,8 @@ interface AdminPagePreferenceInterface
     /**
      * Set the temporary behavior of the new/old page on Admin interface.
      *
-     * @param string $page the page to look for
-     * @param bool $useLegacy true to redirect to old legacy pages for Product controller
+     * @param string $page      the page to look for
+     * @param bool   $useLegacy true to redirect to old legacy pages for Product controller
      */
     public function setTemporaryShouldUseLegacyPage($page, $useLegacy);
 

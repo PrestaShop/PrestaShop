@@ -51,8 +51,8 @@ class AttributeController extends FrameworkBundleAdminController
         foreach ($attributes as $attribute) {
             /* Construct attribute group selector. Ex : Color : All */
             $dataGroupAttributes[$attribute['id_attribute_group']] = [
-                'value' => 'group-' . $attribute['id_attribute_group'],
-                'label' => $attribute['public_name'] . ' : ' . $this->trans('All', 'Admin.Global'),
+                'value' => 'group-'.$attribute['id_attribute_group'],
+                'label' => $attribute['public_name'].' : '.$this->trans('All', 'Admin.Global'),
                 'data' => [
                     'id_group' => $attribute['id_attribute_group'],
                     'name' => $attribute['public_name'],
@@ -61,7 +61,7 @@ class AttributeController extends FrameworkBundleAdminController
 
             $data[] = [
                 'value' => $attribute['id_attribute'],
-                'label' => $attribute['public_name'] . ' : ' . $attribute['name'],
+                'label' => $attribute['public_name'].' : '.$attribute['name'],
                 'data' => [
                     'id_group' => $attribute['id_attribute_group'],
                     'name' => $attribute['name'],
@@ -148,7 +148,7 @@ class AttributeController extends FrameworkBundleAdminController
             foreach ($attribute as $combination) {
                 $form = $this->get('form.factory')
                     ->createNamed(
-                        'combination_' . $combination['id_product_attribute'],
+                        'combination_'.$combination['id_product_attribute'],
                         'PrestaShopBundle\Form\Admin\Product\ProductCombination',
                         $combinationDataProvider->getFormCombination($combination['id_product_attribute'])
                     );
@@ -167,7 +167,7 @@ class AttributeController extends FrameworkBundleAdminController
 
     /**
      * @param Product $product
-     * @param array $combinations
+     * @param array   $combinations
      */
     public function ensureProductHasDefaultCombination(Product $product, array $combinations)
     {
@@ -183,8 +183,8 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Delete a product attribute.
      *
-     * @param int $idProduct The product ID
-     * @param Request $request The request
+     * @param int     $idProduct The product ID
+     * @param Request $request   The request
      *
      * @return string
      */
@@ -205,7 +205,7 @@ class AttributeController extends FrameworkBundleAdminController
                     ->ajaxProcessDeleteProductAttribute($attributeId, $idProduct);
             }
 
-            if ($legacyResponse['status'] == 'error') {
+            if ('error' == $legacyResponse['status']) {
                 $response->setStatusCode(400);
             }
 
@@ -218,8 +218,8 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Delete all product attributes.
      *
-     * @param int $idProduct The product ID
-     * @param Request $request The request
+     * @param int     $idProduct The product ID
+     * @param Request $request   The request
      *
      * @return string
      */
@@ -241,7 +241,7 @@ class AttributeController extends FrameworkBundleAdminController
             $res = $this->get('prestashop.adapter.admin.controller.attribute_generator')
                 ->ajaxProcessDeleteProductAttribute($combination['id_product_attribute'], $idProduct);
 
-            if ($res['status'] == 'error') {
+            if ('error' == $res['status']) {
                 $response->setStatusCode(400);
                 break;
             }
@@ -255,8 +255,8 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * get the images form for a product combinations.
      *
-     * @param int $idProduct The product id
-     * @param Request $request The request
+     * @param int     $idProduct The product id
+     * @param Request $request   The request
      *
      * @return string Json
      */

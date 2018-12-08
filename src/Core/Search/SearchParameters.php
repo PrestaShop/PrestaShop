@@ -78,7 +78,7 @@ final class SearchParameters implements SearchParametersInterface
 
         $savedFilters = [];
 
-        if ($adminFilter !== null) {
+        if (null !== $adminFilter) {
             $savedFilters = json_decode($adminFilter->getFilter(), true);
         }
 

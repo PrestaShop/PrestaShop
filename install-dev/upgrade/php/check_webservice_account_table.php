@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,8 +27,6 @@
 /**
  * Check if all needed columns in webservice_account table exists.
  * These columns are used for the WebserviceRequest overriding.
- *
- * @return void
  */
 function check_webservice_account_table()
 {

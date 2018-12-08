@@ -51,7 +51,7 @@ class GenerateByStatusType extends CommonAbstractType
 
     /**
      * @param FormChoiceProviderInterface $orderStateChoiceProvider
-     * @param array $orderCountsByState
+     * @param array                       $orderCountsByState
      */
     public function __construct(FormChoiceProviderInterface $orderStateChoiceProvider, array $orderCountsByState)
     {

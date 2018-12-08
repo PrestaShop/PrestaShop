@@ -62,11 +62,11 @@ class StockRepository extends StockManagementRepository
      * StockRepository constructor.
      *
      * @param ContainerInterface $container
-     * @param Connection $connection
-     * @param EntityManager $entityManager
-     * @param ContextAdapter $contextAdapter
-     * @param ImageManager $imageManager
-     * @param StockManager $stockManager
+     * @param Connection         $connection
+     * @param EntityManager      $entityManager
+     * @param ContextAdapter     $contextAdapter
+     * @param ImageManager       $imageManager
+     * @param StockManager       $stockManager
      * @param $tablePrefix
      */
     public function __construct(
@@ -110,7 +110,7 @@ class StockRepository extends StockManagementRepository
 
     /**
      * @param Movement $movement
-     * @param bool $syncStock
+     * @param bool     $syncStock
      *
      * @return mixed
      */
@@ -119,7 +119,7 @@ class StockRepository extends StockManagementRepository
         $productIdentity = $movement->getProductIdentity();
         $delta = $movement->getDelta();
 
-        if ($productIdentity->getProductId() && $delta !== 0) {
+        if ($productIdentity->getProductId() && 0 !== $delta) {
             $product = (new ProductDataProvider())->getProduct($productIdentity->getProductId());
 
             if ($product->id) {
@@ -178,7 +178,7 @@ class StockRepository extends StockManagementRepository
         $statement->closeCursor();
         $this->foundRows = $this->getFoundRows();
 
-        if (count($rows) === 0) {
+        if (0 === count($rows)) {
             throw new ProductNotFoundException(
                 sprintf(
                     'Product with id %d and combination id %d can not be found',
@@ -227,7 +227,7 @@ class StockRepository extends StockManagementRepository
     /**
      * @param string $andWhereClause
      * @param string $having
-     * @param null $orderByClause
+     * @param null   $orderByClause
      *
      * @return mixed
      */
@@ -337,7 +337,7 @@ class StockRepository extends StockManagementRepository
     {
         $rows = parent::addCombinationsAndFeatures($rows);
         foreach ($rows as &$row) {
-            if ($row['combination_id'] != 0) {
+            if (0 != $row['combination_id']) {
                 $row['total_combinations'] = $this->getTotalCombinations($row);
             } else {
                 $row['total_combinations'] = 'N/A';
@@ -358,7 +358,7 @@ class StockRepository extends StockManagementRepository
     {
         if (!isset($this->totalCombinations[$row['product_id']])) {
             $query = 'SELECT COUNT(*) total_combinations
-                        FROM ' . $this->tablePrefix . 'product_attribute pa
+                        FROM '.$this->tablePrefix.'product_attribute pa
                         WHERE id_product=:id_product';
             $statement = $this->connection->prepare($query);
             $statement->bindValue('id_product', (int) $row['product_id'], \PDO::PARAM_INT);

@@ -75,14 +75,14 @@ class HookConfigurator
             ;
             $currentHooks[$hookName] = [];
             foreach ($modules as $key => $module) {
-                if ($module === null && $firstNullValueFound) {
+                if (null === $module && $firstNullValueFound) {
                     $firstNullValueFound = false;
                     foreach ($existing as $m) {
                         $currentHooks[$hookName][] = $m;
                     }
                 } elseif (is_array($module)) {
                     $currentHooks[$hookName][$key] = $module;
-                } elseif ($module !== null) {
+                } elseif (null !== $module) {
                     $currentHooks[$hookName][] = $module;
                 }
             }

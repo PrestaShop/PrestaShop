@@ -43,7 +43,7 @@ final class DoctrineQueryParser implements QueryParserInterface
             if (!is_string($key)) {
                 throw new UnsupportedParameterException('Only named parameters are supported in prepared queries.');
             }
-            $values[':' . $key] = $this->parseValue($value);
+            $values[':'.$key] = $this->parseValue($value);
         }
 
         return strtr($query, $values);
@@ -74,11 +74,11 @@ final class DoctrineQueryParser implements QueryParserInterface
             return $this->parseBooleanParameter($value);
         }
 
-        if ($value === null) {
+        if (null === $value) {
             return 'NULL';
         }
 
-        throw new UnsupportedParameterException('Unsupported value type: ' . gettype($value));
+        throw new UnsupportedParameterException('Unsupported value type: '.gettype($value));
     }
 
     /**
@@ -88,7 +88,7 @@ final class DoctrineQueryParser implements QueryParserInterface
      */
     private function parseStringParameter($value)
     {
-        return "'" . addslashes($value) . "'";
+        return "'".addslashes($value)."'";
     }
 
     /**
@@ -108,7 +108,7 @@ final class DoctrineQueryParser implements QueryParserInterface
      */
     private function parseArrayParameter(array $value)
     {
-        return "'" . implode("', '", array_map('addslashes', $value)) . "'";
+        return "'".implode("', '", array_map('addslashes', $value))."'";
     }
 
     /**

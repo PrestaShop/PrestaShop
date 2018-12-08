@@ -110,7 +110,7 @@ class OrderCarrierCore extends ObjectModel
             $img = $prod_obj->getCombinationImages($order->id_lang);
             $link_rewrite = $prod_obj->link_rewrite[$order->id_lang];
             $combination_img = $img[$product['product_attribute_id']][0]['id_image'];
-            if ($combination_img != null) {
+            if (null != $combination_img) {
                 $img_url = $link->getImageLink($link_rewrite, $combination_img, 'large_default');
             } else {
                 //if there is no combination image, then get the product cover instead
@@ -119,11 +119,11 @@ class OrderCarrierCore extends ObjectModel
             }
             $prod_url = $prod_obj->getLink();
 
-            $metadata .= "\n" . '<div itemprop="itemShipped" itemscope itemtype="http://schema.org/Product">';
-            $metadata .= "\n" . '   <meta itemprop="name" content="' . htmlspecialchars($product['product_name']) . '"/>';
-            $metadata .= "\n" . '   <link itemprop="image" href="' . $img_url . '"/>';
-            $metadata .= "\n" . '   <link itemprop="url" href="' . $prod_url . '"/>';
-            $metadata .= "\n" . '</div>';
+            $metadata .= "\n".'<div itemprop="itemShipped" itemscope itemtype="http://schema.org/Product">';
+            $metadata .= "\n".'   <meta itemprop="name" content="'.htmlspecialchars($product['product_name']).'"/>';
+            $metadata .= "\n".'   <link itemprop="image" href="'.$img_url.'"/>';
+            $metadata .= "\n".'   <link itemprop="url" href="'.$prod_url.'"/>';
+            $metadata .= "\n".'</div>';
         }
 
         $orderLanguage = new Language((int) $order->id_lang);
@@ -153,7 +153,7 @@ class OrderCarrierCore extends ObjectModel
             ),
             $templateVars,
             $customer->email,
-            $customer->firstname . ' ' . $customer->lastname,
+            $customer->firstname.' '.$customer->lastname,
             null,
             null,
             null,

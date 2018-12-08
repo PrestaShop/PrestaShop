@@ -53,8 +53,8 @@ final class ExcelToCsvFileConverter implements FileConverterInterface
 
     /**
      * @param Filesystem $filesystem
-     * @param string $csvDirectory path to CSV files directory
-     * @param string $excelDirectory path to excel files directory
+     * @param string     $csvDirectory   path to CSV files directory
+     * @param string     $excelDirectory path to excel files directory
      */
     public function __construct(Filesystem $filesystem, $csvDirectory, $excelDirectory)
     {
@@ -77,13 +77,13 @@ final class ExcelToCsvFileConverter implements FileConverterInterface
             $this->filesystem->mkdir($this->excelDirectory);
         }
 
-        $destinationFilename = basename($sourceFile->getFilename(), $sourceFile->getExtension()) . '.csv';
-        $destinationFilePath = $this->excelDirectory . $destinationFilename;
+        $destinationFilename = basename($sourceFile->getFilename(), $sourceFile->getExtension()).'.csv';
+        $destinationFilePath = $this->excelDirectory.$destinationFilename;
 
         if (!$this->filesystem->exists($destinationFilePath)) {
             $excelReader = IOFactory::createReaderForFile($sourceFile->getFilename());
             $excelReader->setReadDataOnly(true);
-            $excelFile = $excelReader->load($sourceFile->getFilename() . $destinationFilename);
+            $excelFile = $excelReader->load($sourceFile->getFilename().$destinationFilename);
             $csvWriter = IOFactory::createWriter($excelFile, 'Csv');
             $csvWriter->setSheetIndex(0);
             $csvWriter->setDelimiter(';');

@@ -98,7 +98,7 @@ class ThemeExtractor
     /**
      * Add default catalogue in this &$catalogue when the translation exists.
      *
-     * @param string $locale
+     * @param string           $locale
      * @param MessageCatalogue $catalogue
      */
     private function overrideFromDefaultCatalog($locale, &$catalogue)
@@ -122,7 +122,7 @@ class ThemeExtractor
 
         foreach ($defaultCatalogue as $domain => $translation) {
             // AdminCatalogFeature.fr-FR to AdminCatalogFeature
-            $domain = str_replace('.' . $locale, '', $domain);
+            $domain = str_replace('.'.$locale, '', $domain);
 
             // AdminCatalogFeature to Admin.Catalog.Feature
             $domain = implode('.', preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY));
@@ -140,8 +140,8 @@ class ThemeExtractor
     /**
      * Add database catalogue in this &$catalogue.
      *
-     * @param string $themeName
-     * @param string $locale
+     * @param string           $themeName
+     * @param string           $locale
      * @param MessageCatalogue $catalogue
      *
      * @throws \Exception

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -212,7 +212,7 @@ function smartyTranslate($params, $smarty)
     }
 
     if (($translation = Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d'])) !== $params['s']
-        && $params['mod'] === false) {
+        && false === $params['mod']) {
         return $translation;
     }
 
@@ -220,7 +220,7 @@ function smartyTranslate($params, $smarty)
     $basename = basename($smarty->source->name, '.tpl');
     $key = $basename.'_'.md5($string);
 
-    if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false)) {
+    if (isset($smarty->source) && (false !== strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR))) {
         $key = 'override_'.$key;
     }
 
@@ -245,9 +245,9 @@ function smartyTranslate($params, $smarty)
         );
     }
 
-    if ($_LANG != null && isset($_LANG[$key])) {
+    if (null != $_LANG && isset($_LANG[$key])) {
         $msg = $_LANG[$key];
-    } elseif ($_LANG != null && isset($_LANG[Tools::strtolower($key)])) {
+    } elseif (null != $_LANG && isset($_LANG[Tools::strtolower($key)])) {
         $msg = $_LANG[Tools::strtolower($key)];
     } else {
         $msg = $params['s'];
@@ -259,7 +259,7 @@ function smartyTranslate($params, $smarty)
         $msg = addslashes($msg);
     }
 
-    if ($params['sprintf'] !== null) {
+    if (null !== $params['sprintf']) {
         $msg = Translate::checkAndReplaceArgs($msg, $params['sprintf']);
     }
 

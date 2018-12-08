@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,6 @@ use PrestaShopBundle\Install\Database;
 
 class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
 {
-
     public $process_steps = array();
     public $previous_button = false;
 
@@ -50,7 +49,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     public function display()
     {
-
     }
 
     /**
@@ -72,18 +70,18 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         Shop::setContext(Shop::CONTEXT_SHOP, 1);
         Configuration::loadConfiguration();
         if (!isset(Context::getContext()->language) || !Validate::isLoadedObject(Context::getContext()->language)) {
-            if ($id_lang = (int)Configuration::get('PS_LANG_DEFAULT')) {
+            if ($id_lang = (int) Configuration::get('PS_LANG_DEFAULT')) {
                 Context::getContext()->language = new Language($id_lang);
             }
         }
         if (!isset(Context::getContext()->country) || !Validate::isLoadedObject(Context::getContext()->country)) {
-            if ($id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT')) {
-                Context::getContext()->country = new Country((int)$id_country);
+            if ($id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT')) {
+                Context::getContext()->country = new Country((int) $id_country);
             }
         }
         if (!isset(Context::getContext()->currency) || !Validate::isLoadedObject(Context::getContext()->currency)) {
-            if ($id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT')) {
-                Context::getContext()->currency = new Currency((int)$id_currency);
+            if ($id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT')) {
+                Context::getContext()->currency = new Currency((int) $id_currency);
             }
         }
 
@@ -103,7 +101,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
-            $steps = array('database','fixtures','theme','modules','addons_modules');
+            $steps = array('database', 'fixtures', 'theme', 'modules', 'addons_modules');
         }
 
         if (in_array('database', $steps)) {
@@ -167,14 +165,14 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                     'method' => 'addMemberToNewsletter',
                     'language' => $this->datas->lang,
                     'visitorType' => 1,
-                    'source' => 'installer'
+                    'source' => 'installer',
                 ));
             Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }
 
     /**
-     * PROCESS : generateSettingsFile
+     * PROCESS : generateSettingsFile.
      */
     public function processGenerateSettingsFile()
     {
@@ -190,7 +188,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : installDatabase
-     * Create database structure
+     * Create database structure.
      */
     public function processInstallDatabase()
     {
@@ -199,16 +197,16 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : installDefaultData
-     * Create default shop and languages
+     * Create default shop and languages.
      */
     public function processInstallDefaultData()
     {
         $this->initializeContext();
-        if (!$res = $this->model_install->installDefaultData($this->datas->shop_name, $this->datas->shop_country, (int)$this->datas->all_languages, true)) {
+        if (!$res = $this->model_install->installDefaultData($this->datas->shop_name, $this->datas->shop_country, (int) $this->datas->all_languages, true)) {
             return false;
         }
 
-        if ($this->datas->base_uri != '/') {
+        if ('/' != $this->datas->base_uri) {
             $shop_url = new ShopUrl(1);
             $shop_url->physical_uri = $this->datas->base_uri;
             $shop_url->save();
@@ -219,7 +217,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : populateDatabase
-     * Populate database with default data
+     * Populate database with default data.
      */
     public function processPopulateDatabase()
     {
@@ -235,23 +233,23 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : configureShop
-     * Set default shop configuration
+     * Set default shop configuration.
      */
     public function processConfigureShop()
     {
         $this->initializeContext();
 
         return $this->model_install->configureShop(array(
-            'shop_name' =>                $this->datas->shop_name,
-            'shop_activity' =>            $this->datas->shop_activity,
-            'shop_country' =>            $this->datas->shop_country,
-            'shop_timezone' =>            $this->datas->timezone,
-            'use_smtp' =>                false,
-            'admin_firstname' =>        $this->datas->admin_firstname,
-            'admin_lastname' =>            $this->datas->admin_lastname,
-            'admin_password' =>            $this->datas->admin_password,
-            'admin_email' =>            $this->datas->admin_email,
-            'configuration_agrement' =>    true,
+            'shop_name' => $this->datas->shop_name,
+            'shop_activity' => $this->datas->shop_activity,
+            'shop_country' => $this->datas->shop_country,
+            'shop_timezone' => $this->datas->timezone,
+            'use_smtp' => false,
+            'admin_firstname' => $this->datas->admin_firstname,
+            'admin_lastname' => $this->datas->admin_lastname,
+            'admin_password' => $this->datas->admin_password,
+            'admin_email' => $this->datas->admin_email,
+            'configuration_agrement' => true,
             'send_informations' => true,
             'enable_ssl' => $this->datas->enable_ssl,
         ));
@@ -259,7 +257,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : installModules
-     * Install all modules in ~/modules/ directory
+     * Install all modules in ~/modules/ directory.
      */
     public function processInstallModules()
     {
@@ -270,7 +268,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : installFixtures
-     * Install fixtures (E.g. demo products)
+     * Install fixtures (E.g. demo products).
      */
     public function processInstallFixtures()
     {
@@ -283,12 +281,13 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
         $result = $this->model_install->installFixtures(null, array('shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country));
         $this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
+
         return $result;
     }
 
     /**
      * PROCESS : installModulesAddons
-     * Install modules from addons
+     * Install modules from addons.
      */
     public function processInstallAddonsModules()
     {
@@ -297,11 +296,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : installTheme
-     * Install theme
+     * Install theme.
      */
     public function processInstallTheme()
     {
         $this->initializeContext();
+
         return $this->model_install->installTheme($this->datas->theme);
     }
 
@@ -311,7 +311,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $cacheFiles = scandir($configXMLPath, SCANDIR_SORT_NONE);
         $excludes = ['.htaccess', 'index.php'];
 
-        foreach($cacheFiles as $file) {
+        foreach ($cacheFiles as $file) {
             $filepath = $configXMLPath.$file;
             if (is_file($filepath) && !in_array($file, $excludes)) {
                 unlink($filepath);
@@ -323,7 +323,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     {
         $themesPath = _PS_ROOT_DIR_.'/config/themes/';
         $cacheFiles = scandir($themesPath, SCANDIR_SORT_NONE);
-        foreach($cacheFiles as $file) {
+        foreach ($cacheFiles as $file) {
             $file = $themesPath.$file;
             if (is_file($file)) {
                 unlink($file);

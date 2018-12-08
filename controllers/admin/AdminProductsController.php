@@ -89,7 +89,7 @@ class AdminProductsControllerCore extends AdminController
 
     public static function getQuantities($echo, $tr)
     {
-        if ((int) $tr['is_virtual'] == 1 && $tr['nb_downloadable'] == 0) {
+        if (1 == (int) $tr['is_virtual'] && 0 == $tr['nb_downloadable']) {
             return '&infin;';
         } else {
             return $echo;
@@ -98,12 +98,12 @@ class AdminProductsControllerCore extends AdminController
 
     protected function _cleanMetaKeywords($keywords)
     {
-        if (!empty($keywords) && $keywords != '') {
+        if (!empty($keywords) && '' != $keywords) {
             $out = array();
             $words = explode(',', $keywords);
             foreach ($words as $word_item) {
                 $word_item = trim($word_item);
-                if (!empty($word_item) && $word_item != '') {
+                if (!empty($word_item) && '' != $word_item) {
                     $out[] = $word_item;
                 }
             }
@@ -116,21 +116,21 @@ class AdminProductsControllerCore extends AdminController
 
     /**
      * @param Product|ObjectModel $object
-     * @param string $table
+     * @param string              $table
      */
     protected function copyFromPost(&$object, $table)
     {
         parent::copyFromPost($object, $table);
-        if (get_class($object) != 'Product') {
+        if ('Product' != get_class($object)) {
             return;
         }
 
         /* Additional fields */
         foreach (Language::getIDs(false) as $id_lang) {
-            if (isset($_POST['meta_keywords_' . $id_lang])) {
-                $_POST['meta_keywords_' . $id_lang] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_' . $id_lang]));
+            if (isset($_POST['meta_keywords_'.$id_lang])) {
+                $_POST['meta_keywords_'.$id_lang] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$id_lang]));
                 // preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$id_lang]));
-                $object->meta_keywords[$id_lang] = $_POST['meta_keywords_' . $id_lang];
+                $object->meta_keywords[$id_lang] = $_POST['meta_keywords_'.$id_lang];
             }
         }
         $_POST['width'] = empty($_POST['width']) ? '0' : str_replace(',', '.', $_POST['width']);
@@ -138,10 +138,10 @@ class AdminProductsControllerCore extends AdminController
         $_POST['depth'] = empty($_POST['depth']) ? '0' : str_replace(',', '.', $_POST['depth']);
         $_POST['weight'] = empty($_POST['weight']) ? '0' : str_replace(',', '.', $_POST['weight']);
 
-        if (Tools::getIsset('unit_price') != null) {
+        if (null != Tools::getIsset('unit_price')) {
             $object->unit_price = str_replace(',', '.', Tools::getValue('unit_price'));
         }
-        if (Tools::getIsset('ecotax') != null) {
+        if (null != Tools::getIsset('ecotax')) {
             $object->ecotax = str_replace(',', '.', Tools::getValue('ecotax'));
         }
 
@@ -172,23 +172,23 @@ class AdminProductsControllerCore extends AdminController
         static $checkbox = null;
         static $shop_context = null;
 
-        if ($context == null && $shop_context == null) {
+        if (null == $context && null == $shop_context) {
             $context = Context::getContext();
         }
 
-        if ($shop_context == null) {
+        if (null == $shop_context) {
             $shop_context = $context->shop->getContext();
         }
 
-        if ($checkbox == null) {
+        if (null == $checkbox) {
             $checkbox = Tools::getValue('multishop_check', array());
         }
 
-        if ($shop_context == Shop::CONTEXT_SHOP) {
+        if (Shop::CONTEXT_SHOP == $shop_context) {
             return true;
         }
 
-        if (isset($checkbox[$field]) && $checkbox[$field] == 1) {
+        if (isset($checkbox[$field]) && 1 == $checkbox[$field]) {
             return true;
         }
 
@@ -197,10 +197,10 @@ class AdminProductsControllerCore extends AdminController
 
     public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
     {
-        $orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table . 'Orderby') ? $this->context->cookie->__get($this->table . 'Orderby') : 'id_' . $this->table) : $orderBy);
-        $orderWayPriceFinal = (empty($orderWay) ? ($this->context->cookie->__get($this->table . 'Orderway') ? $this->context->cookie->__get($this->table . 'Orderby') : 'ASC') : $orderWay);
-        if ($orderByPriceFinal == 'price_final') {
-            $orderBy = 'id_' . $this->table;
+        $orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
+        $orderWayPriceFinal = (empty($orderWay) ? ($this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderby') : 'ASC') : $orderWay);
+        if ('price_final' == $orderByPriceFinal) {
+            $orderBy = 'id_'.$this->table;
             $orderWay = 'ASC';
         }
         parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $this->context->shop->id);
@@ -212,7 +212,7 @@ class AdminProductsControllerCore extends AdminController
             $context->shop = clone $context->shop;
             /* update product final price */
             for ($i = 0; $i < $nb; ++$i) {
-                if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP) {
+                if (Shop::CONTEXT_SHOP != Context::getContext()->shop->getContext()) {
                     $context->shop = new Shop((int) $this->_list[$i]['id_shop_default']);
                 }
 
@@ -239,8 +239,8 @@ class AdminProductsControllerCore extends AdminController
             }
         }
 
-        if ($orderByPriceFinal == 'price_final') {
-            if (strtolower($orderWayPriceFinal) == 'desc') {
+        if ('price_final' == $orderByPriceFinal) {
+            if ('desc' == strtolower($orderWayPriceFinal)) {
                 uasort($this->_list, 'cmpPriceDesc');
             } else {
                 uasort($this->_list, 'cmpPriceAsc');
@@ -256,7 +256,7 @@ class AdminProductsControllerCore extends AdminController
     {
         $result = parent::loadObject($opt);
         if ($result && Validate::isLoadedObject($this->object)) {
-            if (Shop::getContext() == Shop::CONTEXT_SHOP && Shop::isFeatureActive() && !$this->object->isAssociatedToShop()) {
+            if (Shop::CONTEXT_SHOP == Shop::getContext() && Shop::isFeatureActive() && !$this->object->isAssociatedToShop()) {
                 $default_product = new Product((int) $this->object->id, false, null, (int) $this->object->id_shop_default);
                 $def = ObjectModel::getDefinition($this->object);
                 foreach ($def['fields'] as $field_name => $row) {
@@ -366,7 +366,7 @@ class AdminProductsControllerCore extends AdminController
             if (!$product_download->deleteFile((int) $id_product_download)) {
                 $this->errors[] = $this->trans('Cannot delete file', array(), 'Admin.Notifications.Error');
             } else {
-                $this->redirect_after = self::$currentIndex . '&id_product=' . (int) Tools::getValue('id_product') . '&updateproduct&key_tab=VirtualProduct&conf=1&token=' . $this->token;
+                $this->redirect_after = self::$currentIndex.'&id_product='.(int) Tools::getValue('id_product').'&updateproduct&key_tab=VirtualProduct&conf=1&token='.$this->token;
             }
         }
 
@@ -380,7 +380,7 @@ class AdminProductsControllerCore extends AdminController
             return die(json_encode(array('error' => 'You do not have the right permission')));
         }
         if (isset($_FILES['attachment_file'])) {
-            if ((int) $_FILES['attachment_file']['error'] === 1) {
+            if (1 === (int) $_FILES['attachment_file']['error']) {
                 $_FILES['attachment_file']['error'] = array();
 
                 $max_upload = (int) ini_get('upload_max_filesize');
@@ -388,8 +388,8 @@ class AdminProductsControllerCore extends AdminController
                 $upload_mb = min($max_upload, $max_post);
                 $_FILES['attachment_file']['error'][] = sprintf(
                     'File %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.',
-                    '<b>' . $_FILES['attachment_file']['name'] . '</b> ',
-                    '<b>' . $upload_mb . '</b>'
+                    '<b>'.$_FILES['attachment_file']['name'].'</b> ',
+                    '<b>'.$upload_mb.'</b>'
                 );
             }
 
@@ -444,8 +444,8 @@ class AdminProductsControllerCore extends AdminController
                     } else {
                         do {
                             $uniqid = sha1(microtime());
-                        } while (file_exists(_PS_DOWNLOAD_DIR_ . $uniqid));
-                        if (!copy($_FILES['attachment_file']['tmp_name'], _PS_DOWNLOAD_DIR_ . $uniqid)) {
+                        } while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
+                        if (!copy($_FILES['attachment_file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid)) {
                             $_FILES['attachment_file']['error'][] = 'File copy failed';
                         }
                         @unlink($_FILES['attachment_file']['tmp_name']);
@@ -519,7 +519,7 @@ class AdminProductsControllerCore extends AdminController
     {
         if (Validate::isLoadedObject($product = new Product((int) Tools::getValue('id_product')))) {
             $id_product_old = $product->id;
-            if (empty($product->price) && Shop::getContext() == Shop::CONTEXT_GROUP) {
+            if (empty($product->price) && Shop::CONTEXT_GROUP == Shop::getContext()) {
                 $shops = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
                 foreach ($shops as $shop) {
                     if ($product->isAssociatedToShop($shop['id_shop'])) {
@@ -535,7 +535,7 @@ class AdminProductsControllerCore extends AdminController
             if ($product->add()
             && Category::duplicateProductCategories($id_product_old, $product->id)
             && Product::duplicateSuppliers($id_product_old, $product->id)
-            && ($combination_images = Product::duplicateAttributes($id_product_old, $product->id)) !== false
+            && false !== ($combination_images = Product::duplicateAttributes($id_product_old, $product->id))
             && GroupReduction::duplicateReduction($id_product_old, $product->id)
             && Product::duplicateAccessories($id_product_old, $product->id)
             && Product::duplicateFeatures($id_product_old, $product->id)
@@ -555,7 +555,7 @@ class AdminProductsControllerCore extends AdminController
                     if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $product->id);
                     }
-                    $this->redirect_after = self::$currentIndex . (Tools::getIsset('id_category') ? '&id_category=' . (int) Tools::getValue('id_category') : '') . '&conf=19&token=' . $this->token;
+                    $this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int) Tools::getValue('id_category') : '').'&conf=19&token='.$this->token;
                 }
             } else {
                 $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error');
@@ -569,7 +569,7 @@ class AdminProductsControllerCore extends AdminController
             /** @var Product $object */
             // check if request at least one object with noZeroObject
             if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1) {
-                $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b><br />' . $this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b><br />'.$this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
             } else {
                 /*
                  * @since 1.5.0
@@ -589,16 +589,16 @@ class AdminProductsControllerCore extends AdminController
                 if (!count($this->errors)) {
                     if ($object->delete()) {
                         $id_category = (int) Tools::getValue('id_category');
-                        $category_url = empty($id_category) ? '' : '&id_category=' . (int) $id_category;
+                        $category_url = empty($id_category) ? '' : '&id_category='.(int) $id_category;
                         PrestaShopLogger::addLog(sprintf('%s deletion', $this->className), 1, null, $this->className, (int) $object->id, true, (int) $this->context->employee->id);
-                        $this->redirect_after = self::$currentIndex . '&conf=1&token=' . $this->token . $category_url;
+                        $this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
                     } else {
                         $this->errors[] = $this->trans('An error occurred during deletion.', array(), 'Admin.Notifications.Error');
                     }
                 }
             }
         } else {
-            $this->errors[] = $this->trans('An error occurred while deleting the object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('An error occurred while deleting the object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         }
     }
 
@@ -623,14 +623,14 @@ class AdminProductsControllerCore extends AdminController
                     $this->errors[] = $this->trans('You cannot change the product\'s cover image.', array(), 'Admin.Catalog.Notification');
                 } else {
                     $productId = (int) Tools::getValue('id_product');
-                    @unlink(_PS_TMP_IMG_DIR_ . 'product_' . $productId . '.jpg');
-                    @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . $productId . '_' . $this->context->shop->id . '.jpg');
-                    $this->redirect_after = self::$currentIndex . '&id_product=' . $image->id_product . '&id_category=' . (Tools::getIsset('id_category') ? '&id_category=' . (int) Tools::getValue('id_category') : '') . '&action=Images&addproduct' . '&token=' . $this->token;
+                    @unlink(_PS_TMP_IMG_DIR_.'product_'.$productId.'.jpg');
+                    @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$productId.'_'.$this->context->shop->id.'.jpg');
+                    $this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int) Tools::getValue('id_category') : '').'&action=Images&addproduct'.'&token='.$this->token;
                 }
             } elseif (Tools::getIsset('imgPosition') && Tools::getIsset('imgDirection')) {
                 /* Choose product image position */
                 $image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
-                $this->redirect_after = self::$currentIndex . '&id_product=' . $image->id_product . '&id_category=' . (Tools::getIsset('id_category') ? '&id_category=' . (int) Tools::getValue('id_category') : '') . '&add' . $this->table . '&action=Images&token=' . $this->token;
+                $this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int) Tools::getValue('id_category') : '').'&add'.$this->table.'&action=Images&token='.$this->token;
             }
         } else {
             $this->errors[] = $this->trans('The image could not be found. ', array(), 'Admin.Catalog.Notification');
@@ -645,11 +645,11 @@ class AdminProductsControllerCore extends AdminController
 
                 if (isset($object->noZeroObject) &&
                     // Check if all object will be deleted
-                    (count(call_user_func(array($this->className, $object->noZeroObject))) <= 1 || count($_POST[$this->table . 'Box']) == count(call_user_func(array($this->className, $object->noZeroObject))))) {
-                    $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b><br />' . $this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
+                    (count(call_user_func(array($this->className, $object->noZeroObject))) <= 1 || count($_POST[$this->table.'Box']) == count(call_user_func(array($this->className, $object->noZeroObject))))) {
+                    $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b><br />'.$this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
                 } else {
                     $success = 1;
-                    $products = Tools::getValue($this->table . 'Box');
+                    $products = Tools::getValue($this->table.'Box');
                     if (is_array($products) && ($count = count($products))) {
                         // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
                         if (intval(ini_get('max_execution_time')) < round($count * 1.5)) {
@@ -689,8 +689,8 @@ class AdminProductsControllerCore extends AdminController
 
                     if ($success) {
                         $id_category = (int) Tools::getValue('id_category');
-                        $category_url = empty($id_category) ? '' : '&id_category=' . (int) $id_category;
-                        $this->redirect_after = self::$currentIndex . '&conf=2&token=' . $this->token . $category_url;
+                        $category_url = empty($id_category) ? '' : '&id_category='.(int) $id_category;
+                        $this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token.$category_url;
                     } else {
                         $this->errors[] = $this->trans('An error occurred while deleting this selection.', array(), 'Admin.Notifications.Error');
                     }
@@ -711,7 +711,7 @@ class AdminProductsControllerCore extends AdminController
         }
 
         if (Validate::isLoadedObject($product = $this->object)) {
-            if ($this->isProductFieldUpdated('attribute_price') && (!Tools::getIsset('attribute_price') || Tools::getIsset('attribute_price') == null)) {
+            if ($this->isProductFieldUpdated('attribute_price') && (!Tools::getIsset('attribute_price') || null == Tools::getIsset('attribute_price'))) {
                 $this->errors[] = $this->trans('The price attribute is required.', array(), 'Admin.Catalog.Notification');
             }
             if (!Tools::getIsset('attribute_combination_list') || Tools::isEmpty(Tools::getValue('attribute_combination_list'))) {
@@ -736,7 +736,7 @@ class AdminProductsControllerCore extends AdminController
                 'available_date' => 'isDateFormat',
             );
             foreach ($array_checks as $property => $check) {
-                if (Tools::getValue('attribute_' . $property) !== false && !call_user_func(array('Validate', $check), Tools::getValue('attribute_' . $property))) {
+                if (false !== Tools::getValue('attribute_'.$property) && !call_user_func(array('Validate', $check), Tools::getValue('attribute_'.$property))) {
                     $this->errors[] = $this->trans('The %s field is not valid', array($property), 'Admin.Notifications.Error');
                 }
             }
@@ -761,7 +761,7 @@ class AdminProductsControllerCore extends AdminController
                 // Change existing one
                 if (($id_product_attribute = (int) Tools::getValue('id_product_attribute')) || ($id_product_attribute = $product->productAttributeExists(Tools::getValue('attribute_combination_list'), false, null, true, true))) {
                     if ($this->access('edit')) {
-                        if ($this->isProductFieldUpdated('available_date_attribute') && (Tools::getValue('available_date_attribute') != '' && !Validate::isDateFormat(Tools::getValue('available_date_attribute')))) {
+                        if ($this->isProductFieldUpdated('available_date_attribute') && ('' != Tools::getValue('available_date_attribute') && !Validate::isDateFormat(Tools::getValue('available_date_attribute')))) {
                             $this->errors[] = $this->trans('Invalid date format.', array(), 'Admin.Notifications.Error');
                         } else {
                             $product->updateAttribute(
@@ -912,7 +912,7 @@ class AdminProductsControllerCore extends AdminController
         $tos = Tools::getValue('spm_to');
 
         foreach ($id_specific_prices as $key => $id_specific_price) {
-            if ($reduction_types[$key] == 'percentage' && ((float) $reductions[$key] <= 0 || (float) $reductions[$key] > 100)) {
+            if ('percentage' == $reduction_types[$key] && ((float) $reductions[$key] <= 0 || (float) $reductions[$key] > 100)) {
                 $this->errors[] = $this->trans('Submitted reduction value (0-100) is out-of-range', array(), 'Admin.Catalog.Notification');
             } elseif ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $id_customers[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key], $id_combinations[$key])) {
                 $specific_price = new SpecificPrice((int) ($id_specific_price));
@@ -924,7 +924,7 @@ class AdminProductsControllerCore extends AdminController
                 $specific_price->id_customer = (int) $id_customers[$key];
                 $specific_price->price = (float) ($prices[$key]);
                 $specific_price->from_quantity = (int) ($from_quantities[$key]);
-                $specific_price->reduction = (float) ($reduction_types[$key] == 'percentage' ? ($reductions[$key] / 100) : $reductions[$key]);
+                $specific_price->reduction = (float) ('percentage' == $reduction_types[$key] ? ($reductions[$key] / 100) : $reductions[$key]);
                 $specific_price->reduction_type = !$reductions[$key] ? 'amount' : $reduction_types[$key];
                 $specific_price->from = !$froms[$key] ? '0000-00-00 00:00:00' : $froms[$key];
                 $specific_price->to = !$tos[$key] ? '0000-00-00 00:00:00' : $tos[$key];
@@ -934,7 +934,7 @@ class AdminProductsControllerCore extends AdminController
             }
         }
         if (!count($this->errors)) {
-            $this->redirect_after = self::$currentIndex . '&id_product=' . (int) (Tools::getValue('id_product')) . (Tools::getIsset('id_category') ? '&id_category=' . (int) Tools::getValue('id_category') : '') . '&update' . $this->table . '&action=Prices&token=' . $this->token;
+            $this->redirect_after = self::$currentIndex.'&id_product='.(int) (Tools::getValue('id_product')).(Tools::getIsset('id_category') ? '&id_category='.(int) Tools::getValue('id_category') : '').'&update'.$this->table.'&action=Prices&token='.$this->token;
         }
     }
 
@@ -957,7 +957,7 @@ class AdminProductsControllerCore extends AdminController
         $reduction = (float) (Tools::getValue('sp_reduction'));
         $reduction_tax = Tools::getValue('sp_reduction_tax');
         $reduction_type = !$reduction ? 'amount' : Tools::getValue('sp_reduction_type');
-        $reduction_type = $reduction_type == '-' ? 'amount' : $reduction_type;
+        $reduction_type = '-' == $reduction_type ? 'amount' : $reduction_type;
         $from = Tools::getValue('sp_from');
         if (!$from) {
             $from = '0000-00-00 00:00:00';
@@ -967,11 +967,11 @@ class AdminProductsControllerCore extends AdminController
             $to = '0000-00-00 00:00:00';
         }
 
-        if (($price == '-1') && ((float) $reduction == '0')) {
+        if (('-1' == $price) && ('0' == (float) $reduction)) {
             $this->errors[] = $this->trans('No reduction value has been submitted', array(), 'Admin.Catalog.Notification');
-        } elseif ($to != '0000-00-00 00:00:00' && strtotime($to) < strtotime($from)) {
+        } elseif ('0000-00-00 00:00:00' != $to && strtotime($to) < strtotime($from)) {
             $this->errors[] = $this->trans('Invalid date range', array(), 'Admin.Notifications.Error');
-        } elseif ($reduction_type == 'percentage' && ((float) $reduction <= 0 || (float) $reduction > 100)) {
+        } elseif ('percentage' == $reduction_type && ((float) $reduction <= 0 || (float) $reduction > 100)) {
             $this->errors[] = $this->trans('Submitted reduction value (0-100) is out-of-range', array(), 'Admin.Catalog.Notification');
         } elseif ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
             $specificPrice = new SpecificPrice();
@@ -984,7 +984,7 @@ class AdminProductsControllerCore extends AdminController
             $specificPrice->id_customer = (int) $id_customer;
             $specificPrice->price = (float) ($price);
             $specificPrice->from_quantity = (int) ($from_quantity);
-            $specificPrice->reduction = (float) ($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
+            $specificPrice->reduction = (float) ('percentage' == $reduction_type ? $reduction / 100 : $reduction);
             $specificPrice->reduction_tax = $reduction_tax;
             $specificPrice->reduction_type = $reduction_type;
             $specificPrice->from = $from;
@@ -1053,7 +1053,7 @@ class AdminProductsControllerCore extends AdminController
         $text_count = 0;
         if (is_array($current_customization)) {
             foreach ($current_customization as $field) {
-                if ($field['type'] == 1) {
+                if (1 == $field['type']) {
                     ++$text_count;
                 } else {
                     ++$files_count;
@@ -1077,7 +1077,7 @@ class AdminProductsControllerCore extends AdminController
     {
         if (Validate::isLoadedObject($product = new Product((int) Tools::getValue('id_product')))) {
             foreach ($_POST as $field => $value) {
-                if (strncmp($field, 'label_', 6) == 0 && !Validate::isLabel($value)) {
+                if (0 == strncmp($field, 'label_', 6) && !Validate::isLabel($value)) {
                     $this->errors[] = $this->trans('The label fields defined are invalid.', array(), 'Admin.Catalog.Notification');
                 }
             }
@@ -1099,8 +1099,8 @@ class AdminProductsControllerCore extends AdminController
     {
         /** @var Product $object */
         if (!Validate::isLoadedObject($object = $this->loadObject())) {
-            $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error') .
-                ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').
+                ' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         } elseif (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
             $this->errors[] = $this->trans('Failed to update the position.', array(), 'Admin.Notifications.Error');
         } else {
@@ -1108,7 +1108,7 @@ class AdminProductsControllerCore extends AdminController
             if (Validate::isLoadedObject($category)) {
                 Hook::exec('actionCategoryUpdate', array('category' => $category));
             }
-            $this->redirect_after = self::$currentIndex . '&' . $this->table . 'Orderby=position&' . $this->table . 'Orderway=asc&action=Customization&conf=5' . (($id_category = (Tools::getIsset('id_category') ? (int) Tools::getValue('id_category') : '')) ? ('&id_category=' . $id_category) : '') . '&token=' . Tools::getAdminTokenLite('AdminProducts');
+            $this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&action=Customization&conf=5'.(($id_category = (Tools::getIsset('id_category') ? (int) Tools::getValue('id_category') : '')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');
         }
     }
 
@@ -1118,7 +1118,7 @@ class AdminProductsControllerCore extends AdminController
             $this->id_object = (int) Tools::getValue('id_product');
             $this->object = new Product($this->id_object);
 
-            if ($this->isTabSubmitted('Informations') && $this->object->is_virtual && (int) Tools::getValue('type_product') != 2) {
+            if ($this->isTabSubmitted('Informations') && $this->object->is_virtual && 2 != (int) Tools::getValue('type_product')) {
                 if ($id_product_download = (int) ProductDownload::getIdFromIdProduct($this->id_object)) {
                     $product_download = new ProductDownload($id_product_download);
                     if (!$product_download->deleteFile($id_product_download)) {
@@ -1150,7 +1150,7 @@ class AdminProductsControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
-        } elseif (Tools::getIsset('duplicate' . $this->table)) {
+        } elseif (Tools::getIsset('duplicate'.$this->table)) {
             // Product duplication
             if ($this->access('add')) {
                 $this->action = 'duplicate';
@@ -1275,7 +1275,7 @@ class AdminProductsControllerCore extends AdminController
             parent::postProcess();
         }
 
-        if ($this->display == 'edit' || $this->display == 'add') {
+        if ('edit' == $this->display || 'add' == $this->display) {
             $this->addJqueryUI(array(
                 'ui.core',
                 'ui.widget',
@@ -1293,22 +1293,22 @@ class AdminProductsControllerCore extends AdminController
             ));
 
             $this->addJS(array(
-                _PS_JS_DIR_ . 'admin/products.js',
-                _PS_JS_DIR_ . 'admin/attributes.js',
-                _PS_JS_DIR_ . 'admin/price.js',
-                _PS_JS_DIR_ . 'tiny_mce/tiny_mce.js',
-                _PS_JS_DIR_ . 'admin/tinymce.inc.js',
-                _PS_JS_DIR_ . 'admin/dnd.js',
-                _PS_JS_DIR_ . 'jquery/ui/jquery.ui.progressbar.min.js',
-                _PS_JS_DIR_ . 'vendor/spin.js',
-                _PS_JS_DIR_ . 'vendor/ladda.js',
+                _PS_JS_DIR_.'admin/products.js',
+                _PS_JS_DIR_.'admin/attributes.js',
+                _PS_JS_DIR_.'admin/price.js',
+                _PS_JS_DIR_.'tiny_mce/tiny_mce.js',
+                _PS_JS_DIR_.'admin/tinymce.inc.js',
+                _PS_JS_DIR_.'admin/dnd.js',
+                _PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
+                _PS_JS_DIR_.'vendor/spin.js',
+                _PS_JS_DIR_.'vendor/ladda.js',
             ));
 
-            $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/select2/select2_locale_' . $this->context->language->iso_code . '.js');
-            $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js');
+            $this->addJS(_PS_JS_DIR_.'jquery/plugins/select2/select2_locale_'.$this->context->language->iso_code.'.js');
+            $this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
 
             $this->addCSS(array(
-                _PS_JS_DIR_ . 'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css',
+                _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css',
             ));
         }
     }
@@ -1412,7 +1412,7 @@ class AdminProductsControllerCore extends AdminController
 
     public function ajaxPreProcess()
     {
-        if (Tools::getIsset('update' . $this->table) && Tools::getIsset('id_' . $this->table)) {
+        if (Tools::getIsset('update'.$this->table) && Tools::getIsset('id_'.$this->table)) {
             $this->display = 'edit';
             $this->action = Tools::getValue('action');
         }
@@ -1422,38 +1422,38 @@ class AdminProductsControllerCore extends AdminController
     {
         $id_product = Tools::getValue('id_product');
         if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int) Tools::getValue('id_shop'))) {
-            if (Tools::getValue('active') == 'true') {
-                $res = Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'image_shop (`id_product`, `id_image`, `id_shop`, `cover`) VALUES(' . (int) $id_product . ', ' . (int) $id_image . ', ' . (int) $id_shop . ', NULL)');
+            if ('true' == Tools::getValue('active')) {
+                $res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_product`, `id_image`, `id_shop`, `cover`) VALUES('.(int) $id_product.', '.(int) $id_image.', '.(int) $id_shop.', NULL)');
             } else {
-                $res = Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'image_shop WHERE `id_image` = ' . (int) $id_image . ' AND `id_shop` = ' . (int) $id_shop);
+                $res = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image` = '.(int) $id_image.' AND `id_shop` = '.(int) $id_shop);
             }
         }
 
         // Clean covers in image table
         $count_cover_image = Db::getInstance()->getValue('
-			SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'image i
-			INNER JOIN ' . _DB_PREFIX_ . 'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = ' . (int) $id_shop . ')
-			WHERE i.cover = 1 AND i.`id_product` = ' . (int) $id_product);
+			SELECT COUNT(*) FROM '._DB_PREFIX_.'image i
+			INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int) $id_shop.')
+			WHERE i.cover = 1 AND i.`id_product` = '.(int) $id_product);
 
         if (!$id_image) {
             $id_image = Db::getInstance()->getValue('
-                SELECT i.`id_image` FROM ' . _DB_PREFIX_ . 'image i
-                INNER JOIN ' . _DB_PREFIX_ . 'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = ' . (int) $id_shop . ')
-                WHERE i.`id_product` = ' . (int) $id_product);
+                SELECT i.`id_image` FROM '._DB_PREFIX_.'image i
+                INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int) $id_shop.')
+                WHERE i.`id_product` = '.(int) $id_product);
         }
 
         if ($count_cover_image < 1) {
-            Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'image i SET i.cover = 1 WHERE i.id_image = ' . (int) $id_image . ' AND i.`id_product` = ' . (int) $id_product . ' LIMIT 1');
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i SET i.cover = 1 WHERE i.id_image = '.(int) $id_image.' AND i.`id_product` = '.(int) $id_product.' LIMIT 1');
         }
 
         // Clean covers in image_shop table
         $count_cover_image_shop = Db::getInstance()->getValue('
 			SELECT COUNT(*)
-			FROM ' . _DB_PREFIX_ . 'image_shop ish
-			WHERE ish.`id_product` = ' . (int) $id_product . ' AND ish.id_shop = ' . (int) $id_shop . ' AND ish.cover = 1');
+			FROM '._DB_PREFIX_.'image_shop ish
+			WHERE ish.`id_product` = '.(int) $id_product.' AND ish.id_shop = '.(int) $id_shop.' AND ish.cover = 1');
 
         if ($count_cover_image_shop < 1) {
-            Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'image_shop ish SET ish.cover = 1 WHERE ish.id_image = ' . (int) $id_image . ' AND ish.`id_product` = ' . (int) $id_product . ' AND ish.id_shop =  ' . (int) $id_shop . ' LIMIT 1');
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int) $id_image.' AND ish.`id_product` = '.(int) $id_product.' AND ish.id_shop =  '.(int) $id_shop.' LIMIT 1');
         }
 
         if ($res) {
@@ -1495,8 +1495,8 @@ class AdminProductsControllerCore extends AdminController
         $img = new Image((int) Tools::getValue('id_image'));
         $img->cover = 1;
 
-        @unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $img->id_product . '.jpg');
-        @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $img->id_product . '_' . $this->context->shop->id . '.jpg');
+        @unlink(_PS_TMP_IMG_DIR_.'product_'.(int) $img->id_product.'.jpg');
+        @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int) $img->id_product.'_'.$this->context->shop->id.'.jpg');
 
         if ($img->update()) {
             $this->jsonConfirmation($this->_conf[26]);
@@ -1518,24 +1518,24 @@ class AdminProductsControllerCore extends AdminController
         // if deleted image was the cover, change it to the first one
         if (!Image::getCover($image->id_product)) {
             $res &= Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'image_shop` image_shop
+			UPDATE `'._DB_PREFIX_.'image_shop` image_shop
 			SET image_shop.`cover` = 1
-			WHERE image_shop.`id_product` = ' . (int) $image->id_product . '
-			AND id_shop=' . (int) $this->context->shop->id . ' LIMIT 1');
+			WHERE image_shop.`id_product` = '.(int) $image->id_product.'
+			AND id_shop='.(int) $this->context->shop->id.' LIMIT 1');
         }
 
         if (!Image::getGlobalCover($image->id_product)) {
             $res &= Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'image` i
+			UPDATE `'._DB_PREFIX_.'image` i
 			SET i.`cover` = 1
-			WHERE i.`id_product` = ' . (int) $image->id_product . ' LIMIT 1');
+			WHERE i.`id_product` = '.(int) $image->id_product.' LIMIT 1');
         }
 
-        if (file_exists(_PS_TMP_IMG_DIR_ . 'product_' . $image->id_product . '.jpg')) {
-            $res &= @unlink(_PS_TMP_IMG_DIR_ . 'product_' . $image->id_product . '.jpg');
+        if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg')) {
+            $res &= @unlink(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg');
         }
-        if (file_exists(_PS_TMP_IMG_DIR_ . 'product_mini_' . $image->id_product . '_' . $this->context->shop->id . '.jpg')) {
-            $res &= @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . $image->id_product . '_' . $this->context->shop->id . '.jpg');
+        if (file_exists(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'_'.$this->context->shop->id.'.jpg')) {
+            $res &= @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'_'.$this->context->shop->id.'.jpg');
         }
 
         if ($res) {
@@ -1587,7 +1587,7 @@ class AdminProductsControllerCore extends AdminController
                     $this->errors[] = $this->trans(
                         'The name for feature %1$s is too long in %2$s.',
                         array(
-                            ' <b>' . $feature['name'] . '</b>',
+                            ' <b>'.$feature['name'].'</b>',
                             $current_language->name,
                         ),
                         'Admin.Catalog.Notification'
@@ -1596,7 +1596,7 @@ class AdminProductsControllerCore extends AdminController
                     $this->errors[] = $this->trans(
                         'A valid name required for feature. %1$s in %2$s.',
                         array(
-                            ' <b>' . $feature['name'] . '</b>',
+                            ' <b>'.$feature['name'].'</b>',
                             $current_language->name,
                         ),
                         'Admin.Catalog.Notification'
@@ -1619,7 +1619,7 @@ class AdminProductsControllerCore extends AdminController
      * Add or update a product image.
      *
      * @param Product $product Product object to add image
-     * @param string $method
+     * @param string  $method
      *
      * @return int|false
      */
@@ -1631,7 +1631,7 @@ class AdminProductsControllerCore extends AdminController
             if (!Validate::isLoadedObject($image)) {
                 $this->errors[] = $this->trans('An error occurred while uploading the image.', array(), 'Admin.Notifications.Error');
             } else {
-                if (($cover = Tools::getValue('cover')) == 1) {
+                if (1 == ($cover = Tools::getValue('cover'))) {
                     Image::deleteCover($product->id);
                 }
                 $image->cover = $cover;
@@ -1639,19 +1639,19 @@ class AdminProductsControllerCore extends AdminController
                 $this->copyFromPost($image, 'image');
                 if (count($this->errors) || !$image->update()) {
                     $this->errors[] = $this->trans('An error occurred while updating the image.', array(), 'Admin.Notifications.Error');
-                } elseif (isset($_FILES['image_product']['tmp_name']) && $_FILES['image_product']['tmp_name'] != null) {
+                } elseif (isset($_FILES['image_product']['tmp_name']) && null != $_FILES['image_product']['tmp_name']) {
                     $this->copyImage($product->id, $image->id, $method);
                 }
             }
         }
-        if (isset($image) && Validate::isLoadedObject($image) && !file_exists(_PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
+        if (isset($image) && Validate::isLoadedObject($image) && !file_exists(_PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$image->image_format)) {
             $image->delete();
         }
         if (count($this->errors)) {
             return false;
         }
-        @unlink(_PS_TMP_IMG_DIR_ . 'product_' . $product->id . '.jpg');
-        @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . $product->id . '_' . $this->context->shop->id . '.jpg');
+        @unlink(_PS_TMP_IMG_DIR_.'product_'.$product->id.'.jpg');
+        @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'_'.$this->context->shop->id.'.jpg');
 
         return (isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false;
     }
@@ -1659,8 +1659,8 @@ class AdminProductsControllerCore extends AdminController
     /**
      * Copy a product image.
      *
-     * @param int $id_product Product Id for product image filename
-     * @param int $id_image Image Id for product image filename
+     * @param int    $id_product Product Id for product image filename
+     * @param int    $id_image   Image Id for product image filename
      * @param string $method
      *
      * @return void|false
@@ -1682,12 +1682,12 @@ class AdminProductsControllerCore extends AdminController
             }
             if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['image_product']['tmp_name'], $tmpName)) {
                 $this->errors[] = $this->trans('An error occurred while uploading the image.', array(), 'Admin.Notifications.Error');
-            } elseif (!ImageManager::resize($tmpName, $new_path . '.' . $image->image_format)) {
+            } elseif (!ImageManager::resize($tmpName, $new_path.'.'.$image->image_format)) {
                 $this->errors[] = $this->trans('An error occurred while copying the image.', array(), 'Admin.Notifications.Error');
-            } elseif ($method == 'auto') {
+            } elseif ('auto' == $method) {
                 $imagesTypes = ImageType::getImagesTypes('products');
                 foreach ($imagesTypes as $k => $image_type) {
-                    if (!ImageManager::resize($tmpName, $new_path . '-' . stripslashes($image_type['name']) . '.' . $image->image_format, $image_type['width'], $image_type['height'], $image->image_format)) {
+                    if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($image_type['name']).'.'.$image->image_format, $image_type['width'], $image_type['height'], $image->image_format)) {
                         $this->errors[] = $this->trans('An error occurred while copying this image: %s', array(stripslashes($image_type['name'])), 'Admin.Notifications.Error');
                     }
                 }
@@ -1724,7 +1724,7 @@ class AdminProductsControllerCore extends AdminController
             $this->updatePackItems($this->object);
             $this->updateDownloadProduct($this->object);
 
-            if (Configuration::get('PS_FORCE_ASM_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $this->object->getType() != Product::PTYPE_VIRTUAL) {
+            if (Configuration::get('PS_FORCE_ASM_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Product::PTYPE_VIRTUAL != $this->object->getType()) {
                 $this->object->advanced_stock_management = 1;
                 $this->object->save();
                 $id_shops = Shop::getContextListShopID();
@@ -1739,7 +1739,7 @@ class AdminProductsControllerCore extends AdminController
                     $this->errors[] = $this->trans(
                         'An error occurred while linking the object %table_name% to categories.',
                         array(
-                            '%table_name%' => ' <b>' . $this->table . '</b> ',
+                            '%table_name%' => ' <b>'.$this->table.'</b> ',
                         ),
                         'Admin.Notifications.Error'
                     );
@@ -1752,7 +1752,7 @@ class AdminProductsControllerCore extends AdminController
                     }
                 }
 
-                if (Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT') != 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+                if (0 != Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                     $warehouse_location_entity = new WarehouseProductLocation();
                     $warehouse_location_entity->id_product = $this->object->id;
                     $warehouse_location_entity->id_product_attribute = 0;
@@ -1770,15 +1770,15 @@ class AdminProductsControllerCore extends AdminController
                 }
 
                 // Save and stay on same form
-                if ($this->display == 'edit') {
-                    $this->redirect_after = self::$currentIndex . '&id_product=' . (int) $this->object->id
-                        . (Tools::getIsset('id_category') ? '&id_category=' . (int) Tools::getValue('id_category') : '')
-                        . '&updateproduct&conf=3&key_tab=' . Tools::safeOutput(Tools::getValue('key_tab')) . '&token=' . $this->token;
+                if ('edit' == $this->display) {
+                    $this->redirect_after = self::$currentIndex.'&id_product='.(int) $this->object->id
+                        .(Tools::getIsset('id_category') ? '&id_category='.(int) Tools::getValue('id_category') : '')
+                        .'&updateproduct&conf=3&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).'&token='.$this->token;
                 } else {
                     // Default behavior (save and back)
                     $this->redirect_after = self::$currentIndex
-                        . (Tools::getIsset('id_category') ? '&id_category=' . (int) Tools::getValue('id_category') : '')
-                        . '&conf=3&token=' . $this->token;
+                        .(Tools::getIsset('id_category') ? '&id_category='.(int) Tools::getValue('id_category') : '')
+                        .'&conf=3&token='.$this->token;
                 }
             } else {
                 $this->object->delete();
@@ -1786,7 +1786,7 @@ class AdminProductsControllerCore extends AdminController
                 $this->display = 'edit';
             }
         } else {
-            $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b>';
+            $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b>';
         }
 
         return $this->object;
@@ -1811,10 +1811,10 @@ class AdminProductsControllerCore extends AdminController
         if (!Validate::isLoadedObject($this->object)) {
             return false;
         }
-        if (($error = $this->object->validateFields(false, true)) !== true) {
+        if (true !== ($error = $this->object->validateFields(false, true))) {
             $this->errors[] = $error;
         }
-        if (($error = $this->object->validateFieldsLang(false, true)) !== true) {
+        if (true !== ($error = $this->object->validateFieldsLang(false, true))) {
             $this->errors[] = $error;
         }
 
@@ -1829,7 +1829,7 @@ class AdminProductsControllerCore extends AdminController
 
         if ($query) {
             $this->redirect_after = preg_replace('/[\?|&](bo_query|bo_search_type)=([^&]*)/i', '', $this->redirect_after);
-            $this->redirect_after .= '&bo_query=' . $query . '&bo_search_type=' . $searchType;
+            $this->redirect_after .= '&bo_query='.$query.'&bo_search_type='.$searchType;
         }
 
         return $res;
@@ -1847,7 +1847,7 @@ class AdminProductsControllerCore extends AdminController
             return false;
         }
 
-        $id = (int) Tools::getValue('id_' . $this->table);
+        $id = (int) Tools::getValue('id_'.$this->table);
         /* Update an existing product */
         if (isset($id) && !empty($id)) {
             /** @var Product $object */
@@ -1860,12 +1860,12 @@ class AdminProductsControllerCore extends AdminController
                 $this->copyFromPost($object, $this->table);
                 $object->indexed = 0;
 
-                if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
+                if (Shop::isFeatureActive() && Shop::CONTEXT_SHOP != Shop::getContext()) {
                     $object->setFieldsToUpdate((array) Tools::getValue('multishop_check', array()));
                 }
 
                 // Duplicate combinations if not associated to shop
-                if ($this->context->shop->getContext() == Shop::CONTEXT_SHOP && !$object->isAssociatedToShop()) {
+                if (Shop::CONTEXT_SHOP == $this->context->shop->getContext() && !$object->isAssociatedToShop()) {
                     $is_associated_to_shop = false;
                     $combinations = Product::getProductAttributesIds($object->id);
                     if ($combinations) {
@@ -1887,7 +1887,7 @@ class AdminProductsControllerCore extends AdminController
 
                 if ($object->update()) {
                     // If the product doesn't exist in the current shop but exists in another shop
-                    if (Shop::getContext() == Shop::CONTEXT_SHOP && !$existing_product->isAssociatedToShop($this->context->shop->id)) {
+                    if (Shop::CONTEXT_SHOP == Shop::getContext() && !$existing_product->isAssociatedToShop($this->context->shop->id)) {
                         $out_of_stock = StockAvailable::outOfStock($existing_product->id, $existing_product->id_shop_default);
                         $depends_on_stock = StockAvailable::dependsOnStock($existing_product->id, $existing_product->id_shop_default);
                         StockAvailable::setProductOutOfStock((int) $this->object->id, $out_of_stock, $this->context->shop->id);
@@ -1927,7 +1927,7 @@ class AdminProductsControllerCore extends AdminController
 
                         $this->updatePackItems($object);
                         // Disallow avanced stock management if the product become a pack
-                        if ($product_type_before == Product::PTYPE_SIMPLE && $object->getType() == Product::PTYPE_PACK) {
+                        if (Product::PTYPE_SIMPLE == $product_type_before && Product::PTYPE_PACK == $object->getType()) {
                             StockAvailable::setProductDependsOnStock((int) $object->id, false);
                         }
                         $this->updateDownloadProduct($object, 1);
@@ -1937,7 +1937,7 @@ class AdminProductsControllerCore extends AdminController
                             $this->errors[] = $this->trans(
                                 'An error occurred while linking the object %table_name% to categories.',
                                 array(
-                                    '%table_name%' => ' <b>' . $this->table . '</b> ',
+                                    '%table_name%' => ' <b>'.$this->table.'</b> ',
                                 ),
                                 'Admin.Notifications.Error'
                             );
@@ -1958,14 +1958,14 @@ class AdminProductsControllerCore extends AdminController
                         } else {
                             $page = (int) Tools::getValue('page');
                             // Save and stay on same form
-                            if ($this->display == 'edit') {
+                            if ('edit' == $this->display) {
                                 $this->confirmations[] = 'Update successful';
-                                $this->redirect_after = self::$currentIndex . '&id_product=' . (int) $this->object->id
-                                    . (Tools::getIsset('id_category') ? '&id_category=' . (int) Tools::getValue('id_category') : '')
-                                    . '&updateproduct&conf=4&key_tab=' . Tools::safeOutput(Tools::getValue('key_tab')) . ($page > 1 ? '&page=' . (int) $page : '') . '&token=' . $this->token;
+                                $this->redirect_after = self::$currentIndex.'&id_product='.(int) $this->object->id
+                                    .(Tools::getIsset('id_category') ? '&id_category='.(int) Tools::getValue('id_category') : '')
+                                    .'&updateproduct&conf=4&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).($page > 1 ? '&page='.(int) $page : '').'&token='.$this->token;
                             } else {
                                 // Default behavior (save and back)
-                                $this->redirect_after = self::$currentIndex . (Tools::getIsset('id_category') ? '&id_category=' . (int) Tools::getValue('id_category') : '') . '&conf=4' . ($page > 1 ? '&submitFilterproduct=' . (int) $page : '') . '&token=' . $this->token;
+                                $this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int) Tools::getValue('id_category') : '').'&conf=4'.($page > 1 ? '&submitFilterproduct='.(int) $page : '').'&token='.$this->token;
                             }
                         }
                     } else {
@@ -1979,10 +1979,10 @@ class AdminProductsControllerCore extends AdminController
                             $combination->delete();
                         }
                     }
-                    $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b> (' . Db::getInstance()->getMsgError() . ')';
+                    $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
                 }
             } else {
-                $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b> (' . $this->trans('The object cannot be loaded. ', array(), 'Admin.Notifications.Error') . ')';
+                $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> ('.$this->trans('The object cannot be loaded. ', array(), 'Admin.Notifications.Error').')';
             }
 
             return $object;
@@ -2005,8 +2005,8 @@ class AdminProductsControllerCore extends AdminController
                 continue;
             }
 
-            if (($value = Tools::getValue($field)) == false && $value != '0') {
-                if (Tools::getValue('id_' . $this->table) && $field == 'passwd') {
+            if (false == ($value = Tools::getValue($field)) && '0' != $value) {
+                if (Tools::getValue('id_'.$this->table) && 'passwd' == $field) {
                     continue;
                 }
                 $this->errors[] = $this->trans('The %name% field is required.', array('%name%' => call_user_func(array($this->className, 'displayFieldName'), $field, $this->className)), 'Admin.Notifications.Error');
@@ -2015,7 +2015,7 @@ class AdminProductsControllerCore extends AdminController
 
         // Check multilingual required fields
         foreach ($rules['requiredLang'] as $fieldLang) {
-            if ($this->isProductFieldUpdated($fieldLang, $default_language->id) && !Tools::getValue($fieldLang . '_' . $default_language->id)) {
+            if ($this->isProductFieldUpdated($fieldLang, $default_language->id) && !Tools::getValue($fieldLang.'_'.$default_language->id)) {
                 $this->errors[] = $this->trans(
                     'This %1$s field is required at least in %2$s',
                     array(
@@ -2052,7 +2052,7 @@ class AdminProductsControllerCore extends AdminController
             $limit = 400;
         }
         foreach ($languages as $language) {
-            if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue('description_short_' . $language['id_lang']))) {
+            if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue('description_short_'.$language['id_lang']))) {
                 if (Tools::strlen(strip_tags($value)) > $limit) {
                     $this->errors[] = $this->trans(
                         'This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).',
@@ -2071,7 +2071,7 @@ class AdminProductsControllerCore extends AdminController
         // Check multilingual fields sizes
         foreach ($rules['sizeLang'] as $fieldLang => $maxLength) {
             foreach ($languages as $language) {
-                $value = Tools::getValue($fieldLang . '_' . $language['id_lang']);
+                $value = Tools::getValue($fieldLang.'_'.$language['id_lang']);
                 if ($value && Tools::strlen($value) > $maxLength) {
                     $this->errors[] = $this->trans(
                         'The %1$s field is too long (%2$d chars max).',
@@ -2093,7 +2093,7 @@ class AdminProductsControllerCore extends AdminController
         foreach ($rules['validate'] as $field => $function) {
             if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field))) {
                 $res = true;
-                if (Tools::strtolower($function) == 'iscleanhtml') {
+                if ('iscleanhtml' == Tools::strtolower($function)) {
                     if (!Validate::$function($value, (int) Configuration::get('PS_ALLOW_HTML_IFRAME'))) {
                         $res = false;
                     }
@@ -2115,7 +2115,7 @@ class AdminProductsControllerCore extends AdminController
         // Check multilingual fields validity
         foreach ($rules['validateLang'] as $fieldLang => $function) {
             foreach ($languages as $language) {
-                if ($this->isProductFieldUpdated($fieldLang, $language['id_lang']) && ($value = Tools::getValue($fieldLang . '_' . $language['id_lang']))) {
+                if ($this->isProductFieldUpdated($fieldLang, $language['id_lang']) && ($value = Tools::getValue($fieldLang.'_'.$language['id_lang']))) {
                     if (!Validate::$function($value, (int) Configuration::get('PS_ALLOW_HTML_IFRAME'))) {
                         $this->errors[] = $this->trans(
                             'The %1$s field (%2$s) is invalid.',
@@ -2141,7 +2141,7 @@ class AdminProductsControllerCore extends AdminController
 
         // Tags
         foreach ($languages as $language) {
-            if ($value = Tools::getValue('tags_' . $language['id_lang'])) {
+            if ($value = Tools::getValue('tags_'.$language['id_lang'])) {
                 if (!Validate::isTagsList($value)) {
                     $this->errors[] = $this->trans(
                         'The tags list (%s) is invalid.',
@@ -2159,8 +2159,8 @@ class AdminProductsControllerCore extends AdminController
      * Check if a field is edited (if the checkbox is checked)
      * This method will do something only for multishop with a context all / group.
      *
-     * @param string $field Name of field
-     * @param int $id_lang
+     * @param string $field   Name of field
+     * @param int    $id_lang
      *
      * @return bool
      */
@@ -2169,7 +2169,7 @@ class AdminProductsControllerCore extends AdminController
         // Cache this condition to improve performances
         static $is_activated = null;
         if (is_null($is_activated)) {
-            $is_activated = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->id_object;
+            $is_activated = Shop::isFeatureActive() && Shop::CONTEXT_SHOP != Shop::getContext() && $this->id_object;
         }
 
         if (!$is_activated) {
@@ -2206,7 +2206,7 @@ class AdminProductsControllerCore extends AdminController
      * Update product download.
      *
      * @param Product $product
-     * @param int $edit
+     * @param int     $edit
      *
      * @return bool
      */
@@ -2214,11 +2214,11 @@ class AdminProductsControllerCore extends AdminController
     {
         //legacy/sf2 form workaround
         //if is_virtual_file parameter was not send (SF2 form case), don't process virtual file
-        if (Tools::getValue('is_virtual_file') === false) {
+        if (false === Tools::getValue('is_virtual_file')) {
             return false;
         }
 
-        if ((int) Tools::getValue('is_virtual_file') == 1) {
+        if (1 == (int) Tools::getValue('is_virtual_file')) {
             if (isset($_FILES['virtual_product_file_uploader']) && $_FILES['virtual_product_file_uploader']['size'] > 0) {
                 $virtual_product_filename = ProductDownload::getNewFilename();
                 $helper = new HelperUploader('virtual_product_file_uploader');
@@ -2238,7 +2238,7 @@ class AdminProductsControllerCore extends AdminController
             }
 
             // Trick's
-            if ($edit == 1) {
+            if (1 == $edit) {
                 $id_product_download = (int) ProductDownload::getIdFromIdProduct((int) $product->id, false);
                 if (!$id_product_download) {
                     $id_product_download = (int) Tools::getValue('virtual_product_id');
@@ -2258,7 +2258,7 @@ class AdminProductsControllerCore extends AdminController
             $download->display_filename = $virtual_product_name;
             $download->filename = $virtual_product_filename;
             $download->date_add = date('Y-m-d H:i:s');
-            $download->date_expiration = $virtual_product_expiration_date ? $virtual_product_expiration_date . ' 23:59:59' : '';
+            $download->date_expiration = $virtual_product_expiration_date ? $virtual_product_expiration_date.' 23:59:59' : '';
             $download->nb_days_accessible = (int) $virtual_product_nb_days;
             $download->nb_downloadable = (int) $virtual_product_nb_downloable;
             $download->active = 1;
@@ -2268,7 +2268,7 @@ class AdminProductsControllerCore extends AdminController
             }
         } else {
             /* unactive download product if checkbox not checked */
-            if ($edit == 1) {
+            if (1 == $edit) {
                 $id_product_download = (int) ProductDownload::getIdFromIdProduct((int) $product->id);
                 if (!$id_product_download) {
                     $id_product_download = (int) Tools::getValue('virtual_product_id');
@@ -2309,8 +2309,8 @@ class AdminProductsControllerCore extends AdminController
     /**
      * Update product tags.
      *
-     * @param array $languages Array languages
-     * @param object $product Product
+     * @param array  $languages Array languages
+     * @param object $product   Product
      *
      * @return bool Update result
      */
@@ -2323,7 +2323,7 @@ class AdminProductsControllerCore extends AdminController
         }
         /* Assign tags to this product */
         foreach ($languages as $language) {
-            if ($value = Tools::getValue('tags_' . $language['id_lang'])) {
+            if ($value = Tools::getValue('tags_'.$language['id_lang'])) {
                 $tag_success &= Tag::addTags($language['id_lang'], (int) $product->id, $value);
             }
         }
@@ -2347,7 +2347,7 @@ class AdminProductsControllerCore extends AdminController
             }
         }
 
-        die('[' . implode(',', $jsonArray) . ']');
+        die('['.implode(',', $jsonArray).']');
     }
 
     /**
@@ -2355,10 +2355,10 @@ class AdminProductsControllerCore extends AdminController
      *
      * @param $id_obj
      * @param array $indexedCategories Array with categories where product is indexed (in order to check checkbox)
-     * @param array $categories Categories to list
+     * @param array $categories        Categories to list
      * @param $current
-     * @param null $id_category Current category ID
-     * @param null $id_category_default
+     * @param null  $id_category         Current category ID
+     * @param null  $id_category_default
      * @param array $has_suite
      *
      * @return string
@@ -2391,7 +2391,7 @@ class AdminProductsControllerCore extends AdminController
         if (!$product->active) {
             $admin_dir = dirname($_SERVER['PHP_SELF']);
             $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-            $preview_url .= ((strpos($preview_url, '?') === false) ? '?' : '&') . 'adtoken=' . $this->token . '&ad=' . $admin_dir . '&id_employee=' . (int) $this->context->employee->id;
+            $preview_url .= ((false === strpos($preview_url, '?')) ? '?' : '&').'adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int) $this->context->employee->id;
         }
 
         return $preview_url;
@@ -2406,7 +2406,7 @@ class AdminProductsControllerCore extends AdminController
     {
         $id_product = (int) $id_product ? $id_product : (int) Tools::getValue('id_product');
 
-        if ((int) Tools::getValue('supplier_loaded') === 1 && Validate::isLoadedObject($product = new Product($id_product))) {
+        if (1 === (int) Tools::getValue('supplier_loaded') && Validate::isLoadedObject($product = new Product($id_product))) {
             // Get all id_product_attribute
             $attributes = $product->getAttributesResume($this->context->language->id);
             if (empty($attributes)) {
@@ -2431,7 +2431,7 @@ class AdminProductsControllerCore extends AdminController
 
             // Get new associations
             foreach ($suppliers as $supplier) {
-                if (Tools::isSubmit('check_supplier_' . $supplier['id_supplier'])) {
+                if (Tools::isSubmit('check_supplier_'.$supplier['id_supplier'])) {
                     $suppliers_to_associate[] = $supplier['id_supplier'];
                 }
             }
@@ -2484,12 +2484,12 @@ class AdminProductsControllerCore extends AdminController
             foreach ($attributes as $attribute) {
                 foreach ($associated_suppliers as $supplier) {
                     /** @var ProductSupplier $supplier */
-                    if (Tools::isSubmit('supplier_reference_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier) ||
-                        (Tools::isSubmit('product_price_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier) &&
-                         Tools::isSubmit('product_price_currency_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier))) {
+                    if (Tools::isSubmit('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier) ||
+                        (Tools::isSubmit('product_price_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier) &&
+                         Tools::isSubmit('product_price_currency_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier))) {
                         $reference = pSQL(
                             Tools::getValue(
-                                'supplier_reference_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier,
+                                'supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier,
                                 ''
                             )
                         );
@@ -2498,7 +2498,7 @@ class AdminProductsControllerCore extends AdminController
                             array(' ', ','),
                             array('', '.'),
                             Tools::getValue(
-                                'product_price_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier,
+                                'product_price_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier,
                                 0
                             )
                         );
@@ -2506,7 +2506,7 @@ class AdminProductsControllerCore extends AdminController
                         $price = Tools::ps_round($price, 6);
 
                         $id_currency = (int) Tools::getValue(
-                            'product_price_currency_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier,
+                            'product_price_currency_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier,
                             0
                         );
 
@@ -2526,8 +2526,8 @@ class AdminProductsControllerCore extends AdminController
                                         'wholesale_price' => (float) Tools::convertPrice($price, $id_currency),
                                     );
                                     $where = '
-										a.id_product = ' . (int) $product->id . '
-										AND a.id_product_attribute = ' . (int) $attribute['id_product_attribute'];
+										a.id_product = '.(int) $product->id.'
+										AND a.id_product_attribute = '.(int) $attribute['id_product_attribute'];
                                     ObjectModel::updateMultishopTable('Combination', $data, $where);
                                 } else {
                                     $product->wholesale_price = (float) Tools::convertPrice($price, $id_currency); //converted in the default currency
@@ -2542,7 +2542,7 @@ class AdminProductsControllerCore extends AdminController
                             $product_supplier->product_supplier_reference = pSQL($reference);
                             $product_supplier->update();
                         }
-                    } elseif (Tools::isSubmit('supplier_reference_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier)) {
+                    } elseif (Tools::isSubmit('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)) {
                         //int attribute with default values if possible
                         if ((int) $attribute['id_product_attribute'] > 0) {
                             $product_supplier = new ProductSupplier();
@@ -2567,7 +2567,7 @@ class AdminProductsControllerCore extends AdminController
      */
     public function processWarehouses()
     {
-        if ((int) Tools::getValue('warehouse_loaded') === 1 && Validate::isLoadedObject($product = new Product((int) $id_product = Tools::getValue('id_product')))) {
+        if (1 === (int) Tools::getValue('warehouse_loaded') && Validate::isLoadedObject($product = new Product((int) $id_product = Tools::getValue('id_product')))) {
             // Get all id_product_attribute
             $attributes = $product->getAttributesResume($this->context->language->id);
             if (empty($attributes)) {
@@ -2588,11 +2588,11 @@ class AdminProductsControllerCore extends AdminController
             // get form inforamtion
             foreach ($attributes as $attribute) {
                 foreach ($warehouses as $warehouse) {
-                    $key = $warehouse['id_warehouse'] . '_' . $product->id . '_' . $attribute['id_product_attribute'];
+                    $key = $warehouse['id_warehouse'].'_'.$product->id.'_'.$attribute['id_product_attribute'];
 
                     // get elements to manage
-                    if (Tools::isSubmit('check_warehouse_' . $key)) {
-                        $location = Tools::getValue('location_warehouse_' . $key, '');
+                    if (Tools::isSubmit('check_warehouse_'.$key)) {
+                        $location = Tools::getValue('location_warehouse_'.$key, '');
                         $elements_to_manage[$key] = $location;
                     }
                 }
@@ -2601,7 +2601,7 @@ class AdminProductsControllerCore extends AdminController
             // Delete entry if necessary
             foreach ($associated_warehouses_collection as $awc) {
                 /** @var WarehouseProductLocation $awc */
-                if (!array_key_exists($awc->id_warehouse . '_' . $awc->id_product . '_' . $awc->id_product_attribute, $elements_to_manage)) {
+                if (!array_key_exists($awc->id_warehouse.'_'.$awc->id_product.'_'.$awc->id_product_attribute, $elements_to_manage)) {
                     $awc->delete();
                 }
             }
@@ -2696,21 +2696,21 @@ class AdminProductsControllerCore extends AdminController
         $customizableFieldIds = array();
         if (isset($labels[Product::CUSTOMIZE_FILE])) {
             foreach ($labels[Product::CUSTOMIZE_FILE] as $id_customization_field => $label) {
-                $customizableFieldIds[] = 'label_' . Product::CUSTOMIZE_FILE . '_' . (int) ($id_customization_field);
+                $customizableFieldIds[] = 'label_'.Product::CUSTOMIZE_FILE.'_'.(int) ($id_customization_field);
             }
         }
         if (isset($labels[Product::CUSTOMIZE_TEXTFIELD])) {
             foreach ($labels[Product::CUSTOMIZE_TEXTFIELD] as $id_customization_field => $label) {
-                $customizableFieldIds[] = 'label_' . Product::CUSTOMIZE_TEXTFIELD . '_' . (int) ($id_customization_field);
+                $customizableFieldIds[] = 'label_'.Product::CUSTOMIZE_TEXTFIELD.'_'.(int) ($id_customization_field);
             }
         }
         $j = 0;
         for ($i = $alreadyGenerated[Product::CUSTOMIZE_FILE]; $i < (int) ($this->getFieldValue($obj, 'uploadable_files')); ++$i) {
-            $customizableFieldIds[] = 'newLabel_' . Product::CUSTOMIZE_FILE . '_' . $j++;
+            $customizableFieldIds[] = 'newLabel_'.Product::CUSTOMIZE_FILE.'_'.$j++;
         }
         $j = 0;
         for ($i = $alreadyGenerated[Product::CUSTOMIZE_TEXTFIELD]; $i < (int) ($this->getFieldValue($obj, 'text_fields')); ++$i) {
-            $customizableFieldIds[] = 'newLabel_' . Product::CUSTOMIZE_TEXTFIELD . '_' . $j++;
+            $customizableFieldIds[] = 'newLabel_'.Product::CUSTOMIZE_TEXTFIELD.'_'.$j++;
         }
 
         return implode('¤', $customizableFieldIds);
@@ -2757,8 +2757,8 @@ class AdminProductsControllerCore extends AdminController
      * Ajax process upload images.
      *
      * @param int|null $idProduct
-     * @param string $inputFileName
-     * @param bool $die If method must die or return values
+     * @param string   $inputFileName
+     * @param bool     $die           If method must die or return values
      *
      * @return array
      */
@@ -2800,11 +2800,11 @@ class AdminProductsControllerCore extends AdminController
                 $image->cover = 0;
             }
 
-            if (($validate = $image->validateFieldsLang(false, true)) !== true) {
+            if (true !== ($validate = $image->validateFieldsLang(false, true))) {
                 $file['error'] = $validate;
             }
 
-            if (isset($file['error']) && (!is_numeric($file['error']) || $file['error'] != 0)) {
+            if (isset($file['error']) && (!is_numeric($file['error']) || 0 != $file['error'])) {
                 continue;
             }
 
@@ -2818,7 +2818,7 @@ class AdminProductsControllerCore extends AdminController
 
                 $error = 0;
 
-                if (!ImageManager::resize($file['save_path'], $new_path . '.' . $image->image_format, null, null, 'jpg', false, $error)) {
+                if (!ImageManager::resize($file['save_path'], $new_path.'.'.$image->image_format, null, null, 'jpg', false, $error)) {
                     switch ($error) {
                         case ImageManager::ERROR_FILE_NOT_EXIST:
                             $file['error'] = $this->trans('An error occurred while copying image, the file does not exist anymore.', array(), 'Admin.Catalog.Notification');
@@ -2842,14 +2842,14 @@ class AdminProductsControllerCore extends AdminController
                     $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
                     foreach ($imagesTypes as $imageType) {
-                        if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
-                            $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
+                        if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
+                            $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error').' '.stripslashes($imageType['name']);
                             continue;
                         }
 
                         if ($generate_hight_dpi_images) {
-                            if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $image->image_format, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $image->image_format)) {
-                                $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
+                            if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'2x.'.$image->image_format, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $image->image_format)) {
+                                $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error').' '.stripslashes($imageType['name']);
                                 continue;
                             }
                         }
@@ -2883,8 +2883,8 @@ class AdminProductsControllerCore extends AdminController
                 $file['path'] = $image->getExistingImgPath();
                 $file['shops'] = $json_shops;
 
-                @unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $product->id . '.jpg');
-                @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $product->id . '_' . $this->context->shop->id . '.jpg');
+                @unlink(_PS_TMP_IMG_DIR_.'product_'.(int) $product->id.'.jpg');
+                @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int) $product->id.'_'.$this->context->shop->id.'.jpg');
             }
         }
 
@@ -2907,30 +2907,30 @@ class AdminProductsControllerCore extends AdminController
         $product = new Product((int) Tools::getValue('id_product'), true);
         switch (Tools::getValue('actionQty')) {
             case 'depends_on_stock':
-                if (Tools::getValue('value') === false) {
+                if (false === Tools::getValue('value')) {
                     die(json_encode(array('error' => 'Undefined value')));
                 }
-                if ((int) Tools::getValue('value') != 0 && (int) Tools::getValue('value') != 1) {
+                if (0 != (int) Tools::getValue('value') && 1 != (int) Tools::getValue('value')) {
                     die(json_encode(array('error' => 'Incorrect value')));
                 }
-                if (!$product->advanced_stock_management && (int) Tools::getValue('value') == 1) {
+                if (!$product->advanced_stock_management && 1 == (int) Tools::getValue('value')) {
                     die(json_encode(array('error' => 'Not possible if advanced stock management is disabled.')));
                 }
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-                    && (int) Tools::getValue('value') == 1
+                    && 1 == (int) Tools::getValue('value')
                     && (Pack::isPack($product->id)
                         && !Pack::allUsesAdvancedStockManagement($product->id)
-                        && ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-                            || $product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
-                            || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
-                                && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PRODUCTS_ONLY
-                                    || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
+                        && (Pack::STOCK_TYPE_PACK_BOTH == $product->pack_stock_type
+                            || Pack::STOCK_TYPE_PRODUCTS_ONLY == $product->pack_stock_type
+                            || (Pack::STOCK_TYPE_DEFAULT == $product->pack_stock_type
+                                && (Pack::STOCK_TYPE_PRODUCTS_ONLY == Configuration::get('PS_PACK_STOCK_TYPE')
+                                    || Pack::STOCK_TYPE_PACK_BOTH == Configuration::get('PS_PACK_STOCK_TYPE'))
                             )
                         )
                     )
                 ) {
-                    die(json_encode(array('error' => 'You cannot use advanced stock management for this pack because' . '<br />' .
-                        '- advanced stock management is not enabled for these products' . '<br />' .
+                    die(json_encode(array('error' => 'You cannot use advanced stock management for this pack because'.'<br />'.
+                        '- advanced stock management is not enabled for these products'.'<br />'.
                         '- you have chosen to decrement products quantities.', )));
                 }
 
@@ -2939,25 +2939,25 @@ class AdminProductsControllerCore extends AdminController
 
             case 'pack_stock_type':
                 $value = Tools::getValue('value');
-                if ($value === false) {
+                if (false === $value) {
                     die(json_encode(array('error' => 'Undefined value')));
                 }
-                if ((int) $value != 0 && (int) $value != 1
-                    && (int) $value != 2 && (int) $value != 3) {
+                if (0 != (int) $value && 1 != (int) $value
+                    && 2 != (int) $value && 3 != (int) $value) {
                     die(json_encode(array('error' => 'Incorrect value')));
                 }
                 if ($product->depends_on_stock
                     && !Pack::allUsesAdvancedStockManagement($product->id)
-                    && ((int) $value == 1
-                        || (int) $value == 2
-                        || ((int) $value == 3
-                            && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PRODUCTS_ONLY
-                                || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
+                    && (1 == (int) $value
+                        || 2 == (int) $value
+                        || (3 == (int) $value
+                            && (Pack::STOCK_TYPE_PRODUCTS_ONLY == Configuration::get('PS_PACK_STOCK_TYPE')
+                                || Pack::STOCK_TYPE_PACK_BOTH == Configuration::get('PS_PACK_STOCK_TYPE'))
                         )
                     )
                 ) {
-                    die(json_encode(array('error' => 'You cannot use this stock management option because:' . '<br />' .
-                        '- advanced stock management is not enabled for these products' . '<br />' .
+                    die(json_encode(array('error' => 'You cannot use this stock management option because:'.'<br />'.
+                        '- advanced stock management is not enabled for these products'.'<br />'.
                         '- advanced stock management is enabled for the pack', )));
                 }
 
@@ -2965,7 +2965,7 @@ class AdminProductsControllerCore extends AdminController
                 break;
 
             case 'out_of_stock':
-                if (Tools::getValue('value') === false) {
+                if (false === Tools::getValue('value')) {
                     die(json_encode(array('error' => 'Undefined value')));
                 }
                 if (!in_array((int) Tools::getValue('value'), array(0, 1, 2))) {
@@ -2976,10 +2976,10 @@ class AdminProductsControllerCore extends AdminController
                 break;
 
             case 'set_qty':
-                if (Tools::getValue('value') === false || (!is_numeric(trim(Tools::getValue('value'))))) {
+                if (false === Tools::getValue('value') || (!is_numeric(trim(Tools::getValue('value'))))) {
                     die(json_encode(array('error' => 'Undefined value')));
                 }
-                if (Tools::getValue('id_product_attribute') === false) {
+                if (false === Tools::getValue('id_product_attribute')) {
                     die(json_encode(array('error' => 'Undefined id product attribute')));
                 }
 
@@ -2995,18 +2995,18 @@ class AdminProductsControllerCore extends AdminController
                 }
                 break;
             case 'advanced_stock_management':
-                if (Tools::getValue('value') === false) {
+                if (false === Tools::getValue('value')) {
                     die(json_encode(array('error' => 'Undefined value')));
                 }
-                if ((int) Tools::getValue('value') != 1 && (int) Tools::getValue('value') != 0) {
+                if (1 != (int) Tools::getValue('value') && 0 != (int) Tools::getValue('value')) {
                     die(json_encode(array('error' => 'Incorrect value')));
                 }
-                if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int) Tools::getValue('value') == 1) {
+                if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && 1 == (int) Tools::getValue('value')) {
                     die(json_encode(array('error' => 'Not possible if advanced stock management is disabled. ')));
                 }
 
                 $product->setAdvancedStockManagement((int) Tools::getValue('value'));
-                if (StockAvailable::dependsOnStock($product->id) == 1 && (int) Tools::getValue('value') == 0) {
+                if (1 == StockAvailable::dependsOnStock($product->id) && 0 == (int) Tools::getValue('value')) {
                     StockAvailable::setProductDependsOnStock($product->id, 0);
                 }
                 break;
@@ -3027,9 +3027,9 @@ class AdminProductsControllerCore extends AdminController
         }
         foreach ($allCombinationImages as $id_product_attribute => $combination_images) {
             $i = 0;
-            $content .= 'combination_images[' . (int) $id_product_attribute . '] = new Array();';
+            $content .= 'combination_images['.(int) $id_product_attribute.'] = new Array();';
             foreach ($combination_images as $combination_image) {
-                $content .= 'combination_images[' . (int) $id_product_attribute . '][' . $i++ . '] = ' . (int) $combination_image['id_image'] . ';';
+                $content .= 'combination_images['.(int) $id_product_attribute.']['.$i++.'] = '.(int) $combination_image['id_image'].';';
             }
         }
 
@@ -3049,7 +3049,7 @@ class AdminProductsControllerCore extends AdminController
 
     protected function initPack(Product $product)
     {
-        $this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Tools::getValue('type_product') == Product::PTYPE_PACK;
+        $this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Product::PTYPE_PACK == Tools::getValue('type_product');
         $product->packItems = Pack::getItems($product->id, $this->context->language->id);
 
         $input_pack_items = '';
@@ -3057,7 +3057,7 @@ class AdminProductsControllerCore extends AdminController
             $input_pack_items = Tools::getValue('inputPackItems');
         } else {
             foreach ($product->packItems as $pack_item) {
-                $input_pack_items .= $pack_item->pack_quantity . 'x' . $pack_item->id . '-';
+                $input_pack_items .= $pack_item->pack_quantity.'x'.$pack_item->id.'-';
             }
         }
         $this->tpl_form_vars['input_pack_items'] = $input_pack_items;
@@ -3067,7 +3067,7 @@ class AdminProductsControllerCore extends AdminController
             $input_namepack_items = Tools::getValue('namePackItems');
         } else {
             foreach ($product->packItems as $pack_item) {
-                $input_namepack_items .= $pack_item->pack_quantity . ' x ' . $pack_item->name . '¤';
+                $input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¤';
             }
         }
         $this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
@@ -3085,7 +3085,7 @@ class AdminProductsControllerCore extends AdminController
     {
         Pack::deleteItems($product->id);
         // lines format: QTY x ID-QTY x ID
-        if (Tools::getValue('type_product') == Product::PTYPE_PACK) {
+        if (Product::PTYPE_PACK == Tools::getValue('type_product')) {
             $product->setDefaultAttribute(0); //reset cache_default_attribute
             $items = Tools::getValue('inputPackItems');
             $lines = array_unique(explode('-', $items));
@@ -3095,7 +3095,7 @@ class AdminProductsControllerCore extends AdminController
                 foreach ($lines as $line) {
                     if (!empty($line)) {
                         $item_id_attribute = 0;
-                        count($array = explode('x', $line)) == 3 ? list($qty, $item_id, $item_id_attribute) = $array : list($qty, $item_id) = $array;
+                        3 == count($array = explode('x', $line)) ? list($qty, $item_id, $item_id_attribute) = $array : list($qty, $item_id) = $array;
                         if ($qty > 0 && isset($item_id)) {
                             if (Pack::isPack((int) $item_id)) {
                                 $this->errors[] = $this->trans('You can\'t add product packs into a pack', array(), 'Admin.Catalog.Notification');
@@ -3115,18 +3115,18 @@ class AdminProductsControllerCore extends AdminController
             $search = Tools::getValue('q');
             $id_lang = Tools::getValue('id_lang');
             $limit = Tools::getValue('limit');
-            if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP) {
+            if (Shop::CONTEXT_SHOP != Context::getContext()->shop->getContext()) {
                 $result = false;
             } else {
                 $result = Db::getInstance()->executeS('
 					SELECT DISTINCT pl.`name`, p.`id_product`, pl.`id_shop`
-					FROM `' . _DB_PREFIX_ . 'product` p
-					LEFT JOIN `' . _DB_PREFIX_ . 'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop =' . (int) Context::getContext()->shop->id . ')
-					LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
-						ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = ' . (int) $id_lang . ')
-					WHERE pl.`name` LIKE "%' . pSQL($search) . '%" AND ps.id_product IS NULL
+					FROM `'._DB_PREFIX_.'product` p
+					LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop ='.(int) Context::getContext()->shop->id.')
+					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+						ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int) $id_lang.')
+					WHERE pl.`name` LIKE "%'.pSQL($search).'%" AND ps.id_product IS NULL
 					GROUP BY pl.`id_product`
-					LIMIT ' . (int) $limit);
+					LIMIT '.(int) $limit);
             }
             die(json_encode($result));
         }
@@ -3157,12 +3157,12 @@ class AdminProductsControllerCore extends AdminController
                                 if (Validate::isLoadedObject($category)) {
                                     hook::Exec('categoryUpdate', array('category' => $category));
                                 }
-                                echo 'ok position ' . (int) $position . ' for product ' . (int) $pos[2] . "\r\n";
+                                echo 'ok position '.(int) $position.' for product '.(int) $pos[2]."\r\n";
                             } else {
-                                echo '{"hasError" : true, "errors" : "Can not update product ' . (int) $id_product . ' to position ' . (int) $position . ' "}';
+                                echo '{"hasError" : true, "errors" : "Can not update product '.(int) $id_product.' to position '.(int) $position.' "}';
                             }
                         } else {
-                            echo '{"hasError" : true, "errors" : "This product (' . (int) $id_product . ') can t be loaded"}';
+                            echo '{"hasError" : true, "errors" : "This product ('.(int) $id_product.') can t be loaded"}';
                         }
 
                         break;
@@ -3176,7 +3176,7 @@ class AdminProductsControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             if ($id_product = (int) Tools::getValue('id_product')) {
-                $bo_product_url = dirname($_SERVER['PHP_SELF']) . '/index.php?tab=AdminProducts&id_product=' . $id_product . '&updateproduct&token=' . $this->token;
+                $bo_product_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminProducts&id_product='.$id_product.'&updateproduct&token='.$this->token;
 
                 if (Tools::getValue('redirect')) {
                     die($bo_product_url);
@@ -3200,14 +3200,14 @@ class AdminProductsControllerCore extends AdminController
 
     public function processImageLegends()
     {
-        if (Tools::getValue('key_tab') == 'Images' && Tools::getValue('submitAddproductAndStay') == 'update_legends' && Validate::isLoadedObject($product = new Product((int) Tools::getValue('id_product')))) {
+        if ('Images' == Tools::getValue('key_tab') && 'update_legends' == Tools::getValue('submitAddproductAndStay') && Validate::isLoadedObject($product = new Product((int) Tools::getValue('id_product')))) {
             $id_image = (int) Tools::getValue('id_caption');
             $language_ids = Language::getIDs(false);
             foreach ($_POST as $key => $val) {
                 if (preg_match('/^legend_([0-9]+)/i', $key, $match)) {
                     foreach ($language_ids as $id_lang) {
                         if ($val && $id_lang == $match[1]) {
-                            Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'image_lang SET legend = "' . pSQL($val) . '" WHERE ' . ($id_image ? 'id_image = ' . (int) $id_image : 'EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'image WHERE ' . _DB_PREFIX_ . 'image.id_image = ' . _DB_PREFIX_ . 'image_lang.id_image AND id_product = ' . (int) $product->id . ')') . ' AND id_lang = ' . (int) $id_lang);
+                            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE '.($id_image ? 'id_image = '.(int) $id_image : 'EXISTS (SELECT 1 FROM '._DB_PREFIX_.'image WHERE '._DB_PREFIX_.'image.id_image = '._DB_PREFIX_.'image_lang.id_image AND id_product = '.(int) $product->id.')').' AND id_lang = '.(int) $id_lang);
                         }
                     }
                 }

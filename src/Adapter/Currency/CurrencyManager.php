@@ -44,7 +44,7 @@ class CurrencyManager
         ObjectModel::updateMultishopTable('Currency', ['conversion_rate' => 1], 'a.id_currency');
 
         $tmpContext = Shop::getContext();
-        if ($tmpContext == Shop::CONTEXT_GROUP) {
+        if (Shop::CONTEXT_GROUP == $tmpContext) {
             $tmpShop = Shop::getContextShopGroupID();
         } else {
             $tmpShop = (int) Shop::getContextShopID();

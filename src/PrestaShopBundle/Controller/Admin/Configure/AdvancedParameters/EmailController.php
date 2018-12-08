@@ -48,7 +48,7 @@ class EmailController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
-     * @param Request $request
+     * @param Request         $request
      * @param EmailLogsFilter $filters
      *
      * @return Response

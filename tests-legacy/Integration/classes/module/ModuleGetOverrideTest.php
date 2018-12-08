@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,14 +27,13 @@
 namespace LegacyTests\Integration;
 
 use LegacyTests\TestCase\IntegrationTestCase;
-
 use Module;
 use LegacyTests\TestCase\Module as HelperModule;
 
 class ModulesGetOverrideTest extends IntegrationTestCase
 {
     /**
-     * @return array a list of modules to control override features.
+     * @return array a list of modules to control override features
      */
     public function listModulesOnDisk()
     {
@@ -53,7 +52,8 @@ class ModulesGetOverrideTest extends IntegrationTestCase
     /**
      * @dataProvider listModulesOnDisk
      * Note: improves module list fixtures in order to cancel any override.
-     * @param string $moduleName the module name.
+     *
+     * @param string $moduleName the module name
      */
     public function testDummyGetOverride($moduleName)
     {

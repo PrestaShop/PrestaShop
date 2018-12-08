@@ -121,7 +121,7 @@ class WarehouseCore extends ObjectModel
         $query->select('ws.id_shop, s.name');
         $query->from('warehouse_shop', 'ws');
         $query->leftJoin('shop', 's', 's.id_shop = ws.id_shop');
-        $query->where($this->def['primary'] . ' = ' . (int) $this->id);
+        $query->where($this->def['primary'].' = '.(int) $this->id);
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
@@ -145,7 +145,7 @@ class WarehouseCore extends ObjectModel
         }
         $query->from('warehouse_carrier', 'wc');
         $query->innerJoin('carrier', 'c', 'c.id_reference = wc.id_carrier');
-        $query->where($this->def['primary'] . ' = ' . (int) $this->id);
+        $query->where($this->def['primary'].' = '.(int) $this->id);
         $query->where('c.deleted = 0');
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
@@ -179,8 +179,8 @@ class WarehouseCore extends ObjectModel
         }
 
         Db::getInstance()->execute('
-			DELETE FROM ' . _DB_PREFIX_ . 'warehouse_carrier
-			WHERE ' . $this->def['primary'] . ' = ' . (int) $this->id);
+			DELETE FROM '._DB_PREFIX_.'warehouse_carrier
+			WHERE '.$this->def['primary'].' = '.(int) $this->id);
 
         if ($row_to_insert) {
             Db::getInstance()->insert('warehouse_carrier', $row_to_insert);
@@ -191,15 +191,15 @@ class WarehouseCore extends ObjectModel
      * For a given carrier, removes it from the warehouse/carrier association
      * If $id_warehouse is set, it only removes the carrier for this warehouse.
      *
-     * @param int $id_carrier Id of the carrier to remove
+     * @param int $id_carrier   Id of the carrier to remove
      * @param int $id_warehouse optional Id of the warehouse to filter
      */
     public static function removeCarrier($id_carrier, $id_warehouse = null)
     {
         Db::getInstance()->execute('
-			DELETE FROM ' . _DB_PREFIX_ . 'warehouse_carrier
-			WHERE id_carrier = ' . (int) $id_carrier .
-            ($id_warehouse ? ' AND id_warehouse = ' . (int) $id_warehouse : ''));
+			DELETE FROM '._DB_PREFIX_.'warehouse_carrier
+			WHERE id_carrier = '.(int) $id_carrier.
+            ($id_warehouse ? ' AND id_warehouse = '.(int) $id_warehouse : ''));
     }
 
     /**
@@ -212,9 +212,9 @@ class WarehouseCore extends ObjectModel
         $query = new DbQuery();
         $query->select('SUM(s.physical_quantity)');
         $query->from('stock', 's');
-        $query->where($this->def['primary'] . ' = ' . (int) $this->id);
+        $query->where($this->def['primary'].' = '.(int) $this->id);
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 0;
+        return 0 == Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**
@@ -229,7 +229,7 @@ class WarehouseCore extends ObjectModel
         $query = new DbQuery();
         $query->select('id_warehouse');
         $query->from('warehouse');
-        $query->where('id_warehouse = ' . (int) $id_warehouse);
+        $query->where('id_warehouse = '.(int) $id_warehouse);
         $query->where('deleted = 0');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -239,20 +239,20 @@ class WarehouseCore extends ObjectModel
      * For a given {product, product attribute} sets its location in the given warehouse
      * First, for the given parameters, it cleans the database before updating.
      *
-     * @param int $id_product ID of the product
-     * @param int $id_product_attribute Use 0 if this product does not have attributes
-     * @param int $id_warehouse ID of the warehouse
-     * @param string $location Describes the location (no lang id required)
+     * @param int    $id_product           ID of the product
+     * @param int    $id_product_attribute Use 0 if this product does not have attributes
+     * @param int    $id_warehouse         ID of the warehouse
+     * @param string $location             Describes the location (no lang id required)
      *
      * @return bool Success/Failure
      */
     public static function setProductLocation($id_product, $id_product_attribute, $id_warehouse, $location)
     {
         Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'warehouse_product_location`
-			WHERE `id_product` = ' . (int) $id_product . '
-			AND `id_product_attribute` = ' . (int) $id_product_attribute . '
-			AND `id_warehouse` = ' . (int) $id_warehouse);
+			DELETE FROM `'._DB_PREFIX_.'warehouse_product_location`
+			WHERE `id_product` = '.(int) $id_product.'
+			AND `id_product_attribute` = '.(int) $id_product_attribute.'
+			AND `id_warehouse` = '.(int) $id_warehouse);
 
         $row_to_insert = array(
             'id_product' => (int) $id_product,
@@ -270,16 +270,16 @@ class WarehouseCore extends ObjectModel
     public function resetProductsLocations()
     {
         Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'warehouse_product_location`
-			WHERE `id_warehouse` = ' . (int) $this->id);
+			DELETE FROM `'._DB_PREFIX_.'warehouse_product_location`
+			WHERE `id_warehouse` = '.(int) $this->id);
     }
 
     /**
      * For a given {product, product attribute} gets its location in the given warehouse.
      *
-     * @param int $id_product ID of the product
+     * @param int $id_product           ID of the product
      * @param int $id_product_attribute Use 0 if this product does not have attributes
-     * @param int $id_warehouse ID of the warehouse
+     * @param int $id_warehouse         ID of the warehouse
      *
      * @return string Location of the product
      */
@@ -288,9 +288,9 @@ class WarehouseCore extends ObjectModel
         $query = new DbQuery();
         $query->select('location');
         $query->from('warehouse_product_location');
-        $query->where('id_warehouse = ' . (int) $id_warehouse);
-        $query->where('id_product = ' . (int) $id_product);
-        $query->where('id_product_attribute = ' . (int) $id_product_attribute);
+        $query->where('id_warehouse = '.(int) $id_warehouse);
+        $query->where('id_product = '.(int) $id_product);
+        $query->where('id_product_attribute = '.(int) $id_product_attribute);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
@@ -298,9 +298,9 @@ class WarehouseCore extends ObjectModel
     /**
      * For a given {product, product attribute} gets warehouse list.
      *
-     * @param int $id_product ID of the product
+     * @param int $id_product           ID of the product
      * @param int $id_product_attribute Optional, uses 0 if this product does not have attributes
-     * @param int $id_shop Optional, ID of the shop. Uses the context shop id (@see Context::shop)
+     * @param int $id_shop              Optional, ID of the shop. Uses the context shop id (@see Context::shop)
      *
      * @return array Warehouses (ID, reference/name concatenated)
      */
@@ -308,8 +308,8 @@ class WarehouseCore extends ObjectModel
     {
         // if it's a pack, returns warehouses if and only if some products use the advanced stock management
         $share_stock = false;
-        if ($id_shop === null) {
-            if (Shop::getContext() == Shop::CONTEXT_GROUP) {
+        if (null === $id_shop) {
+            if (Shop::CONTEXT_GROUP == Shop::getContext()) {
                 $shop_group = Shop::getContextShopGroup();
             } else {
                 $shop_group = Context::getContext()->shop->getGroup();
@@ -330,10 +330,10 @@ class WarehouseCore extends ObjectModel
         $query = new DbQuery();
         $query->select('wpl.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
         $query->from('warehouse_product_location', 'wpl');
-        $query->innerJoin('warehouse_shop', 'ws', 'ws.id_warehouse = wpl.id_warehouse AND id_shop IN (' . implode(',', array_map('intval', $ids_shop)) . ')');
+        $query->innerJoin('warehouse_shop', 'ws', 'ws.id_warehouse = wpl.id_warehouse AND id_shop IN ('.implode(',', array_map('intval', $ids_shop)).')');
         $query->innerJoin('warehouse', 'w', 'ws.id_warehouse = w.id_warehouse');
-        $query->where('id_product = ' . (int) $id_product);
-        $query->where('id_product_attribute = ' . (int) $id_product_attribute);
+        $query->where('id_product = '.(int) $id_product);
+        $query->where('id_product_attribute = '.(int) $id_product_attribute);
         $query->where('w.deleted = 0');
         $query->groupBy('wpl.id_warehouse');
 
@@ -345,7 +345,7 @@ class WarehouseCore extends ObjectModel
      * It is possible via ignore_shop and id_shop to filter the list with shop id.
      *
      * @param bool $ignore_shop Optional, false by default - Allows to get only the warehouses that are associated to one/some shops (@see $id_shop)
-     * @param int $id_shop optional, Context::shop::Id by default - Allows to define a specific shop to filter
+     * @param int  $id_shop     optional, Context::shop::Id by default - Allows to define a specific shop to filter
      *
      * @return array Warehouses (ID, reference/name concatenated)
      */
@@ -363,7 +363,7 @@ class WarehouseCore extends ObjectModel
         $query->where('deleted = 0');
         $query->orderBy('reference ASC');
         if (!$ignore_shop) {
-            $query->innerJoin('warehouse_shop', 'ws', 'ws.id_warehouse = w.id_warehouse AND ws.id_shop = ' . (int) $id_shop);
+            $query->innerJoin('warehouse_shop', 'ws', 'ws.id_warehouse = w.id_warehouse AND ws.id_shop = '.(int) $id_shop);
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -402,8 +402,8 @@ class WarehouseCore extends ObjectModel
 			FROM
 				(
 					SELECT s.id_stock
-				 	FROM ' . _DB_PREFIX_ . 'stock s
-				 	WHERE s.id_warehouse = ' . (int) $this->id . '
+				 	FROM '._DB_PREFIX_.'stock s
+				 	WHERE s.id_warehouse = '.(int) $this->id.'
 				 	GROUP BY s.id_product, s.id_product_attribute
 				 ) as t';
 
@@ -419,8 +419,8 @@ class WarehouseCore extends ObjectModel
     {
         $query = '
 			SELECT SUM(s.physical_quantity)
-			FROM ' . _DB_PREFIX_ . 'stock s
-			WHERE s.id_warehouse = ' . (int) $this->id;
+			FROM '._DB_PREFIX_.'stock s
+			WHERE s.id_warehouse = '.(int) $this->id;
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
@@ -437,7 +437,7 @@ class WarehouseCore extends ObjectModel
         $query = new DbQuery();
         $query->select('SUM(s.`price_te` * s.`physical_quantity`)');
         $query->from('stock', 's');
-        $query->where('s.`id_warehouse` = ' . (int) $this->id);
+        $query->where('s.`id_warehouse` = '.(int) $this->id);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
@@ -454,7 +454,7 @@ class WarehouseCore extends ObjectModel
         $query = new DbQuery();
         $query->select('w.id_warehouse');
         $query->from('warehouse', 'w');
-        $query->where('w.id_employee = ' . (int) $id_employee);
+        $query->where('w.id_employee = '.(int) $id_employee);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
@@ -462,7 +462,7 @@ class WarehouseCore extends ObjectModel
     /**
      * For a given product, returns the warehouses it is stored in.
      *
-     * @param int $id_product Product Id
+     * @param int $id_product           Product Id
      * @param int $id_product_attribute Optional, Product Attribute Id - 0 by default (no attribues)
      *
      * @return array Warehouses Ids and names
@@ -478,10 +478,10 @@ class WarehouseCore extends ObjectModel
         $query->from('warehouse', 'w');
         $query->leftJoin('warehouse_product_location', 'wpl', 'wpl.id_warehouse = w.id_warehouse');
         if ($id_product) {
-            $query->where('wpl.id_product = ' . (int) $id_product);
+            $query->where('wpl.id_product = '.(int) $id_product);
         }
         if ($id_product_attribute) {
-            $query->where('wpl.id_product_attribute = ' . (int) $id_product_attribute);
+            $query->where('wpl.id_product_attribute = '.(int) $id_product_attribute);
         }
         $query->orderBy('w.reference ASC');
 
@@ -500,7 +500,7 @@ class WarehouseCore extends ObjectModel
         $query = new DbQuery();
         $query->select('name');
         $query->from('warehouse');
-        $query->where('id_warehouse = ' . (int) $id_warehouse);
+        $query->where('id_warehouse = '.(int) $id_warehouse);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
@@ -592,7 +592,7 @@ class WarehouseCore extends ObjectModel
         $query = new DbQuery();
         $query->select('s.id_stock as id');
         $query->from('stock', 's');
-        $query->where('s.id_warehouse =' . (int) $this->id);
+        $query->where('s.id_warehouse ='.(int) $this->id);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
@@ -608,7 +608,7 @@ class WarehouseCore extends ObjectModel
         $query->select('ws.id_shop as id, s.name');
         $query->from('warehouse_shop', 'ws');
         $query->leftJoin('shop', 's', 's.id_shop = ws.id_shop');
-        $query->where($this->def['primary'] . ' = ' . (int) $this->id);
+        $query->where($this->def['primary'].' = '.(int) $this->id);
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
@@ -627,7 +627,7 @@ class WarehouseCore extends ObjectModel
         $query = new DbQuery();
         $query->select('wc.id_carrier as id');
         $query->from('warehouse_carrier', 'wc');
-        $query->where($this->def['primary'] . ' = ' . (int) $this->id);
+        $query->where($this->def['primary'].' = '.(int) $this->id);
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 

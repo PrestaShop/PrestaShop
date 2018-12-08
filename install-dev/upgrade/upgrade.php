@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use PrestaShopBundle\Install\Upgrade;
 
 // Although no arguments execute the script, you can get some help if requested.
@@ -44,19 +42,19 @@ if (isset($_GET['adminDir']) && $_GET['adminDir'] && !defined('_PS_ADMIN_DIR_'))
     define('_PS_ADMIN_DIR_', base64_decode($_GET['adminDir']));
 }
 
-require_once(dirname(__FILE__).'/../init.php');
+require_once dirname(__FILE__).'/../init.php';
 Upgrade::migrateSettingsFile();
-require_once(_PS_CONFIG_DIR_.'bootstrap.php');
+require_once _PS_CONFIG_DIR_.'bootstrap.php';
 
 $logDir = _PS_ROOT_DIR_.'/var/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';
 @mkdir($logDir, 0777, true);
 
 $upgrade = new Upgrade($logDir, dirname(dirname(__FILE__)).'/');
-if (isset($_GET['autoupgrade']) && $_GET['autoupgrade'] == 1) {
+if (isset($_GET['autoupgrade']) && 1 == $_GET['autoupgrade']) {
     $upgrade->setInAutoUpgrade(true);
 }
 
-if (isset($_GET['deactivateCustomModule']) && $_GET['deactivateCustomModule'] == '1') {
+if (isset($_GET['deactivateCustomModule']) && '1' == $_GET['deactivateCustomModule']) {
     $upgrade->setDisableCustomModules(true);
 }
 
@@ -73,7 +71,7 @@ if (isset($_GET['idEmployee'])) {
     $upgrade->setIdEmployee($_GET['idEmployee']);
 }
 
-if (isset($_GET['changeToDefaultTheme']) && $_GET['changeToDefaultTheme'] == 1) {
+if (isset($_GET['changeToDefaultTheme']) && 1 == $_GET['changeToDefaultTheme']) {
     $upgrade->setChangeToDefaultTheme(true);
 }
 
@@ -117,7 +115,7 @@ if ($upgrade->getInAutoUpgrade()) {
         'nextErrors' => $upgrade->getNextErrors(),
         'next' => $upgrade->getNext(),
         'nextDesc' => $upgrade->getNextDesc(),
-        'warningExists' => $upgrade->hasWarning()
+        'warningExists' => $upgrade->hasWarning(),
     ));
 } else {
     header('Content-Type: text/xml');
@@ -125,7 +123,7 @@ if ($upgrade->getInAutoUpgrade()) {
 }
 
 /**
- * displays the help
+ * displays the help.
  */
 function displayHelp()
 {

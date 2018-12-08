@@ -76,10 +76,10 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $multistoreContextChecker;
 
     /**
-     * @param string $resetActionUrl
-     * @param string $redirectActionUrl
+     * @param string                            $resetActionUrl
+     * @param string                            $redirectActionUrl
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
-     * @param AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
+     * @param AccessibilityCheckerInterface     $categoryForViewAccessibilityChecker
      */
     public function __construct(
         $resetActionUrl,

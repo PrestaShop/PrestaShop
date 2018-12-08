@@ -36,7 +36,7 @@ class AddRootCategoryCommand extends AbstractCategoryCommand
     /**
      * @param string[] $name
      * @param string[] $linkRewrite
-     * @param bool $isActive
+     * @param bool     $isActive
      *
      * @throws CategoryConstraintException
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -46,7 +46,7 @@ class ExportThemeCommandTest extends TestCase
         $helperSetMock = $this->mockHelperSet();
         $command->setHelperSet($helperSetMock);
 
-        $this->assertEquals(0, $commandTester->execute(array('theme'  => 'classic')));
+        $this->assertEquals(0, $commandTester->execute(array('theme' => 'classic')));
     }
 
     /**
@@ -114,7 +114,7 @@ class ExportThemeCommandTest extends TestCase
                 $services = array(
                     'prestashop.core.addon.theme.repository' => $themeRepositoryMock,
                     'translator' => $translatorMock,
-                    'prestashop.core.addon.theme.exporter' => $themeExporterMock
+                    'prestashop.core.addon.theme.exporter' => $themeExporterMock,
                 );
 
                 return $services[$serviceId];
@@ -139,6 +139,7 @@ class ExportThemeCommandTest extends TestCase
         $helperSetMock->method('get')
             ->with('formatter')
             ->willReturn($formatterHelperMock);
+
         return $helperSetMock;
     }
 }

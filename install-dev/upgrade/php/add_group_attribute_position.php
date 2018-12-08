@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function add_group_attribute_position()
 {
     $groups = Db::getInstance()->executeS('
@@ -35,7 +34,7 @@ function add_group_attribute_position()
             Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'attribute_group`
 				SET `position` = '.$i++.'
-				WHERE `id_attribute_group` = '.(int)$group['id_attribute_group']);
+				WHERE `id_attribute_group` = '.(int) $group['id_attribute_group']);
         }
     }
 }

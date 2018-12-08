@@ -49,8 +49,8 @@ final class PositionModification implements PositionModificationInterface
 
     /**
      * @param string|int $id
-     * @param int $oldPosition
-     * @param int $newPosition
+     * @param int        $oldPosition
+     * @param int        $newPosition
      */
     public function __construct(
         $id,

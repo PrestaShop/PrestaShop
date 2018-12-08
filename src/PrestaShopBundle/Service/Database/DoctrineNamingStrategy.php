@@ -57,7 +57,7 @@ class DoctrineNamingStrategy extends UnderscoreNamingStrategy
     {
         $underscored = parent::classToTableName($className);
 
-        return $this->prefix . $underscored;
+        return $this->prefix.$underscored;
     }
 
     /**
@@ -67,6 +67,6 @@ class DoctrineNamingStrategy extends UnderscoreNamingStrategy
      */
     public function joinTableName($sourceEntity, $targetEntity, $propertyName = null)
     {
-        return $this->prefix . parent::classToTableName($sourceEntity) . '_' . parent::classToTableName($targetEntity);
+        return $this->prefix.parent::classToTableName($sourceEntity).'_'.parent::classToTableName($targetEntity);
     }
 }

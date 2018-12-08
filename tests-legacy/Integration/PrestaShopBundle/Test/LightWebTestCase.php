@@ -33,7 +33,6 @@ use Symfony\Component\Translation\Translator;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Routing\Router;
 use Psr\Log\NullLogger;
-
 use Currency;
 use Employee;
 use Language;
@@ -196,7 +195,7 @@ class LightWebTestCase extends TestCase
 
         $values = array(
             array('_PS_MODE_DEMO_', null, true),
-            array('_PS_MODULE_DIR_', null, __DIR__ . '/../../../resources/modules/'),
+            array('_PS_MODULE_DIR_', null, __DIR__.'/../../../resources/modules/'),
         );
 
         $configurationMock->method('get')

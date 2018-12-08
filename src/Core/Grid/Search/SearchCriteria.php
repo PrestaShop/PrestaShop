@@ -57,7 +57,7 @@ final class SearchCriteria implements SearchCriteriaInterface
     private $limit;
 
     /**
-     * @param array $filters
+     * @param array       $filters
      * @param string|null $orderBy
      * @param string|null $orderWay
      * @param string|null $offset

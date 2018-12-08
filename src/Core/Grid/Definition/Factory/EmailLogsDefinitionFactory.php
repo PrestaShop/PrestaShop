@@ -66,8 +66,8 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     private $languageChoiceProvider;
 
     /**
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
+     * @param string                      $resetActionUrl
+     * @param string                      $redirectionUrl
      * @param FormChoiceProviderInterface $languageChoiceProvider
      */
     public function __construct($resetActionUrl, $redirectionUrl, FormChoiceProviderInterface $languageChoiceProvider)

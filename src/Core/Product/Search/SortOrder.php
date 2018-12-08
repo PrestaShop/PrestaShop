@@ -51,7 +51,7 @@ class SortOrder
 
     public function isRandom()
     {
-        return $this->getDirection() === 'random';
+        return 'random' === $this->getDirection();
     }
 
     public function toArray()
@@ -135,19 +135,19 @@ class SortOrder
 
     private function getLegacyPrefix()
     {
-        if ($this->entity === 'product') {
-            if ($this->field === 'name') {
+        if ('product' === $this->entity) {
+            if ('name' === $this->field) {
                 return 'pl.';
-            } elseif ($this->field === 'position') {
+            } elseif ('position' === $this->field) {
                 return 'cp.';
-            } elseif ($this->field === 'manufacturer_name') {
+            } elseif ('manufacturer_name' === $this->field) {
                 $this->setField('name');
 
                 return 'm.';
             } else {
                 return 'p.';
             }
-        } elseif ($this->entity === 'manufacturer') {
+        } elseif ('manufacturer' === $this->entity) {
             return 'm.';
         }
     }
@@ -155,8 +155,8 @@ class SortOrder
     public function toLegacyOrderBy($prefix = false)
     {
         if ($prefix) {
-            return $this->getLegacyPrefix() . $this->field;
-        } elseif ($this->entity === 'manufacturer' && $this->field === 'name') {
+            return $this->getLegacyPrefix().$this->field;
+        } elseif ('manufacturer' === $this->entity && 'name' === $this->field) {
             return 'manufacturer_name';
         } else {
             return $this->field;

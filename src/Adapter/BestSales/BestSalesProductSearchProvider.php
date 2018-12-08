@@ -57,7 +57,7 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
 
     /**
      * @param ProductSearchContext $context
-     * @param ProductSearchQuery $query
+     * @param ProductSearchQuery   $query
      *
      * @return ProductSearchResult
      */

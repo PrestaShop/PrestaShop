@@ -41,8 +41,8 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @param Connection $connection
-     * @param string $dbPrefix
+     * @param Connection                                $connection
+     * @param string                                    $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      */
     public function __construct(
@@ -92,8 +92,8 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix . 'mail', 'm')
-            ->leftJoin('m', $this->dbPrefix . 'lang', 'l', 'm.id_lang = l.id_lang');
+            ->from($this->dbPrefix.'mail', 'm')
+            ->leftJoin('m', $this->dbPrefix.'lang', 'l', 'm.id_lang = l.id_lang');
 
         foreach ($filters as $name => $value) {
             if ('id_lang' === $name) {
@@ -118,7 +118,7 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             $qb->andWhere("$name LIKE :$name");
-            $qb->setParameter($name, '%' . $value . '%');
+            $qb->setParameter($name, '%'.$value.'%');
         }
 
         return $qb;

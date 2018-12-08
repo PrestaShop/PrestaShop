@@ -104,7 +104,7 @@ class GuestCore extends ObjectModel
         if (count($array[1])) {
             $langsArray = array_combine($array[1], $array[4]);
             foreach ($langsArray as $lang => $val) {
-                if ($val === '') {
+                if ('' === $val) {
                     $langsArray[$lang] = 1;
                 }
             }
@@ -139,8 +139,8 @@ class GuestCore extends ObjectModel
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `id_web_browser`
-				FROM `' . _DB_PREFIX_ . 'web_browser` wb
-				WHERE wb.`name` = \'' . pSQL($k) . '\'');
+				FROM `'._DB_PREFIX_.'web_browser` wb
+				WHERE wb.`name` = \''.pSQL($k).'\'');
 
                 return $result['id_web_browser'];
             }
@@ -172,8 +172,8 @@ class GuestCore extends ObjectModel
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `id_operating_system`
-				FROM `' . _DB_PREFIX_ . 'operating_system` os
-				WHERE os.`name` = \'' . pSQL($k) . '\'');
+				FROM `'._DB_PREFIX_.'operating_system` os
+				WHERE os.`name` = \''.pSQL($k).'\'');
 
                 return $result['id_operating_system'];
             }
@@ -196,8 +196,8 @@ class GuestCore extends ObjectModel
         }
         $result = Db::getInstance()->getRow('
 		SELECT `id_guest`
-		FROM `' . _DB_PREFIX_ . 'guest`
-		WHERE `id_customer` = ' . (int) ($idCustomer));
+		FROM `'._DB_PREFIX_.'guest`
+		WHERE `id_customer` = '.(int) ($idCustomer));
 
         return $result['id_guest'];
     }
@@ -205,16 +205,16 @@ class GuestCore extends ObjectModel
     /**
      * Merge with Customer.
      *
-     * @param int $idGuest Guest ID
+     * @param int $idGuest    Guest ID
      * @param int $idCustomer Customer ID
      */
     public function mergeWithCustomer($idGuest, $idCustomer)
     {
         // Since the guests are merged, the guest id in the connections table must be changed too
         Db::getInstance()->execute('
-		UPDATE `' . _DB_PREFIX_ . 'connections` c
-		SET c.`id_guest` = ' . (int) ($idGuest) . '
-		WHERE c.`id_guest` = ' . (int) ($this->id));
+		UPDATE `'._DB_PREFIX_.'connections` c
+		SET c.`id_guest` = '.(int) ($idGuest).'
+		WHERE c.`id_guest` = '.(int) ($this->id));
 
         // The current guest is removed from the database
         $this->delete();

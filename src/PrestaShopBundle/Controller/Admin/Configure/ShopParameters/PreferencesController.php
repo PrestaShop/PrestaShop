@@ -44,7 +44,7 @@ class PreferencesController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminPreferences';
 
     /**
-     * @param Request $request
+     * @param Request            $request
      * @param FormInterface|null $form
      *
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/preferences.html.twig")
@@ -63,7 +63,7 @@ class PreferencesController extends FrameworkBundleAdminController
         $toolsAdapter = $this->get('prestashop.adapter.tools');
 
         // SSL URI is used for the merchant to check if he has SSL enabled
-        $sslUri = 'https://' . $toolsAdapter->getShopDomainSsl() . $request->getRequestUri();
+        $sslUri = 'https://'.$toolsAdapter->getShopDomainSsl().$request->getRequestUri();
 
         return array(
             'layoutHeaderToolbarBtn' => array(),

@@ -130,7 +130,7 @@ class PhpEncryptionEngineCore
         $secure = true;
         $buf = openssl_random_pseudo_bytes($bytes, $secure);
         if (
-            $buf !== false
+            false !== $buf
             &&
             $secure
             &&
@@ -141,7 +141,7 @@ class PhpEncryptionEngineCore
 
         $buf = @mcrypt_create_iv($bytes, MCRYPT_DEV_URANDOM);
         if (
-            $buf !== false
+            false !== $buf
             &&
             RandomCompat_strlen($buf) === $bytes
         ) {

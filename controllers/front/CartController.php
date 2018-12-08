@@ -94,7 +94,7 @@ class CartControllerCore extends FrontController
      */
     public function initContent()
     {
-        if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show') {
+        if (Configuration::isCatalogMode() && 'show' === Tools::getValue('action')) {
             Tools::redirect('index.php');
         }
 
@@ -278,7 +278,7 @@ class CartControllerCore extends FrontController
                     CartRule::autoAddToCart($this->context);
                 }
             }
-        } elseif (!$this->isTokenValid() && Tools::getValue('action') !== 'show' && !Tools::getValue('ajax')) {
+        } elseif (!$this->isTokenValid() && 'show' !== Tools::getValue('action') && !Tools::getValue('ajax')) {
             Tools::redirect('index.php');
         }
     }
@@ -289,10 +289,10 @@ class CartControllerCore extends FrontController
     protected function processDeleteProductInCart()
     {
         $customization_product = Db::getInstance()->executeS(
-            'SELECT * FROM `' . _DB_PREFIX_ . 'customization`'
-            . ' WHERE `id_cart` = ' . (int) $this->context->cart->id
-            . ' AND `id_product` = ' . (int) $this->id_product
-            . ' AND `id_customization` != ' . (int) $this->customization_id
+            'SELECT * FROM `'._DB_PREFIX_.'customization`'
+            .' WHERE `id_cart` = '.(int) $this->context->cart->id
+            .' AND `id_product` = '.(int) $this->id_product
+            .' AND `id_customization` != '.(int) $this->customization_id
         );
 
         if (count($customization_product)) {
@@ -369,7 +369,7 @@ class CartControllerCore extends FrontController
             );
         }
 
-        if ($this->qty == 0) {
+        if (0 == $this->qty) {
             $this->{$ErrorKey}[] = $this->trans(
                 'Null quantity.',
                 array(),
@@ -395,7 +395,7 @@ class CartControllerCore extends FrontController
         }
 
         if (!$this->id_product_attribute && $product->hasAttributes()) {
-            $minimum_quantity = ($product->out_of_stock == 2)
+            $minimum_quantity = (2 == $product->out_of_stock)
                 ? !Configuration::get('PS_ORDER_OUT_OF_STOCK')
                 : !$product->out_of_stock;
             $this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimum_quantity);
@@ -413,7 +413,7 @@ class CartControllerCore extends FrontController
                 if ($this->productInCartMatchesCriteria($cart_product)) {
                     $qty_to_check = $cart_product['cart_quantity'];
 
-                    if (Tools::getValue('op', 'up') == 'down') {
+                    if ('down' == Tools::getValue('op', 'up')) {
                         $qty_to_check -= $this->qty;
                     } else {
                         $qty_to_check += $this->qty;
@@ -557,7 +557,7 @@ class CartControllerCore extends FrontController
         $presenter = new CartPresenter();
         $presented_cart = $presenter->present($this->context->cart);
 
-        if (count($presented_cart['products']) == 0) {
+        if (0 == count($presented_cart['products'])) {
             $page['body_classes']['cart-empty'] = true;
         }
 
@@ -568,7 +568,7 @@ class CartControllerCore extends FrontController
      * Check product quantity availability.
      *
      * @param Product $product
-     * @param int $qtyToCheck
+     * @param int     $qtyToCheck
      *
      * @return bool
      */

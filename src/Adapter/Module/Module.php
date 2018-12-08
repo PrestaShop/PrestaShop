@@ -189,13 +189,13 @@ class Module implements ModuleInterface
      */
     public function hasValidInstance()
     {
-        if (($this->disk->has('is_present') && $this->disk->getBoolean('is_present') === false)
-            || ($this->disk->has('is_valid') && $this->disk->getBoolean('is_valid') === false)
+        if (($this->disk->has('is_present') && false === $this->disk->getBoolean('is_present'))
+            || ($this->disk->has('is_valid') && false === $this->disk->getBoolean('is_valid'))
         ) {
             return false;
         }
 
-        if ($this->instance === null) {
+        if (null === $this->instance) {
             // We try to instantiate the legacy class if not done yet
             try {
                 $this->instanciateLegacyModule($this->attributes->get('name'));
@@ -348,10 +348,10 @@ class Module implements ModuleInterface
          */
         $path = $this->disk->get('path', ''); // Variable needed for empty() test
         if (empty($path)) {
-            $this->disk->set('path', _PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->attributes->get('name'));
+            $this->disk->set('path', _PS_MODULE_DIR_.DIRECTORY_SEPARATOR.$this->attributes->get('name'));
         }
         // End of temporary content
-        require_once $this->disk->get('path') . DIRECTORY_SEPARATOR . $this->attributes->get('name') . '.php';
+        require_once $this->disk->get('path').DIRECTORY_SEPARATOR.$this->attributes->get('name').'.php';
         $this->instance = LegacyModule::getInstanceByName($this->attributes->get('name'));
     }
 
@@ -396,14 +396,14 @@ class Module implements ModuleInterface
     {
         $img = $this->attributes->get('img');
         if (empty($img)) {
-            $this->attributes->set('img', __PS_BASE_URI__ . 'img/questionmark.png');
+            $this->attributes->set('img', __PS_BASE_URI__.'img/questionmark.png');
         }
-        $this->attributes->set('logo', __PS_BASE_URI__ . 'img/questionmark.png');
+        $this->attributes->set('logo', __PS_BASE_URI__.'img/questionmark.png');
 
         foreach (array('logo.png', 'logo.gif') as $logo) {
-            $logo_path = _PS_MODULE_DIR_ . $this->get('name') . DIRECTORY_SEPARATOR . $logo;
+            $logo_path = _PS_MODULE_DIR_.$this->get('name').DIRECTORY_SEPARATOR.$logo;
             if (file_exists($logo_path)) {
-                $this->attributes->set('img', __PS_BASE_URI__ . basename(_PS_MODULE_DIR_) . '/' . $this->get('name') . '/' . $logo);
+                $this->attributes->set('img', __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$this->get('name').'/'.$logo);
                 $this->attributes->set('logo', $logo);
                 break;
             }
@@ -417,7 +417,7 @@ class Module implements ModuleInterface
      */
     public function canBeUpgraded()
     {
-        if ($this->database->get('installed') == 0) {
+        if (0 == $this->database->get('installed')) {
             return false;
         }
 
@@ -437,7 +437,7 @@ class Module implements ModuleInterface
      */
     public function canBeUpgradedFromAddons()
     {
-        return $this->attributes->get('version_available') !== 0
+        return 0 !== $this->attributes->get('version_available')
             && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<');
     }
 

@@ -65,10 +65,10 @@ class LogoUploader
     {
         $shopId = (int) $this->shop->id;
         if ($shopId == Configuration::get('PS_SHOP_DEFAULT')) {
-            $this->uploadIco('PS_FAVICON', _PS_IMG_DIR_ . 'favicon.ico');
+            $this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon.ico');
         }
-        if ($this->uploadIco('PS_FAVICON', _PS_IMG_DIR_ . 'favicon-' . $shopId . '.ico')) {
-            Configuration::updateValue('PS_FAVICON', 'favicon-' . $shopId . '.ico');
+        if ($this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon-'.$shopId.'.ico')) {
+            Configuration::updateValue('PS_FAVICON', 'favicon-'.$shopId.'.ico');
         }
 
         Configuration::updateGlobalValue('PS_FAVICON', 'favicon.ico');
@@ -99,15 +99,15 @@ class LogoUploader
                 throw new PrestaShopException(sprintf('%Upload of temporary file to %s has failed.', $tmpName));
             }
 
-            $fileExtension = ($fieldName == 'PS_STORES_ICON') ? '.gif' : '.jpg';
+            $fileExtension = ('PS_STORES_ICON' == $fieldName) ? '.gif' : '.jpg';
             $logoName = $this->getLogoName($logoPrefix, $fileExtension);
 
-            if ($fieldName == 'PS_STORES_ICON') {
-                if (!@ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName, null, null, 'gif', true)) {
+            if ('PS_STORES_ICON' == $fieldName) {
+                if (!@ImageManager::resize($tmpName, _PS_IMG_DIR_.$logoName, null, null, 'gif', true)) {
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop icon %s.', $logoName));
                 }
             } else {
-                if (!@ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName)) {
+                if (!@ImageManager::resize($tmpName, _PS_IMG_DIR_.$logoName)) {
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                 }
             }
@@ -115,11 +115,11 @@ class LogoUploader
             $idShop = $this->shop->id;
             $idShopGroup = null;
 
-            if (!count($this->errors) && @filemtime(_PS_IMG_DIR_ . Configuration::get($fieldName))) {
+            if (!count($this->errors) && @filemtime(_PS_IMG_DIR_.Configuration::get($fieldName))) {
                 if (Shop::isFeatureActive()) {
                     $this->updateInMultiShopContext($idShop, $idShopGroup, $fieldName);
                 } else {
-                    @unlink(_PS_IMG_DIR_ . Configuration::get($fieldName));
+                    @unlink(_PS_IMG_DIR_.Configuration::get($fieldName));
                 }
             }
 
@@ -134,7 +134,7 @@ class LogoUploader
 
     private function updateInMultiShopContext(&$idShop, &$idShopGroup, $fieldName)
     {
-        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
+        if (Shop::CONTEXT_SHOP == Shop::getContext()) {
             $idShop = Shop::getContextShopID();
             $idShopGroup = Shop::getContextShopGroupID();
             Shop::setContext(Shop::CONTEXT_ALL);
@@ -143,16 +143,16 @@ class LogoUploader
             $logoGroup = Configuration::get($fieldName);
             Shop::setContext(Shop::CONTEXT_SHOP);
             $logoShop = Configuration::get($fieldName);
-            if ($logoAll != $logoShop && $logoGroup != $logoShop && $logoShop != false) {
-                @unlink(_PS_IMG_DIR_ . Configuration::get($fieldName));
+            if ($logoAll != $logoShop && $logoGroup != $logoShop && false != $logoShop) {
+                @unlink(_PS_IMG_DIR_.Configuration::get($fieldName));
             }
-        } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
+        } elseif (Shop::CONTEXT_GROUP == Shop::getContext()) {
             $idShopGroup = Shop::getContextShopGroupID();
             Shop::setContext(Shop::CONTEXT_ALL);
             $logoAll = Configuration::get($fieldName);
             Shop::setContext(Shop::CONTEXT_GROUP);
             if ($logoAll != Configuration::get($fieldName)) {
-                @unlink(_PS_IMG_DIR_ . Configuration::get($fieldName));
+                @unlink(_PS_IMG_DIR_.Configuration::get($fieldName));
             }
         }
     }
@@ -187,20 +187,20 @@ class LogoUploader
         $shopName = $this->shop->name;
 
         $logoName = Tools::link_rewrite($shopName)
-            . '-'
-            . $logoPrefix
-            . '-'
-            . (int) Configuration::get('PS_IMG_UPDATE_TIME')
-            . (int) $shopId . $fileExtension
+            .'-'
+            .$logoPrefix
+            .'-'
+            .(int) Configuration::get('PS_IMG_UPDATE_TIME')
+            .(int) $shopId.$fileExtension
         ;
 
-        if ($this->shop->getContext() == Shop::CONTEXT_ALL
-            || $shopId == 0
-            || Shop::isFeatureActive() == false
+        if (Shop::CONTEXT_ALL == $this->shop->getContext()
+            || 0 == $shopId
+            || false == Shop::isFeatureActive()
         ) {
             $logoName = Tools::link_rewrite($shopName)
-                . '-'
-                . $logoPrefix . '-' . (int) Configuration::get('PS_IMG_UPDATE_TIME') . $fileExtension
+                .'-'
+                .$logoPrefix.'-'.(int) Configuration::get('PS_IMG_UPDATE_TIME').$fileExtension
             ;
         }
 

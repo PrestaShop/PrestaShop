@@ -48,9 +48,9 @@ final class LocalizationPackImportConfig implements LocalizationPackImportConfig
     private $downloadPackData;
 
     /**
-     * @param string $countryIso Country ISO code
-     * @param array $contentToImport Content that should be impoerted (e.g states, taxes & etc)
-     * @param bool $downloadPackData Whether pack data should be downloaded from prestashop.com server
+     * @param string $countryIso       Country ISO code
+     * @param array  $contentToImport  Content that should be impoerted (e.g states, taxes & etc)
+     * @param bool   $downloadPackData Whether pack data should be downloaded from prestashop.com server
      */
     public function __construct($countryIso, array $contentToImport, $downloadPackData)
     {

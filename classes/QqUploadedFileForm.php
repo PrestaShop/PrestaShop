@@ -55,7 +55,7 @@ class QqUploadedFileFormCore
                 $image->cover = 0;
             }
 
-            if (($validate = $image->validateFieldsLang(false, true)) !== true) {
+            if (true !== ($validate = $image->validateFieldsLang(false, true))) {
                 return array('error' => $validate);
             }
             if (!$image->add()) {
@@ -74,12 +74,12 @@ class QqUploadedFileFormCore
         }
         if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['qqfile']['tmp_name'], $tmpName)) {
             return array('error' => Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', array(), 'Admin.Notifications.Error'));
-        } elseif (!ImageManager::resize($tmpName, $new_path . '.' . $image->image_format)) {
+        } elseif (!ImageManager::resize($tmpName, $new_path.'.'.$image->image_format)) {
             return array('error' => Context::getContext()->getTranslator()->trans('An error occurred while copying the image.', array(), 'Admin.Notifications.Error'));
-        } elseif ($method == 'auto') {
+        } elseif ('auto' == $method) {
             $imagesTypes = ImageType::getImagesTypes('products');
             foreach ($imagesTypes as $imageType) {
-                if (!ImageManager::resize($tmpName, $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
+                if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
                     return array('error' => Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error'));
                 }
             }

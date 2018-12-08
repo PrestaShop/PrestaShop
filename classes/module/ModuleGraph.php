@@ -61,7 +61,7 @@ abstract class ModuleGraphCore extends Module
         if ($this->_employee->stats_date_from == $this->_employee->stats_date_to) {
             if ($legend) {
                 for ($i = 0; $i < 24; ++$i) {
-                    if ($layers == 1) {
+                    if (1 == $layers) {
                         $this->_values[$i] = 0;
                     } else {
                         for ($j = 0; $j < $layers; ++$j) {
@@ -94,7 +94,7 @@ abstract class ModuleGraphCore extends Module
                     }
                 }
                 foreach ($days as $i) {
-                    if ($layers == 1) {
+                    if (1 == $layers) {
                         $this->_values[$i] = 0;
                     } else {
                         for ($j = 0; $j < $layers; ++$j) {
@@ -125,7 +125,7 @@ abstract class ModuleGraphCore extends Module
                     }
                 }
                 foreach ($months as $i) {
-                    if ($layers == 1) {
+                    if (1 == $layers) {
                         $this->_values[$i] = 0;
                     } else {
                         for ($j = 0; $j < $layers; ++$j) {
@@ -147,7 +147,7 @@ abstract class ModuleGraphCore extends Module
                     $years[] = $i;
                 }
                 foreach ($years as $i) {
-                    if ($layers == 1) {
+                    if (1 == $layers) {
                         $this->_values[$i] = 0;
                     } else {
                         for ($j = 0; $j < $layers; ++$j) {
@@ -188,12 +188,12 @@ abstract class ModuleGraphCore extends Module
                 }
             }
         } else { // If there is only one column title, there is in fast two column (the first without title)
-            $this->_csv .= ';' . $this->_titles['main'];
+            $this->_csv .= ';'.$this->_titles['main'];
         }
         $this->_csv .= "\n";
         if (count($this->_legend)) {
             $total = 0;
-            if ($datas['type'] == 'pie') {
+            if ('pie' == $datas['type']) {
                 foreach ($this->_legend as $key => $legend) {
                     for ($i = 0, $total_main = (is_array($this->_titles['main']) ? count($this->_values) : 1); $i < $total_main; ++$i) {
                         $total += (is_array($this->_values[$i]) ? $this->_values[$i][$key] : $this->_values[$key]);
@@ -201,13 +201,13 @@ abstract class ModuleGraphCore extends Module
                 }
             }
             foreach ($this->_legend as $key => $legend) {
-                $this->_csv .= $legend . ';';
+                $this->_csv .= $legend.';';
                 for ($i = 0, $total_main = (is_array($this->_titles['main']) ? count($this->_values) : 1); $i < $total_main; ++$i) {
                     if (!isset($this->_values[$i]) || !is_array($this->_values[$i])) {
                         if (isset($this->_values[$key])) {
                             // We don't want strings to be divided. Example: product name
                             if (is_numeric($this->_values[$key])) {
-                                $this->_csv .= $this->_values[$key] / (($datas['type'] == 'pie') ? $total : 1);
+                                $this->_csv .= $this->_values[$key] / (('pie' == $datas['type']) ? $total : 1);
                             } else {
                                 $this->_csv .= $this->_values[$key];
                             }
@@ -217,7 +217,7 @@ abstract class ModuleGraphCore extends Module
                     } else {
                         // We don't want strings to be divided. Example: product name
                         if (is_numeric($this->_values[$i][$key])) {
-                            $this->_csv .= $this->_values[$i][$key] / (($datas['type'] == 'pie') ? $total : 1);
+                            $this->_csv .= $this->_values[$i][$key] / (('pie' == $datas['type']) ? $total : 1);
                         } else {
                             $this->_csv .= $this->_values[$i][$key];
                         }
@@ -236,7 +236,7 @@ abstract class ModuleGraphCore extends Module
             ob_end_clean();
         }
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . $this->displayName . ' - ' . time() . '.csv"');
+        header('Content-Disposition: attachment; filename="'.$this->displayName.' - '.time().'.csv"');
         echo $this->_csv;
         exit;
     }
@@ -246,7 +246,7 @@ abstract class ModuleGraphCore extends Module
         if (!Validate::isModuleName($render)) {
             die(Tools::displayError());
         }
-        if (!Tools::file_exists_cache($file = _PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
+        if (!Tools::file_exists_cache($file = _PS_ROOT_DIR_.'/modules/'.$render.'/'.$render.'.php')) {
             die(Tools::displayError());
         }
         require_once $file;
@@ -280,7 +280,7 @@ abstract class ModuleGraphCore extends Module
         if (!Validate::isModuleName($render)) {
             die(Tools::displayError());
         }
-        if (!file_exists(_PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
+        if (!file_exists(_PS_ROOT_DIR_.'/modules/'.$render.'/'.$render.'.php')) {
             return Context::getContext()->getTranslator()->trans('Graph engine selected is unavailable.', array(), 'Admin.Modules.Notification');
         }
 
@@ -305,9 +305,9 @@ abstract class ModuleGraphCore extends Module
         $url_params['module'] = Tools::getValue('module');
         $url_params['id_employee'] = $id_employee;
         $url_params['id_lang'] = $id_lang;
-        $drawer = 'drawer.php?' . http_build_query(array_map('Tools::safeOutput', $url_params), '', '&');
+        $drawer = 'drawer.php?'.http_build_query(array_map('Tools::safeOutput', $url_params), '', '&');
 
-        require_once _PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php';
+        require_once _PS_ROOT_DIR_.'/modules/'.$render.'/'.$render.'.php';
 
         return call_user_func(array($render, 'hookGraphEngine'), $params, $drawer);
     }
@@ -325,12 +325,12 @@ abstract class ModuleGraphCore extends Module
         }
 
         if (empty($employee->stats_date_from) || empty($employee->stats_date_to)
-            || $employee->stats_date_from == '0000-00-00' || $employee->stats_date_to == '0000-00-00') {
-            if (empty($employee->stats_date_from) || $employee->stats_date_from == '0000-00-00') {
-                $employee->stats_date_from = date('Y') . '-01-01';
+            || '0000-00-00' == $employee->stats_date_from || '0000-00-00' == $employee->stats_date_to) {
+            if (empty($employee->stats_date_from) || '0000-00-00' == $employee->stats_date_from) {
+                $employee->stats_date_from = date('Y').'-01-01';
             }
-            if (empty($employee->stats_date_to) || $employee->stats_date_to == '0000-00-00') {
-                $employee->stats_date_to = date('Y') . '-12-31';
+            if (empty($employee->stats_date_to) || '0000-00-00' == $employee->stats_date_to) {
+                $employee->stats_date_to = date('Y').'-12-31';
             }
             $employee->update();
         }
@@ -346,10 +346,10 @@ abstract class ModuleGraphCore extends Module
     public static function getDateBetween($employee = null)
     {
         if ($employee = ModuleGraph::getEmployee($employee)) {
-            return ' \'' . pSQL($employee->stats_date_from) . ' 00:00:00\' AND \'' . pSQL($employee->stats_date_to) . ' 23:59:59\' ';
+            return ' \''.pSQL($employee->stats_date_from).' 00:00:00\' AND \''.pSQL($employee->stats_date_to).' 23:59:59\' ';
         }
 
-        return ' \'' . date('Y-m') . '-01 00:00:00\' AND \'' . date('Y-m-t') . ' 23:59:59\' ';
+        return ' \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m-t').' 23:59:59\' ';
     }
 
     public function getLang()

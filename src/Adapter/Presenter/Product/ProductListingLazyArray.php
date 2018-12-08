@@ -37,11 +37,11 @@ class ProductListingLazyArray extends ProductLazyArray
      */
     public function getAddToCartUrl()
     {
-        if ($this->product['id_product_attribute'] != 0 && !$this->settings->allow_add_variant_to_cart_from_listing) {
+        if (0 != $this->product['id_product_attribute'] && !$this->settings->allow_add_variant_to_cart_from_listing) {
             return null;
         }
 
-        if ($this->product['customizable'] == 2 || !empty($this->product['customization_required'])) {
+        if (2 == $this->product['customizable'] || !empty($this->product['customization_required'])) {
             return null;
         }
 
@@ -49,7 +49,7 @@ class ProductListingLazyArray extends ProductLazyArray
     }
 
     /**
-     * @param array $product
+     * @param array                       $product
      * @param ProductPresentationSettings $settings
      *
      * @return bool

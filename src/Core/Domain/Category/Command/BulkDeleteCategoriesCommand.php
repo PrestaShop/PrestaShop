@@ -47,7 +47,7 @@ class BulkDeleteCategoriesCommand
     private $deleteMode;
 
     /**
-     * @param int[] $categoryIds
+     * @param int[]              $categoryIds
      * @param CategoryDeleteMode $deleteMode
      *
      * @throws CategoryConstraintException

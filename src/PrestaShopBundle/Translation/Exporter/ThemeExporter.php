@@ -143,7 +143,7 @@ class ThemeExporter
      */
     public function setExportDir($exportDir)
     {
-        $this->exportDir = str_replace('/export', DIRECTORY_SEPARATOR . 'export', $exportDir);
+        $this->exportDir = str_replace('/export', DIRECTORY_SEPARATOR.'export', $exportDir);
     }
 
     /**
@@ -187,7 +187,7 @@ class ThemeExporter
             ->setOutputPath($tmpFolderPath)
             ->extract($theme, $locale, $rootDir);
 
-        Flattenizer::flatten($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $folderPath . DIRECTORY_SEPARATOR . $locale, $locale);
+        Flattenizer::flatten($tmpFolderPath.DIRECTORY_SEPARATOR.$locale, $folderPath.DIRECTORY_SEPARATOR.$locale, $locale);
 
         return $this->themeProvider->getCatalogueFromPaths($folderPath, $locale, '*');
     }
@@ -200,11 +200,11 @@ class ThemeExporter
     {
         $finder = Finder::create();
 
-        foreach ($finder->in($archiveParentDirectory . DIRECTORY_SEPARATOR . $locale)->files() as $file) {
+        foreach ($finder->in($archiveParentDirectory.DIRECTORY_SEPARATOR.$locale)->files() as $file) {
             $parentDirectoryParts = explode(DIRECTORY_SEPARATOR, dirname($file));
             $destinationFilenameParts = array(
                 $archiveParentDirectory,
-                $parentDirectoryParts[count($parentDirectoryParts) - 1] . '.' . $locale . '.xlf',
+                $parentDirectoryParts[count($parentDirectoryParts) - 1].'.'.$locale.'.xlf',
             );
             $destinationFilename = implode(DIRECTORY_SEPARATOR, $destinationFilenameParts);
             if ($this->filesystem->exists($destinationFilename)) {
@@ -213,7 +213,7 @@ class ThemeExporter
             $this->filesystem->rename($file->getPathname(), $destinationFilename);
         }
 
-        $this->filesystem->remove($archiveParentDirectory . DIRECTORY_SEPARATOR . $locale);
+        $this->filesystem->remove($archiveParentDirectory.DIRECTORY_SEPARATOR.$locale);
     }
 
     public function cleanArtifacts($themeName)
@@ -229,7 +229,7 @@ class ThemeExporter
      */
     protected function getTemporaryExtractionFolder($themeName)
     {
-        return $this->cacheDir . DIRECTORY_SEPARATOR . $themeName . '-tmp';
+        return $this->cacheDir.DIRECTORY_SEPARATOR.$themeName.'-tmp';
     }
 
     /**
@@ -239,7 +239,7 @@ class ThemeExporter
      */
     protected function getFlattenizationFolder($themeName)
     {
-        return $this->cacheDir . DIRECTORY_SEPARATOR . $themeName;
+        return $this->cacheDir.DIRECTORY_SEPARATOR.$themeName;
     }
 
     /**
@@ -249,7 +249,7 @@ class ThemeExporter
      */
     protected function getExportDir($themeName)
     {
-        return $this->exportDir . DIRECTORY_SEPARATOR . $themeName;
+        return $this->exportDir.DIRECTORY_SEPARATOR.$themeName;
     }
 
     /**
@@ -268,7 +268,7 @@ class ThemeExporter
             $this->exportDir,
             $themeName,
             $locale,
-            $themeName . '.' . $locale . '.zip',
+            $themeName.'.'.$locale.'.zip',
         );
 
         return implode(DIRECTORY_SEPARATOR, $zipFilenameParts);
@@ -350,7 +350,7 @@ class ThemeExporter
     {
         $catalogue = new MessageCatalogue($locale, array());
         foreach ($sourceCatalogue->all() as $domain => $messages) {
-            $catalogue->add($messages, $domain . '.' . $locale);
+            $catalogue->add($messages, $domain.'.'.$locale);
         }
 
         return $catalogue;

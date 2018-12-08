@@ -37,7 +37,7 @@ interface PositionUpdateFactoryInterface
     /**
      * Transform the provided data into a PositionUpdate.
      *
-     * @param array $data
+     * @param array              $data
      * @param PositionDefinition $positionDefinition
      *
      * @return PositionUpdate

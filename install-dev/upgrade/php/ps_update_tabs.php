@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,21 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function ps_update_tabs()
 {
     if (file_exists(__DIR__.'/../../data/xml/tab.xml')) {
-        $tab_xml = simplexml_load_file(__DIR__ . '/../../data/xml/tab.xml');
+        $tab_xml = simplexml_load_file(__DIR__.'/../../data/xml/tab.xml');
         if (!empty($tab_xml)) {
             $tab_class_name = array();
             $tab_ids = array();
 
             foreach ($tab_xml->entities->tab as $tab) {
-                $tab = (array)$tab;
+                $tab = (array) $tab;
                 $tab_class_name[$tab['class_name']] = $tab['@attributes']['id'];
             }
 
-            $tabs = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'tab`', true, false);
+            $tabs = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'tab`', true, false);
             if (!empty($tabs)) {
                 foreach ($tabs as $tab) {
                     if (isset($tab_class_name[$tab['class_name']])) {
@@ -45,36 +44,32 @@ function ps_update_tabs()
                     }
                 }
             }
-
         } else {
             return;
         }
 
         if (!empty($tab_class_name)) {
-
-            $langs = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` != "en" ', true, false);
+            $langs = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` != "en" ', true, false);
 
             if (!empty($langs)) {
                 foreach ($langs as $lang) {
-                    if (file_exists(__DIR__ . '/../../langs/' . $lang['iso_code'] . '/data/tab.xml')) {
-
+                    if (file_exists(__DIR__.'/../../langs/'.$lang['iso_code'].'/data/tab.xml')) {
                         // store XML data
                         $tab_xml_data = array();
-                        $tab_xml_lang = simplexml_load_file(__DIR__ . '/../../langs/' . $lang['iso_code'] . '/data/tab.xml');
+                        $tab_xml_lang = simplexml_load_file(__DIR__.'/../../langs/'.$lang['iso_code'].'/data/tab.xml');
                         if (!empty($tab_xml_lang)) {
                             foreach ($tab_xml_lang->tab as $tab) {
-                                $tab = (array)$tab;
+                                $tab = (array) $tab;
                                 $tab_xml_data[$tab['@attributes']['id']] = $tab['@attributes']['name'];
                             }
                         }
 
-
                         // store DB data
                         $tab_db_data = array();
                         $results = Db::getInstance()->executeS('
-                          SELECT t.`id_tab`, tl.`id_lang`, t.`class_name`, tl.`name` FROM `' . _DB_PREFIX_ . 'tab` t
-                            INNER JOIN `' . _DB_PREFIX_ . 'tab_lang` tl ON tl.`id_tab` = t.`id_tab`
-                            WHERE tl.`id_lang` = ' . (int)$lang['id_lang'], true, false);
+                          SELECT t.`id_tab`, tl.`id_lang`, t.`class_name`, tl.`name` FROM `'._DB_PREFIX_.'tab` t
+                            INNER JOIN `'._DB_PREFIX_.'tab_lang` tl ON tl.`id_tab` = t.`id_tab`
+                            WHERE tl.`id_lang` = '.(int) $lang['id_lang'], true, false);
 
                         if (!empty($results)) {
                             foreach ($results as $res) {
@@ -92,21 +87,19 @@ function ps_update_tabs()
 
                                         // if data XML is not in DB => insert
                                         if (!array_key_exists($tmp_class_name, $tab_db_data)) {
-
-                                            $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'tab_lang`
+                                            $sql = 'INSERT INTO `'._DB_PREFIX_.'tab_lang`
                                             (`id_tab`, `id_lang`, `name`)
-                                            VALUES (' . (int)$tmp_class_id . ',' . (int)$lang['id_lang'] . ',"' . pSQL($tab) . '")';
+                                            VALUES ('.(int) $tmp_class_id.','.(int) $lang['id_lang'].',"'.pSQL($tab).'")';
 
                                             Db::getInstance()->execute($sql);
-
                                         } else {
                                             // if DB is != XML
                                             if ($tab_db_data[$tmp_class_name] != $tab) {
-                                                $sql = 'UPDATE `' . _DB_PREFIX_ . 'tab_lang`
-                                                    SET  `name` = "' . pSQL($tab) . '"
-                                                    WHERE   `id_tab` = ' . (int)$tmp_class_id . ' AND
-                                                            `id_lang` = ' . (int)$lang['id_lang'] . ' AND
-                                                            `name`  = "' . pSQL($tab_db_data[$tmp_class_name]) . '" ';
+                                                $sql = 'UPDATE `'._DB_PREFIX_.'tab_lang`
+                                                    SET  `name` = "'.pSQL($tab).'"
+                                                    WHERE   `id_tab` = '.(int) $tmp_class_id.' AND
+                                                            `id_lang` = '.(int) $lang['id_lang'].' AND
+                                                            `name`  = "'.pSQL($tab_db_data[$tmp_class_name]).'" ';
 
                                                 Db::getInstance()->execute($sql);
                                             }

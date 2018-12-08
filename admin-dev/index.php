@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -39,7 +39,7 @@ if (!defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
-require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+require _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 //small test to clear cache after upgrade
 if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {
@@ -73,7 +73,7 @@ if (_PS_MODE_DEV_) {
 }
 require_once __DIR__.'/../app/AppKernel.php';
 
-$kernel = new AppKernel(_PS_MODE_DEV_?'dev':'prod', _PS_MODE_DEV_);
+$kernel = new AppKernel(_PS_MODE_DEV_ ? 'dev' : 'prod', _PS_MODE_DEV_);
 if (PHP_VERSION_ID < 70000) {
     $kernel->loadClassCache();
 }

@@ -57,8 +57,8 @@ class SmartyLazyRegister
     /**
      * Dynamically call static function or method.
      *
-     * @param string $name function name
-     * @param mixed $arguments function argument
+     * @param string $name      function name
+     * @param mixed  $arguments function argument
      *
      * @return mixed function return
      */
@@ -68,12 +68,12 @@ class SmartyLazyRegister
 
         // case 1: call to static method - case 2 : call to static function
         if (is_array($item[1])) {
-            return call_user_func_array($item[1] . '::' . $item[0], array($arguments[0], &$arguments[1]));
+            return call_user_func_array($item[1].'::'.$item[0], array($arguments[0], &$arguments[1]));
         } else {
             $args = array();
 
             foreach ($arguments as $a => $argument) {
-                if ($a == 0) {
+                if (0 == $a) {
                     $args[] = $arguments[0];
                 } else {
                     $args[] = &$arguments[$a];

@@ -87,46 +87,46 @@ class TaxRulesGroupCore extends ObjectModel
 
         return parent::update() &&
         Db::getInstance()->execute('
-		INSERT INTO ' . _DB_PREFIX_ . 'tax_rule
+		INSERT INTO '._DB_PREFIX_.'tax_rule
 		(id_tax_rules_group, id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description)
 		(
-			SELECT ' . (int) $tax_rules_group->id . ', id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description
-			FROM ' . _DB_PREFIX_ . 'tax_rule
-			WHERE id_tax_rules_group=' . (int) $this->id . '
+			SELECT '.(int) $tax_rules_group->id.', id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description
+			FROM '._DB_PREFIX_.'tax_rule
+			WHERE id_tax_rules_group='.(int) $this->id.'
 		)') &&
         Db::getInstance()->execute('
-		UPDATE ' . _DB_PREFIX_ . 'product
-		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
-		WHERE id_tax_rules_group=' . (int) $this->id) &&
+		UPDATE '._DB_PREFIX_.'product
+		SET id_tax_rules_group='.(int) $tax_rules_group->id.'
+		WHERE id_tax_rules_group='.(int) $this->id) &&
         Db::getInstance()->execute('
-		UPDATE ' . _DB_PREFIX_ . 'product_shop
-		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
-		WHERE id_tax_rules_group=' . (int) $this->id) &&
+		UPDATE '._DB_PREFIX_.'product_shop
+		SET id_tax_rules_group='.(int) $tax_rules_group->id.'
+		WHERE id_tax_rules_group='.(int) $this->id) &&
         Db::getInstance()->execute('
-		UPDATE ' . _DB_PREFIX_ . 'carrier
-		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
-		WHERE id_tax_rules_group=' . (int) $this->id) &&
+		UPDATE '._DB_PREFIX_.'carrier
+		SET id_tax_rules_group='.(int) $tax_rules_group->id.'
+		WHERE id_tax_rules_group='.(int) $this->id) &&
         Db::getInstance()->execute('
-		UPDATE ' . _DB_PREFIX_ . 'carrier_tax_rules_group_shop
-		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
-		WHERE id_tax_rules_group=' . (int) $this->id);
+		UPDATE '._DB_PREFIX_.'carrier_tax_rules_group_shop
+		SET id_tax_rules_group='.(int) $tax_rules_group->id.'
+		WHERE id_tax_rules_group='.(int) $this->id);
     }
 
     public function getIdTaxRuleGroupFromHistorizedId($id_tax_rule)
     {
         $params = Db::getInstance()->getRow('
 		SELECT id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior
-		FROM ' . _DB_PREFIX_ . 'tax_rule
-		WHERE id_tax_rule=' . (int) $id_tax_rule
+		FROM '._DB_PREFIX_.'tax_rule
+		WHERE id_tax_rule='.(int) $id_tax_rule
         );
 
         return Db::getInstance()->getValue('
 		SELECT id_tax_rule
-		FROM ' . _DB_PREFIX_ . 'tax_rule
+		FROM '._DB_PREFIX_.'tax_rule
 		WHERE
-			id_tax_rules_group = ' . (int) $this->id . ' AND
-			id_country=' . (int) $params['id_country'] . ' AND id_state=' . (int) $params['id_state'] . ' AND id_tax=' . (int) $params['id_tax'] . ' AND
-			zipcode_from=\'' . pSQL($params['zipcode_from']) . '\' AND zipcode_to=\'' . pSQL($params['zipcode_to']) . '\' AND behavior=' . (int) $params['behavior']
+			id_tax_rules_group = '.(int) $this->id.' AND
+			id_country='.(int) $params['id_country'].' AND id_state='.(int) $params['id_state'].' AND id_tax='.(int) $params['id_tax'].' AND
+			zipcode_from=\''.pSQL($params['zipcode_from']).'\' AND zipcode_to=\''.pSQL($params['zipcode_to']).'\' AND behavior='.(int) $params['behavior']
         );
     }
 
@@ -134,9 +134,9 @@ class TaxRulesGroupCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT DISTINCT g.id_tax_rules_group, g.name, g.active
-			FROM `' . _DB_PREFIX_ . 'tax_rules_group` g'
-            . Shop::addSqlAssociation('tax_rules_group', 'g') . ' WHERE deleted = 0'
-            . ($only_active ? ' AND g.`active` = 1' : '') . '
+			FROM `'._DB_PREFIX_.'tax_rules_group` g'
+            .Shop::addSqlAssociation('tax_rules_group', 'g').' WHERE deleted = 0'
+            .($only_active ? ' AND g.`active` = 1' : '').'
 			ORDER BY name ASC');
     }
 
@@ -152,7 +152,7 @@ class TaxRulesGroupCore extends ObjectModel
 
     public function delete()
     {
-        $res = Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'tax_rule` WHERE `id_tax_rules_group`=' . (int) $this->id);
+        $res = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'tax_rule` WHERE `id_tax_rules_group`='.(int) $this->id);
 
         return parent::delete() && $res;
     }
@@ -164,10 +164,10 @@ class TaxRulesGroupCore extends ObjectModel
     {
         $rows = Db::getInstance()->executeS('
 			SELECT rg.`id_tax_rules_group`, t.`rate`
-			FROM `' . _DB_PREFIX_ . 'tax_rules_group` rg
-			LEFT JOIN `' . _DB_PREFIX_ . 'tax_rule` tr ON (tr.`id_tax_rules_group` = rg.`id_tax_rules_group`)
-			LEFT JOIN `' . _DB_PREFIX_ . 'tax` t ON (t.`id_tax` = tr.`id_tax`)
-			WHERE tr.`id_country` = ' . (int) $id_country . '
+			FROM `'._DB_PREFIX_.'tax_rules_group` rg
+			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (tr.`id_tax_rules_group` = rg.`id_tax_rules_group`)
+			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+			WHERE tr.`id_country` = '.(int) $id_country.'
 			AND tr.`id_state` = 0
 			AND 0 between `zipcode_from` AND `zipcode_to`'
         );
@@ -191,8 +191,8 @@ class TaxRulesGroupCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             'SELECT `id_tax_rules_group`
-			FROM `' . _DB_PREFIX_ . 'tax_rules_group` rg
-			WHERE `name` = \'' . pSQL($name) . '\''
+			FROM `'._DB_PREFIX_.'tax_rules_group` rg
+			WHERE `name` = \''.pSQL($name).'\''
         );
     }
 
@@ -212,8 +212,8 @@ class TaxRulesGroupCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
 		SELECT `id_tax_rules_group`
-		FROM `' . _DB_PREFIX_ . 'order_detail`
-		WHERE `id_tax_rules_group` = ' . (int) $this->id
+		FROM `'._DB_PREFIX_.'order_detail`
+		WHERE `id_tax_rules_group` = '.(int) $this->id
         );
     }
 

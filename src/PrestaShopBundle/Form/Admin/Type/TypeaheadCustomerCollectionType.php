@@ -75,12 +75,12 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
                 $customer = $this->customerAdapter->getCustomer($id);
                 $collection[] = [
                     'id' => $id,
-                    'name' => $customer->firstname . ' ' . $customer->lastname . ' - ' . $customer->email,
+                    'name' => $customer->firstname.' '.$customer->lastname.' - '.$customer->email,
                 ];
                 ++$i;
 
                 //if collection length is up to limit, break
-                if ($options['limit'] != 0 && $i >= $options['limit']) {
+                if (0 != $options['limit'] && $i >= $options['limit']) {
                     break;
                 }
             }

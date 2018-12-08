@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function p15018_change_image_types()
 {
     $replace_types = array(
@@ -32,19 +31,19 @@ function p15018_change_image_types()
             'medium' => array('medium_default', '125', '125'),
             'large' => array('large_default', '458', '458'),
             'thickbox' => array('thickbox_default', '800', '800'),
-            'home' => array('home_default', '270', '270')
+            'home' => array('home_default', '270', '270'),
         ),
         'others' => array(
             'category' => array('category_default', '870', '217'),
             'large_scene' => array('scene_default', '520', '189'),
-            'thumb_scene' => array('m_scene_default', '161', '58')
-        )
+            'thumb_scene' => array('m_scene_default', '161', '58'),
+        ),
     );
 
     $new_types = array(
         'products' => array(
-            'small' => array('cart_default', '80', '80')
-        )
+            'small' => array('cart_default', '80', '80'),
+        ),
     );
 
     foreach ($new_types as $type => $type_array) {
@@ -57,7 +56,7 @@ function p15018_change_image_types()
         }
     }
 
-    $option = (bool)Db::getInstance()->getValue('SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE directory != "default" AND directory != "prestashop"');
+    $option = (bool) Db::getInstance()->getValue('SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE directory != "default" AND directory != "prestashop"');
 
     // If there is another theme than the default one, duplicate
     if ($option) {
@@ -68,16 +67,16 @@ function p15018_change_image_types()
 					SELECT NULL, "'.$new_type[0].'", "'.$new_type[1].'", "'.$new_type[2].'", products, categories, manufacturers, suppliers, scenes, stores
 					FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
                 }
-    // But if there is only the default one, we can update de names
-    else {
-        foreach ($replace_types as $type => $type_array) {
-            foreach ($type_array as $old_type => $new_type) {
-                if (is_array($new_type) && count($new_type)) {
-                    Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_type` SET name = "'.$new_type[0].'" WHERE name = "'.$old_type.'"');
+                // But if there is only the default one, we can update de names
+                else {
+                    foreach ($replace_types as $type => $type_array) {
+                        foreach ($type_array as $old_type => $new_type) {
+                            if (is_array($new_type) && count($new_type)) {
+                                Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_type` SET name = "'.$new_type[0].'" WHERE name = "'.$old_type.'"');
+                            }
+                        }
+                    }
                 }
-            }
-        }
-    }
             }
         }
     }
@@ -100,7 +99,7 @@ function p15018_change_image_types()
                     }
                 }
             }
-            $folder = implode(DIRECTORY_SEPARATOR, str_split((string)$row['id_image'])).DIRECTORY_SEPARATOR;
+            $folder = implode(DIRECTORY_SEPARATOR, str_split((string) $row['id_image'])).DIRECTORY_SEPARATOR;
             if (file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'.jpg')) {
                 foreach ($replace_types['products'] as $old_type => $new_type) {
                     if (is_array($new_type) && count($new_type)) {
@@ -117,7 +116,7 @@ function p15018_change_image_types()
         // Then the other entities (if there is less than 500 products, that should not be a problem)
         $directories = array('p', 'c', 'm', 's', 'su', 'scenes', 'scenes'.DIRECTORY_SEPARATOR.'thumbs', 'st');
         foreach ($directories as $directory) {
-            foreach (scandir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $directory, SCANDIR_SORT_NONE) as $file) {
+            foreach (scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory, SCANDIR_SORT_NONE) as $file) {
                 if (!preg_match('/^([0-9]+|[a-z]{2}-default)\-[a-z_-]+\.jpg$/i', $file)) {
                     continue;
                 }

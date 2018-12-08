@@ -37,7 +37,7 @@ class AttachementProductController extends FrameworkBundleAdminController
     /**
      * Manage form add product attachment.
      *
-     * @param int $idProduct
+     * @param int     $idProduct
      * @param Request $request
      *
      * @return string

@@ -51,8 +51,8 @@ class EditableSqlRequest
 
     /**
      * @param SqlRequestId $requestSqlId
-     * @param string $name
-     * @param string $sql
+     * @param string       $name
+     * @param string       $sql
      *
      * @throws SqlRequestException
      */

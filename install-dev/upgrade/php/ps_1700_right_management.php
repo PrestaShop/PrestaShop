@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,12 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function ps_1700_right_management()
 {
     $actions = array('CREATE', 'READ', 'UPDATE', 'DELETE');
 
-    /**
+    /*
      * Add roles
      */
     foreach (array('TAB' => 'class_name', 'MODULE' => 'name') as $element => $nameColumn) {
@@ -43,9 +42,9 @@ function ps_1700_right_management()
     }
 
     /**
-     * Add access
+     * Add access.
      */
-    $accessObject = new Access;
+    $accessObject = new Access();
 
     // Tabs
     $oldAccess = Db::getInstance()->executeS('SELECT t.id_tab, a.id_profile, a.view, a.add, a.edit, a.delete FROM `'._DB_PREFIX_.'tab` t LEFT JOIN `'._DB_PREFIX_.'access_old` a USING (id_tab)');
@@ -54,11 +53,11 @@ function ps_1700_right_management()
     }
     foreach ($oldAccess as $currOldAccess) {
         foreach (array('view', 'add', 'edit', 'delete') as $action) {
-            if (array_key_exists($action, $currOldAccess) && ($currOldAccess[$action] == '1'
-                    || $currOldAccess['id_profile'] == _PS_ADMIN_PROFILE_
+            if (array_key_exists($action, $currOldAccess) && ('1' == $currOldAccess[$action]
+                    || _PS_ADMIN_PROFILE_ == $currOldAccess['id_profile']
                     || empty($currOldAccess['id_profile']))) {
                 $accessObject->updateLgcAccess(
-                    !empty($currOldAccess['id_profile'])?$currOldAccess['id_profile']:_PS_ADMIN_PROFILE_,
+                    !empty($currOldAccess['id_profile']) ? $currOldAccess['id_profile'] : _PS_ADMIN_PROFILE_,
                     $currOldAccess['id_tab'],
                     $action,
                     true
@@ -75,11 +74,11 @@ function ps_1700_right_management()
 
     foreach ($oldAccess as $currOldAccess) {
         foreach (array('configure', 'view', 'uninstall') as $action) {
-            if (array_key_exists($action, $currOldAccess) && ($currOldAccess[$action] == '1'
-                    || $currOldAccess['id_profile'] == _PS_ADMIN_PROFILE_
+            if (array_key_exists($action, $currOldAccess) && ('1' == $currOldAccess[$action]
+                    || _PS_ADMIN_PROFILE_ == $currOldAccess['id_profile']
                     || empty($currOldAccess['id_profile']))) {
                 $accessObject->updateLgcModuleAccess(
-                    !empty($currOldAccess['id_profile'])?$currOldAccess['id_profile']:_PS_ADMIN_PROFILE_,
+                    !empty($currOldAccess['id_profile']) ? $currOldAccess['id_profile'] : _PS_ADMIN_PROFILE_,
                     $currOldAccess['id_module'],
                     $action,
                     true

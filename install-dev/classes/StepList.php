@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,30 +23,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 class StepList implements IteratorAggregate
 {
     /**
-     *
      * @var integer
      */
     protected $offset = 0;
 
     /**
-     *
      * @var array
      */
     protected $steps = array();
 
     /**
-     *
      * @var array
      */
     private $stepNames = array();
 
     /**
-     *
      * @param array $stepNames
      */
     public function __construct(array $stepConfig)
@@ -61,7 +55,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return int
      */
     public function getOffset()
@@ -70,8 +63,8 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @param int $offset
+     *
      * @return StepList
      */
     public function setOffset($offset)
@@ -82,8 +75,8 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @param string $stepName
+     *
      * @return StepList
      */
     public function setOffsetFromStepName($stepName)
@@ -94,8 +87,8 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @param string $stepName
+     *
      * @return int
      */
     public function getOffsetFromStepName($stepName)
@@ -104,7 +97,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return Step[]
      */
     public function getSteps()
@@ -113,7 +105,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return Step
      */
     public function current()
@@ -122,33 +113,30 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return Step
      */
     public function next()
     {
-        if (array_key_exists($this->offset+1, $this->steps)) {
-            $this->offset++;
+        if (array_key_exists($this->offset + 1, $this->steps)) {
+            ++$this->offset;
         }
 
         return $this;
     }
 
     /**
-     *
      * @return Step
      */
     public function previous()
     {
-        if (array_key_exists($this->offset-1, $this->steps)) {
-            $this->offset--;
+        if (array_key_exists($this->offset - 1, $this->steps)) {
+            --$this->offset;
         }
 
         return $this;
     }
 
     /**
-     *
      * @return boolean
      */
     public function isFirstStep()
@@ -157,16 +145,14 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return boolean
      */
     public function isLastStep()
     {
-        return $this->offset == count($this->steps) -1;
+        return $this->offset == count($this->steps) - 1;
     }
 
     /**
-     *
      * @return Traversable
      */
     public function getIterator()

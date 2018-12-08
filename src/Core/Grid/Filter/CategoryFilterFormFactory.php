@@ -54,8 +54,8 @@ final class CategoryFilterFormFactory implements GridFilterFormFactoryInterface
 
     /**
      * @param GridFilterFormFactoryInterface $formFactory
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param RequestStack $requestStack
+     * @param UrlGeneratorInterface          $urlGenerator
+     * @param RequestStack                   $requestStack
      */
     public function __construct(
         GridFilterFormFactoryInterface $formFactory,

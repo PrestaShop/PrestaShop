@@ -72,11 +72,11 @@ class ModuleActivatedListener
     private $moduleRepository;
 
     /**
-     * @param RouterInterface $router
+     * @param RouterInterface     $router
      * @param TranslatorInterface $translator
-     * @param SessionInterface $session
-     * @param Reader $annotationReader
-     * @param ModuleRepository $moduleRepository
+     * @param SessionInterface    $session
+     * @param Reader              $annotationReader
+     * @param ModuleRepository    $moduleRepository
      */
     public function __construct(
         RouterInterface $router,
@@ -181,7 +181,7 @@ class ModuleActivatedListener
         $annotation = $this->annotationReader->getMethodAnnotation($reflectionMethod, $tokenAnnotation);
 
         if (null !== $annotation && $annotation instanceof ModuleActivated) {
-            $this->validateAnnotation($annotation, $controllerClass . '::' . $methodName);
+            $this->validateAnnotation($annotation, $controllerClass.'::'.$methodName);
 
             return $annotation;
         }
@@ -191,7 +191,7 @@ class ModuleActivatedListener
 
     /**
      * @param ModuleActivated $annotation
-     * @param string $annotationPosition
+     * @param string          $annotationPosition
      *
      * @throws AnnotationException
      */

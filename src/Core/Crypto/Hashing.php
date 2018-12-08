@@ -37,8 +37,8 @@ class Hashing
     /**
      * Check if it's the first function of the array that was used for hashing.
      *
-     * @param string $passwd The password you want to check
-     * @param string $hash The hash you want to check
+     * @param string $passwd     The password you want to check
+     * @param string $hash       The hash you want to check
      * @param string $staticSalt A static salt
      *
      * @return bool Result of the verify function
@@ -57,8 +57,8 @@ class Hashing
     /**
      * Iterate on hash_methods array and return true if it matches.
      *
-     * @param string $passwd The password you want to check
-     * @param string $hash The hash you want to check
+     * @param string $passwd     The password you want to check
+     * @param string $hash       The hash you want to check
      * @param string $staticSalt A static salt
      *
      * @return bool `true` is returned if the function find a match else false
@@ -83,7 +83,7 @@ class Hashing
      * contained in PrestaShop\PrestaShop\Core\Crypto\Hashing::hash_methods.
      *
      * @param string $plaintextPassword The password you want to hash
-     * @param string $staticSalt The static salt
+     * @param string $staticSalt        The static salt
      *
      * @return string
      */
@@ -116,10 +116,10 @@ class Hashing
             'md5' => array(
                 'option' => array(),
                 'hash' => function ($passwd, $staticSalt, $option) {
-                    return md5($staticSalt . $passwd);
+                    return md5($staticSalt.$passwd);
                 },
                 'verify' => function ($passwd, $hash, $staticSalt) {
-                    return md5($staticSalt . $passwd) === $hash;
+                    return md5($staticSalt.$passwd) === $hash;
                 },
             ),
         );

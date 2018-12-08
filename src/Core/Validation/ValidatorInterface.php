@@ -32,7 +32,7 @@ interface ValidatorInterface
      * Check if HTML is clean.
      *
      * @param string $html
-     * @param array $options
+     * @param array  $options
      *
      * @return bool
      */

@@ -93,7 +93,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
             $methodDoc = $method->getDocComment();
-            if (strpos($methodDoc, '@arrayAccess') !== false) {
+            if (false !== strpos($methodDoc, '@arrayAccess')) {
                 $this->arrayAccessList[$this->convertMethodNameToIndex($method->getName())] =
                     array(
                         'type' => 'method',
@@ -190,7 +190,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @param mixed $offset
      * @param mixed $value
-     * @param bool $force if set, allow override of an existing method
+     * @param bool  $force  if set, allow override of an existing method
      *
      * @throws RuntimeException
      */
@@ -204,7 +204,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      * think they must use the object syntax.
      *
      * @param mixed $offset
-     * @param bool $force if set, allow unset of an existing method
+     * @param bool  $force  if set, allow unset of an existing method
      *
      * @throws RuntimeException
      */
@@ -226,7 +226,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     {
         if (isset($this->arrayAccessList[$index])) {
             // if the index is associated with a method, execute the method an cache the result
-            if ($this->arrayAccessList[$index]['type'] === 'method') {
+            if ('method' === $this->arrayAccessList[$index]['type']) {
                 if (!isset($this->methodCacheResults[$index])) {
                     $methodName = $this->arrayAccessList[$index]['value'];
                     $this->methodCacheResults[$index] = $this->{$methodName}();
@@ -334,7 +334,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     /**
      * @param mixed $offset
      * @param mixed $value
-     * @param bool $force if set, allow override of an existing method
+     * @param bool  $force  if set, allow override of an existing method
      *
      * @throws RuntimeException
      */
@@ -342,9 +342,9 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     {
         if (!$force && $this->arrayAccessList->offsetExists($offset)) {
             $result = $this->arrayAccessList->offsetGet($offset);
-            if ($result['type'] !== 'variable') {
+            if ('variable' !== $result['type']) {
                 throw new RuntimeException(
-                    'Trying to set the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) .
+                    'Trying to set the index '.print_r($offset, true).' of the LazyArray '.get_class($this).
                     ' already defined by a method is not allowed'
                 );
             }
@@ -357,18 +357,18 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
 
     /**
      * @param mixed $offset
-     * @param bool $force if set, allow unset of an existing method
+     * @param bool  $force  if set, allow unset of an existing method
      *
      * @throws RuntimeException
      */
     public function offsetUnset($offset, $force = false)
     {
         $result = $this->arrayAccessList->offsetGet($offset);
-        if ($force || $result['type'] === 'variable') {
+        if ($force || 'variable' === $result['type']) {
             $this->arrayAccessList->offsetUnset($offset);
         } else {
             throw new RuntimeException(
-                'Trying to unset the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) .
+                'Trying to unset the index '.print_r($offset, true).' of the LazyArray '.get_class($this).
                 ' already defined by a method is not allowed'
             );
         }

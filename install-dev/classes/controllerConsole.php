@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Install\LanguageList;
 use PrestaShopBundle\Install\AbstractInstall;
 
@@ -91,7 +90,7 @@ abstract class InstallControllerConsole
             exit;
         }
 
-        if ($errors !== true) {
+        if (true !== $errors) {
             if (count($errors)) {
                 foreach ($errors as $error) {
                     echo $error.PHP_EOL;
@@ -153,7 +152,7 @@ abstract class InstallControllerConsole
             if (!is_array($errors)) {
                 $errors = array($errors);
             }
-            echo 'Errors :'. PHP_EOL;
+            echo 'Errors :'.PHP_EOL;
             foreach ($errors as $error_process) {
                 if (!is_array($error_process)) {
                     $error_process = [$error_process];

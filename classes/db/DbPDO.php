@@ -46,7 +46,7 @@ class DbPDOCore extends Db
      * @param string $user
      * @param string $password
      * @param string $dbname
-     * @param int $timeout
+     * @param int    $timeout
      *
      * @return PDO
      */
@@ -62,7 +62,7 @@ class DbPDOCore extends Db
      * @param string $user
      * @param string $password
      * @param string $dbname
-     * @param int $timeout
+     * @param int    $timeout
      *
      * @return PDO
      */
@@ -70,14 +70,14 @@ class DbPDOCore extends Db
     {
         $dsn = 'mysql:';
         if ($dbname) {
-            $dsn .= 'dbname=' . $dbname . ';';
+            $dsn .= 'dbname='.$dbname.';';
         }
         if (preg_match('/^(.*):([0-9]+)$/', $host, $matches)) {
-            $dsn .= 'host=' . $matches[1] . ';port=' . $matches[2];
+            $dsn .= 'host='.$matches[1].';port='.$matches[2];
         } elseif (preg_match('#^.*:(/.*)$#', $host, $matches)) {
-            $dsn .= 'unix_socket=' . $matches[1];
+            $dsn .= 'unix_socket='.$matches[1];
         } else {
-            $dsn .= 'host=' . $host;
+            $dsn .= 'host='.$host;
         }
         $dsn .= ';charset=utf8';
 
@@ -91,7 +91,7 @@ class DbPDOCore extends Db
      * @param string $user
      * @param string $password
      * @param string $dbname
-     * @param bool $dropit if true, drops the created database
+     * @param bool   $dropit   if true, drops the created database
      *
      * @return bool|int
      */
@@ -99,8 +99,8 @@ class DbPDOCore extends Db
     {
         try {
             $link = DbPDO::getPDO($host, $user, $password, false);
-            $success = $link->exec('CREATE DATABASE `' . str_replace('`', '\\`', $dbname) . '`');
-            if ($dropit && ($link->exec('DROP DATABASE `' . str_replace('`', '\\`', $dbname) . '`') !== false)) {
+            $success = $link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
+            if ($dropit && (false !== $link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`'))) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -124,7 +124,7 @@ class DbPDOCore extends Db
         try {
             $this->link = $this->getPDO($this->server, $this->user, $this->password, $this->database, 5);
         } catch (PDOException $e) {
-            throw new PrestaShopException('Link to database cannot be established: ' . $e->getMessage());
+            throw new PrestaShopException('Link to database cannot be established: '.$e->getMessage());
         }
 
         $this->link->exec('SET SESSION sql_mode = \'\'');
@@ -251,7 +251,7 @@ class DbPDOCore extends Db
     {
         $error = $this->link->errorInfo();
 
-        return ($error[0] == '00000') ? '' : $error[2];
+        return ('00000' == $error[0]) ? '' : $error[2];
     }
 
     /**
@@ -308,7 +308,7 @@ class DbPDOCore extends Db
      */
     public function set_db($db_name)
     {
-        return $this->link->exec('USE ' . pSQL($db_name));
+        return $this->link->exec('USE '.pSQL($db_name));
     }
 
     /**
@@ -317,9 +317,9 @@ class DbPDOCore extends Db
      * @see Db::hasTableWithSamePrefix()
      *
      * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @param string $db Database name
+     * @param string $user   Login for database connection
+     * @param string $pwd    Password for database connection
+     * @param string $db     Database name
      * @param string $prefix Tables prefix
      *
      * @return bool
@@ -332,7 +332,7 @@ class DbPDOCore extends Db
             return false;
         }
 
-        $sql = 'SHOW TABLES LIKE \'' . $prefix . '%\'';
+        $sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
         $result = $link->query($sql);
 
         return (bool) $result->fetch();
@@ -341,11 +341,11 @@ class DbPDOCore extends Db
     /**
      * Tries to connect to the database and create a table (checking creation privileges).
      *
-     * @param string $server
-     * @param string $user
-     * @param string $pwd
-     * @param string $db
-     * @param string $prefix
+     * @param string      $server
+     * @param string      $user
+     * @param string      $pwd
+     * @param string      $db
+     * @param string      $prefix
      * @param string|null $engine Table engine
      *
      * @return bool|string True, false or error
@@ -358,20 +358,20 @@ class DbPDOCore extends Db
             return false;
         }
 
-        if ($engine === null) {
+        if (null === $engine) {
             $engine = 'MyISAM';
         }
 
         $result = $link->query('
-		CREATE TABLE `' . $prefix . 'test` (
+		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE=' . $engine);
+		) ENGINE='.$engine);
         if (!$result) {
             $error = $link->errorInfo();
 
             return $error[2];
         }
-        $link->query('DROP TABLE `' . $prefix . 'test`');
+        $link->query('DROP TABLE `'.$prefix.'test`');
 
         return true;
     }
@@ -381,13 +381,13 @@ class DbPDOCore extends Db
      *
      * @see Db::checkConnection()
      *
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @param string $db Database name
-     * @param bool $newDbLink
+     * @param string      $server    Server address
+     * @param string      $user      Login for database connection
+     * @param string      $pwd       Password for database connection
+     * @param string      $db        Database name
+     * @param bool        $newDbLink
      * @param string|bool $engine
-     * @param int $timeout
+     * @param int         $timeout
      *
      * @return int Error code or 0 if connection was successful
      */
@@ -397,7 +397,7 @@ class DbPDOCore extends Db
             $link = DbPDO::getPDO($server, $user, $pwd, $db, $timeout);
         } catch (PDOException $e) {
             // hhvm wrongly reports error status 42000 when the database does not exist - might change in the future
-            return ($e->getCode() == 1049 || (defined('HHVM_VERSION') && $e->getCode() == 42000)) ? 2 : 1;
+            return (1049 == $e->getCode() || (defined('HHVM_VERSION') && 42000 == $e->getCode())) ? 2 : 1;
         }
         unset($link);
 
@@ -420,7 +420,7 @@ class DbPDOCore extends Db
             $value = 'MyISAM';
         } else {
             $row = $result->fetch();
-            if (!$row || strtolower($row['Value']) != 'yes') {
+            if (!$row || 'yes' != strtolower($row['Value'])) {
                 $value = 'MyISAM';
             }
         }
@@ -429,7 +429,7 @@ class DbPDOCore extends Db
         $sql = 'SHOW ENGINES';
         $result = $this->link->query($sql);
         while ($row = $result->fetch()) {
-            if ($row['Engine'] == 'InnoDB') {
+            if ('InnoDB' == $row['Engine']) {
                 if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
                     $value = 'InnoDB';
                 }
@@ -446,8 +446,8 @@ class DbPDOCore extends Db
      * @see Db::checkEncoding()
      *
      * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
+     * @param string $user   Login for database connection
+     * @param string $pwd    Password for database connection
      *
      * @return bool
      */
@@ -461,7 +461,7 @@ class DbPDOCore extends Db
         $result = $link->exec('SET NAMES \'utf8\'');
         unset($link);
 
-        return ($result === false) ? false : true;
+        return (false === $result) ? false : true;
     }
 
     /**
@@ -480,8 +480,8 @@ class DbPDOCore extends Db
         } catch (PDOException $e) {
             return false;
         }
-        $ret = (bool) (($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch()) && $row['aii'] == 1);
-        $ret &= (bool) (($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch()) && $row['aio'] == 1);
+        $ret = (bool) (($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch()) && 1 == $row['aii']);
+        $ret &= (bool) (($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch()) && 1 == $row['aio']);
         unset($link);
 
         return $ret;

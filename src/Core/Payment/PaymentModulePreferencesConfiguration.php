@@ -46,7 +46,7 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
     private $paymentRestrictionsConfigurator;
 
     /**
-     * @param PaymentModuleListProviderInterface $paymentModuleProvider
+     * @param PaymentModuleListProviderInterface       $paymentModuleProvider
      * @param PaymentRestrictionsConfiguratorInterface $paymentRestrictionsConfigurator
      */
     public function __construct(

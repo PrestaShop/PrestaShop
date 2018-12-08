@@ -83,15 +83,15 @@ final class ImportConfig implements ImportConfigInterface
 
     /**
      * @param string $fileName
-     * @param int $entityType
+     * @param int    $entityType
      * @param string $languageIso
      * @param string $separator
      * @param string $multipleValueSeparator
-     * @param bool $truncate
-     * @param bool $skipThumbnailRegeneration
-     * @param bool $matchReferences
-     * @param bool $forceIds
-     * @param bool $sendEmail
+     * @param bool   $truncate
+     * @param bool   $skipThumbnailRegeneration
+     * @param bool   $matchReferences
+     * @param bool   $forceIds
+     * @param bool   $sendEmail
      */
     public function __construct(
         $fileName,

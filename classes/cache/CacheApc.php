@@ -55,9 +55,9 @@ class CacheApcCore extends Cache
      */
     public function delete($key)
     {
-        if ($key == '*') {
+        if ('*' == $key) {
             $this->flush();
-        } elseif (strpos($key, '*') === false) {
+        } elseif (false === strpos($key, '*')) {
             $this->_delete($key);
         } else {
             $pattern = str_replace('\\*', '.*', preg_quote($key));
@@ -69,7 +69,7 @@ class CacheApcCore extends Cache
                 } else {
                     $key = $entry['info'];
                 }
-                if (preg_match('#^' . $pattern . '$#', $key)) {
+                if (preg_match('#^'.$pattern.'$#', $key)) {
                     $this->_delete($key);
                 }
             }
@@ -84,7 +84,7 @@ class CacheApcCore extends Cache
     protected function _set($key, $value, $ttl = 0)
     {
         $result = (($this->apcu) ? apcu_store($key, $value, $ttl) : apc_store($key, $value, $ttl));
-        if ($result === false) {
+        if (false === $result) {
             $this->setAdjustTableCacheSize(true);
         }
 
@@ -138,10 +138,10 @@ class CacheApcCore extends Cache
     /**
      * Store data in the cache.
      *
-     * @param string $key Cache Key
-     * @param mixed $value Value
-     * @param int $ttl Time to live in the cache
-     *                 0 = unlimited
+     * @param string $key   Cache Key
+     * @param mixed  $value Value
+     * @param int    $ttl   Time to live in the cache
+     *                      0 = unlimited
      *
      * @return bool Whether the data was successfully stored
      */

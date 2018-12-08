@@ -38,7 +38,7 @@ class AdminPdfControllerCore extends AdminController
         parent::initProcess();
         $this->checkCacheFolder();
         $access = Profile::getProfileAccess($this->context->employee->id_profile, (int) Tab::getIdFromClassName('AdminOrders'));
-        if ($access['view'] === '1' && ($action = Tools::getValue('submitAction'))) {
+        if ('1' === $access['view'] && ($action = Tools::getValue('submitAction'))) {
             $this->action = $action;
         } else {
             $this->errors[] = $this->trans('You do not have permission to view this.', array(), 'Admin.Notifications.Error');
@@ -47,8 +47,8 @@ class AdminPdfControllerCore extends AdminController
 
     public function checkCacheFolder()
     {
-        if (!is_dir(_PS_CACHE_DIR_ . 'tcpdf/')) {
-            mkdir(_PS_CACHE_DIR_ . 'tcpdf/');
+        if (!is_dir(_PS_CACHE_DIR_.'tcpdf/')) {
+            mkdir(_PS_CACHE_DIR_.'tcpdf/');
         }
     }
 

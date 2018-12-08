@@ -98,7 +98,7 @@ class AddonsDataProvider implements AddonsInterface
         }
 
         $temp_filename = tempnam($this->cacheDir, 'mod');
-        if (file_put_contents($temp_filename, $module_data) !== false) {
+        if (false !== file_put_contents($temp_filename, $module_data)) {
             $this->zipManager->storeInModulesFolder($temp_filename);
 
             return true;

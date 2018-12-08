@@ -86,7 +86,7 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * If failed to find options, then return the input values.
      *
-     * @param string $routeName
+     * @param string   $routeName
      * @param string[] $parameters The route parameters to convert
      *
      * @return array[] An array with: the legacy controller name, then the parameters array
@@ -103,7 +103,7 @@ class UrlGenerator implements UrlGeneratorInterface
                 if ($route->hasDefault('_legacy_param_mapper_class') && $route->hasDefault('_legacy_param_mapper_method')) {
                     $class = $route->getDefault('_legacy_param_mapper_class');
                     $method = $route->getDefault('_legacy_param_mapper_method');
-                    $method = (new ReflectionClass('\\' . $class))->getMethod($method);
+                    $method = (new ReflectionClass('\\'.$class))->getMethod($method);
                     $legacyParameters = $method->invoke(($method->isStatic()) ? null : $method->getDeclaringClass()->newInstance(), $parameters);
                 }
             }

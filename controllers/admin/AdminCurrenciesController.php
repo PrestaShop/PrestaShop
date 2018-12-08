@@ -69,7 +69,7 @@ class AdminCurrenciesControllerCore extends AdminController
 
             $this->_list[$k]['name'] = ucfirst($currency['name']);
             $this->_list[$k]['sign'] = $currency['symbol'];
-            $this->_list[$k]['iso_code'] .= ' / ' . $currency['iso_code'];
+            $this->_list[$k]['iso_code'] .= ' / '.$currency['iso_code'];
         }
 
         $helper = new HelperList();
@@ -178,8 +178,8 @@ class AdminCurrenciesControllerCore extends AdminController
                 return true;
             }
         } else {
-            $this->errors[] = $this->trans('An error occurred while deleting the object.', array(), 'Admin.Notifications.Error') . '
-                <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('An error occurred while deleting the object.', array(), 'Admin.Notifications.Error').'
+                <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         }
 
         return false;
@@ -194,8 +194,8 @@ class AdminCurrenciesControllerCore extends AdminController
                 return true;
             }
         } else {
-            $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error') . '
-				<b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').'
+				<b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         }
 
         return false;
@@ -261,7 +261,7 @@ class AdminCurrenciesControllerCore extends AdminController
     public function processExchangeRates()
     {
         if (!$this->errors = Currency::refreshCurrencies()) {
-            Tools::redirectAdmin(self::$currentIndex . '&conf=6&token=' . $this->token);
+            Tools::redirectAdmin(self::$currentIndex.'&conf=6&token='.$this->token);
         }
     }
 
@@ -290,7 +290,7 @@ class AdminCurrenciesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_currency'] = array(
-                'href' => self::$currentIndex . '&addcurrency&token=' . $this->token,
+                'href' => self::$currentIndex.'&addcurrency&token='.$this->token,
                 'desc' => $this->trans('Add new currency', array(), 'Admin.International.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -310,15 +310,15 @@ class AdminCurrenciesControllerCore extends AdminController
 
         $enable = (int) Tools::getValue('enable');
         $config = Configuration::get('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', null, null, $this->context->shop->id);
-        $cronJobUrl = 'http://' . ShopUrl::getMainShopDomain($this->context->shop->id) . __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/cron_currency_rates.php?secure_key=' . md5(_COOKIE_KEY_ . Configuration::get('PS_SHOP_NAME'));
+        $cronJobUrl = 'http://'.ShopUrl::getMainShopDomain($this->context->shop->id).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME'));
 
-        if ($config && $enable == 0) {
+        if ($config && 0 == $enable) {
             Configuration::updateValue('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', 0, false, null, $this->context->shop->id);
-            Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'cronjobs WHERE `id_cronjob` = \'' . (int) $config . '\'');
+            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cronjobs WHERE `id_cronjob` = \''.(int) $config.'\'');
         }
 
         //The cronjob is not defined, create it
-        if ($enable == 1 && (!$config || $config == 0)) {
+        if (1 == $enable && (!$config || 0 == $config)) {
             $cronJobs = new CronJobs();
             $cronJobs->addOneShotTask(
                 $cronJobUrl,
@@ -327,10 +327,10 @@ class AdminCurrenciesControllerCore extends AdminController
 
             Configuration::updateValue('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', Db::getInstance()->Insert_ID(), false, null, $this->context->shop->id);
         } else {
-            $cronJob = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'cronjobs WHERE `id_cronjob` = \'' . (int) $config . '\'');
+            $cronJob = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'cronjobs WHERE `id_cronjob` = \''.(int) $config.'\'');
 
             //if cronjob do not exsit anymore OR cronjob dis disabled => disable conf
-            if (!$cronJob || $cronJob[0]['active'] == 0) {
+            if (!$cronJob || 0 == $cronJob[0]['active']) {
                 Configuration::updateValue('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', 0, false, null, $this->context->shop->id);
             }
         }

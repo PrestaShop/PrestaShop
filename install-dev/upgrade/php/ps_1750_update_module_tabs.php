@@ -25,7 +25,7 @@
  */
 
 /**
- * File copied from ps_update_tabs.php and modified for only adding modules related tabs
+ * File copied from ps_update_tabs.php and modified for only adding modules related tabs.
  */
 function ps_1750_update_module_tabs()
 {
@@ -33,11 +33,11 @@ function ps_1750_update_module_tabs()
     $moduleTabsToBeAdded = array(
         'AdminModulesUpdates' => array(
             'translations' => 'en:Updates|fr:Mises à jour|es:Actualizaciones|de:Aktualisierung|it:Aggiornamenti',
-            'parent' => 'AdminModulesSf'
+            'parent' => 'AdminModulesSf',
         ),
         'AdminParentModulesCatalog' => array(
             'translations' => 'en:Module Catalog|fr:Catalogue de modules|es:Catálogo de módulos|de:Modulkatalog|it:Catalogo dei moduli',
-            'parent' => 'AdminParentModulesSf'
+            'parent' => 'AdminParentModulesSf',
         ),
     );
 
@@ -45,10 +45,9 @@ function ps_1750_update_module_tabs()
     foreach ($moduleTabsToBeAdded as $className => $tabDetails) {
         add_new_tab_17($className, $tabDetails['translations'], 0, false, $tabDetails['parent']);
         Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'tab` SET `active`= 1 WHERE `class_name` = "' . $className . '"'
+            'UPDATE `'._DB_PREFIX_.'tab` SET `active`= 1 WHERE `class_name` = "'.$className.'"'
         );
     }
-
 
     // STEP 2: Rename module tabs (Notifications as Alerts, Module selection as Module Catalog, Module Catalog as Module Selections)
     include_once 'clean_tabs_15.php';
@@ -127,7 +126,7 @@ function ps_1750_update_module_tabs()
     );
     foreach (array('AdminModulesCatalog', 'AdminAddonsCatalog') as $key => $className) {
         Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'tab` SET `id_parent`= ' . (int) $adminParentModuleCatalogTabId . ', position = '. $key . ' WHERE `class_name` = "' . $className . '"'
+            'UPDATE `'._DB_PREFIX_.'tab` SET `id_parent`= '.(int) $adminParentModuleCatalogTabId.', position = '.$key.' WHERE `class_name` = "'.$className.'"'
         );
     }
 }

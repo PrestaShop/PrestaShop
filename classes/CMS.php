@@ -75,7 +75,7 @@ class CMSCore extends ObjectModel
     /**
      * Adds current CMS as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
+     * @param bool $autoDate   Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the CMS has been successfully added
@@ -128,9 +128,9 @@ class CMSCore extends ObjectModel
     /**
      * Get links.
      *
-     * @param int $idLang Language ID
-     * @param null $selection
-     * @param bool $active
+     * @param int       $idLang    Language ID
+     * @param null      $selection
+     * @param bool      $active
      * @param Link|null $link
      *
      * @return array
@@ -142,12 +142,12 @@ class CMSCore extends ObjectModel
         }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.id_cms, cl.link_rewrite, cl.meta_title
-		FROM ' . _DB_PREFIX_ . 'cms c
-		LEFT JOIN ' . _DB_PREFIX_ . 'cms_lang cl ON (c.id_cms = cl.id_cms AND cl.id_lang = ' . (int) $idLang . ')
-		' . Shop::addSqlAssociation('cms', 'c') . '
+		FROM '._DB_PREFIX_.'cms c
+		LEFT JOIN '._DB_PREFIX_.'cms_lang cl ON (c.id_cms = cl.id_cms AND cl.id_lang = '.(int) $idLang.')
+		'.Shop::addSqlAssociation('cms', 'c').'
 		WHERE 1
-		' . (($selection !== null) ? ' AND c.id_cms IN (' . implode(',', array_map('intval', $selection)) . ')' : '') .
-        ($active ? ' AND c.`active` = 1 ' : '') .
+		'.((null !== $selection) ? ' AND c.id_cms IN ('.implode(',', array_map('intval', $selection)).')' : '').
+        ($active ? ' AND c.`active` = 1 ' : '').
         'GROUP BY c.id_cms
 		ORDER BY c.`position`');
 
@@ -177,11 +177,11 @@ class CMSCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.id_cms, l.meta_title
-		FROM  ' . _DB_PREFIX_ . 'cms c
-		JOIN ' . _DB_PREFIX_ . 'cms_lang l ON (c.id_cms = l.id_cms)
-		' . Shop::addSqlAssociation('cms', 'c') . '
-		' . (($idBlock) ? 'JOIN ' . _DB_PREFIX_ . 'block_cms b ON (c.id_cms = b.id_cms)' : '') . '
-		WHERE l.id_lang = ' . (int) $idLang . (($idBlock) ? ' AND b.id_block = ' . (int) $idBlock : '') . ($active ? ' AND c.`active` = 1 ' : '') . '
+		FROM  '._DB_PREFIX_.'cms c
+		JOIN '._DB_PREFIX_.'cms_lang l ON (c.id_cms = l.id_cms)
+		'.Shop::addSqlAssociation('cms', 'c').'
+		'.(($idBlock) ? 'JOIN '._DB_PREFIX_.'block_cms b ON (c.id_cms = b.id_cms)' : '').'
+		WHERE l.id_lang = '.(int) $idLang.(($idBlock) ? ' AND b.id_block = '.(int) $idBlock : '').($active ? ' AND c.`active` = 1 ' : '').'
 		GROUP BY c.id_cms
 		ORDER BY c.`position`');
     }
@@ -196,8 +196,8 @@ class CMSCore extends ObjectModel
     {
         if (!$res = Db::getInstance()->executeS('
 			SELECT cp.`id_cms`, cp.`position`, cp.`id_cms_category`
-			FROM `' . _DB_PREFIX_ . 'cms` cp
-			WHERE cp.`id_cms_category` = ' . (int) $this->id_cms_category . '
+			FROM `'._DB_PREFIX_.'cms` cp
+			WHERE cp.`id_cms_category` = '.(int) $this->id_cms_category.'
 			ORDER BY cp.`position` ASC'
         )) {
             return false;
@@ -216,18 +216,18 @@ class CMSCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         return Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'cms`
-			SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
+			UPDATE `'._DB_PREFIX_.'cms`
+			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
-			' . ($way
-                ? '> ' . (int) $movedCms['position'] . ' AND `position` <= ' . (int) $position
-                : '< ' . (int) $movedCms['position'] . ' AND `position` >= ' . (int) $position) . '
-			AND `id_cms_category`=' . (int) $movedCms['id_cms_category'])
+			'.($way
+                ? '> '.(int) $movedCms['position'].' AND `position` <= '.(int) $position
+                : '< '.(int) $movedCms['position'].' AND `position` >= '.(int) $position).'
+			AND `id_cms_category`='.(int) $movedCms['id_cms_category'])
         && Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'cms`
-			SET `position` = ' . (int) $position . '
-			WHERE `id_cms` = ' . (int) $movedCms['id_cms'] . '
-			AND `id_cms_category`=' . (int) $movedCms['id_cms_category']);
+			UPDATE `'._DB_PREFIX_.'cms`
+			SET `position` = '.(int) $position.'
+			WHERE `id_cms` = '.(int) $movedCms['id_cms'].'
+			AND `id_cms_category`='.(int) $movedCms['id_cms_category']);
     }
 
     /**
@@ -239,17 +239,17 @@ class CMSCore extends ObjectModel
     {
         $sql = '
 		SELECT `id_cms`
-		FROM `' . _DB_PREFIX_ . 'cms`
-		WHERE `id_cms_category` = ' . (int) $idCategory . '
+		FROM `'._DB_PREFIX_.'cms`
+		WHERE `id_cms_category` = '.(int) $idCategory.'
 		ORDER BY `position`';
 
         $result = Db::getInstance()->executeS($sql);
 
         for ($i = 0, $total = count($result); $i < $total; ++$i) {
-            $sql = 'UPDATE `' . _DB_PREFIX_ . 'cms`
-					SET `position` = ' . (int) $i . '
-					WHERE `id_cms_category` = ' . (int) $idCategory . '
-						AND `id_cms` = ' . (int) $result[$i]['id_cms'];
+            $sql = 'UPDATE `'._DB_PREFIX_.'cms`
+					SET `position` = '.(int) $i.'
+					WHERE `id_cms_category` = '.(int) $idCategory.'
+						AND `id_cms` = '.(int) $result[$i]['id_cms'];
             Db::getInstance()->execute($sql);
         }
 
@@ -265,8 +265,8 @@ class CMSCore extends ObjectModel
     {
         $sql = '
 		SELECT MAX(position) + 1
-		FROM `' . _DB_PREFIX_ . 'cms`
-		WHERE `id_cms_category` = ' . (int) $idCategory;
+		FROM `'._DB_PREFIX_.'cms`
+		WHERE `id_cms_category` = '.(int) $idCategory;
 
         return Db::getInstance()->getValue($sql);
     }
@@ -287,14 +287,14 @@ class CMSCore extends ObjectModel
 
         if ($idLang) {
             if ($idShop) {
-                $sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = ' . (int) $idLang . ' AND l.id_shop = ' . (int) $idShop);
+                $sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = '.(int) $idLang.' AND l.id_shop = '.(int) $idShop);
             } else {
-                $sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = ' . (int) $idLang);
+                $sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = '.(int) $idLang);
             }
         }
 
         if ($idShop) {
-            $sql->innerJoin('cms_shop', 'cs', 'c.id_cms = cs.id_cms AND cs.id_shop = ' . (int) $idShop);
+            $sql->innerJoin('cms_shop', 'cs', 'c.id_cms = cs.id_cms AND cs.id_shop = '.(int) $idShop);
         }
 
         if ($active) {
@@ -302,7 +302,7 @@ class CMSCore extends ObjectModel
         }
 
         if ($idCmsCategory) {
-            $sql->where('c.id_cms_category = ' . (int) $idCmsCategory);
+            $sql->where('c.id_cms_category = '.(int) $idCmsCategory);
         }
 
         $sql->orderBy('position');
@@ -318,16 +318,16 @@ class CMSCore extends ObjectModel
     public static function getUrlRewriteInformations($idCms)
     {
         $sql = 'SELECT l.`id_lang`, c.`link_rewrite`
-				FROM `' . _DB_PREFIX_ . 'cms_lang` AS c
-				LEFT JOIN  `' . _DB_PREFIX_ . 'lang` AS l ON c.`id_lang` = l.`id_lang`
-				WHERE c.`id_cms` = ' . (int) $idCms . '
+				FROM `'._DB_PREFIX_.'cms_lang` AS c
+				LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
+				WHERE c.`id_cms` = '.(int) $idCms.'
 				AND l.`active` = 1';
 
         return Db::getInstance()->executeS($sql);
     }
 
     /**
-     * @param int $idCms
+     * @param int      $idCms
      * @param int|null $idLang
      * @param int|null $idShop
      *
@@ -344,8 +344,8 @@ class CMSCore extends ObjectModel
 
         $sql = '
 			SELECT `content`
-			FROM `' . _DB_PREFIX_ . 'cms_lang`
-			WHERE `id_cms` = ' . (int) $idCms . ' AND `id_lang` = ' . (int) $idLang . ' AND `id_shop` = ' . (int) $idShop;
+			FROM `'._DB_PREFIX_.'cms_lang`
+			WHERE `id_cms` = '.(int) $idCms.' AND `id_lang` = '.(int) $idLang.' AND `id_shop` = '.(int) $idShop;
 
         return Db::getInstance()->getRow($sql);
     }

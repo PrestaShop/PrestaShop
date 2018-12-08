@@ -1,4 +1,5 @@
 <?php
+
 define('lang_Select', 'Sélectionner');
 define('lang_Erase', 'Effacer');
 define('lang_Open', 'Ouvrir');

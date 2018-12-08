@@ -39,9 +39,9 @@ class ServiceDefinitionException extends Exception
     public $serviceId;
 
     /**
-     * @param string $message
-     * @param string $serviceId
-     * @param int $code
+     * @param string    $message
+     * @param string    $serviceId
+     * @param int       $code
      * @param Exception $previous
      */
     public function __construct($message, $serviceId, $code = 0, Exception $previous = null)

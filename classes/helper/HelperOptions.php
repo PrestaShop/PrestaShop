@@ -61,7 +61,7 @@ class HelperOptionsCore extends Helper
             }
 
             if (!isset($category_data['image'])) {
-                $category_data['image'] = (!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT'] . _MODULE_DIR_ . $tab['module'] . '/' . $tab['class_name'] . '.gif') ? _MODULE_DIR_ . $tab['module'] . '/' : '../img/t/') . $tab['class_name'] . '.gif';
+                $category_data['image'] = (!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif';
             }
 
             if (!isset($category_data['fields'])) {
@@ -91,7 +91,7 @@ class HelperOptionsCore extends Helper
                     if (isset($field['visibility']) && $field['visibility'] > Shop::getContext()) {
                         $is_disabled = true;
                         $is_invisible = true;
-                    } elseif (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key)) {
+                    } elseif (Shop::CONTEXT_ALL != Shop::getContext() && !Configuration::isOverridenByCurrentContext($key)) {
                         $is_disabled = true;
                     }
                 }
@@ -100,26 +100,26 @@ class HelperOptionsCore extends Helper
 
                 $field['required'] = isset($field['required']) ? $field['required'] : $this->required;
 
-                if ($field['type'] == 'color') {
+                if ('color' == $field['type']) {
                     $this->context->controller->addJqueryPlugin('colorpicker');
                 }
 
-                if ($field['type'] == 'textarea' || $field['type'] == 'textareaLang') {
-                    if (isset($field['autoload_rte']) && $field['autoload_rte'] == true) {
+                if ('textarea' == $field['type'] || 'textareaLang' == $field['type']) {
+                    if (isset($field['autoload_rte']) && true == $field['autoload_rte']) {
                         $iso = $this->context->language->iso_code;
-                        $this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_ . '/js/tiny_mce/langs/' . $iso . '.js') ? $iso : 'en';
+                        $this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
                         $this->tpl_vars['path_css'] = _THEME_CSS_DIR_;
-                        $this->tpl_vars['ad'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_);
+                        $this->tpl_vars['ad'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
                         $this->tpl_vars['tinymce'] = true;
 
-                        $this->context->controller->addJS(_PS_JS_DIR_ . 'tiny_mce/tiny_mce.js');
-                        $this->context->controller->addJS(_PS_JS_DIR_ . 'admin/tinymce.inc.js');
+                        $this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
+                        $this->context->controller->addJS(_PS_JS_DIR_.'admin/tinymce.inc.js');
                     } else {
                         $this->context->controller->addJqueryPlugin('autosize');
                     }
                 }
 
-                if ($field['type'] == 'file') {
+                if ('file' == $field['type']) {
                     $uploader = new HelperUploader();
                     $uploader->setId(isset($field['id']) ? $field['id'] : null);
                     $uploader->setName($field['name']);
@@ -156,7 +156,7 @@ class HelperOptionsCore extends Helper
                         $uploader->setFiles(array(
                             0 => array(
                                 'type' => HelperUploader::TYPE_IMAGE,
-                                'image' => isset($field['thumb']) ? '<img src="' . $field['thumb'] . '" alt="' . $field['title'] . '" title="' . $field['title'] . '" />' : null,
+                                'image' => isset($field['thumb']) ? '<img src="'.$field['thumb'].'" alt="'.$field['title'].'" title="'.$field['title'].'" />' : null,
                             ),
                         ));
                     }
@@ -166,21 +166,21 @@ class HelperOptionsCore extends Helper
                 }
 
                 // Cast options values if specified
-                if ($field['type'] == 'select' && isset($field['cast'])) {
+                if ('select' == $field['type'] && isset($field['cast'])) {
                     foreach ($field['list'] as $option_key => $option) {
                         $field['list'][$option_key][$field['identifier']] = $field['cast']($option[$field['identifier']]);
                     }
                 }
 
                 // Fill values for all languages for all lang fields
-                if (substr($field['type'], -4) == 'Lang') {
+                if ('Lang' == substr($field['type'], -4)) {
                     $field['value'] = array();
                     foreach ($languages as $language) {
-                        if ($field['type'] == 'textLang') {
-                            $value = Tools::getValue($key . '_' . $language['id_lang'], Configuration::get($key, $language['id_lang']));
-                        } elseif ($field['type'] == 'textareaLang') {
+                        if ('textLang' == $field['type']) {
+                            $value = Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang']));
+                        } elseif ('textareaLang' == $field['type']) {
                             $value = Configuration::get($key, $language['id_lang']);
-                        } elseif ($field['type'] == 'selectLang') {
+                        } elseif ('selectLang' == $field['type']) {
                             $value = Configuration::get($key, $language['id_lang']);
                         }
                         if (isset($value)) {
@@ -188,33 +188,33 @@ class HelperOptionsCore extends Helper
                         } else {
                             $field['languages'][$language['id_lang']] = '';
                         }
-                        $field['value'][$language['id_lang']] = $this->getOptionValue($key . '_' . strtoupper($language['iso_code']), $field);
+                        $field['value'][$language['id_lang']] = $this->getOptionValue($key.'_'.strtoupper($language['iso_code']), $field);
                     }
                 }
 
                 // pre-assign vars to the tpl
                 // @todo move this
-                if ($field['type'] == 'maintenance_ip') {
+                if ('maintenance_ip' == $field['type']) {
                     $field['script_ip'] = '
                         <script type="text/javascript">
                             function addRemoteAddr()
                             {
                                 var length = $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').length;
                                 if (length > 0) {
-                                    if ($(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').indexOf(\'' . Tools::getRemoteAddr() . '\') < 0) {
-                                        $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\',' . Tools::getRemoteAddr() . '\');
+                                    if ($(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').indexOf(\''.Tools::getRemoteAddr().'\') < 0) {
+                                        $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\','.Tools::getRemoteAddr().'\');
                                     }
                                 } else {
-                                    $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\'' . Tools::getRemoteAddr() . '\');
+                                    $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
                                 }
                             }
                         </script>';
-                    $field['link_remove_ip'] = '<button type="button" class="btn btn-default" onclick="addRemoteAddr();"><i class="icon-plus"></i> ' . $this->l('Add my IP', 'Helper') . '</button>';
+                    $field['link_remove_ip'] = '<button type="button" class="btn btn-default" onclick="addRemoteAddr();"><i class="icon-plus"></i> '.$this->l('Add my IP', 'Helper').'</button>';
                 }
 
                 // Multishop default value
                 $field['multishop_default'] = false;
-                if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !$is_invisible) {
+                if (Shop::isFeatureActive() && Shop::CONTEXT_ALL != Shop::getContext() && !$is_invisible) {
                     $field['multishop_default'] = true;
                     $use_multishop = true;
                 }
@@ -262,14 +262,14 @@ class HelperOptionsCore extends Helper
         $i = 0;
         foreach ($field['list'] as $theme) {
             echo '<td class="center" style="width: 180px; padding:0px 20px 20px 0px;">';
-            echo '<input type="radio" name="' . $key . '" id="' . $key . '_' . $theme['name'] . '_on" style="vertical-align: text-bottom;" value="' . $theme['name'] . '"' . (_THEME_NAME_ == $theme['name'] ? 'checked="checked"' : '') . ' />';
-            echo '<label class="t" for="' . $key . '_' . $theme['name'] . '_on"> ' . Tools::strtolower($theme['name']) . '</label>';
+            echo '<input type="radio" name="'.$key.'" id="'.$key.'_'.$theme['name'].'_on" style="vertical-align: text-bottom;" value="'.$theme['name'].'"'.(_THEME_NAME_ == $theme['name'] ? 'checked="checked"' : '').' />';
+            echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on"> '.Tools::strtolower($theme['name']).'</label>';
             echo '<br />';
-            echo '<label class="t" for="' . $key . '_' . $theme['name'] . '_on">';
-            echo '<img src="' . $theme['preview'] . '" alt="' . Tools::strtolower($theme['name']) . '">';
+            echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on">';
+            echo '<img src="'.$theme['preview'].'" alt="'.Tools::strtolower($theme['name']).'">';
             echo '</label>';
             echo '</td>';
-            if (isset($field['max']) && ($i + 1) % $field['max'] == 0) {
+            if (isset($field['max']) && 0 == ($i + 1) % $field['max']) {
                 echo '</tr><tr>';
             }
             ++$i;
@@ -285,7 +285,7 @@ class HelperOptionsCore extends Helper
     {
         echo $this->context->currency->getSign('left');
         $this->displayOptionTypeText($key, $field, $value);
-        echo $this->context->currency->getSign('right') . ' ' . $this->l('(tax excl.)', 'Helper');
+        echo $this->context->currency->getSign('right').' '.$this->l('(tax excl.)', 'Helper');
     }
 
     /**

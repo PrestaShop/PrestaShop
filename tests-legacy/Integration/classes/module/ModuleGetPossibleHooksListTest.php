@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,10 +28,8 @@ namespace LegacyTests\Integration;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use LegacyTests\TestCase\IntegrationTestCase;
-
 use Module;
 use Cache;
-use PrestaShopAutoload;
 
 class ModuleGetPossibleHooksListTest extends IntegrationTestCase
 {

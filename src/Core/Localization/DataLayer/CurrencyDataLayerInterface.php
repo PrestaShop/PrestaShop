@@ -50,8 +50,8 @@ interface CurrencyDataLayerInterface
     /**
      * Write a currency data object into the data source.
      *
-     * @param string $currencyCode
-     *                             The currency code (ISO 4217)
+     * @param string       $currencyCode
+     *                                   The currency code (ISO 4217)
      * @param CurrencyData $currencyData
      *                                   The currency data to write
      *

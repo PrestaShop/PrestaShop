@@ -85,7 +85,7 @@ class ThemeTranslationsFactory extends TranslationsFactory
      */
     protected function removeLocaleFromDomain($locale, $domain)
     {
-        return str_replace('.' . $locale, '', $domain);
+        return str_replace('.'.$locale, '', $domain);
     }
 
     /**

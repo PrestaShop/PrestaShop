@@ -85,7 +85,7 @@ class PaymentOptionsFinderCore extends HookFinder
             return array_map(function (PaymentOption $option) use (&$id) {
                 ++$id;
                 $formattedOption = $option->toArray();
-                $formattedOption['id'] = 'payment-option-' . $id;
+                $formattedOption['id'] = 'payment-option-'.$id;
 
                 if ($formattedOption['form']) {
                     $decorator = new PaymentOptionFormDecorator();

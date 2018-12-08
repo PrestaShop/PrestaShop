@@ -47,7 +47,7 @@ final class CarrierByReferenceChoiceProvider implements FormChoiceProviderInterf
 
     /**
      * @param CarrierDataProvider $carrierDataProvider
-     * @param int $langId
+     * @param int                 $langId
      */
     public function __construct(CarrierDataProvider $carrierDataProvider, $langId)
     {

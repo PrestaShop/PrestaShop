@@ -38,10 +38,10 @@ class LocalizationPackCore
     /**
      * Loads localization pack.
      *
-     * @param SimpleXMLElement|string $pack Localization pack as SimpleXMLElement or plain XML string
-     * @param array $selection Content to import selection
-     * @param bool $install_mode Whether mode is installation or not
-     * @param string|null $iso_localization_pack Country Alpha-2 ISO code
+     * @param SimpleXMLElement|string $pack                  Localization pack as SimpleXMLElement or plain XML string
+     * @param array                   $selection             Content to import selection
+     * @param bool                    $install_mode          Whether mode is installation or not
+     * @param string|null             $iso_localization_pack Country Alpha-2 ISO code
      *
      * @return bool
      */
@@ -117,7 +117,7 @@ class LocalizationPackCore
         } else {
             foreach ($selection as $selected) {
                 // No need to specify the install_mode because if the selection mode is used, then it's not the install
-                $res &= Validate::isLocalizationPackSelection($selected) ? $this->{'_install' . $selected}($xml) : false;
+                $res &= Validate::isLocalizationPackSelection($selected) ? $this->{'_install'.$selected}($xml) : false;
             }
         }
 
@@ -126,7 +126,7 @@ class LocalizationPackCore
             foreach ($xml->languages->language as $lang) {
                 //use this to get correct language code ex : qc become fr
                 $languageCode = explode('-', Language::getLanguageCodeByIso($lang['iso_code']));
-                $isoCode = $languageCode[0] . '-' . strtoupper($iso_localization_pack);
+                $isoCode = $languageCode[0].'-'.strtoupper($iso_localization_pack);
 
                 $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
                 $cldrUpdate->fetchLocale($isoCode);
@@ -231,8 +231,8 @@ class LocalizationPackCore
                 $tax->rate = (float) $attributes['rate'];
                 $tax->active = 1;
 
-                if (($error = $tax->validateFields(false, true)) !== true || ($error = $tax->validateFieldsLang(false, true)) !== true) {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid tax properties.', array(), 'Admin.International.Notification') . ' ' . $error;
+                if (true !== ($error = $tax->validateFields(false, true)) || true !== ($error = $tax->validateFieldsLang(false, true))) {
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid tax properties.', array(), 'Admin.International.Notification').' '.$error;
 
                     return false;
                 }
@@ -320,7 +320,7 @@ class LocalizationPackCore
 
     /**
      * @param SimpleXMLElement $xml
-     * @param bool $install_mode
+     * @param bool             $install_mode
      *
      * @return bool
      *
@@ -366,7 +366,7 @@ class LocalizationPackCore
                 $this->_errors[] = $error;
             }
 
-            if (!count($this->_errors) && $install_mode && isset($attributes['iso_code']) && count($xml->currencies->currency) == 1) {
+            if (!count($this->_errors) && $install_mode && isset($attributes['iso_code']) && 1 == count($xml->currencies->currency)) {
                 $this->iso_currency = $attributes['iso_code'];
             }
         }
@@ -376,7 +376,7 @@ class LocalizationPackCore
 
     /**
      * @param SimpleXMLElement $xml
-     * @param bool $install_mode
+     * @param bool             $install_mode
      *
      * @return bool
      */
@@ -393,14 +393,14 @@ class LocalizationPackCore
                 }
 
                 $errors = Language::downloadAndInstallLanguagePack($attributes['iso_code'], $attributes['version'], $attributes);
-                if ($errors !== true && is_array($errors)) {
+                if (true !== $errors && is_array($errors)) {
                     $this->_errors = array_merge($this->_errors, $errors);
                 }
             }
         }
 
         // change the default language if there is only one language in the localization pack
-        if (!count($this->_errors) && $install_mode && isset($attributes['iso_code']) && count($xml->languages->language) == 1) {
+        if (!count($this->_errors) && $install_mode && isset($attributes['iso_code']) && 1 == count($xml->languages->language)) {
             $this->iso_code_lang = $attributes['iso_code'];
         }
 
@@ -452,7 +452,7 @@ class LocalizationPackCore
                 $attributes = $data->attributes();
                 $name = (string) $attributes['name'];
                 if (isset($name) && $module = Module::getInstanceByName($name)) {
-                    $install = ($attributes['install'] == 1) ? true : false;
+                    $install = (1 == $attributes['install']) ? true : false;
                     $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                     $moduleManager = $moduleManagerBuilder->build();
 
@@ -495,7 +495,7 @@ class LocalizationPackCore
                 $attributes = $data->attributes();
                 $name = (string) $attributes['name'];
 
-                if (isset($name) && isset($attributes['value']) && Configuration::get($name) !== false) {
+                if (isset($name) && isset($attributes['value']) && false !== Configuration::get($name)) {
                     if (!Configuration::updateValue($name, (string) $attributes['value'])) {
                         $this->_errors[] = Context::getContext()->getTranslator()->trans(
                             'An error occurred during the configuration setup: %1$s',

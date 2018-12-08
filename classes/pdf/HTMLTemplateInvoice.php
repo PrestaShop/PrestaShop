@@ -116,7 +116,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $total_width = 0;
         $free_columns_count = 0;
         foreach ($layout as $data) {
-            if ($data['width'] === 0) {
+            if (0 === $data['width']) {
                 ++$free_columns_count;
             }
 
@@ -126,7 +126,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $delta = 100 - $total_width;
 
         foreach ($layout as $row => $data) {
-            if ($data['width'] === 0) {
+            if (0 === $data['width']) {
                 $layout[$row]['width'] = $delta / $free_columns_count;
             }
         }
@@ -170,7 +170,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                 $order_detail['unit_price_tax_excl_before_specific_price'] = $order_detail['unit_price_tax_excl_including_ecotax'] + $order_detail['reduction_amount_tax_excl'];
             } elseif ($order_detail['reduction_percent'] > 0) {
                 $has_discount = true;
-                if ($order_detail['reduction_percent'] == 100) {
+                if (100 == $order_detail['reduction_percent']) {
                     $order_detail['unit_price_tax_excl_before_specific_price'] = 0;
                 } else {
                     $order_detail['unit_price_tax_excl_before_specific_price'] = (100 * $order_detail['unit_price_tax_excl_including_ecotax']) / (100 - $order_detail['reduction_percent']);
@@ -201,19 +201,19 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         if (Configuration::get('PS_PDF_IMG_INVOICE')) {
             foreach ($order_details as &$order_detail) {
-                if ($order_detail['image'] != null) {
-                    $name = 'product_mini_' . (int) $order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int) $order_detail['product_attribute_id'] : '') . '.jpg';
-                    $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
+                if (null != $order_detail['image']) {
+                    $name = 'product_mini_'.(int) $order_detail['product_id'].(isset($order_detail['product_attribute_id']) ? '_'.(int) $order_detail['product_attribute_id'] : '').'.jpg';
+                    $path = _PS_PROD_IMG_DIR_.$order_detail['image']->getExistingImgPath().'.jpg';
 
                     $order_detail['image_tag'] = preg_replace(
-                        '/\.*' . preg_quote(__PS_BASE_URI__, '/') . '/',
-                        _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
+                        '/\.*'.preg_quote(__PS_BASE_URI__, '/').'/',
+                        _PS_ROOT_DIR_.DIRECTORY_SEPARATOR,
                         ImageManager::thumbnail($path, $name, 45, 'jpg', false),
                         1
                     );
 
-                    if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
-                        $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
+                    if (file_exists(_PS_TMP_IMG_DIR_.$name)) {
+                        $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
                     } else {
                         $order_detail['image_size'] = false;
                     }
@@ -238,7 +238,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                  * Don't display cart rules that are only about free shipping and don't create
                  * a discount on products.
                  */
-                if ($cart_rules[$key]['value'] == 0) {
+                if (0 == $cart_rules[$key]['value']) {
                     unset($cart_rules[$key]);
                 }
             }
@@ -474,7 +474,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $file = Configuration::get('PS_INVOICE_MODEL');
 
         // try to fetch the iso template
-        $template = $this->getTemplate($file . '.' . $iso_country);
+        $template = $this->getTemplate($file.'.'.$iso_country);
 
         // else use the default one
         if (!$template) {
@@ -514,6 +514,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop),
             $this->order_invoice->number,
             date('Y', strtotime($this->order_invoice->date_add))
-        ) . '.pdf';
+        ).'.pdf';
     }
 }

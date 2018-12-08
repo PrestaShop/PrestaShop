@@ -145,7 +145,7 @@ class AdminModuleDataProvider implements ModuleInterface
     public function clearCatalogCache()
     {
         if ($this->cacheProvider) {
-            $this->cacheProvider->delete($this->languageISO . self::_CACHEKEY_MODULES_);
+            $this->cacheProvider->delete($this->languageISO.self::_CACHEKEY_MODULES_);
         }
         $this->catalog_modules = array();
     }
@@ -180,7 +180,7 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     public function getCatalogModules(array $filters = array())
     {
-        if (count($this->catalog_modules) === 0 && !$this->failed) {
+        if (0 === count($this->catalog_modules) && !$this->failed) {
             $this->loadCatalogData();
         }
 
@@ -202,8 +202,8 @@ class AdminModuleDataProvider implements ModuleInterface
     /**
      * Check the permissions of the current context (CLI or employee) for a module.
      *
-     * @param array $actions Actions to check
-     * @param string $name The module name
+     * @param array  $actions Actions to check
+     * @param string $name    The module name
      *
      * @return array of allowed actions
      */
@@ -223,7 +223,7 @@ class AdminModuleDataProvider implements ModuleInterface
      * Check the permissions of the current context (CLI or employee) for a specified action.
      *
      * @param string $action The action called in the module
-     * @param string $name (Optionnal for 'install') The module name to check
+     * @param string $name   (Optionnal for 'install') The module name to check
      *
      * @return bool
      */
@@ -246,7 +246,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
     /**
      * @param AddonsCollection $addons
-     * @param null $specific_action
+     * @param null             $specific_action
      *
      * @return array
      */
@@ -331,7 +331,7 @@ class AdminModuleDataProvider implements ModuleInterface
             $addon->attributes->set('urls', $urls);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
                 $addon->attributes->set('url_active', $specific_action);
-            } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
+            } elseif ('buy' === $url_active || array_key_exists($url_active, $urls)) {
                 $addon->attributes->set('url_active', $url_active);
             } else {
                 $addon->attributes->set('url_active', key($urls));
@@ -383,9 +383,9 @@ class AdminModuleDataProvider implements ModuleInterface
                         // Instead of looping on the whole module list, we use $module_ids which can already be reduced
                         // thanks to the previous array_intersect(...)
                         foreach ($modules as $key => $module) {
-                            if (strpos($module->displayName, $keyword) !== false
-                                || strpos($module->name, $keyword) !== false
-                                || strpos($module->description, $keyword) !== false) {
+                            if (false !== strpos($module->displayName, $keyword)
+                                || false !== strpos($module->name, $keyword)
+                                || false !== strpos($module->description, $keyword)) {
                                 $search_result[] = $key;
                             }
                         }
@@ -411,8 +411,8 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     protected function loadCatalogData()
     {
-        if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO . self::_CACHEKEY_MODULES_)) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
+        if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO.self::_CACHEKEY_MODULES_)) {
+            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO.self::_CACHEKEY_MODULES_);
         }
 
         if (!$this->catalog_modules) {
@@ -465,7 +465,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 if (!empty($listAddons)) {
                     $this->catalog_modules = $listAddons;
                     if ($this->cacheProvider) {
-                        $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                        $this->cacheProvider->save($this->languageISO.self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
                     }
                 } else {
                     $this->fallbackOnCatalogCache();
@@ -487,7 +487,7 @@ class AdminModuleDataProvider implements ModuleInterface
     {
         // Fallback on data from cache if exists
         if ($this->cacheProvider) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
+            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO.self::_CACHEKEY_MODULES_);
         }
 
         if (!$this->catalog_modules) {

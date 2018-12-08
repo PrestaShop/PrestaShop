@@ -51,18 +51,18 @@ class ThemeRepository implements AddonRepositoryInterface
 
     public function getInstanceByName($name)
     {
-        $dir = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $name;
+        $dir = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$name;
 
-        $confDir = $this->appConfiguration->get('_PS_CONFIG_DIR_') . 'themes/' . $name;
-        $jsonConf = $confDir . '/theme.json';
+        $confDir = $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name;
+        $jsonConf = $confDir.'/theme.json';
         if ($this->shop) {
-            $jsonConf = $confDir . '/shop' . $this->shop->id . '.json';
+            $jsonConf = $confDir.'/shop'.$this->shop->id.'.json';
         }
 
         if ($this->filesystem->exists($jsonConf)) {
             $data = $this->getConfigFromFile($jsonConf);
         } else {
-            $data = $this->getConfigFromFile($dir . '/config/theme.yml');
+            $data = $this->getConfigFromFile($dir.'/config/theme.yml');
 
             // Write parsed yml data into json conf (faster parsing next time)
             $this->filesystem->dumpFile($jsonConf, json_encode($data), 0777);
@@ -124,7 +124,7 @@ class ThemeRepository implements AddonRepositoryInterface
     private function getThemesOnDisk()
     {
         $suffix = 'config/theme.yml';
-        $themeDirectories = glob($this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . '*/' . $suffix, GLOB_NOSORT);
+        $themeDirectories = glob($this->appConfiguration->get('_PS_ALL_THEMES_DIR_').'*/'.$suffix, GLOB_NOSORT);
 
         $themes = array();
         foreach ($themeDirectories as $directory) {

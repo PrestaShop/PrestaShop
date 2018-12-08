@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace LegacyTests\Integration\Core\Module;
 
@@ -49,7 +48,7 @@ class HookRepositoryTest extends IntegrationTestCase
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
         $this->hookRepository = new HookRepository(
-            new HookInformationProvider,
+            new HookInformationProvider(),
             Context::getContext()->shop,
             Db::getInstance(),
             _DB_PREFIX_
@@ -66,11 +65,11 @@ class HookRepositoryTest extends IntegrationTestCase
     {
         $modules = [
             'ps_emailsubscription',
-            'ps_featuredproducts'
+            'ps_featuredproducts',
         ];
 
         $this->hookRepository->persistHooksConfiguration([
-            'displayTestHookName' => $modules
+            'displayTestHookName' => $modules,
         ]);
 
         $this->assertEquals(
@@ -83,7 +82,7 @@ class HookRepositoryTest extends IntegrationTestCase
     {
         $this->hookRepository->persistHooksConfiguration([
             'displayTestHookName' => ['ps_emailsubscription', 'ps_featuredproducts'],
-            'notADisplayTestHookName' => ['ps_languageselector', 'ps_currencyselector']
+            'notADisplayTestHookName' => ['ps_languageselector', 'ps_currencyselector'],
         ]);
 
         $actual = $this->hookRepository->getDisplayHooksWithModules();
@@ -104,17 +103,17 @@ class HookRepositoryTest extends IntegrationTestCase
             'displayTestHookNameWithExceptions' => [
                 [
                     'ps_emailsubscription' => [
-                        'except_pages' => ['category', 'product']
-                    ]
-                ]
-            ]
+                        'except_pages' => ['category', 'product'],
+                    ],
+                ],
+            ],
         ]);
 
         $this->assertEquals(
             [
                 'ps_emailsubscription' => [
-                    'except_pages' => ['category', 'product']
-                ]
+                    'except_pages' => ['category', 'product'],
+                ],
             ],
             $this->hookRepository->getHooksWithModules()['displayTestHookNameWithExceptions']
         );

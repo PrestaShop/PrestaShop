@@ -89,7 +89,7 @@ class Context implements MultistoreContextCheckerInterface
      */
     public function isShopContext()
     {
-        return Shop::getContext() === Shop::CONTEXT_SHOP;
+        return Shop::CONTEXT_SHOP === Shop::getContext();
     }
 
     /**
@@ -181,7 +181,7 @@ class Context implements MultistoreContextCheckerInterface
      */
     public function isAllShopContext()
     {
-        return Shop::getContext() === Shop::CONTEXT_ALL;
+        return Shop::CONTEXT_ALL === Shop::getContext();
     }
 
     /**
@@ -189,6 +189,6 @@ class Context implements MultistoreContextCheckerInterface
      */
     public function isGroupShopContext()
     {
-        return Shop::getContext() === Shop::CONTEXT_GROUP;
+        return Shop::CONTEXT_GROUP === Shop::getContext();
     }
 }

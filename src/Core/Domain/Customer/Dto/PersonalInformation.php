@@ -102,20 +102,20 @@ class PersonalInformation
     private $isActive;
 
     /**
-     * @param string $firstName
-     * @param string $lastName
-     * @param string $email
-     * @param bool $isGuest
-     * @param string $socialTitle
-     * @param string $birthday
-     * @param string $registrationDate
-     * @param string $lastUpdateDate
-     * @param string $lastVisitDate
-     * @param string $rankBySales
-     * @param string $shopName
-     * @param string $languageName
+     * @param string        $firstName
+     * @param string        $lastName
+     * @param string        $email
+     * @param bool          $isGuest
+     * @param string        $socialTitle
+     * @param string        $birthday
+     * @param string        $registrationDate
+     * @param string        $lastUpdateDate
+     * @param string        $lastVisitDate
+     * @param string        $rankBySales
+     * @param string        $shopName
+     * @param string        $languageName
      * @param Subscriptions $subscriptions
-     * @param bool $isActive
+     * @param bool          $isActive
      */
     public function __construct(
         $firstName,

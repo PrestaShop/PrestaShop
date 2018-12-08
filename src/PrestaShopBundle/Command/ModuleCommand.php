@@ -81,7 +81,7 @@ class ModuleCommand extends ContainerAwareCommand
         $this->translator = $this->getContainer()->get('translator');
         $this->input = $input;
         $this->output = $output;
-        require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
+        require $this->getContainer()->get('kernel')->getRootDir().'/../config/config.inc.php';
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -103,7 +103,7 @@ class ModuleCommand extends ContainerAwareCommand
             return;
         }
 
-        if ($action === 'configure') {
+        if ('configure' === $action) {
             $this->executeConfigureModuleAction($moduleName, $file);
         } else {
             $this->executeGenericModuleAction($action, $moduleName);
@@ -122,7 +122,7 @@ class ModuleCommand extends ContainerAwareCommand
         $errors = $moduleSelfConfigurator->validate();
         if (!empty($errors)) {
             // Display errors as a list
-            $errors = array_map(function ($val) { return '- ' . $val; }, $errors);
+            $errors = array_map(function ($val) { return '- '.$val; }, $errors);
             // And add a default message at the top
             array_unshift($errors, $this->translator->trans(
                 'Validation of configuration details failed:',

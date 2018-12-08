@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,11 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
 
 class Ps_Emailsubscription extends Module
 {
@@ -53,8 +51,8 @@ class Ps_Emailsubscription extends Module
             'name' => array('newsletter_conf', 'newsletter_voucher'),
             'ext' => array(
                 0 => 'html',
-                1 => 'txt'
-            )
+                1 => 'txt',
+            ),
         );
     }
 
@@ -63,6 +61,7 @@ class Ps_Emailsubscription extends Module
         if (!parent::install() || !Configuration::updateValue('PS_NEWSLETTER_RAND', rand().rand()) || !$this->registerHook(array('displayFooterBefore', 'actionCustomerAccountAdd'))) {
             return false;
         }
+
         return true;
     }
 }

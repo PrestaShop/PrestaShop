@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function update_modules_multishop()
 {
-    $block_cms_installed = (bool)Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'module` WHERE name = "blockcms"');
+    $block_cms_installed = (bool) Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'module` WHERE name = "blockcms"');
     if ($block_cms_installed) {
         Db::getInstance()->execute('CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'blocklink_shop` (
 			`id_blocklink` int(2) NOT NULL AUTO_INCREMENT,
@@ -45,7 +44,7 @@ function update_modules_multishop()
 			(SELECT id_cms_block, 1 FROM '._DB_PREFIX_.'cms_block)');
     }
 
-    $block_link_installed = (bool)Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'module` WHERE name = "blocklink"');
+    $block_link_installed = (bool) Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'module` WHERE name = "blocklink"');
     if ($block_link_installed) {
         Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'blocklink_shop` (
@@ -56,5 +55,6 @@ function update_modules_multishop()
         Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'blocklink_shop` (id_blocklink, id_shop)
 			(SELECT id_blocklink, 1 FROM `'._DB_PREFIX_.'blocklink`)');
     }
+
     return true;
 }

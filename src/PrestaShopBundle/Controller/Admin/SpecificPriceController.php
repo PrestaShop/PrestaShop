@@ -184,8 +184,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Delete a specific price.
      *
-     * @param int $idSpecificPrice The specific price ID
-     * @param Request $request The request
+     * @param int     $idSpecificPrice The specific price ID
+     * @param Request $request         The request
      *
      * @return string
      */
@@ -196,7 +196,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $res = $adminProductWrapper->deleteSpecificPrice((int) $idSpecificPrice);
 
-        if ($res['status'] == 'error') {
+        if ('error' == $res['status']) {
             $response->setStatusCode(Response::HTTP_BAD_REQUEST);
         }
 
@@ -206,14 +206,14 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param int $id
+     * @param int            $id
      * @param \SpecificPrice $price
      *
      * @return array
      */
     private function formatSpecificPriceToPrefillForm($id, $price)
     {
-        if ($price->reduction_type === 'percentage') {
+        if ('percentage' === $price->reduction_type) {
             $reduction = $price->reduction * 100;
         } else {
             $reduction = $price->reduction;
@@ -229,13 +229,13 @@ class SpecificPriceController extends FrameworkBundleAdminController
             'sp_from' => self::formatForDatePicker($price->from),
             'sp_to' => self::formatForDatePicker($price->to),
             'sp_from_quantity' => $price->from_quantity,
-            'sp_price' => ($price->price !== '-1.000000') ? $price->price : '',
-            'leave_bprice' => ($price->price === '-1.000000'),
+            'sp_price' => ('-1.000000' !== $price->price) ? $price->price : '',
+            'leave_bprice' => ('-1.000000' === $price->price),
             'sp_reduction' => $reduction,
             'sp_reduction_type' => $price->reduction_type,
             'sp_reduction_tax' => $price->reduction_tax,
         ];
-        if ($price->id_customer !== '0') {
+        if ('0' !== $price->id_customer) {
             $formattedFormData['sp_id_customer'] = ['data' => [$price->id_customer]];
         }
         $cleanedFormData = array_map(function ($item) {

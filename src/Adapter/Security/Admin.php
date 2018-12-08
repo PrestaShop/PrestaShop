@@ -87,7 +87,7 @@ class Admin
         }
 
         // in case of exception handler sub request, avoid infinite redirection
-        if ($event->getRequestType() === HttpKernelInterface::SUB_REQUEST
+        if (HttpKernelInterface::SUB_REQUEST === $event->getRequestType()
             && isset($event->getRequest()->attributes['exception'])
         ) {
             return true;
@@ -104,7 +104,7 @@ class Admin
         }
 
         //redirect to admin home page
-        header('Location: ' . $this->context->getAdminLink('', false));
+        header('Location: '.$this->context->getAdminLink('', false));
         exit();
     }
 }

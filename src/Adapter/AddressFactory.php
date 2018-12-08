@@ -38,7 +38,7 @@ class AddressFactory
      * default shop configuration.
      *
      * @param int|null $id_address
-     * @param bool $with_geoloc
+     * @param bool     $with_geoloc
      *
      * @return Address
      */

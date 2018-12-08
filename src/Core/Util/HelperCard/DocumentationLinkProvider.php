@@ -43,7 +43,7 @@ final class DocumentationLinkProvider implements DocumentationLinkProviderInterf
 
     /**
      * @param string $contextLangIsoCode
-     * @param array $documentationLinks
+     * @param array  $documentationLinks
      */
     public function __construct(
         $contextLangIsoCode,

@@ -51,13 +51,13 @@ class ModuleRepository
 
     /**
      * @param Connection $connection
-     * @param string $databasePrefix
+     * @param string     $databasePrefix
      */
     public function __construct(Connection $connection, $databasePrefix)
     {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;
-        $this->table = $this->databasePrefix . 'module';
+        $this->table = $this->databasePrefix.'module';
     }
 
     /**
@@ -72,7 +72,7 @@ class ModuleRepository
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mc.id_country')
-            ->from($this->table . '_country', 'mc')
+            ->from($this->table.'_country', 'mc')
             ->where('mc.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mc.id_shop = :id_shop')
@@ -94,7 +94,7 @@ class ModuleRepository
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mc.id_currency')
-            ->from($this->table . '_currency', 'mc')
+            ->from($this->table.'_currency', 'mc')
             ->where('mc.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mc.id_shop = :id_shop')
@@ -116,7 +116,7 @@ class ModuleRepository
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mg.id_group')
-            ->from($this->table . '_group', 'mg')
+            ->from($this->table.'_group', 'mg')
             ->where('mg.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mg.id_shop = :id_shop')
@@ -138,7 +138,7 @@ class ModuleRepository
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mc.id_reference')
-            ->from($this->table . '_carrier', 'mc')
+            ->from($this->table.'_carrier', 'mc')
             ->where('mc.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mc.id_shop = :id_shop')

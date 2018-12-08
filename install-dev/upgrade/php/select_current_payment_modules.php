@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Select all current payment modules for the carrier restriction
+ * Select all current payment modules for the carrier restriction.
  */
 function select_current_payment_modules()
 {
@@ -53,9 +53,9 @@ function select_current_payment_modules()
                 Db::getInstance()->insert(
                     'module_carrier',
                     array(
-                        'id_reference' => (int)$carrier['id_reference'],
-                        'id_module' => (int)$module['id_module'],
-                        'id_shop' => (int)$shop['id_shop']
+                        'id_reference' => (int) $carrier['id_reference'],
+                        'id_module' => (int) $module['id_module'],
+                        'id_shop' => (int) $shop['id_shop'],
                     ),
                     false,
                     false,

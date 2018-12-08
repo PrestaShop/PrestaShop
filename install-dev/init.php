@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,15 +33,15 @@ require_once 'install_version.php';
 
 // setting the memory limit to 128M only if current is lower
 $memory_limit = ini_get('memory_limit');
-if (substr($memory_limit, -1) != 'G'
-    && ((substr($memory_limit, -1) == 'M' && substr($memory_limit, 0, -1) < 128)
+if ('G' != substr($memory_limit, -1)
+    && (('M' == substr($memory_limit, -1) && substr($memory_limit, 0, -1) < 128)
         || is_numeric($memory_limit) && (intval($memory_limit) < 131072) && $memory_limit > 0)
 ) {
     @ini_set('memory_limit', '128M');
 }
 
 // redefine REQUEST_URI if empty (on some webservers...)
-if (!isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == '') {
+if (!isset($_SERVER['REQUEST_URI']) || '' == $_SERVER['REQUEST_URI']) {
     if (!isset($_SERVER['SCRIPT_NAME']) && isset($_SERVER['SCRIPT_FILENAME'])) {
         $_SERVER['SCRIPT_NAME'] = $_SERVER['SCRIPT_FILENAME'];
     } else {
@@ -88,7 +88,7 @@ if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
 
 if (!defined('_THEME_NAME_')) {
     // @see app/config.yml _PS_THEME_NAME default value is "classic".
-    if (getenv('PS_THEME_NAME') !== false) {
+    if (false !== getenv('PS_THEME_NAME')) {
         define('_THEME_NAME_', getenv('PS_THEME_NAME'));
     } else {
         /**

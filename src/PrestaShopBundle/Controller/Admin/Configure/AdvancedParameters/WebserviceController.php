@@ -48,7 +48,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param WebserviceKeyFilters $filters - filters for webservice list
-     * @param Request $request
+     * @param Request              $request
      *
      * @return Response
      */

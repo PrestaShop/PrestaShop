@@ -56,7 +56,7 @@ class Localize
      */
     public static function getBrowserLocales()
     {
-        if (self::$browserLocales !== null) {
+        if (null !== self::$browserLocales) {
             return self::$browserLocales;
         }
 
@@ -89,7 +89,7 @@ class Localize
 
     public static function getEnvironmentLocale()
     {
-        if (self::$environmentLocale !== null) {
+        if (null !== self::$environmentLocale) {
             return self::$environmentLocale;
         }
 
@@ -98,7 +98,7 @@ class Localize
 
         $value = setlocale(LC_ALL, 0);
 
-        if ($value != 'C' && $value != 'POSIX' && preg_match("/{$regex}/", $value, $matches)) {
+        if ('C' != $value && 'POSIX' != $value && preg_match("/{$regex}/", $value, $matches)) {
             $result = (array) $matches['locale'];
 
             // TODO: Add region handle
@@ -168,25 +168,25 @@ class Localize
             $locale = $locale->toString();
         }
 
-        if ($locale === 'browser') {
+        if ('browser' === $locale) {
             $locale = self::getBrowserLocales();
         }
 
-        if ($locale === 'environment') {
+        if ('environment' === $locale) {
             $locale = self::getEnvironmentLocale();
         }
 
-        if (($locale === 'auto') || ($locale === null)) {
+        if (('auto' === $locale) || (null === $locale)) {
             $locale = self::getBrowserLocales();
             $locale += self::getEnvironmentLocale();
         }
 
-        if (is_array($locale) === true) {
+        if (true === is_array($locale)) {
             reset($locale);
             $locale = current($locale);
         }
 
-        if ($locale === null || trim($locale) == '') {
+        if (null === $locale || '' == trim($locale)) {
             $locale = self::DEFAULT_LOCALE;
         }
 
@@ -208,7 +208,7 @@ class Localize
 
         $locale = explode('_', strtoupper($locale));
 
-        if (isset($locale[1]) === true) {
+        if (true === isset($locale[1])) {
             return $locale[1];
         }
 
@@ -234,14 +234,14 @@ class Localize
      */
     private static function canonicalize($locale)
     {
-        if (empty($locale) || $locale == '') {
+        if (empty($locale) || '' == $locale) {
             return null;
         }
 
         $regex = '(?P<language>[a-z]{2,3})(?:[_-](?P<script>[a-z]{4}))?(?:[_-](?P<territory>[a-z]{2}))?(?:[_-](?P<variant>[a-z]{5,}))?';
 
         if (!preg_match("/^{$regex}$/i", $locale, $matches)) {
-            throw new \InvalidArgumentException('Locale "' . $locale . '" could not be parsed');
+            throw new \InvalidArgumentException('Locale "'.$locale.'" could not be parsed');
         }
 
         $tags = array_filter(array_intersect_key($matches, static::$filters));

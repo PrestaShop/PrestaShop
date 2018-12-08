@@ -76,7 +76,7 @@ class FileUploaderCore
 
         $size = $this->file->getSize();
 
-        if ($size == 0) {
+        if (0 == $size) {
             return array('error' => Context::getContext()->getTranslator()->trans('Source file does not exist or is empty.', array(), 'Admin.Notifications.Error'));
         }
         if ($size > $this->sizeLimit) {

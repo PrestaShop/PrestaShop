@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,19 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Install\Upgrade;
 
-$parametersFilepath = __DIR__  . '/parameters.php';
+$parametersFilepath = __DIR__.'/parameters.php';
 if (!file_exists($parametersFilepath)) {
     // let's check first if there's some old config files which could be migrated
-    if (Upgrade::migrateSettingsFile() === false) {
+    if (false === Upgrade::migrateSettingsFile()) {
         // nothing to migrate ? return
         return;
     }
 }
 
-$parameters = require($parametersFilepath);
+$parameters = require $parametersFilepath;
 
 if (!array_key_exists('parameters', $parameters)) {
     throw new \Exception('Missing "parameters" key in "parameters.php" configuration file');
@@ -45,16 +44,16 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
     $input = new \Symfony\Component\Console\Input\ArgvInput();
     $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');
 
-    if ($env === 'test') {
+    if ('test' === $env) {
         define('_PS_IN_TEST_', 1);
     }
 }
 
 foreach ($parameters['parameters'] as $key => $value) {
-    if (defined('_PS_IN_TEST_') && $key === 'database_name') {
+    if (defined('_PS_IN_TEST_') && 'database_name' === $key) {
         $value = 'test_'.$value;
     }
     $container->setParameter($key, $value);
 }
 
-$container->setParameter('cache.driver', extension_loaded('apc') ? 'apc': 'array');
+$container->setParameter('cache.driver', extension_loaded('apc') ? 'apc' : 'array');

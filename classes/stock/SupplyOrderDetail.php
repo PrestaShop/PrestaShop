@@ -228,7 +228,7 @@ class SupplyOrderDetailCore extends ObjectModel
         $this->price_te = Tools::ps_round((float) $this->unit_price_te * (int) $this->quantity_expected, 6);
 
         // calculates entry discount value
-        if ($this->discount_rate != null && (is_float($this->discount_rate) || is_numeric($this->discount_rate)) && $this->discount_rate > 0) {
+        if (null != $this->discount_rate && (is_float($this->discount_rate) || is_numeric($this->discount_rate)) && $this->discount_rate > 0) {
             $this->discount_value_te = Tools::ps_round((float) $this->price_te * ($this->discount_rate / 100), 6);
         }
 
@@ -252,7 +252,7 @@ class SupplyOrderDetailCore extends ObjectModel
      */
     public function applyGlobalDiscount($discount_rate)
     {
-        if ($discount_rate != null && is_numeric($discount_rate) && (float) $discount_rate > 0) {
+        if (null != $discount_rate && is_numeric($discount_rate) && (float) $discount_rate > 0) {
             // calculates new price, with global order discount, tax ecluded
             $discount_value = $this->price_with_discount_te - (($this->price_with_discount_te * (float) $discount_rate) / 100);
 
@@ -288,12 +288,12 @@ class SupplyOrderDetailCore extends ObjectModel
         }
 
         foreach ($fields_required as $field) {
-            if (($value = $this->{$field}) == false && (string) $value != '0') {
-                if (!$this->id || $field != 'passwd') {
+            if (false == ($value = $this->{$field}) && '0' != (string) $value) {
+                if (!$this->id || 'passwd' != $field) {
                     $errors[] = $this->trans(
                         '%s is required.',
                         array(
-                            '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
+                            '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b>',
                         ),
                         'Shop.Notifications.Error'
                     );
@@ -316,8 +316,8 @@ class SupplyOrderDetailCore extends ObjectModel
         foreach ($this->fieldsValidate as $field => $function) {
             if ($value = $this->{$field}) {
                 if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired))) {
-                    $errors[] = '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
-                } elseif ($field == 'passwd') {
+                    $errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+                } elseif ('passwd' == $field) {
                     if ($value = Tools::getValue($field)) {
                         $this->{$field} = Tools::hash($value);
                     } else {
@@ -328,15 +328,15 @@ class SupplyOrderDetailCore extends ObjectModel
         }
 
         if ($this->quantity_expected <= 0) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         if ($this->tax_rate < 0 || $this->tax_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         if ($this->discount_rate < 0 || $this->discount_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         return $errors;
@@ -354,8 +354,8 @@ class SupplyOrderDetailCore extends ObjectModel
         foreach ($data as $key => $value) {
             if (array_key_exists($key, $this)) {
                 // formats prices and floats
-                if ($this->def['fields'][$key]['validate'] == 'isFloat' ||
-                    $this->def['fields'][$key]['validate'] == 'isPrice') {
+                if ('isFloat' == $this->def['fields'][$key]['validate'] ||
+                    'isPrice' == $this->def['fields'][$key]['validate']) {
                     $value = Tools::ps_round($value, 6);
                 }
                 $this->$key = $value;

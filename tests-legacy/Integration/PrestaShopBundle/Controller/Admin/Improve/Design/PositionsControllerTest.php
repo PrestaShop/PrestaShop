@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -76,7 +76,7 @@ class PositionsControllerTest extends WebTestCase
                         $this->moduleId
                     ),
                     'aa_dd',
-                    'something'
+                    'something',
                 ],
             ]
         );

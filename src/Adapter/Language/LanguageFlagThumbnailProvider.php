@@ -62,11 +62,11 @@ final class LanguageFlagThumbnailProvider implements ImageProviderInterface
      */
     public function getPath($languageId)
     {
-        $pathToImage = _PS_IMG_DIR_ . 'l' . DIRECTORY_SEPARATOR . $languageId . '.jpg';
+        $pathToImage = _PS_IMG_DIR_.'l'.DIRECTORY_SEPARATOR.$languageId.'.jpg';
 
         $imageTag = ImageManager::thumbnail(
             $pathToImage,
-            'lang_mini_' . $languageId . '_' . $this->contextShopId . '.jpg',
+            'lang_mini_'.$languageId.'_'.$this->contextShopId.'.jpg',
             45,
             'jpg'
         );

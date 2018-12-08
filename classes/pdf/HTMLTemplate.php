@@ -100,10 +100,10 @@ abstract class HTMLTemplateCore
 
         $id_shop = (int) $this->shop->id;
 
-        if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop))) {
-            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
-        } elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $id_shop))) {
-            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $id_shop);
+        if (false != Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop))) {
+            $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
+        } elseif (false != Configuration::get('PS_LOGO', null, null, $id_shop) && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop))) {
+            $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop);
         }
 
         return $logo;
@@ -136,7 +136,7 @@ abstract class HTMLTemplateCore
 
         $this->smarty->assign(array(
             'logo_path' => $path_logo,
-            'img_ps_dir' => 'http://' . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
+            'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'date' => $this->date,
             'title' => $this->title,
@@ -155,7 +155,7 @@ abstract class HTMLTemplateCore
     public function assignHookData($object)
     {
         $template = ucfirst(str_replace('HTMLTemplate', '', get_class($this)));
-        $hook_name = 'displayPDF' . $template;
+        $hook_name = 'displayPDF'.$template;
 
         $this->smarty->assign(array(
             'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, array('object' => $object)),
@@ -194,8 +194,8 @@ abstract class HTMLTemplateCore
     protected function getTemplate($template_name)
     {
         $template = false;
-        $default_template = rtrim(_PS_PDF_DIR_, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $template_name . '.tpl';
-        $overridden_template = _PS_ALL_THEMES_DIR_ . $this->shop->theme->getName() . DIRECTORY_SEPARATOR . 'pdf' . DIRECTORY_SEPARATOR . $template_name . '.tpl';
+        $default_template = rtrim(_PS_PDF_DIR_, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$template_name.'.tpl';
+        $overridden_template = _PS_ALL_THEMES_DIR_.$this->shop->theme->getName().DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$template_name.'.tpl';
         if (file_exists($overridden_template)) {
             $template = $overridden_template;
         } elseif (file_exists($default_template)) {

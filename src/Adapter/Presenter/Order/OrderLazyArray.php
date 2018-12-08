@@ -189,11 +189,11 @@ class OrderLazyArray extends AbstractLazyArray
             if ($orderPaid && $orderProduct['is_virtual']) {
                 $id_product_download = ProductDownload::getIdFromIdProduct($orderProduct['product_id']);
                 $product_download = new ProductDownload($id_product_download);
-                if ($product_download->display_filename != '') {
+                if ('' != $product_download->display_filename) {
                     $orderProduct['download_link'] =
                         $product_download->getTextLink(false, $orderProduct['download_hash'])
-                        . '&id_order=' . (int) $order->id
-                        . '&secure_key=' . $order->secure_key;
+                        .'&id_order='.(int) $order->id
+                        .'&secure_key='.$order->secure_key;
                 }
             }
 
@@ -307,9 +307,9 @@ class OrderLazyArray extends AbstractLazyArray
             $messages[$cmId]['message'] = nl2br($customerMessage['message']);
             $messages[$cmId]['message_date'] = Tools::displayDate($customerMessage['date_add'], null, true);
             if (isset($customerMessage['elastname']) && $customerMessage['elastname']) {
-                $messages[$cmId]['name'] = $customerMessage['efirstname'] . ' ' . $customerMessage['elastname'];
+                $messages[$cmId]['name'] = $customerMessage['efirstname'].' '.$customerMessage['elastname'];
             } elseif ($customerMessage['clastname']) {
-                $messages[$cmId]['name'] = $customerMessage['cfirstname'] . ' ' . $customerMessage['clastname'];
+                $messages[$cmId]['name'] = $customerMessage['cfirstname'].' '.$customerMessage['clastname'];
             } else {
                 $messages[$cmId]['name'] = Configuration::get('PS_SHOP_NAME');
             }
@@ -329,7 +329,7 @@ class OrderLazyArray extends AbstractLazyArray
 
         $carrier = new Carrier((int) $order->id_carrier, (int) $order->id_lang);
         $orderCarrier = $this->objectPresenter->present($carrier);
-        $orderCarrier['name'] = ($carrier->name == '0') ? Configuration::get('PS_SHOP_NAME') : $carrier->name;
+        $orderCarrier['name'] = ('0' == $carrier->name) ? Configuration::get('PS_SHOP_NAME') : $carrier->name;
         $orderCarrier['delay'] = $carrier->delay;
 
         return $orderCarrier;

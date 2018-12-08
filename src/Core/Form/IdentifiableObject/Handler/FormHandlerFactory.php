@@ -52,8 +52,8 @@ final class FormHandlerFactory implements FormHandlerFactoryInterface
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param TranslatorInterface $translator
-     * @param bool $isDemoModeEnabled
+     * @param TranslatorInterface     $translator
+     * @param bool                    $isDemoModeEnabled
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,

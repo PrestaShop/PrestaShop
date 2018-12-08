@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Integration\classes;
 
-use LegacyTests\TestCase\ReflexionHelper;
 use LegacyTests\TestCase\IntegrationTestCase;
 use Configuration;
 

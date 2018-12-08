@@ -92,7 +92,7 @@ class AccessDeniedListener
      * Compute the url for the redirection.
      *
      * @param AdminSecurity $adminSecurity
-     * @param Request $request
+     * @param Request       $request
      *
      * @return string
      */
@@ -100,7 +100,7 @@ class AccessDeniedListener
     {
         $route = $adminSecurity->getRedirectRoute();
 
-        if ($route !== null) {
+        if (null !== $route) {
             $redirectQueryParameters = $adminSecurity->getRedirectQueryParamsToKeep();
             $routeParamsToKeep = $this->getQueryParamsFromRequestQuery(
                 $redirectQueryParameters,
@@ -133,7 +133,7 @@ class AccessDeniedListener
     /**
      * Gets query parameters by comparing them to the current request attributes.
      *
-     * @param array $queryParametersToKeep
+     * @param array   $queryParametersToKeep
      * @param Request $request
      *
      * @return array

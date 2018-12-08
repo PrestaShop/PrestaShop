@@ -90,14 +90,14 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
 
     public function renderField($field)
     {
-        $is_association = (isset($field['is_association']) && $field['is_association'] == true);
+        $is_association = (isset($field['is_association']) && true == $field['is_association']);
 
         if (is_array($field['value'])) {
             $tmp = array();
             foreach ($this->languages as $id_lang) {
                 $tmp[] = array('id' => $id_lang, 'value' => $field['value'][$id_lang]);
             }
-            if (count($tmp) == 1) {
+            if (1 == count($tmp)) {
                 $field['value'] = $tmp[0]['value'];
             } else {
                 $field['value'] = $tmp;
@@ -117,7 +117,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
     {
         // api ?
         static $isAPICall = false;
-        if ($node_name == 'api' && ($isAPICall == false)) {
+        if ('api' == $node_name && (false == $isAPICall)) {
             $isAPICall = true;
         }
         if ($isAPICall && !in_array($node_name, array('description', 'schema', 'api'))) {

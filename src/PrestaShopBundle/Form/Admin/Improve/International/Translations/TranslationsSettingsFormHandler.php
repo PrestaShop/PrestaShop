@@ -35,28 +35,28 @@ final class TranslationsSettingsFormHandler implements FormHandlerInterface
     /**
      * @var FormBuilderInterface the form builder
      */
-    protected $formBuilder;
+    private $formBuilder;
 
     /**
      * @var HookDispatcherInterface the event dispatcher
      */
-    protected $hookDispatcher;
+    private $hookDispatcher;
 
     /**
      * @var string the hook name to be dispatched
      */
-    protected $hookName;
+    private $hookName;
 
     /**
      * @var array the list of Form Types
      */
-    protected $formTypes;
+    private $formTypes;
 
     /**
-     * @param FormBuilderInterface $formBuilder
+     * @param FormBuilderInterface    $formBuilder
      * @param HookDispatcherInterface $hookDispatcher
-     * @param array $formTypes
-     * @param string $hookName
+     * @param array                   $formTypes
+     * @param string                  $hookName
      */
     public function __construct(
         FormBuilderInterface $formBuilder,

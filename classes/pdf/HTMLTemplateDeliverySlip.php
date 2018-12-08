@@ -92,24 +92,24 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         }
 
         $carrier = new Carrier($this->order->id_carrier);
-        $carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
+        $carrier->name = ('0' == $carrier->name ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
 
         $order_details = $this->order_invoice->getProducts();
         if (Configuration::get('PS_PDF_IMG_DELIVERY')) {
             foreach ($order_details as &$order_detail) {
-                if ($order_detail['image'] != null) {
-                    $name = 'product_mini_' . (int) $order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int) $order_detail['product_attribute_id'] : '') . '.jpg';
-                    $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
+                if (null != $order_detail['image']) {
+                    $name = 'product_mini_'.(int) $order_detail['product_id'].(isset($order_detail['product_attribute_id']) ? '_'.(int) $order_detail['product_attribute_id'] : '').'.jpg';
+                    $path = _PS_PROD_IMG_DIR_.$order_detail['image']->getExistingImgPath().'.jpg';
 
                     $order_detail['image_tag'] = preg_replace(
-                        '/\.*' . preg_quote(__PS_BASE_URI__, '/') . '/',
-                        _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
+                        '/\.*'.preg_quote(__PS_BASE_URI__, '/').'/',
+                        _PS_ROOT_DIR_.DIRECTORY_SEPARATOR,
                         ImageManager::thumbnail($path, $name, 45, 'jpg', false),
                         1
                     );
 
-                    if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
-                        $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
+                    if (file_exists(_PS_TMP_IMG_DIR_.$name)) {
+                        $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
                     } else {
                         $order_detail['image_size'] = false;
                     }
@@ -156,6 +156,6 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . sprintf('%06d', $this->order->delivery_number) . '.pdf';
+        return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order->delivery_number).'.pdf';
     }
 }

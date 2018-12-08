@@ -58,9 +58,9 @@ final class Grid implements GridInterface
 
     /**
      * @param GridDefinitionInterface $definition
-     * @param GridDataInterface $data
+     * @param GridDataInterface       $data
      * @param SearchCriteriaInterface $searchCriteria
-     * @param FormInterface $filtersForm
+     * @param FormInterface           $filtersForm
      */
     public function __construct(
         GridDefinitionInterface $definition,

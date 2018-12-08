@@ -45,7 +45,7 @@ class DeleteCategoryCommand
     private $deleteMode;
 
     /**
-     * @param CategoryId $categoryId
+     * @param CategoryId         $categoryId
      * @param CategoryDeleteMode $mode
      */
     public function __construct(CategoryId $categoryId, CategoryDeleteMode $mode)

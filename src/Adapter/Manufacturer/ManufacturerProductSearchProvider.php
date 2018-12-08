@@ -51,8 +51,8 @@ class ManufacturerProductSearchProvider implements ProductSearchProviderInterfac
 
     /**
      * @param ProductSearchContext $context
-     * @param ProductSearchQuery $query
-     * @param string $type
+     * @param ProductSearchQuery   $query
+     * @param string               $type
      *
      * @return array|bool
      */
@@ -68,13 +68,13 @@ class ManufacturerProductSearchProvider implements ProductSearchProviderInterfac
             $query->getResultsPerPage(),
             $query->getSortOrder()->toLegacyOrderBy(),
             $query->getSortOrder()->toLegacyOrderWay(),
-            $type !== 'products'
+            'products' !== $type
         );
     }
 
     /**
      * @param ProductSearchContext $context
-     * @param ProductSearchQuery $query
+     * @param ProductSearchQuery   $query
      *
      * @return ProductSearchResult
      */

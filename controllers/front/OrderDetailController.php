@@ -121,7 +121,7 @@ class OrderDetailControllerCore extends FrontController
                             $to,
                             $toName,
                             strval(Configuration::get('PS_SHOP_EMAIL')),
-                            $customer->firstname . ' ' . $customer->lastname,
+                            $customer->firstname.' '.$customer->lastname,
                             null,
                             null,
                             _PS_MAIL_DIR_,
@@ -132,7 +132,7 @@ class OrderDetailControllerCore extends FrontController
                         );
                     }
 
-                    Tools::redirect('index.php?controller=order-detail&id_order=' . $idOrder . '&messagesent');
+                    Tools::redirect('index.php?controller=order-detail&id_order='.$idOrder.'&messagesent');
                 } else {
                     $this->redirect_after = '404';
                     $this->redirect();

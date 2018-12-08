@@ -35,10 +35,10 @@ class PaymentOptionFormDecorator
         $doc = new DOMDocument();
         $doc->encoding = 'UTF-8';
 
-        $doc->loadHTML('<?xml encoding="UTF-8">' . $formHTML);
+        $doc->loadHTML('<?xml encoding="UTF-8">'.$formHTML);
 
         $forms = $doc->getElementsByTagName('form');
-        if ($forms->length !== 1) {
+        if (1 !== $forms->length) {
             return false;
         }
 
@@ -48,7 +48,7 @@ class PaymentOptionFormDecorator
         $styleAttr->value = 'display:none';
 
         $idAttr = $doc->createAttribute('id');
-        $idAttr->value = 'pay-with-' . $optionId;
+        $idAttr->value = 'pay-with-'.$optionId;
 
         $typeAttr = $doc->createAttribute('type');
         $typeAttr->value = 'submit';

@@ -37,7 +37,7 @@ class ManufacturerDataProvider
      * Get all Manufacturer.
      *
      * @param bool $get_nb_products
-     * @param int $id_lang
+     * @param int  $id_lang
      * @param bool $active
      * @param bool $p
      * @param bool $n

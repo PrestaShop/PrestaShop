@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function setAllGroupsOnHomeCategory()
 {
     $ps_lang_default = Db::getInstance()->getValue('SELECT value
@@ -40,7 +39,7 @@ function setAllGroupsOnHomeCategory()
         Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group`
 			WHERE `id_category` = 1');
         // addGroups($groups);
-        $row = array('id_category' => 1, 'id_group' => (int)$groups);
+        $row = array('id_category' => 1, 'id_group' => (int) $groups);
         Db::getInstance()->insert('category_group', $row);
     }
 }

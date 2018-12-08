@@ -91,15 +91,15 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
 
             $fieldParts = explode(':', $field, 2);
 
-            if (count($fieldParts) === 1) {
-                if ($field === 'postcode') {
+            if (1 === count($fieldParts)) {
+                if ('postcode' === $field) {
                     if ($this->country->need_zip_code) {
                         $formField->setRequired(true);
                     }
-                } elseif ($field === 'phone') {
+                } elseif ('phone' === $field) {
                     $formField->setType('tel');
                 }
-            } elseif (count($fieldParts) === 2) {
+            } elseif (2 === count($fieldParts)) {
                 list($entity, $entityField) = $fieldParts;
 
                 // Fields specified using the Entity:field
@@ -108,9 +108,9 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                 $formField->setType('select');
 
                 // Also, what we really want is the id of the linked entity
-                $formField->setName('id_' . strtolower($entity));
+                $formField->setName('id_'.strtolower($entity));
 
-                if ($entity === 'Country') {
+                if ('Country' === $entity) {
                     $formField->setType('countrySelect');
                     $formField->setValue($this->country->id);
                     foreach ($this->availableCountries as $country) {
@@ -119,7 +119,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                             $country[$entityField]
                         );
                     }
-                } elseif ($entity === 'State') {
+                } elseif ('State' === $entity) {
                     if ($this->country->contains_states) {
                         $states = State::getStatesByIdCountry($this->country->id, true);
                         foreach ($states as $state) {
@@ -158,7 +158,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
 
                 foreach ($additionnalFormFields as $formField) {
                     $formField->moduleName = $moduleName;
-                    $format[$moduleName . '_' . $formField->getName()] = $formField;
+                    $format[$moduleName.'_'.$formField->getName()] = $formField;
                 }
             }
         }

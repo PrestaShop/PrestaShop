@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-require_once('generate_ntree.php');
+require_once 'generate_ntree.php';
 
 function generate_root_category_for_multishop()
 {
@@ -39,7 +38,7 @@ function generate_root_category_for_multishop()
     $id = Db::getInstance()->Insert_ID();
     // set vars config
     Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
-	(\'PS_ROOT_CATEGORY\', '.(int)$id.', NOW(), NOW()),
+	(\'PS_ROOT_CATEGORY\', '.(int) $id.', NOW(), NOW()),
 	(\'PS_HOME_CATEGORY\', 1, NOW(), NOW())
 	');
 
@@ -79,7 +78,7 @@ function generate_root_category_for_multishop()
             foreach ($shops as $shop) {
                 $data[] = array(
                     'id_category' => $category['id_category'],
-                    'id_shop' => $shop['id_shop']
+                    'id_shop' => $shop['id_shop'],
                 );
             }
         }
@@ -88,8 +87,8 @@ function generate_root_category_for_multishop()
 
     Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'category`
-		SET `id_parent` = '.(int)$id.'
-		WHERE `id_parent` = 0 AND `id_category` <> '.(int)$id.'
+		SET `id_parent` = '.(int) $id.'
+		WHERE `id_parent` = 0 AND `id_category` <> '.(int) $id.'
 	');
     Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'shop`

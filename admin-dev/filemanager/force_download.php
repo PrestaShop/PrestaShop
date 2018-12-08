@@ -1,15 +1,16 @@
 <?php
-include('config/config.php');
-if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
+
+include 'config/config.php';
+if ('RESPONSIVEfilemanager' != $_SESSION['verify']) {
     die('Forbidden');
 }
-include('include/utils.php');
+include 'include/utils.php';
 
-if (preg_match('/\.{1,2}[\/|\\\]/', $_POST['path']) !== 0) {
+if (0 !== preg_match('/\.{1,2}[\/|\\\]/', $_POST['path'])) {
     die('wrong path');
 }
 
-if (strpos($_POST['name'], '/') !== false || strpos($_POST['name'], '\\') !== false) {
+if (false !== strpos($_POST['name'], '/') || false !== strpos($_POST['name'], '\\')) {
     die('wrong path');
 }
 
@@ -24,7 +25,7 @@ if (!in_array(fix_strtolower($info['extension']), $ext)) {
 header('Pragma: private');
 header('Cache-control: private, must-revalidate');
 header('Content-Type: application/octet-stream');
-header('Content-Length: '.(string)filesize($path.$name));
+header('Content-Length: '.(string) filesize($path.$name));
 header('Content-Disposition: attachment; filename="'.($name).'"');
 readfile($path.$name);
 

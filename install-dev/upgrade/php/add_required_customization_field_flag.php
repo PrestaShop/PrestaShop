@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,22 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 define('_CONTAINS_REQUIRED_FIELD_', 2);
 
 function add_required_customization_field_flag()
 {
-    if (($result = Db::getInstance()->executeS('SELECT `id_product` FROM `'._DB_PREFIX_.'customization_field` WHERE `required` = 1')) === false) {
+    if (false === ($result = Db::getInstance()->executeS('SELECT `id_product` FROM `'._DB_PREFIX_.'customization_field` WHERE `required` = 1'))) {
         return false;
     }
     if (Db::getInstance()->numRows()) {
         $productIds = array();
         foreach ($result as $row) {
-            $productIds[] = (int)($row['id_product']);
+            $productIds[] = (int) ($row['id_product']);
         }
         if (!Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET `customizable` = '._CONTAINS_REQUIRED_FIELD_.' WHERE `id_product` IN ('.implode(', ', $productIds).')')) {
             return false;
         }
     }
+
     return true;
 }

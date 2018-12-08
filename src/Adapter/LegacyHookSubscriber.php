@@ -247,11 +247,11 @@ class LegacyHookSubscriber implements EventSubscriberInterface
                 if (is_array($modules)) {
                     foreach ($modules as $order => $module) {
                         $moduleId = $module['id_module'];
-                        $functionName = 'call_' . $id . '_' . $moduleId;
+                        $functionName = 'call_'.$id.'_'.$moduleId;
                         $moduleListeners[] = array($functionName, 2000 - $order);
                     }
                 } else {
-                    $moduleListeners[] = array('call_' . $id . '_0', 2000);
+                    $moduleListeners[] = array('call_'.$id.'_0', 2000);
                 }
 
                 $listeners[$name] = $moduleListeners;
@@ -268,21 +268,21 @@ class LegacyHookSubscriber implements EventSubscriberInterface
      * "call_<hookID>_<moduleID>(HookEvent $event, $hookName)"
      *
      * @param string $name The method called
-     * @param array $args The HookEvent, and then the hook name (eventName)
+     * @param array  $args The HookEvent, and then the hook name (eventName)
      *
      * @throws \BadMethodCallException
      */
     public function __call($name, $args)
     {
-        if (strpos($name, 'call_') !== 0) {
-            throw new \BadMethodCallException('The call to \'' . $name . '\' is not recognized.');
+        if (0 !== strpos($name, 'call_')) {
+            throw new \BadMethodCallException('The call to \''.$name.'\' is not recognized.');
         }
 
         $ids = explode('_', $name);
         array_shift($ids); // remove 'call'
 
-        if (count($ids) !== 2) {
-            throw new \BadMethodCallException('The call to \'' . $name . '\' is not recognized.');
+        if (2 !== count($ids)) {
+            throw new \BadMethodCallException('The call to \''.$name.'\' is not recognized.');
         }
 
         $moduleId = (int) $ids[1];

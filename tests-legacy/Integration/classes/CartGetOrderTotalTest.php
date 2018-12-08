@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -53,12 +53,12 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     private static $id_address;
     protected $previousConfig = array(
         'PS_CART_RULE_FEATURE_ACTIVE' => null,
-        'PS_GROUP_FEATURE_ACTIVE'     => null,
-        'PS_ATCP_SHIPWRAP'            => null,
-        'PS_PRICE_ROUND_MODE'         => null,
-        'PS_ROUND_TYPE'               => null,
-        'PS_PRICE_DISPLAY_PRECISION'  => null,
-        'PS_TAX'                      => null,
+        'PS_GROUP_FEATURE_ACTIVE' => null,
+        'PS_ATCP_SHIPWRAP' => null,
+        'PS_PRICE_ROUND_MODE' => null,
+        'PS_ROUND_TYPE' => null,
+        'PS_PRICE_DISPLAY_PRECISION' => null,
+        'PS_TAX' => null,
     );
 
     public static function setUpBeforeClass()
@@ -90,7 +90,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      * Methods starting with get should cache their result for performance,
      * methods starting with make should create a new object each time.
      */
-
     private static function deactivateCurrentCartRules()
     {
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart_rule SET active = 0');
@@ -98,7 +97,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
     private static function getLanguageId()
     {
-        return (int)Context::getContext()->language->id;
+        return (int) Context::getContext()->language->id;
     }
 
     private static function getDefaultLanguageId()
@@ -193,7 +192,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
             $tax->name = $name;
             $tax->rate = $rate;
             $tax->active = true;
-            Assert::assertTrue((bool)$tax->save()); // casting because actually returns 1, but not the point here.
+            Assert::assertTrue((bool) $tax->save()); // casting because actually returns 1, but not the point here.
             $taxes[$name] = $tax->id;
         }
 
@@ -213,7 +212,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
             $taxRulesGroup = new TaxRulesGroup(null, self::getDefaultLanguageId());
             $taxRulesGroup->name = $name;
             $taxRulesGroup->active = true;
-            Assert::assertTrue((bool)$taxRulesGroup->save());
+            Assert::assertTrue((bool) $taxRulesGroup->save());
 
             $taxRule = new TaxRule(null, self::getDefaultLanguageId());
             $taxRule->id_tax = self::getIdTax($rate);
@@ -239,6 +238,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $product->price = $price;
         $product->link_rewrite = Tools::link_rewrite($name);
         Assert::assertTrue($product->save());
+
         return $product;
     }
 
@@ -252,6 +252,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $address->alias = microtime().getmypid();
         $address->city = 'Levallois';
         Assert::assertTrue($address->save());
+
         return $address;
     }
 
@@ -262,6 +263,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cart->id_address_invoice = self::$id_address;
         Assert::assertTrue($cart->save());
         Context::getContext()->cart = $cart;
+
         return $cart;
     }
 
@@ -297,7 +299,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
             if (null !== $shippingCost) {
                 // Populate one range
                 Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'range_price (id_carrier, delimiter1, delimiter2) VALUES (
-                    '.(int)$carrier->id.',
+                    '.(int) $carrier->id.',
                     0,1
                 )');
 
@@ -307,14 +309,14 @@ class CartGetOrderTotalTest extends IntegrationTestCase
                 // apply our shippingCost to all zones
                 Db::getInstance()->execute(
                     'INSERT INTO '._DB_PREFIX_.'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price)
-                     SELECT '.(int)$carrier->id.', '.(int)$id_range_price.', 0, id_zone, '.(float)$shippingCost.'
+                     SELECT '.(int) $carrier->id.', '.(int) $id_range_price.', 0, id_zone, '.(float) $shippingCost.'
                      FROM '._DB_PREFIX_.'zone'
                 );
 
                 // enable all zones
                 Db::getInstance()->execute(
                     'INSERT INTO '._DB_PREFIX_.'carrier_zone (id_carrier, id_zone)
-                     SELECT '.(int)$carrier->id.', id_zone FROM '._DB_PREFIX_.'zone'
+                     SELECT '.(int) $carrier->id.', id_zone FROM '._DB_PREFIX_.'zone'
                 );
             }
 
@@ -342,16 +344,16 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cartRule->quantity = 1;
         $cartRule->quantity_per_user;
 
-        if ($type === 'before tax') {
+        if ('before tax' === $type) {
             $cartRule->reduction_amount = $amount;
             $cartRule->reduction_tax = false;
-        } elseif ($type === 'after tax') {
+        } elseif ('after tax' === $type) {
             $cartRule->reduction_amount = $amount;
             $cartRule->reduction_tax = true;
-        } elseif ($type === '%') {
+        } elseif ('%' === $type) {
             $cartRule->reduction_percent = $amount;
         } else {
-            throw new Exception(sprintf("Invalid CartRule type `%s`.", $type));
+            throw new Exception(sprintf('Invalid CartRule type `%s`.', $type));
         }
 
         Assert::assertTrue($cartRule->save());
@@ -468,7 +470,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $product = self::makeProduct('Yo Product', 10, self::getIdTaxRulesGroup(20));
 
-
         self::makeCartRule(5, 'before tax')->id;
         $cart = self::makeCart();
 
@@ -486,7 +487,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      * This test checks that if PS_ATCP_SHIPWRAP is set to true then:
      * - the shipping cost of the carrier is understood as tax included instead of tax excluded
      * - the tax excluded shipping cost is deduced from the tax included shipping cost
-     * 	 by removing the average tax rate of the cart
+     * 	 by removing the average tax rate of the cart.
      */
     public function testAverageTaxOfCartProducts_ShippingTax()
     {
@@ -508,7 +509,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     }
 
     /**
-     * Check getOrderTotal return the same value with and without when PS_TAX is disable
+     * Check getOrderTotal return the same value with and without when PS_TAX is disable.
      */
     public function testSameTotalWithoutTax()
     {

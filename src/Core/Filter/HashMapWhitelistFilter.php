@@ -186,7 +186,7 @@ class HashMapWhitelistFilter implements FilterInterface
     /**
      * Adds an element to the whitelist.
      *
-     * @param int|string $paramKey
+     * @param int|string             $paramKey
      * @param string|FilterInterface $paramValue
      *
      * @return $this

@@ -71,11 +71,11 @@ class AdminThemesControllerCore extends AdminController
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
         parent::init();
-        $this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
+        $this->can_display_themes = (!Shop::isFeatureActive() || Shop::CONTEXT_SHOP == Shop::getContext());
 
-        if (Tools::getValue('display') == 'configureLayouts') {
+        if ('configureLayouts' == Tools::getValue('display')) {
             $this->initConfigureLayouts();
-        } elseif (Tools::getValue('action') == 'importtheme') {
+        } elseif ('importtheme' == Tools::getValue('action')) {
             $this->display = 'importtheme';
         }
 
@@ -96,12 +96,12 @@ class AdminThemesControllerCore extends AdminController
 
         if (!$this->isFresh(self::CACHE_FILE_CUSTOMER_THEMES_LIST, 86400)) {
             file_put_contents(
-                _PS_ROOT_DIR_ . self::CACHE_FILE_CUSTOMER_THEMES_LIST,
+                _PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_THEMES_LIST,
                 Tools::addonsRequest('customer_themes')
             );
         }
 
-        $customer_themes_list = file_get_contents(_PS_ROOT_DIR_ . self::CACHE_FILE_CUSTOMER_THEMES_LIST);
+        $customer_themes_list = file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_THEMES_LIST);
         if (!empty($customer_themes_list) && $customer_themes_list_xml = @simplexml_load_string($customer_themes_list)) {
             foreach ($customer_themes_list_xml->theme as $addons_theme) {
                 //get addons theme if folder does not exist
@@ -118,12 +118,12 @@ class AdminThemesControllerCore extends AdminController
                     );
 
                     $uniqid = uniqid();
-                    $sandbox = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR . $uniqid . DIRECTORY_SEPARATOR;
+                    $sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
                     mkdir($sandbox);
 
-                    file_put_contents($sandbox . (string) $addons_theme->getName() . '.zip', $zip_content);
+                    file_put_contents($sandbox.(string) $addons_theme->getName().'.zip', $zip_content);
 
-                    if ($this->extractTheme($sandbox . (string) $addons_theme->getName() . '.zip', $sandbox)) {
+                    if ($this->extractTheme($sandbox.(string) $addons_theme->getName().'.zip', $sandbox)) {
                         if ($theme_directory = $this->installTheme(self::UPLOADED_THEME_DIR_NAME, $sandbox, false)) {
                             $ids_themes[$theme_directory] = (string) $addons_theme->id;
                         }
@@ -141,7 +141,7 @@ class AdminThemesControllerCore extends AdminController
         parent::processUpdateOptions();
 
         if (!count($this->errors)) {
-            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes') . '&conf=6');
+            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=6');
         }
     }
 
@@ -152,12 +152,12 @@ class AdminThemesControllerCore extends AdminController
         if (empty($this->display)) {
             if ($this->isAddGranted()) {
                 $this->page_header_toolbar_btn['import_theme'] = array(
-                    'href' => self::$currentIndex . '&action=importtheme&token=' . $this->token,
+                    'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
                     'desc' => $this->trans('Add new theme', array(), 'Admin.Design.Feature'),
                     'icon' => 'process-icon-new',
                 );
                 $this->page_header_toolbar_btn['export_theme'] = array(
-                    'href' => self::$currentIndex . '&action=exporttheme&token=' . $this->token,
+                    'href' => self::$currentIndex.'&action=exporttheme&token='.$this->token,
                     'desc' => $this->trans('Export current theme', array(), 'Admin.Design.Feature'),
                     'icon' => 'process-icon-export',
                 );
@@ -168,26 +168,26 @@ class AdminThemesControllerCore extends AdminController
             }
         }
 
-        if ($this->display == 'importtheme') {
+        if ('importtheme' == $this->display) {
             $this->toolbar_title[] = $this->trans('Import theme', array(), 'Admin.Design.Feature');
         } else {
             $this->toolbar_title[] = $this->trans('Theme', array(), 'Admin.Design.Feature');
         }
 
-        $title = implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ', $this->toolbar_title);
+        $title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
         $this->page_header_toolbar_title = $title;
     }
 
     public function initContent()
     {
-        if ($this->display == 'list') {
+        if ('list' == $this->display) {
             $this->display = '';
         }
 
-        if (isset($this->display) && method_exists($this, 'render' . $this->display)) {
+        if (isset($this->display) && method_exists($this, 'render'.$this->display)) {
             $this->content .= $this->initPageHeaderToolbar();
 
-            $this->content .= $this->{'render' . $this->display}();
+            $this->content .= $this->{'render'.$this->display}();
             $this->context->smarty->assign(array(
                 'content' => $this->content,
                 'show_page_header_toolbar' => $this->show_page_header_toolbar,
@@ -196,9 +196,9 @@ class AdminThemesControllerCore extends AdminController
             ));
         } else {
             $content = '';
-            if (Configuration::hasKey('PS_LOGO') && trim(Configuration::get('PS_LOGO')) != ''
-                && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO')) && filesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO'))) {
-                list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO'));
+            if (Configuration::hasKey('PS_LOGO') && '' != trim(Configuration::get('PS_LOGO'))
+                && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')) && filesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO'))) {
+                list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO'));
                 Configuration::updateValue('SHOP_LOGO_HEIGHT', (int) round($height));
                 Configuration::updateValue('SHOP_LOGO_WIDTH', (int) round($width));
             }
@@ -217,12 +217,12 @@ class AdminThemesControllerCore extends AdminController
      */
     public function ajaxProcessGetAddonsThemes()
     {
-        $parent_domain = Tools::getHttpHost(true) . substr($_SERVER['REQUEST_URI'], 0, -1 * strlen(basename($_SERVER['REQUEST_URI'])));
+        $parent_domain = Tools::getHttpHost(true).substr($_SERVER['REQUEST_URI'], 0, -1 * strlen(basename($_SERVER['REQUEST_URI'])));
         $iso_lang = $this->context->language->iso_code;
         $iso_currency = $this->context->currency->iso_code;
         $iso_country = $this->context->country->iso_code;
         $activity = Configuration::get('PS_SHOP_ACTIVITY');
-        $addons_url = Tools::getCurrentUrlProtocolPrefix() . 'addons.prestashop.com/iframe/search-1.7.php?psVersion=' . _PS_VERSION_ . '&onlyThemes=1&isoLang=' . $iso_lang . '&isoCurrency=' . $iso_currency . '&isoCountry=' . $iso_country . '&activity=' . (int) $activity . '&parentUrl=' . $parent_domain;
+        $addons_url = Tools::getCurrentUrlProtocolPrefix().'addons.prestashop.com/iframe/search-1.7.php?psVersion='._PS_VERSION_.'&onlyThemes=1&isoLang='.$iso_lang.'&isoCurrency='.$iso_currency.'&isoCountry='.$iso_country.'&activity='.(int) $activity.'&parentUrl='.$parent_domain;
 
         die(Tools::file_get_contents($addons_url));
     }
@@ -346,12 +346,12 @@ class AdminThemesControllerCore extends AdminController
         } elseif (function_exists('mime_content_type')) {
             $mimeType = @mime_content_type($tmp_name);
         } elseif (function_exists('exec')) {
-            $mimeType = trim(@exec('file -b --mime-type ' . escapeshellarg($tmp_name)));
+            $mimeType = trim(@exec('file -b --mime-type '.escapeshellarg($tmp_name)));
             if (!$mimeType) {
-                $mimeType = trim(@exec('file --mime ' . escapeshellarg($tmp_name)));
+                $mimeType = trim(@exec('file --mime '.escapeshellarg($tmp_name)));
             }
             if (!$mimeType) {
-                $mimeType = trim(@exec('file -bi ' . escapeshellarg($tmp_name)));
+                $mimeType = trim(@exec('file -bi '.escapeshellarg($tmp_name)));
             }
         }
 
@@ -370,7 +370,7 @@ class AdminThemesControllerCore extends AdminController
 
         $name = $_FILES['themearchive']['name'];
         if (!Validate::isFileName($name)) {
-            $dest = _PS_ALL_THEMES_DIR_ . sha1_file($tmp_name) . '.zip';
+            $dest = _PS_ALL_THEMES_DIR_.sha1_file($tmp_name).'.zip';
         }
 
         if (!move_uploaded_file(
@@ -421,34 +421,34 @@ class AdminThemesControllerCore extends AdminController
                         'type' => 'file',
                         'name' => 'PS_LOGO',
                         'tab' => 'logo',
-                        'thumb' => _PS_IMG_ . Configuration::get('PS_LOGO'),
+                        'thumb' => _PS_IMG_.Configuration::get('PS_LOGO'),
                     ),
                     'PS_LOGO_MAIL' => array(
                         'title' => $this->trans('Mail logo', array(), 'Admin.Design.Feature'),
-                        'desc' => ((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">' . $this->trans('Warning: if no email logo is available, the main logo will be used instead.', array(), 'Admin.Design.Notification') . '</span><br />' : ''),
+                        'desc' => ((false === Configuration::get('PS_LOGO_MAIL')) ? '<span class="light-warning">'.$this->trans('Warning: if no email logo is available, the main logo will be used instead.', array(), 'Admin.Design.Notification').'</span><br />' : ''),
                         'hint' => $this->trans('Will appear on email headers. If undefined, the header logo will be used.', array(), 'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_LOGO_MAIL',
                         'tab' => 'logo2',
-                        'thumb' => (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_ . Configuration::get('PS_LOGO_MAIL') : _PS_IMG_ . Configuration::get('PS_LOGO'),
+                        'thumb' => (false !== Configuration::get('PS_LOGO_MAIL') && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL') : _PS_IMG_.Configuration::get('PS_LOGO'),
                     ),
                     'PS_LOGO_INVOICE' => array(
                         'title' => $this->trans('Invoice logo', array(), 'Admin.Design.Feature'),
-                        'desc' => ((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">' . $this->trans('Warning: if no invoice logo is available, the main logo will be used instead.', array(), 'Admin.Design.Help') . '</span><br />' : ''),
-                        'hint' => $this->trans('Will appear on invoice headers.', array(), 'Admin.Design.Help') . ' ' . $this->trans('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.', array(), 'Admin.Design.Help'),
+                        'desc' => ((false === Configuration::get('PS_LOGO_INVOICE')) ? '<span class="light-warning">'.$this->trans('Warning: if no invoice logo is available, the main logo will be used instead.', array(), 'Admin.Design.Help').'</span><br />' : ''),
+                        'hint' => $this->trans('Will appear on invoice headers.', array(), 'Admin.Design.Help').' '.$this->trans('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.', array(), 'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_LOGO_INVOICE',
                         'tab' => 'logo2',
-                        'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_ . Configuration::get('PS_LOGO_INVOICE') : _PS_IMG_ . Configuration::get('PS_LOGO'),
+                        'thumb' => (false !== Configuration::get('PS_LOGO_INVOICE') && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE') : _PS_IMG_.Configuration::get('PS_LOGO'),
                     ),
                     'PS_FAVICON' => array(
                         'title' => $this->trans('Favicon', array(), 'Admin.Design.Feature'),
-                        'desc' => $this->trans('Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!', array('[1]' => '<a href="' . $url . '" target="_blank">', '[/1]' => '</a>'), 'Admin.Design.Help'),
+                        'desc' => $this->trans('Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!', array('[1]' => '<a href="'.$url.'" target="_blank">', '[/1]' => '</a>'), 'Admin.Design.Help'),
                         'hint' => $this->trans('It is the small icon that appears in browser tabs, next to the web address', array(), 'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_FAVICON',
                         'tab' => 'icons',
-                        'thumb' => _PS_IMG_ . Configuration::get('PS_FAVICON') . (Tools::getValue('conf') ? sprintf('?%04d', rand(0, 9999)) : ''),
+                        'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON').(Tools::getValue('conf') ? sprintf('?%04d', rand(0, 9999)) : ''),
                     ),
                 ),
                 'after_tabs' => array(
@@ -460,10 +460,10 @@ class AdminThemesControllerCore extends AdminController
                         'id' => 'visit-theme-catalog-link',
                         'title' => $this->trans('Visit the theme catalog', array(), 'Admin.Design.Feature'),
                         'icon' => 'process-icon-themes',
-                        'href' => Tools::getCurrentUrlProtocolPrefix() . 'addons.prestashop.com/en/3-templates-prestashop'
-                        . '?utm_source=back-office&utm_medium=theme-button'
-                        . '&utm_campaign=back-office-' . $iso_lang_uc
-                        . '&utm_content=' . (defined('_PS_HOST_MODE_') ? 'cloud' : 'download'),
+                        'href' => Tools::getCurrentUrlProtocolPrefix().'addons.prestashop.com/en/3-templates-prestashop'
+                        .'?utm_source=back-office&utm_medium=theme-button'
+                        .'&utm_campaign=back-office-'.$iso_lang_uc
+                        .'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download'),
                         'js' => 'return !window.open(this.href)',
                     ),
                 ),
@@ -519,8 +519,8 @@ class AdminThemesControllerCore extends AdminController
             );
         }
 
-        if (isset($this->display) && method_exists($this, 'render' . $this->display)) {
-            return $this->{'render' . $this->display}();
+        if (isset($this->display) && method_exists($this, 'render'.$this->display)) {
+            return $this->{'render'.$this->display}();
         }
         if ($this->fields_options && is_array($this->fields_options)) {
             $helper = new HelperOptions($this);
@@ -558,7 +558,7 @@ class AdminThemesControllerCore extends AdminController
             'desc' => $this->trans('Save', array(), 'Admin.Actions'),
         );
 
-        if ($this->context->mode != Context::MODE_HOST) {
+        if (Context::MODE_HOST != $this->context->mode) {
             $fields_form[0] = array(
                 'form' => array(
                     'tinymce' => false,
@@ -607,10 +607,10 @@ class AdminThemesControllerCore extends AdminController
             $theme_archive_server[] = '-';
 
             foreach ($files as $file) {
-                if (is_file(_PS_ALL_THEMES_DIR_ . $file) && substr(_PS_ALL_THEMES_DIR_ . $file, -4) == '.zip') {
+                if (is_file(_PS_ALL_THEMES_DIR_.$file) && '.zip' == substr(_PS_ALL_THEMES_DIR_.$file, -4)) {
                     $theme_archive_server[] = array(
-                        'id' => basename(_PS_ALL_THEMES_DIR_ . $file),
-                        'name' => basename(_PS_ALL_THEMES_DIR_ . $file),
+                        'id' => basename(_PS_ALL_THEMES_DIR_.$file),
+                        'name' => basename(_PS_ALL_THEMES_DIR_.$file),
                     );
                 }
             }
@@ -652,7 +652,7 @@ class AdminThemesControllerCore extends AdminController
 
         $helper = new HelperForm();
 
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false) . '&action=importtheme';
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false).'&action=importtheme';
         $helper->token = Tools::getAdminTokenLite('AdminThemes');
         $helper->show_toolbar = true;
         $helper->toolbar_btn = $toolbar_btn;
@@ -669,10 +669,10 @@ class AdminThemesControllerCore extends AdminController
     public function setMedia($isNewTheme = false)
     {
         parent::setMedia($isNewTheme);
-        $this->addJS(_PS_JS_DIR_ . 'admin/themes.js');
+        $this->addJS(_PS_JS_DIR_.'admin/themes.js');
 
-        if ($this->context->mode == Context::MODE_HOST && Tools::getValue('action') == 'importtheme') {
-            $this->addJS(_PS_JS_DIR_ . 'admin/addons.js');
+        if (Context::MODE_HOST == $this->context->mode && 'importtheme' == Tools::getValue('action')) {
+            $this->addJS(_PS_JS_DIR_.'admin/addons.js');
         }
     }
 
@@ -800,7 +800,7 @@ class AdminThemesControllerCore extends AdminController
                 AdminController::LEVEL_DELETE,
             )
         )) {
-            throw new InvalidArgumentException('Unknown access level : ' . $accessLevel);
+            throw new InvalidArgumentException('Unknown access level : '.$accessLevel);
         }
 
         if (empty($this->authAccesses[$accessLevel])) {
@@ -928,7 +928,7 @@ class AdminThemesControllerCore extends AdminController
      */
     protected function addErrorToRedirectAfter()
     {
-        $this->redirect_after = self::$currentIndex . '&token=' . $this->token . '&error';
+        $this->redirect_after = self::$currentIndex.'&token='.$this->token.'&error';
     }
 
     /**
@@ -970,10 +970,10 @@ class AdminThemesControllerCore extends AdminController
             $this->validateAddAuthorization();
 
             if ($filename = Tools::getValue('theme_archive_server')) {
-                $path = _PS_ALL_THEMES_DIR_ . $filename;
+                $path = _PS_ALL_THEMES_DIR_.$filename;
                 $this->theme_manager->install($path);
             } elseif ($filename = Tools::getValue('themearchive')) {
-                $path = _PS_ALL_THEMES_DIR_ . $filename;
+                $path = _PS_ALL_THEMES_DIR_.$filename;
                 $destination = $this->processUploadFile($path);
                 if (!empty($destination)) {
                     $this->theme_manager->install($destination);
@@ -1106,7 +1106,7 @@ class AdminThemesControllerCore extends AdminController
             }
             if (Tools::getValue('PS_FAVICON')) {
                 $this->logo_uploader->updateFavicon();
-                $this->redirect_after = self::$currentIndex . '&token=' . $this->token;
+                $this->redirect_after = self::$currentIndex.'&token='.$this->token;
             }
 
             Hook::exec('actionAdminThemesControllerUpdate_optionsAfter');

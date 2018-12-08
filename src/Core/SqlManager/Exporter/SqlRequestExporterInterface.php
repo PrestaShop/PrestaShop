@@ -38,7 +38,7 @@ interface SqlRequestExporterInterface
     /**
      * Export SqlRequest query execution result to file.
      *
-     * @param SqlRequestId $sqlRequestId
+     * @param SqlRequestId              $sqlRequestId
      * @param SqlRequestExecutionResult $sqlRequestExecutionResult
      *
      * @return SplFileInfo

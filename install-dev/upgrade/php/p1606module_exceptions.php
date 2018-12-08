@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function p1606module_exceptions()
 {
     $modules_dir = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
@@ -33,7 +32,7 @@ function p1606module_exceptions()
     foreach ($modules_dir as $module_dir) {
         $module_path = _PS_MODULE_DIR_.$module_dir;
 
-        if ($module_dir[0] == '.' || $module_dir == 'index.php') {
+        if ('.' == $module_dir[0] || 'index.php' == $module_dir) {
             continue;
         }
 
@@ -42,7 +41,7 @@ function p1606module_exceptions()
             if (file_exists($module_path_admin) && is_dir($module_path_admin)) {
                 $admin = scandir($module_path_admin, SCANDIR_SORT_NONE);
                 foreach ($admin as $a_controller) {
-                    if ($a_controller[0] == '.' || $a_controller == 'index.php') {
+                    if ('.' == $a_controller[0] || 'index.php' == $a_controller) {
                         continue;
                     }
                     if (isset($modules_controllers[$module_dir])) {
@@ -57,7 +56,7 @@ function p1606module_exceptions()
             if (file_exists($module_path_front) && is_dir($module_path_front)) {
                 $front = scandir($module_path_front, SCANDIR_SORT_NONE);
                 foreach ($front as $f_controller) {
-                    if ($f_controller[0] == '.' || $f_controller == 'index.php') {
+                    if ('.' == $f_controller[0] || 'index.php' == $f_controller) {
                         continue;
                     }
                     if (isset($modules_controllers[$module_dir])) {
@@ -76,7 +75,7 @@ function p1606module_exceptions()
         $front_controllers = scandir($controller_dir, SCANDIR_SORT_NONE);
 
         foreach ($front_controllers as $controller) {
-            if ($controller[0] == '.' || $controller == 'index.php') {
+            if ('.' == $controller[0] || 'index.php' == $controller) {
                 continue;
             }
             $core_controllers[] = strtolower(str_replace('Controller.php', '', $controller));
@@ -90,10 +89,10 @@ function p1606module_exceptions()
     foreach ($hook_module_exceptions as $exception) {
         foreach ($modules_controllers as $module => $controllers) {
             if (in_array($exception['file_name'], $controllers) && !in_array($exception['file_name'], $core_controllers)) {
-                $sql_delete .= ' `id_hook_module_exceptions` = '.(int)$exception['id_hook_module_exceptions'].' AND';
+                $sql_delete .= ' `id_hook_module_exceptions` = '.(int) $exception['id_hook_module_exceptions'].' AND';
                 foreach ($controllers as $cont) {
                     if ($exception['file_name'] == $cont) {
-                        $sql_insert .= '(null, '.(int)$exception['id_shop'].', '.(int)$exception['id_module'].', '.(int)$exception['id_hook'].', \'module-'.pSQL($module).'-'.pSQL($exception['file_name']).'\'),';
+                        $sql_insert .= '(null, '.(int) $exception['id_shop'].', '.(int) $exception['id_module'].', '.(int) $exception['id_hook'].', \'module-'.pSQL($module).'-'.pSQL($exception['file_name']).'\'),';
                     }
                 }
             }

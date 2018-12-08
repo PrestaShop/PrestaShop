@@ -61,7 +61,7 @@ class PositionsController extends FrameworkBundleAdminController
         $installedModules = $moduleAdapter->getModulesInstalled();
 
         $selectedModule = $request->get('show_modules');
-        if ($selectedModule && strval($selectedModule) != 'all') {
+        if ($selectedModule && 'all' != strval($selectedModule)) {
             $this->selectedModule = (int) $selectedModule;
         }
 
@@ -95,7 +95,7 @@ class PositionsController extends FrameworkBundleAdminController
 
             $hooks[$key]['modules_count'] = count($hooks[$key]['modules']);
             // No module remaining after the check, no need to continue
-            if ($hooks[$key]['modules_count'] === 0) {
+            if (0 === $hooks[$key]['modules_count']) {
                 unset($hooks[$key]);
                 continue;
             }

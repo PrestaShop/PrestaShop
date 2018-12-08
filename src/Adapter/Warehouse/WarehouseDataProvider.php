@@ -52,7 +52,7 @@ class WarehouseDataProvider
      * Get all warehouses.
      *
      * @param bool $ignore_shop Optional, false by default - Allows to get only the warehouses that are associated to one/some shops (@see $id_shop)
-     * @param int $id_shop optional, Context::shop::Id by default - Allows to define a specific shop to filter
+     * @param int  $id_shop     optional, Context::shop::Id by default - Allows to define a specific shop to filter
      *
      * @return array Warehouses (ID, reference/name concatenated)
      */
@@ -74,6 +74,6 @@ class WarehouseDataProvider
     {
         $location = WarehouseProductLocation::getProductLocation($id_product, $id_product_attribute, $id_warehouse);
         // for 'activated', we test if $location is ===false or ==="", that's the only difference to know it...
-        return ['location' => $location, 'activated' => ($location !== false), 'product_id' => $id_product];
+        return ['location' => $location, 'activated' => (false !== $location), 'product_id' => $id_product];
     }
 }

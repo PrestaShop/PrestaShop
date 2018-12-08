@@ -102,35 +102,35 @@ class AdminCmsContentControllerCore extends AdminController
             $id_cms_category = 1;
         }
 
-        if ($this->display == 'list') {
+        if ('list' == $this->display) {
             $this->page_header_toolbar_btn['new_cms_category'] = array(
-                'href' => self::$currentIndex . '&addcms_category&token=' . $this->token,
+                'href' => self::$currentIndex.'&addcms_category&token='.$this->token,
                 'desc' => $this->trans('Add new page category', array(), 'Admin.Design.Help'),
                 'icon' => 'process-icon-new',
             );
             $this->page_header_toolbar_btn['new_cms_page'] = array(
-                'href' => self::$currentIndex . '&addcms&id_cms_category=' . (int) $id_cms_category . '&token=' . $this->token,
+                'href' => self::$currentIndex.'&addcms&id_cms_category='.(int) $id_cms_category.'&token='.$this->token,
                 'desc' => $this->trans('Add new page', array(), 'Admin.Design.Help'),
                 'icon' => 'process-icon-new',
             );
         }
 
-        $this->page_header_toolbar_title = implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ', $this->toolbar_title);
+        $this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
 
         if (is_array($this->page_header_toolbar_btn)
             && $this->page_header_toolbar_btn instanceof Traversable
-            || trim($this->page_header_toolbar_title) != '') {
+            || '' != trim($this->page_header_toolbar_title)) {
             $this->show_page_header_toolbar = true;
         }
 
         $this->admin_cms_categories->token = $this->token;
         $this->admin_cms->token = $this->token;
 
-        if ($this->display == 'edit_category') {
+        if ('edit_category' == $this->display) {
             $this->content .= $this->admin_cms_categories->renderForm();
-        } elseif ($this->display == 'edit_page') {
+        } elseif ('edit_page' == $this->display) {
             $this->content .= $this->admin_cms->renderForm();
-        } elseif ($this->display == 'list') {
+        } elseif ('list' == $this->display) {
             $id_cms_category = (int) Tools::getValue('id_cms_category');
             if (!$id_cms_category) {
                 $id_cms_category = 1;
@@ -141,8 +141,8 @@ class AdminCmsContentControllerCore extends AdminController
             // Cleaning links
             $cat_bar_index = self::$currentIndex;
             foreach ($cms_tabs as $tab) {
-                if (Tools::getValue($tab . 'Orderby') && Tools::getValue($tab . 'Orderway')) {
-                    $cat_bar_index = preg_replace('/&' . $tab . 'Orderby=([a-z _]*)&' . $tab . 'Orderway=([a-z]*)/i', '', self::$currentIndex);
+                if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway')) {
+                    $cat_bar_index = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
                 }
             }
             $this->context->smarty->assign(array(
@@ -169,27 +169,27 @@ class AdminCmsContentControllerCore extends AdminController
         $this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
 
         $id_cms_category = (int) Tools::getValue('id_cms_category');
-        if ($id_cms_category && $id_cms_category !== 1) {
+        if ($id_cms_category && 1 !== $id_cms_category) {
             $cms_category = new CMSCategory($id_cms_category);
         }
         $id_cms_page = Tools::getValue('id_cms');
 
-        if ($this->display == 'edit_category') {
-            if (Tools::getValue('addcms_category') !== false) {
+        if ('edit_category' == $this->display) {
+            if (false !== Tools::getValue('addcms_category')) {
                 $this->toolbar_title[] = $this->trans('Add new category', array(), 'Admin.Design.Feature');
             } else {
                 if (isset($cms_category)) {
                     $this->toolbar_title[] = $this->trans('Edit category: %name%', array('%name%' => $cms_category->name[$this->context->employee->id_lang]), 'Admin.Design.Feature');
                 }
             }
-        } elseif ($this->display == 'edit_page') {
-            if (Tools::getValue('addcms') !== false) {
+        } elseif ('edit_page' == $this->display) {
+            if (false !== Tools::getValue('addcms')) {
                 $this->toolbar_title[] = $this->trans('Add new page', array(), 'Admin.Design.Feature');
             } elseif ($id_cms_page) {
                 $cms_page = new CMS($id_cms_page);
                 $this->toolbar_title[] = $this->trans('Edit page: %meta_title%', array('%meta_title%' => $cms_page->meta_title[$this->context->employee->id_lang]), 'Admin.Design.Feature');
             }
-        } elseif ($this->display == 'list' && isset($cms_category)) {
+        } elseif ('list' == $this->display && isset($cms_category)) {
             $this->toolbar_title[] = $this->trans('Category: %category%', array('%category%' => $cms_category->name[$this->context->employee->id_lang]), 'Admin.Design.Feature');
         }
     }
@@ -279,7 +279,7 @@ class AdminCmsContentControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             if ($id_cms = (int) Tools::getValue('id_cms')) {
-                $bo_cms_url = _PS_BASE_URL_ . __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/index.php?tab=AdminCmsContent&id_cms=' . (int) $id_cms . '&updatecms&token=' . $this->token;
+                $bo_cms_url = _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/index.php?tab=AdminCmsContent&id_cms='.(int) $id_cms.'&updatecms&token='.$this->token;
 
                 if (Tools::getValue('redirect')) {
                     die($bo_cms_url);

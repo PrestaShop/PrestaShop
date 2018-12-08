@@ -54,8 +54,8 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
 
     /**
      * @param ProductSearchContext $context
-     * @param ProductSearchQuery $query
-     * @param string $type
+     * @param ProductSearchQuery   $query
+     * @param string               $type
      *
      * @return array|false|int
      *
@@ -73,7 +73,7 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
                 $query->getResultsPerPage(),
                 null,
                 null,
-                $type !== 'products',
+                'products' !== $type,
                 true,
                 true,
                 $query->getResultsPerPage()
@@ -85,14 +85,14 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
                 $query->getResultsPerPage(),
                 $query->getSortOrder()->toLegacyOrderBy(),
                 $query->getSortOrder()->toLegacyOrderWay(),
-                $type !== 'products'
+                'products' !== $type
             );
         }
     }
 
     /**
      * @param ProductSearchContext $context
-     * @param ProductSearchQuery $query
+     * @param ProductSearchQuery   $query
      *
      * @return ProductSearchResult
      *

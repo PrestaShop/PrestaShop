@@ -46,7 +46,7 @@ class CacheXcacheCore extends Cache
     {
         $result = xcache_set($key, $value, $ttl);
 
-        if ($result === false) {
+        if (false === $result) {
             $this->setAdjustTableCacheSize(true);
         }
 

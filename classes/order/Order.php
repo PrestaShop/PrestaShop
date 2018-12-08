@@ -283,7 +283,7 @@ class OrderCore extends ObjectModel
     {
         parent::__construct($id, $id_lang);
 
-        $is_admin = (is_object(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin');
+        $is_admin = (is_object(Context::getContext()->controller) && 'admin' == Context::getContext()->controller->controller_type);
         if ($this->id_customer && !$is_admin) {
             $customer = new Customer((int) $this->id_customer);
             $this->_taxCalculationMethod = Group::getPriceDisplayMethod((int) $customer->id_default_group);
@@ -325,7 +325,7 @@ class OrderCore extends ObjectModel
      *
      * @param $order
      * @param OrderDetail $order_detail
-     * @param int $quantity
+     * @param int         $quantity
      *
      * @return bool
      *
@@ -366,19 +366,19 @@ class OrderCore extends ObjectModel
         foreach ($products as &$product) {
             $product['id_product_attribute'] = $product['product_attribute_id'];
             $product['cart_quantity'] = $product['product_quantity'];
-            $product_id_list[] = $this->id_address_delivery . '_'
-                . $product['product_id'] . '_'
-                . $product['product_attribute_id'] . '_'
-                . (isset($product['id_customization']) ? $product['id_customization'] : '0');
+            $product_id_list[] = $this->id_address_delivery.'_'
+                .$product['product_id'].'_'
+                .$product['product_attribute_id'].'_'
+                .(isset($product['id_customization']) ? $product['id_customization'] : '0');
         }
         unset($product);
 
         $product_list = array();
         foreach ($products as $product) {
-            $key = $this->id_address_delivery . '_'
-                . $product['id_product'] . '_'
-                . (isset($product['id_product_attribute']) ? $product['id_product_attribute'] : '0') . '_'
-                . (isset($product['id_customization']) ? $product['id_customization'] : '0');
+            $key = $this->id_address_delivery.'_'
+                .$product['id_product'].'_'
+                .(isset($product['id_product_attribute']) ? $product['id_product_attribute'] : '0').'_'
+                .(isset($product['id_customization']) ? $product['id_customization'] : '0');
 
             if (in_array($key, $product_id_list)) {
                 $product_list[] = $product;
@@ -392,7 +392,7 @@ class OrderCore extends ObjectModel
      * DOES delete the product.
      *
      * @param OrderDetail $order_detail
-     * @param int $quantity
+     * @param int         $quantity
      *
      * @return bool
      *
@@ -447,11 +447,11 @@ class OrderCore extends ObjectModel
 
         /* Update order detail */
         $order_detail->product_quantity -= (int) $quantity;
-        if ($order_detail->product_quantity == 0) {
+        if (0 == $order_detail->product_quantity) {
             if (!$order_detail->delete()) {
                 return false;
             }
-            if (count($this->getProductsDetail()) == 0) {
+            if (0 == count($this->getProductsDetail())) {
                 $history = new OrderHistory();
                 $history->id_order = (int) $this->id;
                 $history->changeIdOrderState(Configuration::get('PS_OS_CANCELED'), $this);
@@ -478,14 +478,14 @@ class OrderCore extends ObjectModel
         }
 
         if ($this->hasBeenDelivered()) {
-            return Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_returned` = `quantity_returned` + ' . (int) $quantity . ' WHERE `id_customization` = ' . (int) $id_customization . ' AND `id_cart` = ' . (int) $this->id_cart . ' AND `id_product` = ' . (int) $order_detail->product_id);
+            return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity_returned` = `quantity_returned` + '.(int) $quantity.' WHERE `id_customization` = '.(int) $id_customization.' AND `id_cart` = '.(int) $this->id_cart.' AND `id_product` = '.(int) $order_detail->product_id);
         } elseif ($this->hasBeenPaid()) {
-            return Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_refunded` = `quantity_refunded` + ' . (int) $quantity . ' WHERE `id_customization` = ' . (int) $id_customization . ' AND `id_cart` = ' . (int) $this->id_cart . ' AND `id_product` = ' . (int) $order_detail->product_id);
+            return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity_refunded` = `quantity_refunded` + '.(int) $quantity.' WHERE `id_customization` = '.(int) $id_customization.' AND `id_cart` = '.(int) $this->id_cart.' AND `id_product` = '.(int) $order_detail->product_id);
         }
-        if (!Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity` = `quantity` - ' . (int) $quantity . ' WHERE `id_customization` = ' . (int) $id_customization . ' AND `id_cart` = ' . (int) $this->id_cart . ' AND `id_product` = ' . (int) $order_detail->product_id)) {
+        if (!Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity` = `quantity` - '.(int) $quantity.' WHERE `id_customization` = '.(int) $id_customization.' AND `id_cart` = '.(int) $this->id_cart.' AND `id_product` = '.(int) $order_detail->product_id)) {
             return false;
         }
-        if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `quantity` = 0')) {
+        if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization` WHERE `quantity` = 0')) {
             return false;
         }
 
@@ -495,10 +495,10 @@ class OrderCore extends ObjectModel
     /**
      * Get order history.
      *
-     * @param int $id_lang Language id
+     * @param int $id_lang        Language id
      * @param int $id_order_state Filter a specific order status
-     * @param int $no_hidden Filter no hidden status
-     * @param int $filters Flag to use specific field filter
+     * @param int $no_hidden      Filter no hidden status
+     * @param int $filters        Flag to use specific field filter
      *
      * @return array History entries ordered by date DESC
      */
@@ -530,48 +530,48 @@ class OrderCore extends ObjectModel
             }
         }
 
-        if (!isset(self::$_historyCache[$this->id . '_' . $id_order_state . '_' . $filters]) || $no_hidden) {
+        if (!isset(self::$_historyCache[$this->id.'_'.$id_order_state.'_'.$filters]) || $no_hidden) {
             $id_lang = $id_lang ? (int) $id_lang : 'o.`id_lang`';
             $result = Db::getInstance()->executeS('
             SELECT os.*, oh.*, e.`firstname` as employee_firstname, e.`lastname` as employee_lastname, osl.`name` as ostate_name
-            FROM `' . _DB_PREFIX_ . 'orders` o
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_history` oh ON o.`id_order` = oh.`id_order`
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON os.`id_order_state` = oh.`id_order_state`
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) ($id_lang) . ')
-            LEFT JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = oh.`id_employee`
-            WHERE oh.id_order = ' . (int) $this->id . '
-            ' . ($no_hidden ? ' AND os.hidden = 0' : '') . '
-            ' . ($logable ? ' AND os.logable = 1' : '') . '
-            ' . ($delivery ? ' AND os.delivery = 1' : '') . '
-            ' . ($paid ? ' AND os.paid = 1' : '') . '
-            ' . ($shipped ? ' AND os.shipped = 1' : '') . '
-            ' . ((int) $id_order_state ? ' AND oh.`id_order_state` = ' . (int) $id_order_state : '') . '
+            FROM `'._DB_PREFIX_.'orders` o
+            LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON o.`id_order` = oh.`id_order`
+            LEFT JOIN `'._DB_PREFIX_.'order_state` os ON os.`id_order_state` = oh.`id_order_state`
+            LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int) ($id_lang).')
+            LEFT JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = oh.`id_employee`
+            WHERE oh.id_order = '.(int) $this->id.'
+            '.($no_hidden ? ' AND os.hidden = 0' : '').'
+            '.($logable ? ' AND os.logable = 1' : '').'
+            '.($delivery ? ' AND os.delivery = 1' : '').'
+            '.($paid ? ' AND os.paid = 1' : '').'
+            '.($shipped ? ' AND os.shipped = 1' : '').'
+            '.((int) $id_order_state ? ' AND oh.`id_order_state` = '.(int) $id_order_state : '').'
             ORDER BY oh.date_add DESC, oh.id_order_history DESC');
             if ($no_hidden) {
                 return $result;
             }
-            self::$_historyCache[$this->id . '_' . $id_order_state . '_' . $filters] = $result;
+            self::$_historyCache[$this->id.'_'.$id_order_state.'_'.$filters] = $result;
         }
 
-        return self::$_historyCache[$this->id . '_' . $id_order_state . '_' . $filters];
+        return self::$_historyCache[$this->id.'_'.$id_order_state.'_'.$filters];
     }
 
     public function getProductsDetail()
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT *
-        FROM `' . _DB_PREFIX_ . 'order_detail` od
-        LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = od.product_id)
-        LEFT JOIN `' . _DB_PREFIX_ . 'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
-        WHERE od.`id_order` = ' . (int) $this->id);
+        FROM `'._DB_PREFIX_.'order_detail` od
+        LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = od.product_id)
+        LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
+        WHERE od.`id_order` = '.(int) $this->id);
     }
 
     public function getFirstMessage()
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT `message`
-            FROM `' . _DB_PREFIX_ . 'message`
-            WHERE `id_order` = ' . (int) $this->id . '
+            FROM `'._DB_PREFIX_.'message`
+            WHERE `id_order` = '.(int) $this->id.'
             ORDER BY `id_message`
         ');
     }
@@ -672,11 +672,11 @@ class OrderCore extends ObjectModel
     {
         return (int) Db::getInstance()->getValue('
             SELECT o.id_order
-            FROM ' . _DB_PREFIX_ . 'orders o
-            LEFT JOIN ' . _DB_PREFIX_ . 'order_detail od
+            FROM '._DB_PREFIX_.'orders o
+            LEFT JOIN '._DB_PREFIX_.'order_detail od
                 ON o.id_order = od.id_order
-            WHERE o.id_customer = ' . (int) $id_customer . '
-                AND od.product_id = ' . (int) $id_product . '
+            WHERE o.id_customer = '.(int) $id_customer.'
+                AND od.product_id = '.(int) $id_product.'
             ORDER BY o.date_add DESC
         ');
     }
@@ -702,7 +702,7 @@ class OrderCore extends ObjectModel
     protected function setProductCurrentStock(&$product)
     {
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-            && (int) $product['advanced_stock_management'] == 1
+            && 1 == (int) $product['advanced_stock_management']
             && (int) $product['id_warehouse'] > 0) {
             $product['current_stock'] = StockManagerFactory::getManager()->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], (int) $product['id_warehouse'], true);
         } else {
@@ -722,18 +722,18 @@ class OrderCore extends ObjectModel
         if (isset($product['product_attribute_id']) && $product['product_attribute_id']) {
             $id_image = Db::getInstance()->getValue('
                 SELECT `image_shop`.id_image
-                FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai' .
-                Shop::addSqlAssociation('image', 'pai', true) . '
-                LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
-                WHERE id_product_attribute = ' . (int) $product['product_attribute_id'] . ' ORDER by i.position ASC');
+                FROM `'._DB_PREFIX_.'product_attribute_image` pai'.
+                Shop::addSqlAssociation('image', 'pai', true).'
+                LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_image` = pai.`id_image`)
+                WHERE id_product_attribute = '.(int) $product['product_attribute_id'].' ORDER by i.position ASC');
         }
 
         if (!isset($id_image) || !$id_image) {
             $id_image = Db::getInstance()->getValue(
                 'SELECT `image_shop`.id_image
-                FROM `' . _DB_PREFIX_ . 'image` i' .
-                Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
-                WHERE i.id_product = ' . (int) $product['product_id']
+                FROM `'._DB_PREFIX_.'image` i'.
+                Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
+                WHERE i.id_product = '.(int) $product['product_id']
             );
         }
 
@@ -759,8 +759,8 @@ class OrderCore extends ObjectModel
     {
         $sql = '
             SELECT `product_id`, `product_attribute_id`, `download_hash`, `download_deadline`
-            FROM `' . _DB_PREFIX_ . 'order_detail` od
-            WHERE od.`id_order` = ' . (int) $this->id . '
+            FROM `'._DB_PREFIX_.'order_detail` od
+            WHERE od.`id_order` = '.(int) $this->id.'
                 AND `download_hash` <> \'\'';
 
         return Db::getInstance()->executeS($sql);
@@ -783,7 +783,7 @@ class OrderCore extends ObjectModel
         $virtual = true;
 
         foreach ($products as $product) {
-            if ($strict === false && (bool) $product['is_virtual']) {
+            if (false === $strict && (bool) $product['is_virtual']) {
                 return true;
             }
 
@@ -807,19 +807,19 @@ class OrderCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT *
-        FROM `' . _DB_PREFIX_ . 'order_cart_rule` ocr
-        WHERE ocr.`id_order` = ' . (int) $this->id);
+        FROM `'._DB_PREFIX_.'order_cart_rule` ocr
+        WHERE ocr.`id_order` = '.(int) $this->id);
     }
 
     public static function getDiscountsCustomer($id_customer, $id_cart_rule)
     {
-        $cache_id = 'Order::getDiscountsCustomer_' . (int) $id_customer . '-' . (int) $id_cart_rule;
+        $cache_id = 'Order::getDiscountsCustomer_'.(int) $id_customer.'-'.(int) $id_cart_rule;
         if (!Cache::isStored($cache_id)) {
             $result = (int) Db::getInstance()->getValue('
-            SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'orders` o
-            LEFT JOIN ' . _DB_PREFIX_ . 'order_cart_rule ocr ON (ocr.id_order = o.id_order)
-            WHERE o.id_customer = ' . (int) $id_customer . '
-            AND ocr.id_cart_rule = ' . (int) $id_cart_rule);
+            SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders` o
+            LEFT JOIN '._DB_PREFIX_.'order_cart_rule ocr ON (ocr.id_order = o.id_order)
+            WHERE o.id_customer = '.(int) $id_customer.'
+            AND ocr.id_cart_rule = '.(int) $id_cart_rule);
             Cache::store($cache_id, $result);
 
             return $result;
@@ -847,9 +847,9 @@ class OrderCore extends ObjectModel
     {
         return Db::getInstance()->getRow('
             SELECT os.`id_order_state`, osl.`name`, os.`logable`, os.`shipped`
-            FROM `' . _DB_PREFIX_ . 'order_state` os
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (osl.`id_order_state` = os.`id_order_state`)
-            WHERE osl.`id_lang` = ' . (int) $id_lang . ' AND os.`id_order_state` = ' . (int) $this->current_state);
+            FROM `'._DB_PREFIX_.'order_state` os
+            LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (osl.`id_order_state` = os.`id_order_state`)
+            WHERE osl.`id_lang` = '.(int) $id_lang.' AND os.`id_order_state` = '.(int) $this->current_state);
     }
 
     public function hasBeenDelivered()
@@ -864,12 +864,12 @@ class OrderCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT IFNULL(SUM(ord.product_quantity), SUM(product_quantity_return))
-            FROM `' . _DB_PREFIX_ . 'orders` o
-            INNER JOIN `' . _DB_PREFIX_ . 'order_detail` od
+            FROM `'._DB_PREFIX_.'orders` o
+            INNER JOIN `'._DB_PREFIX_.'order_detail` od
             ON od.id_order = o.id_order
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_return_detail` ord
+            LEFT JOIN `'._DB_PREFIX_.'order_return_detail` ord
             ON ord.id_order_detail = od.id_order_detail
-            WHERE o.id_order = ' . (int) $this->id);
+            WHERE o.id_order = '.(int) $this->id);
     }
 
     public function hasBeenPaid()
@@ -905,7 +905,7 @@ class OrderCore extends ObjectModel
     /**
      * Get customer orders.
      *
-     * @param int $id_customer Customer id
+     * @param int  $id_customer        Customer id
      * @param bool $show_hidden_status Display or not hidden order statuses
      *
      * @return array Customer orders
@@ -923,15 +923,15 @@ class OrderCore extends ObjectModel
         }
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT o.*, 
-          (SELECT SUM(od.`product_quantity`) FROM `' . _DB_PREFIX_ . 'order_detail` od WHERE od.`id_order` = o.`id_order`) nb_products,
-          (SELECT oh.`id_order_state` FROM `' . _DB_PREFIX_ . 'order_history` oh
-           LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
-           WHERE oh.`id_order` = o.`id_order` ' .
-            (!$show_hidden_status ? ' AND os.`hidden` != 1' : '') .
+          (SELECT SUM(od.`product_quantity`) FROM `'._DB_PREFIX_.'order_detail` od WHERE od.`id_order` = o.`id_order`) nb_products,
+          (SELECT oh.`id_order_state` FROM `'._DB_PREFIX_.'order_history` oh
+           LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
+           WHERE oh.`id_order` = o.`id_order` '.
+            (!$show_hidden_status ? ' AND os.`hidden` != 1' : '').
             ' ORDER BY oh.`date_add` DESC, oh.`id_order_history` DESC LIMIT 1) id_order_state
-        FROM `' . _DB_PREFIX_ . 'orders` o
-        WHERE o.`id_customer` = ' . (int) $id_customer .
-            Shop::addSqlRestriction(Shop::SHARE_ORDER) . '
+        FROM `'._DB_PREFIX_.'orders` o
+        WHERE o.`id_customer` = '.(int) $id_customer.
+            Shop::addSqlRestriction(Shop::SHARE_ORDER).'
         GROUP BY o.`id_order`
         ORDER BY o.`date_add` DESC');
 
@@ -951,11 +951,11 @@ class OrderCore extends ObjectModel
     public static function getOrdersIdByDate($date_from, $date_to, $id_customer = null, $type = null)
     {
         $sql = 'SELECT `id_order`
-                FROM `' . _DB_PREFIX_ . 'orders`
-                WHERE DATE_ADD(date_upd, INTERVAL -1 DAY) <= \'' . pSQL($date_to) . '\' AND date_upd >= \'' . pSQL($date_from) . '\'
-                    ' . Shop::addSqlRestriction()
-                    . ($type ? ' AND `' . bqSQL($type) . '_number` != 0' : '')
-                    . ($id_customer ? ' AND id_customer = ' . (int) $id_customer : '');
+                FROM `'._DB_PREFIX_.'orders`
+                WHERE DATE_ADD(date_upd, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND date_upd >= \''.pSQL($date_from).'\'
+                    '.Shop::addSqlRestriction()
+                    .($type ? ' AND `'.bqSQL($type).'_number` != 0' : '')
+                    .($id_customer ? ' AND id_customer = '.(int) $id_customer : '');
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
         $orders = array();
@@ -974,17 +974,17 @@ class OrderCore extends ObjectModel
 
         $sql = 'SELECT *, (
                     SELECT osl.`name`
-                    FROM `' . _DB_PREFIX_ . 'order_state_lang` osl
+                    FROM `'._DB_PREFIX_.'order_state_lang` osl
                     WHERE osl.`id_order_state` = o.`current_state`
-                    AND osl.`id_lang` = ' . (int) $context->language->id . '
+                    AND osl.`id_lang` = '.(int) $context->language->id.'
                     LIMIT 1
                 ) AS `state_name`, o.`date_add` AS `date_add`, o.`date_upd` AS `date_upd`
-                FROM `' . _DB_PREFIX_ . 'orders` o
-                LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (c.`id_customer` = o.`id_customer`)
+                FROM `'._DB_PREFIX_.'orders` o
+                LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
                 WHERE 1
-                    ' . Shop::addSqlRestriction(false, 'o') . '
+                    '.Shop::addSqlRestriction(false, 'o').'
                 ORDER BY o.`date_add` DESC
-                ' . ((int) $limit ? 'LIMIT 0, ' . (int) $limit : '');
+                '.((int) $limit ? 'LIMIT 0, '.(int) $limit : '');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
@@ -1003,11 +1003,11 @@ class OrderCore extends ObjectModel
     {
         Tools::displayAsDeprecated();
         $sql = 'SELECT `id_order`
-                FROM `' . _DB_PREFIX_ . 'orders`
-                WHERE DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \'' . pSQL($date_to) . '\' AND invoice_date >= \'' . pSQL($date_from) . '\'
-                    ' . Shop::addSqlRestriction()
-                    . ($type ? ' AND `' . bqSQL($type) . '_number` != 0' : '')
-                    . ($id_customer ? ' AND id_customer = ' . (int) $id_customer : '') .
+                FROM `'._DB_PREFIX_.'orders`
+                WHERE DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND invoice_date >= \''.pSQL($date_from).'\'
+                    '.Shop::addSqlRestriction()
+                    .($type ? ' AND `'.bqSQL($type).'_number` != 0' : '')
+                    .($id_customer ? ' AND id_customer = '.(int) $id_customer : '').
                 ' ORDER BY invoice_date ASC';
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -1030,9 +1030,9 @@ class OrderCore extends ObjectModel
     {
         Tools::displayAsDeprecated();
         $sql = 'SELECT id_order
-                FROM ' . _DB_PREFIX_ . 'orders o
-                WHERE o.`current_state` = ' . (int) $id_order_state . '
-                ' . Shop::addSqlRestriction(false, 'o') . '
+                FROM '._DB_PREFIX_.'orders o
+                WHERE o.`current_state` = '.(int) $id_order_state.'
+                '.Shop::addSqlRestriction(false, 'o').'
                 ORDER BY invoice_date ASC';
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -1061,7 +1061,7 @@ class OrderCore extends ObjectModel
      */
     public function getTotalProductsWithTaxes($products = false)
     {
-        if ($this->total_products_wt != '0.00' && !$products) {
+        if ('0.00' != $this->total_products_wt && !$products) {
             return $this->total_products_wt;
         }
         /* Retro-compatibility (now set directly on the validateOrder() method) */
@@ -1112,9 +1112,9 @@ class OrderCore extends ObjectModel
     public static function getCustomerNbOrders($id_customer)
     {
         $sql = 'SELECT COUNT(`id_order`) AS nb
-                FROM `' . _DB_PREFIX_ . 'orders`
-                WHERE `id_customer` = ' . (int) $id_customer
-                    . Shop::addSqlRestriction();
+                FROM `'._DB_PREFIX_.'orders`
+                WHERE `id_customer` = '.(int) $id_customer
+                    .Shop::addSqlRestriction();
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
         return isset($result['nb']) ? $result['nb'] : 0;
@@ -1158,8 +1158,8 @@ class OrderCore extends ObjectModel
     public static function getIdByCartId($id_cart)
     {
         $sql = 'SELECT `id_order` 
-            FROM `' . _DB_PREFIX_ . 'orders`
-            WHERE `id_cart` = ' . (int) $id_cart .
+            FROM `'._DB_PREFIX_.'orders`
+            WHERE `id_cart` = '.(int) $id_cart.
             Shop::addSqlRestriction();
 
         $result = Db::getInstance()->getValue($sql);
@@ -1171,9 +1171,9 @@ class OrderCore extends ObjectModel
      * @deprecated 1.5.0.1
      * @see Order::addCartRule()
      *
-     * @param int $id_cart_rule
+     * @param int    $id_cart_rule
      * @param string $name
-     * @param float $value
+     * @param float  $value
      *
      * @return bool
      */
@@ -1187,10 +1187,10 @@ class OrderCore extends ObjectModel
     /**
      * @since 1.5.0.1
      *
-     * @param int $id_cart_rule
+     * @param int    $id_cart_rule
      * @param string $name
-     * @param array $values
-     * @param int $id_order_invoice
+     * @param array  $values
+     * @param int    $id_order_invoice
      *
      * @return bool
      */
@@ -1203,7 +1203,7 @@ class OrderCore extends ObjectModel
         $order_cart_rule->name = $name;
         $order_cart_rule->value = $values['tax_incl'];
         $order_cart_rule->value_tax_excl = $values['tax_excl'];
-        if ($free_shipping === null) {
+        if (null === $free_shipping) {
             $cart_rule = new CartRule($id_cart_rule);
             $free_shipping = $cart_rule->free_shipping;
         }
@@ -1218,8 +1218,8 @@ class OrderCore extends ObjectModel
             return true;
         }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-        SELECT TO_DAYS("' . date('Y-m-d') . ' 00:00:00") - TO_DAYS(`delivery_date`)  AS days FROM `' . _DB_PREFIX_ . 'orders`
-        WHERE `id_order` = ' . (int) $this->id);
+        SELECT TO_DAYS("'.date('Y-m-d').' 00:00:00") - TO_DAYS(`delivery_date`)  AS days FROM `'._DB_PREFIX_.'orders`
+        WHERE `id_order` = '.(int) $this->id);
         if ($result['days'] <= $nb_return_days) {
             return true;
         }
@@ -1243,9 +1243,9 @@ class OrderCore extends ObjectModel
 
     public static function getLastInvoiceNumber()
     {
-        $sql = 'SELECT MAX(`number`) FROM `' . _DB_PREFIX_ . 'order_invoice`';
+        $sql = 'SELECT MAX(`number`) FROM `'._DB_PREFIX_.'order_invoice`';
         if (Configuration::get('PS_INVOICE_RESET')) {
-            $sql .= ' WHERE DATE_FORMAT(`date_add`, "%Y") = ' . (int) date('Y');
+            $sql .= ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int) date('Y');
         }
 
         return Db::getInstance()->getValue($sql);
@@ -1263,20 +1263,20 @@ class OrderCore extends ObjectModel
             Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $id_shop);
         }
 
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_invoice` SET number =';
+        $sql = 'UPDATE `'._DB_PREFIX_.'order_invoice` SET number =';
 
         if ($number) {
             $sql .= (int) $number;
         } else {
             $getNumberSql = '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
-                FROM `' . _DB_PREFIX_ . 'order_invoice`' . (Configuration::get('PS_INVOICE_RESET') ?
-                ' WHERE DATE_FORMAT(`date_add`, "%Y") = ' . (int) date('Y') : '') . ') AS result)';
+                FROM `'._DB_PREFIX_.'order_invoice`'.(Configuration::get('PS_INVOICE_RESET') ?
+                ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int) date('Y') : '').') AS result)';
             $getNumberSqlRow = Db::getInstance()->getRow($getNumberSql);
             $newInvoiceNumber = $getNumberSqlRow['new_number'];
             $sql .= $newInvoiceNumber;
         }
 
-        $sql .= ' WHERE `id_order_invoice` = ' . (int) $order_invoice_id;
+        $sql .= ' WHERE `id_order_invoice` = '.(int) $order_invoice_id;
 
         return Db::getInstance()->execute($sql);
     }
@@ -1289,8 +1289,8 @@ class OrderCore extends ObjectModel
 
         return Db::getInstance()->getValue(
             'SELECT `number`
-            FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE `id_order_invoice` = ' . (int) $order_invoice_id
+            FROM `'._DB_PREFIX_.'order_invoice`
+            WHERE `id_order_invoice` = '.(int) $order_invoice_id
         );
     }
 
@@ -1321,8 +1321,8 @@ class OrderCore extends ObjectModel
             // Update order_carrier
             $id_order_carrier = Db::getInstance()->getValue('
                 SELECT `id_order_carrier`
-                FROM `' . _DB_PREFIX_ . 'order_carrier`
-                WHERE `id_order` = ' . (int) $order_invoice->id_order . '
+                FROM `'._DB_PREFIX_.'order_carrier`
+                WHERE `id_order` = '.(int) $order_invoice->id_order.'
                 AND (`id_order_invoice` IS NULL OR `id_order_invoice` = 0)');
 
             if ($id_order_carrier) {
@@ -1333,27 +1333,27 @@ class OrderCore extends ObjectModel
 
             // Update order detail
             Db::getInstance()->execute('
-                UPDATE `' . _DB_PREFIX_ . 'order_detail`
-                SET `id_order_invoice` = ' . (int) $order_invoice->id . '
-                WHERE `id_order` = ' . (int) $order_invoice->id_order);
+                UPDATE `'._DB_PREFIX_.'order_detail`
+                SET `id_order_invoice` = '.(int) $order_invoice->id.'
+                WHERE `id_order` = '.(int) $order_invoice->id_order);
 
             // Update order payment
             if ($use_existing_payment) {
                 $id_order_payments = Db::getInstance()->executeS('
                     SELECT DISTINCT op.id_order_payment
-                    FROM `' . _DB_PREFIX_ . 'order_payment` op
-                    INNER JOIN `' . _DB_PREFIX_ . 'orders` o ON (o.reference = op.order_reference)
-                    LEFT JOIN `' . _DB_PREFIX_ . 'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)
-                    WHERE (oip.id_order != ' . (int) $order_invoice->id_order . ' OR oip.id_order IS NULL) AND o.id_order = ' . (int) $order_invoice->id_order);
+                    FROM `'._DB_PREFIX_.'order_payment` op
+                    INNER JOIN `'._DB_PREFIX_.'orders` o ON (o.reference = op.order_reference)
+                    LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)
+                    WHERE (oip.id_order != '.(int) $order_invoice->id_order.' OR oip.id_order IS NULL) AND o.id_order = '.(int) $order_invoice->id_order);
 
                 if (count($id_order_payments)) {
                     foreach ($id_order_payments as $order_payment) {
                         Db::getInstance()->execute('
-                            INSERT INTO `' . _DB_PREFIX_ . 'order_invoice_payment`
+                            INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
                             SET
-                                `id_order_invoice` = ' . (int) $order_invoice->id . ',
-                                `id_order_payment` = ' . (int) $order_payment['id_order_payment'] . ',
-                                `id_order` = ' . (int) $order_invoice->id_order);
+                                `id_order_invoice` = '.(int) $order_invoice->id.',
+                                `id_order_payment` = '.(int) $order_payment['id_order_payment'].',
+                                `id_order` = '.(int) $order_invoice->id_order);
                     }
                     // Clear cache
                     Cache::clean('order_invoice_paid_*');
@@ -1362,9 +1362,9 @@ class OrderCore extends ObjectModel
 
             // Update order cart rule
             Db::getInstance()->execute('
-                UPDATE `' . _DB_PREFIX_ . 'order_cart_rule`
-                SET `id_order_invoice` = ' . (int) $order_invoice->id . '
-                WHERE `id_order` = ' . (int) $order_invoice->id_order);
+                UPDATE `'._DB_PREFIX_.'order_cart_rule`
+                SET `id_order_invoice` = '.(int) $order_invoice->id.'
+                WHERE `id_order` = '.(int) $order_invoice->id_order);
 
             // Keep it for backward compatibility, to remove on 1.6 version
             $this->invoice_date = $order_invoice->date_add;
@@ -1468,18 +1468,18 @@ class OrderCore extends ObjectModel
             Configuration::updateValue('PS_DELIVERY_NUMBER', false, false, null, $id_shop);
         }
 
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_invoice` SET delivery_number =';
+        $sql = 'UPDATE `'._DB_PREFIX_.'order_invoice` SET delivery_number =';
 
         if ($number) {
             $sql .= (int) $number;
         } else {
             $getNumberSql = '(SELECT new_number FROM (SELECT (MAX(`delivery_number`) + 1) AS new_number
-                FROM `' . _DB_PREFIX_ . 'order_invoice`) AS result)';
+                FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
             $newInvoiceNumber = Db::getInstance()->getValue($getNumberSql);
             $sql .= $newInvoiceNumber;
         }
 
-        $sql .= ' WHERE `id_order_invoice` = ' . (int) $order_invoice_id;
+        $sql .= ' WHERE `id_order_invoice` = '.(int) $order_invoice_id;
 
         return Db::getInstance()->execute($sql);
     }
@@ -1492,8 +1492,8 @@ class OrderCore extends ObjectModel
 
         return Db::getInstance()->getValue(
             'SELECT `delivery_number`
-            FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE `id_order_invoice` = ' . (int) $order_invoice_id
+            FROM `'._DB_PREFIX_.'order_invoice`
+            WHERE `id_order_invoice` = '.(int) $order_invoice_id
         );
     }
 
@@ -1526,9 +1526,9 @@ class OrderCore extends ObjectModel
     public static function getByDelivery($id_delivery)
     {
         $sql = 'SELECT id_order
-                FROM `' . _DB_PREFIX_ . 'orders`
-                WHERE `delivery_number` = ' . (int) $id_delivery . '
-                ' . Shop::addSqlRestriction();
+                FROM `'._DB_PREFIX_.'orders`
+                WHERE `delivery_number` = '.(int) $id_delivery.'
+                '.Shop::addSqlRestriction();
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
         return new Order((int) $res['id_order']);
@@ -1563,9 +1563,9 @@ class OrderCore extends ObjectModel
     {
         $sql = '
           SELECT id_order
-            FROM `' . _DB_PREFIX_ . 'orders` o
-            LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (o.`id_customer` = c.`id_customer`)
-                WHERE o.`reference` = \'' . pSQL($reference) . '\' AND c.`email` = \'' . pSQL($email) . '\'
+            FROM `'._DB_PREFIX_.'orders` o
+            LEFT JOIN `'._DB_PREFIX_.'customer` c ON (o.`id_customer` = c.`id_customer`)
+                WHERE o.`reference` = \''.pSQL($reference).'\' AND c.`email` = \''.pSQL($email).'\'
         ';
 
         $id = (int) Db::getInstance()->getValue($sql);
@@ -1577,8 +1577,8 @@ class OrderCore extends ObjectModel
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
         SELECT SUM(product_weight * product_quantity)
-        FROM ' . _DB_PREFIX_ . 'order_detail
-        WHERE id_order = ' . (int) $this->id);
+        FROM '._DB_PREFIX_.'order_detail
+        WHERE id_order = '.(int) $this->id);
 
         return (float) $result;
     }
@@ -1594,8 +1594,8 @@ class OrderCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
         SELECT `invoice_number`, `id_order`
-        FROM `' . _DB_PREFIX_ . 'orders`
-        WHERE invoice_number = ' . (int) $id_invoice);
+        FROM `'._DB_PREFIX_.'orders`
+        WHERE invoice_number = '.(int) $id_invoice);
     }
 
     public function isAssociatedAtGuest($email)
@@ -1604,12 +1604,12 @@ class OrderCore extends ObjectModel
             return false;
         }
         $sql = 'SELECT COUNT(*)
-                FROM `' . _DB_PREFIX_ . 'orders` o
-                LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (c.`id_customer` = o.`id_customer`)
-                WHERE o.`id_order` = ' . (int) $this->id . '
-                    AND c.`email` = \'' . pSQL($email) . '\'
+                FROM `'._DB_PREFIX_.'orders` o
+                LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
+                WHERE o.`id_order` = '.(int) $this->id.'
+                    AND c.`email` = \''.pSQL($email).'\'
                     AND c.`is_guest` = 1
-                    ' . Shop::addSqlRestriction(false, 'c');
+                    '.Shop::addSqlRestriction(false, 'c');
 
         return (bool) Db::getInstance()->getValue($sql);
     }
@@ -1624,9 +1624,9 @@ class OrderCore extends ObjectModel
     {
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT `id_cart`
-            FROM `' . _DB_PREFIX_ . 'orders`
-            WHERE `id_order` = ' . (int) $id_order . '
-            ' . ($id_customer ? 'AND `id_customer` = ' . (int) $id_customer : ''));
+            FROM `'._DB_PREFIX_.'orders`
+            WHERE `id_order` = '.(int) $id_order.'
+            '.($id_customer ? 'AND `id_customer` = '.(int) $id_customer : ''));
     }
 
     public function getWsOrderRows()
@@ -1646,8 +1646,8 @@ class OrderCore extends ObjectModel
             `product_upc`,
             `unit_price_tax_incl`,
             `unit_price_tax_excl`
-            FROM `' . _DB_PREFIX_ . 'order_detail`
-            WHERE id_order = ' . (int) $this->id;
+            FROM `'._DB_PREFIX_.'order_detail`
+            WHERE id_order = '.(int) $this->id;
         $result = Db::getInstance()->executeS($query);
 
         return $result;
@@ -1655,7 +1655,7 @@ class OrderCore extends ObjectModel
 
     /** Set current order status
      * @param int $id_order_state
-     * @param int $id_employee (/!\ not optional except for Webservice
+     * @param int $id_employee    (/!\ not optional except for Webservice
      */
     public function setCurrentState($id_order_state, $id_employee = 0)
     {
@@ -1668,8 +1668,8 @@ class OrderCore extends ObjectModel
         $history->changeIdOrderState((int) $id_order_state, $this);
         $res = Db::getInstance()->getRow('
             SELECT `invoice_number`, `invoice_date`, `delivery_number`, `delivery_date`
-            FROM `' . _DB_PREFIX_ . 'orders`
-            WHERE `id_order` = ' . (int) $this->id);
+            FROM `'._DB_PREFIX_.'orders`
+            WHERE `id_order` = '.(int) $this->id);
         $this->invoice_date = $res['invoice_date'];
         $this->invoice_number = $res['invoice_number'];
         $this->delivery_date = $res['delivery_date'];
@@ -1692,9 +1692,9 @@ class OrderCore extends ObjectModel
 
     public function deleteAssociations()
     {
-        return Db::getInstance()->execute('
-                DELETE FROM `' . _DB_PREFIX_ . 'order_detail`
-                WHERE `id_order` = ' . (int) $this->id) !== false;
+        return false !== Db::getInstance()->execute('
+                DELETE FROM `'._DB_PREFIX_.'order_detail`
+                WHERE `id_order` = '.(int) $this->id);
     }
 
     /**
@@ -1708,9 +1708,9 @@ class OrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
             SELECT id_order
-            FROM ' . _DB_PREFIX_ . 'orders
-            WHERE id_order < ' . (int) $this->id
-            . Shop::addSqlRestriction() . '
+            FROM '._DB_PREFIX_.'orders
+            WHERE id_order < '.(int) $this->id
+            .Shop::addSqlRestriction().'
             ORDER BY id_order DESC');
     }
 
@@ -1725,9 +1725,9 @@ class OrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
             SELECT id_order
-            FROM ' . _DB_PREFIX_ . 'orders
-            WHERE id_order > ' . (int) $this->id
-            . Shop::addSqlRestriction() . '
+            FROM '._DB_PREFIX_.'orders
+            WHERE id_order > '.(int) $this->id
+            .Shop::addSqlRestriction().'
             ORDER BY id_order ASC');
     }
 
@@ -1778,10 +1778,10 @@ class OrderCore extends ObjectModel
         return Db::getInstance()->getValue(
             '
     		SELECT od.`tax_computation_method`
-    		FROM `' . _DB_PREFIX_ . 'order_detail_tax` odt
-    		LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-    		WHERE od.`id_order` = ' . (int) $this->id . '
-    		AND od.`tax_computation_method` = ' . (int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD
+    		FROM `'._DB_PREFIX_.'order_detail_tax` odt
+    		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+    		WHERE od.`id_order` = '.(int) $this->id.'
+    		AND od.`tax_computation_method` = '.(int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD
         );
     }
 
@@ -1805,11 +1805,11 @@ class OrderCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param float $amount_paid
-     * @param string $payment_method
-     * @param string $payment_transaction_id
-     * @param Currency $currency
-     * @param string $date
+     * @param float        $amount_paid
+     * @param string       $payment_method
+     * @param string       $payment_transaction_id
+     * @param Currency     $currency
+     * @param string       $date
      * @param OrderInvoice $order_invoice
      *
      * @return bool
@@ -1828,8 +1828,8 @@ class OrderCore extends ObjectModel
         $order_payment->date_add = ($date ? $date : null);
 
         // Add time to the date if needed
-        if ($order_payment->date_add != null && preg_match('/^[0-9]+-[0-9]+-[0-9]+$/', $order_payment->date_add)) {
-            $order_payment->date_add .= ' ' . date('H:i:s');
+        if (null != $order_payment->date_add && preg_match('/^[0-9]+-[0-9]+-[0-9]+$/', $order_payment->date_add)) {
+            $order_payment->date_add .= ' '.date('H:i:s');
         }
 
         // Update total_paid_real value for backward compatibility reasons
@@ -1848,8 +1848,8 @@ class OrderCore extends ObjectModel
 
         if (!is_null($order_invoice)) {
             $res = Db::getInstance()->execute('
-            INSERT INTO `' . _DB_PREFIX_ . 'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
-            VALUES(' . (int) $order_invoice->id . ', ' . (int) $order_payment->id . ', ' . (int) $this->id . ')');
+            INSERT INTO `'._DB_PREFIX_.'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
+            VALUES('.(int) $order_invoice->id.', '.(int) $order_payment->id.', '.(int) $this->id.')');
 
             // Clear cache
             Cache::clean('order_invoice_paid_*');
@@ -1905,16 +1905,16 @@ class OrderCore extends ObjectModel
     {
         return Db::getInstance()->executeS(
             'SELECT DISTINCT oc.`id_order_invoice`, oc.`weight`, oc.`shipping_cost_tax_excl`, oc.`shipping_cost_tax_incl`, c.`url`, oc.`id_carrier`, c.`name` as `carrier_name`, oc.`date_add`, "Delivery" as `type`, "true" as `can_edit`, oc.`tracking_number`, oc.`id_order_carrier`, osl.`name` as order_state_name, c.`name` as state_name
-            FROM `' . _DB_PREFIX_ . 'orders` o
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_history` oh
+            FROM `'._DB_PREFIX_.'orders` o
+            LEFT JOIN `'._DB_PREFIX_.'order_history` oh
                 ON (o.`id_order` = oh.`id_order`)
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_carrier` oc
+            LEFT JOIN `'._DB_PREFIX_.'order_carrier` oc
                 ON (o.`id_order` = oc.`id_order`)
-            LEFT JOIN `' . _DB_PREFIX_ . 'carrier` c
+            LEFT JOIN `'._DB_PREFIX_.'carrier` c
                 ON (oc.`id_carrier` = c.`id_carrier`)
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl
-                ON (oh.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) Context::getContext()->language->id . ')
-            WHERE o.`id_order` = ' . (int) $this->id . '
+            LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl
+                ON (oh.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int) Context::getContext()->language->id.')
+            WHERE o.`id_order` = '.(int) $this->id.'
             GROUP BY c.id_carrier'
         );
     }
@@ -2031,9 +2031,9 @@ class OrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             'SELECT SUM(total_paid_tax_incl)
-            FROM `' . _DB_PREFIX_ . 'orders`
-            WHERE `reference` = \'' . pSQL($this->reference) . '\'
-            AND `id_cart` = ' . (int) $this->id_cart
+            FROM `'._DB_PREFIX_.'orders`
+            WHERE `reference` = \''.pSQL($this->reference).'\'
+            AND `id_cart` = '.(int) $this->id_cart
         );
     }
 
@@ -2050,7 +2050,7 @@ class OrderCore extends ObjectModel
     {
         $difference = $amount - $this->total_shipping;
         // if the current amount is same as the new, we return true
-        if ($difference == 0) {
+        if (0 == $difference) {
             return true;
         }
 
@@ -2077,10 +2077,10 @@ class OrderCore extends ObjectModel
             // sum by taxes
             $taxes_by_tax = Db::getInstance()->executeS('
                 SELECT odt.`id_order_detail`, t.`name`, t.`rate`, SUM(`total_amount`) AS `total_amount`
-                FROM `' . _DB_PREFIX_ . 'order_detail_tax` odt
-                LEFT JOIN `' . _DB_PREFIX_ . 'tax` t ON (t.`id_tax` = odt.`id_tax`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-                WHERE od.`id_order` = ' . (int) $this->id . '
+                FROM `'._DB_PREFIX_.'order_detail_tax` odt
+                LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
+                LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+                WHERE od.`id_order` = '.(int) $this->id.'
                 GROUP BY odt.`id_tax`
             ');
 
@@ -2094,10 +2094,10 @@ class OrderCore extends ObjectModel
             // sum by order details in order to retrieve real taxes rate
             $taxes_infos = Db::getInstance()->executeS('
             SELECT odt.`id_order_detail`, t.`rate` AS `name`, SUM(od.`total_price_tax_excl`) AS total_price_tax_excl, SUM(t.`rate`) AS rate, SUM(`total_amount`) AS `total_amount`
-            FROM `' . _DB_PREFIX_ . 'order_detail_tax` odt
-            LEFT JOIN `' . _DB_PREFIX_ . 'tax` t ON (t.`id_tax` = odt.`id_tax`)
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-            WHERE od.`id_order` = ' . (int) $this->id . '
+            FROM `'._DB_PREFIX_.'order_detail_tax` odt
+            LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
+            LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+            WHERE od.`id_order` = '.(int) $this->id.'
             GROUP BY odt.`id_order_detail`
             ');
 
@@ -2170,8 +2170,8 @@ class OrderCore extends ObjectModel
         return Db::getInstance()->executeS(
             '
     		SELECT `ecotax_tax_rate`, SUM(`ecotax`) as `ecotax_tax_excl`, SUM(`ecotax`) as `ecotax_tax_incl`
-    		FROM `' . _DB_PREFIX_ . 'order_detail`
-    		WHERE `id_order` = ' . (int) $this->id
+    		FROM `'._DB_PREFIX_.'order_detail`
+    		WHERE `id_order` = '.(int) $this->id
         );
     }
 
@@ -2184,8 +2184,8 @@ class OrderCore extends ObjectModel
     {
         return (bool) Db::getInstance()->getValue(
             'SELECT `id_order_invoice`
-            FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE `id_order` =  ' . (int) $this->id .
+            FROM `'._DB_PREFIX_.'order_invoice`
+            WHERE `id_order` =  '.(int) $this->id.
             (Configuration::get('PS_INVOICE') ? ' AND `number` > 0' : '')
         );
     }
@@ -2210,8 +2210,8 @@ class OrderCore extends ObjectModel
         return (int) Db::getInstance()->getValue(
             '
             SELECT `id_order_invoice`
-            FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE `id_order` =  ' . (int) $this->id . '
+            FROM `'._DB_PREFIX_.'order_invoice`
+            WHERE `id_order` =  '.(int) $this->id.'
             AND `delivery_number` > 0'
         );
     }
@@ -2225,8 +2225,8 @@ class OrderCore extends ObjectModel
     {
         $results = Db::getInstance()->executeS(
             'SELECT id_warehouse
-            FROM `' . _DB_PREFIX_ . 'order_detail`
-            WHERE `id_order` =  ' . (int) $this->id . '
+            FROM `'._DB_PREFIX_.'order_detail`
+            WHERE `id_order` =  '.(int) $this->id.'
             GROUP BY id_warehouse'
         );
         if (!$results) {
@@ -2303,14 +2303,14 @@ class OrderCore extends ObjectModel
         $query = new DbQuery();
         $query->select('MIN(id_order) as min, MAX(id_order) as max');
         $query->from('orders');
-        $query->where('id_cart = ' . (int) $this->id_cart);
+        $query->where('id_cart = '.(int) $this->id_cart);
 
         $order = Db::getInstance()->getRow($query);
 
         if ($order['min'] == $order['max']) {
             return $this->reference;
         } else {
-            return $this->reference . '#' . ($this->id + 1 - $order['min']);
+            return $this->reference.'#'.($this->id + 1 - $order['min']);
         }
     }
 
@@ -2340,8 +2340,8 @@ class OrderCore extends ObjectModel
     {
         return (int) Db::getInstance()->getValue('
                 SELECT `id_order_carrier`
-                FROM `' . _DB_PREFIX_ . 'order_carrier`
-                WHERE `id_order` = ' . (int) $this->id);
+                FROM `'._DB_PREFIX_.'order_carrier`
+                WHERE `id_order` = '.(int) $this->id);
     }
 
     public static function sortDocuments($a, $b)
@@ -2357,8 +2357,8 @@ class OrderCore extends ObjectModel
     {
         $id_order_carrier = Db::getInstance()->getValue('
             SELECT `id_order_carrier`
-            FROM `' . _DB_PREFIX_ . 'order_carrier`
-            WHERE `id_order` = ' . (int) $this->id);
+            FROM `'._DB_PREFIX_.'order_carrier`
+            WHERE `id_order` = '.(int) $this->id);
         if ($id_order_carrier) {
             $order_carrier = new OrderCarrier($id_order_carrier);
 
@@ -2372,8 +2372,8 @@ class OrderCore extends ObjectModel
     {
         $id_order_carrier = Db::getInstance()->getValue('
             SELECT `id_order_carrier`
-            FROM `' . _DB_PREFIX_ . 'order_carrier`
-            WHERE `id_order` = ' . (int) $this->id);
+            FROM `'._DB_PREFIX_.'order_carrier`
+            WHERE `id_order` = '.(int) $this->id);
         if ($id_order_carrier) {
             $order_carrier = new OrderCarrier($id_order_carrier);
             $order_carrier->tracking_number = $shipping_number;
@@ -2414,7 +2414,7 @@ class OrderCore extends ObjectModel
     public function getProductTaxesDetails($limitToOrderDetails = false)
     {
         $round_type = $this->round_type;
-        if ($round_type == 0) {
+        if (0 == $round_type) {
             // if this is 0, it means the field did not exist
             // at the time the order was made.
             // Set it to old type, which was closest to line.
@@ -2430,7 +2430,7 @@ class OrderCore extends ObjectModel
         $expected_total_base = $this->total_products - $this->total_discounts_tax_excl;
 
         foreach ($this->getCartRules() as $order_cart_rule) {
-            if ($order_cart_rule['free_shipping'] && $free_shipping_tax === 0) {
+            if ($order_cart_rule['free_shipping'] && 0 === $free_shipping_tax) {
                 $free_shipping_tax = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
                 $order_discount_tax_excl -= $this->total_shipping_tax_excl;
                 $expected_total_base += $this->total_shipping_tax_excl;
@@ -2541,12 +2541,12 @@ class OrderCore extends ObjectModel
             $order_ecotax_tax = Tools::ps_round($order_ecotax_tax, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
 
             $tax_rounding_error = $expected_total_tax - $actual_total_tax - $order_ecotax_tax;
-            if ($tax_rounding_error !== 0) {
+            if (0 !== $tax_rounding_error) {
                 Tools::spreadAmount($tax_rounding_error, _PS_PRICE_COMPUTE_PRECISION_, $order_detail_tax_rows, 'total_amount');
             }
 
             $base_rounding_error = $expected_total_base - $actual_total_base;
-            if ($base_rounding_error !== 0) {
+            if (0 !== $base_rounding_error) {
                 Tools::spreadAmount($base_rounding_error, _PS_PRICE_COMPUTE_PRECISION_, $order_detail_tax_rows, 'total_tax_base');
             }
         }
@@ -2576,28 +2576,28 @@ class OrderCore extends ObjectModel
         $values = array();
         foreach ($order_detail_tax_rows_to_insert as $row) {
             $old_id_order_details[] = (int) $row['id_order_detail'];
-            $values[] = '(' . (int) $row['id_order_detail'] . ', ' . (int) $row['id_tax'] . ', ' . (float) $row['unit_amount'] . ', ' . (float) $row['total_amount'] . ')';
+            $values[] = '('.(int) $row['id_order_detail'].', '.(int) $row['id_tax'].', '.(float) $row['unit_amount'].', '.(float) $row['total_amount'].')';
         }
 
         // Remove current order_detail_tax'es
         Db::getInstance()->execute(
-            'DELETE FROM `' . _DB_PREFIX_ . 'order_detail_tax` WHERE id_order_detail IN (' . implode(', ', $old_id_order_details) . ')'
+            'DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail IN ('.implode(', ', $old_id_order_details).')'
         );
 
         // Insert the adjusted ones instead
         Db::getInstance()->execute(
-            'INSERT INTO `' . _DB_PREFIX_ . 'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount) VALUES ' . implode(', ', $values)
+            'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount) VALUES '.implode(', ', $values)
         );
     }
 
     public function getOrderDetailTaxes()
     {
         return Db::getInstance()->executeS(
-            'SELECT od.id_tax_rules_group, od.product_quantity, odt.*, t.* FROM ' . _DB_PREFIX_ . 'orders o ' .
-            'INNER JOIN ' . _DB_PREFIX_ . 'order_detail od ON od.id_order = o.id_order ' .
-            'INNER JOIN ' . _DB_PREFIX_ . 'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail ' .
-            'INNER JOIN ' . _DB_PREFIX_ . 'tax t ON t.id_tax = odt.id_tax ' .
-            'WHERE o.id_order = ' . (int) $this->id
+            'SELECT od.id_tax_rules_group, od.product_quantity, odt.*, t.* FROM '._DB_PREFIX_.'orders o '.
+            'INNER JOIN '._DB_PREFIX_.'order_detail od ON od.id_order = o.id_order '.
+            'INNER JOIN '._DB_PREFIX_.'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail '.
+            'INNER JOIN '._DB_PREFIX_.'tax t ON t.id_tax = odt.id_tax '.
+            'WHERE o.id_order = '.(int) $this->id
         );
     }
 

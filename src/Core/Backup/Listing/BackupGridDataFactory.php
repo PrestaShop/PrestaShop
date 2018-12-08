@@ -64,8 +64,8 @@ final class BackupGridDataFactory implements GridDataFactoryInterface
     /**
      * @param BackupRepositoryInterface $backupRepository
      * @param BackupComparatorInterface $backupByDateComparator
-     * @param TranslatorInterface $translator
-     * @param string $languageDateTimeFormat
+     * @param TranslatorInterface       $translator
+     * @param string                    $languageDateTimeFormat
      */
     public function __construct(
         BackupRepositoryInterface $backupRepository,

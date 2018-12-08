@@ -91,7 +91,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      * \Configuration.
      *
      * @param string $key
-     * @param mixed $default The default value if the parameter key does not exist
+     * @param mixed  $default The default value if the parameter key does not exist
      *
      * @return mixed
      */
@@ -118,8 +118,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      * Set configuration value.
      *
      * @param string $key
-     * @param mixed $value
-     * @param array $options Options
+     * @param mixed  $value
+     * @param array  $options Options
      *
      * @return $this
      *

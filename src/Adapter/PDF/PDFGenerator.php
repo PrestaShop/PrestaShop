@@ -47,7 +47,7 @@ final class PDFGenerator implements PDFGeneratorInterface
     private $templateTypeProvider;
 
     /**
-     * @param Smarty $smarty
+     * @param Smarty                           $smarty
      * @param PDFTemplateTypeProviderInterface $templateTypeProvider
      */
     public function __construct(

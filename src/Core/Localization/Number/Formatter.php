@@ -72,9 +72,9 @@ class Formatter
     /**
      * Create a number formatter instance.
      *
-     * @param int $roundingMode
-     *                          The wanted rounding mode when formatting numbers
-     *                          Cf. PrestaShop\Decimal\Operation\Rounding::ROUND_* values
+     * @param int    $roundingMode
+     *                                The wanted rounding mode when formatting numbers
+     *                                Cf. PrestaShop\Decimal\Operation\Rounding::ROUND_* values
      * @param string $numberingSystem
      *                                Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
      */
@@ -87,8 +87,8 @@ class Formatter
     /**
      * Formats the passed number according to specifications.
      *
-     * @param int|float|string $number
-     *                                 The number to format
+     * @param int|float|string    $number
+     *                                           The number to format
      * @param NumberSpecification $specification
      *                                           Number specification to be used (can be a number spec, a price spec, a percentage spec)
      *
@@ -105,7 +105,7 @@ class Formatter
         try {
             $decimalNumber = $this->prepareNumber($number);
         } catch (SPLInvalidArgumentException $e) {
-            throw new LocalizationException('Invalid $number parameter : ' . $e->getMessage(), 0, $e);
+            throw new LocalizationException('Invalid $number parameter : '.$e->getMessage(), 0, $e);
         }
 
         /*
@@ -122,7 +122,7 @@ class Formatter
         // Assemble the final number
         $formattedNumber = $majorDigits;
         if ($minorDigits) {
-            $formattedNumber .= self::DECIMAL_SEPARATOR_PLACEHOLDER . $minorDigits;
+            $formattedNumber .= self::DECIMAL_SEPARATOR_PLACEHOLDER.$minorDigits;
         }
 
         // Get the good CLDR formatting pattern. Sign is important here !

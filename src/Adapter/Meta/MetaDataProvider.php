@@ -43,7 +43,7 @@ class MetaDataProvider implements MetaDataProviderInterface
         $query = new DbQuery();
         $query->select('`id_meta`');
         $query->from('meta');
-        $query->where('`page`= "' . pSQL($pageName) . '"');
+        $query->where('`page`= "'.pSQL($pageName).'"');
 
         $idMeta = 0;
         $result = Db::getInstance()->getValue($query);

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function set_payment_module()
 {
     // Get all modules then select only payment ones
@@ -35,16 +34,16 @@ function set_payment_module()
         }
         $fd = fopen($file, 'r');
         if (!$fd) {
-            continue ;
+            continue;
         }
         $content = fread($fd, filesize($file));
         if (preg_match_all('/extends PaymentModule/U', $content, $matches)) {
             Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_country` (id_module, id_country)
-			SELECT '.(int)($module['id_module']).', id_country FROM `'._DB_PREFIX_.'country` WHERE active = 1');
+			SELECT '.(int) ($module['id_module']).', id_country FROM `'._DB_PREFIX_.'country` WHERE active = 1');
             Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_currency` (id_module, id_currency)
-			SELECT '.(int)($module['id_module']).', id_currency FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0');
+			SELECT '.(int) ($module['id_module']).', id_currency FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0');
         }
         fclose($fd);
     }

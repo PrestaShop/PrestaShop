@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,9 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 $con = new AdminController();
-$tab = new Tab((int)Tab::getIdFromClassName(Tools::getValue('controller')));
+$tab = new Tab((int) Tab::getIdFromClassName(Tools::getValue('controller')));
 $con->id = $tab->id;
 $con->init();
 $con->initToolbar();
@@ -55,7 +54,7 @@ Context::getContext()->smarty->assign(array(
     'js_def' => array(
         'baseAdminDir' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/',
         'baseDir' => __PS_BASE_URI__,
-    )
+    ),
 ));
 echo Context::getContext()->smarty->fetch($header_tpl);
 echo Context::getContext()->smarty->fetch($tool_tpl);

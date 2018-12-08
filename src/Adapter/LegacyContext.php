@@ -85,14 +85,14 @@ class LegacyContext
      */
     public function getAdminBaseUrl()
     {
-        return __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
+        return __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/';
     }
 
     /**
      * Adapter to get Admin HTTP link.
      *
-     * @param string $controller the controller name
-     * @param bool $withToken
+     * @param string        $controller  the controller name
+     * @param bool          $withToken
      * @param array[string] $extraParams
      *
      * @return string
@@ -106,8 +106,8 @@ class LegacyContext
      * Returns the controller link in its legacy form, without trying to convert it in symfony url.
      *
      * @param string $controller
-     * @param bool $withToken
-     * @param array $extraParams
+     * @param bool   $withToken
+     * @param array  $extraParams
      *
      * @return string
      */
@@ -155,13 +155,13 @@ class LegacyContext
     /**
      * Adapter to get admin legacy layout into old controller context.
      *
-     * @param string $controllerName The legacy controller name
-     * @param string $title The page title to override default one
-     * @param array $headerToolbarBtn The header toolbar to override
-     * @param string $displayType The legacy display type variable
-     * @param bool $showContentHeader can force header toolbar (buttons and title) to be hidden with false value
-     * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
-     * @param string $helpLink If specified, will be used instead of legacy one
+     * @param string $controllerName    The legacy controller name
+     * @param string $title             The page title to override default one
+     * @param array  $headerToolbarBtn  The header toolbar to override
+     * @param string $displayType       The legacy display type variable
+     * @param bool   $showContentHeader can force header toolbar (buttons and title) to be hidden with false value
+     * @param bool   $enableSidebar     Allow to use right sidebar to display docs for instance
+     * @param string $helpLink          If specified, will be used instead of legacy one
      *
      * @return string The html layout
      */
@@ -193,9 +193,9 @@ class LegacyContext
     /**
      * Returns available languages. The first one is the employee default one.
      *
-     * @param bool $active Select only active languages
-     * @param int|bool $id_shop Shop ID
-     * @param bool $ids_only If true, returns an array of language IDs
+     * @param bool     $active   Select only active languages
+     * @param int|bool $id_shop  Shop ID
+     * @param bool     $ids_only If true, returns an array of language IDs
      *
      * @return array Languages
      */

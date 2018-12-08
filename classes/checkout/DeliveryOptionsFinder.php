@@ -115,7 +115,7 @@ class DeliveryOptionsFinderCore
                             if (count($carriers) > 1) {
                                 $carrier['label'] = $carrier['price'];
                             } else {
-                                $carrier['label'] = $carrier['name'] . ' - ' . $carrier['delay'] . ' - ' . $carrier['price'];
+                                $carrier['label'] = $carrier['name'].' - '.$carrier['delay'].' - '.$carrier['price'];
                             }
 
                             // If carrier related to a module, check for additionnal data to display

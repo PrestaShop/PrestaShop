@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function update_order_canada()
 {
-    $sql ='SHOW TABLES LIKE "'.str_replace('_', '\_', _DB_PREFIX_).'order\_tax"';
+    $sql = 'SHOW TABLES LIKE "'.str_replace('_', '\_', _DB_PREFIX_).'order\_tax"';
     $table = Db::getInstance()->executeS($sql);
 
     if (!count($table)) {
@@ -37,7 +36,6 @@ function update_order_canada()
 		  `tax_rate` decimal(6,3) NOT NULL,
 		  `amount` decimal(20,6) NOT NULL
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
-
 
         $address_field = Db::getInstance()->getValue('SELECT value
 			FROM `'._DB_PREFIX_.'configuration`
@@ -60,40 +58,40 @@ function update_order_canada()
             foreach ($id_order_list as $order) {
                 $amount = array();
                 $id_order = $order['id_order'];
-            // in Order class, getTaxCalculationMethod
-            // 	returns Group::getDefaultPriceDisplayMethod
-            $tax_calculation_method = $order['price_display_method'];
+                // in Order class, getTaxCalculationMethod
+                // 	returns Group::getDefaultPriceDisplayMethod
+                $tax_calculation_method = $order['price_display_method'];
 
                 $products = Db::getInstance()->executeS('
 				SELECT * FROM `'._DB_PREFIX_.'order_detail` od
-				WHERE od.`id_order` = '.(int)$id_order);
+				WHERE od.`id_order` = '.(int) $id_order);
 
                 foreach ($products as $product) {
                     if (!array_key_exists($product['tax_name'], $amount)) {
                         $amount[$product['tax_name']] = array('amount' => 0, 'rate' => $product['tax_rate']);
                     }
 
-                // PS_TAX_EXC = 1, PS_TAX_INC = 0
-                if ($tax_calculation_method == 1) {
-                    $total_product = $product['product_price'] * $product['product_quantity'];
-                    $amount_tmp = update_order_canada_ps_round($total_product * ($product['tax_rate'] / 100), 2);
-                    $amount[$product['tax_name']]['amount'] += update_order_canada_ps_round($total_product * ($product['tax_rate'] / 100), 2);
-                } else {
-                    $total_product = $product['product_price'] * $product['product_quantity'];
-                    $amount_tmp = update_order_canada_ps_round($total_product - ($total_product / (1 + ($product['tax_rate'] / 100))), 2);
-                    $amount[$product['tax_name']]['amount'] += update_order_canada_ps_round($total_product - ($total_product / (1 + ($product['tax_rate'] / 100))), 2);
-                }
+                    // PS_TAX_EXC = 1, PS_TAX_INC = 0
+                    if (1 == $tax_calculation_method) {
+                        $total_product = $product['product_price'] * $product['product_quantity'];
+                        $amount_tmp = update_order_canada_ps_round($total_product * ($product['tax_rate'] / 100), 2);
+                        $amount[$product['tax_name']]['amount'] += update_order_canada_ps_round($total_product * ($product['tax_rate'] / 100), 2);
+                    } else {
+                        $total_product = $product['product_price'] * $product['product_quantity'];
+                        $amount_tmp = update_order_canada_ps_round($total_product - ($total_product / (1 + ($product['tax_rate'] / 100))), 2);
+                        $amount[$product['tax_name']]['amount'] += update_order_canada_ps_round($total_product - ($total_product / (1 + ($product['tax_rate'] / 100))), 2);
+                    }
                 }
 
                 foreach ($amount as $tax_name => $tax_infos) {
-                    $values .= '('.(int)$id_order.', "'.$tax_name.'\', "'.$tax_infos['rate'].'", '.(float)$tax_infos['amount'].'),';
+                    $values .= '('.(int) $id_order.', "'.$tax_name.'\', "'.$tax_infos['rate'].'", '.(float) $tax_infos['amount'].'),';
                 }
                 unset($order);
             }
         }
 
         if (!empty($values)) {
-            $values = rtrim($values, ",");
+            $values = rtrim($values, ',');
 
             Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'order_tax` (id_order, tax_name, tax_rate, amount)
@@ -113,9 +111,9 @@ function update_order_canada_ps_round($val)
 
     switch ($ps_price_round_mode) {
         case 0:
-            return ceil($val * 100)/100;
+            return ceil($val * 100) / 100;
         case 1:
-            return floor($val * 100)/100;
+            return floor($val * 100) / 100;
         default:
             return round($val, 2);
     }

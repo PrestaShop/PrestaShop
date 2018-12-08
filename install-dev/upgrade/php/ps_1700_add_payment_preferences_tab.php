@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function ps_1700_add_payment_preferences_tab()
 {
-    include_once('add_new_tab.php');
+    include_once 'add_new_tab.php';
     // TODO: ajouter les trads ? translations/[fr]/tabs.php et autre ?
     add_new_tab(
         'AdminPaymentPreferences',

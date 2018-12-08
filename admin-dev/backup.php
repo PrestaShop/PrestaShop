@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,11 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 if (!Context::getContext()->employee->isLoggedBack()) {
     Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminLogin'));
@@ -38,7 +37,7 @@ $tabAccess = Profile::getProfileAccess(
     Tab::getIdFromClassName('AdminBackup')
 );
 
-if ($tabAccess['view'] !== '1') {
+if ('1' !== $tabAccess['view']) {
     die(Context::getContext()->getTranslator()->trans(
         'You do not have permission to view this.',
         array(),
@@ -48,7 +47,7 @@ if ($tabAccess['view'] !== '1') {
 
 $backupdir = realpath(PrestaShopBackup::getBackupPath());
 
-if ($backupdir === false) {
+if (false === $backupdir) {
     die(Context::getContext()->getTranslator()->trans(
         'There is no "/backup" directory.',
         array(),
@@ -67,20 +66,20 @@ if (!$backupfile = Tools::getValue('filename')) {
 // Check the realpath so we can validate the backup file is under the backup directory
 $backupfile = realpath($backupdir.DIRECTORY_SEPARATOR.$backupfile);
 
-if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
+if (false === $backupfile || 0 != strncmp($backupdir, $backupfile, strlen($backupdir))) {
     die(Tools::dieOrLog('The backup file does not exist.'));
 }
 
-if (substr($backupfile, -4) == '.bz2') {
+if ('.bz2' == substr($backupfile, -4)) {
     $contentType = 'application/x-bzip2';
-} elseif (substr($backupfile, -3) == '.gz') {
+} elseif ('.gz' == substr($backupfile, -3)) {
     $contentType = 'application/x-gzip';
 } else {
     $contentType = 'text/x-sql';
 }
 $fp = @fopen($backupfile, 'r');
 
-if ($fp === false) {
+if (false === $fp) {
     die(Context::getContext()->getTranslator()->trans(
             'Unable to open backup file(s).',
             array(),
@@ -91,7 +90,7 @@ if ($fp === false) {
 
 // Add the correct headers, this forces the file is saved
 header('Content-Type: '.$contentType);
-header('Content-Disposition: attachment; filename="'.Tools::getValue('filename'). '"');
+header('Content-Disposition: attachment; filename="'.Tools::getValue('filename').'"');
 
 if (ob_get_level() && ob_get_length() > 0) {
     ob_clean();
@@ -100,7 +99,7 @@ $ret = @fpassthru($fp);
 
 fclose($fp);
 
-if ($ret === false) {
+if (false === $ret) {
     die(Context::getContext()->getTranslator()->trans(
             'Unable to display backup file(s).',
             array(),

@@ -34,7 +34,7 @@ class CategoryLangCore extends DataLangCore
 
     public function getFieldValue($field, $value)
     {
-        if ($field == 'link_rewrite') {
+        if ('link_rewrite' == $field) {
             $replacements = array(
                 'home' => 'Home',
                 'root' => 'Root',
@@ -44,7 +44,7 @@ class CategoryLangCore extends DataLangCore
 
         $value = parent::getFieldValue($field, $value);
 
-        if ($field == 'link_rewrite') {
+        if ('link_rewrite' == $field) {
             $value = $this->slugify($value);
         }
 

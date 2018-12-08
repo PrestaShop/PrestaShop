@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function remove_module_from_hook($module_name, $hook_name)
 {
     $result = true;
@@ -33,15 +32,15 @@ function remove_module_from_hook($module_name, $hook_name)
 	WHERE `name` = \''.pSQL($module_name).'\''
     );
 
-    if ((int)$id_module > 0) {
+    if ((int) $id_module > 0) {
         $id_hook = Db::getInstance()->getValue('
 		SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \''.pSQL($hook_name).'\'
 		');
 
-        if ((int)$id_hook > 0) {
+        if ((int) $id_hook > 0) {
             $result &= Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'hook_module`
-			WHERE `id_module` = '.(int)$id_module.' AND `id_hook` = '.(int)$id_hook);
+			WHERE `id_module` = '.(int) $id_module.' AND `id_hook` = '.(int) $id_hook);
         }
     }
 
