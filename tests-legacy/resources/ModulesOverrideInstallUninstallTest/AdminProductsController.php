@@ -664,8 +664,8 @@ class AdminProductsController extends AdminProductsControllerCore
                     }
                 }
             }
-            unset($product->id);
-            unset($product->id_product);
+            unset($product->id, $product->id_product);
+            
             $product->indexed = 0;
             $product->active = 0;
             if ($product->add()
@@ -2374,8 +2374,8 @@ class AdminProductsController extends AdminProductsControllerCore
             if (!$id_category) {
                 $this->_defaultOrderBy = $this->identifier;
                 if ('position' == $this->context->cookie->{$this->table.'Orderby'}) {
-                    unset($this->context->cookie->{$this->table.'Orderby'});
-                    unset($this->context->cookie->{$this->table.'Orderway'});
+                    unset($this->context->cookie->{$this->table.'Orderby'}, $this->context->cookie->{$this->table.'Orderway'});
+                    
                 }
             }
             if (!$id_category) {
