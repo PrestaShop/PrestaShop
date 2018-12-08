@@ -122,8 +122,10 @@ class MultishopCommandListenerTest extends UnitTestCase
         $event   = new ConsoleCommandEvent($command, $input, $output);
 
         // Call ...
-        $this->setExpectedException(
-            'LogicException',
+        $this->expectException(
+            'LogicException'
+        );
+        $this->expectExceptionMessage(
             'Do not specify an ID shop and an ID group shop at the same time.'
         );
         $this->commandListener->onConsoleCommand($event);

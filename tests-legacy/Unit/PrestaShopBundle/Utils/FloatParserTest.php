@@ -53,11 +53,12 @@ class FloatParserTest extends TestCase
      * Then an InvalidArgumentException should be thrown
      * @param mixed $value
      *
-     * @expectedException \InvalidArgumentException
      * @dataProvider provideInvalidValues
      */
     public function testItThrowsExceptionIfNotValid($value)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         (new FloatParser())->fromString($value);
     }
 

@@ -29,7 +29,7 @@ namespace LegacyTests\Unit\Core\Filter;
 use PrestaShop\PrestaShop\Core\Filter\CollectionFilter;
 use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
-class CollectionFilterTest extends \PHPUnit_Framework_TestCase
+class CollectionFilterTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

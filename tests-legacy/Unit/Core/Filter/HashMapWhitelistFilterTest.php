@@ -28,7 +28,7 @@ namespace LegacyTests\Unit\Core\Filter;
 
 use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
-class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
+class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

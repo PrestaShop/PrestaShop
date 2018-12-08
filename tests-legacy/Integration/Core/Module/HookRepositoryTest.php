@@ -93,8 +93,8 @@ class HookRepositoryTest extends IntegrationTestCase
             $actual['displayTestHookName']
         );
 
-        $this->assertFalse(
-            array_key_exists('notADisplayTestHookName', $actual)
+        $this->assertArrayNotHasKey(
+            'notADisplayTestHookName', $actual
         );
     }
 

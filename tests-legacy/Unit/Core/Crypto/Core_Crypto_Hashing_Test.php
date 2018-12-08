@@ -51,7 +51,7 @@ class Core_Crypto_Hashing_Test extends TestCase
 
     public function test_simple_encrypt()
     {
-        $this->assertTrue(is_string($this->hashing->hash("123", _COOKIE_KEY_)));
+        $this->assertInternalType('string', $this->hashing->hash("123", _COOKIE_KEY_));
     }
 
     public function test_simple_first_hash()

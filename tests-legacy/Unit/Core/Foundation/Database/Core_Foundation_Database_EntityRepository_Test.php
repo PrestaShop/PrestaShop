@@ -51,10 +51,11 @@ class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
      */
     public function test_call_to_invalid_method_throws_exception()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\Database\Exception::class);
+
         $this->repository->thisDoesNotExist();
     }
 
