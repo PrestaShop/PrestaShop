@@ -38,8 +38,8 @@
  *
  * @version   SVN: $Id: LikeBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__).'/TableBuilder.php';
+require_once __DIR__.'/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__.'/TableBuilder.php';
 
 /**
  * This class implements the builder for the LIKE statement part of CREATE TABLE.

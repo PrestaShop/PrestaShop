@@ -38,15 +38,15 @@
  *
  * @version   SVN: $Id: SubTreeBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__).'/ReservedBuilder.php';
-require_once dirname(__FILE__).'/SelectBracketExpressionBuilder.php';
-require_once dirname(__FILE__).'/ColumnReferenceBuilder.php';
-require_once dirname(__FILE__).'/FunctionBuilder.php';
-require_once dirname(__FILE__).'/OperatorBuilder.php';
-require_once dirname(__FILE__).'/ConstantBuilder.php';
-require_once dirname(__FILE__).'/SubQueryBuilder.php';
-require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once __DIR__.'/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__.'/ReservedBuilder.php';
+require_once __DIR__.'/SelectBracketExpressionBuilder.php';
+require_once __DIR__.'/ColumnReferenceBuilder.php';
+require_once __DIR__.'/FunctionBuilder.php';
+require_once __DIR__.'/OperatorBuilder.php';
+require_once __DIR__.'/ConstantBuilder.php';
+require_once __DIR__.'/SubQueryBuilder.php';
+require_once __DIR__.'/../utils/ExpressionType.php';
 
 /**
  * This class implements the builder for [sub_tree] fields.

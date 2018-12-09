@@ -29,9 +29,9 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-require_once dirname(__FILE__).'/AbstractProcessor.php';
-require_once dirname(__FILE__).'/ExpressionListProcessor.php';
-require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once __DIR__.'/AbstractProcessor.php';
+require_once __DIR__.'/ExpressionListProcessor.php';
+require_once __DIR__.'/../utils/ExpressionType.php';
 
 /**
  * This class processes the SELECT expressions.
@@ -125,12 +125,12 @@ class SelectExpressionProcessor extends AbstractProcessor
                                'base_expr' => trim($last['base_expr']), );
                 // remove the last token
                 array_pop($tokens);
-                $base_expr = join('', $tokens);
+                $base_expr = implode('', $tokens);
             }
         }
 
         if (!$alias) {
-            $base_expr = join('', $tokens);
+            $base_expr = implode('', $tokens);
         } else {
             /* remove escape from the alias */
             $alias['no_quotes'] = $this->revokeQuotation($alias['name']);

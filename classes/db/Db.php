@@ -456,7 +456,7 @@ abstract class DbCore
                 if ('sql' == $value['type']) {
                     $values[] = $string_value = $value['value'];
                 } else {
-                    $values[] = $string_value = $null_values && ('' === $value['value'] || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
+                    $values[] = $string_value = $null_values && ('' === $value['value'] || null === $value['value']) ? 'NULL' : "'{$value['value']}'";
                 }
 
                 if (Db::ON_DUPLICATE_KEY == $type) {
@@ -507,7 +507,7 @@ abstract class DbCore
             if ('sql' == $value['type']) {
                 $sql .= '`' . bqSQL($key) . "` = {$value['value']},";
             } else {
-                $sql .= ($null_values && ('' === $value['value'] || is_null($value['value']))) ? '`' . bqSQL($key) . '` = NULL,' : '`' . bqSQL($key) . "` = '{$value['value']}',";
+                $sql .= ($null_values && ('' === $value['value'] || null === $value['value'])) ? '`' . bqSQL($key) . '` = NULL,' : '`' . bqSQL($key) . "` = '{$value['value']}',";
             }
         }
 
@@ -669,7 +669,7 @@ abstract class DbCore
 
         $this->last_cached = false;
 
-        if (is_null($result)) {
+        if (null === $result) {
             $result = false;
         }
 

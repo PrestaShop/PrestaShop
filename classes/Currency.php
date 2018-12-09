@@ -381,7 +381,7 @@ class CurrencyCore extends ObjectModel
 
     public static function getPaymentCurrenciesSpecial($idModule, $idShop = null)
     {
-        if (is_null($idShop)) {
+        if (null === $idShop) {
             $idShop = Context::getContext()->shop->id;
         }
 
@@ -403,7 +403,7 @@ class CurrencyCore extends ObjectModel
      */
     public static function getPaymentCurrencies($idModule, $idShop = null)
     {
-        if (is_null($idShop)) {
+        if (null === $idShop) {
             $idShop = Context::getContext()->shop->id;
         }
 
@@ -433,7 +433,7 @@ class CurrencyCore extends ObjectModel
             return array();
         }
 
-        if (is_null($idShop)) {
+        if (null === $idShop) {
             $idShop = Context::getContext()->shop->id;
         }
 

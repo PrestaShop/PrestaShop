@@ -124,9 +124,9 @@ class ModuleManagerBuilder
      */
     public function buildRepository()
     {
-        if (is_null(self::$modulesRepository)) {
+        if (null === self::$modulesRepository) {
             $sfContainer = SymfonyContainer::getInstance();
-            if (!is_null($sfContainer)) {
+            if (null !== $sfContainer) {
                 self::$modulesRepository = $sfContainer->get('prestashop.core.admin.module.repository');
             } else {
                 self::$modulesRepository = new ModuleRepository(
@@ -151,7 +151,7 @@ class ModuleManagerBuilder
          * build & buildRepository. No need to init manually all the dependancies.
          */
         $sfContainer = SymfonyContainer::getInstance();
-        if (!is_null($sfContainer)) {
+        if (null !== $sfContainer) {
             return;
         }
 
@@ -226,7 +226,7 @@ class ModuleManagerBuilder
         );
         self::$lecacyContext = new LegacyContext();
 
-        if (is_null(self::$adminModuleDataProvider)) {
+        if (null === self::$adminModuleDataProvider) {
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
                 self::$translator,

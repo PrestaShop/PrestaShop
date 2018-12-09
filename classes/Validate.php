@@ -583,7 +583,7 @@ class ValidateCore
 
     public static function isDateOrNull($date)
     {
-        if (is_null($date) || '0000-00-00 00:00:00' === $date || '0000-00-00' === $date) {
+        if (null === $date || '0000-00-00 00:00:00' === $date || '0000-00-00' === $date) {
             return true;
         }
 

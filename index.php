@@ -23,5 +23,5 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-require dirname(__FILE__).'/config/config.inc.php';
+require __DIR__.'/config/config.inc.php';
 Dispatcher::getInstance()->dispatch();

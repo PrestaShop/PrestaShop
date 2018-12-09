@@ -166,21 +166,21 @@ class PHPSQLParserConstants
 
     public static function isAggregateFunction($token)
     {
-        return in_array($token, PHPSQLParserConstants::$aggregateFunctions);
+        return in_array($token, self::$aggregateFunctions);
     }
 
     public static function isReserved($token)
     {
-        return in_array($token, PHPSQLParserConstants::$reserved);
+        return in_array($token, self::$reserved);
     }
 
     public static function isFunction($token)
     {
-        return in_array($token, PHPSQLParserConstants::$functions);
+        return in_array($token, self::$functions);
     }
 
     public static function isParameterizedFunction($token)
     {
-        return in_array($token, PHPSQLParserConstants::$parameterizedFunctions);
+        return in_array($token, self::$parameterizedFunctions);
     }
 }

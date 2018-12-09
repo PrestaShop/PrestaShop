@@ -61,7 +61,7 @@ class PerformanceController extends FrameworkBundleAdminController
             ],
         ];
 
-        $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
+        $form = null === $form ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
 
         return [
             'layoutHeaderToolbarBtn' => $toolbarButtons,

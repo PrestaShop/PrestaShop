@@ -136,7 +136,7 @@ class TranslateCore
     public static function getGenericAdminTranslation($string, $key, &$langArray)
     {
         $string = preg_replace("/\\\*'/", "\'", $string);
-        if (is_null($key)) {
+        if (null === $key) {
             $key = md5($string);
         }
 
@@ -176,7 +176,7 @@ class TranslateCore
 
         $name = $module instanceof Module ? $module->name : $module;
 
-        if (!is_null($locale)) {
+        if (null !== $locale) {
             $iso = Language::getIsoByLocale($locale);
         }
 
@@ -265,9 +265,9 @@ class TranslateCore
             }
         }
 
-        if (!is_array($sprintf) && !is_null($sprintf)) {
+        if (!is_array($sprintf) && null !== $sprintf) {
             $sprintf_for_trans = array($sprintf);
-        } elseif (is_null($sprintf)) {
+        } elseif (null === $sprintf) {
             $sprintf_for_trans = array();
         } else {
             $sprintf_for_trans = $sprintf;
@@ -336,7 +336,7 @@ class TranslateCore
      */
     public static function checkAndReplaceArgs($string, $args)
     {
-        if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && !is_null($args)) {
+        if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && null !== $args) {
             if (!is_array($args)) {
                 $args = array($args);
             }

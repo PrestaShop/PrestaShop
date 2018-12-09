@@ -67,7 +67,7 @@ class DatabaseTranslationLoader implements LoaderInterface
             ->setParameter('lang', $langs[$locale])
         ;
 
-        if (!is_null($theme)) {
+        if (null !== $theme) {
             $queryBuilder
                 ->andWhere('t.theme = :theme')
                 ->setParameter('theme', $theme)

@@ -3,7 +3,7 @@
 session_start();
 
 if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', dirname(__FILE__).'/../../');
+    define('_PS_ADMIN_DIR_', __DIR__.'/../../');
 }
 
 require_once _PS_ADMIN_DIR_.'/../config/config.inc.php';

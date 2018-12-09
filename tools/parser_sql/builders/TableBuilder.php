@@ -38,11 +38,11 @@
  *
  * @version   SVN: $Id: TableBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../utils/ExpressionType.php';
-require_once dirname(__FILE__).'/AliasBuilder.php';
-require_once dirname(__FILE__).'/JoinBuilder.php';
-require_once dirname(__FILE__).'/RefTypeBuilder.php';
-require_once dirname(__FILE__).'/RefClauseBuilder.php';
+require_once __DIR__.'/../utils/ExpressionType.php';
+require_once __DIR__.'/AliasBuilder.php';
+require_once __DIR__.'/JoinBuilder.php';
+require_once __DIR__.'/RefTypeBuilder.php';
+require_once __DIR__.'/RefClauseBuilder.php';
 
 /**
  * This class implements the builder for the table name and join options.

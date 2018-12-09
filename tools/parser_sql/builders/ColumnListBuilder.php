@@ -38,9 +38,9 @@
  *
  * @version   SVN: $Id: ColumnListBuilder.php 894 2013-12-31 00:27:03Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__).'/IndexColumnBuilder.php';
-require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once __DIR__.'/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__.'/IndexColumnBuilder.php';
+require_once __DIR__.'/../utils/ExpressionType.php';
 /**
  * This class implements the builder for column-list parts of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.

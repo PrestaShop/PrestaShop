@@ -78,7 +78,7 @@ final class CsvFileReader implements FileReaderInterface
             throw new UnreadableFileException();
         }
 
-        $handle = fopen($file->getPathname(), 'r');
+        $handle = fopen($file->getPathname(), 'rb');
 
         if (false === $handle) {
             throw new UnreadableFileException();

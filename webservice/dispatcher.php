@@ -25,7 +25,7 @@
  */
 ob_start();
 
-require_once dirname(__FILE__).'/../config/config.inc.php';
+require_once __DIR__.'/../config/config.inc.php';
 
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();
@@ -59,7 +59,7 @@ $input_xml = null;
 
 // if a XML is in PUT or in POST
 if (('PUT' == $_SERVER['REQUEST_METHOD']) || ('POST' == $_SERVER['REQUEST_METHOD'])) {
-    $putresource = fopen('php://input', 'r');
+    $putresource = fopen('php://input', 'rb');
     while ($putData = fread($putresource, 1024)) {
         $input_xml .= $putData;
     }

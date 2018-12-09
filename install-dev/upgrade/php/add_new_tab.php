@@ -38,7 +38,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
  */
 function register_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
-    if (!is_null($parentTab) && !empty($parentTab) && 'null' !== strtolower(trim($parentTab))) {
+    if (null !== $parentTab && !empty($parentTab) && 'null' !== strtolower(trim($parentTab))) {
         $id_parent = (int) Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
     }
 

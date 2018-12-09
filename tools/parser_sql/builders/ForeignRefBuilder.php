@@ -38,11 +38,11 @@
  *
  * @version   SVN: $Id: ForeignRefBuilder.php 927 2014-01-08 13:01:17Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../utils/ExpressionType.php';
-require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__).'/TableBuilder.php';
-require_once dirname(__FILE__).'/ReservedBuilder.php';
-require_once dirname(__FILE__).'/ColumnListBuilder.php';
+require_once __DIR__.'/../utils/ExpressionType.php';
+require_once __DIR__.'/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__.'/TableBuilder.php';
+require_once __DIR__.'/ReservedBuilder.php';
+require_once __DIR__.'/ColumnListBuilder.php';
 
 /**
  * This class implements the builder for the FOREIGN KEY REFERENCES statement

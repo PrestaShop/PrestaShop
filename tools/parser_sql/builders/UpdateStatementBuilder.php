@@ -38,9 +38,9 @@
  *
  * @version   SVN: $Id: UpdateStatementBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/WhereBuilder.php';
-require_once dirname(__FILE__).'/SetBuilder.php';
-require_once dirname(__FILE__).'/UpdateBuilder.php';
+require_once __DIR__.'/WhereBuilder.php';
+require_once __DIR__.'/SetBuilder.php';
+require_once __DIR__.'/UpdateBuilder.php';
 
 /**
  * This class implements the builder for the whole Update statement. You can overwrite

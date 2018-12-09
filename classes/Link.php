@@ -328,7 +328,7 @@ class LinkCore
             'token' => Tools::getToken(false),
         );
 
-        if (!is_null($op)) {
+        if (null !== $op) {
             $params['op'] = $op;
         }
 
@@ -434,7 +434,7 @@ class LinkCore
         }
 
         // Selected filters is used by the module ps_facetedsearch
-        $selectedFilters = is_null($selectedFilters) ? '' : $selectedFilters;
+        $selectedFilters = null === $selectedFilters ? '' : $selectedFilters;
 
         if (empty($selectedFilters)) {
             $rule = 'category_rule';
@@ -732,7 +732,7 @@ class LinkCore
         $sfContainer = SymfonyContainer::getInstance();
         $sfRouter = null;
         $legacyUrlConverter = null;
-        if (!is_null($sfContainer)) {
+        if (null !== $sfContainer) {
             $sfRouter = $sfContainer->get('router');
             $legacyUrlConverter = $sfContainer->get('prestashop.bundle.routing.converter.legacy_url_converter');
         }
@@ -1498,7 +1498,7 @@ class LinkCore
                 }
 
                 $sfContainer = SymfonyContainer::getInstance();
-                if (!is_null($sfContainer)) {
+                if (null !== $sfContainer) {
                     $sfRouter = $sfContainer->get('router');
 
                     if (array_key_exists('sf-params', $params)) {

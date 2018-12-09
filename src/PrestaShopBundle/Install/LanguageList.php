@@ -152,7 +152,7 @@ class LanguageList
     {
         static $countries = null;
 
-        if (is_null($countries)) {
+        if (null === $countries) {
             $countries = array();
             $countries_lang = $this->getLanguage()->getCountries();
             $countries_default = $this->getLanguage(self::DEFAULT_ISO)->getCountries();

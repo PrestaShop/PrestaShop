@@ -31,7 +31,7 @@ if (false === defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
 }
 
-require_once dirname(__FILE__).'/classes/CronJobsForms.php';
+require_once __DIR__.'/classes/CronJobsForms.php';
 
 class CronJobs extends Module
 {
@@ -330,7 +330,7 @@ class CronJobs extends Module
             $query = 'INSERT INTO '._DB_PREFIX_.'cronjobs
                 (`description`, `task`, `hour`, `day`, `month`, `day_of_week`, `updated_at`, `one_shot`, `active`, `id_shop`, `id_shop_group`)
                 VALUES (\''.Db::getInstance()->escape($description).'\', \''.
-                urlencode($task).'\', \'0\', \''.CronJobs::EACH.'\', \''.CronJobs::EACH.'\', \''.CronJobs::EACH.'\',
+                urlencode($task).'\', \'0\', \''.self::EACH.'\', \''.self::EACH.'\', \''.self::EACH.'\',
                     NULL, TRUE, TRUE, '.$id_shop.', '.$id_shop_group.')';
 
             return Db::getInstance()->execute($query);
@@ -695,7 +695,7 @@ class CronJobs extends Module
         );
 
         $context_options = array('http' => array(
-            'method' => (true == is_null($webservice_id)) ? 'POST' : 'PUT',
+            'method' => (true == (null === $webservice_id)) ? 'POST' : 'PUT',
             'header' => 'Content-type: application/x-www-form-urlencoded',
             'content' => http_build_query($data),
         ));

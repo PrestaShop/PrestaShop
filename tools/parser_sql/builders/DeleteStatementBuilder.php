@@ -38,9 +38,9 @@
  *
  * @version   SVN: $Id: DeleteStatementBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/WhereBuilder.php';
-require_once dirname(__FILE__).'/FromBuilder.php';
-require_once dirname(__FILE__).'/DeleteBuilder.php';
+require_once __DIR__.'/WhereBuilder.php';
+require_once __DIR__.'/FromBuilder.php';
+require_once __DIR__.'/DeleteBuilder.php';
 
 /**
  * This class implements the builder for the whole Delete statement. You can overwrite

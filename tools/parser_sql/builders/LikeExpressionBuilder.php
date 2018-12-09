@@ -38,9 +38,9 @@
  *
  * @version   SVN: $Id: LikeExpressionBuilder.php 906 2014-01-07 14:38:08Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../utils/ExpressionType.php';
-require_once dirname(__FILE__).'/TableBuilder.php';
-require_once dirname(__FILE__).'/ReservedBuilder.php';
+require_once __DIR__.'/../utils/ExpressionType.php';
+require_once __DIR__.'/TableBuilder.php';
+require_once __DIR__.'/ReservedBuilder.php';
 
 /**
  * This class implements the builder for the (LIKE) keyword within a

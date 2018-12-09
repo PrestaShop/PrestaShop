@@ -38,8 +38,8 @@ class QqUploadedFileXhrCore
      */
     public function upload($path)
     {
-        $input = fopen('php://input', 'r');
-        $target = fopen($path, 'w');
+        $input = fopen('php://input', 'rb');
+        $target = fopen($path, 'wb');
 
         $realSize = stream_copy_to_stream($input, $target);
         if ($realSize != $this->getSize()) {

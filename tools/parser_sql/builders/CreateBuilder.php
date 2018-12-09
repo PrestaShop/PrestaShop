@@ -38,9 +38,9 @@
  *
  * @version   SVN: $Id: CreateBuilder.php 833 2013-12-18 10:13:59Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../utils/ExpressionType.php';
-require_once dirname(__FILE__).'/CreateTableBuilder.php';
-require_once dirname(__FILE__).'/SubTreeBuilder.php';
+require_once __DIR__.'/../utils/ExpressionType.php';
+require_once __DIR__.'/CreateTableBuilder.php';
+require_once __DIR__.'/SubTreeBuilder.php';
 
 /**
  * This class implements the builder for the [CREATE] part. You can overwrite

@@ -92,7 +92,7 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
      */
     public function getDatabaseCatalogue($themeName = null)
     {
-        if (is_null($themeName)) {
+        if (null === $themeName) {
             $themeName = self::DEFAULT_THEME_NAME;
         }
 

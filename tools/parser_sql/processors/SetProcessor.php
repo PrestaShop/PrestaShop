@@ -29,9 +29,9 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-require_once dirname(__FILE__).'/AbstractProcessor.php';
-require_once dirname(__FILE__).'/ExpressionListProcessor.php';
-require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once __DIR__.'/AbstractProcessor.php';
+require_once __DIR__.'/ExpressionListProcessor.php';
+require_once __DIR__.'/../utils/ExpressionType.php';
 
 /**
  * This class processes the SET statements.

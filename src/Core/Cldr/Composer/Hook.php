@@ -55,7 +55,7 @@ class Hook
         $zipUrl = self::ZIP_CORE_URL;
 
         if (!file_exists($cldrFilePath)) {
-            $fp = fopen($cldrFilePath, 'w');
+            $fp = fopen($cldrFilePath, 'wb');
             $ch = curl_init($zipUrl);
             curl_setopt($ch, CURLOPT_FILE, $fp);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);

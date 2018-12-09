@@ -38,7 +38,7 @@
  *
  * @version   SVN: $Id: JoinBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../exceptions/UnsupportedFeatureException.php';
+require_once __DIR__.'/../exceptions/UnsupportedFeatureException.php';
 
 /**
  * This class implements the builder for the JOIN statement parts (within FROM).

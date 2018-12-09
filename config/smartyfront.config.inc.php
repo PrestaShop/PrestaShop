@@ -175,7 +175,7 @@ function smartyTranslate($params, $smarty)
         $params['d'] = null;
     }
 
-    if (!is_null($params['d'])) {
+    if (null !== $params['d']) {
         if (isset($params['tags'])) {
             $backTrace = debug_backtrace();
 

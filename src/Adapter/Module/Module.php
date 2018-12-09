@@ -150,7 +150,7 @@ class Module implements ModuleInterface
 
         if ($this->database->get('installed')) {
             $version = $this->database->get('version');
-        } elseif (is_null($this->attributes->get('version')) && $this->disk->get('is_valid')) {
+        } elseif (null === $this->attributes->get('version') && $this->disk->get('is_valid')) {
             $version = $this->disk->get('version');
         } else {
             $version = $this->attributes->get('version');

@@ -29,8 +29,8 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-require_once dirname(__FILE__).'/../utils/ExpressionType.php';
-require_once dirname(__FILE__).'/../lexer/PHPSQLLexer.php';
+require_once __DIR__.'/../utils/ExpressionType.php';
+require_once __DIR__.'/../lexer/PHPSQLLexer.php';
 
 /**
  * This class processes contains some general functions for a processor.

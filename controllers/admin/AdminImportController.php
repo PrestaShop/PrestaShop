@@ -974,7 +974,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         $separator = Tools::getValue('multiple_value_separator');
-        if (is_null($separator) || '' == trim($separator)) {
+        if (null === $separator || '' == trim($separator)) {
             $separator = ',';
         }
 
@@ -987,7 +987,7 @@ class AdminImportControllerCore extends AdminController
                 $uniqid_path = _PS_UPLOAD_DIR_ . uniqid();
             } while (file_exists($uniqid_path));
             file_put_contents($uniqid_path, $field);
-            $fd = fopen($uniqid_path, 'r');
+            $fd = fopen($uniqid_path, 'rb');
         }
 
         if (false === $fd) {
@@ -4280,7 +4280,7 @@ class AdminImportControllerCore extends AdminController
             if (!mb_check_encoding(file_get_contents($file), 'UTF-8')) {
                 $this->convert = true;
             }
-            $handle = fopen($file, 'r');
+            $handle = fopen($file, 'rb');
         }
 
         if (!$handle) {
@@ -4540,7 +4540,7 @@ class AdminImportControllerCore extends AdminController
             $crossStepsVariables = array();
             if ($crossStepsVars = Tools::getValue('crossStepsVars')) {
                 $crossStepsVars = json_decode($crossStepsVars, true);
-                if (sizeof($crossStepsVars) > 0) {
+                if (count($crossStepsVars) > 0) {
                     $crossStepsVariables = $crossStepsVars;
                 }
             }

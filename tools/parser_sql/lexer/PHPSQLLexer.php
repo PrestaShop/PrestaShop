@@ -39,8 +39,8 @@
  *
  * @version   SVN: $Id: PHPSQLLexer.php 842 2013-12-30 08:57:53Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/LexerSplitter.php';
-require_once dirname(__FILE__).'/../exceptions/InvalidParameterException.php';
+require_once __DIR__.'/LexerSplitter.php';
+require_once __DIR__.'/../exceptions/InvalidParameterException.php';
 
 /**
  * This class splits the SQL string into little parts, which the parser can

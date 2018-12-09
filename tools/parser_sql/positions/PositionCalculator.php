@@ -30,8 +30,8 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-require_once dirname(__FILE__).'/../utils/PHPSQLParserConstants.php';
-require_once dirname(__FILE__).'/../exceptions/UnableToCalculatePositionException.php';
+require_once __DIR__.'/../utils/PHPSQLParserConstants.php';
+require_once __DIR__.'/../exceptions/UnableToCalculatePositionException.php';
 
 /**
  * This class calculates the positions

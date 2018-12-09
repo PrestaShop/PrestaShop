@@ -29,7 +29,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-require_once dirname(__FILE__).'/FromProcessor.php';
+require_once __DIR__.'/FromProcessor.php';
 
 /**
  * This class processes the UPDATE statements.

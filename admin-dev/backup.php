@@ -77,7 +77,7 @@ if ('.bz2' == substr($backupfile, -4)) {
 } else {
     $contentType = 'text/x-sql';
 }
-$fp = @fopen($backupfile, 'r');
+$fp = @fopen($backupfile, 'rb');
 
 if (false === $fp) {
     die(Context::getContext()->getTranslator()->trans(

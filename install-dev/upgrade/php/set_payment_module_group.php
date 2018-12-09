@@ -32,7 +32,7 @@ function set_payment_module_group()
         if (!file_exists($file)) {
             continue;
         }
-        $fd = @fopen($file, 'r');
+        $fd = @fopen($file, 'rb');
         if (!$fd) {
             continue;
         }

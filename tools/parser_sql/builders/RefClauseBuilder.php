@@ -38,10 +38,10 @@
  *
  * @version   SVN: $Id: RefClauseBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__).'/ColumnReferenceBuilder.php';
-require_once dirname(__FILE__).'/OperatorBuilder.php';
-require_once dirname(__FILE__).'/ConstantBuilder.php';
+require_once __DIR__.'/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__.'/ColumnReferenceBuilder.php';
+require_once __DIR__.'/OperatorBuilder.php';
+require_once __DIR__.'/ConstantBuilder.php';
 
 /**
  * This class implements the references clause within a JOIN.

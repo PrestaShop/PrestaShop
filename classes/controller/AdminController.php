@@ -567,7 +567,7 @@ class AdminControllerCore extends Controller
             $tabs = array();
         }
 
-        if (is_null($tab_id)) {
+        if (null === $tab_id) {
             $tab_id = $this->id;
         }
 
@@ -2457,7 +2457,7 @@ class AdminControllerCore extends Controller
         $helper = new HelperView($this);
         $this->setHelperDisplay($helper);
         $helper->tpl_vars = $this->getTemplateViewVars();
-        if (!is_null($this->base_tpl_view)) {
+        if (null !== $this->base_tpl_view) {
             $helper->base_tpl = $this->base_tpl_view;
         }
         $view = $helper->generateView();
@@ -2533,7 +2533,7 @@ class AdminControllerCore extends Controller
             }
 
             $helper->back_url = $back;
-            !is_null($this->base_tpl_form) ? $helper->base_tpl = $this->base_tpl_form : '';
+            null !== $this->base_tpl_form ? $helper->base_tpl = $this->base_tpl_form : '';
             if ($this->access('view')) {
                 if (Tools::getValue('back')) {
                     $helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue('back'));
@@ -2759,7 +2759,7 @@ class AdminControllerCore extends Controller
             $this->ajax = '1';
         }
 
-        if (is_null($this->context->link)) {
+        if (null === $this->context->link) {
             $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
             $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
             $this->context->link = new Link($protocol_link, $protocol_content);
@@ -3506,11 +3506,11 @@ class AdminControllerCore extends Controller
      */
     public function getModulesList($filter_modules_list, $tracking_source = false)
     {
-        if (!is_array($filter_modules_list) && !is_null($filter_modules_list)) {
+        if (!is_array($filter_modules_list) && null !== $filter_modules_list) {
             $filter_modules_list = array($filter_modules_list);
         }
 
-        if (is_null($filter_modules_list) || !count($filter_modules_list)) {
+        if (null === $filter_modules_list || !count($filter_modules_list)) {
             return false;
         } //if there is no modules to display just return false;
 
@@ -4457,7 +4457,7 @@ class AdminControllerCore extends Controller
 
         $install = array(
             'href' => $link_admin_modules . '&install=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name)
-                . (!is_null($back) ? '&back=' . urlencode($back) : '') . ($install_source_tracking ? '&source=' . $install_source_tracking : ''),
+                . (null !== $back ? '&back=' . urlencode($back) : '') . ($install_source_tracking ? '&source=' . $install_source_tracking : ''),
             'onclick' => '',
             'title' => $this->translationsTab['Install'],
             'text' => $this->translationsTab['Install'],
@@ -4466,7 +4466,7 @@ class AdminControllerCore extends Controller
         );
 
         $uninstall = array(
-            'href' => $link_admin_modules . '&uninstall=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (!is_null($back) ? '&back=' . urlencode($back) : ''),
+            'href' => $link_admin_modules . '&uninstall=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (null !== $back ? '&back=' . urlencode($back) : ''),
             'onclick' => (isset($module->onclick_option_content['uninstall']) ? $module->onclick_option_content['uninstall'] : 'return confirm(\'' . $this->translationsTab['confirm_uninstall_popup'] . '\');'),
             'title' => $this->translationsTab['Uninstall'],
             'text' => $this->translationsTab['Uninstall'],
@@ -4569,7 +4569,7 @@ class AdminControllerCore extends Controller
             if ($option['cond']) {
                 if ('link' == $output_type) {
                     $return .= '<li><a class="' . $option_name . ' action_module';
-                    $return .= '" href="' . $option['href'] . (!is_null($back) ? '&back=' . urlencode($back) : '') . '"';
+                    $return .= '" href="' . $option['href'] . (null !== $back ? '&back=' . urlencode($back) : '') . '"';
                     $return .= ' onclick="' . $option['onclick'] . '"  title="' . $option['title'] . '"><i class="icon-' . (isset($option['icon']) && $option['icon'] ? $option['icon'] : 'cog') . '"></i>&nbsp;' . $option['text'] . '</a></li>';
                 } elseif ('array' == $output_type) {
                     if (!is_array($return)) {
@@ -4604,10 +4604,10 @@ class AdminControllerCore extends Controller
                         $html .= ' style="' . $option['style'] . '"';
                     }
 
-                    $html .= ' href="' . htmlentities($option['href']) . (!is_null($back) ? '&back=' . urlencode($back) : '') . '" onclick="' . $option['onclick'] . '"  title="' . $option['title'] . '"><i class="icon-' . (isset($option['icon']) && $option['icon'] ? $option['icon'] : 'cog') . '"></i> ' . $option['text'] . '</a>';
+                    $html .= ' href="' . htmlentities($option['href']) . (null !== $back ? '&back=' . urlencode($back) : '') . '" onclick="' . $option['onclick'] . '"  title="' . $option['title'] . '"><i class="icon-' . (isset($option['icon']) && $option['icon'] ? $option['icon'] : 'cog') . '"></i> ' . $option['text'] . '</a>';
                     $return[] = $html;
                 } elseif ('select' == $output_type) {
-                    $return .= '<option id="' . $option_name . '" data-href="' . htmlentities($option['href']) . (!is_null($back) ? '&back=' . urlencode($back) : '') . '" data-onclick="' . $option['onclick'] . '">' . $option['text'] . '</option>';
+                    $return .= '<option id="' . $option_name . '" data-href="' . htmlentities($option['href']) . (null !== $back ? '&back=' . urlencode($back) : '') . '" data-onclick="' . $option['onclick'] . '">' . $option['text'] . '</option>';
                 }
             }
         }

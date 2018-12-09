@@ -48,8 +48,8 @@ class InstallSession
         $session_started = session_start();
         if (!($session_started)
         || (!isset($_SESSION['session_mode']) && (isset($_GET['_']) || isset($_POST['submitNext']) || isset($_POST['submitPrevious']) || isset($_POST['language'])))) {
-            InstallSession::$_cookie_mode = true;
-            InstallSession::$_cookie = new Cookie('ps_install', null, time() + 7200, null, true);
+            self::$_cookie_mode = true;
+            self::$_cookie = new Cookie('ps_install', null, time() + 7200, null, true);
         }
         if ($session_started && !isset($_SESSION['session_mode'])) {
             $_SESSION['session_mode'] = 'session';
@@ -59,8 +59,8 @@ class InstallSession
 
     public function clean()
     {
-        if (InstallSession::$_cookie_mode) {
-            InstallSession::$_cookie->logout();
+        if (self::$_cookie_mode) {
+            self::$_cookie->logout();
         } else {
             foreach ($_SESSION as $k => $v) {
                 unset($_SESSION[$k]);
@@ -70,8 +70,8 @@ class InstallSession
 
     public function &__get($varname)
     {
-        if (InstallSession::$_cookie_mode) {
-            $ref = InstallSession::$_cookie->{$varname};
+        if (self::$_cookie_mode) {
+            $ref = self::$_cookie->{$varname};
             if (0 === strncmp($ref, 'serialized_array:', strlen('serialized_array:'))) {
                 $ref = unserialize(substr($ref, strlen('serialized_array:')));
             }
@@ -89,14 +89,14 @@ class InstallSession
 
     public function __set($varname, $value)
     {
-        if (InstallSession::$_cookie_mode) {
+        if (self::$_cookie_mode) {
             if ('xml_loader_ids' == $varname) {
                 return;
             }
             if (is_array($value)) {
                 $value = 'serialized_array:'.serialize($value);
             }
-            InstallSession::$_cookie->{$varname} = $value;
+            self::$_cookie->{$varname} = $value;
         } else {
             $_SESSION[$varname] = $value;
         }
@@ -104,8 +104,8 @@ class InstallSession
 
     public function __isset($varname)
     {
-        if (InstallSession::$_cookie_mode) {
-            return isset(InstallSession::$_cookie->{$varname});
+        if (self::$_cookie_mode) {
+            return isset(self::$_cookie->{$varname});
         } else {
             return isset($_SESSION[$varname]);
         }
@@ -113,8 +113,8 @@ class InstallSession
 
     public function __unset($varname)
     {
-        if (InstallSession::$_cookie_mode) {
-            unset(InstallSession::$_cookie->{$varname});
+        if (self::$_cookie_mode) {
+            unset(self::$_cookie->{$varname});
         } else {
             unset($_SESSION[$varname]);
         }

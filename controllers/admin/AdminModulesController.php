@@ -804,7 +804,7 @@ class AdminModulesControllerCore extends AdminController
                         }
 
                         foreach ($module_to_update as $name => $attr) {
-                            if ((is_null($attr) && 0 == $this->logged_on_addons) || (1 == $attr['need_loggedOnAddons'] && 0 == $this->logged_on_addons)) {
+                            if ((null === $attr && 0 == $this->logged_on_addons) || (1 == $attr['need_loggedOnAddons'] && 0 == $this->logged_on_addons)) {
                                 $this->errors[] = $this->trans(
                                     'You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s',
                                     array(
@@ -815,7 +815,7 @@ class AdminModulesControllerCore extends AdminController
                                     ),
                                     'Admin.Modules.Notification'
                                 );
-                            } elseif (!is_null($attr['id'])) {
+                            } elseif (null !== $attr['id']) {
                                 $download_ok = false;
                                 if (0 == $attr['need_loggedOnAddons']
                                         && file_put_contents(

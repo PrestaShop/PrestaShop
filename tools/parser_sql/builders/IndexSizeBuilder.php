@@ -38,12 +38,12 @@
  *
  * @version   SVN: $Id: IndexSizeBuilder.php 918 2014-01-08 11:48:30Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../utils/ExpressionType.php';
-require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__).'/ColumnListBuilder.php';
-require_once dirname(__FILE__).'/ConstraintBuilder.php';
-require_once dirname(__FILE__).'/ReservedBuilder.php';
-require_once dirname(__FILE__).'/IndexTypeBuilder.php';
+require_once __DIR__.'/../utils/ExpressionType.php';
+require_once __DIR__.'/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__.'/ColumnListBuilder.php';
+require_once __DIR__.'/ConstraintBuilder.php';
+require_once __DIR__.'/ReservedBuilder.php';
+require_once __DIR__.'/IndexTypeBuilder.php';
 
 /**
  * This class implements the builder for the index size of a PRIMARY KEY

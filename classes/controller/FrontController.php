@@ -1414,7 +1414,7 @@ class FrontControllerCore extends Controller
             $params['id'] = null;
         }
 
-        if (is_null($locale)) {
+        if (null === $locale) {
             $locale = $this->context->language->locale;
         }
 

@@ -38,10 +38,10 @@
  *
  * @version   SVN: $Id: GroupByBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__).'/PositionBuilder.php';
-require_once dirname(__FILE__).'/ColumnReferenceBuilder.php';
-require_once dirname(__FILE__).'/FunctionBuilder.php';
+require_once __DIR__.'/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__.'/PositionBuilder.php';
+require_once __DIR__.'/ColumnReferenceBuilder.php';
+require_once __DIR__.'/FunctionBuilder.php';
 
 /**
  * This class implements the builder for the GROUP-BY clause.

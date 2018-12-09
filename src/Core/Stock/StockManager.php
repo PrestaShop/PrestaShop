@@ -328,7 +328,7 @@ class StockManager
                 (string) $configuration['PS_SHOP_NAME'],
                 null,
                 null,
-                dirname(__FILE__) . '/mails/',
+                __DIR__ . '/mails/',
                 false,
                 $idShop
             );
@@ -352,7 +352,7 @@ class StockManager
 
             if ($stockMvt) {
                 $sfContainer = SymfonyContainer::getInstance();
-                if (!is_null($sfContainer)) {
+                if (null !== $sfContainer) {
                     $stockMvtRepository = $sfContainer->get('prestashop.core.api.stock_movement.repository');
 
                     return $stockMvtRepository->saveStockMvt($stockMvt);

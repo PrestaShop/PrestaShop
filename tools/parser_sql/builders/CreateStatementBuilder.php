@@ -38,9 +38,9 @@
  *
  * @version   SVN: $Id: CreateStatementBuilder.php 930 2014-01-08 13:07:55Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/LikeBuilder.php';
-require_once dirname(__FILE__).'/SelectStatementBuilder.php';
-require_once dirname(__FILE__).'/CreateBuilder.php';
+require_once __DIR__.'/LikeBuilder.php';
+require_once __DIR__.'/SelectStatementBuilder.php';
+require_once __DIR__.'/CreateBuilder.php';
 
 /**
  * This class implements the builder for the whole Create statement. You can overwrite

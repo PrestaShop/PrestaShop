@@ -42,7 +42,7 @@ if (_PS_MODE_DEV_ === true) {
 define('_PS_DEBUG_PROFILING_', false);
 define('_PS_MODE_DEMO_', false);
 
-$currentDir = dirname(__FILE__);
+$currentDir = __DIR__;
 
 if (!defined('_PS_HOST_MODE_') && (getenv('_PS_HOST_MODE_') || getenv('REDIRECT__PS_HOST_MODE_'))) {
     define('_PS_HOST_MODE_', getenv('_PS_HOST_MODE_') ? getenv('_PS_HOST_MODE_') : getenv('REDIRECT__PS_HOST_MODE_'));

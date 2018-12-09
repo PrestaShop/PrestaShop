@@ -54,7 +54,7 @@ class PasswordControllerCore extends FrontController
         } else {
             $customer = new Customer();
             $customer->getByEmail($email);
-            if (is_null($customer->email)) {
+            if (null === $customer->email) {
                 $customer->email = Tools::getValue('email');
             }
 

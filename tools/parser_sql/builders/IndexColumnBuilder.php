@@ -38,8 +38,8 @@
  *
  * @version   SVN: $Id: IndexColumnBuilder.php 917 2014-01-08 11:47:42Z phosco@gmx.de $
  */
-require_once dirname(__FILE__).'/../exceptions/UnsupportedFeatureException.php';
-require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once __DIR__.'/../exceptions/UnsupportedFeatureException.php';
+require_once __DIR__.'/../utils/ExpressionType.php';
 /**
  * This class implements the builder for index column entries of the column-list
  * parts of CREATE TABLE.
