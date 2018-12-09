@@ -64,7 +64,7 @@ class ImageManager
         $thumbPath = $this->getThumbnailTag($imageId, $imageType, $tableName, $imageDir);
 
         // because legacy uses relative path to reach a directory under root directory...
-        $replacement = 'src="'.$this->legacyContext->getRootUrl();
+        $replacement = 'src="' . $this->legacyContext->getRootUrl();
         $thumbPath = preg_replace('/src="(\\.\\.\\/)+/', $replacement, $thumbPath);
 
         return $thumbPath;
@@ -118,15 +118,15 @@ class ImageManager
      */
     private function getImagePath($imageId, $imageType, $tableName, $imageDir)
     {
-        $parentDirectory = _PS_IMG_DIR_.$imageDir;
+        $parentDirectory = _PS_IMG_DIR_ . $imageDir;
 
         if ('product' == $tableName) {
             $image = new Image($imageId);
 
-            return $parentDirectory.'/'.$image->getExistingImgPath().'.'.$imageType;
+            return $parentDirectory . '/' . $image->getExistingImgPath() . '.' . $imageType;
         }
 
-        return $parentDirectory.'/'.$imageId.'.'.$imageType;
+        return $parentDirectory . '/' . $imageId . '.' . $imageType;
     }
 
     /**
@@ -138,6 +138,6 @@ class ImageManager
      */
     private function makeCachedImageName($imageId, $imageType, $tableName)
     {
-        return $tableName.'_mini_'.$imageId.'.'.$imageType;
+        return $tableName . '_mini_' . $imageId . '.' . $imageType;
     }
 }

@@ -36,7 +36,7 @@ class TranslateCore
         global $_LANG;
 
         $string = preg_replace("/\\\*'/", "\'", $string);
-        $key = $class.'_'.md5($string);
+        $key = $class . '_' . md5($string);
 
         if (isset($_LANG[$key])) {
             $str = $_LANG[$key];
@@ -87,13 +87,13 @@ class TranslateCore
             if (empty($iso)) {
                 $iso = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
             }
-            if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
-                include_once _PS_TRANSLATIONS_DIR_.$iso.'/admin.php';
+            if (file_exists(_PS_TRANSLATIONS_DIR_ . $iso . '/admin.php')) {
+                include_once _PS_TRANSLATIONS_DIR_ . $iso . '/admin.php';
             }
         }
 
         if (isset($modulesTabs[strtolower($class)])) {
-            $classNameController = $class.'controller';
+            $classNameController = $class . 'controller';
             // if the class is extended by a module, use modules/[module_name]/xx.php lang file
             if (class_exists($classNameController) && Module::getModuleNameFromClass($classNameController)) {
                 return Translate::getModuleTranslation(Module::$classInModule[$classNameController], $string, $classNameController, $sprintf, $addslashes);
@@ -102,8 +102,8 @@ class TranslateCore
 
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
-        if (isset($_LANGADM[$class.$key])) {
-            $str = $_LANGADM[$class.$key];
+        if (isset($_LANGADM[$class . $key])) {
+            $str = $_LANGADM[$class . $key];
         } else {
             $str = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
         }
@@ -140,12 +140,12 @@ class TranslateCore
             $key = md5($string);
         }
 
-        if (isset($langArray['AdminController'.$key])) {
-            $str = $langArray['AdminController'.$key];
-        } elseif (isset($langArray['Helper'.$key])) {
-            $str = $langArray['Helper'.$key];
-        } elseif (isset($langArray['AdminTab'.$key])) {
-            $str = $langArray['AdminTab'.$key];
+        if (isset($langArray['AdminController' . $key])) {
+            $str = $langArray['AdminController' . $key];
+        } elseif (isset($langArray['Helper' . $key])) {
+            $str = $langArray['Helper' . $key];
+        } elseif (isset($langArray['AdminTab' . $key])) {
+            $str = $langArray['AdminTab' . $key];
         } else {
             $str = $string;
         }
@@ -187,12 +187,12 @@ class TranslateCore
         if (!isset($translationsMerged[$name][$iso])) {
             $filesByPriority = array(
                 // Translations in theme
-                _PS_THEME_DIR_.'modules/'.$name.'/translations/'.$iso.'.php',
-                _PS_THEME_DIR_.'modules/'.$name.'/'.$iso.'.php',
+                _PS_THEME_DIR_ . 'modules/' . $name . '/translations/' . $iso . '.php',
+                _PS_THEME_DIR_ . 'modules/' . $name . '/' . $iso . '.php',
                 // PrestaShop 1.5 translations
-                _PS_MODULE_DIR_.$name.'/translations/'.$iso.'.php',
+                _PS_MODULE_DIR_ . $name . '/translations/' . $iso . '.php',
                 // PrestaShop 1.4 translations
-                _PS_MODULE_DIR_.$name.'/'.$iso.'.php',
+                _PS_MODULE_DIR_ . $name . '/' . $iso . '.php',
             );
             foreach ($filesByPriority as $file) {
                 if (file_exists($file)) {
@@ -206,7 +206,7 @@ class TranslateCore
         $string = preg_replace("/\\\*'/", "\'", $originalString);
         $key = md5($string);
 
-        $cacheKey = $name.'|'.$string.'|'.$source.'|'.(int) $js.'|'.$iso;
+        $cacheKey = $name . '|' . $string . '|' . $source . '|' . (int) $js . '|' . $iso;
         if (isset($langCache[$cacheKey])) {
             $ret = $langCache[$cacheKey];
         } else {
@@ -222,13 +222,13 @@ class TranslateCore
                 $ret = str_replace('"', '&quot;', $string);
             }
 
-            $currentKey = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
-            $defaultKey = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
+            $currentKey = strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $source) . '_' . $key;
+            $defaultKey = strtolower('<{' . $name . '}prestashop>' . $source) . '_' . $key;
 
             if ('controller' == substr($source, -10, 10)) {
                 $file = substr($source, 0, -10);
-                $currentKeyFile = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$file).'_'.$key;
-                $defaultKeyFile = strtolower('<{'.$name.'}prestashop>'.$file).'_'.$key;
+                $currentKeyFile = strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $file) . '_' . $key;
+                $defaultKeyFile = strtolower('<{' . $name . '}prestashop>' . $file) . '_' . $key;
             }
 
             if (isset($currentKeyFile) && !empty($_MODULES[$currentKeyFile])) {
@@ -313,7 +313,7 @@ class TranslateCore
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
 
-        $str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
+        $str = (array_key_exists('PDF' . $key, $_LANGPDF) ? $_LANGPDF['PDF' . $key] : $string);
 
         if (
             null !== $sprintf &&
@@ -364,11 +364,11 @@ class TranslateCore
                 $match = array();
                 if (preg_match('/^\s*<\s*(\w+)/', $tag, $match)) {
                     $opener = $tag;
-                    $closer = '</'.$match[1].'>';
+                    $closer = '</' . $match[1] . '>';
 
-                    $string = str_replace('['.$position.']', $opener, $string);
-                    $string = str_replace('[/'.$position.']', $closer, $string);
-                    $string = str_replace('['.$position.'/]', $opener.$closer, $string);
+                    $string = str_replace('[' . $position . ']', $opener, $string);
+                    $string = str_replace('[/' . $position . ']', $closer, $string);
+                    $string = str_replace('[' . $position . '/]', $opener . $closer, $string);
                 }
             }
         }

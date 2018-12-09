@@ -72,7 +72,6 @@ class RoundingModeTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider roundingModeDataProvider
-     *
      * @param mixed $productData
      * @param mixed $expectedTotal
      * @param mixed $cartRuleData

@@ -48,7 +48,7 @@ final class ModuleRepository
     public function __construct(Connection $connection, $databasePrefix)
     {
         $this->connection = $connection;
-        $this->tableName = $databasePrefix.'module';
+        $this->tableName = $databasePrefix . 'module';
     }
 
     /**
@@ -56,7 +56,7 @@ final class ModuleRepository
      */
     public function getActiveModules()
     {
-        $sth = $this->connection->query('SELECT name FROM '.$this->tableName.' WHERE active = 1');
+        $sth = $this->connection->query('SELECT name FROM ' . $this->tableName . ' WHERE active = 1');
 
         return $sth->fetchAll(\PDO::FETCH_COLUMN);
     }
@@ -69,7 +69,7 @@ final class ModuleRepository
     public function getActiveModulesPaths()
     {
         $paths = array();
-        $modulesFiles = Finder::create()->directories()->in(__DIR__.'/../../../modules')->depth(0);
+        $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../modules')->depth(0);
         $activeModules = $this->getActiveModules();
 
         foreach ($modulesFiles as $moduleFile) {

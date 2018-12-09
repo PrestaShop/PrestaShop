@@ -190,7 +190,6 @@ class Core_Foundation_IoC_Container_Test extends TestCase
 
     /**
      * @dataProvider valuesToBind
-     *
      * @param mixed $value
      */
     public function test_container_can_bind_values_directly($value)

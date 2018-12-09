@@ -56,43 +56,31 @@
 		<p>
 			<label for="dbEngine"><?php echo $this->translator->trans('Database Engine', array(), 'Install'); ?></label>
 			<select id="dbEngine" name="dbEngine">
-				<option value="InnoDB" <?php if ('InnoDB' == $this->database_engine) {
-     ?>selected="selected"<?php
- } ?>>InnoDB</option>
-				<option value="MyISAM" <?php if ('MyISAM' == $this->database_engine) {
-     ?>selected="selected"<?php
- } ?>>MyISAM</option>
+				<option value="InnoDB" <?php if ('InnoDB' == $this->database_engine) { ?>selected="selected"<?php } ?>>InnoDB</option>
+				<option value="MyISAM" <?php if ('MyISAM' == $this->database_engine) { ?>selected="selected"<?php } ?>>MyISAM</option>
 			</select>
 		</p>-->
 		<p>
 			<label for="db_prefix"><?php echo $this->translator->trans('Tables prefix', array(), 'Install'); ?></label>
 			<input class="text" type="text" id="db_prefix" name="db_prefix" value="<?php echo htmlspecialchars($this->database_prefix); ?>" />
 		</p>
-		<?php if (_PS_MODE_DEV_) {
-     ?>
+		<?php if (_PS_MODE_DEV_) { ?>
 			<p>
 				<label for="db_clear"><?php echo $this->translator->trans('Drop existing tables (mode dev)', array(), 'Install'); ?></label>
-				<input type="checkbox" name="database_clear" id="db_clear" value="1" <?php if ($this->database_clear) {
-         ?>checked="checked"<?php
-     } ?> />
+				<input type="checkbox" name="database_clear" id="db_clear" value="1" <?php if ($this->database_clear) { ?>checked="checked"<?php } ?> />
 			</p>
-		<?php
- } ?>
+		<?php } ?>
 		<p class="aligned last">
 			<input id="btTestDB" class="button" type="button" value="<?php echo $this->translator->trans('Test your database connection now!', array(), 'Install'); ?>"/>
 		</p>
 
 		<input class="text" type="hidden" id="rewrite_engine" name="rewrite_engine" value="0" />
 
-		<?php if ($this->errors) {
-     ?>
+		<?php if ($this->errors) { ?>
 			<p id="dbResultCheck" class="errorBlock"><?php echo implode('<br />', $this->errors); ?></p>
-		<?php
- } else {
-     ?>
+		<?php } else { ?>
 			<p id="dbResultCheck" style="display: none;"></p>
-		<?php
- } ?>
+		<?php } ?>
 	</div>
 </div>
 

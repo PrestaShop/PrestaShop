@@ -182,7 +182,6 @@ class TranslationControllerTest extends ApiTestCase
     /**
      * @dataProvider getGoodEditTranslations
      * @test
-     *
      * @param mixed $params
      */
     public function it_should_return_valid_response_when_requesting_translations_edition($params)
@@ -224,7 +223,6 @@ class TranslationControllerTest extends ApiTestCase
     /**
      * @dataProvider getGoodResetTranslations
      * @test
-     *
      * @param mixed $params
      */
     public function it_should_return_valid_response_when_requesting_translations_reset($params)
@@ -345,7 +343,6 @@ class TranslationControllerTest extends ApiTestCase
 
     /**
      * @param mixed $params
-     *
      * @return array
      */
     private function assertOkResponseOnTranslationEdition($params)

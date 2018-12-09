@@ -95,7 +95,7 @@ class ConnectionsSourceCore extends ObjectModel
         if (isset($_SERVER['HTTP_REFERER'])) {
             // If the referrer is internal (i.e. from your own website), then we drop the connection
             $parsed = parse_url($_SERVER['HTTP_REFERER']);
-            $parsedHost = parse_url(Tools::getProtocol().Tools::getHttpHost(false, false).__PS_BASE_URI__);
+            $parsedHost = parse_url(Tools::getProtocol() . Tools::getHttpHost(false, false) . __PS_BASE_URI__);
 
             if (!isset($parsed['host']) || (!isset($parsed['path']) || !isset($parsedHost['path']))) {
                 return false;
@@ -137,11 +137,11 @@ class ConnectionsSourceCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cos.http_referer, cos.request_uri, cos.keywords, cos.date_add
-		FROM '._DB_PREFIX_.'orders o
-		INNER JOIN '._DB_PREFIX_.'guest g ON g.id_customer = o.id_customer
-		INNER JOIN '._DB_PREFIX_.'connections co  ON co.id_guest = g.id_guest
-		INNER JOIN '._DB_PREFIX_.'connections_source cos ON cos.id_connections = co.id_connections
-		WHERE id_order = '.(int) ($idOrder).'
+		FROM ' . _DB_PREFIX_ . 'orders o
+		INNER JOIN ' . _DB_PREFIX_ . 'guest g ON g.id_customer = o.id_customer
+		INNER JOIN ' . _DB_PREFIX_ . 'connections co  ON co.id_guest = g.id_guest
+		INNER JOIN ' . _DB_PREFIX_ . 'connections_source cos ON cos.id_connections = co.id_connections
+		WHERE id_order = ' . (int) ($idOrder) . '
 		ORDER BY cos.date_add DESC');
     }
 }

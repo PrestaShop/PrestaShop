@@ -44,7 +44,7 @@ class AdminAttachmentsControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = 'IFNULL(virtual_product_attachment.products, 0) as products';
-        $this->_join = 'LEFT JOIN (SELECT id_attachment, COUNT(*) as products FROM '._DB_PREFIX_.'product_attachment GROUP BY id_attachment) virtual_product_attachment ON a.id_attachment = virtual_product_attachment.id_attachment';
+        $this->_join = 'LEFT JOIN (SELECT id_attachment, COUNT(*) as products FROM ' . _DB_PREFIX_ . 'product_attachment GROUP BY id_attachment) virtual_product_attachment ON a.id_attachment = virtual_product_attachment.id_attachment';
         $this->_use_found_rows = false;
 
         parent::__construct();
@@ -87,7 +87,7 @@ class AdminAttachmentsControllerCore extends AdminController
     {
         parent::setMedia($isNewTheme);
 
-        $this->addJs(_PS_JS_DIR_.'/admin/attachments.js');
+        $this->addJs(_PS_JS_DIR_ . '/admin/attachments.js');
         Media::addJsDefL('confirm_text', $this->trans('This file is associated with the following products, do you really want to  delete it?', array(), 'Admin.Catalog.Notification'));
     }
 
@@ -100,7 +100,7 @@ class AdminAttachmentsControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_attachment'] = array(
-                'href' => self::$currentIndex.'&addattachment&token='.$this->token,
+                'href' => self::$currentIndex . '&addattachment&token=' . $this->token,
                 'desc' => $this->trans('Add new file', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -112,7 +112,7 @@ class AdminAttachmentsControllerCore extends AdminController
     public function renderView()
     {
         if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj)) {
-            $link = $this->context->link->getPageLink('attachment', true, null, 'id_attachment='.$obj->id);
+            $link = $this->context->link->getPageLink('attachment', true, null, 'id_attachment=' . $obj->id);
             Tools::redirectLink($link);
         }
 
@@ -123,10 +123,10 @@ class AdminAttachmentsControllerCore extends AdminController
     {
         if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj)) {
             /** @var Attachment $obj */
-            $link = $this->context->link->getPageLink('attachment', true, null, 'id_attachment='.$obj->id);
+            $link = $this->context->link->getPageLink('attachment', true, null, 'id_attachment=' . $obj->id);
 
-            if (file_exists(_PS_DOWNLOAD_DIR_.$obj->file)) {
-                $size = round(filesize(_PS_DOWNLOAD_DIR_.$obj->file) / 1024);
+            if (file_exists(_PS_DOWNLOAD_DIR_ . $obj->file)) {
+                $size = round(filesize(_PS_DOWNLOAD_DIR_ . $obj->file) / 1024);
             }
         }
 
@@ -182,7 +182,7 @@ class AdminAttachmentsControllerCore extends AdminController
 
                 if (isset($this->product_attachements[$list['id_attachment']])) {
                     foreach ($this->product_attachements[$list['id_attachment']] as $product) {
-                        $product_list .= $product.', ';
+                        $product_list .= $product . ', ';
                     }
 
                     $product_list = rtrim($product_list, ', ');
@@ -207,7 +207,7 @@ class AdminAttachmentsControllerCore extends AdminController
             return;
         }
 
-        if (Tools::isSubmit('submitAdd'.$this->table)) {
+        if (Tools::isSubmit('submitAdd' . $this->table)) {
             $id = (int) Tools::getValue('id_attachment');
             if ($id && $a = new Attachment($id)) {
                 $_POST['file'] = $a->file;
@@ -227,14 +227,14 @@ class AdminAttachmentsControllerCore extends AdminController
                     } else {
                         do {
                             $uniqid = sha1(microtime());
-                        } while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
-                        if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid)) {
+                        } while (file_exists(_PS_DOWNLOAD_DIR_ . $uniqid));
+                        if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_ . $uniqid)) {
                             $this->errors[] = $this->trans('Failed to copy the file.', array(), 'Admin.Catalog.Notification');
                         }
                         $_POST['file_name'] = $_FILES['file']['name'];
                         @unlink($_FILES['file']['tmp_name']);
-                        if (!count($this->errors) && isset($a) && file_exists(_PS_DOWNLOAD_DIR_.$a->file)) {
-                            unlink(_PS_DOWNLOAD_DIR_.$a->file);
+                        if (!count($this->errors) && isset($a) && file_exists(_PS_DOWNLOAD_DIR_ . $a->file)) {
+                            unlink(_PS_DOWNLOAD_DIR_ . $a->file);
                         }
                         $_POST['file'] = $uniqid;
                         $_POST['mime'] = $_FILES['file']['type'];
@@ -245,18 +245,18 @@ class AdminAttachmentsControllerCore extends AdminController
                     $upload_mb = min($max_upload, $max_post);
                     $this->errors[] = $this->trans(
                         'The file %file% exceeds the size allowed by the server. The limit is set to %size% MB.',
-                        array('%file%' => '<b>'.$_FILES['file']['name'].'</b> ', '%size%' => '<b>'.$upload_mb.'</b>'),
+                        array('%file%' => '<b>' . $_FILES['file']['name'] . '</b> ', '%size%' => '<b>' . $upload_mb . '</b>'),
                         'Admin.Catalog.Notification'
                     );
-                } elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_.$a->file))) {
+                } elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_ . $a->file))) {
                     $this->errors[] = $this->trans('Upload error. Please check your server configurations for the maximum upload size allowed.', array(), 'Admin.Catalog.Notification');
                 }
             }
             $this->validateRules();
         }
         $return = parent::postProcess();
-        if (!$return && isset($uniqid) && file_exists(_PS_DOWNLOAD_DIR_.$uniqid)) {
-            unlink(_PS_DOWNLOAD_DIR_.$uniqid);
+        if (!$return && isset($uniqid) && file_exists(_PS_DOWNLOAD_DIR_ . $uniqid)) {
+            unlink(_PS_DOWNLOAD_DIR_ . $uniqid);
         }
 
         return $return;

@@ -105,7 +105,7 @@ class Formatter
         try {
             $decimalNumber = $this->prepareNumber($number);
         } catch (SPLInvalidArgumentException $e) {
-            throw new LocalizationException('Invalid $number parameter : '.$e->getMessage(), 0, $e);
+            throw new LocalizationException('Invalid $number parameter : ' . $e->getMessage(), 0, $e);
         }
 
         /*
@@ -122,7 +122,7 @@ class Formatter
         // Assemble the final number
         $formattedNumber = $majorDigits;
         if ($minorDigits) {
-            $formattedNumber .= self::DECIMAL_SEPARATOR_PLACEHOLDER.$minorDigits;
+            $formattedNumber .= self::DECIMAL_SEPARATOR_PLACEHOLDER . $minorDigits;
         }
 
         // Get the good CLDR formatting pattern. Sign is important here !

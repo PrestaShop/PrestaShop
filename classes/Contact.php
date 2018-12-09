@@ -87,11 +87,11 @@ class ContactCore extends ObjectModel
     {
         $shopIds = Shop::getContextListShopID();
         $sql = 'SELECT *
-                FROM `'._DB_PREFIX_.'contact` c
-                '.Shop::addSqlAssociation('contact', 'c', false).'
-                LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
-                WHERE cl.`id_lang` = '.(int) $idLang.'
-                AND contact_shop.`id_shop` IN ('.implode(', ', array_map('intval', $shopIds)).')
+                FROM `' . _DB_PREFIX_ . 'contact` c
+                ' . Shop::addSqlAssociation('contact', 'c', false) . '
+                LEFT JOIN `' . _DB_PREFIX_ . 'contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
+                WHERE cl.`id_lang` = ' . (int) $idLang . '
+                AND contact_shop.`id_shop` IN (' . implode(', ', array_map('intval', $shopIds)) . ')
                 GROUP BY c.`id_contact`
                 ORDER BY `name` ASC';
 
@@ -109,12 +109,12 @@ class ContactCore extends ObjectModel
 
         return Db::getInstance()->executeS('
             SELECT cl.*
-            FROM '._DB_PREFIX_.'contact ct
-            '.Shop::addSqlAssociation('contact', 'ct', false).'
-            LEFT JOIN '._DB_PREFIX_.'contact_lang cl
-                ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int) Context::getContext()->language->id.')
+            FROM ' . _DB_PREFIX_ . 'contact ct
+            ' . Shop::addSqlAssociation('contact', 'ct', false) . '
+            LEFT JOIN ' . _DB_PREFIX_ . 'contact_lang cl
+                ON (cl.id_contact = ct.id_contact AND cl.id_lang = ' . (int) Context::getContext()->language->id . ')
             WHERE ct.customer_service = 1
-            AND contact_shop.`id_shop` IN ('.implode(', ', array_map('intval', $shopIds)).')
+            AND contact_shop.`id_shop` IN (' . implode(', ', array_map('intval', $shopIds)) . ')
             GROUP BY ct.`id_contact`
         ');
     }

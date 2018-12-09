@@ -47,8 +47,8 @@ class AdminPdfControllerCore extends AdminController
 
     public function checkCacheFolder()
     {
-        if (!is_dir(_PS_CACHE_DIR_.'tcpdf/')) {
-            mkdir(_PS_CACHE_DIR_.'tcpdf/');
+        if (!is_dir(_PS_CACHE_DIR_ . 'tcpdf/')) {
+            mkdir(_PS_CACHE_DIR_ . 'tcpdf/');
         }
     }
 

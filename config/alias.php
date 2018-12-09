@@ -38,7 +38,7 @@ if (!function_exists('dump')) {
  * Sanitize data which will be injected into SQL query.
  *
  * @param string $string SQL data which will be injected into SQL query
- * @param bool $htmlOK Does data contain HTML code ? (optional)
+ * @param bool   $htmlOK Does data contain HTML code ? (optional)
  *
  * @return string Sanitized data
  */

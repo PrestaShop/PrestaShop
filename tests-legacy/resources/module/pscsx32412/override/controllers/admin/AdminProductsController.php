@@ -400,7 +400,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
             unset($product->id, $product->id_product);
-
+            
             $product->indexed = 0;
             $product->active = 0;
             if ($product->add()
@@ -1485,7 +1485,7 @@ class AdminProductsController extends AdminProductsControllerCore
      * Copy a product image.
      *
      * @param int $id_product Product Id for product image filename
-     * @param int $id_image Image Id for product image filename
+     * @param int $id_image   Image Id for product image filename
      * @param mixed $method
      */
     public function copyImage($id_product, $id_image, $method = 'auto')
@@ -1939,8 +1939,8 @@ class AdminProductsController extends AdminProductsControllerCore
      * Check if a field is edited (if the checkbox is checked)
      * This method will do something only for multishop with a context all / group.
      *
-     * @param string $field Name of field
-     * @param int $id_lang
+     * @param string $field   Name of field
+     * @param int    $id_lang
      *
      * @return bool
      */
@@ -2156,6 +2156,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $this->_defaultOrderBy = $this->identifier;
                 if ('position' == $this->context->cookie->{$this->table.'Orderby'}) {
                     unset($this->context->cookie->{$this->table.'Orderby'}, $this->context->cookie->{$this->table.'Orderway'});
+                    
                 }
             }
             if (!$id_category) {
@@ -2283,9 +2284,9 @@ class AdminProductsController extends AdminProductsControllerCore
      * Build a categories tree.
      *
      * @param array $indexedCategories Array with categories where product is indexed (in order to check checkbox)
-     * @param array $categories Categories to list
-     * @param array $current Current category
-     * @param int $id_category Current category id
+     * @param array $categories        Categories to list
+     * @param array $current           Current category
+     * @param int   $id_category       Current category id
      * @param mixed $id_obj
      * @param null|mixed $id_category_default
      * @param mixed $has_suite
@@ -4644,7 +4645,6 @@ class AdminProductsController extends AdminProductsControllerCore
 
     /**
      *  AdminProducts display hook.
-     *
      * @param mixed $obj
      */
     public function initFormModules($obj)
@@ -4748,7 +4748,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 foreach ($positions as $position => $value) {
                     $pos = explode('_', $value);
 
-                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category && (int) $pos[2] === $id_product)) {
+                    if ((isset($pos[1], $pos[2])  ) && ($pos[1] == $id_category && (int) $pos[2] === $id_product)) {
                         if ($product = new Product((int) $pos[2])) {
                             if (isset($position) && $product->updatePosition($way, $position)) {
                                 $category = new Category((int) $id_category);

@@ -66,7 +66,7 @@ class ValidateCore
             $errors[] = Context::getContext()->getTranslator()->trans('Unknown archive type.', array(), 'Admin.Modules.Notification');
         } else {
             if (false === (strpos($url, 'http'))) {
-                $url = 'http://'.$url;
+                $url = 'http://' . $url;
             }
             if (!is_array(@get_headers($url))) {
                 $errors[] = Context::getContext()->getTranslator()->trans('Invalid URL', array(), 'Admin.Notifications.Error');
@@ -449,7 +449,7 @@ class ValidateCore
         $events .= '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
         $events .= '|onselectstart|onstart|onstop';
 
-        if (preg_match('/<[\s]*script/ims', $html) || preg_match('/('.$events.')[\s]*=/ims', $html) || preg_match('/.*script\:/ims', $html)) {
+        if (preg_match('/<[\s]*script/ims', $html) || preg_match('/(' . $events . ')[\s]*=/ims', $html) || preg_match('/.*script\:/ims', $html)) {
             return false;
         }
 
@@ -1219,7 +1219,7 @@ class ValidateCore
 
     public static function isOrderInvoiceNumber($id)
     {
-        return preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id);
+        return preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $id);
     }
 
     public static function isThemeName($theme_name)

@@ -187,7 +187,7 @@ class CombinationDataProvider
         $name = array();
 
         foreach ($attributesCombinations as $attribute) {
-            $name[] = $attribute['group_name'].' - '.$attribute['attribute_name'];
+            $name[] = $attribute['group_name'] . ' - ' . $attribute['attribute_name'];
         }
 
         return implode(', ', $name);

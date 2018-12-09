@@ -289,9 +289,9 @@ class CartRow
                 || ($cartQuantity = $this->cacheAdapter->retrieve($cacheId)
                                     != (int) $quantity)) {
                 $sql = 'SELECT SUM(`quantity`)
-				FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `id_product` = '.(int) $productId.'
-				AND `id_cart` = '.(int) $cart->id;
+				FROM `' . _DB_PREFIX_ . 'cart_product`
+				WHERE `id_product` = ' . (int) $productId . '
+				AND `id_cart` = ' . (int) $cart->id;
                 $cartQuantity = (int) $this->databaseAdapter->getValue($sql, _PS_USE_SQL_SLAVE_);
                 $this->cacheAdapter->store($cacheId, $cartQuantity);
             } else {
@@ -432,7 +432,7 @@ class CartRow
     {
         $percent = (float) $percent;
         if ($percent < 0 || $percent > 100) {
-            throw new \Exception('Invalid percentage discount given: '.$percent);
+            throw new \Exception('Invalid percentage discount given: ' . $percent);
         }
         $discountTaxIncluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
         $discountTaxExcluded = $this->finalTotalPrice->getTaxExcluded() * $percent / 100;

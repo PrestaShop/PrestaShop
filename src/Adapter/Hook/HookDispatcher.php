@@ -67,7 +67,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
             $event = new HookEvent();
         }
         if (!$event instanceof HookEvent) {
-            throw new \Exception('HookDispatcher must dispatch a HookEvent subclass only. '.get_class($event).' given.');
+            throw new \Exception('HookDispatcher must dispatch a HookEvent subclass only. ' . get_class($event) . ' given.');
         }
 
         return parent::dispatch($eventName, $event);

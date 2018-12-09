@@ -49,22 +49,22 @@ class ToolsInstall
      * ...And so on.
      * _____________________________________.
      *
-     * @param simpleXMLElement $xml the XML to convert
-     * @param bool $flattenValues Choose wether to flatten values
-     *                            or to set them under a particular index.
-     *                            defaults to true;
-     * @param bool $flattenAttributes Choose wether to flatten attributes
-     *                                or to set them under a particular index.
-     *                                Defaults to true;
-     * @param bool $flattenChildren Choose wether to flatten children
-     *                              or to set them under a particular index.
-     *                              Defaults to true;
-     * @param string $valueKey index for values, in case $flattenValues was set to
-     *                         false. Defaults to "@value"
-     * @param string $attributesKey index for attributes, in case $flattenAttributes was set to
-     *                              false. Defaults to "@attributes"
-     * @param string $childrenKey index for children, in case $flattenChildren was set to
-     *                            false. Defaults to "@children"
+     * @param simpleXMLElement $xml               the XML to convert
+     * @param bool             $flattenValues     Choose wether to flatten values
+     *                                            or to set them under a particular index.
+     *                                            defaults to true;
+     * @param bool             $flattenAttributes Choose wether to flatten attributes
+     *                                            or to set them under a particular index.
+     *                                            Defaults to true;
+     * @param bool             $flattenChildren   Choose wether to flatten children
+     *                                            or to set them under a particular index.
+     *                                            Defaults to true;
+     * @param string           $valueKey          index for values, in case $flattenValues was set to
+     *                                            false. Defaults to "@value"
+     * @param string           $attributesKey     index for attributes, in case $flattenAttributes was set to
+     *                                            false. Defaults to "@attributes"
+     * @param string           $childrenKey       index for children, in case $flattenChildren was set to
+     *                                            false. Defaults to "@children"
      *
      * @return array the resulting array.
      */

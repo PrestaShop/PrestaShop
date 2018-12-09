@@ -63,7 +63,7 @@ class PreferencesController extends FrameworkBundleAdminController
         $toolsAdapter = $this->get('prestashop.adapter.tools');
 
         // SSL URI is used for the merchant to check if he has SSL enabled
-        $sslUri = 'https://'.$toolsAdapter->getShopDomainSsl().$request->getRequestUri();
+        $sslUri = 'https://' . $toolsAdapter->getShopDomainSsl() . $request->getRequestUri();
 
         return array(
             'layoutHeaderToolbarBtn' => array(),

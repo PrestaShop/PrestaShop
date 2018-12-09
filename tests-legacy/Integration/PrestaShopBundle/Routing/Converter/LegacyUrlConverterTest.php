@@ -255,10 +255,10 @@ class LegacyUrlConverterTest extends LightWebTestCase
     }
 
     /**
-     * @param string $expectedUrl
-     * @param string $controller
+     * @param string      $expectedUrl
+     * @param string      $controller
      * @param null|string $action
-     * @param null|array $queryParameters
+     * @param null|array  $queryParameters
      */
     private function doTestConverterByParameters($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
@@ -309,10 +309,10 @@ class LegacyUrlConverterTest extends LightWebTestCase
     }
 
     /**
-     * @param string $expectedUrl
-     * @param string $controller
+     * @param string      $expectedUrl
+     * @param string      $controller
      * @param null|string $action
-     * @param null|array $queryParameters
+     * @param null|array  $queryParameters
      */
     private function doTestLegacyLinkClass($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
@@ -339,10 +339,10 @@ class LegacyUrlConverterTest extends LightWebTestCase
     }
 
     /**
-     * @param string $expectedUrl
-     * @param string $controller
+     * @param string      $expectedUrl
+     * @param string      $controller
      * @param null|string $action
-     * @param null|array $queryParameters
+     * @param null|array  $queryParameters
      */
     private function doTestLegacyClassParameterAction($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
@@ -368,8 +368,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * Mainly used to ensure the legacy links are not broken.
      *
-     * @param string $expectedUrl
-     * @param string $controller
+     * @param string     $expectedUrl
+     * @param string     $controller
      * @param null|array $parameters
      *
      * @throws \PrestaShopException
@@ -426,8 +426,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
     }
 
     /**
-     * @param string $expectedUrl
-     * @param string $url
+     * @param string     $expectedUrl
+     * @param string     $url
      * @param null|array $ignoredParameters
      */
     private function assertSameUrl($expectedUrl, $url, array $ignoredParameters = null)
@@ -440,7 +440,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
         }
 
         unset($parameters['token'], $parameters['_token']);
-
+        
         if (null !== $ignoredParameters) {
             foreach ($ignoredParameters as $ignoredParameter) {
                 unset($parameters[$ignoredParameter]);

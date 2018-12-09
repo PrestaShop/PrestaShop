@@ -62,7 +62,7 @@ class YamlModuleLoader extends Loader
         $routes = new RouteCollection();
 
         foreach ($this->activeModulesPaths as $modulePath) {
-            $routingFile = $modulePath.'/config/routes.yml';
+            $routingFile = $modulePath . '/config/routes.yml';
             if (file_exists($routingFile)) {
                 $loadedRoutes = $this->import($routingFile, 'yaml');
 

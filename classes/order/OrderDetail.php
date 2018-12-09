@@ -276,7 +276,7 @@ class OrderDetailCore extends ObjectModel
             return false;
         }
 
-        Db::getInstance()->delete('order_detail_tax', 'id_order_detail='.(int) $this->id);
+        Db::getInstance()->delete('order_detail_tax', 'id_order_detail=' . (int) $this->id);
 
         return $res;
     }
@@ -294,9 +294,9 @@ class OrderDetailCore extends ObjectModel
             return false;
         }
         $sql = 'SELECT *
-        FROM `'._DB_PREFIX_.'order_detail` od
-        LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (od.`product_id`=pd.`id_product`)
-        WHERE od.`download_hash` = \''.pSQL((string) $hash).'\'
+        FROM `' . _DB_PREFIX_ . 'order_detail` od
+        LEFT JOIN `' . _DB_PREFIX_ . 'product_download` pd ON (od.`product_id`=pd.`id_product`)
+        WHERE od.`download_hash` = \'' . pSQL((string) $hash) . '\'
         AND pd.`active` = 1';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -304,9 +304,9 @@ class OrderDetailCore extends ObjectModel
 
     public static function incrementDownload($id_order_detail, $increment = 1)
     {
-        $sql = 'UPDATE `'._DB_PREFIX_.'order_detail`
-            SET `download_nb` = `download_nb` + '.(int) $increment.'
-            WHERE `id_order_detail`= '.(int) $id_order_detail.'
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_detail`
+            SET `download_nb` = `download_nb` + ' . (int) $increment . '
+            WHERE `id_order_detail`= ' . (int) $id_order_detail . '
             LIMIT 1';
 
         return Db::getInstance()->execute($sql);
@@ -336,9 +336,9 @@ class OrderDetailCore extends ObjectModel
     public static function getTaxCalculatorStatic($id_order_detail)
     {
         $sql = 'SELECT t.*, d.`tax_computation_method`
-                FROM `'._DB_PREFIX_.'order_detail_tax` t
-                LEFT JOIN `'._DB_PREFIX_.'order_detail` d ON (d.`id_order_detail` = t.`id_order_detail`)
-                WHERE d.`id_order_detail` = '.(int) $id_order_detail;
+                FROM `' . _DB_PREFIX_ . 'order_detail_tax` t
+                LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` d ON (d.`id_order_detail` = t.`id_order_detail`)
+                WHERE d.`id_order_detail` = ' . (int) $id_order_detail;
 
         $computation_method = 1;
         $taxes = array();
@@ -418,16 +418,16 @@ class OrderDetailCore extends ObjectModel
                     break;
             }
 
-            $values .= '('.(int) $this->id.','.(int) $id_tax.','.(float) $unit_amount.','.(float) $total_amount.'),';
+            $values .= '(' . (int) $this->id . ',' . (int) $id_tax . ',' . (float) $unit_amount . ',' . (float) $total_amount . '),';
         }
 
         if ($replace) {
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail='.(int) $this->id);
+            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'order_detail_tax` WHERE id_order_detail=' . (int) $this->id);
         }
 
         $values = rtrim($values, ',');
-        $sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
-                VALUES '.$values;
+        $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
+                VALUES ' . $values;
 
         return Db::getInstance()->execute($sql);
     }
@@ -451,7 +451,7 @@ class OrderDetailCore extends ObjectModel
      */
     public static function getList($id_order)
     {
-        return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int) $id_order);
+        return Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'order_detail` WHERE `id_order` = ' . (int) $id_order);
     }
 
     public function getTaxList()
@@ -461,8 +461,8 @@ class OrderDetailCore extends ObjectModel
 
     public static function getTaxListStatic($id_order_detail)
     {
-        $sql = 'SELECT * FROM `'._DB_PREFIX_.'order_detail_tax`
-                    WHERE `id_order_detail` = '.(int) $id_order_detail;
+        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'order_detail_tax`
+                    WHERE `id_order_detail` = ' . (int) $id_order_detail;
 
         return Db::getInstance()->executeS($sql);
     }
@@ -682,9 +682,9 @@ class OrderDetailCore extends ObjectModel
         $this->product_id = (int) $product['id_product'];
         $this->product_attribute_id = $product['id_product_attribute'] ? (int) $product['id_product_attribute'] : 0;
         $this->id_customization = $product['id_customization'] ? (int) $product['id_customization'] : 0;
-        $this->product_name = $product['name'].
+        $this->product_name = $product['name'] .
             ((isset($product['attributes']) && null != $product['attributes']) ?
-                ' - '.$product['attributes'] : '');
+                ' - ' . $product['attributes'] : '');
 
         $this->product_quantity = (int) $product['cart_quantity'];
         $this->product_ean13 = empty($product['ean13']) ? null : pSQL($product['ean13']);
@@ -786,7 +786,7 @@ class OrderDetailCore extends ObjectModel
         $query->select('id_tax as id');
         $query->from('order_detail_tax', 'tax');
         $query->leftJoin('order_detail', 'od', 'tax.`id_order_detail` = od.`id_order_detail`');
-        $query->where('od.`id_order_detail` = '.(int) $this->id_order_detail);
+        $query->where('od.`id_order_detail` = ' . (int) $this->id_order_detail);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
@@ -804,37 +804,37 @@ class OrderDetailCore extends ObjectModel
 
         $orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT o.id_order
-        FROM '._DB_PREFIX_.'orders o
-        LEFT JOIN '._DB_PREFIX_.'order_detail od ON (od.id_order = o.id_order)
-        WHERE o.valid = 1 AND od.product_id = '.(int) $id_product);
+        FROM ' . _DB_PREFIX_ . 'orders o
+        LEFT JOIN ' . _DB_PREFIX_ . 'order_detail od ON (od.id_order = o.id_order)
+        WHERE o.valid = 1 AND od.product_id = ' . (int) $id_product);
 
         if (count($orders)) {
             $list = '';
             foreach ($orders as $order) {
-                $list .= (int) $order['id_order'].',';
+                $list .= (int) $order['id_order'] . ',';
             }
             $list = rtrim($list, ',');
 
             $order_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
                 SELECT DISTINCT od.product_id, p.id_product, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price,
-                cl.link_rewrite category, p.ean13, p.isbn, p.out_of_stock, p.id_category_default '.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '').'
-                FROM '._DB_PREFIX_.'order_detail od
-                LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
-                '.Shop::addSqlAssociation('product', 'p').
-                (Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
-                ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int) Context::getContext()->shop->id.')' : '').'
-                LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
-                LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
-                LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
-                '.Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
-                WHERE od.id_order IN ('.$list.')
-                    AND pl.id_lang = '.(int) $id_lang.'
-                    AND cl.id_lang = '.(int) $id_lang.'
-                    AND od.product_id != '.(int) $id_product.'
+                cl.link_rewrite category, p.ean13, p.isbn, p.out_of_stock, p.id_category_default ' . (Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
+                FROM ' . _DB_PREFIX_ . 'order_detail od
+                LEFT JOIN ' . _DB_PREFIX_ . 'product p ON (p.id_product = od.product_id)
+                ' . Shop::addSqlAssociation('product', 'p') .
+                (Combination::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
+                ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) Context::getContext()->shop->id . ')' : '') . '
+                LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl ON (pl.id_product = od.product_id' . Shop::addSqlRestrictionOnLang('pl') . ')
+                LEFT JOIN ' . _DB_PREFIX_ . 'category_lang cl ON (cl.id_category = product_shop.id_category_default' . Shop::addSqlRestrictionOnLang('cl') . ')
+                LEFT JOIN ' . _DB_PREFIX_ . 'image i ON (i.id_product = od.product_id)
+                ' . Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
+                WHERE od.id_order IN (' . $list . ')
+                    AND pl.id_lang = ' . (int) $id_lang . '
+                    AND cl.id_lang = ' . (int) $id_lang . '
+                    AND od.product_id != ' . (int) $id_product . '
                     AND product_shop.active = 1'
-                    .($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
+                    . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
                 ORDER BY RAND()
-                LIMIT '.(int) $limit.'
+                LIMIT ' . (int) $limit . '
             ', true, false);
 
             $tax_calc = Product::getTaxCalculationMethod();
@@ -842,7 +842,7 @@ class OrderDetailCore extends ObjectModel
                 foreach ($order_products as &$order_product) {
                     $order_product['image'] = Context::getContext()->link->getImageLink(
                         $order_product['link_rewrite'],
-                        (int) $order_product['product_id'].'-'.(int) $order_product['id_image'],
+                        (int) $order_product['product_id'] . '-' . (int) $order_product['id_image'],
                         ImageType::getFormattedName('medium')
                     );
                     $order_product['link'] = Context::getContext()->link->getProductLink(

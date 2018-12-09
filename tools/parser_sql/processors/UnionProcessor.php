@@ -62,7 +62,6 @@ class UnionProcessor extends AbstractProcessor
      * This function handles this query syntax. Only one such subquery
      * is supported in each UNION block. (select)(select)union(select) is not legal.
      * The extra queries will be silently ignored.
-     *
      * @param mixed $queries
      */
     protected function processMySQLUnion($queries)

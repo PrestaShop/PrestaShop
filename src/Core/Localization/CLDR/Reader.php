@@ -118,9 +118,9 @@ class Reader implements ReaderInterface
         // Supplemental data about currencies, languages and parent locales
         if (!isset($this->supplementalXml)) {
             $supplementalPath = realpath(
-                _PS_ROOT_DIR_.'/'
-                .self::CLDR_SUPPLEMENTAL
-                .'supplementalData.xml'
+                _PS_ROOT_DIR_ . '/'
+                . self::CLDR_SUPPLEMENTAL
+                . 'supplementalData.xml'
             );
             $this->supplementalXml = simplexml_load_file($supplementalPath);
         }
@@ -128,9 +128,9 @@ class Reader implements ReaderInterface
         // This file contains special digits for non-occidental numbering systems
         if (!isset($this->numberingSystemsXml)) {
             $numberingSystemsPath = realpath(
-                _PS_ROOT_DIR_.'/'
-                .self::CLDR_SUPPLEMENTAL
-                .'numberingSystems.xml'
+                _PS_ROOT_DIR_ . '/'
+                . self::CLDR_SUPPLEMENTAL
+                . 'numberingSystems.xml'
             );
             $this->numberingSystemsXml = simplexml_load_file($numberingSystemsPath);
         }
@@ -242,7 +242,7 @@ class Reader implements ReaderInterface
      */
     protected function getMainXmlData($localeCode)
     {
-        return simplexml_load_file($this->mainPath($localeCode.'.xml'));
+        return simplexml_load_file($this->mainPath($localeCode . '.xml'));
     }
 
     /**
@@ -257,7 +257,7 @@ class Reader implements ReaderInterface
      */
     protected function mainPath($filename = '')
     {
-        $path = realpath(_PS_ROOT_DIR_.'/'.self::CLDR_MAIN.($filename ? $filename : ''));
+        $path = realpath(_PS_ROOT_DIR_ . '/' . self::CLDR_MAIN . ($filename ? $filename : ''));
         if (false === $path) {
             throw new LocalizationException("The file $filename does not exist");
         }
@@ -305,7 +305,7 @@ class Reader implements ReaderInterface
             $localeData->localeCode = (string) $xmlLocaleData->identity->language['type'];
         }
         if (isset($xmlLocaleData->identity->territory)) {
-            $localeData->localeCode .= '-'.$xmlLocaleData->identity->territory['type'];
+            $localeData->localeCode .= '-' . $xmlLocaleData->identity->territory['type'];
         }
         $numbersData = $xmlLocaleData->numbers;
         // Default numbering system.
@@ -499,7 +499,7 @@ class Reader implements ReaderInterface
         if (empty($parts['region'])) {
             return self::CLDR_ROOT_LOCALE;
         }
-        $code = $parts['language'].'_'.$parts['region'];
+        $code = $parts['language'] . '_' . $parts['region'];
         $results = $parentLocaleXmlData->xpath("//parentLocale[contains(@locales, '$code')]");
         if (empty($results)) {
             return $parts['language'];

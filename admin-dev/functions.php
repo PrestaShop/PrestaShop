@@ -53,8 +53,8 @@ function bindDatepicker($id, $time)
 /**
  * @deprecated 1.5.3.0 Use Controller::addJqueryUi('ui.datepicker') instead
  *
- * @param array|int $id ID can be a identifier or an array of identifiers
- * @param bool $time
+ * @param array|int $id   ID can be a identifier or an array of identifiers
+ * @param bool      $time
  */
 function includeDatepicker($id, $time = false)
 {
@@ -80,9 +80,9 @@ function includeDatepicker($id, $time = false)
 /**
  * Generate a new settings file, only transmitted parameters are updated.
  *
- * @param string $baseUri Base URI
- * @param string $theme Theme name (eg. default)
- * @param array $array_db Parameters in order to connect to database
+ * @param string $baseUri  Base URI
+ * @param string $theme    Theme name (eg. default)
+ * @param array  $array_db Parameters in order to connect to database
  * @param null|mixed $base_urls
  */
 function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
@@ -129,8 +129,8 @@ function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
 /**
  * Display SQL date in friendly format.
  *
- * @param string $sql_date Date in SQL format (YYYY-MM-DD HH:mm:ss)
- * @param bool $with_time Display both date and time
+ * @param string $sql_date  Date in SQL format (YYYY-MM-DD HH:mm:ss)
+ * @param bool   $with_time Display both date and time
  *
  * @todo Several formats (french : DD-MM-YYYY)
  */
@@ -142,11 +142,11 @@ function displayDate($sql_date, $with_time = false)
 /**
  * Return path to a product category.
  *
- * @param string $url_base Start URL
- * @param int $id_category Start category
- * @param string $path Current path
- * @param string $highlight String to highlight (in XHTML/CSS)
- * @param string $type Category type (products/cms)
+ * @param string $url_base    Start URL
+ * @param int    $id_category Start category
+ * @param string $path        Current path
+ * @param string $highlight   String to highlight (in XHTML/CSS)
+ * @param string $type        Category type (products/cms)
  * @param mixed $category_type
  * @param mixed $home
  */
@@ -304,7 +304,6 @@ function checkingTab($tab)
 
 /**
  * @TODO deprecate for Tab::checkTabRights()
- *
  * @param mixed $id_tab
  */
 function checkTabRights($id_tab)
@@ -346,19 +345,19 @@ function checkTabRights($id_tab)
  * ...And so on.
  * _____________________________________.
  *
- * @param simpleXMLElement $xml the XML to convert
- * @param bool $flatten_values Choose wether to flatten values
- *                             or to set them under a particular index.
- *                             defaults to true;
- * @param bool $flatten_attributes Choose wether to flatten attributes
- *                                 or to set them under a particular index.
- *                                 Defaults to true;
- * @param bool $flatten_children Choose wether to flatten children
- *                               or to set them under a particular index.
- *                               Defaults to true;
- * @param string $value_key index for values, in case $flatten_values was set to false. Defaults to "@value"
- * @param string $attributes_key index for attributes, in case $flatten_attributes was set to false. Defaults to "@attributes"
- * @param string $children_key index for children, in case $flatten_children was set to false. Defaults to "@children"
+ * @param simpleXMLElement $xml                the XML to convert
+ * @param bool             $flatten_values     Choose wether to flatten values
+ *                                             or to set them under a particular index.
+ *                                             defaults to true;
+ * @param bool             $flatten_attributes Choose wether to flatten attributes
+ *                                             or to set them under a particular index.
+ *                                             Defaults to true;
+ * @param bool             $flatten_children   Choose wether to flatten children
+ *                                             or to set them under a particular index.
+ *                                             Defaults to true;
+ * @param string           $value_key          index for values, in case $flatten_values was set to false. Defaults to "@value"
+ * @param string           $attributes_key     index for attributes, in case $flatten_attributes was set to false. Defaults to "@attributes"
+ * @param string           $children_key       index for children, in case $flatten_children was set to false. Defaults to "@children"
  *
  * @return array the resulting array.
  */
@@ -429,7 +428,6 @@ function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = tr
  *
  * @param mixed $tab
  * @param mixed $ajax_mode
- *
  * @return void
  */
 function runAdminTab($tab, $ajax_mode = false)

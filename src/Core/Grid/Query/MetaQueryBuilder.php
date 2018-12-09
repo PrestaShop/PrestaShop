@@ -108,36 +108,36 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix.'meta', 'm')
+            ->from($this->dbPrefix . 'meta', 'm')
             ->innerJoin(
                 'm',
-                $this->dbPrefix.'meta_lang',
+                $this->dbPrefix . 'meta_lang',
                 'l',
                 'm.`id_meta` = l.`id_meta`'
             )
         ;
 
-        $qb->andWhere('l.`id_lang`='.$this->contextIdLang);
-        $qb->andWhere('l.`id_shop`='.$this->contextIdShop);
+        $qb->andWhere('l.`id_lang`=' . $this->contextIdLang);
+        $qb->andWhere('l.`id_shop`=' . $this->contextIdShop);
         $qb->andWhere('m.`configurable`=1');
 
         foreach ($filters as $name => $value) {
             if ('id_meta' === $name) {
-                $qb->andWhere('m.`id_meta` = :'.$name);
+                $qb->andWhere('m.`id_meta` = :' . $name);
                 $qb->setParameter($name, $value);
 
                 continue;
             }
 
             if ('page' === $name) {
-                $qb->andWhere('m.`page` LIKE :'.$name);
-                $qb->setParameter($name, '%'.$value.'%');
+                $qb->andWhere('m.`page` LIKE :' . $name);
+                $qb->setParameter($name, '%' . $value . '%');
 
                 continue;
             }
 
-            $qb->andWhere('l.`'.$name.'` LIKE :'.$name);
-            $qb->setParameter($name, '%'.$value.'%');
+            $qb->andWhere('l.`' . $name . '` LIKE :' . $name);
+            $qb->setParameter($name, '%' . $value . '%');
         }
 
         return $qb;

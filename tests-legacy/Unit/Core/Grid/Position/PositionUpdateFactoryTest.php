@@ -121,9 +121,9 @@ class PositionUpdateFactoryTest extends TestCase
     }
 
     /**
-     * @param array $data
-     * @param null|string $expectedErrorKey
-     * @param null|array $expectedErrorParameters
+     * @param array                   $data
+     * @param null|string             $expectedErrorKey
+     * @param null|array              $expectedErrorParameters
      * @param null|PositionDefinition $definition
      */
     private function checkDataValidation(array $data, $expectedErrorKey = null, $expectedErrorParameters = null, $definition = null)

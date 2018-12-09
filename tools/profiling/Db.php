@@ -64,7 +64,6 @@ abstract class Db extends DbCore
      * Execute the query and log some informations.
      *
      * @see DbCore::query()
-     *
      * @param mixed $sql
      */
     public function query($sql)

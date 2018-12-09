@@ -292,8 +292,8 @@ abstract class ControllerCore
             if ($this->ajax) {
                 $action = Tools::toCamelCase(Tools::getValue('action'), true);
 
-                if (!empty($action) && method_exists($this, 'displayAjax'.$action)) {
-                    $this->{'displayAjax'.$action}();
+                if (!empty($action) && method_exists($this, 'displayAjax' . $action)) {
+                    $this->{'displayAjax' . $action}();
                 } elseif (method_exists($this, 'displayAjax')) {
                     $this->displayAjax();
                 }
@@ -493,7 +493,7 @@ abstract class ControllerCore
             }
 
             if ($js_path && !in_array($js_path, $this->js_files)) {
-                $this->js_files[] = $js_path.($version ? '?'.$version : '');
+                $this->js_files[] = $js_path . ($version ? '?' . $version : '');
             }
         }
     }
@@ -664,7 +664,7 @@ abstract class ControllerCore
         switch ($errno) {
             case E_USER_ERROR:
             case E_ERROR:
-                die('Fatal error: '.$errstr.' in '.$errfile.' on line '.$errline);
+                die('Fatal error: ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
 
                 break;
             case E_USER_WARNING:
@@ -736,8 +736,8 @@ abstract class ControllerCore
          * @deprecated deprecated since 1.6.1.1
          * use 'actionAjaxDie'.$controller.$method.'Before' instead
          */
-        Hook::exec('actionBeforeAjaxDie'.$controller.$method, array('value' => $value));
-        Hook::exec('actionAjaxDie'.$controller.$method.'Before', array('value' => $value));
+        Hook::exec('actionBeforeAjaxDie' . $controller . $method, array('value' => $value));
+        Hook::exec('actionAjaxDie' . $controller . $method . 'Before', array('value' => $value));
         header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 
         echo $value;

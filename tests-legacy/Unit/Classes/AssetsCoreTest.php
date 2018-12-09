@@ -78,7 +78,6 @@ class AssetsCoreTest extends TestCase
 
     /**
      * @dataProvider isAssetsDataProvider
-     *
      * @param mixed $id
      * @param mixed $toBeFound
      * @param mixed $expectedPath

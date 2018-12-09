@@ -68,7 +68,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
         foreach ($files as $file) {
             $matches = [];
 
-            if (1 === preg_match('/^'.$categoryId.'-([0-9])?_thumb.jpg/i', $file, $matches)) {
+            if (1 === preg_match('/^' . $categoryId . '-([0-9])?_thumb.jpg/i', $file, $matches)) {
                 $usedKeys[] = (int) $matches[1];
             }
         }
@@ -109,7 +109,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
 
             // Copy new image
             if (!isset($uploadedFile['save_path'])
-                || !ImageManager::resize($uploadedFile['save_path'], _PS_CAT_IMG_DIR_.$categoryId.'-'.$key.'_thumb.jpg')
+                || !ImageManager::resize($uploadedFile['save_path'], _PS_CAT_IMG_DIR_ . $categoryId . '-' . $key . '_thumb.jpg')
             ) {
                 throw new ImageUploadException('An error occurred while uploading the image.');
             }

@@ -40,10 +40,10 @@ class CurveCore
         ksort($this->values);
         $string = '';
         foreach ($this->values as $key => $value) {
-            $string .= '['.addslashes((string) $key).($time_mode ? '000' : '').','.(float) $value.'],';
+            $string .= '[' . addslashes((string) $key) . ($time_mode ? '000' : '') . ',' . (float) $value . '],';
         }
 
-        return '{data:['.rtrim($string, ',').']'.(!empty($this->label) ? ',label:"'.$this->label.'"' : '').''.(!empty($this->type) ? ','.$this->type : '').'}';
+        return '{data:[' . rtrim($string, ',') . ']' . (!empty($this->label) ? ',label:"' . $this->label . '"' : '') . '' . (!empty($this->type) ? ',' . $this->type : '') . '}';
     }
 
     /** @prototype void public function setPoint(float $x, float $y) */

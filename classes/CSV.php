@@ -108,6 +108,6 @@ class CSVCore
         header('Content-type: text/csv');
         header('Content-Type: application/force-download; charset=UTF-8');
         header('Cache-Control: no-store, no-cache');
-        header('Content-disposition: attachment; filename="'.$this->filename.'.csv"');
+        header('Content-disposition: attachment; filename="' . $this->filename . '.csv"');
     }
 }

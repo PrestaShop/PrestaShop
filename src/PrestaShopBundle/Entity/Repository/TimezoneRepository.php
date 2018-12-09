@@ -57,7 +57,7 @@ class TimezoneRepository implements RepositoryInterface
     {
         $this->connection = $connection;
         $this->tablePrefix = $tablePrefix;
-        $this->timezoneTable = $tablePrefix.'timezone';
+        $this->timezoneTable = $tablePrefix . 'timezone';
     }
 
     /**

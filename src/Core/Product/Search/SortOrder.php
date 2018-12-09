@@ -155,7 +155,7 @@ class SortOrder
     public function toLegacyOrderBy($prefix = false)
     {
         if ($prefix) {
-            return $this->getLegacyPrefix().$this->field;
+            return $this->getLegacyPrefix() . $this->field;
         } elseif ('manufacturer' === $this->entity && 'name' === $this->field) {
             return 'manufacturer_name';
         } else {

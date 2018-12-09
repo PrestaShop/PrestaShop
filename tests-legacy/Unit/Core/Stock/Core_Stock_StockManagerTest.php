@@ -185,7 +185,6 @@ class StockAvailableTest extends UnitTestCase
 
     /**
      * @dataProvider get_update_pack_quantity_provider
-     *
      * @param mixed $default_stock_type
      * @param mixed $products
      * @param mixed $delta
@@ -278,7 +277,6 @@ class StockAvailableTest extends UnitTestCase
 
     /**
      * @dataProvider get_update_product_quantity_provider
-     *
      * @param mixed $default_stock_type
      * @param mixed $products
      * @param mixed $delta
@@ -392,7 +390,6 @@ class StockAvailableTest extends UnitTestCase
 
     /**
      * @dataProvider get_update_quantity_provider
-     *
      * @param mixed $default_stock_type
      * @param mixed $products
      * @param mixed $product_to_update

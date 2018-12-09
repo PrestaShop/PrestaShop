@@ -38,7 +38,7 @@ class ToolsTest extends TestCase
      *
      * @param string $leftOperand
      * @param string $rightOperand
-     * @param int $scale
+     * @param int    $scale
      * @param string $expectedResult
      *
      * @dataProvider provideTestCasesForBcAdd

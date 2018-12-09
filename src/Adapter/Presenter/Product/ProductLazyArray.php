@@ -623,8 +623,8 @@ class ProductLazyArray extends AbstractLazyArray
             $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
 
             // TODO: add percent sign according to locale preferences
-            $this->product['discount_percentage'] = Tools::displayNumber($presNegativeReduction).'%';
-            $this->product['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction).'%';
+            $this->product['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
+            $this->product['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
             if ($settings->include_taxes) {
                 $regular_price = $product['price_without_reduction'];
                 $this->product['discount_amount'] = $this->priceFormatter->format(
@@ -636,7 +636,7 @@ class ProductLazyArray extends AbstractLazyArray
                     $product['reduction_without_tax']
                 );
             }
-            $this->product['discount_amount_to_display'] = '-'.$this->product['discount_amount'];
+            $this->product['discount_amount_to_display'] = '-' . $this->product['discount_amount'];
         }
 
         $this->product['price_amount'] = $price;
@@ -653,7 +653,7 @@ class ProductLazyArray extends AbstractLazyArray
         if (isset($product['unit_price']) && $product['unit_price']) {
             $this->product['unit_price'] = $this->priceFormatter->format($product['unit_price']);
             $this->product['unit_price_full'] = $this->priceFormatter->format($product['unit_price'])
-                .' '.$product['unity'];
+                . ' ' . $product['unity'];
         } else {
             $this->product['unit_price'] = $this->product['unit_price_full'] = '';
         }

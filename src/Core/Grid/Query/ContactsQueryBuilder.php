@@ -120,9 +120,9 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix.'contact', 'c')
-            ->innerJoin('c', $this->dbPrefix.'contact_lang', 'cl', 'c.id_contact = cl.id_contact')
-            ->innerJoin('c', $this->dbPrefix.'contact_shop', 'cs', 'c.id_contact = cs.id_contact')
+            ->from($this->dbPrefix . 'contact', 'c')
+            ->innerJoin('c', $this->dbPrefix . 'contact_lang', 'cl', 'c.id_contact = cl.id_contact')
+            ->innerJoin('c', $this->dbPrefix . 'contact_shop', 'cs', 'c.id_contact = cs.id_contact')
             ->andWhere('cl.`id_lang`= :language')
             ->andWhere('cs.`id_shop` IN (:shops)')
             ->setParameter('language', $this->languageId)
@@ -135,14 +135,14 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_contact' === $name) {
-                $qb->andWhere('c.`id_contact` = :'.$name);
+                $qb->andWhere('c.`id_contact` = :' . $name);
                 $qb->setParameter($name, $value);
 
                 continue;
             }
 
             $qb->andWhere("$name LIKE :$name");
-            $qb->setParameter($name, '%'.$value.'%');
+            $qb->setParameter($name, '%' . $value . '%');
         }
 
         return $qb;

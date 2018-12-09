@@ -113,7 +113,6 @@ class SortOrderTest extends TestCase
 
     /**
      * @dataProvider serialization_examples
-     *
      * @param mixed $data
      */
     public function test_serialization($data)

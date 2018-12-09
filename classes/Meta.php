@@ -68,11 +68,11 @@ class MetaCore extends ObjectModel
     public static function getPages($excludeFilled = false, $addPage = false)
     {
         $selectedPages = array();
-        if (!$files = Tools::scandir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'front'.DIRECTORY_SEPARATOR, 'php', '', true)) {
+        if (!$files = Tools::scandir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR, 'php', '', true)) {
             die(Context::getContext()->getTranslator()->trans('Cannot scan root directory', array(), 'Admin.Notifications.Error'));
         }
 
-        if (!$overrideFiles = Tools::scandir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'front'.DIRECTORY_SEPARATOR, 'php', '', true)) {
+        if (!$overrideFiles = Tools::scandir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR, 'php', '', true)) {
             die(Context::getContext()->getTranslator()->trans('Cannot scan "override" directory', array(), 'Admin.Notifications.Error'));
         }
 
@@ -107,14 +107,14 @@ class MetaCore extends ObjectModel
         }
 
         // Add modules controllers to list (this function is cool !)
-        foreach (glob(_PS_MODULE_DIR_.'*/controllers/front/*.php') as $file) {
+        foreach (glob(_PS_MODULE_DIR_ . '*/controllers/front/*.php') as $file) {
             $filename = Tools::strtolower(basename($file, '.php'));
             if ('index' == $filename) {
                 continue;
             }
 
             $module = Tools::strtolower(basename(dirname(dirname(dirname($file)))));
-            $selectedPages[$module.' - '.$filename] = 'module-'.$module.'-'.$filename;
+            $selectedPages[$module . ' - ' . $filename] = 'module-' . $module . '-' . $filename;
         }
 
         // Exclude page already filled
@@ -130,7 +130,7 @@ class MetaCore extends ObjectModel
         if ($addPage) {
             $name = $addPage;
             if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $addPage, $m)) {
-                $addPage = $m[1].' - '.$m[2];
+                $addPage = $m[1] . ' - ' . $m[2];
             }
             $selectedPages[$addPage] = $name;
             asort($selectedPages);
@@ -146,7 +146,7 @@ class MetaCore extends ObjectModel
      */
     public static function getMetas()
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'meta ORDER BY page ASC');
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'meta ORDER BY page ASC');
     }
 
     /**
@@ -160,10 +160,10 @@ class MetaCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'meta` m
-		LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
-		WHERE ml.`id_lang` = '.(int) $idLang
-            .Shop::addSqlRestrictionOnLang('ml').
+		FROM `' . _DB_PREFIX_ . 'meta` m
+		LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
+		WHERE ml.`id_lang` = ' . (int) $idLang
+            . Shop::addSqlRestrictionOnLang('ml') .
         'ORDER BY page ASC');
     }
 
@@ -179,14 +179,14 @@ class MetaCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
         		SELECT *
-        		FROM '._DB_PREFIX_.'meta m
-        		LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON m.id_meta = ml.id_meta
+        		FROM ' . _DB_PREFIX_ . 'meta m
+        		LEFT JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON m.id_meta = ml.id_meta
         		WHERE (
-        			m.page = "'.pSQL($page).'"
-        			OR m.page = "'.pSQL(str_replace('-', '', strtolower($page))).'"
+        			m.page = "' . pSQL($page) . '"
+        			OR m.page = "' . pSQL(str_replace('-', '', strtolower($page))) . '"
         		)
-        		AND ml.id_lang = '.(int) $idLang.'
-		'.Shop::addSqlRestrictionOnLang('ml'));
+        		AND ml.id_lang = ' . (int) $idLang . '
+		' . Shop::addSqlRestrictionOnLang('ml'));
     }
 
     /**
@@ -200,10 +200,10 @@ class MetaCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
-		FROM '._DB_PREFIX_.'meta m
-		LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON m.id_meta = ml.id_meta
-		AND ml.id_lang = '.(int) $idLang.'
-		'.Shop::addSqlRestrictionOnLang('ml'));
+		FROM ' . _DB_PREFIX_ . 'meta m
+		LEFT JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON m.id_meta = ml.id_meta
+		AND ml.id_lang = ' . (int) $idLang . '
+		' . Shop::addSqlRestrictionOnLang('ml'));
     }
 
     /**
@@ -275,15 +275,15 @@ class MetaCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
 		SELECT url_rewrite
-		FROM `'._DB_PREFIX_.'meta_lang`
+		FROM `' . _DB_PREFIX_ . 'meta_lang`
 		WHERE id_meta = (
 			SELECT id_meta
-			FROM `'._DB_PREFIX_.'meta_lang`
-			WHERE url_rewrite = \''.pSQL($urlRewrite).'\' AND id_lang = '.(int) $idLang.'
-			AND id_shop = '.Context::getContext()->shop->id.'
+			FROM `' . _DB_PREFIX_ . 'meta_lang`
+			WHERE url_rewrite = \'' . pSQL($urlRewrite) . '\' AND id_lang = ' . (int) $idLang . '
+			AND id_shop = ' . Context::getContext()->shop->id . '
 		)
-		AND id_lang = '.(int) $newIdLang.'
-		AND id_shop = '.Context::getContext()->shop->id);
+		AND id_lang = ' . (int) $newIdLang . '
+		AND id_shop = ' . Context::getContext()->shop->id);
     }
 
     /**
@@ -378,12 +378,12 @@ class MetaCore extends ObjectModel
     public static function getCategoryMetas($idCategory, $idLang, $pageName, $title = '')
     {
         if (!empty($title)) {
-            $title = ' - '.$title;
+            $title = ' - ' . $title;
         }
         $pageNumber = (int) Tools::getValue('page');
         $category = new Category($idCategory, $idLang);
 
-        $cacheId = 'Meta::getCategoryMetas'.(int) $idCategory.'-'.(int) $idLang;
+        $cacheId = 'Meta::getCategoryMetas' . (int) $idCategory . '-' . (int) $idLang;
         if (!Cache::isStored($cacheId)) {
             if (Validate::isLoadedObject($category)) {
                 $row = Meta::getPresentedObject($category);
@@ -393,13 +393,13 @@ class MetaCore extends ObjectModel
 
                 // Paginate title
                 if (!empty($row['meta_title'])) {
-                    $row['meta_title'] = $title.$row['meta_title'].(!empty($pageNumber) ? ' ('.$pageNumber.')' : '');
+                    $row['meta_title'] = $title . $row['meta_title'] . (!empty($pageNumber) ? ' (' . $pageNumber . ')' : '');
                 } else {
-                    $row['meta_title'] = $row['name'].(!empty($pageNumber) ? ' ('.$pageNumber.')' : '');
+                    $row['meta_title'] = $row['name'] . (!empty($pageNumber) ? ' (' . $pageNumber . ')' : '');
                 }
 
                 if (!empty($title)) {
-                    $row['meta_title'] = $title.(!empty($pageNumber) ? ' ('.$pageNumber.')' : '');
+                    $row['meta_title'] = $title . (!empty($pageNumber) ? ' (' . $pageNumber . ')' : '');
                 }
 
                 $result = Meta::completeMetaTags($row, $row['name']);
@@ -434,7 +434,7 @@ class MetaCore extends ObjectModel
             if (!empty($row['meta_description'])) {
                 $row['meta_description'] = strip_tags($row['meta_description']);
             }
-            $row['meta_title'] = ($row['meta_title'] ? $row['meta_title'] : $row['name']).(!empty($pageNumber) ? ' ('.$pageNumber.')' : '');
+            $row['meta_title'] = ($row['meta_title'] ? $row['meta_title'] : $row['name']) . (!empty($pageNumber) ? ' (' . $pageNumber . ')' : '');
             $row['meta_title'];
 
             return Meta::completeMetaTags($row, $row['meta_title']);

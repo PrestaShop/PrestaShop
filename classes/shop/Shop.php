@@ -192,13 +192,13 @@ class ShopCore extends ObjectModel
 
     public function setUrl()
     {
-        $cache_id = 'Shop::setUrl_'.(int) $this->id;
+        $cache_id = 'Shop::setUrl_' . (int) $this->id;
         if (!Cache::isStored($cache_id)) {
             $row = Db::getInstance()->getRow('
               SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl
-              FROM '._DB_PREFIX_.'shop s
-              LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
-              WHERE s.id_shop = '.(int) $this->id.'
+              FROM ' . _DB_PREFIX_ . 'shop s
+              LEFT JOIN ' . _DB_PREFIX_ . 'shop_url su ON (s.id_shop = su.id_shop)
+              WHERE s.id_shop = ' . (int) $this->id . '
               AND s.active = 1 AND s.deleted = 0 AND su.main = 1');
             Cache::store($cache_id, $row);
         } else {
@@ -253,35 +253,35 @@ class ShopCore extends ObjectModel
         }
 
         foreach (Shop::getAssoTables() as $table_name => $row) {
-            $id = 'id_'.$row['type'];
+            $id = 'id_' . $row['type'];
             if ('fk_shop' == $row['type']) {
                 $id = 'id_shop';
             } else {
-                $table_name .= '_'.$row['type'];
+                $table_name .= '_' . $row['type'];
             }
             $res &= Db::getInstance()->execute(
-                'DELETE FROM `'.bqSQL(_DB_PREFIX_.$table_name).'`
-                WHERE `'.bqSQL($id).'`='.(int) $this->id
+                'DELETE FROM `' . bqSQL(_DB_PREFIX_ . $table_name) . '`
+                WHERE `' . bqSQL($id) . '`=' . (int) $this->id
             );
         }
 
         // removes stock available
-        $res &= Db::getInstance()->delete('stock_available', 'id_shop = '.(int) $this->id);
+        $res &= Db::getInstance()->delete('stock_available', 'id_shop = ' . (int) $this->id);
 
         // Remove urls
-        $res &= Db::getInstance()->delete('shop_url', 'id_shop = '.(int) $this->id);
+        $res &= Db::getInstance()->delete('shop_url', 'id_shop = ' . (int) $this->id);
 
         // Remove currency restrictions
-        $res &= Db::getInstance()->delete('module_currency', 'id_shop = '.(int) $this->id);
+        $res &= Db::getInstance()->delete('module_currency', 'id_shop = ' . (int) $this->id);
 
         // Remove group restrictions
-        $res &= Db::getInstance()->delete('module_group', 'id_shop = '.(int) $this->id);
+        $res &= Db::getInstance()->delete('module_group', 'id_shop = ' . (int) $this->id);
 
         // Remove country restrictions
-        $res &= Db::getInstance()->delete('module_country', 'id_shop = '.(int) $this->id);
+        $res &= Db::getInstance()->delete('module_country', 'id_shop = ' . (int) $this->id);
 
         // Remove carrier restrictions
-        $res &= Db::getInstance()->delete('module_carrier', 'id_shop = '.(int) $this->id);
+        $res &= Db::getInstance()->delete('module_carrier', 'id_shop = ' . (int) $this->id);
 
         Shop::cacheShops(true);
 
@@ -300,16 +300,16 @@ class ShopCore extends ObjectModel
         $has_dependency = false;
         $nbr_customer = (int) Db::getInstance()->getValue(
             'SELECT count(*)
-            FROM `'._DB_PREFIX_.'customer`
-            WHERE `id_shop`='.(int) $id_shop
+            FROM `' . _DB_PREFIX_ . 'customer`
+            WHERE `id_shop`=' . (int) $id_shop
         );
         if ($nbr_customer) {
             $has_dependency = true;
         } else {
             $nbr_order = (int) Db::getInstance()->getValue(
                 'SELECT count(*)
-                FROM `'._DB_PREFIX_.'orders`
-                WHERE `id_shop`='.(int) $id_shop
+                FROM `' . _DB_PREFIX_ . 'orders`
+                WHERE `id_shop`=' . (int) $id_shop
             );
             if ($nbr_order) {
                 $has_dependency = true;
@@ -335,9 +335,9 @@ class ShopCore extends ObjectModel
             $request_uri = rawurldecode($_SERVER['REQUEST_URI']);
 
             $sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
-                    FROM '._DB_PREFIX_.'shop_url su
-                    LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
-                    WHERE (su.domain = \''.pSQL($host).'\' OR su.domain_ssl = \''.pSQL($host).'\')
+                    FROM ' . _DB_PREFIX_ . 'shop_url su
+                    LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON (s.id_shop = su.id_shop)
+                    WHERE (su.domain = \'' . pSQL($host) . '\' OR su.domain_ssl = \'' . pSQL($host) . '\')
                         AND s.active = 1
                         AND s.deleted = 0
                     ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
@@ -347,7 +347,7 @@ class ShopCore extends ObjectModel
             $through = false;
             foreach ($result as $row) {
                 // An URL matching current shop was found
-                if (preg_match('#^'.preg_quote($row['uri'], '#').'#i', $request_uri)) {
+                if (preg_match('#^' . preg_quote($row['uri'], '#') . '#i', $request_uri)) {
                     $through = true;
                     $id_shop = $row['id_shop'];
                     $found_uri = $row['uri'];
@@ -364,13 +364,13 @@ class ShopCore extends ObjectModel
                 foreach ($result as $row) {
                     if ($row['id_shop'] == $id_shop && $row['main']) {
                         $request_uri = substr($request_uri, strlen($found_uri));
-                        $url = str_replace('//', '/', $row['domain'].$row['uri'].$request_uri);
+                        $url = str_replace('//', '/', $row['domain'] . $row['uri'] . $request_uri);
                         $redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
                         $redirect_code = (1 == $redirect_type ? '302' : '301');
                         $redirect_header = (1 == $redirect_type ? 'Found' : 'Moved Permanently');
-                        header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
+                        header('HTTP/1.0 ' . $redirect_code . ' ' . $redirect_header);
                         header('Cache-Control: no-cache');
-                        header('Location: http://'.$url);
+                        header('Location: http://' . $url);
                         exit;
                     }
                 }
@@ -424,25 +424,25 @@ class ShopCore extends ObjectModel
                 unset($params['id_shop']);
                 $url = $default_shop->domain;
                 if (!Configuration::get('PS_REWRITING_SETTINGS')) {
-                    $url .= $default_shop->getBaseURI().'index.php?'.http_build_query($params);
+                    $url .= $default_shop->getBaseURI() . 'index.php?' . http_build_query($params);
                 } else {
                     // Catch url with subdomain "www"
-                    if (0 === strpos($url, 'www.') && 'www.'.$_SERVER['HTTP_HOST'] === $url || $_SERVER['HTTP_HOST'] === 'www.'.$url) {
+                    if (0 === strpos($url, 'www.') && 'www.' . $_SERVER['HTTP_HOST'] === $url || $_SERVER['HTTP_HOST'] === 'www.' . $url) {
                         $url .= $_SERVER['REQUEST_URI'];
                     } else {
                         $url .= $default_shop->getBaseURI();
                     }
 
                     if (count($params)) {
-                        $url .= '?'.http_build_query($params);
+                        $url .= '?' . http_build_query($params);
                     }
                 }
 
                 $redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
                 $redirect_code = (1 == $redirect_type ? '302' : '301');
                 $redirect_header = (1 == $redirect_type ? 'Found' : 'Moved Permanently');
-                header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
-                header('Location: http://'.$url);
+                header('HTTP/1.0 ' . $redirect_code . ' ' . $redirect_header);
+                header('Location: http://' . $url);
                 exit;
             } elseif (defined('_PS_ADMIN_DIR_') && empty($shop->physical_uri)) {
                 $shop_default = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
@@ -512,7 +512,7 @@ class ShopCore extends ObjectModel
      */
     public function getBaseURI()
     {
-        return $this->physical_uri.$this->virtual_uri;
+        return $this->physical_uri . $this->virtual_uri;
     }
 
     /**
@@ -572,9 +572,9 @@ class ShopCore extends ObjectModel
     public function getUrls()
     {
         $sql = 'SELECT *
-                FROM '._DB_PREFIX_.'shop_url
+                FROM ' . _DB_PREFIX_ . 'shop_url
                 WHERE active = 1
-                    AND id_shop = '.(int) $this->id;
+                    AND id_shop = ' . (int) $this->id;
 
         return Db::getInstance()->executeS($sql);
     }
@@ -690,20 +690,20 @@ class ShopCore extends ObjectModel
 
         // If the profile isn't a superAdmin
         if (Validate::isLoadedObject($employee) && _PS_ADMIN_PROFILE_ != $employee->id_profile) {
-            $from .= 'LEFT JOIN '._DB_PREFIX_.'employee_shop es ON es.id_shop = s.id_shop';
-            $where .= 'AND es.id_employee = '.(int) $employee->id;
+            $from .= 'LEFT JOIN ' . _DB_PREFIX_ . 'employee_shop es ON es.id_shop = s.id_shop';
+            $where .= 'AND es.id_employee = ' . (int) $employee->id;
         }
 
         $sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.physical_uri, su.virtual_uri
-                FROM '._DB_PREFIX_.'shop_group gs
-                LEFT JOIN '._DB_PREFIX_.'shop s
+                FROM ' . _DB_PREFIX_ . 'shop_group gs
+                LEFT JOIN ' . _DB_PREFIX_ . 'shop s
                     ON s.id_shop_group = gs.id_shop_group
-                LEFT JOIN '._DB_PREFIX_.'shop_url su
+                LEFT JOIN ' . _DB_PREFIX_ . 'shop_url su
                     ON s.id_shop = su.id_shop AND su.main = 1
-                '.$from.'
+                ' . $from . '
                 WHERE s.deleted = 0
                     AND gs.deleted = 0
-                    '.$where.'
+                    ' . $where . '
                 ORDER BY gs.name, s.name';
 
         if ($results = Db::getInstance()->executeS($sql)) {
@@ -729,7 +729,7 @@ class ShopCore extends ObjectModel
                     'theme_name' => $row['theme_name'],
                     'domain' => $row['domain'],
                     'domain_ssl' => $row['domain_ssl'],
-                    'uri' => $row['physical_uri'].$row['virtual_uri'],
+                    'uri' => $row['physical_uri'] . $row['virtual_uri'],
                     'active' => $row['active'],
                 );
             }
@@ -741,7 +741,7 @@ class ShopCore extends ObjectModel
         $cache_id = 'Shop::getCompleteListOfShopsID';
         if (!Cache::isStored($cache_id)) {
             $list = array();
-            $sql = 'SELECT id_shop FROM '._DB_PREFIX_.'shop';
+            $sql = 'SELECT id_shop FROM ' . _DB_PREFIX_ . 'shop';
             foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $row) {
                 $list[] = $row['id_shop'];
             }
@@ -952,9 +952,9 @@ class ShopCore extends ObjectModel
     public static function getShopById($id, $identifier, $table)
     {
         return Db::getInstance()->executeS(
-            'SELECT `id_shop`, `'.bqSQL($identifier).'`
-            FROM `'._DB_PREFIX_.bqSQL($table).'_shop`
-            WHERE `'.bqSQL($identifier).'` = '.(int) $id
+            'SELECT `id_shop`, `' . bqSQL($identifier) . '`
+            FROM `' . _DB_PREFIX_ . bqSQL($table) . '_shop`
+            WHERE `' . bqSQL($identifier) . '` = ' . (int) $id
         );
     }
 
@@ -1087,9 +1087,9 @@ class ShopCore extends ObjectModel
 
         $group = Shop::getGroupFromShop(Shop::getContextShopID(), false);
         if (Shop::SHARE_CUSTOMER == $share && Shop::CONTEXT_SHOP == Shop::getContext() && $group['share_customer']) {
-            $restriction = ' AND '.$alias.'id_shop_group = '.(int) Shop::getContextShopGroupID().' ';
+            $restriction = ' AND ' . $alias . 'id_shop_group = ' . (int) Shop::getContextShopGroupID() . ' ';
         } else {
-            $restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getContextListShopID($share)).') ';
+            $restriction = ' AND ' . $alias . 'id_shop IN (' . implode(', ', Shop::getContextListShopID($share)) . ') ';
         }
 
         return $restriction;
@@ -1108,7 +1108,7 @@ class ShopCore extends ObjectModel
      */
     public static function addSqlAssociation($table, $alias, $inner_join = true, $on = null, $force_not_default = false)
     {
-        $table_alias = $table.'_shop';
+        $table_alias = $table . '_shop';
         if (false !== strpos($table, '.')) {
             list($table_alias, $table) = explode('.', $table);
         }
@@ -1117,16 +1117,16 @@ class ShopCore extends ObjectModel
         if (false === $asso_table || 'shop' != $asso_table['type']) {
             return;
         }
-        $sql = (($inner_join) ? ' INNER' : ' LEFT').' JOIN '._DB_PREFIX_.$table.'_shop '.$table_alias.'
-        ON ('.$table_alias.'.id_'.$table.' = '.$alias.'.id_'.$table;
+        $sql = (($inner_join) ? ' INNER' : ' LEFT') . ' JOIN ' . _DB_PREFIX_ . $table . '_shop ' . $table_alias . '
+        ON (' . $table_alias . '.id_' . $table . ' = ' . $alias . '.id_' . $table;
         if ((int) self::$context_id_shop) {
-            $sql .= ' AND '.$table_alias.'.id_shop = '.(int) self::$context_id_shop;
+            $sql .= ' AND ' . $table_alias . '.id_shop = ' . (int) self::$context_id_shop;
         } elseif (Shop::checkIdShopDefault($table) && !$force_not_default) {
-            $sql .= ' AND '.$table_alias.'.id_shop = '.$alias.'.id_shop_default';
+            $sql .= ' AND ' . $table_alias . '.id_shop = ' . $alias . '.id_shop_default';
         } else {
-            $sql .= ' AND '.$table_alias.'.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')';
+            $sql .= ' AND ' . $table_alias . '.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')';
         }
-        $sql .= (($on) ? ' AND '.$on : '').')';
+        $sql .= (($on) ? ' AND ' . $on : '') . ')';
 
         return $sql;
     }
@@ -1149,7 +1149,7 @@ class ShopCore extends ObjectModel
             $id_shop = (int) Configuration::get('PS_SHOP_DEFAULT');
         }
 
-        return ' AND '.(($alias) ? Db::getInstance()->escape($alias).'.' : '').'id_shop = '.$id_shop.' ';
+        return ' AND ' . (($alias) ? Db::getInstance()->escape($alias) . '.' : '') . 'id_shop = ' . $id_shop . ' ';
     }
 
     /**
@@ -1172,8 +1172,8 @@ class ShopCore extends ObjectModel
         static $feature_active = null;
 
         if (null === $feature_active) {
-            $feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
-                && (Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'shop') > 1);
+            $feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
+                && (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'shop') > 1);
         }
 
         return $feature_active;
@@ -1232,15 +1232,15 @@ class ShopCore extends ObjectModel
                 }
             }
 
-            $id = 'id_'.$row['type'];
+            $id = 'id_' . $row['type'];
             if ('fk_shop' == $row['type']) {
                 $id = 'id_shop';
             } else {
-                $table_name .= '_'.$row['type'];
+                $table_name .= '_' . $row['type'];
             }
 
             if (!$deleted) {
-                $res = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.$table_name.'` WHERE `'.$id.'` = '.(int) $old_id);
+                $res = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . $table_name . '` WHERE `' . $id . '` = ' . (int) $old_id);
                 if ($res) {
                     unset($res[$id]);
                     if (isset($row['primary'])) {
@@ -1251,14 +1251,14 @@ class ShopCore extends ObjectModel
                     if ('product_shop' == $table_name && 1 == count($categories)) {
                         unset($res['id_category_default']);
                         $keys = implode('`, `', array_keys($res));
-                        $sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$table_name.'` (`'.$keys.'`, `id_category_default`, '.$id.')
-                                (SELECT `'.$keys.'`, '.(int) $categories[0].', '.(int) $this->id.' FROM '._DB_PREFIX_.$table_name.'
-                                WHERE `'.$id.'` = '.(int) $old_id.')';
+                        $sql = 'INSERT IGNORE INTO `' . _DB_PREFIX_ . $table_name . '` (`' . $keys . '`, `id_category_default`, ' . $id . ')
+                                (SELECT `' . $keys . '`, ' . (int) $categories[0] . ', ' . (int) $this->id . ' FROM ' . _DB_PREFIX_ . $table_name . '
+                                WHERE `' . $id . '` = ' . (int) $old_id . ')';
                     } else {
                         $keys = implode('`, `', array_keys($res));
-                        $sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$table_name.'` (`'.$keys.'`, '.$id.')
-                                (SELECT `'.$keys.'`, '.(int) $this->id.' FROM '._DB_PREFIX_.$table_name.'
-                                WHERE `'.$id.'` = '.(int) $old_id.')';
+                        $sql = 'INSERT IGNORE INTO `' . _DB_PREFIX_ . $table_name . '` (`' . $keys . '`, ' . $id . ')
+                                (SELECT `' . $keys . '`, ' . (int) $this->id . ' FROM ' . _DB_PREFIX_ . $table_name . '
+                                WHERE `' . $id . '` = ' . (int) $old_id . ')';
                     }
                     Db::getInstance()->execute($sql);
                 }
@@ -1269,7 +1269,7 @@ class ShopCore extends ObjectModel
         $modules_list = Hook::getHookModuleExecList('actionShopDataDuplication');
         if (is_array($modules_list) && count($modules_list) > 0) {
             foreach ($modules_list as $m) {
-                if (!$tables_import || isset($tables_import['Module'.ucfirst($m['module'])])) {
+                if (!$tables_import || isset($tables_import['Module' . ucfirst($m['module'])])) {
                     Hook::exec('actionShopDataDuplication', array(
                         'old_id_shop' => (int) $old_id,
                         'new_id_shop' => (int) $this->id,
@@ -1295,8 +1295,8 @@ class ShopCore extends ObjectModel
             $query->select('DISTINCT cs.`id_category`, cl.`name`, cl.`link_rewrite`');
         }
         $query->from('category_shop', 'cs');
-        $query->leftJoin('category_lang', 'cl', 'cl.`id_category` = cs.`id_category` AND cl.`id_lang` = '.(int) Context::getContext()->language->id);
-        $query->where('cs.`id_shop` = '.(int) $id);
+        $query->leftJoin('category_lang', 'cl', 'cl.`id_category` = cs.`id_category` AND cl.`id_lang` = ' . (int) Context::getContext()->language->id);
+        $query->where('cs.`id_shop` = ' . (int) $id);
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
         if ($only_id) {
@@ -1327,12 +1327,12 @@ class ShopCore extends ObjectModel
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT entity.`id_'.bqSQL($entity).'`
-            FROM `'._DB_PREFIX_.bqSQL($entity).'_shop`es
-            LEFT JOIN '._DB_PREFIX_.bqSQL($entity).' entity
-                ON (entity.`id_'.bqSQL($entity).'` = es.`id_'.bqSQL($entity).'`)
-            WHERE es.`id_shop` = '.(int) $id_shop.
-            ($active ? ' AND entity.`active` = 1' : '').
+            'SELECT entity.`id_' . bqSQL($entity) . '`
+            FROM `' . _DB_PREFIX_ . bqSQL($entity) . '_shop`es
+            LEFT JOIN ' . _DB_PREFIX_ . bqSQL($entity) . ' entity
+                ON (entity.`id_' . bqSQL($entity) . '` = es.`id_' . bqSQL($entity) . '`)
+            WHERE es.`id_shop` = ' . (int) $id_shop .
+            ($active ? ' AND entity.`active` = 1' : '') .
             ($delete ? ' AND entity.deleted = 0' : '')
         );
     }

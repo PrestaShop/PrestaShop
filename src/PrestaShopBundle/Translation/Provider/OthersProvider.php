@@ -86,6 +86,6 @@ class OthersProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory.DIRECTORY_SEPARATOR.'default';
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 }

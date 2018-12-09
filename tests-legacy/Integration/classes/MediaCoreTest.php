@@ -79,7 +79,6 @@ class MediaCoreTest extends IntegrationTestCase
 
     /**
      * @dataProvider isCssInputsProvider
-     *
      * @param mixed $input
      * @param mixed $fileuri
      * @param mixed $output
@@ -93,7 +92,6 @@ class MediaCoreTest extends IntegrationTestCase
 
     /**
      * @dataProvider isCssInputsProvider
-     *
      * @param mixed $input
      * @param mixed $fileuri
      * @param mixed $output

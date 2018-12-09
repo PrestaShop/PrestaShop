@@ -94,7 +94,6 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testGetValueStripsNullCharsFromReturnedStringsExamples
-     *
      * @param mixed $rawString
      * @param mixed $cleanedString
      */
@@ -203,7 +202,6 @@ class ToolsCoreTest extends TestCase
 
     /**
      *  @dataProvider dirProvider
-     *
      * @param mixed $path
      * @param mixed $haveFiles
      */
@@ -231,7 +229,6 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testSpreadAmountExamples
-     *
      * @param mixed $expectedRows
      * @param mixed $amount
      * @param mixed $precision
@@ -332,7 +329,6 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testCamelCaseExample
-     *
      * @param mixed $source
      * @param mixed $expected
      * @param mixed $firstCharUpperCase
@@ -351,7 +347,6 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testStrReplaceFirstProvider
-     *
      * @param mixed $search
      * @param mixed $replace
      * @param mixed $subject

@@ -70,14 +70,14 @@ class DbPDOCore extends Db
     {
         $dsn = 'mysql:';
         if ($dbname) {
-            $dsn .= 'dbname='.$dbname.';';
+            $dsn .= 'dbname=' . $dbname . ';';
         }
         if (preg_match('/^(.*):([0-9]+)$/', $host, $matches)) {
-            $dsn .= 'host='.$matches[1].';port='.$matches[2];
+            $dsn .= 'host=' . $matches[1] . ';port=' . $matches[2];
         } elseif (preg_match('#^.*:(/.*)$#', $host, $matches)) {
-            $dsn .= 'unix_socket='.$matches[1];
+            $dsn .= 'unix_socket=' . $matches[1];
         } else {
-            $dsn .= 'host='.$host;
+            $dsn .= 'host=' . $host;
         }
         $dsn .= ';charset=utf8';
 
@@ -99,8 +99,8 @@ class DbPDOCore extends Db
     {
         try {
             $link = DbPDO::getPDO($host, $user, $password, false);
-            $success = $link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
-            if ($dropit && (false !== $link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`'))) {
+            $success = $link->exec('CREATE DATABASE `' . str_replace('`', '\\`', $dbname) . '`');
+            if ($dropit && (false !== $link->exec('DROP DATABASE `' . str_replace('`', '\\`', $dbname) . '`'))) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -124,7 +124,7 @@ class DbPDOCore extends Db
         try {
             $this->link = $this->getPDO($this->server, $this->user, $this->password, $this->database, 5);
         } catch (PDOException $e) {
-            throw new PrestaShopException('Link to database cannot be established: '.$e->getMessage());
+            throw new PrestaShopException('Link to database cannot be established: ' . $e->getMessage());
         }
 
         $this->link->exec('SET SESSION sql_mode = \'\'');
@@ -308,7 +308,7 @@ class DbPDOCore extends Db
      */
     public function set_db($db_name)
     {
-        return $this->link->exec('USE '.pSQL($db_name));
+        return $this->link->exec('USE ' . pSQL($db_name));
     }
 
     /**
@@ -332,7 +332,7 @@ class DbPDOCore extends Db
             return false;
         }
 
-        $sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
+        $sql = 'SHOW TABLES LIKE \'' . $prefix . '%\'';
         $result = $link->query($sql);
 
         return (bool) $result->fetch();
@@ -363,15 +363,15 @@ class DbPDOCore extends Db
         }
 
         $result = $link->query('
-		CREATE TABLE `'.$prefix.'test` (
+		CREATE TABLE `' . $prefix . 'test` (
 			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE='.$engine);
+		) ENGINE=' . $engine);
         if (!$result) {
             $error = $link->errorInfo();
 
             return $error[2];
         }
-        $link->query('DROP TABLE `'.$prefix.'test`');
+        $link->query('DROP TABLE `' . $prefix . 'test`');
 
         return true;
     }

@@ -80,7 +80,6 @@ class AddStandardProductTest extends AbstractCartTest
 
     /**
      * @dataProvider updateQuantitiesProvider
-     *
      * @param mixed $quantity
      * @param mixed $operator
      * @param mixed $expected
@@ -123,7 +122,6 @@ class AddStandardProductTest extends AbstractCartTest
 
     /**
      * @dataProvider multipleUpdateQuantitiesProvider
-     *
      * @param mixed $first
      * @param mixed $second
      */

@@ -106,11 +106,11 @@ class StockManager implements StockInterface
         $updatePhysicalQuantityQuery = '
             UPDATE {table_prefix}stock_available sa
             SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
-            WHERE sa.id_shop = '.(int) $shopId.'
+            WHERE sa.id_shop = ' . (int) $shopId . '
         ';
 
         if ($idProduct) {
-            $updatePhysicalQuantityQuery .= ' AND sa.id_product = '.(int) $idProduct;
+            $updatePhysicalQuantityQuery .= ' AND sa.id_product = ' . (int) $idProduct;
         }
 
         $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);

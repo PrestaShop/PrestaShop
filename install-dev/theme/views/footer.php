@@ -2,25 +2,17 @@
 </div><!-- div id="sheets" -->
 
 <div id="buttons">
-	<?php if (!$this->isLastStep()) {
-    ?>
-		<?php if ($this->next_button) {
-        ?>
+	<?php if (!$this->isLastStep()) { ?>
+		<?php if ($this->next_button) { ?>
 			<input id="btNext" class="button little" type="submit" name="submitNext" value="<?php echo $this->translator->trans('Next', array(), 'Install'); ?>" />
-		<?php
-    } else {
-        ?>
+		<?php } else { ?>
 			<input id="btNext" class="button little disabled" type="submit" name="submitNext" value="<?php echo $this->translator->trans('Next', array(), 'Install'); ?>" disabled="disabled" />
-		<?php
-    } ?>
-	<?php
-} ?>
+		<?php } ?>
+	<?php } ?>
 
-	<?php if (!$this->isFirstStep() && $this->previous_button) {
-        ?>
+	<?php if (!$this->isFirstStep() && $this->previous_button) { ?>
 		<input id="btBack" class="button little" type="submit" name="submitPrevious" value="<?php echo $this->translator->trans('Back', array(), 'Install'); ?>" />
-	<?php
-    } ?>
+	<?php } ?>
 </div>
 </form>
 <div id="phone_help">

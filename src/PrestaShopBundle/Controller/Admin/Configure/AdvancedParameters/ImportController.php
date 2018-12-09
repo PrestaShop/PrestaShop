@@ -124,7 +124,7 @@ class ImportController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
         $importConfigFactory = $this->get('prestashop.core.import.config_factory');
 
-        $importFile = new SplFileInfo($importDirectory.$request->getSession()->get('csv'));
+        $importFile = new SplFileInfo($importDirectory . $request->getSession()->get('csv'));
         $importConfig = $importConfigFactory->buildFromRequest($request);
         $form = $formHandler->getForm($importConfig);
 
@@ -239,7 +239,7 @@ class ImportController extends FrameworkBundleAdminController
         if ($filename = $request->query->get('filename')) {
             $importDirectory = $this->get('prestashop.core.import.dir');
 
-            $response = new BinaryFileResponse($importDirectory.$filename);
+            $response = new BinaryFileResponse($importDirectory . $filename);
             $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
 
             return $response;

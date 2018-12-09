@@ -58,7 +58,7 @@ class TermsAndConditions
                 return $match[1];
             }
 
-            $replacement = '<a href="'.$this->links[$index].'" id="'.$this->createLinkId($index).'">'.$match[1].'</a>';
+            $replacement = '<a href="' . $this->links[$index] . '" id="' . $this->createLinkId($index) . '">' . $match[1] . '</a>';
             ++$index;
 
             return $replacement;
@@ -79,6 +79,6 @@ class TermsAndConditions
 
     protected function createLinkId($index)
     {
-        return 'cta-'.$this->getIdentifier().'-'.$index;
+        return 'cta-' . $this->getIdentifier() . '-' . $index;
     }
 }

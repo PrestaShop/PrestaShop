@@ -39,7 +39,6 @@ class CartRulesSpecificAmountTest extends AbstractCartCalculationTest
 {
     /**
      * @dataProvider cartWithOneProductSpecificCartRulesAmountProvider
-     *
      * @param mixed $productData
      * @param mixed $expectedTotal
      * @param mixed $cartRuleData

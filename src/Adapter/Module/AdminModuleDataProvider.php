@@ -145,7 +145,7 @@ class AdminModuleDataProvider implements ModuleInterface
     public function clearCatalogCache()
     {
         if ($this->cacheProvider) {
-            $this->cacheProvider->delete($this->languageISO.self::_CACHEKEY_MODULES_);
+            $this->cacheProvider->delete($this->languageISO . self::_CACHEKEY_MODULES_);
         }
         $this->catalog_modules = array();
     }
@@ -415,8 +415,8 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     protected function loadCatalogData()
     {
-        if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO.self::_CACHEKEY_MODULES_)) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO.self::_CACHEKEY_MODULES_);
+        if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO . self::_CACHEKEY_MODULES_)) {
+            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
         }
 
         if (!$this->catalog_modules) {
@@ -469,7 +469,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 if (!empty($listAddons)) {
                     $this->catalog_modules = $listAddons;
                     if ($this->cacheProvider) {
-                        $this->cacheProvider->save($this->languageISO.self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                        $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
                     }
                 } else {
                     $this->fallbackOnCatalogCache();
@@ -491,7 +491,7 @@ class AdminModuleDataProvider implements ModuleInterface
     {
         // Fallback on data from cache if exists
         if ($this->cacheProvider) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO.self::_CACHEKEY_MODULES_);
+            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
         }
 
         if (!$this->catalog_modules) {

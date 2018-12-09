@@ -181,7 +181,7 @@ class ModuleActivatedListener
         $annotation = $this->annotationReader->getMethodAnnotation($reflectionMethod, $tokenAnnotation);
 
         if (null !== $annotation && $annotation instanceof ModuleActivated) {
-            $this->validateAnnotation($annotation, $controllerClass.'::'.$methodName);
+            $this->validateAnnotation($annotation, $controllerClass . '::' . $methodName);
 
             return $annotation;
         }

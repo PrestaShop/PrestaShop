@@ -41,7 +41,6 @@ class IntoProcessor extends AbstractProcessor
     /**
      * TODO: This is a dummy function, we cannot parse INTO as part of SELECT
      * at the moment.
-     *
      * @param mixed $tokenList
      */
     public function process($tokenList)

@@ -41,11 +41,11 @@ class CacheWarmer implements CacheWarmerInterface
     public function warmUp($cacheDir)
     {
         $legacyDirs = array(
-            $cacheDir.DIRECTORY_SEPARATOR.'cachefs',
-            $cacheDir.DIRECTORY_SEPARATOR.'purifier',
-            $cacheDir.DIRECTORY_SEPARATOR.'push',
-            $cacheDir.DIRECTORY_SEPARATOR.'sandbox',
-            $cacheDir.DIRECTORY_SEPARATOR.'tcpdf',
+            $cacheDir . DIRECTORY_SEPARATOR . 'cachefs',
+            $cacheDir . DIRECTORY_SEPARATOR . 'purifier',
+            $cacheDir . DIRECTORY_SEPARATOR . 'push',
+            $cacheDir . DIRECTORY_SEPARATOR . 'sandbox',
+            $cacheDir . DIRECTORY_SEPARATOR . 'tcpdf',
         );
 
         $this->fileSystem->mkdir($legacyDirs);

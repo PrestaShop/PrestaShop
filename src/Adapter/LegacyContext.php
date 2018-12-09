@@ -85,7 +85,7 @@ class LegacyContext
      */
     public function getAdminBaseUrl()
     {
-        return __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/';
+        return __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
     }
 
     /**

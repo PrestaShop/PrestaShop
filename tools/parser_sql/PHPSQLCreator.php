@@ -68,6 +68,7 @@ class PHPSQLCreator
         case 'UNION':
         case 'UNION ALL':
             throw new UnsupportedFeatureException($k);
+
             break;
         case 'SELECT':
             $builder = new SelectStatementBuilder($parsed);
@@ -105,6 +106,7 @@ class PHPSQLCreator
             break;
         default:
             throw new UnsupportedFeatureException($k);
+
             break;
         }
 

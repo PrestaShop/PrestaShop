@@ -42,8 +42,8 @@ class VersionNumber
 
     /**
      * @param float $major
-     * @param int $minor
-     * @param int $patch
+     * @param int   $minor
+     * @param int   $patch
      */
     public function __construct($major, $minor, $patch)
     {

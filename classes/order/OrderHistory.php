@@ -120,8 +120,8 @@ class OrderHistoryCore extends ObjectModel
                     if ('' != $product_download->display_filename) {
                         $assign[$key]['name'] = $product_download->display_filename;
                         $dl_link = $product_download->getTextLink(false, $virtual_product['download_hash'])
-                            .'&id_order='.(int) $order->id
-                            .'&secure_key='.$order->secure_key;
+                            . '&id_order=' . (int) $order->id
+                            . '&secure_key=' . $order->secure_key;
                         $assign[$key]['link'] = $dl_link;
                         if (isset($virtual_product['download_deadline']) && '0000-00-00 00:00:00' != $virtual_product['download_deadline']) {
                             $assign[$key]['deadline'] = Tools::displayDate($virtual_product['download_deadline']);
@@ -137,12 +137,12 @@ class OrderHistoryCore extends ObjectModel
                 $links = '<ul>';
                 foreach ($assign as $product) {
                     $links .= '<li>';
-                    $links .= '<a href="'.$product['link'].'">'.Tools::htmlentitiesUTF8($product['name']).'</a>';
+                    $links .= '<a href="' . $product['link'] . '">' . Tools::htmlentitiesUTF8($product['name']) . '</a>';
                     if (isset($product['deadline'])) {
-                        $links .= '&nbsp;'.$this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
+                        $links .= '&nbsp;' . $this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
                     }
                     if (isset($product['downloadable'])) {
-                        $links .= '&nbsp;'.$this->trans('downloadable %d time(s)', array((int) $product['downloadable']), 'Admin.Orderscustomers.Notification');
+                        $links .= '&nbsp;' . $this->trans('downloadable %d time(s)', array((int) $product['downloadable']), 'Admin.Orderscustomers.Notification');
                     }
                     $links .= '</li>';
                 }
@@ -169,7 +169,7 @@ class OrderHistoryCore extends ObjectModel
                         ),
                         $data,
                         $customer->email,
-                        $customer->firstname.' '.$customer->lastname,
+                        $customer->firstname . ' ' . $customer->lastname,
                         null,
                         null,
                         null,
@@ -396,8 +396,8 @@ class OrderHistoryCore extends ObjectModel
                     $payment->conversion_rate = ($order ? $order->conversion_rate : 1);
                     $payment->save();
                     Db::getInstance()->execute('
-                    INSERT INTO `'._DB_PREFIX_.'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
-                    VALUES('.(int) $invoice->id.', '.(int) $payment->id.', '.(int) $order->id.')');
+                    INSERT INTO `' . _DB_PREFIX_ . 'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
+                    VALUES(' . (int) $invoice->id . ', ' . (int) $payment->id . ', ' . (int) $order->id . ')');
                 }
             }
         }
@@ -437,8 +437,8 @@ class OrderHistoryCore extends ObjectModel
         Tools::displayAsDeprecated();
         $id_order_state = Db::getInstance()->getValue('
         SELECT `id_order_state`
-        FROM `'._DB_PREFIX_.'order_history`
-        WHERE `id_order` = '.(int) $id_order.'
+        FROM `' . _DB_PREFIX_ . 'order_history`
+        WHERE `id_order` = ' . (int) $id_order . '
         ORDER BY `date_add` DESC, `id_order_history` DESC');
 
         // returns false if there is no state
@@ -476,12 +476,12 @@ class OrderHistoryCore extends ObjectModel
     {
         $result = Db::getInstance()->getRow('
             SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`, os.`id_order_state`, os.`pdf_invoice`, os.`pdf_delivery`
-            FROM `'._DB_PREFIX_.'order_history` oh
-                LEFT JOIN `'._DB_PREFIX_.'orders` o ON oh.`id_order` = o.`id_order`
-                LEFT JOIN `'._DB_PREFIX_.'customer` c ON o.`id_customer` = c.`id_customer`
-                LEFT JOIN `'._DB_PREFIX_.'order_state` os ON oh.`id_order_state` = os.`id_order_state`
-                LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = o.`id_lang`)
-            WHERE oh.`id_order_history` = '.(int) $this->id.' AND os.`send_email` = 1');
+            FROM `' . _DB_PREFIX_ . 'order_history` oh
+                LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON oh.`id_order` = o.`id_order`
+                LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON o.`id_customer` = c.`id_customer`
+                LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON oh.`id_order_state` = os.`id_order_state`
+                LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = o.`id_lang`)
+            WHERE oh.`id_order_history` = ' . (int) $this->id . ' AND os.`send_email` = 1');
         if (isset($result['template']) && Validate::isEmail($result['email'])) {
             ShopUrl::cacheMainDomainForShop($order->id_shop);
 
@@ -517,13 +517,13 @@ class OrderHistoryCore extends ObjectModel
                         Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $invoice));
                         $pdf = new PDF($invoice, PDF::TEMPLATE_INVOICE, $context->smarty);
                         $file_attachement['invoice']['content'] = $pdf->render(false);
-                        $file_attachement['invoice']['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
+                        $file_attachement['invoice']['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
                         $file_attachement['invoice']['mime'] = 'application/pdf';
                     }
                     if ($result['pdf_delivery'] && $order->delivery_number) {
                         $pdf = new PDF($invoice, PDF::TEMPLATE_DELIVERY_SLIP, $context->smarty);
                         $file_attachement['delivery']['content'] = $pdf->render(false);
-                        $file_attachement['delivery']['name'] = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $order->id_shop).sprintf('%06d', $order->delivery_number).'.pdf';
+                        $file_attachement['delivery']['name'] = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $order->id_shop) . sprintf('%06d', $order->delivery_number) . '.pdf';
                         $file_attachement['delivery']['mime'] = 'application/pdf';
                     }
                 } else {
@@ -536,7 +536,7 @@ class OrderHistoryCore extends ObjectModel
                     $topic,
                     $data,
                     $result['email'],
-                    $result['firstname'].' '.$result['lastname'],
+                    $result['firstname'] . ' ' . $result['lastname'],
                     null,
                     null,
                     $file_attachement,
@@ -578,9 +578,9 @@ class OrderHistoryCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
         SELECT COUNT(oh.`id_order_history`) AS nb
-        FROM `'._DB_PREFIX_.'order_state` os
-        LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (os.`id_order_state` = oh.`id_order_state`)
-        WHERE oh.`id_order` = '.(int) $this->id_order.'
+        FROM `' . _DB_PREFIX_ . 'order_state` os
+        LEFT JOIN `' . _DB_PREFIX_ . 'order_history` oh ON (os.`id_order_state` = oh.`id_order_state`)
+        WHERE oh.`id_order` = ' . (int) $this->id_order . '
         AND os.`logable` = 1');
     }
 

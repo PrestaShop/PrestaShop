@@ -28,7 +28,7 @@ class Cart extends CartCore
     /**
      * Update the address id of the cart.
      *
-     * @param int $id_address Current address id to change
+     * @param int $id_address     Current address id to change
      * @param int $id_address_new New address id
      */
     public function updateAddressId($id_address, $id_address_new)

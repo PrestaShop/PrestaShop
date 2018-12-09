@@ -118,8 +118,8 @@ class CachingType extends TranslatorAwareType
     {
         return [
             'CacheMemcache' => $this->trans('Memcached via PHP::Memcache', 'Admin.Advparameters.Feature')
-                .' '
-                .$this->trans(
+                . ' '
+                . $this->trans(
                     '(you must install the [a]Memcache PECL extension[/a])',
                     'Admin.Advparameters.Notification',
                     [
@@ -128,8 +128,8 @@ class CachingType extends TranslatorAwareType
                     ]
                 ),
             'CacheMemcached' => $this->trans('Memcached via PHP::Memcached', 'Admin.Advparameters.Feature')
-                .' '
-                .$this->trans(
+                . ' '
+                . $this->trans(
                     '(you must install the [a]Memcached PECL extension[/a])',
                     'Admin.Advparameters.Notification',
                     [
@@ -138,8 +138,8 @@ class CachingType extends TranslatorAwareType
                     ]
                 ),
             'CacheApc' => $this->trans('APC', 'Admin.Advparameters.Feature')
-                .' '
-                .$this->trans(
+                . ' '
+                . $this->trans(
                     '(you must install the [a]APC PECL extension[/a])',
                     'Admin.Advparameters.Notification',
                     [
@@ -148,8 +148,8 @@ class CachingType extends TranslatorAwareType
                     ]
                 ),
             'CacheXcache' => $this->trans('Xcache', 'Admin.Advparameters.Feature')
-                .' '
-                .$this->trans(
+                . ' '
+                . $this->trans(
                     '(you must install the [a]Xcache extension[/a])',
                     'Admin.Advparameters.Notification',
                     [

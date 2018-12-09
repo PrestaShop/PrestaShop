@@ -192,8 +192,8 @@ class OrderLazyArray extends AbstractLazyArray
                 if ('' != $product_download->display_filename) {
                     $orderProduct['download_link'] =
                         $product_download->getTextLink(false, $orderProduct['download_hash'])
-                        .'&id_order='.(int) $order->id
-                        .'&secure_key='.$order->secure_key;
+                        . '&id_order=' . (int) $order->id
+                        . '&secure_key=' . $order->secure_key;
                 }
             }
 
@@ -307,9 +307,9 @@ class OrderLazyArray extends AbstractLazyArray
             $messages[$cmId]['message'] = nl2br($customerMessage['message']);
             $messages[$cmId]['message_date'] = Tools::displayDate($customerMessage['date_add'], null, true);
             if (isset($customerMessage['elastname']) && $customerMessage['elastname']) {
-                $messages[$cmId]['name'] = $customerMessage['efirstname'].' '.$customerMessage['elastname'];
+                $messages[$cmId]['name'] = $customerMessage['efirstname'] . ' ' . $customerMessage['elastname'];
             } elseif ($customerMessage['clastname']) {
-                $messages[$cmId]['name'] = $customerMessage['cfirstname'].' '.$customerMessage['clastname'];
+                $messages[$cmId]['name'] = $customerMessage['cfirstname'] . ' ' . $customerMessage['clastname'];
             } else {
                 $messages[$cmId]['name'] = Configuration::get('PS_SHOP_NAME');
             }

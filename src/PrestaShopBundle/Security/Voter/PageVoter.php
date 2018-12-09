@@ -92,7 +92,7 @@ class PageVoter extends Voter
      */
     protected function can($action, $employeeProfileId)
     {
-        return Access::isGranted('ROLE_MOD_TAB_'.strtoupper($action), $employeeProfileId);
+        return Access::isGranted('ROLE_MOD_TAB_' . strtoupper($action), $employeeProfileId);
     }
 
     /**
@@ -112,6 +112,6 @@ class PageVoter extends Voter
             $action .= '_';
         }
 
-        return $action.$attribute;
+        return $action . $attribute;
     }
 }

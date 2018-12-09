@@ -160,7 +160,7 @@ class PrestaShopLoggerCore extends ObjectModel
     public function getHash()
     {
         if (empty($this->hash)) {
-            $this->hash = md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id);
+            $this->hash = md5($this->message . $this->severity . $this->error_code . $this->object_type . $this->object_id);
         }
 
         return $this->hash;
@@ -168,7 +168,7 @@ class PrestaShopLoggerCore extends ObjectModel
 
     public static function eraseAllLogs()
     {
-        return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'log');
+        return Db::getInstance()->execute('TRUNCATE TABLE ' . _DB_PREFIX_ . 'log');
     }
 
     /**
@@ -190,13 +190,13 @@ class PrestaShopLoggerCore extends ObjectModel
     {
         if (!isset(self::$is_present[md5($this->message)])) {
             self::$is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)
-				FROM `'._DB_PREFIX_.'log`
+				FROM `' . _DB_PREFIX_ . 'log`
 				WHERE
-					`message` = \''.$this->message.'\'
-					AND `severity` = \''.$this->severity.'\'
-					AND `error_code` = \''.$this->error_code.'\'
-					AND `object_type` = \''.$this->object_type.'\'
-					AND `object_id` = \''.$this->object_id.'\'
+					`message` = \'' . $this->message . '\'
+					AND `severity` = \'' . $this->severity . '\'
+					AND `error_code` = \'' . $this->error_code . '\'
+					AND `object_type` = \'' . $this->object_type . '\'
+					AND `object_id` = \'' . $this->object_id . '\'
 				');
         }
 

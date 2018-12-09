@@ -34,7 +34,6 @@ class SearchCoreTest extends IntegrationTestCase
 {
     /**
      * @dataProvider keywordsProvider
-     *
      * @param mixed $word
      * @param mixed $expectedKeyWord
      * @param mixed $withStart

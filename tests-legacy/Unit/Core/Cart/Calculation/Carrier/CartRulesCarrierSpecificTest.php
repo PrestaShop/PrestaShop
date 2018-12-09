@@ -43,7 +43,6 @@ class CartRulesCarrierSpecificTest extends AbstractCarrierTest
 
     /**
      * @dataProvider cartWithOneProductSpecificCartRulesAmountProvider
-     *
      * @param mixed $productData
      * @param mixed $expectedTotal
      * @param mixed $expectedShippingFees

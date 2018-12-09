@@ -130,7 +130,7 @@ class StoreCore extends ObjectModel
     public function __construct($idStore = null, $idLang = null)
     {
         parent::__construct($idStore, $idLang);
-        $this->id_image = ($this->id && file_exists(_PS_STORE_IMG_DIR_.(int) $this->id.'.jpg')) ? (int) $this->id : false;
+        $this->id_image = ($this->id && file_exists(_PS_STORE_IMG_DIR_ . (int) $this->id . '.jpg')) ? (int) $this->id : false;
         $this->image_dir = _PS_STORE_IMG_DIR_;
     }
 
@@ -146,11 +146,11 @@ class StoreCore extends ObjectModel
         $stores = Db::getInstance()->executeS(
             '
             SELECT s.id_store AS `id`, s.*, sl.*
-            FROM '._DB_PREFIX_.'store s
-            '.Shop::addSqlAssociation('store', 's').'
-            LEFT JOIN '._DB_PREFIX_.'store_lang sl ON (
+            FROM ' . _DB_PREFIX_ . 'store s
+            ' . Shop::addSqlAssociation('store', 's') . '
+            LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (
             sl.id_store = s.id_store
-            AND sl.id_lang = '.(int) $idLang.'
+            AND sl.id_lang = ' . (int) $idLang . '
             )
             WHERE s.active = 1'
         );
@@ -200,8 +200,8 @@ class StoreCore extends ObjectModel
         $row = Db::getInstance()->getRow(
             '
             SELECT `id_store`
-            FROM '._DB_PREFIX_.'store a
-            WHERE a.`id_store` = '.(int) $idStore
+            FROM ' . _DB_PREFIX_ . 'store a
+            WHERE a.`id_store` = ' . (int) $idStore
         );
 
         return isset($row['id_store']);

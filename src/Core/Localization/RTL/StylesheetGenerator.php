@@ -90,8 +90,8 @@ class StylesheetGenerator
         $allFiles = $this->getFilesInDirectory($directory);
 
         foreach ($allFiles as $file) {
-            if ($this->shouldProcessFile($directory.'/'.$file, $regenerate)) {
-                $this->processFile($directory.'/'.$file);
+            if ($this->shouldProcessFile($directory . '/' . $file, $regenerate)) {
+                $this->processFile($directory . '/' . $file);
             }
         }
     }
@@ -109,7 +109,7 @@ class StylesheetGenerator
         return
             false === strpos($file, '/node_modules/')
             // does not end with .rtlfix
-            && substr(rtrim($file, '.'.$this->fileType), -4) !== $this->rtlSuffix
+            && substr(rtrim($file, '.' . $this->fileType), -4) !== $this->rtlSuffix
             // RTL file does not exist or we are regenerating them
             && ($regenerate || !file_exists($this->getRtlFileName($file)))
         ;
@@ -174,7 +174,7 @@ class StylesheetGenerator
     {
         $path = pathinfo($filePath);
 
-        return $path['dirname'].'/'.$path['filename'];
+        return $path['dirname'] . '/' . $path['filename'];
     }
 
     /**
@@ -186,7 +186,7 @@ class StylesheetGenerator
      */
     private function getRtlFileName($baseFileName)
     {
-        return $this->getFilePathWithoutExtension($baseFileName).$this->rtlSuffix.'.'.$this->fileType;
+        return $this->getFilePathWithoutExtension($baseFileName) . $this->rtlSuffix . '.' . $this->fileType;
     }
 
     /**
@@ -203,7 +203,7 @@ class StylesheetGenerator
     {
         $filePath = $this->getFilePathWithoutExtension($baseFile);
 
-        $rtlFixFilePath = $filePath.'.'.self::RTLFIX_EXTENSION;
+        $rtlFixFilePath = $filePath . '.' . self::RTLFIX_EXTENSION;
 
         if (file_exists($rtlFixFilePath)) {
             $rtlFixContent = file_get_contents($rtlFixFilePath);
@@ -217,7 +217,7 @@ class StylesheetGenerator
                 );
             }
 
-            return $content.PHP_EOL.$rtlFixContent;
+            return $content . PHP_EOL . $rtlFixContent;
         }
 
         return $content;

@@ -85,7 +85,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'content' => '{$content}', //replace content by original smarty tag var
             'enableSidebar' => $this->enableSidebar,
             'lite_display' => $this->lite_display,
-            'url_post' => self::$currentIndex.'&token='.$this->token,
+            'url_post' => self::$currentIndex . '&token=' . $this->token,
             'show_page_header_toolbar' => $this->show_page_header_toolbar,
             'page_header_toolbar_title' => $this->page_header_toolbar_title,
             'title' => $this->title ? $this->title : $this->page_header_toolbar_title,

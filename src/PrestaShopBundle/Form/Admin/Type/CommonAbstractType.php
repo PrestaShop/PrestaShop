@@ -82,7 +82,7 @@ abstract class CommonAbstractType extends AbstractType
     {
         $new_list = [];
         foreach ($list as $item) {
-            $new_list[$item[$mapping_value].' - '.$item[$mapping_name]] = $item[$mapping_value];
+            $new_list[$item[$mapping_value] . ' - ' . $item[$mapping_name]] = $item[$mapping_value];
         }
 
         return $new_list;

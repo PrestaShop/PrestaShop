@@ -70,8 +70,8 @@ final class WebserviceKeyStatusModifier
                     'An error occurred while updating the status for an object.',
                     [],
                     'Admin.Notifications.Error'
-                ).
-                WebserviceKey::$definition['table'].
+                ) .
+                WebserviceKey::$definition['table'] .
                 $this->translator->trans('(cannot load object)', [], 'Admin.Notifications.Error');
 
             return [$error];

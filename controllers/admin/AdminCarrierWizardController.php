@@ -61,7 +61,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         parent::setMedia($isNewTheme);
         $this->addJqueryPlugin('smartWizard');
         $this->addJqueryPlugin('typewatch');
-        $this->addJs(_PS_JS_DIR_.'admin/carrier_wizard.js');
+        $this->addJs(_PS_JS_DIR_ . 'admin/carrier_wizard.js');
     }
 
     public function initWizard()
@@ -117,7 +117,7 @@ class AdminCarrierWizardControllerCore extends AdminController
             'enableAllSteps' => Validate::isLoadedObject($carrier),
             'wizard_steps' => $this->wizard_steps,
             'validate_url' => $this->context->link->getAdminLink('AdminCarrierWizard'),
-            'carrierlist_url' => $this->context->link->getAdminLink('AdminCarriers').'&conf='.((int) Validate::isLoadedObject($carrier) ? 4 : 3),
+            'carrierlist_url' => $this->context->link->getAdminLink('AdminCarriers') . '&conf=' . ((int) Validate::isLoadedObject($carrier) ? 4 : 3),
             'multistore_enable' => Shop::isFeatureActive(),
             'wizard_contents' => array(
                 'contents' => array(
@@ -138,7 +138,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         }
 
         $this->context->smarty->assign(array(
-                'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg') ? _THEME_SHIP_DIR_.$carrier->id.'.jpg' : false),
+                'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_ . $carrier->id . '.jpg') ? _THEME_SHIP_DIR_ . $carrier->id . '.jpg' : false),
             ));
 
         $this->context->smarty->assign(array(
@@ -286,12 +286,12 @@ class AdminCarrierWizardControllerCore extends AdminController
                             array(
                                 'id' => 'is_free_on',
                                 'value' => 1,
-                                'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->trans('No', array(), 'Admin.Global').'" title="'.$this->trans('No', array(), 'Admin.Global').'" />',
+                                'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', array(), 'Admin.Global') . '" title="' . $this->trans('No', array(), 'Admin.Global') . '" />',
                             ),
                             array(
                                 'id' => 'is_free_off',
                                 'value' => 0,
-                                'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->trans('Yes', array(), 'Admin.Global').'" title="'.$this->trans('Yes', array(), 'Admin.Global').'" />',
+                                'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', array(), 'Admin.Global') . '" title="' . $this->trans('Yes', array(), 'Admin.Global') . '" />',
                             ),
                         ),
                     ),
@@ -391,21 +391,21 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'label' => $this->trans('Maximum package width (%s)', array('%s' => Configuration::get('PS_DIMENSION_UNIT')), 'Admin.Shipping.Feature'),
                         'name' => 'max_width',
                         'required' => false,
-                        'hint' => $this->trans('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.', array(), 'Admin.Shipping.Help').' '.$this->trans('The value must be an integer.', array(), 'Admin.Shipping.Help'),
+                        'hint' => $this->trans('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.', array(), 'Admin.Shipping.Help') . ' ' . $this->trans('The value must be an integer.', array(), 'Admin.Shipping.Help'),
                     ),
                     array(
                         'type' => 'text',
                         'label' => $this->trans('Maximum package height (%s)', array('%s' => Configuration::get('PS_DIMENSION_UNIT')), 'Admin.Shipping.Feature'),
                         'name' => 'max_height',
                         'required' => false,
-                        'hint' => $this->trans('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.', array(), 'Admin.Shipping.Help').' '.$this->trans('The value must be an integer.', array(), 'Admin.Shipping.Help'),
+                        'hint' => $this->trans('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.', array(), 'Admin.Shipping.Help') . ' ' . $this->trans('The value must be an integer.', array(), 'Admin.Shipping.Help'),
                     ),
                     array(
                         'type' => 'text',
                         'label' => $this->trans('Maximum package depth (%s)', array('%s' => Configuration::get('PS_DIMENSION_UNIT')), 'Admin.Shipping.Feature'),
                         'name' => 'max_depth',
                         'required' => false,
-                        'hint' => $this->trans('Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.', array(), 'Admin.Shipping.Help').' '.$this->trans('The value must be an integer.', array(), 'Admin.Shipping.Help'),
+                        'hint' => $this->trans('Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.', array(), 'Admin.Shipping.Help') . ' ' . $this->trans('The value must be an integer.', array(), 'Admin.Shipping.Help'),
                     ),
                     array(
                         'type' => 'text',
@@ -439,7 +439,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         $groups = Group::getGroups($this->context->language->id);
 
         foreach ($groups as $group) {
-            $fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$carrier->id));
+            $fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$carrier->id));
         }
 
         return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
@@ -503,7 +503,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
         $zones = Zone::getZones(false);
         foreach ($zones as $zone) {
-            $fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
+            $fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_' . $zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
         }
 
         if (Carrier::SHIPPING_METHOD_FREE == $shipping_method) {
@@ -515,15 +515,15 @@ class AdminCarrierWizardControllerCore extends AdminController
         }
 
         foreach ($price_by_range as $price) {
-            $tpl_vars['price_by_range'][$price['id_'.$range_table]][$price['id_zone']] = $price['price'];
+            $tpl_vars['price_by_range'][$price['id_' . $range_table]][$price['id_zone']] = $price['price'];
         }
 
         $tmp_range = $range_obj->getRanges((int) $carrier->id);
         $tpl_vars['ranges'] = array();
         if (Carrier::SHIPPING_METHOD_FREE != $shipping_method) {
             foreach ($tmp_range as $id => $range) {
-                $tpl_vars['ranges'][$range['id_'.$range_table]] = $range;
-                $tpl_vars['ranges'][$range['id_'.$range_table]]['id_range'] = $range['id_'.$range_table];
+                $tpl_vars['ranges'][$range['id_' . $range_table]] = $range;
+                $tpl_vars['ranges'][$range['id_' . $range_table]]['id_range'] = $range['id_' . $range_table];
             }
         }
 
@@ -749,7 +749,7 @@ class AdminCarrierWizardControllerCore extends AdminController
     public function ajaxProcessUploadLogo()
     {
         if (!$this->access('edit')) {
-            die('<return result="error" message="'.$this->trans('You do not have permission to use this wizard.', array(), 'Admin.Shipping.Notification').'" />');
+            die('<return result="error" message="' . $this->trans('You do not have permission to use this wizard.', array(), 'Admin.Shipping.Notification') . '" />');
         }
 
         $allowedExtensions = array('jpeg', 'gif', 'png', 'jpg');
@@ -762,13 +762,13 @@ class AdminCarrierWizardControllerCore extends AdminController
             && ImageManager::isRealImage($logo['tmp_name'], $logo['type'])) {
             $file = $logo['tmp_name'];
             do {
-                $tmp_name = uniqid().'.jpg';
-            } while (file_exists(_PS_TMP_IMG_DIR_.$tmp_name));
-            if (!ImageManager::resize($file, _PS_TMP_IMG_DIR_.$tmp_name)) {
-                die('<return result="error" message="Impossible to resize the image into '.Tools::safeOutput(_PS_TMP_IMG_DIR_).'" />');
+                $tmp_name = uniqid() . '.jpg';
+            } while (file_exists(_PS_TMP_IMG_DIR_ . $tmp_name));
+            if (!ImageManager::resize($file, _PS_TMP_IMG_DIR_ . $tmp_name)) {
+                die('<return result="error" message="Impossible to resize the image into ' . Tools::safeOutput(_PS_TMP_IMG_DIR_) . '" />');
             }
             @unlink($file);
-            die('<return result="success" message="'.Tools::safeOutput(_PS_TMP_IMG_.$tmp_name).'" />');
+            die('<return result="success" message="' . Tools::safeOutput(_PS_TMP_IMG_ . $tmp_name) . '" />');
         } else {
             die('<return result="error" message="Cannot upload file" />');
         }
@@ -864,11 +864,11 @@ class AdminCarrierWizardControllerCore extends AdminController
                 }
 
                 if (Tools::getValue('logo')) {
-                    if ('null' == Tools::getValue('logo') && file_exists(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg')) {
-                        unlink(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg');
+                    if ('null' == Tools::getValue('logo') && file_exists(_PS_SHIP_IMG_DIR_ . $carrier->id . '.jpg')) {
+                        unlink(_PS_SHIP_IMG_DIR_ . $carrier->id . '.jpg');
                     } else {
                         $logo = basename(Tools::getValue('logo'));
-                        if (!file_exists(_PS_TMP_IMG_DIR_.$logo) || !copy(_PS_TMP_IMG_DIR_.$logo, _PS_SHIP_IMG_DIR_.$carrier->id.'.jpg')) {
+                        if (!file_exists(_PS_TMP_IMG_DIR_ . $logo) || !copy(_PS_TMP_IMG_DIR_ . $logo, _PS_SHIP_IMG_DIR_ . $carrier->id . '.jpg')) {
                             $return['has_error'] = true;
                             $return['errors'][] = $this->trans('An error occurred while saving carrier logo.', array(), 'Admin.Shipping.Notification');
                         }
@@ -900,10 +900,10 @@ class AdminCarrierWizardControllerCore extends AdminController
         $zones = Zone::getZones(false);
         foreach ($zones as $zone) {
             if (count($carrier->getZone($zone['id_zone']))) {
-                if (!isset($_POST['zone_'.$zone['id_zone']]) || !$_POST['zone_'.$zone['id_zone']]) {
+                if (!isset($_POST['zone_' . $zone['id_zone']]) || !$_POST['zone_' . $zone['id_zone']]) {
                     $return &= $carrier->deleteZone((int) $zone['id_zone']);
                 }
-            } elseif (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']]) {
+            } elseif (isset($_POST['zone_' . $zone['id_zone']]) && $_POST['zone_' . $zone['id_zone']]) {
                 $return &= $carrier->addZone((int) $zone['id_zone']);
             }
         }
@@ -952,15 +952,15 @@ class AdminCarrierWizardControllerCore extends AdminController
 
     public function duplicateLogo($new_id, $old_id)
     {
-        $old_logo = _PS_SHIP_IMG_DIR_.'/'.(int) $old_id.'.jpg';
+        $old_logo = _PS_SHIP_IMG_DIR_ . '/' . (int) $old_id . '.jpg';
         if (file_exists($old_logo)) {
-            copy($old_logo, _PS_SHIP_IMG_DIR_.'/'.(int) $new_id.'.jpg');
+            copy($old_logo, _PS_SHIP_IMG_DIR_ . '/' . (int) $new_id . '.jpg');
         }
 
-        $old_tmp_logo = _PS_TMP_IMG_DIR_.'/carrier_mini_'.(int) $old_id.'.jpg';
+        $old_tmp_logo = _PS_TMP_IMG_DIR_ . '/carrier_mini_' . (int) $old_id . '.jpg';
         if (file_exists($old_tmp_logo)) {
             if (!isset($_FILES['logo'])) {
-                copy($old_tmp_logo, _PS_TMP_IMG_DIR_.'/carrier_mini_'.$new_id.'.jpg');
+                copy($old_tmp_logo, _PS_TMP_IMG_DIR_ . '/carrier_mini_' . $new_id . '.jpg');
             }
             unlink($old_tmp_logo);
         }

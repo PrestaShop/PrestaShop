@@ -53,7 +53,6 @@ class CartGiftWrappingTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartWithoutCartRulesProvider
-     *
      * @param mixed $productData
      * @param mixed $expectedTotal
      * @param mixed $expectedTotalWithGiftWrapping

@@ -51,7 +51,7 @@ class ImportMatchRepository implements RepositoryInterface
     public function __construct(Connection $connection, $tablePrefix)
     {
         $this->connection = $connection;
-        $this->importMatchTable = $tablePrefix.'import_match';
+        $this->importMatchTable = $tablePrefix . 'import_match';
     }
 
     /**

@@ -76,7 +76,7 @@ class StockManager
                 $productStockAvailable->quantity = $productStockAvailable->quantity + ($delta_quantity * $product_pack->pack_quantity);
                 $productStockAvailable->update();
 
-                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int) $product_pack->id.'*');
+                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $product_pack->id . '*');
             }
         }
 
@@ -134,7 +134,7 @@ class StockManager
                 $stock_available_pack->quantity = $max_pack_quantity;
                 $stock_available_pack->update();
 
-                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int) $pack->id.'*');
+                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $pack->id . '*');
             }
         }
     }
@@ -197,7 +197,7 @@ class StockManager
             $this->sendLowStockAlert($product, $id_product_attribute, $stockAvailable->quantity);
         }
 
-        $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int) $product->id.'*');
+        $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $product->id . '*');
     }
 
     /**
@@ -328,7 +328,7 @@ class StockManager
                 (string) $configuration['PS_SHOP_NAME'],
                 null,
                 null,
-                __DIR__.'/mails/',
+                __DIR__ . '/mails/',
                 false,
                 $idShop
             );

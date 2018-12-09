@@ -95,6 +95,6 @@ final class Backup implements BackupInterface
     {
         list($timestamp) = explode('-', $this->fileName);
 
-        return new DateTimeImmutable('@'.$timestamp);
+        return new DateTimeImmutable('@' . $timestamp);
     }
 }

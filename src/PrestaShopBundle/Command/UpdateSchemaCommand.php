@@ -59,9 +59,9 @@ class UpdateSchemaCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = include __DIR__.'/../../../app/config/parameters.php';
+        $config = include __DIR__ . '/../../../app/config/parameters.php';
         if ('test' === $input->getOption('env')) {
-            $this->dbName = 'test_'.$config['parameters']['database_name'];
+            $this->dbName = 'test_' . $config['parameters']['database_name'];
         } else {
             $this->dbName = $config['parameters']['database_name'];
         }
@@ -82,14 +82,14 @@ class UpdateSchemaCommand extends ContainerAwareCommand
             'SELECT CONSTRAINT_NAME, TABLE_NAME 
                 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
                 WHERE CONSTRAINT_TYPE = "FOREIGN KEY" 
-                    AND TABLE_SCHEMA = "'.$this->dbName.'"
-                    AND TABLE_NAME LIKE "'.$this->dbPrefix.'%" '
+                    AND TABLE_SCHEMA = "' . $this->dbName . '"
+                    AND TABLE_NAME LIKE "' . $this->dbPrefix . '%" '
         );
 
         $results = $query->fetchAll();
         foreach ($results as $result) {
-            $drop = 'ALTER TABLE '.$result['TABLE_NAME'].' DROP FOREIGN KEY '.$result['CONSTRAINT_NAME'];
-            $output->writeln('Executing: '.$drop);
+            $drop = 'ALTER TABLE ' . $result['TABLE_NAME'] . ' DROP FOREIGN KEY ' . $result['CONSTRAINT_NAME'];
+            $output->writeln('Executing: ' . $drop);
             $conn->executeQuery($drop);
             ++$sqls;
         }
@@ -171,13 +171,13 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                         $originalFieldName = $fieldName;
                         $fieldName = str_replace('`', '', $fieldName);
                         // get old default value
-                        $query = $conn->query('SHOW FULL COLUMNS FROM '.$tableName.' WHERE Field="'.$fieldName.'"');
+                        $query = $conn->query('SHOW FULL COLUMNS FROM ' . $tableName . ' WHERE Field="' . $fieldName . '"');
                         $results = $query->fetchAll();
                         $oldDefaultValue = $results[0]['Default'];
                         $extra = $results[0]['Extra'];
                         if (null !== $oldDefaultValue
                             && false === strpos($oldDefaultValue, 'CURRENT_TIMESTAMP')) {
-                            $oldDefaultValue = "'".$oldDefaultValue."'";
+                            $oldDefaultValue = "'" . $oldDefaultValue . "'";
                         }
                         if (null === $oldDefaultValue) {
                             $oldDefaultValue = 'NULL';
@@ -191,16 +191,16 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                         ) {
                             if (preg_match('/DEFAULT/', $matches[0][$matchKey])) {
                                 $matches[0][$matchKey] =
-                                    preg_replace('/DEFAULT (.+?)(,|$)/', 'DEFAULT '.
-                                        $oldDefaultValue.'$2'.' '.$extra, $matches[0][$matchKey]);
+                                    preg_replace('/DEFAULT (.+?)(,|$)/', 'DEFAULT ' .
+                                        $oldDefaultValue . '$2' . ' ' . $extra, $matches[0][$matchKey]);
                             } else {
                                 $matches[0][$matchKey] =
-                                    preg_replace('/(.+?)(,|$)/uis', '$1 DEFAULT '.
-                                        $oldDefaultValue.' '.$extra.'$2', $matches[0][$matchKey]);
+                                    preg_replace('/(.+?)(,|$)/uis', '$1 DEFAULT ' .
+                                        $oldDefaultValue . ' ' . $extra . '$2', $matches[0][$matchKey]);
                             }
                         }
                         $updateSchemaSql[$key] = preg_replace(
-                            '/ CHANGE '.$originalFieldName.' (.+?)(,|$)/uis',
+                            '/ CHANGE ' . $originalFieldName . ' (.+?)(,|$)/uis',
                             $matches[0][$matchKey],
                             $updateSchemaSql[$key]
                         );
@@ -213,7 +213,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
         // Now execute the queries!
         foreach ($updateSchemaSql as $sql) {
             try {
-                $output->writeln('Executing: '.$sql);
+                $output->writeln('Executing: ' . $sql);
                 $conn->executeQuery($sql);
             } catch (\Exception $e) {
                 $conn->rollBack();

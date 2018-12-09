@@ -69,7 +69,7 @@ abstract class AbstractAdminQueryBuilder
             return $s[0];
         }
 
-        return '('.implode(' '.$operator.' ', $s).')';
+        return '(' . implode(' ' . $operator . ' ', $s) . ')';
     }
 
     /**
@@ -135,53 +135,53 @@ abstract class AbstractAdminQueryBuilder
         // SELECT
         $s = array();
         foreach ($select as $alias => $field) {
-            $a = is_string($alias) ? ' AS `'.$alias.'`' : '';
+            $a = is_string($alias) ? ' AS `' . $alias . '`' : '';
             if (is_array($field)) {
                 if (isset($field['table'])) {
-                    $s[] = ' '.$field['table'].'.`'.$field['field'].'` '.$a;
+                    $s[] = ' ' . $field['table'] . '.`' . $field['field'] . '` ' . $a;
                 } elseif (isset($field['select'])) {
-                    $s[] = ' '.$field['select'].$a;
+                    $s[] = ' ' . $field['select'] . $a;
                 }
             } else {
-                $s[] = ' '.$field.$a;
+                $s[] = ' ' . $field . $a;
             }
         }
         if (0 === count($s)) {
             throw new LogicException('Compile SQL failed: No field to SELECT!');
         }
-        $sql[] = 'SELECT SQL_CALC_FOUND_ROWS'.implode(','.PHP_EOL, $s);
+        $sql[] = 'SELECT SQL_CALC_FOUND_ROWS' . implode(',' . PHP_EOL, $s);
 
         // FROM / JOIN
         $s = array();
         foreach ($table as $alias => $join) {
             if (!is_array($join)) {
                 if (count($s) > 0) {
-                    throw new LogicException('Compile SQL failed: cannot join the table '.$join.' into SQL query without JOIN sepcs.');
+                    throw new LogicException('Compile SQL failed: cannot join the table ' . $join . ' into SQL query without JOIN sepcs.');
                 }
-                $s[0] = ' `'._DB_PREFIX_.$join.'` '.$alias;
+                $s[0] = ' `' . _DB_PREFIX_ . $join . '` ' . $alias;
             } else {
                 if (0 === count($s)) {
-                    throw new LogicException('Compile SQL failed: cannot join the table alias '.$alias.' into SQL query before to insert initial table.');
+                    throw new LogicException('Compile SQL failed: cannot join the table alias ' . $alias . ' into SQL query before to insert initial table.');
                 }
-                $s[] = ' '.$join['join'].' `'._DB_PREFIX_.$join['table'].'` '.$alias.((isset($join['on'])) ? ' ON ('.$join['on'].')' : '');
+                $s[] = ' ' . $join['join'] . ' `' . _DB_PREFIX_ . $join['table'] . '` ' . $alias . ((isset($join['on'])) ? ' ON (' . $join['on'] . ')' : '');
             }
         }
         if (0 === count($s)) {
             throw new LogicException('Compile SQL failed: No table to insert into FROM!');
         }
-        $sql[] = 'FROM '.implode(' '.PHP_EOL, $s);
+        $sql[] = 'FROM ' . implode(' ' . PHP_EOL, $s);
 
         // WHERE (recursive call)
         if (count($where)) {
             $s = $this->compileSqlWhere($where);
             if (strlen($s) > 0) {
-                $sql[] = 'WHERE '.$s.PHP_EOL;
+                $sql[] = 'WHERE ' . $s . PHP_EOL;
             }
         }
 
         // GROUP BY
         if (!empty($groupBy)) {
-            $sql[] = 'GROUP BY '.implode(', ', array_map('pSQL', $groupBy)).PHP_EOL;
+            $sql[] = 'GROUP BY ' . implode(', ', array_map('pSQL', $groupBy)) . PHP_EOL;
         }
 
         // ORDER
@@ -190,21 +190,21 @@ abstract class AbstractAdminQueryBuilder
             foreach ($order as $o) {
                 $value = explode(' ', $o);
                 if (!empty($value) && 2 === count($value) && Validate::isOrderBy($value[0]) && Validate::isOrderWay($value[1])) {
-                    $goodOrder[] = ' `'.bqSQL($value[0]).'` '.$value[1];
+                    $goodOrder[] = ' `' . bqSQL($value[0]) . '` ' . $value[1];
                 }
             }
 
             if (count($goodOrder) > 0) {
-                $sql[] = 'ORDER BY '.implode(', ', $goodOrder).PHP_EOL;
+                $sql[] = 'ORDER BY ' . implode(', ', $goodOrder) . PHP_EOL;
             }
         }
 
         // LIMIT
         if ($limit) {
-            $sql[] = 'LIMIT '.$limit.PHP_EOL;
+            $sql[] = 'LIMIT ' . $limit . PHP_EOL;
         }
 
-        $this->lastCompiledSql = implode(' '.PHP_EOL, $sql).';';
+        $this->lastCompiledSql = implode(' ' . PHP_EOL, $sql) . ';';
 
         return $this->lastCompiledSql;
     }

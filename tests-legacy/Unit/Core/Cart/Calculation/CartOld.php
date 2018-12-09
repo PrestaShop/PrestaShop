@@ -43,19 +43,19 @@ class CartOld extends Cart
     /**
      * This function returns the total cart amount.
      *
-     * @param bool $with_taxes With or without taxes
-     * @param int $type Total type enum
-     *                  - Cart::ONLY_PRODUCTS
-     *                  - Cart::ONLY_DISCOUNTS
-     *                  - Cart::BOTH
-     *                  - Cart::BOTH_WITHOUT_SHIPPING
-     *                  - Cart::ONLY_SHIPPING
-     *                  - Cart::ONLY_WRAPPING
-     *                  - Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
-     *                  - Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
+     * @param bool  $with_taxes With or without taxes
+     * @param int   $type       Total type enum
+     *                          - Cart::ONLY_PRODUCTS
+     *                          - Cart::ONLY_DISCOUNTS
+     *                          - Cart::BOTH
+     *                          - Cart::BOTH_WITHOUT_SHIPPING
+     *                          - Cart::ONLY_SHIPPING
+     *                          - Cart::ONLY_WRAPPING
+     *                          - Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
+     *                          - Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
      * @param array $products
-     * @param int $id_carrier
-     * @param bool $use_cache Allow using cache of the method CartRule::getContextualValue
+     * @param int   $id_carrier
+     * @param bool  $use_cache  Allow using cache of the method CartRule::getContextualValue
      *
      * @return float Order total
      */

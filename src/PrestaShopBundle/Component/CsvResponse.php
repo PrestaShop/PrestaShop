@@ -82,7 +82,7 @@ class CsvResponse extends StreamedResponse
             $this->setCallback(array($this, 'processData'));
         }
 
-        $this->setFileName('export_'.date('Y-m-d_His').'.csv');
+        $this->setFileName('export_' . date('Y-m-d_His') . '.csv');
         $this->headers->set('Content-Type', 'text/csv; charset=utf-8');
     }
 

@@ -357,7 +357,7 @@ class DispatcherCore
             case self::FC_FRONT:
                 $controllers = Dispatcher::getControllers(array(
                     _PS_FRONT_CONTROLLER_DIR_,
-                    _PS_OVERRIDE_DIR_.'controllers/front/',
+                    _PS_OVERRIDE_DIR_ . 'controllers/front/',
                 ));
                 $controllers['index'] = 'IndexController';
                 if (isset($controllers['auth'])) {
@@ -385,16 +385,16 @@ class DispatcherCore
                 $module = Module::getInstanceByName($module_name);
                 $controller_class = 'PageNotFoundController';
                 if (Validate::isLoadedObject($module) && $module->active) {
-                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_."$module_name/controllers/front/");
+                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . "$module_name/controllers/front/");
                     if (isset($controllers[strtolower($this->controller)])) {
-                        include_once _PS_MODULE_DIR_."$module_name/controllers/front/{$this->controller}.php";
+                        include_once _PS_MODULE_DIR_ . "$module_name/controllers/front/{$this->controller}.php";
                         if (file_exists(
-                            _PS_OVERRIDE_DIR_."modules/$module_name/controllers/front/{$this->controller}.php"
+                            _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php"
                         )) {
-                            include_once _PS_OVERRIDE_DIR_."modules/$module_name/controllers/front/{$this->controller}.php";
-                            $controller_class = $module_name.$this->controller.'ModuleFrontControllerOverride';
+                            include_once _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php";
+                            $controller_class = $module_name . $this->controller . 'ModuleFrontControllerOverride';
                         } else {
-                            $controller_class = $module_name.$this->controller.'ModuleFrontController';
+                            $controller_class = $module_name . $this->controller . 'ModuleFrontController';
                         }
                     }
                 }
@@ -414,7 +414,7 @@ class DispatcherCore
                     && Context::getContext()->employee->isLoggedBack()
                 ) {
                     Tools::redirectAdmin(
-                        "index.php?controller={$this->controller}&token=".Tools::getAdminTokenLite($this->controller)
+                        "index.php?controller={$this->controller}&token=" . Tools::getAdminTokenLite($this->controller)
                     );
                 }
 
@@ -422,26 +422,26 @@ class DispatcherCore
                 $retrocompatibility_admin_tab = null;
 
                 if ($tab->module) {
-                    if (file_exists(_PS_MODULE_DIR_."{$tab->module}/{$tab->class_name}.php")) {
-                        $retrocompatibility_admin_tab = _PS_MODULE_DIR_."{$tab->module}/{$tab->class_name}.php";
+                    if (file_exists(_PS_MODULE_DIR_ . "{$tab->module}/{$tab->class_name}.php")) {
+                        $retrocompatibility_admin_tab = _PS_MODULE_DIR_ . "{$tab->module}/{$tab->class_name}.php";
                     } else {
-                        $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_.$tab->module.'/controllers/admin/');
+                        $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . $tab->module . '/controllers/admin/');
                         if (!isset($controllers[strtolower($this->controller)])) {
                             $this->controller = $this->controller_not_found;
                             $controller_class = 'AdminNotFoundController';
                         } else {
                             $controller_name = $controllers[strtolower($this->controller)];
                             // Controllers in modules can be named AdminXXX.php or AdminXXXController.php
-                            include_once _PS_MODULE_DIR_."{$tab->module}/controllers/admin/$controller_name.php";
+                            include_once _PS_MODULE_DIR_ . "{$tab->module}/controllers/admin/$controller_name.php";
                             if (file_exists(
-                                _PS_OVERRIDE_DIR_."modules/{$tab->module}/controllers/admin/$controller_name.php"
+                                _PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/$controller_name.php"
                             )) {
-                                include_once _PS_OVERRIDE_DIR_."modules/{$tab->module}/controllers/admin/$controller_name.php";
-                                $controller_class = $controller_name.(
+                                include_once _PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/$controller_name.php";
+                                $controller_class = $controller_name . (
                                     strpos($controller_name, 'Controller') ? 'Override' : 'ControllerOverride'
                                 );
                             } else {
-                                $controller_class = $controller_name.(
+                                $controller_class = $controller_name . (
                                     strpos($controller_name, 'Controller') ? '' : 'Controller'
                                 );
                             }
@@ -455,9 +455,9 @@ class DispatcherCore
                 } else {
                     $controllers = Dispatcher::getControllers(
                         array(
-                            _PS_ADMIN_DIR_.'/tabs/',
+                            _PS_ADMIN_DIR_ . '/tabs/',
                             _PS_ADMIN_CONTROLLER_DIR_,
-                            _PS_OVERRIDE_DIR_.'controllers/admin/',
+                            _PS_OVERRIDE_DIR_ . 'controllers/admin/',
                         )
                     );
                     if (!isset($controllers[strtolower($this->controller)])) {
@@ -479,15 +479,15 @@ class DispatcherCore
                         'is_module' => 0,
                     );
 
-                    if (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controller_class.'.php')) {
-                        $retrocompatibility_admin_tab = _PS_ADMIN_DIR_.'/tabs/'.$controller_class.'.php';
+                    if (file_exists(_PS_ADMIN_DIR_ . '/tabs/' . $controller_class . '.php')) {
+                        $retrocompatibility_admin_tab = _PS_ADMIN_DIR_ . '/tabs/' . $controller_class . '.php';
                     }
                 }
 
                 // @retrocompatibility with admin/tabs/ old system
                 if ($retrocompatibility_admin_tab) {
                     include_once $retrocompatibility_admin_tab;
-                    include_once _PS_ADMIN_DIR_.'/functions.php';
+                    include_once _PS_ADMIN_DIR_ . '/functions.php';
                     runAdminTab($this->controller, !empty($_REQUEST['ajaxMode']));
 
                     return;
@@ -555,7 +555,7 @@ class DispatcherCore
         // Remove the shop base URI part from the request URI
         if (null !== $shop) {
             $requestUri = preg_replace(
-                '#^'.preg_quote($shop->getBaseURI(), '#').'#i',
+                '#^' . preg_quote($shop->getBaseURI(), '#') . '#i',
                 '/',
                 $requestUri
             );
@@ -632,8 +632,8 @@ class DispatcherCore
         if ($this->use_routes) {
             // Load routes from meta table
             $sql = 'SELECT m.page, ml.url_rewrite, ml.id_lang
-					FROM `'._DB_PREFIX_.'meta` m
-					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta'.Shop::addSqlRestrictionOnLang('ml', (int) $id_shop).')
+					FROM `' . _DB_PREFIX_ . 'meta` m
+					LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON (m.id_meta = ml.id_meta' . Shop::addSqlRestrictionOnLang('ml', (int) $id_shop) . ')
 					ORDER BY LENGTH(ml.url_rewrite) DESC';
             if ($results = Db::getInstance()->executeS($sql)) {
                 foreach ($results as $row) {
@@ -662,7 +662,7 @@ class DispatcherCore
 
             // Load custom routes
             foreach ($this->default_routes as $route_id => $route_data) {
-                if ($custom_route = Configuration::get('PS_ROUTE_'.$route_id, null, null, $id_shop)) {
+                if ($custom_route = Configuration::get('PS_ROUTE_' . $route_id, null, null, $id_shop)) {
                     if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
                         $language_ids[] = (int) $context->language->id;
                     }
@@ -698,8 +698,8 @@ class DispatcherCore
         if ($keywords) {
             $transform_keywords = array();
             preg_match_all(
-                '#\\\{(([^{}]*)\\\:)?('.
-                implode('|', array_keys($keywords)).')(\\\:([^{}]*))?\\\}#',
+                '#\\\{(([^{}]*)\\\:)?(' .
+                implode('|', array_keys($keywords)) . ')(\\\:([^{}]*))?\\\}#',
                 $regexp,
                 $m
             );
@@ -715,23 +715,23 @@ class DispatcherCore
 
                 $prepend_regexp = $append_regexp = '';
                 if ($prepend || $append) {
-                    $prepend_regexp = '('.$prepend;
-                    $append_regexp = $append.')?';
+                    $prepend_regexp = '(' . $prepend;
+                    $append_regexp = $append . ')?';
                 }
 
                 if (isset($keywords[$keyword]['param'])) {
                     $regexp = str_replace(
                         $m[0][$i],
-                        $prepend_regexp.
-                        '(?P<'.$keywords[$keyword]['param'].'>'.$keywords[$keyword]['regexp'].')'.
+                        $prepend_regexp .
+                        '(?P<' . $keywords[$keyword]['param'] . '>' . $keywords[$keyword]['regexp'] . ')' .
                         $append_regexp,
                         $regexp
                     );
                 } else {
                     $regexp = str_replace(
                         $m[0][$i],
-                        $prepend_regexp.
-                        '('.$keywords[$keyword]['regexp'].')'.
+                        $prepend_regexp .
+                        '(' . $keywords[$keyword]['regexp'] . ')' .
                         $append_regexp,
                         $regexp
                     );
@@ -740,7 +740,7 @@ class DispatcherCore
             $keywords = $transform_keywords;
         }
 
-        $regexp = '#^/'.$regexp.'$#u';
+        $regexp = '#^/' . $regexp . '$#u';
 
         return array(
             'rule' => $rule,
@@ -838,7 +838,7 @@ class DispatcherCore
             return false;
         }
 
-        return preg_match('#\{([^{}]*:)?'.preg_quote($keyword, '#').
+        return preg_match('#\{([^{}]*:)?' . preg_quote($keyword, '#') .
             '(:[^{}]*)?\}#', $this->routes[$id_shop][$id_lang][$route_id]['rule']);
     }
 
@@ -859,7 +859,7 @@ class DispatcherCore
         }
 
         foreach ($this->default_routes[$route_id]['keywords'] as $keyword => $data) {
-            if (isset($data['param']) && !preg_match('#\{([^{}]*:)?'.$keyword.'(:[^{}]*)?\}#', $rule)) {
+            if (isset($data['param']) && !preg_match('#\{([^{}]*:)?' . $keyword . '(:[^{}]*)?\}#', $rule)) {
                 $errors[] = $keyword;
             }
         }
@@ -904,8 +904,8 @@ class DispatcherCore
             $query = http_build_query($params, '', '&');
             $index_link = $this->use_routes ? '' : 'index.php';
 
-            return ('index' == $route_id) ? $index_link.(($query) ? '?'.$query : '') :
-                (('' == trim($route_id)) ? '' : 'index.php?controller='.$route_id).(($query) ? '&'.$query : '').$anchor;
+            return ('index' == $route_id) ? $index_link . (($query) ? '?' . $query : '') :
+                (('' == trim($route_id)) ? '' : 'index.php?controller=' . $route_id) . (($query) ? '&' . $query : '') . $anchor;
         }
         $route = $this->routes[$id_shop][$id_lang][$route_id];
         // Check required fields
@@ -916,8 +916,8 @@ class DispatcherCore
             }
 
             if (!array_key_exists($key, $params)) {
-                throw new PrestaShopException('Dispatcher::createUrl() miss required parameter "'.
-                    $key.'" for route "'.$route_id.'"');
+                throw new PrestaShopException('Dispatcher::createUrl() miss required parameter "' .
+                    $key . '" for route "' . $route_id . '"');
             }
             if (isset($this->default_routes[$route_id])) {
                 $query_params[$this->default_routes[$route_id]['keywords'][$key]['param']] = $params[$key];
@@ -936,16 +936,16 @@ class DispatcherCore
                     }
                 } else {
                     if ($params[$key]) {
-                        $replace = $route['keywords'][$key]['prepend'].$params[$key].$route['keywords'][$key]['append'];
+                        $replace = $route['keywords'][$key]['prepend'] . $params[$key] . $route['keywords'][$key]['append'];
                     } else {
                         $replace = '';
                     }
-                    $url = preg_replace('#\{([^{}]*:)?'.$key.'(:[^{}]*)?\}#', $replace, $url);
+                    $url = preg_replace('#\{([^{}]*:)?' . $key . '(:[^{}]*)?\}#', $replace, $url);
                 }
             }
             $url = preg_replace('#\{([^{}]*:)?[a-z0-9_]+?(:[^{}]*)?\}#', '', $url);
             if (count($add_param)) {
-                $url .= '?'.http_build_query($add_param, '', '&');
+                $url .= '?' . http_build_query($add_param, '', '&');
             }
         } else {
             // Build a classic url index.php?controller=foo&...
@@ -961,12 +961,12 @@ class DispatcherCore
             }
             $query = http_build_query(array_merge($add_params, $query_params), '', '&');
             if ($this->multilang_activated) {
-                $query .= (!empty($query) ? '&' : '').'id_lang='.(int) $id_lang;
+                $query .= (!empty($query) ? '&' : '') . 'id_lang=' . (int) $id_lang;
             }
-            $url = 'index.php?'.$query;
+            $url = 'index.php?' . $query;
         }
 
-        return $url.$anchor;
+        return $url . $anchor;
     }
 
     /**
@@ -1129,7 +1129,7 @@ class DispatcherCore
         }
 
         foreach ($modules as $mod) {
-            foreach (Dispatcher::getControllersInDirectory(_PS_MODULE_DIR_.$mod->name.'/controllers/') as $controller) {
+            foreach (Dispatcher::getControllersInDirectory(_PS_MODULE_DIR_ . $mod->name . '/controllers/') as $controller) {
                 if ('admin' == $type) {
                     if (false !== strpos($controller, 'Admin')) {
                         $modules_controllers[$mod->name][] = $controller;
@@ -1164,9 +1164,9 @@ class DispatcherCore
         $controller_files = scandir($dir, SCANDIR_SORT_NONE);
         foreach ($controller_files as $controller_filename) {
             if ('.' != $controller_filename[0]) {
-                if (!strpos($controller_filename, '.php') && is_dir($dir.$controller_filename)) {
+                if (!strpos($controller_filename, '.php') && is_dir($dir . $controller_filename)) {
                     $controllers += Dispatcher::getControllersInDirectory(
-                        $dir.$controller_filename.DIRECTORY_SEPARATOR
+                        $dir . $controller_filename . DIRECTORY_SEPARATOR
                     );
                 } elseif ('index.php' != $controller_filename) {
                     $key = str_replace(array('controller.php', '.php'), '', strtolower($controller_filename));

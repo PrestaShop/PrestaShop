@@ -39,11 +39,11 @@ class AttachmentControllerCore extends FrontController
         }
 
         header('Content-Transfer-Encoding: binary');
-        header('Content-Type: '.$a->mime);
-        header('Content-Length: '.filesize(_PS_DOWNLOAD_DIR_.$a->file));
-        header('Content-Disposition: attachment; filename="'.utf8_decode($a->file_name).'"');
+        header('Content-Type: ' . $a->mime);
+        header('Content-Length: ' . filesize(_PS_DOWNLOAD_DIR_ . $a->file));
+        header('Content-Disposition: attachment; filename="' . utf8_decode($a->file_name) . '"');
         @set_time_limit(0);
-        $this->readfileChunked(_PS_DOWNLOAD_DIR_.$a->file);
+        $this->readfileChunked(_PS_DOWNLOAD_DIR_ . $a->file);
         exit;
     }
 

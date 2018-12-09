@@ -32,7 +32,6 @@ class CarrierTest extends AbstractCarrierTest
 {
     /**
      * @dataProvider shippingFeesProviderCarrier1
-     *
      * @param mixed $productData
      * @param mixed $expectedTotal
      * @param mixed $expectedShippingFees
@@ -63,7 +62,6 @@ class CarrierTest extends AbstractCarrierTest
 
     /**
      * @dataProvider shippingFeesProviderCarrier2
-     *
      * @param mixed $productData
      * @param mixed $expectedTotal
      * @param mixed $expectedShippingFees

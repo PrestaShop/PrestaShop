@@ -194,7 +194,7 @@ EOF;
                  {% block content %}{% endblock %}
                  {% block content_footer %}{% endblock %}
                  {% block sidebar_right %}{% endblock %}',
-                'var currentIndex = \''.$this->context->getAdminLink($controllerName).'\';',
+                'var currentIndex = \'' . $this->context->getAdminLink($controllerName) . '\';',
                 '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>',
                 '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>',
             ),
@@ -228,7 +228,7 @@ EOF;
     {
         $embedUrl = str_replace(array('watch?v=', 'youtu.be/'), array('embed/', 'youtube.com/embed/'), $watchUrl);
 
-        return '<iframe width="560" height="315" src="'.$embedUrl.
+        return '<iframe width="560" height="315" src="' . $embedUrl .
             '" frameborder="0" allowfullscreen class="youtube-iframe m-x-auto"></iframe>';
     }
 

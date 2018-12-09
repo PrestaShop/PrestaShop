@@ -69,13 +69,13 @@ class Repository
         }
 
         $this->contextLanguage = $contextLanguage;
-        $this->cldrCacheFolder = _PS_TRANSLATIONS_DIR_.'cldr';
+        $this->cldrCacheFolder = _PS_TRANSLATIONS_DIR_ . 'cldr';
 
         $this->oldUmask = umask(0000);
 
         if (!is_dir($this->cldrCacheFolder)) {
             try {
-                mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas', 0777, true);
+                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', 0777, true);
             } catch (\Exception $e) {
                 throw new \Exception('Cldr cache folder can\'t be created');
             }
@@ -107,7 +107,7 @@ class Repository
         $locale = explode('-', $locale);
         if (3 == count($locale)) {
             $this->locale = $locale[0];
-            $this->region = $locale[1].'-'.strtoupper($locale[2]);
+            $this->region = $locale[1] . '-' . strtoupper($locale[2]);
         } else {
             $this->locale = $locale[0];
             if (!empty($locale[1])) {
@@ -128,7 +128,7 @@ class Repository
      */
     public function getCulture()
     {
-        return $this->locale.($this->region ? '-'.$this->region : '');
+        return $this->locale . ($this->region ? '-' . $this->region : '');
     }
 
     /**
@@ -177,7 +177,7 @@ class Repository
             }
             $currency = $this->getCurrency($currency_code);
             $datas[] = array(
-                'name' => ucfirst($currency['name']).' ('.$currency_code.')',
+                'name' => ucfirst($currency['name']) . ' (' . $currency_code . ')',
                 'code' => $currency_code,
                 'iso_code' => $currency['iso_code'],
             );

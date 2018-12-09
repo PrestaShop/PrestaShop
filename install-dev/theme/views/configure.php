@@ -49,49 +49,35 @@ var default_iso = '<?php echo $this->session->shop_country; ?>';
 		<label for="infosActivity" class="aligned"><?php echo $this->translator->trans('Main activity', array(), 'Install'); ?></label>
 		<div class="contentinput">
 			<select id="infosActivity" name="shop_activity" class="chosen">
-				<option value="0" style="font-weight: bold" <?php if (!$this->session->shop_activity) {
-     ?>selected="selected"<?php
- } ?>><?php echo $this->translator->trans('Please choose your main activity', array(), 'Install'); ?></option>
-				<?php foreach ($this->list_activities as $i => $activity) {
-     ?>
-					<option value="<?php echo $i; ?>" <?php if (isset($this->session->shop_activity) && $this->session->shop_activity == $i) {
-         ?>selected="selected"<?php
-     } ?>><?php echo $activity; ?></option>
-				<?php
- } ?>
+				<option value="0" style="font-weight: bold" <?php if (!$this->session->shop_activity) { ?>selected="selected"<?php } ?>><?php echo $this->translator->trans('Please choose your main activity', array(), 'Install'); ?></option>
+				<?php foreach ($this->list_activities as $i => $activity) { ?>
+					<option value="<?php echo $i; ?>" <?php if (isset($this->session->shop_activity) && $this->session->shop_activity == $i) { ?>selected="selected"<?php } ?>><?php echo $activity; ?></option>
+				<?php } ?>
 				<option value="0"><?php echo $this->translator->trans('Other activity...', array(), 'Install'); ?></option>
 			</select>
 		</div>
 		<p class="userInfos aligned"><?php echo $this->translator->trans('Help us learn more about your store so we can offer you optimal guidance and the best features for your business!', array(), 'Install'); ?></p>
 	</div>
 
-	<?php if (_PS_MODE_DEV_) {
-     ?>
+	<?php if (_PS_MODE_DEV_) { ?>
 	<!-- Install type (with fixtures or not) -->
 	<div class="field clearfix">
 		<label class="aligned"><?php echo $this->translator->trans('Install demo products', array(), 'Install'); ?></label>
 		<div class="contentinput">
 			<label>
-				<input value="full" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ('full' == $this->install_type) {
-         ?>checked="checked"<?php
-     } ?> autocomplete="off" />
+				<input value="full" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ('full' == $this->install_type) { ?>checked="checked"<?php } ?> autocomplete="off" />
 				<?php echo $this->translator->trans('Yes', array(), 'Install'); ?>
 			</label>
 			<label>
-				<input value="lite" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ('lite' == $this->install_type) {
-         ?>checked="checked"<?php
-     } ?> autocomplete="off" />
+				<input value="lite" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ('lite' == $this->install_type) { ?>checked="checked"<?php } ?> autocomplete="off" />
 				<?php echo $this->translator->trans('No', array(), 'Install'); ?>
 			</label>
 		</div>
 		<p class="userInfos aligned"><?php echo $this->translator->trans('Demo products are a good way to learn how to use PrestaShop. You should install them if you are not familiar with it.', array(), 'Install'); ?></p>
 	</div>
-	<?php
- } else {
-     ?>
+	<?php } else { ?>
 		<input value="full" name="db_mode" type="hidden" />
-	<?php
- } ?>
+	<?php } ?>
 
 	<!-- Country list -->
 	<div class="field clearfix">
@@ -99,13 +85,9 @@ var default_iso = '<?php echo $this->session->shop_country; ?>';
 		<div class="contentinput">
 			<select name="shop_country" id="infosCountry" class="chosen">
 				<option value="0" style="font-weight: bold"><?php echo $this->translator->trans('Select your country', array(), 'Install'); ?></option>
-				<?php foreach ($this->list_countries as $country) {
-     ?>
-					<option value="<?php echo (isset($country['iso'])) ? $country['iso'] : ''; ?>" <?php if ($this->session->shop_country && isset($country['iso']) && $this->session->shop_country === $country['iso']) {
-         ?>selected="selected"<?php
-     } ?>><?php echo $country['name']; ?></option>
-				<?php
- } ?>
+				<?php foreach ($this->list_countries as $country) { ?>
+					<option value="<?php echo (isset($country['iso'])) ? $country['iso'] : ''; ?>" <?php if ($this->session->shop_country && isset($country['iso']) && $this->session->shop_country === $country['iso']) { ?>selected="selected"<?php } ?>><?php echo $country['name']; ?></option>
+				<?php } ?>
 			</select>
 			<sup class="required">*</sup>
 		</div>
@@ -120,13 +102,9 @@ var default_iso = '<?php echo $this->session->shop_country; ?>';
 		<div class="contentinput">
 			<select name="shop_timezone" id="infosTimezone" class="chosen no-chosen">
 				<option value="0" style="font-weight: bold"><?php echo $this->translator->trans('Select your timezone', array(), 'Install'); ?></option>
-				<?php foreach ($this->getTimezones() as $timezone) {
-     ?>
-					<option value="<?php echo $timezone; ?>" <?php if ($this->session->shop_timezone == $timezone) {
-         ?>selected="selected"<?php
-     } ?>><?php echo $timezone; ?></option>
-				<?php
- } ?>
+				<?php foreach ($this->getTimezones() as $timezone) { ?>
+					<option value="<?php echo $timezone; ?>" <?php if ($this->session->shop_timezone == $timezone) { ?>selected="selected"<?php } ?>><?php echo $timezone; ?></option>
+				<?php } ?>
 			</select>
 			<sup class="required">*</sup>
 		</div>
@@ -188,15 +166,11 @@ var default_iso = '<?php echo $this->session->shop_country; ?>';
 			<input autocomplete="off" type="password" class="text required" id="infosPassword" name="admin_password" value="<?php echo htmlspecialchars($this->session->admin_password); ?>" />
 			<sup class="required">*</sup>
 		</div>
-		<?php if ($this->displayError('admin_password')) {
-     ?>
+		<?php if ($this->displayError('admin_password')) { ?>
 			<?php echo $this->displayError('admin_password'); ?>
-		<?php
- } else {
-     ?>
+		<?php } else { ?>
 			<p class="userInfos aligned"><?php echo $this->translator->trans('Must be at least 8 characters', array(), 'Install'); ?></p>
-		<?php
- } ?>
+		<?php } ?>
 	</div>
 
 	<!-- Admin password confirm -->

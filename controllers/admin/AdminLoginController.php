@@ -32,9 +32,9 @@ class AdminLoginControllerCore extends AdminController
         $this->errors = array();
         $this->display_header = false;
         $this->display_footer = false;
-        $this->layout = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme
-            .DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'login'
-            .DIRECTORY_SEPARATOR.'layout.tpl';
+        $this->layout = _PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $this->bo_theme
+            . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'login'
+            . DIRECTORY_SEPARATOR . 'layout.tpl';
 
         if (!headers_sent()) {
             header('Login: true');
@@ -45,10 +45,10 @@ class AdminLoginControllerCore extends AdminController
     {
         $this->addJquery();
         $this->addjqueryPlugin('validate');
-        $this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/public/theme.css', 'all', 0);
-        $this->addJS(_PS_JS_DIR_.'vendor/spin.js');
-        $this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
+        $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js');
+        $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/theme.css', 'all', 0);
+        $this->addJS(_PS_JS_DIR_ . 'vendor/spin.js');
+        $this->addJS(_PS_JS_DIR_ . 'vendor/ladda.js');
         Media::addJsDef(array('img_dir' => _PS_IMG_));
         Media::addJsDefL('one_error', $this->trans('There is one error.', array(), 'Admin.Notifications.Error'));
         Media::addJsDefL('more_errors', $this->trans('There are several errors.', array(), 'Admin.Notifications.Error'));
@@ -56,7 +56,7 @@ class AdminLoginControllerCore extends AdminController
         Hook::exec('actionAdminLoginControllerSetMedia');
 
         // Specific Admin Theme
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
+        $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/overrides.css', 'all', PHP_INT_MAX);
     }
 
     public function initContent()
@@ -71,36 +71,36 @@ class AdminLoginControllerCore extends AdminController
             if ($clientIsMaintenanceOrLocal) {
                 $warningSslMessage = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', array(), 'Admin.Login.Notification');
             } else {
-                $url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
+                $url = 'https://' . Tools::safeOutput(Tools::getServerName()) . Tools::safeOutput($_SERVER['REQUEST_URI']);
                 $warningSslMessage = $this->trans(
                     'SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]',
-                    array('[1]' => '<a href="'.$url.'">', '[/1]' => '</a>'),
+                    array('[1]' => '<a href="' . $url . '">', '[/1]' => '</a>'),
                     'Admin.Login.Notification'
                 );
             }
             $this->context->smarty->assign('warningSslMessage', $warningSslMessage);
         }
 
-        if (file_exists(_PS_ADMIN_DIR_.'/../install')) {
+        if (file_exists(_PS_ADMIN_DIR_ . '/../install')) {
             $this->context->smarty->assign('wrong_install_name', true);
         }
 
-        if ('admin' == basename(_PS_ADMIN_DIR_) && file_exists(_PS_ADMIN_DIR_.'/../admin/')) {
-            $rand = 'admin'.sprintf('%03d', rand(0, 999)).Tools::strtolower(Tools::passwdGen(6)).'/';
-            if (@rename(_PS_ADMIN_DIR_.'/../admin/', _PS_ADMIN_DIR_.'/../'.$rand)) {
-                Tools::redirectAdmin('../'.$rand);
+        if ('admin' == basename(_PS_ADMIN_DIR_) && file_exists(_PS_ADMIN_DIR_ . '/../admin/')) {
+            $rand = 'admin' . sprintf('%03d', rand(0, 999)) . Tools::strtolower(Tools::passwdGen(6)) . '/';
+            if (@rename(_PS_ADMIN_DIR_ . '/../admin/', _PS_ADMIN_DIR_ . '/../' . $rand)) {
+                Tools::redirectAdmin('../' . $rand);
             } else {
                 $this->context->smarty->assign(array(
                     'wrong_folder_name' => true,
                 ));
             }
         } else {
-            $rand = basename(_PS_ADMIN_DIR_).'/';
+            $rand = basename(_PS_ADMIN_DIR_) . '/';
         }
 
         $this->context->smarty->assign(array(
             'randomNb' => $rand,
-            'adminUrl' => Tools::getCurrentUrlProtocolPrefix().Tools::getShopDomain().__PS_BASE_URI__.$rand,
+            'adminUrl' => Tools::getCurrentUrlProtocolPrefix() . Tools::getShopDomain() . __PS_BASE_URI__ . $rand,
         ));
 
         // Redirect to admin panel
@@ -254,7 +254,7 @@ class AdminLoginControllerCore extends AdminController
             $employee = new Employee();
             if (!$employee->getByEmail($email) || !$employee) {
                 $this->errors[] = $this->trans('This account does not exist.', array(), 'Admin.Login.Notification');
-            } elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0) {
+            } elseif ((strtotime($employee->last_passwd_gen . '+' . Configuration::get('PS_PASSWD_TIME_BACK') . ' minutes') - time()) > 0) {
                 $this->errors[] = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', array('%interval%' => Configuration::get('PS_PASSWD_TIME_BACK')), 'Admin.Login.Notification');
             }
         }
@@ -270,7 +270,7 @@ class AdminLoginControllerCore extends AdminController
                 '{email}' => $employee->email,
                 '{lastname}' => $employee->lastname,
                 '{firstname}' => $employee->firstname,
-                '{url}' => $admin_url.'&id_employee='.(int) $employee->id.'&reset_token='.$employee->reset_password_token,
+                '{url}' => $admin_url . '&id_employee=' . (int) $employee->id . '&reset_token=' . $employee->reset_password_token,
             );
 
             $employeeLanguage = new Language((int) $employee->id_lang);
@@ -287,7 +287,7 @@ class AdminLoginControllerCore extends AdminController
                     ),
                     $params,
                     $employee->email,
-                    $employee->firstname.' '.$employee->lastname
+                    $employee->firstname . ' ' . $employee->lastname
                 )
             ) {
                 // Update employee only if the mail can be sent
@@ -331,7 +331,7 @@ class AdminLoginControllerCore extends AdminController
             $employee = new Employee();
             if (!$employee->getByEmail($reset_email) || !$employee || $employee->id != $id_employee) { // check matching employee id with its email
                 $this->errors[] = $this->trans('This account does not exist.', array(), 'Admin.Login.Notification');
-            } elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0) {
+            } elseif ((strtotime($employee->last_passwd_gen . '+' . Configuration::get('PS_PASSWD_TIME_BACK') . ' minutes') - time()) > 0) {
                 $this->errors[] = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', array('%interval%' => Configuration::get('PS_PASSWD_TIME_BACK')), 'Admin.Login.Notification');
             } elseif ($employee->getValidResetPasswordToken() !== $reset_token_value) {
                 // To update password, we must have the temporary reset token that matches.
@@ -363,7 +363,7 @@ class AdminLoginControllerCore extends AdminController
                     ),
                     $params,
                     $employee->email,
-                    $employee->firstname.' '.$employee->lastname
+                    $employee->firstname . ' ' . $employee->lastname
                 )
             ) {
                 // Update employee only if the mail can be sent

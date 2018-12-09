@@ -224,11 +224,11 @@ class CategoryDataProvider
         if (empty($query)) {
             $query = '';
         } else {
-            $query = "AND cl.name LIKE '%".pSQL($query)."%'";
+            $query = "AND cl.name LIKE '%" . pSQL($query) . "%'";
         }
 
         if (is_int($limit)) {
-            $limit = 'LIMIT '.$limit;
+            $limit = 'LIMIT ' . $limit;
         } else {
             $limit = '';
         }

@@ -62,7 +62,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function getTranslationDomains()
     {
         return array(
-            '^'.$this->getDomain(),
+            '^' . $this->getDomain(),
         );
     }
 
@@ -72,7 +72,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function getFilters()
     {
         return array(
-            '#^'.$this->getDomain().'#',
+            '#^' . $this->getDomain() . '#',
         );
     }
 
@@ -112,6 +112,6 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory.DIRECTORY_SEPARATOR.'default';
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 }

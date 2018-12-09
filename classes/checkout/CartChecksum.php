@@ -56,14 +56,14 @@ class CartChecksumCore implements ChecksumInterface
         $products = $cart->getProducts($refresh = true);
         foreach ($products as $product) {
             $uniq_id .= $product['id_shop']
-                .$this->subseparator
-                .$product['id_product']
-                .$this->subseparator
-                .$product['id_product_attribute']
-                .$this->subseparator
-                .$product['cart_quantity']
-                .$this->subseparator
-                .$product['total_wt'];
+                . $this->subseparator
+                . $product['id_product']
+                . $this->subseparator
+                . $product['id_product_attribute']
+                . $this->subseparator
+                . $product['cart_quantity']
+                . $this->subseparator
+                . $product['total_wt'];
             $uniq_id .= $this->separator;
         }
 

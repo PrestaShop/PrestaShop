@@ -31,9 +31,8 @@ class File
     /**
      * Recursivly copy a directory.
      *
-     * @var the source path (eg. /home/dir/to/copy)
+     * @var the  source path (eg. /home/dir/to/copy)
      * @var $dst the destination path (eg. /home/)
-     *
      * @param mixed $src
      * @param mixed $dst
      */
@@ -59,7 +58,6 @@ class File
      * Recursivly delete a directory.
      *
      * @var the directory to delete path (eg. /home/dir/to/delete)
-     *
      * @param mixed $dir
      */
     public static function recurseDelete($dir)

@@ -55,7 +55,7 @@ class DataLangCore
             $this->translator = new Translator(
                 $this->locale,
                 null,
-                _PS_CACHE_DIR_.'/translations/'.$this->locale,
+                _PS_CACHE_DIR_ . '/translations/' . $this->locale,
                 false
             );
 
@@ -63,8 +63,8 @@ class DataLangCore
 
             $finder = \Symfony\Component\Finder\Finder::create()
                 ->files()
-                ->name('*.'.$this->locale.'.xlf')
-                ->in((_PS_ROOT_DIR_.'/app/Resources/translations'))
+                ->name('*.' . $this->locale . '.xlf')
+                ->in((_PS_ROOT_DIR_ . '/app/Resources/translations'))
             ;
 
             foreach ($finder as $file) {

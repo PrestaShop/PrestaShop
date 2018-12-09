@@ -65,8 +65,8 @@ class QuickAccessCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'quick_access` qa
-		LEFT JOIN `'._DB_PREFIX_.'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = '.(int) $idLang.')
+		FROM `' . _DB_PREFIX_ . 'quick_access` qa
+		LEFT JOIN `' . _DB_PREFIX_ . 'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = ' . (int) $idLang . ')
 		ORDER BY `name` ASC');
     }
 
@@ -107,14 +107,14 @@ class QuickAccessCore extends ObjectModel
                     }
                     $quick_access[$index]['target'] = $admin_tab[1];
 
-                    $tokenString = $admin_tab[1].(int) Tab::getIdFromClassName($admin_tab[1]).$idEmployee;
+                    $tokenString = $admin_tab[1] . (int) Tab::getIdFromClassName($admin_tab[1]) . $idEmployee;
                 }
-                $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.$quick['link'];
+                $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
             }
 
             if (false === strpos($quickAccess[$index]['link'], 'token')) {
                 $separator = strpos($quickAccess[$index]['link'], '?') ? '&' : '?';
-                $quickAccess[$index]['link'] .= $separator.'token='.Tools::getAdminToken($tokenString);
+                $quickAccess[$index]['link'] .= $separator . 'token=' . Tools::getAdminToken($tokenString);
             }
         }
 
@@ -131,7 +131,7 @@ class QuickAccessCore extends ObjectModel
     public function toggleNewWindow()
     {
         if (!array_key_exists('new_window', $this)) {
-            throw new PrestaShopException('property "new_window" is missing in object '.get_class($this));
+            throw new PrestaShopException('property "new_window" is missing in object ' . get_class($this));
         }
 
         $this->setFieldsToUpdate(array('new_window' => true));

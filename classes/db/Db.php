@@ -277,8 +277,8 @@ abstract class DbCore
         }
 
         // Add here your slave(s) server(s) in this file
-        if (file_exists(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php')) {
-            self::$_servers = array_merge(self::$_servers, require(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'));
+        if (file_exists(_PS_ROOT_DIR_ . '/config/db_slave_server.inc.php')) {
+            self::$_servers = array_merge(self::$_servers, require(_PS_ROOT_DIR_ . '/config/db_slave_server.inc.php'));
         }
 
         self::$_slave_servers_loaded = true;
@@ -409,7 +409,7 @@ abstract class DbCore
         }
 
         if ($add_prefix) {
-            $table = _DB_PREFIX_.$table;
+            $table = _DB_PREFIX_ . $table;
         }
 
         if (Db::INSERT == $type) {
@@ -447,7 +447,7 @@ abstract class DbCore
                         throw new PrestaShopDatabaseException('On duplicate key cannot be used on insert with more than 1 VALUE group');
                     }
                 } else {
-                    $keys[] = '`'.bqSQL($key).'`';
+                    $keys[] = '`' . bqSQL($key) . '`';
                 }
 
                 if (!is_array($value)) {
@@ -460,17 +460,17 @@ abstract class DbCore
                 }
 
                 if (Db::ON_DUPLICATE_KEY == $type) {
-                    $duplicate_key_stringified .= '`'.bqSQL($key).'` = '.$string_value.',';
+                    $duplicate_key_stringified .= '`' . bqSQL($key) . '` = ' . $string_value . ',';
                 }
             }
             $first_loop = false;
-            $values_stringified[] = '('.implode(', ', $values).')';
+            $values_stringified[] = '(' . implode(', ', $values) . ')';
         }
         $keys_stringified = implode(', ', $keys);
 
-        $sql = $insert_keyword.' INTO `'.$table.'` ('.$keys_stringified.') VALUES '.implode(', ', $values_stringified);
+        $sql = $insert_keyword . ' INTO `' . $table . '` (' . $keys_stringified . ') VALUES ' . implode(', ', $values_stringified);
         if (Db::ON_DUPLICATE_KEY == $type) {
-            $sql .= ' ON DUPLICATE KEY UPDATE '.substr($duplicate_key_stringified, 0, -1);
+            $sql .= ' ON DUPLICATE KEY UPDATE ' . substr($duplicate_key_stringified, 0, -1);
         }
 
         return (bool) $this->q($sql, $use_cache);
@@ -496,27 +496,27 @@ abstract class DbCore
         }
 
         if ($add_prefix) {
-            $table = _DB_PREFIX_.$table;
+            $table = _DB_PREFIX_ . $table;
         }
 
-        $sql = 'UPDATE `'.bqSQL($table).'` SET ';
+        $sql = 'UPDATE `' . bqSQL($table) . '` SET ';
         foreach ($data as $key => $value) {
             if (!is_array($value)) {
                 $value = array('type' => 'text', 'value' => $value);
             }
             if ('sql' == $value['type']) {
-                $sql .= '`'.bqSQL($key)."` = {$value['value']},";
+                $sql .= '`' . bqSQL($key) . "` = {$value['value']},";
             } else {
-                $sql .= ($null_values && ('' === $value['value'] || null === $value['value'])) ? '`'.bqSQL($key).'` = NULL,' : '`'.bqSQL($key)."` = '{$value['value']}',";
+                $sql .= ($null_values && ('' === $value['value'] || null === $value['value'])) ? '`' . bqSQL($key) . '` = NULL,' : '`' . bqSQL($key) . "` = '{$value['value']}',";
             }
         }
 
         $sql = rtrim($sql, ',');
         if ($where) {
-            $sql .= ' WHERE '.$where;
+            $sql .= ' WHERE ' . $where;
         }
         if ($limit) {
-            $sql .= ' LIMIT '.(int) $limit;
+            $sql .= ' LIMIT ' . (int) $limit;
         }
 
         return (bool) $this->q($sql, $use_cache);
@@ -536,11 +536,11 @@ abstract class DbCore
     public function delete($table, $where = '', $limit = 0, $use_cache = true, $add_prefix = true)
     {
         if ($add_prefix) {
-            $table = _DB_PREFIX_.$table;
+            $table = _DB_PREFIX_ . $table;
         }
 
         $this->result = false;
-        $sql = 'DELETE FROM `'.bqSQL($table).'`'.($where ? ' WHERE '.$where : '').($limit ? ' LIMIT '.(int) $limit : '');
+        $sql = 'DELETE FROM `' . bqSQL($table) . '`' . ($where ? ' WHERE ' . $where : '') . ($limit ? ' LIMIT ' . (int) $limit : '');
         $res = $this->query($sql);
         if ($use_cache && $this->is_cache_enabled) {
             Cache::getInstance()->deleteQuery($sql);
@@ -646,7 +646,7 @@ abstract class DbCore
             $sql = $sql->build();
         }
 
-        $sql = rtrim($sql, " \t\n\r\0\x0B;").' LIMIT 1';
+        $sql = rtrim($sql, " \t\n\r\0\x0B;") . ' LIMIT 1';
         $this->result = false;
         $this->last_query = $sql;
 
@@ -711,12 +711,12 @@ abstract class DbCore
         if (!$this->last_cached && $this->result) {
             $nrows = $this->_numRows($this->result);
             if ($this->is_cache_enabled) {
-                Cache::getInstance()->set($this->last_query_hash.'_nrows', $nrows);
+                Cache::getInstance()->set($this->last_query_hash . '_nrows', $nrows);
             }
 
             return $nrows;
         } elseif ($this->is_cache_enabled && $this->last_cached) {
-            return Cache::getInstance()->get($this->last_query_hash.'_nrows');
+            return Cache::getInstance()->get($this->last_query_hash . '_nrows');
         }
     }
 
@@ -763,10 +763,10 @@ abstract class DbCore
         $errno = $this->getNumberError();
         if ($webservice_call && $errno) {
             $dbg = debug_backtrace();
-            WebserviceRequest::getInstance()->setError(500, '[SQL Error] '.$this->getMsgError().'. From '.(isset($dbg[3]['class']) ? $dbg[3]['class'] : '').'->'.$dbg[3]['function'].'() Query was : '.$sql, 97);
+            WebserviceRequest::getInstance()->setError(500, '[SQL Error] ' . $this->getMsgError() . '. From ' . (isset($dbg[3]['class']) ? $dbg[3]['class'] : '') . '->' . $dbg[3]['function'] . '() Query was : ' . $sql, 97);
         } elseif (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS')) {
             if ($sql) {
-                throw new PrestaShopDatabaseException($this->getMsgError().'<br /><br /><pre>'.$sql.'</pre>');
+                throw new PrestaShopDatabaseException($this->getMsgError() . '<br /><br /><pre>' . $sql . '</pre>');
             }
 
             throw new PrestaShopDatabaseException($this->getMsgError());

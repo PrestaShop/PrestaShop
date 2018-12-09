@@ -64,14 +64,14 @@ class FormatterTest extends TestCase
      * When asking the number formatter to format the said number, following the specification rules
      * Then the expected result should be retrieved.
      *
-     * @param array $localeParams
-     *                            The locale params
+     * @param array                        $localeParams
+     *                                                          The locale params
      * @param NumberSpecificationInterface $numberSpecification
      *                                                          The number specification
-     * @param float|int|string $number
-     *                                 The number to be formatted
-     * @param string $expectedResult
-     *                               The formatted number
+     * @param float|int|string             $number
+     *                                                          The number to be formatted
+     * @param string                       $expectedResult
+     *                                                          The formatted number
      *
      * @dataProvider provideValidNumberFormatSpecs
      *

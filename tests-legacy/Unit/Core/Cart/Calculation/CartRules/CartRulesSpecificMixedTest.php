@@ -39,7 +39,6 @@ class CartRulesSpecificMixedTest extends AbstractCartCalculationTest
 {
     /**
      * @dataProvider cartWithMultipleProductSpecificCartRulesMixedProvider
-     *
      * @param mixed $productData
      * @param mixed $expectedTotal
      * @param mixed $cartRuleData
@@ -58,7 +57,6 @@ class CartRulesSpecificMixedTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartWithMultipleProductOutOfStockSpecificCartRulesMixedProvider
-     *
      * @param mixed $productData
      * @param mixed $expectedTotal
      * @param mixed $cartRuleData
