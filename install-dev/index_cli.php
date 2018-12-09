@@ -37,7 +37,7 @@ if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSI
 $_SERVER['REQUEST_URI'] = '/install/index_cli.php';
 require_once dirname(__FILE__).'/init.php';
 require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
-require_once _PS_INSTALL_PATH_.'classes/Datas.php';
+require_once _PS_INSTALL_PATH_ . 'classes/Datas.php';
 ini_set('memory_limit', '256M');
 try {
     require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';
