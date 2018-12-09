@@ -232,10 +232,10 @@ class AdminSearchControllerCore extends AdminController
         $key_match = array();
         $result = Db::getInstance()->executeS(
             '
-		SELECT class_name, name
-		FROM ' . _DB_PREFIX_ . 'tab t
-		INNER JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $this->context->employee->id_lang . ')
-		WHERE active = 1' . (defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
+        SELECT class_name, name
+        FROM ' . _DB_PREFIX_ . 'tab t
+        INNER JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $this->context->employee->id_lang . ')
+        WHERE active = 1' . (defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
         );
         foreach ($result as $row) {
             if (Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {

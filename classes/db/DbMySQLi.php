@@ -414,9 +414,9 @@ class DbMySQLiCore extends Db
         }
 
         $result = $link->query('
-		CREATE TABLE `' . $prefix . 'test` (
-			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE=' . $engine);
+        CREATE TABLE `' . $prefix . 'test` (
+            `test` tinyint(1) unsigned NOT NULL
+        ) ENGINE=' . $engine);
 
         if (!$result) {
             return $link->error;

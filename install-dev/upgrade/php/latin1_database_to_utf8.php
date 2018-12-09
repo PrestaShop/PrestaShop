@@ -99,11 +99,11 @@ function latin1_database_to_utf8()
         if (false === $latin1Datas) {
             $warningExist = true;
             $requests .= '
-				<request result="fail">
-					<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-					<sqlMsgError><![CDATA['.htmlentities(Db::getInstance()->getMsgError()).']]></sqlMsgError>
-					<sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
-				</request>'."\n";
+                <request result="fail">
+                    <sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
+                    <sqlMsgError><![CDATA['.htmlentities(Db::getInstance()->getMsgError()).']]></sqlMsgError>
+                    <sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
+                </request>'."\n";
         }
 
         if (Db::getInstance()->numRows()) {
@@ -124,11 +124,11 @@ function latin1_database_to_utf8()
                 if (!Db::getInstance()->execute($query)) {
                     $warningExist = true;
                     $requests .= '
-						<request result="fail">
-							<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-							<sqlMsgError><![CDATA['.htmlentities(Db::getInstance()->getMsgError()).']]></sqlMsgError>
-							<sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
-						</request>'."\n";
+                        <request result="fail">
+                            <sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
+                            <sqlMsgError><![CDATA['.htmlentities(Db::getInstance()->getMsgError()).']]></sqlMsgError>
+                            <sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
+                        </request>'."\n";
                 }
             }
         }

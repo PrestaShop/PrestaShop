@@ -632,9 +632,9 @@ class DispatcherCore
         if ($this->use_routes) {
             // Load routes from meta table
             $sql = 'SELECT m.page, ml.url_rewrite, ml.id_lang
-					FROM `' . _DB_PREFIX_ . 'meta` m
-					LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON (m.id_meta = ml.id_meta' . Shop::addSqlRestrictionOnLang('ml', (int) $id_shop) . ')
-					ORDER BY LENGTH(ml.url_rewrite) DESC';
+                    FROM `' . _DB_PREFIX_ . 'meta` m
+                    LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON (m.id_meta = ml.id_meta' . Shop::addSqlRestrictionOnLang('ml', (int) $id_shop) . ')
+                    ORDER BY LENGTH(ml.url_rewrite) DESC';
             if ($results = Db::getInstance()->executeS($sql)) {
                 foreach ($results as $row) {
                     if ($row['url_rewrite']) {

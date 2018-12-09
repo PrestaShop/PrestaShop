@@ -142,18 +142,18 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = '
-			c.`name` AS country_name,
-			s.`name` AS state_name,
-			CONCAT_WS(" - ", a.`zipcode_from`, a.`zipcode_to`) AS zipcode,
-			t.rate';
+            c.`name` AS country_name,
+            s.`name` AS state_name,
+            CONCAT_WS(" - ", a.`zipcode_from`, a.`zipcode_to`) AS zipcode,
+            t.rate';
 
         $this->_join = '
-			LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` c
-				ON (a.`id_country` = c.`id_country` AND id_lang = ' . (int) $this->context->language->id . ')
-			LEFT JOIN `' . _DB_PREFIX_ . 'state` s
-				ON (a.`id_state` = s.`id_state`)
-			LEFT JOIN `' . _DB_PREFIX_ . 'tax` t
-				ON (a.`id_tax` = t.`id_tax`)';
+            LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` c
+                ON (a.`id_country` = c.`id_country` AND id_lang = ' . (int) $this->context->language->id . ')
+            LEFT JOIN `' . _DB_PREFIX_ . 'state` s
+                ON (a.`id_state` = s.`id_state`)
+            LEFT JOIN `' . _DB_PREFIX_ . 'tax` t
+                ON (a.`id_tax` = t.`id_tax`)';
         $this->_where = 'AND `id_tax_rules_group` = ' . (int) $id_group;
         $this->_use_found_rows = false;
 

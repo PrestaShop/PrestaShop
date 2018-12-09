@@ -556,8 +556,8 @@ class AdminFeaturesControllerCore extends AdminController
             // Adding last position to the feature if not exist
             if ($id_feature <= 0) {
                 $sql = 'SELECT `position`+1
-						FROM `' . _DB_PREFIX_ . 'feature`
-						ORDER BY position DESC';
+                        FROM `' . _DB_PREFIX_ . 'feature`
+                        ORDER BY position DESC';
                 // set the position of the new feature in $_POST for postProcess() method
                 $_POST['position'] = Db::getInstance()->getValue($sql);
             }

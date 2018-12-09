@@ -101,8 +101,8 @@ class OrderPaymentCore extends ObjectModel
             'OrderPayment',
             Db::getInstance()->executeS(
                 'SELECT *
-			    FROM `' . _DB_PREFIX_ . 'order_payment`
-			    WHERE `order_reference` = \'' . pSQL($order_reference) . '\''
+                FROM `' . _DB_PREFIX_ . 'order_payment`
+                WHERE `order_reference` = \'' . pSQL($order_reference) . '\''
             )
         );
     }
@@ -142,10 +142,10 @@ class OrderPaymentCore extends ObjectModel
     public function getOrderInvoice($id_order)
     {
         $res = Db::getInstance()->getValue('
-		SELECT id_order_invoice
-		FROM `' . _DB_PREFIX_ . 'order_invoice_payment`
-		WHERE id_order_payment = ' . (int) $this->id . '
-		AND id_order = ' . (int) $id_order);
+        SELECT id_order_invoice
+        FROM `' . _DB_PREFIX_ . 'order_invoice_payment`
+        WHERE id_order_payment = ' . (int) $this->id . '
+        AND id_order = ' . (int) $id_order);
 
         if (!$res) {
             return false;

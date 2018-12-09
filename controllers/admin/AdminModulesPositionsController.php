@@ -346,10 +346,10 @@ class AdminModulesPositionsControllerCore extends AdminController
             }
 
             $sql = 'SELECT id_module
-					FROM ' . _DB_PREFIX_ . 'hook_module
-					WHERE id_module = ' . $id_module . '
-						AND id_hook = ' . $id_hook . '
-						AND id_shop IN(' . implode(', ', Shop::getContextListShopID()) . ')';
+                    FROM ' . _DB_PREFIX_ . 'hook_module
+                    WHERE id_module = ' . $id_module . '
+                        AND id_hook = ' . $id_hook . '
+                        AND id_shop IN(' . implode(', ', Shop::getContextListShopID()) . ')';
             if (!Db::getInstance()->getValue($sql)) {
                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
             }
@@ -433,8 +433,8 @@ class AdminModulesPositionsControllerCore extends AdminController
         }
 
         $content .= '<p>
-					<select size="25" id="em_list_' . $shop_id . '" multiple="multiple">
-					<option disabled="disabled">'
+                    <select size="25" id="em_list_' . $shop_id . '" multiple="multiple">
+                    <option disabled="disabled">'
                     . $this->trans('___________ CUSTOM ___________', array(), 'Admin.Design.Feature')
                     . '</option>';
 
@@ -466,7 +466,7 @@ class AdminModulesPositionsControllerCore extends AdminController
         }
 
         $content .= '</select>
-					</p>';
+                    </p>';
 
         return $content;
     }

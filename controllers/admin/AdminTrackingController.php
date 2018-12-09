@@ -106,11 +106,11 @@ class AdminTrackingControllerCore extends AdminController
 
         $this->_join = Shop::addSqlAssociation('category', 'a');
         $this->_filter = ' AND NOT EXISTS (
-			SELECT 1
-			FROM `' . _DB_PREFIX_ . 'category_product` cp
-			WHERE a.`id_category` = cp.id_category
-		)
-		AND a.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY');
+            SELECT 1
+            FROM `' . _DB_PREFIX_ . 'category_product` cp
+            WHERE a.`id_category` = cp.id_category
+        )
+        AND a.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY');
         $this->toolbar_title = $this->trans('List of empty categories:', array(), 'Admin.Catalog.Feature');
 
         return $this->renderList();
@@ -147,15 +147,15 @@ class AdminTrackingControllerCore extends AdminController
 
         $this->_join = Shop::addSqlAssociation('product', 'a');
         $this->_filter = 'AND EXISTS (
-			SELECT 1
-			FROM `' . _DB_PREFIX_ . 'product` p
-			' . Product::sqlStock('p') . '
-			WHERE a.id_product = p.id_product AND EXISTS (
-				SELECT 1
-				FROM `' . _DB_PREFIX_ . 'product_attribute` WHERE `' . _DB_PREFIX_ . 'product_attribute`.id_product = p.id_product
-			)
-			AND IFNULL(stock.quantity, 0) <= 0
-		)';
+            SELECT 1
+            FROM `' . _DB_PREFIX_ . 'product` p
+            ' . Product::sqlStock('p') . '
+            WHERE a.id_product = p.id_product AND EXISTS (
+                SELECT 1
+                FROM `' . _DB_PREFIX_ . 'product_attribute` WHERE `' . _DB_PREFIX_ . 'product_attribute`.id_product = p.id_product
+            )
+            AND IFNULL(stock.quantity, 0) <= 0
+        )';
         $this->toolbar_title = $this->trans('List of products with combinations but without available quantities for sale:', array(), 'Admin.Catalog.Feature');
 
         return $this->renderList();
@@ -191,15 +191,15 @@ class AdminTrackingControllerCore extends AdminController
 
         $this->_join = Shop::addSqlAssociation('product', 'a');
         $this->_filter = 'AND EXISTS (
-			SELECT 1
-			FROM `' . _DB_PREFIX_ . 'product` p
-			' . Product::sqlStock('p') . '
-			WHERE a.id_product = p.id_product AND NOT EXISTS (
-				SELECT 1
-				FROM `' . _DB_PREFIX_ . 'product_attribute` pa WHERE pa.id_product = p.id_product
-			)
-			AND IFNULL(stock.quantity, 0) <= 0
-		)';
+            SELECT 1
+            FROM `' . _DB_PREFIX_ . 'product` p
+            ' . Product::sqlStock('p') . '
+            WHERE a.id_product = p.id_product AND NOT EXISTS (
+                SELECT 1
+                FROM `' . _DB_PREFIX_ . 'product_attribute` pa WHERE pa.id_product = p.id_product
+            )
+            AND IFNULL(stock.quantity, 0) <= 0
+        )';
 
         $this->toolbar_title = $this->trans('List of products without combinations and without available quantities for sale:', array(), 'Admin.Catalog.Feature');
 
@@ -260,10 +260,10 @@ class AdminTrackingControllerCore extends AdminController
         $this->clearFilters();
         $this->_join = Shop::addSqlAssociation('product', 'a');
         $this->_filter = 'AND NOT EXISTS (
-			SELECT 1
-			FROM `' . _DB_PREFIX_ . 'image` img
-			WHERE a.id_product = img.id_product
-		)';
+            SELECT 1
+            FROM `' . _DB_PREFIX_ . 'image` img
+            WHERE a.id_product = img.id_product
+        )';
         $this->toolbar_title = $this->trans('List of products without images', array(), 'Admin.Catalog.Feature');
 
         return $this->renderList(true);
@@ -293,14 +293,14 @@ class AdminTrackingControllerCore extends AdminController
         $defaultLanguage = new Language(Configuration::get('PS_LANG_DEFAULT'));
         $this->_join = Shop::addSqlAssociation('product', 'a');
         $this->_filter = 'AND EXISTS (
-			SELECT 1
-			FROM `' . _DB_PREFIX_ . 'product_lang` pl
-			WHERE
-			a.id_product = pl.id_product AND
-			pl.id_lang = ' . (int) $defaultLanguage->id . ' AND
-			pl.id_shop = ' . (int) $this->context->shop->id . ' AND
-			description = "" AND description_short = ""
-		)';
+            SELECT 1
+            FROM `' . _DB_PREFIX_ . 'product_lang` pl
+            WHERE
+            a.id_product = pl.id_product AND
+            pl.id_lang = ' . (int) $defaultLanguage->id . ' AND
+            pl.id_shop = ' . (int) $this->context->shop->id . ' AND
+            description = "" AND description_short = ""
+        )';
         $this->toolbar_title = $this->trans('List of products without description', array(), 'Admin.Catalog.Feature');
 
         return $this->renderList(true);
@@ -329,10 +329,10 @@ class AdminTrackingControllerCore extends AdminController
         $this->clearFilters();
         $this->_join = Shop::addSqlAssociation('product', 'a');
         $this->_filter = ' AND a.price = "0.000000" AND a.wholesale_price = "0.000000" AND NOT EXISTS (
-			SELECT 1
-			FROM `' . _DB_PREFIX_ . 'specific_price` sp
-			WHERE a.id_product = sp.id_product
-		)';
+            SELECT 1
+            FROM `' . _DB_PREFIX_ . 'specific_price` sp
+            WHERE a.id_product = sp.id_product
+        )';
         $this->toolbar_title = $this->trans('List of products without price', array(), 'Admin.Catalog.Feature');
 
         return $this->renderList();
