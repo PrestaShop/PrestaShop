@@ -106,10 +106,9 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
      * Might be a file edit, cache update, DB insert/update...
      *
      * @param LocaleData $data The LocaleData object to be written
-     *
      * @param mixed $localeCode The LocaleData object identifier
      *
-     * @throws DataLayerException When write fails                           
+     * @throws DataLayerException When write fails
      */
     protected function doWrite($localeCode, $data)
     {

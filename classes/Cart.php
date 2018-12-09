@@ -186,7 +186,7 @@ class CartCore extends ObjectModel
     /**
      * CartCore constructor.
      *
-     * @param null|int $id Cart ID null = new Cart                   
+     * @param null|int $id Cart ID null = new Cart
      * @param null|int $idLang Language ID null = Language ID of current Context
      */
     public function __construct($id = null, $idLang = null)
@@ -4143,14 +4143,14 @@ class CartCore extends ObjectModel
 
     /**
      * Add customer's text.
-     * 
+     *
      * @param int $id_product Product ID
      * @param int $index
      * @param int $type
      * @param string $textValue
      *
      * @todo: Improve this PHPDoc comment
-     * 
+     *
      * @param mixed $id_product
      * @param mixed $index
      * @param mixed $type

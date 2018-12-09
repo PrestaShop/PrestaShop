@@ -64,7 +64,7 @@ abstract class AbstractDataLayer
     /**
      * Is this data layer writable ?
      *
-     * @return bool True if writable. False if read-only layer.             
+     * @return bool True if writable. False if read-only layer.
      */
     public function isWritable()
     {
@@ -74,12 +74,12 @@ abstract class AbstractDataLayer
     /**
      * Read a data object, by identifier.
      * Lower layer might be called if nothing found in current layer
-     *                  
+     *
      * @param mixed $id The data object identifier
      *
      * @throws DataLayerException
      *
-     * @return null|mixed A data object. Null if not found.                   
+     * @return null|mixed A data object. Null if not found.
      */
     public function read($id)
     {
@@ -112,8 +112,8 @@ abstract class AbstractDataLayer
      * @throws DataLayerException When write fails
      *
      * @return mixed
-     * The data object to be written by the upper data layer
-     * (each layer might hydrate/update the data object for upper layers)
+     *               The data object to be written by the upper data layer
+     *               (each layer might hydrate/update the data object for upper layers)
      */
     public function write($id, $data)
     {
@@ -153,7 +153,7 @@ abstract class AbstractDataLayer
      *
      * @throws DataLayerException When write fails
      *
-     * @return mixed The data object to be written by the upper data layer              
+     * @return mixed The data object to be written by the upper data layer
      */
     protected function propagateWrite($id, $data)
     {
@@ -173,7 +173,6 @@ abstract class AbstractDataLayer
      * @param mixed $data Data object received from lower layers
      *
      * @throws DataLayerException When write failed
-     *
      */
     protected function saveReadPropagationResult($id, $data)
     {
@@ -269,7 +268,7 @@ abstract class AbstractDataLayer
      * @param mixed $id The data object identifier
      * @param mixed $data The data object to be written
      *
-     * @throws DataLayerException When write fails                            
+     * @throws DataLayerException When write fails
      */
     abstract protected function doWrite($id, $data);
 }

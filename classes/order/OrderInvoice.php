@@ -163,7 +163,7 @@ class OrderInvoiceCore extends ObjectModel
 
     /**
      * Get order products.
-     * 
+     *
      * @param mixed $products
      * @param mixed $selected_products
      * @param mixed $selected_qty
