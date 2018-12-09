@@ -213,8 +213,6 @@ function migrate_orders()
  * - round is always 2
  * - no call to Configuration class.
  *
- *
- *
  * @param mixed $val
  */
 function mo_ps_round($val)

@@ -671,8 +671,6 @@ class ToolsCore
     /**
      * Set cookie currency from POST or default currency.
      *
-     *
-     *
      * @param mixed $cookie
      *
      * @return Currency object
@@ -1129,7 +1127,6 @@ class ToolsCore
 
     /**
      * Display an error with detailed object.
-     *
      *
      * @param bool $kill
      * @param mixed $object
@@ -3575,9 +3572,9 @@ exit;
     }
 
     /**
-     * @params string $path Path to scan
-     * @params string $ext Extention to filter files
-     * @params string $dir Add this to prefix output for example /path/dir/*
+     * @param string $path Path to scan
+     * @param string $ext Extention to filter files
+     * @param string $dir Add this to prefix output for example /path/dir/*
      *
      * @since 1.5.0
      *
@@ -3974,8 +3971,6 @@ exit;
     /**
      * Allows to display the category description without HTML tags and slashes.
      *
-     *
-     *
      * @param mixed $description
      *
      * @return string
@@ -4058,7 +4053,7 @@ exit;
      * Check if a constant was already defined.
      *
      * @param string $constant Constant name
-     * @param mixed $value
+     * @param mixed $value Default value to set if not defined
      */
     public static function safeDefine($constant, $value)
     {

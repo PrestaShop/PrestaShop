@@ -298,7 +298,7 @@ class HelperCore
      *
      * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
      *
-     * @param string $class
+     * @param mixed $string term or expression in english
      * @param bool $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
      * @param bool $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
      * @param mixed $string

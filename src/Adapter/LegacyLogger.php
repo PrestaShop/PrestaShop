@@ -131,7 +131,6 @@ class LegacyLogger implements LoggerInterface
     /**
      * Logs with an arbitrary level.
      *
-     *
      * @param string $message
      * @param array $context
      * @param mixed $level

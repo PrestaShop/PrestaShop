@@ -31,9 +31,7 @@ interface FilterInterface
     /**
      * Performs a filter on the subject object.
      *
-     *
-     *
-     * @param mixed $subject
+     * @param mixed $subject subject to filter
      *
      * @return mixed filtered subject
      */

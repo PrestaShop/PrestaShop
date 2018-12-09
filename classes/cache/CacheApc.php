@@ -150,8 +150,7 @@ class CacheApcCore extends Cache
      *
      * @param string $key Cache Key
      * @param int $ttl Time to live in the cache
-     *                 0 = unlimited
-     * @param mixed $value
+     * @param mixed $value 0 = unlimited
      *
      * @return bool Whether the data was successfully stored
      */

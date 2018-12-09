@@ -118,11 +118,8 @@ class Theme implements AddonInterface
     }
 
     /**
-     * Execute up files. You can update configuration, update sql schema.
-     * No file modification.
-     *
-     *
-     *
+     * Execute up files. You can update configuration, update sql schema. No file modification.
+     * 
      * @param mixed $version
      *
      * @return bool true for success

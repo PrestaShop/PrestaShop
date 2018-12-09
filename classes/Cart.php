@@ -186,10 +186,8 @@ class CartCore extends ObjectModel
     /**
      * CartCore constructor.
      *
-     * @param null|int $id Cart ID
-     *                     null = new Cart
-     * @param null|int $idLang Language ID
-     *                         null = Language ID of current Context
+     * @param null|int $id Cart ID null = new Cart                   
+     * @param null|int $idLang Language ID null = Language ID of current Context
      */
     public function __construct($id = null, $idLang = null)
     {
@@ -3050,9 +3048,6 @@ class CartCore extends ObjectModel
      * This method replace the delimiter by a sequence of '0'.
      * The size of this sequence is fixed by the first digit of the return
      *
-     *
-     *
-     *
      * @param mixed $string
      * @param mixed $delimiter
      *
@@ -4148,14 +4143,14 @@ class CartCore extends ObjectModel
 
     /**
      * Add customer's text.
-     *
-     * @params int $id_product Product ID
-     * @params int $index
-     * @params int $type
-     * @params string $textValue
+     * 
+     * @param int $id_product Product ID
+     * @param int $index
+     * @param int $type
+     * @param string $textValue
      *
      * @todo: Improve this PHPDoc comment
-     *
+     * 
      * @param mixed $id_product
      * @param mixed $index
      * @param mixed $type
@@ -4170,11 +4165,6 @@ class CartCore extends ObjectModel
 
     /**
      * Add customer's pictures.
-     *
-     *
-     *
-     *
-     *
      *
      * @param mixed $id_product
      * @param mixed $index

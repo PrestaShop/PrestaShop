@@ -3055,8 +3055,7 @@ class AdminOrdersControllerCore extends AdminController
     /**
      * This method allow to add image information on a package detail.
      *
-     * @param array &pack_item
-     * @param & $pack_item
+     * @param array $pack_item
      */
     protected function setProductImageInformations(&$pack_item)
     {

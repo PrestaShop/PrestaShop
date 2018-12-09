@@ -173,9 +173,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * Get the value associated with the $index from the lazyArray.
      *
-     *
-     *
-     *
      * @param mixed $index
      *
      * @throws RuntimeException
@@ -190,8 +187,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     /**
      * The properties are provided as an array. But callers checking the type of this class (is_object === true)
      * think they must use the object syntax.
-     *
-     *
      *
      * @param bool $force if set, allow override of an existing method
      * @param mixed $name
@@ -208,7 +203,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      * The properties are provided as an array. But callers checking the type of this class (is_object === true)
      * think they must use the object syntax.
      *
-     *
      * @param bool $force if set, allow unset of an existing method
      * @param mixed $name
      *
@@ -221,9 +215,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
 
     /**
      * Get the value associated with the $index from the lazyArray.
-     *
-     *
-     *
      *
      * @param mixed $index
      *
@@ -253,8 +244,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
 
     /**
      * Check if the index exists inside the lazyArray.
-     *
-     *
      *
      * @param mixed $index
      *

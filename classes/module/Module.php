@@ -967,9 +967,8 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Unregister module from hook.
      *
-     *
      * @param array $shop_list List of shop
-     * @param mixed $hook_id
+     * @param mixed $id_hook Hook id (can be a hook name since 1.5.0)
      *
      * @return bool result
      */

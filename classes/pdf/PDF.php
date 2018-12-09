@@ -145,9 +145,6 @@ class PDFCore
     /**
      * Get correct PDF template classes.
      *
-     *
-     *
-     *
      * @param mixed $object
      *
      * @throws PrestaShopException

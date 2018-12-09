@@ -1292,8 +1292,6 @@ class XmlLoader
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
      *
-     *
-     *
      * @param null|mixed $id_format
      * @param mixed $entity
      * @param mixed $primary

@@ -77,9 +77,8 @@ class LinkCore
     /**
      * Create a link to delete a product.
      *
-     *
      * @param int $idPicture ID of the picture to delete
-     * @param mixed $product
+     * @param mixed $product ID of the product OR a Product object
      *
      * @return string
      */
@@ -119,14 +118,13 @@ class LinkCore
     /**
      * Create a link to a product.
      *
-     *
      * @param string $alias
      * @param string $category
      * @param string $ean13
      * @param int $idLang
      * @param int $idShop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
      * @param int $ipa ID product attribute
-     * @param mixed $product
+     * @param mixed $product Product object (can be an ID product, but deprecated)
      * @param mixed $force_routes
      * @param mixed $relativeProtocol
      * @param mixed $addAnchor
@@ -574,7 +572,7 @@ class LinkCore
      * @param string $alias
      * @param int $idLang
      * @param null|mixed $idShop
-     * @param mixed $supplier
+     * @param mixed $supplier Supplier object (can be an ID supplier, but deprecated)
      * @param mixed $relativeProtocol
      *
      * @return string
@@ -623,12 +621,11 @@ class LinkCore
     /**
      * Create a link to a manufacturer.
      *
-     *
      * @param string $alias
      * @param int $idLang
      * @param null $idShop
      * @param bool $relativeProtocol
-     * @param mixed $manufacturer
+     * @param mixed $manufacturer Manufacturer object (can be an ID supplier, but deprecated)
      *
      * @return string
      */

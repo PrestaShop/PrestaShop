@@ -132,9 +132,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Returns true if the key is found in the collection.
      *
-     *
-     *
-     * @param mixed $key
+     * @param mixed $key the key, can be integer or string
      *
      * @return bool
      */
@@ -190,7 +188,6 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Add an Addon with a specified key in the collection.
      *
-     *
      * @param Addon $addon the specified addon
      * @param mixed $key
      */
@@ -215,9 +212,6 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * Remove an addon from the collection by key.
-     *
-     *
-     *
      *
      * @param mixed $key
      *

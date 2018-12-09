@@ -50,7 +50,7 @@ final class DoctrineQueryParser implements QueryParserInterface
     }
 
     /**
-     * @param mixed $value
+     * @param mixed $value the parameter value
      *
      * @throws UnsupportedParameterException
      *

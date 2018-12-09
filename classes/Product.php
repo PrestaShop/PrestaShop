@@ -817,10 +817,6 @@ class ProductCore extends ObjectModel
     /**
      * Get the default attribute for a product.
      *
-     *
-     *
-     *
-     *
      * @param mixed $id_product
      * @param mixed $minimum_quantity
      * @param mixed $reset
@@ -1099,9 +1095,7 @@ class ProductCore extends ObjectModel
     /**
      * addToCategories add this product to the category/ies if not exists.
      *
-     *
-     *
-     * @param mixed $categories
+     * @param mixed $categories id_category or array of id_category
      *
      * @return bool true if succeed
      */
@@ -1205,9 +1199,6 @@ class ProductCore extends ObjectModel
 
     /**
      * deleteCategory delete this product from the category $id_category.
-     *
-     *
-     *
      *
      * @param mixed $id_category
      * @param mixed $clean_positions
@@ -3043,8 +3034,6 @@ class ProductCore extends ObjectModel
     /**
      * getProductCategories return an array of categories which this product belongs to.
      *
-     *
-     *
      * @param mixed $id_product
      *
      * @return array of categories
@@ -3179,8 +3168,6 @@ class ProductCore extends ObjectModel
 
     /**
      * Get product cover image.
-     *
-     *
      *
      * @param mixed $id_product
      * @param null|Context $context
@@ -6161,8 +6148,6 @@ class ProductCore extends ObjectModel
     /**
      * Webservice setter : set virtual field position in category.
      *
-     *
-     *
      * @param mixed $position
      *
      * @return bool
@@ -6216,8 +6201,6 @@ class ProductCore extends ObjectModel
 
     /**
      * Webservice setter : set virtual field id_default_image in category.
-     *
-     *
      *
      * @param mixed $id_image
      *
@@ -6330,8 +6313,6 @@ class ProductCore extends ObjectModel
 
     /**
      * Checks if reference exists.
-     *
-     *
      *
      * @param mixed $reference
      *
@@ -7044,8 +7025,6 @@ class ProductCore extends ObjectModel
     /**
      * Gets a list of IDs from a list of IDs/Refs. The result will avoid duplicates, and checks if given IDs/Refs exists in DB.
      * Useful when a product list should be checked before a bulk operation on them (Only 1 query => performances).
-     *
-     *
      *
      * @param mixed $ids_or_refs
      *

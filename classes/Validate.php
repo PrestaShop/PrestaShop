@@ -1020,8 +1020,6 @@ class ValidateCore
     /**
      * Check if $data is a PrestaShop cookie object.
      *
-     *
-     *
      * @param mixed $data
      *
      * @return bool

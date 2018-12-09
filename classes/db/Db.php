@@ -117,8 +117,6 @@ abstract class DbCore
     /**
      * Get number of rows in a result.
      *
-     *
-     *
      * @param mixed $result
      *
      * @return int

@@ -72,14 +72,11 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
 
     /**
      * Actually read a LocaleData object into the current layer.
-     *
      * Data is read from passed cache adapter
      *
-     * @param string $localeCode
-     *                           The LocaleData object identifier
+     * @param string $localeCode The LocaleData object identifier
      *
-     * @return null|LocaleData
-     *                         The wanted LocaleData object (null if not found)
+     * @return null|LocaleData The wanted LocaleData object (null if not found)
      */
     protected function doRead($localeCode)
     {
@@ -106,18 +103,13 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
 
     /**
      * Actually write a LocaleData object into the current layer.
-     *
      * Might be a file edit, cache update, DB insert/update...
      *
+     * @param LocaleData $data The LocaleData object to be written
      *
-     *                          The LocaleData object identifier
+     * @param mixed $localeCode The LocaleData object identifier
      *
-     * @param LocaleData $data
-     *                         The LocaleData object to be written
-     * @param mixed $localeCode
-     *
-     * @throws DataLayerException
-     *                            When write fails
+     * @throws DataLayerException When write fails                           
      */
     protected function doWrite($localeCode, $data)
     {

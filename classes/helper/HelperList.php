@@ -384,8 +384,6 @@ class HelperListCore extends Helper
     /**
      * Display duplicate action link.
      *
-     *
-     *
      * @param null|mixed $name
      * @param mixed $token
      * @param mixed $id
@@ -439,8 +437,6 @@ class HelperListCore extends Helper
      *     fields_display: // attribute $fields_list of the admin controller
      *   }.
      *
-     *
-     *
      * @param null|mixed $name
      * @param mixed $token
      * @param mixed $id
@@ -473,8 +469,6 @@ class HelperListCore extends Helper
     /**
      * Display view action link.
      *
-     *
-     *
      * @param null|mixed $name
      * @param mixed $token
      * @param mixed $id
@@ -496,8 +490,6 @@ class HelperListCore extends Helper
 
     /**
      * Display edit action link.
-     *
-     *
      *
      * @param null|mixed $name
      * @param mixed $token
@@ -537,8 +529,6 @@ class HelperListCore extends Helper
 
     /**
      * Display delete action link.
-     *
-     *
      *
      * @param null|mixed $name
      * @param mixed $token
@@ -597,8 +587,6 @@ class HelperListCore extends Helper
 
     /**
      * Display default action link.
-     *
-     *
      *
      * @param null|mixed $name
      * @param mixed $token

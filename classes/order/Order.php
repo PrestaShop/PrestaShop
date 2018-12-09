@@ -845,8 +845,6 @@ class OrderCore extends ObjectModel
     /**
      * Get current order status name (eg. Awaiting payment, Delivered...).
      *
-     *
-     *
      * @param mixed $id_lang
      *
      * @return array Order status details
@@ -1056,8 +1054,6 @@ class OrderCore extends ObjectModel
     /**
      * Get product total without taxes.
      *
-     *
-     *
      * @param mixed $products
      *
      * @return Product total without taxes
@@ -1069,8 +1065,6 @@ class OrderCore extends ObjectModel
 
     /**
      * Get product total with taxes.
-     *
-     *
      *
      * @param mixed $products
      *
