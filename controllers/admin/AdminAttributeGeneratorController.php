@@ -48,14 +48,14 @@ class AdminAttributeGeneratorControllerCore extends AdminController
     public function setMedia($isNewTheme = false)
     {
         parent::setMedia($isNewTheme);
-        $this->addJS(_PS_JS_DIR_ . 'admin/attributes.js');
+        $this->addJS(_PS_JS_DIR_.'admin/attributes.js');
     }
 
     protected function addAttribute($attributes, $price = 0, $weight = 0)
     {
         foreach ($attributes as $attribute) {
-            $price += (float) preg_replace('/[^0-9.-]/', '', str_replace(',', '.', Tools::getValue('price_impact_' . (int) $attribute)));
-            $weight += (float) preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_' . (int) $attribute)));
+            $price += (float) preg_replace('/[^0-9.-]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int) $attribute)));
+            $weight += (float) preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_'.(int) $attribute)));
         }
         if ($this->product->id) {
             return array(
@@ -166,7 +166,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
                 SpecificPriceRule::enableAnyApplication();
                 SpecificPriceRule::applyAllRules(array((int) $this->product->id));
 
-                Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts') . '&id_product=' . (int) Tools::getValue('id_product') . '&updateproduct&key_tab=Combinations&conf=4');
+                Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int) Tools::getValue('id_product').'&updateproduct&key_tab=Combinations&conf=4');
             } else {
                 $this->errors[] = $this->trans('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.', array(), 'Admin.Catalog.Notification');
             }
@@ -178,15 +178,15 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         $attributes = array();
         foreach ($tab as $group) {
             foreach ($group as $attribute) {
-                $price = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_' . (int) $attribute)));
-                $weight = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_' . (int) $attribute)));
-                $attributes[] = '(' . (int) $id_product . ', ' . (int) $attribute . ', ' . (float) $price . ', ' . (float) $weight . ')';
+                $price = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int) $attribute)));
+                $weight = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_'.(int) $attribute)));
+                $attributes[] = '('.(int) $id_product.', '.(int) $attribute.', '.(float) $price.', '.(float) $weight.')';
             }
         }
 
         return Db::getInstance()->execute('
-		INSERT INTO `' . _DB_PREFIX_ . 'attribute_impact` (`id_product`, `id_attribute`, `price`, `weight`)
-		VALUES ' . implode(',', $attributes) . '
+		INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `price`, `weight`)
+		VALUES '.implode(',', $attributes).'
 		ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)');
     }
 
@@ -216,7 +216,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
         $this->page_header_toolbar_title = $this->trans('Attributes generator', array(), 'Admin.Catalog.Feature');
         $this->page_header_toolbar_btn['back'] = array(
-            'href' => $this->context->link->getAdminLink('AdminProducts') . '&id_product=' . (int) Tools::getValue('id_product') . '&updateproduct&key_tab=Combinations',
+            'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int) Tools::getValue('id_product').'&updateproduct&key_tab=Combinations',
             'desc' => $this->trans('Back to the product', array(), 'Admin.Catalog.Feature'),
         );
     }
@@ -233,8 +233,8 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         if (!Combination::isFeatureActive()) {
             $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
 
-            $url = '<a href="' . $adminPerformanceUrl . '#featuresDetachables">' .
-                    $this->trans('Performance', array(), 'Admin.Global') . '</a>';
+            $url = '<a href="'.$adminPerformanceUrl.'#featuresDetachables">'.
+                    $this->trans('Performance', array(), 'Admin.Global').'</a>';
             $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %link%.', array('%link%' => $url), 'Admin.Catalog.Notification'));
 
             return;
@@ -260,7 +260,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
             'combinations_size' => count($this->combinations),
             'product_name' => $this->product->name[$this->context->language->id],
             'product_reference' => $this->product->reference,
-            'url_generator' => self::$currentIndex . '&id_product=' . (int) Tools::getValue('id_product') . '&attributegenerator&token=' . Tools::getValue('token'),
+            'url_generator' => self::$currentIndex.'&id_product='.(int) Tools::getValue('id_product').'&attributegenerator&token='.Tools::getValue('token'),
             'attribute_groups' => $attribute_groups,
             'attribute_js' => $attribute_js,
             'toolbar_btn' => $this->toolbar_btn,

@@ -238,9 +238,9 @@ class CustomerCore extends ObjectModel
         $this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->id;
         $this->id_shop_group = ($this->id_shop_group) ? $this->id_shop_group : Context::getContext()->shop->id_shop_group;
         $this->id_lang = ($this->id_lang) ? $this->id_lang : Context::getContext()->language->id;
-        $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
+        $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years.'-'.(int) $this->months.'-'.(int) $this->days);
         $this->secure_key = md5(uniqid(rand(), true));
-        $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_FRONT') . 'minutes'));
+        $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_FRONT').'minutes'));
 
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
@@ -276,7 +276,7 @@ class CustomerCore extends ObjectModel
      */
     public function update($nullValues = false)
     {
-        $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
+        $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years.'-'.(int) $this->months.'-'.(int) $this->days);
 
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
@@ -320,23 +320,23 @@ class CustomerCore extends ObjectModel
                 $obj->delete();
             }
         }
-        Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customer_group` WHERE `id_customer` = ' . (int) $this->id);
-        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'message WHERE id_customer=' . (int) $this->id);
-        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'specific_price WHERE id_customer=' . (int) $this->id);
+        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int) $this->id);
+        Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'message WHERE id_customer='.(int) $this->id);
+        Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_customer='.(int) $this->id);
 
-        $carts = Db::getInstance()->executeS('SELECT id_cart FROM ' . _DB_PREFIX_ . 'cart WHERE id_customer=' . (int) $this->id);
+        $carts = Db::getInstance()->executeS('SELECT id_cart FROM '._DB_PREFIX_.'cart WHERE id_customer='.(int) $this->id);
         if ($carts) {
             foreach ($carts as $cart) {
-                Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart=' . (int) $cart['id_cart']);
-                Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'cart_product WHERE id_cart=' . (int) $cart['id_cart']);
+                Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart WHERE id_cart='.(int) $cart['id_cart']);
+                Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart_product WHERE id_cart='.(int) $cart['id_cart']);
             }
         }
 
-        $cts = Db::getInstance()->executeS('SELECT id_customer_thread FROM ' . _DB_PREFIX_ . 'customer_thread WHERE id_customer=' . (int) $this->id);
+        $cts = Db::getInstance()->executeS('SELECT id_customer_thread FROM '._DB_PREFIX_.'customer_thread WHERE id_customer='.(int) $this->id);
         if ($cts) {
             foreach ($cts as $ct) {
-                Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'customer_thread WHERE id_customer_thread=' . (int) $ct['id_customer_thread']);
-                Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'customer_message WHERE id_customer_thread=' . (int) $ct['id_customer_thread']);
+                Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customer_thread WHERE id_customer_thread='.(int) $ct['id_customer_thread']);
+                Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customer_message WHERE id_customer_thread='.(int) $ct['id_customer_thread']);
             }
         }
 
@@ -357,9 +357,9 @@ class CustomerCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
             SELECT `id_customer`, `email`, `firstname`, `lastname`
-            FROM `' . _DB_PREFIX_ . 'customer`
-            WHERE 1 ' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) .
-            ($onlyActive ? ' AND `active` = 1' : '') . '
+            FROM `'._DB_PREFIX_.'customer`
+            WHERE 1 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).
+            ($onlyActive ? ' AND `active` = 1' : '').'
             ORDER BY `id_customer` ASC'
         );
     }
@@ -384,11 +384,11 @@ class CustomerCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('c.`passwd`');
         $sql->from('customer', 'c');
-        $sql->where('c.`email` = \'' . pSQL($email) . '\'');
+        $sql->where('c.`email` = \''.pSQL($email).'\'');
         if (Shop::CONTEXT_SHOP == Shop::getContext() && $shopGroup['share_customer']) {
-            $sql->where('c.`id_shop_group` = ' . (int) Shop::getContextShopGroupID());
+            $sql->where('c.`id_shop_group` = '.(int) Shop::getContextShopGroupID());
         } else {
-            $sql->where('c.`id_shop` IN (' . implode(', ', Shop::getContextListShopID(Shop::SHARE_CUSTOMER)) . ')');
+            $sql->where('c.`id_shop` IN ('.implode(', ', Shop::getContextListShopID(Shop::SHARE_CUSTOMER)).')');
         }
 
         if ($ignoreGuest) {
@@ -413,11 +413,11 @@ class CustomerCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('c.*');
         $sql->from('customer', 'c');
-        $sql->where('c.`email` = \'' . pSQL($email) . '\'');
+        $sql->where('c.`email` = \''.pSQL($email).'\'');
         if (Shop::CONTEXT_SHOP == Shop::getContext() && $shopGroup['share_customer']) {
-            $sql->where('c.`id_shop_group` = ' . (int) Shop::getContextShopGroupID());
+            $sql->where('c.`id_shop_group` = '.(int) Shop::getContextShopGroupID());
         } else {
-            $sql->where('c.`id_shop` IN (' . implode(', ', Shop::getContextListShopID(Shop::SHARE_CUSTOMER)) . ')');
+            $sql->where('c.`id_shop` IN ('.implode(', ', Shop::getContextListShopID(Shop::SHARE_CUSTOMER)).')');
         }
         if ($ignoreGuest) {
             $sql->where('c.`is_guest` = 0');
@@ -455,9 +455,9 @@ class CustomerCore extends ObjectModel
     public static function getCustomersByEmail($email)
     {
         $sql = 'SELECT *
-                FROM `' . _DB_PREFIX_ . 'customer`
-                WHERE `email` = \'' . pSQL($email) . '\'
-                    ' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
+                FROM `'._DB_PREFIX_.'customer`
+                WHERE `email` = \''.pSQL($email).'\'
+                    '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
 
         return Db::getInstance()->executeS($sql);
     }
@@ -474,12 +474,12 @@ class CustomerCore extends ObjectModel
         if (!Validate::isUnsignedId($idCustomer)) {
             return true;
         }
-        $cacheId = 'Customer::isBanned_' . (int) $idCustomer;
+        $cacheId = 'Customer::isBanned_'.(int) $idCustomer;
         if (!Cache::isStored($cacheId)) {
             $result = (bool) !Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
             SELECT `id_customer`
-            FROM `' . _DB_PREFIX_ . 'customer`
-            WHERE `id_customer` = \'' . (int) $idCustomer . '\'
+            FROM `'._DB_PREFIX_.'customer`
+            WHERE `id_customer` = \''.(int) $idCustomer.'\'
             AND active = 1
             AND `deleted` = 0');
             Cache::store($cacheId, $result);
@@ -508,10 +508,10 @@ class CustomerCore extends ObjectModel
 
         $result = Db::getInstance()->getValue('
         SELECT `id_customer`
-        FROM `' . _DB_PREFIX_ . 'customer`
-        WHERE `email` = \'' . pSQL($email) . '\'
-        ' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
-        ' . ($ignoreGuest ? ' AND `is_guest` = 0' : ''));
+        FROM `'._DB_PREFIX_.'customer`
+        WHERE `email` = \''.pSQL($email).'\'
+        '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
+        '.($ignoreGuest ? ' AND `is_guest` = 0' : ''));
 
         return $returnId ? (int) $result : (bool) $result;
     }
@@ -526,13 +526,13 @@ class CustomerCore extends ObjectModel
      */
     public static function customerHasAddress($idCustomer, $idAddress)
     {
-        $key = (int) $idCustomer . '-' . (int) $idAddress;
+        $key = (int) $idCustomer.'-'.(int) $idAddress;
         if (!array_key_exists($key, self::$_customerHasAddress)) {
             self::$_customerHasAddress[$key] = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT `id_address`
-            FROM `' . _DB_PREFIX_ . 'address`
-            WHERE `id_customer` = ' . (int) $idCustomer . '
-            AND `id_address` = ' . (int) $idAddress . '
+            FROM `'._DB_PREFIX_.'address`
+            WHERE `id_customer` = '.(int) $idCustomer.'
+            AND `id_address` = '.(int) $idAddress.'
             AND `deleted` = 0');
         }
 
@@ -547,7 +547,7 @@ class CustomerCore extends ObjectModel
      */
     public static function resetAddressCache($idCustomer, $idAddress)
     {
-        $key = (int) $idCustomer . '-' . (int) $idAddress;
+        $key = (int) $idCustomer.'-'.(int) $idAddress;
         if (array_key_exists($key, self::$_customerHasAddress)) {
             unset(self::$_customerHasAddress[$key]);
         }
@@ -565,17 +565,17 @@ class CustomerCore extends ObjectModel
         $group = Context::getContext()->shop->getGroup();
         $shareOrder = isset($group->share_order) ? (bool) $group->share_order : false;
         $cacheId = 'Customer::getAddresses'
-            . '-' . (int) $this->id
-            . '-' . (int) $idLang
-            . '-' . ($shareOrder ? 1 : 0);
+            .'-'.(int) $this->id
+            .'-'.(int) $idLang
+            .'-'.($shareOrder ? 1 : 0);
         if (!Cache::isStored($cacheId)) {
             $sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
-                    FROM `' . _DB_PREFIX_ . 'address` a
-                    LEFT JOIN `' . _DB_PREFIX_ . 'country` c ON (a.`id_country` = c.`id_country`)
-                    LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (c.`id_country` = cl.`id_country`)
-                    LEFT JOIN `' . _DB_PREFIX_ . 'state` s ON (s.`id_state` = a.`id_state`)
-                    ' . ($shareOrder ? '' : Shop::addSqlAssociation('country', 'c')) . '
-                    WHERE `id_lang` = ' . (int) $idLang . ' AND `id_customer` = ' . (int) $this->id . ' AND a.`deleted` = 0';
+                    FROM `'._DB_PREFIX_.'address` a
+                    LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
+                    LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
+                    LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
+                    '.($shareOrder ? '' : Shop::addSqlAssociation('country', 'c')).'
+                    WHERE `id_lang` = '.(int) $idLang.' AND `id_customer` = '.(int) $this->id.' AND a.`deleted` = 0';
 
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
             Cache::store($cacheId, $result);
@@ -693,19 +693,19 @@ class CustomerCore extends ObjectModel
                       a.`phone_mobile`,
                       a.`vat_number`,
                       a.`dni`
-                    FROM `' . _DB_PREFIX_ . 'address` a
-                    LEFT JOIN `' . _DB_PREFIX_ . 'country` co ON (a.`id_country` = co.`id_country`)
-                    LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (co.`id_country` = cl.`id_country`)
-                    LEFT JOIN `' . _DB_PREFIX_ . 'state` s ON (s.`id_state` = a.`id_state`)
-                    ' . ($shareOrder ? '' : Shop::addSqlAssociation('country', 'co')) . '
+                    FROM `'._DB_PREFIX_.'address` a
+                    LEFT JOIN `'._DB_PREFIX_.'country` co ON (a.`id_country` = co.`id_country`)
+                    LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (co.`id_country` = cl.`id_country`)
+                    LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
+                    '.($shareOrder ? '' : Shop::addSqlAssociation('country', 'co')).'
                     WHERE
-                        `id_lang` = ' . (int) $idLang . '
-                        AND `id_customer` = ' . (int) $this->id . '
+                        `id_lang` = '.(int) $idLang.'
+                        AND `id_customer` = '.(int) $this->id.'
                         AND a.`deleted` = 0
                         AND a.`active` = 1';
 
         if (null !== $idAddress) {
-            $sql .= ' AND a.`id_address` = ' . (int) $idAddress;
+            $sql .= ' AND a.`id_address` = '.(int) $idAddress;
         }
 
         return $sql;
@@ -723,8 +723,8 @@ class CustomerCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
             SELECT COUNT(`id_address`)
-            FROM `' . _DB_PREFIX_ . 'address`
-            WHERE `id_customer` = ' . (int) $idCustomer . '
+            FROM `'._DB_PREFIX_.'address`
+            WHERE `id_customer` = '.(int) $idCustomer.'
             AND `deleted` = 0'
         );
     }
@@ -742,13 +742,13 @@ class CustomerCore extends ObjectModel
         if (!Validate::isUnsignedId($idCustomer)) {
             die(Tools::displayError());
         }
-        $cacheId = 'Customer::checkPassword' . (int) $idCustomer . '-' . $passwordHash;
+        $cacheId = 'Customer::checkPassword'.(int) $idCustomer.'-'.$passwordHash;
         if (!Cache::isStored($cacheId)) {
             $sql = new DbQuery();
             $sql->select('c.`id_customer`');
             $sql->from('customer', 'c');
-            $sql->where('c.`id_customer` = ' . (int) $idCustomer);
-            $sql->where('c.`passwd` = \'' . pSQL($passwordHash) . '\'');
+            $sql->where('c.`id_customer` = '.(int) $idCustomer);
+            $sql->where('c.`passwd` = \''.pSQL($passwordHash).'\'');
 
             $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 
@@ -773,7 +773,7 @@ class CustomerCore extends ObjectModel
     public static function searchByName($query, $limit = null)
     {
         $sql = 'SELECT *
-                FROM `' . _DB_PREFIX_ . 'customer`
+                FROM `'._DB_PREFIX_.'customer`
                 WHERE 1';
         $search_items = explode(' ', $query);
         $research_fields = array('id_customer', 'firstname', 'lastname', 'email');
@@ -784,18 +784,18 @@ class CustomerCore extends ObjectModel
         $items = array();
         foreach ($research_fields as $field) {
             foreach ($search_items as $item) {
-                $items[$item][] = $field . ' LIKE \'%' . pSQL($item) . '%\' ';
+                $items[$item][] = $field.' LIKE \'%'.pSQL($item).'%\' ';
             }
         }
 
         foreach ($items as $likes) {
-            $sql .= ' AND (' . implode(' OR ', $likes) . ') ';
+            $sql .= ' AND ('.implode(' OR ', $likes).') ';
         }
 
         $sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
 
         if ($limit) {
-            $sql .= ' LIMIT 0, ' . (int) $limit;
+            $sql .= ' LIMIT 0, '.(int) $limit;
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -812,10 +812,10 @@ class CustomerCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT DISTINCT c.*
-        FROM `' . _DB_PREFIX_ . 'customer` c
-        LEFT JOIN `' . _DB_PREFIX_ . 'guest` g ON g.id_customer = c.id_customer
-        LEFT JOIN `' . _DB_PREFIX_ . 'connections` co ON g.id_guest = co.id_guest
-        WHERE co.`ip_address` = \'' . (int) ip2long(trim($ip)) . '\'');
+        FROM `'._DB_PREFIX_.'customer` c
+        LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.id_customer = c.id_customer
+        LEFT JOIN `'._DB_PREFIX_.'connections` co ON g.id_guest = co.id_guest
+        WHERE co.`ip_address` = \''.(int) ip2long(trim($ip)).'\'');
     }
 
     /**
@@ -827,20 +827,20 @@ class CustomerCore extends ObjectModel
     {
         $result = Db::getInstance()->getRow('
         SELECT COUNT(`id_order`) AS nb_orders, SUM(`total_paid` / o.`conversion_rate`) AS total_orders
-        FROM `' . _DB_PREFIX_ . 'orders` o
-        WHERE o.`id_customer` = ' . (int) $this->id . '
+        FROM `'._DB_PREFIX_.'orders` o
+        WHERE o.`id_customer` = '.(int) $this->id.'
         AND o.valid = 1');
 
         $result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT c.`date_add` AS last_visit
-		FROM `' . _DB_PREFIX_ . 'connections` c
-      	LEFT JOIN `' . _DB_PREFIX_ . 'guest` g USING (id_guest)
-		WHERE g.`id_customer` = ' . (int) $this->id . ' ORDER BY c.`date_add` DESC ');
+		FROM `'._DB_PREFIX_.'connections` c
+      	LEFT JOIN `'._DB_PREFIX_.'guest` g USING (id_guest)
+		WHERE g.`id_customer` = '.(int) $this->id.' ORDER BY c.`date_add` DESC ');
 
         $result3 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
         SELECT (YEAR(CURRENT_DATE)-YEAR(c.`birthday`)) - (RIGHT(CURRENT_DATE, 5)<RIGHT(c.`birthday`, 5)) AS age
-        FROM `' . _DB_PREFIX_ . 'customer` c
-        WHERE c.`id_customer` = ' . (int) $this->id);
+        FROM `'._DB_PREFIX_.'customer` c
+        WHERE c.`id_customer` = '.(int) $this->id);
 
         $result['last_visit'] = $result2['last_visit'];
         $result['age'] = ($result3['age'] != date('Y') ? $result3['age'] : '--');
@@ -861,9 +861,9 @@ class CustomerCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT m.*, l.name as language
-        FROM `' . _DB_PREFIX_ . 'mail` m
-        LEFT JOIN `' . _DB_PREFIX_ . 'lang` l ON m.id_lang = l.id_lang
-        WHERE `recipient` = "' . pSQL($this->email) . '"
+        FROM `'._DB_PREFIX_.'mail` m
+        LEFT JOIN `'._DB_PREFIX_.'lang` l ON m.id_lang = l.id_lang
+        WHERE `recipient` = "'.pSQL($this->email).'"
         ORDER BY m.date_add DESC
         LIMIT 10');
     }
@@ -882,10 +882,10 @@ class CustomerCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
     		SELECT c.id_connections, c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
-    		FROM `' . _DB_PREFIX_ . 'guest` g
-    		LEFT JOIN `' . _DB_PREFIX_ . 'connections` c ON c.id_guest = g.id_guest
-    		LEFT JOIN `' . _DB_PREFIX_ . 'connections_page` cp ON c.id_connections = cp.id_connections
-    		WHERE g.`id_customer` = ' . (int) $this->id . '
+    		FROM `'._DB_PREFIX_.'guest` g
+    		LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
+    		LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
+    		WHERE g.`id_customer` = '.(int) $this->id.'
     		GROUP BY c.`id_connections`
     		ORDER BY c.date_add DESC
     		LIMIT 10'
@@ -901,12 +901,12 @@ class CustomerCore extends ObjectModel
      */
     public static function customerIdExistsStatic($idCustomer)
     {
-        $cacheId = 'Customer::customerIdExistsStatic' . (int) $idCustomer;
+        $cacheId = 'Customer::customerIdExistsStatic'.(int) $idCustomer;
         if (!Cache::isStored($cacheId)) {
             $result = (int) Db::getInstance()->getValue('
             SELECT `id_customer`
-            FROM ' . _DB_PREFIX_ . 'customer c
-            WHERE c.`id_customer` = ' . (int) $idCustomer);
+            FROM '._DB_PREFIX_.'customer c
+            WHERE c.`id_customer` = '.(int) $idCustomer);
             Cache::store($cacheId, $result);
 
             return $result;
@@ -939,7 +939,7 @@ class CustomerCore extends ObjectModel
      */
     public function cleanGroups()
     {
-        return Db::getInstance()->delete('customer_group', 'id_customer = ' . (int) $this->id);
+        return Db::getInstance()->delete('customer_group', 'id_customer = '.(int) $this->id);
     }
 
     /**
@@ -977,8 +977,8 @@ class CustomerCore extends ObjectModel
             self::$_customer_groups[$idCustomer] = array();
             $result = Db::getInstance()->executeS('
             SELECT cg.`id_group`
-            FROM ' . _DB_PREFIX_ . 'customer_group cg
-            WHERE cg.`id_customer` = ' . (int) $idCustomer);
+            FROM '._DB_PREFIX_.'customer_group cg
+            WHERE cg.`id_customer` = '.(int) $idCustomer);
             foreach ($result as $group) {
                 self::$_customer_groups[$idCustomer][] = (int) $group['id_group'];
             }
@@ -1000,9 +1000,9 @@ class CustomerCore extends ObjectModel
     public function getBoughtProducts()
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT * FROM `' . _DB_PREFIX_ . 'orders` o
-        LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
-        WHERE o.valid = 1 AND o.`id_customer` = ' . (int) $this->id);
+        SELECT * FROM `'._DB_PREFIX_.'orders` o
+        LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
+        WHERE o.valid = 1 AND o.`id_customer` = '.(int) $this->id);
     }
 
     /**
@@ -1027,8 +1027,8 @@ class CustomerCore extends ObjectModel
             self::$_defaultGroupId[(int) $idCustomer] = Db::getInstance()->getValue(
                 '
                 SELECT `id_default_group`
-                FROM `' . _DB_PREFIX_ . 'customer`
-                WHERE `id_customer` = ' . (int) $idCustomer
+                FROM `'._DB_PREFIX_.'customer`
+                WHERE `id_customer` = '.(int) $idCustomer
             );
         }
 
@@ -1052,8 +1052,8 @@ class CustomerCore extends ObjectModel
             $idAddress = (int) Db::getInstance()->getValue(
                 '
                 SELECT `id_address`
-                FROM `' . _DB_PREFIX_ . 'address`
-                WHERE `id_customer` = ' . (int) $idCustomer . '
+                FROM `'._DB_PREFIX_.'address`
+                WHERE `id_customer` = '.(int) $idCustomer.'
                 AND `deleted` = 0 ORDER BY `id_address`'
             );
         } else {
@@ -1123,7 +1123,7 @@ class CustomerCore extends ObjectModel
                 ),
                 $vars,
                 $this->email,
-                $this->firstname . ' ' . $this->lastname,
+                $this->firstname.' '.$this->lastname,
                 null,
                 null,
                 null,
@@ -1264,7 +1264,7 @@ class CustomerCore extends ObjectModel
         $query->from('order_invoice', 'oi');
         $query->leftJoin('orders', 'o', 'oi.id_order = o.id_order');
         $query->groupBy('o.id_customer');
-        $query->where('o.id_customer = ' . (int) $this->id);
+        $query->where('o.id_customer = '.(int) $this->id);
         $totalPaid = (float) Db::getInstance()->getValue($query->build());
 
         $query = new DbQuery();
@@ -1273,7 +1273,7 @@ class CustomerCore extends ObjectModel
         $query->leftJoin('order_invoice_payment', 'oip', 'op.id_order_payment = oip.id_order_payment');
         $query->leftJoin('orders', 'o', 'oip.id_order = o.id_order');
         $query->groupBy('o.id_customer');
-        $query->where('o.id_customer = ' . (int) $this->id);
+        $query->where('o.id_customer = '.(int) $this->id);
         $totalRest = (float) Db::getInstance()->getValue($query->build());
 
         return $totalPaid - $totalRest;
@@ -1290,9 +1290,9 @@ class CustomerCore extends ObjectModel
         return Db::getInstance()->executeS(
             '
             SELECT cg.`id_group` as id
-            FROM ' . _DB_PREFIX_ . 'customer_group cg
-            ' . Shop::addSqlAssociation('group', 'cg') . '
-            WHERE cg.`id_customer` = ' . (int) $this->id
+            FROM '._DB_PREFIX_.'customer_group cg
+            '.Shop::addSqlAssociation('group', 'cg').'
+            WHERE cg.`id_customer` = '.(int) $this->id
         );
     }
 
@@ -1336,10 +1336,10 @@ class CustomerCore extends ObjectModel
      */
     public function stampResetPasswordToken()
     {
-        $salt = $this->id . '-' . $this->secure_key;
-        $this->reset_password_token = sha1(time() . $salt);
+        $salt = $this->id.'-'.$this->secure_key;
+        $this->reset_password_token = sha1(time().$salt);
         $validity = (int) Configuration::get('PS_PASSWD_RESET_VALIDITY') ?: 1440;
-        $this->reset_password_validity = date('Y-m-d H:i:s', strtotime('+' . $validity . ' minutes'));
+        $this->reset_password_validity = date('Y-m-d H:i:s', strtotime('+'.$validity.' minutes'));
     }
 
     /**

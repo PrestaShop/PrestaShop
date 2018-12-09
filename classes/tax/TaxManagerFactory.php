@@ -41,7 +41,7 @@ class TaxManagerFactoryCore
      */
     public static function getManager(Address $address, $type)
     {
-        $cache_id = TaxManagerFactory::getCacheKey($address) . '-' . $type;
+        $cache_id = TaxManagerFactory::getCacheKey($address).'-'.$type;
         if (!isset(TaxManagerFactory::$cache_tax_manager[$cache_id])) {
             $tax_manager = TaxManagerFactory::execHookTaxManagerFactory($address, $type);
             if (!($tax_manager instanceof TaxManagerInterface)) {
@@ -91,10 +91,10 @@ class TaxManagerFactoryCore
      */
     protected static function getCacheKey(Address $address)
     {
-        return $address->id_country . '-'
-                . (int) $address->id_state . '-'
-                . $address->postcode . '-'
-                . $address->vat_number . '-'
-                . $address->dni;
+        return $address->id_country.'-'
+                .(int) $address->id_state.'-'
+                .$address->postcode.'-'
+                .$address->vat_number.'-'
+                .$address->dni;
     }
 }

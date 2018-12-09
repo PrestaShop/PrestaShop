@@ -67,13 +67,13 @@ class AttributeDataProvider
 
         $result = Db::getInstance()->executeS('
 			SELECT DISTINCT a.`id_attribute`
-			FROM `' . _DB_PREFIX_ . 'attribute_group` ag
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a
+			FROM `'._DB_PREFIX_.'attribute_group` ag
+			LEFT JOIN `'._DB_PREFIX_.'attribute` a
 				ON a.`id_attribute_group` = ag.`id_attribute_group`
-			' . Shop::addSqlAssociation('attribute_group', 'ag') . '
-			' . Shop::addSqlAssociation('attribute', 'a') . '
-			WHERE ag.`id_attribute_group` = ' . (int) $id_group . '
-			' . ($not_null ? 'AND a.`id_attribute` IS NOT NULL' : '') . '
+			'.Shop::addSqlAssociation('attribute_group', 'ag').'
+			'.Shop::addSqlAssociation('attribute', 'a').'
+			WHERE ag.`id_attribute_group` = '.(int) $id_group.'
+			'.($not_null ? 'AND a.`id_attribute` IS NOT NULL' : '').'
 			ORDER BY a.`position` ASC
 		');
 
@@ -123,9 +123,9 @@ class AttributeDataProvider
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT a.`id_image` as id
-			FROM `' . _DB_PREFIX_ . 'product_attribute_image` a
-			' . Shop::addSqlAssociation('product_attribute', 'a') . '
-			WHERE a.`id_product_attribute` = ' . (int) $idAttribute . '
+			FROM `'._DB_PREFIX_.'product_attribute_image` a
+			'.Shop::addSqlAssociation('product_attribute', 'a').'
+			WHERE a.`id_product_attribute` = '.(int) $idAttribute.'
 		');
     }
 }

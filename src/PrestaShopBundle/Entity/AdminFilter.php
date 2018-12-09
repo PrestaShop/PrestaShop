@@ -314,7 +314,7 @@ class AdminFilter
                         $filteredSubjectWithoutOperator = 0;
                     }
 
-                    return $operator . $filteredSubjectWithoutOperator;
+                    return $operator.$filteredSubjectWithoutOperator;
                 }
             };
         };

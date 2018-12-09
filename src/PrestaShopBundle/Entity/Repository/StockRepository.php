@@ -360,7 +360,7 @@ class StockRepository extends StockManagementRepository
     {
         if (!isset($this->totalCombinations[$row['product_id']])) {
             $query = 'SELECT COUNT(*) total_combinations
-                        FROM ' . $this->tablePrefix . 'product_attribute pa
+                        FROM '.$this->tablePrefix.'product_attribute pa
                         WHERE id_product=:id_product';
             $statement = $this->connection->prepare($query);
             $statement->bindValue('id_product', (int) $row['product_id'], \PDO::PARAM_INT);

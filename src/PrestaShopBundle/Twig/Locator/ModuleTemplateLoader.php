@@ -57,7 +57,7 @@ class ModuleTemplateLoader extends FilesystemLoader
             $templatePaths = array();
 
             foreach ($modulePaths as $path) {
-                if (is_dir($dir = $path . '/views/PrestaShop/' . $namespacePath)) {
+                if (is_dir($dir = $path.'/views/PrestaShop/'.$namespacePath)) {
                     $templatePaths[] = $dir;
                 }
             }

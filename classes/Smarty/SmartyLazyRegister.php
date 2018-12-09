@@ -68,7 +68,7 @@ class SmartyLazyRegister
 
         // case 1: call to static method - case 2 : call to static function
         if (is_array($item[1])) {
-            return call_user_func_array($item[1] . '::' . $item[0], array($arguments[0], &$arguments[1]));
+            return call_user_func_array($item[1].'::'.$item[0], array($arguments[0], &$arguments[1]));
         } else {
             $args = array();
 

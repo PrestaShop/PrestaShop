@@ -29,6 +29,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
  * Common method to handle the tab registration.
  *
  * @internal
+ *
  * @param mixed $className
  * @param mixed $name
  * @param mixed $id_parent
@@ -70,6 +71,7 @@ function register_tab($className, $name, $id_parent, $returnId = false, $parentT
  * Common method for getting the new tab ID.
  *
  * @internal
+ *
  * @param mixed $className
  * @param mixed $returnId
  */
@@ -86,9 +88,9 @@ function get_new_tab_id($className, $returnId = false)
  * Entrypoint for adding new tabs prior 1.7 versions of PrestaShop.
  *
  * @param string $className
- * @param string $name      Pipe-separated translated values
- * @param int    $id_parent
- * @param bool   $returnId
+ * @param string $name Pipe-separated translated values
+ * @param int $id_parent
+ * @param bool $returnId
  * @param string $parentTab
  * @param string $module
  *
@@ -112,9 +114,9 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
  * Entrypoint for adding new tabs on +1.7 versions of PrestaShop.
  *
  * @param string $className
- * @param string $name      Pipe-separated translated values
- * @param int    $id_parent
- * @param bool   $returnId
+ * @param string $name Pipe-separated translated values
+ * @param int $id_parent
+ * @param bool $returnId
  * @param string $parentTab
  * @param string $module
  *

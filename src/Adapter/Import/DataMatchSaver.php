@@ -66,7 +66,7 @@ final class DataMatchSaver
     public function save($name, array $value, $skipRows)
     {
         return (bool) $this->connection->insert(
-            $this->dbPrefix . 'import_match',
+            $this->dbPrefix.'import_match',
             [
                 '`name`' => pSQL($name),
                 '`match`' => pSQL(implode('|', $value)),

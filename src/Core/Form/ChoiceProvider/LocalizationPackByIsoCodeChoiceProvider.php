@@ -100,7 +100,7 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
         $finder = (new Finder())
             ->files()
             ->depth('0')
-            ->in($rootDir . '/localization')
+            ->in($rootDir.'/localization')
             ->name('/^([a-z]{2})\.xml$/')
         ;
 

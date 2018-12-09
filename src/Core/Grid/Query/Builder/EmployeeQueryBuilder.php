@@ -109,20 +109,20 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $sub = $this->connection->createQueryBuilder()
             ->select(1)
-            ->from($this->dbPrefix . 'employee_shop', 'es')
+            ->from($this->dbPrefix.'employee_shop', 'es')
             ->where('e.id_employee = es.id_employee')
             ->andWhere('es.id_shop IN (:context_shop_ids)')
         ;
 
         $qb = $this->connection->createQueryBuilder()
-            ->from($this->dbPrefix . 'employee', 'e')
+            ->from($this->dbPrefix.'employee', 'e')
             ->leftJoin(
                 'e',
-                $this->dbPrefix . 'profile_lang',
+                $this->dbPrefix.'profile_lang',
                 'pl',
-                'e.id_profile = pl.id_profile AND pl.id_lang = ' . (int) $this->contextIdLang
+                'e.id_profile = pl.id_profile AND pl.id_lang = '.(int) $this->contextIdLang
             )
-            ->andWhere('EXISTS (' . $sub->getSQL() . ')')
+            ->andWhere('EXISTS ('.$sub->getSQL().')')
             ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
         ;
 
@@ -154,7 +154,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_employee' === $filterName) {
-                $queryBuilder->andWhere('e.id_employee = :' . $filterName);
+                $queryBuilder->andWhere('e.id_employee = :'.$filterName);
                 $queryBuilder->setParameter($filterName, $filterValue);
 
                 continue;
@@ -175,7 +175,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             $queryBuilder->andWhere("`$filterName` LIKE :$filterName");
-            $queryBuilder->setParameter($filterName, '%' . $filterValue . '%');
+            $queryBuilder->setParameter($filterName, '%'.$filterValue.'%');
         }
     }
 

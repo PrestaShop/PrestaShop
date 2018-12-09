@@ -241,7 +241,7 @@ class Localize
         $regex = '(?P<language>[a-z]{2,3})(?:[_-](?P<script>[a-z]{4}))?(?:[_-](?P<territory>[a-z]{2}))?(?:[_-](?P<variant>[a-z]{5,}))?';
 
         if (!preg_match("/^{$regex}$/i", $locale, $matches)) {
-            throw new \InvalidArgumentException('Locale "' . $locale . '" could not be parsed');
+            throw new \InvalidArgumentException('Locale "'.$locale.'" could not be parsed');
         }
 
         $tags = array_filter(array_intersect_key($matches, static::$filters));

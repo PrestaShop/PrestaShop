@@ -57,7 +57,7 @@ class DatabaseDump
         }
 
         if (null === $dumpFile) {
-            $this->dumpFile = sys_get_temp_dir() . '/' . 'ps_dump.sql';
+            $this->dumpFile = sys_get_temp_dir().'/'.'ps_dump.sql';
         } else {
             $this->dumpFile = $dumpFile;
         }
@@ -84,7 +84,7 @@ class DatabaseDump
         );
 
         if ($this->password) {
-            $parts[] = '-p' . escapeshellarg($this->password);
+            $parts[] = '-p'.escapeshellarg($this->password);
         }
 
         $parts = array_merge($parts, array_map('escapeshellarg', $arguments));
@@ -120,7 +120,7 @@ class DatabaseDump
     private function dump()
     {
         $dumpCommand = $this->buildMySQLCommand('mysqldump', array($this->databaseName));
-        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $dumpCommand .= ' > '.escapeshellarg($this->dumpFile).' 2> /dev/null';
         $this->exec($dumpCommand);
     }
 
@@ -130,7 +130,7 @@ class DatabaseDump
     public function restore()
     {
         $restoreCommand = $this->buildMySQLCommand('mysql', array($this->databaseName));
-        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $restoreCommand .= ' < '.escapeshellarg($this->dumpFile).' 2> /dev/null';
         $this->exec($restoreCommand);
     }
 

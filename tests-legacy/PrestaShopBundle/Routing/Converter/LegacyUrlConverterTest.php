@@ -434,11 +434,11 @@ class LegacyUrlConverterTest extends TestCase
     }
 
     /**
-     * @param string       $routeName
-     * @param string       $routePath
+     * @param string $routeName
+     * @param string $routePath
      * @param array|string $legacyLink
-     * @param null|array   $legacyParameters
-     * @param null|array   $expectedParameters
+     * @param null|array $legacyParameters
+     * @param null|array $expectedParameters
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
      */

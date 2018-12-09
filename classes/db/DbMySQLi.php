@@ -102,8 +102,8 @@ class DbMySQLiCore extends Db
         } else {
             $link = @new mysqli($host, $user, $password);
         }
-        $success = $link->query('CREATE DATABASE `' . str_replace('`', '\\`', $database) . '`');
-        if ($dropit && (false !== $link->query('DROP DATABASE `' . str_replace('`', '\\`', $database) . '`'))) {
+        $success = $link->query('CREATE DATABASE `'.str_replace('`', '\\`', $database).'`');
+        if ($dropit && (false !== $link->query('DROP DATABASE `'.str_replace('`', '\\`', $database).'`'))) {
             return true;
         }
 
@@ -289,7 +289,7 @@ class DbMySQLiCore extends Db
      */
     public function set_db($db_name)
     {
-        return $this->link->query('USE `' . bqSQL($db_name) . '`');
+        return $this->link->query('USE `'.bqSQL($db_name).'`');
     }
 
     /**
@@ -312,7 +312,7 @@ class DbMySQLiCore extends Db
             return false;
         }
 
-        $sql = 'SHOW TABLES LIKE \'' . $prefix . '%\'';
+        $sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
         $result = $link->query($sql);
 
         return (bool) $result->fetch_assoc();
@@ -414,15 +414,15 @@ class DbMySQLiCore extends Db
         }
 
         $result = $link->query('
-		CREATE TABLE `' . $prefix . 'test` (
+		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE=' . $engine);
+		) ENGINE='.$engine);
 
         if (!$result) {
             return $link->error;
         }
 
-        $link->query('DROP TABLE `' . $prefix . 'test`');
+        $link->query('DROP TABLE `'.$prefix.'test`');
 
         return true;
     }

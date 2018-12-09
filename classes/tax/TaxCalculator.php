@@ -121,7 +121,7 @@ class TaxCalculatorCore
     {
         $name = '';
         foreach ($this->taxes as $tax) {
-            $name .= $tax->name[(int) Context::getContext()->language->id] . ' - ';
+            $name .= $tax->name[(int) Context::getContext()->language->id].' - ';
         }
 
         $name = rtrim($name, ' - ');

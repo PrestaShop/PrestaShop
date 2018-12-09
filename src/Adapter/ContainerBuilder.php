@@ -47,8 +47,8 @@ class ContainerBuilder
      */
     public static function getContainer($name, $isDebug)
     {
-        $containerName = ucfirst($name) . 'Container';
-        $file = _PS_CACHE_DIR_ . "${containerName}.php";
+        $containerName = ucfirst($name).'Container';
+        $file = _PS_CACHE_DIR_."${containerName}.php";
 
         if (!$isDebug && file_exists($file)) {
             require_once $file;
@@ -60,7 +60,7 @@ class ContainerBuilder
         $container->addCompilerPass(new LegacyCompilerPass());
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
         $env = $isDebug ? 'dev' : 'prod';
-        $servicesPath = _PS_CONFIG_DIR_ . "services/${name}/services_${env}.yml";
+        $servicesPath = _PS_CONFIG_DIR_."services/${name}/services_${env}.yml";
         $loader->load($servicesPath);
         $container->compile();
 

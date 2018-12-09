@@ -49,7 +49,7 @@ class Hook
         if ($event) {
             $event->getIO()->write('Init CLDR data download...');
         }
-        $root_dir = realpath(__DIR__ . '/../../../../');
+        $root_dir = realpath(__DIR__.'/../../../../');
         $cldrFolder = "$root_dir/translations/cldr";
         $cldrFilePath = "$cldrFolder/cldr.zip";
         $zipUrl = self::ZIP_CORE_URL;

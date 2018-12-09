@@ -89,7 +89,7 @@ final class ImportDataConfigurationFormDataProvider implements ImportFormDataPro
      */
     public function getData(ImportConfigInterface $importConfig)
     {
-        $importFile = new SplFileInfo($this->importDirectory . $importConfig->getFileName());
+        $importFile = new SplFileInfo($this->importDirectory.$importConfig->getFileName());
         $dataRowCollection = $this->dataRowCollectionFactory->buildFromFile($importFile, 1);
 
         // Getting the number of cells in the first row

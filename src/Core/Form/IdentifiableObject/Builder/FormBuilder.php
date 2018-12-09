@@ -118,7 +118,7 @@ final class FormBuilder implements FormBuilderInterface
     {
         $formBuilder = $this->formFactory->createBuilder($formType, $data, $options);
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $formBuilder->getName() . 'FormBuilderModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action'.$formBuilder->getName().'FormBuilderModifier', [
             'form_builder' => $formBuilder,
             'data' => &$data,
             'id' => $id,

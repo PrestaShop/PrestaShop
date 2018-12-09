@@ -72,7 +72,7 @@ class HelperUploaderCore extends Uploader
     public function getDropZone()
     {
         if (!isset($this->_drop_zone)) {
-            $this->setDropZone("$('#" . $this->getId() . "-add-button')");
+            $this->setDropZone("$('#".$this->getId()."-add-button')");
         }
 
         return $this->_drop_zone;
@@ -197,25 +197,25 @@ class HelperUploaderCore extends Uploader
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController
-            && file_exists($this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) . $this->getTemplateDirectory() . $template)
+            && file_exists($this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template)
         ) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
-                . $this->getTemplateDirectory() . $template;
+                .$this->getTemplateDirectory().$template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
-            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
-                . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
-                . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
+            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
+                .DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
+            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
+                .DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                . $this->getTemplateDirectory() . $template)) {
+                .$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                    . $this->getTemplateDirectory() . $template;
+                    .$this->getTemplateDirectory().$template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                . $this->getTemplateDirectory() . $template)) {
+                .$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                . $this->getTemplateDirectory() . $template;
+                .$this->getTemplateDirectory().$template;
         } else {
-            return $this->getTemplateDirectory() . $template;
+            return $this->getTemplateDirectory().$template;
         }
     }
 
@@ -258,25 +258,25 @@ class HelperUploaderCore extends Uploader
     public function render()
     {
         $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
-        $admin_webpath = preg_replace('/^' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', '', $admin_webpath);
+        $admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
         $bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
             && $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
 
-        if (!file_exists(_PS_BO_ALL_THEMES_DIR_ . $bo_theme . DIRECTORY_SEPARATOR
-            . 'template')) {
+        if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
+            .'template')) {
             $bo_theme = 'default';
         }
 
-        $this->getContext()->controller->addJs(__PS_BASE_URI__ . $admin_webpath
-            . '/themes/' . $bo_theme . '/js/jquery.iframe-transport.js');
-        $this->getContext()->controller->addJs(__PS_BASE_URI__ . $admin_webpath
-            . '/themes/' . $bo_theme . '/js/jquery.fileupload.js');
-        $this->getContext()->controller->addJs(__PS_BASE_URI__ . $admin_webpath
-            . '/themes/' . $bo_theme . '/js/jquery.fileupload-process.js');
-        $this->getContext()->controller->addJs(__PS_BASE_URI__ . $admin_webpath
-            . '/themes/' . $bo_theme . '/js/jquery.fileupload-validate.js');
-        $this->getContext()->controller->addJs(__PS_BASE_URI__ . 'js/vendor/spin.js');
-        $this->getContext()->controller->addJs(__PS_BASE_URI__ . 'js/vendor/ladda.js');
+        $this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+            .'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
+        $this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+            .'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
+        $this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+            .'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js');
+        $this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+            .'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');
+        $this->getContext()->controller->addJs(__PS_BASE_URI__.'js/vendor/spin.js');
+        $this->getContext()->controller->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
 
         if ($this->useAjax() && !isset($this->_template)) {
             $this->setTemplate(self::DEFAULT_AJAX_TEMPLATE);

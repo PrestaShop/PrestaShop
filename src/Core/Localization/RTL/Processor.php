@@ -216,13 +216,13 @@ class Processor
                 throw new GenerationException("Cannot generate BO themes: \"{$this->adminDir}\" is not a directory");
             }
 
-            $generator->generateInDirectory($this->adminDir . DIRECTORY_SEPARATOR . 'themes');
+            $generator->generateInDirectory($this->adminDir.DIRECTORY_SEPARATOR.'themes');
         }
 
         // generate stylesheets for BO themes
         if ($this->processFOThemes) {
             foreach ($this->processFOThemes as $themeName) {
-                $generator->generateInDirectory($this->themesDir . DIRECTORY_SEPARATOR . $themeName);
+                $generator->generateInDirectory($this->themesDir.DIRECTORY_SEPARATOR.$themeName);
             }
         }
 

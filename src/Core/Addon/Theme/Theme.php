@@ -38,16 +38,16 @@ class Theme implements AddonInterface
     public function __construct(array $attributes)
     {
         if (isset($attributes['parent'])) {
-            $parentAttributes = Yaml::parse(file_get_contents(_PS_ALL_THEMES_DIR_ . '/' . $attributes['parent'] . '/config/theme.yml'));
-            $parentAttributes['preview'] = 'themes/' . $attributes['parent'] . '/preview.png';
-            $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/') . '/';
+            $parentAttributes = Yaml::parse(file_get_contents(_PS_ALL_THEMES_DIR_.'/'.$attributes['parent'].'/config/theme.yml'));
+            $parentAttributes['preview'] = 'themes/'.$attributes['parent'].'/preview.png';
+            $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/').'/';
             $attributes = array_merge($parentAttributes, $attributes);
         }
 
-        $attributes['directory'] = rtrim($attributes['directory'], '/') . '/';
+        $attributes['directory'] = rtrim($attributes['directory'], '/').'/';
 
-        if (file_exists(_PS_ALL_THEMES_DIR_ . $attributes['name'] . '/preview.png')) {
-            $attributes['preview'] = 'themes/' . $attributes['name'] . '/preview.png';
+        if (file_exists(_PS_ALL_THEMES_DIR_.$attributes['name'].'/preview.png')) {
+            $attributes['preview'] = 'themes/'.$attributes['name'].'/preview.png';
         }
 
         $this->attributes = new ArrayFinder($attributes);
@@ -197,14 +197,14 @@ class Theme implements AddonInterface
 
     public function getLayoutRelativePathForPage($page)
     {
-        return 'layouts/' . $this->getLayoutNameForPage($page) . '.tpl';
+        return 'layouts/'.$this->getLayoutNameForPage($page).'.tpl';
     }
 
     private function getPageSpecificCss($pageId)
     {
         $css = array_merge(
             (array) $this->get('assets.css.all'),
-            (array) $this->get('assets.css.' . $pageId)
+            (array) $this->get('assets.css.'.$pageId)
         );
         foreach ($css as $key => &$entry) {
             // Required parameters
@@ -231,7 +231,7 @@ class Theme implements AddonInterface
     {
         $js = array_merge(
             (array) $this->get('assets.js.all'),
-            (array) $this->get('assets.js.' . $pageId)
+            (array) $this->get('assets.js.'.$pageId)
         );
         foreach ($js as $key => &$entry) {
             // Required parameters

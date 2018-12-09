@@ -377,17 +377,17 @@ class MailCore extends ObjectModel
             $moduleName = false;
 
             // get templatePath
-            if (preg_match('#' . $shop->physical_uri . 'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath)) &&
+            if (preg_match('#'.$shop->physical_uri.'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath)) &&
                 preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath), $res)
             ) {
                 $moduleName = $res[1];
             }
 
             foreach ($isoArray as $isoCode) {
-                $isoTemplate = $isoCode . '/' . $template;
+                $isoTemplate = $isoCode.'/'.$template;
                 $templatePath = self::getTemplateBasePath($isoTemplate, $moduleName, $shop->theme);
 
-                if (!file_exists($templatePath . $isoTemplate . '.txt') &&
+                if (!file_exists($templatePath.$isoTemplate.'.txt') &&
                     (
                         Mail::TYPE_BOTH == $configuration['PS_MAIL_TYPE'] ||
                         Mail::TYPE_TEXT == $configuration['PS_MAIL_TYPE']
@@ -396,11 +396,11 @@ class MailCore extends ObjectModel
                     PrestaShopLogger::addLog(
                         Context::getContext()->getTranslator()->trans(
                             'Error - The following e-mail template is missing: %s',
-                            [$templatePath . $isoTemplate . '.txt'],
+                            [$templatePath.$isoTemplate.'.txt'],
                             'Admin.Advparameters.Notification'
                         )
                     );
-                } elseif (!file_exists($templatePath . $isoTemplate . '.html') &&
+                } elseif (!file_exists($templatePath.$isoTemplate.'.html') &&
                           (
                               Mail::TYPE_BOTH == $configuration['PS_MAIL_TYPE'] ||
                               Mail::TYPE_HTML == $configuration['PS_MAIL_TYPE']
@@ -409,7 +409,7 @@ class MailCore extends ObjectModel
                     PrestaShopLogger::addLog(
                         Context::getContext()->getTranslator()->trans(
                             'Error - The following e-mail template is missing: %s',
-                            [$templatePath . $isoTemplate . '.html'],
+                            [$templatePath.$isoTemplate.'.html'],
                             'Admin.Advparameters.Notification'
                         )
                     );
@@ -439,10 +439,10 @@ class MailCore extends ObjectModel
                 null,
                 true
             );
-            $templateHtml .= Tools::file_get_contents($templatePath . $isoTemplate . '.html');
+            $templateHtml .= Tools::file_get_contents($templatePath.$isoTemplate.'.html');
             $templateTxt .= strip_tags(
                 html_entity_decode(
-                    Tools::file_get_contents($templatePath . $isoTemplate . '.txt'),
+                    Tools::file_get_contents($templatePath.$isoTemplate.'.txt'),
                     null,
                     'utf-8'
                 )
@@ -460,7 +460,7 @@ class MailCore extends ObjectModel
             );
 
             /* Create mail and attach differents parts */
-            $subject = '[' . $shop->name . '] ' . $subject;
+            $subject = '['.$shop->name.'] '.$subject;
             $message->setSubject($subject);
 
             $message->setCharset('utf-8');
@@ -480,12 +480,12 @@ class MailCore extends ObjectModel
             $templateVars = array_map(['Tools', 'stripslashes'], $templateVars);
 
             if (false !== Configuration::get('PS_LOGO_MAIL') &&
-                file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
+                file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
             ) {
-                $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop);
+                $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $idShop);
             } else {
-                if (file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $idShop))) {
-                    $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $idShop);
+                if (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $idShop))) {
+                    $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $idShop);
                 } else {
                     $templateVars['{shop_logo}'] = '';
                 }
@@ -617,7 +617,7 @@ class MailCore extends ObjectModel
             return $send;
         } catch (\Swift_SwiftException $e) {
             PrestaShopLogger::addLog(
-                'Swift Error: ' . $e->getMessage(),
+                'Swift Error: '.$e->getMessage(),
                 3,
                 null,
                 'Swift_Message'
@@ -630,20 +630,20 @@ class MailCore extends ObjectModel
     protected static function getTemplateBasePath($isoTemplate, $moduleName, $theme)
     {
         $basePathList = [
-            _PS_ROOT_DIR_ . '/themes/' . $theme->getName() . '/',
-            _PS_ROOT_DIR_ . '/themes/' . $theme->get('parent') . '/',
+            _PS_ROOT_DIR_.'/themes/'.$theme->getName().'/',
+            _PS_ROOT_DIR_.'/themes/'.$theme->get('parent').'/',
             _PS_ROOT_DIR_,
         ];
 
         if (false !== $moduleName) {
-            $templateRelativePath = '/modules/' . $moduleName . '/mails/';
+            $templateRelativePath = '/modules/'.$moduleName.'/mails/';
         } else {
             $templateRelativePath = '/mails/';
         }
 
         foreach ($basePathList as $base) {
-            $templatePath = $base . $templateRelativePath;
-            if (file_exists($templatePath . $isoTemplate . '.txt') || file_exists($templatePath . $isoTemplate . '.html')) {
+            $templatePath = $base.$templateRelativePath;
+            if (file_exists($templatePath.$isoTemplate.'.txt') || file_exists($templatePath.$isoTemplate.'.html')) {
                 return $templatePath;
             }
         }
@@ -658,7 +658,7 @@ class MailCore extends ObjectModel
      */
     public static function eraseLog($idMail)
     {
-        return Db::getInstance()->delete('mail', 'id_mail = ' . (int) $idMail);
+        return Db::getInstance()->delete('mail', 'id_mail = '.(int) $idMail);
     }
 
     /**
@@ -666,7 +666,7 @@ class MailCore extends ObjectModel
      */
     public static function eraseAllLogs()
     {
-        return Db::getInstance()->execute('TRUNCATE TABLE ' . _DB_PREFIX_ . 'mail');
+        return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'mail');
     }
 
     /**
@@ -760,12 +760,12 @@ class MailCore extends ObjectModel
 
         $isoCode = Language::getIsoById((int) $idLang);
 
-        $file_core = _PS_ROOT_DIR_ . '/mails/' . $isoCode . '/lang.php';
+        $file_core = _PS_ROOT_DIR_.'/mails/'.$isoCode.'/lang.php';
         if (Tools::file_exists_cache($file_core) && empty($_LANGMAIL)) {
             include $file_core;
         }
 
-        $fileTheme = _PS_THEME_DIR_ . 'mails/' . $isoCode . '/lang.php';
+        $fileTheme = _PS_THEME_DIR_.'mails/'.$isoCode.'/lang.php';
         if (Tools::file_exists_cache($fileTheme)) {
             include $fileTheme;
         }
@@ -833,9 +833,9 @@ class MailCore extends ObjectModel
         }
 
         $charset = Tools::strtoupper($charset);
-        $start = '=?' . $charset . '?B?';
+        $start = '=?'.$charset.'?B?';
         $end = '?=';
-        $sep = $end . $newline . ' ' . $start;
+        $sep = $end.$newline.' '.$start;
         $length = 75 - Tools::strlen($start) - Tools::strlen($end);
         $length = $length - ($length % 4);
 
@@ -861,10 +861,10 @@ class MailCore extends ObjectModel
             $string = implode($sep, $parts);
         } else {
             $string = chunk_split(base64_encode($string), $length, $sep);
-            $string = preg_replace('/' . preg_quote($sep) . '$/', '', $string);
+            $string = preg_replace('/'.preg_quote($sep).'$/', '', $string);
         }
 
-        return $start . $string . $end;
+        return $start.$string.$end;
     }
 
     /**
@@ -881,7 +881,7 @@ class MailCore extends ObjectModel
             return $to;
         }
 
-        return $address[0] . '@' . idn_to_ascii($address[1]);
+        return $address[0].'@'.idn_to_ascii($address[1]);
     }
 
     /**

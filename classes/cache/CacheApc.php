@@ -69,7 +69,7 @@ class CacheApcCore extends Cache
                 } else {
                     $key = $entry['info'];
                 }
-                if (preg_match('#^' . $pattern . '$#', $key)) {
+                if (preg_match('#^'.$pattern.'$#', $key)) {
                     $this->_delete($key);
                 }
             }

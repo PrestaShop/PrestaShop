@@ -90,7 +90,7 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getLanguageQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $builder = $this->connection->createQueryBuilder()
-            ->from($this->dbPrefix . 'lang', 'l')
+            ->from($this->dbPrefix.'lang', 'l')
         ;
 
         $this->applyFilters($builder, $searchCriteria);
@@ -120,14 +120,14 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if (in_array($filterName, ['id_lang', 'active'])) {
-                $builder->andWhere($filterName . ' = :' . $filterName);
+                $builder->andWhere($filterName.' = :'.$filterName);
                 $builder->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
-            $builder->andWhere($filterName . ' LIKE :' . $filterName);
-            $builder->setParameter($filterName, '%' . $filterValue . '%');
+            $builder->andWhere($filterName.' LIKE :'.$filterName);
+            $builder->setParameter($filterName, '%'.$filterValue.'%');
         }
     }
 }

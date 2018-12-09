@@ -80,7 +80,7 @@ class TranslationService
     {
         $translationsDirectory = $this->getResourcesDirectory();
 
-        $legacyToStandardLocalesJson = file_get_contents($translationsDirectory . '/legacy-to-standard-locales.json');
+        $legacyToStandardLocalesJson = file_get_contents($translationsDirectory.'/legacy-to-standard-locales.json');
         $legacyToStandardLocales = json_decode($legacyToStandardLocalesJson, true);
 
         $jsonLastErrorCode = json_last_error();
@@ -96,7 +96,7 @@ class TranslationService
      */
     private function getResourcesDirectory()
     {
-        return $this->container->getParameter('kernel.root_dir') . '/Resources';
+        return $this->container->getParameter('kernel.root_dir').'/Resources';
     }
 
     /**

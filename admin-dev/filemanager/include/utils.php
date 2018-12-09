@@ -371,7 +371,7 @@ function get_file_by_url($url)
 
 /**
  * @param string $sourcePath
- * @param array  $paths      List of paths to compare
+ * @param array $paths List of paths to compare
  */
 function stopIfSameDir($sourcePath, array $paths)
 {

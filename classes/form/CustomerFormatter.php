@@ -248,7 +248,7 @@ class CustomerFormatterCore implements FormFormatterInterface
 
                 foreach ($additionnalFormFields as $formField) {
                     $formField->moduleName = $moduleName;
-                    $format[$moduleName . '_' . $formField->getName()] = $formField;
+                    $format[$moduleName.'_'.$formField->getName()] = $formField;
                 }
             }
         }

@@ -61,7 +61,7 @@ final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
     {
         $apiUrl = $this->configuration->get('_PS_API_URL_');
 
-        $xmlLocalizationPacks = $this->loadXml($apiUrl . '/rss/localization.xml');
+        $xmlLocalizationPacks = $this->loadXml($apiUrl.'/rss/localization.xml');
         if (!$xmlLocalizationPacks) {
             return null;
         }

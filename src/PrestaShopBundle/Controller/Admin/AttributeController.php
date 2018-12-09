@@ -51,8 +51,8 @@ class AttributeController extends FrameworkBundleAdminController
         foreach ($attributes as $attribute) {
             /* Construct attribute group selector. Ex : Color : All */
             $dataGroupAttributes[$attribute['id_attribute_group']] = [
-                'value' => 'group-' . $attribute['id_attribute_group'],
-                'label' => $attribute['public_name'] . ' : ' . $this->trans('All', 'Admin.Global'),
+                'value' => 'group-'.$attribute['id_attribute_group'],
+                'label' => $attribute['public_name'].' : '.$this->trans('All', 'Admin.Global'),
                 'data' => [
                     'id_group' => $attribute['id_attribute_group'],
                     'name' => $attribute['public_name'],
@@ -61,7 +61,7 @@ class AttributeController extends FrameworkBundleAdminController
 
             $data[] = [
                 'value' => $attribute['id_attribute'],
-                'label' => $attribute['public_name'] . ' : ' . $attribute['name'],
+                'label' => $attribute['public_name'].' : '.$attribute['name'],
                 'data' => [
                     'id_group' => $attribute['id_attribute_group'],
                     'name' => $attribute['name'],
@@ -148,7 +148,7 @@ class AttributeController extends FrameworkBundleAdminController
             foreach ($attribute as $combination) {
                 $form = $this->get('form.factory')
                     ->createNamed(
-                        'combination_' . $combination['id_product_attribute'],
+                        'combination_'.$combination['id_product_attribute'],
                         'PrestaShopBundle\Form\Admin\Product\ProductCombination',
                         $combinationDataProvider->getFormCombination($combination['id_product_attribute'])
                     )

@@ -253,7 +253,7 @@ class ProductQuantity extends CommonAbstractType
                     'Use default behavior',
                     [],
                     'Admin.Catalog.Feature'
-                ) . ' (';
+                ).' (';
                 $defaultChoiceLabel .= 1 == $this->configuration->get('PS_ORDER_OUT_OF_STOCK') ?
                     $this->translator->trans('Allow orders', [], 'Admin.Catalog.Feature') :
                     $this->translator->trans('Deny orders', [], 'Admin.Catalog.Feature');
@@ -277,7 +277,7 @@ class ProductQuantity extends CommonAbstractType
 
                 //Manage out_of_stock field with contextual values/label
                 $pack_stock_type = $this->configuration->get('PS_PACK_STOCK_TYPE');
-                $defaultChoiceLabel = $this->translator->trans('Default', [], 'Admin.Global') . ': ';
+                $defaultChoiceLabel = $this->translator->trans('Default', [], 'Admin.Global').': ';
                 if (Pack::STOCK_TYPE_PACK_ONLY == $pack_stock_type) {
                     $defaultChoiceLabel .= $this->translator->trans(
                         'Decrement pack only.',

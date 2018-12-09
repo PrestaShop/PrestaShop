@@ -32,8 +32,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class PageVoter extends BaseVoter
 {
     /**
-     * @param string         $attribute
-     * @param mixed          $subject
+     * @param string $attribute
+     * @param mixed $subject
      * @param TokenInterface $token
      *
      * @return bool

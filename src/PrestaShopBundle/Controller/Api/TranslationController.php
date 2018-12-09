@@ -256,8 +256,8 @@ class TranslationController extends ApiController
      */
     private function guardAgainstInvalidTranslationEditRequest($content)
     {
-        $message = 'Each item of JSON-encoded array in the request body should contain ' .
-            'a "locale", a "domain", a "default" and a "edited" values. ' .
+        $message = 'Each item of JSON-encoded array in the request body should contain '.
+            'a "locale", a "domain", a "default" and a "edited" values. '.
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
@@ -276,8 +276,8 @@ class TranslationController extends ApiController
      */
     protected function guardAgainstInvalidTranslationResetRequest($content)
     {
-        $message = 'Each item of JSON-encoded array in the request body should contain ' .
-            'a "locale", a "domain" and a "default" values. ' .
+        $message = 'Each item of JSON-encoded array in the request body should contain '.
+            'a "locale", a "domain" and a "default" values. '.
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {

@@ -149,7 +149,7 @@ class PrestaTrustChecker
             }
 
             if (in_array(trim($file_info['extension']), $this->checked_extensions)) {
-                $preparehash .= $zip->getFromName($file_info['dirname'] . '/' . $file_info['basename']);
+                $preparehash .= $zip->getFromName($file_info['dirname'].'/'.$file_info['basename']);
             }
         }
         $zip->close();

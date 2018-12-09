@@ -443,13 +443,13 @@ class AdminProductWrapper
 
                 $current_specific_currency = $currencies[$id_currency];
                 if ('percentage' == $specific_price['reduction_type']) {
-                    $impact = '- ' . ($specific_price['reduction'] * 100) . ' %';
+                    $impact = '- '.($specific_price['reduction'] * 100).' %';
                 } elseif ($specific_price['reduction'] > 0) {
-                    $impact = '- ' . Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency) . ' ';
+                    $impact = '- '.Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency).' ';
                     if ($specific_price['reduction_tax']) {
-                        $impact .= '(' . $this->translator->trans('Tax incl.', array(), 'Admin.Global') . ')';
+                        $impact .= '('.$this->translator->trans('Tax incl.', array(), 'Admin.Global').')';
                     } else {
-                        $impact .= '(' . $this->translator->trans('Tax excl.', array(), 'Admin.Global') . ')';
+                        $impact .= '('.$this->translator->trans('Tax excl.', array(), 'Admin.Global').')';
                     }
                 } else {
                     $impact = '--';
@@ -458,14 +458,14 @@ class AdminProductWrapper
                 if ('0000-00-00 00:00:00' == $specific_price['from'] && '0000-00-00 00:00:00' == $specific_price['to']) {
                     $period = $this->translator->trans('Unlimited', array(), 'Admin.Global');
                 } else {
-                    $period = $this->translator->trans('From', array(), 'Admin.Global') . ' ' . ('0000-00-00 00:00:00' != $specific_price['from'] ? $specific_price['from'] : '0000-00-00 00:00:00') . '<br />' . $this->translator->trans('to', array(), 'Admin.Global') . ' ' . ('0000-00-00 00:00:00' != $specific_price['to'] ? $specific_price['to'] : '0000-00-00 00:00:00');
+                    $period = $this->translator->trans('From', array(), 'Admin.Global').' '.('0000-00-00 00:00:00' != $specific_price['from'] ? $specific_price['from'] : '0000-00-00 00:00:00').'<br />'.$this->translator->trans('to', array(), 'Admin.Global').' '.('0000-00-00 00:00:00' != $specific_price['to'] ? $specific_price['to'] : '0000-00-00 00:00:00');
                 }
                 if ($specific_price['id_product_attribute']) {
                     $combination = new Combination((int) $specific_price['id_product_attribute']);
                     $attributes = $combination->getAttributesName(1);
                     $attributes_name = '';
                     foreach ($attributes as $attribute) {
-                        $attributes_name .= $attribute['name'] . ' - ';
+                        $attributes_name .= $attribute['name'].' - ';
                     }
                     $attributes_name = rtrim($attributes_name, ' - ');
                 } else {
@@ -478,7 +478,7 @@ class AdminProductWrapper
                 if ($specific_price['id_customer']) {
                     $customer = new Customer((int) $specific_price['id_customer']);
                     if (Validate::isLoadedObject($customer)) {
-                        $customer_full_name = $customer->firstname . ' ' . $customer->lastname;
+                        $customer_full_name = $customer->firstname.' '.$customer->lastname;
                     }
                     unset($customer);
                 }
@@ -654,17 +654,17 @@ class AdminProductWrapper
                 //create label
                 if (isset($customization['id_customization_field'])) {
                     $id_customization_field = (int) $customization['id_customization_field'];
-                    Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization_field`
-					SET `required` = ' . ($customization['require'] ? 1 : 0) . ', `type` = ' . (int) $customization['type'] . '
-					WHERE `id_customization_field` = ' . $id_customization_field);
+                    Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization_field`
+					SET `required` = '.($customization['require'] ? 1 : 0).', `type` = '.(int) $customization['type'].'
+					WHERE `id_customization_field` = '.$id_customization_field);
                 } else {
                     Db::getInstance()->execute(
-                        'INSERT INTO `' . _DB_PREFIX_ . 'customization_field` (`id_product`, `type`, `required`)
+                        'INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
                     	VALUES ('
-                            . (int) $product->id . ', '
-                            . (int) $customization['type'] . ', '
-                            . ($customization['require'] ? 1 : 0)
-                        . ')'
+                            .(int) $product->id.', '
+                            .(int) $customization['type'].', '
+                            .($customization['require'] ? 1 : 0)
+                        .')'
                     );
                     $id_customization_field = (int) Db::getInstance()->Insert_ID();
                 }
@@ -677,16 +677,16 @@ class AdminProductWrapper
                     $name = $customization['label'][$language['id_lang']];
                     foreach ($shopList as $id_shop) {
                         $langValues .= '('
-                            . (int) $id_customization_field . ', '
-                            . (int) $language['id_lang'] . ', '
-                            . (int) $id_shop . ',\''
-                            . pSQL($name)
-                            . '\'), ';
+                            .(int) $id_customization_field.', '
+                            .(int) $language['id_lang'].', '
+                            .(int) $id_shop.',\''
+                            .pSQL($name)
+                            .'\'), ';
                     }
                 }
                 Db::getInstance()->execute(
-                    'INSERT INTO `' . _DB_PREFIX_ . 'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '
-                    . rtrim(
+                    'INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '
+                    .rtrim(
                         $langValues,
                         ', '
                     )
@@ -703,14 +703,14 @@ class AdminProductWrapper
         }
 
         //update product count fields labels
-        Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product` SET `customizable` = ' . $productCustomizableValue . ', `uploadable_files` = ' . (int) $countFieldFile . ', `text_fields` = ' . (int) $countFieldText . ' WHERE `id_product` = ' . (int) $product->id);
+        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET `customizable` = '.$productCustomizableValue.', `uploadable_files` = '.(int) $countFieldFile.', `text_fields` = '.(int) $countFieldText.' WHERE `id_product` = '.(int) $product->id);
 
         //update product_shop count fields labels
         ObjectModel::updateMultishopTable('product', array(
             'customizable' => $productCustomizableValue,
             'uploadable_files' => (int) $countFieldFile,
             'text_fields' => (int) $countFieldText,
-        ), 'a.id_product = ' . (int) $product->id);
+        ), 'a.id_product = '.(int) $product->id);
 
         Configuration::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', '1');
 
@@ -745,7 +745,7 @@ class AdminProductWrapper
             $download->display_filename = $data['name'];
             $download->filename = $fileName ? $fileName : $download->filename;
             $download->date_add = date('Y-m-d H:i:s');
-            $download->date_expiration = $data['expiration_date'] ? $data['expiration_date'] . ' 23:59:59' : '';
+            $download->date_expiration = $data['expiration_date'] ? $data['expiration_date'].' 23:59:59' : '';
             $download->nb_days_accessible = (int) $data['nb_days'];
             $download->nb_downloadable = (int) $data['nb_downloadable'];
             $download->active = 1;
@@ -778,8 +778,8 @@ class AdminProductWrapper
         $download = new ProductDownload($id_product_download ? $id_product_download : null);
 
         if ($download && !empty($download->filename)) {
-            unlink(_PS_DOWNLOAD_DIR_ . $download->filename);
-            Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product_download` SET filename = "" WHERE `id_product_download` = ' . (int) $download->id);
+            unlink(_PS_DOWNLOAD_DIR_.$download->filename);
+            Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product_download` SET filename = "" WHERE `id_product_download` = '.(int) $download->id);
         }
     }
 
@@ -930,7 +930,7 @@ class AdminProductWrapper
 
         $admin_dir = dirname($_SERVER['PHP_SELF']);
         $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-        $preview_url_deactivate = $preview_url . ((false === strpos($preview_url, '?')) ? '?' : '&') . 'adtoken=' . $token . '&ad=' . $admin_dir . '&id_employee=' . (int) $context->employee->id . '&preview=1';
+        $preview_url_deactivate = $preview_url.((false === strpos($preview_url, '?')) ? '?' : '&').'adtoken='.$token.'&ad='.$admin_dir.'&id_employee='.(int) $context->employee->id.'&preview=1';
 
         return $preview_url_deactivate;
     }

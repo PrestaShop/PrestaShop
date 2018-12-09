@@ -42,9 +42,9 @@ class HelperShopCore extends Helper
         if ($this->noShopSelection()) {
             $current_shop_value = '';
         } elseif (Shop::CONTEXT_GROUP == $shop_context) {
-            $current_shop_value = 'g-' . Shop::getContextShopGroupID();
+            $current_shop_value = 'g-'.Shop::getContextShopGroupID();
         } else {
-            $current_shop_value = 's-' . Shop::getContextShopID();
+            $current_shop_value = 's-'.Shop::getContextShopID();
         }
 
         $tpl = $this->createTemplate('helpers/shops_list/list.tpl');
@@ -59,7 +59,7 @@ class HelperShopCore extends Helper
             'is_group_context' => ($context->controller->multishop_context & Shop::CONTEXT_GROUP),
             'is_all_context' => ($context->controller->multishop_context & Shop::CONTEXT_ALL),
             'shop_context' => $shop_context,
-            'url' => $_SERVER['REQUEST_URI'] . (($_SERVER['QUERY_STRING']) ? '&' : '?') . 'setShopContext=',
+            'url' => $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext=',
         ));
 
         return $tpl->fetch();

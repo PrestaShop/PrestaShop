@@ -190,12 +190,12 @@ class AdminStatusesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_order_state'] = array(
-                'href' => self::$currentIndex . '&addorder_state&token=' . $this->token,
+                'href' => self::$currentIndex.'&addorder_state&token='.$this->token,
                 'desc' => $this->trans('Add new order status', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
             );
             $this->page_header_toolbar_btn['new_order_return_state'] = array(
-                'href' => self::$currentIndex . '&addorder_return_state&token=' . $this->token,
+                'href' => self::$currentIndex.'&addorder_return_state&token='.$this->token,
                 'desc' => $this->trans('Add new order return status', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -244,18 +244,18 @@ class AdminStatusesControllerCore extends AdminController
     {
         return array_map(function ($row) {
             return (int) $row['id_order_state'];
-        }, Db::getInstance()->executeS('SELECT id_order_state FROM ' . _DB_PREFIX_ . 'order_state WHERE unremovable = 1'));
+        }, Db::getInstance()->executeS('SELECT id_order_state FROM '._DB_PREFIX_.'order_state WHERE unremovable = 1'));
     }
 
     protected function checkFilterForOrdersReturnsList()
     {
         // test if a filter is applied for this list
-        if (Tools::isSubmit('submitFilter' . $this->table) || false !== $this->context->cookie->{'submitFilter' . $this->table}) {
+        if (Tools::isSubmit('submitFilter'.$this->table) || false !== $this->context->cookie->{'submitFilter'.$this->table}) {
             $this->filter = true;
         }
 
         // test if a filter reset request is required for this list
-        if (isset($_POST['submitReset' . $this->table])) {
+        if (isset($_POST['submitReset'.$this->table])) {
             $this->action = 'reset_filters';
         } else {
             $this->action = '';
@@ -279,7 +279,7 @@ class AdminStatusesControllerCore extends AdminController
                     'required' => true,
                     'hint' => array(
                         $this->trans('Order status (e.g. \'Pending\').', array(), 'Admin.Shopparameters.Help'),
-                        $this->trans('Invalid characters: numbers and', array(), 'Admin.Shopparameters.Help') . ' !<>,;?=+()@#"{}_$%:',
+                        $this->trans('Invalid characters: numbers and', array(), 'Admin.Shopparameters.Help').' !<>,;?=+()@#"{}_$%:',
                     ),
                 ),
                 array(
@@ -292,7 +292,7 @@ class AdminStatusesControllerCore extends AdminController
                     'type' => 'color',
                     'label' => $this->trans('Color', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'color',
-                    'hint' => $this->trans('Status will be highlighted in this color. HTML colors only.', array(), 'Admin.Shopparameters.Help') . ' "lightblue", "#CC6600")',
+                    'hint' => $this->trans('Status will be highlighted in this color. HTML colors only.', array(), 'Admin.Shopparameters.Help').' "lightblue", "#CC6600")',
                 ),
                 array(
                     'type' => 'checkbox',
@@ -458,7 +458,7 @@ class AdminStatusesControllerCore extends AdminController
 
         $back = Tools::safeOutput(Tools::getValue('back', ''));
         if (empty($back)) {
-            $back = self::$currentIndex . '&token=' . $this->token;
+            $back = self::$currentIndex.'&token='.$this->token;
         }
         if (!Validate::isCleanHtml($back)) {
             die(Tools::displayError());
@@ -481,14 +481,14 @@ class AdminStatusesControllerCore extends AdminController
                     'required' => true,
                     'hint' => array(
                         $this->trans('Order\'s return status name.', array(), 'Admin.Shopparameters.Help'),
-                        $this->trans('Invalid characters: numbers and', array(), 'Admin.Shopparameters.Help') . ' !<>,;?=+()@#"�{}_$%:',
+                        $this->trans('Invalid characters: numbers and', array(), 'Admin.Shopparameters.Help').' !<>,;?=+()@#"�{}_$%:',
                     ),
                 ),
                 array(
                     'type' => 'color',
                     'label' => $this->trans('Color', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'color',
-                    'hint' => $this->trans('Status will be highlighted in this color. HTML colors only.', array(), 'Admin.Shopparameters.Help') . ' "lightblue", "#CC6600")',
+                    'hint' => $this->trans('Status will be highlighted in this color. HTML colors only.', array(), 'Admin.Shopparameters.Help').' "lightblue", "#CC6600")',
                 ),
             ),
             'submit' => array(
@@ -503,21 +503,21 @@ class AdminStatusesControllerCore extends AdminController
     {
         $default_path = '../mails/';
         // Mail templates can also be found in the theme folder
-        $theme_path = '../themes/' . $this->context->shop->theme->getName() . '/mails/';
+        $theme_path = '../themes/'.$this->context->shop->theme->getName().'/mails/';
 
         $array = array();
         foreach (Language::getLanguages(false) as $language) {
             $iso_code = $language['iso_code'];
 
             // If there is no folder for the given iso_code in /mails or in /themes/[theme_name]/mails, we bypass this language
-            if (!@filemtime(_PS_ADMIN_DIR_ . '/' . $default_path . $iso_code) && !@filemtime(_PS_ADMIN_DIR_ . '/' . $theme_path . $iso_code)) {
+            if (!@filemtime(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code) && !@filemtime(_PS_ADMIN_DIR_.'/'.$theme_path.$iso_code)) {
                 continue;
             }
 
-            $theme_templates_dir = _PS_ADMIN_DIR_ . '/' . $theme_path . $iso_code;
+            $theme_templates_dir = _PS_ADMIN_DIR_.'/'.$theme_path.$iso_code;
             $theme_templates = is_dir($theme_templates_dir) ? scandir($theme_templates_dir, SCANDIR_SORT_NONE) : array();
             // We merge all available emails in one array
-            $templates = array_unique(array_merge(scandir(_PS_ADMIN_DIR_ . '/' . $default_path . $iso_code, SCANDIR_SORT_NONE), $theme_templates));
+            $templates = array_unique(array_merge(scandir(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code, SCANDIR_SORT_NONE), $theme_templates));
             foreach ($templates as $key => $template) {
                 if (!strncmp(strrev($template), 'lmth.', 5)) {
                     $search_result = array_search($template, $theme_templates);
@@ -535,7 +535,7 @@ class AdminStatusesControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (Tools::isSubmit($this->table . 'Orderby') || Tools::isSubmit($this->table . 'Orderway')) {
+        if (Tools::isSubmit($this->table.'Orderby') || Tools::isSubmit($this->table.'Orderway')) {
             $this->filter = true;
         }
 
@@ -548,14 +548,14 @@ class AdminStatusesControllerCore extends AdminController
             $order_return_state->color = Tools::getValue('color');
             $order_return_state->name = array();
             foreach (Language::getIDs(false) as $id_lang) {
-                $order_return_state->name[$id_lang] = Tools::getValue('name_' . $id_lang);
+                $order_return_state->name[$id_lang] = Tools::getValue('name_'.$id_lang);
             }
 
             // Update object
             if (!$order_return_state->save()) {
                 $this->errors[] = $this->trans('An error has occurred: Can\'t save the current order\'s return status.', array(), 'Admin.Orderscustomers.Notification');
             } else {
-                Tools::redirectAdmin(self::$currentIndex . '&conf=4&token=' . $this->token);
+                Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
             }
         }
 
@@ -575,11 +575,11 @@ class AdminStatusesControllerCore extends AdminController
             if (!$order_return_state->delete()) {
                 $this->errors[] = $this->trans('An error has occurred: Can\'t delete the current order\'s return status.', array(), 'Admin.Orderscustomers.Notification');
             } else {
-                Tools::redirectAdmin(self::$currentIndex . '&conf=1&token=' . $this->token);
+                Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$this->token);
             }
         }
 
-        if (Tools::isSubmit('submitAdd' . $this->table)) {
+        if (Tools::isSubmit('submitAdd'.$this->table)) {
             $this->deleted = false; // Disabling saving historisation
             $_POST['invoice'] = (int) Tools::getValue('invoice_on');
             $_POST['logable'] = (int) Tools::getValue('logable_on');
@@ -592,20 +592,20 @@ class AdminStatusesControllerCore extends AdminController
             $_POST['pdf_invoice'] = (int) Tools::getValue('pdf_invoice_on');
             if (!$_POST['send_email']) {
                 foreach (Language::getIDs(false) as $id_lang) {
-                    $_POST['template_' . $id_lang] = '';
+                    $_POST['template_'.$id_lang] = '';
                 }
             }
 
             return parent::postProcess();
-        } elseif (Tools::isSubmit('delete' . $this->table)) {
+        } elseif (Tools::isSubmit('delete'.$this->table)) {
             $order_state = new OrderState(Tools::getValue('id_order_state'), $this->context->language->id);
             if (!$order_state->isRemovable()) {
                 $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', array(), 'Admin.Shopparameters.Notification');
             } else {
                 return parent::postProcess();
             }
-        } elseif (Tools::isSubmit('submitBulkdelete' . $this->table)) {
-            foreach (Tools::getValue($this->table . 'Box') as $selection) {
+        } elseif (Tools::isSubmit('submitBulkdelete'.$this->table)) {
+            foreach (Tools::getValue($this->table.'Box') as $selection) {
                 $order_state = new OrderState((int) $selection, $this->context->language->id);
                 if (!$order_state->isRemovable()) {
                     $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', array(), 'Admin.Shopparameters.Notification');
@@ -638,8 +638,8 @@ class AdminStatusesControllerCore extends AdminController
         parent::afterImageUpload();
 
         if (($id_order_state = (int) Tools::getValue('id_order_state')) &&
-             isset($_FILES) && count($_FILES) && file_exists(_PS_ORDER_STATE_IMG_DIR_ . $id_order_state . '.gif')) {
-            $current_file = _PS_TMP_IMG_DIR_ . 'order_state_mini_' . $id_order_state . '_' . $this->context->shop->id . '.gif';
+             isset($_FILES) && count($_FILES) && file_exists(_PS_ORDER_STATE_IMG_DIR_.$id_order_state.'.gif')) {
+            $current_file = _PS_TMP_IMG_DIR_.'order_state_mini_'.$id_order_state.'_'.$this->context->shop->id.'.gif';
 
             if (file_exists($current_file)) {
                 unlink($current_file);
@@ -653,7 +653,7 @@ class AdminStatusesControllerCore extends AdminController
     {
         $id_order_state = (int) Tools::getValue('id_order_state');
 
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'order_state SET `send_email`= NOT `send_email` WHERE id_order_state=' . $id_order_state;
+        $sql = 'UPDATE '._DB_PREFIX_.'order_state SET `send_email`= NOT `send_email` WHERE id_order_state='.$id_order_state;
         $result = Db::getInstance()->execute($sql);
 
         if ($result) {
@@ -667,7 +667,7 @@ class AdminStatusesControllerCore extends AdminController
     {
         $id_order_state = (int) Tools::getValue('id_order_state');
 
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'order_state SET `delivery`= NOT `delivery` WHERE id_order_state=' . $id_order_state;
+        $sql = 'UPDATE '._DB_PREFIX_.'order_state SET `delivery`= NOT `delivery` WHERE id_order_state='.$id_order_state;
         $result = Db::getInstance()->execute($sql);
 
         if ($result) {
@@ -681,7 +681,7 @@ class AdminStatusesControllerCore extends AdminController
     {
         $id_order_state = (int) Tools::getValue('id_order_state');
 
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'order_state SET `invoice`= NOT `invoice` WHERE id_order_state=' . $id_order_state;
+        $sql = 'UPDATE '._DB_PREFIX_.'order_state SET `invoice`= NOT `invoice` WHERE id_order_state='.$id_order_state;
         $result = Db::getInstance()->execute($sql);
 
         if ($result) {

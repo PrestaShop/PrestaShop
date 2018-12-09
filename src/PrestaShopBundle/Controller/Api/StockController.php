@@ -173,7 +173,7 @@ class StockController extends ApiController
             ->setData($dataCallback)
             ->setHeadersData($headersData)
             ->setLimit(10000)
-            ->setFileName('stock_' . date('Y-m-d_His') . '.csv')
+            ->setFileName('stock_'.date('Y-m-d_His').'.csv')
         ;
     }
 
@@ -239,8 +239,8 @@ class StockController extends ApiController
     {
         $decodedContent = $this->guardAgainstInvalidJsonBody($request->getContent());
 
-        $message = 'Each item of JSON-encoded array in the request body should contain ' .
-            'a product id ("product_id"), a quantity delta ("delta"). ' .
+        $message = 'Each item of JSON-encoded array in the request body should contain '.
+            'a product id ("product_id"), a quantity delta ("delta"). '.
             'The item of index #%d is invalid.';
 
         array_walk($decodedContent, function ($item, $index) use ($message) {

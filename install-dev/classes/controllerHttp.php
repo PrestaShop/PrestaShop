@@ -438,7 +438,7 @@ class InstallControllerHttp
     /**
      * Send AJAX response in JSON format {success: bool, message: string}.
      *
-     * @param bool   $success
+     * @param bool $success
      * @param string $message
      */
     public function ajaxJsonAnswer($success, $message = '')
@@ -456,8 +456,8 @@ class InstallControllerHttp
     /**
      * Display a template.
      *
-     * @param string $template   Template name
-     * @param bool   $get_output Is true, return template html
+     * @param string $template Template name
+     * @param bool $get_output Is true, return template html
      * @param null|mixed $path
      *
      * @return string

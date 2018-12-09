@@ -92,11 +92,11 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         }
 
         $action = Context::getContext()->link->getAdminLink('AdminStats');
-        $action .= ($action && $table ? '&' . Tools::safeOutput($action) : '');
-        $action .= ($identifier && $id ? '&' . Tools::safeOutput($identifier) . '=' . (int) $id : '');
+        $action .= ($action && $table ? '&'.Tools::safeOutput($action) : '');
+        $action .= ($identifier && $id ? '&'.Tools::safeOutput($identifier).'='.(int) $id : '');
         $module = Tools::getValue('module');
-        $action .= ($module ? '&module=' . Tools::safeOutput($module) : '');
-        $action .= (($id_product = Tools::getValue('id_product')) ? '&id_product=' . Tools::safeOutput($id_product) : '');
+        $action .= ($module ? '&module='.Tools::safeOutput($module) : '');
+        $action .= (($id_product = Tools::getValue('id_product')) ? '&id_product='.Tools::safeOutput($id_product) : '');
         $tpl->assign(array(
             'current' => self::$currentIndex,
             'token' => $token,
@@ -173,9 +173,9 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
     protected function getModules()
     {
         $sql = 'SELECT h.`name` AS hook, m.`name`
-				FROM `' . _DB_PREFIX_ . 'module` m
-				LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_module` = m.`id_module`
-				LEFT JOIN `' . _DB_PREFIX_ . 'hook` h ON hm.`id_hook` = h.`id_hook`
+				FROM `'._DB_PREFIX_.'module` m
+				LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
+				LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
 				WHERE h.`name` = \'displayAdminStatsModules\'
 					AND m.`active` = 1
 				GROUP BY hm.id_module
@@ -221,7 +221,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
         if (Tools::getValue('submitSettings')) {
             if ($this->access('edit')) {
-                self::$currentIndex .= '&module=' . Tools::getValue('module');
+                self::$currentIndex .= '&module='.Tools::getValue('module');
                 Configuration::updateValue('PS_STATS_RENDER', Tools::getValue('PS_STATS_RENDER', Configuration::get('PS_STATS_RENDER')));
                 Configuration::updateValue('PS_STATS_GRID_RENDER', Tools::getValue('PS_STATS_GRID_RENDER', Configuration::get('PS_STATS_GRID_RENDER')));
                 Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
@@ -254,16 +254,16 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         if (Tools::isSubmit('submitDateMonthPrev')) {
             $m = (1 == date('m') ? 12 : date('m') - 1);
             $y = (12 == $m ? date('Y') - 1 : date('Y'));
-            $from = $y . '-' . $m . '-01';
-            $to = $y . '-' . $m . date('-t', mktime(12, 0, 0, $m, 15, $y));
+            $from = $y.'-'.$m.'-01';
+            $to = $y.'-'.$m.date('-t', mktime(12, 0, 0, $m, 15, $y));
         }
         if (Tools::isSubmit('submitDateYear')) {
             $from = date('Y-01-01');
             $to = date('Y-12-31');
         }
         if (Tools::isSubmit('submitDateYearPrev')) {
-            $from = (date('Y') - 1) . date('-01-01');
-            $to = (date('Y') - 1) . date('-12-31');
+            $from = (date('Y') - 1).date('-01-01');
+            $to = (date('Y') - 1).date('-12-31');
         }
         if (isset($from, $to) && !count($this->errors)) {
             $this->context->employee->stats_date_from = $from;
@@ -305,6 +305,6 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         $month = isset($this->context->cookie->stats_month) ? sprintf('%02d', $this->context->cookie->stats_month) : '%';
         $day = isset($this->context->cookie->stats_day) ? sprintf('%02d', $this->context->cookie->stats_day) : '%';
 
-        return $year . '-' . $month . '-' . $day;
+        return $year.'-'.$month.'-'.$day;
     }
 }

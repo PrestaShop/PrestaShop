@@ -128,7 +128,7 @@ class ModuleTabUnregister
         $child = end($remainingChildren);
 
         // We know we have a tab to delete if the parent name is the remaining child name+_MTR
-        if ($parent->getClassName() === $child->getClassName() . ModuleTabRegister::SUFFIX) {
+        if ($parent->getClassName() === $child->getClassName().ModuleTabRegister::SUFFIX) {
             $legacyTabParent = new TabClass($parent->getId());
             // Setting a wrong id_parent will prevent the children to move
             $legacyTabParent->id_parent = -1;

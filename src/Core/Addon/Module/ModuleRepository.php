@@ -149,7 +149,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         list($isoLang) = explode('-', $translator->getLocale());
 
         // Cache related variables
-        $this->cacheFilePath = $isoLang . '_local_modules';
+        $this->cacheFilePath = $isoLang.'_local_modules';
         $this->cacheProvider = $cacheProvider;
         $this->loadedModules = new ArrayCache();
 
@@ -429,8 +429,8 @@ class ModuleRepository implements ModuleRepositoryInterface
             return $this->loadedModules->fetch($name);
         }
 
-        $path = $this->modulePath . $name;
-        $php_file_path = $path . '/' . $name . '.php';
+        $path = $this->modulePath.$name;
+        $php_file_path = $path.'/'.$name.'.php';
 
         /* Data which design the module class */
         $attributes = array('name' => $name);
@@ -563,7 +563,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         foreach ($modulesDirsList as $moduleDir) {
             $moduleName = $moduleDir->getFilename();
-            if (!file_exists($this->modulePath . $moduleName . '/' . $moduleName . '.php')) {
+            if (!file_exists($this->modulePath.$moduleName.'/'.$moduleName.'.php')) {
                 continue;
             }
 
@@ -633,7 +633,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getInstalledModulesPaths()
     {
         $paths = array();
-        $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../../modules')->depth(0);
+        $modulesFiles = Finder::create()->directories()->in(__DIR__.'/../../../../modules')->depth(0);
         $installedModules = array_keys($this->getInstalledModules());
 
         foreach ($modulesFiles as $moduleFile) {

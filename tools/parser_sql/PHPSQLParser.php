@@ -57,8 +57,8 @@ class PHPSQLParser
      * Constructor. It simply calls the parse() function.
      * Use the public variable $parsed to get the output.
      *
-     * @param string $sql           the SQL statement
-     * @param bool   $calcPositions true, if the output should contain [position], false otherwise
+     * @param string $sql the SQL statement
+     * @param bool $calcPositions true, if the output should contain [position], false otherwise
      */
     public function __construct($sql = false, $calcPositions = false)
     {
@@ -75,8 +75,8 @@ class PHPSQLParser
      * of the positions needs some time, if you don't need positions in
      * your application, set the parameter to false.
      *
-     * @param string $sql           the SQL statement
-     * @param bool   $calcPositions true, if the output should contain [position], false otherwise
+     * @param string $sql the SQL statement
+     * @param bool $calcPositions true, if the output should contain [position], false otherwise
      *
      * @return array an associative array with all meta information about the SQL statement
      */

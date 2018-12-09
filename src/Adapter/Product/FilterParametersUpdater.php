@@ -108,8 +108,8 @@ final class FilterParametersUpdater
             );
         }
 
-        if ('last' === $value && isset($persistedFilterParameters['last_' . $parameterName])) {
-            $value = $persistedFilterParameters['last_' . $parameterName];
+        if ('last' === $value && isset($persistedFilterParameters['last_'.$parameterName])) {
+            $value = $persistedFilterParameters['last_'.$parameterName];
         }
 
         return $value;

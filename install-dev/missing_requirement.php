@@ -95,28 +95,36 @@
   <h2>We can't start installation :(</h2>
 
   <ol>
-    <?php if (!extension_loaded('SimpleXML')) { ?>
+    <?php if (!extension_loaded('SimpleXML')) {
+    ?>
     <li>
         PrestaShop installation requires the <b>SimpleXML extension</b> to be enabled.
     </li>
-    <?php } ?>
-    <?php if (!extension_loaded('zip')) { ?>
+    <?php
+} ?>
+    <?php if (!extension_loaded('zip')) {
+        ?>
       <li>
           PrestaShop installation requires the <b>zip extension</b> to be enabled.
       </li>
-    <?php } ?>
-    <?php if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) { ?>
+    <?php
+    } ?>
+    <?php if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) {
+        ?>
       <li>
           PrestaShop requires at least PHP <?php echo _PS_INSTALL_MINIMUM_PHP_VERSION_; ?> or newer versions.
           <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_; ?> you need to update your version of PHP.</i>
       </li>
-    <?php } ?>
-        <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache')) { ?>
+    <?php
+    } ?>
+        <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache')) {
+        ?>
       <li>
           PrestaShop installation needs to write critical files in the folder var/cache.
           <i>Please review the permissions on your server.</i>
       </li>
-    <?php } ?>
+    <?php
+    } ?>
   </ol>
 
   <p>You can contact your web host provider to fix theses requirements.</p>

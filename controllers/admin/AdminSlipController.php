@@ -36,7 +36,7 @@ class AdminSlipControllerCore extends AdminController
         $this->className = 'OrderSlip';
 
         $this->_select = ' o.`id_shop`';
-        $this->_join .= ' LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON (o.`id_order` = a.`id_order`)';
+        $this->_join .= ' LEFT JOIN '._DB_PREFIX_.'orders o ON (o.`id_order` = a.`id_order`)';
         $this->_group = ' GROUP BY a.`id_order_slip`';
 
         parent::__construct();
@@ -92,7 +92,7 @@ class AdminSlipControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         $this->page_header_toolbar_btn['generate_pdf'] = array(
-            'href' => self::$currentIndex . '&token=' . $this->token,
+            'href' => self::$currentIndex.'&token='.$this->token,
             'desc' => $this->trans('Generate PDF', array(), 'Admin.Orderscustomers.Feature'),
             'icon' => 'process-icon-save-date',
         );
@@ -154,7 +154,7 @@ class AdminSlipControllerCore extends AdminController
             if (!count($this->errors)) {
                 $order_slips = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
                 if (count($order_slips)) {
-                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf') . '&submitAction=generateOrderSlipsPDF&date_from=' . urlencode(Tools::getValue('date_from')) . '&date_to=' . urlencode(Tools::getValue('date_to')));
+                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateOrderSlipsPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
                 }
                 $this->errors[] = $this->trans('No order slips were found for this period.', array(), 'Admin.Orderscustomers.Notification');
             }

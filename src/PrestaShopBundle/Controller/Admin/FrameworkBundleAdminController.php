@@ -76,14 +76,14 @@ class FrameworkBundleAdminController extends Controller
 
     public function hashUpdateJsAction($hash)
     {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
+        $contents = file_get_contents('http://localhost:8080/'.$hash.'.hot-update.js');
 
         return new Response($contents);
     }
 
     public function hashUpdateJsonAction($hash)
     {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
+        $contents = file_get_contents('http://localhost:8080/'.$hash.'.hot-update.json');
 
         return new Response($contents);
     }
@@ -186,8 +186,8 @@ class FrameworkBundleAdminController extends Controller
             $title = $this->trans('Help', 'Admin.Global');
         }
 
-        $docLink = urlencode('https://help.prestashop.com/' . $legacyContext->getEmployeeLanguageIso() . '/doc/'
-            . $section . '?version=' . $version . '&country=' . $legacyContext->getEmployeeLanguageIso());
+        $docLink = urlencode('https://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
+            .$section.'?version='.$version.'&country='.$legacyContext->getEmployeeLanguageIso());
 
         return $this->generateUrl('admin_common_sidebar', [
             'url' => $docLink,
@@ -240,19 +240,19 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function authorizationLevel($controller)
     {
-        if ($this->isGranted(PageVoter::DELETE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::DELETE, $controller.'_')) {
             return PageVoter::LEVEL_DELETE;
         }
 
-        if ($this->isGranted(PageVoter::CREATE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::CREATE, $controller.'_')) {
             return PageVoter::LEVEL_CREATE;
         }
 
-        if ($this->isGranted(PageVoter::UPDATE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::UPDATE, $controller.'_')) {
             return PageVoter::LEVEL_UPDATE;
         }
 
-        if ($this->isGranted(PageVoter::READ, $controller . '_')) {
+        if ($this->isGranted(PageVoter::READ, $controller.'_')) {
             return PageVoter::LEVEL_READ;
         }
 
@@ -315,12 +315,12 @@ class FrameworkBundleAdminController extends Controller
     protected function actionIsAllowed($action, $object = '', $suffix = '')
     {
         return (
-                $action === 'delete' . $suffix && $this->isGranted(PageVoter::DELETE, $object)
+                $action === 'delete'.$suffix && $this->isGranted(PageVoter::DELETE, $object)
             ) || (
-                ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
+                ($action === 'activate'.$suffix || $action === 'deactivate'.$suffix) &&
                 $this->isGranted(PageVoter::UPDATE, $object)
             ) || (
-                ($action === 'duplicate' . $suffix) &&
+                ($action === 'duplicate'.$suffix) &&
                 ($this->isGranted(PageVoter::UPDATE, $object) || $this->isGranted(PageVoter::CREATE, $object))
             );
     }
@@ -337,19 +337,19 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getForbiddenActionMessage($action, $suffix = '')
     {
-        if ($action === 'delete' . $suffix) {
+        if ($action === 'delete'.$suffix) {
             return $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error');
         }
 
-        if ($action === 'deactivate' . $suffix || $action === 'activate' . $suffix) {
+        if ($action === 'deactivate'.$suffix || $action === 'activate'.$suffix) {
             return $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error');
         }
 
-        if ($action === 'duplicate' . $suffix) {
+        if ($action === 'duplicate'.$suffix) {
             return $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
         }
 
-        throw new \Exception(sprintf('Invalid action (%s)', $action . $suffix));
+        throw new \Exception(sprintf('Invalid action (%s)', $action.$suffix));
     }
 
     /**

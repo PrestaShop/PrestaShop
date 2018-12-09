@@ -119,11 +119,11 @@ class OrderCarrierCore extends ObjectModel
             }
             $prod_url = $prod_obj->getLink();
 
-            $metadata .= "\n" . '<div itemprop="itemShipped" itemscope itemtype="http://schema.org/Product">';
-            $metadata .= "\n" . '   <meta itemprop="name" content="' . htmlspecialchars($product['product_name']) . '"/>';
-            $metadata .= "\n" . '   <link itemprop="image" href="' . $img_url . '"/>';
-            $metadata .= "\n" . '   <link itemprop="url" href="' . $prod_url . '"/>';
-            $metadata .= "\n" . '</div>';
+            $metadata .= "\n".'<div itemprop="itemShipped" itemscope itemtype="http://schema.org/Product">';
+            $metadata .= "\n".'   <meta itemprop="name" content="'.htmlspecialchars($product['product_name']).'"/>';
+            $metadata .= "\n".'   <link itemprop="image" href="'.$img_url.'"/>';
+            $metadata .= "\n".'   <link itemprop="url" href="'.$prod_url.'"/>';
+            $metadata .= "\n".'</div>';
         }
 
         $orderLanguage = new Language((int) $order->id_lang);
@@ -153,7 +153,7 @@ class OrderCarrierCore extends ObjectModel
             ),
             $templateVars,
             $customer->email,
-            $customer->firstname . ' ' . $customer->lastname,
+            $customer->firstname.' '.$customer->lastname,
             null,
             null,
             null,

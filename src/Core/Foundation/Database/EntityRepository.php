@@ -125,7 +125,7 @@ class EntityRepository
      */
     protected function getTableNameWithPrefix()
     {
-        return $this->db->escape($this->tablesPrefix . $this->entityMetaData->getTableName());
+        return $this->db->escape($this->tablesPrefix.$this->entityMetaData->getTableName());
     }
 
     /**
@@ -200,7 +200,7 @@ class EntityRepository
     {
         $whereClause = $this->queryBuilder->buildWhereConditions('AND', $cumulativeConditions);
 
-        $sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix() . ' WHERE ' . $whereClause;
+        $sql = 'SELECT * FROM '.$this->getTableNameWithPrefix().' WHERE '.$whereClause;
 
         $rows = $this->db->select($sql);
 
@@ -235,7 +235,7 @@ class EntityRepository
      */
     public function findAll()
     {
-        $sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix();
+        $sql = 'SELECT * FROM '.$this->getTableNameWithPrefix();
 
         return $this->hydrateMany($this->db->select($sql));
     }

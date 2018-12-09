@@ -122,7 +122,7 @@ class AdminEmployeesControllerCore extends AdminController
                         'hint' => $this->trans('Security: Minimum time to wait between two password changes.', array(), 'Admin.Advparameters.Feature'),
                         'cast' => 'intval',
                         'type' => 'text',
-                        'suffix' => ' ' . $this->trans('minutes', array(), 'Admin.Advparameters.Feature'),
+                        'suffix' => ' '.$this->trans('minutes', array(), 'Admin.Advparameters.Feature'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ),
                     'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array(
@@ -176,9 +176,9 @@ class AdminEmployeesControllerCore extends AdminController
     public function setMedia($isNewTheme = false)
     {
         parent::setMedia($isNewTheme);
-        $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/js/vendor/jquery-passy.js');
+        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery-passy.js');
         $this->addjQueryPlugin('validate');
-        $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js');
+        $this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
     }
 
     public function initPageHeaderToolbar()
@@ -187,7 +187,7 @@ class AdminEmployeesControllerCore extends AdminController
 
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_employee'] = array(
-                'href' => self::$currentIndex . '&addemployee&token=' . $this->token,
+                'href' => self::$currentIndex.'&addemployee&token='.$this->token,
                 'desc' => $this->trans('Add new employee', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -207,7 +207,7 @@ class AdminEmployeesControllerCore extends AdminController
                     'Admin.Advparameters.Feature'
                 );
                 $this->page_header_toolbar_title = implode(
-                    ' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ',
+                    ' '.Configuration::get('PS_NAVIGATION_PIPE').' ',
                     $this->toolbar_title
                 );
             }
@@ -217,9 +217,9 @@ class AdminEmployeesControllerCore extends AdminController
     public function renderList()
     {
         $this->_select = 'pl.`name` AS profile';
-        $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'profile` p ON a.`id_profile` = p.`id_profile`
-		LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '
-            . (int) $this->context->language->id . ')';
+        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile`
+		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '
+            .(int) $this->context->language->id.')';
         $this->_use_found_rows = false;
 
         return parent::renderList();
@@ -263,15 +263,15 @@ class AdminEmployeesControllerCore extends AdminController
                 array(
                     'type' => 'html',
                     'name' => 'employee_avatar',
-                    'html_content' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" target="_blank" style="background-image:url(' . $obj->getImage() . ')"></a></div>
-					<div id="employee-avatar-thumbnail" class="alert alert-info">' . $this->trans(
+                    'html_content' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" target="_blank" style="background-image:url('.$obj->getImage().')"></a></div>
+					<div id="employee-avatar-thumbnail" class="alert alert-info">'.$this->trans(
                         'Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.',
                         array(
                             '%url%' => '<a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>',
                             '%email%' => $obj->email,
                         ),
                         'Admin.Advparameters.Help'
-                        ) . '
+                        ).'
                     </div>',
                 ),
                 array(
@@ -414,7 +414,7 @@ class AdminEmployeesControllerCore extends AdminController
         );
 
         $this->fields_value['passwd'] = false;
-        $this->fields_value['bo_theme_css'] = $obj->bo_theme . '|' . $obj->bo_css;
+        $this->fields_value['bo_theme_css'] = $obj->bo_theme.'|'.$obj->bo_css;
 
         if (empty($obj->id)) {
             $this->fields_value['id_lang'] = $this->context->language->id;
@@ -436,7 +436,7 @@ class AdminEmployeesControllerCore extends AdminController
         $email = $this->getFieldValue($obj, 'email');
         if (Validate::isEmail($email) && Employee::employeeExists($email) && (!Tools::getValue('id_employee')
             || ($employee = new Employee((int) Tools::getValue('id_employee'))) && $employee->email != $email)) {
-            $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.Orderscustomers.Notification') . ' ' . $email;
+            $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.Orderscustomers.Notification').' '.$email;
         }
     }
 
@@ -517,12 +517,12 @@ class AdminEmployeesControllerCore extends AdminController
 
             // Unset set shops
             foreach ($_POST as $postkey => $postvalue) {
-                if (false !== strstr($postkey, 'checkBoxShopAsso_' . $this->table)) {
+                if (false !== strstr($postkey, 'checkBoxShopAsso_'.$this->table)) {
                     unset($_POST[$postkey]);
                 }
             }
             foreach ($_GET as $postkey => $postvalue) {
-                if (false !== strstr($postkey, 'checkBoxShopAsso_' . $this->table)) {
+                if (false !== strstr($postkey, 'checkBoxShopAsso_'.$this->table)) {
                     unset($_GET[$postkey]);
                 }
             }
@@ -530,7 +530,7 @@ class AdminEmployeesControllerCore extends AdminController
             // Add current shops associated to the employee
             $result = Shop::getShopById((int) $employee->id, $this->identifier, $this->table);
             foreach ($result as $row) {
-                $key = 'checkBoxShopAsso_' . $this->table;
+                $key = 'checkBoxShopAsso_'.$this->table;
                 if (!isset($_POST[$key])) {
                     $_POST[$key] = array();
                 }
@@ -548,9 +548,9 @@ class AdminEmployeesControllerCore extends AdminController
 
         //if profile is super admin, manually fill checkBoxShopAsso_employee because in the form they are disabled.
         if (_PS_ADMIN_PROFILE_ == $_POST['id_profile']) {
-            $result = Db::getInstance()->executeS('SELECT id_shop FROM ' . _DB_PREFIX_ . 'shop');
+            $result = Db::getInstance()->executeS('SELECT id_shop FROM '._DB_PREFIX_.'shop');
             foreach ($result as $row) {
-                $key = 'checkBoxShopAsso_' . $this->table;
+                $key = 'checkBoxShopAsso_'.$this->table;
                 if (!isset($_POST[$key])) {
                     $_POST[$key] = array();
                 }

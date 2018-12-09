@@ -48,11 +48,11 @@ class Update extends Repository
     public function __construct($psCacheDir)
     {
         $this->oldUmask = umask(0000);
-        $this->cldrCacheFolder = $psCacheDir . 'cldr';
+        $this->cldrCacheFolder = $psCacheDir.'cldr';
 
         if (!is_dir($this->cldrCacheFolder)) {
             try {
-                mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas', 0777, true);
+                mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas', 0777, true);
             } catch (\Exception $e) {
                 throw new \Exception('Cldr cache folder can\'t be created');
             }
@@ -72,7 +72,7 @@ class Update extends Repository
      */
     public function init()
     {
-        if (!is_file($file = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'core.zip')) {
+        if (!is_file($file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip')) {
             $fp = fopen($file, 'wb');
 
             $curl = new Curl();
@@ -82,8 +82,8 @@ class Update extends Repository
             $curl->get(self::ZIP_CORE_URL);
 
             if ($curl->error) {
-                throw new \Exception("Failed to download '" .
-                    self::ZIP_CORE_URL . "'.");
+                throw new \Exception("Failed to download '".
+                    self::ZIP_CORE_URL."'.");
             }
 
             fclose($fp);
@@ -95,19 +95,19 @@ class Update extends Repository
             for ($i = 0; $i < $archive->numFiles; ++$i) {
                 $filename = $archive->getNameIndex($i);
                 if (preg_match('%^supplemental\/(.*).json$%', $filename)) {
-                    if (!is_dir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename))) {
-                        mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename), 0777, true);
+                    if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename))) {
+                        mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
                     }
 
-                    if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename)) {
-                        copy('zip://' . $file . '#' . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename);
-                        $this->newDatasFile[] = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename;
+                    if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename)) {
+                        copy('zip://'.$file.'#'.$filename, $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename);
+                        $this->newDatasFile[] = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename;
                     }
                 }
             }
             $archive->close();
         } else {
-            throw new \Exception("Failed to unzip '" . $file . "'.");
+            throw new \Exception("Failed to unzip '".$file."'.");
         }
 
         $this->generateSupplementalDatas();
@@ -127,7 +127,7 @@ class Update extends Repository
         $cldrRepository = ToolsLegacy::getCldr(null, $locale);
         $locale = $cldrRepository->getCulture();
 
-        $file = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'core.zip';
+        $file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip';
 
         $archive = new ZipArchive();
         $archive->open($file);
@@ -135,14 +135,14 @@ class Update extends Repository
         for ($i = 0; $i < $archive->numFiles; ++$i) {
             $filename = $archive->getNameIndex($i);
 
-            if (preg_match('%^main\/' . $locale . '\/(.*).json$%', $filename)) {
-                if (!is_dir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename))) {
-                    mkdir($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . dirname($filename), 0777, true);
+            if (preg_match('%^main\/'.$locale.'\/(.*).json$%', $filename)) {
+                if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename))) {
+                    mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
                 }
 
-                if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename)) {
-                    copy('zip://' . $file . '#' . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename);
-                    $this->newDatasFile[] = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename;
+                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename)) {
+                    copy('zip://'.$file.'#'.$filename, $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename);
+                    $this->newDatasFile[] = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename;
                 }
             }
         }
@@ -156,16 +156,16 @@ class Update extends Repository
      */
     private function generateSupplementalDatas()
     {
-        $rootPath = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR;
-        $files = @scandir($rootPath . 'supplemental', SCANDIR_SORT_NONE);
+        $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
+        $files = @scandir($rootPath.'supplemental', SCANDIR_SORT_NONE);
 
         foreach ($files as $file) {
             if (is_file($file)) {
-                $newFileName = 'supplemental--' . pathinfo($file)['filename'];
-                if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName)) {
+                $newFileName = 'supplemental--'.pathinfo($file)['filename'];
+                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName)) {
                     copy(
-                        $rootPath . 'supplemental' . DIRECTORY_SEPARATOR . $file,
-                        $this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName
+                        $rootPath.'supplemental'.DIRECTORY_SEPARATOR.$file,
+                        $this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName
                     );
                 }
             }
@@ -179,19 +179,19 @@ class Update extends Repository
      */
     private function generateMainDatas($locale)
     {
-        $rootPath = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR;
-        $files = @scandir($rootPath . 'main' . DIRECTORY_SEPARATOR . $locale, SCANDIR_SORT_NONE);
+        $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
+        $files = @scandir($rootPath.'main'.DIRECTORY_SEPARATOR.$locale, SCANDIR_SORT_NONE);
 
         if (!$files) {
             return;
         }
         foreach ($files as $file) {
             if (is_file($file)) {
-                $newFileName = 'main--' . $locale . '--' . pathinfo($file)['filename'];
-                if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName)) {
+                $newFileName = 'main--'.$locale.'--'.pathinfo($file)['filename'];
+                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName)) {
                     copy(
-                        $rootPath . 'main' . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $file,
-                        $this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName
+                        $rootPath.'main'.DIRECTORY_SEPARATOR.$locale.DIRECTORY_SEPARATOR.$file,
+                        $this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName
                     );
                 }
             }

@@ -95,7 +95,7 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
 
         $optimizationSucceeded = ImageManager::resize(
             $temporaryImageName,
-            _PS_IMG_DIR_ . 'c' . DIRECTORY_SEPARATOR . $id . '.jpg',
+            _PS_IMG_DIR_.'c'.DIRECTORY_SEPARATOR.$id.'.jpg',
             null,
             null,
             'jpg'
@@ -115,15 +115,15 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
      */
     private function generateDifferentTypes($id)
     {
-        if (!file_exists(_PS_CAT_IMG_DIR_ . $id . '.jpg')) {
+        if (!file_exists(_PS_CAT_IMG_DIR_.$id.'.jpg')) {
             return;
         }
 
         $imagesTypes = ImageType::getImagesTypes('categories');
         foreach ($imagesTypes as $k => $imageType) {
             $generated = ImageManager::resize(
-                _PS_CAT_IMG_DIR_ . $id . '.jpg',
-                _PS_CAT_IMG_DIR_ . $id . '-' . stripslashes($imageType['name']) . '.jpg',
+                _PS_CAT_IMG_DIR_.$id.'.jpg',
+                _PS_CAT_IMG_DIR_.$id.'-'.stripslashes($imageType['name']).'.jpg',
                 (int) $imageType['width'],
                 (int) $imageType['height']
             );

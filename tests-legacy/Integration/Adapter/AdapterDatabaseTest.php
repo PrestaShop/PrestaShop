@@ -51,6 +51,7 @@ class AdapterDatabaseTest extends IntegrationTestCase
 
     /**
      * @dataProvider test_values_are_escaped_dataProvider
+     *
      * @param mixed $expectedSanitizedValue
      * @param mixed $unsafeInput
      */

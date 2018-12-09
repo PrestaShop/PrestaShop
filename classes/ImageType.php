@@ -98,13 +98,13 @@ class ImageTypeCore extends ObjectModel
         if (!isset(self::$images_types_cache[$type])) {
             $where = 'WHERE 1';
             if (!empty($type)) {
-                $where .= ' AND `' . bqSQL($type) . '` = 1 ';
+                $where .= ' AND `'.bqSQL($type).'` = 1 ';
             }
 
             if ($orderBySize) {
-                $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'image_type` ' . $where . ' ORDER BY `width` DESC, `height` DESC, `name`ASC';
+                $query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `width` DESC, `height` DESC, `name`ASC';
             } else {
-                $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'image_type` ' . $where . ' ORDER BY `name` ASC';
+                $query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `name` ASC';
             }
 
             self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
@@ -128,8 +128,8 @@ class ImageTypeCore extends ObjectModel
 
         Db::getInstance()->executeS('
 			SELECT `id_image_type`
-			FROM `' . _DB_PREFIX_ . 'image_type`
-			WHERE `name` = \'' . pSQL($typeName) . '\'');
+			FROM `'._DB_PREFIX_.'image_type`
+			WHERE `name` = \''.pSQL($typeName).'\'');
 
         return Db::getInstance()->numRows();
     }
@@ -145,8 +145,8 @@ class ImageTypeCore extends ObjectModel
     {
         static $is_passed = false;
 
-        if (!isset(self::$images_types_name_cache[$name . '_' . $type . '_' . $order]) && !$is_passed) {
-            $results = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'image_type`');
+        if (!isset(self::$images_types_name_cache[$name.'_'.$type.'_'.$order]) && !$is_passed) {
+            $results = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'image_type`');
 
             $types = array('products', 'categories', 'manufacturers', 'suppliers', 'stores');
             $total = count($types);
@@ -154,7 +154,7 @@ class ImageTypeCore extends ObjectModel
             foreach ($results as $result) {
                 foreach ($result as $value) {
                     for ($i = 0; $i < $total; ++$i) {
-                        self::$images_types_name_cache[$result['name'] . '_' . $types[$i] . '_' . $value] = $result;
+                        self::$images_types_name_cache[$result['name'].'_'.$types[$i].'_'.$value] = $result;
                     }
                 }
             }
@@ -163,8 +163,8 @@ class ImageTypeCore extends ObjectModel
         }
 
         $return = false;
-        if (isset(self::$images_types_name_cache[$name . '_' . $type . '_' . $order])) {
-            $return = self::$images_types_name_cache[$name . '_' . $type . '_' . $order];
+        if (isset(self::$images_types_name_cache[$name.'_'.$type.'_'.$order])) {
+            $return = self::$images_types_name_cache[$name.'_'.$type.'_'.$order];
         }
 
         return $return;
@@ -196,17 +196,17 @@ class ImageTypeCore extends ObjectModel
     public static function getFormattedName($name)
     {
         $themeName = Context::getContext()->shop->theme_name;
-        $nameWithoutThemeName = str_replace(array('_' . $themeName, $themeName . '_'), '', $name);
+        $nameWithoutThemeName = str_replace(array('_'.$themeName, $themeName.'_'), '', $name);
 
         //check if the theme name is already in $name if yes only return $name
         if (strstr($name, $themeName) && self::getByNameNType($name)) {
             return $name;
-        } elseif (self::getByNameNType($nameWithoutThemeName . '_' . $themeName)) {
-            return $nameWithoutThemeName . '_' . $themeName;
-        } elseif (self::getByNameNType($themeName . '_' . $nameWithoutThemeName)) {
-            return $themeName . '_' . $nameWithoutThemeName;
+        } elseif (self::getByNameNType($nameWithoutThemeName.'_'.$themeName)) {
+            return $nameWithoutThemeName.'_'.$themeName;
+        } elseif (self::getByNameNType($themeName.'_'.$nameWithoutThemeName)) {
+            return $themeName.'_'.$nameWithoutThemeName;
         } else {
-            return $nameWithoutThemeName . '_default';
+            return $nameWithoutThemeName.'_default';
         }
     }
 

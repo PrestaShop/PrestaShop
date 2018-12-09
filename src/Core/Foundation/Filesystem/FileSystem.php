@@ -46,7 +46,7 @@ class FileSystem
 
     private function joinTwoPaths($a, $b)
     {
-        return $this->normalizePath($a) . DIRECTORY_SEPARATOR . $this->normalizePath($b);
+        return $this->normalizePath($a).DIRECTORY_SEPARATOR.$this->normalizePath($b);
     }
 
     /**

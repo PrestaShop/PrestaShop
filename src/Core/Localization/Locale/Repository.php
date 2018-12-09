@@ -144,7 +144,7 @@ class Repository implements RepositoryInterface
         $cldrLocale = $this->cldrLocaleRepository->getLocale($localeCode);
 
         if (null === $cldrLocale) {
-            throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
+            throw new LocalizationException('CLDR locale not found for locale code "'.$localeCode.'"');
         }
 
         return $this->buildNumberSpecification($cldrLocale);
@@ -168,7 +168,7 @@ class Repository implements RepositoryInterface
     {
         $cldrLocale = $this->cldrLocaleRepository->getLocale($localeCode);
         if (null === $cldrLocale) {
-            throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
+            throw new LocalizationException('CLDR locale not found for locale code "'.$localeCode.'"');
         }
 
         $currencies = $this->currencyRepository->getInstalledCurrencies();

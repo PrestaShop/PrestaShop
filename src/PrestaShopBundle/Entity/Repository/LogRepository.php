@@ -54,7 +54,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     ) {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;
-        $this->logTable = $this->databasePrefix . 'log';
+        $this->logTable = $this->databasePrefix.'log';
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
@@ -113,7 +113,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      */
     public function getAllWithEmployeeInformationQuery($filters)
     {
-        $employeeTable = $this->databasePrefix . 'employee';
+        $employeeTable = $this->databasePrefix.'employee';
         $queryBuilder = $this->connection->createQueryBuilder();
         $wheres = array_filter($filters['filters'], function ($value) {
             return !empty($value);
@@ -134,7 +134,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         if (!empty($scalarFilters)) {
             foreach ($scalarFilters as $column => $value) {
                 $qb->andWhere("$column LIKE :$column");
-                $qb->setParameter($column, '%' . $value . '%');
+                $qb->setParameter($column, '%'.$value.'%');
             }
         }
 
@@ -150,7 +150,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         /* Manage Employee filter */
         if (!empty($wheres['employee'])) {
             $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
-            $qb->setParameter('employee', '%' . $wheres['employee'] . '%');
+            $qb->setParameter('employee', '%'.$wheres['employee'].'%');
         }
 
         return $qb;
@@ -214,7 +214,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      */
     private function buildGridQuery(SearchCriteriaInterface $searchCriteria)
     {
-        $employeeTable = $this->databasePrefix . 'employee';
+        $employeeTable = $this->databasePrefix.'employee';
 
         $qb = $this->connection
             ->createQueryBuilder()
@@ -234,7 +234,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
 
             if ('employee' == $filterName) {
                 $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
-                $qb->setParameter('employee', '%' . $filterValue . '%');
+                $qb->setParameter('employee', '%'.$filterValue.'%');
 
                 continue;
             }
@@ -254,7 +254,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             }
 
             $qb->andWhere("$filterName LIKE :$filterName");
-            $qb->setParameter($filterName, '%' . $filterValue . '%');
+            $qb->setParameter($filterName, '%'.$filterValue.'%');
         }
 
         return $qb;

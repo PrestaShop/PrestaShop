@@ -37,7 +37,7 @@ class FloatParserTest extends TestCase
      * Then the string should be interpreted as a float by ImmutableFloat.
      *
      * @param string $string
-     * @param float  $expected
+     * @param float $expected
      *
      * @dataProvider provideValidStrings
      */

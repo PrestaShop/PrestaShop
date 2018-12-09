@@ -39,7 +39,7 @@ class ModuleFrontControllerCore extends FrontController
             Tools::redirect('index');
         }
 
-        $this->page_name = 'module-' . $this->module->name . '-' . Dispatcher::getInstance()->getController();
+        $this->page_name = 'module-'.$this->module->name.'-'.Dispatcher::getInstance()->getController();
 
         parent::__construct();
 

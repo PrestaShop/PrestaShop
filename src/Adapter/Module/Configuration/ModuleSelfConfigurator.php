@@ -154,7 +154,7 @@ class ModuleSelfConfigurator
         // Find and store the first config file we find
         $files = Finder::create()
             ->files()
-            ->in(_PS_MODULE_DIR_ . $this->module)
+            ->in(_PS_MODULE_DIR_.$this->module)
             ->name($this->defaultConfigFile, null, true)
         ;
 
@@ -276,7 +276,7 @@ class ModuleSelfConfigurator
     {
         // If we do not deal with any kind of URL, add the path to the YML config file
         if (!filter_var($file, FILTER_VALIDATE_URL)) {
-            $file = dirname($this->getFile()) . '/' . $file;
+            $file = dirname($this->getFile()).'/'.$file;
         }
 
         return $file;

@@ -94,7 +94,7 @@ class AdminCmsControllerCore extends AdminController
         // The controller can't be call directly
         // In this case, AdminCmsContentController::getCurrentCMSCategory() is null
         if (!AdminCmsContentController::getCurrentCMSCategory()) {
-            $this->redirect_after = '?controller=AdminCmsContent&token=' . Tools::getAdminTokenLite('AdminCmsContent');
+            $this->redirect_after = '?controller=AdminCmsContent&token='.Tools::getAdminTokenLite('AdminCmsContent');
             $this->redirect();
         }
 
@@ -102,9 +102,9 @@ class AdminCmsControllerCore extends AdminController
         $this->tpl_list_vars['icon'] = 'icon-folder-close';
         $this->tpl_list_vars['title'] = $this->trans('Pages in category "%name%"', array('%name%' => $this->_category->name[Context::getContext()->employee->id_lang]), 'Admin.Design.Feature');
         $this->_join = '
-		LEFT JOIN `' . _DB_PREFIX_ . 'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
+		LEFT JOIN `'._DB_PREFIX_.'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
         $this->_select = 'a.position ';
-        $this->_where = ' AND c.id_cms_category = ' . (int) $this->_category->id;
+        $this->_where = ' AND c.id_cms_category = '.(int) $this->_category->id;
     }
 
     public function getTabSlug()
@@ -171,7 +171,7 @@ class AdminCmsControllerCore extends AdminController
                     'class' => 'copyMeta2friendlyURL',
                     'hint' => array(
                         $this->trans('Used in the h1 page tag, and as the default title tag value.', array(), 'Admin.Design.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                     ),
                 ),
                 array(
@@ -181,7 +181,7 @@ class AdminCmsControllerCore extends AdminController
                     'lang' => true,
                     'hint' => array(
                         $this->trans('Used to override the title tag value. If left blank, the default title value is used.', array(), 'Admin.Design.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                     ),
                 ),
                 array(
@@ -189,7 +189,7 @@ class AdminCmsControllerCore extends AdminController
                     'label' => $this->trans('Meta description', array(), 'Admin.Global'),
                     'name' => 'meta_description',
                     'lang' => true,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                 ),
                 array(
                     'type' => 'tags',
@@ -198,7 +198,7 @@ class AdminCmsControllerCore extends AdminController
                     'lang' => true,
                     'hint' => array(
                         $this->trans('To add "tags" click in the field, write something, and then press "Enter."', array(), 'Admin.Design.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                     ),
                 ),
                 array(
@@ -217,7 +217,7 @@ class AdminCmsControllerCore extends AdminController
                     'lang' => true,
                     'rows' => 5,
                     'cols' => 40,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}',
                 ),
                 array(
                     'type' => 'switch',
@@ -301,7 +301,7 @@ class AdminCmsControllerCore extends AdminController
 
         $this->toolbar_title = $this->trans('Pages in this category', array(), 'Admin.Design.Feature');
         $this->toolbar_btn['new'] = array(
-            'href' => self::$currentIndex . '&add' . $this->table . '&id_cms_category=' . (int) $this->id_cms_category . '&token=' . $this->token,
+            'href' => self::$currentIndex.'&add'.$this->table.'&id_cms_category='.(int) $this->id_cms_category.'&token='.$this->token,
             'desc' => $this->trans('Add new', array(), 'Admin.Actions'),
         );
 
@@ -313,7 +313,7 @@ class AdminCmsControllerCore extends AdminController
         /* Display list header (filtering, pagination and column names) */
         $this->displayListHeader($token);
         if (!count($this->_list)) {
-            echo '<tr><td class="center" colspan="' . (count($this->fields_list) + 2) . '">' . $this->trans('No items found', array(), 'Admin.Design.Notification') . '</td></tr>';
+            echo '<tr><td class="center" colspan="'.(count($this->fields_list) + 2).'">'.$this->trans('No items found', array(), 'Admin.Design.Notification').'</td></tr>';
         }
 
         /* Show the content of the table */
@@ -328,7 +328,7 @@ class AdminCmsControllerCore extends AdminController
         if (Tools::isSubmit('viewcms') && ($id_cms = (int) Tools::getValue('id_cms'))) {
             parent::postProcess();
             if (($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms)) {
-                Tools::redirectAdmin(self::$currentIndex . '&id_cms=' . $id_cms . '&conf=4&updatecms&token=' . Tools::getAdminTokenLite('AdminCmsContent') . '&url_preview=1');
+                Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$id_cms.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_preview=1');
             }
         } elseif (Tools::isSubmit('deletecms')) {
             if (Tools::getValue('id_cms') == Configuration::get('PS_CONDITIONS_CMS_ID')) {
@@ -339,21 +339,21 @@ class AdminCmsControllerCore extends AdminController
             $cms->cleanPositions($cms->id_cms_category);
             if (!$cms->delete()) {
                 $this->errors[] = $this->trans('An error occurred while deleting the object.', array(), 'Admin.Notifications.Error')
-                    . ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
+                    .' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
             } else {
-                Tools::redirectAdmin(self::$currentIndex . '&id_cms_category=' . $cms->id_cms_category . '&conf=1&token=' . Tools::getAdminTokenLite('AdminCmsContent'));
+                Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=1&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             }
-        } elseif (Tools::getValue('submitDel' . $this->table)) {
+        } elseif (Tools::getValue('submitDel'.$this->table)) {
             // Delete multiple objects
             if ($this->access('delete')) {
-                if (Tools::isSubmit($this->table . 'Box')) {
+                if (Tools::isSubmit($this->table.'Box')) {
                     $cms = new CMS();
                     $result = true;
-                    $result = $cms->deleteSelection(Tools::getValue($this->table . 'Box'));
+                    $result = $cms->deleteSelection(Tools::getValue($this->table.'Box'));
                     if ($result) {
                         $cms->cleanPositions((int) Tools::getValue('id_cms_category'));
                         $token = Tools::getAdminTokenLite('AdminCmsContent');
-                        Tools::redirectAdmin(self::$currentIndex . '&conf=2&token=' . $token . '&id_cms_category=' . (int) Tools::getValue('id_cms_category'));
+                        Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token.'&id_cms_category='.(int) Tools::getValue('id_cms_category'));
                     }
                     $this->errors[] = $this->trans('An error occurred while deleting this selection.', array(), 'Admin.Notifications.Error');
                 } else {
@@ -371,7 +371,7 @@ class AdminCmsControllerCore extends AdminController
                 $cms = new CMS();
                 $this->copyFromPost($cms, 'cms');
                 if (!$cms->add()) {
-                    $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
+                    $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
                 } else {
                     $this->updateAssoShop($cms->id);
                 }
@@ -379,17 +379,17 @@ class AdminCmsControllerCore extends AdminController
                 $cms = new CMS($id_cms);
                 $this->copyFromPost($cms, 'cms');
                 if (!$cms->update()) {
-                    $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
+                    $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
                 } else {
                     $this->updateAssoShop($cms->id);
                 }
             }
-            if (Tools::isSubmit('view' . $this->table)) {
-                Tools::redirectAdmin(self::$currentIndex . '&id_cms=' . $cms->id . '&conf=4&updatecms&token=' . Tools::getAdminTokenLite('AdminCmsContent') . '&url_preview=1');
-            } elseif (Tools::isSubmit('submitAdd' . $this->table . 'AndStay')) {
-                Tools::redirectAdmin(self::$currentIndex . '&' . $this->identifier . '=' . $cms->id . '&conf=4&update' . $this->table . '&token=' . Tools::getAdminTokenLite('AdminCmsContent'));
+            if (Tools::isSubmit('view'.$this->table)) {
+                Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$cms->id.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_preview=1');
+            } elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay')) {
+                Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$cms->id.'&conf=4&update'.$this->table.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             } else {
-                Tools::redirectAdmin(self::$currentIndex . '&id_cms_category=' . $cms->id_cms_category . '&conf=4&token=' . Tools::getAdminTokenLite('AdminCmsContent'));
+                Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             }
         } elseif (Tools::isSubmit('way') && Tools::isSubmit('id_cms') && (Tools::isSubmit('position'))) {
             /* @var CMS $object */
@@ -397,11 +397,11 @@ class AdminCmsControllerCore extends AdminController
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } elseif (!Validate::isLoadedObject($object = $this->loadObject())) {
                 $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error')
-                    . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+                    .' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
             } elseif (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
                 $this->errors[] = $this->trans('Failed to update the position.', array(), 'Admin.Notifications.Error');
             } else {
-                Tools::redirectAdmin(self::$currentIndex . '&' . $this->table . 'Orderby=position&' . $this->table . 'Orderway=asc&conf=4&id_cms_category=' . (int) $object->id_cms_category . '&token=' . Tools::getAdminTokenLite('AdminCmsContent'));
+                Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=4&id_cms_category='.(int) $object->id_cms_category.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             }
         } elseif (Tools::isSubmit('statuscms') && Tools::isSubmit($this->identifier)) {
             // Change object status (active, inactive)
@@ -409,13 +409,13 @@ class AdminCmsControllerCore extends AdminController
                 if (Validate::isLoadedObject($object = $this->loadObject())) {
                     /** @var CMS $object */
                     if ($object->toggleStatus()) {
-                        Tools::redirectAdmin(self::$currentIndex . '&conf=5&id_cms_category=' . (int) $object->id_cms_category . '&token=' . Tools::getValue('token'));
+                        Tools::redirectAdmin(self::$currentIndex.'&conf=5&id_cms_category='.(int) $object->id_cms_category.'&token='.Tools::getValue('token'));
                     } else {
                         $this->errors[] = $this->trans('An error occurred while updating the status.', array(), 'Admin.Notifications.Error');
                     }
                 } else {
                     $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error')
-                        . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+                        .' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
                 }
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
@@ -424,14 +424,14 @@ class AdminCmsControllerCore extends AdminController
             // Delete multiple CMS content
             if ($this->access('delete')) {
                 $this->action = 'bulkdelete';
-                $this->boxes = Tools::getValue($this->table . 'Box');
+                $this->boxes = Tools::getValue($this->table.'Box');
                 if (is_array($this->boxes) && array_key_exists(0, $this->boxes)) {
                     $firstCms = new CMS((int) $this->boxes[0]);
                     $id_cms_category = (int) $firstCms->id_cms_category;
                     if (!$res = parent::postProcess(true)) {
                         return $res;
                     }
-                    Tools::redirectAdmin(self::$currentIndex . '&conf=2&token=' . Tools::getAdminTokenLite('AdminCmsContent') . '&id_cms_category=' . $id_cms_category);
+                    Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCmsContent').'&id_cms_category='.$id_cms_category);
                 }
             } else {
                 $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
@@ -452,7 +452,7 @@ class AdminCmsControllerCore extends AdminController
                 'id_employee' => (int) $this->context->employee->id,
                 )
             );
-            $preview_url .= (false === strpos($preview_url, '?') ? '?' : '&') . $params;
+            $preview_url .= (false === strpos($preview_url, '?') ? '?' : '&').$params;
         }
 
         return $preview_url;

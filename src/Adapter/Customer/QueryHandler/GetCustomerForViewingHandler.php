@@ -207,16 +207,16 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      */
     private function getCustomerRankBySales($customerId)
     {
-        $sql = 'SELECT SUM(total_paid_real) FROM ' . _DB_PREFIX_ . 'orders WHERE id_customer = ' . (int) $customerId . ' AND valid = 1';
+        $sql = 'SELECT SUM(total_paid_real) FROM '._DB_PREFIX_.'orders WHERE id_customer = '.(int) $customerId.' AND valid = 1';
 
         if ($totalPaid = Db::getInstance()->getValue($sql)) {
             $sql = '
                 SELECT SQL_CALC_FOUND_ROWS COUNT(*)
-                FROM ' . _DB_PREFIX_ . 'orders
+                FROM '._DB_PREFIX_.'orders
                 WHERE valid = 1
-                    AND id_customer != ' . (int) $customerId . '
+                    AND id_customer != '.(int) $customerId.'
                 GROUP BY id_customer
-                HAVING SUM(total_paid_real) > ' . (int) $totalPaid
+                HAVING SUM(total_paid_real) > '.(int) $totalPaid
             ;
 
             Db::getInstance()->getValue($sql);
@@ -334,15 +334,15 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
 
         $sql = '
             SELECT DISTINCT cp.id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
-            FROM ' . _DB_PREFIX_ . 'cart_product cp
-            JOIN ' . _DB_PREFIX_ . 'cart c ON (c.id_cart = cp.id_cart)
-            JOIN ' . _DB_PREFIX_ . 'product p ON (cp.id_product = p.id_product)
-            WHERE c.id_customer = ' . (int) $customer->id . '
+            FROM '._DB_PREFIX_.'cart_product cp
+            JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = cp.id_cart)
+            JOIN '._DB_PREFIX_.'product p ON (cp.id_product = p.id_product)
+            WHERE c.id_customer = '.(int) $customer->id.'
                 AND NOT EXISTS (
                         SELECT 1
-                        FROM ' . _DB_PREFIX_ . 'orders o
-                        JOIN ' . _DB_PREFIX_ . 'order_detail od ON (o.id_order = od.id_order)
-                        WHERE product_id = cp.id_product AND o.valid = 1 AND o.id_customer = ' . (int) $customer->id . '
+                        FROM '._DB_PREFIX_.'orders o
+                        JOIN '._DB_PREFIX_.'order_detail od ON (o.id_order = od.id_order)
+                        WHERE product_id = cp.id_product AND o.valid = 1 AND o.id_customer = '.(int) $customer->id.'
                 )
         ';
 

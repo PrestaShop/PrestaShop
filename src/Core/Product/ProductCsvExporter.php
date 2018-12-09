@@ -92,7 +92,7 @@ final class ProductCsvExporter implements ProductExporterInterface
             ->setHeadersData($headersData)
             ->setModeType(CsvResponse::MODE_OFFSET)
             ->setLimit(5000)
-            ->setFileName('product_' . date('Y-m-d_His') . '.csv')
+            ->setFileName('product_'.date('Y-m-d_His').'.csv')
         ;
     }
 

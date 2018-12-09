@@ -43,7 +43,7 @@ class PHPSQLParserUtils
      * Prints an array only if debug mode is on.
      *
      * @param array $s
-     * @param bool  $return, if true, the formatted array is returned via return parameter
+     * @param bool $return, if true, the formatted array is returned via return parameter
      * @param mixed $arr
      */
     protected function preprint($arr, $return = false)
@@ -78,6 +78,7 @@ class PHPSQLParserUtils
 
     /**
      * Revokes the quoting characters from an expression.
+     *
      * @param mixed $sql
      */
     protected function revokeQuotation($sql)
@@ -95,6 +96,7 @@ class PHPSQLParserUtils
     /**
      * This method removes parenthesis from start of the given string.
      * It removes also the associated closing parenthesis.
+     *
      * @param mixed $token
      */
     protected function removeParenthesisFromStart($token)
@@ -150,6 +152,7 @@ class PHPSQLParserUtils
 
     /**
      * translates an array of objects into an associative array.
+     *
      * @param mixed $tokenList
      */
     public function toArray($tokenList)

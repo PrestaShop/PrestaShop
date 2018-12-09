@@ -91,7 +91,7 @@ class RoutingCacheKeyGenerator implements CacheKeyGeneratorInterface
         foreach ($this->activeModulesPaths as $modulePath) {
             $extensions = ['yml', 'yaml'];
             foreach ($extensions as $extension) {
-                $routingFile = $modulePath . '/config/routes.' . $extension;
+                $routingFile = $modulePath.'/config/routes.'.$extension;
                 if (file_exists($routingFile)) {
                     $routingFiles[$routingFile] = filemtime($routingFile);
                 }
@@ -125,7 +125,7 @@ class RoutingCacheKeyGenerator implements CacheKeyGeneratorInterface
         if ('prod' !== $this->environment) {
             $latestModification = $this->getLatestModificationTime();
             if (null !== $latestModification) {
-                $cacheKey .= '_' . $latestModification;
+                $cacheKey .= '_'.$latestModification;
             }
         }
 

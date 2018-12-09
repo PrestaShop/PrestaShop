@@ -168,7 +168,7 @@ class ModuleTabRegister
             throw new Exception('Missing class name of tab');
         }
         // Check controller exists
-        if (!in_array($className . 'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
+        if (!in_array($className.'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
             throw new Exception(sprintf('Class "%sController" not found in controllers/admin', $className));
         }
         // Deprecation check
@@ -190,8 +190,8 @@ class ModuleTabRegister
      */
     protected function getModuleAdminControllers($moduleName)
     {
-        $modulePath = _PS_ROOT_DIR_ . '/' . basename(_PS_MODULE_DIR_) .
-                '/' . $moduleName . '/controllers/admin/';
+        $modulePath = _PS_ROOT_DIR_.'/'.basename(_PS_MODULE_DIR_).
+                '/'.$moduleName.'/controllers/admin/';
 
         if (!$this->filesystem->exists($modulePath)) {
             return array();
@@ -299,7 +299,7 @@ class ModuleTabRegister
         $parentClassName = $tabDetails->get('parent_class_name', $tabDetails->get('ParentClassName'));
         if (!empty($parentClassName)) {
             // Could be a previously duplicated tab
-            $idParent = $this->tabRepository->findOneIdByClassName($parentClassName . self::SUFFIX);
+            $idParent = $this->tabRepository->findOneIdByClassName($parentClassName.self::SUFFIX);
             if (!$idParent) {
                 $idParent = $this->tabRepository->findOneIdByClassName($parentClassName);
             }
@@ -329,7 +329,7 @@ class ModuleTabRegister
         $newTab = clone $currentTab;
         $newTab->id = 0;
         $newTab->id_parent = $currentTab->id_parent;
-        $newTab->class_name = $currentTab->class_name . self::SUFFIX;
+        $newTab->class_name = $currentTab->class_name.self::SUFFIX;
         $newTab->save();
 
         // Second save in order to get the proper position (add() resets it)

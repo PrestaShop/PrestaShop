@@ -108,7 +108,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                 $formField->setType('select');
 
                 // Also, what we really want is the id of the linked entity
-                $formField->setName('id_' . strtolower($entity));
+                $formField->setName('id_'.strtolower($entity));
 
                 if ('Country' === $entity) {
                     $formField->setType('countrySelect');
@@ -158,7 +158,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
 
                 foreach ($additionnalFormFields as $formField) {
                     $formField->moduleName = $moduleName;
-                    $format[$moduleName . '_' . $formField->getName()] = $formField;
+                    $format[$moduleName.'_'.$formField->getName()] = $formField;
                 }
             }
         }

@@ -298,7 +298,7 @@ class SupplyOrderDetailCore extends ObjectModel
                     $errors[] = $this->trans(
                         '%s is required.',
                         array(
-                            '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
+                            '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b>',
                         ),
                         'Shop.Notifications.Error'
                     );
@@ -321,7 +321,7 @@ class SupplyOrderDetailCore extends ObjectModel
         foreach ($this->fieldsValidate as $field => $function) {
             if ($value = $this->{$field}) {
                 if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired))) {
-                    $errors[] = '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+                    $errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
                 } elseif ('passwd' == $field) {
                     if ($value = Tools::getValue($field)) {
                         $this->{$field} = Tools::hash($value);
@@ -333,15 +333,15 @@ class SupplyOrderDetailCore extends ObjectModel
         }
 
         if ($this->quantity_expected <= 0) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         if ($this->tax_rate < 0 || $this->tax_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         if ($this->discount_rate < 0 || $this->discount_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         return $errors;

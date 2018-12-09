@@ -127,14 +127,14 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix . 'category', 'c')
+            ->from($this->dbPrefix.'category', 'c')
             ->setParameter('context_lang_id', $this->contextLangId)
             ->setParameter('context_shop_id', $this->contextShopId)
         ;
 
         $qb->leftJoin(
             'c',
-            $this->dbPrefix . 'category_lang',
+            $this->dbPrefix.'category_lang',
             'cl',
             $this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext() ?
                 'c.id_category = cl.id_category AND cl.id_lang = :context_lang_id AND cl.id_shop = :context_shop_id' :
@@ -143,7 +143,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb->leftJoin(
             'c',
-            $this->dbPrefix . 'category_shop',
+            $this->dbPrefix.'category_shop',
             'cs',
             $this->multistoreContextChecker->isSingleShopContext() ?
                 'c.id_category = cs.id_category AND cs.id_shop = :context_shop_id' :
@@ -160,14 +160,14 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 
             if ('name' === $filterName) {
                 $qb->andWhere("cl.name LIKE :$filterName");
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
+                $qb->setParameter($filterName, '%'.$filterValue.'%');
 
                 continue;
             }
 
             if ('description' === $filterName) {
                 $qb->andWhere("cl.description LIKE :$filterName");
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
+                $qb->setParameter($filterName, '%'.$filterValue.'%');
 
                 continue;
             }

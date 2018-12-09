@@ -35,7 +35,7 @@ class ControllerActionTest extends TestCase
      * @dataProvider getControllers
      *
      * @param string $fqcn
-     * @param array  $result
+     * @param array $result
      */
     public function testGetFromString($fqcn, $result)
     {

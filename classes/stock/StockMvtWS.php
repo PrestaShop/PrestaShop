@@ -228,7 +228,7 @@ class StockMvtWSCore extends ObjectModelCore
         parent::__construct($id, $id_lang, $id_shop);
 
         if (0 != (int) $this->id) {
-            $res = $this->getWebserviceObjectList(null, (' AND ' . $this->def['primary'] . ' = ' . (int) $this->id), null, null, true);
+            $res = $this->getWebserviceObjectList(null, (' AND '.$this->def['primary'].' = '.(int) $this->id), null, null, true);
             if (isset($res[0])) {
                 foreach ($this->tables_assoc as $key => $param) {
                     $this->{$key} = $res[0][$key];
@@ -249,7 +249,7 @@ class StockMvtWSCore extends ObjectModelCore
      */
     public function getWebserviceObjectList($join, $filter, $sort, $limit, $full = false)
     {
-        $query = 'SELECT DISTINCT main.' . $this->def['primary'] . ' ';
+        $query = 'SELECT DISTINCT main.'.$this->def['primary'].' ';
 
         if ($full) {
             $query .= ', s.id_product, s.id_product_attribute, s.id_warehouse, w.id_currency, w.management_type,
@@ -259,16 +259,16 @@ class StockMvtWSCore extends ObjectModelCore
         $old_filter = $filter;
         if ($filter) {
             foreach ($this->tables_assoc as $key => $value) {
-                $filter = str_replace('main.`' . $key . '`', $value['table'] . '.`' . $key . '`', $filter);
+                $filter = str_replace('main.`'.$key.'`', $value['table'].'.`'.$key.'`', $filter);
             }
         }
 
-        $query .= 'FROM ' . _DB_PREFIX_ . $this->def['table'] . ' as main ';
+        $query .= 'FROM '._DB_PREFIX_.$this->def['table'].' as main ';
 
         if ($filter !== $old_filter || $full) {
-            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'stock s ON (s.id_stock = main.id_stock) ';
-            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'warehouse w ON (w.id_warehouse = s.id_warehouse) ';
-            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'currency c ON (c.id_currency = w.id_currency) ';
+            $query .= 'LEFT JOIN '._DB_PREFIX_.'stock s ON (s.id_stock = main.id_stock) ';
+            $query .= 'LEFT JOIN '._DB_PREFIX_.'warehouse w ON (w.id_warehouse = s.id_warehouse) ';
+            $query .= 'LEFT JOIN '._DB_PREFIX_.'currency c ON (c.id_currency = w.id_currency) ';
         }
 
         if ($join) {
@@ -278,15 +278,15 @@ class StockMvtWSCore extends ObjectModelCore
         $query .= 'WHERE 1 ';
 
         if ($filter) {
-            $query .= $filter . ' ';
+            $query .= $filter.' ';
         }
 
         if ($sort) {
-            $query .= $sort . ' ';
+            $query .= $sort.' ';
         }
 
         if ($limit) {
-            $query .= $limit . ' ';
+            $query .= $limit.' ';
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

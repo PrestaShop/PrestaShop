@@ -502,12 +502,12 @@ class CartPresenter implements PresenterInterface
             }
 
             if (isset($cartVoucher['reduction_percent']) && '0.00' == $cartVoucher['reduction_amount']) {
-                $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
+                $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'].'%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
                 $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cartVoucher['reduction_amount']);
             }
 
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-' . $cartVoucher['reduction_formatted'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-'.$cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
                 true,
@@ -535,10 +535,10 @@ class CartPresenter implements PresenterInterface
     protected function getAttributesArrayFromString($attributes)
     {
         $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
-        $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)' . $separator . '+(?!' . $separator . '([^:' . $separator . '])+:))/';
+        $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)'.$separator.'+(?!'.$separator.'([^:'.$separator.'])+:))/';
         $attributesArray = array();
         $matches = array();
-        if (!preg_match_all($pattern, $attributes . $separator, $matches)) {
+        if (!preg_match_all($pattern, $attributes.$separator, $matches)) {
             return $attributesArray;
         }
 

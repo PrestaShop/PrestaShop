@@ -48,7 +48,7 @@ class MemcacheServerManager
     public function __construct(Connection $connection, $dbPrefix)
     {
         $this->connection = $connection;
-        $this->tableName = $dbPrefix . 'memcached_servers';
+        $this->tableName = $dbPrefix.'memcached_servers';
     }
 
     /**
@@ -60,7 +60,7 @@ class MemcacheServerManager
      */
     public function addServer($serverIp, $serverPort, $serverWeight)
     {
-        $this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', array(
+        $this->connection->executeUpdate('INSERT INTO '.$this->tableName.' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', array(
            'serverIp' => $serverIp,
            'serverPort' => (int) $serverPort,
            'serverWeight' => (int) $serverWeight,
@@ -118,6 +118,6 @@ class MemcacheServerManager
      */
     public function getServers()
     {
-        return $this->connection->fetchAll('SELECT * FROM ' . $this->tableName, array());
+        return $this->connection->fetchAll('SELECT * FROM '.$this->tableName, array());
     }
 }

@@ -101,9 +101,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
                 if (1 == $this->order_slip->partial) {
                     $order_slip_detail = Db::getInstance()->getRow('
-                        SELECT * FROM `' . _DB_PREFIX_ . 'order_slip_detail`
-                        WHERE `id_order_slip` = ' . (int) $this->order_slip->id . '
-                        AND `id_order_detail` = ' . (int) $product['id_order_detail']);
+                        SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
+                        WHERE `id_order_slip` = '.(int) $this->order_slip->id.'
+                        AND `id_order_detail` = '.(int) $product['id_order_detail']);
 
                     $product['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
                     $product['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
@@ -191,7 +191,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     public function getFilename()
     {
-        return Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . sprintf('%06d', $this->order_slip->id) . '.pdf';
+        return Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_slip->id).'.pdf';
     }
 
     /**

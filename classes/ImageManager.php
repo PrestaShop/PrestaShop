@@ -55,11 +55,11 @@ class ImageManagerCore
             return '';
         }
 
-        if (file_exists(_PS_TMP_IMG_DIR_ . $cacheImage) && $regenerate) {
-            @unlink(_PS_TMP_IMG_DIR_ . $cacheImage);
+        if (file_exists(_PS_TMP_IMG_DIR_.$cacheImage) && $regenerate) {
+            @unlink(_PS_TMP_IMG_DIR_.$cacheImage);
         }
 
-        if ($regenerate || !file_exists(_PS_TMP_IMG_DIR_ . $cacheImage)) {
+        if ($regenerate || !file_exists(_PS_TMP_IMG_DIR_.$cacheImage)) {
             $infos = getimagesize($image);
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
@@ -73,7 +73,7 @@ class ImageManagerCore
 
             // Size is already ok
             if ($y < $size && $x <= $maxX) {
-                copy($image, _PS_TMP_IMG_DIR_ . $cacheImage);
+                copy($image, _PS_TMP_IMG_DIR_.$cacheImage);
             } else {
                 // We need to resize */
                 $ratioX = $x / ($y / $size);
@@ -82,11 +82,11 @@ class ImageManagerCore
                     $size = $y / ($x / $maxX);
                 }
 
-                ImageManager::resize($image, _PS_TMP_IMG_DIR_ . $cacheImage, $ratioX, $size, $imageType);
+                ImageManager::resize($image, _PS_TMP_IMG_DIR_.$cacheImage, $ratioX, $size, $imageType);
             }
         }
 
-        return '<img src="' . self::getThumbnailPath($cacheImage, $disableCache) . '" alt="" class="imgm img-thumbnail" />';
+        return '<img src="'.self::getThumbnailPath($cacheImage, $disableCache).'" alt="" class="imgm img-thumbnail" />';
     }
 
     /**
@@ -97,13 +97,13 @@ class ImageManagerCore
      */
     public static function getThumbnailPath($cacheImage, $disableCache)
     {
-        $cacheParam = $disableCache ? '?time=' . time() : '';
+        $cacheParam = $disableCache ? '?time='.time() : '';
 
         if ('admin' == Context::getContext()->controller->controller_type) {
-            return '../img/tmp/' . $cacheImage . $cacheParam;
+            return '../img/tmp/'.$cacheImage.$cacheParam;
         }
 
-        return _PS_TMP_IMG_ . $cacheImage . $cacheParam;
+        return _PS_TMP_IMG_.$cacheImage.$cacheParam;
     }
 
     /**
@@ -288,7 +288,7 @@ class ImageManagerCore
         @imagedestroy($srcImage);
 
         file_put_contents(
-            dirname($destinationFile) . DIRECTORY_SEPARATOR . 'fileType',
+            dirname($destinationFile).DIRECTORY_SEPARATOR.'fileType',
             $fileType
         );
 
@@ -385,12 +385,12 @@ class ImageManagerCore
         } elseif (function_exists('mime_content_type')) {
             $mimeType = mime_content_type($filename);
         } elseif (function_exists('exec')) {
-            $mimeType = trim(exec('file -b --mime-type ' . escapeshellarg($filename)));
+            $mimeType = trim(exec('file -b --mime-type '.escapeshellarg($filename)));
             if (!$mimeType) {
-                $mimeType = trim(exec('file --mime ' . escapeshellarg($filename)));
+                $mimeType = trim(exec('file --mime '.escapeshellarg($filename)));
             }
             if (!$mimeType) {
-                $mimeType = trim(exec('file -bi ' . escapeshellarg($filename)));
+                $mimeType = trim(exec('file -bi '.escapeshellarg($filename)));
             }
         }
 

@@ -11,17 +11,21 @@
 	<link rel="shortcut icon" href="theme/img/favicon.ico" />
 	<link rel="stylesheet" type="text/css" media="all" href="theme/view.css" />
 
-	<?php if ('true' == $this->language->getLanguage()->isRtl()) { ?>
+	<?php if ('true' == $this->language->getLanguage()->isRtl()) {
+    ?>
 		<link rel="stylesheet" type="text/css" media="all" href="theme/rtl.css" />
-	<?php } ?>
+	<?php
+} ?>
 
 	<script type="text/javascript" src="../js/jquery/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="../js/jquery/plugins/jquery.chosen.js"></script>
 	<script type="text/javascript" src="theme/js/install.js"></script>
 	<script type="text/javascript" src="//www.prestashop.com/js/user-assistance.js"></script>
-	<?php if (file_exists(_PS_INSTALL_PATH_.'theme/js/'.self::$steps->current()->getName().'.js')) { ?>
+	<?php if (file_exists(_PS_INSTALL_PATH_.'theme/js/'.self::$steps->current()->getName().'.js')) {
+        ?>
 		<script type="text/javascript" src="theme/js/<?php echo self::$steps->current()->getName(); ?>.js"></script>
-	<?php } ?>
+	<?php
+    } ?>
 	<script type="text/javascript">
 		var ps_base_uri = '<?php echo addslashes(__PS_BASE_URI__); ?>';
 		var ps_version = '<?php echo addslashes(_PS_INSTALL_VERSION_); ?>';
@@ -39,11 +43,13 @@
 		<li class="lnk_forum"><a href="<?php echo $this->getDocumentationLink(); ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Documentation', array(), 'Install'); ?></a></li>
 		<li class="lnk_blog last"><a href="<?php echo $this->getBlogLink(); ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Blog', array(), 'Install'); ?></a></li>
 		<!--
-		<?php if ($this->getPhone()) { ?>
+		<?php if ($this->getPhone()) {
+        ?>
 			<li id="phone_block" class="last">
 				<div><span><?php echo $this->translator->trans('Contact us!', array(), 'Install'); ?></span><br /><?php echo $this->getPhone(); ?></div>
 			</li>
-		<?php } ?>
+		<?php
+    } ?>
 		-->
 	</ul>
 
@@ -58,26 +64,38 @@
 <!-- List of steps -->
 <div id="leftpannel">
 	<ol id="tabs">
-		<?php foreach ($this->getSteps() as $step) { ?>
-			<?php if (self::$steps->current()->getName() == $step->getName()) { ?>
+		<?php foreach ($this->getSteps() as $step) {
+        ?>
+			<?php if (self::$steps->current()->getName() == $step->getName()) {
+            ?>
 				<li class="selected"><?php echo $step; ?></li>
-			<?php } elseif ($this->isStepFinished($step->getName())){ ?>
+			<?php
+        } elseif ($this->isStepFinished($step->getName())) {
+            ?>
 				<li class="finished"><a href="index.php?step=<?php echo $step->getName(); ?>"><?php echo $step; ?></a></li>
-			<?php } elseif ($step->getName() == $this->getLastStep()){ ?>
+			<?php
+        } elseif ($step->getName() == $this->getLastStep()) {
+            ?>
 				<li class="configuring"><a href="index.php?step=<?php echo $step->getName(); ?>"><?php echo $step; ?></a></li>
-			<?php } else { ?>
+			<?php
+        } else {
+            ?>
 				<li><?php echo $step; ?></li>
-			<?php } ?>
-		<?php } ?>
+			<?php
+        } ?>
+		<?php
+    } ?>
 	</ol>
-	<?php if (@fsockopen('api.prestashop.com', 80, $errno, $errst, 3)) { ?>
+	<?php if (@fsockopen('api.prestashop.com', 80, $errno, $errst, 3)) {
+        ?>
 		<iframe scrolling="no" style="height:210px;width:200px;border:none;margin-top:20px" id="iframe_help"
 			src="https://api.prestashop.com/iframe/install.php?step=<?php echo self::$steps->current()->getName(); ?>&lang=<?php echo $this->language->getLanguageIso(); ?><?php if (isset($this->session->shop_country)) {
-    echo '&country='.$this->session->shop_country;
-} ?>">
+            echo '&country='.$this->session->shop_country;
+        } ?>">
 			<p><?php echo $this->translator->trans('Contact us!', array(), 'Install'); ?><br /><?php echo $this->getPhone(); ?></p>
 		</iframe>
-	<?php } ?>
+	<?php
+    } ?>
 </div>
 
 <!-- Page content -->
@@ -87,9 +105,13 @@
 	<div class="contentTitle">
 		<h1><?php echo $this->translator->trans('Installation Assistant', array(), 'Install'); ?></h1>
 		<ul id="stepList_1" class="stepList clearfix">
-			<?php foreach ($this->getSteps() as $step) { ?>
-				<li <?php if ($this->isStepFinished($step->getName())) { ?>class="ok"<?php } ?>><?php echo $step; ?></li>
-			<?php } ?>
+			<?php foreach ($this->getSteps() as $step) {
+        ?>
+				<li <?php if ($this->isStepFinished($step->getName())) {
+            ?>class="ok"<?php
+        } ?>><?php echo $step; ?></li>
+			<?php
+    } ?>
 		</ul>
 	</div>
 	<noscript>

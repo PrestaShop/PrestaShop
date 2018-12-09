@@ -302,7 +302,7 @@ class ProductController extends FrameworkBundleAdminController
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
         );
         if ('full' !== $view) {
-            return $this->render('@Product/CatalogPage/Lists/list_' . $view . '.html.twig', array_merge($vars, [
+            return $this->render('@Product/CatalogPage/Lists/list_'.$view.'.html.twig', array_merge($vars, [
                 'limit' => $limit,
                 'offset' => $offset,
                 'total' => $totalCount,
@@ -658,7 +658,7 @@ class ProductController extends FrameworkBundleAdminController
 
             foreach ($combinations as $combination) {
                 $formBuilder->add(
-                    'combination_' . $combination['id_product_attribute'],
+                    'combination_'.$combination['id_product_attribute'],
                     ProductCombination::class
                 );
             }
@@ -719,7 +719,7 @@ class ProductController extends FrameworkBundleAdminController
                         $this->addFlash('success', $this->trans('Product(s) successfully activated.', 'Admin.Catalog.Notification'));
                     }
 
-                    $logger->info('Products activated: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products activated: ('.implode(',', $productIdList).').');
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminActivateAfter',
                         $hookEventParameters
@@ -745,7 +745,7 @@ class ProductController extends FrameworkBundleAdminController
                         $this->addFlash('success', $this->trans('Product(s) successfully deactivated.', 'Admin.Catalog.Notification'));
                     }
 
-                    $logger->info('Products deactivated: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products deactivated: ('.implode(',', $productIdList).').');
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeactivateAfter',
                         $hookEventParameters
@@ -770,7 +770,7 @@ class ProductController extends FrameworkBundleAdminController
                     if (empty($hasMessages)) {
                         $this->addFlash('success', $this->trans('Product(s) successfully deleted.', 'Admin.Catalog.Notification'));
                     }
-                    $logger->info('Products deleted: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products deleted: ('.implode(',', $productIdList).').');
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeleteAfter',
                         $hookEventParameters
@@ -795,7 +795,7 @@ class ProductController extends FrameworkBundleAdminController
                     if (empty($hasMessages)) {
                         $this->addFlash('success', $this->trans('Product(s) successfully duplicated.', 'Admin.Catalog.Notification'));
                     }
-                    $logger->info('Products duplicated: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products duplicated: ('.implode(',', $productIdList).').');
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDuplicateAfter',
                         $hookEventParameters
@@ -814,7 +814,7 @@ class ProductController extends FrameworkBundleAdminController
                     $logger->error('Bulk action from ProductController received a bad parameter.');
 
                     throw new Exception(
-                        'Bad action received from call to ProductController::bulkAction: "' . $action . '"',
+                        'Bad action received from call to ProductController::bulkAction: "'.$action.'"',
                         2001
                     );
             }
@@ -895,8 +895,8 @@ class ProductController extends FrameworkBundleAdminController
                         $this->trans('Products successfully sorted.', 'Admin.Catalog.Notification')
                     );
                     $logger->info(
-                        'Products sorted: (' . implode(',', $productIdList) .
-                        ') with positions (' . implode(',', $productPositionList) . ').'
+                        'Products sorted: ('.implode(',', $productIdList).
+                        ') with positions ('.implode(',', $productPositionList).').'
                     );
                     $hookEventParameters = [
                         'product_list_id' => $productIdList,
@@ -920,7 +920,7 @@ class ProductController extends FrameworkBundleAdminController
                     $logger->error('Mass edit action from ProductController received a bad parameter.');
 
                     throw new Exception(
-                        'Bad action received from call to ProductController::massEditAction: "' . $action . '"',
+                        'Bad action received from call to ProductController::massEditAction: "'.$action.'"',
                         2001
                     );
             }
@@ -982,7 +982,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->deleteProduct($id);
                     $this->addFlash('success', $this->trans('Product successfully deleted.', 'Admin.Catalog.Notification'));
-                    $logger->info('Product deleted: (' . $id . ').');
+                    $logger->info('Product deleted: ('.$id.').');
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeleteAfter',
                         $hookEventParameters
@@ -1005,7 +1005,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $duplicateProductId = $productUpdater->duplicateProduct($id);
                     $this->addFlash('success', $this->trans('Product successfully duplicated.', 'Admin.Catalog.Notification'));
-                    $logger->info('Product duplicated: (from ' . $id . ' to ' . $duplicateProductId . ').');
+                    $logger->info('Product duplicated: (from '.$id.' to '.$duplicateProductId.').');
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDuplicateAfter',
                         $hookEventParameters
@@ -1028,7 +1028,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList([$id]);
                     $this->addFlash('success', $this->trans('Product successfully activated.', 'Admin.Catalog.Notification'));
-                    $logger->info('Product activated: ' . $id);
+                    $logger->info('Product activated: '.$id);
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminActivateAfter',
                         $hookEventParameters
@@ -1051,7 +1051,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList([$id], false);
                     $this->addFlash('success', $this->trans('Product successfully deactivated.', 'Admin.Catalog.Notification'));
-                    $logger->info('Product deactivated: ' . $id);
+                    $logger->info('Product deactivated: '.$id);
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeactivateAfter',
                         $hookEventParameters
@@ -1070,7 +1070,7 @@ class ProductController extends FrameworkBundleAdminController
                     $logger->error('Unit action from ProductController received a bad parameter.');
 
                     throw new Exception(
-                        'Bad action received from call to ProductController::unitAction: "' . $action . '"',
+                        'Bad action received from call to ProductController::unitAction: "'.$action.'"',
                         2002
                     );
             }
@@ -1181,7 +1181,7 @@ class ProductController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', [
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
-            'formId' => $step . '_' . $fieldName . '_rendered',
+            'formId' => $step.'_'.$fieldName.'_rendered',
         ]);
     }
 }

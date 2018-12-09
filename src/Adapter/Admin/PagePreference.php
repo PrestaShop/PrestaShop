@@ -67,7 +67,7 @@ class PagePreference implements AdminPagePreferenceInterface
             throw new \InvalidParameterException('$page parameter missing');
         }
 
-        return $this->session->has('should_use_legacy_page_for_' . $page) && 1 == $this->session->get('should_use_legacy_page_for_' . $page, 0);
+        return $this->session->has('should_use_legacy_page_for_'.$page) && 1 == $this->session->get('should_use_legacy_page_for_'.$page, 0);
     }
 
     /**
@@ -80,9 +80,9 @@ class PagePreference implements AdminPagePreferenceInterface
         }
 
         if ((bool) $useLegacy) {
-            $this->session->set('should_use_legacy_page_for_' . $page, 1);
+            $this->session->set('should_use_legacy_page_for_'.$page, 1);
         } else {
-            $this->session->remove('should_use_legacy_page_for_' . $page);
+            $this->session->remove('should_use_legacy_page_for_'.$page);
         }
     }
 
@@ -96,7 +96,7 @@ class PagePreference implements AdminPagePreferenceInterface
             return true;
         }
 
-        $version = Db::getInstance()->getValue('SELECT `value` FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_INSTALL_VERSION"');
+        $version = Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_INSTALL_VERSION"');
         if (!$version) {
             return false;
         }

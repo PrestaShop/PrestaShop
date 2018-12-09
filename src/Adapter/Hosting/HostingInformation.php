@@ -79,7 +79,7 @@ class HostingInformation
      */
     public function getUname()
     {
-        return function_exists('php_uname') ? php_uname('s') . ' ' . php_uname('v') . ' ' . php_uname('m') : '';
+        return function_exists('php_uname') ? php_uname('s').' '.php_uname('v').' '.php_uname('m') : '';
     }
 
     /**

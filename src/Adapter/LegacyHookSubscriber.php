@@ -247,11 +247,11 @@ class LegacyHookSubscriber implements EventSubscriberInterface
                 if (is_array($modules)) {
                     foreach ($modules as $order => $module) {
                         $moduleId = $module['id_module'];
-                        $functionName = 'call_' . $id . '_' . $moduleId;
+                        $functionName = 'call_'.$id.'_'.$moduleId;
                         $moduleListeners[] = array($functionName, 2000 - $order);
                     }
                 } else {
-                    $moduleListeners[] = array('call_' . $id . '_0', 2000);
+                    $moduleListeners[] = array('call_'.$id.'_0', 2000);
                 }
 
                 $listeners[$name] = $moduleListeners;
@@ -275,14 +275,14 @@ class LegacyHookSubscriber implements EventSubscriberInterface
     public function __call($name, $args)
     {
         if (0 !== strpos($name, 'call_')) {
-            throw new \BadMethodCallException('The call to \'' . $name . '\' is not recognized.');
+            throw new \BadMethodCallException('The call to \''.$name.'\' is not recognized.');
         }
 
         $ids = explode('_', $name);
         array_shift($ids); // remove 'call'
 
         if (2 !== count($ids)) {
-            throw new \BadMethodCallException('The call to \'' . $name . '\' is not recognized.');
+            throw new \BadMethodCallException('The call to \''.$name.'\' is not recognized.');
         }
 
         $moduleId = (int) $ids[1];

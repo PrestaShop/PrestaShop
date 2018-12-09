@@ -67,22 +67,22 @@ class AccessCore extends ObjectModel
             );
 
             if (isset($matches['type']) && 'TAB' == $matches['type']) {
-                $joinTable = _DB_PREFIX_ . 'access';
+                $joinTable = _DB_PREFIX_.'access';
             } elseif (isset($matches['type']) && 'MODULE' == $matches['type']) {
-                $joinTable = _DB_PREFIX_ . 'module_access';
+                $joinTable = _DB_PREFIX_.'module_access';
             } else {
-                throw new Exception('The slug ' . $currentRole . ' is invalid');
+                throw new Exception('The slug '.$currentRole.' is invalid');
             }
 
             $currentRole = Db::getInstance()->escape($currentRole);
 
             $isCurrentGranted = (bool) Db::getInstance()->getRow('
                 SELECT t.`id_authorization_role`
-                FROM `' . _DB_PREFIX_ . 'authorization_role` t
-                LEFT JOIN ' . $joinTable . ' j
+                FROM `'._DB_PREFIX_.'authorization_role` t
+                LEFT JOIN '.$joinTable.' j
                 ON j.`id_authorization_role` = t.`id_authorization_role`
-                WHERE `slug` = "' . $currentRole . '"
-                AND j.`id_profile` = "' . (int) $idProfile . '"
+                WHERE `slug` = "'.$currentRole.'"
+                AND j.`id_profile` = "'.(int) $idProfile.'"
             ');
 
             if (!$isCurrentGranted) {
@@ -106,16 +106,16 @@ class AccessCore extends ObjectModel
 
         $accesses = Db::getInstance()->executeS('
             SELECT r.`slug`
-            FROM `' . _DB_PREFIX_ . 'authorization_role` r
-            INNER JOIN `' . _DB_PREFIX_ . 'access` a ON a.`id_authorization_role` = r.`id_authorization_role`
-            WHERE a.`id_profile` = "' . $idProfile . '"
+            FROM `'._DB_PREFIX_.'authorization_role` r
+            INNER JOIN `'._DB_PREFIX_.'access` a ON a.`id_authorization_role` = r.`id_authorization_role`
+            WHERE a.`id_profile` = "'.$idProfile.'"
         ');
 
         $accessesFromModules = Db::getInstance()->executeS('
             SELECT r.`slug`
-            FROM `' . _DB_PREFIX_ . 'authorization_role` r
-            INNER JOIN `' . _DB_PREFIX_ . 'module_access` ma ON ma.`id_authorization_role` = r.`id_authorization_role`
-            WHERE ma.`id_profile` = "' . $idProfile . '"
+            FROM `'._DB_PREFIX_.'authorization_role` r
+            INNER JOIN `'._DB_PREFIX_.'module_access` ma ON ma.`id_authorization_role` = r.`id_authorization_role`
+            WHERE ma.`id_profile` = "'.$idProfile.'"
         ');
 
         $roles = array_merge($accesses, $accessesFromModules);
@@ -145,8 +145,8 @@ class AccessCore extends ObjectModel
 
         $result = Db::getInstance()->getRow('
             SELECT `id_tab`
-            FROM `' . _DB_PREFIX_ . 'tab`
-            WHERE UCASE(`class_name`) = "' . $matches['classname'] . '"
+            FROM `'._DB_PREFIX_.'tab`
+            WHERE UCASE(`class_name`) = "'.$matches['classname'].'"
         ');
 
         return $result['id_tab'];
@@ -163,8 +163,8 @@ class AccessCore extends ObjectModel
     {
         $result = Db::getInstance()->getRow('
             SELECT `class_name`
-            FROM `' . _DB_PREFIX_ . 'tab`
-            WHERE `id_tab` = "' . (int) $idTab . '"
+            FROM `'._DB_PREFIX_.'tab`
+            WHERE `id_tab` = "'.(int) $idTab.'"
         ');
 
         return self::sluggifyTab($result);
@@ -181,8 +181,8 @@ class AccessCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
             SELECT `class_name`
-            FROM `' . _DB_PREFIX_ . 'tab`
-            WHERE `id_parent` = "' . (int) $idParentTab . '"
+            FROM `'._DB_PREFIX_.'tab`
+            WHERE `id_parent` = "'.(int) $idParentTab.'"
         ');
     }
 
@@ -197,8 +197,8 @@ class AccessCore extends ObjectModel
     {
         $result = Db::getInstance()->getRow('
             SELECT `name`
-            FROM `' . _DB_PREFIX_ . 'module`
-            WHERE `id_module` = "' . (int) $idModule . '"
+            FROM `'._DB_PREFIX_.'module`
+            WHERE `id_module` = "'.(int) $idModule.'"
         ');
 
         return self::sluggifyModule($result);
@@ -264,8 +264,8 @@ class AccessCore extends ObjectModel
     public function addAccess($idProfile, $idRole)
     {
         $sql = '
-            INSERT IGNORE INTO `' . _DB_PREFIX_ . 'access` (`id_profile`, `id_authorization_role`)
-            VALUES (' . (int) $idProfile . ',' . (int) $idRole . ')
+            INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
+            VALUES ('.(int) $idProfile.','.(int) $idRole.')
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
@@ -282,9 +282,9 @@ class AccessCore extends ObjectModel
     public function removeAccess($idProfile, $idRole)
     {
         $sql = '
-            DELETE FROM `' . _DB_PREFIX_ . 'access`
-            WHERE `id_profile` = "' . (int) $idProfile . '"
-            AND `id_authorization_role` = "' . (int) $idRole . '"
+            DELETE FROM `'._DB_PREFIX_.'access`
+            WHERE `id_profile` = "'.(int) $idProfile.'"
+            AND `id_authorization_role` = "'.(int) $idRole.'"
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
@@ -301,8 +301,8 @@ class AccessCore extends ObjectModel
     public function addModuleAccess($idProfile, $idRole)
     {
         $sql = '
-            INSERT IGNORE INTO `' . _DB_PREFIX_ . 'module_access` (`id_profile`, `id_authorization_role`)
-            VALUES (' . (int) $idProfile . ',' . (int) $idRole . ')
+            INSERT IGNORE INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_authorization_role`)
+            VALUES ('.(int) $idProfile.','.(int) $idRole.')
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
@@ -317,9 +317,9 @@ class AccessCore extends ObjectModel
     public function removeModuleAccess($idProfile, $idRole)
     {
         $sql = '
-            DELETE FROM `' . _DB_PREFIX_ . 'module_access`
-            WHERE `id_profile` = "' . (int) $idProfile . '"
-            AND `id_authorization_role` = "' . (int) $idRole . '"
+            DELETE FROM `'._DB_PREFIX_.'module_access`
+            WHERE `id_profile` = "'.(int) $idProfile.'"
+            AND `id_authorization_role` = "'.(int) $idRole.'"
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
@@ -352,24 +352,24 @@ class AccessCore extends ObjectModel
         $whereClauses = array();
 
         foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
-            $slugLike = Db::getInstance()->escape($slug . $auth);
-            $whereClauses[] = ' `slug` LIKE "' . $slugLike . '"';
+            $slugLike = Db::getInstance()->escape($slug.$auth);
+            $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
         }
 
         if (1 == $addFromParent) {
             foreach (self::findSlugByIdParentTab($idTab) as $child) {
                 $child = self::sluggifyTab($child);
                 foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
-                    $slugLike = Db::getInstance()->escape($child . $auth);
-                    $whereClauses[] = ' `slug` LIKE "' . $slugLike . '"';
+                    $slugLike = Db::getInstance()->escape($child.$auth);
+                    $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
                 }
             }
         }
 
         $roles = Db::getInstance()->executeS('
             SELECT `id_authorization_role`
-            FROM `' . _DB_PREFIX_ . 'authorization_role` t
-            WHERE ' . implode(' OR ', $whereClauses) . '
+            FROM `'._DB_PREFIX_.'authorization_role` t
+            WHERE '.implode(' OR ', $whereClauses).'
         ');
 
         if (empty($roles)) {
@@ -412,14 +412,14 @@ class AccessCore extends ObjectModel
         $whereClauses = array();
 
         foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
-            $slugLike = Db::getInstance()->escape($slug . $auth);
-            $whereClauses[] = ' `slug` LIKE "' . $slugLike . '"';
+            $slugLike = Db::getInstance()->escape($slug.$auth);
+            $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
         }
 
         $roles = Db::getInstance()->executeS('
             SELECT `id_authorization_role`
-            FROM `' . _DB_PREFIX_ . 'authorization_role` t
-            WHERE ' . implode(' OR ', $whereClauses) . '
+            FROM `'._DB_PREFIX_.'authorization_role` t
+            WHERE '.implode(' OR ', $whereClauses).'
         ');
 
         $res = array();

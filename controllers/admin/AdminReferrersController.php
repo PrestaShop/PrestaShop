@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd() . '/..');
+    define('_PS_ADMIN_DIR_', getcwd().'/..');
 }
 
-if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers' . (int) Tab::getIdFromClassName('AdminReferrers') . (int) Tools::getValue('id_employee'))) {
+if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers'.(int) Tab::getIdFromClassName('AdminReferrers').(int) Tools::getValue('id_employee'))) {
     if (Tools::isSubmit('ajaxProductFilter')) {
         Referrer::getAjaxProduct(
             (int) Tools::getValue('id_referrer'),
@@ -39,17 +39,17 @@ if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers' . (int) Ta
         $result = Db::getInstance()->executeS(
             '
 			SELECT p.id_product, pl.name
-			FROM ' . _DB_PREFIX_ . 'product p
-			LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl
-				ON (p.id_product = pl.id_product AND pl.id_lang = ' . (int) Tools::getValue('id_lang') . ')
-			' . ('undefined' != Tools::getValue('filter') ? 'WHERE name LIKE "%' . pSQL(Tools::getValue('filter')) . '%"' : '')
+			FROM '._DB_PREFIX_.'product p
+			LEFT JOIN '._DB_PREFIX_.'product_lang pl
+				ON (p.id_product = pl.id_product AND pl.id_lang = '.(int) Tools::getValue('id_lang').')
+			'.('undefined' != Tools::getValue('filter') ? 'WHERE name LIKE "%'.pSQL(Tools::getValue('filter')).'%"' : '')
         );
 
         foreach ($result as $row) {
-            $json_array[] = '{id_product:' . (int) $row['id_product'] . ',name:\'' . addslashes($row['name']) . '\'}';
+            $json_array[] = '{id_product:'.(int) $row['id_product'].',name:\''.addslashes($row['name']).'\'}';
         }
 
-        die('[' . implode(',', $json_array) . ']');
+        die('['.implode(',', $json_array).']');
     }
 }
 
@@ -170,7 +170,7 @@ class AdminReferrersControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_referrer'] = array(
-                'href' => self::$currentIndex . '&addreferrer&token=' . $this->token,
+                'href' => self::$currentIndex.'&addreferrer&token='.$this->token,
                 'desc' => $this->trans('Add new referrer', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -191,8 +191,8 @@ class AdminReferrersControllerCore extends AdminController
 							IF(sa.cache_orders > 0, ROUND(sa.cache_sales/sa.cache_orders, 2), 0) as cart, (sa.cache_visits*click_fee) as fee0,
 							(sa.cache_orders*base_fee) as fee1, (sa.cache_sales*percent_fee/100) as fee2';
         $this->_join = '
-			LEFT JOIN `' . _DB_PREFIX_ . 'referrer_shop` sa
-				ON (sa.`' . bqSQL($this->identifier) . '` = a.`' . bqSQL($this->identifier) . '` AND sa.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . '))';
+			LEFT JOIN `'._DB_PREFIX_.'referrer_shop` sa
+				ON (sa.`'.bqSQL($this->identifier).'` = a.`'.bqSQL($this->identifier).'` AND sa.id_shop IN ('.implode(', ', Shop::getContextListShopID()).'))';
 
         $this->_group = 'GROUP BY sa.id_referrer';
 
@@ -207,7 +207,7 @@ class AdminReferrersControllerCore extends AdminController
 
     public function renderForm()
     {
-        $uri = Tools::getHttpHost(true, true) . __PS_BASE_URI__;
+        $uri = Tools::getHttpHost(true, true).__PS_BASE_URI__;
 
         $this->fields_form[0] = array('form' => array(
             'legend' => array(
@@ -239,7 +239,7 @@ class AdminReferrersControllerCore extends AdminController
         if ($moduleManager->isInstalled('trackingfront')) {
             $this->fields_form[0]['form']['desc'] = array(
                 $this->trans('Affiliates can access their data with this name and password.', array(), 'Admin.Shopparameters.Feature'),
-                $this->trans('Front access:', array(), 'Admin.Shopparameters.Feature') . ' <a class="btn btn-link" href="' . $uri . 'modules/trackingfront/stats.php" onclick="return !window.open(this.href);"><i class="icon-external-link-sign"></i> ' . $uri . 'modules/trackingfront/stats.php</a>',
+                $this->trans('Front access:', array(), 'Admin.Shopparameters.Feature').' <a class="btn btn-link" href="'.$uri.'modules/trackingfront/stats.php" onclick="return !window.open(this.href);"><i class="icon-external-link-sign"></i> '.$uri.'modules/trackingfront/stats.php</a>',
             );
         } else {
             $this->fields_form[0]['form']['desc'] = array(
@@ -458,7 +458,7 @@ class AdminReferrersControllerCore extends AdminController
 
     protected function enableCalendar()
     {
-        return !Tools::isSubmit('add' . $this->table) && !Tools::isSubmit('submitAdd' . $this->table) && !Tools::isSubmit('update' . $this->table);
+        return !Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('submitAdd'.$this->table) && !Tools::isSubmit('update'.$this->table);
     }
 
     public function postProcess()
@@ -476,7 +476,7 @@ class AdminReferrersControllerCore extends AdminController
                 if (Configuration::updateValue('TRACKING_DIRECT_TRAFFIC', (int) Tools::getValue('tracking_dt'))
                     && Configuration::updateValue('REFERER_TAX', (int) Tools::getValue('exclude_tx'))
                     && Configuration::updateValue('REFERER_SHIPPING', (int) Tools::getValue('exclude_ship'))) {
-                    Tools::redirectAdmin(self::$currentIndex . '&conf=4&token=' . Tools::getValue('token'));
+                    Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.Tools::getValue('token'));
                 }
             }
         }

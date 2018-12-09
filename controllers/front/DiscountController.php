@@ -125,7 +125,7 @@ class DiscountControllerCore extends FrontController
         }
 
         return sprintf(
-            '%s ' . $taxTranslation,
+            '%s '.$taxTranslation,
             Tools::displayPrice($amount, (int) $currencyId)
         );
     }

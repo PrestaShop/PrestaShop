@@ -48,8 +48,8 @@ class DebugMode
     public function isDebugModeEnabled()
     {
         $definesClean = '';
-        $customDefinesPath = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
-        $definesPath = _PS_ROOT_DIR_ . '/config/defines.inc.php';
+        $customDefinesPath = _PS_ROOT_DIR_.'/config/defines_custom.inc.php';
+        $definesPath = _PS_ROOT_DIR_.'/config/defines.inc.php';
 
         if (is_readable($customDefinesPath)) {
             $definesClean = php_strip_whitespace($customDefinesPath);
@@ -92,7 +92,7 @@ class DebugMode
      */
     private function isCustomDefinesReadable()
     {
-        return is_readable(_PS_ROOT_DIR_ . '/config/defines_custom.inc.php');
+        return is_readable(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
     }
 
     /**
@@ -102,7 +102,7 @@ class DebugMode
      */
     private function isMainDefinesReadable()
     {
-        return is_readable(_PS_ROOT_DIR_ . '/config/defines.inc.php');
+        return is_readable(_PS_ROOT_DIR_.'/config/defines.inc.php');
     }
 
     /**
@@ -114,7 +114,7 @@ class DebugMode
      */
     private function updateDebugModeValueInMainFile($value)
     {
-        $filename = _PS_ROOT_DIR_ . '/config/defines.inc.php';
+        $filename = _PS_ROOT_DIR_.'/config/defines.inc.php';
         $cleanedFileContent = php_strip_whitespace($filename);
         $fileContent = Tools::file_get_contents($filename);
 
@@ -122,7 +122,7 @@ class DebugMode
             return self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND;
         }
 
-        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
+        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', '.$value.');', $fileContent);
         if (!@file_put_contents($filename, $fileContent)) {
             return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS;
         }
@@ -143,12 +143,12 @@ class DebugMode
      */
     private function updateDebugModeValueInCustomFile($value)
     {
-        $customFileName = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
+        $customFileName = _PS_ROOT_DIR_.'/config/defines_custom.inc.php';
         $cleanedFileContent = php_strip_whitespace($customFileName);
         $fileContent = Tools::file_get_contents($customFileName);
 
         if (!empty($cleanedFileContent) && preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $cleanedFileContent)) {
-            $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
+            $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', '.$value.');', $fileContent);
 
             if (!@file_put_contents($customFileName, $fileContent)) {
                 return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM;

@@ -106,10 +106,10 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix . 'webservice_account', 'wa')
+            ->from($this->dbPrefix.'webservice_account', 'wa')
             ->innerJoin(
                 'wa',
-                $this->dbPrefix . 'webservice_account_shop',
+                $this->dbPrefix.'webservice_account_shop',
                 'was',
                 'was.`id_webservice_account` = wa.`id_webservice_account`'
             )
@@ -121,13 +121,13 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
 
         foreach ($filters as $filterName => $value) {
             if ('active' === $filterName && is_numeric($value)) {
-                $qb->andWhere('wa.`active`=' . (int) $value);
+                $qb->andWhere('wa.`active`='.(int) $value);
 
                 continue;
             }
 
-            $qb->andWhere('wa.`' . $filterName . '` LIKE :' . $filterName);
-            $qb->setParameter($filterName, '%' . $value . '%');
+            $qb->andWhere('wa.`'.$filterName.'` LIKE :'.$filterName);
+            $qb->setParameter($filterName, '%'.$value.'%');
         }
 
         return $qb;
@@ -142,6 +142,6 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getModifiedOrderBy($orderBy)
     {
-        return 'wa.`' . $orderBy . '`';
+        return 'wa.`'.$orderBy.'`';
     }
 }

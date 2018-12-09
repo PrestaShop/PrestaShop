@@ -101,7 +101,7 @@ class UpdateLicensesCommand extends Command
         $finder = new Finder();
         $finder
             ->files()
-            ->name('*.' . $ext)
+            ->name('*.'.$ext)
             ->in(_PS_ROOT_DIR_)
             ->exclude(array(
                 '.git',
@@ -124,7 +124,7 @@ class UpdateLicensesCommand extends Command
         ;
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 
-        $output->writeln('Updating license in ' . strtoupper($ext) . ' files ...');
+        $output->writeln('Updating license in '.strtoupper($ext).' files ...');
         $progress = new ProgressBar($output, count($finder));
         $progress->start();
         $progress->setRedrawFrequency(20);
@@ -141,7 +141,7 @@ class UpdateLicensesCommand extends Command
                             $this->addLicenseToNode($nodes[0], $file);
                         }
                     } catch (\PhpParser\Error $exception) {
-                        $output->writeln('Syntax error on file ' . $file->getRelativePathname() . '. Continue ...');
+                        $output->writeln('Syntax error on file '.$file->getRelativePathname().'. Continue ...');
                     }
 
                     break;
@@ -224,14 +224,14 @@ class UpdateLicensesCommand extends Command
     {
         $content = $file->getContents();
         // Regular expression found thanks to Stephen Ostermiller's Blog. http://blog.ostermiller.org/find-comment
-        $regex = '%' . $startDelimiter . '\*([^*]|[\r\n]|(\*+([^*' . $endDelimiter . ']|[\r\n])))*\*+' . $endDelimiter . '%';
+        $regex = '%'.$startDelimiter.'\*([^*]|[\r\n]|(\*+([^*'.$endDelimiter.']|[\r\n])))*\*+'.$endDelimiter.'%';
         $matches = array();
         $text = $this->license;
         if ('\/' != $startDelimiter) {
-            $text = $startDelimiter . ltrim($text, '/');
+            $text = $startDelimiter.ltrim($text, '/');
         }
         if ('\/' != $endDelimiter) {
-            $text = rtrim($text, '/') . $endDelimiter;
+            $text = rtrim($text, '/').$endDelimiter;
         }
 
         // Try to find an existing license
@@ -246,7 +246,7 @@ class UpdateLicensesCommand extends Command
             }
         } else {
             // Not found - Add it at the beginning of the file
-            $content = $text . "\n" . $content;
+            $content = $text."\n".$content;
         }
 
         file_put_contents($file->getRelativePathname(), $content);
@@ -260,7 +260,7 @@ class UpdateLicensesCommand extends Command
     {
         if (!$node->hasAttribute('comments')) {
             $needle = '<?php';
-            $replace = "<?php\n" . $this->license . "\n";
+            $replace = "<?php\n".$this->license."\n";
             $haystack = $file->getContents();
 
             $pos = strpos($haystack, $needle);

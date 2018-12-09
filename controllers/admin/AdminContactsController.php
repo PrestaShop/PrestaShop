@@ -145,7 +145,7 @@ class AdminContactsControllerCore extends AdminController
         $this->initToolbar();
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_contact'] = array(
-                'href' => self::$currentIndex . '&addcontact&token=' . $this->token,
+                'href' => self::$currentIndex.'&addcontact&token='.$this->token,
                 'desc' => $this->trans('Add new contact', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
             );
