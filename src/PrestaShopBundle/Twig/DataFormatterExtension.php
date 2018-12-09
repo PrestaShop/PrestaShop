@@ -64,7 +64,9 @@ class DataFormatterExtension extends \Twig_Extension
     /**
      * Cast to array the variable given.
      *
-     * @param mixed $toCast Mixed value to be casted into an array
+     *
+     *
+     * @param mixed $toCast
      *
      * @return array $toCast casted in array
      */
@@ -76,7 +78,9 @@ class DataFormatterExtension extends \Twig_Extension
     /**
      * Cast to int the variable given.
      *
-     * @param mixed $toCast Mixed value to be casted into an int
+     *
+     *
+     * @param mixed $toCast
      *
      * @return int $toCast casted in int
      */

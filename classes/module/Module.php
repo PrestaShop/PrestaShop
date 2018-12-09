@@ -967,7 +967,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Unregister module from hook.
      *
-     * @param mixed $id_hook Hook id (can be a hook name since 1.5.0)
+     *
      * @param array $shop_list List of shop
      * @param mixed $hook_id
      *
@@ -1060,7 +1060,9 @@ abstract class ModuleCore implements ModuleInterface
      * of an AdminTab which belongs to a module, in order to keep translation
      * related to a module in its directory (instead of $_LANGADM).
      *
-     * @param mixed $current_class the
+     *
+     *
+     * @param mixed $current_class
      *
      * @return bool|string if the class belongs to a module, will return the module name. Otherwise, return false.
      */
@@ -2741,7 +2743,7 @@ abstract class ModuleCore implements ModuleInterface
      * @param int $group_id
      * @param mixed $shops
      *
-     * @return array|null
+     * @return null|array
      */
     public static function getAuthorizedModules($group_id, $shops = array(1))
     {
@@ -3301,7 +3303,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Retrieve an array of the override in the module.
      *
-     * @return array|null
+     * @return null|array
      */
     public function getOverrides()
     {

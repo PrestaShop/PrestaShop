@@ -90,7 +90,7 @@ class ContextCore
     /**
      * Mobile device of the customer.
      *
-     * @var bool|null
+     * @var null|bool
      */
     protected $mobile_device = null;
 

@@ -208,6 +208,8 @@ class MediaCore
     /**
      * addJS return javascript path.
      *
+     *
+     *
      * @param mixed $jsUri
      *
      * @return string
@@ -220,9 +222,10 @@ class MediaCore
     /**
      * addCSS return stylesheet path.
      *
-     * @param mixed $cssUri
+     *
      * @param string $cssMediaType
      * @param bool $needRtl
+     * @param mixed $cssUri
      *
      * @return string
      */
@@ -289,8 +292,9 @@ class MediaCore
     /**
      * return jquery path.
      *
-     * @param mixed $version
+     *
      * @param null|mixed $folder
+     * @param null|mixed $version
      * @param mixed $minifier
      *
      * @return string
@@ -340,6 +344,10 @@ class MediaCore
 
     /**
      * return jqueryUI component path.
+     *
+     *
+     *
+     *
      *
      * @param mixed $component
      * @param mixed $theme
@@ -414,8 +422,9 @@ class MediaCore
     /**
      * return jquery plugin path.
      *
-     * @param mixed $name
+     *
      * @param null|string $folder
+     * @param mixed $name
      *
      * @return bool|string
      */
@@ -446,8 +455,9 @@ class MediaCore
     /**
      * return jquery plugin css path if exist.
      *
-     * @param mixed $name
+     *
      * @param null|string $folder
+     * @param mixed $name
      *
      * @return bool|string
      */
@@ -590,7 +600,7 @@ class MediaCore
     /**
      * Get backtrack limit.
      *
-     * @return int|null|string
+     * @return null|int|string
      */
     public static function getBackTrackLimit()
     {
@@ -759,10 +769,11 @@ class MediaCore
     /**
      * Add a new javascript definition from a capture at bottom of page.
      *
-     * @param mixed $params
+     *
      * @param string $content
      * @param Smarty $smarty
      * @param bool $repeat
+     * @param mixed $params
      */
     public static function addJsDefL($params, $content, $smarty = null, &$repeat = false)
     {

@@ -26,7 +26,7 @@
 class StepList implements IteratorAggregate
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $offset = 0;
 
@@ -42,6 +42,7 @@ class StepList implements IteratorAggregate
 
     /**
      * @param array $stepNames
+     * @param array $stepConfig
      */
     public function __construct(array $stepConfig)
     {
@@ -137,7 +138,7 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFirstStep()
     {
@@ -145,7 +146,7 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isLastStep()
     {

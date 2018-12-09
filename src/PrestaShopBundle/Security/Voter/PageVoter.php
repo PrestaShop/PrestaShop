@@ -55,7 +55,7 @@ class PageVoter extends Voter
      * Indicates if this voter should pronounce on this attribute and subject.
      *
      * @param string $attribute Rights to test
-     * @param mixed $subject Subject to secure (a controller name)
+     * @param mixed $subject
      *
      * @return bool
      */

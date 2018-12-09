@@ -117,7 +117,7 @@ class ImageRetriever
      *
      * @throws \PrestaShopDatabaseException
      *
-     * @return array|null
+     * @return null|array
      */
     public function getImage($object, $id_image)
     {

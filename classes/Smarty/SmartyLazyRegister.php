@@ -58,7 +58,7 @@ class SmartyLazyRegister
      * Dynamically call static function or method.
      *
      * @param string $name function name
-     * @param mixed $arguments function argument
+     * @param mixed $arguments
      *
      * @return mixed function return
      */

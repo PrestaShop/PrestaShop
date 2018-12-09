@@ -154,8 +154,8 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param string $field Field name
      * @param string $operator List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
-     * @param mixed $value
      * @param string $type where|having
+     * @param mixed $value
      * @param mixed $method
      *
      * @return PrestaShopCollection
@@ -657,8 +657,9 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Format a value with the type of the given field.
      *
-     * @param mixed $value
+     *
      * @param string $field Field name
+     * @param mixed $value
      *
      * @return mixed
      */

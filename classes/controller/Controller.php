@@ -119,7 +119,7 @@ abstract class ControllerCore
      *
      * @see Controller::run()
      *
-     * @var string|null
+     * @var null|string
      */
     protected $redirect_after = null;
 

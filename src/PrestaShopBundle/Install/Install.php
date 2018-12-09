@@ -725,6 +725,8 @@ class Install extends AbstractInstall
     /**
      * PROCESS : configureShop
      * Set default shop configuration.
+     *
+     * @param array $data
      */
     public function configureShop(array $data = array())
     {
@@ -1101,6 +1103,7 @@ class Install extends AbstractInstall
      * Install fixtures (E.g. demo products).
      *
      * @param null|mixed $entity
+     * @param array $data
      */
     public function installFixtures($entity = null, array $data = array())
     {

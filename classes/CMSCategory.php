@@ -129,6 +129,7 @@ class CMSCategoryCore extends ObjectModel
      * @param array $excluded_ids_array specify a list of ids to exclude of results
      * @param int $idLang Specify the id of the language used
      * @param null|mixed $id_lang
+     * @param null|Link $link
      *
      * @return array Subcategories lite tree
      */
@@ -233,6 +234,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @param array &$toDelete Array reference where categories ID will be saved
      * @param array|int $id_cms_category Parent CMSCategory ID
+     * @param & $to_delete
      */
     protected function recursiveDelete(&$to_delete, $id_cms_category)
     {

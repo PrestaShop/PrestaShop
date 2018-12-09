@@ -100,8 +100,8 @@ abstract class CacheCore
      * Cache a data.
      *
      * @param string $key
-     * @param mixed $value
      * @param int $ttl
+     * @param mixed $value
      *
      * @return bool
      */
@@ -220,8 +220,8 @@ abstract class CacheCore
      * Store a data in cache.
      *
      * @param string $key
-     * @param mixed $value
      * @param int $ttl
+     * @param mixed $value
      *
      * @return bool
      */

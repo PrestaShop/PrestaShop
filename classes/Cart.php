@@ -381,7 +381,9 @@ class CartCore extends ObjectModel
     /**
      * Calculate average Tax rate in Cart.
      *
-     * @param mixed $cart Cart ID or Cart Object
+     *
+     *
+     * @param mixed $cart
      *
      * @return float Average Tax used in Cart
      */
@@ -1297,6 +1299,7 @@ class CartCore extends ObjectModel
      * @param string $operator Indicate if quantity must be increased or decreased
      * @param mixed $id_customization
      * @param mixed $id_address_delivery
+     * @param null|Shop $shop
      * @param mixed $auto_add_cart_rule
      * @param mixed $skipAvailabilityCheckOutOfStock
      *
@@ -2182,7 +2185,7 @@ class CartCore extends ObjectModel
     /**
      * @param $product
      *
-     * @return int|null
+     * @return null|int
      */
     public function getProductAddressId($product)
     {
@@ -3047,6 +3050,9 @@ class CartCore extends ObjectModel
      * This method replace the delimiter by a sequence of '0'.
      * The size of this sequence is fixed by the first digit of the return
      *
+     *
+     *
+     *
      * @param mixed $string
      * @param mixed $delimiter
      *
@@ -3332,8 +3338,9 @@ class CartCore extends ObjectModel
      * @deprecated 1.5.0, use Cart->getPackageShippingCost()
      *
      * @param null|mixed $id_carrier
-     * @param mixed $use_tax
      * @param null|mixed $product_list
+     * @param mixed $use_tax
+     * @param null|Country $default_country
      */
     public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
     {
@@ -4111,7 +4118,7 @@ class CartCore extends ObjectModel
      *
      * @param int $id_order
      *
-     * @return Cart|bool
+     * @return bool|Cart
      */
     public static function getCartByOrderId($id_order)
     {
@@ -4163,6 +4170,11 @@ class CartCore extends ObjectModel
 
     /**
      * Add customer's pictures.
+     *
+     *
+     *
+     *
+     *
      *
      * @param mixed $id_product
      * @param mixed $index
@@ -5024,7 +5036,7 @@ class CartCore extends ObjectModel
     /**
      * Get products with gifts and manually added occurrences separated.
      *
-     * @return array|null
+     * @return null|array
      */
     public function getProductsWithSeparatedGifts()
     {

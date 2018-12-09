@@ -421,7 +421,7 @@ class AddressCore extends ObjectModel
      * @param int $id_customer Customer id
      * @param bool $active Active addresses only
      *
-     * @return bool|int|null
+     * @return null|bool|int
      */
     public static function getFirstCustomerAddressId($id_customer, $active = true)
     {

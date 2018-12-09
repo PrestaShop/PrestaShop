@@ -226,6 +226,8 @@ class ModuleTabRegister
      * From the name given by the module maintainer, associate a value per language
      * installed on the shop.
      *
+     *
+     *
      * @param mixed $names
      *
      * @return array Name to use for each installed language

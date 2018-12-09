@@ -926,7 +926,7 @@ class AdminControllerCore extends Controller
     /**
      * @TODO uses redirectAdmin only if !$this->ajax
      *
-     * @return ObjectModel|bool
+     * @return bool|ObjectModel
      */
     public function postProcess()
     {
@@ -988,7 +988,7 @@ class AdminControllerCore extends Controller
     /**
      * Object Delete images.
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processDeleteImage()
     {
@@ -1077,7 +1077,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processDelete()
     {
@@ -1124,7 +1124,7 @@ class AdminControllerCore extends Controller
     /**
      * Call the right method for creating or updating object.
      *
-     * @return ObjectModel|false|void
+     * @return false|ObjectModel|void
      */
     public function processSave()
     {
@@ -1142,7 +1142,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processAdd()
     {
@@ -1195,7 +1195,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return ObjectModel|false|void
+     * @return false|ObjectModel|void
      */
     public function processUpdate()
     {
@@ -1310,7 +1310,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processStatus()
     {
@@ -1344,7 +1344,7 @@ class AdminControllerCore extends Controller
     /**
      * Change object position.
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processPosition()
     {
@@ -1664,7 +1664,7 @@ class AdminControllerCore extends Controller
      *
      * @param bool $opt Return an empty object if load fail
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     protected function loadObject($opt = false)
     {
@@ -2382,7 +2382,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return string|false
+     * @return false|string
      */
     public function renderList()
     {
@@ -2473,7 +2473,7 @@ class AdminControllerCore extends Controller
     /**
      * Override to render the view page.
      *
-     * @return string|false
+     * @return false|string
      */
     public function renderDetails()
     {
@@ -3906,8 +3906,8 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @param mixed $value
      * @param array $field
+     * @param mixed $value
      *
      * @return bool
      */
@@ -4348,7 +4348,7 @@ class AdminControllerCore extends Controller
      * @param null|string $back
      * @param bool|string $install_source_tracking
      *
-     * @return string|array
+     * @return array|string
      */
     public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false)
     {

@@ -501,7 +501,7 @@ class ToolsCore
      * if unavailable, take a default value.
      *
      * @param string $key Value key
-     * @param mixed $default_value (optional)
+     * @param mixed $default_value
      *
      * @return mixed Value
      */
@@ -671,6 +671,8 @@ class ToolsCore
     /**
      * Set cookie currency from POST or default currency.
      *
+     *
+     *
      * @param mixed $cookie
      *
      * @return Currency object
@@ -742,6 +744,7 @@ class ToolsCore
      * @param float $price Product price
      * @param array|object $currency Current currency (object, id_currency, NULL => context currency)
      * @param mixed $no_utf8
+     * @param null|Context $context
      *
      * @return string Price correctly formated (sign, decimal separator...)
      *                if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
@@ -831,7 +834,7 @@ class ToolsCore
     /**
      * Implement array_replace for PHP <= 5.2.
      *
-     * @return array|mixed|null
+     * @return null|array|mixed
      *
      * @deprecated since version 1.7.4.0, to be removed.
      */
@@ -1127,8 +1130,9 @@ class ToolsCore
     /**
      * Display an error with detailed object.
      *
-     * @param mixed $object
+     *
      * @param bool $kill
+     * @param mixed $object
      *
      * @return $object if $kill = false;
      */
@@ -1176,10 +1180,10 @@ class ToolsCore
      *
      * @see error_log()
      *
-     * @param mixed $object
      * @param null|int $message_type
      * @param null|string $destination
      * @param null|string $extra_headers
+     * @param mixed $object
      *
      * @return bool
      */
@@ -1262,6 +1266,7 @@ class ToolsCore
      *
      * @param string $token token to encrypt
      * @param mixed $page
+     * @param null|Context $context
      */
     public static function getToken($page = true, Context $context = null)
     {
@@ -3265,9 +3270,9 @@ exit;
      * Clear cache for Smarty.
      *
      * @param Smarty $smarty
-     * @param mixed $tpl
      * @param null|mixed $cache_id
      * @param null|mixed $compile_id
+     * @param mixed $tpl
      */
     public static function clearCache($smarty = null, $tpl = false, $cache_id = null, $compile_id = null)
     {
@@ -3828,7 +3833,7 @@ exit;
      * @param string $input File upload field name
      * @param bool $return_content If true, returns uploaded file contents
      *
-     * @return array|null
+     * @return null|array
      */
     public static function fileAttachment($input = 'fileUpload', $return_content = true)
     {
@@ -3969,6 +3974,8 @@ exit;
     /**
      * Allows to display the category description without HTML tags and slashes.
      *
+     *
+     *
      * @param mixed $description
      *
      * @return string
@@ -4051,7 +4058,7 @@ exit;
      * Check if a constant was already defined.
      *
      * @param string $constant Constant name
-     * @param mixed $value Default value to set if not defined
+     * @param mixed $value
      */
     public static function safeDefine($constant, $value)
     {

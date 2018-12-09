@@ -109,9 +109,9 @@ class EditableCategory
      * @param int[] $groupAssociationIds
      * @param int[] $shopAssociationIds
      * @param bool $isRootCategory
-     * @param mixed $coverImage
-     * @param mixed $thumbnailImage
      * @param array $menuThumbnailImages
+     * @param null|mixed $coverImage
+     * @param null|mixed $thumbnailImage
      */
     public function __construct(
         array $name,

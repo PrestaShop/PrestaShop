@@ -132,7 +132,9 @@ class ThemeCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Returns true if the key is found in the collection.
      *
-     * @param mixed $key the key, can be integer or string
+     *
+     *
+     * @param mixed $key
      *
      * @return bool
      */
@@ -188,8 +190,9 @@ class ThemeCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Add an Addon with a specified key in the collection.
      *
-     * @param mixed $key the key
+     *
      * @param Addon $addon the specified addon
+     * @param mixed $key
      */
     public function set($key, Addon $addon)
     {
@@ -213,7 +216,9 @@ class ThemeCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Remove an addon from the collection by key.
      *
-     * @param mixed the key (can be int or string)
+     *
+     *
+     *
      * @param mixed $key
      *
      * @return bool true if the addon has been found and removed

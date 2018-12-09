@@ -238,8 +238,10 @@ class LanguageCore extends ObjectModel
      * Concerned files are those located in translations/$iso_code/
      * and translations/mails/$iso_code .
      *
-     * @param mixed $iso_code
+     *
      * @returntrue if all files exists
+     *
+     * @param mixed $iso_code
      */
     public static function checkFilesWithIsoCode($iso_code)
     {
@@ -714,7 +716,7 @@ class LanguageCore extends ObjectModel
      * @param string $iso_code Iso code
      * @param bool $no_cache
      *
-     * @return false|null|string
+     * @return null|false|string
      */
     public static function getIdByIso($iso_code, $no_cache = false)
     {
@@ -756,7 +758,7 @@ class LanguageCore extends ObjectModel
      *
      * @throws Exception
      *
-     * @return string|false
+     * @return false|string
      */
     public static function getLocaleByIso($isoCode)
     {
@@ -778,7 +780,7 @@ class LanguageCore extends ObjectModel
      *
      * @throws Exception
      *
-     * @return string|false
+     * @return false|string
      */
     public static function getIsoByLocale($locale)
     {

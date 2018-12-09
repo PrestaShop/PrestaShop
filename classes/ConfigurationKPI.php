@@ -174,9 +174,9 @@ class ConfigurationKPICore extends Configuration
      * Set key.
      *
      * @param string $key Configuration key
-     * @param mixed $values Values
      * @param null $idShopGroup ShopGroup ID
      * @param null $idShop Shop ID
+     * @param mixed $values
      */
     public static function set($key, $values, $idShopGroup = null, $idShop = null)
     {
@@ -189,8 +189,8 @@ class ConfigurationKPICore extends Configuration
      * Update global value.
      *
      * @param string $key Configuration key
-     * @param mixed $values Values
      * @param bool $html Do the values contain HTML?
+     * @param mixed $values
      *
      * @return bool Indicates whether the key was successfully updated
      */
@@ -207,10 +207,10 @@ class ConfigurationKPICore extends Configuration
      * Update value.
      *
      * @param string $key Configuration key
-     * @param mixed $values Values
      * @param bool $html Do the values contain HTML?
      * @param null $idShopGroup ShopGroup ID
      * @param null $idShop Shop ID
+     * @param mixed $values
      *
      * @return bool Indicates whether the key was successfully updated
      */

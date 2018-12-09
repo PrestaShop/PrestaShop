@@ -33,8 +33,8 @@ class PageVoter extends BaseVoter
 {
     /**
      * @param string         $attribute
-     * @param mixed          $subject
      * @param TokenInterface $token
+     * @param mixed          $subject
      *
      * @return bool
      */

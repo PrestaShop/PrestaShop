@@ -1135,7 +1135,7 @@ class AdminImportControllerCore extends AdminController
     /**
      * @param $array
      * @param $funcname
-     * @param mixed $user_data
+     * @param & $user_data
      *
      * @return bool
      */

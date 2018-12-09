@@ -189,6 +189,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     /**
      * $rate is e.g. 5.5, 20...
      * This is cached by $rate.
+     *
      * @param mixed $rate
      */
     private static function getIdTax($rate)
@@ -211,6 +212,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
     /**
      * This is cached by $rate.
+     *
      * @param mixed $rate
      */
     private static function getIdTaxRulesGroup($rate)
@@ -240,6 +242,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
     /**
      * This is cached by $name.
+     *
      * @param mixed $name
      * @param mixed $price
      * @param mixed $id_tax_rules_group
@@ -284,9 +287,10 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     /**
      * null $shippingCost is interpreted as free shipping
      * Carriers are cached by $name.
-     * @param mixed $name
+     *
      * @param null|mixed $shippingCost
      * @param null|mixed $id_tax_rules_group
+     * @param mixed      $name
      */
     private static function getIdCarrier($name, $shippingCost = null, $id_tax_rules_group = null)
     {

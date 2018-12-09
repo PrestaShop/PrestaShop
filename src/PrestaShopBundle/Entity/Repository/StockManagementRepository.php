@@ -106,6 +106,7 @@ abstract class StockManagementRepository
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
      * @param $tablePrefix
+     * @param EntityManager $entityManager
      *
      * @throws NotImplementedException
      */

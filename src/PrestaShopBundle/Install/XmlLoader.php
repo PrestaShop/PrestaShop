@@ -1292,9 +1292,12 @@ class XmlLoader
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
      *
+     *
+     *
+     * @param null|mixed $id_format
      * @param mixed $entity
      * @param mixed $primary
-     * @param null|mixed $id_format
+     * @param array $row
      */
     public function generateId($entity, $primary, array $row = array(), $id_format = null)
     {
@@ -1336,6 +1339,8 @@ class XmlLoader
      * ONLY FOR DEVELOPMENT PURPOSE.
      *
      * @param mixed $entity
+     * @param array $nodes
+     * @param \SimpleXMLElement $entities
      */
     public function createXmlEntityNodes($entity, array $nodes, \SimpleXMLElement $entities)
     {

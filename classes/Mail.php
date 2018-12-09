@@ -741,6 +741,7 @@ class MailCore extends ObjectModel
      *
      * @param string $string raw sentence (write directly in file)
      * @param null|mixed $idLang
+     * @param null|Context $context
      *
      * @return mixed
      */

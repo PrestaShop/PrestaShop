@@ -384,9 +384,11 @@ class HelperListCore extends Helper
     /**
      * Display duplicate action link.
      *
+     *
+     *
+     * @param null|mixed $name
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
      */
     public function displayDuplicateLink($token, $id, $name = null)
     {
@@ -437,9 +439,11 @@ class HelperListCore extends Helper
      *     fields_display: // attribute $fields_list of the admin controller
      *   }.
      *
+     *
+     *
+     * @param null|mixed $name
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
      */
     public function displayDetailsLink($token, $id, $name = null)
     {
@@ -469,9 +473,11 @@ class HelperListCore extends Helper
     /**
      * Display view action link.
      *
+     *
+     *
+     * @param null|mixed $name
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
      */
     public function displayViewLink($token, $id, $name = null)
     {
@@ -491,9 +497,11 @@ class HelperListCore extends Helper
     /**
      * Display edit action link.
      *
+     *
+     *
+     * @param null|mixed $name
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
      */
     public function displayEditLink($token, $id, $name = null)
     {
@@ -530,9 +538,11 @@ class HelperListCore extends Helper
     /**
      * Display delete action link.
      *
+     *
+     *
+     * @param null|mixed $name
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
      */
     public function displayDeleteLink($token, $id, $name = null)
     {
@@ -588,9 +598,11 @@ class HelperListCore extends Helper
     /**
      * Display default action link.
      *
+     *
+     *
+     * @param null|mixed $name
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
      */
     public function displayDefaultLink($token, $id, $name = null)
     {

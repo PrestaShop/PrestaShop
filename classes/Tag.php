@@ -187,7 +187,7 @@ class TagCore extends ObjectModel
      * @param int $idLang Language ID
      * @param int $nb number
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getMainTags($idLang, $nb = 10)
     {
@@ -244,7 +244,7 @@ class TagCore extends ObjectModel
      * @param bool $associated
      * @param null|Context $context
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getProducts($associated = true, \Context $context = null)
     {

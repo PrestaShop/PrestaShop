@@ -514,9 +514,9 @@ class CarrierCore extends ObjectModel
      *                             - PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE
      *                             - ALL_CARRIERS
      * @param bool $active Returns only active carriers when true
+     * @param null|mixed $ids_group
      * @param mixed $delete
      * @param mixed $id_zone
-     * @param null|mixed $ids_group
      *
      * @return array Carriers
      */
@@ -824,6 +824,8 @@ class CarrierCore extends ObjectModel
     /**
      * Get a specific zones.
      *
+     *
+     *
      * @param mixed $id_zone
      *
      * @return array Zone
@@ -1093,8 +1095,9 @@ class CarrierCore extends ObjectModel
     /**
      * Get carrier using the reference id.
      *
-     * @param mixed $id_reference
+     *
      * @param null|mixed $id_lang
+     * @param mixed $id_reference
      */
     public static function getCarrierByReference($id_reference, $id_lang = null)
     {

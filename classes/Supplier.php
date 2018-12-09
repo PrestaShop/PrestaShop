@@ -110,6 +110,14 @@ class SupplierCore extends ObjectModel
     /**
      * Return suppliers.
      *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
      * @param mixed $getNbProducts
      * @param mixed $idLang
      * @param mixed $active
@@ -421,7 +429,7 @@ class SupplierCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getProductsLite($idLang)
     {

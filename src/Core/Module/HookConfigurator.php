@@ -52,6 +52,8 @@ class HookConfigurator
      *         ]
      *     ]
      * ].
+     *
+     * @param array $hooks
      */
     public function getThemeHooksConfiguration(array $hooks)
     {

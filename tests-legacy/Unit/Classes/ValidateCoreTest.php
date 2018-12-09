@@ -33,6 +33,7 @@ class ValidateCoreTest extends TestCase
 {
     /**
      * @dataProvider isIp2LongDataProvider
+     *
      * @param mixed $expected
      * @param mixed $input
      */
@@ -54,6 +55,7 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isEmailDataProvider
+     *
      * @param mixed $expected
      * @param mixed $input
      */
@@ -64,6 +66,7 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isBirthDateProvider
+     *
      * @param mixed $expected
      * @param mixed $input
      */
@@ -74,6 +77,7 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isDateOrNullProvider
+     *
      * @param mixed $expected
      * @param mixed $input
      */
@@ -84,6 +88,7 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isMd5DataProvider
+     *
      * @param mixed $expected
      * @param mixed $input
      */
@@ -94,6 +99,7 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isSha1DataProvider
+     *
      * @param mixed $expected
      * @param mixed $input
      */
@@ -104,6 +110,7 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isFloatDataProvider
+     *
      * @param mixed $expected
      * @param mixed $input
      */
@@ -114,6 +121,7 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isUnsignedFloatDataProvider
+     *
      * @param mixed $expected
      * @param mixed $input
      */
@@ -125,6 +133,7 @@ class ValidateCoreTest extends TestCase
     /**
      * @depends testIsFloat
      * @dataProvider isOptFloatDataProvider
+     *
      * @param mixed $expected
      * @param mixed $input
      */

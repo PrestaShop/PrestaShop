@@ -817,6 +817,10 @@ class ProductCore extends ObjectModel
     /**
      * Get the default attribute for a product.
      *
+     *
+     *
+     *
+     *
      * @param mixed $id_product
      * @param mixed $minimum_quantity
      * @param mixed $reset
@@ -959,9 +963,9 @@ class ProductCore extends ObjectModel
     /**
      * @see ObjectModel::validateField()
      *
+     * @param null|mixed $id_lang
      * @param mixed $field
      * @param mixed $value
-     * @param null|mixed $id_lang
      * @param mixed $skip
      * @param mixed $human_errors
      */
@@ -1095,7 +1099,9 @@ class ProductCore extends ObjectModel
     /**
      * addToCategories add this product to the category/ies if not exists.
      *
-     * @param mixed $categories id_category or array of id_category
+     *
+     *
+     * @param mixed $categories
      *
      * @return bool true if succeed
      */
@@ -1199,6 +1205,9 @@ class ProductCore extends ObjectModel
 
     /**
      * deleteCategory delete this product from the category $id_category.
+     *
+     *
+     *
      *
      * @param mixed $id_category
      * @param mixed $clean_positions
@@ -1312,6 +1321,7 @@ class ProductCore extends ObjectModel
      * @param string $order_way Way for ordering (ASC or DESC)
      * @param mixed $id_category
      * @param mixed $only_active
+     * @param null|Context $context
      *
      * @return array Products details
      */
@@ -1475,6 +1485,7 @@ class ProductCore extends ObjectModel
      * @see ProductSupplier for manage supplier reference(s)
      * @deprecated since 1.5.0
      *
+     * @param null|mixed $low_stock_threshold
      * @param mixed $price
      * @param mixed $weight
      * @param mixed $unit_impact
@@ -1489,7 +1500,6 @@ class ProductCore extends ObjectModel
      * @param mixed $upc
      * @param mixed $minimal_quantity
      * @param mixed $isbn
-     * @param null|mixed $low_stock_threshold
      * @param mixed $low_stock_alert
      */
     public function addProductAttribute(
@@ -1599,6 +1609,10 @@ class ProductCore extends ObjectModel
     /**
      * @param int $quantity DEPRECATED
      * @param string $supplier_reference DEPRECATED
+     * @param null|mixed $location
+     * @param null|mixed $upc
+     * @param null|mixed $available_date
+     * @param null|mixed $low_stock_threshold
      * @param mixed $wholesale_price
      * @param mixed $price
      * @param mixed $weight
@@ -1609,12 +1623,9 @@ class ProductCore extends ObjectModel
      * @param mixed $id_supplier
      * @param mixed $ean13
      * @param mixed $default
-     * @param null|mixed $location
-     * @param null|mixed $upc
      * @param mixed $minimal_quantity
-     * @param null|mixed $available_date
+     * @param array $id_shop_list
      * @param mixed $isbn
-     * @param null|mixed $low_stock_threshold
      * @param mixed $low_stock_alert
      */
     public function addCombinationEntity(
@@ -1759,6 +1770,7 @@ class ProductCore extends ObjectModel
      * @see updateAttribute() to use instead
      * @see ProductSupplier for manage supplier reference(s)
      *
+     * @param null|mixed $low_stock_threshold
      * @param mixed $id_product_attribute
      * @param mixed $wholesale_price
      * @param mixed $price
@@ -1775,7 +1787,6 @@ class ProductCore extends ObjectModel
      * @param mixed $minimal_quantity
      * @param mixed $available_date
      * @param mixed $isbn
-     * @param null|mixed $low_stock_threshold
      * @param mixed $low_stock_alert
      */
     public function updateProductAttribute(
@@ -1879,10 +1890,11 @@ class ProductCore extends ObjectModel
      * @param string $isbn ISBN reference
      * @param null|int $low_stock_threshold Low stock alert
      * @param bool $low_stock_alert send email on low stock
-     * @param mixed $id_images
      * @param null|mixed $location
      * @param null|mixed $available_date
+     * @param mixed $id_images
      * @param mixed $update_all_fields
+     * @param array $id_shop_list
      *
      * @return array Update result
      */
@@ -1988,11 +2000,12 @@ class ProductCore extends ObjectModel
      * @param int $minimal_quantity Minimal quantity to add to cart
      * @param string $isbn ISBN reference
      * @param null|int $low_stock Low stock alert
-     * @param mixed $unit_impact
      * @param null|mixed $upc
      * @param null|mixed $available_date
-     * @param mixed $quantity
      * @param null|mixed $low_stock_threshold
+     * @param mixed $unit_impact
+     * @param array $id_shop_list
+     * @param mixed $quantity
      * @param mixed $low_stock_alert
      *
      * @return mixed $id_product_attribute or false
@@ -2633,11 +2646,12 @@ class ProductCore extends ObjectModel
      * @param int $id_lang Language id
      * @param int $pageNumber Start from (optional)
      * @param int $nbProducts Number of products to return (optional)
+     * @param null|mixed $order_by
+     * @param null|mixed $order_way
      * @param mixed $page_number
      * @param mixed $nb_products
      * @param mixed $count
-     * @param null|mixed $order_by
-     * @param null|mixed $order_way
+     * @param null|Context $context
      *
      * @return array New products
      */
@@ -2794,6 +2808,7 @@ class ProductCore extends ObjectModel
      * @param int $id_lang Language id
      * @param mixed $beginning
      * @param mixed $ending
+     * @param null|Context $context
      *
      * @return array Special
      */
@@ -2888,12 +2903,13 @@ class ProductCore extends ObjectModel
      * @param int $pageNumber Start from (optional)
      * @param int $nbProducts Number of products to return (optional)
      * @param bool $count Only in order to get total number (optional)
-     * @param mixed $page_number
-     * @param mixed $nb_products
      * @param null|mixed $order_by
      * @param null|mixed $order_way
+     * @param mixed $page_number
+     * @param mixed $nb_products
      * @param mixed $beginning
      * @param mixed $ending
+     * @param null|Context $context
      *
      * @return array Prices drop
      */
@@ -3027,6 +3043,8 @@ class ProductCore extends ObjectModel
     /**
      * getProductCategories return an array of categories which this product belongs to.
      *
+     *
+     *
      * @param mixed $id_product
      *
      * @return array of categories
@@ -3142,6 +3160,7 @@ class ProductCore extends ObjectModel
      * Get product images and legends.
      *
      * @param int $id_lang Language id for multilingual legends
+     * @param null|Context $context
      *
      * @return array Product images and legends
      */
@@ -3161,7 +3180,10 @@ class ProductCore extends ObjectModel
     /**
      * Get product cover image.
      *
+     *
+     *
      * @param mixed $id_product
+     * @param null|Context $context
      *
      * @return array Product cover image
      */
@@ -3819,8 +3841,8 @@ class ProductCore extends ObjectModel
      * @param int|string $productAttribute If string : alias of PA table ; if int : value of PA ; if null : nothing about PA
      * @param bool $innerJoin LEFT JOIN or INNER JOIN
      * @param Shop $shop
-     * @param mixed $product_alias
      * @param null|mixed $product_attribute
+     * @param mixed $product_alias
      * @param mixed $inner_join
      *
      * @return string
@@ -4317,6 +4339,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_lang Language id
      * @param string $query Search query
+     * @param null|Context $context
      *
      * @return array Matching products
      */
@@ -4786,6 +4809,8 @@ class ProductCore extends ObjectModel
 
     /**
      * Get the link of the product page of this product.
+     *
+     * @param null|Context $context
      */
     public function getLink(Context $context = null)
     {
@@ -6136,6 +6161,8 @@ class ProductCore extends ObjectModel
     /**
      * Webservice setter : set virtual field position in category.
      *
+     *
+     *
      * @param mixed $position
      *
      * @return bool
@@ -6189,6 +6216,8 @@ class ProductCore extends ObjectModel
 
     /**
      * Webservice setter : set virtual field id_default_image in category.
+     *
+     *
      *
      * @param mixed $id_image
      *
@@ -6301,6 +6330,8 @@ class ProductCore extends ObjectModel
 
     /**
      * Checks if reference exists.
+     *
+     *
      *
      * @param mixed $reference
      *
@@ -7013,6 +7044,8 @@ class ProductCore extends ObjectModel
     /**
      * Gets a list of IDs from a list of IDs/Refs. The result will avoid duplicates, and checks if given IDs/Refs exists in DB.
      * Useful when a product list should be checked before a bulk operation on them (Only 1 query => performances).
+     *
+     *
      *
      * @param mixed $ids_or_refs
      *

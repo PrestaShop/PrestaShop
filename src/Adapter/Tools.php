@@ -75,9 +75,9 @@ class Tools
      *
      * @deprecated since 1.7.2.2 - Use PrestaShop\Decimal\Number instead
      *
+     * @param null|mixed $scale
      * @param mixed $left_operand
      * @param mixed $right_operand
-     * @param null|mixed $scale
      */
     public function bcadd($left_operand, $right_operand, $scale = null)
     {

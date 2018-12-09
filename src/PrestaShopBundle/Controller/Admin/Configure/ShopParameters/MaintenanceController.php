@@ -45,6 +45,9 @@ class MaintenanceController extends FrameworkBundleAdminController
      * @var FormInterface
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig")
      *
+     * @param Request $request
+     * @param null|FormInterface $form
+     *
      * @return Response
      */
     public function indexAction(Request $request, FormInterface $form = null)

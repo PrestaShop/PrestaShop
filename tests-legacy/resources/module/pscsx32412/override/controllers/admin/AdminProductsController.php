@@ -372,8 +372,6 @@ class AdminProductsController extends AdminProductsControllerCore
 
     /**
      * Attach an existing attachment to the product.
-     *
-     * @return void
      */
     public function processAttachments()
     {
@@ -1108,8 +1106,6 @@ class AdminProductsController extends AdminProductsControllerCore
 
     /**
      * postProcess handle every checks before saving products information.
-     *
-     * @return void
      */
     public function postProcess()
     {
@@ -1446,7 +1442,7 @@ class AdminProductsController extends AdminProductsControllerCore
      * Add or update a product image.
      *
      * @param object $product Product object to add image
-     * @param mixed $method
+     * @param mixed  $method
      */
     public function addProductImage($product, $method = 'auto')
     {
@@ -1484,8 +1480,8 @@ class AdminProductsController extends AdminProductsControllerCore
     /**
      * Copy a product image.
      *
-     * @param int $id_product Product Id for product image filename
-     * @param int $id_image   Image Id for product image filename
+     * @param int   $id_product Product Id for product image filename
+     * @param int   $id_image   Image Id for product image filename
      * @param mixed $method
      */
     public function copyImage($id_product, $id_image, $method = 'auto')
@@ -1981,7 +1977,7 @@ class AdminProductsController extends AdminProductsControllerCore
      * Update product download.
      *
      * @param object $product Product
-     * @param mixed $edit
+     * @param mixed  $edit
      *
      * @return bool
      */
@@ -2080,8 +2076,8 @@ class AdminProductsController extends AdminProductsControllerCore
      * Update product tags.
      *
      * @param array Languages
-     * @param object $product Product
-     * @param mixed $languages
+     * @param object $product   Product
+     * @param mixed  $languages
      *
      * @return bool Update result
      */
@@ -2283,13 +2279,13 @@ class AdminProductsController extends AdminProductsControllerCore
     /**
      * Build a categories tree.
      *
-     * @param array $indexedCategories Array with categories where product is indexed (in order to check checkbox)
-     * @param array $categories        Categories to list
-     * @param array $current           Current category
-     * @param int   $id_category       Current category id
-     * @param mixed $id_obj
+     * @param array      $indexedCategories   Array with categories where product is indexed (in order to check checkbox)
+     * @param array      $categories          Categories to list
+     * @param array      $current             Current category
+     * @param int        $id_category         Current category id
      * @param null|mixed $id_category_default
-     * @param mixed $has_suite
+     * @param mixed      $id_obj
+     * @param mixed      $has_suite
      */
     public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = array())
     {
@@ -4645,6 +4641,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
     /**
      *  AdminProducts display hook.
+     *
      * @param mixed $obj
      */
     public function initFormModules($obj)

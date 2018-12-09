@@ -207,7 +207,7 @@ class DbMySQLiCore extends Db
      *
      * @see DbCore::Insert_ID()
      *
-     * @return string|int
+     * @return int|string
      */
     public function Insert_ID()
     {

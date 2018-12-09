@@ -750,6 +750,8 @@ class ImageCore extends ObjectModel
     /**
      * Returns the path to the folder containing the image in the new filesystem.
      *
+     *
+     *
      * @param mixed $idImage
      *
      * @return string path to folder

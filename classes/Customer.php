@@ -619,7 +619,7 @@ class CustomerCore extends ObjectModel
      * @param int $idAddress Address ID
      * @param null|int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getSimpleAddress($idAddress, $idLang = null)
     {
@@ -806,7 +806,7 @@ class CustomerCore extends ObjectModel
      *
      * @param string $ip Searched string
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function searchByIp($ip)
     {
@@ -851,7 +851,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get last 10 emails sent to the Customer.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getLastEmails()
     {
@@ -871,7 +871,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get last 10 Connections of the Customer.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getLastConnections()
     {
@@ -995,7 +995,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get Products bought by this Customer.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getBoughtProducts()
     {
@@ -1010,7 +1010,7 @@ class CustomerCore extends ObjectModel
      *
      * @param int $idCustomer Customer ID
      *
-     * @return mixed|null|string
+     * @return null|mixed|string
      */
     public static function getDefaultGroupId($idCustomer)
     {
@@ -1283,7 +1283,7 @@ class CustomerCore extends ObjectModel
      * Get Customer Groups
      * (for webservice).
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getWsGroups()
     {

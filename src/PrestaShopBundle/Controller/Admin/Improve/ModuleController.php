@@ -783,6 +783,7 @@ class ModuleController extends ModuleAbstractController
      * Get categories and its modules.
      *
      * @param array $modules List of installed modules
+     * @param AdminModuleDataProvider $modulesProvider
      *
      * @return array
      */

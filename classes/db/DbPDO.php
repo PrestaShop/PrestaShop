@@ -163,7 +163,7 @@ class DbPDOCore extends Db
      *
      * @param bool $result
      *
-     * @return array|false|null
+     * @return null|array|false
      */
     public function nextRow($result = false)
     {
@@ -185,7 +185,7 @@ class DbPDOCore extends Db
      *
      * @param bool $result
      *
-     * @return array|false|null
+     * @return null|array|false
      */
     protected function getAll($result = false)
     {
@@ -219,7 +219,7 @@ class DbPDOCore extends Db
      *
      * @see DbCore::Insert_ID()
      *
-     * @return string|int
+     * @return int|string
      */
     public function Insert_ID()
     {

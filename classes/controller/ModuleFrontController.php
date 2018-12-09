@@ -50,8 +50,8 @@ class ModuleFrontControllerCore extends FrontController
      * Assigns module template for page content.
      *
      * @param string $template Template filename
-     * @param mixed $params
      * @param null|mixed $locale
+     * @param mixed $params
      *
      * @throws PrestaShopException
      */

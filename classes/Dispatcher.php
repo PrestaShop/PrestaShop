@@ -192,6 +192,9 @@ class DispatcherCore
     /**
      * Get current instance of dispatcher (singleton).
      *
+     *
+     * @param null|SymfonyRequest $request
+     *
      * @throws PrestaShopException
      *
      * @return Dispatcher

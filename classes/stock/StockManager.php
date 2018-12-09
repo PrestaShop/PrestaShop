@@ -527,9 +527,9 @@ class StockManagerCore implements StockManagerInterface
     /**
      * @see StockManagerInterface::getProductPhysicalQuantities()
      *
+     * @param null|mixed $ids_warehouse
      * @param mixed $id_product
      * @param mixed $id_product_attribute
-     * @param null|mixed $ids_warehouse
      * @param mixed $usable
      */
     public function getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
@@ -567,9 +567,9 @@ class StockManagerCore implements StockManagerInterface
     /**
      * @see StockManagerInterface::getProductRealQuantities()
      *
+     * @param null|mixed $ids_warehouse
      * @param mixed $id_product
      * @param mixed $id_product_attribute
-     * @param null|mixed $ids_warehouse
      * @param mixed $usable
      */
     public function getProductRealQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
@@ -761,10 +761,10 @@ class StockManagerCore implements StockManagerInterface
      * @see StockManagerInterface::getProductCoverage()
      * Here, $coverage is a number of days
      *
+     * @param null|mixed $id_warehouse
      * @param mixed $id_product
      * @param mixed $id_product_attribute
      * @param mixed $coverage
-     * @param null|mixed $id_warehouse
      *
      * @return int number of days left (-1 if infinite)
      */

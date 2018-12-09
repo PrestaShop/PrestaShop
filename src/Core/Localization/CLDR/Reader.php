@@ -171,7 +171,7 @@ class Reader implements ReaderInterface
      *
      * @throws LocalizationException
      *
-     * @return string|null
+     * @return null|string
      *                     The parent locale code (CLDR filenames' style). Null if no parent.
      */
     protected function getParentLocale($localeCode)

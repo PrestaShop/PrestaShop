@@ -87,6 +87,8 @@ class RangeWeightCore extends ObjectModel
     /**
      * Get all available price ranges.
      *
+     *
+     *
      * @param mixed $id_carrier
      *
      * @return array Ranges

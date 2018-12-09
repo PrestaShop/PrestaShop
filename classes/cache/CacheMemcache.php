@@ -163,8 +163,8 @@ class CacheMemcacheCore extends Cache
      * Store a data in cache.
      *
      * @param string $key
-     * @param mixed $value
      * @param int $ttl
+     * @param mixed $value
      *
      * @return bool
      */

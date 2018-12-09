@@ -82,6 +82,8 @@ class FileSystem
      * If $path is a file and not a directory, just gets the file info for it
      * and return it in an array.
      *
+     *
+     *
      * @param mixed $path
      *
      * @return an array of SplFileInfo object indexed by file path
@@ -131,6 +133,8 @@ class FileSystem
 
     /**
      * Filter used by listFilesRecursively.
+     *
+     * @param \SplFileInfo $info
      */
     private function matchOnlyFiles(\SplFileInfo $info)
     {

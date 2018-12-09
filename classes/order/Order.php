@@ -582,6 +582,8 @@ class OrderCore extends ObjectModel
      * (Order History).
      *
      * @deprecated
+     *
+     * @param & $row
      */
     public function setProductPrices(&$row)
     {
@@ -843,6 +845,8 @@ class OrderCore extends ObjectModel
     /**
      * Get current order status name (eg. Awaiting payment, Delivered...).
      *
+     *
+     *
      * @param mixed $id_lang
      *
      * @return array Order status details
@@ -911,6 +915,7 @@ class OrderCore extends ObjectModel
      *
      * @param int $id_customer Customer id
      * @param bool $show_hidden_status Display or not hidden order statuses
+     * @param null|Context $context
      *
      * @return array Customer orders
      */
@@ -1051,6 +1056,8 @@ class OrderCore extends ObjectModel
     /**
      * Get product total without taxes.
      *
+     *
+     *
      * @param mixed $products
      *
      * @return Product total without taxes
@@ -1062,6 +1069,8 @@ class OrderCore extends ObjectModel
 
     /**
      * Get product total with taxes.
+     *
+     *
      *
      * @param mixed $products
      *

@@ -215,6 +215,9 @@ class TabCore extends ObjectModel
     /**
      * Get tab.
      *
+     *
+     *
+     *
      * @param mixed $idLang
      * @param mixed $idTab
      *
@@ -453,6 +456,8 @@ class TabCore extends ObjectModel
     /**
      * return an available position in subtab for parent $id_parent.
      *
+     *
+     *
      * @param mixed $idParent
      *
      * @return int
@@ -636,7 +641,7 @@ class TabCore extends ObjectModel
      * @param int $idParent
      * @param int $idProfile
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getTabByIdProfile($idParent, $idProfile)
     {

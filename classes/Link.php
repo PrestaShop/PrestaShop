@@ -77,8 +77,9 @@ class LinkCore
     /**
      * Create a link to delete a product.
      *
-     * @param mixed $product ID of the product OR a Product object
+     *
      * @param int $idPicture ID of the picture to delete
+     * @param mixed $product
      *
      * @return string
      */
@@ -118,13 +119,14 @@ class LinkCore
     /**
      * Create a link to a product.
      *
-     * @param mixed $product Product object (can be an ID product, but deprecated)
+     *
      * @param string $alias
      * @param string $category
      * @param string $ean13
      * @param int $idLang
      * @param int $idShop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
      * @param int $ipa ID product attribute
+     * @param mixed $product
      * @param mixed $force_routes
      * @param mixed $relativeProtocol
      * @param mixed $addAnchor
@@ -399,11 +401,12 @@ class LinkCore
     /**
      * Create a link to a category.
      *
-     * @param mixed $category Category object (can be an ID category, but deprecated)
+     *
      * @param string $alias
      * @param int $idLang
      * @param string $selectedFilters Url parameter to autocheck filters of the module blocklayered
      * @param null|mixed $idShop
+     * @param mixed $category
      * @param mixed $relativeProtocol
      *
      * @return string
@@ -567,10 +570,11 @@ class LinkCore
     /**
      * Create a link to a supplier.
      *
-     * @param mixed $supplier Supplier object (can be an ID supplier, but deprecated)
+     *
      * @param string $alias
      * @param int $idLang
      * @param null|mixed $idShop
+     * @param mixed $supplier
      * @param mixed $relativeProtocol
      *
      * @return string
@@ -619,11 +623,12 @@ class LinkCore
     /**
      * Create a link to a manufacturer.
      *
-     * @param mixed $manufacturer Manufacturer object (can be an ID supplier, but deprecated)
+     *
      * @param string $alias
      * @param int $idLang
      * @param null $idShop
      * @param bool $relativeProtocol
+     * @param mixed $manufacturer
      *
      * @return string
      */
@@ -885,7 +890,7 @@ class LinkCore
     /**
      * Search for a shop whose domain matches the current url.
      *
-     * @return int|null
+     * @return null|int
      */
     public function getMatchingUrlShopId()
     {
@@ -1208,7 +1213,7 @@ class LinkCore
      * @param bool $pagination Show page number attribute
      * @param bool $array If false return an url, if true return an array
      *
-     * @return string|array
+     * @return array|string
      */
     public function getPaginationLink($type, $idObject, $nb = false, $sort = false, $pagination = false, $array = false)
     {

@@ -35,9 +35,9 @@ class SimplexmlElement extends \SimpleXMLElement
      *
      * @see SimpleXMLElement::addChild()
      *
-     * @param mixed $name
      * @param null|mixed $value
      * @param null|mixed $namespace
+     * @param mixed $name
      */
     public function addChild($name, $value = null, $namespace = null)
     {

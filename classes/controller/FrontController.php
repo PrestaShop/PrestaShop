@@ -1027,9 +1027,9 @@ class FrontControllerCore extends Controller
     /**
      * @deprecated 1.7 use $this->registerJavascript() and $this->registerStylesheet() to manage your assets.
      *
-     * @param mixed $media_uri
      * @param null|mixed $css_media_type
      * @param null|mixed $offset
+     * @param mixed $media_uri
      * @param mixed $remove
      * @param mixed $check_path
      */
@@ -1044,8 +1044,8 @@ class FrontControllerCore extends Controller
     /**
      * @deprecated 1.7 this method has not effect with PrestaShop 1.7+
      *
-     * @param mixed $media_uri
      * @param null|mixed $css_media_type
+     * @param mixed $media_uri
      * @param mixed $check_path
      */
     public function removeMedia($media_uri, $css_media_type = null, $check_path = true)
@@ -1106,9 +1106,9 @@ class FrontControllerCore extends Controller
     /**
      * @deprecated 1.7 This function shouldn't be used, use $this->registerStylesheet() instead
      *
+     * @param null|mixed $offset
      * @param mixed $css_uri
      * @param mixed $css_media_type
-     * @param null|mixed $offset
      * @param mixed $check_path
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
@@ -1238,6 +1238,8 @@ class FrontControllerCore extends Controller
 
     /**
      * Add Library not included with classic theme.
+     *
+     * @param array $libraries
      */
     public function requireAssets(array $libraries)
     {
@@ -1286,7 +1288,7 @@ class FrontControllerCore extends Controller
     /**
      * Recovers cart information.
      *
-     * @return int|false
+     * @return false|int
      */
     protected function recoverCart()
     {
@@ -1318,9 +1320,9 @@ class FrontControllerCore extends Controller
      * Sets template file for page content output.
      *
      * @param string $default_template
+     * @param null|mixed $locale
      * @param mixed $template
      * @param mixed $params
-     * @param null|mixed $locale
      */
     public function setTemplate($template, $params = array(), $locale = null)
     {
@@ -1755,6 +1757,8 @@ class FrontControllerCore extends Controller
      *
      * Otherwise, params from $extraParams that have a null value are stripped,
      * and other params are added. Params not in $extraParams are unchanged.
+     *
+     * @param null|array $extraParams
      */
     protected function updateQueryString(array $extraParams = null)
     {

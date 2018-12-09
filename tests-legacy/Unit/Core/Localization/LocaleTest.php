@@ -200,14 +200,17 @@ class LocaleTest extends TestCase
      * When asking the locale to format the number as a price
      * Then an exception should be raised.
      *
-     * @param mixed $number
+     *
      *                        Potentially invalid number
-     * @param mixed $currency
+     *
      *                        Potentially invalid currency
      *
      * @dataProvider provideInvalidPriceData
      *
      * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     *
+     * @param mixed $number
+     * @param mixed $currency
      */
     public function testFormatNumberWithInvalidPriceData($number, $currency)
     {

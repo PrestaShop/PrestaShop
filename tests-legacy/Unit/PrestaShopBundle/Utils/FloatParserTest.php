@@ -51,10 +51,12 @@ class FloatParserTest extends TestCase
      * When constructing an ImmutableFloat from that value using ::fromString
      * Then an InvalidArgumentException should be thrown.
      *
-     * @param mixed $value
+     *
      *
      * @expectedException \InvalidArgumentException
      * @dataProvider provideInvalidValues
+     *
+     * @param mixed $value
      */
     public function testItThrowsExceptionIfNotValid($value)
     {

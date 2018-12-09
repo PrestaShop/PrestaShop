@@ -351,6 +351,7 @@ class SupplyOrderDetailCore extends ObjectModel
      * @see ObjectModel::hydrate()
      *
      * @param null|mixed $id_lang
+     * @param array $data
      */
     public function hydrate(array $data, $id_lang = null)
     {

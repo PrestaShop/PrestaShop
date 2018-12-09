@@ -360,9 +360,9 @@ class ConfigurationCore extends ObjectModel
      * Set TEMPORARY a single configuration value (in one language only).
      *
      * @param string $key Configuration key
-     * @param mixed $values `$values` is an array if the configuration is multilingual, a single string else
      * @param int $idShopGroup
      * @param int $idShop
+     * @param mixed $values
      */
     public static function set($key, $values, $idShopGroup = null, $idShop = null)
     {
@@ -399,8 +399,8 @@ class ConfigurationCore extends ObjectModel
      * Update configuration key for global context only.
      *
      * @param string $key
-     * @param mixed $values
      * @param bool $html
+     * @param mixed $values
      *
      * @return bool
      */
@@ -418,10 +418,10 @@ class ConfigurationCore extends ObjectModel
      * @TODO Fix saving HTML values in Configuration model
      *
      * @param string $key Configuration key
-     * @param mixed $values $values is an array if the configuration is multilingual, a single string else
      * @param bool $html Specify if html is authorized in value
      * @param int $idShopGroup
      * @param int $idShop
+     * @param mixed $values
      *
      * @return bool Update result
      */

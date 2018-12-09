@@ -249,6 +249,7 @@ class AddressFormatCore extends ObjectModel
      * example : (firstname) => 'Presta' will result (Presta)
      *         : (firstname-lastname) => 'Presta' and 'Shop' result '(Presta-Shop)'.
      *
+     * @param & $formattedValueList
      * @param mixed $currentLine
      * @param mixed $currentKeyList
      */
@@ -302,6 +303,8 @@ class AddressFormatCore extends ObjectModel
 
     /**
      * Cleaned the layout set by the user.
+     *
+     * @param & $orderedAddressField
      */
     public static function cleanOrderedAddress(&$orderedAddressField)
     {
@@ -439,6 +442,8 @@ class AddressFormatCore extends ObjectModel
 
     /**
      * Returns selected fields required for an address in an array according to a selection hash.
+     *
+     *
      *
      * @param mixed $className
      *
@@ -596,7 +601,7 @@ class AddressFormatCore extends ObjectModel
     /**
      * @param int $idCountry
      *
-     * @return false|null|string
+     * @return null|false|string
      *
      * @deprecated 1.7.0
      */

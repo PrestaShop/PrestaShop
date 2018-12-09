@@ -145,11 +145,14 @@ class PDFCore
     /**
      * Get correct PDF template classes.
      *
+     *
+     *
+     *
      * @param mixed $object
      *
      * @throws PrestaShopException
      *
-     * @return HTMLTemplate|false
+     * @return false|HTMLTemplate
      */
     public function getTemplateObject($object)
     {

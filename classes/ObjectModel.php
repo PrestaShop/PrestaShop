@@ -413,11 +413,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Formats a value.
      *
-     * @param mixed $value
+     *
      * @param int $type
      * @param bool $with_quotes
      * @param bool $purify
      * @param bool $allow_null
+     * @param mixed $value
      *
      * @return mixed
      */
@@ -610,7 +611,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function duplicateObject()
     {
@@ -1058,10 +1059,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @since 1.5.0.1
      *
      * @param string $field Field name
-     * @param mixed $value Field value
      * @param null|int $id_lang Language ID
      * @param array $skip array of fields to skip
      * @param bool $human_errors if true, uses more descriptive, translatable error strings
+     * @param mixed $value
      *
      * @throws PrestaShopException
      *
@@ -1378,7 +1379,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      *
-     * @return array|null
+     * @return null|array
      */
     public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
     {
@@ -1456,7 +1457,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      *
-     * @return array|null
+     * @return null|array
      */
     public function getFieldsRequiredDatabase($all = false)
     {

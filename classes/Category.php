@@ -731,7 +731,7 @@ class CategoryCore extends ObjectModel
      * @param string $limit Set the limit
      *                      Both the offset and limit can be given
      *
-     * @return array|null
+     * @return null|array
      */
     public static function getNestedCategories(
         $idRootCategory = null,
@@ -815,7 +815,7 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getSimpleCategories($idLang)
     {
@@ -836,7 +836,7 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getSimpleCategoriesWithParentInfos($idLang)
     {
@@ -1636,7 +1636,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get Category groups.
      *
-     * @return array|null
+     * @return null|array
      */
     public function getGroups()
     {
@@ -1678,6 +1678,8 @@ class CategoryCore extends ObjectModel
 
     /**
      * checkAccess return true if id_customer is in a group allowed to see this category.
+     *
+     *
      *
      * @param mixed $idCustomer
      *
@@ -1796,7 +1798,9 @@ class CategoryCore extends ObjectModel
      * but remove duplicate position. Should not be used if positions
      * are clean at the beginning !
      *
-     * @param mixed $idCategoryParent
+     *
+     *
+     * @param null|mixed $idCategoryParent
      *
      * @return bool true if succeed
      */
@@ -1876,7 +1880,7 @@ class CategoryCore extends ObjectModel
      *
      * @param $idCategory
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      *
      * @since 1.7.0
      */
@@ -1971,7 +1975,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get Children for the webservice.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getChildrenWs()
     {
@@ -1987,7 +1991,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get Products for webservice.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getProductsWs()
     {
@@ -2017,7 +2021,7 @@ class CategoryCore extends ObjectModel
     /**
      * Recursively get amount of Products for the webservice.
      *
-     * @return false|int|null|string
+     * @return null|false|int|string
      */
     public function getWsNbProductsRecursive()
     {
@@ -2046,8 +2050,8 @@ class CategoryCore extends ObjectModel
      * @see self::getCategoryInformation()
      * @deprecated 1.7.0
      *
-     * @param mixed $idsCategory
      * @param null|mixed $idLang
+     * @param mixed $idsCategory
      */
     public static function getCategoryInformations($idsCategory, $idLang = null)
     {
@@ -2315,6 +2319,8 @@ class CategoryCore extends ObjectModel
 
     /**
      * Deletes all Categories from the Shop ID.
+     *
+     *
      *
      * @param mixed $idShop
      *

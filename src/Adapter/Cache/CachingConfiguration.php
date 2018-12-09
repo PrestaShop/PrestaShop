@@ -122,6 +122,8 @@ class CachingConfiguration implements DataConfigurationInterface
     /**
      * Update the Php configuration for Cache feature and system.
      *
+     * @param array $configuration
+     *
      * @return array the errors list during the update operation
      */
     private function updatePhpCacheConfiguration(array $configuration)

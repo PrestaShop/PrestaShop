@@ -96,7 +96,7 @@ abstract class DbCore
     /**
      * Opens a database connection.
      *
-     * @return PDO|mysqli|resource
+     * @return mysqli|PDO|resource
      */
     abstract public function connect();
 
@@ -110,12 +110,14 @@ abstract class DbCore
      *
      * @param string $sql
      *
-     * @return PDOStatement|mysqli_result|resource|bool
+     * @return bool|mysqli_result|PDOStatement|resource
      */
     abstract protected function _query($sql);
 
     /**
      * Get number of rows in a result.
+     *
+     *
      *
      * @param mixed $result
      *
@@ -142,7 +144,7 @@ abstract class DbCore
      *
      * @param bool|mysqli_result|PDOStatement|resource $result
      *
-     * @return array|object|false|null
+     * @return null|array|false|object
      */
     abstract public function nextRow($result = false);
 
@@ -580,7 +582,7 @@ abstract class DbCore
      *
      * @throws PrestaShopDatabaseException
      *
-     * @return array|false|null|mysqli_result|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function executeS($sql, $array = true, $use_cache = true)
     {
@@ -638,7 +640,7 @@ abstract class DbCore
      * @param DbQuery|string $sql the select query (without "LIMIT 1")
      * @param bool $use_cache Find it in cache first
      *
-     * @return array|bool|object|null
+     * @return null|array|bool|object
      */
     public function getRow($sql, $use_cache = true)
     {
@@ -686,7 +688,7 @@ abstract class DbCore
      * @param DbQuery|string $sql
      * @param bool $use_cache
      *
-     * @return string|false|null
+     * @return null|false|string
      */
     public function getValue($sql, $use_cache = true)
     {
