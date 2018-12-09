@@ -2,32 +2,43 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
-  <title>PrestaShop service visualisation using graphviz</title>
+  <title>PrestaShop services visualization tool using graphviz</title>
 </head>
 <body>
 
 <div>
   <form method="POST">
-    <label for="controller_name_input">Controller filepath</label>
-    <input id="controller_name_input" name="controller_name_input" type="text">
-    </input>
+    <div>
+      <label for="controller_filepath_input">Controller filepath</label>
+      <input id="controller_filepath_input" name="controller_filepath_input" type="text"
+             value="{{ controllerFilepath }}">
+      </input>
+    </div>
 
-    <p>
-      Example: src/PrestaShopBundle/Controller/Admin/AddonsController.php
-    </p>
+    <div>
+      <label for="print_graph_as_text">Print graph as text</label>
+      <input type="checkbox" id="print_graph_as_text"
+             name="print_graph_as_text" {% if printGraphAsText == true %}checked="true"{% endif %}"/>
+    </div>
+    <div>
+      <p>
+        Example: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php
+      </p>
+    </div>
 
-    <input type="submit"></input>
+    <input type="submit"/>
   </form>
 
 </div>
 
-<textarea id="graphviz_data" style="display:none">
+<textarea id="graphviz_data" style="display:none; width: 1000px; height: 100vw;">
 {{ graph_data }}
 </textarea>
 
 <div id="graphviz_svg_div">
   <!-- Target for dynamic svg generation -->
 </div>
+
 
 </body>
 <script language="javascript" type="text/javascript"
@@ -36,20 +47,24 @@
 <script language="javascript" type="text/javascript">
   jQuery(document).ready(function () {
 
-    var svg_div = jQuery('#graphviz_svg_div');
-    var graphviz_data_textarea = jQuery('#graphviz_data');
+    const print_graph_as_text = {% if printGraphAsText %} true {% else %} false {% endif %};
+    const svg_div = jQuery('#graphviz_svg_div');
+    const graphviz_data_textarea = jQuery('#graphviz_data');
 
-    UpdateGraphviz();
+    if (print_graph_as_text == true) {
+      $('#graphviz_data').show();
+    } else {
+      updateGraphviz();
 
-    function UpdateGraphviz() {
-      svg_div.html("");
-      var data = graphviz_data_textarea.val();
-      // Generate the Visualization of the Graph into "svg".
-      var svg = Viz(data, "svg");
-      svg_div.html("<hr>" + svg);
+      function updateGraphviz() {
+        svg_div.html("");
+
+        const data = graphviz_data_textarea.val();
+        const svg = Viz(data, "svg");
+        svg_div.html("<hr>" + svg);
+      }
     }
   });
 </script>
 
 </html>
-<!-- Using http://www.webgraphviz.com -->

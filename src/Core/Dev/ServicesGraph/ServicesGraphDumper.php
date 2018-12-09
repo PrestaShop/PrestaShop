@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Dev;
+namespace PrestaShop\PrestaShop\Core\Dev\ServicesGraph;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
@@ -37,9 +37,10 @@ use Symfony\Component\DependencyInjection\Reference;
 class ServicesGraphDumper
 {
     /**
-     * We explore the service graph recursively
+     * We explore the service graph recursively, however
+     * we limit the nested search to avoid out-of-memory errors
      */
-    const MAX_NESTED_SERVICES_DEFINITION_DEPTH = 50;
+    const MAX_NESTED_SERVICES_SEARCH_DEPTH = 50;
 
     /**
      * Used in order to pass $containerBuilder between recursive function calls
@@ -50,30 +51,49 @@ class ServicesGraphDumper
     private $containerBuilder;
 
     /**
+     * @var string
+     */
+    private $prestashopBundleRootDirectory;
+
+    /**
+     * @param string $prestashopBundleRootDirectory
+     */
+    public function __construct($prestashopBundleRootDirectory)
+    {
+        $this->prestashopBundleRootDirectory = $prestashopBundleRootDirectory;
+    }
+
+    /**
+     * Build service graph for given Symfony controller
+     *
      * @param string $realpath
      *
-     * @return string
+     * @return string graph in DOT format
      *
      * @throws \Exception
      */
-    public function getGraph($realpath)
+    public function buildAndDumpGraphForController($realpath)
     {
         if (false === file_exists($realpath)) {
             throw new \Exception('Bad controller filepath (file does not exist): ' . $realpath);
         }
 
         $serviceIds = $this->extractServiceIdsFromControllerClass($realpath);
-        $graph = $this->exploreController($serviceIds);
+        $serviceContainer = $this->buildServiceContainerFromRootNodes($serviceIds);
+        $graph = $this->dumpServiceContainer($serviceContainer);
 
         return $graph;
     }
 
     /**
      * Parse the controller file looking for $this->get('...') statements
+     * and extract service IDs
      *
      * @param string $controllerFilepath
      *
-     * @return string[]
+     * @return string[] service IDs found in given Controller
+     *
+     * @todo: use Controller FQDN instead of filepath
      */
     protected function extractServiceIdsFromControllerClass($controllerFilepath)
     {
@@ -92,31 +112,46 @@ class ServicesGraphDumper
     }
 
     /**
-     * @param string[] $servicesToExplore
+     * From root nodes, build a Service Container with all the children
+     * (recursive search)
      *
-     * @return string
+     * @param string[] $rootNodes service IDS
+     *
+     * @return ContainerBuilder
      */
-    protected function exploreController(array $servicesToExplore)
+    protected function buildServiceContainerFromRootNodes(array $rootNodes)
     {
         $containerBuilder = $this->getPrestaShopContainerBuilder();
         $this->containerBuilder = $containerBuilder;
 
-        foreach ($servicesToExplore as $serviceToExplore) {
+        // we're going to add to this 2nd container builder the relevant services
+        // extracted from PrestaShop container builder
+        $filteredContainer = new ContainerBuilder();
+
+        // we tag all services to be extracted
+        foreach ($rootNodes as $serviceToExplore) {
             $rootDefinition = $containerBuilder->getDefinition($serviceToExplore);
             $this->tagDefinitionRecursivelyForGraphExploration($rootDefinition);
         }
 
-        $filteredContainer = new ContainerBuilder();
-
+        // we extract the tagged services
         foreach ($containerBuilder->getDefinitions() as $id => $def) {
             if ($def->hasTag('to-be-graphed')) {
                 $filteredContainer->setDefinition($id, $def);
             }
         }
 
-        $filteredContainer->removeDefinition('service_container');
+        return $filteredContainer;
+    }
 
-        $dumper = new CustomGraphvizDumper($filteredContainer);
+    /**
+     * @param ContainerBuilder $serviceContainer
+     *
+     * @return string
+     */
+    protected function dumpServiceContainer(ContainerBuilder $serviceContainer)
+    {
+        $dumper = new CustomGraphvizDumper($serviceContainer);
         $graph = $dumper->dump();
 
         return $graph;
@@ -126,12 +161,14 @@ class ServicesGraphDumper
      * Load the Symfony container with PrestaShop services
      *
      * @return ContainerBuilder
+     *
+     * @todo: be able to target PrestaShop services defined outside of PrestaShopBundle
      */
     protected function getPrestaShopContainerBuilder()
     {
         $container = new ContainerBuilder();
 
-        $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator($this->prestashopBundleRootDirectory . '/Resources/config'));
         $loader->load('services.yml');
 
         return $container;
@@ -157,7 +194,7 @@ class ServicesGraphDumper
      */
     protected function tagDefinitionArgumentRecursively($argument, $i)
     {
-        if ($i > self::MAX_NESTED_SERVICES_DEFINITION_DEPTH) {
+        if ($i > self::MAX_NESTED_SERVICES_SEARCH_DEPTH) {
             throw new \RuntimeException('MAX_NESTED_SERVICES_DEFINITION_DEPTH reached, aborting...');
         }
 
@@ -165,6 +202,7 @@ class ServicesGraphDumper
             return;
         }
         if (($argument instanceof Parameter) || ($argument instanceof \Symfony\Component\ExpressionLanguage\Expression)) {
+            // @todo: to be improved: this could be part of the graph
             return;
         }
 
@@ -173,6 +211,7 @@ class ServicesGraphDumper
             try {
                 $definition = $this->containerBuilder->getDefinition($serviceId);
             } catch (ServiceNotFoundException $e) {
+                // @todo: to be improved: this could be part of the graph
                 return;
             }
             $this->tagDefinitionRecursivelyForGraphExploration($definition, $i);

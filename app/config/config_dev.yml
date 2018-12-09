@@ -55,4 +55,5 @@ services:
         public: true
 
     prestashop.dev.graph_dumper:
-        class: PrestaShopBundle\Controller\Dev\ServicesGraphDumper
+        class: PrestaShop\PrestaShop\Core\Dev\ServicesGraph\ServicesGraphDumper
+        arguments: ['%ps_prestashopbundle_dir%']
