@@ -310,7 +310,7 @@ class AdminCurrenciesControllerCore extends AdminController
 
         $enable = (int) Tools::getValue('enable');
         $config = Configuration::get('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', null, null, $this->context->shop->id);
-        $cronJobUrl = 'http://' . ShopUrl::getMainShopDomain($this->context->shop->id) . __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/cron_currency_rates.php?secure_key=' . md5(_COOKIE_KEY_ . Configuration::get('PS_SHOP_NAME'));
+        $cronJobUrl = Tools::getShopProtocol() . ShopUrl::getMainShopDomain($this->context->shop->id) . __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/cron_currency_rates.php?secure_key=' . md5(_COOKIE_KEY_ . Configuration::get('PS_SHOP_NAME'));
 
         if ($config && $enable == 0) {
             Configuration::updateValue('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', 0, false, null, $this->context->shop->id);
