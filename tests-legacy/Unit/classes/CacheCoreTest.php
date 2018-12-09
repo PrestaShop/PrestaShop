@@ -27,10 +27,10 @@
 namespace LegacyTests\Unit\Classes;
 
 use PrestaShop\PrestaShop\Adapter\Entity\CacheMemcache;
-use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_TestCase;
 use Cache;
 
-class CacheCoreTest extends TestCase
+class CacheCoreTest extends PHPUnit_Framework_TestCase
 {
     private $cacheArray = array();
 
