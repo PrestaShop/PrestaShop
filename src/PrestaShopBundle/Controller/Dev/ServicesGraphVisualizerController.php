@@ -26,20 +26,12 @@
 
 namespace PrestaShopBundle\Controller\Dev;
 
+use PrestaShop\PrestaShop\Core\Dev\ServicesGraph\ServicesGraphDumper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Parameter;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
-
 
 class ServicesGraphVisualizerController extends Controller
 {
-
     /**
      * @param Request $request
      *
@@ -47,23 +39,35 @@ class ServicesGraphVisualizerController extends Controller
      */
     public function indexAction(Request $request)
     {
+
         if ($request->getMethod() === Request::METHOD_POST) {
 
-            $controllerFilepath = $request->request->get('controller_name_input');
+            $controllerFilepath = $request->request->get('controller_filepath_input');
+            $printGraphAsText = ('on' === $request->request->get('print_graph_as_text'));
+
+            if (empty($controllerFilepath)) {
+                throw new \Exception('Bad controller filepath (empty)');
+            }
+
             $realpath = $this->getParameter('ps_root_dir') . trim($controllerFilepath);
 
-            $graph = $this->get('prestashop.dev.graph_dumper')->getGraph($realpath);
+            /** @var ServicesGraphDumper $graphDumper */
+            $graphDumper = $this->get('prestashop.dev.graph_dumper');
+            $graph = $graphDumper->buildAndDumpGraphForController($realpath);
 
         } else {
             $graph = '';
+            $controllerFilepath = '';
+            $printGraphAsText = false;
         }
 
         return $this->render(
             '@PrestaShop/Dev/graph.html.twig',
             [
-                'graph_data' => $graph
+                'graph_data' => $graph,
+                'controllerFilepath' => $controllerFilepath,
+                'printGraphAsText' => $printGraphAsText,
             ]
         );
     }
-
 }

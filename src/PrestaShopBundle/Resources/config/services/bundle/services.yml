@@ -1,6 +1,7 @@
 parameters:
     ps_root_dir:              "%kernel.root_dir%/../"
     ps_config_dir:            "%ps_root_dir%config"
+    ps_prestashopbundle_dir:  "%ps_root_dir%src/PrestaShopBundle"
     translations_dir:         "%kernel.root_dir%/Resources/translations"
     themes_translations_dir:  "%kernel.cache_dir%/themes"
     themes_dir:               "%kernel.root_dir%/../themes"

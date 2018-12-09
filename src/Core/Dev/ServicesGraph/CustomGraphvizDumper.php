@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Dev;
+namespace PrestaShop\PrestaShop\Core\Dev\ServicesGraph;
 
 use Symfony\Component\DependencyInjection\Argument\ArgumentInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -194,6 +194,7 @@ class CustomGraphvizDumper extends Dumper
         $nodes = array();
 
         $container = $this->cloneContainer();
+        $container->removeDefinition('service_container');
 
         foreach ($container->getDefinitions() as $id => $definition) {
             $class = $definition->getClass();
@@ -216,10 +217,15 @@ class CustomGraphvizDumper extends Dumper
                 continue;
             }
 
+            if (array_key_exists($id, $container->getRemovedIds())) {
+                continue;
+            }
+
             if (!$container->hasDefinition($id)) {
                 $nodes[$id] = array('class' => str_replace('\\', '\\\\', \get_class($container->get($id))), 'attributes' => $this->options['node.instance']);
             }
         }
+
 
         return $nodes;
     }
