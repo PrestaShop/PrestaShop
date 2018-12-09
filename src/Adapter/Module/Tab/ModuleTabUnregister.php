@@ -91,7 +91,7 @@ class ModuleTabUnregister
      *
      * @param Tab $tab the instance of entity tab
      */
-    private function unregisterTab(TabClass $tab)
+    private function unregisterTab(Tab $tab)
     {
         // We need to use the legacy class because of the right management
         $tab_legacy = new TabClass($tab->getId());
@@ -113,7 +113,7 @@ class ModuleTabUnregister
      *
      * @param Tab $tab
      */
-    private function removeDuplicatedParent(TabClass $tab)
+    private function removeDuplicatedParent(Tab $tab)
     {
         $remainingChildren = $this->tabRepository->findByParentId($tab->getIdParent());
         // Or more than one children, the parent tab is still used.
