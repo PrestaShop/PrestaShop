@@ -3,6 +3,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {ShopParameters} = require('../../../selectors/BO/shopParameters/shop_parameters.js');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 scenario('Configure shop in the Back Office', () => {
@@ -10,7 +11,7 @@ scenario('Configure shop in the Back Office', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Disable shop in the Back Office', client => {
     test('should go to "Shop parameters" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.general_submenu));
     test('should close symfony Profiler', () => {

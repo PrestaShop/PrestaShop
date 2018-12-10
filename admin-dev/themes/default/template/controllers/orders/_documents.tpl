@@ -69,12 +69,12 @@
 						<td>
 							{if get_class($document) eq 'OrderInvoice'}
 								{if isset($document->is_delivery)}
-									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order_invoice={$document->id}">
+									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf', true, [], ['submitAction' => 'generateDeliverySlipPDF', 'id_order_invoice' => $document->id])|escape:'html':'UTF-8'}">
 								{else}
-									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order_invoice={$document->id}">
+									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf', true, [], ['submitAction' => 'generateInvoicePDF', 'id_order_invoice' => $document->id])|escape:'html':'UTF-8'}">
 							   {/if}
 							{elseif get_class($document) eq 'OrderSlip'}
-								<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateOrderSlipPDF&amp;id_order_slip={$document->id}">
+								<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf', true, [], ['submitAction' => 'generateOrderSlipPDF', 'id_order_slip' => $document->id])|escape:'html':'UTF-8'}">
 							{/if}
 							{if get_class($document) eq 'OrderInvoice'}
 								{if isset($document->is_delivery)}

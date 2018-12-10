@@ -3,6 +3,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonProduct = require('../../common_scenarios/product');
 const commonFeature = require('../../common_scenarios/feature');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = {
   name: 'Feat',

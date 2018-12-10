@@ -49,8 +49,8 @@ module.exports = {
       await client.checkAttributeValue(OnBoarding.welcomeSteps.tutorial_step.replace("%P", '2'), 'class', 'id -done', 'equal');
       await client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '1/2', 'contain', 4000);
       await client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'These payment methods are already available to your customers.', 'equal', 2000);
-      await client.waitForExistAndClick(OnBoarding.payement_check_button.replace("%moduleTechName", "ps_checkpayment"));
-      await client.waitForVisibleAndClick(OnBoarding.resume_button);
+      await client.waitForExistAndClick(OnBoarding.payement_check_button.replace("%moduleTechName", "ps_checkpayment", 3000));
+      await client.waitForVisibleAndClick(OnBoarding.resume_button, 2000);
       await client.waitForExistAndClick(OnBoarding.welcomeSteps.next_button);
 
       await client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '2/2', 'contain', 4000);
