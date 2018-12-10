@@ -66,6 +66,7 @@ class CustomerController extends AbstractAdminController
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerGrid' => $this->presentGrid($customerGrid),
+            'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
         ]);
     }
 
@@ -78,6 +79,10 @@ class CustomerController extends AbstractAdminController
      */
     public function createAction(Request $request)
     {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
+            return $this->redirectToRoute('admin_customers_index');
+        }
+
         $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
         $customerForm->handleRequest($request);
 
