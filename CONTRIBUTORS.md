@@ -43,6 +43,7 @@ GitHub contributors:
 - Andy Pieters
 - anegoda1995
 - Angel Guzman Maeso
+- Ansar Mallouli
 - Anthony Girard
 - antoin_m
 - Antoine LA
