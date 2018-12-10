@@ -50,7 +50,7 @@ class CustomerConstraintException extends CustomerException
      * @var int Code is used when invalid password is provided for customer
      */
     const INVALID_PASSWORD = 4;
-    
+
     /**
      * @var int Code is used when customer email get duplicated
      */
