@@ -40,7 +40,10 @@
           </div>
 
           <div class="form-group row">
-            <label for="{{ customerForm.first_name.vars.id }}" class="form-control-label">{{ 'First name'|trans({}, 'Admin.Global') }}</label>
+            <label for="{{ customerForm.first_name.vars.id }}" class="form-control-label">
+              <span class="text-danger">*</span>
+              {{ 'First name'|trans({}, 'Admin.Global') }}
+            </label>
             <div class="col-sm">
               {{ form_widget(customerForm.first_name) }}
               <small class="form-text">
@@ -50,7 +53,10 @@
           </div>
 
           <div class="form-group row">
-            <label for="{{ customerForm.last_name.vars.id }}" class="form-control-label">{{ 'Last name'|trans({}, 'Admin.Global') }}</label>
+            <label for="{{ customerForm.last_name.vars.id }}" class="form-control-label">
+              <span class="text-danger">*</span>
+              {{ 'Last name'|trans({}, 'Admin.Global') }}
+            </label>
             <div class="col-sm">
               {{ form_widget(customerForm.last_name) }}
               <small class="form-text">
@@ -60,14 +66,20 @@
           </div>
 
           <div class="form-group row">
-            <label for="{{ customerForm.email.vars.id }}" class="form-control-label">{{ 'Email'|trans({}, 'Admin.Global') }}</label>
+            <label for="{{ customerForm.email.vars.id }}" class="form-control-label">
+              <span class="text-danger">*</span>
+              {{ 'Email'|trans({}, 'Admin.Global') }}
+            </label>
             <div class="col-sm">
               {{ form_widget(customerForm.email) }}
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="{{ customerForm.password.vars.id }}" class="form-control-label">{{ 'Password'|trans({}, 'Admin.Global') }}</label>
+            <label for="{{ customerForm.password.vars.id }}" class="form-control-label">
+              {% if customerForm.password.vars.required %}<span class="text-danger">*</span>{% endif %}
+              {{ 'Password'|trans({}, 'Admin.Global') }}
+            </label>
             <div class="col-sm">
               {{ form_widget(customerForm.password) }}
               <small class="form-text">
@@ -104,7 +116,10 @@
           </div>
 
           <div class="form-group row">
-            <label for="{{ customerForm.group_ids.vars.id }}" class="form-control-label">{{ 'Group access'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <label for="{{ customerForm.group_ids.vars.id }}" class="form-control-label">
+              <span class="text-danger">*</span>
+              {{ 'Group access'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            </label>
             <div class="col-sm">
               {{ form_widget(customerForm.group_ids) }}
               <small class="form-text">
