@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\AddCustomerHandler
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
 /**
  * Handles command that adds new customer
@@ -61,16 +62,16 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
     }
 
     /**
-     * @param string $email
+     * @param Email $email
      */
     private function assertCustomerWithGivenEmailDoesNotExist($email)
     {
         $customer = new Customer();
-        $customer->getByEmail($email);
+        $customer->getByEmail($email->getValue());
 
         if ($customer->id) {
             throw new CustomerConstraintException(
-                sprintf('Customer with email "%s" already exists', $email),
+                sprintf('Customer with email "%s" already exists', $email->getValue()),
                 CustomerConstraintException::DUPLICATE_EMAIL
             );
         }
@@ -82,10 +83,10 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
      */
     private function fillCustomerWithCommandData(Customer $customer, AddCustomerCommand $command)
     {
-        $customer->firstname = $command->getFirstName();
-        $customer->lastname = $command->getLastName();
-        $customer->email = $command->getEmail();
-        $customer->passwd = $command->getPassword();
+        $customer->firstname = $command->getFirstName()->getValue();
+        $customer->lastname = $command->getLastName()->getValue();
+        $customer->email = $command->getEmail()->getValue();
+        $customer->passwd = $command->getPassword()->getValue();
         $customer->id_default_group = $command->getDefaultGroupId();
         $customer->groupBox = $command->getGroupIds();
         $customer->id_gender = $command->getGenderId();
