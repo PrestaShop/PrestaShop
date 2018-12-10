@@ -54,7 +54,7 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
 
         $this->updateCustomerWithCommandData($customer, $command);
 
-        if (false === $customer->validateFields(false)) {
+        if (false === $customer->validateFields()) {
             throw new CustomerException('Customer contains invalid field values');
         }
 
@@ -107,6 +107,43 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
 
         if (null !== $command->getDefaultGroupId()) {
             $customer->id_default_group = $command->getDefaultGroupId();
+        }
+
+        $this->updateCustomerB2bData($customer, $command);
+    }
+
+    /**
+     * @param Customer $customer
+     * @param EditCustomerCommand $command
+     */
+    private function updateCustomerB2bData(Customer $customer, EditCustomerCommand $command)
+    {
+        if (null !== $command->getCompanyName()) {
+            $customer->company = $command->getCompanyName();
+        }
+
+        if (null !== $command->getSiretCode()) {
+            $customer->siret = $command->getSiretCode();
+        }
+
+        if (null !== $command->getApeCode()) {
+            $customer->ape = $command->getApeCode();
+        }
+
+        if (null !== $command->getWebsite()) {
+            $customer->website = $command->getWebsite();
+        }
+
+        if (null !== $command->getAllowedOutstandingAmount()) {
+            $customer->outstanding_allow_amount = $command->getAllowedOutstandingAmount();
+        }
+
+        if (null !== $command->getMaxPaymentDays()) {
+            $customer->max_payment_days = $command->getMaxPaymentDays();
+        }
+
+        if (null !== $command->getRiskId()) {
+            $customer->id_risk = $command->getRiskId();
         }
     }
 }
