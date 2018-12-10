@@ -67,7 +67,7 @@ final class OrdersPerCustomerKpi implements KpiInterface
     public function render()
     {
         $helper = new HelperKpi();
-        $helper->id = 'box-age';
+        $helper->id = 'box-orders';
         $helper->icon = 'shopping_basket';
         $helper->color = 'color4';
 
