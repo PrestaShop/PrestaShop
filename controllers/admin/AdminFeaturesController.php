@@ -437,10 +437,14 @@ class AdminFeaturesControllerCore extends AdminController
                     return;
                 }
                 $this->content .= $this->initFormFeatureValue();
-            } elseif (!$this->ajax) {
+            } elseif ($this->display != 'view' && !$this->ajax) {
                 // If a feature value was saved, we need to reset the values to display the list
                 $this->setTypeFeature();
                 $this->content .= $this->renderList();
+                /* reset all attributes filter */
+                if (!Tools::getValue('submitFilterfeature_value', 0) && !Tools::getIsset('id_feature_value')) {
+                    $this->processResetFilters('feature_value');
+                }
             }
         } else {
             $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
@@ -484,6 +488,11 @@ class AdminFeaturesControllerCore extends AdminController
     {
         if (!Feature::isFeatureActive()) {
             return;
+        }
+
+        /* set location with current index */
+        if (Tools::getIsset('id_feature') && Tools::getIsset('viewfeature')) {
+            self::$currentIndex = self::$currentIndex . '&id_feature=' . Tools::getValue('id_feature', 0) . '&viewfeature';
         }
 
         if ($this->table == 'feature_value' && ($this->action == 'save' || $this->action == 'delete' || $this->action == 'bulkDelete')) {
