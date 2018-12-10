@@ -44,22 +44,22 @@ class URLFragmentSerializerTest extends Testcase
         $this->assertEquals($fragment, $this->serializer->unserialize($expected));
     }
 
-    public function test_serialize_single_monovalued_fragment()
+    public function testSerializeSingleMonovaluedFragment()
     {
         $this->doTest('a-b', ['a' => ['b']]);
     }
 
-    public function test_serialize_single_multivalued_fragment()
+    public function testSerializeSingleMultivaluedFragment()
     {
         $this->doTest('a-b-c', ['a' => ['b', 'c']]);
     }
 
-    public function test_serialize_multiple_multivalued_fragments()
+    public function testSerializeMultipleMultivaluedFragments()
     {
         $this->doTest('a-b-c/x-y-z', ['a' => ['b', 'c'], 'x' => ['y', 'z']]);
     }
 
-    public function test_serialize_single_monovalued_fragment_with_dash_in_name()
+    public function testSerializeSingleMonovaluedFragmentWithDashInName()
     {
         $this->doTest('a-b--c', ['a' => ['b-c']]);
     }

@@ -45,25 +45,25 @@ class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestC
         );
     }
 
-    public function test_quote_number_not_quoted()
+    public function testQuoteNumberNotQuoted()
     {
         $this->assertEquals('escaped', $this->queryBuilder->quote(42));
         $this->assertEquals('escaped', $this->queryBuilder->quote(4.2));
     }
 
-    public function test_quote_string_quoted()
+    public function testQuoteStringQuoted()
     {
         $this->assertEquals('\'escaped\'', $this->queryBuilder->quote('hello'));
     }
 
-    public function test_buildWhereConditions_AND_just_one_condition()
+    public function testBuildWhereConditionsANDJustOneCondition()
     {
         $this->assertEquals("name = 'escaped'", $this->queryBuilder->buildWhereConditions('AND', array(
             'name' => 'some string'
         )));
     }
 
-    public function test_buildWhereConditions_AND_two_conditions()
+    public function testBuildWhereConditionsANDTwoConditions()
     {
         $this->assertEquals("name = 'escaped' AND num = escaped", $this->queryBuilder->buildWhereConditions('AND', array(
             'name' => 'some string',
@@ -71,7 +71,7 @@ class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestC
         )));
     }
 
-    public function test_buildWhereConditions_arrayValue()
+    public function testBuildWhereConditionsArrayValue()
     {
         $this->assertEquals("stuff IN ('escaped', escaped, escaped)", $this->queryBuilder->buildWhereConditions('AND', array(
             'stuff' => array('a string', 123, 456452)

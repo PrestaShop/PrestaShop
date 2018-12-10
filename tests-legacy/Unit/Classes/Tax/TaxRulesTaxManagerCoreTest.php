@@ -48,7 +48,7 @@ class TaxRulesTaxManagerCoreTest extends UnitTestCase
         )
     );
 
-    public function test_getTaxCalculator_ShouldUseFirstComputationMethodFromTaxes()
+    public function testGetTaxCalculatorShouldUseFirstComputationMethodFromTaxes()
     {
         // Given
         Phake::when($this->database)->executeS(Phake::anyParameters())->thenReturn($this->tax_rows);

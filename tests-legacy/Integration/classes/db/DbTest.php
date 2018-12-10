@@ -45,7 +45,7 @@ class DbTest extends IntegrationTestCase
         Db::$instance = array();
     }
 
-    public function test_getInstance_ShouldLoadSlavesCorrectly_EvenWhenMasterIsCalled()
+    public function testGetInstanceShouldLoadSlavesCorrectlyEvenWhenMasterIsCalled()
     {
         $this->loadSlaves(2);
 

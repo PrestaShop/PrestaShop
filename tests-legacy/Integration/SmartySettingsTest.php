@@ -47,7 +47,7 @@ class SmartySettingsTest extends IntegrationTestCase
         return $this->smarty->fetch('string:' . $templateString);
     }
 
-    public function test_a_link_is_escaped_automatically()
+    public function testALinkIsEscapedAutomatically()
     {
         $str = '<a>hello</a>';
         $this->assertEquals(
@@ -58,7 +58,7 @@ class SmartySettingsTest extends IntegrationTestCase
         );
     }
 
-    public function test_nofilter_prevents_escape()
+    public function testNofilterPreventsEscape()
     {
         $str = '<a>hello</a>';
         $this->assertEquals(
@@ -69,7 +69,7 @@ class SmartySettingsTest extends IntegrationTestCase
         );
     }
 
-    public function test_html_is_not_escaped_twice()
+    public function testHtmlIsNotEscapedTwice()
     {
         $str = '<a>hello</a>';
         $this->assertEquals(

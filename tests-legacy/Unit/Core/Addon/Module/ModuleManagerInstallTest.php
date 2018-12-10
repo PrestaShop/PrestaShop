@@ -36,23 +36,23 @@ class ModuleManagerInstallTest extends TestCase
     }
 
 
-    public function test_data_in_database_after_module_install()
+    public function testDataInDatabaseAfterModuleInstall()
     {
     }
 
-    public function test_successful_install_with_zip()
+    public function testSuccessfulInstallWithZip()
     {
     }
 
-    public function test_failed_install_caused_by_parse_error()
+    public function testFailedInstallCausedByParseError()
     {
     }
 
-    public function test_installation_paypal_module_from_addons()
+    public function testInstallationPaypalModuleFromAddons()
     {
     }
 
-    public function test_failed_install_caused_by_response_from_module()
+    public function testFailedInstallCausedByResponseFromModule()
     {
         // Should uninstall
     }

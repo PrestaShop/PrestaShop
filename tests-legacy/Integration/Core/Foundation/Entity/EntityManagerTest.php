@@ -60,7 +60,7 @@ class EntityManagerTest extends IntegrationTestCase
         $this->contextMocker->resetContext();
     }
 
-    public function test_explicitly_defined_repository_is_found_by_entitymanager()
+    public function testExplicitlyDefinedRepositoryIsFoundByEntitymanager()
     {
         $this->assertInstanceOf(
             '\\PrestaShop\\PrestaShop\\Core\\CMS\\CMSRoleRepository',
@@ -68,7 +68,7 @@ class EntityManagerTest extends IntegrationTestCase
         );
     }
 
-    public function test_find_implicitly_defined_repository()
+    public function testFindImplicitlyDefinedRepository()
     {
         $repository = $this->entityManager->getRepository('Product');
         $product = $repository->findOne(1);
@@ -76,7 +76,7 @@ class EntityManagerTest extends IntegrationTestCase
         $this->assertEquals(1, $product->id);
     }
 
-    public function test_save_dataMapper_style()
+    public function testSaveDataMapperStyle()
     {
         $repository = $this->entityManager->getRepository('CMSRole');
 

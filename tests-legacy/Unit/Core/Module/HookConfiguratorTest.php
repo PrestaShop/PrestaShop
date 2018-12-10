@@ -55,7 +55,7 @@ class HookConfiguratorTest extends UnitTestCase
         return $this;
     }
 
-    public function test_single_module_appended_to_hook()
+    public function testSingleModuleAppendedToHook()
     {
         $this->setCurrentDisplayHooksConfiguration([
             "displayTop" => [
@@ -80,7 +80,7 @@ class HookConfiguratorTest extends UnitTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function test_single_module_appended_to_hook_with_exceptions()
+    public function testSingleModuleAppendedToHookWithExceptions()
     {
         $this->setCurrentDisplayHooksConfiguration([
             "displayTop" => [
@@ -115,7 +115,7 @@ class HookConfiguratorTest extends UnitTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function test_multiple_modules_appended_to_hook()
+    public function testMultipleModulesAppendedToHook()
     {
         $this->setCurrentDisplayHooksConfiguration([
             "displayTop" => [
@@ -142,7 +142,7 @@ class HookConfiguratorTest extends UnitTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function test_multiple_tilde_in_hook_module_list()
+    public function testMultipleTildeInHookModuleList()
     {
         $this->setCurrentDisplayHooksConfiguration([
             "displayTop" => [
@@ -171,7 +171,7 @@ class HookConfiguratorTest extends UnitTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function test_single_module_prepended_to_hook()
+    public function testSingleModulePrependedToHook()
     {
         $this->setCurrentDisplayHooksConfiguration([
             "displayTop" => [
@@ -196,7 +196,7 @@ class HookConfiguratorTest extends UnitTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function test_multiple_modules_prepended_to_hook()
+    public function testMultipleModulesPrependedToHook()
     {
         $this->setCurrentDisplayHooksConfiguration([
             "displayTop" => [
@@ -223,7 +223,7 @@ class HookConfiguratorTest extends UnitTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function test_modules_hooked_are_replaced()
+    public function testModulesHookedAreReplaced()
     {
         $this->setCurrentDisplayHooksConfiguration([
             "displayTop" => [
@@ -248,7 +248,7 @@ class HookConfiguratorTest extends UnitTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function test_when_a_module_is_hooked_it_is_unhooked_from_current_display_hooks()
+    public function testWhenAModuleIsHookedItIsUnhookedFromCurrentDisplayHooks()
     {
         $this->setCurrentDisplayHooksConfiguration([
             "displayTop" => [
@@ -276,7 +276,7 @@ class HookConfiguratorTest extends UnitTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function test_new_hook_is_created()
+    public function testNewHookIsCreated()
     {
         $config = [
             "displayTop" => [

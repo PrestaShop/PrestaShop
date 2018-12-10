@@ -43,18 +43,18 @@ class Core_Crypto_Hashing_Test extends TestCase
         $this->hashing = new Hashing;
     }
 
-    public function test_simple_check_hash_md5()
+    public function testSimpleCheckHashMd5()
     {
         $this->assertTrue($this->hashing->checkHash("123", md5(_COOKIE_KEY_."123"), _COOKIE_KEY_));
         $this->assertFalse($this->hashing->checkHash("23", md5(_COOKIE_KEY_."123"), _COOKIE_KEY_));
     }
 
-    public function test_simple_encrypt()
+    public function testSimpleEncrypt()
     {
         $this->assertTrue(is_string($this->hashing->hash("123", _COOKIE_KEY_)));
     }
 
-    public function test_simple_first_hash()
+    public function testSimpleFirstHash()
     {
         $this->assertTrue($this->hashing->isFirstHash("123", $this->hashing->hash("123", _COOKIE_KEY_), _COOKIE_KEY_));
         $this->assertFalse($this->hashing->isFirstHash("123", md5("123", _COOKIE_KEY_), _COOKIE_KEY_));

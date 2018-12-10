@@ -51,7 +51,7 @@ class EntityTest extends IntegrationTestCase
         $this->contextMocker->resetContext();
     }
 
-    public function test_save_activeRecord_style()
+    public function testSaveActiveRecordStyle()
     {
         $product = new Product(null, false, 1);
         $product->name = 'A Product';

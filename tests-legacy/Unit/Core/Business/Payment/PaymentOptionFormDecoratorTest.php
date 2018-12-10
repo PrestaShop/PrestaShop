@@ -33,7 +33,7 @@ use Exception;
 
 class PaymentOptionFormDecoratorTest extends UnitTestCase
 {
-    public function test_addHiddenSubmitButton_inserts_submit_button_into_form()
+    public function testAddHiddenSubmitButtonInsertsSubmitButtonIntoForm()
     {
         $decorator = new PaymentOptionFormDecorator;
 
@@ -59,7 +59,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
         $this->assertSameHTML($exp, $act);
     }
 
-    public function test_addHiddenSubmitButton_returns_false_when_multiple_forms()
+    public function testAddHiddenSubmitButtonReturnsFalseWhenMultipleForms()
     {
         $decorator = new PaymentOptionFormDecorator;
         $this->assertFalse(
