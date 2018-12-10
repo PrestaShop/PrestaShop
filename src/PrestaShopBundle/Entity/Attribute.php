@@ -156,7 +156,7 @@ class Attribute
      *
      * @return Attribute
      */
-    public function setAttributeGroup(\PrestaShopBundle\Entity\AttributeGroup $attributeGroup)
+    public function setAttributeGroup(AttributeGroup $attributeGroup)
     {
         $this->attributeGroup = $attributeGroup;
 
@@ -180,7 +180,7 @@ class Attribute
      *
      * @return Attribute
      */
-    public function addShop(\PrestaShopBundle\Entity\Shop $shop)
+    public function addShop(Shop $shop)
     {
         $this->shops[] = $shop;
 
@@ -192,7 +192,7 @@ class Attribute
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      */
-    public function removeShop(\PrestaShopBundle\Entity\Shop $shop)
+    public function removeShop(Shop $shop)
     {
         $this->shops->removeElement($shop);
     }

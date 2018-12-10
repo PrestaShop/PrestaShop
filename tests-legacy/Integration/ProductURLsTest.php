@@ -77,7 +77,7 @@ class ProductURLsTest extends IntegrationTestCase
         return $parts;
     }
 
-    public function test_url_takes_variant_into_account__with_url_rewriting()
+    public function testUrlTakesVariantIntoAccountWithUrlRewriting()
     {
         $this->enableURLRewriting();
         $filename = basename($this->getURL(1, 2)['path']);
@@ -88,7 +88,7 @@ class ProductURLsTest extends IntegrationTestCase
         );
     }
 
-    public function test_url_ignores_variant_if_not_specified__with_url_rewriting()
+    public function testUrlIgnoresVariantIfNotSpecifiedWithUrlRewriting()
     {
         $this->enableURLRewriting();
         $filename = basename($this->getURL(1, null)['path']);
@@ -99,7 +99,7 @@ class ProductURLsTest extends IntegrationTestCase
         );
     }
 
-    public function test_url_takes_variant_into_account__without_url_rewriting()
+    public function testUrlTakesVariantIntoAccountWithoutUrlRewriting()
     {
         $this->disableURLRewriting();
         $query = [];
@@ -109,13 +109,13 @@ class ProductURLsTest extends IntegrationTestCase
         $this->assertEquals(6, $query['id_product_attribute']);
     }
 
-    public function test_url_ignores_variant_if_not_specified__without_url_rewriting()
+    public function testUrlIgnoresVariantIfNotSpecifiedWithoutUrlRewriting()
     {
         $this->disableURLRewriting();
         $query = [];
         parse_str($this->getURL(1, null)['query'], $query);
 
         $this->assertEquals(1, $query['id_product']);
-        $this->assertTrue(empty($query['id_product_attribute']));
+        $this->assertEmpty($query['id_product_attribute']);
     }
 }

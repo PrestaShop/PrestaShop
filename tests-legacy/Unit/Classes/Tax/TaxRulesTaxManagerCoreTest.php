@@ -48,7 +48,7 @@ class TaxRulesTaxManagerCoreTest extends UnitTestCase
         ),
     );
 
-    public function test_getTaxCalculator_ShouldUseFirstComputationMethodFromTaxes()
+    public function testGetTaxCalculatorShouldUseFirstComputationMethodFromTaxes()
     {
         // Given
         Phake::when($this->database)->executeS(Phake::anyParameters())->thenReturn($this->tax_rows);
@@ -71,7 +71,7 @@ class TaxRulesTaxManagerCoreTest extends UnitTestCase
 
         // Then
         $this->assertEquals(TaxCalculator::COMBINE_METHOD, $tax_calculator->computation_method);
-        $this->assertTrue(is_array($tax_calculator->taxes));
+        $this->assertInternalType('array', $tax_calculator->taxes);
 
         foreach ($tax_calculator->taxes as $key => $tax) {
             $this->assertTrue($tax instanceof Tax);

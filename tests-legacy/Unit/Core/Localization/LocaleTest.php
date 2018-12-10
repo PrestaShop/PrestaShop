@@ -126,10 +126,11 @@ class LocaleTest extends TestCase
      *
      * For more formatting cases, @see \LegacyTests\Unit\Core\Localization\Number\FormatterTest
      *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testFormatNumberWithInvalidRawNumber()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+
         $this->cldrLocale->formatNumber('foobar');
     }
 
@@ -209,6 +210,8 @@ class LocaleTest extends TestCase
      */
     public function testFormatNumberWithInvalidPriceData($number, $currency)
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+
         $this->cldrLocale->formatPrice($number, $currency);
     }
 

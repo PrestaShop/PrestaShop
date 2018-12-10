@@ -98,7 +98,7 @@ class TabLang
      *
      * @return TabLang
      */
-    public function setLang(\PrestaShopBundle\Entity\Lang $lang)
+    public function setLang(Lang $lang)
     {
         $this->lang = $lang;
 

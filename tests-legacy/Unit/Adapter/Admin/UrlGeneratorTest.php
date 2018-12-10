@@ -46,7 +46,7 @@ class UrlGeneratorTest extends UnitTestCase
         $this->setupSfKernel();
     }
 
-    public function test_generate_equivalent_route()
+    public function testGenerateEquivalentRoute()
     {
         $router = $this->sfKernel->getContainer()->get('router');
         $generator = new UrlGenerator($this->legacyContext, $router);

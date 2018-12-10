@@ -55,7 +55,7 @@ class ToolsCoreTest extends TestCase
     public function testGetValueDefaultValueIsFalse()
     {
         $this->setPostAndGet();
-        $this->assertEquals(false, Tools::getValue('hello'));
+        $this->assertFalse(Tools::getValue('hello'));
     }
 
     public function testGetValueUsesDefaultValue()
@@ -78,9 +78,9 @@ class ToolsCoreTest extends TestCase
             null => true,
         ));
 
-        $this->assertEquals(false, Tools::getValue('', true));
-        $this->assertEquals(true, Tools::getValue(' '));
-        $this->assertEquals(false, Tools::getValue(null, true));
+        $this->assertFalse(Tools::getValue('', true));
+        $this->assertTrue(Tools::getValue(' '));
+        $this->assertFalse(Tools::getValue(null, true));
     }
 
     public function testGetValueStripsNullCharsFromReturnedStringsExamples()

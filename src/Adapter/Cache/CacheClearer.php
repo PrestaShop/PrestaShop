@@ -80,7 +80,7 @@ class CacheClearer
      */
     public function clearAllCaches()
     {
-        trigger_error(
+        @trigger_error(
             'Deprecated since 1.7.6, to be removed in 1.8. Use CacheClearerChain instead.',
             E_USER_DEPRECATED
         );
@@ -95,7 +95,7 @@ class CacheClearer
      */
     public function clearSymfonyCache()
     {
-        trigger_error(
+        @trigger_error(
             'Deprecated since 1.7.6, to be removed in 1.8. Use SymfonyCacheClearer instead.',
             E_USER_DEPRECATED
         );
@@ -110,7 +110,7 @@ class CacheClearer
      */
     public function clearMediaCache()
     {
-        trigger_error(
+        @trigger_error(
             'Deprecated since 1.7.6, to be removed in 1.8. Use MediaCacheClearer instead.',
             E_USER_DEPRECATED
         );
@@ -125,7 +125,7 @@ class CacheClearer
      */
     public function clearSmartyCache()
     {
-        trigger_error(
+        @trigger_error(
             'Deprecated since 1.7.6, to be removed in 1.8. Use SmartyCacheClearer instead.',
             E_USER_DEPRECATED
         );

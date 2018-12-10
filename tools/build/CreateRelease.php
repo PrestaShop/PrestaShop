@@ -31,7 +31,8 @@ require_once 'Library/Version.php';
 $consoleWrite = new ConsoleWriter();
 $lineSeparator = PHP_EOL;
 
-if ('cli' !== PHP_SAPI) {
+if (PHP_SAPI !== 'cli') {
+
     $consoleWrite->displayText(
         "ERROR:{$lineSeparator}Must be run has a CLI script.{$lineSeparator}",
         ConsoleWriter::COLOR_RED

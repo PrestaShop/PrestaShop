@@ -223,7 +223,7 @@ class Shop
      *
      * @return Shop
      */
-    public function setShopGroup(\PrestaShopBundle\Entity\ShopGroup $shopGroup)
+    public function setShopGroup(ShopGroup $shopGroup)
     {
         $this->shopGroup = $shopGroup;
 

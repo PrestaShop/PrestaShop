@@ -72,7 +72,7 @@ class TemplateFinderTest extends TestCase
 
     public function testNoFoundTemplateThrowException()
     {
-        $this->setExpectedException('\PrestaShopException');
+        $this->expectException('\PrestaShopException');
         $template = $this->templateFinder->getTemplate('catalog/listing/my-custom-list', 'custom', null, 'fr-FR');
     }
 }

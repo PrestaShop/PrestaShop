@@ -865,7 +865,7 @@ class CartRuleCore extends ObjectModel
      *
      * @return array|bool|string
      */
-    public function checkProductRestrictionsFromCart(\Cart $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
+    public function checkProductRestrictionsFromCart(Cart $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
     {
         $selected_products = array();
 

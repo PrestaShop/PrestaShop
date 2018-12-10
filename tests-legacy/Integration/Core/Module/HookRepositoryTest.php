@@ -61,7 +61,7 @@ class HookRepositoryTest extends IntegrationTestCase
         $this->contextMocker->resetContext();
     }
 
-    public function test_persist_and_retrieve()
+    public function testPersistAndRetrieve()
     {
         $modules = [
             'ps_emailsubscription',
@@ -78,7 +78,7 @@ class HookRepositoryTest extends IntegrationTestCase
         );
     }
 
-    public function test_only_display_hooks_are_retrieved()
+    public function testOnlyDisplayHooksAreRetrieved()
     {
         $this->hookRepository->persistHooksConfiguration([
             'displayTestHookName' => ['ps_emailsubscription', 'ps_featuredproducts'],
@@ -92,12 +92,12 @@ class HookRepositoryTest extends IntegrationTestCase
             $actual['displayTestHookName']
         );
 
-        $this->assertFalse(
-            array_key_exists('notADisplayTestHookName', $actual)
+        $this->assertArrayNotHasKey(
+            'notADisplayTestHookName', $actual
         );
     }
 
-    public function test_exceptions_taken_into_account()
+    public function testExceptionsTakenIntoAccount()
     {
         $this->hookRepository->persistHooksConfiguration([
             'displayTestHookNameWithExceptions' => [

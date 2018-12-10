@@ -42,7 +42,7 @@ class TranslateTextType extends AbstractType
 {
     public function __construct()
     {
-        trigger_error(
+        @trigger_error(
             sprintf(
                 'The %s class is deprecated since version 1.7.6 and will be removed in 1.8. Use the %s class instead.',
                 __CLASS__,

@@ -70,7 +70,7 @@ class TranslationsFactoryTest extends TestCase
 
     public function testCreateCatalogueWithoutProviderFails()
     {
-        $this->setExpectedException('PrestaShopBundle\Translation\Factory\ProviderNotFoundException');
+        $this->expectException('PrestaShopBundle\Translation\Factory\ProviderNotFoundException');
         $expected = $this->factory
             ->createCatalogue($this->providerMock->getIdentifier())
         ;
@@ -89,7 +89,7 @@ class TranslationsFactoryTest extends TestCase
 
     public function testCreateTranslationsArrayWithoutProviderFails()
     {
-        $this->setExpectedException('PrestaShopBundle\Translation\Factory\ProviderNotFoundException');
+        $this->expectException('PrestaShopBundle\Translation\Factory\ProviderNotFoundException');
         $expected = $this->factory
             ->createTranslationsArray($this->providerMock->getIdentifier())
         ;

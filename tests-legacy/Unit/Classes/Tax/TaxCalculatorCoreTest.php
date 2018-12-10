@@ -32,7 +32,7 @@ use TaxCalculator;
 
 class TaxCalculatorCoreTest extends TestCase
 {
-    public function test_getTotalRate_OK()
+    public function testGetTotalRateOK()
     {
         $tax = new Tax();
         $tax->rate = 20.6;
@@ -48,7 +48,7 @@ class TaxCalculatorCoreTest extends TestCase
         $this->assertEquals(26.1, $totalRate);
     }
 
-    public function test_getTotalRate_Bug()
+    public function testGetTotalRateBug()
     {
         $tax = new Tax();
         $tax->rate = 20.6;

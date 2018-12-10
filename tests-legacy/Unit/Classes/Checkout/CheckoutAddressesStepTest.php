@@ -85,7 +85,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
         );
     }
 
-    public function test_if_customer_has_no_addresses_then_delivery_address_form_is_open()
+    public function testIfCustomerHasNoAddressesThenDeliveryAddressFormIsOpen()
     {
         $this->setCustomerAddressesCount(0);
         $this->assertTemplateParametersInclude([
@@ -93,7 +93,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
         ]);
     }
 
-    public function test_if_customer_has_one_address_then_delivery_address_form_is_not_open()
+    public function testIfCustomerHasOneAddressThenDeliveryAddressFormIsNotOpen()
     {
         $this->setCustomerAddressesCount(1);
         $this->assertTemplateParametersInclude([
@@ -101,7 +101,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
         ]);
     }
 
-    public function test_if_customer_has_one_address_and_wants_different_invoice_then_invoice_open()
+    public function testIfCustomerHasOneAddressAndWantsDifferentInvoiceThenInvoiceOpen()
     {
         $this->setCustomerAddressesCount(1);
         $this->assertTemplateParametersInclude([
@@ -111,7 +111,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
         ]);
     }
 
-    public function test_when_customer_has_one_delivery_address_and_edits_it_then_is_open()
+    public function testWhenCustomerHasOneDeliveryAddressAndEditsItThenIsOpen()
     {
         $this->setCustomerAddressesCount(1);
         $this->assertTemplateParametersInclude([

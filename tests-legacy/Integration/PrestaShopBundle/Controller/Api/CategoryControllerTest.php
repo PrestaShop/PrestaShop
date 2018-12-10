@@ -35,7 +35,7 @@ class CategoryControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_ok_response_when_requesting_categories()
+    public function itShouldReturnOkResponseWhenRequestingCategories()
     {
         $route = $this->router->generate('api_stock_list_categories');
         self::$client->request('GET', $route);

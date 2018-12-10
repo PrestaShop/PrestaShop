@@ -38,7 +38,7 @@ class I18nControllerTest extends ApiTestCase
      *
      * @param $params
      */
-    public function it_should_return_bad_response_when_requesting_list_of_translations($params)
+    public function itShouldReturnBadResponseWhenRequestingListOfTranslations($params)
     {
         $this->assertBadRequest('api_i18n_translations_list', $params);
     }
@@ -49,7 +49,7 @@ class I18nControllerTest extends ApiTestCase
      *
      * @param $params
      */
-    public function it_should_return_ok_response_when_requesting_list_of_translations($params)
+    public function itShouldReturnOkResponseWhenRequestingListOfTranslations($params)
     {
         $this->assertOkRequest('api_i18n_translations_list', $params);
     }

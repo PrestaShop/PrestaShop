@@ -40,7 +40,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
         $this->fixturesPath = __DIR__.DIRECTORY_SEPARATOR.'fixtures';
     }
 
-    public function test_joinPaths_two_paths()
+    public function testJoinPathsTwoPaths()
     {
         $this->assertEquals(
             'a'.DIRECTORY_SEPARATOR.'b',
@@ -48,7 +48,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
         );
     }
 
-    public function test_joinPaths_three_paths()
+    public function testJoinPathsThreePaths()
     {
         $this->assertEquals(
             'a'.DIRECTORY_SEPARATOR.'b'.DIRECTORY_SEPARATOR.'c',
@@ -57,22 +57,24 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
-    public function test_joinPaths_one_path_throws()
+    public function testJoinPathsOnePathThrows()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception::class);
+
         $this->fs->joinPaths('a');
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
-    public function test_joinPaths_zero_path_throws()
+    public function testJoinPathsZeroPathThrows()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception::class);
+
         $this->fs->joinPaths();
     }
 
-    public function test_joinPaths_normalizes_directory_separators()
+    public function testJoinPathsNormalizesDirectorySeparators()
     {
         $this->assertEquals(
             'a'.DIRECTORY_SEPARATOR.'b'.DIRECTORY_SEPARATOR.'c'.DIRECTORY_SEPARATOR.'d',
@@ -80,7 +82,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
         );
     }
 
-    public function test_listEntriesRecursively()
+    public function testListEntriesRecursively()
     {
         $expectedPaths = array(
             $this->fs->joinPaths($this->fixturesPath, 'a'),
@@ -96,7 +98,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
         );
     }
 
-    public function test_listFilesRecursively()
+    public function testListFilesRecursively()
     {
         $expectedPaths = array(
             $this->fs->joinPaths($this->fixturesPath, 'a', 'a.tmp'),
@@ -115,16 +117,20 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
      *
      * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
-    public function test_listEntriesRecursively_throws_if_path_does_not_exist()
+    public function testListEntriesRecursivelyThrowsIfPathDoesNotExist()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception::class);
+
         $this->fs->listEntriesRecursively('/some/w/h/e/r/e/over/the/rainbow');
     }
 
     /**
      * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
-    public function test_listEntriesRecursively_throws_when_path_is_a_file()
+    public function testListEntriesRecursivelyThrowsWhenPathIsAFile()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception::class);
+
         $this->fs->listEntriesRecursively(__FILE__);
     }
 }

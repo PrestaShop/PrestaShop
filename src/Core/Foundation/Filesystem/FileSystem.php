@@ -134,7 +134,7 @@ class FileSystem
      *
      * @param \SplFileInfo $info
      */
-    private function matchOnlyFiles(\SplFileInfo $info)
+    private function matchOnlyFiles(SplFileInfo $info)
     {
         return $info->isFile();
     }
