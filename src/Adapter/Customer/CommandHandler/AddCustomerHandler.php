@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\AddCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
@@ -46,6 +47,41 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
     {
         $customer = new Customer();
 
+        $this->fillCustomerWithCommandData($customer, $command);
+
+        if (false === $customer->validateFields()) {
+            throw new CustomerException('Customer contains invalid field values');
+        }
+
+        $this->assertCustomerWithGivenEmailDoesNotExist($command->getEmail());
+
+        $customer->add();
+
+        return new CustomerId((int) $customer->id);
+    }
+
+    /**
+     * @param string $email
+     */
+    private function assertCustomerWithGivenEmailDoesNotExist($email)
+    {
+        $customer = new Customer();
+        $customer->getByEmail($email);
+
+        if ($customer->id) {
+            throw new CustomerConstraintException(
+                sprintf('Customer with email "%s" already exists', $email),
+                CustomerConstraintException::DUPLICATE_EMAIL
+            );
+        }
+    }
+
+    /**
+     * @param Customer $customer
+     * @param AddCustomerCommand $command
+     */
+    private function fillCustomerWithCommandData(Customer $customer, AddCustomerCommand $command)
+    {
         $customer->firstname = $command->getFirstName();
         $customer->lastname = $command->getLastName();
         $customer->email = $command->getEmail();
@@ -66,13 +102,5 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
         $customer->outstanding_allow_amount = $command->getAllowedOutstandingAmount();
         $customer->max_payment_days = $command->getMaxPaymentDays();
         $customer->id_risk = $command->getRiskId();
-
-        if (false === $customer->validateFields()) {
-            throw new CustomerException('Customer contains invalid field values');
-        }
-
-        $customer->add();
-
-        return new CustomerId((int) $customer->id);
     }
 }
