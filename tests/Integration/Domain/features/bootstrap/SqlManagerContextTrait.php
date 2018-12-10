@@ -3,15 +3,15 @@
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\DatabaseTableField;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 use Behat\Gherkin\Node\TableNode;
-
 
 trait SqlManagerContextTrait
 {
     /**
      * @When I request the database fields from table :tableName
      */
-    public function iRequestTheDatabaseFieldsFromTable($tableName)
+    public function getDatabaseTableFieldsList($tableName)
     {
         $commandBus = $this::getContainer()->get('prestashop.core.command_bus');
 
@@ -25,7 +25,7 @@ trait SqlManagerContextTrait
     /**
      * @Then I should get a set of database fields that contain values:
      */
-    public function iShouldGetASetOfDatabaseFieldsThatContain(TableNode $table)
+    public function assertSetOfDatabaseFieldsContain(TableNode $table)
     {
         $result = $this->latestResult;
 
@@ -34,6 +34,43 @@ trait SqlManagerContextTrait
         foreach ($table->getRows() as $row) {
             $this->assertDatabaseFieldsContain($result, current($row));
         };
+    }
+
+    /**
+     * @Given there is :count stored SQL requests
+     * @Then there should be :arg1 stored SQL request
+     */
+    public function assertStoredSqlRequestCount($count)
+    {
+        // @todo: need improvement and decoupling
+        $legacyDatabaseSingleton = \Db::getInstance(_PS_USE_SQL_SLAVE_);
+        $realCountResults = $legacyDatabaseSingleton->executeS('SELECT COUNT(*) AS result FROM ps_request_sql');
+
+        $realCount = current($realCountResults)['result'];
+
+        if ((int)$realCount !== (int)$count) {
+
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %d sql stored requests, got %d instead',
+                    (int)$count,
+                    (int)$realCount
+                )
+            );
+        }
+    }
+
+    /**
+     * @When I add the SQL request :sqlRequest with name :name
+     */
+    public function addSqlRequest($sqlRequest, $name)
+    {
+        $commandBus = $this::getContainer()->get('prestashop.core.command_bus');
+
+        $command = new AddSqlRequestCommand($name, $sqlRequest);
+        $result = $commandBus->handle($command);
+
+        $this->latestResult = $result;
     }
 
     /**
