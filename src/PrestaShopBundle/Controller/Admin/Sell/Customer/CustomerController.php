@@ -74,6 +74,7 @@ class CustomerController extends AbstractAdminController
             'customerGrid' => $this->presentGrid($customerGrid),
             'customersKpi' => $customersKpiFactory->build(),
             'customerRequiredFieldsForm' => $this->getRequiredFieldsForm()->createView(),
+            'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
         ]);
     }
 
@@ -86,6 +87,10 @@ class CustomerController extends AbstractAdminController
      */
     public function createAction(Request $request)
     {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
+            return $this->redirectToRoute('admin_customers_index');
+        }
+
         $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
         $customerForm->handleRequest($request);
 
