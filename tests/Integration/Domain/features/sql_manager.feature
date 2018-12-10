@@ -9,3 +9,9 @@ Feature: SQL Manager
       | id_carrier      |
       | name            |
       | shipping_method |
+
+  @database-light-reset
+  Scenario: Save a SQL request
+    Given there is "0" stored SQL requests
+    When I add the SQL request "SELECT * FROM carrier" with name "select_carriers_count_1"
+    Then there should be "1" stored SQL request
