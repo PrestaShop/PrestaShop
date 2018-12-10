@@ -34,7 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 
 /**
- * Edits provided customer
+ * Edits provided customer.
+ * It can edit either all or partial data.
+ *
+ * Only not-null values are considered when editing customer.
+ * For example, if the email is null, then the original value is not modified,
+ * however, if email is set, then the original value will be overwritten.
  */
 class EditCustomerCommand
 {
