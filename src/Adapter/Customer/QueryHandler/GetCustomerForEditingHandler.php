@@ -64,7 +64,14 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
             (bool) $customer->active,
             (bool) $customer->optin,
             $customer->getGroups(),
-            $customer->id_default_group
+            $customer->id_default_group,
+            (string) $customer->company,
+            (string) $customer->siret,
+            (string) $customer->ape,
+            (string) $customer->website,
+            (float) $customer->outstanding_allow_amount,
+            (int) $customer->max_payment_days,
+            (int) $customer->id_risk
         );
     }
 }

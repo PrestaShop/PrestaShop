@@ -55,18 +55,26 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
     private $defaultGroupsProvider;
 
     /**
+     * @var bool
+     */
+    private $isB2bFeatureEnabled;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param ConfigurationInterface $configuration
      * @param DefaultGroupsProviderInterface $defaultGroupsProvider
+     * @param bool $isB2bFeatureEnabled
      */
     public function __construct(
         CommandBusInterface $queryBus,
         ConfigurationInterface $configuration,
-        DefaultGroupsProviderInterface $defaultGroupsProvider
+        DefaultGroupsProviderInterface $defaultGroupsProvider,
+        $isB2bFeatureEnabled
     ) {
         $this->queryBus = $queryBus;
         $this->configuration = $configuration;
         $this->defaultGroupsProvider = $defaultGroupsProvider;
+        $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
     }
 
     /**
@@ -82,7 +90,7 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
             null
         ;
 
-        return [
+        $data = [
             'gender_id' => $editableCustomer->getGenderId(),
             'first_name' => $editableCustomer->getFirstName(),
             'last_name' => $editableCustomer->getLastName(),
@@ -93,6 +101,20 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
             'group_ids' => $editableCustomer->getGroupIds(),
             'default_group_id' => $editableCustomer->getDefaultGroupId(),
         ];
+
+        if ($this->isB2bFeatureEnabled) {
+            $data = array_merge($data, [
+                'company_name' => $editableCustomer->getCompanyName(),
+                'siret_code' => $editableCustomer->getSiretCode(),
+                'ape_code' => $editableCustomer->getApeCode(),
+                'website' => $editableCustomer->getWebsite(),
+                'allowed_outstanding_amount' => $editableCustomer->getAllowedOutstandingAmount(),
+                'max_payment_days' => $editableCustomer->getMaxPaymentDays(),
+                'risk_id' => $editableCustomer->getRiskId(),
+            ]);
+        }
+
+        return $data;
     }
 
     /**
@@ -102,7 +124,7 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
     {
         $defaultGroups = $this->defaultGroupsProvider->getGroups();
 
-        return [
+        $data = [
             'is_enabled' => true,
             'is_partner_offers_subscribed' => false,
             'group_ids' => [
@@ -112,5 +134,14 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
             ],
             'default_group_id' => (int) $this->configuration->get('PS_CUSTOMER_GROUP'),
         ];
+
+        if ($this->isB2bFeatureEnabled) {
+            $data = array_merge($data, [
+                'allowed_outstanding_amount' => 0,
+                'max_payment_days' => 0,
+            ]);
+        }
+
+        return $data;
     }
 }

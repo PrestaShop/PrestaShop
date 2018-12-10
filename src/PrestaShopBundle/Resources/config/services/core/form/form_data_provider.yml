@@ -13,3 +13,4 @@ services:
       - '@prestashop.core.query_bus'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.group.provider.default_groups_provider'
+      - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
