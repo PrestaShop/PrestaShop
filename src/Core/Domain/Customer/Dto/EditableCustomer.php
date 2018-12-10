@@ -84,6 +84,41 @@ class EditableCustomer
     private $defaultGroupId;
 
     /**
+     * @var string
+     */
+    private $companyName;
+
+    /**
+     * @var string
+     */
+    private $siretCode;
+
+    /**
+     * @var string
+     */
+    private $apeCode;
+
+    /**
+     * @var string
+     */
+    private $website;
+
+    /**
+     * @var float
+     */
+    private $allowedOutstandingAmount;
+
+    /**
+     * @var int
+     */
+    private $maxPaymentDays;
+
+    /**
+     * @var int
+     */
+    private $riskId;
+
+    /**
      * @param CustomerId $customerId
      * @param int $genderId
      * @param string $firstName
@@ -94,6 +129,13 @@ class EditableCustomer
      * @param bool $isPartnerOffersSubscribed
      * @param int[] $groupIds
      * @param int $defaultGroupId
+     * @param string $companyName
+     * @param string $siretCode
+     * @param string $apeCode
+     * @param string $website
+     * @param float $allowedOutstandingAmount
+     * @param int $maxPaymentDays
+     * @param int $riskId
      */
     public function __construct(
         CustomerId $customerId,
@@ -105,7 +147,14 @@ class EditableCustomer
         $isEnabled,
         $isPartnerOffersSubscribed,
         array $groupIds,
-        $defaultGroupId
+        $defaultGroupId,
+        $companyName,
+        $siretCode,
+        $apeCode,
+        $website,
+        $allowedOutstandingAmount,
+        $maxPaymentDays,
+        $riskId
     ) {
         $this->customerId = $customerId;
         $this->genderId = $genderId;
@@ -117,6 +166,13 @@ class EditableCustomer
         $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
         $this->groupIds = $groupIds;
         $this->defaultGroupId = $defaultGroupId;
+        $this->companyName = $companyName;
+        $this->siretCode = $siretCode;
+        $this->apeCode = $apeCode;
+        $this->website = $website;
+        $this->allowedOutstandingAmount = $allowedOutstandingAmount;
+        $this->maxPaymentDays = $maxPaymentDays;
+        $this->riskId = $riskId;
     }
 
     /**
@@ -184,7 +240,7 @@ class EditableCustomer
     }
 
     /**
-     * @return int[]
+     * @return array|int[]
      */
     public function getGroupIds()
     {
@@ -197,5 +253,61 @@ class EditableCustomer
     public function getDefaultGroupId()
     {
         return $this->defaultGroupId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompanyName()
+    {
+        return $this->companyName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiretCode()
+    {
+        return $this->siretCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApeCode()
+    {
+        return $this->apeCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebsite()
+    {
+        return $this->website;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAllowedOutstandingAmount()
+    {
+        return $this->allowedOutstandingAmount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxPaymentDays()
+    {
+        return $this->maxPaymentDays;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRiskId()
+    {
+        return $this->riskId;
     }
 }
