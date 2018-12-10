@@ -142,37 +142,31 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
      */
     private function buildCustomerEditCommand($customerId, array $data)
     {
-        $command = new EditCustomerCommand(new CustomerId($customerId));
-        $command
+        $command = (new EditCustomerCommand(new CustomerId($customerId)))
+            ->setGenderId($data['gender_id'])
             ->setEmail(new Email($data['email']))
             ->setFirstName(new FirstName($data['first_name']))
             ->setLastName(new LastName($data['last_name']))
             ->setIsEnabled($data['is_enabled'])
             ->setIsPartnerOffersSubscribed($data['is_partner_offers_subscribed'])
             ->setDefaultGroupId((int) $data['default_group_id'])
-            ->setCompanyName(null !== $data['company_name'] ? $data['company_name'] : '')
-            ->setSiretCode(null !== $data['siret_code'] ? $data['siret_code'] : '')
-            ->setApeCode(null !== $data['ape_code'] ? $data['ape_code'] : '')
-            ->setWebsite(null !== $data['website'] ? $data['website'] : '')
-            ->setAllowedOutstandingAmount(
-                null !== $data['allowed_outstanding_amount'] ? (float) $data['allowed_outstanding_amount'] : null
-            )
-            ->setMaxPaymentDays(null !== $data['max_payment_days'])
-            ->setRiskId($data['risk_id'])
+            ->setGroupIds(array_map(function ($groupId) { return (int) $groupId; }, $data['group_ids']))
         ;
-
-        if (null !== $data['group_ids']) {
-            $command->setGroupIds(
-                array_map(function ($groupId) { return (int) $groupId; }, $data['group_ids'])
-            );
-        }
-
-        if (null !== $data['gender_id']) {
-            $command->setGenderId($data['gender_id']);
-        }
 
         if ($data['birthday'] instanceof DateTime) {
             $command->setBirthday(DateTimeImmutable::createFromMutable($data['birthday']));
+        }
+
+        if ($this->isB2bFeatureEnabled) {
+            $command
+                ->setCompanyName((string) $data['company_name'])
+                ->setSiretCode((string) $data['siret_code'])
+                ->setApeCode((string) $data['ape_code'])
+                ->setWebsite((string) $data['website'])
+                ->setAllowedOutstandingAmount((float) $data['allowed_outstanding_amount'])
+                ->setMaxPaymentDays((int) $data['max_payment_days'])
+                ->setRiskId((int) $data['risk_id'])
+            ;
         }
 
         return $command;
