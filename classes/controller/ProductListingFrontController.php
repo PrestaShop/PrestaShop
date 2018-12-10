@@ -277,7 +277,8 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         // we need to set a few parameters from back-end preferences
         $query
             ->setResultsPerPage($resultsPerPage)
-            ->setPage(max((int) Tools::getValue('page'), 1));
+            ->setPage(max((int) Tools::getValue('page'), 1))
+        ;
 
         // set the sort order if provided in the URL
         if (($encodedSortOrder = Tools::getValue('order'))) {
@@ -301,10 +302,15 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         // We're ready to run the actual query!
 
+        /** @var ProductSearchResult $result */
         $result = $provider->runQuery(
             $context,
             $query
         );
+
+        if (Configuration::get('PS_CATALOG_MODE')) {
+            $this->filterPricesResult($result);
+        }
 
         // sort order is useful for template,
         // add it if undefined - it should be the same one
@@ -387,6 +393,39 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     }
 
     /**
+     * Removes price information from result (in facet collection and available sorters)
+     * Usually used for catalog mode.
+     *
+     * @param ProductSearchResult $result
+     */
+    protected function filterPricesResult(ProductSearchResult $result)
+    {
+        if ($result->getFacetCollection()) {
+            $filteredFacets = [];
+            /** @var Facet $facet */
+            foreach ($result->getFacetCollection()->getFacets() as $facet) {
+                if ('price' === $facet->getType()) {
+                    continue;
+                }
+                $filteredFacets[] = $facet;
+            }
+            $result->getFacetCollection()->setFacets($filteredFacets);
+        }
+
+        if ($result->getAvailableSortOrders()) {
+            $filteredOrders = [];
+            /** @var SortOrder $sortOrder */
+            foreach ($result->getAvailableSortOrders() as $sortOrder) {
+                if ('price' === $sortOrder->getField()) {
+                    continue;
+                }
+                $filteredOrders[] = $sortOrder;
+            }
+            $result->setAvailableSortOrders($filteredOrders);
+        }
+    }
+
+    /**
      * Pagination is HARD. We let the core do the heavy lifting from
      * a simple representation of the pagination.
      *
@@ -407,7 +446,8 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             ->setPage($query->getPage())
             ->setPagesCount(
                 ceil($result->getTotalProductsCount() / $query->getResultsPerPage())
-            );
+            )
+        ;
 
         $totalItems = $result->getTotalProductsCount();
         $itemsShownFrom = ($query->getResultsPerPage() * ($query->getPage() - 1)) + 1;
