@@ -467,7 +467,7 @@ class ProductLazyArray extends AbstractLazyArray
             );
         }
 
-        Hook::exec('productFlagsModifier', array(
+        Hook::exec('actionProductFlagsModifier', array(
             'flags' => &$flags,
             'product' => $this->product,
         ));
