@@ -556,7 +556,7 @@ class ProductLazyArray extends AbstractLazyArray
         ProductPresentationSettings $settings,
         array $product
     ) {
-        return $settings->showPrices && (bool) $product['show_price'];
+        return !$settings->catalog_mode && $settings->showPrices && (bool) $product['show_price'];
     }
 
     /**
