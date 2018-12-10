@@ -98,7 +98,7 @@ class AttributeLang
      *
      * @return AttributeLang
      */
-    public function setAttribute(\PrestaShopBundle\Entity\Attribute $attribute)
+    public function setAttribute(Attribute $attribute)
     {
         $this->attribute = $attribute;
 
@@ -122,7 +122,7 @@ class AttributeLang
      *
      * @return AttributeLang
      */
-    public function setLang(\PrestaShopBundle\Entity\Lang $lang)
+    public function setLang(Lang $lang)
     {
         $this->lang = $lang;
 
