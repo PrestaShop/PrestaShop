@@ -62,4 +62,4 @@ $_MODULE['<{cronjobs}prestashop>configure_d24ca73e026491b9610193f36d5edec8'] = '
 $_MODULE['<{cronjobs}prestashop>task_b43ff85c4fc17955aa3ba90827d65430'] = 'N\'oubliez pas d\'utiliser une URL absolue dans le lien cible pour le rendre valide ! Le lien doit aussi être sur le même domaine que la boutique.';
 $_MODULE['<{cronjobs}prestashop>form_ef7bd68a02b6b5656554f7a27d1c7bdf'] = 'Erreur !';
 $_MODULE['<{cronjobs}prestashop>form_dc3fd488f03d423a04da27ce66274c1b'] = 'Attention !';
-$_MODULE['<{cronjobs}prestashop>form_402e7a087747cb56c718bde84651f96a'] = 'Réussite !';
+$_MODULE['<{cronjobs}prestashop>form_402e7a087747cb56c718bde84651f96a'] = 'Réussite !';
