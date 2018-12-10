@@ -149,13 +149,18 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * We check the catalog mode separately, because shouldShowPrice is used in
+     * other methods of this class for fine tuning display not related to catalog
+     * mode. However when this getter is used somewhere in a template we always hide
+     * the price in catalog mode.
+     *
      * @arrayAccess
      *
      * @return bool
      */
     public function getShowPrice()
     {
-        return $this->shouldShowPrice($this->settings, $this->product);
+        return $this->shouldShowPrice($this->settings, $this->product) && !$this->settings->catalog_mode;
     }
 
     /**
