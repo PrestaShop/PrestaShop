@@ -105,6 +105,11 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
      */
     private function buildCustomerAddCommandFromFormData(array $data)
     {
+        $birthday = $data['birthday'] instanceof DateTime ?
+            $data['birthday']->format('Y-m-d') :
+            '0000-00-00'
+        ;
+
         $command = new AddCustomerCommand(
             new FirstName($data['first_name']),
             new LastName($data['last_name']),
@@ -115,7 +120,8 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             $this->contextShopId,
             (int) $data['gender_id'],
             (bool) $data['is_enabled'],
-            (bool) $data['is_partner_offers_subscribed']
+            (bool) $data['is_partner_offers_subscribed'],
+            $birthday
         );
 
         if (!$this->isB2bFeatureEnabled) {
