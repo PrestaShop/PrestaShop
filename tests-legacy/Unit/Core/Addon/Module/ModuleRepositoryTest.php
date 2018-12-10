@@ -181,7 +181,7 @@ class ModuleRepositoryTest extends UnitTestCase
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->database->get('installed') == 1) {
-                $this->assertTrue(array_key_exists($name, $installed_modules), sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $installed_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
@@ -204,7 +204,7 @@ class ModuleRepositoryTest extends UnitTestCase
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 0) {
-                $this->assertTrue(array_key_exists($name, $not_installed_modules), sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $not_installed_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
@@ -229,7 +229,7 @@ class ModuleRepositoryTest extends UnitTestCase
             // Each installed module must be found in the installed modules list
             if ($module->database->get('installed') == 1
                 && $module->database->get('active') == 1) {
-                $this->assertTrue(array_key_exists($name, $installed_and_active_modules), sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $installed_and_active_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
@@ -251,7 +251,7 @@ class ModuleRepositoryTest extends UnitTestCase
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 1  && $module->database->get('active') == 0) {
-                $this->assertTrue(array_key_exists($name, $not_active_modules), sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $not_active_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
@@ -274,7 +274,7 @@ class ModuleRepositoryTest extends UnitTestCase
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->database->get('installed') == 1 && $module->database->get('active') == 0) {
-                $this->assertTrue(array_key_exists($name, $installed_but_not_installed_modules), sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $installed_but_not_installed_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
@@ -340,7 +340,7 @@ class ModuleRepositoryTest extends UnitTestCase
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::THEME);
 
-        $this->assertEquals(0, count($this->moduleRepositoryStub->getFilteredList($filters)));
+        $this->assertCount(0, $this->moduleRepositoryStub->getFilteredList($filters));
     }
 
     public function teardown()

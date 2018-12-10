@@ -161,8 +161,8 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $testedModule = $this->modules['module-verified-from-addons-api'];
         $presentedModule = $this->modulePresenter->present($testedModule);
 
-        $this->assertTrue(array_key_exists('picos', $presentedModule['attributes']));
-        $this->assertFalse(empty($presentedModule['attributes']['picos']));
+        $this->assertArrayHasKey('picos', $presentedModule['attributes']);
+        $this->assertNotEmpty($presentedModule['attributes']['picos']);
     }
 
     /**
@@ -177,8 +177,8 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $testedModule = $this->modules['module-under-dev'];
         $presentedModule = $this->modulePresenter->present($testedModule);
 
-        $this->assertTrue(array_key_exists('picos', $presentedModule['attributes']));
-        $this->assertTrue(empty($presentedModule['attributes']['picos']));
+        $this->assertArrayHasKey('picos', $presentedModule['attributes']);
+        $this->assertEmpty($presentedModule['attributes']['picos']);
     }
 
     /**

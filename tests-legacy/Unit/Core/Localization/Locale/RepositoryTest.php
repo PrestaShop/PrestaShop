@@ -120,10 +120,11 @@ class RepositoryTest extends TestCase
      * When asking the repository for the corresponding locale
      * Then an exception should be raised
      *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetLocaleWithInvalidLocaleCode()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+
         $this->localeRepository->getLocale('en-US');
     }
 }

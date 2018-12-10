@@ -115,6 +115,6 @@ class ProductURLsTest extends IntegrationTestCase
         parse_str($this->getURL(1, null)['query'], $query);
 
         $this->assertEquals(1, $query['id_product']);
-        $this->assertTrue(empty($query['id_product_attribute']));
+        $this->assertEmpty($query['id_product_attribute']);
     }
 }

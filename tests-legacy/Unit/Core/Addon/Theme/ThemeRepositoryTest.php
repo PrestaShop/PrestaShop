@@ -70,7 +70,7 @@ class ThemeRepositoryTest extends TestCase
 
     public function testGetInstanceByNameNotFound()
     {
-        $this->setExpectedException('PrestaShopException');
+        $this->expectException('PrestaShopException');
         $this->repository->getInstanceByName('not_found');
     }
 

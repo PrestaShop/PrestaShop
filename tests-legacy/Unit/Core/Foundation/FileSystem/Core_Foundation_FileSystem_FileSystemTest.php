@@ -57,18 +57,20 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
     public function testJoinPathsOnePathThrows()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception::class);
+
         $this->fs->joinPaths('a');
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
     public function testJoinPathsZeroPathThrows()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception::class);
+
         $this->fs->joinPaths();
     }
 
@@ -112,19 +114,21 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     /**
      * Rationale: ls /some/non/existing/file => ls: cannot access /some/non/existing/file: No such file or directory
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
     public function testListEntriesRecursivelyThrowsIfPathDoesNotExist()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception::class);
+
         $this->fs->listEntriesRecursively('/some/w/h/e/r/e/over/the/rainbow');
     }
 
     /**
      *
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
     public function testListEntriesRecursivelyThrowsWhenPathIsAFile()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception::class);
+
         $this->fs->listEntriesRecursively(__FILE__);
     }
 }

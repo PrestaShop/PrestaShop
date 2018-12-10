@@ -54,10 +54,11 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function testCannotBindTheSameServiceTwice()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
+
         $this->container->bind('foo', function () {});
         $this->container->bind('foo', function () {});
     }
@@ -112,10 +113,11 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function testAnAliasCannotBeChanged()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
+
         $this->container->aliasNamespace('Fixtures', 'LegacyTests\Unit\Core\Foundation\IoC\Fixtures');
         $this->container->aliasNamespace('Fixtures', 'LegacyTests\Unit\Core\Foundation\Other');
     }
@@ -135,26 +137,29 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function testUnbuildableNotBuilt()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
+
         $this->container->make('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\UnBuildable');
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function testNonExistingClassNotBuilt()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
+
         $this->container->make('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\AClassThatDoesntExistAtAll');
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function testDependencyLoopDoesntCrashContainer()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
+
         /**
          * CycleA depends on CycleB,
          * CycleB depends on CycleA
@@ -199,10 +204,11 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     }
 
     /**
-     * @expectedException Exception
      */
     public function testContainerDoesntBindStringsAsLiteralValues()
     {
+        $this->expectException(\Exception::class);
+
         $this->container->bind('value', 'a string which is not a class name');
         $this->container->make('value');
     }
