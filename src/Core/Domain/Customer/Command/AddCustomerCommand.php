@@ -26,28 +26,33 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
+
 /**
  * Adds new customer with provided data
  */
 class AddCustomerCommand
 {
     /**
-     * @var string
+     * @var FirstName
      */
     private $firstName;
 
     /**
-     * @var string
+     * @var LastName
      */
     private $lastName;
 
     /**
-     * @var string
+     * @var Email
      */
     private $email;
 
     /**
-     * @var string
+     * @var Password
      */
     private $password;
 
@@ -122,10 +127,10 @@ class AddCustomerCommand
     private $riskId;
 
     /**
-     * @param string $firstName
-     * @param string $lastName
-     * @param string $email
-     * @param string $password
+     * @param FirstName $firstName
+     * @param LastName $lastName
+     * @param Email $email
+     * @param Password $password
      * @param int $defaultGroupId
      * @param int[] $groupIds
      * @param int $shopId
@@ -135,10 +140,10 @@ class AddCustomerCommand
      * @param string $birthday
      */
     public function __construct(
-        $firstName,
-        $lastName,
-        $email,
-        $password,
+        FirstName $firstName,
+        LastName $lastName,
+        Email $email,
+        Password $password,
         $defaultGroupId,
         array $groupIds,
         $shopId,
@@ -161,7 +166,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @return string
+     * @return FirstName
      */
     public function getFirstName()
     {
@@ -169,7 +174,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @return string
+     * @return LastName
      */
     public function getLastName()
     {
@@ -177,7 +182,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @return string
+     * @return Email
      */
     public function getEmail()
     {
@@ -185,7 +190,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @return string
+     * @return Password
      */
     public function getPassword()
     {

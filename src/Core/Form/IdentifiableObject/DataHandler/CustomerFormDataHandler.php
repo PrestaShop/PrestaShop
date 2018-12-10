@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 
 /**
  * Saves or updates customer data submitted in form
@@ -105,10 +106,10 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
     private function buildCustomerAddCommandFromFormData(array $data)
     {
         $command = new AddCustomerCommand(
-            $data['first_name'],
-            $data['last_name'],
-            $data['email'],
-            $data['password'],
+            new FirstName($data['first_name']),
+            new LastName($data['last_name']),
+            new Email($data['email']),
+            new Password($data['password']),
             (int) $data['default_group_id'],
             array_map(function ($groupId) { return (int) $groupId; }, $data['group_ids']),
             $this->contextShopId,
