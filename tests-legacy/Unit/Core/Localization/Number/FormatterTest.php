@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Localization\Number;
+namespace LegacyTests\Unit\Core\Localization\Number;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\Operation\Rounding;

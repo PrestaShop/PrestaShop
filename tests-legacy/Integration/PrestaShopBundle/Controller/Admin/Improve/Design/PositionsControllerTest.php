@@ -24,13 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Improve\Design;
+namespace LegacyTests\Integration\PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Cache;
 use Hook;
 use Module;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
+use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 
 /**

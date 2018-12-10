@@ -458,7 +458,7 @@ class MailCore extends ObjectModel
             );
 
             /* Create mail and attach differents parts */
-            $subject = '[' . Configuration::get('PS_SHOP_NAME', null, null, $idShop) . '] ' . $subject;
+            $subject = '[' . $shop->name . '] ' . $subject;
             $message->setSubject($subject);
 
             $message->setCharset('utf-8');
@@ -498,7 +498,7 @@ class MailCore extends ObjectModel
                 Context::getContext()->link = new Link();
             }
 
-            $templateVars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME', null, null, $idShop));
+            $templateVars['{shop_name}'] = Tools::safeOutput($shop->name);
             $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink(
                 'index',
                 true,

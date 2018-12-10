@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Cart\Calculation\Modes;
+namespace LegacyTests\Unit\Core\Cart\Calculation\Modes;
 
 use Configuration;
 use Order;
-use Tests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
+use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use Tools;
 
 class RoundingTypeTest extends AbstractCartCalculationTest

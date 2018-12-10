@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\TestCase;
+namespace LegacyTests\TestCase;
 
 use PHPUnit\Framework\TestCase;
-use Tests\Unit\ContextMocker;
-use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\Unit\ContextMocker;
+use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 
 class IntegrationTestCase extends TestCase
 {

@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Controller\FrontController;
+namespace LegacyTests\Unit\Controller\FrontController;
 
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use Tests\TestCase\IntegrationTestCase;
-use Tests\Unit\ContextMocker;
+use LegacyTests\TestCase\IntegrationTestCase;
+use LegacyTests\Unit\ContextMocker;
 
 class ProductControllerTest extends IntegrationTestCase
 {

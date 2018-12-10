@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Core\Addon;
+namespace LegacyTests\Core\Addon;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator;
-use Tests\TestCase\FakeConfiguration;
+use LegacyTests\TestCase\FakeConfiguration;
 use Symfony\Component\Yaml\Parser;
 use PHPUnit\Framework\TestCase;
 use Phake;

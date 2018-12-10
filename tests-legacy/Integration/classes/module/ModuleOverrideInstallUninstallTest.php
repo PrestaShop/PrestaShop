@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration;
+namespace LegacyTests\Integration;
 
 
 use Module;
 use PrestaShopAutoload;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use Tests\TestCase\IntegrationTestCase;
-use Tests\TestCase\Module as TestingModule;
+use LegacyTests\TestCase\IntegrationTestCase;
+use LegacyTests\TestCase\Module as TestingModule;
 
 class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
 {

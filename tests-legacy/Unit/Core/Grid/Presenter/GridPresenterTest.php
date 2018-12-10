@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Grid\Presenter;
+namespace LegacyTests\Unit\Core\Grid\Presenter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;

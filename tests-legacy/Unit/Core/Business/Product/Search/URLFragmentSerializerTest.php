@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Product\Search;
+namespace LegacyTests\Unit\Core\Product\Search;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Product\Search\URLFragmentSerializer;

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\PrestaShopBundle\Service\DataProvider\MarketPlace;
+namespace LegacyTests\Integration\PrestaShopBundle\Service\DataProvider\MarketPlace;
 
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

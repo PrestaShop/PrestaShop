@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle\Utils;
+namespace LegacyTests\Unit\PrestaShopBundle\Utils;
 
 use PrestaShopBundle\Utils\FloatParser;
 use PHPUnit\Framework\TestCase;

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Classes\Checkout;
+namespace LegacyTests\Unit\Classes\Checkout;
 
 use CheckoutAddressesStep;
 use CheckoutProcess;
@@ -33,7 +33,7 @@ use Customer;
 use Language;
 use Link;
 use Phake;
-use Tests\TestCase\UnitTestCase;
+use LegacyTests\TestCase\UnitTestCase;
 
 class CheckoutAddressesStepTest extends UnitTestCase
 {

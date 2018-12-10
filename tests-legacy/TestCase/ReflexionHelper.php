@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\TestCase;
+namespace LegacyTests\TestCase;
 
 use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class ReflexionHelper
- * @package Tests\TestCase
+ * @package LegacyTests\TestCase
  *
  * Provides utilities to access private or protected properties inside classes.
  *

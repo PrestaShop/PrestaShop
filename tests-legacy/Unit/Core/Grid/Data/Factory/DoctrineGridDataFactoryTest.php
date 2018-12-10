@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Grid\Data\Factory;
+namespace LegacyTests\Unit\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;

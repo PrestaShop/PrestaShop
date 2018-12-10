@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle\Api;
+namespace LegacyTests\Unit\PrestaShopBundle\Api;
 
 use Exception;
 use PHPUnit\Framework\TestCase;

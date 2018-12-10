@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle;
+namespace LegacyTests\Unit\PrestaShopBundle;
 
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;

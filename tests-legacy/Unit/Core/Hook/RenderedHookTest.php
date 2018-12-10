@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Hook;
+namespace LegacyTests\Unit\Core\Hook;
 
 use PrestaShop\PrestaShop\Core\Hook\HookInterface;
 use PrestaShop\PrestaShop\Core\Hook\RenderedHook;

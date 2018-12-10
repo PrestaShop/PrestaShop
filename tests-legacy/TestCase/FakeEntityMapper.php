@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace Tests\TestCase;
+namespace LegacyTests\TestCase;
 
 use PrestaShop\PrestaShop\Adapter\EntityMapper;
 use Exception;

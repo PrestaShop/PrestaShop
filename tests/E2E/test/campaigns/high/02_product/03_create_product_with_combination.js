@@ -29,12 +29,7 @@ scenario('Create product with combination in the Back Office', client => {
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.standard.new_category_name + 'C' + date_time));
     test('should click on "Create"', () => client.createCategory());
-<<<<<<< HEAD
-||||||| merged common ancestors
     test('should open all categories', () => client.openAllCategories());
-=======
-    //test('should open all categories', () => client.openAllCategories()); //TODO: Verify if we should close then open all categories
->>>>>>> origin/1.7.5.x
     test('should choose the created category as default', () => {
       return promise
         .then(() => client.waitForVisible(AddProductPage.created_category))
@@ -48,14 +43,9 @@ scenario('Create product with combination in the Back Office', client => {
     });
     test('should click on "ADD RELATED PRODUCT" button', () => client.waitForExistAndClick(AddProductPage.add_related_product_btn));
     test('should search and add a related product', () => client.searchAndAddRelatedProduct());
-<<<<<<< HEAD
     commonScenarios.addProductFeature(client, "Frame Size", 0, "Cotton");
     commonScenarios.addProductFeature(client, "Compositions", 1, '', "Azerty", "custom_value");
-||||||| merged common ancestors
     test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('combination'));
-=======
-    test('should click on "ADD A FEATURE" and select one', () => client.addFeature('combination'));
->>>>>>> origin/1.7.5.x
     test('should set "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference" input', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
     test('should switch the product online', () => {

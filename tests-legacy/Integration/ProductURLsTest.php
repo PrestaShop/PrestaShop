@@ -25,9 +25,9 @@
  */
 
 
-namespace Tests\Integration;
+namespace LegacyTests\Integration;
 
-use Tests\TestCase\IntegrationTestCase;
+use LegacyTests\TestCase\IntegrationTestCase;
 use Context;
 use Dispatcher;
 use ReflectionClass;
