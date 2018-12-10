@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
@@ -89,14 +90,26 @@ class CustomerController extends AbstractAdminController
         $customerForm->handleRequest($request);
 
         $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
-        $result = $customerFormHandler->handle($customerForm);
 
-        if ($customerId = $result->getIdentifiableObjectId()) {
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+        try {
+            $result = $customerFormHandler->handle($customerForm);
 
-            return $this->redirectToRoute('admin_customers_edit', [
-                'customerId' => $customerId,
-            ]);
+            if ($customerId = $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_customers_edit', [
+                    'customerId' => $customerId,
+                ]);
+            }
+        } catch (CustomerException $e) {
+            $messages = [
+                CustomerConstraintException::DUPLICATE_EMAIL => $this->trans(
+                    'A registered customer account using the defined email address already exists. ',
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ];
+
+            $this->addFlash('error', $this->getErrorMessageForException($e, $messages));
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/create.html.twig', [
@@ -114,23 +127,45 @@ class CustomerController extends AbstractAdminController
      */
     public function editAction($customerId, Request $request)
     {
-        $customerFormOptions = [
-            'is_password_required' => false,
-        ];
-        $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
-            ->getFormFor((int) $customerId, [], $customerFormOptions)
-        ;
-        $customerForm->handleRequest($request);
+        try {
+            $customerFormOptions = [
+                'is_password_required' => false,
+            ];
+            $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
+                ->getFormFor((int) $customerId, [], $customerFormOptions)
+            ;
+            $customerForm->handleRequest($request);
 
-        $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
-        $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
+            $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
+            $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
 
-        if ($customerId = $result->getIdentifiableObjectId()) {
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_customers_edit', [
-                'customerId' => $customerId,
-            ]);
+                return $this->redirectToRoute('admin_customers_edit', [
+                    'customerId' => $result->getIdentifiableObjectId(),
+                ]);
+            }
+        } catch (CustomerException $e) {
+            $messages = [
+                CustomerNotFoundException::class => $this->trans(
+                    'This customer does not exist.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                CustomerConstraintException::class => [
+                    CustomerConstraintException::DUPLICATE_EMAIL =>
+                        $this->trans(
+                            'A registered customer account using the defined email address already exists. ',
+                            'Admin.Orderscustomers.Notification'
+                        ),
+                ]
+            ];
+
+            $this->addFlash('error', $this->getErrorMessageForException($e, $messages));
+
+            if ($e instanceof CustomerNotFoundException) {
+                return $this->redirectToRoute('admin_customers_index');
+            }
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/edit.html.twig', [
