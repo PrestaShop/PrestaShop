@@ -40,6 +40,9 @@ services:
 
   prestashop.adapter.customer.command_handler.add_customer:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\AddCustomerHandler'
+    arguments:
+      - '@prestashop.core.crypto.hashing'
+      - '@=service("prestashop.adapter.legacy.configuration").get("_COOKIE_KEY_")'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand'
@@ -50,8 +53,11 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing'
 
-  prestashop.adapter.customer.command_handler.get_customer_for_editing:
+  prestashop.adapter.customer.command_handler.edit_customer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\EditCustomerHandler'
+    arguments:
+      - '@prestashop.core.crypto.hashing'
+      - '@=service("prestashop.adapter.legacy.configuration").get("_COOKIE_KEY_")'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand'
