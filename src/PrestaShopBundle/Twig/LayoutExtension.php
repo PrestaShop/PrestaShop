@@ -147,7 +147,6 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         $enableSidebar = false,
         $helpLink = ''
     ) {
-
         if ('test' == $this->environment) {
             return <<<'EOF'
 
