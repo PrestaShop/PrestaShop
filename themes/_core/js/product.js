@@ -326,7 +326,7 @@ $(document).ready(() => {
     });
 
     prestashop.on('updateCart', (event) => {
-        if (!event || !event.reason || event.reason.linkAction != 'add-to-cart' ) {
+        if (!event || !event.reason || event.reason.linkAction !== 'add-to-cart' ) {
           return;
         }
         const $productActions = $('.product-actions');
