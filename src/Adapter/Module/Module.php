@@ -39,7 +39,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Module implements ModuleInterface
 {
-    /** @var legacyInstance Module The instance of the legacy module */
+    /** @var LegacyModule Module The instance of the legacy module */
     public $instance = null;
 
     /**
@@ -232,7 +232,13 @@ class Module implements ModuleInterface
         // "Notice: Use of undefined constant _PS_INSTALL_LANGS_PATH_ - assumed '_PS_INSTALL_LANGS_PATH_'"
         LegacyModule::updateTranslationsAfterInstall(false);
 
-        $result = $this->instance->install();
+        // Casted to Boolean, because some modules returns 1 instead true and 0 instead false.
+        // Other value types are not expected. See also: https://github.com/PrestaShop/PrestaShop/pull/11442#issuecomment-440485268
+        // The best way is to check for non Boolean type and `throw \UnexpectedValueException`,
+        // but it's need much refactoring and testing.
+        // TODO: refactoring.
+        $result = (bool) $this->instance->install();
+
         $this->database->set('installed', $result);
         $this->database->set('active', $result);
         $this->database->set('version', $this->attributes->get('version'));
