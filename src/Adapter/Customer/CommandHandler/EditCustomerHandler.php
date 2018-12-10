@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
@@ -38,6 +39,26 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundExcepti
  */
 final class EditCustomerHandler implements EditCustomerHandlerInterface
 {
+    /**
+     * @var Hashing
+     */
+    private $hashing;
+
+    /**
+     * @var string Value of legacy _COOKIE_KEY_
+     */
+    private $legacyCookieKey;
+
+    /**
+     * @param Hashing $hashing
+     * @param string $legacyCookieKey
+     */
+    public function __construct(Hashing $hashing, $legacyCookieKey)
+    {
+        $this->hashing = $hashing;
+        $this->legacyCookieKey = $legacyCookieKey;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -57,7 +78,7 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
 
         $this->updateCustomerWithCommandData($customer, $command);
 
-        if (false === $customer->validateFields()) {
+        if (false === $customer->validateFields(false)) {
             throw new CustomerException('Customer contains invalid field values');
         }
 
@@ -89,7 +110,12 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         }
 
         if (null !== $command->getPassword()) {
-            $customer->passwd = $command->getPassword()->getValue();
+            $hashedPassword = $this->hashing->hash(
+                $command->getPassword()->getValue(),
+                $this->legacyCookieKey
+            );
+
+            $customer->passwd = $hashedPassword;
         }
 
         if (null !== $command->getBirthday()) {

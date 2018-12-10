@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\AddCustomerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
@@ -42,6 +43,26 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 final class AddCustomerHandler implements AddCustomerHandlerInterface
 {
     /**
+     * @var Hashing
+     */
+    private $hashing;
+
+    /**
+     * @var string Value of legacy _COOKIE_KEY_
+     */
+    private $legacyCookieKey;
+
+    /**
+     * @param Hashing $hashing
+     * @param string $legacyCookieKey
+     */
+    public function __construct(Hashing $hashing, $legacyCookieKey)
+    {
+        $this->hashing = $hashing;
+        $this->legacyCookieKey = $legacyCookieKey;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(AddCustomerCommand $command)
@@ -50,7 +71,7 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
 
         $this->fillCustomerWithCommandData($customer, $command);
 
-        if (false === $customer->validateFields()) {
+        if (false === $customer->validateFields(false)) {
             throw new CustomerException('Customer contains invalid field values');
         }
 
@@ -83,10 +104,15 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
      */
     private function fillCustomerWithCommandData(Customer $customer, AddCustomerCommand $command)
     {
+        $hashedPassword = $this->hashing->hash(
+            $command->getPassword()->getValue(),
+            $this->legacyCookieKey
+        );
+
         $customer->firstname = $command->getFirstName()->getValue();
         $customer->lastname = $command->getLastName()->getValue();
         $customer->email = $command->getEmail()->getValue();
-        $customer->passwd = $command->getPassword()->getValue();
+        $customer->passwd = $hashedPassword;
         $customer->id_default_group = $command->getDefaultGroupId();
         $customer->groupBox = $command->getGroupIds();
         $customer->id_gender = $command->getGenderId();
