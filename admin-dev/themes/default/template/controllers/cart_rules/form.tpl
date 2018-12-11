@@ -58,7 +58,7 @@
 		var product_rule_groups_counter = {if isset($product_rule_groups_counter)}{$product_rule_groups_counter|intval}{else}0{/if};
 		var product_rule_counters = new Array();
 		var currentToken = '{$currentToken|escape:'quotes'}';
-		var currentFormTab = '{if isset($smarty.post.currentFormTab)}{$smarty.post.currentFormTab|escape:'quotes'}{else}informations{/if}';
+		var currentFormTab = '{if isset($smarty.post.currentFormTab)}{$smarty.post.currentFormTab|escape:'html'}{else}informations{/if}';
 		var currentText = '{l s='Now' js=1 d='Admin.Catalog.Feature'}';
 		var closeText = '{l s='Done' js=1 d='Admin.Catalog.Feature'}';
 		var timeOnlyTitle = '{l s='Choose Time' js=1 d='Admin.Catalog.Feature'}';

@@ -86,7 +86,7 @@
 	<!-- shipping update modal -->
 	<div class="modal fade" id="modal-shipping">
 		<div class="modal-dialog">
-			<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}">
+			<form method="post" action="{$link->getAdminLink('AdminOrders', true, [], ['id_order' => $order->id|intval, 'vieworder' => 1])|escape:'html':'UTF-8'}">
 				<input type="hidden" name="submitShippingNumber" id="submitShippingNumber" value="1" />
 				<input type="hidden" name="id_order_carrier" id="id_order_carrier" />
 				<div class="modal-content">

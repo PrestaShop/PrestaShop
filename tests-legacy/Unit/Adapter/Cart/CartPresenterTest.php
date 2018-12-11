@@ -44,7 +44,7 @@ class CartPresenterTest extends UnitTestCase
         parent::setup();
         $this->previousSeparator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
         Configuration::set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-');
-        $this->cartPresenter = new CartPresenter;
+        $this->cartPresenter = new CartPresenter();
     }
 
     public function tearDown()
