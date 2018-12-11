@@ -91,8 +91,8 @@ class WarehouseProductLocationCore extends ObjectModel
         $query->select('wpl.location');
         $query->from('warehouse_product_location', 'wpl');
         $query->where('wpl.id_product = ' . (int) $id_product . '
-			AND wpl.id_product_attribute = ' . (int) $id_product_attribute . '
-			AND wpl.id_warehouse = ' . (int) $id_warehouse
+            AND wpl.id_product_attribute = ' . (int) $id_product_attribute . '
+            AND wpl.id_warehouse = ' . (int) $id_warehouse
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -114,8 +114,8 @@ class WarehouseProductLocationCore extends ObjectModel
         $query->select('wpl.id_warehouse_product_location');
         $query->from('warehouse_product_location', 'wpl');
         $query->where('wpl.id_product = ' . (int) $id_product . '
-			AND wpl.id_product_attribute = ' . (int) $id_product_attribute . '
-			AND wpl.id_warehouse = ' . (int) $id_warehouse
+            AND wpl.id_product_attribute = ' . (int) $id_product_attribute . '
+            AND wpl.id_warehouse = ' . (int) $id_warehouse
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);

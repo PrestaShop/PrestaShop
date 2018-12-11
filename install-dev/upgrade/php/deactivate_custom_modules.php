@@ -65,9 +65,9 @@ function deactivate_custom_modules()
     $arrNonNative = array();
     if ($arrNativeModules) {
         $arrNonNative = $db->executeS('
-    		SELECT *
-    		FROM `'._DB_PREFIX_.'module` m
-    		WHERE name NOT IN ('.implode(',', $arrNativeModules).') ');
+            SELECT *
+            FROM `'._DB_PREFIX_.'module` m
+            WHERE name NOT IN ('.implode(',', $arrNativeModules).') ');
     }
 
     $uninstallMe = array("undefined-modules");
@@ -86,7 +86,7 @@ function deactivate_custom_modules()
     }
 
     $return = Db::getInstance()->execute('
-	UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` IN ('.implode(',', $uninstallMe).')');
+    UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` IN ('.implode(',', $uninstallMe).')');
 
     if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'module_shop\''))> 0) {
         foreach ($uninstallMe as $k => $uninstall) {

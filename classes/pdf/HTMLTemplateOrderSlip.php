@@ -262,8 +262,8 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     public function getProductTaxesBreakdown()
     {
         // $breakdown will be an array with tax rates as keys and at least the columns:
-        // 	- 'total_price_tax_excl'
-        // 	- 'total_amount'
+        //     - 'total_price_tax_excl'
+        //     - 'total_amount'
         $breakdown = array();
 
         $details = $this->order->getProductTaxesDetails($this->order->products);

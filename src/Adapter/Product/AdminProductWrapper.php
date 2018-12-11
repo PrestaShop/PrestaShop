@@ -638,12 +638,12 @@ class AdminProductWrapper
                 if (isset($customization['id_customization_field'])) {
                     $id_customization_field = (int) $customization['id_customization_field'];
                     Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization_field`
-					SET `required` = ' . ($customization['require'] ? 1 : 0) . ', `type` = ' . (int) $customization['type'] . '
-					WHERE `id_customization_field` = ' . $id_customization_field);
+                    SET `required` = ' . ($customization['require'] ? 1 : 0) . ', `type` = ' . (int) $customization['type'] . '
+                    WHERE `id_customization_field` = ' . $id_customization_field);
                 } else {
                     Db::getInstance()->execute(
                         'INSERT INTO `' . _DB_PREFIX_ . 'customization_field` (`id_product`, `type`, `required`)
-                    	VALUES ('
+                        VALUES ('
                             . (int) $product->id . ', '
                             . (int) $customization['type'] . ', '
                             . ($customization['require'] ? 1 : 0)

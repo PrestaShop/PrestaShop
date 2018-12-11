@@ -30,8 +30,8 @@
 function update_module_loyalty()
 {
     $ps_loyalty_point_value = Db::getInstance()->getValue('SELECT value
-		FROM `'._DB_PREFIX_.'configuration`
-		WHERE name="PS_LOYALTY_POINT_VALUE"');
+        FROM `'._DB_PREFIX_.'configuration`
+        WHERE name="PS_LOYALTY_POINT_VALUE"');
     if ($ps_loyalty_point_value !== false) {
         $category_list = '';
         $categories = Db::getInstance()->executeS('SELECT id_category FROM `'._DB_PREFIX_.'category`');

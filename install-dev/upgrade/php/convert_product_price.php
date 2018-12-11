@@ -33,7 +33,7 @@ function convert_product_price()
         $taxRates[$data['id_tax']] = (float)($data['rate']) / 100;
     }
     $resource = Db::getInstance()->executeS('SELECT `id_product`, `price`, `id_tax`
-		FROM `'._DB_PREFIX_.'product`', false);
+        FROM `'._DB_PREFIX_.'product`', false);
     if (!$resource) {
         return array('error' => 1, 'msg' => Db::getInstance()->getMsgError());
     } // was previously die(mysql_error())

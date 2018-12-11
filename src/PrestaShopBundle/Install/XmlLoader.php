@@ -1222,8 +1222,8 @@ class XmlLoader
                         $column = (string) $field['name'];
                         if (isset($field['relation'])) {
                             $sql = 'SELECT `id_' . bqSQL($field['relation']) . '`
-									FROM `' . bqSQL(_DB_PREFIX_ . $field['relation']) . '`
-									WHERE `id_' . bqSQL($field['relation']) . '` = ' . (int) $row[$column];
+                                    FROM `' . bqSQL(_DB_PREFIX_ . $field['relation']) . '`
+                                    WHERE `id_' . bqSQL($field['relation']) . '` = ' . (int) $row[$column];
                             $node[$column] = $this->generateId((string) $field['relation'], Db::getInstance()->getValue($sql));
 
                             // A little trick to allow storage of some hard values, like '-1' for tab.id_parent
@@ -1259,9 +1259,9 @@ class XmlLoader
         $nodes_lang = array();
 
         $sql = 'SELECT t.id_tag, t.id_lang, t.name, pt.id_product
-				FROM ' . _DB_PREFIX_ . 'tag t
-				LEFT JOIN ' . _DB_PREFIX_ . 'product_tag pt ON t.id_tag = pt.id_tag
-				ORDER BY id_lang';
+                FROM ' . _DB_PREFIX_ . 'tag t
+                LEFT JOIN ' . _DB_PREFIX_ . 'product_tag pt ON t.id_tag = pt.id_tag
+                ORDER BY id_lang';
         foreach (Db::getInstance()->executeS($sql) as $row) {
             $identifier = $this->generateId('tag', $row['id_tag']);
             if (!isset($nodes_lang[$row['id_lang']])) {

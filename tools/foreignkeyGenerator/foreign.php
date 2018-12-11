@@ -45,7 +45,7 @@ function clearForeignKeys()
         foreach ($tables as $table) {
             Db::getInstance()->execute('
                 ALTER TABLE `' . $table['table_name'] . '`
-				DROP FOREIGN KEY `' . $table['constraint_name'] . '`'
+                DROP FOREIGN KEY `' . $table['constraint_name'] . '`'
             );
         }
     }
@@ -62,15 +62,15 @@ function noNullParent($table)
 {
     $rows = Db::getInstance()->executeS('
         SELECT `id_' . $table . '`
-		FROM `' . _DB_PREFIX_ . $table . '`
-		WHERE `id_parent` = 0'
+        FROM `' . _DB_PREFIX_ . $table . '`
+        WHERE `id_parent` = 0'
     );
     if (is_array($rows)) {
         foreach ($rows as $row) {
             Db::getInstance()->execute('
                 UPDATE `' . _DB_PREFIX_ . $table . '`
-				SET `id_parent` = ' . (int) $row['id_' . $table] . '
-				WHERE `id_' . $table . '` = ' . (int) $row['id_' . $table]
+                SET `id_parent` = ' . (int) $row['id_' . $table] . '
+                WHERE `id_' . $table . '` = ' . (int) $row['id_' . $table]
             );
         }
     }
@@ -89,24 +89,24 @@ function updateMismatchForeign()
     // Make sure that the id_tax_rules_group is set
     Db::getInstance()->execute('
         UPDATE `' . _DB_PREFIX_ . 'tax_rules_group`
-		SET `id_tax_rules_group` = 1
-		WHERE `id_tax_rules_group` = 0'
+        SET `id_tax_rules_group` = 1
+        WHERE `id_tax_rules_group` = 0'
     );
     // Make sure the currency is set
     Db::getInstance()->execute('
         UPDATE `' . _DB_PREFIX_ . 'country`
         SET `id_currency` = 1
-		WHERE `id_currency` = 0'
+        WHERE `id_currency` = 0'
     );
 
     // If there is no country, create a default one
     if (!Db::getInstance()->getValue('
         SELECT COUNT(*)
-		FROM `' . _DB_PREFIX_ . 'country`'
+        FROM `' . _DB_PREFIX_ . 'country`'
     )) {
         Db::getInstance()->execute('
             INSERT INTO `' . _DB_PREFIX_ . 'country`
-			(`id_country`, `id_state`) VALUES(0, 1)'
+            (`id_country`, `id_state`) VALUES(0, 1)'
         );
     }
 
@@ -180,10 +180,10 @@ function forgeRelationsQueries($relations)
     foreach ($relations as $table => $fields) {
         foreach ($fields as $field => $foreign) {
             $q = 'ALTER TABLE `' . _DB_PREFIX_ . $table . '`
-							ADD FOREIGN KEY (`' . $field . '`)';
+                            ADD FOREIGN KEY (`' . $field . '`)';
             foreach ($foreign as $fTable => $fField) {
                 $q .= ' REFERENCES `' . _DB_PREFIX_ . $fTable . '`(`' . $fField . '`)
-								  ON DELETE NO ACTION ON UPDATE NO ACTION,';
+                                  ON DELETE NO ACTION ON UPDATE NO ACTION,';
             }
             $queries[$table][] = rtrim($q, ',') . ';';
         }

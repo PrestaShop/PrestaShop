@@ -44,13 +44,13 @@ abstract class AbstractDeleteCategoryHandler
     protected function handleProductsUpdate($parentCategoryId, CategoryDeleteMode $mode)
     {
         $productsWithoutCategory = \Db::getInstance()->executeS('
-			SELECT p.`id_product`
-			FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') . '
-			WHERE NOT EXISTS (
-			    SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`
-			)
-		');
+            SELECT p.`id_product`
+            FROM `' . _DB_PREFIX_ . 'product` p
+            ' . Shop::addSqlAssociation('product', 'p') . '
+            WHERE NOT EXISTS (
+                SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`
+            )
+        ');
 
         foreach ($productsWithoutCategory as $productWithoutCategory) {
             $product = new Product((int) $productWithoutCategory['id_product']);

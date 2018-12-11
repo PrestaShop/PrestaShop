@@ -172,8 +172,8 @@ class SmartyCustomCore extends Smarty
     {
         $template_md5 = md5($template);
         $sql = 'UPDATE `' . _DB_PREFIX_ . 'smarty_lazy_cache`
-							SET filepath=\'' . pSQL($filepath) . '\'
-							WHERE `template_hash`=\'' . pSQL($template_md5) . '\'';
+                            SET filepath=\'' . pSQL($filepath) . '\'
+                            WHERE `template_hash`=\'' . pSQL($template_md5) . '\'';
 
         $sql .= ' AND cache_id="' . pSQL((string) $cache_id) . '"';
 
@@ -209,7 +209,7 @@ class SmartyCustomCore extends Smarty
             return $is_in_lazy_cache[$key];
         } else {
             $sql = 'SELECT UNIX_TIMESTAMP(last_update) as last_update, filepath FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache`
-							WHERE `template_hash`=\'' . pSQL($template_md5) . '\'';
+                            WHERE `template_hash`=\'' . pSQL($template_md5) . '\'';
             $sql .= ' AND cache_id="' . pSQL((string) $cache_id) . '"';
             $sql .= ' AND compile_id="' . pSQL((string) $compile_id) . '"';
 
@@ -251,8 +251,8 @@ class SmartyCustomCore extends Smarty
     {
         $template_md5 = md5($template);
         $sql = 'INSERT IGNORE INTO `' . _DB_PREFIX_ . 'smarty_lazy_cache`
-							(`template_hash`, `cache_id`, `compile_id`, `last_update`)
-							VALUES (\'' . pSQL($template_md5) . '\'';
+                            (`template_hash`, `cache_id`, `compile_id`, `last_update`)
+                            VALUES (\'' . pSQL($template_md5) . '\'';
 
         $sql .= ',"' . pSQL((string) $cache_id) . '"';
 
@@ -282,7 +282,7 @@ class SmartyCustomCore extends Smarty
 
         $template_md5 = md5($template);
         $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache`
-							WHERE template_hash=\'' . pSQL($template_md5) . '\'';
+                            WHERE template_hash=\'' . pSQL($template_md5) . '\'';
 
         if ($cache_id != null) {
             $sql .= ' AND cache_id LIKE "' . pSQL((string) $cache_id) . '%"';

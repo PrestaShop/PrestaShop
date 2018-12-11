@@ -67,9 +67,9 @@ class AliasCore extends ObjectModel
                 $this->search = trim($search);
             } else {
                 $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT a.id_alias, a.search, a.alias
-				FROM `' . _DB_PREFIX_ . 'alias` a
-				WHERE `alias` = \'' . pSQL($alias) . '\' AND `active` = 1');
+                SELECT a.id_alias, a.search, a.alias
+                FROM `' . _DB_PREFIX_ . 'alias` a
+                WHERE `alias` = \'' . pSQL($alias) . '\' AND `active` = 1');
 
                 if ($row) {
                     $this->id = (int) $row['id_alias'];
@@ -128,9 +128,9 @@ class AliasCore extends ObjectModel
         }
 
         $aliases = Db::getInstance()->executeS('
-		SELECT a.alias
-		FROM `' . _DB_PREFIX_ . 'alias` a
-		WHERE `search` = \'' . pSQL($this->search) . '\'');
+        SELECT a.alias
+        FROM `' . _DB_PREFIX_ . 'alias` a
+        WHERE `search` = \'' . pSQL($this->search) . '\'');
 
         $aliases = array_map('implode', $aliases);
 

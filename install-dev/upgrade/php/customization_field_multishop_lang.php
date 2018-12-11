@@ -27,15 +27,15 @@
 function customization_field_multishop_lang()
 {
     $shops = Db::getInstance()->executeS('
-		SELECT `id_shop`
-		FROM `'._DB_PREFIX_.'shop`
-		WHERE `id_shop` != 1
-		');
+        SELECT `id_shop`
+        FROM `'._DB_PREFIX_.'shop`
+        WHERE `id_shop` != 1
+        ');
 
     $customization_field_lang = Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'customization_field_lang`
-		');
+        SELECT *
+        FROM `'._DB_PREFIX_.'customization_field_lang`
+        ');
 
     foreach ($customization_field_lang as $value) {
         $data = array();

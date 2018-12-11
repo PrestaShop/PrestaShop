@@ -58,7 +58,7 @@ class CreateTableOptionsBuilder {
         $builder = new SelectExpressionBuilder();
         return $builder->build($parsed);
     }
-	
+    
     protected function buildCharacterSet($parsed) {
         $builder = new CharacterSetBuilder();
         return $builder->build($parsed);

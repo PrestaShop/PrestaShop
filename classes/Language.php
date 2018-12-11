@@ -482,12 +482,12 @@ class LanguageCore extends ObjectModel
         foreach ($columns as $column) {
             if ($identifier != $column['Field'] && $column['Field'] != 'id_lang') {
                 $selectQueries[] = '(
-							SELECT `' . bqSQL($column['Field']) . '`
-							FROM `' . bqSQL($tableName) . '` tl
-							WHERE tl.`id_lang` = ' . (int) $shopDefaultLangId . '
-							' . ($shop_field_exists ? ' AND tl.`id_shop` = ' . (int) $shopId : '') . '
-							AND tl.`' . bqSQL($identifier) . '` = `' . bqSQL(str_replace('_lang', '', $tableName)) . '`.`' . bqSQL($identifier) . '`
-						)';
+                            SELECT `' . bqSQL($column['Field']) . '`
+                            FROM `' . bqSQL($tableName) . '` tl
+                            WHERE tl.`id_lang` = ' . (int) $shopDefaultLangId . '
+                            ' . ($shop_field_exists ? ' AND tl.`id_shop` = ' . (int) $shopId : '') . '
+                            AND tl.`' . bqSQL($identifier) . '` = `' . bqSQL(str_replace('_lang', '', $tableName)) . '`.`' . bqSQL($identifier) . '`
+                        )';
             } else {
                 $selectQueries[] = '`' . bqSQL($column['Field']) . '`';
             }
@@ -816,9 +816,9 @@ class LanguageCore extends ObjectModel
         // or a close match.
         $id_lang = Db::getInstance()->getValue(
             'SELECT `id_lang`, IF(language_code = \'' . pSQL($code) . '\', 0, LENGTH(language_code)) as found
-			FROM `' . _DB_PREFIX_ . 'lang`
-			WHERE LEFT(`language_code`,2) = \'' . pSQL($lang) . '\'
-			ORDER BY found ASC'
+            FROM `' . _DB_PREFIX_ . 'lang`
+            WHERE LEFT(`language_code`,2) = \'' . pSQL($lang) . '\'
+            ORDER BY found ASC'
         );
 
         // Instantiate the Language object if we found it.
@@ -876,8 +876,8 @@ class LanguageCore extends ObjectModel
         self::$_LANGUAGES = array();
 
         $sql = 'SELECT l.*, ls.`id_shop`
-				FROM `' . _DB_PREFIX_ . 'lang` l
-				LEFT JOIN `' . _DB_PREFIX_ . 'lang_shop` ls ON (l.id_lang = ls.id_lang)';
+                FROM `' . _DB_PREFIX_ . 'lang` l
+                LEFT JOIN `' . _DB_PREFIX_ . 'lang_shop` ls ON (l.id_lang = ls.id_lang)';
 
         $result = Db::getInstance()->executeS($sql);
 
@@ -1025,10 +1025,10 @@ class LanguageCore extends ObjectModel
 
         if (!isset(self::$countActiveLanguages[$id_shop])) {
             self::$countActiveLanguages[$id_shop] = Db::getInstance()->getValue('
-				SELECT COUNT(DISTINCT l.id_lang) FROM `' . _DB_PREFIX_ . 'lang` l
-				JOIN ' . _DB_PREFIX_ . 'lang_shop lang_shop ON (lang_shop.id_lang = l.id_lang AND lang_shop.id_shop = ' . (int) $id_shop . ')
-				WHERE l.`active` = 1
-			');
+                SELECT COUNT(DISTINCT l.id_lang) FROM `' . _DB_PREFIX_ . 'lang` l
+                JOIN ' . _DB_PREFIX_ . 'lang_shop lang_shop ON (lang_shop.id_lang = l.id_lang AND lang_shop.id_shop = ' . (int) $id_shop . ')
+                WHERE l.`active` = 1
+            ');
         }
 
         return self::$countActiveLanguages[$id_shop];

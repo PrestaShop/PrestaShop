@@ -27,14 +27,14 @@
 function cms_multishop()
 {
     $shops = Db::getInstance()->executeS('
-		SELECT `id_shop`
-		FROM `'._DB_PREFIX_.'shop`
-		');
+        SELECT `id_shop`
+        FROM `'._DB_PREFIX_.'shop`
+        ');
 
     $cms_lang = Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'cms_lang`
-	');
+        SELECT *
+        FROM `'._DB_PREFIX_.'cms_lang`
+    ');
     foreach ($cms_lang as $value) {
         $data = array();
         $cms = array(
@@ -56,9 +56,9 @@ function cms_multishop()
     }
 
     $cms_category_lang = Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'cms_category_lang`
-	');
+        SELECT *
+        FROM `'._DB_PREFIX_.'cms_category_lang`
+    ');
     foreach ($cms_category_lang as $value) {
         $data = array();
         $data_bis = array();

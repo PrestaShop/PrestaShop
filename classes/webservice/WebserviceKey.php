@@ -59,9 +59,9 @@ class WebserviceKeyCore extends ObjectModel
     public static function keyExists($key)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `key`
-		FROM ' . _DB_PREFIX_ . 'webservice_account
-		WHERE `key` = "' . pSQL($key) . '"');
+        SELECT `key`
+        FROM ' . _DB_PREFIX_ . 'webservice_account
+        WHERE `key` = "' . pSQL($key) . '"');
     }
 
     public function delete()
@@ -77,11 +77,11 @@ class WebserviceKeyCore extends ObjectModel
     public static function getPermissionForAccount($auth_key)
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT p.*
-			FROM `' . _DB_PREFIX_ . 'webservice_permission` p
-			LEFT JOIN `' . _DB_PREFIX_ . 'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
-			WHERE a.key = \'' . pSQL($auth_key) . '\'
-		');
+            SELECT p.*
+            FROM `' . _DB_PREFIX_ . 'webservice_permission` p
+            LEFT JOIN `' . _DB_PREFIX_ . 'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
+            WHERE a.key = \'' . pSQL($auth_key) . '\'
+        ');
         $permissions = array();
         if ($result) {
             foreach ($result as $row) {
@@ -95,17 +95,17 @@ class WebserviceKeyCore extends ObjectModel
     public static function isKeyActive($auth_key)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT active
-		FROM `' . _DB_PREFIX_ . 'webservice_account`
-		WHERE `key` = "' . pSQL($auth_key) . '"');
+        SELECT active
+        FROM `' . _DB_PREFIX_ . 'webservice_account`
+        WHERE `key` = "' . pSQL($auth_key) . '"');
     }
 
     public static function getClassFromKey($auth_key)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT class_name
-		FROM `' . _DB_PREFIX_ . 'webservice_account`
-		WHERE `key` = "' . pSQL($auth_key) . '"');
+        SELECT class_name
+        FROM `' . _DB_PREFIX_ . 'webservice_account`
+        WHERE `key` = "' . pSQL($auth_key) . '"');
     }
 
     public static function setPermissionForAccount($id_account, $permissions_to_set)

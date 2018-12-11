@@ -159,10 +159,10 @@ class MetaCore extends ObjectModel
     public static function getMetasByIdLang($idLang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
-		FROM `' . _DB_PREFIX_ . 'meta` m
-		LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
-		WHERE ml.`id_lang` = ' . (int) $idLang
+        SELECT *
+        FROM `' . _DB_PREFIX_ . 'meta` m
+        LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
+        WHERE ml.`id_lang` = ' . (int) $idLang
             . Shop::addSqlRestrictionOnLang('ml') .
         'ORDER BY page ASC');
     }
@@ -178,15 +178,15 @@ class MetaCore extends ObjectModel
     public static function getMetaByPage($page, $idLang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-        		SELECT *
-        		FROM ' . _DB_PREFIX_ . 'meta m
-        		LEFT JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON m.id_meta = ml.id_meta
-        		WHERE (
-        			m.page = "' . pSQL($page) . '"
-        			OR m.page = "' . pSQL(str_replace('-', '', strtolower($page))) . '"
-        		)
-        		AND ml.id_lang = ' . (int) $idLang . '
-		' . Shop::addSqlRestrictionOnLang('ml'));
+                SELECT *
+                FROM ' . _DB_PREFIX_ . 'meta m
+                LEFT JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON m.id_meta = ml.id_meta
+                WHERE (
+                    m.page = "' . pSQL($page) . '"
+                    OR m.page = "' . pSQL(str_replace('-', '', strtolower($page))) . '"
+                )
+                AND ml.id_lang = ' . (int) $idLang . '
+        ' . Shop::addSqlRestrictionOnLang('ml'));
     }
 
     /**
@@ -199,11 +199,11 @@ class MetaCore extends ObjectModel
     public static function getAllMeta($idLang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
-		FROM ' . _DB_PREFIX_ . 'meta m
-		LEFT JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON m.id_meta = ml.id_meta
-		AND ml.id_lang = ' . (int) $idLang . '
-		' . Shop::addSqlRestrictionOnLang('ml'));
+        SELECT *
+        FROM ' . _DB_PREFIX_ . 'meta m
+        LEFT JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON m.id_meta = ml.id_meta
+        AND ml.id_lang = ' . (int) $idLang . '
+        ' . Shop::addSqlRestrictionOnLang('ml'));
     }
 
     /**
@@ -274,16 +274,16 @@ class MetaCore extends ObjectModel
     public static function getEquivalentUrlRewrite($newIdLang, $idLang, $urlRewrite)
     {
         return Db::getInstance()->getValue('
-		SELECT url_rewrite
-		FROM `' . _DB_PREFIX_ . 'meta_lang`
-		WHERE id_meta = (
-			SELECT id_meta
-			FROM `' . _DB_PREFIX_ . 'meta_lang`
-			WHERE url_rewrite = \'' . pSQL($urlRewrite) . '\' AND id_lang = ' . (int) $idLang . '
-			AND id_shop = ' . Context::getContext()->shop->id . '
-		)
-		AND id_lang = ' . (int) $newIdLang . '
-		AND id_shop = ' . Context::getContext()->shop->id);
+        SELECT url_rewrite
+        FROM `' . _DB_PREFIX_ . 'meta_lang`
+        WHERE id_meta = (
+            SELECT id_meta
+            FROM `' . _DB_PREFIX_ . 'meta_lang`
+            WHERE url_rewrite = \'' . pSQL($urlRewrite) . '\' AND id_lang = ' . (int) $idLang . '
+            AND id_shop = ' . Context::getContext()->shop->id . '
+        )
+        AND id_lang = ' . (int) $newIdLang . '
+        AND id_shop = ' . Context::getContext()->shop->id);
     }
 
     /**

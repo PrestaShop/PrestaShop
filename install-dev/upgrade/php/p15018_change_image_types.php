@@ -51,8 +51,8 @@ function p15018_change_image_types()
         foreach ($type_array as $old_type => $new_type) {
             if (is_array($new_type) && count($new_type)) {
                 Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'image_type` (
-					SELECT NULL, "'.$new_type[0].'", "'.$new_type[1].'", "'.$new_type[2].'", products, categories, manufacturers, suppliers, scenes, stores
-					FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
+                    SELECT NULL, "'.$new_type[0].'", "'.$new_type[1].'", "'.$new_type[2].'", products, categories, manufacturers, suppliers, scenes, stores
+                    FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
             }
         }
     }
@@ -65,8 +65,8 @@ function p15018_change_image_types()
             foreach ($type_array as $old_type => $new_type) {
                 if (is_array($new_type) && count($new_type)) {
                     Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'image_type` (
-					SELECT NULL, "'.$new_type[0].'", "'.$new_type[1].'", "'.$new_type[2].'", products, categories, manufacturers, suppliers, scenes, stores
-					FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
+                    SELECT NULL, "'.$new_type[0].'", "'.$new_type[1].'", "'.$new_type[2].'", products, categories, manufacturers, suppliers, scenes, stores
+                    FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
                 }
     // But if there is only the default one, we can update de names
     else {
