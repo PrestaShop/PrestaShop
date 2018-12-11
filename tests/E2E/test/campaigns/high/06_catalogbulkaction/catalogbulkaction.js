@@ -2,6 +2,8 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {ProductList} = require('../../../selectors/BO/add_product_page');
+const welcomeScenarios = require('../../common_scenarios/welcome');
+
 let promise = Promise.resolve();
 
 scenario('Catalog bulk action', () => {
@@ -10,7 +12,7 @@ scenario('Catalog bulk action', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'catalogbulkaction');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Disable the product list', client => {
     test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "Select all" radio button', () => client.selectAllProducts(CatalogPage.select_all_product_button));
@@ -117,7 +119,7 @@ scenario('Catalog bulk action', () => {
       scenario('Check that the duplicate product has been deleted', client => {
         test('should set the search input to "copy" to search for the duplicated products', () => client.waitAndSetValue(CatalogPage.name_search_input, "copy"));
         test('should click on the "ENTER" key', () => client.keys('Enter'));
-        test('should get a message indicates that no result found', () => client.checkTextValue(CatalogPage.search_result_message, 'There is no result for this search', "contain"));
+        test('should get a message indicates that no result found', () => client.checkTextValue(CatalogPage.search_result_message, 'There is no result for this search', "contain", 2000));
         test('should click on "Reset" button', () => client.waitForVisibleAndClick(CatalogPage.reset_button));
       }, 'catalogbulkaction');
     }, 'catalogbulkaction');

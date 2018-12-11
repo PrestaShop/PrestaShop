@@ -48,17 +48,14 @@ scenario('The shop installation', () => {
 
   welcomeScenarios.findAndCloseWelcomeModal('installation');
 
-  /**
-   * This scenario is based on the bug described in this ticket
-   * http://forge.prestashop.com/browse/BOOM-3195
-   **/
+  scenario('paaaaaaaaaaaause', client => {
+    test('paaaaaaaaaaaause', () => client.pause(25000));
+  }, 'installation');
 
   scenario('Install "Top-sellers block" and "New products block" modules From Cross selling', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_bestsellers");
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_newproducts");
   }, 'installation');
-
-  /****** END *****/
 
   scenario('Install " 1-Click Upgrade " From Cross selling and configure it', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "autoupgrade");
@@ -71,7 +68,6 @@ scenario('The shop installation', () => {
     if (rcLink !== "") {
       test('should copy the downloaded RC to the auto upgrade directory', () => client.copyFileToAutoUpgrade(downloadsFolderPath, filename, rcTarget + "admin-dev/autoupgrade/download"));
     }
-    test('should click on "More options (Expert mode)" button', () => client.waitForExistAndClick(ModulePage.more_option_button));
     test('should select the "Channel" option', () => client.waitAndSelectByValue(ModulePage.channel_select, "archive"));
     test('should select the "Archive to use" option', () => client.waitAndSelectByValue(ModulePage.archive_select, global.filename));
     test('should set the Number of the version you want to upgrade to', () => client.waitAndSetValue(ModulePage.version_number, global.filename.replace(".zip", "")));
@@ -109,17 +105,12 @@ scenario('The shop installation', () => {
   }, 'installation');
 
   /**
-   * This scenario is based on the bug described in this ticket
-   * http://forge.prestashop.com/browse/BOOM-3195
+   * Here we delete the scenario "Check the existence of "Top sellers block" and "New products block""
+   * because of the bug described in this ticket
+   * http://forge.prestashop.com/browse/BOOM-3195*
+   * and we reproduce it in broken_tests campaign
    **/
-
-  scenario('Check the existence of "Top sellers block" and "New products block"', client => {
-    test('should set the language of shop to "English"', () => client.changeLanguage());
-    test('should check the existence of "Top sellers" block', () => client.waitForVisible(AccessPageFO.top_sellers_block));
-    test('should check the existence of "New products" block', () => client.waitForVisible(AccessPageFO.new_products_block));
-  }, 'installation');
-
-  /****** END *****/
+  /** TODO :Check the existence of "Top sellers block" and "New products block"*/
 
   orderCommonScenarios.createOrderFO("connected");
 
