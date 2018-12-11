@@ -4090,10 +4090,10 @@ class CartCore extends ObjectModel
     /**
      * Add customer's text.
      *
-     * @params int $id_product Product ID
-     * @params int $index
-     * @params int $type
-     * @params string $textValue
+     * @param int $id_product Product ID
+     * @param int $index
+     * @param int $type
+     * @param string $textValue
      *
      * @return bool Always true
      * @todo: Improve this PHPDoc comment
