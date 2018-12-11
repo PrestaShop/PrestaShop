@@ -303,7 +303,7 @@ class AdminModulesControllerCore extends AdminController
         $modules_list_sort = array(
             'installed' => $installed,
             'not_installed' => $uninstalled,
-            );
+        );
 
         $this->context->smarty->assign(array(
             'currentIndex' => self::$currentIndex,

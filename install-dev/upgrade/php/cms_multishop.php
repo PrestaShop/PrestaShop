@@ -45,7 +45,7 @@ function cms_multishop()
             'meta_title' => pSQL($value['meta_title']),
             'meta_keywords' => pSQL($value['meta_keywords']),
             'meta_description' => pSQL($value['meta_description'])
-            );
+        );
         foreach ($shops as $shop) {
             if ($shop['id_shop'] != 1) {
                 $cms['id_shop'] = $shop['id_shop'];
@@ -65,7 +65,7 @@ function cms_multishop()
 
         $cms_category_shop = array(
             'id_cms_category' => $value['id_cms_category'],
-            );
+        );
         $cms_category = array(
             'id_cms_category' => $value['id_cms_category'],
             'id_lang' => $value['id_lang'],
@@ -75,7 +75,7 @@ function cms_multishop()
             'meta_title' => pSQL($value['meta_title']),
             'meta_keywords' => pSQL($value['meta_keywords']),
             'meta_description' => pSQL($value['meta_description'])
-            );
+        );
         foreach ($shops as $shop) {
             if ($shop['id_shop'] != 1) {
                 $cms_category['id_shop'] = $shop['id_shop'];

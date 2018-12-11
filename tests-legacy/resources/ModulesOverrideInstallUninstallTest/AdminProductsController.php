@@ -443,7 +443,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'option_list' => $res,
             'key_id' => 'id_country',
             'key_value' => 'name'
-            )
+        )
         );
         $this->content = $tpl->fetch();
     }
@@ -462,7 +462,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'option_list' => $res,
             'key_id' => 'id_currency',
             'key_value' => 'name'
-            )
+        )
         );
         $this->content = $tpl->fetch();
     }
@@ -481,7 +481,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'option_list' => $res,
             'key_id' => 'id_group',
             'key_value' => 'name'
-            )
+        )
         );
         $this->content = $tpl->fetch();
     }
@@ -2510,10 +2510,10 @@ class AdminProductsController extends AdminProductsControllerCore
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_product'] = array(
-                    'href' => self::$currentIndex.'&addproduct&token='.$this->token,
-                    'desc' => $this->l('Add new product', null, null, false),
-                    'icon' => 'process-icon-new'
-                );
+                'href' => self::$currentIndex.'&addproduct&token='.$this->token,
+                'desc' => $this->l('Add new product', null, null, false),
+                'icon' => 'process-icon-new'
+            );
         }
         if ($this->display == 'edit') {
             if (($product = $this->loadObject(true)) && $product->isAssociatedToShop()) {
@@ -2540,10 +2540,10 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
                 if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php')) {
                     $this->page_header_toolbar_btn['stats'] = array(
-                    'short' => $this->l('Statistics', null, null, false),
-                    'href' => $this->context->link->getAdminLink('AdminStats').'&module=statsproduct&id_product='.(int)$product->id,
-                    'desc' => $this->l('Product sales', null, null, false),
-                );
+                        'short' => $this->l('Statistics', null, null, false),
+                        'href' => $this->context->link->getAdminLink('AdminStats').'&module=statsproduct&id_product='.(int)$product->id,
+                        'desc' => $this->l('Product sales', null, null, false),
+                    );
                 }
                 if ($this->access('delete')) {
                     $this->page_header_toolbar_btn['delete'] = array(
@@ -2956,13 +2956,13 @@ class AdminProductsController extends AdminProductsControllerCore
             ->setUseSearch(true)
             ->setSelectedCategories($categories);
         $data->assign(array('default_category' => $default_category,
-                    'selected_cat_ids' => implode(',', array_keys($selected_cat)),
-                    'selected_cat' => $selected_cat,
-                    'id_category_default' => $product->getDefaultCategory(),
-                    'category_tree' => $tree->render(),
-                    'product' => $product,
-                    'link' => $this->context->link,
-                    'is_shop_context' => Shop::getContext() == Shop::CONTEXT_SHOP
+            'selected_cat_ids' => implode(',', array_keys($selected_cat)),
+            'selected_cat' => $selected_cat,
+            'id_category_default' => $product->getDefaultCategory(),
+            'category_tree' => $tree->render(),
+            'product' => $product,
+            'link' => $this->context->link,
+            'is_shop_context' => Shop::getContext() == Shop::CONTEXT_SHOP
         ));
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
@@ -3685,13 +3685,13 @@ class AdminProductsController extends AdminProductsControllerCore
     {
         $data = $this->createTemplate($this->tpl_form);
         $data->assign(array(
-                          'product' => $obj,
-                          'ps_dimension_unit' => Configuration::get('PS_DIMENSION_UNIT'),
-                          'ps_weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
-                          'carrier_list' => $this->getCarrierList(),
-                          'currency' => $this->context->currency,
-                          'country_display_tax_label' =>  $this->context->country->display_tax_label
-                      ));
+            'product' => $obj,
+            'ps_dimension_unit' => Configuration::get('PS_DIMENSION_UNIT'),
+            'ps_weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
+            'carrier_list' => $this->getCarrierList(),
+            'currency' => $this->context->currency,
+            'country_display_tax_label' =>  $this->context->country->display_tax_label
+        ));
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
@@ -3876,20 +3876,20 @@ class AdminProductsController extends AdminProductsControllerCore
                     Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$obj->id
                     .'&action=addProductImage');
                 $data->assign(array(
-                        'countImages' => $count_images,
-                        'id_product' => (int)Tools::getValue('id_product'),
-                        'id_category_default' => (int)$this->_category->id,
-                        'images' => $images,
-                        'iso_lang' => $languages[0]['iso_code'],
-                        'token' =>  $this->token,
-                        'table' => $this->table,
-                        'max_image_size' => $this->max_image_size / 1024 / 1024,
-                        'up_filename' => (string)Tools::getValue('virtual_product_filename_attribute'),
-                        'currency' => $this->context->currency,
-                        'current_shop_id' => $current_shop_id,
-                        'languages' => $this->_languages,
-                        'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
-                        'image_uploader' => $image_uploader->render()
+                    'countImages' => $count_images,
+                    'id_product' => (int)Tools::getValue('id_product'),
+                    'id_category_default' => (int)$this->_category->id,
+                    'images' => $images,
+                    'iso_lang' => $languages[0]['iso_code'],
+                    'token' =>  $this->token,
+                    'table' => $this->table,
+                    'max_image_size' => $this->max_image_size / 1024 / 1024,
+                    'up_filename' => (string)Tools::getValue('virtual_product_filename_attribute'),
+                    'currency' => $this->context->currency,
+                    'current_shop_id' => $current_shop_id,
+                    'languages' => $this->_languages,
+                    'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
+                    'image_uploader' => $image_uploader->render()
                 ));
                 $type = ImageType::getByNameNType('%', 'products', 'height');
                 if (isset($type['name'])) {

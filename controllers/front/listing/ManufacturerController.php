@@ -79,7 +79,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
                 $this->label = $this->trans(
                     'List of products by brand %brand_name%', array(
                         '%brand_name%' => $this->manufacturer->name,
-                        ),
+                    ),
                     'Shop.Theme.Catalog'
                 );
                 $this->doProductSearch(

@@ -207,7 +207,7 @@ class StockAvailableCore extends ObjectModel
                                         'id_product_attribute' => 0,
                                         'quantity' => $product_quantity,
                                         'id_shop' => $id_shop,
-                                        )
+                                    )
                     );
                 } else {
                     // else this product has attributes, hence loops on $ids_product_attribute

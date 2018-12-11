@@ -142,8 +142,8 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         if (!empty($wheres['date_from']) && !empty($wheres['date_to'])) {
             $qb->andWhere('l.date_add BETWEEN :date_from AND :date_to');
             $qb->setParameters(array(
-               'date_from' => $wheres['date_from'],
-               'date_to' => $wheres['date_to'],
+                'date_from' => $wheres['date_from'],
+                'date_to' => $wheres['date_to'],
             ));
         }
 

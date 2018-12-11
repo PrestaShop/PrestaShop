@@ -205,7 +205,7 @@ class AdminImportControllerCore extends AdminController
                     'is_root_category' => array(
                         'label' => $this->trans('Root category (0/1)', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('A category root is where a category tree can begin. This is used with multistore.', array(), 'Admin.Advparameters.Help'),
-                        ),
+                    ),
                     'description' => array('label' => $this->trans('Description', array(), 'Admin.Global')),
                     'meta_title' => array('label' => $this->trans('Meta title', array(), 'Admin.Global')),
                     'meta_keywords' => array('label' => $this->trans('Meta keywords', array(), 'Admin.Global')),
@@ -485,7 +485,7 @@ class AdminImportControllerCore extends AdminController
                     'alias' => array('label' => $this->trans('Alias', array(), 'Admin.Shopparameters.Feature') . '*'),
                     'search' => array('label' => $this->trans('Search', array(), 'Admin.Shopparameters.Feature') . '*'),
                     'active' => array('label' => $this->trans('Active', array(), 'Admin.Global')),
-                    );
+                );
                 self::$default_values = array(
                     'active' => '1',
                 );

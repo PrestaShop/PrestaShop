@@ -507,7 +507,7 @@ class ProductCore extends ObjectModel
             'tags' => array('resource' => 'tag',
                 'fields' => array(
                     'id' => array('required' => true),
-            ), ),
+                ), ),
             'stock_availables' => array('resource' => 'stock_available',
                 'fields' => array(
                     'id' => array('required' => true),

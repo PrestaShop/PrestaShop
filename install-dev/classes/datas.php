@@ -120,7 +120,7 @@ class Datas
             'name' => 'country',
             'validate' => 'isLanguageIsoCode',
             'default' => 'fr',
-            ),
+        ),
         'admin_firstname' => array(
             'name' => 'firstname',
             'validate' => 'isName',

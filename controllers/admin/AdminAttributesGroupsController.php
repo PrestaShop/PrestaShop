@@ -627,7 +627,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                                 'Edit: %value%',
                                 array(
                                     '%value%' => $obj->name[$this->context->employee->id_lang],
-                                    ),
+                                ),
                                 'Admin.Catalog.Feature'
                             );
                         }

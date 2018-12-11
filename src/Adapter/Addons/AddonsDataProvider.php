@@ -200,8 +200,8 @@ class AddonsDataProvider implements AddonsInterface
         $password = $this->encryption->decrypt($request->cookies->get('password_addons'));
 
         return array(
-           'username_addons' => $username,
-           'password_addons' => $password,
+            'username_addons' => $username,
+            'password_addons' => $password,
         );
     }
 

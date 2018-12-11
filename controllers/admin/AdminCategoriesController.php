@@ -564,8 +564,8 @@ class AdminCategoriesControllerCore extends AdminController
                     'image' => $image_url ? $image_url : false,
                     'size' => $image_size,
                     'delete_url' => self::$currentIndex . '&' . $this->identifier . '=' . $this->_category->id . '&token=' . $this->token . '&deleteImage=1',
-                   'hint' => $this->trans('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.', array(), 'Admin.Catalog.Help'),
-                   'format' => $format['category'],
+                    'hint' => $this->trans('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.', array(), 'Admin.Catalog.Help'),
+                    'format' => $format['category'],
                 ),
                 array(
                     'type' => 'file',

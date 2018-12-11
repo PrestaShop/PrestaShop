@@ -693,9 +693,9 @@ class AdminManufacturersControllerCore extends AdminController
         /* @var Manufacturer $manufacturer */
 
         $this->toolbar_btn['new'] = array(
-                    'href' => $this->context->link->getAdminLink('AdminManufacturers') . '&addaddress=1&id_manufacturer=' . (int) $manufacturer->id,
-                    'desc' => $this->trans('Add address', array(), 'Admin.Catalog.Feature'),
-                );
+            'href' => $this->context->link->getAdminLink('AdminManufacturers') . '&addaddress=1&id_manufacturer=' . (int) $manufacturer->id,
+            'desc' => $this->trans('Add address', array(), 'Admin.Catalog.Feature'),
+        );
 
         $this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
         $this->toolbar_title[] = $manufacturer->name;

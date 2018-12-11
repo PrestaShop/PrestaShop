@@ -494,14 +494,14 @@ class StockManagementControllerTest extends ApiTestCase
     {
         return array(
             // @TODO when entity manager can save movements in db
-//            array(
-//                array(),
-//                $expectedTotalPages = 1
-//            ),
-//            array(
-//                array('page_index' => 1, 'page_size' => 5),
-//                $expectedTotalPages = 2
-//            )
+            //            array(
+            //                array(),
+            //                $expectedTotalPages = 1
+            //            ),
+            //            array(
+            //                array('page_index' => 1, 'page_size' => 5),
+            //                $expectedTotalPages = 2
+            //            )
             array(
                 array('page_index' => 1),
                 $expectedTotalPages = 0

@@ -66,7 +66,7 @@ class CartRulesSpecificAmountTest extends AbstractCartCalculationTest
                     1 => 1,
                 ],
                 'expectedTotal'   => static::PRODUCT_FIXTURES[1]['price']
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 // specific discount not applied on product #1
                 'cartRules'       => [8],
                 'knownToFailOnV1' => false,
@@ -76,7 +76,7 @@ class CartRulesSpecificAmountTest extends AbstractCartCalculationTest
                     1 => 3,
                 ],
                 'expectedTotal'   => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 // specific discount not applied on product #1
                 'cartRules'       => [8],
                 'knownToFailOnV1' => false,
@@ -89,10 +89,10 @@ class CartRulesSpecificAmountTest extends AbstractCartCalculationTest
                     // total without rule : 155.41
                 ],
                 'expectedTotal'   => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                     + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                     + static::PRODUCT_FIXTURES[3]['price']
-                                     - static::CART_RULES_FIXTURES[8]['amount']
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + 2 * static::PRODUCT_FIXTURES[2]['price']
+                + static::PRODUCT_FIXTURES[3]['price']
+                - static::CART_RULES_FIXTURES[8]['amount']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'       => [8],
                 'knownToFailOnV1' => false,
             ],
@@ -104,8 +104,8 @@ class CartRulesSpecificAmountTest extends AbstractCartCalculationTest
                     // total without rule : 155.41
                 ],
                 'expectedTotal'   => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                     + static::PRODUCT_FIXTURES[3]['price']
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::PRODUCT_FIXTURES[3]['price']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 // voucher exceeds #2 total
                 'cartRules'       => [9],
                 'knownToFailOnV1' => true,

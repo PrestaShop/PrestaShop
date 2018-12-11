@@ -122,7 +122,7 @@ class AdminGamificationController extends ModuleAdminController
             'refresh_data' => $this->processRefreshData(),
             'daily_calculation' => $this->processMakeDailyCalculation(),
             'advice_validation' => $this->processAdviceValidation()
-            );
+        );
         
         $return['advices_to_display'] = $this->processGetAdvicesToDisplay();
         //get only one random advice by tab

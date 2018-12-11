@@ -59,7 +59,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         $this->moduleNames= [
             'pscsx3241',
             'pscsx32412',
-       ];
+        ];
     }
 
     public static function tearDownAfterClass()

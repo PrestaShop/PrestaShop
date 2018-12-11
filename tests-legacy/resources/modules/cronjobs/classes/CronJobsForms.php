@@ -205,11 +205,11 @@ class CronJobsForms
         return array(
             'cron_mode' => Configuration::get('CRONJOBS_MODE'),
             'advanced_help' =>
-                '<div class="alert alert-info">
+            '<div class="alert alert-info">
                     <p>'
-                        .self::$module->l('The Advanced mode enables you to use your own cron tasks manager instead of PrestaShop cron tasks webservice.', 'CronJobsForms').' '
-                        .self::$module->l('First of all, make sure the \'curl\' library is installed on your server.', 'CronJobsForms')
-                        .'<br />'.self::$module->l('To execute your cron tasks, please insert the following line in your cron tasks manager:', 'CronJobsForms').'
+                    .self::$module->l('The Advanced mode enables you to use your own cron tasks manager instead of PrestaShop cron tasks webservice.', 'CronJobsForms').' '
+                    .self::$module->l('First of all, make sure the \'curl\' library is installed on your server.', 'CronJobsForms')
+                    .'<br />'.self::$module->l('To execute your cron tasks, please insert the following line in your cron tasks manager:', 'CronJobsForms').'
                     </p>
                     <br />
                     <ul class="list-unstyled">

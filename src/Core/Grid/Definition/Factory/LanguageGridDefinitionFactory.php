@@ -195,7 +195,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                        'placeholder' => $this->translator->trans('Search ID', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search ID', [], 'Admin.International.Help'),
                      ],
                  ])
                  ->setAssociatedColumn('id_lang')

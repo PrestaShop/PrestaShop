@@ -95,12 +95,12 @@ class LanguageCore extends ObjectModel
     );
 
     protected $translationsFilesAndVars = array(
-            'fields' => '_FIELDS',
-            'errors' => '_ERRORS',
-            'admin' => '_LANGADM',
-            'pdf' => '_LANGPDF',
-            'tabs' => 'tabs',
-        );
+        'fields' => '_FIELDS',
+        'errors' => '_ERRORS',
+        'admin' => '_LANGADM',
+        'pdf' => '_LANGPDF',
+        'tabs' => 'tabs',
+    );
 
     public function __construct($id = null, $id_lang = null)
     {

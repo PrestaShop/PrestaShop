@@ -1844,7 +1844,7 @@ class AdminControllerCore extends Controller
                 'page' => $this->json ? json_encode($page) : $page,
                 'header' => $this->context->smarty->fetch($header_tpl),
                 'footer' => $this->context->smarty->fetch($footer_tpl),
-        ));
+            ));
 
         $this->smartyOutputContent($this->layout);
     }
@@ -1967,7 +1967,7 @@ class AdminControllerCore extends Controller
                             '[1]' => '<strong>',
                             '[/1]' => '</strong>',
                             '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts') . '&action=filterOnlyAbandonedCarts">',
-                             '[/2]' => '</a>',
+                            '[/2]' => '</a>',
                             '[3]' => '<br>',
                         ),
                         'Admin.Navigation.Notification'

@@ -106,7 +106,7 @@ class Advice extends ObjectModel
                     'html' => $res['html'],
                     'id_ps_advice' => $res['id_ps_advice'],
                     'weight' => $res['weight']
-                    );
+                );
             }
         }
         if (!$premium) {

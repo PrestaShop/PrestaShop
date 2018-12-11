@@ -98,7 +98,7 @@ class ModifyTranslationsType extends TranslatorAwareType
             ])
             ->add('theme', ChoiceType::class, [
                 'choices' => [$noTheme => 0] +
-                    $this->themeChoices,
+                $this->themeChoices,
                 'choice_attr' => [
                     $noTheme => [
                         'class' => 'js-no-theme',

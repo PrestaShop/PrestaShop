@@ -437,7 +437,7 @@ class AdminCartsControllerCore extends AdminController
             $this->setMedia(false);
             $this->initFooter();
             $this->context->smarty->assign(array('customization_errors' => implode('<br />', $errors),
-                                                            'css_files' => $this->css_files, ));
+                'css_files' => $this->css_files, ));
 
             return $this->smartyOutputContent('controllers/orders/form_customization_feedback.tpl');
         }
