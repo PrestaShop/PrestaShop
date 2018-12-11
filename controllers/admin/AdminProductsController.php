@@ -655,7 +655,7 @@ class AdminProductsControllerCore extends AdminController
                     $products = Tools::getValue($this->table . 'Box');
                     if (is_array($products) && ($count = count($products))) {
                         // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
-                        if (intval(ini_get('max_execution_time')) < round($count * 1.5)) {
+                        if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
                             ini_set('max_execution_time', round($count * 1.5));
                         }
 
