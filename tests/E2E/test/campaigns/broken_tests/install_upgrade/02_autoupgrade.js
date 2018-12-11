@@ -43,19 +43,23 @@ scenario('The shop installation', () => {
   }, 'installation');
 
   scenario('Open the browser and connect to the Back Office', client => {
+    test('should open the browser', () => client.open()); //a supprimer
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
   }, 'installation');
 
   welcomeScenarios.findAndCloseWelcomeModal('installation');
 
-  scenario('paaaaaaaaaaaause', client => {
-    test('paaaaaaaaaaaause', () => client.pause(25000));
-  }, 'installation');
+  /**
+   * This scenario is based on the bug described in this ticket
+   * http://forge.prestashop.com/browse/BOOM-3195
+   **/
 
   scenario('Install "Top-sellers block" and "New products block" modules From Cross selling', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_bestsellers");
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_newproducts");
   }, 'installation');
+
+  /****** END *****/
 
   scenario('Install " 1-Click Upgrade " From Cross selling and configure it', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "autoupgrade");
@@ -105,12 +109,17 @@ scenario('The shop installation', () => {
   }, 'installation');
 
   /**
-   * Here we delete the scenario "Check the existence of "Top sellers block" and "New products block""
-   * because of the bug described in this ticket
-   * http://forge.prestashop.com/browse/BOOM-3195*
-   * and we reproduce it in broken_tests campaign
+   * This scenario is based on the bug described in this ticket
+   * http://forge.prestashop.com/browse/BOOM-3195
    **/
-  /** TODO :Check the existence of "Top sellers block" and "New products block"*/
+
+  scenario('Check the existence of "Top sellers block" and "New products block"', client => {
+    test('should set the language of shop to "English"', () => client.changeLanguage());
+    test('should check the existence of "Top sellers" block', () => client.waitForVisible(AccessPageFO.top_sellers_block));
+    test('should check the existence of "New products" block', () => client.waitForVisible(AccessPageFO.new_products_block));
+  }, 'installation');
+
+  /****** END *****/
 
   orderCommonScenarios.createOrderFO("connected");
 
