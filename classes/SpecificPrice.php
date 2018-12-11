@@ -73,7 +73,7 @@ class SpecificPriceCore extends ObjectModel
     protected $webserviceParameters = array(
         'objectsNodeName' => 'specific_prices',
         'objectNodeName' => 'specific_price',
-            'fields' => array(
+        'fields' => array(
             'id_shop_group' => array('xlink_resource' => 'shop_groups'),
             'id_shop' => array('xlink_resource' => 'shops', 'required' => true),
             'id_cart' => array('xlink_resource' => 'carts', 'required' => true),
@@ -83,7 +83,7 @@ class SpecificPriceCore extends ObjectModel
             'id_country' => array('xlink_resource' => 'countries', 'required' => true),
             'id_group' => array('xlink_resource' => 'groups', 'required' => true),
             'id_customer' => array('xlink_resource' => 'customers', 'required' => true),
-            ),
+        ),
     );
 
     /**
@@ -265,9 +265,9 @@ class SpecificPriceCore extends ObjectModel
      * @param int $field_value
      * @param int $threshold
      *
-     * @return string
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return string
      */
     protected static function filterOutField($field_name, $field_value, $threshold = 1000)
     {
@@ -313,11 +313,11 @@ class SpecificPriceCore extends ObjectModel
     /**
      * Remove or add useless fields value depending on the values in the database (cache friendly).
      *
-     * @param int|null $id_product
-     * @param int|null $id_product_attribute
-     * @param int|null $id_cart
-     * @param string|null $beginning
-     * @param string|null $ending
+     * @param null|int $id_product
+     * @param null|int $id_product_attribute
+     * @param null|int $id_cart
+     * @param null|string $beginning
+     * @param null|string $ending
      *
      * @return string
      */

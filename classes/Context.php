@@ -90,14 +90,14 @@ class ContextCore
     /**
      * Mobile device of the customer.
      *
-     * @var bool|null
+     * @var null|bool
      */
     protected $mobile_device = null;
 
-    /** @var bool|null */
+    /** @var null|bool */
     protected $is_mobile = null;
 
-    /** @var bool|null */
+    /** @var null|bool */
     protected $is_tablet = null;
 
     /** @var int */
@@ -227,9 +227,9 @@ class ContextCore
     /**
      * Checks if mobile context is possible.
      *
-     * @return bool
-     *
      * @throws PrestaShopException
+     *
+     * @return bool
      */
     protected function checkMobileContext()
     {
@@ -250,8 +250,8 @@ class ContextCore
             }
         }
 
-        return isset($_SERVER['HTTP_USER_AGENT'])
-            && isset(Context::getContext()->cookie)
+        return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
+
             && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
             && !Context::getContext()->cookie->no_mobile;

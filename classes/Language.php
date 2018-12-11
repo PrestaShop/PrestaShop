@@ -95,12 +95,12 @@ class LanguageCore extends ObjectModel
     );
 
     protected $translationsFilesAndVars = array(
-            'fields' => '_FIELDS',
-            'errors' => '_ERRORS',
-            'admin' => '_LANGADM',
-            'pdf' => '_LANGPDF',
-            'tabs' => 'tabs',
-        );
+        'fields' => '_FIELDS',
+        'errors' => '_ERRORS',
+        'admin' => '_LANGADM',
+        'pdf' => '_LANGPDF',
+        'tabs' => 'tabs',
+    );
 
     public function __construct($id = null, $id_lang = null)
     {
@@ -445,9 +445,9 @@ class LanguageCore extends ObjectModel
      * @param $shopDefaultLangId
      * @param $shopId
      *
-     * @return bool
-     *
      * @throws \PrestaShopDatabaseException
+     *
+     * @return bool
      */
     private function duplicateRowsFromDefaultShopLang($tableName, $shopDefaultLangId, $shopId)
     {
@@ -612,7 +612,7 @@ class LanguageCore extends ObjectModel
      * Returns available languages.
      *
      * @param bool $active Select only active languages
-     * @param int|bool $id_shop Shop ID
+     * @param bool|int $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
      * @return array Languages
@@ -639,7 +639,7 @@ class LanguageCore extends ObjectModel
      * Returns an array of language IDs.
      *
      * @param bool $active Select only active languages
-     * @param int|bool $id_shop Shop ID
+     * @param bool|int $id_shop Shop ID
      *
      * @return array
      */
@@ -709,7 +709,7 @@ class LanguageCore extends ObjectModel
      * @param string $iso_code Iso code
      * @param bool $no_cache
      *
-     * @return false|null|string
+     * @return null|false|string
      */
     public static function getIdByIso($iso_code, $no_cache = false)
     {
@@ -749,9 +749,9 @@ class LanguageCore extends ObjectModel
      *
      * @param string $isoCode
      *
-     * @return string|false
-     *
      * @throws Exception
+     *
+     * @return false|string
      */
     public static function getLocaleByIso($isoCode)
     {
@@ -771,9 +771,9 @@ class LanguageCore extends ObjectModel
      *
      * @param string $locale
      *
-     * @return string|false
-     *
      * @throws Exception
+     *
+     * @return false|string
      */
     public static function getIsoByLocale($locale)
     {

@@ -43,14 +43,14 @@ final class PositionUpdate implements PositionUpdateInterface
     private $positionModificationCollection;
 
     /**
-     * @var string|null
+     * @var null|string
      */
     private $parentId;
 
     /**
      * @param PositionModificationCollectionInterface $positionModificationCollection
      * @param PositionDefinitionInterface $positionDefinition
-     * @param string|null $parentId
+     * @param null|string $parentId
      */
     public function __construct(
         PositionModificationCollectionInterface $positionModificationCollection,

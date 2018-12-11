@@ -78,7 +78,7 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
      * @param string $localeCode
      *                           The LocaleData object identifier
      *
-     * @return LocaleData|null
+     * @return null|LocaleData
      *                         The wanted LocaleData object (null if not found)
      */
     protected function doRead($localeCode)

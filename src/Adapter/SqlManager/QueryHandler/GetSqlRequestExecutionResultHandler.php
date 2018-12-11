@@ -87,9 +87,9 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
      *
      * @param array $records
      *
-     * @return array Records with hidden sensitive data
-     *
      * @throws PrestaShopException
+     *
+     * @return array Records with hidden sensitive data
      */
     private function hideSensitiveData(array $records)
     {

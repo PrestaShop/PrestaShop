@@ -152,7 +152,7 @@ class DemoModeEnabledListener
      * @param Controller $controllerObject
      * @param string $methodName
      *
-     * @return DemoRestricted|null
+     * @return null|DemoRestricted
      */
     private function getAnnotation($controllerObject, $methodName)
     {

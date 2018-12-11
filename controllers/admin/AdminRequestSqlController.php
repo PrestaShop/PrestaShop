@@ -195,10 +195,7 @@ class AdminRequestSqlControllerCore extends AdminController
             $request_sql = new RequestSql();
             $attributes = $request_sql->getAttributesByTable($table);
             foreach ($attributes as $key => $attribute) {
-                unset($attributes[$key]['Null']);
-                unset($attributes[$key]['Key']);
-                unset($attributes[$key]['Default']);
-                unset($attributes[$key]['Extra']);
+                unset($attributes[$key]['Null'], $attributes[$key]['Key'], $attributes[$key]['Default'], $attributes[$key]['Extra']);
             }
             die(json_encode($attributes));
         }
@@ -255,10 +252,10 @@ class AdminRequestSqlControllerCore extends AdminController
      * @param $token
      * @param int $id
      *
-     * @return string
-     *
      * @throws Exception
      * @throws SmartyException
+     *
+     * @return string
      */
     public function displayExportLink($token, $id)
     {

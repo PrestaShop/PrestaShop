@@ -200,7 +200,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                 $moduleManager = $moduleManagerBuilder->build();
 
-                if (isset($this->context->cookie) && isset($this->category->id_category) && !($moduleManager->isInstalled('ps_categorytree') && $moduleManager->isEnabled('ps_categorytree'))) {
+                if (isset($this->context->cookie, $this->category->id_category) && !($moduleManager->isInstalled('ps_categorytree') && $moduleManager->isEnabled('ps_categorytree'))) {
                     $this->context->cookie->last_visited_category = (int) $this->category->id_category;
                 }
             }
@@ -666,8 +666,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                     foreach ($group['attributes'] as $key => $attribute) {
                         if (!in_array((int) $key, $id_attributes)) {
-                            unset($group['attributes'][$key]);
-                            unset($group['attributes_quantity'][$key]);
+                            unset($group['attributes'][$key], $group['attributes_quantity'][$key]);
                         }
                     }
                 }
@@ -968,9 +967,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * Return id_product_attribute by id_product_attribute request parameter
      * or by the group request parameter.
      *
-     * @return int|null
-     *
      * @throws PrestaShopException
+     *
+     * @return null|int
      */
     private function getIdProductAttributeByRequestOrGroup()
     {
@@ -1020,9 +1019,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * Return id_product_attribute by the group request parameter.
      *
-     * @return int|null
-     *
      * @throws PrestaShopException
+     *
+     * @return null|int
      */
     private function getIdProductAttributeByGroup()
     {

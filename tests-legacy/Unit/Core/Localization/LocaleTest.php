@@ -103,7 +103,7 @@ class LocaleTest extends TestCase
      * When asking the locale to format this number
      * Then the expected formatted number should be retrieved
      *
-     * @param int|float $number
+     * @param float|int $number
      *  The number to be formatted
      *
      * @param string $expected
@@ -162,7 +162,7 @@ class LocaleTest extends TestCase
      *
      * For more formatting cases, @see \LegacyTests\Unit\Core\Localization\Number\FormatterTest
      *
-     * @param int|float|string $number
+     * @param float|int|string $number
      *  The number to be formatted
      *
      * @param string $currencyCode

@@ -504,9 +504,9 @@ class AdminProductWrapper
     /**
      * @param int $id
      *
-     * @return SpecificPrice
-     *
      * @throws PrestaShopObjectNotFoundException
+     *
+     * @return SpecificPrice
      */
     public function getSpecificPriceDataById($id)
     {
@@ -788,7 +788,7 @@ class AdminProductWrapper
      * @param array $data
      * @param array $locales
      *
-     * @return object|null Attachement
+     * @return null|object Attachement
      */
     public function processAddAttachment($product, $data, $locales)
     {

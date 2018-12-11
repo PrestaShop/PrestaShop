@@ -89,9 +89,9 @@ class ImportDataConfigurationType extends TranslatorAwareType
                 'entry_type' => ChoiceType::class,
                 'entry_options' => [
                     'choices' => [
-                            $this->trans('Ignore this column', 'Admin.Advparameters.Feature') => 'no',
-                        ] +
-                        $this->entityFieldChoices,
+                        $this->trans('Ignore this column', 'Admin.Advparameters.Feature') => 'no',
+                    ] +
+                    $this->entityFieldChoices,
                     'choice_translation_domain' => false,
                     'label' => false,
                 ],

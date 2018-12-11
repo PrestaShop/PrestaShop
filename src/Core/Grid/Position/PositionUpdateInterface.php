@@ -51,7 +51,7 @@ interface PositionUpdateInterface
      * If the PositionDefinition needs a parent and has defined a
      * parentIdField then this field contains its value.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getParentId();
 }

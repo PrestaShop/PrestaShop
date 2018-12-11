@@ -105,7 +105,7 @@ class PositionsController extends FrameworkBundleAdminController
 
         $legacyContextService = $this->get('prestashop.adapter.legacy.context');
         $saveUrlParams = [
-             'addToHook' => '',
+            'addToHook' => '',
         ];
         if ($this->selectedModule) {
             $saveUrlParams['show_modules'] = $this->selectedModule;

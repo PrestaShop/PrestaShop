@@ -105,8 +105,8 @@ class ManufacturerCore extends ObjectModel
     /**
      * ManufacturerCore constructor.
      *
-     * @param int|null $id
-     * @param int|null $idLang
+     * @param null|int $id
+     * @param null|int $idLang
      */
     public function __construct($id = null, $idLang = null)
     {
@@ -119,9 +119,9 @@ class ManufacturerCore extends ObjectModel
     /**
      * Deletes current Manufacturer from the database.
      *
-     * @return bool `true` if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {
@@ -162,7 +162,7 @@ class ManufacturerCore extends ObjectModel
     /**
      * Get Manufacturer Address ID.
      *
-     * @return bool|false|null|string
+     * @return null|bool|false|string
      */
     protected function getManufacturerAddress()
     {
@@ -359,7 +359,7 @@ class ManufacturerCore extends ObjectModel
      * @param bool $getTotal
      * @param bool $active
      * @param bool $activeCategory
-     * @param Context|null $context
+     * @param null|Context $context
      *
      * @return array|bool
      */
@@ -504,7 +504,7 @@ class ManufacturerCore extends ObjectModel
      *
      * @param int $idLang
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getProductsLite($idLang)
     {
@@ -549,7 +549,7 @@ class ManufacturerCore extends ObjectModel
      *
      * @param int $idLang
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getAddresses($idLang)
     {
@@ -570,7 +570,7 @@ class ManufacturerCore extends ObjectModel
      * Get Manufacturer Addresses
      * (for webservice).
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getWsAddresses()
     {

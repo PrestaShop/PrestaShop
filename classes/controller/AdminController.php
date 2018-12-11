@@ -47,7 +47,7 @@ class AdminControllerCore extends Controller
     /** @var array */
     public $confirmations = array();
 
-    /** @var string|false */
+    /** @var false|string */
     public $shopShareDatas = false;
 
     /** @var array */
@@ -65,7 +65,7 @@ class AdminControllerCore extends Controller
     /** @var bool */
     public $bootstrap = false;
 
-    /** @var string|array */
+    /** @var array|string */
     protected $meta_title = array();
 
     /** @var string */
@@ -77,7 +77,7 @@ class AdminControllerCore extends Controller
     /** @var string */
     public $list_id;
 
-    /** @var string|false Object identifier inside the associated table */
+    /** @var false|string Object identifier inside the associated table */
     protected $identifier = false;
 
     /** @var string */
@@ -125,10 +125,10 @@ class AdminControllerCore extends Controller
     /** @var array */
     public $tpl_required_fields_vars = array();
 
-    /** @var string|null */
+    /** @var null|string */
     public $base_tpl_view = null;
 
-    /** @var string|null */
+    /** @var null|string */
     public $base_tpl_form = null;
 
     /** @var bool If you want more fieldsets in the form */
@@ -176,7 +176,7 @@ class AdminControllerCore extends Controller
     /** @var string MySQL error */
     protected $_list_error;
 
-    /** @var string|array Toolbar title */
+    /** @var array|string Toolbar title */
     protected $toolbar_title;
 
     /** @var array List of toolbar buttons */
@@ -305,7 +305,7 @@ class AdminControllerCore extends Controller
     /** @var string Identifier to use for changing positions in lists (can be omitted if positions cannot be changed) */
     protected $position_identifier;
 
-    /** @var string|int */
+    /** @var int|string */
     protected $position_group_identifier;
 
     /** @var bool Table records are not deleted but marked as deleted if set to true */
@@ -317,7 +317,7 @@ class AdminControllerCore extends Controller
     /** @var bool */
     protected $noLink;
 
-    /** @var bool|null */
+    /** @var null|bool */
     protected $specificConfirmDelete = null;
 
     /** @var bool */
@@ -525,7 +525,7 @@ class AdminControllerCore extends Controller
 
         // Check if logged on Addons
         $this->logged_on_addons = false;
-        if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons)) {
+        if (isset($this->context->cookie->username_addons, $this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons)) {
             $this->logged_on_addons = true;
         }
 
@@ -558,8 +558,8 @@ class AdminControllerCore extends Controller
     /**
      * Set breadcrumbs array for the controller page.
      *
-     * @param int|null $tab_id
-     * @param array|null $tabs
+     * @param null|int $tab_id
+     * @param null|array $tabs
      */
     public function initBreadcrumbs($tab_id = null, $tabs = null)
     {
@@ -917,7 +917,7 @@ class AdminControllerCore extends Controller
     /**
      * @TODO uses redirectAdmin only if !$this->ajax
      *
-     * @return ObjectModel|bool
+     * @return bool|ObjectModel
      */
     public function postProcess()
     {
@@ -979,7 +979,7 @@ class AdminControllerCore extends Controller
     /**
      * Object Delete images.
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processDeleteImage()
     {
@@ -1066,9 +1066,9 @@ class AdminControllerCore extends Controller
     /**
      * Object Delete.
      *
-     * @return ObjectModel|false
-     *
      * @throws PrestaShopException
+     *
+     * @return false|ObjectModel
      */
     public function processDelete()
     {
@@ -1115,7 +1115,7 @@ class AdminControllerCore extends Controller
     /**
      * Call the right method for creating or updating object.
      *
-     * @return ObjectModel|false|void
+     * @return false|ObjectModel|void
      */
     public function processSave()
     {
@@ -1131,9 +1131,9 @@ class AdminControllerCore extends Controller
     /**
      * Object creation.
      *
-     * @return ObjectModel|false
-     *
      * @throws PrestaShopException
+     *
+     * @return false|ObjectModel
      */
     public function processAdd()
     {
@@ -1184,9 +1184,9 @@ class AdminControllerCore extends Controller
     /**
      * Object update.
      *
-     * @return ObjectModel|false|void
-     *
      * @throws PrestaShopException
+     *
+     * @return false|ObjectModel|void
      */
     public function processUpdate()
     {
@@ -1299,9 +1299,9 @@ class AdminControllerCore extends Controller
     /**
      * Change object status (active, inactive).
      *
-     * @return ObjectModel|false
-     *
      * @throws PrestaShopException
+     *
+     * @return false|ObjectModel
      */
     public function processStatus()
     {
@@ -1335,7 +1335,7 @@ class AdminControllerCore extends Controller
     /**
      * Change object position.
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processPosition()
     {
@@ -1356,7 +1356,7 @@ class AdminControllerCore extends Controller
     /**
      * Cancel all filters for this tab.
      *
-     * @param int|null $list_id
+     * @param null|int $list_id
      */
     public function processResetFilters($list_id = null)
     {
@@ -1388,8 +1388,7 @@ class AdminControllerCore extends Controller
 
         $_POST = array();
         $this->_filter = false;
-        unset($this->_filterHaving);
-        unset($this->_having);
+        unset($this->_filterHaving, $this->_having);
     }
 
     /**
@@ -1433,7 +1432,7 @@ class AdminControllerCore extends Controller
 
                 // Check if field is required
                 if ((!Shop::isFeatureActive() && isset($values['required']) && $values['required'])
-                    || (Shop::isFeatureActive() && isset($_POST['multishopOverrideOption'][$field]) && isset($values['required']) && $values['required'])) {
+                    || (Shop::isFeatureActive() && isset($_POST['multishopOverrideOption'][$field], $values['required']) && $values['required'])) {
                     if (isset($values['type']) && $values['type'] == 'textLang') {
                         foreach ($languages as $language) {
                             if (($value = Tools::getValue($field . '_' . $language['id_lang'])) == false && (string) $value != '0') {
@@ -1496,7 +1495,7 @@ class AdminControllerCore extends Controller
                                 }
                             }
                         }
-                        Configuration::updateValue($key, $list, isset($values['validation']) && isset($options['validation']) && $options['validation'] == 'isCleanHtml' ? true : false);
+                        Configuration::updateValue($key, $list, isset($values['validation'], $options['validation']) && $options['validation'] == 'isCleanHtml' ? true : false);
                     } else {
                         $val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
                         if ($this->validateField($val, $options)) {
@@ -1650,7 +1649,7 @@ class AdminControllerCore extends Controller
      *
      * @param bool $opt Return an empty object if load fail
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     protected function loadObject($opt = false)
     {
@@ -1844,7 +1843,7 @@ class AdminControllerCore extends Controller
                 'page' => $this->json ? json_encode($page) : $page,
                 'header' => $this->context->smarty->fetch($header_tpl),
                 'footer' => $this->context->smarty->fetch($footer_tpl),
-        ));
+            ));
 
         $this->smartyOutputContent($this->layout);
     }
@@ -1967,7 +1966,7 @@ class AdminControllerCore extends Controller
                             '[1]' => '<strong>',
                             '[/1]' => '</strong>',
                             '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts') . '&action=filterOnlyAbandonedCarts">',
-                             '[/2]' => '</a>',
+                            '[/2]' => '</a>',
                             '[3]' => '<br>',
                         ),
                         'Admin.Navigation.Notification'
@@ -2329,10 +2328,10 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @return string
-     *
      * @throws Exception
      * @throws SmartyException
+     *
+     * @return string
      */
     public function renderModal()
     {
@@ -2350,7 +2349,7 @@ class AdminControllerCore extends Controller
     /**
      * Was used to display a list of recommended modules.
      *
-     * @param string|bool $tracking_source Source information for URL used by "Install" button
+     * @param bool|string $tracking_source Source information for URL used by "Install" button
      *
      * @return string Empty
      *
@@ -2364,9 +2363,9 @@ class AdminControllerCore extends Controller
     /**
      * Function used to render the list to display for this controller.
      *
-     * @return string|false
-     *
      * @throws PrestaShopException
+     *
+     * @return false|string
      */
     public function renderList()
     {
@@ -2457,7 +2456,7 @@ class AdminControllerCore extends Controller
     /**
      * Override to render the view page.
      *
-     * @return string|false
+     * @return false|string
      */
     public function renderDetails()
     {
@@ -2467,10 +2466,10 @@ class AdminControllerCore extends Controller
     /**
      * Function used to render the form for this controller.
      *
-     * @return string
-     *
      * @throws Exception
      * @throws SmartyException
+     *
+     * @return string
      */
     public function renderForm()
     {
@@ -2709,7 +2708,7 @@ class AdminControllerCore extends Controller
      * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
      *
      * @param string $string Term or expression in english
-     * @param string|null $class Name of the class
+     * @param null|string $class Name of the class
      * @param bool $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
      * @param bool $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
      *
@@ -2984,7 +2983,7 @@ class AdminControllerCore extends Controller
             } else {
                 $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
             }
-        } elseif (isset($_GET['update' . $this->table]) && isset($_GET[$this->identifier])) {
+        } elseif (isset($_GET['update' . $this->table], $_GET[$this->identifier])) {
             $this->display = 'edit';
             if (!$this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
@@ -3080,11 +3079,11 @@ class AdminControllerCore extends Controller
      * Get the current objects' list form the database.
      *
      * @param int $id_lang Language used for display
-     * @param string|null $order_by ORDER BY clause
-     * @param string|null $order_way Order way (ASC, DESC)
+     * @param null|string $order_by ORDER BY clause
+     * @param null|string $order_way Order way (ASC, DESC)
      * @param int $start Offset in LIMIT clause
-     * @param int|null $limit Row count in LIMIT clause
-     * @param int|bool $id_lang_shop
+     * @param null|int $limit Row count in LIMIT clause
+     * @param bool|int $id_lang_shop
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -3367,7 +3366,7 @@ class AdminControllerCore extends Controller
             $this->fields_list[$orderBy]['order_key'] = $this->fields_list[$orderBy]['filter_key'];
         }
 
-        if (isset($this->fields_list[$orderBy]) && isset($this->fields_list[$orderBy]['order_key'])) {
+        if (isset($this->fields_list[$orderBy], $this->fields_list[$orderBy]['order_key'])) {
             $orderBy = $this->fields_list[$orderBy]['order_key'];
         }
 
@@ -3477,11 +3476,11 @@ class AdminControllerCore extends Controller
 
     /**
      * @param array|string $filter_modules_list
-     * @param string|bool $tracking_source
-     *
-     * @return bool
+     * @param bool|string $tracking_source
      *
      * @throws PrestaShopException
+     *
+     * @return bool
      */
     public function getModulesList($filter_modules_list, $tracking_source = false)
     {
@@ -3604,7 +3603,7 @@ class AdminControllerCore extends Controller
      *
      * @param ObjectModel $obj Object
      * @param string $key Field name
-     * @param int|null $id_lang Language id (optional)
+     * @param null|int $id_lang Language id (optional)
      *
      * @return string
      */
@@ -3622,7 +3621,7 @@ class AdminControllerCore extends Controller
     /**
      * Manage page display (form, list...).
      *
-     * @param string|bool $class_name Allow to validate a different class than the current one
+     * @param bool|string $class_name Allow to validate a different class than the current one
      *
      * @throws PrestaShopException
      */
@@ -3844,9 +3843,9 @@ class AdminControllerCore extends Controller
      *
      * @param int $id_object
      *
-     * @return bool|void
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return bool|void
      */
     protected function updateAssoShop($id_object)
     {
@@ -3919,11 +3918,11 @@ class AdminControllerCore extends Controller
      */
     protected function postImage($id)
     {
-        if (isset($this->fieldImageSettings['name']) && isset($this->fieldImageSettings['dir'])) {
+        if (isset($this->fieldImageSettings['name'], $this->fieldImageSettings['dir'])) {
             return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'] . '/');
         } elseif (!empty($this->fieldImageSettings)) {
             foreach ($this->fieldImageSettings as $image) {
-                if (isset($image['name']) && isset($image['dir'])) {
+                if (isset($image['name'], $image['dir'])) {
                     $this->uploadImage($id, $image['name'], $image['dir'] . '/');
                 }
             }
@@ -3936,9 +3935,9 @@ class AdminControllerCore extends Controller
      * @param int $id
      * @param string $name
      * @param string $dir
-     * @param string|bool $ext
-     * @param int|null $width
-     * @param int|null $height
+     * @param bool|string $ext
+     * @param null|int $width
+     * @param null|int $height
      *
      * @return bool
      */
@@ -4104,9 +4103,9 @@ class AdminControllerCore extends Controller
      *
      * @param bool $status
      *
-     * @return bool true if success
-     *
      * @throws PrestaShopException
+     *
+     * @return bool true if success
      */
     protected function processBulkStatusSelection($status)
     {
@@ -4263,8 +4262,8 @@ class AdminControllerCore extends Controller
     /**
      * @param Module $module
      * @param string $output_type
-     * @param string|null $back
-     * @param string|bool $install_source_tracking
+     * @param null|string $back
+     * @param bool|string $install_source_tracking
      */
     public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
     {
@@ -4320,10 +4319,10 @@ class AdminControllerCore extends Controller
      *
      * @param Module $module
      * @param string $output_type (link or select)
-     * @param string|null $back
-     * @param string|bool $install_source_tracking
+     * @param null|string $back
+     * @param bool|string $install_source_tracking
      *
-     * @return string|array
+     * @return array|string
      */
     public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false)
     {
@@ -4519,7 +4518,7 @@ class AdminControllerCore extends Controller
             }
         }
 
-        if (isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1) {
+        if (isset($module->preferences, $module->preferences['favorite']) && $module->preferences['favorite'] == 1) {
             $remove_from_favorite['style'] = '';
             $mark_as_favorite['style'] = 'display:none;';
             $modules_options[] = $remove_from_favorite;

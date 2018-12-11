@@ -208,9 +208,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array|bool
-     *
      * @throws InvalidArgumentException
+     *
+     * @return array|bool
      */
     public function getCondition()
     {
@@ -298,9 +298,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array
-     *
      * @throws \ReflectionException
+     *
+     * @return array
      */
     public function getAttachments()
     {
@@ -326,7 +326,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return mixed|null
+     * @return null|mixed
      */
     public function getReferenceToDisplay()
     {
@@ -348,7 +348,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array|null
+     * @return null|array
      */
     public function getGroupedFeatures()
     {
@@ -381,9 +381,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array
-     *
      * @throws InvalidArgumentException
+     *
+     * @return array
      */
     public function getLabels()
     {
@@ -400,7 +400,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array|null
+     * @return null|array
      */
     public function getEcotax()
     {
@@ -418,9 +418,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array
-     *
      * @throws InvalidArgumentException
+     *
+     * @return array
      */
     public function getFlags()
     {
@@ -499,7 +499,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return 0|null
+     * @return null|0
      */
     public function getSpecificReferences()
     {

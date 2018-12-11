@@ -142,8 +142,8 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         if (!empty($wheres['date_from']) && !empty($wheres['date_to'])) {
             $qb->andWhere('l.date_add BETWEEN :date_from AND :date_to');
             $qb->setParameters(array(
-               'date_from' => $wheres['date_from'],
-               'date_to' => $wheres['date_to'],
+                'date_from' => $wheres['date_from'],
+                'date_to' => $wheres['date_to'],
             ));
         }
 
@@ -159,9 +159,9 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     /**
      * Delete all logs.
      *
-     * @return int the number of affected rows
-     *
      * @throws \Doctrine\DBAL\DBALException
+     *
+     * @return int the number of affected rows
      */
     public function deleteAll()
     {
@@ -173,7 +173,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     /**
      * Get query that searches grid rows.
      *
-     * @param SearchCriteriaInterface|null $searchCriteria
+     * @param null|SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */
@@ -192,7 +192,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     /**
      * Get query that counts grid rows.
      *
-     * @param SearchCriteriaInterface|null $searchCriteria
+     * @param null|SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */
@@ -207,7 +207,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     /**
      * Build query body without select, sorting & limiting.
      *
-     * @param SearchCriteriaInterface|null $searchCriteria
+     * @param null|SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */

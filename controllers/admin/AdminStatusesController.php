@@ -300,7 +300,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Consider the associated order as validated.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -311,7 +311,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Allow a customer to download and view PDF versions of his/her invoices.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -322,7 +322,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Hide this status in all customer orders.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -333,7 +333,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Send an email to the customer when his/her order status has changed.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -344,7 +344,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on',  'name' => $this->trans('Attach invoice PDF to email.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -355,7 +355,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on',  'name' => $this->trans('Attach delivery slip PDF to email.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -366,7 +366,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on',  'name' => $this->trans('Set the order as shipped.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -377,7 +377,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Set the order as paid.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -388,7 +388,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Show delivery PDF.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -522,9 +522,9 @@ class AdminStatusesControllerCore extends AdminController
                 if (!strncmp(strrev($template), 'lmth.', 5)) {
                     $search_result = array_search($template, $theme_templates);
                     $array[$iso_code][] = array(
-                                'id' => substr($template, 0, -5),
-                                'name' => substr($template, 0, -5),
-                                'folder' => ((!empty($search_result) ? $theme_path : $default_path)),
+                        'id' => substr($template, 0, -5),
+                        'name' => substr($template, 0, -5),
+                        'folder' => ((!empty($search_result) ? $theme_path : $default_path)),
                     );
                 }
             }

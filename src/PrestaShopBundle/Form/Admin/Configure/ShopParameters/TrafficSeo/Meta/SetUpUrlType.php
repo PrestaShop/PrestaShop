@@ -78,9 +78,9 @@ class SetUpUrlType extends AbstractType
             ->add('friendly_url', SwitchType::class)
             ->add('accented_url', SwitchType::class)
             ->add('canonical_url_redirection', ChoiceType::class, [
-                    'choices' => $this->canonicalUrlChoices,
-                    'translation_domain' => false,
-                ]
+                'choices' => $this->canonicalUrlChoices,
+                'translation_domain' => false,
+            ]
             )
         ;
 

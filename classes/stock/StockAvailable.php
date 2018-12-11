@@ -207,7 +207,7 @@ class StockAvailableCore extends ObjectModel
                                         'id_product_attribute' => 0,
                                         'quantity' => $product_quantity,
                                         'id_shop' => $id_shop,
-                                        )
+                                    )
                     );
                 } else {
                     // else this product has attributes, hence loops on $ids_product_attribute
@@ -363,9 +363,9 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_shop Optional
      * @param int $id_product_attribute Optional
      *
-     * @return bool
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return bool
      */
     public static function setLocation($id_product, $location, $id_shop = null, $id_product_attribute = 0)
     {
@@ -625,8 +625,8 @@ class StockAvailableCore extends ObjectModel
      * Removes a given product from the stock available.
      *
      * @param int $id_product
-     * @param int|null $id_product_attribute Optional
-     * @param Shop|null $shop Shop id or shop object Optional
+     * @param null|int $id_product_attribute Optional
+     * @param null|Shop $shop Shop id or shop object Optional
      *
      * @return bool
      */
@@ -785,11 +785,11 @@ class StockAvailableCore extends ObjectModel
     /**
      * Add an sql restriction for shops fields - specific to StockAvailable.
      *
-     * @param DbQuery|string|null $sql Reference to the query object
-     * @param Shop|int|null $shop Optional : The shop ID
-     * @param string|null $alias Optional : The current table alias
+     * @param null|DbQuery|string $sql Reference to the query object
+     * @param null|int|Shop $shop Optional : The shop ID
+     * @param null|string $alias Optional : The current table alias
      *
-     * @return string|DbQuery DbQuery object or the sql restriction string
+     * @return DbQuery|string DbQuery object or the sql restriction string
      */
     public static function addSqlShopRestriction($sql = null, $shop = null, $alias = null)
     {

@@ -78,10 +78,10 @@ class CMSCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the CMS has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the CMS has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -95,10 +95,10 @@ class CMSCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the CMS has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the CMS has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -112,9 +112,9 @@ class CMSCore extends ObjectModel
     /**
      * Deletes current CMS from the database.
      *
-     * @return bool True if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool True if delete was successful
      */
     public function delete()
     {
@@ -131,7 +131,7 @@ class CMSCore extends ObjectModel
      * @param int $idLang Language ID
      * @param null $selection
      * @param bool $active
-     * @param Link|null $link
+     * @param null|Link $link
      *
      * @return array
      */
@@ -167,7 +167,7 @@ class CMSCore extends ObjectModel
      * @param bool $idBlock
      * @param bool $active
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function listCms($idLang = null, $idBlock = false, $active = true)
     {
@@ -259,7 +259,7 @@ class CMSCore extends ObjectModel
     /**
      * @param $idCategory
      *
-     * @return false|null|string
+     * @return null|false|string
      */
     public static function getLastPosition($idCategory)
     {
@@ -277,7 +277,7 @@ class CMSCore extends ObjectModel
      * @param bool $active
      * @param null $idShop
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getCMSPages($idLang = null, $idCmsCategory = null, $active = true, $idShop = null)
     {
@@ -313,7 +313,7 @@ class CMSCore extends ObjectModel
     /**
      * @param $idCms
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getUrlRewriteInformations($idCms)
     {
@@ -328,10 +328,10 @@ class CMSCore extends ObjectModel
 
     /**
      * @param int $idCms
-     * @param int|null $idLang
-     * @param int|null $idShop
+     * @param null|int $idLang
+     * @param null|int $idShop
      *
-     * @return array|bool|null|object
+     * @return null|array|bool|object
      */
     public static function getCMSContent($idCms, $idLang = null, $idShop = null)
     {

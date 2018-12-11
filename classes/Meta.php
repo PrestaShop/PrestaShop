@@ -142,7 +142,7 @@ class MetaCore extends ObjectModel
     /**
      * Get all Metas.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getMetas()
     {
@@ -154,7 +154,7 @@ class MetaCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getMetasByIdLang($idLang)
     {
@@ -173,7 +173,7 @@ class MetaCore extends ObjectModel
      * @param string $page
      * @param int $idLang Language ID
      *
-     * @return array|bool|null|object
+     * @return null|array|bool|object
      */
     public static function getMetaByPage($page, $idLang)
     {
@@ -194,7 +194,7 @@ class MetaCore extends ObjectModel
      *
      * @param int $idLang
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getAllMeta($idLang)
     {
@@ -211,10 +211,10 @@ class MetaCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Meta has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the Meta has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -228,9 +228,9 @@ class MetaCore extends ObjectModel
     /**
      * Deletes current Meta from the database.
      *
-     * @return bool `true` if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {
@@ -269,7 +269,7 @@ class MetaCore extends ObjectModel
      * @param int $idLang
      * @param string $urlRewrite
      *
-     * @return false|null|string
+     * @return null|false|string
      */
     public static function getEquivalentUrlRewrite($newIdLang, $idLang, $urlRewrite)
     {
@@ -412,7 +412,6 @@ class MetaCore extends ObjectModel
     /**
      * Get manufacturer meta tags.
      *
-     *
      * @param int $idManufacturer
      * @param int $idLang
      * @param string $pageName
@@ -441,7 +440,6 @@ class MetaCore extends ObjectModel
 
     /**
      * Get supplier meta tags.
-     *
      *
      * @param int $idSupplier
      * @param int $idLang

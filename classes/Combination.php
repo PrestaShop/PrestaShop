@@ -55,7 +55,7 @@ class CombinationCore extends ObjectModel
 
     public $minimal_quantity = 1;
 
-    /** @var int|null Low stock for mail alert */
+    /** @var null|int Low stock for mail alert */
     public $low_stock_threshold = null;
 
     /** @var bool Low stock mail alert activated */
@@ -114,9 +114,9 @@ class CombinationCore extends ObjectModel
     /**
      * Deletes current Combination from the database.
      *
-     * @return bool True if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool True if delete was successful
      */
     public function delete()
     {
@@ -164,10 +164,10 @@ class CombinationCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Combination has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the Combination has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -200,10 +200,10 @@ class CombinationCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Combination has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the Combination has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -279,7 +279,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getWsProductOptionValues()
     {
@@ -293,7 +293,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getWsImages()
     {
@@ -354,7 +354,7 @@ class CombinationCore extends ObjectModel
     /**
      * @param $idLang
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getAttributesName($idLang)
     {
@@ -422,7 +422,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getColorsAttributes()
     {

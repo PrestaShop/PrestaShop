@@ -522,10 +522,10 @@ class FrontControllerCore extends Controller
      *
      * @param array $object Variables inserted in the template (see FrontController::assignGeneralPurposeVariables)
      *
-     * @return array Variables to be inserted in the "prestashop" javascript object
-     *
      * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
      * @throws PrestaShopException
+     *
+     * @return array Variables to be inserted in the "prestashop" javascript object
      */
     protected function buildFrontEndObject($object)
     {
@@ -648,10 +648,10 @@ class FrontControllerCore extends Controller
     /**
      * Compiles and outputs full page content.
      *
-     * @return bool
-     *
      * @throws Exception
      * @throws SmartyException
+     *
+     * @return bool
      */
     public function display()
     {
@@ -940,9 +940,9 @@ class FrontControllerCore extends Controller
     /**
      * Sets and returns customer groups that the current customer(visitor) belongs to.
      *
-     * @return array
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return array
      */
     public static function getCurrentCustomerGroups()
     {
@@ -1189,7 +1189,7 @@ class FrontControllerCore extends Controller
     /**
      * Adds jQuery UI component(s) to queued JS file list.
      *
-     * @param string|array $component
+     * @param array|string $component
      * @param string $theme
      * @param bool $check_dependencies
      */
@@ -1221,7 +1221,7 @@ class FrontControllerCore extends Controller
     /**
      * Adds jQuery plugin(s) to queued JS file list.
      *
-     * @param string|array $name
+     * @param array|string $name
      * @param string null $folder
      * @param bool $css
      */
@@ -1254,7 +1254,7 @@ class FrontControllerCore extends Controller
     /**
      * Recovers cart information.
      *
-     * @return int|false
+     * @return false|int
      */
     protected function recoverCart()
     {
@@ -1569,11 +1569,7 @@ class FrontControllerCore extends Controller
             $cust = $this->objectPresenter->present($this->context->customer);
         }
 
-        unset($cust['secure_key']);
-        unset($cust['passwd']);
-        unset($cust['show_public_prices']);
-        unset($cust['deleted']);
-        unset($cust['id_lang']);
+        unset($cust['secure_key'], $cust['passwd'], $cust['show_public_prices'], $cust['deleted'], $cust['id_lang']);
 
         $cust['is_logged'] = $this->context->customer->isLogged(true);
 

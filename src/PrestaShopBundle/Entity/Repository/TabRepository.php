@@ -54,7 +54,7 @@ class TabRepository extends EntityRepository
     /**
      * @param $className
      *
-     * @return \PrestaShopBundle\Entity\Tab|null
+     * @return null|\PrestaShopBundle\Entity\Tab
      */
     public function findOneByClassName($className)
     {
@@ -64,7 +64,7 @@ class TabRepository extends EntityRepository
     /**
      * @param $className
      *
-     * @return int|null
+     * @return null|int
      */
     public function findOneIdByClassName($className)
     {

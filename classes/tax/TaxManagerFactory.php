@@ -60,7 +60,7 @@ class TaxManagerFactoryCore
      * @param Address $address
      * @param string $type
      *
-     * @return TaxManagerInterface|false
+     * @return false|TaxManagerInterface
      */
     public static function execHookTaxManagerFactory(Address $address, $type)
     {
@@ -71,9 +71,9 @@ class TaxManagerFactoryCore
             $module_instance = Module::getInstanceByName($module_infos['name']);
             if (is_callable(array($module_instance, 'hookTaxManager'))) {
                 $tax_manager = $module_instance->hookTaxManager(array(
-                                                                'address' => $address,
-                                                                'params' => $type,
-                                                            ));
+                    'address' => $address,
+                    'params' => $type,
+                ));
             }
 
             if ($tax_manager) {

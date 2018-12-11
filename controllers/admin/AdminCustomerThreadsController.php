@@ -147,16 +147,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 'title' => $this->trans('Contact options', array(), 'Admin.Catalog.Feature'),
                 'fields' => array(
                     'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => array(
-                            'title' => $this->trans('Allow file uploading', array(), 'Admin.Catalog.Feature'),
-                            'hint' => $this->trans('Allow customers to upload files using the contact page.', array(), 'Admin.Catalog.Help'),
-                            'type' => 'bool',
-                        ),
+                        'title' => $this->trans('Allow file uploading', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Allow customers to upload files using the contact page.', array(), 'Admin.Catalog.Help'),
+                        'type' => 'bool',
+                    ),
                     'PS_CUSTOMER_SERVICE_SIGNATURE' => array(
-                            'title' => $this->trans('Default message', array(), 'Admin.Catalog.Feature'),
-                            'hint' => $this->trans('Please fill out the message fields that appear by default when you answer a thread on the customer service page.', array(), 'Admin.Catalog.Help'),
-                            'type' => 'textareaLang',
-                            'lang' => true,
-                        ),
+                        'title' => $this->trans('Default message', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Please fill out the message fields that appear by default when you answer a thread on the customer service page.', array(), 'Admin.Catalog.Help'),
+                        'type' => 'textareaLang',
+                        'lang' => true,
+                    ),
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             ),
@@ -874,11 +874,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
      * @see AdminController::getList()
      *
      * @param int $id_lang
-     * @param string|null $order_by
-     * @param string|null $order_way
+     * @param null|string $order_by
+     * @param null|string $order_way
      * @param int $start
-     * @param int|null $limit
-     * @param int|bool $id_lang_shop
+     * @param null|int $limit
+     * @param bool|int $id_lang_shop
      *
      * @throws PrestaShopException
      */
@@ -1065,7 +1065,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 preg_match('/\#ct([0-9]*)/', $subject, $matches1);
                 preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
                 $match_found = false;
-                if (isset($matches1[1]) && isset($matches2[1])) {
+                if (isset($matches1[1], $matches2[1])) {
                     $match_found = true;
                 }
 

@@ -303,7 +303,7 @@ class AdminModulesControllerCore extends AdminController
         $modules_list_sort = array(
             'installed' => $installed,
             'not_installed' => $uninstalled,
-            );
+        );
 
         $this->context->smarty->assign(array(
             'currentIndex' => self::$currentIndex,
@@ -752,8 +752,7 @@ class AdminModulesControllerCore extends AdminController
             } elseif ($key == 'updateAll') {
                 $loggedOnAddons = false;
 
-                if (isset($this->context->cookie->username_addons)
-                    && isset($this->context->cookie->password_addons)
+                if (isset($this->context->cookie->username_addons, $this->context->cookie->password_addons)
                     && !empty($this->context->cookie->username_addons)
                     && !empty($this->context->cookie->password_addons)) {
                     $loggedOnAddons = true;

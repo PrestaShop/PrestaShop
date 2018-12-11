@@ -170,7 +170,7 @@ class LanguageList
     /**
      * Parse HTTP_ACCEPT_LANGUAGE and get first data matching list of available languages.
      *
-     * @return bool|array
+     * @return array|bool
      */
     public function detectLanguage()
     {

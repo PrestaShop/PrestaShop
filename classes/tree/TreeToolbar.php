@@ -155,9 +155,9 @@ class TreeToolbarCore implements ITreeToolbarCore
     /**
      * @param ITreeToolbarButton $action
      *
-     * @return TreeToolbar
-     *
      * @throws PrestaShopException
+     *
+     * @return TreeToolbar
      */
     public function addAction($action)
     {

@@ -409,7 +409,7 @@ class ImageManagerCore
      * Check if image file extension is correct.
      *
      * @param string $filename Real filename
-     * @param array|null $authorizedExtensions
+     * @param null|array $authorizedExtensions
      *
      * @return bool True if it's correct
      */

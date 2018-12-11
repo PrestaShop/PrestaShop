@@ -176,9 +176,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /**
      * Management of images URL segment.
      *
-     * @return bool
-     *
      * @throws WebserviceException
+     *
+     * @return bool
      */
     protected function manageImages()
     {
@@ -345,9 +345,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /**
      * Management of general images.
      *
-     * @return bool
-     *
      * @throws WebserviceException
+     *
+     * @return bool
      */
     protected function manageGeneralImages()
     {
@@ -781,9 +781,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      * @param array $image_sizes The
      * @param string $directory
      *
-     * @return bool
-     *
      * @throws WebserviceException
+     *
+     * @return bool
      */
     protected function manageDeclinatedImagesCRUD($filename_exists, $filename, $image_sizes, $directory)
     {
@@ -897,9 +897,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      * @param array $image_types
      * @param string $parent_path
      *
-     * @return string
-     *
      * @throws WebserviceException
+     *
+     * @return string
      */
     protected function writeImageOnDisk($base_path, $new_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
     {
@@ -1019,9 +1019,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      * @param array $image_types
      * @param string $parent_path
      *
-     * @return bool
-     *
      * @throws WebserviceException
+     *
+     * @return bool
      */
     protected function writePostedImageOnDisk($reception_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
     {

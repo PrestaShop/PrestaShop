@@ -564,8 +564,8 @@ class AdminCategoriesControllerCore extends AdminController
                     'image' => $image_url ? $image_url : false,
                     'size' => $image_size,
                     'delete_url' => self::$currentIndex . '&' . $this->identifier . '=' . $this->_category->id . '&token=' . $this->token . '&deleteImage=1',
-                   'hint' => $this->trans('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.', array(), 'Admin.Catalog.Help'),
-                   'format' => $format['category'],
+                    'hint' => $this->trans('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.', array(), 'Admin.Catalog.Help'),
+                    'format' => $format['category'],
                 ),
                 array(
                     'type' => 'file',
@@ -988,7 +988,7 @@ class AdminCategoriesControllerCore extends AdminController
         if (is_array($positions)) {
             foreach ($positions as $key => $value) {
                 $pos = explode('_', $value);
-                if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move)) {
+                if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move)) {
                     $position = $key;
                     break;
                 }

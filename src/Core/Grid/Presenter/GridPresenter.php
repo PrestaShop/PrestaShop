@@ -117,7 +117,7 @@ final class GridPresenter implements GridPresenterInterface
     /**
      * @param GridInterface $grid
      *
-     * @return ColumnInterface|null
+     * @return null|ColumnInterface
      */
     public function getOrderingPosition(GridInterface $grid)
     {

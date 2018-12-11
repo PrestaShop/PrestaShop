@@ -81,7 +81,7 @@ class AdminEmployeesControllerCore extends AdminController
         }
 
         $this->fields_list = array(
-                'id_employee' => array('title' => $this->trans('ID', array(), 'Admin.Global'),
+            'id_employee' => array('title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
             ),
@@ -134,8 +134,8 @@ class AdminEmployeesControllerCore extends AdminController
                         'list' => array(
                             '0' => array('value' => 0, 'name' => $this->trans('No', array(), 'Admin.Global')),
                             '1' => array('value' => 1, 'name' => $this->trans('Yes', array(), 'Admin.Global'),
-                        ),
-                    ), 'visibility' => Shop::CONTEXT_ALL, ),
+                            ),
+                        ), 'visibility' => Shop::CONTEXT_ALL, ),
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             ),
@@ -288,7 +288,7 @@ class AdminEmployeesControllerCore extends AdminController
                 'type' => 'change-password',
                 'label' => $this->trans('Password', array(), 'Admin.Global'),
                 'name' => 'passwd',
-                );
+            );
 
             if (Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController'))) {
                 $this->fields_form['input'][] = array(
@@ -303,7 +303,7 @@ class AdminEmployeesControllerCore extends AdminController
                 'label' => $this->trans('Password', array(), 'Admin.Global'),
                 'hint' => $this->trans('Password should be at least %num% characters long.', array('%num%' => Validate::ADMIN_PASSWORD_LENGTH), 'Admin.Advparameters.Help'),
                 'name' => 'passwd',
-                );
+            );
         }
 
         $this->fields_form['input'] = array_merge($this->fields_form['input'], array(

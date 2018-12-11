@@ -84,7 +84,7 @@ class ConfigurationCore extends ObjectModel
     /**
      * @see ObjectModel::getFieldsLang()
      *
-     * @return bool|array Multilingual fields
+     * @return array|bool Multilingual fields
      */
     public function getFieldsLang()
     {
@@ -245,7 +245,7 @@ class ConfigurationCore extends ObjectModel
      * Get global value.
      *
      * @param string $key Configuration key
-     * @param int|null $idLang Language ID
+     * @param null|int $idLang Language ID
      *
      * @return string
      */
@@ -295,12 +295,13 @@ class ConfigurationCore extends ObjectModel
     /**
      * Get several configuration values (in one language only).
      *
-     * @throws PrestaShopException
      *
      * @param array $keys Keys wanted
      * @param int $idLang Language ID
      * @param int $idShopGroup
      * @param int $idShop
+     *
+     * @throws PrestaShopException
      *
      * @return array Values
      */

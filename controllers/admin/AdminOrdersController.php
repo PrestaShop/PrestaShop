@@ -241,9 +241,9 @@ class AdminOrdersControllerCore extends AdminController
         $this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch', 'highlight'));
 
         $defaults_order_state = array('cheque' => (int) Configuration::get('PS_OS_CHEQUE'),
-                                                'bankwire' => (int) Configuration::get('PS_OS_BANKWIRE'),
-                                                'cashondelivery' => Configuration::get('PS_OS_COD_VALIDATION') ? (int) Configuration::get('PS_OS_COD_VALIDATION') : (int) Configuration::get('PS_OS_PREPARATION'),
-                                                'other' => (int) Configuration::get('PS_OS_PAYMENT'), );
+            'bankwire' => (int) Configuration::get('PS_OS_BANKWIRE'),
+            'cashondelivery' => Configuration::get('PS_OS_COD_VALIDATION') ? (int) Configuration::get('PS_OS_COD_VALIDATION') : (int) Configuration::get('PS_OS_PREPARATION'),
+            'other' => (int) Configuration::get('PS_OS_PAYMENT'), );
         $payment_modules = array();
         foreach (PaymentModule::getInstalledPaymentModules() as $p_module) {
             $payment_modules[] = Module::getInstanceById((int) $p_module['id_module']);
@@ -2343,9 +2343,9 @@ class AdminOrdersControllerCore extends AdminController
             // Create OrderCartRule
             $rule = new CartRule($cart_rule['id_cart_rule']);
             $values = array(
-                    'tax_incl' => $rule->getContextualValue(true),
-                    'tax_excl' => $rule->getContextualValue(false),
-                    );
+                'tax_incl' => $rule->getContextualValue(true),
+                'tax_excl' => $rule->getContextualValue(false),
+            );
             $order_cart_rule = new OrderCartRule();
             $order_cart_rule->id_order = $order->id;
             $order_cart_rule->id_cart_rule = $cart_rule['id_cart_rule'];

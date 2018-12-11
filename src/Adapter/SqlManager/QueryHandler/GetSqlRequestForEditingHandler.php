@@ -57,9 +57,9 @@ final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHan
     /**
      * @param SqlRequestId $requestSqlId
      *
-     * @return RequestSql
-     *
      * @throws SqlRequestNotFoundException
+     *
+     * @return RequestSql
      */
     private function loadById(SqlRequestId $requestSqlId)
     {
@@ -87,9 +87,9 @@ final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHan
     /**
      * @param RequestSql $entity
      *
-     * @return EditableSqlRequest
-     *
      * @throws SqlRequestException
+     *
+     * @return EditableSqlRequest
      */
     private function buildEditableSqlRequest(RequestSql $entity)
     {

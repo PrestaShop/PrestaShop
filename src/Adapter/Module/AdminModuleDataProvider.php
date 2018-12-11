@@ -68,7 +68,7 @@ class AdminModuleDataProvider implements ModuleInterface
     private $logger;
 
     /**
-     * @var Router|null
+     * @var null|Router
      */
     private $router = null;
 

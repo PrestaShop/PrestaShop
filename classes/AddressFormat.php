@@ -150,8 +150,7 @@ class AddressFormatCore extends ObjectModel
                 ': ' . $className . ': ' . $fieldName;
             }
 
-            unset($obj);
-            unset($reflect);
+            unset($obj, $reflect);
         }
 
         return $isValid;
@@ -456,8 +455,7 @@ class AddressFormatCore extends ObjectModel
                     $propertyList[] = $propertyName;
                 }
             }
-            unset($object);
-            unset($reflect);
+            unset($object, $reflect);
         }
 
         return $propertyList;
@@ -490,8 +488,7 @@ class AddressFormatCore extends ObjectModel
                     }
                 }
             }
-            unset($object);
-            unset($reflect);
+            unset($object, $reflect);
         }
 
         return $objectList;
@@ -591,7 +588,7 @@ class AddressFormatCore extends ObjectModel
     /**
      * @param int $idCountry
      *
-     * @return false|null|string
+     * @return null|false|string
      *
      * @deprecated 1.7.0
      */
@@ -605,7 +602,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      *
-     * @return false|null|string Address format
+     * @return null|false|string Address format
      *
      * @since 1.7.0
      */

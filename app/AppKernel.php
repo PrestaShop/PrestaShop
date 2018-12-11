@@ -147,8 +147,8 @@ class AppKernel extends Kernel
     /**
      * Return all active modules.
      *
-     * @return array list of modules names.
      * @throws \Doctrine\DBAL\DBALException
+     * @return array list of modules names.
      */
     private function getActiveModules()
     {
@@ -194,8 +194,8 @@ class AppKernel extends Kernel
     }
 
     /**
-     * @return \Doctrine\DBAL\Connection
      * @throws \Doctrine\DBAL\DBALException
+     * @return \Doctrine\DBAL\Connection
      */
     private function getConnection()
     {

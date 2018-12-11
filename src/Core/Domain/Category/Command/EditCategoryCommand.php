@@ -71,9 +71,9 @@ class EditCategoryCommand extends AbstractCategoryCommand
     /**
      * @param int $parentCategoryId
      *
-     * @return self
-     *
      * @throws CategoryConstraintException
+     *
+     * @return self
      */
     public function setParentCategoryId($parentCategoryId)
     {

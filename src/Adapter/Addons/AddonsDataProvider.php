@@ -75,9 +75,9 @@ class AddonsDataProvider implements AddonsInterface
     /**
      * @param $module_id
      *
-     * @return bool
-     *
      * @throws Exception
+     *
+     * @return bool
      */
     public function downloadModule($module_id)
     {
@@ -189,9 +189,9 @@ class AddonsDataProvider implements AddonsInterface
     }
 
     /**
-     * @return array
-     *
      * @throws Exception
+     *
+     * @return array
      */
     protected function getAddonsCredentials()
     {
@@ -200,8 +200,8 @@ class AddonsDataProvider implements AddonsInterface
         $password = $this->encryption->decrypt($request->cookies->get('password_addons'));
 
         return array(
-           'username_addons' => $username,
-           'password_addons' => $password,
+            'username_addons' => $username,
+            'password_addons' => $password,
         );
     }
 

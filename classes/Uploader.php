@@ -83,7 +83,7 @@ class UploaderCore
     }
 
     /**
-     * @param string|null $fileName
+     * @param null|string $fileName
      *
      * @return string
      */
@@ -170,7 +170,7 @@ class UploaderCore
     }
 
     /**
-     * @return int|null
+     * @return null|int
      */
     public function getPostMaxSizeBytes()
     {

@@ -81,9 +81,9 @@ class LogoUploader
      * @param $logoPrefix
      * @param $files[] the array of files to avoid use $_POST
      *
-     * @return bool
-     *
      * @throws PrestaShopException in case of upload failure
+     *
+     * @return bool
      */
     public function update($fieldName, $logoPrefix, array $files = [])
     {

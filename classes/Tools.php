@@ -153,7 +153,7 @@ class ToolsCore
      * @param string $url Desired URL
      * @param string $base_uri Base URI (optional)
      * @param Link $link
-     * @param string|array $headers A list of headers to send before redirection
+     * @param array|string $headers A list of headers to send before redirection
      */
     public static function redirect($url, $base_uri = __PS_BASE_URI__, Link $link = null, $headers = null)
     {
@@ -601,7 +601,7 @@ class ToolsCore
     /**
      * If necessary change cookie language ID and context language.
      *
-     * @param Context|null $context
+     * @param null|Context $context
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -647,7 +647,7 @@ class ToolsCore
     public static function getCountry($address = null)
     {
         $id_country = (int) Tools::getValue('id_country');
-        if (!$id_country && isset($address) && isset($address->id_country) && $address->id_country) {
+        if (!$id_country && isset($address, $address->id_country) && $address->id_country) {
             $id_country = (int) $address->id_country;
         } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
@@ -704,12 +704,12 @@ class ToolsCore
     /**
      * Return the CLDR associated with the context or given language_code.
      *
-     * @param Context|null $context
+     * @param null|Context $context
      * @param null $language_code
      *
-     * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
-     *
      * @throws PrestaShopException
+     *
+     * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
      */
     public static function getCldr(Context $context = null, $language_code = null)
     {
@@ -732,7 +732,7 @@ class ToolsCore
      * Return price with currency sign for a given product.
      *
      * @param float $price Product price
-     * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
+     * @param array|object $currency Current currency (object, id_currency, NULL => context currency)
      *
      * @return string Price correctly formated (sign, decimal separator...)
      *                if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
@@ -786,7 +786,7 @@ class ToolsCore
      * @deprecated since 1.7.4 use convertPriceToCurrency()
      *
      * @param float $price Product price
-     * @param object|array $currency Current currency object
+     * @param array|object $currency Current currency object
      * @param bool $to_currency convert to currency or from currency to default currency
      * @param Context $context
      *
@@ -822,7 +822,7 @@ class ToolsCore
     /**
      * Implement array_replace for PHP <= 5.2.
      *
-     * @return array|mixed|null
+     * @return null|array|mixed
      *
      * @deprecated since version 1.7.4.0, to be removed.
      */
@@ -1082,13 +1082,13 @@ class ToolsCore
     /**
      * Depending on _PS_MODE_DEV_ throws an exception or returns a error message.
      *
-     * @param string|null $errorMessage Error message (defaults to "Fatal error")
+     * @param null|string $errorMessage Error message (defaults to "Fatal error")
      * @param bool $htmlentities DEPRECATED since 1.7.4.0
-     * @param Context|null $context DEPRECATED since 1.7.4.0
-     *
-     * @return string
+     * @param null|Context $context DEPRECATED since 1.7.4.0
      *
      * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
+     *
+     * @return string
      */
     public static function displayError($errorMessage = null, $htmlentities = null, Context $context = null)
     {
@@ -1165,9 +1165,9 @@ class ToolsCore
      * @see error_log()
      *
      * @param mixed $object
-     * @param int|null $message_type
-     * @param string|null $destination
-     * @param string|null $extra_headers
+     * @param null|int $message_type
+     * @param null|string $destination
+     * @param null|string $extra_headers
      *
      * @return bool
      */
@@ -1494,9 +1494,9 @@ class ToolsCore
         // ä to ae
 
         $replacements = array(
-                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 'ss', 't', 'u', 'v', 'w', 'y', 'z', 'ae', 'ch', 'kh', 'oe', 'sh', 'shh', 'ya', 'ye', 'yi', 'yo', 'yu', 'zh',
-                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', 'AE', 'CH', 'KH', 'OE', 'SH', 'SHH', 'YA', 'YE', 'YI', 'YO', 'YU', 'ZH',
-            );
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 'ss', 't', 'u', 'v', 'w', 'y', 'z', 'ae', 'ch', 'kh', 'oe', 'sh', 'shh', 'ya', 'ye', 'yi', 'yo', 'yu', 'zh',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', 'AE', 'CH', 'KH', 'OE', 'SH', 'SHH', 'YA', 'YE', 'YI', 'YO', 'YU', 'ZH',
+        );
 
         return preg_replace($patterns, $replacements, $str);
     }
@@ -3719,7 +3719,7 @@ exit;
                 break;
             case 'module':
                 $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
-                if (isset($params['username_addons']) && isset($params['password_addons'])) {
+                if (isset($params['username_addons'], $params['password_addons'])) {
                     $post_data .= '&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
                 }
                 break;
@@ -3762,7 +3762,7 @@ exit;
      * @param string $input File upload field name
      * @param bool $return_content If true, returns uploaded file contents
      *
-     * @return array|null
+     * @return null|array
      */
     public static function fileAttachment($input = 'fileUpload', $return_content = true)
     {

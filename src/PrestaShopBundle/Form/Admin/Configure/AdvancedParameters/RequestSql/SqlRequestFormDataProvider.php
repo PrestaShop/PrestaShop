@@ -117,9 +117,9 @@ class SqlRequestFormDataProvider
     /**
      * @param array $requestSqlData
      *
-     * @return AddSqlRequestCommand
-     *
      * @throws SqlRequestConstraintException
+     *
+     * @return AddSqlRequestCommand
      */
     private function getAddRequestSqlCommand(array $requestSqlData)
     {
@@ -132,9 +132,9 @@ class SqlRequestFormDataProvider
     /**
      * @param array $requestSqlData
      *
-     * @return EditSqlRequestCommand
-     *
      * @throws SqlRequestException
+     *
+     * @return EditSqlRequestCommand
      */
     private function getEditRequestSqlCommand(array $requestSqlData)
     {

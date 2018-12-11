@@ -115,7 +115,7 @@ class AdminProductsControllerCore extends AdminController
     }
 
     /**
-     * @param Product|ObjectModel $object
+     * @param ObjectModel|Product $object
      * @param string $table
      */
     protected function copyFromPost(&$object, $table)
@@ -528,8 +528,8 @@ class AdminProductsControllerCore extends AdminController
                     }
                 }
             }
-            unset($product->id);
-            unset($product->id_product);
+            unset($product->id, $product->id_product);
+
             $product->indexed = 0;
             $product->active = 0;
             if ($product->add()
@@ -1259,7 +1259,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * postProcess for new form archi (need object return).
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function postCoreProcess()
     {
@@ -1621,7 +1621,7 @@ class AdminProductsControllerCore extends AdminController
      * @param Product $product Product object to add image
      * @param string $method
      *
-     * @return int|false
+     * @return false|int
      */
     public function addProductImage($product, $method = 'auto')
     {
@@ -1663,9 +1663,9 @@ class AdminProductsControllerCore extends AdminController
      * @param int $id_image Image Id for product image filename
      * @param string $method
      *
-     * @return void|false
-     *
      * @throws PrestaShopException
+     *
+     * @return false|void
      */
     public function copyImage($id_product, $id_image, $method = 'auto')
     {
@@ -2756,7 +2756,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * Ajax process upload images.
      *
-     * @param int|null $idProduct
+     * @param null|int $idProduct
      * @param string $inputFileName
      * @param bool $die If method must die or return values
      *
@@ -3146,7 +3146,7 @@ class AdminProductsControllerCore extends AdminController
                 foreach ($positions as $position => $value) {
                     $pos = explode('_', $value);
 
-                    if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int) $pos[2] === $id_product)) {
+                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category && (int) $pos[2] === $id_product)) {
                         if ($page > 1) {
                             $position = $position + (($page - 1) * $selected_pagination);
                         }

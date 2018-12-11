@@ -627,7 +627,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                                 'Edit: %value%',
                                 array(
                                     '%value%' => $obj->name[$this->context->employee->id_lang],
-                                    ),
+                                ),
                                 'Admin.Catalog.Feature'
                             );
                         }
@@ -842,11 +842,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
      * @see AdminController::getList()
      *
      * @param int $id_lang
-     * @param string|null $order_by
-     * @param string|null $order_way
+     * @param null|string $order_by
+     * @param null|string $order_way
      * @param int $start
-     * @param int|null $limit
-     * @param int|bool $id_lang_shop
+     * @param null|int $limit
+     * @param bool|int $id_lang_shop
      *
      * @throws PrestaShopException
      */
@@ -948,7 +948,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             foreach ($positions as $position => $value) {
                 $pos = explode('_', $value);
 
-                if ((isset($pos[1]) && isset($pos[2])) && (int) $pos[2] === $id_attribute) {
+                if ((isset($pos[1], $pos[2])) && (int) $pos[2] === $id_attribute) {
                     if ($attribute = new Attribute((int) $pos[2])) {
                         if (isset($position) && $attribute->updatePosition($way, $position)) {
                             echo 'ok position ' . (int) $position . ' for attribute ' . (int) $pos[2] . '\r\n';

@@ -144,9 +144,9 @@ class OrderLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return mixed
-     *
      * @throws PrestaShopException
+     *
+     * @return mixed
      */
     public function getShipping()
     {

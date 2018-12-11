@@ -108,7 +108,7 @@ class HelperListCore extends Helper
     /** @var bool If true, activates color on hover */
     public $row_hover = true;
 
-    /** @var string|null If not null, a title will be added on that list */
+    /** @var null|string If not null, a title will be added on that list */
     public $title = null;
 
     /** @var bool ask for simple header : no filters, no paginations and no sorting */
@@ -314,7 +314,7 @@ class HelperListCore extends Helper
                         $path_to_image = _PS_IMG_DIR_ . $params['image'] . '/' . Image::getImgFolderStatic($tr['id_image']) . (int) $tr['id_image'] . '.' . $this->imageType;
                     }
                     $this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table . '_mini_' . $item_id . '_' . $this->context->shop->id . '.' . $this->imageType, 45, $this->imageType);
-                } elseif (isset($params['icon']) && isset($tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default']))) {
+                } elseif (isset($params['icon'], $tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default']))) {
                     if (!$this->bootstrap) {
                         if (isset($params['icon'][$tr[$key]]) && is_array($params['icon'][$tr[$key]])) {
                             $this->_list[$index][$key] = array(

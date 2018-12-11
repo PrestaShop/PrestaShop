@@ -245,7 +245,7 @@ class AdminShopControllerCore extends AdminController
             return false;
         }
 
-        /** @var Shop|bool $result */
+        /** @var bool|Shop $result */
         $result = parent::postProcess();
 
         if ($result != false && (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop')) && (int) $result->id_category != (int) Configuration::get('PS_HOME_CATEGORY', null, null, (int) $result->id)) {
