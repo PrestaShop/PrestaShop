@@ -52,7 +52,7 @@ class PHPSQLParserUtils {
             return $x;
         } else {
             if (isset($_ENV['DEBUG'])) {
-                print $x . "\n";
+                echo $x . "\n";
             }
         }
     }
