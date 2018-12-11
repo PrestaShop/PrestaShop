@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,27 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Sell\Customer;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-/**
- * Class PrivateNoteType is used to add private notes about customer.
- */
-class PrivateNoteType extends AbstractType
+class CustomerConstraintException extends CustomerException
 {
     /**
-     * {@inheritdoc}
+     * @var int Is used when invalid (not string) private note is provided as private note
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('note', TextareaType::class, [
-                'required' => false,
-                'empty_data' => '',
-            ])
-        ;
-    }
+    const INVALID_PRIVATE_NOTE = 1;
 }

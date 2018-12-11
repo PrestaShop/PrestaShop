@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,27 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Sell\Customer;
-
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\FormBuilderInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
 /**
- * Class PrivateNoteType is used to add private notes about customer.
+ * Is thrown when customer transformation error occurs
  */
-class PrivateNoteType extends AbstractType
+class CustomerTransformationException extends CustomerException
 {
     /**
-     * {@inheritdoc}
+     * @var int Code is used when customer which is not guest is being transformed into customer
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('note', TextareaType::class, [
-                'required' => false,
-                'empty_data' => '',
-            ])
-        ;
-    }
+    const CUSTOMER_IS_NOT_GUEST = 1;
+
+    /**
+     * @var int Code is used when guest transformation into customer has failed
+     */
+    const TRANSFORMATION_FAILED = 2;
 }

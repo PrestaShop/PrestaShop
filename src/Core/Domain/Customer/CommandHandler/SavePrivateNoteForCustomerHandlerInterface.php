@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,27 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Sell\Customer;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
 
 /**
- * Class PrivateNoteType is used to add private notes about customer.
+ * Defines interface for service that handles command which saves private note for customer
  */
-class PrivateNoteType extends AbstractType
+interface SavePrivateNoteForCustomerHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param SavePrivateNoteForCustomerCommand $command
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('note', TextareaType::class, [
-                'required' => false,
-                'empty_data' => '',
-            ])
-        ;
-    }
+    public function handle(SavePrivateNoteForCustomerCommand $command);
 }

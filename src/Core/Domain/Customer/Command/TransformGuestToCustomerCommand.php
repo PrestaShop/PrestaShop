@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,27 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Sell\Customer;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Class PrivateNoteType is used to add private notes about customer.
+ * Transforms guest (customer without password) into registered customer account
  */
-class PrivateNoteType extends AbstractType
+class TransformGuestToCustomerCommand
 {
     /**
-     * {@inheritdoc}
+     * @var CustomerId
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    private $customerId;
+
+    /**
+     * @param CustomerId $customerId
+     */
+    public function __construct(CustomerId $customerId)
     {
-        $builder
-            ->add('note', TextareaType::class, [
-                'required' => false,
-                'empty_data' => '',
-            ])
-        ;
+        $this->customerId = $customerId;
+    }
+
+    /**
+     * @return CustomerId
+     */
+    public function getCustomerId()
+    {
+        return $this->customerId;
     }
 }
