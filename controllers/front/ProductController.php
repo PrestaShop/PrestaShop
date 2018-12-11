@@ -394,7 +394,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product' => $productForTemplate,
         )));
 
-        return;
+        
     }
 
     public function displayAjaxRefresh()
@@ -438,7 +438,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'id_product_attribute' => $product['id_product_attribute'],
         )));
 
-        return;
+        
     }
 
     /**

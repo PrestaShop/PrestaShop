@@ -296,6 +296,6 @@ class AdminStatesControllerCore extends AdminController
             $this->tpl_list_vars['assign_zone'] = true;
         }
 
-        return;
+        
     }
 }

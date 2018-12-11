@@ -154,7 +154,7 @@ class StoresControllerCore extends FrontController
 
         $this->ajaxRender($parnode->asXML());
 
-        return;
+        
     }
 
     /**

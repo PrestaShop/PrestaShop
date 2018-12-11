@@ -251,7 +251,7 @@ class OrderControllerCore extends FrontController
             )),
         )));
 
-        return;
+        
     }
 
     public function initContent()
@@ -343,6 +343,6 @@ class OrderControllerCore extends FrontController
             ),
         )));
 
-        return;
+        
     }
 }

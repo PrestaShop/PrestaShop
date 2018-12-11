@@ -1270,7 +1270,7 @@ class AdminControllerCore extends Controller
             return $object;
         }
 
-        return;
+        
     }
 
     /**

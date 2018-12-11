@@ -141,6 +141,6 @@ class AddressControllerCore extends FrontController
             ),
         )));
 
-        return;
+        
     }
 }

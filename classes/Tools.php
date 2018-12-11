@@ -3483,7 +3483,7 @@ exit;
             next($array2);
         }
 
-        return;
+        
     }
 
     /**

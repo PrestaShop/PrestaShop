@@ -1713,7 +1713,7 @@ class FrontControllerCore extends Controller
 
     public function getCanonicalURL()
     {
-        return;
+        
     }
 
     /**

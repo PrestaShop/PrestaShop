@@ -243,7 +243,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             }
         }
 
-        return;
+        
     }
 
     /**

@@ -175,7 +175,7 @@ class CartControllerCore extends FrontController
             'cart_voucher' => $this->render('checkout/_partials/cart-voucher'),
         ]));
 
-        return;
+        
     }
 
     /**
@@ -221,7 +221,7 @@ class CartControllerCore extends FrontController
             'productUrl' => $url,
         ]));
 
-        return;
+        
     }
 
     public function postProcess()
