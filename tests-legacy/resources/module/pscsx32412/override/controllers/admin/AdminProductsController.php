@@ -2570,8 +2570,8 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-    * Post treatment for suppliers
-    */
+     * Post treatment for suppliers
+     */
     public function processSuppliers()
     {
         if ((int)Tools::getValue('supplier_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product')))) {
@@ -2728,8 +2728,8 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-    * Post treatment for warehouses
-    */
+     * Post treatment for warehouses
+     */
     public function processWarehouses()
     {
         if ((int)Tools::getValue('warehouse_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)$id_product = Tools::getValue('id_product')))) {
