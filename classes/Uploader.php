@@ -120,7 +120,7 @@ class UploaderCore
      */
     public function setMaxSize($value)
     {
-        $this->_max_size = intval($value);
+        $this->_max_size = (int) $value;
 
         return $this;
     }
