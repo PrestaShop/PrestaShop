@@ -121,6 +121,7 @@ class CustomerType extends AbstractType
                 'disabled' => !$this->isPartnerOffersEnabled,
             ])
             ->add('group_ids', MaterialChoiceTableType::class, [
+                'empty_data' => [],
                 'choices' => $this->groupChoices,
             ])
             ->add('default_group_id', ChoiceType::class, [

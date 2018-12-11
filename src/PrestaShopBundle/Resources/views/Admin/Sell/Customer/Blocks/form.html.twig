@@ -77,7 +77,7 @@
             </div>
           </div>
 
-          <div class="form-group row {% if not isGuest %}d-none{% endif %}">
+          <div class="form-group row {% if isGuest %}d-none{% endif %}">
             <label for="{{ customerForm.password.vars.id }}" class="form-control-label">
               {% if customerForm.password.vars.required %}<span class="text-danger">*</span>{% endif %}
               {{ 'Password'|trans({}, 'Admin.Global') }}
@@ -140,60 +140,62 @@
             </div>
           </div>
 
-          <div class="form-group row">
-            <label for="{{ customerForm.company_name.vars.id }}" class="form-control-label">{{ 'Company'|trans({}, 'Admin.Global') }}</label>
-            <div class="col-sm">
-              {{ form_widget(customerForm.company_name) }}
+          {% if isB2bFeatureActive %}
+            <div class="form-group row">
+              <label for="{{ customerForm.company_name.vars.id }}" class="form-control-label">{{ 'Company'|trans({}, 'Admin.Global') }}</label>
+              <div class="col-sm">
+                {{ form_widget(customerForm.company_name) }}
+              </div>
             </div>
-          </div>
 
-          <div class="form-group row">
-            <label for="{{ customerForm.siret_code.vars.id }}" class="form-control-label">{{ 'SIRET'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
-            <div class="col-sm">
-              {{ form_widget(customerForm.siret_code) }}
+            <div class="form-group row">
+              <label for="{{ customerForm.siret_code.vars.id }}" class="form-control-label">{{ 'SIRET'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+              <div class="col-sm">
+                {{ form_widget(customerForm.siret_code) }}
+              </div>
             </div>
-          </div>
 
-          <div class="form-group row">
-            <label for="{{ customerForm.ape_code.vars.id }}" class="form-control-label">{{ 'APE'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
-            <div class="col-sm">
-              {{ form_widget(customerForm.ape_code) }}
+            <div class="form-group row">
+              <label for="{{ customerForm.ape_code.vars.id }}" class="form-control-label">{{ 'APE'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+              <div class="col-sm">
+                {{ form_widget(customerForm.ape_code) }}
+              </div>
             </div>
-          </div>
 
-          <div class="form-group row">
-            <label for="{{ customerForm.website.vars.id }}" class="form-control-label">{{ 'Website'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
-            <div class="col-sm">
-              {{ form_widget(customerForm.website) }}
+            <div class="form-group row">
+              <label for="{{ customerForm.website.vars.id }}" class="form-control-label">{{ 'Website'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+              <div class="col-sm">
+                {{ form_widget(customerForm.website) }}
+              </div>
             </div>
-          </div>
 
-          <div class="form-group row">
-            <label for="{{ customerForm.allowed_outstanding_amount.vars.id }}" class="form-control-label">{{ 'Allowed outstanding amount'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
-            <div class="col-sm">
-              {{ form_widget(customerForm.allowed_outstanding_amount) }}
-              <small class="form-text">
-                {{ '%s 0-9'|format('Valid characters:'|trans({}, 'Admin.Orderscustomers.Help')) }}
-              </small>
+            <div class="form-group row">
+              <label for="{{ customerForm.allowed_outstanding_amount.vars.id }}" class="form-control-label">{{ 'Allowed outstanding amount'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+              <div class="col-sm">
+                {{ form_widget(customerForm.allowed_outstanding_amount) }}
+                <small class="form-text">
+                  {{ '%s 0-9'|format('Valid characters:'|trans({}, 'Admin.Orderscustomers.Help')) }}
+                </small>
+              </div>
             </div>
-          </div>
 
-          <div class="form-group row">
-            <label for="{{ customerForm.max_payment_days.vars.id }}" class="form-control-label">{{ 'Maximum number of payment days'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
-            <div class="col-sm">
-              {{ form_widget(customerForm.max_payment_days) }}
-              <small class="form-text">
-                {{ '%s 0-9'|format('Valid characters:'|trans({}, 'Admin.Orderscustomers.Help')) }}
-              </small>
+            <div class="form-group row">
+              <label for="{{ customerForm.max_payment_days.vars.id }}" class="form-control-label">{{ 'Maximum number of payment days'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+              <div class="col-sm">
+                {{ form_widget(customerForm.max_payment_days) }}
+                <small class="form-text">
+                  {{ '%s 0-9'|format('Valid characters:'|trans({}, 'Admin.Orderscustomers.Help')) }}
+                </small>
+              </div>
             </div>
-          </div>
 
-          <div class="form-group row">
-            <label for="{{ customerForm.risk_id.vars.id }}" class="form-control-label">{{ 'Risk rating'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
-            <div class="col-sm">
-              {{ form_widget(customerForm.risk_id) }}
+            <div class="form-group row">
+              <label for="{{ customerForm.risk_id.vars.id }}" class="form-control-label">{{ 'Risk rating'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+              <div class="col-sm">
+                {{ form_widget(customerForm.risk_id) }}
+              </div>
             </div>
-          </div>
+          {% endif %}
 
           {% block customer_form_rest %}
             {{ form_rest(customerForm) }}

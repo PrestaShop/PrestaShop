@@ -83,6 +83,8 @@ class CustomerController extends AbstractAdminController
             return $this->redirectToRoute('admin_customers_index');
         }
 
+        $this->addGroupSelectionToRequest($request);
+
         $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
         $customerForm->handleRequest($request);
 
@@ -111,6 +113,7 @@ class CustomerController extends AbstractAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/create.html.twig', [
             'customerForm' => $customerForm->createView(),
+            'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
         ]);
     }
 
@@ -124,9 +127,11 @@ class CustomerController extends AbstractAdminController
      */
     public function editAction($customerId, Request $request)
     {
+        $this->addGroupSelectionToRequest($request);
+
         try {
             /** @var CustomerInformation $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing(new CustomerId($customerId)));
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing(new CustomerId((int) $customerId)));
 
             $customerFormOptions = [
                 'is_password_required' => false,
@@ -171,6 +176,7 @@ class CustomerController extends AbstractAdminController
         return $this->render('@PrestaShop/Admin/Sell/Customer/edit.html.twig', [
             'customerForm' => $customerForm->createView(),
             'customerInformation' => $customerInformation,
+            'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
         ]);
     }
 
@@ -315,5 +321,29 @@ class CustomerController extends AbstractAdminController
         return $this->redirectToRoute('admin_customers_view', [
             'customerId' => $customerId,
         ]);
+    }
+
+    /**
+     * If customer form is submitted and groups are not selected
+     * we add empty groups to request
+     *
+     * @param Request $request
+     */
+    private function addGroupSelectionToRequest(Request $request)
+    {
+        if ($request->isMethod(Request::METHOD_POST)) {
+            return;
+        }
+
+        if (!$request->request->has('customer')
+            || isset($request->request->get('customer')['group_ids'])
+        ) {
+            return;
+        }
+
+        $customerData = $request->request->get('customer');
+        $customerData['group_ids'] = [];
+
+        $request->request->set('customer', $customerData);
     }
 }
