@@ -32,6 +32,15 @@ return PhpCsFixer\Config::create()
         'psr4' => false,
         'self_accessor' => false,
         'yoda_style' => null,
+        'align_multiline_comment' => [
+            'comment_type' => 'phpdocs_only'
+        ],
+        'array_indentation' => true, 
+        'combine_consecutive_issets' => true,
+        'combine_consecutive_unsets' => true,
+        'hash_to_slash_comment' => true,
+        'logical_operators' => true,
+        'no_alternative_syntax' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache');
