@@ -273,7 +273,7 @@ class AdminStatesControllerCore extends AdminController
             }
 
             foreach ($states as $state) {
-                $list .= '<option value="' . (int) ($state['id_state']) . '"' . ((isset($_GET['id_state']) and $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '') . '>' . $state['name'] . '</option>' . "\n";
+                $list .= '<option value="' . (int) ($state['id_state']) . '"' . ((isset($_GET['id_state']) && $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '') . '>' . $state['name'] . '</option>' . "\n";
             }
         } else {
             $list = 'false';
