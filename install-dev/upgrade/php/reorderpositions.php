@@ -36,11 +36,11 @@ function reorderpositions()
         foreach ($cat as $categ) {
             $id_category = $categ['id_category'];
             $result = Db::getInstance()->executeS('
-                SELECT `id_product`
-                FROM `'._DB_PREFIX_.'category_product`
-                WHERE `id_category` = '.$id_category.'
-                ORDER BY `position`');
-            $sizeof = sizeof($result);
+				SELECT `id_product`
+				FROM `'._DB_PREFIX_.'category_product`
+				WHERE `id_category` = '.$id_category.'
+				ORDER BY `position`');
+            $sizeof = count($result);
             for ($i = 0; $i < $sizeof; $i++) {
                 $res &= Db::getInstance()->execute('
                     UPDATE `'._DB_PREFIX_.'category_product`
@@ -89,11 +89,11 @@ function reorderpositions()
         foreach ($cms_cat as $i => $categ) {
             $id_category_parent = $categ['id_cms_category'];
             $result &= Db::getInstance()->executeS('
-                SELECT `id_cms_category`
-                FROM `'._DB_PREFIX_.'cms_category`
-                WHERE `id_parent` = '.(int)$id_category_parent.'
-                ORDER BY `position`');
-            $sizeof = sizeof($result);
+				SELECT `id_cms_category`
+				FROM `'._DB_PREFIX_.'cms_category`
+				WHERE `id_parent` = '.(int)$id_category_parent.'
+				ORDER BY `position`');
+            $sizeof = count($result);
             for ($i = 0; $i < $sizeof; ++$i) {
                 $sql = 'UPDATE `'._DB_PREFIX_.'cms_category`
                         SET `position` = '.(int)$i.'

@@ -52,10 +52,10 @@
           <li class="module-category-menu"
             {% if subMenu.tab %}data-category-tab="{{subMenu.tab}}"{% endif %}
             data-category-ref="{{subMenu.refMenu}}"
-            data-category-display-name="{{subMenu.name}}"
+            data-category-display-name="{{subMenu.name|trans({}, 'Admin.Modules.Feature')}}"
           >
             <a class="dropdown-item" href="#">
-              {{subMenu.name}}<span class="float-right">{{subMenu.modules|length }}</span>
+              {{subMenu.name|trans({}, 'Admin.Modules.Feature')}}<span class="float-right">{{subMenu.modules|length }}</span>
             </a>
           </li>
         {% endfor %}

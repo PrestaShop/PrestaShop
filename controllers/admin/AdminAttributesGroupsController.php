@@ -561,30 +561,30 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 }
 
                 $this->toolbar_btn['back'] = array(
-                    'href' => self::$currentIndex . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups'),
                     'desc' => $this->trans('Back to list', array(), 'Admin.Actions'),
                 );
                 break;
             case 'view':
                 $this->toolbar_btn['newAttributes'] = array(
-                    'href' => self::$currentIndex . '&updateattribute&id_attribute_group=' . (int) Tools::getValue('id_attribute_group') . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups', true, array(), array('updateattribute' => 1, 'id_attribute_group' => (int) Tools::getValue('id_attribute_group'))),
                     'desc' => $this->trans('Add New Values', array(), 'Admin.Catalog.Feature'),
                     'class' => 'toolbar-new',
                 );
 
                 $this->toolbar_btn['back'] = array(
-                    'href' => self::$currentIndex . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups'),
                     'desc' => $this->trans('Back to list', array(), 'Admin.Actions'),
                 );
                 break;
             default: // list
                 $this->toolbar_btn['new'] = array(
-                    'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups', true, array(), array('add' . $this->table => 1)),
                     'desc' => $this->trans('Add New Attributes', array(), 'Admin.Catalog.Feature'),
                 );
                 if ($this->can_import) {
                     $this->toolbar_btn['import'] = array(
-                        'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=combinations',
+                        'href' => $this->context->link->getAdminLink('AdminImport', true, array(), array('import_type' => 'combinations')),
                         'desc' => $this->trans('Import', array(), 'Admin.Actions'),
                     );
                 }

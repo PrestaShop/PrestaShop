@@ -92,7 +92,7 @@ function latin1_database_to_utf8()
         foreach ($table['fields'] as $field) {
             $query .= ', `'.$field.'`';
         }
-        if (isset($table['lang']) and $table['lang']) {
+        if (isset($table['lang']) && $table['lang']) {
             $query .= ', `id_lang`';
         }
         $query .= ' FROM `'._DB_PREFIX_.$table['name'].'`';
@@ -119,7 +119,7 @@ function latin1_database_to_utf8()
                 }
                 $query = rtrim($query, ',');
                 $query .= ' WHERE `'.$table['id'].'` = '.(int)($latin1Data[$table['id']]);
-                if (isset($table['lang']) and $table['lang']) {
+                if (isset($table['lang']) && $table['lang']) {
                     $query .= ' AND `id_lang` = '.(int)($latin1Data['id_lang']);
                 }
                 if (!Db::getInstance()->execute($query)) {

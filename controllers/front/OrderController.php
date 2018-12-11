@@ -250,8 +250,6 @@ class OrderControllerCore extends FrontController
                 'static_token' => Tools::getToken(false),
             )),
         )));
-
-        return;
     }
 
     public function initContent()
@@ -342,7 +340,5 @@ class OrderControllerCore extends FrontController
                 $templateParams
             ),
         )));
-
-        return;
     }
 }

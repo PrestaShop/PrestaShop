@@ -829,7 +829,7 @@ class ImageCore extends ObjectModel
 
         @mkdir($testFolder, self::$access_rights, true);
         @chmod($testFolder, self::$access_rights);
-        if (!is_writeable($testFolder)) {
+        if (!is_writable($testFolder)) {
             return false;
         }
         @rmdir($testFolder);
