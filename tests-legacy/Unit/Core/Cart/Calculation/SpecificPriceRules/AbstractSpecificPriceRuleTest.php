@@ -61,7 +61,7 @@ abstract class AbstractSpecificPriceRuleTest extends AbstractCartCalculationTest
             throw new \Exception('Unknown specific cart rule with id #' . $priceRuleId);
         }
         $specificCartRuleFixture = $fixtures[$priceRuleId];
-        $rule                    = new SpecificPriceRule;
+        $rule                    = new SpecificPriceRule();
         $rule->id_shop           = \Context::getContext()->shop->id;
         $rule->id_currency       = 0; // 0 = all
         $rule->id_country        = 0; // 0 = all

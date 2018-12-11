@@ -42,11 +42,11 @@ scenario('Create, sort, filter, delete and check "Files" in the Back Office', ()
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-  for(let i = 0; i < fileData.length; i++) {
+  for (let i = 0; i < fileData.length; i++) {
     commonFileScenarios.createFile(fileData[i].filename, fileData[i].description, fileData[i].file);
     commonFileScenarios.checkFile(fileData[i].filename, fileData[i].description);
   }
-  for(let m = 0; m < productData.length; m++) {
+  for (let m = 0; m < productData.length; m++) {
     commonProductScenarios.createProduct(AddProductPage, productData[m]);
   }
   commonFileScenarios.sortFile('id', 2);
@@ -57,7 +57,7 @@ scenario('Create, sort, filter, delete and check "Files" in the Back Office', ()
   commonFileScenarios.filterFile('Ps Category', 'name', 3, true);
   commonFileScenarios.sortFile('associated', 6, true);
   commonFileScenarios.filterFile('0', 'associated', 6);
-  for(let k = 0; k < fileData.length; k++) {
+  for (let k = 0; k < fileData.length; k++) {
     commonFileScenarios.deleteFile(fileData[k].filename);
   }
   scenario('Logout from the Back Office', client => {

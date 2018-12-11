@@ -2979,7 +2979,7 @@ class CartCore extends ObjectModel
                 foreach ($option['carrier_list'] as $carrier) {
                     $nameList[] = $carrier['instance']->name;
                 }
-                $name = join(' -', $nameList);
+                $name = implode(' -', $nameList);
                 $img = ''; // No images if multiple carriers
                 $delay = '';
             }

@@ -7,6 +7,7 @@ services:
 
     prestashop.bundle.routing.converter.legacy_url_converter:
         class: 'PrestaShopBundle\Routing\Converter\LegacyUrlConverter'
+        public: true
         arguments:
             - '@router'
             - '@prestashop.bundle.routing.converter.cache_provider'
