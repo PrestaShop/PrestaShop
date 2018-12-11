@@ -134,7 +134,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      * @AdminSecurity(
      *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
-     *      redirectRoute="admin_sql_requests_index"
+     *     redirectRoute="admin_sql_requests_index"
      * )
      *
      * @param Request $request
@@ -163,8 +163,8 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))",
-     *      message="You do not have permission to create this.",
-     *      redirectRoute="admin_sql_requests_index"
+     *     message="You do not have permission to create this.",
+     *     redirectRoute="admin_sql_requests_index"
      * )
      *
      * @param Request $request
