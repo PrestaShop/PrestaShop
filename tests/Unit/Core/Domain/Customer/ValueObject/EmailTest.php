@@ -39,7 +39,7 @@ class EmailTest extends TestCase
     {
         $email = new Email($validEmail);
 
-        $this->assertInstanceOf(Email::class, $email);
+        $this->assertEquals($validEmail, $email->getValue());
     }
 
     /**
