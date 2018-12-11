@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandle
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
 /**
  * Handles command which edits customer's data
@@ -182,16 +183,22 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
      */
     private function assertCustomerWithUpdatedEmailDoesNotExist(Customer $customer, EditCustomerCommand $command)
     {
-        if ($command->getEmail() === $customer->email) {
+        // if email is not being updated
+        // then assertion is not needed
+        if (null === $command->getEmail()) {
+            return;
+        }
+
+        if ($command->getEmail()->isEqualTo(new Email($customer->email))) {
             return;
         }
 
         $customerByEmail = new Customer();
-        $customerByEmail->getByEmail($customer);
+        $customerByEmail->getByEmail($command->getEmail()->getValue());
 
         if ($customerByEmail->id) {
             throw new CustomerConstraintException(
-                sprintf('Customer with email "%s" already exists', $command->getEmail()),
+                sprintf('Customer with email "%s" already exists', $command->getEmail()->getValue()),
                 CustomerConstraintException::DUPLICATE_EMAIL
             );
         }

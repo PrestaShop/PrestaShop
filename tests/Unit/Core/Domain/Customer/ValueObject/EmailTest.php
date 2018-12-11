@@ -53,6 +53,14 @@ class EmailTest extends TestCase
         new Email($invalidEmail);
     }
 
+    /**
+     * @dataProvider getEmailCompareValues
+     */
+    public function testEmailComparesValuesCorrectly($firstEmail, $secondEmail, $expectedCompareResult)
+    {
+        $this->assertEquals($expectedCompareResult, (new Email($firstEmail))->isEqualTo(new Email($secondEmail)));
+    }
+
     public function getValidEmailValues()
     {
         yield ['demo.demo@prestashop.com'];
@@ -64,11 +72,12 @@ class EmailTest extends TestCase
     {
         yield [''];
         yield [123];
-        yield [sprintf(
-            'very_long_email_%s%s%s@demo.com',
-            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        )];
+        yield [sprintf('very_long_email_%s@demo.com', str_repeat('A', 231))];
+    }
+
+    public function getEmailCompareValues()
+    {
+        yield ['demo@demo.com', 'demo@demo.com', true];
+        yield ['demo@demo.com', 'no_the_same@demo.com', false];
     }
 }
