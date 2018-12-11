@@ -35,7 +35,7 @@ class FeatureControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_ok_response_when_requesting_features()
+    public function itShouldReturnOkResponseWhenRequestingFeatures()
     {
         $route = $this->router->generate('api_stock_list_features');
         self::$client->request('GET', $route);

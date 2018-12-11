@@ -151,7 +151,7 @@ class gamification extends Module
     public function __call($name, $arguments)
     {
         if (!empty(self::$_batch_mode)) {
-            self::$_defered_func_call[get_class().'::__call_'.$name] = array(array($this, '__call'), array($name, $arguments));
+            self::$_defered_func_call[__CLASS__.'::__call_'.$name] = array(array($this, '__call'), array($name, $arguments));
         } else {
             if (!Validate::isHookName($name)) {
                 return false;

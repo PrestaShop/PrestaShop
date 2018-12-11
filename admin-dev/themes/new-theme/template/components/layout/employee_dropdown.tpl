@@ -32,11 +32,11 @@
       <img class="avatar rounded-circle" src="{$employee->getImage()}" />
       <span>{$employee->firstname} {$employee->lastname}</span>
     </div>
-    <a class="dropdown-item employee-link profile-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee">
+    <a class="dropdown-item employee-link profile-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}">
       <i class="material-icons">settings_applications</i>
       {l s='Your profile'}
     </a>
-    <a class="dropdown-item employee-link" id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout">
+    <a class="dropdown-item employee-link" id="header_logout" href="{$logout_link|escape:'html':'UTF-8'}">
       <i class="material-icons">power_settings_new</i>
       <span>{l s='Sign out'}</span>
     </a>

@@ -158,12 +158,12 @@ class ModuleRepositoryTest extends UnitTestCase
          */
     }
 
-    public function test_get_at_least_one_module_from_universe()
+    public function testGetAtLeastOneModuleFromUniverse()
     {
         $this->assertGreaterThan(0, count($this->moduleRepositoryStub->getList()));
     }
 
-    public function test_get_only_installed_modules()
+    public function testGetOnlyInstalledModules()
     {
         $all_modules = $this->moduleRepositoryStub->getList();
 
@@ -181,12 +181,12 @@ class ModuleRepositoryTest extends UnitTestCase
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->database->get('installed') == 1) {
-                $this->assertTrue(array_key_exists($name, $installed_modules), sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $installed_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
 
-    public function test_get_only_NOT_installed_modules()
+    public function testGetOnlyNOTInstalledModules()
     {
         $all_modules = $this->moduleRepositoryStub->getList();
 
@@ -204,12 +204,12 @@ class ModuleRepositoryTest extends UnitTestCase
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 0) {
-                $this->assertTrue(array_key_exists($name, $not_installed_modules), sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $not_installed_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
 
-    public function test_get_only_enabled_modules()
+    public function testGetOnlyEnabledModules()
     {
         $all_modules = $this->moduleRepositoryStub->getList();
 
@@ -229,12 +229,12 @@ class ModuleRepositoryTest extends UnitTestCase
             // Each installed module must be found in the installed modules list
             if ($module->database->get('installed') == 1
                 && $module->database->get('active') == 1) {
-                $this->assertTrue(array_key_exists($name, $installed_and_active_modules), sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $installed_and_active_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
 
-    public function test_get_not_enabled_modules()
+    public function testGetNotEnabledModules()
     {
         $all_modules = $this->moduleRepositoryStub->getList();
 
@@ -251,12 +251,12 @@ class ModuleRepositoryTest extends UnitTestCase
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 1  && $module->database->get('active') == 0) {
-                $this->assertTrue(array_key_exists($name, $not_active_modules), sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $not_active_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
 
-    public function test_get_installed_but_disabled_modules()
+    public function testGetInstalledButDisabledModules()
     {
         $all_modules = $this->moduleRepositoryStub->getList();
 
@@ -274,12 +274,12 @@ class ModuleRepositoryTest extends UnitTestCase
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->database->get('installed') == 1 && $module->database->get('active') == 0) {
-                $this->assertTrue(array_key_exists($name, $installed_but_not_installed_modules), sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $installed_but_not_installed_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
 
-    public function test_get_addons_from_marketplace_only()
+    public function testGetAddonsFromMarketplaceOnly()
     {
         $filters = new AddonListFilter();
         $filters->setOrigin(AddonListFilterOrigin::ADDONS_ALL);
@@ -290,7 +290,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_get_addons_not_on_marketplace_1()
+    public function testGetAddonsNotOnMarketplace1()
     {
         $filters = new AddonListFilter();
         $filters->setOrigin(AddonListFilterOrigin::DISK);
@@ -301,7 +301,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_get_addons_not_on_marketplace_2()
+    public function testGetAddonsNotOnMarketplace2()
     {
         $filters = new AddonListFilter();
         $filters->setOrigin(~AddonListFilterOrigin::ADDONS_ALL);
@@ -315,7 +315,7 @@ class ModuleRepositoryTest extends UnitTestCase
     /**
      * @todo how to get fake modules returned ?
      */
-    public function test_get_only_modules()
+    public function testGetOnlyModules()
     {
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE);
@@ -325,7 +325,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_get_only_services()
+    public function testGetOnlyServices()
     {
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::SERVICE);
@@ -335,12 +335,12 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_should_not_be_able_to_return_theme()
+    public function testShouldNotBeAbleToReturnTheme()
     {
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::THEME);
 
-        $this->assertEquals(0, count($this->moduleRepositoryStub->getFilteredList($filters)));
+        $this->assertCount(0, $this->moduleRepositoryStub->getFilteredList($filters));
     }
 
     public function teardown()

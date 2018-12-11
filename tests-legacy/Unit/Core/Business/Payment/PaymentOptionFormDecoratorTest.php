@@ -33,9 +33,9 @@ use Exception;
 
 class PaymentOptionFormDecoratorTest extends UnitTestCase
 {
-    public function test_addHiddenSubmitButton_inserts_submit_button_into_form()
+    public function testAddHiddenSubmitButtonInsertsSubmitButtonIntoForm()
     {
-        $decorator = new PaymentOptionFormDecorator;
+        $decorator = new PaymentOptionFormDecorator();
 
         $form =
 "<div>
@@ -59,9 +59,9 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
         $this->assertSameHTML($exp, $act);
     }
 
-    public function test_addHiddenSubmitButton_returns_false_when_multiple_forms()
+    public function testAddHiddenSubmitButtonReturnsFalseWhenMultipleForms()
     {
-        $decorator = new PaymentOptionFormDecorator;
+        $decorator = new PaymentOptionFormDecorator();
         $this->assertFalse(
             $decorator->addHiddenSubmitButton(
                 '<form></form><form></form>',
@@ -72,7 +72,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 
     private function normalizeHTML($html)
     {
-        $doc = new DOMDocument;
+        $doc = new DOMDocument();
         if (!$doc->loadHTML($html)) {
             throw new Exception('Invalid HTML.');
         }

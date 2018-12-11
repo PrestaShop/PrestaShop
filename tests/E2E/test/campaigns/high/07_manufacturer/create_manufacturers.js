@@ -3,13 +3,14 @@ const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {Brands} = require('../../../selectors/BO/catalogpage/Manufacturers/brands');
 const {BrandAddress} = require('../../../selectors/BO/catalogpage/Manufacturers/brands_address');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 scenario('Create "Brand" - "Brand address"', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'manufacturers');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Create a new "Brand"', client => {
     test('should go to "Brands & Suppliers" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.manufacturers_submenu));
     test('should click on "Add new brand" button', () => client.waitForExistAndClick(Brands.new_brand_button));

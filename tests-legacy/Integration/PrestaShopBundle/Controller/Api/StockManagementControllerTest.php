@@ -74,7 +74,7 @@ class StockManagementControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_bad_request_response_on_invalid_pagination_params()
+    public function itShouldReturnBadRequestResponseOnInvalidPaginationParams()
     {
         $routes = array(
             $this->router->generate('api_stock_list_products', array()),
@@ -97,7 +97,7 @@ class StockManagementControllerTest extends ApiTestCase
      * @param $params
      * @param $expectedTotalPages
      */
-    public function it_should_return_ok_response_when_requesting_products_stock($params, $expectedTotalPages)
+    public function itShouldReturnOkResponseWhenRequestingProductsStock($params, $expectedTotalPages)
     {
         $this->assertOkResponseOnList('api_stock_list_products', $params, $expectedTotalPages);
     }
@@ -144,7 +144,7 @@ class StockManagementControllerTest extends ApiTestCase
      * @param $params
      * @param $expectedTotalPages
      */
-    public function it_should_return_ok_response_when_requesting_products_combinations_stock(
+    public function itShouldReturnOkResponseWhenRequestingProductsCombinationsStock(
         $params,
         $expectedTotalPages
     )
@@ -230,7 +230,7 @@ class StockManagementControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_error_response_when_requesting_products_stock_edition()
+    public function itShouldReturnErrorResponseWhenRequestingProductsStockEdition()
     {
         $this->assertErrorResponseOnEditProduct();
     }
@@ -238,7 +238,7 @@ class StockManagementControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_valid_response_when_requesting_products_combinations_stock_edition()
+    public function itShouldReturnValidResponseWhenRequestingProductsCombinationsStockEdition()
     {
         $this->assertNotFoundResponseOnEditProductCombination();
         $this->assertOkResponseOnEditProductCombination();
@@ -247,7 +247,7 @@ class StockManagementControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_valid_response_when_requesting_bulk_stock_edition()
+    public function itShouldReturnValidResponseWhenRequestingBulkStockEdition()
     {
         $this->assertErrorResponseOnBulkEditProducts();
         $this->assertOkResponseOnBulkEditProducts();
@@ -430,7 +430,7 @@ class StockManagementControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_valid_response_when_requesting_stock_search_results()
+    public function itShouldReturnValidResponseWhenRequestingStockSearchResults()
     {
         $listProductsRoute = $this->router->generate('api_stock_list_products');
 
@@ -446,7 +446,7 @@ class StockManagementControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_valid_response_when_requesting_stock_with_attributes()
+    public function itShouldReturnValidResponseWhenRequestingStockWithAttributes()
     {
         $listProductsRoute = $this->router->generate('api_stock_list_products');
 
@@ -462,7 +462,7 @@ class StockManagementControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_valid_response_when_requesting_stock_with_features()
+    public function itShouldReturnValidResponseWhenRequestingStockWithFeatures()
     {
         $listProductsRoute = $this->router->generate('api_stock_list_products');
 
@@ -482,7 +482,7 @@ class StockManagementControllerTest extends ApiTestCase
      * @param $params
      * @param $expectedTotalPages
      */
-    public function it_should_return_ok_response_when_requesting_movements_stock($params, $expectedTotalPages)
+    public function itShouldReturnOkResponseWhenRequestingMovementsStock($params, $expectedTotalPages)
     {
         $this->assertOkResponseOnList('api_stock_list_movements', $params, $expectedTotalPages);
     }
@@ -512,7 +512,7 @@ class StockManagementControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_ok_response_when_requesting_movements_types()
+    public function itShouldReturnOkResponseWhenRequestingMovementsTypes()
     {
         $this->assertOkResponseOnList('api_stock_list_movements_types');
     }
@@ -520,7 +520,7 @@ class StockManagementControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_ok_response_when_requesting_movements_employees()
+    public function itShouldReturnOkResponseWhenRequestingMovementsEmployees()
     {
         $this->assertOkResponseOnList('api_stock_list_movements_employees');
     }

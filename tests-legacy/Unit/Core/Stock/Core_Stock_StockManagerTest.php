@@ -179,7 +179,7 @@ class StockAvailableTest extends UnitTestCase
     /**
      * @dataProvider get_update_pack_quantity_provider
      */
-    public function test_update_pack_quantity($default_stock_type, FakeProduct4759 $pack, $products, $delta, $expected)
+    public function testUpdatePackQuantity($default_stock_type, FakeProduct4759 $pack, $products, $delta, $expected)
     {
         $this->setStockType($default_stock_type);
         $this->packItemsManager = new FakePackItemsManager4759();
@@ -268,7 +268,7 @@ class StockAvailableTest extends UnitTestCase
     /**
      * @dataProvider get_update_product_quantity_provider
      */
-    public function test_update_product_quantity($default_stock_type, FakeProduct4759 $pack, $products, $delta, $expected)
+    public function testUpdateProductQuantity($default_stock_type, FakeProduct4759 $pack, $products, $delta, $expected)
     {
         $this->setStockType($default_stock_type);
         $this->packItemsManager = new FakePackItemsManager4759();
@@ -378,7 +378,7 @@ class StockAvailableTest extends UnitTestCase
     /**
      * @dataProvider get_update_quantity_provider
      */
-    public function test_update_quantity($default_stock_type, FakeProduct4759 $pack, $products, $product_to_update, $delta, $expected)
+    public function testUpdateQuantity($default_stock_type, FakeProduct4759 $pack, $products, $product_to_update, $delta, $expected)
     {
         $this->setStockType($default_stock_type);
         $this->packItemsManager = new FakePackItemsManager4759();

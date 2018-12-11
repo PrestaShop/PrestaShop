@@ -126,6 +126,7 @@ class TranslationRouteFinder
                 // If module is not using the new translation system -
                 // generate a legacy link for it
                 if (!$this->isModuleUsingNewTranslationSystem($moduleName)) {
+                    $language = $propertyAccessor->getValue($routeProperties, '[language]');
                     $route = $this->link->getAdminLink(
                         'AdminTranslations',
                         true,
@@ -133,6 +134,7 @@ class TranslationRouteFinder
                         [
                             'type' => self::MODULES,
                             'module' => $moduleName,
+                            'lang' => $language,
                         ]
                     );
                 }

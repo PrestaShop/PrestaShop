@@ -55,7 +55,7 @@ class TranslationControllerTest extends ApiTestCase
      *
      * @param $params
      */
-    public function it_should_return_bad_response_when_requesting_domain($params)
+    public function itShouldReturnBadResponseWhenRequestingDomain($params)
     {
         $this->assertBadRequest('api_translation_domain_catalog', $params);
     }
@@ -66,7 +66,7 @@ class TranslationControllerTest extends ApiTestCase
      *
      * @param $params
      */
-    public function it_should_return_ok_response_when_requesting_domain($params)
+    public function itShouldReturnOkResponseWhenRequestingDomain($params)
     {
         $this->assertOkRequest('api_translation_domain_catalog', $params);
     }
@@ -107,7 +107,7 @@ class TranslationControllerTest extends ApiTestCase
      *
      * @param $params
      */
-    public function it_should_return_bad_response_when_requesting_domain_catalog($params)
+    public function itShouldReturnBadResponseWhenRequestingDomainCatalog($params)
     {
         $this->assertBadRequest('api_translation_domains_tree', $params);
     }
@@ -118,7 +118,7 @@ class TranslationControllerTest extends ApiTestCase
      *
      * @param $params
      */
-    public function it_should_return_ok_response_when_requesting_domain_catalog($params)
+    public function itShouldReturnOkResponseWhenRequestingDomainCatalog($params)
     {
         $this->assertOkRequest('api_translation_domains_tree', $params);
     }
@@ -173,7 +173,7 @@ class TranslationControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_error_response_when_requesting_translations_edition()
+    public function itShouldReturnErrorResponseWhenRequestingTranslationsEdition()
     {
         $this->assertErrorResponseOnTranslationEdition();
     }
@@ -182,7 +182,7 @@ class TranslationControllerTest extends ApiTestCase
      * @dataProvider getGoodEditTranslations
      * @test
      */
-    public function it_should_return_valid_response_when_requesting_translations_edition($params)
+    public function itShouldReturnValidResponseWhenRequestingTranslationsEdition($params)
     {
         $this->assertOkResponseOnTranslationEdition($params);
     }
@@ -215,7 +215,7 @@ class TranslationControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_error_response_when_requesting_translations_reset()
+    public function itShouldReturnErrorResponseWhenRequestingTranslationsReset()
     {
         $this->assertErrorResponseOnTranslationReset();
     }
@@ -224,7 +224,7 @@ class TranslationControllerTest extends ApiTestCase
      * @dataProvider getGoodResetTranslations
      * @test
      */
-    public function it_should_return_valid_response_when_requesting_translations_reset($params)
+    public function itShouldReturnValidResponseWhenRequestingTranslationsReset($params)
     {
         $this->assertOkResponseOnTranslationReset($params);
     }

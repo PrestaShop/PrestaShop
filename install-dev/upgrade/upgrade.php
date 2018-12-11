@@ -129,7 +129,7 @@ if ($upgrade->getInAutoUpgrade()) {
  */
 function displayHelp()
 {
-    echo <<<EOF
+    echo <<<'EOF'
 PrestaShop upgrade
 
 This script can be called directly and is used by the 1-click upgrade module. It ouputs xml in the first case and json data for the module.

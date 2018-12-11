@@ -32,7 +32,7 @@ use Phake;
 
 class AverageTaxOfProductsTaxCalculatorTest extends UnitTestCase
 {
-    public function test_tax_is_split_according_to_share_of_each_tax_rate()
+    public function testTaxIsSplitAccordingToShareOfEachTaxRate()
     {
         $db = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface');
         $configuration = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');

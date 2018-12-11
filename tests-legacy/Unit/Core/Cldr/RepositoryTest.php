@@ -62,11 +62,11 @@ class RepositoryTest extends UnitTestCase
 
     public function testCacheFolderIsCreated()
     {
-        $this->assertFalse(file_exists($this->cldrCacheFolder));
+        $this->assertFileNotExists($this->cldrCacheFolder);
 
         mkdir($this->cldrCacheFolder, 0777, true);
 
-        $this->assertTrue(file_exists($this->cldrCacheFolder));
+        $this->assertFileExists($this->cldrCacheFolder);
     }
 
     public function testSetLocale()

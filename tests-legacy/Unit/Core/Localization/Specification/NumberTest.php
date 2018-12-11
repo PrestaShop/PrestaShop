@@ -107,10 +107,11 @@ class NumberTest extends TestCase
      * When asking it a symbols list for a given INVALID numbering system
      * Then an exception souhd be raised
      *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetSymbolsByNumberingSystemWithInvalidParameter()
     {
+        $this->expectException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+
         $this->latinNumberSpec->getSymbolsByNumberingSystem('foobar');
     }
 }

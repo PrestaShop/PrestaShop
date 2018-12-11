@@ -39,7 +39,7 @@ class CustomerId
     private $customerId;
 
     /**
-     * @param $customerId
+     * @param int $customerId
      */
     public function __construct($customerId)
     {
@@ -59,7 +59,7 @@ class CustomerId
      */
     private function setCustomerId($customerId)
     {
-        if (!is_numeric($customerId) || 0 > $customerId) {
+        if (!is_int($customerId) || 0 > $customerId) {
             throw new InvalidCustomerIdException(sprintf(
                 'Invalid Customer id value %s supplied. Customer id should be positive integer.',
                 var_export($customerId, true)

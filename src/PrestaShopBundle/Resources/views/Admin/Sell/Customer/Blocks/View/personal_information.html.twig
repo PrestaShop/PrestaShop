@@ -169,12 +169,12 @@
           {% if customerInformation.generalInformation.customerBySameEmailExists %}
             <p>{{ 'A registered customer account using the defined email address already exists. '|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
           {% else %}
-            {{ form_start(transferGuestAccountForm) }}
+            {{ form_start(transferGuestAccountForm, {'action': path('admin_customers_transform_guest_to_customer', {'customerId': customerInformation.customerId.value})}) }}
               <button class="btn btn-primary btn-sm">
                 {{ 'Transform to a customer account'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </button>
 
-              <p>{{ 'This feature generates a random password before sending an email to your customer.'|trans({}, 'Admin.Orderscustomers.Help') }}</p>
+              <p class="small-text">{{ 'This feature generates a random password before sending an email to your customer.'|trans({}, 'Admin.Orderscustomers.Help') }}</p>
             {{ form_end(transferGuestAccountForm) }}
           {% endif %}
         </div>

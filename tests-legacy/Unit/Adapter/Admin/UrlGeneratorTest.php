@@ -37,7 +37,7 @@ class UrlGeneratorTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->context->language = new \Language;
+        $this->context->language = new \Language();
         $this->context->language->id = 42;
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');
@@ -45,7 +45,7 @@ class UrlGeneratorTest extends UnitTestCase
         $this->setupSfKernel();
     }
 
-    public function test_generate_equivalent_route()
+    public function testGenerateEquivalentRoute()
     {
         $router = $this->sfKernel->getContainer()->get('router');
         $generator = new UrlGenerator($this->legacyContext, $router);

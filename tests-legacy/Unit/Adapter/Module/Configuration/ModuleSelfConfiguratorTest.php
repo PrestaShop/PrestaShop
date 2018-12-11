@@ -57,7 +57,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     public function setUp()
     {
         $this->configuration = new ConfigurationMock();
-        $this->connection = new ConnectionMock(array(), new Driver);
+        $this->connection = new ConnectionMock(array(), new Driver());
         $this->mockModuleRepository();
 
         $this->defaultDir = __DIR__.'/../../../../resources/module-self-config-files';
@@ -152,7 +152,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $filepath = $this->defaultDir.'/moduleConfCrashFileSource.yml';
         $name = 'bankwire';
 
-        $this->setExpectedException('Exception', 'Missing source file');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Missing source file');
         $this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure();
     }
 
@@ -161,7 +162,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $filepath = $this->defaultDir.'/moduleConfCrashFileDestination.yml';
         $name = 'bankwire';
 
-        $this->setExpectedException('Exception', 'Missing destination file');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Missing destination file');
         $this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure();
     }
 
@@ -223,7 +225,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $filepath = $this->defaultDir.'/moduleConfCrashSql.yml';
         $name = 'bankwire';
 
-        $this->setExpectedException('Exception', 'Missing file path');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Missing file path');
         $this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure();
     }
 

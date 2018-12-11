@@ -231,7 +231,7 @@ class PDFGeneratorCore extends TCPDF
         }
 
         $seed .= uniqid('', true);
-        $seed .= rand();
+        $seed .= mt_rand(0, mt_getrandmax());
         $seed .= __FILE__;
         $seed .= $this->bufferlen;
 
@@ -254,7 +254,7 @@ class PDFGeneratorCore extends TCPDF
             $seed .= $_SERVER['HTTP_ACCEPT_CHARSET'];
         }
 
-        $seed .= rand();
+        $seed .= mt_rand(0, mt_getrandmax());
         $seed .= uniqid('', true);
         $seed .= microtime();
 

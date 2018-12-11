@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 <tbody
-    {% if activate_drag_and_drop and has_category_filter %}class="sortable"{% endif %}
+    {% if activate_drag_and_drop %}class="sortable"{% endif %}
     last_sql="{{ last_sql_query|escape('html_attr') }}"
 >
     {% for product in products %}

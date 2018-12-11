@@ -75,8 +75,7 @@ class ImportController extends FrameworkBundleAdminController
         $iniConfiguration = $this->get('prestashop.core.configuration.ini_configuration');
         $importConfigFactory = $this->get('prestashop.core.import.config_factory');
 
-        $importConfig = $importConfigFactory->buildFromRequest($request);
-        $form = $formHandler->getForm($importConfig);
+        $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
