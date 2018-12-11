@@ -123,8 +123,8 @@ class HashMapWhitelistFilter implements FilterInterface
             );
         }
 
-        unset($this->whitelistItems[$key]);
-        unset($this->filters[$key]);
+        unset($this->whitelistItems[$key], $this->filters[$key]);
+        
 
         return $this;
     }
