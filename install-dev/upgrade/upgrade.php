@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 use PrestaShopBundle\Install\Upgrade;
 
 // Although no arguments execute the script, you can get some help if requested.

@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Integration;
 
-
 use Module;
 use PrestaShopAutoload;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;

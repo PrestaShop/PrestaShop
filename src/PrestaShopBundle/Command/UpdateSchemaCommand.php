@@ -78,9 +78,9 @@ class UpdateSchemaCommand extends ContainerAwareCommand
 
         // First drop any existing FK
         $query = $conn->query(
-            'SELECT CONSTRAINT_NAME, TABLE_NAME 
+            'SELECT CONSTRAINT_NAME, TABLE_NAME
                 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
-                WHERE CONSTRAINT_TYPE = "FOREIGN KEY" 
+                WHERE CONSTRAINT_TYPE = "FOREIGN KEY"
                     AND TABLE_SCHEMA = "' . $this->dbName . '"
                     AND TABLE_NAME LIKE "' . $this->dbPrefix . '%" '
         );

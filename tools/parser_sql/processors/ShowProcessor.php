@@ -36,11 +36,11 @@ require_once(dirname(__FILE__) . '/LimitProcessor.php');
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 
 /**
- * 
+ *
  * This class processes the SHOW statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class ShowProcessor extends AbstractProcessor {
 

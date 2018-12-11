@@ -31,7 +31,7 @@ function add_new_status_stock()
 
     // insert ps_tab AdminStockManagement
     $count = (int)Db::getInstance()->getValue(
-        'SELECT count(id_tab) FROM `' . _DB_PREFIX_ . 'tab` 
+        'SELECT count(id_tab) FROM `' . _DB_PREFIX_ . 'tab`
         WHERE `class_name` = \'AdminStockManagement\'
         AND `id_parent` = 9'
     );
@@ -55,10 +55,10 @@ function add_new_status_stock()
                 )
             );
             Db::getInstance()->execute(
-                "INSERT INTO `" . _DB_PREFIX_ . "tab_lang` (`id_tab`, `id_lang`, `name`) 
+                "INSERT INTO `" . _DB_PREFIX_ . "tab_lang` (`id_tab`, `id_lang`, `name`)
                 VALUES (
-                  " . $lastIdTab . ", 
-                  " . $idLang . ", 
+                  " . $lastIdTab . ",
+                  " . $idLang . ",
                   '" . $stockName . "'
                 )"
             );
@@ -140,7 +140,7 @@ function configuration_exists($confName)
 {
     $count = (int)Db::getInstance()->getValue(
         'SELECT count(id_configuration)
-        FROM `' . _DB_PREFIX_ . 'configuration` 
+        FROM `' . _DB_PREFIX_ . 'configuration`
         WHERE `name` = \'' . $confName . '\''
     );
 

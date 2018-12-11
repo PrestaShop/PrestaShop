@@ -271,7 +271,6 @@ $timezones = array(
     'ZW' => 'Africa/Harare',
 );
 
-
 if (isset($timezones[$_GET['country']]) && $timezones[$_GET['country']]) {
     die($timezones[$_GET['country']]);
 }

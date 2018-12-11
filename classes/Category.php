@@ -490,8 +490,8 @@ class CategoryCore extends ObjectModel
             $chunks = array_chunk($queries, 5000);
             foreach ($chunks as $chunk) {
                 $sqlChunk = array_map(function ($value) { return '(' . rtrim(implode(',', $value)) . ')'; }, $chunk);
-                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'category` (id_category, nleft, nright) 
-                VALUES ' . rtrim(implode(',', $sqlChunk), ',') . ' 
+                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'category` (id_category, nleft, nright)
+                VALUES ' . rtrim(implode(',', $sqlChunk), ',') . '
                 ON DUPLICATE KEY UPDATE nleft=VALUES(nleft), nright=VALUES(nright)');
             }
         }
@@ -855,12 +855,12 @@ class CategoryCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.`id_category`, cl.`name`, c.id_parent
 		FROM `' . _DB_PREFIX_ . 'category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl 
+		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
 		ON (c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . ')
 		' . Shop::addSqlAssociation('category', 'c') . '
 		WHERE cl.`id_lang` = ' . (int) $idLang . '
         AND c.`nleft` >= ' . (int) $rootTreeInfo['nleft'] . '
-        AND c.`nright` <= ' . (int) $rootTreeInfo['nright'] . '		
+        AND c.`nright` <= ' . (int) $rootTreeInfo['nright'] . '
 		GROUP BY c.id_category
 		ORDER BY c.`id_category`, category_shop.`position`');
     }
@@ -1559,7 +1559,7 @@ class CategoryCore extends ObjectModel
 
         if (!empty($treeInfo)) {
             $rootTreeInfo = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-                'SELECT c.`nleft`, c.`nright` FROM `' . _DB_PREFIX_ . 'category` c 
+                'SELECT c.`nleft`, c.`nright` FROM `' . _DB_PREFIX_ . 'category` c
             WHERE c.`id_category` = ' . (int) $context->shop->id_category
             );
 

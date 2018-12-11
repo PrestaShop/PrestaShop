@@ -32,7 +32,7 @@
 
 /**
  * This class implements some helper functions.
- * 
+ *
  * @author arothe
  * @deprecated
  */
@@ -40,7 +40,7 @@ class PHPSQLParserUtils {
 
     /**
      * Prints an array only if debug mode is on.
-     * 
+     *
      * @param array $s
      * @param boolean $return, if true, the formatted array is returned via return parameter
      */
@@ -59,7 +59,7 @@ class PHPSQLParserUtils {
 
     /**
      * Ends the given string $haystack with the string $needle?
-     * 
+     *
      * @param string $haystack
      * @param string $needle
      */

@@ -81,7 +81,6 @@ function enableGiftFeature()
 
 enableGiftFeature();
 
-
 echo "- Gift feature display enabled\n";
 
 // Setup modules
@@ -104,7 +103,6 @@ function hookModule($moduleName, $hookName)
     $module->registerHook($hookName);
     echo "- module `$moduleName` hooked to `$hookName`\n";
 }
-
 
 // We need a customizable product: we add a single required text field to the product with id 1.
 

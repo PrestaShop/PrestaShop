@@ -67,7 +67,7 @@ class PrestaShopAutoloadTest extends TestCase
         @mkdir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override/classes/', 0777, true);
         define('_PS_HOST_MODE_', 1);
         file_put_contents(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override/classes/Connection.php',
-            '<?php 
+            '<?php
             class Connection extends ConnectionCore {
         }');
         PrestaShopAutoload::getInstance()->generateIndex();

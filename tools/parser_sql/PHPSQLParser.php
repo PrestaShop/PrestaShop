@@ -32,7 +32,7 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
@@ -54,9 +54,9 @@ class PHPSQLParser {
     public $parsed;
 
     /**
-     * Constructor. It simply calls the parse() function. 
+     * Constructor. It simply calls the parse() function.
      * Use the public variable $parsed to get the output.
-     * 
+     *
      * @param String  $sql           The SQL statement.
      * @param boolean $calcPositions True, if the output should contain [position], false otherwise.
      */
@@ -67,16 +67,16 @@ class PHPSQLParser {
     }
 
     /**
-     * It parses the given SQL statement and generates a detailled 
-     * output array for every part of the statement. The method can 
-     * also generate [position] fields within the output, which hold 
-     * the character position for every statement part. The calculation 
+     * It parses the given SQL statement and generates a detailled
+     * output array for every part of the statement. The method can
+     * also generate [position] fields within the output, which hold
+     * the character position for every statement part. The calculation
      * of the positions needs some time, if you don't need positions in
      * your application, set the parameter to false.
-     * 
+     *
      * @param String  $sql           The SQL statement.
      * @param boolean $calcPositions True, if the output should contain [position], false otherwise.
-     * 
+     *
      * @return array An associative array with all meta information about the SQL statement.
      */
     public function parse($sql, $calcPositions = false) {

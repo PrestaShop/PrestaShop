@@ -35,11 +35,11 @@ require_once(dirname(__FILE__) . '/SelectExpressionProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
+ *
  * This class processes the ORDER-BY statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class OrderByProcessor extends AbstractProcessor {
 

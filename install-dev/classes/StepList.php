@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 class StepList implements IteratorAggregate
 {
     /**

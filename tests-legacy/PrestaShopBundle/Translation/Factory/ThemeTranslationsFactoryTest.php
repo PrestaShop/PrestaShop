@@ -239,7 +239,6 @@ class ThemeTranslationsFactoryTest extends TestCase
         return $providerMock;
     }
 
-
     protected function assertPropertiesTranslations($locale)
     {
         $this->assertInternalType('array', $this->translations);

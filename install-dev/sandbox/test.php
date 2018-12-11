@@ -24,5 +24,4 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 echo 'ok';

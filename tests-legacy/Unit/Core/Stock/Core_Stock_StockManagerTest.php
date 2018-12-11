@@ -102,7 +102,6 @@ class FakePackItemsManager4759
     }
 }
 
-
 class StockAvailableTest extends UnitTestCase
 {
     private function setStockType($packStockType)
@@ -198,7 +197,6 @@ class StockAvailableTest extends UnitTestCase
         }
     }
 
-
     public function get_update_product_quantity_provider()
     {
         return array(
@@ -290,7 +288,6 @@ class StockAvailableTest extends UnitTestCase
             $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
         }
     }
-
 
     public function get_update_quantity_provider()
     {
@@ -387,7 +384,6 @@ class StockAvailableTest extends UnitTestCase
         }
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $this->packItemsManager);
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
-
 
         $productToUpdate = ($product_to_update === 0)? $pack : $products[$product_to_update-1][0];
         $productAttributeToUpdate = ($product_to_update === 0)? null : $products[$product_to_update-1][1];

@@ -83,7 +83,7 @@ class ProductAssemblerCore
                     AND pl.id_shop = $idShop
                     AND pl.id_lang = $idLang
                 LEFT JOIN {$prefix}stock_available sa
-			        ON sa.id_product = p.id_product 
+			        ON sa.id_product = p.id_product
 			        AND sa.id_shop = $idShop
 			    WHERE p.id_product = $idProduct";
 

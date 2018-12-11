@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id: SelectBuilder.php 903 2014-01-06 11:29:19Z phosco@gmx.de $
- * 
+ *
  */
 require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
 require_once dirname(__FILE__) . '/ConstantBuilder.php';
@@ -51,7 +51,7 @@ require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
 class SelectBuilder {
 
@@ -87,7 +87,7 @@ class SelectBuilder {
     /**
      * Returns a well-formatted delimiter string. If you don't need nice SQL,
      * you could simply return $parsed['delim'].
-     * 
+     *
      * @param array $parsed The part of the output array, which contains the current expression.
      * @return a string, which is added right after the expression
      */

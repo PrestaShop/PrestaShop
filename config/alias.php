@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 use Symfony\Component\VarDumper\VarDumper;
 
 if (!function_exists('dump')) {

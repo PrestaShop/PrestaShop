@@ -33,11 +33,11 @@
 require_once(dirname(__FILE__) . '/SelectExpressionProcessor.php');
 
 /**
- * 
+ *
  * This class processes the SELECT statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class SelectProcessor extends SelectExpressionProcessor {
 
