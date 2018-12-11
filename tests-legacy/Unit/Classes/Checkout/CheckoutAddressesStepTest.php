@@ -43,9 +43,9 @@ class CheckoutAddressesStepTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $context = new Context;
-        $context->language = new Language;
-        $context->customer = new Customer;
+        $context = new Context();
+        $context->language = new Language();
+        $context->customer = new Customer();
         $context->link = Phake::mock('Link');
         Phake::when($context->link)->getPageLink(Phake::anyParameters())->thenReturn('http://addresses-actions.url');
 

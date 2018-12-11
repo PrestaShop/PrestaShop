@@ -276,7 +276,7 @@ function checkingTab($tab)
         echo sprintf(Tools::displayError('The class %s cannot be found.'), $tab);
         return false;
     }
-    $admin_obj = new $tab;
+    $admin_obj = new $tab();
     if (!$admin_obj->viewAccess() && ($admin_obj->table != 'employee' || Context::getContext()->employee->id != Tools::getValue('id_employee') || !Tools::isSubmit('updateemployee'))) {
         $admin_obj->_errors = array(Tools::displayError('Access denied.'));
         echo $admin_obj->displayErrors();
