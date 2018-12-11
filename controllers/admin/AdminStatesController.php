@@ -295,7 +295,5 @@ class AdminStatesControllerCore extends AdminController
         if (Tools::getIsset('submitBulkAffectZonestate')) {
             $this->tpl_list_vars['assign_zone'] = true;
         }
-
-        
     }
 }

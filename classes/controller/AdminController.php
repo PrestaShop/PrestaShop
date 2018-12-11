@@ -1269,8 +1269,6 @@ class AdminControllerCore extends Controller
         if (isset($object)) {
             return $object;
         }
-
-        
     }
 
     /**

@@ -393,8 +393,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             ),
             'product' => $productForTemplate,
         )));
-
-        
     }
 
     public function displayAjaxRefresh()
@@ -437,8 +435,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
         )));
-
-        
     }
 
     /**

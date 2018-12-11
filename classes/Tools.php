@@ -3482,8 +3482,6 @@ exit;
             $array[key($array2)] = current($array2);
             next($array2);
         }
-
-        
     }
 
     /**
