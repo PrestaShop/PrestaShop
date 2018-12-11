@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table()
+ * @ORM\Table
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\LangRepository")
  */
 class Lang
