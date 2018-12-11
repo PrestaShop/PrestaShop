@@ -116,6 +116,7 @@ class CustomerController extends AbstractAdminController
         return $this->render('@PrestaShop/Admin/Sell/Customer/create.html.twig', [
             'customerForm' => $customerForm->createView(),
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
+            'minPasswordLength' => Password::MIN_LENGTH,
         ]);
     }
 
@@ -165,6 +166,7 @@ class CustomerController extends AbstractAdminController
             'customerForm' => $customerForm->createView(),
             'customerInformation' => $customerInformation,
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
+            'minPasswordLength' => Password::MIN_LENGTH,
         ]);
     }
 
