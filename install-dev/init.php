@@ -119,8 +119,8 @@ define('_PS_INSTALL_FIXTURES_PATH_', _PS_INSTALL_PATH_.'fixtures/');
 // Add classes used by installer bellow.
 
 require_once _PS_CORE_DIR_.'/config/alias.php';
-require_once _PS_INSTALL_PATH_ . 'classes/Exception.php';
-require_once _PS_INSTALL_PATH_ . 'classes/Session.php';
+require_once _PS_INSTALL_PATH_.'classes/exception.php';
+require_once _PS_INSTALL_PATH_.'classes/session.php';
 
 @set_time_limit(0);
 if (!@ini_get('date.timezone')) {
