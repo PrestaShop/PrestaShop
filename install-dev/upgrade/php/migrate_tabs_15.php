@@ -29,7 +29,7 @@
  */
 function migrate_tabs_15()
 {
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php');
+    include_once _PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php';
 
     // ===== Remove deleted tabs =====
     $remove_tabs = array(

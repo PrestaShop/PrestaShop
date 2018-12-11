@@ -3301,7 +3301,7 @@ class imageLib
   #
   {
       if (file_exists($this->psdReaderPath)) {
-          include_once($this->psdReaderPath);
+          include_once $this->psdReaderPath;
 
           $psdReader = new PhpPsdReader($fileName);
 

@@ -1,9 +1,9 @@
 <?php
-include('config/config.php');
+include 'config/config.php';
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
     die('forbiden');
 }
-include('include/utils.php');
+include 'include/utils.php';
 
 $_POST['path_thumb'] = $thumbs_base_path.$_POST['path_thumb'];
 if (!isset($_POST['path_thumb']) && trim($_POST['path_thumb']) == '') {
@@ -48,7 +48,7 @@ while ($cycle && $i < $max_cycles) {
     }
 
     if (file_exists($path.'config.php')) {
-        require_once($path.'config.php');
+        require_once $path.'config.php';
         $cycle = false;
     }
     $path = fix_dirname($path).'/';

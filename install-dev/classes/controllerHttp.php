@@ -175,7 +175,7 @@ class InstallControllerHttp
         $self = new self();
 
         if (Tools::getValue('compile_templates')) {
-            require_once(_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
+            require_once _PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php';
             exit;
         }
 
@@ -472,7 +472,7 @@ class InstallControllerHttp
             ob_start();
         }
 
-        include($path.$template.'.php');
+        include $path.$template.'.php';
 
         if ($get_output) {
             $content = ob_get_contents();

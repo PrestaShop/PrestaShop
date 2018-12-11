@@ -27,8 +27,8 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
-require_once(_PS_ADMIN_DIR_.'/init.php');
+require_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
+require_once _PS_ADMIN_DIR_.'/init.php';
 
 if (isset($_GET['img']) && Validate::isMd5($_GET['img']) && isset($_GET['name']) && Validate::isGenericName($_GET['name']) && file_exists(_PS_UPLOAD_DIR_.$_GET['img'])) {
     header('Content-type: image/jpeg');

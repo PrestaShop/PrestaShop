@@ -26,9 +26,9 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 /* Getting cookie or logout */
-require_once(_PS_ADMIN_DIR_.'/init.php');
+require_once _PS_ADMIN_DIR_.'/init.php';
 
 $query = Tools::getValue('q', false);
 if (!$query || $query == '' || strlen($query) < 1) {

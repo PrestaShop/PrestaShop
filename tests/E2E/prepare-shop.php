@@ -25,7 +25,7 @@
  */
 
 define('_PS_MODE_DEV_', false);
-require(__DIR__.'/../../config/config.inc.php');
+require __DIR__.'/../../config/config.inc.php';
 
 // useful variables
 

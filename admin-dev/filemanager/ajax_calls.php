@@ -1,12 +1,12 @@
 <?php
 
-include('config/config.php');
+include 'config/config.php';
 
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
     die('Forbidden');
 }
 
-include('include/utils.php');
+include 'include/utils.php';
 
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {

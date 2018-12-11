@@ -26,7 +26,7 @@
 
 ob_start();
 
-require_once(dirname(__FILE__).'/../config/config.inc.php');
+require_once dirname(__FILE__).'/../config/config.inc.php';
 
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();

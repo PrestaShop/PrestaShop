@@ -26,7 +26,7 @@
 
 function ps_1700_add_payment_preferences_tab()
 {
-    include_once('add_new_tab.php');
+    include_once 'add_new_tab.php';
     // TODO: ajouter les trads ? translations/[fr]/tabs.php et autre ?
     add_new_tab(
         'AdminPaymentPreferences',

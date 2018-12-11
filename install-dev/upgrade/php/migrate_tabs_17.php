@@ -32,7 +32,7 @@ use PrestaShopBundle\Install\LanguageList;
  */
 function migrate_tabs_17()
 {
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php');
+    include_once _PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php';
 
     /* first make some room for new tabs */
     $moduleTabs = Db::getInstance()->executeS(

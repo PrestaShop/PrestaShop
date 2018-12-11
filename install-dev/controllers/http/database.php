@@ -139,7 +139,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     {
         if (!$this->session->database_server) {
             if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.php')) {
-                $parameters = require(_PS_ROOT_DIR_.'/app/config/parameters.php');
+                $parameters = require _PS_ROOT_DIR_.'/app/config/parameters.php';
             } else {
                 $parameters = Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml.dist'));
             }
