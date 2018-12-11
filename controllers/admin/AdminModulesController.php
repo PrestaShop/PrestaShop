@@ -753,7 +753,6 @@ class AdminModulesControllerCore extends AdminController
                 $loggedOnAddons = false;
 
                 if (isset($this->context->cookie->username_addons, $this->context->cookie->password_addons)
-                     
                     && !empty($this->context->cookie->username_addons)
                     && !empty($this->context->cookie->password_addons)) {
                     $loggedOnAddons = true;

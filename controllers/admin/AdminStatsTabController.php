@@ -266,7 +266,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             $from = (date('Y') - 1) . date('-01-01');
             $to = (date('Y') - 1) . date('-12-31');
         }
-        if (isset($from, $to)   && !count($this->errors)) {
+        if (isset($from, $to) && !count($this->errors)) {
             $this->context->employee->stats_date_from = $from;
             $this->context->employee->stats_date_to = $to;
             $this->context->employee->update();
