@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
+use PrestaShop\PrestaShop\Core\Product\Search\FacetCollection;
 use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
@@ -304,10 +305,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         // We're ready to run the actual query!
 
+        /** @var ProductSearchResult $result */
         $result = $provider->runQuery(
             $context,
             $query
         );
+        $this->filterFacetCollection($result->getFacetCollection());
 
         // sort order is useful for template,
         // add it if undefined - it should be the same one
@@ -386,6 +389,22 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         Hook::exec('actionProductSearchAfter', $searchVariables);
 
         return $searchVariables;
+    }
+
+    /**
+     * @param FacetCollection $facetCollection
+     */
+    protected function filterFacetCollection(FacetCollection $facetCollection)
+    {
+        $filteredFacets = [];
+        /** @var Facet $facet */
+        foreach ($facetCollection->getFacets() as $facet) {
+            if (Configuration::get('PS_CATALOG_MODE') && 'price' === $facet->getType()) {
+                continue;
+            }
+            $filteredFacets[] = $facet;
+        }
+        $facetCollection->setFacets($filteredFacets);
     }
 
     /**
