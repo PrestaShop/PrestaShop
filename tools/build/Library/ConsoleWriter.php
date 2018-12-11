@@ -83,9 +83,9 @@ class ConsoleWriter
      * @param string $text
      * @param string $color
      *
+     * @throws BuildException
      * @return $this
      *
-     * @throws BuildException
      */
     public function displayText($text, $color = self::COLOR_WHITE)
     {

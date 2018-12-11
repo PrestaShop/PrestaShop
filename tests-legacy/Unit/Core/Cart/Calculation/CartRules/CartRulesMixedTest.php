@@ -40,6 +40,10 @@ class CartRulesMixedTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartWithMultipleCartRulesMixedProvider
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $cartRuleData
+     * @param mixed $knownToFailOnV1
      */
     public function testCartWithMultipleCartRulesMixed(
         $productData,

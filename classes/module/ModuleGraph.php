@@ -266,6 +266,8 @@ abstract class ModuleGraphCore extends Module
 
     /**
      * @todo Set this method as abstracted ? Quid of module compatibility.
+     * @param mixed $option
+     * @param mixed $layers
      */
     public function setOption($option, $layers = 1)
     {

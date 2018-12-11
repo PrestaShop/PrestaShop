@@ -131,6 +131,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * Renders an array of facets.
      *
      * @param array $facets
+     * @param ProductSearchResult $result
      *
      * @return string the HTML of the facets
      */
@@ -169,6 +170,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * Renders an array of active filters.
      *
      * @param array $facets
+     * @param ProductSearchResult $result
      *
      * @return string the HTML of the facets
      */
@@ -532,6 +534,8 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * If we're not doing AJAX, then render the whole page with the given template.
      *
      * @param string $template the template for this page
+     * @param mixed $params
+     * @param null|mixed $locale
      */
     protected function doProductSearch($template, $params = array(), $locale = null)
     {

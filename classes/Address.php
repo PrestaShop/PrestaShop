@@ -159,6 +159,7 @@ class AddressCore extends ObjectModel
      * Build an Address.
      *
      * @param int $id_address Existing Address ID in order to load object (optional)
+     * @param null|mixed $id_lang
      */
     public function __construct($id_address = null, $id_lang = null)
     {
@@ -172,6 +173,8 @@ class AddressCore extends ObjectModel
 
     /**
      * @see ObjectModel::add()
+     * @param mixed $autodate
+     * @param mixed $null_values
      */
     public function add($autodate = true, $null_values = false)
     {
@@ -188,6 +191,7 @@ class AddressCore extends ObjectModel
 
     /**
      * @see ObjectModel::update()
+     * @param mixed $null_values
      */
     public function update($null_values = false)
     {
@@ -444,9 +448,9 @@ class AddressCore extends ObjectModel
      * @param int $id_address
      * @param bool $with_geoloc
      *
+     * @throws PrestaShopException
      * @return Address address
      *
-     * @throws PrestaShopException
      */
     public static function initialize($id_address = null, $with_geoloc = false)
     {
@@ -532,7 +536,7 @@ class AddressCore extends ObjectModel
      * @param int $id_address Address id
      * @param int $id_customer Customer id
      *
-     * @return false|null|string Amount of aliases found
+     * @return null|false|string Amount of aliases found
      * @todo: Find out if we shouldn't be returning an int instead? (breaking change)
      */
     public static function aliasExist($alias, $id_address, $id_customer)

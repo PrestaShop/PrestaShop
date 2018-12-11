@@ -57,10 +57,10 @@ class ConnectionsSourceCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the ConnectionsSource has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Indicates whether the ConnectionsSource has been successfully added
+     *
      */
     public function add($autoDate = true, $nullValues = false)
     {

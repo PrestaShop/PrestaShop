@@ -93,7 +93,7 @@ final class FormHandler implements FormHandlerInterface
 
     /**
      * @param FormInterface $form
-     * @param int|null $id
+     * @param null|int $id
      *
      * @return FormHandlerResultInterface
      */

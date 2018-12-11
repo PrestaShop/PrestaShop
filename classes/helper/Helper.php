@@ -116,6 +116,13 @@ class HelperCore
 
     /**
      * @deprecated 1.5.0
+     * @param mixed $translations
+     * @param mixed $selected_cat
+     * @param mixed $input_name
+     * @param mixed $use_radio
+     * @param mixed $use_search
+     * @param mixed $disabled_categories
+     * @param mixed $use_in_popup
      */
     public static function renderAdminCategorieTree(
         $translations,

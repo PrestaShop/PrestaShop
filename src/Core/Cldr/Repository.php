@@ -196,7 +196,7 @@ class Repository
      *
      * @param string $code currency iso code
      *
-     * @return int|null iso code num
+     * @return null|int iso code num
      */
     public function getCurrencyIsoCodeNum($code)
     {

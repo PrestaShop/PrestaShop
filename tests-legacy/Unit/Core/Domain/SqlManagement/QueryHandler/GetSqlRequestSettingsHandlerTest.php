@@ -37,6 +37,8 @@ class GetSqlRequestSettingsHandlerTest extends TestCase
 {
     /**
      * @dataProvider getInvalidConfiguration
+     * @param mixed $configuredValue
+     * @param mixed $expectedValue
      */
     public function testItReturnsCorrectSettings($configuredValue, $expectedValue)
     {

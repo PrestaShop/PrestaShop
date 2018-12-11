@@ -48,7 +48,7 @@ final class PositionModification implements PositionModificationInterface
     private $newPosition;
 
     /**
-     * @param string|int $id
+     * @param int|string $id
      * @param int $oldPosition
      * @param int $newPosition
      */

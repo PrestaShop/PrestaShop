@@ -81,6 +81,11 @@ class CurrencyTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider currencyDataProvider
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $cartRuleData
+     * @param mixed $defaultCurrencyId
+     * @param mixed $currencyId
      */
     public function testCurrencies(
         $productData,
@@ -103,6 +108,7 @@ class CurrencyTest extends AbstractCartCalculationTest
      * sets the default currency change rate to avoid using 1.0 as default
      *
      * @param float $changeRate
+     * @param mixed $currencyId
      */
     protected function setDefaultCurrency($currencyId)
     {

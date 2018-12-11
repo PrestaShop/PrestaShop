@@ -43,6 +43,8 @@ class ImageTagSourceParserTest extends TestCase
 
     /**
      * @dataProvider getTestCases
+     * @param mixed $imageTag
+     * @param mixed $expectedSource
      */
     public function testItParsesSourceAsExpected($imageTag, $expectedSource)
     {

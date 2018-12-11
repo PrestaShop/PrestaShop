@@ -22,6 +22,11 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
+ * @param mixed $image
+ * @param mixed $cacheImage
+ * @param mixed $size
+ * @param mixed $imageType
+ * @param mixed $disableCache
  */
 
 /**
@@ -35,6 +40,8 @@ function cacheImage($image, $cacheImage, $size, $imageType = 'jpg', $disableCach
 
 /**
  * @deprecated 1.5.0
+ * @param mixed $file
+ * @param mixed $maxFileSize
  */
 function checkImage($file, $maxFileSize = 0)
 {
@@ -44,6 +51,7 @@ function checkImage($file, $maxFileSize = 0)
 
 /**
  * @deprecated 1.5.0
+ * @param mixed $file
  */
 function checkImageUploadError($file)
 {
@@ -52,6 +60,8 @@ function checkImageUploadError($file)
 
 /**
  *  @deprecated 1.5.0
+ * @param mixed $file
+ * @param null|mixed $types
  */
 function isPicture($file, $types = null)
 {
@@ -61,6 +71,8 @@ function isPicture($file, $types = null)
 
 /**
  * @deprecated 1.5.0
+ * @param mixed $file
+ * @param mixed $maxFileSize
  */
 function checkIco($file, $maxFileSize = 0)
 {
@@ -70,6 +82,11 @@ function checkIco($file, $maxFileSize = 0)
 
 /**
  * @deprecated 1.5.0
+ * @param mixed $sourceFile
+ * @param mixed $destFile
+ * @param null|mixed $destWidth
+ * @param null|mixed $destHeight
+ * @param mixed $fileType
  */
 function imageResize($sourceFile, $destFile, $destWidth = null, $destHeight = null, $fileType = 'jpg')
 {
@@ -79,6 +96,13 @@ function imageResize($sourceFile, $destFile, $destWidth = null, $destHeight = nu
 
 /**
  * @deprecated 1.5.0
+ * @param mixed $srcFile
+ * @param mixed $destFile
+ * @param null|mixed $destWidth
+ * @param null|mixed $destHeight
+ * @param mixed $fileType
+ * @param mixed $destX
+ * @param mixed $destY
  */
 function imageCut($srcFile, $destFile, $destWidth = null, $destHeight = null, $fileType = 'jpg', $destX = 0, $destY = 0)
 {
@@ -91,6 +115,8 @@ function imageCut($srcFile, $destFile, $destWidth = null, $destHeight = null, $f
 
 /**
  * @deprecated 1.5.0
+ * @param mixed $type
+ * @param mixed $filename
  */
 function createSrcImage($type, $filename)
 {
@@ -100,6 +126,8 @@ function createSrcImage($type, $filename)
 
 /**
  * @deprecated 1.5.0
+ * @param mixed $width
+ * @param mixed $height
  */
 function createDestImage($width, $height)
 {
@@ -109,6 +137,9 @@ function createDestImage($width, $height)
 
 /**
  * @deprecated 1.5.0
+ * @param mixed $type
+ * @param mixed $ressource
+ * @param mixed $filename
  */
 function returnDestImage($type, $ressource, $filename)
 {
@@ -118,6 +149,8 @@ function returnDestImage($type, $ressource, $filename)
 
 /**
  *  @deprecated 1.5.0
+ * @param mixed $id_item
+ * @param null|mixed $id_image
  */
 function deleteImage($id_item, $id_image = null)
 {

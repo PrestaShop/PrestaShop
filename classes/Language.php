@@ -134,6 +134,7 @@ class LanguageCore extends ObjectModel
 
     /**
      * Move translations files after editing language iso code.
+     * @param mixed $newIso
      */
     public function moveToIso($newIso)
     {
@@ -445,9 +446,9 @@ class LanguageCore extends ObjectModel
      * @param $shopDefaultLangId
      * @param $shopId
      *
+     * @throws \PrestaShopDatabaseException
      * @return bool
      *
-     * @throws \PrestaShopDatabaseException
      */
     private function duplicateRowsFromDefaultShopLang($tableName, $shopDefaultLangId, $shopId)
     {
@@ -612,7 +613,7 @@ class LanguageCore extends ObjectModel
      * Returns available languages.
      *
      * @param bool $active Select only active languages
-     * @param int|bool $id_shop Shop ID
+     * @param bool|int $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
      * @return array Languages
@@ -639,7 +640,7 @@ class LanguageCore extends ObjectModel
      * Returns an array of language IDs.
      *
      * @param bool $active Select only active languages
-     * @param int|bool $id_shop Shop ID
+     * @param bool|int $id_shop Shop ID
      *
      * @return array
      */
@@ -749,9 +750,9 @@ class LanguageCore extends ObjectModel
      *
      * @param string $isoCode
      *
+     * @throws Exception
      * @return string|false
      *
-     * @throws Exception
      */
     public static function getLocaleByIso($isoCode)
     {
@@ -771,9 +772,9 @@ class LanguageCore extends ObjectModel
      *
      * @param string $locale
      *
+     * @throws Exception
      * @return string|false
      *
-     * @throws Exception
      */
     public static function getIsoByLocale($locale)
     {
@@ -833,6 +834,7 @@ class LanguageCore extends ObjectModel
      * Return array (id_lang, iso_code).
      *
      * @param string $iso_code Iso code
+     * @param mixed $active
      *
      * @return array Language (id_lang, iso_code)
      */
@@ -1183,6 +1185,7 @@ class LanguageCore extends ObjectModel
      *
      * @since 1.5.0
      *
+     * @param null|mixed $id_shop
      * @return bool
      */
     public static function isMultiLanguageActivated($id_shop = null)

@@ -45,13 +45,13 @@ class PreferencesController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
-     * @param FormInterface|null $form
+     * @param null|FormInterface $form
      *
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/preferences.html.twig")
      *
+     * @throws \LogicException
      * @return array
      *
-     * @throws \LogicException
      */
     public function indexAction(Request $request, FormInterface $form = null)
     {
@@ -85,9 +85,9 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
+     * @throws \LogicException
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @throws \LogicException
      */
     public function processFormAction(Request $request)
     {

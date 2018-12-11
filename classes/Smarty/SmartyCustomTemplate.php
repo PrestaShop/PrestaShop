@@ -25,7 +25,7 @@
  */
 class SmartyCustomTemplateCore extends Smarty_Internal_Template
 {
-    /** @var SmartyCustom|null */
+    /** @var null|SmartyCustom */
     public $smarty = null;
 
     public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false)

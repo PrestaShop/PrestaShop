@@ -90,7 +90,8 @@ class TagCore extends ObjectModel
      *
      * @param int $idLang Language id
      * @param int $idProduct Product id to link tags with
-     * @param string|array $tagList List of tags, as array or as a string with comas
+     * @param array|string $tagList List of tags, as array or as a string with comas
+     * @param mixed $separator
      *
      * @return bool Operation success
      */
@@ -145,7 +146,7 @@ class TagCore extends ObjectModel
     /**
      * Update tag count.
      *
-     * @param array|null $tagList
+     * @param null|array $tagList
      */
     public static function updateTagCount($tagList = null)
     {
@@ -241,7 +242,7 @@ class TagCore extends ObjectModel
      * Get Products.
      *
      * @param bool $associated
-     * @param Context|null $context
+     * @param null|Context $context
      *
      * @return array|false|mysqli_result|null|PDOStatement|resource
      */

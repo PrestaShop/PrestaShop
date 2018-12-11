@@ -93,6 +93,8 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testGetValueStripsNullCharsFromReturnedStringsExamples
+     * @param mixed $rawString
+     * @param mixed $cleanedString
      */
     public function testGetValueStripsNullCharsFromReturnedStrings($rawString, $cleanedString)
     {
@@ -200,6 +202,8 @@ class ToolsCoreTest extends TestCase
     /**
      *  @dataProvider dirProvider
      *
+     * @param mixed $path
+     * @param mixed $haveFiles
      */
     public function testGetDirectories($path, $haveFiles)
     {
@@ -225,6 +229,11 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testSpreadAmountExamples
+     * @param mixed $expectedRows
+     * @param mixed $amount
+     * @param mixed $precision
+     * @param mixed $rows
+     * @param mixed $column
      */
     public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column)
     {
@@ -320,6 +329,9 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testCamelCaseExample
+     * @param mixed $source
+     * @param mixed $expected
+     * @param mixed $firstCharUpperCase
      */
     public function testToCamelCase($source, $expected, $firstCharUpperCase)
     {
@@ -334,6 +346,11 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testStrReplaceFirstProvider
+     * @param mixed $search
+     * @param mixed $replace
+     * @param mixed $subject
+     * @param mixed $cur
+     * @param mixed $expected
      */
     public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected) {
         $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));

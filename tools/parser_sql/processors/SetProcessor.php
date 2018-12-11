@@ -52,6 +52,7 @@ class SetProcessor extends AbstractProcessor {
     /**
      * A SET list is simply a list of key = value expressions separated by comma (,).
      * This function produces a list of the key/value expressions.
+     * @param mixed $base_expr
      */
     protected function getAssignment($base_expr) {
         $assignment = $this->expressionListProcessor->process($this->splitSQLIntoTokens($base_expr));

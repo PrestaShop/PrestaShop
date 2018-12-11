@@ -70,7 +70,7 @@ class FormatterTest extends TestCase
      * @param NumberSpecificationInterface $numberSpecification
      *  The number specification
      *
-     * @param int|float|string $number
+     * @param float|int|string $number
      *  The number to be formatted
      *
      * @param string $expectedResult

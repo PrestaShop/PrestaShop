@@ -41,7 +41,7 @@ class LocalizationPackCore
      * @param SimpleXMLElement|string $pack Localization pack as SimpleXMLElement or plain XML string
      * @param array $selection Content to import selection
      * @param bool $install_mode Whether mode is installation or not
-     * @param string|null $iso_localization_pack Country Alpha-2 ISO code
+     * @param null|string $iso_localization_pack Country Alpha-2 ISO code
      *
      * @return bool
      */
@@ -139,9 +139,9 @@ class LocalizationPackCore
     /**
      * @param SimpleXMLElement $xml
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     protected function _installStates($xml)
     {
@@ -211,9 +211,9 @@ class LocalizationPackCore
     /**
      * @param SimpleXMLElement $xml
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     protected function _installTaxes($xml)
     {
@@ -322,9 +322,9 @@ class LocalizationPackCore
      * @param SimpleXMLElement $xml
      * @param bool $install_mode
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     protected function _installCurrencies($xml, $install_mode = false)
     {

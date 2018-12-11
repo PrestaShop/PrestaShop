@@ -46,6 +46,7 @@ final class EmployeeOptionsConfiguration implements DataConfigurationInterface
 
     /**
      * @param ConfigurationInterface $configuration
+     * @param OptionsCheckerInterface $optionsChecker
      */
     public function __construct(ConfigurationInterface $configuration, OptionsCheckerInterface $optionsChecker)
     {

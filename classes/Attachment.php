@@ -60,6 +60,8 @@ class AttachmentCore extends ObjectModel
 
     /**
      * @see ObjectModel::add()
+     * @param mixed $autoDate
+     * @param mixed $nullValues
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -70,6 +72,7 @@ class AttachmentCore extends ObjectModel
 
     /**
      * @see ObjectModel::update()
+     * @param mixed $nullValues
      */
     public function update($nullValues = false)
     {
@@ -129,7 +132,7 @@ class AttachmentCore extends ObjectModel
      * @param int $idProduct Product ID
      * @param bool $include Whether the attachments are included or excluded from the Product ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Database query result
+     * @return null|array|false|mysqli_result|PDOStatement|resource Database query result
      */
     public static function getAttachments($idLang, $idProduct, $include = true)
     {

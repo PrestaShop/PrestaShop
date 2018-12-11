@@ -118,7 +118,7 @@ class NumberCollection implements IteratorAggregate, Countable
     /**
      * Removes a Number specification item or an array of Number specification items by index from the collection.
      *
-     * @param int|string|int[]|string[]|array $index
+     * @param array|int|int[]|string|string[] $index
      *                                               The Number specification item index or an array of Number specification item indexes
      *
      * @return NumberCollection

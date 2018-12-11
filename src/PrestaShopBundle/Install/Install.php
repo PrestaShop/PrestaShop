@@ -123,6 +123,12 @@ class Install extends AbstractInstall
 
     /**
      * Generate the settings file.
+     * @param mixed $database_host
+     * @param mixed $database_user
+     * @param mixed $database_password
+     * @param mixed $database_name
+     * @param mixed $database_prefix
+     * @param mixed $database_engine
      */
     public function generateSettingsFile(
         $database_host,
@@ -264,6 +270,7 @@ class Install extends AbstractInstall
     /**
      * PROCESS : installDatabase
      * Generate settings file and create database structure.
+     * @param mixed $clear_database
      */
     public function installDatabase($clear_database = false)
     {
@@ -422,6 +429,10 @@ class Install extends AbstractInstall
     /**
      * PROCESS : installDefaultData
      * Create default shop and languages.
+     * @param mixed $shop_name
+     * @param mixed $iso_country
+     * @param mixed $all_languages
+     * @param mixed $clear_database
      */
     public function installDefaultData($shop_name, $iso_country = false, $all_languages = false, $clear_database = false)
     {
@@ -472,6 +483,7 @@ class Install extends AbstractInstall
     /**
      * PROCESS : populateDatabase
      * Populate database with default data.
+     * @param null|mixed $entity
      */
     public function populateDatabase($entity = null)
     {
@@ -581,6 +593,7 @@ class Install extends AbstractInstall
     /**
      * Install languages.
      *
+     * @param null|mixed $languages_list
      * @return array Association between ID and iso array(id_lang => iso, ...)
      */
     public function installLanguages($languages_list = null)
@@ -703,6 +716,7 @@ class Install extends AbstractInstall
     /**
      * PROCESS : configureShop
      * Set default shop configuration.
+     * @param array $data
      */
     public function configureShop(array $data = array())
     {
@@ -1008,6 +1022,7 @@ class Install extends AbstractInstall
     /**
      * PROCESS : installModules
      * Download module from addons and Install all modules in ~/modules/ directory.
+     * @param null|mixed $module
      */
     public function installModulesAddons($module = null)
     {
@@ -1029,6 +1044,7 @@ class Install extends AbstractInstall
     /**
      * PROCESS : installModules
      * Download module from addons and Install all modules in ~/modules/ directory.
+     * @param null|mixed $module
      */
     public function installModules($module = null)
     {
@@ -1073,6 +1089,8 @@ class Install extends AbstractInstall
     /**
      * PROCESS : installFixtures
      * Install fixtures (E.g. demo products).
+     * @param null|mixed $entity
+     * @param array $data
      */
     public function installFixtures($entity = null, array $data = array())
     {

@@ -82,6 +82,10 @@ class AddStandardProductTest extends AbstractCartTest
 
     /**
      * @dataProvider updateQuantitiesProvider
+     * @param mixed $quantity
+     * @param mixed $operator
+     * @param mixed $expected
+     * @param mixed $quantityExpected
      */
     public function testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce(
         $quantity,
@@ -120,6 +124,8 @@ class AddStandardProductTest extends AbstractCartTest
 
     /**
      * @dataProvider multipleUpdateQuantitiesProvider
+     * @param mixed $first
+     * @param mixed $second
      */
     public function testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityTwice($first, $second)
     {

@@ -89,6 +89,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
      * Used to normalize the PHP source code for file comparison
      * and to strip dates that are inserted in comments when
      * overrides are installed.
+     * @param mixed $str
      */
     private function cleanup($str)
     {

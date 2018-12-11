@@ -78,6 +78,10 @@ class AssetsCoreTest extends TestCase
 
     /**
      * @dataProvider isAssetsDataProvider
+     * @param mixed $id
+     * @param mixed $toBeFound
+     * @param mixed $expectedPath
+     * @param mixed $type
      */
     public function testIsAssets($id, $toBeFound, $expectedPath, $type)
     {

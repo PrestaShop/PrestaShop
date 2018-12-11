@@ -32,6 +32,8 @@ class FileLoggerCore extends AbstractLogger
      *
      * @param string message
      * @param level
+     * @param mixed $message
+     * @param mixed $level
      */
     protected function logMessage($message, $level)
     {

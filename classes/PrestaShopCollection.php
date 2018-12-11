@@ -156,6 +156,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * @param string $operator List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
      * @param mixed $value
      * @param string $type where|having
+     * @param mixed $method
      *
      * @return PrestaShopCollection
      */

@@ -467,6 +467,7 @@ class WebserviceRequestCore
      * @param string $url
      * @param string $params
      * @param string $inputXml
+     * @param mixed $bad_class_name
      *
      * @return array Returns an array of results (headers, content, type of resource...)
      */
@@ -642,6 +643,7 @@ class WebserviceRequestCore
      * @param array $value
      * @param array $values
      * @param int $code
+     * @param mixed $available_values
      */
     public function setErrorDidYouMean($num, $label, $value, $available_values, $code)
     {
@@ -1462,7 +1464,7 @@ class WebserviceRequestCore
             return;
         }
 
-        /** @var SimpleXMLElement|Countable $xmlEntities */
+        /** @var Countable|SimpleXMLElement $xmlEntities */
         $xmlEntities = $xml->children();
         $object = null;
 
