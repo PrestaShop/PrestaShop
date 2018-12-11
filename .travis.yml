@@ -123,6 +123,6 @@ after_deploy:
   - |
     if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then
       gcloud compute instances add-metadata $GC_INSTANCE_NAME --zone $GC_ZONE --metadata=TRAVIS_BRANCH=$TRAVIS_BRANCH
-      gcloud compute instances add-metadata $GC_INSTANCE_NAME --zone $GC_ZONE --metadata-from-file startup-script=tests/E2E/run.sh
+      gcloud compute instances add-metadata $GC_INSTANCE_NAME --zone $GC_ZONE --metadata-from-file startup-script=tests/E2E/run-nightly-tests.sh
       gcloud compute instances start --zone $GC_ZONE $GC_INSTANCE_NAME
     fi
