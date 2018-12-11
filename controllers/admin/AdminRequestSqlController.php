@@ -196,9 +196,6 @@ class AdminRequestSqlControllerCore extends AdminController
             $attributes = $request_sql->getAttributesByTable($table);
             foreach ($attributes as $key => $attribute) {
                 unset($attributes[$key]['Null'], $attributes[$key]['Key'], $attributes[$key]['Default'], $attributes[$key]['Extra']);
-                
-                
-                
             }
             die(json_encode($attributes));
         }

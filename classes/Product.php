@@ -5699,7 +5699,6 @@ class ProductCore extends ObjectModel
                     unset($rows[$keyrow]['id_feature']);
                 }
                 unset($rows[$keyrow]['id_product'], $rows[$keyrow]['custom']);
-                
             }
             asort($rows[$keyrow]);
         }

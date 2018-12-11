@@ -179,7 +179,7 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         unset($product->id, $product->id_product);
-        
+
         $product->indexed = 0;
         $product->active = 0;
 

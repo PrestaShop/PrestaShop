@@ -734,8 +734,6 @@ class OrderDetailCore extends ObjectModel
         }
 
         unset($this->vat_address, $products, $this->customer);
-        
-        
     }
 
     /**

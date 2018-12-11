@@ -149,7 +149,6 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
                 $modules[$m]['displayName'] = $module_instance[$module['name']]->displayName;
             } else {
                 unset($module_instance[$module['name']], $modules[$m]);
-                
             }
         }
 

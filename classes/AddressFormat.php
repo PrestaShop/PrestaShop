@@ -151,7 +151,6 @@ class AddressFormatCore extends ObjectModel
             }
 
             unset($obj, $reflect);
-            
         }
 
         return $isValid;
@@ -457,7 +456,6 @@ class AddressFormatCore extends ObjectModel
                 }
             }
             unset($object, $reflect);
-            
         }
 
         return $propertyList;
@@ -491,7 +489,6 @@ class AddressFormatCore extends ObjectModel
                 }
             }
             unset($object, $reflect);
-            
         }
 
         return $objectList;

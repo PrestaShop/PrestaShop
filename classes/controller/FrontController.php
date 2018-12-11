@@ -1570,10 +1570,6 @@ class FrontControllerCore extends Controller
         }
 
         unset($cust['secure_key'], $cust['passwd'], $cust['show_public_prices'], $cust['deleted'], $cust['id_lang']);
-        
-        
-        
-        
 
         $cust['is_logged'] = $this->context->customer->isLogged(true);
 
