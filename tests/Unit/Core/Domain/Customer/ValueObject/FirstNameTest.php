@@ -37,13 +37,7 @@ class FirstNameTest extends TestCase
         $this->expectException(CustomerConstraintException::class);
         $this->expectExceptionCode(CustomerConstraintException::INVALID_FIRST_NAME);
 
-        $veryLongFirstName = sprintf(
-            '%s%s%s%s',
-            'demodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemo',
-            'demodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemo',
-            'demodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemo',
-            'demodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemodemo'
-        );
+        $veryLongFirstName = str_repeat('A', 256);
 
         new FirstName($veryLongFirstName);
     }

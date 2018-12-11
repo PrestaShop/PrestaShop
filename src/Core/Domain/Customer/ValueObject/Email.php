@@ -64,6 +64,18 @@ class Email
     }
 
     /**
+     * Check if given email is the same as current
+     *
+     * @param Email $email
+     *
+     * @return bool
+     */
+    public function isEqualTo(Email $email)
+    {
+        return $email->getValue() === $this->getValue();
+    }
+
+    /**
      * Assert that email is in valid format
      *
      * @param string $email
