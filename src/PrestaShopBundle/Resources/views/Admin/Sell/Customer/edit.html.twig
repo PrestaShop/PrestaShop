@@ -24,14 +24,15 @@
   *#}
 
 {% set enableSidebar = true %}
-{% set layoutTitle = 'Creating a new Customer'|trans({}, 'Admin.Orderscustomers.Feature') %}
+{% set fullName = '%s. %s'|format(customerInformation.personalInformation.firstName[:1], customerInformation.personalInformation.lastName) %}
+{% set layoutTitle = 'Editing customer %name%'|trans({'%name%': fullName}, 'Admin.Orderscustomers.Feature') %}
 
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
   <div class="row justify-content-center">
     <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/form.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/form.html.twig' with {'isGuest': customerInformation.personalInformation.guest} %}
     </div>
   </div>
 {% endblock %}
