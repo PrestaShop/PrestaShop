@@ -2517,13 +2517,8 @@ class AdminImportControllerCore extends AdminController
                                 'Admin.Advparameters.Notification'
                             );
                         }
-                        if (function_exists('mysqli_fetch_all')) {
-                            $my_sql_error = mysqli_error();
-                        } elseif (strpos($pdo->getAttribute(PDO::ATTR_CLIENT_VERSION), 'mysqlnd') !== false) {
-                            $my_sql_error = PDO::errorInfo();
-                        }
                         if ($field_error !== true || $lang_field_error !== true) {
-                            $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '') . $my_sql_error();
+                            $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '') . Db::getInstance()->getMsgError();
                         }
                     }
                 }
