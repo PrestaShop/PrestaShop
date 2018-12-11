@@ -90,27 +90,16 @@ class CustomerAddressFormCore extends AbstractForm
         // This form is very tricky: fields may change depending on which
         // country is being submitted!
         // So we first update the format if a new id_country was set.
-        $country = null;
         if (isset($params['id_country'])
             && $params['id_country'] != $this->formatter->getCountry()->id
         ) {
-            $country = new Country(
+            $this->formatter->setCountry(new Country(
                 $params['id_country'],
                 $this->language->id
-            );
-            $this->formatter->setCountry($country);
+            ));
         }
 
-        parent::fillWith($params);
-
-        //Check if this country needs identification number
-        if (null !== $country && $country->need_identification_number) {
-            if (($dni = $this->getField('dni'))) {
-                $dni->setRequired(true);
-            }
-        }
-
-        return $this;
+        return parent::fillWith($params);
     }
 
     public function validate()
