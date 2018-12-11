@@ -118,7 +118,7 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
         $customer->id_gender = $command->getGenderId();
         $customer->active = $command->isEnabled();
         $customer->optin = $command->isPartnerOffersSubscribed();
-        $customer->birthday = $command->getBirthday();
+        $customer->birthday = $command->getBirthday()->getValue();
         $customer->id_shop = $command->getShopId();
 
         // fill b2b customer fields

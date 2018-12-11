@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use DateTime;
-use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
@@ -105,11 +105,6 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
      */
     private function buildCustomerAddCommandFromFormData(array $data)
     {
-        $birthday = $data['birthday'] instanceof DateTime ?
-            $data['birthday']->format('Y-m-d') :
-            '0000-00-00'
-        ;
-
         $command = new AddCustomerCommand(
             new FirstName($data['first_name']),
             new LastName($data['last_name']),
@@ -121,7 +116,7 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             (int) $data['gender_id'],
             (bool) $data['is_enabled'],
             (bool) $data['is_partner_offers_subscribed'],
-            $birthday
+            new Birthday($this->getBirthdayDate($data['birthday']))
         );
 
         if (!$this->isB2bFeatureEnabled) {
@@ -158,11 +153,8 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             ->setIsPartnerOffersSubscribed($data['is_partner_offers_subscribed'])
             ->setDefaultGroupId((int) $data['default_group_id'])
             ->setGroupIds(array_map(function ($groupId) { return (int) $groupId; }, $data['group_ids']))
+            ->setBirthday(new Birthday($this->getBirthdayDate($data['birthday'])))
         ;
-
-        if ($data['birthday'] instanceof DateTime) {
-            $command->setBirthday(DateTimeImmutable::createFromMutable($data['birthday']));
-        }
 
         if ($this->isB2bFeatureEnabled) {
             $command
@@ -177,5 +169,23 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
         }
 
         return $command;
+    }
+
+    /**
+     * Since it's used in context of form data
+     * the value provided by form is either DateTime (when date is selected) or null (when not selected)
+     * in case birthday is null, it means that user wants to reset birthday
+     * or keep it default (not set)
+     *
+     * @param DateTime|null $formBirthdayValue
+     *
+     * @return string
+     */
+    private function getBirthdayDate($formBirthdayValue)
+    {
+        return $formBirthdayValue instanceof DateTime ?
+            $formBirthdayValue->format('Y-m-d') :
+            Birthday::EMPTY_BIRTHDAY
+        ;
     }
 }

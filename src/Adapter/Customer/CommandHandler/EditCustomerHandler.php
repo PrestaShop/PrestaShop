@@ -120,7 +120,7 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         }
 
         if (null !== $command->getBirthday()) {
-            $customer->birthday = $command->getBirthday()->format('Y-m-d');
+            $customer->birthday = $command->getBirthday()->getValue();
         }
 
         if (null !== $command->isEnabled()) {
