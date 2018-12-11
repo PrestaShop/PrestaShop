@@ -85,7 +85,7 @@
             <div class="col-sm">
               {{ form_widget(customerForm.password) }}
               <small class="form-text">
-                {{ 'Password should be at least %length% characters long.'|trans({}, 'Admin.Notifications.Info') }}
+                {{ 'Password should be at least %length% characters long.'|trans({'%length%': minPasswordLength}, 'Admin.Notifications.Info') }}
               </small>
             </div>
           </div>
