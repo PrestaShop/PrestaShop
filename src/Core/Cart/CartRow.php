@@ -191,8 +191,8 @@ class CartRow
      * Returns the initial unit price (ie without applying cart rules).
      *
      * @throws \Exception
-     * @return AmountImmutable
      *
+     * @return AmountImmutable
      */
     public function getInitialUnitPrice()
     {
@@ -207,8 +207,8 @@ class CartRow
      * return final price: initial minus the cart rule discounts.
      *
      * @throws \Exception
-     * @return AmountImmutable
      *
+     * @return AmountImmutable
      */
     public function getFinalUnitPrice()
     {
@@ -223,8 +223,8 @@ class CartRow
      * return final price: initial minus the cart rule discounts.
      *
      * @throws \Exception
-     * @return AmountImmutable
      *
+     * @return AmountImmutable
      */
     public function getFinalTotalPrice()
     {

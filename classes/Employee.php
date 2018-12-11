@@ -209,8 +209,8 @@ class EmployeeCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the Employee has been successfully added
      *
+     * @return bool Indicates whether the Employee has been successfully added
      */
     public function add($autoDate = true, $nullValues = true)
     {
@@ -228,8 +228,8 @@ class EmployeeCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the Employee has been successfully updated
      *
+     * @return bool Indicates whether the Employee has been successfully updated
      */
     public function update($nullValues = false)
     {

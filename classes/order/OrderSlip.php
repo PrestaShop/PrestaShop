@@ -245,6 +245,7 @@ class OrderSlipCore extends ObjectModel
 
     /**
      * @deprecated since 1.6.0.10 use OrderSlip::create() instead
+     *
      * @param mixed $order
      * @param mixed $productList
      * @param mixed $qtyList

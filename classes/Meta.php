@@ -213,8 +213,8 @@ class MetaCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the Meta has been successfully updated
      *
+     * @return bool Indicates whether the Meta has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -229,8 +229,8 @@ class MetaCore extends ObjectModel
      * Deletes current Meta from the database.
      *
      * @throws PrestaShopException
-     * @return bool `true` if delete was successful
      *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {
@@ -290,6 +290,7 @@ class MetaCore extends ObjectModel
      * Get meta tags.
      *
      * @since 1.5.0
+     *
      * @param mixed $idLang
      * @param mixed $pageName
      * @param mixed $title
@@ -518,6 +519,7 @@ class MetaCore extends ObjectModel
 
     /**
      * @since 1.5.0
+     *
      * @param mixed $metaTags
      * @param mixed $defaultValue
      * @param null|Context $context

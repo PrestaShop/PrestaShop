@@ -120,8 +120,8 @@ class ManufacturerCore extends ObjectModel
      * Deletes current Manufacturer from the database.
      *
      * @throws PrestaShopException
-     * @return bool `true` if delete was successful
      *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {
@@ -142,6 +142,7 @@ class ManufacturerCore extends ObjectModel
      * Delete several objects from database.
      *
      * return boolean Deletion result
+     *
      * @param mixed $selection
      */
     public function deleteSelection($selection)

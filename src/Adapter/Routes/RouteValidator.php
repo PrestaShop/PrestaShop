@@ -54,8 +54,8 @@ class RouteValidator
      * @param string $rule Rule to verify
      *
      * @throws PrestaShopException
-     * @return array - returns list of missing keywords
      *
+     * @return array - returns list of missing keywords
      */
     public function doesRouteContainsRequiredKeywords($routeId, $rule)
     {

@@ -58,8 +58,8 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
      * @param string $type
      *
      * @throws \PrestaShopDatabaseException
-     * @return array|false|int
      *
+     * @return array|false|int
      */
     private function getProductsOrCount(
         ProductSearchContext $context,
@@ -95,8 +95,8 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
      * @param ProductSearchQuery $query
      *
      * @throws \PrestaShopDatabaseException
-     * @return ProductSearchResult
      *
+     * @return ProductSearchResult
      */
     public function runQuery(
         ProductSearchContext $context,

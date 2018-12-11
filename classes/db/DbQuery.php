@@ -277,8 +277,8 @@ class DbQueryCore
      * Generates query and return SQL string.
      *
      * @throws PrestaShopException
-     * @return string
      *
+     * @return string
      */
     public function build()
     {

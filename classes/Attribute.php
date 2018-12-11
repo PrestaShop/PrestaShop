@@ -130,6 +130,7 @@ class AttributeCore extends ObjectModel
 
     /**
      * @see ObjectModel::update()
+     *
      * @param mixed $nullValues
      */
     public function update($nullValues = false)
@@ -151,8 +152,8 @@ class AttributeCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Whether the Attribute has been successfully added
      *
+     * @return bool Whether the Attribute has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {

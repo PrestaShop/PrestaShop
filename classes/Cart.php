@@ -252,8 +252,8 @@ class CartCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Whether the Cart has been successfully added
      *
+     * @return bool Whether the Cart has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -277,8 +277,8 @@ class CartCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Whether the Cart has been successfully updated
      *
+     * @return bool Whether the Cart has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -335,8 +335,8 @@ class CartCore extends ObjectModel
      * Deletes current Cart from the database.
      *
      * @throws PrestaShopException
-     * @return bool True if delete was successful
      *
+     * @return bool True if delete was successful
      */
     public function delete()
     {
@@ -539,8 +539,8 @@ class CartCore extends ObjectModel
      *                    - FILTER_ACTION_ALL_NOCAP
      *
      * @throws PrestaShopDatabaseException
-     * @return array
      *
+     * @return array
      */
     public function getOrderedCartRulesIds($filter = CartRule::FILTER_ACTION_ALL)
     {
@@ -1505,6 +1505,7 @@ class CartCore extends ObjectModel
 
     /**
      * Customization management.
+     *
      * @param mixed $quantity
      * @param mixed $id_customization
      * @param mixed $id_product
@@ -1895,8 +1896,8 @@ class CartCore extends ObjectModel
      * @param bool $use_cache @deprecated
      *
      * @throws \Exception
-     * @return float Order total
      *
+     * @return float Order total
      */
     public function getOrderTotal(
         $withTaxes = true,
@@ -2309,7 +2310,9 @@ class CartCore extends ObjectModel
      *
      *
      * @todo Add avaibility check
+     *
      * @param mixed $flush
+     *
      * @return array array(
      *               0 => array( // First address
      *               0 => array(  // First package
@@ -3036,6 +3039,7 @@ class CartCore extends ObjectModel
      *
      * @param mixed $string
      * @param mixed $delimiter
+     *
      * @return int Intified value
      */
     public static function intifier($string, $delimiter = ',')
@@ -3048,6 +3052,7 @@ class CartCore extends ObjectModel
 
     /**
      * Translate an int option_delivery identifier (3240002000) in a string ('24,3,').
+     *
      * @param mixed $int
      * @param mixed $delimiter
      */
@@ -3310,6 +3315,7 @@ class CartCore extends ObjectModel
 
     /**
      * @deprecated 1.5.0, use Cart->getPackageShippingCost()
+     *
      * @param null|mixed $id_carrier
      * @param mixed $use_tax
      * @param null|Country $default_country
@@ -3675,6 +3681,7 @@ class CartCore extends ObjectModel
      * Return total Cart weight.
      *
      * @param null|mixed $products
+     *
      * @return float Total Cart weight
      */
     public function getTotalWeight($products = null)
@@ -3764,6 +3771,7 @@ class CartCore extends ObjectModel
      *
      * @param null|mixed $id_lang
      * @param mixed $refresh
+     *
      * @return array Cart details
      */
     public function getSummaryDetails($id_lang = null, $refresh = false)
@@ -4138,6 +4146,7 @@ class CartCore extends ObjectModel
      * @param mixed $index
      * @param mixed $type
      * @param mixed $file
+     *
      * @return bool Always true
      */
     public function addPictureToProduct($id_product, $index, $type, $file)
@@ -4782,6 +4791,7 @@ class CartCore extends ObjectModel
      *
      * @id_carrier int
      * @id_zone int
+     *
      * @param mixed $id_carrier
      * @param mixed $id_zone
      */

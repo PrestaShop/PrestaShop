@@ -80,8 +80,8 @@ class CMSCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the CMS has been successfully added
      *
+     * @return bool Indicates whether the CMS has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -97,8 +97,8 @@ class CMSCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the CMS has been successfully updated
      *
+     * @return bool Indicates whether the CMS has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -113,8 +113,8 @@ class CMSCore extends ObjectModel
      * Deletes current CMS from the database.
      *
      * @throws PrestaShopException
-     * @return bool True if delete was successful
      *
+     * @return bool True if delete was successful
      */
     public function delete()
     {

@@ -200,8 +200,8 @@ class FeatureValueCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the FeatureValue has been successfully added
      *
+     * @return bool Indicates whether the FeatureValue has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -220,8 +220,8 @@ class FeatureValueCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the FeatureValue has been successfully updated
      *
+     * @return bool Indicates whether the FeatureValue has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -237,8 +237,8 @@ class FeatureValueCore extends ObjectModel
      * Deletes current FeatureValue from the database.
      *
      * @throws PrestaShopException
-     * @return bool `true` if delete was successful
      *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {

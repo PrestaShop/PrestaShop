@@ -97,6 +97,7 @@ class StockCore extends ObjectModel
 
     /**
      * @see ObjectModel::update()
+     *
      * @param mixed $null_values
      */
     public function update($null_values = false)
@@ -108,6 +109,7 @@ class StockCore extends ObjectModel
 
     /**
      * @see ObjectModel::add()
+     *
      * @param mixed $autodate
      * @param mixed $null_values
      */

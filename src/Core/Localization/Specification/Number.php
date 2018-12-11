@@ -171,8 +171,8 @@ class Number implements NumberInterface
      *                                Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
      *
      * @throws LocalizationException
-     * @return NumberSymbolList
      *
+     * @return NumberSymbolList
      */
     public function getSymbolsByNumberingSystem($numberingSystem = null)
     {

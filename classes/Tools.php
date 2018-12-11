@@ -551,6 +551,7 @@ class ToolsCore
      * Change language in cookie while clicking on a flag.
      *
      * @param null|mixed $cookie
+     *
      * @return string iso code
      */
     public static function setCookieLanguage($cookie = null)
@@ -668,6 +669,7 @@ class ToolsCore
      * Set cookie currency from POST or default currency.
      *
      * @param mixed $cookie
+     *
      * @return Currency object
      */
     public static function setCurrency($cookie)
@@ -711,8 +713,8 @@ class ToolsCore
      * @param null $language_code
      *
      * @throws PrestaShopException
-     * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
      *
+     * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
      */
     public static function getCldr(Context $context = null, $language_code = null)
     {
@@ -1094,8 +1096,8 @@ class ToolsCore
      * @param null|Context $context DEPRECATED since 1.7.4.0
      *
      * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
-     * @return string
      *
+     * @return string
      */
     public static function displayError($errorMessage = null, $htmlentities = null, Context $context = null)
     {
@@ -2265,6 +2267,7 @@ class ToolsCore
     /**
      * Converts SomethingLikeThis to something-like-this
      * The name comes from Perl, we like Perl.
+     *
      * @param mixed $string
      */
     public static function camelCaseToKebabCase($string)
@@ -2909,6 +2912,7 @@ exit;
 
     /**
      * Display a warning message indicating that the method is deprecated.
+     *
      * @param null|mixed $message
      */
     public static function displayAsDeprecated($message = null)
@@ -2928,6 +2932,7 @@ exit;
 
     /**
      * Display a warning message indicating that the parameter is deprecated.
+     *
      * @param mixed $parameter
      */
     public static function displayParameterAsDeprecated($parameter)
@@ -3050,6 +3055,7 @@ exit;
      * @desc try to open a zip file in order to check if it's valid
      *
      * @param mixed $from_file
+     *
      * @return bool success
      */
     public static function ZipTest($from_file)
@@ -3074,6 +3080,7 @@ exit;
      *
      * @param mixed $from_file
      * @param mixed $to_dir
+     *
      * @return bool success
      */
     public static function ZipExtract($from_file, $to_dir)
@@ -3276,6 +3283,7 @@ exit;
 
     /**
      * Clear compile for Smarty.
+     *
      * @param null|mixed $smarty
      */
     public static function clearCompile($smarty = null)
@@ -3307,6 +3315,7 @@ exit;
 
     /**
      * Clear Symfony cache.
+     *
      * @param null|mixed $env
      */
     public static function clearSf2Cache($env = null)
@@ -3362,6 +3371,7 @@ exit;
      * @since 1.5.0
      *
      * @param mixed $option
+     *
      * @return int the value of a configuration option in octet
      */
     public static function getOctets($option)
@@ -3934,6 +3944,7 @@ exit;
      * Allows to display the category description without HTML tags and slashes.
      *
      * @param mixed $description
+     *
      * @return string
      */
     public static function getDescriptionClean($description)

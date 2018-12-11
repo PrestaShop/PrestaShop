@@ -209,8 +209,8 @@ class ProductLazyArray extends AbstractLazyArray
      * @arrayAccess
      *
      * @throws InvalidArgumentException
-     * @return array|bool
      *
+     * @return array|bool
      */
     public function getCondition()
     {
@@ -299,8 +299,8 @@ class ProductLazyArray extends AbstractLazyArray
      * @arrayAccess
      *
      * @throws \ReflectionException
-     * @return array
      *
+     * @return array
      */
     public function getAttachments()
     {
@@ -382,8 +382,8 @@ class ProductLazyArray extends AbstractLazyArray
      * @arrayAccess
      *
      * @throws InvalidArgumentException
-     * @return array
      *
+     * @return array
      */
     public function getLabels()
     {
@@ -419,8 +419,8 @@ class ProductLazyArray extends AbstractLazyArray
      * @arrayAccess
      *
      * @throws InvalidArgumentException
-     * @return array
      *
+     * @return array
      */
     public function getFlags()
     {

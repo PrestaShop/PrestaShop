@@ -122,9 +122,9 @@ class Locale implements LocaleInterface
      *                                 The number to be formatted
      *
      * @throws Exception\LocalizationException
+     *
      * @return string
      *                The formatted number
-     *
      */
     public function formatNumber($number)
     {
@@ -143,9 +143,9 @@ class Locale implements LocaleInterface
      *                             Currency of the price
      *
      * @throws Exception\LocalizationException
+     *
      * @return string
      *                The formatted price
-     *
      */
     public function formatPrice($number, $currencyCode)
     {

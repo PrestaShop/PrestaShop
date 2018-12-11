@@ -99,8 +99,8 @@ class PDFCore
      * @param bool $display
      *
      * @throws PrestaShopException
-     * @return mixed
      *
+     * @return mixed
      */
     public function render($display = true)
     {
@@ -148,8 +148,8 @@ class PDFCore
      * @param mixed $object
      *
      * @throws PrestaShopException
-     * @return HTMLTemplate|false
      *
+     * @return HTMLTemplate|false
      */
     public function getTemplateObject($object)
     {

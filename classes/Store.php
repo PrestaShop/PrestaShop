@@ -190,7 +190,9 @@ class StoreCore extends ObjectModel
      *
      *
      * @since 1.7.0
+     *
      * @param mixed $idStore
+     *
      * @return bool
      */
     public static function storeExists($idStore)

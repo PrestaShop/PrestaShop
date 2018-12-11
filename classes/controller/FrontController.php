@@ -524,8 +524,8 @@ class FrontControllerCore extends Controller
      *
      * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
      * @throws PrestaShopException
-     * @return array Variables to be inserted in the "prestashop" javascript object
      *
+     * @return array Variables to be inserted in the "prestashop" javascript object
      */
     protected function buildFrontEndObject($object)
     {
@@ -650,8 +650,8 @@ class FrontControllerCore extends Controller
      *
      * @throws Exception
      * @throws SmartyException
-     * @return bool
      *
+     * @return bool
      */
     public function display()
     {
@@ -941,8 +941,8 @@ class FrontControllerCore extends Controller
      * Sets and returns customer groups that the current customer(visitor) belongs to.
      *
      * @throws PrestaShopDatabaseException
-     * @return array
      *
+     * @return array
      */
     public static function getCurrentCustomerGroups()
     {
@@ -1023,6 +1023,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 use $this->registerJavascript() and $this->registerStylesheet() to manage your assets.
+     *
      * @param mixed $media_uri
      * @param null|mixed $css_media_type
      * @param null|mixed $offset
@@ -1039,6 +1040,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 this method has not effect with PrestaShop 1.7+
+     *
      * @param mixed $media_uri
      * @param null|mixed $css_media_type
      * @param mixed $check_path
@@ -1100,6 +1102,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function shouldn't be used, use $this->registerStylesheet() instead
+     *
      * @param mixed $css_uri
      * @param mixed $css_media_type
      * @param null|mixed $offset
@@ -1125,6 +1128,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterStylesheet() instead
+     *
      * @param mixed $css_uri
      * @param mixed $css_media_type
      * @param mixed $check_path
@@ -1149,6 +1153,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() instead
+     *
      * @param mixed $js_uri
      * @param mixed $check_path
      */
@@ -1172,6 +1177,7 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterJavascript() instead
+     *
      * @param mixed $js_uri
      * @param mixed $check_path
      */
@@ -1196,6 +1202,7 @@ class FrontControllerCore extends Controller
     /**
      * @deprecated 1.7  This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core on every theme.
      *                  Have a look at the /themes/_core folder.
+     *
      * @param null|mixed $version
      * @param null|mixed $folder
      * @param mixed $minifier
@@ -1228,6 +1235,7 @@ class FrontControllerCore extends Controller
 
     /**
      * Add Library not included with classic theme.
+     *
      * @param array $libraries
      */
     public function requireAssets(array $libraries)
@@ -1750,6 +1758,7 @@ class FrontControllerCore extends Controller
      *
      * Otherwise, params from $extraParams that have a null value are stripped,
      * and other params are added. Params not in $extraParams are unchanged.
+     *
      * @param null|array $extraParams
      */
     protected function updateQueryString(array $extraParams = null)

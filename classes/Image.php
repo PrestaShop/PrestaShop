@@ -99,8 +99,8 @@ class ImageCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the Image has been successfully added
      *
+     * @return bool Indicates whether the Image has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -124,8 +124,8 @@ class ImageCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the Image has been successfully updated
      *
+     * @return bool Indicates whether the Image has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -142,8 +142,8 @@ class ImageCore extends ObjectModel
      * Deletes current Image from the database.
      *
      * @throws PrestaShopException
-     * @return bool `true` if delete was successful
      *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {
@@ -556,6 +556,7 @@ class ImageCore extends ObjectModel
     /**
      * Delete the product image from disk and remove the containing folder if empty
      * Handles both legacy and new image filesystems.
+     *
      * @param mixed $forceDelete
      */
     public function deleteImage($forceDelete = false)

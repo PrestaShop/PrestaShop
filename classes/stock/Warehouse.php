@@ -132,6 +132,7 @@ class WarehouseCore extends ObjectModel
      * Gets the carriers associated to the current warehouse.
      *
      * @param mixed $return_reference
+     *
      * @return array Ids of the associated carriers
      */
     public function getCarriers($return_reference = false)

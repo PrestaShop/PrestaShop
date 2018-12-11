@@ -294,6 +294,7 @@ class HelperFormCore extends Helper
      *
      * @param mixed $disable_shared
      * @param null|mixed $template_directory
+     *
      * @return string
      */
     public function renderAssoShop($disable_shared = false, $template_directory = null)

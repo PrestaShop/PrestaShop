@@ -166,6 +166,7 @@ class PreferencesType extends TranslatorAwareType
      * Enabled only if the form is accessed using HTTPS protocol.
      *
      * @var bool
+     *
      * @param mixed $isSecure
      */
     public function setIsSecure($isSecure)

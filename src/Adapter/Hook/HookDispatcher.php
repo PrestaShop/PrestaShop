@@ -140,8 +140,8 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      * @param array $parameters Hook parameters
      *
      * @throws \Exception
-     * @return Event the event that has been passed to each listener
      *
+     * @return Event the event that has been passed to each listener
      */
     public function dispatchForParameters($eventName, array $parameters = [])
     {
@@ -158,8 +158,8 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      * @param array $parameters Hook parameters
      *
      * @throws \Exception
-     * @return Event The event that has been passed to each listener. Contains the responses.
      *
+     * @return Event The event that has been passed to each listener. Contains the responses.
      */
     public function renderForParameters($eventName, array $parameters = [])
     {

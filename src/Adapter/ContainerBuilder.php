@@ -42,8 +42,8 @@ class ContainerBuilder
      * @param bool $isDebug
      *
      * @throws \Exception
-     * @return SfContainerBuilder
      *
+     * @return SfContainerBuilder
      */
     public static function getContainer($name, $isDebug)
     {

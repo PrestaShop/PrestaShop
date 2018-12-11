@@ -73,6 +73,7 @@ class CacheMemcacheCore extends Cache
 
     /**
      * @see Cache::_set()
+     *
      * @param mixed $key
      * @param mixed $value
      * @param mixed $ttl
@@ -94,6 +95,7 @@ class CacheMemcacheCore extends Cache
 
     /**
      * @see Cache::_get()
+     *
      * @param mixed $key
      */
     protected function _get($key)
@@ -107,6 +109,7 @@ class CacheMemcacheCore extends Cache
 
     /**
      * @see Cache::_exists()
+     *
      * @param mixed $key
      */
     protected function _exists($key)
@@ -120,6 +123,7 @@ class CacheMemcacheCore extends Cache
 
     /**
      * @see Cache::_delete()
+     *
      * @param mixed $key
      */
     protected function _delete($key)

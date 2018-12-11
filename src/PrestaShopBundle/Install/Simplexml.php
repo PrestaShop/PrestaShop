@@ -34,6 +34,7 @@ class SimplexmlElement extends \SimpleXMLElement
      * Can add SimpleXMLElement values in XML tree.
      *
      * @see SimpleXMLElement::addChild()
+     *
      * @param mixed $name
      * @param null|mixed $value
      * @param null|mixed $namespace
@@ -63,6 +64,7 @@ class SimplexmlElement extends \SimpleXMLElement
      * Generate nice and sweet XML.
      *
      * @see SimpleXMLElement::asXML()
+     *
      * @param null|mixed $filename
      */
     public function asXML($filename = null)

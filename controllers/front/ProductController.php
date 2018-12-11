@@ -517,6 +517,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     /**
      * Assign template vars related to attribute groups and colors.
+     *
      * @param null|mixed $product_for_template
      */
     protected function assignAttributesGroups($product_for_template = null)
@@ -970,8 +971,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * or by the group request parameter.
      *
      * @throws PrestaShopException
-     * @return int|null
      *
+     * @return int|null
      */
     private function getIdProductAttributeByRequestOrGroup()
     {
@@ -1022,8 +1023,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * Return id_product_attribute by the group request parameter.
      *
      * @throws PrestaShopException
-     * @return int|null
      *
+     * @return int|null
      */
     private function getIdProductAttributeByGroup()
     {

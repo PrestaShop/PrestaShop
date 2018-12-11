@@ -54,8 +54,8 @@ class StockManagerCore implements StockManagerInterface
      * @param null|Employee $employee
      *
      * @throws PrestaShopException
-     * @return bool
      *
+     * @return bool
      */
     public function addProduct(
         $id_product,
@@ -212,8 +212,8 @@ class StockManagerCore implements StockManagerInterface
      * @param null|Employee $employee
      *
      * @throws PrestaShopException
-     * @return array
      *
+     * @return array
      */
     public function removeProduct(
         $id_product,
@@ -519,6 +519,7 @@ class StockManagerCore implements StockManagerInterface
 
     /**
      * @see StockManagerInterface::getProductPhysicalQuantities()
+     *
      * @param mixed $id_product
      * @param mixed $id_product_attribute
      * @param null|mixed $ids_warehouse
@@ -558,6 +559,7 @@ class StockManagerCore implements StockManagerInterface
 
     /**
      * @see StockManagerInterface::getProductRealQuantities()
+     *
      * @param mixed $id_product
      * @param mixed $id_product_attribute
      * @param null|mixed $ids_warehouse
@@ -670,6 +672,7 @@ class StockManagerCore implements StockManagerInterface
 
     /**
      * @see StockManagerInterface::transferBetweenWarehouses()
+     *
      * @param mixed $id_product
      * @param mixed $id_product_attribute
      * @param mixed $quantity
@@ -750,6 +753,7 @@ class StockManagerCore implements StockManagerInterface
      * @param mixed $id_product_attribute
      * @param mixed $coverage
      * @param null|mixed $id_warehouse
+     *
      * @return int number of days left (-1 if infinite)
      */
     public function getProductCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null)

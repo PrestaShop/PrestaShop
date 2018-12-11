@@ -115,8 +115,8 @@ class CombinationCore extends ObjectModel
      * Deletes current Combination from the database.
      *
      * @throws PrestaShopException
-     * @return bool True if delete was successful
      *
+     * @return bool True if delete was successful
      */
     public function delete()
     {
@@ -166,8 +166,8 @@ class CombinationCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the Combination has been successfully added
      *
+     * @return bool Indicates whether the Combination has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -202,8 +202,8 @@ class CombinationCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the Combination has been successfully updated
      *
+     * @return bool Indicates whether the Combination has been successfully updated
      */
     public function update($nullValues = false)
     {

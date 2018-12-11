@@ -173,6 +173,7 @@ class AddressCore extends ObjectModel
 
     /**
      * @see ObjectModel::add()
+     *
      * @param mixed $autodate
      * @param mixed $null_values
      */
@@ -191,6 +192,7 @@ class AddressCore extends ObjectModel
 
     /**
      * @see ObjectModel::update()
+     *
      * @param mixed $null_values
      */
     public function update($null_values = false)
@@ -449,8 +451,8 @@ class AddressCore extends ObjectModel
      * @param bool $with_geoloc
      *
      * @throws PrestaShopException
-     * @return Address address
      *
+     * @return Address address
      */
     public static function initialize($id_address = null, $with_geoloc = false)
     {

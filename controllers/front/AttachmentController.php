@@ -49,6 +49,7 @@ class AttachmentControllerCore extends FrontController
 
     /**
      * @see   http://ca2.php.net/manual/en/function.readfile.php#54295
+     *
      * @param mixed $filename
      * @param mixed $retbytes
      */

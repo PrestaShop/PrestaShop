@@ -62,8 +62,8 @@ class HookFinder
      * Execute hook specified in params and check if the result matches the expected classes if asked.
      *
      * @throws \Exception if class doesn't match interface or expected classes
-     * @return array Content returned by modules
      *
+     * @return array Content returned by modules
      */
     public function find()
     {

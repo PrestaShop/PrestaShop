@@ -257,8 +257,8 @@ class AdminRequestSqlControllerCore extends AdminController
      *
      * @throws Exception
      * @throws SmartyException
-     * @return string
      *
+     * @return string
      */
     public function displayExportLink($token, $id)
     {
@@ -322,6 +322,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
     /**
      * Genrating a export file.
+     *
      * @param mixed $textDelimiter
      */
     public function processExport($textDelimiter = '"')

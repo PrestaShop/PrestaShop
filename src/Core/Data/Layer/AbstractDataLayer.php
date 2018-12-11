@@ -81,9 +81,9 @@ abstract class AbstractDataLayer
      *                  The data object identifier
      *
      * @throws DataLayerException
+     *
      * @return mixed|null
      *                    A data object. Null if not found.
-     *
      */
     public function read($id)
     {
@@ -118,10 +118,10 @@ abstract class AbstractDataLayer
      *
      * @throws DataLayerException
      *                            When write fails
+     *
      * @return mixed
      *               The data object to be written by the upper data layer
      *               (each layer might hydrate/update the data object for upper layers)
-     *
      */
     public function write($id, $data)
     {
@@ -141,8 +141,8 @@ abstract class AbstractDataLayer
      *  The field to read
      *
      * @throws DataLayerException
-     * @return mixed|null
      *
+     * @return mixed|null
      */
     protected function propagateRead($field)
     {
@@ -163,9 +163,9 @@ abstract class AbstractDataLayer
      *
      * @throws DataLayerException
      *                            When write fails
+     *
      * @return mixed
      *               The data object to be written by the upper data layer
-     *
      */
     protected function propagateWrite($id, $data)
     {
@@ -216,9 +216,9 @@ abstract class AbstractDataLayer
      *
      * @throws DataLayerException
      *                            When write failed
+     *
      * @return mixed
      *               Data object to be written by upper layer
-     *
      */
     protected function saveWritePropagationResult($id, $data)
     {
@@ -281,9 +281,9 @@ abstract class AbstractDataLayer
      *
      * @throws DataLayerException
      *                            When read fails
+     *
      * @return mixed|null
      *                    The wanted data object (null if not found)
-     *
      */
     abstract protected function doRead($id);
 

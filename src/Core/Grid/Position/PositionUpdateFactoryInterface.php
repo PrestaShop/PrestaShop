@@ -41,8 +41,8 @@ interface PositionUpdateFactoryInterface
      * @param PositionDefinition $positionDefinition
      *
      * @throws PositionDataException
-     * @return PositionUpdate
      *
+     * @return PositionUpdate
      */
     public function buildPositionUpdate(array $data, PositionDefinition $positionDefinition);
 }

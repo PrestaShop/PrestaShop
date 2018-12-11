@@ -122,8 +122,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      * @param array $options Options
      *
      * @throws \Exception
-     * @return $this
      *
+     * @return $this
      */
     public function set($key, $value, array $options = [])
     {
@@ -187,8 +187,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      * @param $key
      *
      * @throws \Exception
-     * @return $this
      *
+     * @return $this
      *
      * @deprecated since version 1.7.4.0
      */

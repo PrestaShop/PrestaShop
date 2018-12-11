@@ -176,6 +176,7 @@ class StockMvtCore extends ObjectModel
      *
      * This method no longer exists.
      * There is no equivalent or replacement, considering that this should be handled by inventories.
+     *
      * @param mixed $id_employee
      */
     public static function addMissingMvt($id_employee)

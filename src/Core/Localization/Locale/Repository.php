@@ -135,9 +135,9 @@ class Repository implements RepositoryInterface
      *                           eg: fr-FR, en-US
      *
      * @throws LocalizationException
+     *
      * @return NumberSpecification
      *                             A Number specification
-     *
      */
     protected function getNumberSpecification($localeCode)
     {
@@ -160,9 +160,9 @@ class Repository implements RepositoryInterface
      *                           eg: fr-FR, en-US
      *
      * @throws LocalizationException
+     *
      * @return PriceSpecificationMap
      *                               All installed currencies' Price specifications
-     *
      */
     protected function getPriceSpecifications($localeCode)
     {
@@ -192,8 +192,8 @@ class Repository implements RepositoryInterface
      *                               This CldrLocale object is a low level data object extracted from CLDR data source
      *
      * @throws LocalizationException
-     * @return NumberSpecification
      *
+     * @return NumberSpecification
      */
     protected function buildNumberSpecification($cldrLocale)
     {
@@ -222,8 +222,8 @@ class Repository implements RepositoryInterface
      *                           eg: fr-FR, en-US
      *
      * @throws LocalizationException
-     * @return PriceSpecification
      *
+     * @return PriceSpecification
      */
     protected function buildPriceSpecification(CldrLocale $cldrLocale, Currency $currency, $localeCode)
     {

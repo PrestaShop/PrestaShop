@@ -343,6 +343,7 @@ class AdminProductWrapper
 
     /**
      * Validate a specific price.
+     *
      * @param mixed $id_product
      * @param mixed $id_shop
      * @param mixed $id_currency
@@ -521,8 +522,8 @@ class AdminProductWrapper
      * @param int $id
      *
      * @throws PrestaShopObjectNotFoundException
-     * @return SpecificPrice
      *
+     * @return SpecificPrice
      */
     public function getSpecificPriceDataById($id)
     {

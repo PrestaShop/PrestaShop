@@ -55,8 +55,8 @@ class TranslationService
      * @param $locale
      *
      * @throws Exception
-     * @return mixed
      *
+     * @return mixed
      */
     public function findLanguageByLocale($locale)
     {
@@ -73,8 +73,8 @@ class TranslationService
 
     /**
      * @throws Exception
-     * @return mixed
      *
+     * @return mixed
      */
     private function getLangToLocalesMapping()
     {

@@ -820,6 +820,7 @@ class ProductCore extends ObjectModel
      * @param mixed $id_product
      * @param mixed $minimum_quantity
      * @param mixed $reset
+     *
      * @return int Attributes list
      */
     public static function getDefaultAttribute($id_product, $minimum_quantity = 0, $reset = false)
@@ -957,6 +958,7 @@ class ProductCore extends ObjectModel
 
     /**
      * @see ObjectModel::validateField()
+     *
      * @param mixed $field
      * @param mixed $value
      * @param null|mixed $id_lang
@@ -1471,6 +1473,7 @@ class ProductCore extends ObjectModel
      * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
      * @see ProductSupplier for manage supplier reference(s)
      * @deprecated since 1.5.0
+     *
      * @param mixed $price
      * @param mixed $weight
      * @param mixed $unit_impact
@@ -1755,6 +1758,7 @@ class ProductCore extends ObjectModel
      * @deprecated since 1.5
      * @see updateAttribute() to use instead
      * @see ProductSupplier for manage supplier reference(s)
+     *
      * @param mixed $id_product_attribute
      * @param mixed $wholesale_price
      * @param mixed $price
@@ -2287,8 +2291,8 @@ class ProductCore extends ObjectModel
      * @param $combinations
      *
      * @throws PrestaShopDatabaseException
-     * @return bool
      *
+     * @return bool
      */
     public function addAttributeCombinationMultiple($id_attributes, $combinations)
     {
@@ -3024,6 +3028,7 @@ class ProductCore extends ObjectModel
      * getProductCategories return an array of categories which this product belongs to.
      *
      * @param mixed $id_product
+     *
      * @return array of categories
      */
     public static function getProductCategories($id_product = '')
@@ -3099,6 +3104,7 @@ class ProductCore extends ObjectModel
 
     /**
      * Sets carriers assigned to the product.
+     *
      * @param mixed $carrier_list
      */
     public function setCarriers($carrier_list)
@@ -3155,6 +3161,7 @@ class ProductCore extends ObjectModel
      *
      * @param mixed $id_product
      * @param null|Context $context
+     *
      * @return array Product cover image
      */
     public static function getCover($id_product, Context $context = null)
@@ -4168,6 +4175,7 @@ class ProductCore extends ObjectModel
 
     /**
      * Add new feature to product.
+     *
      * @param mixed $id_value
      * @param mixed $lang
      * @param mixed $cust
@@ -4766,6 +4774,7 @@ class ProductCore extends ObjectModel
 
     /**
      * Get the link of the product page of this product.
+     *
      * @param null|Context $context
      */
     public function getLink(Context $context = null)
@@ -5506,8 +5515,8 @@ class ProductCore extends ObjectModel
      * check if product has an activated and required customizationFields.
      *
      * @throws \PrestaShopDatabaseException
-     * @return bool
      *
+     * @return bool
      */
     public function hasActivatedRequiredCustomizableFields()
     {
@@ -5712,6 +5721,7 @@ class ProductCore extends ObjectModel
 
     /**
      * @deprecated since 1.5.0
+     *
      * @param mixed $id_lang
      */
     public function getStockMvts($id_lang)
@@ -6113,6 +6123,7 @@ class ProductCore extends ObjectModel
      * Webservice setter : set virtual field position in category.
      *
      * @param mixed $position
+     *
      * @return bool
      */
     public function setWsPositionInCategory($position)
@@ -6166,6 +6177,7 @@ class ProductCore extends ObjectModel
      * Webservice setter : set virtual field id_default_image in category.
      *
      * @param mixed $id_image
+     *
      * @return bool
      */
     public function setCoverWs($id_image)
@@ -6276,6 +6288,7 @@ class ProductCore extends ObjectModel
      * Checks if reference exists.
      *
      * @param mixed $reference
+     *
      * @return bool
      */
     public function existsRefInDatabase($reference)
@@ -6394,8 +6407,8 @@ class ProductCore extends ObjectModel
      * @param bool $findBest
      *
      * @throws PrestaShopException
-     * @return int
      *
+     * @return int
      */
     public static function getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest = false)
     {
@@ -6482,6 +6495,7 @@ class ProductCore extends ObjectModel
     /**
      * @deprecated 1.7.3.1
      * @see Product::getIdProductAttributeByIdAttributes()
+     *
      * @param mixed $id_product
      * @param mixed $id_attributes
      * @param mixed $find_best
@@ -6981,6 +6995,7 @@ class ProductCore extends ObjectModel
      * Useful when a product list should be checked before a bulk operation on them (Only 1 query => performances).
      *
      * @param mixed $ids_or_refs
+     *
      * @return array the IDs list, whithout duplicate and only existing ones
      */
     public static function getExistingIdsFromIdsOrRefs($ids_or_refs)
@@ -7064,8 +7079,8 @@ class ProductCore extends ObjectModel
      * @param array $customizationIds - Array of customization fields IDs
      *
      * @throws PrestaShopDatabaseException
-     * @return bool
      *
+     * @return bool
      */
     public function deleteUnusedCustomizationFields($customizationIds)
     {
@@ -7092,8 +7107,8 @@ class ProductCore extends ObjectModel
      * @param array $customizationIds - Array of excluded customization fields IDs
      *
      * @throws PrestaShopDatabaseException
-     * @return bool
      *
+     * @return bool
      */
     public function softDeleteCustomizationFields($customizationIds)
     {

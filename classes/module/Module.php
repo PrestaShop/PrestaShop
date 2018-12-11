@@ -2308,6 +2308,7 @@ abstract class ModuleCore implements ModuleInterface
 
     /**
      * Template management (display, overload, cache).
+     *
      * @param mixed $module_name
      * @param mixed $template
      */

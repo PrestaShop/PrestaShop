@@ -36,8 +36,8 @@ class OrderPresenter implements PresenterInterface
      * @param Order $order
      *
      * @throws Exception
-     * @return OrderLazyArray
      *
+     * @return OrderLazyArray
      */
     public function present($order)
     {

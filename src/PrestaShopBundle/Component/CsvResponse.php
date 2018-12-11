@@ -150,8 +150,8 @@ class CsvResponse extends StreamedResponse
      * @param string $fileName
      *
      * @throws \InvalidArgumentException
-     * @return $this
      *
+     * @return $this
      */
     public function setFileName($fileName)
     {

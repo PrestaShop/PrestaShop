@@ -59,8 +59,8 @@ class ConnectionsSourceCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @return bool Indicates whether the ConnectionsSource has been successfully added
      *
+     * @return bool Indicates whether the ConnectionsSource has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {

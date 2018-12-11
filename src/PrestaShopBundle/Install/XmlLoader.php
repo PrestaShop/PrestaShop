@@ -578,8 +578,8 @@ class XmlLoader
      * @param array $data_lang
      *
      * @throws PrestaShopDatabaseException
-     * @return $this
      *
+     * @return $this
      */
     public function createEntityPack($identifier, array $data, array $data_lang)
     {
@@ -1065,6 +1065,7 @@ class XmlLoader
 
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
+     *
      * @param mixed $entities
      */
     public function generateEntityFiles($entities)
@@ -1143,6 +1144,7 @@ class XmlLoader
 
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
+     *
      * @param mixed $entity
      */
     public function getEntityContents($entity)
@@ -1289,6 +1291,7 @@ class XmlLoader
 
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
+     *
      * @param mixed $entity
      * @param mixed $primary
      * @param array $row
@@ -1332,6 +1335,7 @@ class XmlLoader
 
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
+     *
      * @param mixed $entity
      * @param array $nodes
      * @param \SimpleXMLElement $entities
@@ -1354,6 +1358,7 @@ class XmlLoader
 
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
+     *
      * @param mixed $entity
      * @param mixed $path
      */

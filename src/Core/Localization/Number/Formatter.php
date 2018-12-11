@@ -93,10 +93,10 @@ class Formatter
      *                                           Number specification to be used (can be a number spec, a price spec, a percentage spec)
      *
      * @throws LocalizationException
+     *
      * @return string
      *                The formatted number
      *                You should use this this value for display, without modifying it
-     *
      */
     public function format($number, NumberSpecification $specification)
     {

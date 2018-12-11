@@ -367,8 +367,8 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product_attribute Optional
      *
      * @throws PrestaShopDatabaseException
-     * @return bool
      *
+     * @return bool
      */
     public static function setLocation($id_product, $location, $id_shop = null, $id_product_attribute = 0)
     {
@@ -454,6 +454,7 @@ class StockAvailableCore extends ObjectModel
      * Upgrades total_quantity_available after having saved.
      *
      * @see ObjectModel::add()
+     *
      * @param mixed $autodate
      * @param mixed $null_values
      */
@@ -472,6 +473,7 @@ class StockAvailableCore extends ObjectModel
      * Upgrades total_quantity_available after having update.
      *
      * @see ObjectModel::update()
+     *
      * @param mixed $null_values
      */
     public function update($null_values = false)

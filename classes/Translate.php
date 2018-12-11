@@ -349,6 +349,7 @@ class TranslateCore
 
     /**
      * Perform operations on translations after everything is escaped and before displaying it.
+     *
      * @param mixed $string
      * @param mixed $params
      */
@@ -379,6 +380,7 @@ class TranslateCore
      * Compatibility method that just calls postProcessTranslation.
      *
      * @deprecated renamed this to postProcessTranslation, since it is not only used in relation to smarty
+     *
      * @param mixed $string
      * @param mixed $params
      */
@@ -391,6 +393,7 @@ class TranslateCore
      * Helper function to make calls to postProcessTranslation more readable.
      *
      * @deprecated 1.7.1.0
+     *
      * @param mixed $string
      * @param mixed $tags
      */

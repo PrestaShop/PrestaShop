@@ -380,6 +380,7 @@ abstract class ControllerCore
 
     /**
      * Set $this->redirect_after that will be used by redirect() after the process.
+     *
      * @param mixed $url
      */
     public function setRedirectAfter($url)
@@ -751,8 +752,8 @@ abstract class ControllerCore
      * @param string $serviceId Service identifier
      *
      * @throws Exception
-     * @return object The associated service
      *
+     * @return object The associated service
      */
     public function get($serviceId)
     {
@@ -765,8 +766,8 @@ abstract class ControllerCore
      * @param string $parameterId The parameter name
      *
      * @throws InvalidArgumentException if the parameter is not defined
-     * @return mixed The parameter value
      *
+     * @return mixed The parameter value
      */
     public function getParameter($parameterId)
     {
