@@ -45,7 +45,7 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 class ExpressionListProcessor extends AbstractProcessor {
 
     public function process($tokens) {
-        $resultList = array();
+        $resultList = [];
         $skip_next = false;
         $prev = new ExpressionToken();
 
@@ -130,7 +130,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                     // below for unspecified tokens (expressions).
 
                     $localExpr = new ExpressionToken();
-                    $tmpExprList = array();
+                    $tmpExprList = [];
 
                     foreach ($localTokenList as $k => $v) {
                         $tmpToken = new ExpressionToken($k, $v);
@@ -148,7 +148,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                                 $localExpr->setTokenType(ExpressionType::EXPRESSION);
                                 $localExprList = $localExpr->toArray();
                                 $localExprList['alias'] = false;
-                                $localExprList = array($localExprList);
+                                $localExprList = [$localExprList];
                             }
 
                             if (!$curr->getSubTree()) {
@@ -158,7 +158,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                                 $curr->setSubTree(array_merge($tmpExprList, $localExprList));
                             }
 
-                            $tmpExprList = array();
+                            $tmpExprList = [];
                             $localExpr = new ExpressionToken();
                         }
                     }
@@ -171,7 +171,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                         $localExpr->setTokenType(ExpressionType::EXPRESSION);
                         $localExprList = $localExpr->toArray();
                         $localExprList['alias'] = false;
-                        $localExprList = array($localExprList);
+                        $localExprList = [$localExprList];
                     }
 
                     if (!$curr->getSubTree()) {

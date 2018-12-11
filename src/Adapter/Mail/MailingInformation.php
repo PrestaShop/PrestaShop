@@ -46,12 +46,12 @@ class MailingInformation
      */
     public function getSmtpInformation()
     {
-        return array(
+        return [
             'server' => Configuration::get('PS_MAIL_SERVER'),
             'user' => Configuration::get('PS_MAIL_USER'),
             'password' => Configuration::get('PS_MAIL_PASSWD'),
             'encryption' => Configuration::get('PS_MAIL_SMTP_ENCRYPTION'),
             'port' => Configuration::get('PS_MAIL_SMTP_PORT'),
-        );
+        ];
     }
 }

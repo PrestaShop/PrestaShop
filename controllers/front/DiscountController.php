@@ -44,7 +44,7 @@ class DiscountControllerCore extends FrontController
         $cart_rules = $this->getTemplateVarCartRules();
 
         if (count($cart_rules) <= 0) {
-            $this->warning[] = $this->trans('You do not have any vouchers.', array(), 'Shop.Notifications.Warning');
+            $this->warning[] = $this->trans('You do not have any vouchers.', [], 'Shop.Notifications.Warning');
         }
 
         $this->context->smarty->assign([
@@ -69,7 +69,7 @@ class DiscountControllerCore extends FrontController
         foreach ($vouchers as $key => $voucher) {
             $cart_rules[$key] = $voucher;
             $cart_rules[$key]['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
-            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int) $voucher['minimum_amount_currency']) : $this->trans('None', array(), 'Shop.Theme.Global');
+            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int) $voucher['minimum_amount_currency']) : $this->trans('None', [], 'Shop.Theme.Global');
             $cart_rules[$key]['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);
 
             $cartRuleValue = $this->accumulateCartRuleValue($voucher);
@@ -101,9 +101,9 @@ class DiscountControllerCore extends FrontController
     protected function getCombinableVoucherTranslation($voucher)
     {
         if ($voucher['cart_rule_restriction']) {
-            $combinableVoucherTranslation = $this->trans('No', array(), 'Shop.Theme.Global');
+            $combinableVoucherTranslation = $this->trans('No', [], 'Shop.Theme.Global');
         } else {
-            $combinableVoucherTranslation = $this->trans('Yes', array(), 'Shop.Theme.Global');
+            $combinableVoucherTranslation = $this->trans('Yes', [], 'Shop.Theme.Global');
         }
 
         return $combinableVoucherTranslation;
@@ -119,9 +119,9 @@ class DiscountControllerCore extends FrontController
     protected function formatReductionAmount($hasTaxIncluded, $amount, $currencyId)
     {
         if ($hasTaxIncluded) {
-            $taxTranslation = $this->trans('Tax included', array(), 'Shop.Theme.Checkout');
+            $taxTranslation = $this->trans('Tax included', [], 'Shop.Theme.Checkout');
         } else {
-            $taxTranslation = $this->trans('Tax excluded', array(), 'Shop.Theme.Checkout');
+            $taxTranslation = $this->trans('Tax excluded', [], 'Shop.Theme.Checkout');
         }
 
         return sprintf(
@@ -162,7 +162,7 @@ class DiscountControllerCore extends FrontController
         }
 
         if ($voucher['free_shipping']) {
-            $cartRuleValue[] = $this->trans('Free shipping', array(), 'Shop.Theme.Checkout');
+            $cartRuleValue[] = $this->trans('Free shipping', [], 'Shop.Theme.Checkout');
         }
 
         if ($voucher['gift_product'] > 0) {

@@ -69,13 +69,13 @@ class ProductCategories extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('categories', ChoiceCategoriesTreeType::class, array(
+        $builder->add('categories', ChoiceCategoriesTreeType::class, [
             'label' => $this->trans('Categories', 'Admin.Catalog.Feature'),
             'list' => $this->categoryProvider->getNestedCategories(null, $this->languageId, false),
             'valid_list' => [],
             'multiple' => false,
             'expanded' => false,
-        ));
+        ]);
     }
 
     /**

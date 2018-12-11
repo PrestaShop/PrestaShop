@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-	<title><?php echo $this->translator->trans('PrestaShop Installation Assistant', array(), 'Install') ?></title>
+	<title><?php echo $this->translator->trans('PrestaShop Installation Assistant', [], 'Install') ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 	<meta http-equiv="Pragma" content="no-cache" />
@@ -34,14 +34,14 @@
 <!-- Header -->
 <div id="header" class="clearfix">
 	<ul id="headerLinks">
-		<li class="lnk_forum"><a href="<?php echo $this->getForumLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Forum', array(), 'Install'); ?></a></li>
-		<li class="lnk_forum"><a href="<?php echo $this->getSupportLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Support', array(), 'Install'); ?></a></li>
-		<li class="lnk_forum"><a href="<?php echo $this->getDocumentationLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Documentation', array(), 'Install'); ?></a></li>
-		<li class="lnk_blog last"><a href="<?php echo $this->getBlogLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Blog', array(), 'Install') ?></a></li>
+		<li class="lnk_forum"><a href="<?php echo $this->getForumLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Forum', [], 'Install'); ?></a></li>
+		<li class="lnk_forum"><a href="<?php echo $this->getSupportLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Support', [], 'Install'); ?></a></li>
+		<li class="lnk_forum"><a href="<?php echo $this->getDocumentationLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Documentation', [], 'Install'); ?></a></li>
+		<li class="lnk_blog last"><a href="<?php echo $this->getBlogLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Blog', [], 'Install') ?></a></li>
 		<!--
 		<?php if ($this->getPhone()): ?>
 			<li id="phone_block" class="last">
-				<div><span><?php echo $this->translator->trans('Contact us!', array(), 'Install') ?></span><br /><?php echo $this->getPhone() ?></div>
+				<div><span><?php echo $this->translator->trans('Contact us!', [], 'Install') ?></span><br /><?php echo $this->getPhone() ?></div>
 			</li>
 		<?php endif; ?>
 		-->
@@ -73,7 +73,7 @@
 	<?php if (@fsockopen('api.prestashop.com', 80, $errno, $errst, 3)): ?>
 		<iframe scrolling="no" style="height:210px;width:200px;border:none;margin-top:20px" id="iframe_help"
 			src="https://api.prestashop.com/iframe/install.php?step=<?php echo self::$steps->current()->getName() ?>&lang=<?php echo $this->language->getLanguageIso() ?><?php if (isset($this->session->shop_country)) echo '&country='.$this->session->shop_country; ?>">
-			<p><?php echo $this->translator->trans('Contact us!', array(), 'Install') ?><br /><?php echo $this->getPhone() ?></p>
+			<p><?php echo $this->translator->trans('Contact us!', [], 'Install') ?><br /><?php echo $this->getPhone() ?></p>
 		</iframe>
 	<?php endif; ?>
 </div>
@@ -83,7 +83,7 @@
 <div id="sheets" class="sheet shown">
 	<div id="sheet_<?php echo self::$steps->current()->getName() ?>" class="sheet shown clearfix">
 	<div class="contentTitle">
-		<h1><?php echo $this->translator->trans('Installation Assistant', array(), 'Install'); ?></h1>
+		<h1><?php echo $this->translator->trans('Installation Assistant', [], 'Install'); ?></h1>
 		<ul id="stepList_1" class="stepList clearfix">
 			<?php foreach ($this->getSteps() as $step): ?>
 				<li <?php if ($this->isStepFinished($step->getName())): ?>class="ok"<?php endif; ?>><?php echo $step ?></li>
@@ -92,8 +92,8 @@
 	</div>
 	<noscript>
 		<h4 class="errorBlock" style="margin-bottom:10px">
-			<?php echo $this->translator->trans('To install PrestaShop, you need to have JavaScript enabled in your browser.', array(), 'Install'); ?>
-			<a href="<?php echo $this->translator->trans('https://enable-javascript.com/', array(), 'Install'); ?>" target="_blank" rel="noopener noreferrer">
+			<?php echo $this->translator->trans('To install PrestaShop, you need to have JavaScript enabled in your browser.', [], 'Install'); ?>
+			<a href="<?php echo $this->translator->trans('https://enable-javascript.com/', [], 'Install'); ?>" target="_blank" rel="noopener noreferrer">
 				<img src="theme/img/help.png" style="height:16px;width:16px" />
 			</a>
 		</h4>

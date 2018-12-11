@@ -27,8 +27,8 @@
 function p1606module_exceptions()
 {
     $modules_dir = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
-    $modules_controllers = $core_controllers = array();
-    $core_controllers = array();
+    $modules_controllers = $core_controllers = [];
+    $core_controllers = [];
 
     foreach ($modules_dir as $module_dir) {
         $module_path = _PS_MODULE_DIR_.$module_dir;
@@ -48,7 +48,7 @@ function p1606module_exceptions()
                     if (isset($modules_controllers[$module_dir])) {
                         $modules_controllers[$module_dir][] = str_replace('.php', '', $a_controller);
                     } else {
-                        $modules_controllers[$module_dir] = array(str_replace('.php', '', $a_controller));
+                        $modules_controllers[$module_dir] = [str_replace('.php', '', $a_controller)];
                     }
                 }
             }
@@ -63,7 +63,7 @@ function p1606module_exceptions()
                     if (isset($modules_controllers[$module_dir])) {
                         $modules_controllers[$module_dir][] = str_replace('.php', '', $f_controller);
                     } else {
-                        $modules_controllers[$module_dir] = array(str_replace('.php', '', $f_controller));
+                        $modules_controllers[$module_dir] = [str_replace('.php', '', $f_controller)];
                     }
                 }
             }

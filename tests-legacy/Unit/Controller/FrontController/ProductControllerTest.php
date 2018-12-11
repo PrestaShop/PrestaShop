@@ -63,7 +63,7 @@ class ProductControllerTest extends IntegrationTestCase
      *
      * @return mixed Method return.
      */
-    public function invokeMethod($object, $methodName, array $parameters = array())
+    public function invokeMethod($object, $methodName, array $parameters = [])
     {
         $reflection = new \ReflectionClass(get_class($object));
         $method     = $reflection->getMethod($methodName);
@@ -111,12 +111,12 @@ class ProductControllerTest extends IntegrationTestCase
         $result             = $this->invokeMethod(
             $this->controller,
             'formatQuantityDiscounts',
-            array(
+            [
                 $specificPrices,
                 $price,
                 $taxRate,
                 $ecotaxAmount,
-            )
+            ]
         );
 
         $priceFormatter = new PriceFormatter();
@@ -133,8 +133,8 @@ class ProductControllerTest extends IntegrationTestCase
     public function specificPricesProvider()
     {
 
-        $specificPrices = array(
-            0 => array(
+        $specificPrices = [
+            0 => [
                 'id_specific_price'      => '9',
                 'id_specific_price_rule' => '0',
                 'id_cart'                => '0',
@@ -157,72 +157,72 @@ class ProductControllerTest extends IntegrationTestCase
                 'quantity'               => '15',
                 'reduction_with_tax'     => 0,
                 'nextQuantity'           => -1,
-            ),
-        );
-        $currencyEur    = array(
+            ],
+        ];
+        $currencyEur    = [
             'conversion_rate' => 1.0,
             'sign'            => '€',
             'code'            => 'EUR',
-        );
-        $currencyDol    = array(
+        ];
+        $currencyDol    = [
             'conversion_rate' => 1.3,
             'sign'            => '$',
             'code'            => 'USD',
-        );
+        ];
 
-        return array(
-            'EUR to USD, without ecotax' => array(
+        return [
+            'EUR to USD, without ecotax' => [
                 'price'           => 31.2,
                 'tax_rate'        => 20,
                 'ecotax_amount'   => 0,
                 'currency'        => $currencyDol,
                 'specific_prices' => $specificPrices,
-                'expected'        => array(
-                    array(
+                'expected'        => [
+                    [
                         'discount' => 7.80,
                         'save'     => 117.00,
-                    ),
-                ),
-            ),
-            'EUR to EUR, without ecotax' => array(
+                    ],
+                ],
+            ],
+            'EUR to EUR, without ecotax' => [
                 'price'           => 24,
                 'tax_rate'        => 20,
                 'ecotax_amount'   => 0,
                 'currency'        => $currencyEur,
                 'specific_prices' => $specificPrices,
-                'expected'        => array(
-                    array(
+                'expected'        => [
+                    [
                         'discount' => 6.00,
                         'save'     => 90.00,
-                    ),
-                ),
-            ),
-            'EUR to USD, with ecotax'    => array(
+                    ],
+                ],
+            ],
+            'EUR to USD, with ecotax'    => [
                 'price'           => 31.2,
                 'tax_rate'        => 20,
                 'ecotax_amount'   => 0.9,
                 'currency'        => $currencyDol,
                 'specific_prices' => $specificPrices,
-                'expected'        => array(
-                    array(
+                'expected'        => [
+                    [
                         'discount' => 6.63,
                         'save'     => 99.45,
-                    ),
-                ),
-            ),
-            'EUR to EUR, with ecotax'    => array(
+                    ],
+                ],
+            ],
+            'EUR to EUR, with ecotax'    => [
                 'price'           => 24,
                 'tax_rate'        => 20,
                 'ecotax_amount'   => 0.9,
                 'currency'        => $currencyEur,
                 'specific_prices' => $specificPrices,
-                'expected'        => array(
-                    array(
+                'expected'        => [
+                    [
                         'discount' => 5.10,
                         'save'     => 76.50,
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
     }
 }

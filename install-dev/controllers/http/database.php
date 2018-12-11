@@ -110,7 +110,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
 
         $this->ajaxJsonAnswer(
             (count($errors)) ? false : true,
-            (count($errors)) ? implode('<br />', $errors) : $this->translator->trans('Database is connected', array(), 'Install')
+            (count($errors)) ? implode('<br />', $errors) : $this->translator->trans('Database is connected', [], 'Install')
         );
     }
 
@@ -128,7 +128,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
 
         $this->ajaxJsonAnswer(
             $success,
-            $success ?  $this->translator->trans('Database is created', array(), 'Install') : $this->translator->trans('Cannot create the database automatically', array(), 'Install')
+            $success ?  $this->translator->trans('Database is created', [], 'Install') : $this->translator->trans('Cannot create the database automatically', [], 'Install')
         );
     }
 

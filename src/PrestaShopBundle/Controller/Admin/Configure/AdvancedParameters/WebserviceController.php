@@ -299,7 +299,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function processFormAction(Request $request)
     {
-        $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $this->getFormHandler()->getForm();
         $form->handleRequest($request);

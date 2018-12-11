@@ -76,14 +76,14 @@ class TranslationControllerTest extends ApiTestCase
      */
     public function getBadDomains()
     {
-        return array(
-            array(
-                array('locale' => 'default', 'domain' => 'AdminGloabl'), // syntax error wanted
-            ),
-            array(
-                array('locale' => 'defaultt', 'domain' => 'AdminGlobal'),
-            ),
-        );
+        return [
+            [
+                ['locale' => 'default', 'domain' => 'AdminGloabl'], // syntax error wanted
+            ],
+            [
+                ['locale' => 'defaultt', 'domain' => 'AdminGlobal'],
+            ],
+        ];
     }
 
     /**
@@ -91,14 +91,14 @@ class TranslationControllerTest extends ApiTestCase
      */
     public function getGoodDomains()
     {
-        return array(
-            array(
-                array('locale' => 'default', 'domain' => 'AdminGlobal'),
-            ),
-            array(
-                array('locale' => 'default', 'domain' => 'AdminNavigationMenu'),
-            ),
-        );
+        return [
+            [
+                ['locale' => 'default', 'domain' => 'AdminGlobal'],
+            ],
+            [
+                ['locale' => 'default', 'domain' => 'AdminNavigationMenu'],
+            ],
+        ];
     }
 
     /**
@@ -128,22 +128,22 @@ class TranslationControllerTest extends ApiTestCase
      */
     public function getBadDomainsCatalog()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'lang' => 'en',
                     'type' => 'modules',
                     'selected' => 'ps_baanner' // syntax error wanted
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'lang' => 'en',
                     'type' => 'frront', // syntax error wanted
                     'selected' => 'classic'
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -151,22 +151,22 @@ class TranslationControllerTest extends ApiTestCase
      */
     public function getGoodDomainsCatalog()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'lang' => 'en',
                     'type' => 'modules',
                     'selected' => 'ps_banner'
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'lang' => 'en',
                     'type' => 'front',
                     'selected' => 'classic'
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
 
@@ -189,25 +189,25 @@ class TranslationControllerTest extends ApiTestCase
 
     public function getGoodEditTranslations()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'locale' => 'en-US',
                     'domain' => 'AdminActions',
                     'default' => 'First message',
                     'edited' => 'First translation',
                     'theme' => 'classic',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'locale' => 'en-US',
                     'domain' => 'AdminActions',
                     'default' => 'Second message',
                     'edited' => 'Second translation',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
 
@@ -231,23 +231,23 @@ class TranslationControllerTest extends ApiTestCase
 
     public function getGoodResetTranslations()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'locale' => 'en-US',
                     'domain' => 'AdminActions',
                     'default' => 'First message',
                     'theme' => 'classic',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'locale' => 'en-US',
                     'domain' => 'AdminActions',
                     'default' => 'Second message',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -257,44 +257,44 @@ class TranslationControllerTest extends ApiTestCase
     {
         $editTranslationRoute = $this->router->generate(
             'api_translation_value_edit',
-            array('locale' => 'en-US', 'domain' => 'AdminActions')
+            ['locale' => 'en-US', 'domain' => 'AdminActions']
         );
 
         self::$client->request('POST', $editTranslationRoute);
         $this->assertResponseBodyValidJson(400);
 
 
-        self::$client->request('POST', $editTranslationRoute, array(), array(), array(), '{}');
+        self::$client->request('POST', $editTranslationRoute, [], [], [], '{}');
         $this->assertResponseBodyValidJson(400);
 
-        $fails = array(
-            array(
+        $fails = [
+            [
                 'locale' => 'en-US',
                 'domain' => 'AdminActions',
                 'defaultfoo' => 'foo',
                 'edited' => 'boo',
                 'theme' => 'classic',
-            ),
-            array(
+            ],
+            [
                 'default' => 'AdminActions',
                 'edited' => 'boo',
                 'theme' => 'classic',
-            ),
-            array(
+            ],
+            [
                 'locale' => 'en-US',
-            ),
-            array(
+            ],
+            [
                 'locale' => 'en-BOUH',
                 'domain' => 'AdminActions',
                 'default' => 'First message',
                 'edited' => 'First translation',
                 'theme' => 'classic',
-            ),
-        );
+            ],
+        ];
 
         foreach ($fails as $fail) {
-            $post = json_encode(array('translations' => array($fail)));
-            self::$client->request('POST', $editTranslationRoute, array(), array(), array(), $post);
+            $post = json_encode(['translations' => [$fail]]);
+            self::$client->request('POST', $editTranslationRoute, [], [], [], $post);
             $this->assertResponseBodyValidJson(400);
         }
     }
@@ -303,41 +303,41 @@ class TranslationControllerTest extends ApiTestCase
     {
         $resetTranslationRoute = $this->router->generate(
             'api_translation_value_reset',
-            array('locale' => 'en-US', 'domain' => 'AdminActions')
+            ['locale' => 'en-US', 'domain' => 'AdminActions']
         );
 
         self::$client->request('POST', $resetTranslationRoute);
         $this->assertResponseBodyValidJson(400);
 
 
-        self::$client->request('POST', $resetTranslationRoute, array(), array(), array(), '{}');
+        self::$client->request('POST', $resetTranslationRoute, [], [], [], '{}');
         $this->assertResponseBodyValidJson(400);
 
-        $fails = array(
-            array(
+        $fails = [
+            [
                 'locale' => 'en-US',
                 'domain' => 'AdminActions',
                 'defaultfoo' => 'foo',
-            ),
-            array(
+            ],
+            [
                 'default' => 'foo',
                 'theme' => 'classic',
-            ),
-            array(
+            ],
+            [
                 'locale' => 'en-US',
-            ),
-            array(
+            ],
+            [
                 'locale' => 'en-BOUH',
                 'domain' => 'AdminActions',
                 'default' => 'First message',
                 'edited' => 'First translation',
                 'theme' => 'classic',
-            ),
-        );
+            ],
+        ];
 
         foreach ($fails as $fail) {
-            $post = json_encode(array('translations' => array($fail)));
-            self::$client->request('POST', $resetTranslationRoute, array(), array(), array(), $post);
+            $post = json_encode(['translations' => [$fail]]);
+            self::$client->request('POST', $resetTranslationRoute, [], [], [], $post);
             $this->assertResponseBodyValidJson(400);
         }
     }
@@ -349,11 +349,11 @@ class TranslationControllerTest extends ApiTestCase
     {
         $editTranslationRoute = $this->router->generate(
         'api_translation_value_edit',
-            array('locale' => 'en-US', 'domain' => 'AdminActions')
+            ['locale' => 'en-US', 'domain' => 'AdminActions']
         );
 
-        $post = json_encode(array('translations' => array($params)));
-        self::$client->request('POST', $editTranslationRoute, array(), array(), array(), $post);
+        $post = json_encode(['translations' => [$params]]);
+        self::$client->request('POST', $editTranslationRoute, [], [], [], $post);
         $this->assertResponseBodyValidJson(200);
     }
 
@@ -361,11 +361,11 @@ class TranslationControllerTest extends ApiTestCase
     {
         $resetTranslationRoute = $this->router->generate(
             'api_translation_value_reset',
-            array('locale' => 'en-US', 'domain' => 'AdminActions')
+            ['locale' => 'en-US', 'domain' => 'AdminActions']
         );
 
-        $post = json_encode(array('translations' => array($params)));
-        self::$client->request('POST', $resetTranslationRoute, array(), array(), array(), $post);
+        $post = json_encode(['translations' => [$params]]);
+        self::$client->request('POST', $resetTranslationRoute, [], [], [], $post);
         $this->assertResponseBodyValidJson(200);
     }
 }

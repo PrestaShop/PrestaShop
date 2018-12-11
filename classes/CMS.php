@@ -46,31 +46,31 @@ class CMSCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'cms',
         'primary' => 'id_cms',
         'multilang' => true,
         'multilang_shop' => true,
-        'fields' => array(
-            'id_cms_category' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'position' => array('type' => self::TYPE_INT),
-            'indexation' => array('type' => self::TYPE_BOOL),
-            'active' => array('type' => self::TYPE_BOOL),
+        'fields' => [
+            'id_cms_category' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'position' => ['type' => self::TYPE_INT],
+            'indexation' => ['type' => self::TYPE_BOOL],
+            'active' => ['type' => self::TYPE_BOOL],
 
             /* Lang fields */
-            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
-            'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
-            'head_seo_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'link_rewrite' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
-            'content' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 3999999999999),
-        ),
-    );
+            'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
+            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
+            'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+            'head_seo_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
+            'link_rewrite' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128],
+            'content' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 3999999999999],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectNodeName' => 'content',
         'objectsNodeName' => 'content_management_system',
-    );
+    ];
 
     /**
      * Adds current CMS as a new Object to the database.
@@ -151,7 +151,7 @@ class CMSCore extends ObjectModel
         'GROUP BY c.id_cms
 		ORDER BY c.`position`');
 
-        $links = array();
+        $links = [];
         if ($result) {
             foreach ($result as $row) {
                 $row['link'] = $link->getCMSLink((int) $row['id_cms'], $row['link_rewrite']);

@@ -29,7 +29,7 @@ use PrestaShopBundle\Install\Database;
 class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
 {
 
-    public $process_steps = array();
+    public $process_steps = [];
     public $previous_button = false;
 
     public function init()
@@ -103,7 +103,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
-            $steps = array('database','fixtures','theme','modules','addons_modules');
+            $steps = ['database','fixtures','theme','modules','addons_modules'];
         }
 
         if (in_array('database', $steps)) {
@@ -162,13 +162,13 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         }
 
         if ($this->datas->newsletter) {
-            $params = http_build_query(array(
+            $params = http_build_query([
                     'email' => $this->datas->admin_email,
                     'method' => 'addMemberToNewsletter',
                     'language' => $this->datas->lang,
                     'visitorType' => 1,
                     'source' => 'installer'
-                ));
+                ]);
             Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }
@@ -241,7 +241,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     {
         $this->initializeContext();
 
-        return $this->model_install->configureShop(array(
+        return $this->model_install->configureShop([
             'shop_name' =>                $this->datas->shop_name,
             'shop_activity' =>            $this->datas->shop_activity,
             'shop_country' =>            $this->datas->shop_country,
@@ -254,7 +254,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             'configuration_agrement' =>    true,
             'send_informations' => true,
             'enable_ssl' => $this->datas->enable_ssl,
-        ));
+        ]);
     }
 
     /**
@@ -281,7 +281,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         }
 
         $this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
-        $result = $this->model_install->installFixtures(null, array('shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country));
+        $result = $this->model_install->installFixtures(null, ['shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country]);
         $this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
         return $result;
     }

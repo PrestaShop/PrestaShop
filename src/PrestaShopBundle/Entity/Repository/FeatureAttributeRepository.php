@@ -214,10 +214,10 @@ class FeatureAttributeRepository
 
                 $parts = explode(':', $value);
 
-                return array(
+                return [
                     'item_id' => $parts[0],
                     'name' => $parts[1],
-                );
+                ];
             }, $row['values']);
 
             $row['values'] = $this->castNumericToInt($row['values']);

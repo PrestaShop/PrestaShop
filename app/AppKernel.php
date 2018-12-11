@@ -43,7 +43,7 @@ class AppKernel extends Kernel
      */
     public function registerBundles()
     {
-        $bundles = array(
+        $bundles = [
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
@@ -58,9 +58,9 @@ class AppKernel extends Kernel
             // REST API consumer
             new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
             new League\Tactician\Bundle\TacticianBundle(),
-        );
+        ];
 
-        if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
+        if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
@@ -88,7 +88,7 @@ class AppKernel extends Kernel
     {
         $kernelParameters = parent::getKernelParameters();
 
-        $activeModules = array();
+        $activeModules = [];
 
         /* Will not work until PrestaShop is installed */
         if ($this->parametersFileExists()) {
@@ -101,7 +101,7 @@ class AppKernel extends Kernel
 
         return array_merge(
             $kernelParameters,
-            array('kernel.active_modules' => $activeModules)
+            ['kernel.active_modules' => $activeModules]
         );
     }
 
@@ -173,7 +173,7 @@ class AppKernel extends Kernel
             return $config['parameters'];
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -201,7 +201,7 @@ class AppKernel extends Kernel
     {
         $parameters = $this->getParameters();
 
-        return DriverManager::getConnection(array(
+        return DriverManager::getConnection([
             'dbname' => $parameters['database_name'],
             'user' => $parameters['database_user'],
             'password' => $parameters['database_password'],
@@ -209,7 +209,7 @@ class AppKernel extends Kernel
             'port' => $parameters['database_port'],
             'charset' => 'utf8',
             'driver' => 'pdo_mysql',
-        ));
+        ]);
     }
 
     /**

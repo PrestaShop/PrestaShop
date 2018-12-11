@@ -83,12 +83,12 @@ if ($items && ($disableCombination ||$excludeIds)) {
             $item['name'] = str_replace('|', '&#124;', $item['name']);
             $results[] = trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product']);
         } else {
-            $results[] = array(
+            $results[] = [
                 'id' => $item['id_product'],
                 'name' => $item['name'].(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : ''),
                 'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
                 'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
-            );
+            ];
         }
     }
 
@@ -99,7 +99,7 @@ if ($items && ($disableCombination ||$excludeIds)) {
     }
 } elseif ($items) {
     // packs
-    $results = array();
+    $results = [];
     foreach ($items as $item) {
         // check if product have combination
         if (Combination::isFeatureActive() && $item['cache_default_attribute']) {
@@ -134,20 +134,20 @@ if ($items && ($disableCombination ||$excludeIds)) {
                     }
                 }
             } else {
-                $results[] = array(
+                $results[] = [
                     'id' => $item['id_product'],
                     'name' => $item['name'],
                     'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
                     'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
-                );
+                ];
             }
         } else {
-            $results[] = array(
+            $results[] = [
                 'id' => $item['id_product'],
                 'name' => $item['name'],
                 'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
                 'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
-            );
+            ];
         }
     }
     echo json_encode(array_values($results));

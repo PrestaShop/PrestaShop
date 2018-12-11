@@ -35,9 +35,9 @@ class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInt
      */
     public function getTranslationDomains()
     {
-        return array(
+        return [
             '^Modules*',
-        );
+        ];
     }
 
     /**
@@ -45,9 +45,9 @@ class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInt
      */
     public function getFilters()
     {
-        return array(
+        return [
             '#^Modules*#',
-        );
+        ];
     }
 
     /**
@@ -67,7 +67,7 @@ class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInt
 
         foreach ($this->getFilters() as $filter) {
             $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
+                [$this->getDefaultResourceDirectory()],
                 $this->getLocale(),
                 $filter
             );

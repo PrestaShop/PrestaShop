@@ -27,7 +27,7 @@
 function outstanding_allow_amount1530()
 {
     $column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'address`');
-    $column_formated = array();
+    $column_formated = [];
     $res = true;
     if ($column_exist) {
         foreach ($column_exist as $c) {

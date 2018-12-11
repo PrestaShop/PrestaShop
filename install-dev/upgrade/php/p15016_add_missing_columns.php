@@ -26,7 +26,7 @@
 
 function p15016_add_missing_columns()
 {
-    $errors = array();
+    $errors = [];
 
     $id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name="blockreinsurance"');
     if ($id_module) {
@@ -93,6 +93,6 @@ function p15016_add_missing_columns()
     }
 
     if (count($errors)) {
-        return array('error' => 1, 'msg' => implode(',', $errors)) ;
+        return ['error' => 1, 'msg' => implode(',', $errors)] ;
     }
 }

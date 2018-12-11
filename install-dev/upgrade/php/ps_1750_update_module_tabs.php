@@ -30,16 +30,16 @@
 function ps_1750_update_module_tabs()
 {
     // STEP 1: Add new sub menus for modules
-    $moduleTabsToBeAdded = array(
-        'AdminModulesUpdates' => array(
+    $moduleTabsToBeAdded = [
+        'AdminModulesUpdates' => [
             'translations' => 'en:Updates|fr:Mises à jour|es:Actualizaciones|de:Aktualisierung|it:Aggiornamenti',
             'parent' => 'AdminModulesSf'
-        ),
-        'AdminParentModulesCatalog' => array(
+        ],
+        'AdminParentModulesCatalog' => [
             'translations' => 'en:Module Catalog|fr:Catalogue de modules|es:Catálogo de módulos|de:Modulkatalog|it:Catalogo dei moduli',
             'parent' => 'AdminParentModulesSf'
-        ),
-    );
+        ],
+    ];
 
     include_once 'add_new_tab.php';
     foreach ($moduleTabsToBeAdded as $className => $tabDetails) {
@@ -125,7 +125,7 @@ function ps_1750_update_module_tabs()
     $adminParentModuleCatalogTabId = Db::getInstance()->getValue(
         'SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = "AdminParentModulesCatalog"'
     );
-    foreach (array('AdminModulesCatalog', 'AdminAddonsCatalog') as $key => $className) {
+    foreach (['AdminModulesCatalog', 'AdminAddonsCatalog'] as $key => $className) {
         Db::getInstance()->execute(
             'UPDATE `'._DB_PREFIX_.'tab` SET `id_parent`= ' . (int) $adminParentModuleCatalogTabId . ', position = '. $key . ' WHERE `class_name` = "' . $className . '"'
         );

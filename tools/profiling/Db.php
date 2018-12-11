@@ -45,21 +45,21 @@ abstract class Db extends DbCore
      *
      * @var array
      */
-    public $queries = array();
+    public $queries = [];
     
     /**
      * List of uniq queries (replace numbers by XX)
      *
      * @var array
      */
-    public $uniqQueries = array();
+    public $uniqQueries = [];
     
     /**
      * List of tables
      *
      * @var array
      */
-    public $tables = array();
+    public $tables = [];
 
     /**
      * Execute the query and log some informations
@@ -108,16 +108,16 @@ abstract class Db extends DbCore
             while (preg_match('@[/\\\\]classes[/\\\\]db[/\\\\]@i', $stack[0]['file'])) {
                 array_shift($stack);
             }
-            $stack_light = array();
+            $stack_light = [];
             foreach ($stack as $call) {
-                $stack_light[] = array('file' => isset($call['file']) ? $call['file'] : 'undefined', 'line' => isset($call['line']) ? $call['line'] : 'undefined');
+                $stack_light[] = ['file' => isset($call['file']) ? $call['file'] : 'undefined', 'line' => isset($call['line']) ? $call['line'] : 'undefined'];
             }
             
-            $this->queries[] = array(
+            $this->queries[] = [
                 'query' => $sql,
                 'time' => $end - $start,
                 'stack' => $stack_light
-            );
+            ];
         }
         
         return $result;

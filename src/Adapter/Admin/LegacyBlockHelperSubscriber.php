@@ -41,9 +41,9 @@ class LegacyBlockHelperSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            'legacy_block_kpi' => array('renderKpi', 0),
-        );
+        return [
+            'legacy_block_kpi' => ['renderKpi', 0],
+        ];
     }
 
     /**

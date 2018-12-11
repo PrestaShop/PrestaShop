@@ -30,7 +30,7 @@ abstract class AbstractAssetManagerCore
 {
     protected $directories;
     protected $configuration;
-    protected $list = array();
+    protected $list = [];
 
     const DEFAULT_MEDIA = 'all';
     const DEFAULT_PRIORITY = 50;

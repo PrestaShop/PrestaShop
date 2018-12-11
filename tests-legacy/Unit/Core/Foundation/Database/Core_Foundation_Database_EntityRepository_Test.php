@@ -39,7 +39,7 @@ class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
 
         $mockDb = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface');
 
-        Phake::when($mockDb)->select(Phake::anyParameters())->thenReturn(array());
+        Phake::when($mockDb)->select(Phake::anyParameters())->thenReturn([]);
 
         Phake::when($mockEntityManager)->getDatabase()->thenReturn($mockDb);
 

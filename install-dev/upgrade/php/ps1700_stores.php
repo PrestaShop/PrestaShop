@@ -39,7 +39,7 @@ function ps1700_stores()
                 $hours[$key] = [$h];
             }
         } else {
-            $hours = array();
+            $hours = [];
         }
         $hours = json_encode($hours);
 

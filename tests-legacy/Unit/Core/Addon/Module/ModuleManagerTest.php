@@ -237,7 +237,7 @@ class ModuleManagerTest extends TestCase
     private function mockModuleRepository()
     {
         $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
-            ->setConstructorArgs(array(array(), array(), array()))
+            ->setConstructorArgs([[], [], []])
             ->getMock();
         $moduleS
             ->method('onInstall')

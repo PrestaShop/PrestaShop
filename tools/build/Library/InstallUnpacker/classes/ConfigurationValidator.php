@@ -65,7 +65,7 @@ class ConfigurationValidator
      */
     public function testFopen()
     {
-        return in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'));
+        return in_array(ini_get('allow_url_fopen'), ['On', 'on', '1']);
     }
 
     /**

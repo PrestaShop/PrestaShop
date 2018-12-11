@@ -87,7 +87,7 @@ function create_img($imgfile, $imgthumb, $newwidth, $newheight="")
 
 function makeSize($size)
 {
-    $units = array('B','KB','MB','GB','TB');
+    $units = ['B','KB','MB','GB','TB'];
     $u = 0;
     while ((round($size / 1024) > 0) && ($u < 4)) {
         $size = $size / 1024;
@@ -179,7 +179,7 @@ function fix_filename($str, $transliteration)
         $str = preg_replace("/[^a-zA-Z0-9\.\[\]_| -]/", '', $str);
     }
 
-    $str=str_replace(array('"', "'", "/", "\\"), "", $str);
+    $str=str_replace(['"', "'", "/", "\\"], "", $str);
     $str=strip_tags($str);
 
     // Empty or incorrectly transliterated filename.
@@ -352,7 +352,7 @@ function get_file_by_url($url)
 
         $data = curl_exec($ch);
         curl_close($ch);
-    } elseif (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'))) {
+    } elseif (in_array(ini_get('allow_url_fopen'), ['On', 'on', '1'])) {
         $data = file_get_contents($url);
     }
 

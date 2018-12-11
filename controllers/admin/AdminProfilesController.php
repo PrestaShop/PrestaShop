@@ -39,51 +39,51 @@ class AdminProfilesControllerCore extends AdminController
         $this->lang = true;
         $this->addRowAction('edit');
         $this->addRowAction('delete');
-        $this->addRowActionSkipList('delete', array(1));
+        $this->addRowActionSkipList('delete', [1]);
 
         parent::__construct();
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash',
-            ),
-        );
+            ],
+        ];
 
-        $this->fields_list = array(
-            'id_profile' => array(
-                        'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_profile' => [
+                        'title' => $this->trans('ID', [], 'Admin.Global'),
                         'align' => 'center',
                         'class' => 'fixed-width-xs',
-                        ),
-            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
-            );
+                        ],
+            'name' => ['title' => $this->trans('Name', [], 'Admin.Global')],
+            ];
 
         $this->identifier = 'id_profile';
 
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Profile', array(), 'Admin.Advparameters.Feature'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Profile', [], 'Admin.Advparameters.Feature'),
                 'icon' => 'icon-group',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Name', array(), 'Admin.Global'),
+                    'label' => $this->trans('Name', [], 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
 
-        $list_profile = array();
+        $list_profile = [];
         foreach (Profile::getProfiles($this->context->language->id) as $profil) {
-            $list_profile[] = array('value' => $profil['id_profile'], 'name' => $profil['name']);
+            $list_profile[] = ['value' => $profil['id_profile'], 'name' => $profil['name']];
         }
     }
 
@@ -91,14 +91,14 @@ class AdminProfilesControllerCore extends AdminController
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
-            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 
             return;
         }
         /* PrestaShop demo mode*/
 
         if (isset($_GET['delete' . $this->table]) && $_GET[$this->identifier] == (int) (_PS_ADMIN_PROFILE_)) {
-            $this->errors[] = $this->trans('For security reasons, you cannot delete the Administrator\'s profile.', array(), 'Admin.Advparameters.Notification');
+            $this->errors[] = $this->trans('For security reasons, you cannot delete the Administrator\'s profile.', [], 'Admin.Advparameters.Notification');
         } else {
             parent::postProcess();
         }
@@ -107,11 +107,11 @@ class AdminProfilesControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_profile'] = array(
+            $this->page_header_toolbar_btn['new_profile'] = [
                 'href' => self::$currentIndex . '&addprofile&token=' . $this->token,
-                'desc' => $this->trans('Add new profile', array(), 'Admin.Advparameters.Feature'),
+                'desc' => $this->trans('Add new profile', [], 'Admin.Advparameters.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();

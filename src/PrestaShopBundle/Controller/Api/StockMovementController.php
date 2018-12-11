@@ -61,7 +61,7 @@ class StockMovementController extends ApiController
         $stockMovement = $this->stockMovementRepository->getData($queryParamsCollection);
         $totalPages = $this->stockMovementRepository->countPages($queryParamsCollection);
 
-        return $this->jsonResponse($stockMovement, $request, $queryParamsCollection, 200, array('Total-Pages' => $totalPages));
+        return $this->jsonResponse($stockMovement, $request, $queryParamsCollection, 200, ['Total-Pages' => $totalPages]);
     }
 
     /**

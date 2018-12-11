@@ -69,7 +69,7 @@ class ToolsInstall
              */
     public static function simpleXMLToArray($xml, $flattenValues = true, $flattenAttributes = true, $flattenChildren = true, $valueKey = '@value', $attributesKey = '@attributes', $childrenKey = '@children')
     {
-        $return = array();
+        $return = [];
         if (!($xml instanceof SimpleXMLElement)) {
             return $return;
         }
@@ -88,7 +88,7 @@ class ToolsInstall
             }
         }
 
-        $children = array();
+        $children = [];
         $first = true;
         foreach ($xml->children() as $elementName => $child) {
             $value = ToolsInstall::simpleXMLToArray($child, $flattenValues, $flattenAttributes, $flattenChildren, $valueKey, $attributesKey, $childrenKey);
@@ -113,7 +113,7 @@ class ToolsInstall
             }
         }
 
-        $attributes = array();
+        $attributes = [];
         foreach ($xml->attributes() as $name => $value) {
             $attributes[$name] = trim($value);
         }

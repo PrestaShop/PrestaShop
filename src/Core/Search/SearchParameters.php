@@ -34,13 +34,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class SearchParameters implements SearchParametersInterface
 {
-    const FILTER_TYPES = array(
+    const FILTER_TYPES = [
         'limit',
         'offset',
         'orderBy',
         'sortOrder',
         'filters',
-    );
+    ];
 
     /**
      * @var AdminFilterRepository

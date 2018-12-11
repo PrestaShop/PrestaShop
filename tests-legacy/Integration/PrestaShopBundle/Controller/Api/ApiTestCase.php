@@ -67,7 +67,7 @@ abstract class ApiTestCase extends WebTestCase
         self::$container->set('prestashop.adapter.legacy.context', $legacyContextMock);
 
         $client = self::$kernel->getContainer()->get('test.client');
-        $client->setServerParameters(array());
+        $client->setServerParameters([]);
 
         self::$client = $client;
     }
@@ -88,13 +88,13 @@ abstract class ApiTestCase extends WebTestCase
     protected function mockContextAdapter()
     {
         $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
-            ->setMethods(array(
+            ->setMethods([
                 'getContext',
                 'getEmployeeLanguageIso',
                 'getEmployeeCurrency',
                 'getRootUrl',
                 'getLanguage'
-            ))
+            ])
             ->getMock()
         ;
 
@@ -131,7 +131,7 @@ abstract class ApiTestCase extends WebTestCase
         $controllerMock = $this->mockController();
         $contextMock->controller = $controllerMock;
 
-        $contextMock->currency = (object) array('sign' => '$');
+        $contextMock->currency = (object) ['sign' => '$'];
 
         Context::setInstanceForTesting($contextMock);
 
@@ -177,12 +177,12 @@ abstract class ApiTestCase extends WebTestCase
     private function mockShop()
     {
         $shopMock = $this->getMockBuilder('\Shop')
-            ->setMethods(array(
+            ->setMethods([
                 'getContextualShopId',
                 'getCategory',
                 'getContextType',
                 'getGroup',
-            ))
+            ])
             ->getMock()
         ;
 

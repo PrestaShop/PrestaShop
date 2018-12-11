@@ -31,7 +31,7 @@ use ObjectModel;
 
 class FakeEntityMapper extends EntityMapper
 {
-    private $fake_db = array();
+    private $fake_db = [];
 
     private $entity_being_built = null;
 

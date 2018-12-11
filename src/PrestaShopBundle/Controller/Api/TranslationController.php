@@ -68,19 +68,19 @@ class TranslationController extends ApiController
             $search = $request->query->get('search');
 
             $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search);
-            $info = array(
+            $info = [
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
-            );
+            ];
 
             $catalog['info'] = array_merge(
                 $catalog['info'],
-                array(
+                [
                     'locale' => $locale,
                     'domain' => $domain,
                     'theme' => $theme,
                     'total_translations' => count($catalog['data']),
                     'total_missing_translations' => 0,
-                )
+                ]
             );
 
             foreach ($catalog['data'] as $message) {
@@ -122,7 +122,7 @@ class TranslationController extends ApiController
 
             $search = $request->query->get('search');
 
-            if (in_array($type, array('modules', 'themes')) && empty($selected)) {
+            if (in_array($type, ['modules', 'themes']) && empty($selected)) {
                 throw new Exception('This \'selected\' param is not valid.');
             }
 

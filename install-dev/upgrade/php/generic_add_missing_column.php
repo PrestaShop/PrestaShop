@@ -27,7 +27,7 @@
 function generic_add_missing_column($table, $column_to_add)
 {
     $column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.$table.'`');
-    $column_formated = array();
+    $column_formated = [];
     $res = true;
     if ($column_exist) {
         foreach ($column_exist as $c) {

@@ -109,7 +109,7 @@ class TokenizedUrlsListener
                 $uri = substr($uri, 0, strpos($uri, '_token='));
             }
 
-            $response = new RedirectResponse($this->router->generate('admin_security_compromised', array('uri' => urlencode($uri))));
+            $response = new RedirectResponse($this->router->generate('admin_security_compromised', ['uri' => urlencode($uri)]));
             $event->setResponse($response);
         }
     }

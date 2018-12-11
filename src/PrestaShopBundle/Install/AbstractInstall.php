@@ -41,7 +41,7 @@ abstract class AbstractInstall
     /**
      * @var array List of errors
      */
-    protected $errors = array();
+    protected $errors = [];
 
     public function __construct()
     {
@@ -51,7 +51,7 @@ abstract class AbstractInstall
     public function setError($errors)
     {
         if (!is_array($errors)) {
-            $errors = array($errors);
+            $errors = [$errors];
         }
 
         $this->errors = array_merge($this->errors, $errors);

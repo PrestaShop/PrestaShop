@@ -26,14 +26,14 @@
 class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
-    protected $headerToolbarBtn = array();
+    protected $headerToolbarBtn = [];
     protected $title;
     protected $showContentHeader = true;
     protected $headerTabContent = '';
     protected $enableSidebar = false;
     protected $helpLink;
 
-    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
+    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = [], $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
     {
         parent::__construct($controllerName, 'new-theme');
 
@@ -78,7 +78,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
         $this->show_page_header_toolbar = (bool) $this->showContentHeader;
 
-        $vars = array(
+        $vars = [
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'headerTabContent' => $this->headerTabContent,
@@ -91,7 +91,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'title' => $this->title ? $this->title : $this->page_header_toolbar_title,
             'toolbar_btn' => $this->page_header_toolbar_btn,
             'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
-        );
+        ];
 
         if ($this->helpLink === false || !empty($this->helpLink)) {
             $vars['help_link'] = $this->helpLink;

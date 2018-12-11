@@ -34,7 +34,7 @@ function add_column_order_state_deleted_if_not_exists()
 			ADD COLUMN `deleted` tinyint(1) UNSIGNED NOT NULL default "0" AFTER `paid`');
     }
     if (!$res) {
-        return array('error' => Db::getInstance()->getNumberError(), 'msg' => Db::getInstance()->getMsgError());
+        return ['error' => Db::getInstance()->getNumberError(), 'msg' => Db::getInstance()->getMsgError()];
     }
     return true;
 }

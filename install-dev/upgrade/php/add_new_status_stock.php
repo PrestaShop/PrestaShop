@@ -49,7 +49,7 @@ function add_new_status_stock()
             $stockName = pSQL(
                 $translator->trans(
                     'Stock',
-                    array(),
+                    [],
                     'Admin.Navigation.Menu',
                     $lang['locale']
                 )
@@ -66,28 +66,28 @@ function add_new_status_stock()
     }
 
     // Stock movements
-    $data = array(
-        array(
+    $data = [
+        [
             'name' => 'Customer Order',
             'sign' => 1,
             'conf' => 'PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON',
-        ),
-        array(
+        ],
+        [
             'name' => 'Product Return',
             'sign' => 1,
             'conf' => 'PS_STOCK_CUSTOMER_RETURN_REASON',
-        ),
-        array(
+        ],
+        [
             'name' => 'Employee Edition',
             'sign' => 1,
             'conf' => 'PS_STOCK_MVT_INC_EMPLOYEE_EDITION',
-        ),
-        array(
+        ],
+        [
             'name' => 'Employee Edition',
             'sign' => -1,
             'conf' => 'PS_STOCK_MVT_DEC_EMPLOYEE_EDITION',
-        ),
-    );
+        ],
+    ];
 
     foreach ($data as $d) {
         // We don't want duplicated data
@@ -113,7 +113,7 @@ function add_new_status_stock()
             $mvtName = pSQL(
                 $translator->trans(
                     $d['name'],
-                    array(),
+                    [],
                     'Admin.Catalog.Feature',
                     $lang['locale']
                 )

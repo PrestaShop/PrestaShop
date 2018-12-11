@@ -41,7 +41,7 @@ class InstallControllerHttp
     /**
      * @var array
      */
-    protected static $instances = array();
+    protected static $instances = [];
 
     /**
      * @var string Current step
@@ -51,7 +51,7 @@ class InstallControllerHttp
     /**
      * @var array List of errors
      */
-    public $errors = array();
+    public $errors = [];
 
     public $controller;
 
@@ -88,42 +88,42 @@ class InstallControllerHttp
     /**
      * @var array Magic vars
      */
-    protected $__vars = array();
+    protected $__vars = [];
 
     private function initSteps()
     {
-        $stepConfig = array(
-            array(
+        $stepConfig = [
+            [
                 'name' => 'welcome',
-                'displayName' => $this->translator->trans('Choose your language', array(), 'Install'),
+                'displayName' => $this->translator->trans('Choose your language', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpWelcome'
-            ),
-            array(
+            ],
+            [
                 'name' => 'license',
-                'displayName' => $this->translator->trans('License agreements', array(), 'Install'),
+                'displayName' => $this->translator->trans('License agreements', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpLicense'
-            ),
-            array(
+            ],
+            [
                 'name' => 'system',
-                'displayName' => $this->translator->trans('System compatibility', array(), 'Install'),
+                'displayName' => $this->translator->trans('System compatibility', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpSystem'
-            ),
-            array(
+            ],
+            [
                 'name' => 'configure',
-                'displayName' => $this->translator->trans('Store information', array(), 'Install'),
+                'displayName' => $this->translator->trans('Store information', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpConfigure'
-            ),
-            array(
+            ],
+            [
                 'name' => 'database',
-                'displayName' => $this->translator->trans('System configuration', array(), 'Install'),
+                'displayName' => $this->translator->trans('System configuration', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpDatabase'
-            ),
-            array(
+            ],
+            [
                 'name' => 'process',
-                'displayName' => $this->translator->trans('Store installation', array(), 'Install'),
+                'displayName' => $this->translator->trans('Store installation', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpProcess'
-            ),
-        );
+            ],
+        ];
         self::$steps = new StepList($stepConfig);
     }
 
@@ -372,7 +372,7 @@ class InstallControllerHttp
     public function getDocumentationLink()
     {
         /* Link to translated documentation (if available) */
-        return $this->translator->trans('http://doc.prestashop.com/display/PS17/Installing+PrestaShop', array(), 'Install');
+        return $this->translator->trans('http://doc.prestashop.com/display/PS17/Installing+PrestaShop', [], 'Install');
     }
 
     /**
@@ -383,7 +383,7 @@ class InstallControllerHttp
     public function getTutorialLink()
     {
         /* Link to localized video tutorial (if available) */
-        return $this->translator->trans('https://www.youtube.com/watch?v=cANFwuJqdgM', array(), 'Install');
+        return $this->translator->trans('https://www.youtube.com/watch?v=cANFwuJqdgM', [], 'Install');
     }
 
     /**
@@ -394,7 +394,7 @@ class InstallControllerHttp
     public function getTailoredHelp()
     {
         /* Link to support on addons */
-        return $this->translator->trans('https://addons.prestashop.com/en/388-support', array(), 'Install');
+        return $this->translator->trans('https://addons.prestashop.com/en/388-support', [], 'Install');
     }
 
     /**
@@ -405,7 +405,7 @@ class InstallControllerHttp
     public function getForumLink()
     {
         /* Link to localized forum */
-        return $this->translator->trans('http://www.prestashop.com/forums/', array(), 'Install');
+        return $this->translator->trans('http://www.prestashop.com/forums/', [], 'Install');
     }
 
     /**
@@ -415,7 +415,7 @@ class InstallControllerHttp
      */
     public function getBlogLink()
     {
-        return $this->translator->trans('http://www.prestashop.com/blog/', array(), 'Install');
+        return $this->translator->trans('http://www.prestashop.com/blog/', [], 'Install');
     }
 
     /**
@@ -425,12 +425,12 @@ class InstallControllerHttp
      */
     public function getSupportLink()
     {
-        return $this->translator->trans('https://www.prestashop.com/en/support', array(), 'Install');
+        return $this->translator->trans('https://www.prestashop.com/en/support', [], 'Install');
     }
 
     public function getDocumentationUpgradeLink()
     {
-        return $this->translator->trans('http://docs.prestashop.com/display/PS16/Updating+PrestaShop', array(), 'Install');
+        return $this->translator->trans('http://docs.prestashop.com/display/PS16/Updating+PrestaShop', [], 'Install');
     }
 
     /**
@@ -444,11 +444,11 @@ class InstallControllerHttp
         if (!$success && empty($message)) {
             $message = print_r(@error_get_last(), true);
         }
-        die(json_encode(array(
+        die(json_encode([
             'success' => (bool)$success,
             'message' => $message,
             // 'memory' => round(memory_get_peak_usage()/1024/1024, 2).' Mo',
-        )));
+        ]));
     }
 
     /**

@@ -62,7 +62,7 @@ final class ProductCsvExporter implements ProductExporterInterface
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function export(array $products = array())
+    public function export(array $products = [])
     {
         $productProvider = $this->productProvider;
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
@@ -71,10 +71,10 @@ final class ProductCsvExporter implements ProductExporterInterface
 
         // prepare callback to fetch data from DB
         $dataCallback = function ($offset, $limit) use ($productProvider, $orderBy, $sortOrder) {
-            return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, array(), true, false);
+            return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, [], true, false);
         };
 
-        $headersData = array(
+        $headersData = [
             'id_product' => 'Product ID',
             'image_link' => $this->trans('Image', 'Admin.Global'),
             'name' => $this->trans('Name', 'Admin.Global'),
@@ -85,7 +85,7 @@ final class ProductCsvExporter implements ProductExporterInterface
             'sav_quantity' => $this->trans('Quantity', 'Admin.Global'),
             'badge_danger' => $this->trans('Status', 'Admin.Global'),
             'position' => $this->trans('Position', 'Admin.Global'),
-        );
+        ];
 
         return (new CsvResponse())
             ->setData($dataCallback)
@@ -107,6 +107,6 @@ final class ProductCsvExporter implements ProductExporterInterface
      */
     private function trans($key, $domain)
     {
-        return $this->translator->trans($key, array(), $domain);
+        return $this->translator->trans($key, [], $domain);
     }
 }

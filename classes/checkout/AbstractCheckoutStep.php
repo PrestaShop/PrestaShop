@@ -73,14 +73,14 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
         return $this->translator;
     }
 
-    protected function renderTemplate($template, array $extraParams = array(), array $params = array())
+    protected function renderTemplate($template, array $extraParams = [], array $params = [])
     {
-        $defaultParams = array(
+        $defaultParams = [
             'title' => $this->getTitle(),
             'step_is_complete' => (int) $this->isComplete(),
             'step_is_reachable' => (int) $this->isReachable(),
             'step_is_current' => (int) $this->isCurrent(),
-        );
+        ];
 
         $scope = $this->smarty->createData(
             $this->smarty
@@ -169,7 +169,7 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
 
     public function getDataToPersist()
     {
-        return array();
+        return [];
     }
 
     public function restorePersistedData(array $data)

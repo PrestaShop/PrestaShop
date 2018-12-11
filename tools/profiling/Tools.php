@@ -56,7 +56,7 @@ class Tools extends ToolsCore
         // Send additional headers
         if ($headers) {
             if (!is_array($headers)) {
-                $headers = array($headers);
+                $headers = [$headers];
             }
 
             foreach ($headers as $header) {
@@ -75,7 +75,7 @@ class Tools extends ToolsCore
         if (empty($default_controller)) {
             $default_controller = 'AdminDashboard';
         }
-        $controllers = Dispatcher::getControllers(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_, _PS_OVERRIDE_DIR_.'controllers/admin/'));
+        $controllers = Dispatcher::getControllers([_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_, _PS_OVERRIDE_DIR_.'controllers/admin/']);
         if (!isset($controllers[strtolower($default_controller)])) {
             $default_controller = 'adminnotfound';
         }

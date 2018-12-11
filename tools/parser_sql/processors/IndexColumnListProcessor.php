@@ -43,14 +43,14 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 class IndexColumnListProcessor extends AbstractProcessor {
 
     protected function initExpression() {
-        return array('name' => false, 'no_quotes' => false, 'length' => false, 'dir' => false);
+        return ['name' => false, 'no_quotes' => false, 'length' => false, 'dir' => false];
     }
 
     public function process($sql) {
         $tokens = $this->splitSQLIntoTokens($sql);
 
         $expr = $this->initExpression();
-        $result = array();
+        $result = [];
         $base_expr = "";
 
         foreach ($tokens as $k => $token) {
@@ -74,7 +74,7 @@ class IndexColumnListProcessor extends AbstractProcessor {
 
             case ',':
             # the next column
-                $result[] = array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr),
+                $result[] = array_merge(['expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr],
                         $expr);
                 $expr = $this->initExpression();
                 $base_expr = "";
@@ -92,7 +92,7 @@ class IndexColumnListProcessor extends AbstractProcessor {
                 break;
             }
         }
-        $result[] = array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr), $expr);
+        $result[] = array_merge(['expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr], $expr);
         return $result;
     }
 }

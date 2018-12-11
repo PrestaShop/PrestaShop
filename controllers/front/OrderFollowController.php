@@ -67,11 +67,11 @@ class OrderFollowControllerCore extends FrontController
             $orderReturn->question = htmlspecialchars(Tools::getValue('returnText'));
             if (empty($orderReturn->question)) {
                 Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorMsg&' .
-                    http_build_query(array(
+                    http_build_query([
                         'ids_order_detail' => $ids_order_detail,
                         'order_qte_input' => $order_qte_input,
                         'id_order' => Tools::getValue('id_order'),
-                    )));
+                    ]));
             }
 
             if (!$orderReturn->checkEnoughProduct($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput)) {
@@ -81,7 +81,7 @@ class OrderFollowControllerCore extends FrontController
             $orderReturn->state = 1;
             $orderReturn->add();
             $orderReturn->addReturnDetail($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput);
-            Hook::exec('actionOrderReturn', array('orderReturn' => $orderReturn));
+            Hook::exec('actionOrderReturn', ['orderReturn' => $orderReturn]);
             Tools::redirect('index.php?controller=order-follow');
         }
     }
@@ -100,7 +100,7 @@ class OrderFollowControllerCore extends FrontController
         $ordersReturn = $this->getTemplateVarOrdersReturns();
         if (count($ordersReturn) <= 0) {
             $this->warning[] = $this->trans(
-                'You have no merchandise return authorizations.', array(), 'Shop.Notifications.Error'
+                'You have no merchandise return authorizations.', [], 'Shop.Notifications.Error'
             );
         }
 
@@ -112,7 +112,7 @@ class OrderFollowControllerCore extends FrontController
 
     public function getTemplateVarOrdersReturns()
     {
-        $orders_returns = array();
+        $orders_returns = [];
         $orders_return = OrderReturn::getOrdersReturn($this->context->customer->id);
 
         $orderReturnPresenter = new OrderReturnPresenter(

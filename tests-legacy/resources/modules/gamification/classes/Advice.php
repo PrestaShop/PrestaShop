@@ -51,24 +51,24 @@ class Advice extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'advice',
         'primary' => 'id_advice',
         'multilang' => true,
-        'fields' => array(
-            'id_ps_advice' =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'id_tab' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'selector' =>        array('type' => self::TYPE_STRING),
-            'location' =>        array('type' => self::TYPE_STRING),
-            'validated' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'start_day' =>        array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'stop_day' =>        array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'weight' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+        'fields' => [
+            'id_ps_advice' =>    ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'id_tab' =>            ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'selector' =>        ['type' => self::TYPE_STRING],
+            'location' =>        ['type' => self::TYPE_STRING],
+            'validated' =>        ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'start_day' =>        ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'stop_day' =>        ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'weight' =>            ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             // Lang fields
-            'html' =>            array('type' => self::TYPE_HTML, 'lang' => true, 'required' => true, 'validate' => 'isString'),
-        ),
-    );
+            'html' =>            ['type' => self::TYPE_HTML, 'lang' => true, 'required' => true, 'validate' => 'isString'],
+        ],
+    ];
     
     public static function getIdByIdPs($id_ps_advice)
     {
@@ -97,16 +97,16 @@ class Advice extends ObjectModel
 			((a.`start_day` = 0 AND a.`stop_day` = 0) OR ('.date('d').' >= a.`start_day` AND '.date('d').' <= a.`stop_day`))');
         
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-        $advices = array();
+        $advices = [];
         if (is_array($result)) {
             foreach ($result as $res) {
-                $advices[] = array(
+                $advices[] = [
                     'selector' => $res['selector'],
                     'location' => $res['location'],
                     'html' => $res['html'],
                     'id_ps_advice' => $res['id_ps_advice'],
                     'weight' => $res['weight']
-                    );
+                    ];
             }
         }
         if (!$premium) {
@@ -154,7 +154,7 @@ class Advice extends ObjectModel
     
     public static function getIdsAdviceToValidate()
     {
-        $ids = array();
+        $ids = [];
         $query = new DbQuery();
         $query->select('a.`id_advice`');
         $query->from('advice', 'a');
@@ -177,7 +177,7 @@ class Advice extends ObjectModel
     
     public static function getIdsAdviceToUnvalidate()
     {
-        $ids = array();
+        $ids = [];
         $query = new DbQuery();
         $query->select('a.`id_advice`');
         $query->from('advice', 'a');

@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 
 $_MODULE['<{cronjobs}prestashop>cronjobsforms_c9cc8cce247e49bae79f15173ce97354'] = 'Save';
 $_MODULE['<{cronjobs}prestashop>cronjobsforms_d4169d52732e9ae8df56d2cbcad81a94'] = 'Task description';

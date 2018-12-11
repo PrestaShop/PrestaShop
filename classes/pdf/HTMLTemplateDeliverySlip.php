@@ -70,7 +70,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array('header' => Context::getContext()->getTranslator()->trans('Delivery', array(), 'Shop.Pdf')));
+        $this->smarty->assign(['header' => Context::getContext()->getTranslator()->trans('Delivery', [], 'Shop.Pdf')]);
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
@@ -83,12 +83,12 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
     public function getContent()
     {
         $delivery_address = new Address((int) $this->order->id_address_delivery);
-        $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
+        $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, [], '<br />', ' ');
         $formatted_invoice_address = '';
 
         if ($this->order->id_address_delivery != $this->order->id_address_invoice) {
             $invoice_address = new Address((int) $this->order->id_address_invoice);
-            $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
+            $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, [], '<br />', ' ');
         }
 
         $carrier = new Carrier($this->order->id_carrier);
@@ -117,7 +117,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             }
         }
 
-        $this->smarty->assign(array(
+        $this->smarty->assign([
             'order' => $this->order,
             'order_details' => $order_details,
             'delivery_address' => $formatted_delivery_address,
@@ -125,15 +125,15 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             'order_invoice' => $this->order_invoice,
             'carrier' => $carrier,
             'display_product_images' => Configuration::get('PS_PDF_IMG_DELIVERY'),
-        ));
+        ]);
 
-        $tpls = array(
+        $tpls = [
             'style_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.style-tab')),
             'addresses_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.addresses-tab')),
             'summary_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.summary-tab')),
             'product_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.product-tab')),
             'payment_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.payment-tab')),
-        );
+        ];
         $this->smarty->assign($tpls);
 
         return $this->smarty->fetch($this->getTemplate('delivery-slip'));

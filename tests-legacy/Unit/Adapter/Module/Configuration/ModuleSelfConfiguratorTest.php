@@ -57,7 +57,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     public function setUp()
     {
         $this->configuration = new ConfigurationMock();
-        $this->connection = new ConnectionMock(array(), new Driver);
+        $this->connection = new ConnectionMock([], new Driver);
         $this->mockModuleRepository();
 
         $this->defaultDir = __DIR__.'/../../../../resources/module-self-config-files';
@@ -201,10 +201,10 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
         // Then clean
         $filesystem = new Filesystem();
-        $filesystem->remove(array(
+        $filesystem->remove([
             __DIR__.'/../../../../resources/modules/ganalytics/ganalytics_copy.php',
             __DIR__.'/../../../../resources/modules/ganalytics/avatar.jpg',
-        ));
+        ]);
     }
 
     public function testSqlStep()
@@ -239,7 +239,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         // Test context with mocks
         require_once $php_filepath;
         $mock = $this->getMockBuilder('\MyComplexModuleConfiguration')
-                     ->setMethods(array('run'))
+                     ->setMethods(['run'])
                      ->getMock();
         $mock->expects($this->exactly(2))
              ->method('run');
@@ -249,8 +249,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
             ->getMockBuilder(
                 '\PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator'
             )
-            ->setConstructorArgs(array($this->moduleRepository, $this->configuration, $this->connection, new Filesystem()))
-            ->setMethods(array('loadPhpFile'))
+            ->setConstructorArgs([$this->moduleRepository, $this->configuration, $this->connection, new Filesystem()])
+            ->setMethods(['loadPhpFile'])
             ->getMock();
 
         $moduleSelfConfigurator
@@ -306,7 +306,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
 class ConfigurationMock extends Configuration
 {
-    private $configurationData = array();
+    private $configurationData = [];
 
     public function set($key, $value, array $options = [])
     {
@@ -328,8 +328,8 @@ class ConfigurationMock extends Configuration
 
 class ConnectionMock extends Connection
 {
-    public $sql = array();
-    public $executedSql = array();
+    public $sql = [];
+    public $executedSql = [];
 
     public function connect()
     {
@@ -341,12 +341,12 @@ class ConnectionMock extends Connection
     public function commit()
     {
         $this->executedSql = array_merge($this->executedSql, $this->sql);
-        $this->sql = array();
+        $this->sql = [];
     }
 
     public function rollBack()
     {
-        $this->sql = array();
+        $this->sql = [];
     }
 
     public function prepare($statement)

@@ -85,7 +85,7 @@ class PHPSQLLexer {
             throw new InvalidParameterException($sql);
         }
 
-        $tokens = array();
+        $tokens = [];
         $token = "";
 
         $splitLen = $this->splitters->getMaxLengthOfSplitter();

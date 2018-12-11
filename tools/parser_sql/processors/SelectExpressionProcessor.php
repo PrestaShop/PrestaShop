@@ -67,7 +67,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
          * The tokens after (and including) the AS are removed.
          */
         $base_expr = "";
-        $stripped = array();
+        $stripped = [];
         $capture = false;
         $alias = false;
         $processed = false;
@@ -77,7 +77,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
             $upper = strtoupper($token);
 
             if ($upper === 'AS') {
-                $alias = array('as' => true, "name" => "", "base_expr" => $token);
+                $alias = ['as' => true, "name" => "", "base_expr" => $token];
                 $tokens[$i] = "";
                 $capture = true;
                 continue;
@@ -120,9 +120,9 @@ class SelectExpressionProcessor extends AbstractProcessor {
                     || $this->isFunction($prev) || $this->isExpression($prev) || $this->isSubQuery($prev)
                     || $this->isColumnReference($prev) || $this->isBracketExpression($prev)) {
 
-                $alias = array('as' => false, 'name' => trim($last['base_expr']),
+                $alias = ['as' => false, 'name' => trim($last['base_expr']),
                                'no_quotes' => $this->revokeQuotation($last['base_expr']),
-                               'base_expr' => trim($last['base_expr']));
+                               'base_expr' => trim($last['base_expr'])];
                 // remove the last token
                 array_pop($tokens);
                 $base_expr = join("", $tokens);
@@ -155,7 +155,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
             }
         }
 
-        $result = array();
+        $result = [];
         $result['expr_type'] = $type;
         $result['alias'] = $alias;
         $result['base_expr'] = trim($base_expr);

@@ -37,8 +37,8 @@ class ConfigurationCoreTest extends IntegrationTestCase
     protected function setUp()
     {
         parent::setUp();
-        $id_shops = array(1, 2);
-        $id_shop_groups = array(1, 2);
+        $id_shops = [1, 2];
+        $id_shop_groups = [1, 2];
 
         Configuration::set('PS_TEST_NOT_OVERRIDDEN', 'RESULT_NOT_OVERRIDDEN', 0, 0);
         Configuration::set('PS_TEST_GROUP_OVERRIDDEN', 'RESULT_GROUP_OVERRIDDEN', 0, 0);

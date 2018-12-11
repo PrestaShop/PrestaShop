@@ -28,7 +28,7 @@ class ProfileLangCore extends DataLangCore
     // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Advparameters.Feature';
 
-    protected $keys = array('id_profile');
+    protected $keys = ['id_profile'];
 
-    protected $fieldsToUpdate = array('name');
+    protected $fieldsToUpdate = ['name'];
 }

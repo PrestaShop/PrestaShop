@@ -42,7 +42,7 @@ class Repository
     protected $locale;
     protected $contextLanguage;
     protected $oldUmask;
-    protected $non_iso_relational_language = array(
+    protected $non_iso_relational_language = [
         'an-es' => 'en-GB',
         'az-az' => 'az-Cyrl-AZ',
         'bs-ba' => 'bs-Cyrl-BA',
@@ -59,7 +59,7 @@ class Repository
         'ug-cn' => 'ug-Arab-CN',
         'zh-cn' => 'zh-Hans-CN',
         'zh-tw' => 'zh-Hant-TW',
-    );
+    ];
 
     public function __construct($contextLanguage = null)
     {
@@ -170,17 +170,17 @@ class Repository
     public function getAllCurrencies()
     {
         $currencies = $this->repository->supplemental['codeMappings'];
-        $datas = array();
+        $datas = [];
         foreach (array_keys($currencies) as $currency_code) {
             if ($currency_code === 'XTS' || strlen($currency_code) !== 3) {
                 continue;
             }
             $currency = $this->getCurrency($currency_code);
-            $datas[] = array(
+            $datas[] = [
                 'name' => ucfirst($currency['name']) . ' (' . $currency_code . ')',
                 'code' => $currency_code,
                 'iso_code' => $currency['iso_code'],
-            );
+            ];
         }
 
         //sort array naturally
@@ -222,23 +222,23 @@ class Repository
             $territory = $this->repository->territories[$this->region];
             $code = (string) $territory->currency;
         } elseif (!$this->isCurrencyValid($code)) {
-            return array(
+            return [
                 'name' => $code,
                 'symbol' => '',
                 'code' => $code,
                 'iso_code' => '',
-            );
+            ];
         }
 
         $currency = new Currency($this->repository, $code);
         $localized_currency = $currency->localize($this->getCulture());
 
-        return array(
+        return [
             'name' => $localized_currency->name,
             'symbol' => $this->getCurrencySymbol($code),
             'code' => $code,
             'iso_code' => $this->getCurrencyIsoCodeNum($code),
-        );
+        ];
     }
 
     /**

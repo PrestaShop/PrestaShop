@@ -28,8 +28,8 @@
  */
 class SmartyLazyRegister
 {
-    protected $registry = array();
-    protected static $instances = array();
+    protected $registry = [];
+    protected static $instances = [];
 
     /**
      * Register a function or method to be dynamically called later.
@@ -68,9 +68,9 @@ class SmartyLazyRegister
 
         // case 1: call to static method - case 2 : call to static function
         if (is_array($item[1])) {
-            return call_user_func_array($item[1] . '::' . $item[0], array($arguments[0], &$arguments[1]));
+            return call_user_func_array($item[1] . '::' . $item[0], [$arguments[0], &$arguments[1]]);
         } else {
-            $args = array();
+            $args = [];
 
             foreach ($arguments as $a => $argument) {
                 if ($a == 0) {

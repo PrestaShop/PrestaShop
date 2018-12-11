@@ -68,7 +68,7 @@ final class ModuleRepository
      */
     public function getActiveModulesPaths()
     {
-        $paths = array();
+        $paths = [];
         $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../modules')->depth(0);
         $activeModules = $this->getActiveModules();
 

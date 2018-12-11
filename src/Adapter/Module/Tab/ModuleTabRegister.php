@@ -142,10 +142,10 @@ class ModuleTabRegister
                 continue;
             }
 
-            $tabs[] = array(
+            $tabs[] = [
                 'class_name' => $adminControllerName,
                 'visible' => false,
-            );
+            ];
         }
 
         return $tabs;
@@ -194,7 +194,7 @@ class ModuleTabRegister
                 '/' . $moduleName . '/controllers/admin/';
 
         if (!$this->filesystem->exists($modulePath)) {
-            return array();
+            return [];
         }
 
         $moduleFolder = Finder::create()->files()
@@ -231,7 +231,7 @@ class ModuleTabRegister
      */
     protected function getTabNames($names)
     {
-        $translatedNames = array();
+        $translatedNames = [];
 
         foreach ($this->languages as $lang) {
             // In case we just receive a string, we apply it to all languages
@@ -278,7 +278,7 @@ class ModuleTabRegister
             throw new Exception(
                 $this->translator->trans(
                     'Failed to install admin tab "%name%".',
-                    array('%name%' => $tab->name),
+                    ['%name%' => $tab->name],
                     'Admin.Modules.Notification'));
         }
     }

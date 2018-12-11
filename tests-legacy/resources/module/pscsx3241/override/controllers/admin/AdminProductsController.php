@@ -46,11 +46,11 @@ class AdminProductsController extends AdminProductsControllerCore
      * The tabs are preloaded from the smallest to the highest number.
      * @var array Product tabs.
      */
-    protected $available_tabs = array();
+    protected $available_tabs = [];
 
     protected $default_tab = 'Informations';
 
-    protected $available_tabs_lang = array();
+    protected $available_tabs_lang = [];
 
     protected $position_identifier = 'id_product';
 
@@ -65,13 +65,13 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->className = 'Product';
         $this->lang = true;
         $this->explicitSelect = true;
-        $this->bulk_actions = array(
-            'delete' => array(
+        $this->bulk_actions = [
+            'delete' => [
                 'text' => $this->l('Delete selected'),
                 'icon' => 'icon-trash',
                 'confirm' => $this->l('Delete selected items?')
-            )
-        );
+            ]
+        ];
         if (!Tools::getValue('id_product')) {
             $this->multishop_context_group = false;
         }
@@ -85,7 +85,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->allow_export = true;
 
         // @since 1.5 : translations for tabs
-        $this->available_tabs_lang = array(
+        $this->available_tabs_lang = [
             'Informations' => $this->l('Information'),
             'Pack' => $this->l('Pack'),
             'VirtualProduct' => $this->l('Virtual Product'),
@@ -101,11 +101,11 @@ class AdminProductsController extends AdminProductsControllerCore
             'Quantities' => $this->l('Quantities'),
             'Suppliers' => $this->l('Suppliers'),
             'Warehouses' => $this->l('Warehouses'),
-        );
+        ];
 
-        $this->available_tabs = array('Quantities' => 6, 'Warehouses' => 14);
+        $this->available_tabs = ['Quantities' => 6, 'Warehouses' => 14];
         if ($this->context->shop->getContext() != Shop::CONTEXT_GROUP) {
-            $this->available_tabs = array_merge($this->available_tabs, array(
+            $this->available_tabs = array_merge($this->available_tabs, [
                 'Informations' => 0,
                 'Pack' => 7,
                 'VirtualProduct' => 8,
@@ -119,7 +119,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 'Customization' => 11,
                 'Attachments' => 12,
                 'Suppliers' => 13,
-            ));
+            ]);
         }
 
         // Sort the tabs that need to be preloaded by their priority number
@@ -192,58 +192,58 @@ class AdminProductsController extends AdminProductsControllerCore
 
         $this->_group = 'GROUP BY '.$alias.'.id_product';
 
-        $this->fields_list = array();
-        $this->fields_list['id_product'] = array(
+        $this->fields_list = [];
+        $this->fields_list['id_product'] = [
             'title' => $this->l('ID'),
             'align' => 'center',
             'class' => 'fixed-width-xs',
             'type' => 'int'
-        );
-        $this->fields_list['image'] = array(
+        ];
+        $this->fields_list['image'] = [
             'title' => $this->l('Image'),
             'align' => 'center',
             'image' => 'p',
             'orderby' => false,
             'filter' => false,
             'search' => false
-        );
-        $this->fields_list['name'] = array(
+        ];
+        $this->fields_list['name'] = [
             'title' => $this->l('Name'),
             'filter_key' => 'b!name'
-        );
-        $this->fields_list['reference'] = array(
+        ];
+        $this->fields_list['reference'] = [
             'title' => $this->l('Reference'),
             'align' => 'left',
-        );
+        ];
 
         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-            $this->fields_list['shopname'] = array(
+            $this->fields_list['shopname'] = [
                 'title' => $this->l('Default shop'),
                 'filter_key' => 'shop!name',
-            );
+            ];
         } else {
-            $this->fields_list['name_category'] = array(
+            $this->fields_list['name_category'] = [
                 'title' => $this->l('Category'),
                 'filter_key' => 'cl!name',
-            );
+            ];
         }
-        $this->fields_list['price'] = array(
+        $this->fields_list['price'] = [
             'title' => $this->l('Base price'),
             'type' => 'price',
             'align' => 'text-right',
             'filter_key' => 'a!price'
-        );
-        $this->fields_list['price_final'] = array(
+        ];
+        $this->fields_list['price_final'] = [
             'title' => $this->l('Final price'),
             'type' => 'price',
             'align' => 'text-right',
             'havingFilter' => true,
             'orderby' => false,
             'search' => false
-        );
+        ];
 
         if (Configuration::get('PS_STOCK_MANAGEMENT')) {
-            $this->fields_list['sav_quantity'] = array(
+            $this->fields_list['sav_quantity'] = [
                 'title' => $this->l('Quantity'),
                 'type' => 'int',
                 'align' => 'text-right',
@@ -251,10 +251,10 @@ class AdminProductsController extends AdminProductsControllerCore
                 'orderby' => true,
                 'badge_danger' => true,
                 //'hint' => $this->l('This is the quantity available in the current shop/group.'),
-            );
+            ];
         }
 
-        $this->fields_list['active'] = array(
+        $this->fields_list['active'] = [
             'title' => $this->l('Status'),
             'active' => 'status',
             'filter_key' => $alias.'!active',
@@ -262,15 +262,15 @@ class AdminProductsController extends AdminProductsControllerCore
             'type' => 'bool',
             'class' => 'fixed-width-sm',
             'orderby' => false
-        );
+        ];
 
         if ($join_category && (int)$this->id_current_category) {
-            $this->fields_list['position'] = array(
+            $this->fields_list['position'] = [
                 'title' => $this->l('Position'),
                 'filter_key' => 'cp!position',
                 'align' => 'center',
                 'position' => 'position'
-            );
+            ];
         }
     }
 }

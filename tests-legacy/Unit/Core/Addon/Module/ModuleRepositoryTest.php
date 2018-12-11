@@ -73,10 +73,10 @@ class ModuleRepositoryTest extends UnitTestCase
             ->getMock();
         $this->moduleDataProviderStub
             ->method('findByName')
-            ->willReturn(array(
+            ->willReturn([
                 'installed' => 0,
                 'active' => true,
-            ));
+            ]);
         // required to have 'productType' field of module set up
         $this->moduleDataProviderStub
             ->method('isModuleMainClassValid')
@@ -108,17 +108,17 @@ class ModuleRepositoryTest extends UnitTestCase
             ->will($this->returnArgument(0));
 
         $this->adminModuleDataProviderStub = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
-            ->setConstructorArgs(array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS, $this->moduleDataProviderStub))
-            ->setMethods(array('getCatalogModulesNames'))
+            ->setConstructorArgs([$this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS, $this->moduleDataProviderStub])
+            ->setMethods(['getCatalogModulesNames'])
             ->getMock()
         ;
 
         $this->adminModuleDataProviderStub
             ->method('getCatalogModulesNames')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->moduleRepositoryStub = $this->getMockBuilder('PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository')
-            ->setConstructorArgs(array(
+            ->setConstructorArgs([
                 $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
                 new ModuleDataUpdater(
@@ -134,8 +134,8 @@ class ModuleRepositoryTest extends UnitTestCase
                 new FakeLogger(),
                 $this->translatorStub,
                 __DIR__.'/../../../../resources/modules/'
-            ))
-            ->setMethods(array('readCacheFile', 'generateCacheFile'))
+            ])
+            ->setMethods(['readCacheFile', 'generateCacheFile'])
             ->getMock()
         ;
 
@@ -144,7 +144,7 @@ class ModuleRepositoryTest extends UnitTestCase
          */
         $this->moduleRepositoryStub
             ->method('readCacheFile')
-            ->willReturn(array());
+            ->willReturn([]);
 
         /*
          * Mock function 'readCacheFile()' to disable the cache

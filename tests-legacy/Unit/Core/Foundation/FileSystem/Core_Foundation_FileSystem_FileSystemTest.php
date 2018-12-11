@@ -84,13 +84,13 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     public function testListEntriesRecursively()
     {
-        $expectedPaths = array(
+        $expectedPaths = [
             $this->fs->joinPaths($this->fixturesPath, 'a'),
             $this->fs->joinPaths($this->fixturesPath, 'a', 'a.tmp'),
             $this->fs->joinPaths($this->fixturesPath, 'a', 'b'),
             $this->fs->joinPaths($this->fixturesPath, 'a', 'b', 'b.file'),
             $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt')
-        );
+        ];
 
         $this->assertEquals(
             $expectedPaths,
@@ -100,11 +100,11 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     public function testListFilesRecursively()
     {
-        $expectedPaths = array(
+        $expectedPaths = [
             $this->fs->joinPaths($this->fixturesPath, 'a', 'a.tmp'),
             $this->fs->joinPaths($this->fixturesPath, 'a', 'b', 'b.file'),
             $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt')
-        );
+        ];
 
         $this->assertEquals(
             $expectedPaths,

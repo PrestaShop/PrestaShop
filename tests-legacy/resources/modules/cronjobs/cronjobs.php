@@ -50,7 +50,7 @@ class CronJobs extends Module
         $this->version = '1.4.0';
         $this->module_key = '';
 
-        $this->controllers = array('callback');
+        $this->controllers = ['callback'];
 
         $this->author = 'PrestaShop';
         $this->need_instance = true;
@@ -160,7 +160,7 @@ class CronJobs extends Module
     {
         $tab = new Tab();
         $tab->active = 1;
-        $tab->name = array();
+        $tab->name = [];
         $tab->class_name = 'AdminCronJobs';
 
         foreach (Language::getLanguages(true) as $lang) {
@@ -233,10 +233,10 @@ class CronJobs extends Module
             $submit_cron = $this->postProcessUpdateJob();
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'module_dir' => $this->_path,
             'module_local_dir' => $this->local_path,
-        ));
+        ]);
 
         $this->context->smarty->assign('form_errors', $this->_errors);
         $this->context->smarty->assign('form_infos', $this->_warnings);
@@ -303,7 +303,7 @@ class CronJobs extends Module
     /**
      * $taks should be a valid URL
      */
-    public static function addOneShotTask($task, $description, $execution = array())
+    public static function addOneShotTask($task, $description, $execution = [])
     {
         if (self::isTaskURLValid($task) == false) {
             return false;
@@ -370,7 +370,7 @@ class CronJobs extends Module
             return true;
         }
 
-        return in_array(Tools::getRemoteAddr(), array('127.0.0.1', '::1')) || preg_match('/^172\.16\.|^192\.168\.|^10\.|^127\.|^localhost|\.local$/', Configuration::get('PS_SHOP_DOMAIN'));
+        return in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1']) || preg_match('/^172\.16\.|^192\.168\.|^10\.|^127\.|^localhost|\.local$/', Configuration::get('PS_SHOP_DOMAIN'));
     }
 
     protected function renderForm($form, $form_values, $action, $cancel = false, $back_url = false, $update = false)
@@ -394,13 +394,13 @@ class CronJobs extends Module
 
         $helper->token = Tools::getAdminTokenLite('AdminModules');
 
-        $helper->tpl_vars = array(
+        $helper->tpl_vars = [
             'fields_value' => $form_values,
             'id_language' => $this->context->language->id,
             'languages' => $this->context->controller->getLanguages(),
             'back_url' => $back_url,
             'show_cancel_button' => $cancel,
-        );
+        ];
 
         return $helper->generateForm($form);
     }
@@ -414,18 +414,18 @@ class CronJobs extends Module
         $helper->no_link = true;
         $helper->shopLinkType = '';
         $helper->identifier = 'id_cronjob';
-        $helper->actions = array('edit', 'delete');
+        $helper->actions = ['edit', 'delete'];
 
         $values = CronJobsForms::getTasksListValues();
         $helper->listTotal = count($values);
-        $helper->tpl_vars = array('show_filters' => false);
+        $helper->tpl_vars = ['show_filters' => false];
 
-        $helper->toolbar_btn['new'] = array(
+        $helper->toolbar_btn['new'] = [
             'href' => $this->context->link->getAdminLink('AdminModules', false)
             .'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name
             .'&newcronjobs=1&token='.Tools::getAdminTokenLite('AdminModules'),
             'desc' => $this->l('Add new task')
-        );
+        ];
 
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
@@ -674,19 +674,19 @@ class CronJobs extends Module
 
         $webservice_id = Configuration::get('CRONJOBS_WEBSERVICE_ID') ? '/'.Configuration::get('CRONJOBS_WEBSERVICE_ID') : null;
 
-        $data = array(
+        $data = [
             'callback' => $link->getModuleLink($this->name, 'callback'),
             'domain' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__,
             'cronjob' => $cron_url.'&token='.Configuration::getGlobalValue('CRONJOBS_EXECUTION_TOKEN'),
             'cron_token' => Configuration::getGlobalValue('CRONJOBS_EXECUTION_TOKEN'),
             'active' => (bool)$use_webservice
-        );
+        ];
 
-        $context_options = array('http' => array(
+        $context_options = ['http' => [
             'method' => (is_null($webservice_id) == true) ? 'POST' : 'PUT',
             'header'  => 'Content-type: application/x-www-form-urlencoded',
             'content' => http_build_query($data)
-        ));
+        ]];
 
         $result = Tools::file_get_contents($this->webservice_url.$webservice_id, false, stream_context_create($context_options));
 
@@ -728,7 +728,7 @@ class CronJobs extends Module
         $id_shop = (int)Context::getContext()->shop->id;
         $id_shop_group = (int)Context::getContext()->shop->id_shop_group;
 
-        if (is_callable(array($module, 'getCronFrequency')) == true) {
+        if (is_callable([$module, 'getCronFrequency']) == true) {
             $frequency = $module->getCronFrequency();
 
             $query = 'INSERT INTO '._DB_PREFIX_.bqSQL($this->name).'

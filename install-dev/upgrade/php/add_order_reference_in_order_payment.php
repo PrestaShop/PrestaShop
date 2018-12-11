@@ -37,7 +37,7 @@ function add_order_reference_in_order_payment()
         return true;
     }
 
-    $errors = array();
+    $errors = [];
     // Populate "order_reference"
     while ($payment = Db::getInstance()->nextRow($payments)) {
         if (isset($payment['id_order_payment']) && $payment['id_order_payment']) {
@@ -52,7 +52,7 @@ function add_order_reference_in_order_payment()
     }
 
     if (count($errors)) {
-        return array('error' => true, 'msg' => implode('<br/>', $errors));
+        return ['error' => true, 'msg' => implode('<br/>', $errors)];
     }
 
     // Get lines to merge (with multishipping on, durring the payment one line was added by order, only one is necessary by cart)
@@ -66,9 +66,9 @@ function add_order_reference_in_order_payment()
         return true;
     }
 
-    $order_payments_to_remove = array();
+    $order_payments_to_remove = [];
     while ($order_payments = Db::getInstance()->nextRow($duplicate_lines)) {
-        $order_payments_array = array();
+        $order_payments_array = [];
         if (isset($order_payments['id_order_payments'])) {
             $order_payments_array = explode(',', $order_payments['id_order_payments']);
         }
@@ -88,7 +88,7 @@ function add_order_reference_in_order_payment()
     }
 
     if (!$res) {
-        return array('errors' => true, 'msg' =>  Db::getInstance()->getMsgError());
+        return ['errors' => true, 'msg' =>  Db::getInstance()->getMsgError()];
     }
     return true;
 }

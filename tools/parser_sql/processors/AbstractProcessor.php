@@ -197,7 +197,7 @@ abstract class AbstractProcessor {
      * translates an array of objects into an associative array
      */
     public function toArray($tokenList) {
-        $expr = array();
+        $expr = [];
         foreach ($tokenList as $token) {
             $expr[] = $token->toArray();
         }

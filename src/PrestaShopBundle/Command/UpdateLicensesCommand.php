@@ -63,11 +63,11 @@ class UpdateLicensesCommand extends Command
 
     private $license;
 
-    private $aflLicense = array(
+    private $aflLicense = [
         'themes/classic/',
         'themes/StarterTheme/',
         'modules/',
-    );
+    ];
 
     protected function configure()
     {
@@ -80,7 +80,7 @@ class UpdateLicensesCommand extends Command
     {
         $this->text = str_replace('{currentYear}', date('Y'), $this->text);
 
-        $extensions = array(
+        $extensions = [
             'php',
             'js',
             'css',
@@ -88,7 +88,7 @@ class UpdateLicensesCommand extends Command
             'html.twig',
             'json',
             'vue',
-        );
+        ];
 
         foreach ($extensions as $extension) {
             $this->findAndCheckExtension($output, $extension);
@@ -102,7 +102,7 @@ class UpdateLicensesCommand extends Command
             ->files()
             ->name('*.' . $ext)
             ->in(_PS_ROOT_DIR_)
-            ->exclude(array(
+            ->exclude([
                 '.git',
                 '.github',
                 '.composer',
@@ -118,7 +118,7 @@ class UpdateLicensesCommand extends Command
                 'themes/starterTheme/assets/',
                 'admin-dev/themes/default/public/',
                 'admin-dev/themes/new-theme/public/',
-            ))
+            ])
             ->ignoreDotFiles(false);
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 
@@ -217,7 +217,7 @@ class UpdateLicensesCommand extends Command
         $content = $file->getContents();
         // Regular expression found thanks to Stephen Ostermiller's Blog. http://blog.ostermiller.org/find-comment
         $regex = '%' . $startDelimiter . '\*([^*]|[\r\n]|(\*+([^*' . $endDelimiter . ']|[\r\n])))*\*+' . $endDelimiter . '%';
-        $matches = array();
+        $matches = [];
         $text = $this->license;
         if ($startDelimiter != '\/') {
             $text = $startDelimiter . ltrim($text, '/');
@@ -307,7 +307,7 @@ class UpdateLicensesCommand extends Command
      */
     private function addLicenseToJsonFile(SplFileInfo $file)
     {
-        if (!in_array($file->getFilename(), array('composer.json', 'package.json'))) {
+        if (!in_array($file->getFilename(), ['composer.json', 'package.json'])) {
             return false;
         }
 

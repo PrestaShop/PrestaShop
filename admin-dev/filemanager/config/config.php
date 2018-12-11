@@ -103,20 +103,20 @@ $duplicate_files=true;
 //**********************
 //Allowed extensions (lowercase insert)
 //**********************
-$ext_img = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg'); //Images
-$ext_file = array('pdf'); //array('doc', 'docx','rtf', 'pdf', 'xls', 'xlsx', 'txt', 'csv','html','xhtml','psd','sql','log','fla','xml','ade','adp','mdb','accdb','ppt','pptx','odt','ots','ott','odb','odg','otp','otg','odf','ods','odp','css','ai'); //Files
-$ext_video = array('mov', 'mpeg', 'mp4', 'avi', 'mpg', 'wma', 'flv', 'webm'); //Video
-$ext_music = array();//array('mp3', 'm4a', 'ac3', 'aiff', 'mid','ogg','wav'); //Audio
-$ext_misc = array();// array('zip', 'rar','gz','tar','iso','dmg'); //Archives
+$ext_img = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg']; //Images
+$ext_file = ['pdf']; //array('doc', 'docx','rtf', 'pdf', 'xls', 'xlsx', 'txt', 'csv','html','xhtml','psd','sql','log','fla','xml','ade','adp','mdb','accdb','ppt','pptx','odt','ots','ott','odb','odg','otp','otg','odf','ods','odp','css','ai'); //Files
+$ext_video = ['mov', 'mpeg', 'mp4', 'avi', 'mpg', 'wma', 'flv', 'webm']; //Video
+$ext_music = [];//array('mp3', 'm4a', 'ac3', 'aiff', 'mid','ogg','wav'); //Audio
+$ext_misc = [];// array('zip', 'rar','gz','tar','iso','dmg'); //Archives
 
 $ext=array_merge($ext_img, $ext_file, $ext_misc, $ext_video, $ext_music); //allowed extensions
 
 //**********************
 //Allowed mime types
 //**********************
-$mime_img = array('image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg');
-$mime_file = array('application/pdf');
-$mime_video = array('video/mpeg', 'video/mp4', 'video/x-msvideo', 'audio/x-ms-wma', 'video/x-flv', 'video/webm');
+$mime_img = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg'];
+$mime_file = ['application/pdf'];
+$mime_video = ['video/mpeg', 'video/mp4', 'video/x-msvideo', 'audio/x-ms-wma', 'video/x-flv', 'video/webm'];
 
 $mime = array_merge($mime_img, $mime_file, $mime_video);
 
@@ -139,9 +139,9 @@ $file_number_limit_js=500;
 // Hidden files and folders
 //**********************
 // set the names of any folders you want hidden (eg "hidden_folder1", "hidden_folder2" ) Remember all folders with these names will be hidden (you can set any exceptions in config.php files on folders)
-$hidden_folders = array();
+$hidden_folders = [];
 // set the names of any files you want hidden. Remember these names will be hidden in all folders (eg "this_document.pdf", "that_image.jpg" )
-$hidden_files = array('config.php');
+$hidden_files = ['config.php'];
 
 /*******************
  * JAVA upload
@@ -162,11 +162,11 @@ $JAVAMaxSizeUpload=200; //Gb
 // path_from_filemanager/test/test1/
 // PS if there isn't write permission in your destination folder you must set it
 $fixed_image_creation                   = false; //activate or not the creation of one or more image resized with fixed path from filemanager folder
-$fixed_path_from_filemanager            = array('../test/','../test1/'); //fixed path of the image folder from the current position on upload folder
-$fixed_image_creation_name_to_prepend   = array('','test_'); //name to prepend on filename
-$fixed_image_creation_to_append         = array('_test',''); //name to appendon filename
-$fixed_image_creation_width             = array(300,400); //width of image (you can leave empty if you set height)
-$fixed_image_creation_height            = array(200,''); //height of image (you can leave empty if you set width)
+$fixed_path_from_filemanager            = ['../test/','../test1/']; //fixed path of the image folder from the current position on upload folder
+$fixed_image_creation_name_to_prepend   = ['','test_']; //name to prepend on filename
+$fixed_image_creation_to_append         = ['_test','']; //name to appendon filename
+$fixed_image_creation_width             = [300,400]; //width of image (you can leave empty if you set height)
+$fixed_image_creation_height            = [200,'']; //height of image (you can leave empty if you set width)
 
 
 // New image resized creation with relative path inside to upload folder after uploading (thumbnails in relative mode)
@@ -174,8 +174,8 @@ $fixed_image_creation_height            = array(200,''); //height of image (you 
 // just simply add a value in the array
 // The image creation path is always relative so if i'm inside source/test/test1 and I upload an image, the path start from here
 $relative_image_creation                = false; //activate or not the creation of one or more image resized with relative path from upload folder
-$relative_path_from_current_pos         = array('thumb/','thumb/'); //relative path of the image folder from the current position on upload folder
-$relative_image_creation_name_to_prepend= array('','test_'); //name to prepend on filename
-$relative_image_creation_name_to_append = array('_test',''); //name to append on filename
-$relative_image_creation_width          = array(300,400); //width of image (you can leave empty if you set height)
-$relative_image_creation_height         = array(200,''); //height of image (you can leave empty if you set width)
+$relative_path_from_current_pos         = ['thumb/','thumb/']; //relative path of the image folder from the current position on upload folder
+$relative_image_creation_name_to_prepend= ['','test_']; //name to prepend on filename
+$relative_image_creation_name_to_append = ['_test','']; //name to append on filename
+$relative_image_creation_width          = [300,400]; //width of image (you can leave empty if you set height)
+$relative_image_creation_height         = [200,'']; //height of image (you can leave empty if you set width)

@@ -37,7 +37,7 @@ class QueryTranslationParamsCollection extends QueryParamsCollection
      */
     protected function getValidFilterParams()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -45,7 +45,7 @@ class QueryTranslationParamsCollection extends QueryParamsCollection
      */
     protected function getValidOrderParams()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -55,7 +55,7 @@ class QueryTranslationParamsCollection extends QueryParamsCollection
      */
     protected function setDefaultOrderParam($queryParams)
     {
-        $queryParams['order'] = array('unknown');
+        $queryParams['order'] = ['unknown'];
 
         return $queryParams;
     }

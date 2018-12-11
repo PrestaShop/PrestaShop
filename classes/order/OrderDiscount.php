@@ -58,6 +58,6 @@ class OrderDiscountCore extends OrderCartRule
     {
         Tools::displayAsDeprecated();
 
-        return call_user_func_array(array($this->parent, $method), $args);
+        return call_user_func_array([$this->parent, $method], $args);
     }
 }

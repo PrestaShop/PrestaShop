@@ -64,32 +64,32 @@ class ProductSupplierCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'product_supplier',
         'primary' => 'id_product_supplier',
-        'fields' => array(
-            'product_supplier_reference' => array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64),
-            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_supplier' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'product_supplier_price_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'id_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-        ),
-    );
+        'fields' => [
+            'product_supplier_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
+            'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_product_attribute' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_supplier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'product_supplier_price_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+        ],
+    ];
 
     /**
      * @see ObjectModel::$webserviceParameters
      */
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'product_suppliers',
         'objectNodeName' => 'product_supplier',
-        'fields' => array(
-            'id_product' => array('xlink_resource' => 'products'),
-            'id_product_attribute' => array('xlink_resource' => 'combinations'),
-            'id_supplier' => array('xlink_resource' => 'suppliers'),
-            'id_currency' => array('xlink_resource' => 'currencies'),
-        ),
-    );
+        'fields' => [
+            'id_product' => ['xlink_resource' => 'products'],
+            'id_product_attribute' => ['xlink_resource' => 'combinations'],
+            'id_supplier' => ['xlink_resource' => 'suppliers'],
+            'id_currency' => ['xlink_resource' => 'currencies'],
+        ],
+    ];
 
     /**
      * @see ObjectModel::delete()

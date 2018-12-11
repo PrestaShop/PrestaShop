@@ -48,7 +48,7 @@ class AdminThemesControllerCore extends AdminController
      */
     protected $theme_repository;
     protected $toolbar_scroll = false;
-    protected $authAccesses = array();
+    protected $authAccesses = [];
     protected $img_error;
 
     /* @var LogoUploader $logo_uploader */
@@ -110,11 +110,11 @@ class AdminThemesControllerCore extends AdminController
                 if (!is_array($ids_themes) || (is_array($ids_themes) && !in_array((string) $addons_theme->id, $ids_themes))) {
                     $zip_content = Tools::addonsRequest(
                         'module',
-                        array(
+                        [
                             'id_module' => pSQL($addons_theme->id),
                             'username_addons' => pSQL(trim($this->context->cookie->username_addons)),
                             'password_addons' => pSQL(trim($this->context->cookie->password_addons)),
-                        )
+                        ]
                     );
 
                     $uniqid = uniqid();
@@ -151,16 +151,16 @@ class AdminThemesControllerCore extends AdminController
 
         if (empty($this->display)) {
             if ($this->isAddGranted()) {
-                $this->page_header_toolbar_btn['import_theme'] = array(
+                $this->page_header_toolbar_btn['import_theme'] = [
                     'href' => self::$currentIndex . '&action=importtheme&token=' . $this->token,
-                    'desc' => $this->trans('Add new theme', array(), 'Admin.Design.Feature'),
+                    'desc' => $this->trans('Add new theme', [], 'Admin.Design.Feature'),
                     'icon' => 'process-icon-new',
-                );
-                $this->page_header_toolbar_btn['export_theme'] = array(
+                ];
+                $this->page_header_toolbar_btn['export_theme'] = [
                     'href' => self::$currentIndex . '&action=exporttheme&token=' . $this->token,
-                    'desc' => $this->trans('Export current theme', array(), 'Admin.Design.Feature'),
+                    'desc' => $this->trans('Export current theme', [], 'Admin.Design.Feature'),
                     'icon' => 'process-icon-export',
-                );
+                ];
             }
 
             if ($this->context->mode) {
@@ -169,9 +169,9 @@ class AdminThemesControllerCore extends AdminController
         }
 
         if ($this->display == 'importtheme') {
-            $this->toolbar_title[] = $this->trans('Import theme', array(), 'Admin.Design.Feature');
+            $this->toolbar_title[] = $this->trans('Import theme', [], 'Admin.Design.Feature');
         } else {
-            $this->toolbar_title[] = $this->trans('Theme', array(), 'Admin.Design.Feature');
+            $this->toolbar_title[] = $this->trans('Theme', [], 'Admin.Design.Feature');
         }
 
         $title = implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ', $this->toolbar_title);
@@ -188,12 +188,12 @@ class AdminThemesControllerCore extends AdminController
             $this->content .= $this->initPageHeaderToolbar();
 
             $this->content .= $this->{'render' . $this->display}();
-            $this->context->smarty->assign(array(
+            $this->context->smarty->assign([
                 'content' => $this->content,
                 'show_page_header_toolbar' => $this->show_page_header_toolbar,
                 'page_header_toolbar_title' => $this->page_header_toolbar_title,
                 'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
-            ));
+            ]);
         } else {
             $content = '';
             if (Configuration::hasKey('PS_LOGO') && trim(Configuration::get('PS_LOGO')) != ''
@@ -229,14 +229,14 @@ class AdminThemesControllerCore extends AdminController
 
     public function renderView()
     {
-        $this->tpl_view_vars = array(
+        $this->tpl_view_vars = [
             'doc' => $this->doc,
             'theme_name' => $this->theme_name,
             'img_error' => $this->img_error,
             'modules_errors' => $this->modules_errors,
             'back_link' => Context::getContext()->link->getAdminLink('AdminThemes'),
             'image_link' => Context::getContext()->link->getAdminLink('AdminImages'),
-        );
+        ];
 
         return parent::renderView();
     }
@@ -251,7 +251,7 @@ class AdminThemesControllerCore extends AdminController
         if (isset($_GET['error'])) {
             $this->errors[] = $this->trans(
                 'You do not have permission to edit this.',
-                array(),
+                [],
                 'Admin.Notifications.Error'
             );
         }
@@ -314,7 +314,7 @@ class AdminThemesControllerCore extends AdminController
         } catch (Exception $e) {
             $this->errors[] = $this->trans(
                 'You do not have permission to upload this.',
-                array(),
+                [],
                 'Admin.Notifications.Error'
             );
 
@@ -326,11 +326,11 @@ class AdminThemesControllerCore extends AdminController
                 break;
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
-                $this->errors[] = $this->trans('The uploaded file is too large.', array(), 'Admin.Design.Notification');
+                $this->errors[] = $this->trans('The uploaded file is too large.', [], 'Admin.Design.Notification');
 
                 return false;
             default:
-                $this->errors[] = $this->trans('Unknown error.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('Unknown error.', [], 'Admin.Notifications.Error');
 
                 return false;
         }
@@ -363,7 +363,7 @@ class AdminThemesControllerCore extends AdminController
         }
 
         if (false === $goodMimeType) {
-            $this->errors[] = $this->trans('Invalid file format.', array(), 'Admin.Design.Notification');
+            $this->errors[] = $this->trans('Invalid file format.', [], 'Admin.Design.Notification');
 
             return false;
         }
@@ -377,7 +377,7 @@ class AdminThemesControllerCore extends AdminController
             $_FILES['themearchive']['tmp_name'],
             $dest
         )) {
-            $this->errors[] = $this->trans('Failed to move uploaded file.', array(), 'Admin.Design.Notification');
+            $this->errors[] = $this->trans('Failed to move uploaded file.', [], 'Admin.Design.Notification');
 
             return false;
         }
@@ -400,123 +400,123 @@ class AdminThemesControllerCore extends AdminController
         $iso_lang_uc = strtoupper($lang->iso_code);
         $url = 'https://addons.prestashop.com/create-favicon.php?pab=1';
 
-        $this->fields_options = array(
-            'appearance' => array(
-                'title' => $this->trans('Your current theme', array(), 'Admin.Design.Feature'),
+        $this->fields_options = [
+            'appearance' => [
+                'title' => $this->trans('Your current theme', [], 'Admin.Design.Feature'),
                 'icon' => 'icon-html5',
-                'tabs' => array(
-                    'logo' => $this->trans('Logo', array(), 'Admin.Global'),
-                    'logo2' => $this->trans('Invoice & Email Logos', array(), 'Admin.Design.Feature'),
-                    'icons' => $this->trans('Favicons', array(), 'Admin.Design.Feature'),
-                    ),
-                'fields' => array(
-                    'PS_LOGO' => array(
-                        'title' => $this->trans('Header logo', array(), 'Admin.Design.Feature'),
+                'tabs' => [
+                    'logo' => $this->trans('Logo', [], 'Admin.Global'),
+                    'logo2' => $this->trans('Invoice & Email Logos', [], 'Admin.Design.Feature'),
+                    'icons' => $this->trans('Favicons', [], 'Admin.Design.Feature'),
+                    ],
+                'fields' => [
+                    'PS_LOGO' => [
+                        'title' => $this->trans('Header logo', [], 'Admin.Design.Feature'),
                         'hint' => $this->trans('Will appear on main page. Recommended size for the default theme: height %height% and width %width%.',
-                            array(
+                            [
                                 '%height%' => '40px',
                                 '%width%' => '200px',
-                            ),
+                            ],
                             'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_LOGO',
                         'tab' => 'logo',
                         'thumb' => _PS_IMG_ . Configuration::get('PS_LOGO'),
-                    ),
-                    'PS_LOGO_MAIL' => array(
-                        'title' => $this->trans('Mail logo', array(), 'Admin.Design.Feature'),
-                        'desc' => ((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">' . $this->trans('Warning: if no email logo is available, the main logo will be used instead.', array(), 'Admin.Design.Notification') . '</span><br />' : ''),
-                        'hint' => $this->trans('Will appear on email headers. If undefined, the header logo will be used.', array(), 'Admin.Design.Help'),
+                    ],
+                    'PS_LOGO_MAIL' => [
+                        'title' => $this->trans('Mail logo', [], 'Admin.Design.Feature'),
+                        'desc' => ((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">' . $this->trans('Warning: if no email logo is available, the main logo will be used instead.', [], 'Admin.Design.Notification') . '</span><br />' : ''),
+                        'hint' => $this->trans('Will appear on email headers. If undefined, the header logo will be used.', [], 'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_LOGO_MAIL',
                         'tab' => 'logo2',
                         'thumb' => (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_ . Configuration::get('PS_LOGO_MAIL') : _PS_IMG_ . Configuration::get('PS_LOGO'),
-                    ),
-                    'PS_LOGO_INVOICE' => array(
-                        'title' => $this->trans('Invoice logo', array(), 'Admin.Design.Feature'),
-                        'desc' => ((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">' . $this->trans('Warning: if no invoice logo is available, the main logo will be used instead.', array(), 'Admin.Design.Help') . '</span><br />' : ''),
-                        'hint' => $this->trans('Will appear on invoice headers.', array(), 'Admin.Design.Help') . ' ' . $this->trans('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.', array(), 'Admin.Design.Help'),
+                    ],
+                    'PS_LOGO_INVOICE' => [
+                        'title' => $this->trans('Invoice logo', [], 'Admin.Design.Feature'),
+                        'desc' => ((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">' . $this->trans('Warning: if no invoice logo is available, the main logo will be used instead.', [], 'Admin.Design.Help') . '</span><br />' : ''),
+                        'hint' => $this->trans('Will appear on invoice headers.', [], 'Admin.Design.Help') . ' ' . $this->trans('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.', [], 'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_LOGO_INVOICE',
                         'tab' => 'logo2',
                         'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_ . Configuration::get('PS_LOGO_INVOICE') : _PS_IMG_ . Configuration::get('PS_LOGO'),
-                    ),
-                    'PS_FAVICON' => array(
-                        'title' => $this->trans('Favicon', array(), 'Admin.Design.Feature'),
-                        'desc' => $this->trans('Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!', array('[1]' => '<a href="' . $url . '" target="_blank">', '[/1]' => '</a>'), 'Admin.Design.Help'),
-                        'hint' => $this->trans('It is the small icon that appears in browser tabs, next to the web address', array(), 'Admin.Design.Help'),
+                    ],
+                    'PS_FAVICON' => [
+                        'title' => $this->trans('Favicon', [], 'Admin.Design.Feature'),
+                        'desc' => $this->trans('Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!', ['[1]' => '<a href="' . $url . '" target="_blank">', '[/1]' => '</a>'], 'Admin.Design.Help'),
+                        'hint' => $this->trans('It is the small icon that appears in browser tabs, next to the web address', [], 'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_FAVICON',
                         'tab' => 'icons',
                         'thumb' => _PS_IMG_ . Configuration::get('PS_FAVICON') . (Tools::getValue('conf') ? sprintf('?%04d', mt_rand(0, 9999)) : ''),
-                    ),
-                ),
-                'after_tabs' => array(
+                    ],
+                ],
+                'after_tabs' => [
                     'cur_theme' => $this->context->shop->theme,
-                ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
-                'buttons' => array(
-                    'storeLink' => array(
+                ],
+                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
+                'buttons' => [
+                    'storeLink' => [
                         'id' => 'visit-theme-catalog-link',
-                        'title' => $this->trans('Visit the theme catalog', array(), 'Admin.Design.Feature'),
+                        'title' => $this->trans('Visit the theme catalog', [], 'Admin.Design.Feature'),
                         'icon' => 'process-icon-themes',
                         'href' => Tools::getCurrentUrlProtocolPrefix() . 'addons.prestashop.com/en/3-templates-prestashop'
                         . '?utm_source=back-office&utm_medium=theme-button'
                         . '&utm_campaign=back-office-' . $iso_lang_uc
                         . '&utm_content=' . (defined('_PS_HOST_MODE_') ? 'cloud' : 'download'),
                         'js' => 'return !window.open(this.href)',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
         if (in_array('1', array_column($this->_languages, 'is_rtl'))) {
-            $themes_list = array();
+            $themes_list = [];
             $allThemes = $this->theme_repository->getList();
             foreach ($allThemes as $theme) {
                 $themeName = $theme->getName();
-                $themes_list[] = array('theme' => $themeName, 'name' => $themeName);
+                $themes_list[] = ['theme' => $themeName, 'name' => $themeName];
             }
-            $this->fields_options['RTL'] = array(
-                'title' => $this->trans('Adaptation to Right-to-Left languages', array(), 'Admin.Design.Feature'),
-                'description' => $this->trans('Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.', array(), 'Admin.Design.Help'),
-                'fields' => array(
-                    'PS_THEMES_LIST' => array(
-                        'title' => $this->trans('Theme to adapt', array(), 'Admin.Design.Feature'),
+            $this->fields_options['RTL'] = [
+                'title' => $this->trans('Adaptation to Right-to-Left languages', [], 'Admin.Design.Feature'),
+                'description' => $this->trans('Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.', [], 'Admin.Design.Help'),
+                'fields' => [
+                    'PS_THEMES_LIST' => [
+                        'title' => $this->trans('Theme to adapt', [], 'Admin.Design.Feature'),
                         'type' => 'select',
                         'identifier' => 'theme',
                         'list' => $themes_list,
-                    ),
-                    'PS_GENERATE_RTL' => array(
-                        'title' => $this->trans('Generate RTL stylesheet', array(), 'Admin.Design.Feature'),
+                    ],
+                    'PS_GENERATE_RTL' => [
+                        'title' => $this->trans('Generate RTL stylesheet', [], 'Admin.Design.Feature'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
                         'default' => 0,
-                    ),
-                ),
-                'submit' => array(
-                    'title' => $this->trans('Save', array(), 'Admin.Actions'),
+                    ],
+                ],
+                'submit' => [
+                    'title' => $this->trans('Save', [], 'Admin.Actions'),
                     'name' => 'submitGenerateRTL',
-                ),
-            );
+                ],
+            ];
         }
 
         $other_themes = $this->theme_repository->getListExcluding([$this->context->shop->theme->getName()]);
         if (!empty($other_themes)) {
-            $this->fields_options['theme'] = array(
-                'title' => $this->trans('Select a theme for the "%name%" shop', array('%name%' => $this->context->shop->name), 'Admin.Design.Feature'),
-                'description' => (!$this->can_display_themes) ? $this->trans('You must select a shop from the above list if you wish to choose a theme.', array(), 'Admin.Design.Help') : '',
-                'fields' => array(
-                    'theme_for_shop' => array(
+            $this->fields_options['theme'] = [
+                'title' => $this->trans('Select a theme for the "%name%" shop', ['%name%' => $this->context->shop->name], 'Admin.Design.Feature'),
+                'description' => (!$this->can_display_themes) ? $this->trans('You must select a shop from the above list if you wish to choose a theme.', [], 'Admin.Design.Help') : '',
+                'fields' => [
+                    'theme_for_shop' => [
                         'type' => 'theme',
                         'themes' => $other_themes,
                         'can_display_themes' => $this->can_display_themes,
                         'can_delete_themes' => $this->isDeleteGranted(),
                         'no_multishop_checkbox' => true,
-                    ),
-                ),
-            );
+                    ],
+                ],
+            ];
         }
 
         if (isset($this->display) && method_exists($this, 'render' . $this->display)) {
@@ -526,13 +526,13 @@ class AdminThemesControllerCore extends AdminController
             $helper = new HelperOptions($this);
             $this->setHelperDisplay($helper);
             $helper->toolbar_scroll = true;
-            $helper->title = $this->trans('Theme appearance', array(), 'Admin.Design.Feature');
-            $helper->toolbar_btn = array(
-                'save' => array(
+            $helper->title = $this->trans('Theme appearance', [], 'Admin.Design.Feature');
+            $helper->toolbar_btn = [
+                'save' => [
                     'href' => '#',
-                    'desc' => $this->trans('Save', array(), 'Admin.Actions'),
-                ),
-            );
+                    'desc' => $this->trans('Save', [], 'Admin.Actions'),
+                ],
+            ];
             $helper->id = $this->id;
             $helper->tpl_vars = $this->tpl_option_vars;
             $options = $helper->generateOptions($this->fields_options);
@@ -551,103 +551,103 @@ class AdminThemesControllerCore extends AdminController
             return false;
         }
 
-        $fields_form = array();
+        $fields_form = [];
 
-        $toolbar_btn['save'] = array(
+        $toolbar_btn['save'] = [
             'href' => '#',
-            'desc' => $this->trans('Save', array(), 'Admin.Actions'),
-        );
+            'desc' => $this->trans('Save', [], 'Admin.Actions'),
+        ];
 
         if ($this->context->mode != Context::MODE_HOST) {
-            $fields_form[0] = array(
-                'form' => array(
+            $fields_form[0] = [
+                'form' => [
                     'tinymce' => false,
-                    'legend' => array(
-                        'title' => $this->trans('Import from your computer', array(), 'Admin.Design.Feature'),
+                    'legend' => [
+                        'title' => $this->trans('Import from your computer', [], 'Admin.Design.Feature'),
                         'icon' => 'icon-picture',
-                    ),
-                    'input' => array(
-                        array(
+                    ],
+                    'input' => [
+                        [
                             'type' => 'file',
-                            'label' => $this->trans('Zip file', array(), 'Admin.Design.Feature'),
-                            'desc' => $this->trans('Browse your computer files and select the Zip file for your new theme.', array(), 'Admin.Design.Help'),
+                            'label' => $this->trans('Zip file', [], 'Admin.Design.Feature'),
+                            'desc' => $this->trans('Browse your computer files and select the Zip file for your new theme.', [], 'Admin.Design.Help'),
                             'name' => 'themearchive',
-                        ),
-                    ),
-                    'submit' => array(
+                        ],
+                    ],
+                    'submit' => [
                         'id' => 'zip',
-                        'title' => $this->trans('Save', array(), 'Admin.Actions'),
-                        ),
-                    ),
-                );
+                        'title' => $this->trans('Save', [], 'Admin.Actions'),
+                        ],
+                    ],
+                ];
 
-            $fields_form[1] = array(
-                'form' => array(
+            $fields_form[1] = [
+                'form' => [
                     'tinymce' => false,
-                    'legend' => array(
-                        'title' => $this->trans('Import from the web', array(), 'Admin.Design.Feature'),
+                    'legend' => [
+                        'title' => $this->trans('Import from the web', [], 'Admin.Design.Feature'),
                         'icon' => 'icon-picture',
-                    ),
-                    'input' => array(
-                        array(
+                    ],
+                    'input' => [
+                        [
                             'type' => 'text',
-                            'label' => $this->trans('Archive URL', array(), 'Admin.Design.Feature'),
-                            'desc' => $this->trans('Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".', array(), 'Admin.Design.Help'),
+                            'label' => $this->trans('Archive URL', [], 'Admin.Design.Feature'),
+                            'desc' => $this->trans('Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".', [], 'Admin.Design.Help'),
                             'name' => 'themearchiveUrl',
-                        ),
-                    ),
-                    'submit' => array(
-                        'title' => $this->trans('Save', array(), 'Admin.Actions'),
-                        ),
-                    ),
-                );
+                        ],
+                    ],
+                    'submit' => [
+                        'title' => $this->trans('Save', [], 'Admin.Actions'),
+                        ],
+                    ],
+                ];
 
-            $theme_archive_server = array();
+            $theme_archive_server = [];
             $files = scandir(_PS_ALL_THEMES_DIR_, SCANDIR_SORT_NONE);
             $theme_archive_server[] = '-';
 
             foreach ($files as $file) {
                 if (is_file(_PS_ALL_THEMES_DIR_ . $file) && substr(_PS_ALL_THEMES_DIR_ . $file, -4) == '.zip') {
-                    $theme_archive_server[] = array(
+                    $theme_archive_server[] = [
                         'id' => basename(_PS_ALL_THEMES_DIR_ . $file),
                         'name' => basename(_PS_ALL_THEMES_DIR_ . $file),
-                    );
+                    ];
                 }
             }
 
-            $fields_form[2] = array(
-                'form' => array(
+            $fields_form[2] = [
+                'form' => [
                     'tinymce' => false,
-                    'legend' => array(
-                        'title' => $this->trans('Import from FTP', array(), 'Admin.Design.Feature'),
+                    'legend' => [
+                        'title' => $this->trans('Import from FTP', [], 'Admin.Design.Feature'),
                         'icon' => 'icon-picture',
-                    ),
-                    'input' => array(
-                        array(
+                    ],
+                    'input' => [
+                        [
                             'type' => 'select',
-                            'label' => $this->trans('Select the archive', array(), 'Admin.Design.Feature'),
+                            'label' => $this->trans('Select the archive', [], 'Admin.Design.Feature'),
                             'name' => 'theme_archive_server',
-                            'desc' => $this->trans('This selector lists the Zip files that you uploaded in the \'/themes\' folder.', array(), 'Admin.Design.Help'),
-                            'options' => array(
+                            'desc' => $this->trans('This selector lists the Zip files that you uploaded in the \'/themes\' folder.', [], 'Admin.Design.Help'),
+                            'options' => [
                                 'id' => 'id',
                                 'name' => 'name',
                                 'query' => $theme_archive_server,
-                            ),
-                        ),
-                    ),
-                    'submit' => array(
-                        'title' => $this->trans('Save', array(), 'Admin.Actions'),
-                        ),
-                    ),
-                );
+                            ],
+                        ],
+                    ],
+                    'submit' => [
+                        'title' => $this->trans('Save', [], 'Admin.Actions'),
+                        ],
+                    ],
+                ];
         }
 
         $this->context->smarty->assign(
-            array(
+            [
                 'import_theme' => true,
                 'logged_on_addons' => $this->logged_on_addons,
                 'iso_code' => $this->context->language->iso_code,
-                )
+                ]
             );
 
         $helper = new HelperForm();
@@ -657,7 +657,7 @@ class AdminThemesControllerCore extends AdminController
         $helper->show_toolbar = true;
         $helper->toolbar_btn = $toolbar_btn;
         $helper->fields_value['themearchiveUrl'] = '';
-        $helper->fields_value['theme_archive_server'] = array();
+        $helper->fields_value['theme_archive_server'] = [];
         $helper->multiple_fieldsets = true;
         $helper->override_folder = $this->tpl_folder;
         $helper->languages = $this->getLanguages();
@@ -704,14 +704,14 @@ class AdminThemesControllerCore extends AdminController
                 // layout can be an array of array, or just an array :/ we just translate name & description, see theme.dist.yml
                 if (is_array($layout)) {
                     if (array_key_exists('name', $layout)) {
-                        $layout['name'] = $this->translator->trans($layout['name'], array(), 'Admin.Design.Feature');
+                        $layout['name'] = $this->translator->trans($layout['name'], [], 'Admin.Design.Feature');
                     }
                     if (array_key_exists('description', $layout)) {
-                        $layout['description'] = $this->translator->trans($layout['description'], array(), 'Admin.Design.Feature');
+                        $layout['description'] = $this->translator->trans($layout['description'], [], 'Admin.Design.Feature');
                     }
                 } else {
-                    if (in_array($key, array('name', 'description'))) {
-                        $attributes[$key] = $this->translator->trans($layout, array(), 'Admin.Design.Feature');
+                    if (in_array($key, ['name', 'description'])) {
+                        $attributes[$key] = $this->translator->trans($layout, [], 'Admin.Design.Feature');
                     }
                 }
             }
@@ -793,12 +793,12 @@ class AdminThemesControllerCore extends AdminController
         $accessLevel = (int) $accessLevel;
         if (!in_array(
             $accessLevel,
-            array(
+            [
                 AdminController::LEVEL_VIEW,
                 AdminController::LEVEL_EDIT,
                 AdminController::LEVEL_ADD,
                 AdminController::LEVEL_DELETE,
-            )
+            ]
         )) {
             throw new InvalidArgumentException('Unknown access level : ' . $accessLevel);
         }
@@ -826,7 +826,7 @@ class AdminThemesControllerCore extends AdminController
             || !$this->isDeleteGranted()
         ) {
             throw new Exception(
-                $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error')
+                $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error')
             );
         }
     }
@@ -846,7 +846,7 @@ class AdminThemesControllerCore extends AdminController
             || !$this->isDeleteGranted()
         ) {
             throw new Exception(
-                $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error')
+                $this->trans('You do not have permission to delete this.', [], 'Admin.Notifications.Error')
             );
         }
     }
@@ -866,7 +866,7 @@ class AdminThemesControllerCore extends AdminController
             || !$this->isAddGranted()
         ) {
             throw new Exception(
-                $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error')
+                $this->trans('You do not have permission to add this.', [], 'Admin.Notifications.Error')
             );
         }
     }
@@ -886,7 +886,7 @@ class AdminThemesControllerCore extends AdminController
             || !$this->isEditGranted()
         ) {
             throw new Exception(
-                $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error')
+                $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error')
             );
         }
     }
@@ -906,7 +906,7 @@ class AdminThemesControllerCore extends AdminController
             || !$this->isViewGranted()
         ) {
             throw new Exception(
-                $this->trans('You do not have permission to view this.', array(), 'Admin.Notifications.Error')
+                $this->trans('You do not have permission to view this.', [], 'Admin.Notifications.Error')
             );
         }
     }
@@ -919,7 +919,7 @@ class AdminThemesControllerCore extends AdminController
             && $_SERVER['CONTENT_LENGTH']
             && $_SERVER['CONTENT_LENGTH'] > $post_max_size
         ) {
-            throw new Exception($this->trans('The uploaded file is too large.', array(), 'Admin.Design.Notification'));
+            throw new Exception($this->trans('The uploaded file is too large.', [], 'Admin.Design.Notification'));
         }
     }
 
@@ -943,7 +943,7 @@ class AdminThemesControllerCore extends AdminController
         } catch (Exception $e) {
             $this->errors[] = $this->trans(
                 'You do not have permission to edit this.',
-                array(),
+                [],
                 'Admin.Notifications.Error'
             );
 
@@ -1051,13 +1051,13 @@ class AdminThemesControllerCore extends AdminController
 
             if ((bool) Tools::getValue('PS_GENERATE_RTL')) {
                 Language::getRtlStylesheetProcessor()
-                ->setProcessFOThemes(array(Tools::getValue('PS_THEMES_LIST')))
+                ->setProcessFOThemes([Tools::getValue('PS_THEMES_LIST')])
                 ->setRegenerate(true)
                 ->process();
 
                 $this->confirmations[] = $this->trans(
                     'Your RTL stylesheets has been generated successfully',
-                    array(),
+                    [],
                     'Admin.Design.Notification'
                 );
             }
@@ -1076,7 +1076,7 @@ class AdminThemesControllerCore extends AdminController
             if ($this->theme_manager->reset(Tools::getValue('theme_name'))) {
                 $this->confirmations[] = $this->trans(
                     'Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'Regenerate thumbnails\' button.',
-                    array(),
+                    [],
                     'Admin.Design.Notification'
                 );
             }

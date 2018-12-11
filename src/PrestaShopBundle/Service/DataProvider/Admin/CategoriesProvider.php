@@ -206,13 +206,13 @@ class CategoriesProvider
      */
     private function createMenuObject($menu, $name, $moduleIds = [], $tab = null)
     {
-        return (object) array(
+        return (object) [
             'tab' => $tab,
             'name' => $name,
             'refMenu' => $menu,
             'modules' => $moduleIds,
             'subMenu' => [],
-        );
+        ];
     }
 
     /**

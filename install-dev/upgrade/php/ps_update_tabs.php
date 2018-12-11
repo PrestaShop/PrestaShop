@@ -29,8 +29,8 @@ function ps_update_tabs()
     if (file_exists(__DIR__.'/../../data/xml/tab.xml')) {
         $tab_xml = simplexml_load_file(__DIR__ . '/../../data/xml/tab.xml');
         if (!empty($tab_xml)) {
-            $tab_class_name = array();
-            $tab_ids = array();
+            $tab_class_name = [];
+            $tab_ids = [];
 
             foreach ($tab_xml->entities->tab as $tab) {
                 $tab = (array)$tab;
@@ -59,7 +59,7 @@ function ps_update_tabs()
                     if (file_exists(__DIR__ . '/../../langs/' . $lang['iso_code'] . '/data/tab.xml')) {
 
                         // store XML data
-                        $tab_xml_data = array();
+                        $tab_xml_data = [];
                         $tab_xml_lang = simplexml_load_file(__DIR__ . '/../../langs/' . $lang['iso_code'] . '/data/tab.xml');
                         if (!empty($tab_xml_lang)) {
                             foreach ($tab_xml_lang->tab as $tab) {
@@ -70,7 +70,7 @@ function ps_update_tabs()
 
 
                         // store DB data
-                        $tab_db_data = array();
+                        $tab_db_data = [];
                         $results = Db::getInstance()->executeS('
                           SELECT t.`id_tab`, tl.`id_lang`, t.`class_name`, tl.`name` FROM `' . _DB_PREFIX_ . 'tab` t
                             INNER JOIN `' . _DB_PREFIX_ . 'tab_lang` tl ON tl.`id_tab` = t.`id_tab`

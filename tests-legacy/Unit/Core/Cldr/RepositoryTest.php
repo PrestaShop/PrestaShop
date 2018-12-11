@@ -124,7 +124,7 @@ class RepositoryTest extends UnitTestCase
 
         $this->assertCount(486, $currencies);
 
-        $datas = array();
+        $datas = [];
         foreach ($currencies as $k => $v) {
             if (strlen($k)!==3) {
                 continue;

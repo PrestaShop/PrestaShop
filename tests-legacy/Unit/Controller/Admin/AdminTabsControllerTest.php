@@ -74,13 +74,13 @@ class AdminTabsControllerTest extends UnitTestCase
     {
         $cookieMock = $this->getMockBuilder('\Cookie')
             ->disableOriginalConstructor()
-            ->setMethods(array('getFamily'))
+            ->setMethods(['getFamily'])
             ->getMock();
 
         $cookieMock->expects($this->once())
             ->method('getFamily')
             ->with($this->anything())
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->context->cookie = $cookieMock;
     }
@@ -89,7 +89,7 @@ class AdminTabsControllerTest extends UnitTestCase
     {
         $dbMock = $this->getMockBuilder('\DbPDO')
             ->disableOriginalConstructor()
-            ->setMethods(array('query', 'executeS', 'getMsgError'))
+            ->setMethods(['query', 'executeS', 'getMsgError'])
             ->getMock();
 
         $dbMock->expects($this->any())
@@ -122,7 +122,7 @@ class AdminTabsControllerTest extends UnitTestCase
             }))
             ->will($this->returnCallback(function ($subject) {
                 if (strpos($subject, 'authorization') !== false) {
-                    return array();
+                    return [];
                 } else {
                     return false;
                 }

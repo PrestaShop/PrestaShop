@@ -45,16 +45,16 @@ class ExplainProcessor extends AbstractProcessor {
     protected function isStatement($keys, $needle = "EXPLAIN") {
         $pos = array_search($needle, $keys);
         if (isset($keys[$pos + 1])) {
-            return in_array($keys[$pos + 1], array('SELECT', 'DELETE', 'INSERT', 'REPLACE', 'UPDATE'), true);
+            return in_array($keys[$pos + 1], ['SELECT', 'DELETE', 'INSERT', 'REPLACE', 'UPDATE'], true);
         }
         return false;
     }
 
     // TODO: refactor that function
-    public function process($tokens, $keys = array()) {
+    public function process($tokens, $keys = []) {
 
         $base_expr = "";
-        $expr = array();
+        $expr = [];
         $currCategory = "";
 
         if ($this->isStatement($keys)) {
@@ -73,20 +73,20 @@ class ExplainProcessor extends AbstractProcessor {
 
                 case 'EXTENDED':
                 case 'PARTITIONS':
-                    return array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $token);
+                    return ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $token];
                     break;
 
                 case 'FORMAT':
                     if ($currCategory === '') {
                         $currCategory = $upper;
-                        $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
+                        $expr[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
                     }
                     // else?
                     break;
 
                 case '=':
                     if ($currCategory === 'FORMAT') {
-                        $expr[] = array('expr_type' => ExpressionType::OPERATOR, 'base_expr' => $trim);
+                        $expr[] = ['expr_type' => ExpressionType::OPERATOR, 'base_expr' => $trim];
                     }
                     // else?
                     break;
@@ -94,9 +94,9 @@ class ExplainProcessor extends AbstractProcessor {
                 case 'TRADITIONAL':
                 case 'JSON':
                     if ($currCategory === 'FORMAT') {
-                        $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
-                        return array('expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($base_expr),
-                                     'sub_tree' => $expr);
+                        $expr[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
+                        return ['expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($base_expr),
+                                     'sub_tree' => $expr];
                     }
                     // else?
                     break;
@@ -121,12 +121,12 @@ class ExplainProcessor extends AbstractProcessor {
 
             case 'TABLENAME':
                 $currCategory = 'WILD';
-                $expr[] = array('expr_type' => ExpressionType::COLREF, 'base_expr' => $trim);
+                $expr[] = ['expr_type' => ExpressionType::COLREF, 'base_expr' => $trim];
                 break;
 
             case '':
                 $currCategory = 'TABLENAME';
-                $expr[] = array('expr_type' => ExpressionType::TABLE, 'base_expr' => $trim);
+                $expr[] = ['expr_type' => ExpressionType::TABLE, 'base_expr' => $trim];
                 break;
 
             default:

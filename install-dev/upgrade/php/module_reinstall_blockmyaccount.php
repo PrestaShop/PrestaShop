@@ -33,7 +33,7 @@ function module_reinstall_blockmyaccount()
 			(`name`, `title`, `description`, `position`) VALUES
 			("displayMyAccountBlock", "My account block", "Display extra informations inside the \"my account\" block", 1)');
         // register left column, and header, and addmyaccountblockhook
-        $hooks = array('leftColumn', 'header');
+        $hooks = ['leftColumn', 'header'];
         foreach ($hooks as $hook_name) {
             // do not pSql hook_name
             $row = Db::getInstance()->getRow('SELECT h.id_hook, '.$id_module.' as id_module, MAX(hm.position)+1 as position

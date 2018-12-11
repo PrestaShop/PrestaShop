@@ -177,7 +177,7 @@ class RequirementCollection implements IteratorAggregate
     /**
      * @var Requirement[]
      */
-    private $requirements = array();
+    private $requirements = [];
 
     /**
      * Gets the current RequirementCollection as an Iterator.
@@ -288,7 +288,7 @@ class RequirementCollection implements IteratorAggregate
      */
     public function getRequirements()
     {
-        $array = array();
+        $array = [];
         foreach ($this->requirements as $req) {
             if (!$req->isOptional()) {
                 $array[] = $req;
@@ -305,7 +305,7 @@ class RequirementCollection implements IteratorAggregate
      */
     public function getFailedRequirements()
     {
-        $array = array();
+        $array = [];
         foreach ($this->requirements as $req) {
             if (!$req->isFulfilled() && !$req->isOptional()) {
                 $array[] = $req;
@@ -322,7 +322,7 @@ class RequirementCollection implements IteratorAggregate
      */
     public function getRecommendations()
     {
-        $array = array();
+        $array = [];
         foreach ($this->requirements as $req) {
             if ($req->isOptional()) {
                 $array[] = $req;
@@ -339,7 +339,7 @@ class RequirementCollection implements IteratorAggregate
      */
     public function getFailedRecommendations()
     {
-        $array = array();
+        $array = [];
         foreach ($this->requirements as $req) {
             if (!$req->isFulfilled() && $req->isOptional()) {
                 $array[] = $req;

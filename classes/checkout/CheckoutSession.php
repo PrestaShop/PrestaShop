@@ -163,10 +163,10 @@ class CheckoutSessionCore
 
     public function getGift()
     {
-        return array(
+        return [
             'isGift' => $this->context->cart->gift,
             'message' => $this->context->cart->gift_message,
-        );
+        ];
     }
 
     public function isGuestAllowed()

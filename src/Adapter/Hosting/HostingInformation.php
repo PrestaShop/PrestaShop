@@ -39,7 +39,7 @@ class HostingInformation
      */
     public function getDatabaseInformation()
     {
-        return array(
+        return [
             'version' => Db::getInstance()->getVersion(),
             'server' => _DB_SERVER_,
             'name' => _DB_NAME_,
@@ -47,7 +47,7 @@ class HostingInformation
             'prefix' => _DB_PREFIX_,
             'engine' => _MYSQL_ENGINE_,
             'driver' => Db::getClass(),
-        );
+        ];
     }
 
     /**
@@ -66,12 +66,12 @@ class HostingInformation
      */
     private function getPhpInformation()
     {
-        return array(
+        return [
             'version' => PHP_VERSION,
             'memoryLimit' => ini_get('memory_limit'),
             'maxExecutionTime' => ini_get('max_execution_time'),
             'maxFileSizeUpload' => ini_get('upload_max_filesize'),
-        );
+        ];
     }
 
     /**

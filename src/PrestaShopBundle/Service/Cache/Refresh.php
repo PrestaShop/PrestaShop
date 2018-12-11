@@ -37,9 +37,9 @@ class Refresh extends AbstractCommand
     {
         $this->addCacheClear();
 
-        $this->commands[] = array(
+        $this->commands[] = [
             'command' => 'doctrine:schema:update',
             '--force' => true,
-        );
+        ];
     }
 }

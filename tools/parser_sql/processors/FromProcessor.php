@@ -47,17 +47,17 @@ class FromProcessor extends AbstractProcessor {
     protected function initParseInfo($parseInfo = false) {
         // first init
         if ($parseInfo === false) {
-            $parseInfo = array('join_type' => "", 'saved_join_type' => "JOIN");
+            $parseInfo = ['join_type' => "", 'saved_join_type' => "JOIN"];
         }
         // loop init
-        return array('expression' => "", 'token_count' => 0, 'table' => "", 'no_quotes' => "", 'alias' => false,
+        return ['expression' => "", 'token_count' => 0, 'table' => "", 'no_quotes' => "", 'alias' => false,
                      'join_type' => "", 'next_join_type' => "", 'saved_join_type' => $parseInfo['saved_join_type'],
                      'ref_type' => false, 'ref_expr' => false, 'base_expr' => false, 'sub_tree' => false,
-                     'subquery' => "");
+                     'subquery' => ""];
     }
 
     protected function processFromExpression(&$parseInfo) {
-        $res = array();
+        $res = [];
 
         // exchange the join types (join_type is save now, saved_join_type holds the next one)
         $parseInfo['join_type'] = $parseInfo['saved_join_type']; // initialized with JOIN
@@ -107,7 +107,7 @@ class FromProcessor extends AbstractProcessor {
 
     public function process($tokens) {
         $parseInfo = $this->initParseInfo();
-        $expr = array();
+        $expr = [];
 
         $skip_next = false;
         $i = 0;
@@ -146,7 +146,7 @@ class FromProcessor extends AbstractProcessor {
 
             switch ($upper) {
             case 'AS':
-                $parseInfo['alias'] = array('as' => true, 'name' => "", 'base_expr' => $token);
+                $parseInfo['alias'] = ['as' => true, 'name' => "", 'base_expr' => $token];
                 $parseInfo['token_count']++;
                 $n = 1;
                 $str = "";
@@ -219,9 +219,9 @@ class FromProcessor extends AbstractProcessor {
                         $parseInfo['no_quotes'] = $this->revokeQuotation($token);
                     }
                 } elseif ($parseInfo['token_count'] === 1) {
-                    $parseInfo['alias'] = array('as' => false, 'name' => trim($token),
+                    $parseInfo['alias'] = ['as' => false, 'name' => trim($token),
                                                 'no_quotes' => $this->revokeQuotation($token),
-                                                'base_expr' => trim($token));
+                                                'base_expr' => trim($token)];
                 }
                 $parseInfo['token_count']++;
                 break;

@@ -53,25 +53,25 @@ class Badge extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'badge',
         'primary' => 'id_badge',
         'multilang' => true,
-        'fields' => array(
-            'id_ps_badge' =>        array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'type' =>                array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 32),
-            'id_group' =>            array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 32),
-            'group_position' =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'scoring' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'validated' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'awb' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+        'fields' => [
+            'id_ps_badge' =>        ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'type' =>                ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 32],
+            'id_group' =>            ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 32],
+            'group_position' =>    ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'scoring' =>            ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'validated' =>            ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'awb' =>                ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
             // Lang fields
-            'name' =>                array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'description' =>        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255),
-            'group_name' =>        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255),
-        ),
-    );
+            'name' =>                ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'description' =>        ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255],
+            'group_name' =>        ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255],
+        ],
+    ];
     
     public function getBadgeImgUrl()
     {
@@ -97,7 +97,7 @@ class Badge extends ObjectModel
     
     public static function getIdsBadgesToValidate()
     {
-        $ids = array();
+        $ids = [];
         $query = new DbQuery();
         $query->select('b.`id_badge`');
         $query->from('badge', 'b');

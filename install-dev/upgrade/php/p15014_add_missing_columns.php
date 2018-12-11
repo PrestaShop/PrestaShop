@@ -26,7 +26,7 @@
 
 function p15014_add_missing_columns()
 {
-    $errors = array();
+    $errors = [];
     $db = Db::getInstance();
 
     // for module statssearch
@@ -46,6 +46,6 @@ function p15014_add_missing_columns()
     }
 
     if (count($errors)) {
-        return array('error' => 1, 'msg' => implode(',', $errors)) ;
+        return ['error' => 1, 'msg' => implode(',', $errors)] ;
     }
 }

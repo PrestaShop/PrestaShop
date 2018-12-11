@@ -66,10 +66,10 @@ function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_enc
 {
     $escapeModifierFile = implode(
         DIRECTORY_SEPARATOR,
-        array(
+        [
             SMARTY_PLUGINS_DIR,
             'modifier.escape.php',
-        )
+        ]
     );
     require_once $escapeModifierFile;
 
@@ -85,14 +85,14 @@ smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
-smartyRegisterFunction($smarty, 'modifier', 'json_encode', array('Tools', 'jsonEncode'));
-smartyRegisterFunction($smarty, 'modifier', 'json_decode', array('Tools', 'jsonDecode'));
-smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
-smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
+smartyRegisterFunction($smarty, 'modifier', 'json_encode', ['Tools', 'jsonEncode']);
+smartyRegisterFunction($smarty, 'modifier', 'json_decode', ['Tools', 'jsonDecode']);
+smartyRegisterFunction($smarty, 'function', 'dateFormat', ['Tools', 'dateFormat']);
+smartyRegisterFunction($smarty, 'modifier', 'boolval', ['Tools', 'boolval']);
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
-smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
+smartyRegisterFunction($smarty, 'function', 'url', ['Link', 'getUrlSmarty']);
 
 function smarty_modifier_htmlentitiesUTF8($string)
 {
@@ -101,7 +101,7 @@ function smarty_modifier_htmlentitiesUTF8($string)
 
 function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true, $initial_lazy_register = null)
 {
-    if (!in_array($type, array('function', 'modifier', 'block'))) {
+    if (!in_array($type, ['function', 'modifier', 'block'])) {
         return false;
     }
 
@@ -122,7 +122,7 @@ function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true
         }
 
         // SmartyLazyRegister allows to only load external class when they are needed
-        $smarty->registerPlugin($type, $function, array($lazy_register, $params));
+        $smarty->registerPlugin($type, $function, [$lazy_register, $params]);
     } else {
         $smarty->registerPlugin($type, $function, $params);
     }
@@ -184,7 +184,7 @@ function smartyClassname($classname)
 
 function smartyClassnames(array $classnames)
 {
-    $enabled_classes = array();
+    $enabled_classes = [];
     foreach ($classnames as $classname => $enabled) {
         if ($enabled) {
             $enabled_classes[] = smartyClassname($classname);

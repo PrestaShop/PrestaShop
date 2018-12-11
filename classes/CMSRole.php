@@ -37,14 +37,14 @@ class CMSRoleCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'cms_role',
         'primary' => 'id_cms_role',
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 50),
-            'id_cms' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 50],
+            'id_cms' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+        ],
+    ];
 
     /**
      * @return string

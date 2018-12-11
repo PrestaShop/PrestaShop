@@ -53,7 +53,7 @@ class ModuleFrontControllerCore extends FrontController
      *
      * @throws PrestaShopException
      */
-    public function setTemplate($template, $params = array(), $locale = null)
+    public function setTemplate($template, $params = [], $locale = null)
     {
         if (strpos($template, 'module:') === 0) {
             $this->template = $template;
@@ -67,9 +67,9 @@ class ModuleFrontControllerCore extends FrontController
         if (Tools::isSubmit('module') && Tools::getValue('controller') == 'payment') {
             $currency = Currency::getCurrency((int) $this->context->cart->id_currency);
             $minimalPurchase = Tools::convertPrice((float) Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
-            Hook::exec('overrideMinimalPurchasePrice', array(
+            Hook::exec('overrideMinimalPurchasePrice', [
                 'minimalPurchase' => &$minimalPurchase,
-            ));
+            ]);
             if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimalPurchase) {
                 Tools::redirect('index.php?controller=order&step=1');
             }

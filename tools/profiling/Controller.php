@@ -31,14 +31,14 @@ abstract class Controller extends ControllerCore
     protected $total_global_var_size = 0;
     protected $total_modules_time = 0;
     protected $total_modules_memory = 0;
-    protected $global_var_size = array();
+    protected $global_var_size = [];
 
-    protected $modules_perfs = array();
-    protected $hooks_perfs = array();
+    protected $modules_perfs = [];
+    protected $hooks_perfs = [];
 
-    protected $array_queries = array();
+    protected $array_queries = [];
 
-    protected $profiler = array();
+    protected $profiler = [];
 
     private function getMemoryColor($n)
     {
@@ -185,7 +185,7 @@ abstract class Controller extends ControllerCore
 
     protected function stamp($block)
     {
-        return array('block' => $block, 'memory_usage' => memory_get_usage(), 'peak_memory_usage' => memory_get_peak_usage(), 'time' => microtime(true));
+        return ['block' => $block, 'memory_usage' => memory_get_usage(), 'peak_memory_usage' => memory_get_peak_usage(), 'time' => microtime(true)];
     }
 
     public function __construct()
@@ -291,15 +291,15 @@ abstract class Controller extends ControllerCore
         $queries = Db::getInstance()->queries;
         uasort($queries, 'prestashop_querytime_sort');
         foreach ($queries as $data) {
-            $query_row = array(
+            $query_row = [
                 'time' => $data['time'],
                 'query' => $data['query'],
                 'location' => str_replace('\\', '/', substr($data['stack'][0]['file'], strlen(_PS_ROOT_DIR_))).':'.$data['stack'][0]['line'],
                 'filesort' => false,
                 'rows' => 1,
                 'group_by' => false,
-                'stack' => array(),
-            );
+                'stack' => [],
+            ];
             if (preg_match('/^\s*select\s+/i', $data['query'])) {
                 $explain = Db::getInstance()->executeS('explain '.$data['query']);
                 if (stristr($explain[0]['Extra'], 'filesort')) {
@@ -454,7 +454,7 @@ abstract class Controller extends ControllerCore
 		<div class="col-4">
 			<table class="table table-condensed">
 				<tr><th>&nbsp;</th><th>Time</th><th>Cumulated Time</th><th>Memory Usage</th><th>Memory Peak Usage</th></tr>';
-        $last = array('time' => $start_time, 'memory_usage' => 0);
+        $last = ['time' => $start_time, 'memory_usage' => 0];
         foreach ($this->profiler as $row) {
             if ($row['block'] == 'checkAccess' && $row['time'] == $last['time']) {
                 continue;
@@ -648,7 +648,7 @@ abstract class Controller extends ControllerCore
 					<td><span '.$this->getObjectModelColor(count($info)).'>'.count($info).'</span></td>
 					<td>';
             foreach ($info as $trace) {
-                echo str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']).' ['.$trace['line'].']<br />';
+                echo str_replace([_PS_ROOT_DIR_, '\\'], ['', '/'], $trace['file']).' ['.$trace['line'].']<br />';
             }
             echo '	</td>
 				</tr>';

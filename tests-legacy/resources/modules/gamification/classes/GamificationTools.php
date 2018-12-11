@@ -28,9 +28,9 @@ class GamificationTools
 {
     public static function parseMetaData($content)
     {
-        $meta_data = array(
+        $meta_data = [
             'PREFIX_' => _DB_PREFIX_,
-            );
+            ];
         //replace define
         $content = str_replace(array_keys($meta_data), array_values($meta_data), $content);
         

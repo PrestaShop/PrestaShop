@@ -35,9 +35,9 @@ class MailsProvider extends AbstractProvider implements UseDefaultCatalogueInter
      */
     public function getTranslationDomains()
     {
-        return array(
+        return [
             'EmailsSubject*',
-        );
+        ];
     }
 
     /**
@@ -45,9 +45,9 @@ class MailsProvider extends AbstractProvider implements UseDefaultCatalogueInter
      */
     public function getFilters()
     {
-        return array(
+        return [
             '#EmailsSubject*#',
-        );
+        ];
     }
 
     /**
@@ -67,7 +67,7 @@ class MailsProvider extends AbstractProvider implements UseDefaultCatalogueInter
 
         foreach ($this->getFilters() as $filter) {
             $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
+                [$this->getDefaultResourceDirectory()],
                 $this->getLocale(),
                 $filter
             );

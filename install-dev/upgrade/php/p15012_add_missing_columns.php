@@ -26,9 +26,9 @@
 
 function p15012_add_missing_columns()
 {
-    $errors = array();
+    $errors = [];
     $db = Db::getInstance();
-    $q_list = array();
+    $q_list = [];
     // columns must exists
     $q_list['carrier']['id_reference']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'carrier`
 		CHANGE `id_reference` `id_reference` int(10) unsigned NOT NULL';
@@ -185,7 +185,7 @@ function p15012_add_missing_columns()
 
     if (sizeof($errors) > 0) {
         $msg = implode("\r", $errors);
-        return array('error' => 1, 'msg' => $msg);
+        return ['error' => 1, 'msg' => $msg];
     } else {
         return true;
     }

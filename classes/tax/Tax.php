@@ -40,25 +40,25 @@ class TaxCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'tax',
         'primary' => 'id_tax',
         'multilang' => true,
-        'fields' => array(
-            'rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'active' => array('type' => self::TYPE_BOOL),
-            'deleted' => array('type' => self::TYPE_BOOL),
+        'fields' => [
+            'rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
+            'active' => ['type' => self::TYPE_BOOL],
+            'deleted' => ['type' => self::TYPE_BOOL],
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+        ],
+    ];
 
-    protected static $_product_country_tax = array();
-    protected static $_product_tax_via_rules = array();
+    protected static $_product_country_tax = [];
+    protected static $_product_tax_via_rules = [];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'taxes',
-    );
+    ];
 
     public function delete()
     {

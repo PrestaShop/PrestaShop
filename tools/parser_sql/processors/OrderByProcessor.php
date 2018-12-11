@@ -50,7 +50,7 @@ class OrderByProcessor extends AbstractProcessor {
     }
 
     protected function initParseInfo() {
-        return array('base_expr' => "", 'dir' => "ASC", 'expr_type' => ExpressionType::EXPRESSION);
+        return ['base_expr' => "", 'dir' => "ASC", 'expr_type' => ExpressionType::EXPRESSION];
     }
 
     protected function processOrderExpression(&$parseInfo, $select) {
@@ -84,7 +84,7 @@ class OrderByProcessor extends AbstractProcessor {
             return $expr;
         }
 
-        $result = array();
+        $result = [];
         $result['expr_type'] = $parseInfo['expr_type'];
         $result['base_expr'] = $parseInfo['base_expr'];
         if (isset($parseInfo['no_quotes'])) {
@@ -94,8 +94,8 @@ class OrderByProcessor extends AbstractProcessor {
         return $result;
     }
 
-    public function process($tokens, $select = array()) {
-        $out = array();
+    public function process($tokens, $select = []) {
+        $out = [];
         $parseInfo = $this->initParseInfo();
 
         if (!$tokens) {

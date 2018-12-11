@@ -235,7 +235,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
     * @return mixed Method return.
     * @link https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
     */
-    protected function invokeMethod(&$object, $methodName, array $parameters = array())
+    protected function invokeMethod(&$object, $methodName, array $parameters = [])
     {
         $reflection = new \ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);

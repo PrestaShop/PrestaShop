@@ -44,7 +44,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      */
     private $shop;
 
-    public function __construct(array $parameters = array())
+    public function __construct(array $parameters = [])
     {
         // Do nothing
         if (!empty($parameters)) {
@@ -71,7 +71,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function replace(array $parameters = array())
+    public function replace(array $parameters = [])
     {
         $this->add($parameters);
     }
@@ -79,7 +79,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function add(array $parameters = array())
+    public function add(array $parameters = [])
     {
         foreach ($parameters as $key => $value) {
             $this->set($key, $value);

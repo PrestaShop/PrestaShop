@@ -26,7 +26,7 @@
 
 function migrate_orders()
 {
-    $array_errors = array();
+    $array_errors = [];
     $res = true;
     if (!defined('PS_TAX_EXC')) {
         define('PS_TAX_EXC', 1);
@@ -44,16 +44,16 @@ function migrate_orders()
     }
 
     if (!$col_order_detail_old) {
-        return array('error' => 1, 'msg' => 'unable to get fields list from order_detail table');
+        return ['error' => 1, 'msg' => 'unable to get fields list from order_detail table'];
     }
 
     $insert_order_detail = 'INSERT INTO `'._DB_PREFIX_.'order_detail_2` (`'.implode('`, `', $col_order_detail).'`) VALUES ';
 
-    $col_orders = array();
+    $col_orders = [];
     $col_orders_old = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'orders`');
 
     if (!$col_orders_old) {
-        return array('error' => 1, 'msg' => 'unable to get fields list from orders table');
+        return ['error' => 1, 'msg' => 'unable to get fields list from orders table'];
     }
 
     foreach ($col_orders_old as $k => $field) {
@@ -116,7 +116,7 @@ function migrate_orders()
                     if (!in_array($k, $col_order_detail)) {
                         unset($order_details[$k]);
                     } else {
-                        if (in_array($order_details[$k], array('product_price', 'reduction_percent', 'reduction_amount', 'group_reduction', 'product_quantity_discount', 'tax_rate', 'ecotax', 'ecotax_tax_rate'))) {
+                        if (in_array($order_details[$k], ['product_price', 'reduction_percent', 'reduction_amount', 'group_reduction', 'product_quantity_discount', 'tax_rate', 'ecotax', 'ecotax_tax_rate'])) {
                             $order_details[$k] = (float)$order_details[$k];
                         } else {
                             $order_details[$k] = Db::getInstance()->escape($order_details[$k]);
@@ -205,7 +205,7 @@ function migrate_orders()
     }
 
     if (!$res) {
-        return array('error' => 1, 'msg' => count($array_errors).' error(s) : <br/>'.implode('<br/>', $array_errors));
+        return ['error' => 1, 'msg' => count($array_errors).' error(s) : <br/>'.implode('<br/>', $array_errors)];
     }
 }
 

@@ -66,16 +66,16 @@ class AdminAttributeGeneratorControllerWrapper
         //add combination if not already exists
         $combinations = array_values(AdminAttributeGeneratorController::createCombinations(array_values($options)));
         $combinationsValues = array_values(array_map(function () use ($product) {
-            return array(
+            return [
                 'id_product' => $product->id,
-            );
+            ];
         }, $combinations));
 
         $product->generateMultipleCombinations($combinationsValues, $combinations, false);
 
         Product::updateDefaultAttribute($product->id);
         SpecificPriceRule::enableAnyApplication();
-        SpecificPriceRule::applyAllRules(array((int) $product->id));
+        SpecificPriceRule::applyAllRules([(int) $product->id]);
     }
 
     /**
@@ -94,10 +94,10 @@ class AdminAttributeGeneratorControllerWrapper
 
         if ($idProduct && Validate::isUnsignedId($idProduct) && Validate::isLoadedObject($product = new Product($idProduct))) {
             if (($depends_on_stock = StockAvailable::dependsOnStock($idProduct)) && StockAvailable::getQuantityAvailableByProduct($idProduct, $idAttribute)) {
-                return array(
+                return [
                     'status' => 'error',
-                    'message' => $this->translator->trans('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.', array(), 'Admin.Catalog.Notification'),
-                );
+                    'message' => $this->translator->trans('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.', [], 'Admin.Catalog.Notification'),
+                ];
             } else {
                 $product->deleteAttributeCombination((int) $idAttribute);
                 $product->checkDefaultAttributes();
@@ -110,22 +110,22 @@ class AdminAttributeGeneratorControllerWrapper
                 }
 
                 if ($depends_on_stock && !Stock::deleteStockByIds($idProduct, $idAttribute)) {
-                    return array(
+                    return [
                         'status' => 'error',
-                        'message' => $this->translator->trans('Error while deleting the stock', array(), 'Admin.Catalog.Notification'),
-                    );
+                        'message' => $this->translator->trans('Error while deleting the stock', [], 'Admin.Catalog.Notification'),
+                    ];
                 } else {
-                    return array(
+                    return [
                         'status' => 'ok',
-                        'message' => $this->translator->trans('Successful deletion', array(), 'Admin.Catalog.Notification'),
-                    );
+                        'message' => $this->translator->trans('Successful deletion', [], 'Admin.Catalog.Notification'),
+                    ];
                 }
             }
         } else {
-            return array(
+            return [
                 'status' => 'error',
-                'message' => $this->translator->trans('You cannot delete this attribute.', array(), 'Admin.Catalog.Notification'),
-            );
+                'message' => $this->translator->trans('You cannot delete this attribute.', [], 'Admin.Catalog.Notification'),
+            ];
         }
     }
 }

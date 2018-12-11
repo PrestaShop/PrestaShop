@@ -119,7 +119,7 @@ class Language
     public function getCountries()
     {
         if (!is_array($this->countries)) {
-            $this->countries = array();
+            $this->countries = [];
             $filename = _PS_INSTALL_LANGS_PATH_ . substr($this->language_code, 0, 2) . '/data/country.xml';
 
             if (!file_exists($filename)) {

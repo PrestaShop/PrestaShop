@@ -112,7 +112,7 @@ class ModuleTemplateLoaderTest extends TestCase
     {
         $loader = new ModuleTemplateLoader([]);
 
-        self::assertEquals(array(), $loader->getPaths());
+        self::assertEquals([], $loader->getPaths());
     }
 
     /**

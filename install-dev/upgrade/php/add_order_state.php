@@ -27,8 +27,8 @@
 function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unremovable, $logable, $delivery, $template = null)
 {
     $res = true;
-    $name_lang = array();
-    $template_lang = array();
+    $name_lang = [];
+    $template_lang = [];
     foreach (explode('|', $name) as $item) {
         $temp = explode(':', $item);
         $name_lang[$temp[0]] = $temp[1];

@@ -143,7 +143,7 @@ function executeQueries($arrayOfQueries)
  */
 function forgeChangesQueries($changes)
 {
-    $queries = array();
+    $queries = [];
 
     foreach ($changes as $table => $fields) {
         foreach ($fields as $field => $params) {
@@ -175,7 +175,7 @@ function forgeChangesQueries($changes)
  */
 function forgeRelationsQueries($relations)
 {
-    $queries = array();
+    $queries = [];
 
     foreach ($relations as $table => $fields) {
         foreach ($fields as $field => $foreign) {

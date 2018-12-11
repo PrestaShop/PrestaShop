@@ -64,29 +64,29 @@ class SupplierCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'supplier',
         'primary' => 'id_supplier',
         'multilang' => true,
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
-            'active' => array('type' => self::TYPE_BOOL),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64],
+            'active' => ['type' => self::TYPE_BOOL],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
 
             /* Lang fields */
-            'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
-            'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-        ),
-    );
+            'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
+            'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
+            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'link_rewrite' => array('sqlId' => 'link_rewrite'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'link_rewrite' => ['sqlId' => 'link_rewrite'],
+        ],
+    ];
 
     /**
      * SupplierCore constructor.
@@ -166,7 +166,7 @@ class SupplierCore extends ObjectModel
 					GROUP BY ps.`id_supplier`'
                 );
 
-            $counts = array();
+            $counts = [];
             foreach ($results as $result) {
                 $counts[(int) $result['id_supplier']] = (int) $result['nb_products'];
             }
@@ -201,25 +201,25 @@ class SupplierCore extends ObjectModel
     {
         $idLang = is_null($idLang) ? Context::getContext()->language->id : (int) $idLang;
 
-        $suppliersList = array();
+        $suppliersList = [];
         $suppliers = Supplier::getSuppliers(false, $idLang, true);
         if ($suppliers && count($suppliers)) {
             foreach ($suppliers as $supplier) {
                 if ($format === 'sitemap') {
-                    $suppliersList[] = array(
+                    $suppliersList[] = [
                         'id' => 'supplier-page-' . (int) $supplier['id_supplier'],
                         'label' => $supplier['name'],
                         'url' => Context::getContext()->link->getSupplierLink($supplier['id_supplier'], $supplier['link_rewrite']),
-                        'children' => array(),
-                    );
+                        'children' => [],
+                    ];
                 } else {
-                    $suppliersList[] = array(
+                    $suppliersList[] = [
                         'id' => (int) $supplier['id_supplier'],
                         'link' => Context::getContext()->link->getSupplierLink($supplier['id_supplier'], $supplier['link_rewrite']),
                         'name' => $supplier['name'],
                         'desc' => $supplier['description'],
-                        'children' => array(),
-                    );
+                        'children' => [],
+                    ];
                 }
             }
         }
@@ -234,7 +234,7 @@ class SupplierCore extends ObjectModel
      *
      * @return string name
      */
-    protected static $cache_name = array();
+    protected static $cache_name = [];
 
     public static function getNameById($idSupplier)
     {
@@ -286,7 +286,7 @@ class SupplierCore extends ObjectModel
     ) {
         $context = Context::getContext();
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, ['front', 'modulefront'])) {
             $front = false;
         }
 
@@ -337,7 +337,7 @@ class SupplierCore extends ObjectModel
             $orderBy = pSQL($orderBy[0]) . '.`' . pSQL($orderBy[1]) . '`';
         }
         $alias = '';
-        if (in_array($orderBy, array('price', 'date_add', 'date_upd'))) {
+        if (in_array($orderBy, ['price', 'date_add', 'date_upd'])) {
             $alias = 'product_shop.';
         } elseif ($orderBy == 'id_product') {
             $alias = 'p.';
@@ -418,7 +418,7 @@ class SupplierCore extends ObjectModel
     {
         $context = Context::getContext();
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, ['front', 'modulefront'])) {
             $front = false;
         }
 

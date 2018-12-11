@@ -35,17 +35,17 @@ class ProfileCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'profile',
         'primary' => 'id_profile',
         'multilang' => true,
-        'fields' => array(
+        'fields' => [
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+        ],
+    ];
 
-    protected static $_cache_accesses = array();
+    protected static $_cache_accesses = [];
 
     /**
      * Get all available profiles.
@@ -127,40 +127,40 @@ class ProfileCore extends ObjectModel
      */
     public static function getProfileAccesses($idProfile, $type = 'id_tab')
     {
-        if (!in_array($type, array('id_tab', 'class_name'))) {
+        if (!in_array($type, ['id_tab', 'class_name'])) {
             return false;
         }
 
         if (!isset(self::$_cache_accesses[$idProfile])) {
-            self::$_cache_accesses[$idProfile] = array();
+            self::$_cache_accesses[$idProfile] = [];
         }
 
         if (!isset(self::$_cache_accesses[$idProfile][$type])) {
-            self::$_cache_accesses[$idProfile][$type] = array();
+            self::$_cache_accesses[$idProfile][$type] = [];
             // Super admin profile has full auth
             if ($idProfile == _PS_ADMIN_PROFILE_) {
                 self::fillCacheAccesses(
                     $idProfile,
                     $type,
-                    array(
+                    [
                         'id_profile' => _PS_ADMIN_PROFILE_,
                         'view' => '1',
                         'add' => '1',
                         'edit' => '1',
                         'delete' => '1',
-                    )
+                    ]
                 );
             } else {
                 self::fillCacheAccesses(
                     $idProfile,
                     $type,
-                    array(
+                    [
                         'id_profile' => $idProfile,
                         'view' => '0',
                         'add' => '0',
                         'edit' => '0',
                         'delete' => '0',
-                    )
+                    ]
                 );
 
                 $result = Db::getInstance()->executeS('
@@ -186,7 +186,7 @@ class ProfileCore extends ObjectModel
 
     public static function resetCacheAccesses()
     {
-        self::$_cache_accesses = array();
+        self::$_cache_accesses = [];
     }
 
     /**
@@ -198,10 +198,10 @@ class ProfileCore extends ObjectModel
     {
         foreach (Tab::getTabs(Context::getContext()->language->id) as $tab) {
             self::$_cache_accesses[$idProfile][$type][$tab[$type]] = array_merge(
-                array(
+                [
                     'id_tab' => $tab['id_tab'],
                     'class_name' => $tab['class_name'],
-                ),
+                ],
                 $cacheData
             );
         }

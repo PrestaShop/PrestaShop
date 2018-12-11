@@ -51,7 +51,7 @@ class DropProcessor extends AbstractProcessor {
         $base_expr = "";
         $expr_type = false;
         $option = false;
-        $resultList = array();
+        $resultList = [];
 
         foreach ($tokenList as $k => $v) {
             $token = new ExpressionToken($k, $v);
@@ -89,7 +89,7 @@ class DropProcessor extends AbstractProcessor {
                 break;
 
             case ',':
-                $resultList[] = array('expr_type' => $expr_type, 'base_expr' => $base_expr);
+                $resultList[] = ['expr_type' => $expr_type, 'base_expr' => $base_expr];
                 $base_expr = "";
                 break;
 
@@ -99,10 +99,10 @@ class DropProcessor extends AbstractProcessor {
         }
 
         if ($base_expr !== "") {
-            $resultList[] = array('expr_type' => $expr_type, 'base_expr' => $base_expr);
+            $resultList[] = ['expr_type' => $expr_type, 'base_expr' => $base_expr];
         }
 
-        return array('option' => $option, 'warning' => $warning, 'object_list' => $resultList);
+        return ['option' => $option, 'warning' => $warning, 'object_list' => $resultList];
     }
 }
 ?>

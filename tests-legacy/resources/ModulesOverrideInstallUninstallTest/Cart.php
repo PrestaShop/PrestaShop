@@ -19,13 +19,13 @@ class Cart extends CartCore
     * date: 2015-07-13 15:56:34
     * version: 1
     */
-    protected static $_nbProducts = array();
+    protected static $_nbProducts = [];
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
     * version: 1
     */
-    protected static $_isVirtualCart = array();
+    protected static $_isVirtualCart = [];
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
@@ -37,7 +37,7 @@ class Cart extends CartCore
     * date: 2015-07-13 15:56:34
     * version: 1
     */
-    protected static $_totalWeight = array();
+    protected static $_totalWeight = [];
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
@@ -61,7 +61,7 @@ class Cart extends CartCore
     * date: 2015-07-13 15:56:34
     * version: 1
     */
-    protected static $_attributesLists = array();
+    protected static $_attributesLists = [];
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
@@ -75,12 +75,12 @@ class Cart extends CartCore
     */
     public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
     {
-        $result = Hook::exec('ppbsDeleteCartProduct', array(
+        $result = Hook::exec('ppbsDeleteCartProduct', [
                 'id_product' => $id_product,
                 'id_product_attribute' => $id_product_attribute,
                 'id_customization' => $id_customization,
                 'id_address_delivery' => $id_address_delivery,
-            ),
+            ],
             null, false);
         if ($result == false) {
             parent::deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0);
@@ -95,14 +95,14 @@ class Cart extends CartCore
     {
         $products = parent::getProducts($refresh, $id_product, $id_country);
         if (_PS_VERSION_ >= 1.6) {
-            $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null, true);
+            $params = Hook::exec('ppbsGetProducts', ['products'=>$products], null, true);
             if (isset($params['productpricebysize']['products'])) {
                 return $params['productpricebysize']['products'];
             } else {
                 return $products;
             }
         } else {
-            $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null);
+            $params = Hook::exec('ppbsGetProducts', ['products'=>$products], null);
             $params = json_decode($params, true);
             if (isset($params['products'])) {
                 return $params['products'];

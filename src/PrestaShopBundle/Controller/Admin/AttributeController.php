@@ -139,10 +139,10 @@ class AttributeController extends FrameworkBundleAdminController
 
         $response = new JsonResponse();
         $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
-        $result = array(
-            'ids_product_attribute' => array(),
+        $result = [
+            'ids_product_attribute' => [],
             'form' => '',
-        );
+        ];
 
         foreach ($attributes as $attribute) {
             foreach ($attribute as $combination) {
@@ -154,9 +154,9 @@ class AttributeController extends FrameworkBundleAdminController
                     );
                 $result['form'] .= $this->renderView(
                     '@Product/ProductPage/Forms/form_combination.html.twig',
-                    array(
+                    [
                         'form' => $form->createView(),
-                    )
+                    ]
                 );
                 $result['ids_product_attribute'][] = $combination['id_product_attribute'];
             }

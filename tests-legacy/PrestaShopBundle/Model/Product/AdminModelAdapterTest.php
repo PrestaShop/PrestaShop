@@ -132,7 +132,7 @@ class AdminModelAdapterTest extends KernelTestCase
     }
     private function fakeCombination()
     {
-        return array('0' => [
+        return ['0' => [
             "id_product_attribute" => "6",
             "id_product" => "1",
             "reference" => "",
@@ -158,7 +158,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "group_name" => "Taille",
             "attribute_name" => "L",
             "id_attribute" => "3"
-        ]);
+        ]];
     }
 
     private function fakeProduct()
@@ -231,7 +231,7 @@ class AdminModelAdapterTest extends KernelTestCase
      */
     public function testGetFormCombination()
     {
-        $expectedStructureReturn = array(
+        $expectedStructureReturn = [
             "id_product_attribute" => "6",
             "attribute_reference" => "",
             "attribute_ean13" => "",
@@ -254,7 +254,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_default" => false,
             "attribute_quantity" => 300,
             "name" => "Taille - L",
-        );
+        ];
         $combinationDataProvider = new combinationDataProvider();
         $actualReturn = $combinationDataProvider->completeCombination($this->fakeCombination(), $this->product);
 

@@ -173,23 +173,23 @@ class imageLib
     private $fileExtension;
 
     private $debug = true;
-    private $errorArray = array();
+    private $errorArray = [];
 
     private $forceStretch = true;
     private $aggresiveSharpening = false;
 
-    private $transparentArray = array('.png', '.gif');
+    private $transparentArray = ['.png', '.gif'];
     private $keepTransparency = true;
-    private $fillColorArray = array('r'=>255, 'g'=>255, 'b'=>255);
+    private $fillColorArray = ['r'=>255, 'g'=>255, 'b'=>255];
 
-    private $sharpenArray = array('jpg');
+    private $sharpenArray = ['jpg'];
 
     private $psdReaderPath;
     private $filterOverlayPath;
 
     private $isInterlace;
 
-    private $captionBoxPositionArray = array();
+    private $captionBoxPositionArray = [];
 
     private $fontDir = 'fonts';
 
@@ -554,7 +554,7 @@ class imageLib
       }
     }
 
-      return array('x' => $cropStartX, 'y' => $cropStartY);
+      return ['x' => $cropStartX, 'y' => $cropStartY];
   }
 
 ## --------------------------------------------------------
@@ -613,7 +613,7 @@ class imageLib
                 break;
         }
 
-      return array('optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight);
+      return ['optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight];
   }
 
 ## --------------------------------------------------------
@@ -625,7 +625,7 @@ class imageLib
 
       // *** ...check if actual height is less than target height
       if ($this->height < $newHeight) {
-          return array('optimalWidth' => $this->width, 'optimalHeight' => $this->height);
+          return ['optimalWidth' => $this->width, 'optimalHeight' => $this->height];
       }
     }
 
@@ -634,7 +634,7 @@ class imageLib
         $newWidth = $newHeight * $ratio;
 
         //return $newWidth;
-    return array('optimalWidth' => $newWidth, 'optimalHeight' => $newHeight);
+    return ['optimalWidth' => $newWidth, 'optimalHeight' => $newHeight];
     }
 
 ## --------------------------------------------------------
@@ -646,7 +646,7 @@ class imageLib
 
       // *** ...check if actual width is less than target width
       if ($this->width < $newWidth) {
-          return array('optimalWidth' => $this->width, 'optimalHeight' => $this->height);
+          return ['optimalWidth' => $this->width, 'optimalHeight' => $this->height];
       }
     }
 
@@ -655,7 +655,7 @@ class imageLib
         $newHeight = $newWidth * $ratio;
 
         //return $newHeight;
-    return array('optimalWidth' => $newWidth, 'optimalHeight' => $newHeight);
+    return ['optimalWidth' => $newWidth, 'optimalHeight' => $newHeight];
     }
 
 ## --------------------------------------------------------
@@ -673,7 +673,7 @@ class imageLib
 
       // *** ...check if actual size is less than target size
       if ($this->width < $newWidth && $this->height < $newHeight) {
-          return array('optimalWidth' => $this->width, 'optimalHeight' => $this->height);
+          return ['optimalWidth' => $this->width, 'optimalHeight' => $this->height];
       }
     }
 
@@ -718,7 +718,7 @@ class imageLib
       }
         }
 
-        return array('optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight);
+        return ['optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight];
     }
 
 ## --------------------------------------------------------
@@ -760,7 +760,7 @@ class imageLib
 
       // *** ...check if actual size is less than target size
       if ($this->width < $newWidth && $this->height < $newHeight) {
-          return array('optimalWidth' => $this->width, 'optimalHeight' => $this->height);
+          return ['optimalWidth' => $this->width, 'optimalHeight' => $this->height];
       }
     }
 
@@ -776,7 +776,7 @@ class imageLib
         $optimalHeight = round($this->height / $optimalRatio);
         $optimalWidth  = round($this->width  / $optimalRatio);
 
-        return array('optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight);
+        return ['optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight];
     }
 
 ## --------------------------------------------------------
@@ -796,9 +796,9 @@ class imageLib
       // ***
       if ($this->aggresiveSharpening) { # A more aggressive sharpening solution
 
-        $sharpenMatrix = array( array( -1, -1, -1 ),
-                         array( -1, 16, -1 ),
-                         array( -1, -1, -1 ) );
+        $sharpenMatrix = [ [ -1, -1, -1 ],
+                         [ -1, 16, -1 ],
+                         [ -1, -1, -1 ] ];
           $divisor = 8;
           $offset = 0;
 
@@ -808,11 +808,11 @@ class imageLib
 
         $sharpness  = $this->findSharp($this->widthOriginal, $this->width);
 
-          $sharpenMatrix  = array(
-          array(-1, -2, -1),
-          array(-2, $sharpness + 12, -2), //Lessen the effect of a filter by increasing the value in the center cell
-          array(-1, -2, -1)
-        );
+          $sharpenMatrix  = [
+          [-1, -2, -1],
+          [-2, $sharpness + 12, -2], //Lessen the effect of a filter by increasing the value in the center cell
+          [-1, -2, -1]
+        ];
           $divisor    = $sharpness; // adjusts brightness
         $offset     = 0;
           imageconvolution($this->imageResized, $sharpenMatrix, $divisor, $offset);
@@ -828,11 +828,11 @@ class imageLib
 
   private function sharpen2($level)
   {
-      $sharpenMatrix  = array(
-        array($level, $level, $level),
-        array($level, (8*$level)+1, $level), //Lessen the effect of a filter by increasing the value in the center cell
-        array($level, $level, $level)
-      );
+      $sharpenMatrix  = [
+        [$level, $level, $level],
+        [$level, (8*$level)+1, $level], //Lessen the effect of a filter by increasing the value in the center cell
+        [$level, $level, $level]
+      ];
   }
 
 ## --------------------------------------------------------
@@ -916,7 +916,7 @@ class imageLib
   Draw border
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-  public function addBorder($thickness = 1, $rgbArray = array(255, 255, 255))
+  public function addBorder($thickness = 1, $rgbArray = [255, 255, 255])
     # Author:     Jarrod Oberto
     # Date:       05-05-11
     # Purpose:    Add a border to the image
@@ -1507,7 +1507,7 @@ class imageLib
           $intensity = 255*$t*$t;
 
           $colour = imagecolorallocate($shadow, $intensity, $intensity, $intensity);
-          $points = array(
+          $points = [
         $blurWidth*$t,        $blurHeight,     // Point 1 (x, y)
         $blurWidth,         $blurHeight*$t,  // Point 2 (x, y)
         $width,           $blurHeight*$t,  // Point 3 (x, y)
@@ -1516,7 +1516,7 @@ class imageLib
         $width,           $height+$blurHeight*(1-$t),  // Point 6 (x, y)
         $blurWidth,         $height+$blurHeight*(1-$t),  // Point 7 (x, y)
         $blurWidth*$t,        $height      // Point 8 (x, y)
-      );
+      ];
           imagepolygon($shadow, $points, 8, $colour);
       }
 
@@ -1669,7 +1669,7 @@ class imageLib
 
   private function calculateCaptionBoxPosition($side, $thickness, $padding)
   {
-      $positionArray = array();
+      $positionArray = [];
 
       switch ($side) {
       case 't':
@@ -1728,21 +1728,21 @@ class imageLib
         if ($debug) {
             throw new Exception('The EXIF Library is not installed.');
         } else {
-            return array();
+            return [];
         }
     };
       if (!file_exists($this->fileName)) {
           if ($debug) {
               throw new Exception('Image not found.');
           } else {
-              return array();
+              return [];
           }
       };
       if ($this->fileExtension != '.jpg') {
           if ($debug) {
               throw new Exception('Metadata not supported for this image type.');
           } else {
-              return array();
+              return [];
           }
       };
       $exifData = exif_read_data($this->fileName, 'IFD0');
@@ -2210,7 +2210,7 @@ class imageLib
     // ***  Get height of text from dimensions (should also be same as $fontSize)
     $textHeight = abs($box[5] - $box[1]);
 
-      return array('height' => $textHeight, 'width' => $textWidth);
+      return ['height' => $textHeight, 'width' => $textWidth];
   }
 
 
@@ -2357,7 +2357,7 @@ class imageLib
           $height = $height + $assetHeight;
       }
 
-      return array('width' => $width, 'height' => $height);
+      return ['width' => $width, 'height' => $height];
   }
 
 
@@ -2872,7 +2872,7 @@ class imageLib
     # Notes:
     #
   {
-      $rgbArray = array();
+      $rgbArray = [];
 
     // *** If it's an array it should be R, G, B
     if (is_array($value)) {
@@ -2884,12 +2884,12 @@ class imageLib
             $rgbArray = $value;
         }
     } elseif (fix_strtolower($value) == 'transparent') {
-        $rgbArray = array(
+        $rgbArray = [
         'r' => 255,
         'g' => 255,
         'b' => 255,
         'a' => 127
-      );
+      ];
     } else {
 
       // *** ...Else it should be hex. Let's make it RGB
@@ -2910,12 +2910,12 @@ class imageLib
           $color = $color . $color;
       }
 
-      $rgb = array(
+      $rgb = [
       'r' => hexdec(substr($color, 0, 2)),
       'g' => hexdec(substr($color, 2, 2)),
       'b' => hexdec(substr($color, 4, 2)),
       'a' => 0
-    );
+    ];
       return $rgb;
   }
 
@@ -2954,7 +2954,7 @@ class imageLib
       $green = 255;
 
       do {
-          $greenChroma = array(0, $green, 0);
+          $greenChroma = [0, $green, 0];
           $colorArray = $this->formatColor($greenChroma);
           $match = $this->testColorExists($colorArray);
           $green--;
@@ -2962,7 +2962,7 @@ class imageLib
 
     // *** If no match, just bite the bullet and use green value of 255
     if (!$match) {
-        $greenChroma = array(0, $green, 0);
+        $greenChroma = [0, $green, 0];
     }
 
       return $greenChroma;
@@ -2977,7 +2977,7 @@ class imageLib
       $blue = 255;
 
       do {
-          $blueChroma = array(0, 0, $blue);
+          $blueChroma = [0, 0, $blue];
           $colorArray = $this->formatColor($blueChroma);
           $match = $this->testColorExists($colorArray);
           $blue--;
@@ -2985,7 +2985,7 @@ class imageLib
 
     // *** If no match, just bite the bullet and use blue value of 255
     if (!$match) {
-        $blueChroma = array(0, 0, $blue);
+        $blueChroma = [0, 0, $blue];
     }
 
       return $blueChroma;
@@ -3196,7 +3196,7 @@ class imageLib
       }
 
     //3 : Chargement des couleurs de la palette
-    $PALETTE = array();
+    $PALETTE = [];
       if ($BMP['colors'] < 16777216) {
           $PALETTE = unpack('V'.$BMP['colors'], fread($f1, $BMP['colors']*4));
       }

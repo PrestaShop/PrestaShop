@@ -26,12 +26,12 @@
 abstract class AbstractLoggerCore
 {
     public $level;
-    protected $level_value = array(
+    protected $level_value = [
         0 => 'DEBUG',
         1 => 'INFO',
         2 => 'WARNING',
         3 => 'ERROR',
-    );
+    ];
 
     const DEBUG = 0;
     const INFO = 1;

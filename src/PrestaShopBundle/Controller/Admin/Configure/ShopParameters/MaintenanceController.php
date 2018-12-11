@@ -53,8 +53,8 @@ class MaintenanceController extends FrameworkBundleAdminController
             $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
         }
 
-        return array(
-            'layoutHeaderToolbarBtn' => array(),
+        return [
+            'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Maintenance', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
@@ -64,7 +64,7 @@ class MaintenanceController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'form' => $form->createView(),
             'currentIp' => $request->getClientIp(),
-        );
+        ];
     }
 
     /**
@@ -83,12 +83,12 @@ class MaintenanceController extends FrameworkBundleAdminController
 
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
+            [
                 PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            )
+            ]
         )) {
             $this->addFlash(
                 'error',
@@ -98,7 +98,7 @@ class MaintenanceController extends FrameworkBundleAdminController
             return $redirectResponse;
         }
 
-        $this->dispatchHook('actionAdminMaintenanceControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminMaintenanceControllerPostProcessBefore', ['controller' => $this]);
         $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
         $form->handleRequest($request);
 

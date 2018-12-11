@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-$sql = array();
+$sql = [];
 $sql[_DB_PREFIX_.'badge'] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'badge` (
 			  `id_badge` int(11) NOT NULL AUTO_INCREMENT,
 			  `id_ps_badge` int(11) NOT NULL,

@@ -57,7 +57,7 @@ function set_stock_available()
 				("'.(int)$row['id_product'].'", "'.(int)$attribute['id_product_attribute'].'", "1", "0", "'.(int)$attribute['quantity'].'", "0", "'.(int)$row['out_of_stock'].'")
 			');
             if (!$res) {
-                return array('error' => Db::getInstance()->getNumberError(), 'msg' => '(attributes)'.Db::getInstance()->getMsgError());
+                return ['error' => Db::getInstance()->getNumberError(), 'msg' => '(attributes)'.Db::getInstance()->getMsgError()];
             }
         }
 
@@ -73,7 +73,7 @@ function set_stock_available()
 			("'.(int)$row['id_product'].'", "0", "1", "0", "'.(int)$quantity.'", "0", "'.(int)$row['out_of_stock'].'")
 		');
         if (!$res) {
-            return array('error' => Db::getInstance()->getNumberError(), 'msg' => '(products)'.Db::getInstance()->getMsgError());
+            return ['error' => Db::getInstance()->getNumberError(), 'msg' => '(products)'.Db::getInstance()->getMsgError()];
         }
     }
     return $res;

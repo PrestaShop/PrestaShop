@@ -33,7 +33,7 @@ class EntityManager
     private $db;
     private $configuration;
 
-    private $entityMetaData = array();
+    private $entityMetaData = [];
 
     public function __construct(
         DatabaseInterface $db,
@@ -62,8 +62,8 @@ class EntityManager
      */
     public function getRepository($className)
     {
-        if (is_callable(array($className, 'getRepositoryClassName'))) {
-            $repositoryClass = call_user_func(array($className, 'getRepositoryClassName'));
+        if (is_callable([$className, 'getRepositoryClassName'])) {
+            $repositoryClass = call_user_func([$className, 'getRepositoryClassName']);
         } else {
             $repositoryClass = null;
         }

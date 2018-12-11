@@ -98,7 +98,7 @@ abstract class StockManagementRepository
     /**
      * @var array
      */
-    protected $productFeatures = array();
+    protected $productFeatures = [];
 
     /**
      * @param ContainerInterface $container
@@ -258,14 +258,14 @@ abstract class StockManagementRepository
     protected function andWhere(QueryParamsCollection $queryParams)
     {
         $filters = $queryParams->getSqlFilters();
-        $filters = strtr($filters[$queryParams::SQL_CLAUSE_WHERE], array(
+        $filters = strtr($filters[$queryParams::SQL_CLAUSE_WHERE], [
             '{product_id}' => 'p.id_product',
             '{supplier_id}' => 'p.id_supplier',
             '{id_employee}' => 'sm.id_employee',
             '{date_add}' => 'sm.date_add',
             '{id_stock_mvt_reason}' => 'sm.id_stock_mvt_reason',
             '{active}' => 'p.active',
-        ));
+        ]);
 
         return $filters;
     }
@@ -283,12 +283,12 @@ abstract class StockManagementRepository
             return '';
         }
 
-        return strtr($filters['having'], array(
+        return strtr($filters['having'], [
             '{combination_name}' => 'combination_name',
             '{product_reference}' => 'product_reference',
             '{supplier_name}' => 'supplier_name',
             '{product_name}' => 'product_name',
-        ));
+        ]);
     }
 
     /**
@@ -307,7 +307,7 @@ abstract class StockManagementRepository
             $productColumns = 'product_id DESC, combination_id DESC';
         }
 
-        return strtr($orderByClause, array(
+        return strtr($orderByClause, [
             '{product} DESC' => $productColumns,
             '{product}' => $productColumns,
             '{reference}' => 'product_reference',
@@ -317,7 +317,7 @@ abstract class StockManagementRepository
             '{id_stock_mvt}' => 'id_stock_mvt',
             '{date_add}' => 'date_add',
             '{product_low_stock_alert}' => 'product_low_stock_alert',
-        ));
+        ]);
     }
 
     /**

@@ -166,13 +166,13 @@ if (isset($_POST['submit'])) {
     }
 
     $get_params = http_build_query(
-        array(
+        [
             'type' => Tools::safeOutput($_GET['type']),
             'lang' => Tools::safeOutput($lang),
             'popup' => $popup,
             'field_id' => isset($_GET['field_id']) ? (int)$_GET['field_id'] : '',
             'fldr' => ''
-        )
+        ]
     );
     ?>
 
@@ -349,7 +349,7 @@ if (isset($_POST['submit'])) {
     ?>"/>
 	<?php $protocol = Tools::getShopProtocol();
     ?>
-	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter), array(''), $protocol.$_SERVER['HTTP_HOST'].Tools::safeOutput($_SERVER['REQUEST_URI']));
+	<input type="hidden" id="current_url" value="<?php echo str_replace(['&filter='.$filter], [''], $protocol.$_SERVER['HTTP_HOST'].Tools::safeOutput($_SERVER['REQUEST_URI']));
     ?>"/>
 	<input type="hidden" id="lang_show_url" value="<?php echo Tools::safeOutput(lang_Show_url);
     ?>"/>
@@ -459,25 +459,25 @@ if (isset($_POST['submit'])) {
     $n_files = count($files);
 
     //php sorting
-    $sorted = array();
-    $current_folder = array();
-    $prev_folder = array();
+    $sorted = [];
+    $current_folder = [];
+    $prev_folder = [];
     foreach ($files as $k => $file) {
         if ($file == ".") {
-            $current_folder = array('file' => $file);
+            $current_folder = ['file' => $file];
         } elseif ($file == "..") {
-            $prev_folder = array('file' => $file);
+            $prev_folder = ['file' => $file];
         } elseif (is_dir($current_path.$subfolder.$subdir.$file)) {
             $date = filemtime($current_path.$subfolder.$subdir.$file);
             $size = foldersize($current_path.$subfolder.$subdir.$file);
             $file_ext = lang_Type_dir;
-            $sorted[$k] = array('file' => $file, 'date' => $date, 'size' => $size, 'extension' => $file_ext);
+            $sorted[$k] = ['file' => $file, 'date' => $date, 'size' => $size, 'extension' => $file_ext];
         } else {
             $file_path = $current_path.$subfolder.$subdir.$file;
             $date = filemtime($file_path);
             $size = filesize($file_path);
             $file_ext = substr(strrchr($file, '.'), 1);
-            $sorted[$k] = array('file' => $file, 'date' => $date, 'size' => $size, 'extension' => $file_ext);
+            $sorted[$k] = ['file' => $file, 'date' => $date, 'size' => $size, 'extension' => $file_ext];
         }
     }
 
@@ -523,12 +523,12 @@ if (isset($_POST['submit'])) {
         $sorted = array_reverse($sorted);
     }
 
-    $files = array();
+    $files = [];
     if (!empty($prev_folder)) {
-        $files = array($prev_folder);
+        $files = [$prev_folder];
     }
     if (!empty($current_folder)) {
-        $files = array_merge($files, array($current_folder));
+        $files = array_merge($files, [$current_folder]);
     }
     $files = array_merge($files, $sorted);
     ?>
@@ -776,7 +776,7 @@ if (isset($_POST['submit'])) {
     ?>">
 	<?php
 
-    $jplayer_ext = array(
+    $jplayer_ext = [
         "mp4",
         "flv",
         "webmv",
@@ -791,7 +791,7 @@ if (isset($_POST['submit'])) {
         "mid",
         "ogg",
         "wav"
-    );
+    ];
     foreach ($files as $file_array) {
         $file = $file_array['file'];
         if ($file == '.' || (isset($file_array['extension']) && $file_array['extension'] != lang_Type_dir) || ($file == '..' && $subdir == '') || in_array($file, $hidden_folders) || ($filter != '' && $file != ".." && strpos($file, $filter) === false)) {

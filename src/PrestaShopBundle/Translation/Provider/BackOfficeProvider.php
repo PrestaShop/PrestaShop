@@ -35,10 +35,10 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
      */
     public function getTranslationDomains()
     {
-        return array(
+        return [
             '^Admin*',
             '^Modules(.*)Admin',
-        );
+        ];
     }
 
     /**
@@ -46,10 +46,10 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
      */
     public function getFilters()
     {
-        return array(
+        return [
             '#^Admin*#',
             '#^Modules(.*)Admin#',
-        );
+        ];
     }
 
     /**
@@ -69,7 +69,7 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
 
         foreach ($this->getFilters() as $filter) {
             $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
+                [$this->getDefaultResourceDirectory()],
                 $this->getLocale(),
                 $filter
             );

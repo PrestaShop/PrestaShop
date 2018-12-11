@@ -43,9 +43,9 @@ require_once dirname(__FILE__) . '/../exceptions/UnableToCalculatePositionExcept
  */
 class PositionCalculator {
 
-    private static $_allowedOnOperator = array("\t", "\n", "\r", " ", ",", "(", ")", "_", "'", "\"");
-    private static $_allowedOnOther = array("\t", "\n", "\r", " ", ",", "(", ")", "<", ">", "*", "+", "-", "/", "|",
-                                            "&", "=", "!", ";");
+    private static $_allowedOnOperator = ["\t", "\n", "\r", " ", ",", "(", ")", "_", "'", "\""];
+    private static $_allowedOnOther = ["\t", "\n", "\r", " ", ",", "(", ")", "<", ">", "*", "+", "-", "/", "|",
+                                            "&", "=", "!", ";"];
 
     private function _printPos($text, $sql, $charPos, $key, $parsed, $backtracking) {
         if (!isset($_ENV['DEBUG'])) {
@@ -66,7 +66,7 @@ class PositionCalculator {
 
     public function setPositionsWithinSQL($sql, $parsed) {
         $charPos = 0;
-        $backtracking = array();
+        $backtracking = [];
         $this->lookForBaseExpression($sql, $charPos, $parsed, 0, $backtracking);
         return $parsed;
     }

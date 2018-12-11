@@ -145,7 +145,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
                     'baz',
                 ],
                 'expected'  => [
-                    'baz' => array(),
+                    'baz' => [],
                 ],
             ],
             'keep 1st and 2nd' => [

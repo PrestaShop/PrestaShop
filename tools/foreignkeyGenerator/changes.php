@@ -11,150 +11,150 @@
  *   ),
  * );.
  */
-$changes = array(
-    'module_currency' => array(
-        'id_currency' => array(
+$changes = [
+    'module_currency' => [
+        'id_currency' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'tab' => array(
-        'id_parent' => array(
+        ],
+    ],
+    'tab' => [
+        'id_parent' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'tax_rules_group' => array(
-        'id_tax_rules_group' => array(
+        ],
+    ],
+    'tax_rules_group' => [
+        'id_tax_rules_group' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'customer_message' => array(
-        'id_customer_thread' => array(
+        ],
+    ],
+    'customer_message' => [
+        'id_customer_thread' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'customization' => array(
-        'id_product' => array(
+        ],
+    ],
+    'customization' => [
+        'id_product' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'stock_mvt_reason' => array(
-        'id_stock_mvt_reason' => array(
+        ],
+    ],
+    'stock_mvt_reason' => [
+        'id_stock_mvt_reason' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'stock_mvt_reason_lang' => array(
-        'id_stock_mvt_reason' => array(
+        ],
+    ],
+    'stock_mvt_reason_lang' => [
+        'id_stock_mvt_reason' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-        'id_lang' => array(
+        ],
+        'id_lang' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'webservice_account' => array(
-        'id_webservice_account' => array(
+        ],
+    ],
+    'webservice_account' => [
+        'id_webservice_account' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'webservice_permission' => array(
-        'id_webservice_permission' => array(
+        ],
+    ],
+    'webservice_permission' => [
+        'id_webservice_permission' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-        'id_webservice_account' => array(
+        ],
+        'id_webservice_account' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'required_field' => array(
-        'id_required_field' => array(
+        ],
+    ],
+    'required_field' => [
+        'id_required_field' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'memcached_servers' => array(
-        'id_memcached_server' => array(
+        ],
+    ],
+    'memcached_servers' => [
+        'id_memcached_server' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'product_country_tax' => array(
-        'id_product' => array(
+        ],
+    ],
+    'product_country_tax' => [
+        'id_product' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-        'id_country' => array(
+        ],
+        'id_country' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-        'id_tax' => array(
+        ],
+        'id_tax' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'tax_rule' => array(
-        'id_tax_rule' => array(
+        ],
+    ],
+    'tax_rule' => [
+        'id_tax_rule' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-        'id_tax_rules_group' => array(
+        ],
+        'id_tax_rules_group' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-        'id_country' => array(
+        ],
+        'id_country' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-        'id_state' => array(
+        ],
+        'id_state' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-        'id_tax' => array(
+        ],
+        'id_tax' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'tax_rules_group' => array(
-        'id_tax_rules_group' => array(
+        ],
+    ],
+    'tax_rules_group' => [
+        'id_tax_rules_group' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'specific_price_priority' => array(
-        'id_specific_price_priority' => array(
+        ],
+    ],
+    'specific_price_priority' => [
+        'id_specific_price_priority' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-        'id_product' => array(
+        ],
+        'id_product' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'import_match' => array(
-        'id_import_match' => array(
+        ],
+    ],
+    'import_match' => [
+        'id_import_match' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'address_format' => array(
-        'id_country' => array(
+        ],
+    ],
+    'address_format' => [
+        'id_country' => [
             '#type' => 'INT(11)',
             '#unsigned' => true,
-        ),
-    ),
-    'country' => array(
-        'display_tax_label' => array(
+        ],
+    ],
+    'country' => [
+        'display_tax_label' => [
             '#type' => 'tinyint(1)', // Was boolean
             '#unsigned' => false,
             '#null' => false,
-        ),
-    ),
-);
+        ],
+    ],
+];

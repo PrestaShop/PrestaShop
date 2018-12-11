@@ -33,12 +33,12 @@ class Localize
 {
     const DEFAULT_LOCALE = 'en';
 
-    protected static $filters = array(
-        'language' => array('filter' => 'strtolower'),
-        'script' => array('filter' => array('strtolower', 'ucfirst')),
-        'territory' => array('filter' => 'strtoupper'),
-        'variant' => array('filter' => 'strtoupper'),
-    );
+    protected static $filters = [
+        'language' => ['filter' => 'strtolower'],
+        'script' => ['filter' => ['strtolower', 'ucfirst']],
+        'territory' => ['filter' => 'strtoupper'],
+        'variant' => ['filter' => 'strtoupper'],
+    ];
 
     private static $browserLocales;
     private static $environmentLocale;
@@ -61,7 +61,7 @@ class Localize
         }
 
         $regex = '(?P<locale>[\w\-]+)+(?:;q=(?P<quality>[0-9]+\.[0-9]+))?';
-        $result = array();
+        $result = [];
 
         $httpLanguages = getenv('HTTP_ACCEPT_LANGUAGE');
 
@@ -94,7 +94,7 @@ class Localize
         }
 
         $regex = '(?P<locale>[\w\_]+)(\.|@|$)+';
-        $result = array();
+        $result = [];
 
         $value = setlocale(LC_ALL, 0);
 
@@ -252,7 +252,7 @@ class Localize
             }
         }
 
-        $result = array();
+        $result = [];
 
         foreach (static::$filters as $name => $value) {
             if (isset($tags[$name])) {

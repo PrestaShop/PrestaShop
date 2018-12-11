@@ -89,11 +89,11 @@ class ThemeProvider extends AbstractProvider
     public function getTranslationDomains()
     {
         if (empty($this->domain)) {
-            return array('*');
+            return ['*'];
         } else {
-            return array(
+            return [
                 '^' . $this->getDomain(),
-            );
+            ];
         }
     }
 
@@ -103,11 +103,11 @@ class ThemeProvider extends AbstractProvider
     public function getFilters()
     {
         if (empty($this->domain)) {
-            return array('*');
+            return ['*'];
         } else {
-            return array(
+            return [
                 '#^' . $this->getDomain() . '#',
-            );
+            ];
         }
     }
 
@@ -155,10 +155,10 @@ class ThemeProvider extends AbstractProvider
      */
     public function getDirectories()
     {
-        return array(
+        return [
             $this->getResourceDirectory(),
             $this->getThemeResourcesDirectory(),
-        );
+        ];
     }
 
     /**
@@ -238,7 +238,7 @@ class ThemeProvider extends AbstractProvider
 
         foreach ($this->getFilters() as $filter) {
             $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
+                [$this->getDefaultResourceDirectory()],
                 $this->getLocale(),
                 $filter
             );

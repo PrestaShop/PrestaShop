@@ -152,7 +152,7 @@ if (isset($_POST['extract'])) {
     $numFiles = $zip->numFiles;
     $lastId = $startId + BATCH_SIZE;
 
-    $fileList = array();
+    $fileList = [];
     for ($id = $startId; $id < min($numFiles, $lastId); ++$id) {
         $currentFile = $zip->getNameIndex($id);
         if (in_array($currentFile, ['/index.php', 'index.php'])) {

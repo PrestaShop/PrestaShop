@@ -170,11 +170,11 @@ class ThemeManager implements AddonManagerInterface
 
         $this->disable($this->shop->theme_name);
 
-        $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', array()))
-                ->doApplyConfiguration($theme->get('global_settings.configuration', array()))
-                ->doDisableModules($theme->get('global_settings.modules.to_disable', array()))
+        $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
+                ->doApplyConfiguration($theme->get('global_settings.configuration', []))
+                ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
                 ->doEnableModules($theme->getModulesToEnable())
-                ->doResetModules($theme->get('global_settings.modules.to_reset', array()))
+                ->doResetModules($theme->get('global_settings.modules.to_reset', []))
                 ->doApplyImageTypes($theme->get('global_settings.image_types'))
                 ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
 
@@ -291,11 +291,11 @@ class ThemeManager implements AddonManagerInterface
                 throw new PrestaShopException(
                     $this->translator->trans(
                         'Cannot %action% module %module%. %error_details%',
-                        array(
+                        [
                             '%action%' => 'install',
                             '%module%' => $moduleName,
                             '%error_details%' => $moduleManager->getError($moduleName),
-                        ),
+                        ],
                         'Admin.Modules.Notification')
                 );
             }
@@ -482,7 +482,7 @@ class ThemeManager implements AddonManagerInterface
      */
     private function getDefaultDomains($locale, $themeProvider)
     {
-        $allDomains = array();
+        $allDomains = [];
 
         $defaultCatalogue = $themeProvider
             ->setLocale($locale)

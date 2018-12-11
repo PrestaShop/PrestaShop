@@ -76,7 +76,7 @@ class LightWebTestCase extends TestCase
         $employeeMock->id_profile = 1;
 
         $contextMock = $this->getMockBuilder(Context::class)
-            ->setMethods(array('getTranslator', 'getContext'))
+            ->setMethods(['getTranslator', 'getContext'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -89,7 +89,7 @@ class LightWebTestCase extends TestCase
         $contextMock->employee = $employeeMock;
 
         $shopMock = $this->getMockBuilder(Shop::class)
-            ->setMethods(array('getBaseURL'))
+            ->setMethods(['getBaseURL'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -100,7 +100,7 @@ class LightWebTestCase extends TestCase
         $contextMock->shop = $shopMock;
 
         $themeMock = $this->getMockBuilder(Theme::class)
-            ->setMethods(array('getName'))
+            ->setMethods(['getName'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -194,10 +194,10 @@ class LightWebTestCase extends TestCase
             ->disableAutoload()
             ->getMock();
 
-        $values = array(
-            array('_PS_MODE_DEMO_', null, true),
-            array('_PS_MODULE_DIR_', null, __DIR__ . '/../../../resources/modules/'),
-        );
+        $values = [
+            ['_PS_MODE_DEMO_', null, true],
+            ['_PS_MODULE_DIR_', null, __DIR__ . '/../../../resources/modules/'],
+        ];
 
         $configurationMock->method('get')
             ->will(self::returnValueMap($values));

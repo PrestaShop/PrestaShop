@@ -39,14 +39,14 @@ class AdapterDatabaseTest extends IntegrationTestCase
 
     public function testValuesAreEscapedDataProvider()
     {
-        return array(
-            array( 'hello'       , 'hello'    ),
-            array( '\\\'inject'  , '\'inject' ),
-            array( '\\"inject'   , '"inject'  ),
-            array( 42            , 42         ),
-            array( 4.2           , 4.2        ),
-            array( '4\\\'200'    , '4\'200'   ),
-        );
+        return [
+            [ 'hello'       , 'hello'    ],
+            [ '\\\'inject'  , '\'inject' ],
+            [ '\\"inject'   , '"inject'  ],
+            [ 42            , 42         ],
+            [ 4.2           , 4.2        ],
+            [ '4\\\'200'    , '4\'200'   ],
+        ];
     }
 
     /**

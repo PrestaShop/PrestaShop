@@ -60,7 +60,7 @@ class VirtualProductController extends FrameworkBundleAdminController
         $form = $this->createForm(
             ProductVirtual::class,
             null,
-            array('csrf_protection' => false)
+            ['csrf_protection' => false]
         );
 
         $form->handleRequest($request);

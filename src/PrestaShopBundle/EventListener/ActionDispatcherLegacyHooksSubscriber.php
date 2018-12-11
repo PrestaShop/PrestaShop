@@ -61,14 +61,14 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
-            KernelEvents::CONTROLLER => array(
-                array('callActionDispatcherBeforeHook', 100),
-            ),
-            KernelEvents::RESPONSE => array(
-                array('callActionDispatcherAfterHook', 255),
-            ),
-        );
+        return [
+            KernelEvents::CONTROLLER => [
+                ['callActionDispatcherBeforeHook', 100],
+            ],
+            KernelEvents::RESPONSE => [
+                ['callActionDispatcherAfterHook', 255],
+            ],
+        ];
     }
 
     public function callActionDispatcherBeforeHook(FilterControllerEvent $event)
@@ -85,9 +85,9 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
             $controllerType = self::BACK_OFFICE_CONTROLLER;
         }
 
-        $this->hookDispatcher->dispatchWithParameters(self::DISPATCHER_BEFORE_ACTION, array(
+        $this->hookDispatcher->dispatchWithParameters(self::DISPATCHER_BEFORE_ACTION, [
             'controller_type' => $controllerType,
-        ));
+        ]);
 
         $requestAttributes->set('controller_type', $controllerType);
         $requestAttributes->set('controller_name', get_class($controller));
@@ -102,11 +102,11 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
         $requestAttributes = $event->getRequest()->attributes;
 
         if ($requestAttributes->has('controller_type') && $requestAttributes->has('controller_name')) {
-            $this->hookDispatcher->dispatchWithParameters(self::DISPATCHER_AFTER_ACTION, array(
+            $this->hookDispatcher->dispatchWithParameters(self::DISPATCHER_AFTER_ACTION, [
                 'controller_type' => $requestAttributes->get('controller_type'),
                 'controller_class' => $requestAttributes->get('controller_name'),
                 'is_module' => 0,
-            ));
+            ]);
         }
     }
 }

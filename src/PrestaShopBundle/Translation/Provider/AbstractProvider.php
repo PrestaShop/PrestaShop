@@ -53,7 +53,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getDirectories()
     {
-        return array($this->getResourceDirectory());
+        return [$this->getResourceDirectory()];
     }
 
     /**
@@ -61,7 +61,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getFilters()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -69,7 +69,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getTranslationDomains()
     {
-        return array('');
+        return [''];
     }
 
     /**

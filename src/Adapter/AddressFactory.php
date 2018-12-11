@@ -46,7 +46,7 @@ class AddressFactory
     {
         $func_args = func_get_args();
 
-        return call_user_func_array(array('\\Address', 'initialize'), $func_args);
+        return call_user_func_array(['\\Address', 'initialize'], $func_args);
     }
 
     /**

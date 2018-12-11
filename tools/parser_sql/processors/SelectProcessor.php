@@ -43,7 +43,7 @@ class SelectProcessor extends SelectExpressionProcessor {
 
     public function process($tokens) {
         $expression = "";
-        $expressionList = array();
+        $expressionList = [];
         foreach ($tokens as $token) {
             if ($this->isCommaToken($token)) {
                 $expression = parent::process(trim($expression));

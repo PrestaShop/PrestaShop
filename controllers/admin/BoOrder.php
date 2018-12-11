@@ -30,6 +30,6 @@ class BoOrderCore extends PaymentModule
 
     public function __construct()
     {
-        $this->displayName = $this->trans('Back office order', array(), 'Admin.Orderscustomers.Feature');
+        $this->displayName = $this->trans('Back office order', [], 'Admin.Orderscustomers.Feature');
     }
 }

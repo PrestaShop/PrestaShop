@@ -67,7 +67,7 @@ class EntityRepository
         if (!$by) {
             $where = $arguments[0];
         } else {
-            $where = array();
+            $where = [];
             $by = $this->convertToDbFieldName($by);
             $where[$by] = $arguments[0];
         }
@@ -176,7 +176,7 @@ class EntityRepository
 
     protected function hydrateMany(array $rows)
     {
-        $entities = array();
+        $entities = [];
         foreach ($rows as $row) {
             $entity = $this->getNewEntity();
             $entity->hydrate($row);
@@ -222,7 +222,7 @@ class EntityRepository
      */
     public function findOne($id)
     {
-        $conditions = array();
+        $conditions = [];
         $conditions[$this->getIdFieldName()] = $id;
 
         return $this->doFind(true, $conditions);

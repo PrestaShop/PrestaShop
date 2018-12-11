@@ -30,12 +30,12 @@ if (!defined('_PS_VERSION_')) {
 
 function upgrade_module_1_7_7($object)
 {
-    $cols = array(
-        'start_day' => array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` ADD `start_day` INT NULL DEFAULT 0 '),
-        'stop_day' => array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` ADD `stop_day` INT NULL DEFAULT 0 '),
-        'start_date' =>  array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `start_date`'),
-        'stop_date' =>  array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `stop_date`'),
-    );
+    $cols = [
+        'start_day' => ['exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` ADD `start_day` INT NULL DEFAULT 0 '],
+        'stop_day' => ['exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` ADD `stop_day` INT NULL DEFAULT 0 '],
+        'start_date' =>  ['exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `start_date`'],
+        'stop_date' =>  ['exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `stop_date`'],
+    ];
     
     $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'._DB_PREFIX_.'advice` ');
     foreach ($columns as $c) {
@@ -45,7 +45,7 @@ function upgrade_module_1_7_7($object)
     }
     
     foreach ($cols as $name => $co) {
-        if (in_array($name, array('start_day', 'stop_day'))) {
+        if (in_array($name, ['start_day', 'stop_day'])) {
             if (!$co['exist']) {
                 Db::getInstance()->execute($co['sql']);
             }

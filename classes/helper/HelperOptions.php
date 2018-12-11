@@ -65,14 +65,14 @@ class HelperOptionsCore extends Helper
             }
 
             if (!isset($category_data['fields'])) {
-                $category_data['fields'] = array();
+                $category_data['fields'] = [];
             }
 
             $category_data['hide_multishop_checkbox'] = true;
 
             if (isset($category_data['tabs'])) {
                 $tabs[$category] = $category_data['tabs'];
-                $tabs[$category]['misc'] = Context::getContext()->getTranslator()->trans('Miscellaneous', array(), 'Admin.Global');
+                $tabs[$category]['misc'] = Context::getContext()->getTranslator()->trans('Miscellaneous', [], 'Admin.Global');
             }
 
             foreach ($category_data['fields'] as $key => $field) {
@@ -131,34 +131,34 @@ class HelperOptionsCore extends Helper
                     if (isset($field['files']) && $field['files']) {
                         $uploader->setFiles($field['files']);
                     } elseif (isset($field['image']) && $field['image']) { // Use for retrocompatibility
-                        $uploader->setFiles(array(
-                            0 => array(
+                        $uploader->setFiles([
+                            0 => [
                                 'type' => HelperUploader::TYPE_IMAGE,
                                 'image' => isset($field['image']) ? $field['image'] : null,
                                 'size' => isset($field['size']) ? $field['size'] : null,
                                 'delete_url' => isset($field['delete_url']) ? $field['delete_url'] : null,
-                            ),
-                        ));
+                            ],
+                        ]);
                     }
 
                     if (isset($field['file']) && $field['file']) { // Use for retrocompatibility
-                        $uploader->setFiles(array(
-                            0 => array(
+                        $uploader->setFiles([
+                            0 => [
                                 'type' => HelperUploader::TYPE_FILE,
                                 'size' => isset($field['size']) ? $field['size'] : null,
                                 'delete_url' => isset($field['delete_url']) ? $field['delete_url'] : null,
                                 'download_url' => isset($field['file']) ? $field['file'] : null,
-                            ),
-                        ));
+                            ],
+                        ]);
                     }
 
                     if (isset($field['thumb']) && $field['thumb']) { // Use for retrocompatibility
-                        $uploader->setFiles(array(
-                            0 => array(
+                        $uploader->setFiles([
+                            0 => [
                                 'type' => HelperUploader::TYPE_IMAGE,
                                 'image' => isset($field['thumb']) ? '<img src="' . $field['thumb'] . '" alt="' . $field['title'] . '" title="' . $field['title'] . '" />' : null,
-                            ),
-                        ));
+                            ],
+                        ]);
                     }
 
                     $uploader->setTitle(isset($field['title']) ? $field['title'] : null);
@@ -174,7 +174,7 @@ class HelperOptionsCore extends Helper
 
                 // Fill values for all languages for all lang fields
                 if (substr($field['type'], -4) == 'Lang') {
-                    $field['value'] = array();
+                    $field['value'] = [];
                     foreach ($languages as $language) {
                         if ($field['type'] == 'textLang') {
                             $value = Tools::getValue($key . '_' . $language['id_lang'], Configuration::get($key, $language['id_lang']));
@@ -231,7 +231,7 @@ class HelperOptionsCore extends Helper
             $option_list[$category] = $category_data;
         }
 
-        $this->tpl->assign(array(
+        $this->tpl->assign([
             'title' => $this->title,
             'toolbar_btn' => $this->toolbar_btn,
             'show_toolbar' => $this->show_toolbar,
@@ -246,7 +246,7 @@ class HelperOptionsCore extends Helper
             'currency_left_sign' => $this->context->currency->getSign('left'),
             'currency_right_sign' => $this->context->currency->getSign('right'),
             'use_multishop' => $use_multishop,
-        ));
+        ]);
 
         return parent::generate();
     }

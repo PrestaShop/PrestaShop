@@ -54,7 +54,7 @@ class QqUploadedFileXhrCore
     {
         $product = new Product($_GET['id_product']);
         if (!Validate::isLoadedObject($product)) {
-            return array('error' => Context::getContext()->getTranslator()->trans('Cannot add image because product creation failed.', array(), 'Admin.Catalog.Notification'));
+            return ['error' => Context::getContext()->getTranslator()->trans('Cannot add image because product creation failed.', [], 'Admin.Catalog.Notification')];
         } else {
             $image = new Image();
             $image->id_product = (int) ($product->id);
@@ -65,7 +65,7 @@ class QqUploadedFileXhrCore
                     if (Validate::isGenericName($legend)) {
                         $image->legend[(int) $key] = $legend;
                     } else {
-                        return array('error' => Context::getContext()->getTranslator()->trans('Error on image caption: "%1s" is not a valid caption.', array(Tools::safeOutput($legend)), 'Admin.Notifications.Error'));
+                        return ['error' => Context::getContext()->getTranslator()->trans('Error on image caption: "%1s" is not a valid caption.', [Tools::safeOutput($legend)], 'Admin.Notifications.Error')];
                     }
                 }
             }
@@ -76,10 +76,10 @@ class QqUploadedFileXhrCore
             }
 
             if (($validate = $image->validateFieldsLang(false, true)) !== true) {
-                return array('error' => $validate);
+                return ['error' => $validate];
             }
             if (!$image->add()) {
-                return array('error' => Context::getContext()->getTranslator()->trans('Error while creating additional image', array(), 'Admin.Catalog.Notification'));
+                return ['error' => Context::getContext()->getTranslator()->trans('Error while creating additional image', [], 'Admin.Catalog.Notification')];
             } else {
                 return $this->copyImage($product->id, $image->id);
             }
@@ -90,29 +90,29 @@ class QqUploadedFileXhrCore
     {
         $image = new Image($id_image);
         if (!$new_path = $image->getPathForCreation()) {
-            return array('error' => Context::getContext()->getTranslator()->trans('An error occurred while attempting to create a new folder.', array(), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while attempting to create a new folder.', [], 'Admin.Notifications.Error')];
         }
         if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !$this->upload($tmpName)) {
-            return array('error' => Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', array(), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', [], 'Admin.Notifications.Error')];
         } elseif (!ImageManager::resize($tmpName, $new_path . '.' . $image->image_format)) {
-            return array('error' => Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', array(), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', [], 'Admin.Notifications.Error')];
         } elseif ($method == 'auto') {
             $imagesTypes = ImageType::getImagesTypes('products');
             foreach ($imagesTypes as $imageType) {
                 if (!ImageManager::resize($tmpName, $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
-                    return array('error' => Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error'));
+                    return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error')];
                 }
             }
         }
         unlink($tmpName);
-        Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_product));
+        Hook::exec('actionWatermark', ['id_image' => $id_image, 'id_product' => $id_product]);
 
         if (!$image->update()) {
-            return array('error' => Context::getContext()->getTranslator()->trans('Error while updating the status.', array(), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('Error while updating the status.', [], 'Admin.Notifications.Error')];
         }
-        $img = array('id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover, 'name' => $this->getName(), 'legend' => $image->legend);
+        $img = ['id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover, 'name' => $this->getName(), 'legend' => $image->legend];
 
-        return array('success' => $img);
+        return ['success' => $img];
     }
 
     public function getName()

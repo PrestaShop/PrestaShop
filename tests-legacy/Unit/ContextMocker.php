@@ -99,7 +99,7 @@ class ContextMocker
         $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
         $context->customer = Phake::mock('Customer');
-        Phake::when($context->customer)->getGroups()->thenReturn(array());
+        Phake::when($context->customer)->getGroups()->thenReturn([]);
         $context->cookie   = Phake::mock('Cookie');
         $context->country  = Phake::mock('Country');
         $context->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));

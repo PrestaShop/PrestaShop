@@ -37,16 +37,16 @@ class RiskCore extends ObjectModel
     public $color;
     public $percent;
 
-    public static $definition = array(
+    public static $definition = [
         'table' => 'risk',
         'primary' => 'id_risk',
         'multilang' => true,
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
-            'color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
-            'percent' => array('type' => self::TYPE_INT, 'validate' => 'isPercentage'),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32],
+            'percent' => ['type' => self::TYPE_INT, 'validate' => 'isPercentage'],
+        ],
+    ];
 
     /**
      * Get fields.

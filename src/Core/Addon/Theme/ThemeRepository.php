@@ -126,7 +126,7 @@ class ThemeRepository implements AddonRepositoryInterface
         $suffix = 'config/theme.yml';
         $themeDirectories = glob($this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . '*/' . $suffix, GLOB_NOSORT);
 
-        $themes = array();
+        $themes = [];
         foreach ($themeDirectories as $directory) {
             $name = basename(substr($directory, 0, -strlen($suffix)));
             $theme = $this->getInstanceByName($name);

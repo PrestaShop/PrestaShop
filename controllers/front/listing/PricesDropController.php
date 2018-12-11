@@ -63,7 +63,7 @@ class PricesDropControllerCore extends ProductListingFrontController
     {
         return $this->trans(
             'On sale',
-            array(),
+            [],
             'Shop.Theme.Catalog'
         );
     }

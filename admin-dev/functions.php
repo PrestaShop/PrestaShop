@@ -86,7 +86,7 @@ function includeDatepicker($id, $time = false)
  */
 function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
 {
-    $defines = array();
+    $defines = [];
     $defines['_PS_CACHING_SYSTEM_'] = _PS_CACHING_SYSTEM_;
     $defines['_PS_CACHE_ENABLED_'] = _PS_CACHE_ENABLED_;
     $defines['_DB_NAME_'] = (($array_db && isset($array_db['_DB_NAME_'])) ? $array_db['_DB_NAME_'] : _DB_NAME_);
@@ -204,7 +204,7 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
 
 function getDirContent($path)
 {
-    $content = array();
+    $content = [];
     if (is_dir($path)) {
         $d = dir($path);
         while (false !== ($entry = $d->read())) {
@@ -278,7 +278,7 @@ function checkingTab($tab)
     }
     $admin_obj = new $tab;
     if (!$admin_obj->viewAccess() && ($admin_obj->table != 'employee' || Context::getContext()->employee->id != Tools::getValue('id_employee') || !Tools::isSubmit('updateemployee'))) {
-        $admin_obj->_errors = array(Tools::displayError('Access denied.'));
+        $admin_obj->_errors = [Tools::displayError('Access denied.')];
         echo $admin_obj->displayErrors();
         return false;
     }
@@ -343,7 +343,7 @@ function checkTabRights($id_tab)
  */
 function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = true, $flatten_children = true, $value_key = '@value', $attributes_key = '@attributes', $children_key = '@children')
 {
-    $return = array();
+    $return = [];
     if (!($xml instanceof SimpleXMLElement)) {
         return $return;
     }
@@ -362,7 +362,7 @@ function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = tr
         }
     }
 
-    $children = array();
+    $children = [];
     $first = true;
     foreach ($xml->children() as $element_name => $child) {
         $value = simpleXMLToArray($child, $flatten_values, $flatten_attributes, $flatten_children, $value_key, $attributes_key, $children_key);
@@ -387,7 +387,7 @@ function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = tr
         }
     }
 
-    $attributes = array();
+    $attributes = [];
     foreach ($xml->attributes() as $name => $value) {
         $attributes[$name] = trim($value);
     }
@@ -434,7 +434,7 @@ function runAdminTab($tab, $ajax_mode = false)
                 require_once(_PS_ADMIN_DIR_.'/header.inc.php');
             }
             $iso_user = Context::getContext()->language->id;
-            $tabs = array();
+            $tabs = [];
             $tabs = Tab::recursiveTab($admin_obj->id, $tabs);
             $tabs = array_reverse($tabs);
             $bread = '';

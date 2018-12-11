@@ -26,26 +26,26 @@
 
 function p15018_change_image_types()
 {
-    $replace_types = array(
-        'products' => array(
-            'small' => array('small_default', '98', '98'),
-            'medium' => array('medium_default', '125', '125'),
-            'large' => array('large_default', '458', '458'),
-            'thickbox' => array('thickbox_default', '800', '800'),
-            'home' => array('home_default', '270', '270')
-        ),
-        'others' => array(
-            'category' => array('category_default', '870', '217'),
-            'large_scene' => array('scene_default', '520', '189'),
-            'thumb_scene' => array('m_scene_default', '161', '58')
-        )
-    );
+    $replace_types = [
+        'products' => [
+            'small' => ['small_default', '98', '98'],
+            'medium' => ['medium_default', '125', '125'],
+            'large' => ['large_default', '458', '458'],
+            'thickbox' => ['thickbox_default', '800', '800'],
+            'home' => ['home_default', '270', '270']
+        ],
+        'others' => [
+            'category' => ['category_default', '870', '217'],
+            'large_scene' => ['scene_default', '520', '189'],
+            'thumb_scene' => ['m_scene_default', '161', '58']
+        ]
+    ];
 
-    $new_types = array(
-        'products' => array(
-            'small' => array('cart_default', '80', '80')
-        )
-    );
+    $new_types = [
+        'products' => [
+            'small' => ['cart_default', '80', '80']
+        ]
+    ];
 
     foreach ($new_types as $type => $type_array) {
         foreach ($type_array as $old_type => $new_type) {
@@ -115,7 +115,7 @@ function p15018_change_image_types()
         }
 
         // Then the other entities (if there is less than 500 products, that should not be a problem)
-        $directories = array('p', 'c', 'm', 's', 'su', 'scenes', 'scenes'.DIRECTORY_SEPARATOR.'thumbs', 'st');
+        $directories = ['p', 'c', 'm', 's', 'su', 'scenes', 'scenes'.DIRECTORY_SEPARATOR.'thumbs', 'st'];
         foreach ($directories as $directory) {
             foreach (scandir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $directory, SCANDIR_SORT_NONE) as $file) {
                 if (!preg_match('/^([0-9]+|[a-z]{2}-default)\-[a-z_-]+\.jpg$/i', $file)) {

@@ -78,7 +78,7 @@ class CommonController extends FrameworkBundleAdminController
         $to = $offset + $limit - 1;
 
         // urls from route
-        $callerParameters = $request->attributes->get('caller_parameters', array());
+        $callerParameters = $request->attributes->get('caller_parameters', []);
         foreach ($callerParameters as $k => $v) {
             if (strpos($k, '_') === 0) {
                 unset($callerParameters[$k]);
@@ -87,51 +87,51 @@ class CommonController extends FrameworkBundleAdminController
         $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
         $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 'offset' => min($total - 1, $offset + $limit),
                 'limit' => $limit,
-            )
+            ]
         ));
 
         $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 'offset' => max(0, $offset - $limit),
                 'limit' => $limit,
-            )
+            ]
         ));
         $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 'offset' => 0,
                 'limit' => $limit,
-            )
+            ]
         ));
         $lastPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 'offset' => ($pageCount - 1) * $limit,
                 'limit' => $limit,
-            )
+            ]
         ));
         $changeLimitUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 'offset' => 0,
                 'limit' => '_limit',
-            )
+            ]
         ));
         $jumpPageUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 'offset' => 999999,
                 'limit' => $limit,
-            )
+            ]
         ));
-        $limitChoices = $request->attributes->get('limit_choices', array(10, 20, 50, 100));
+        $limitChoices = $request->attributes->get('limit_choices', [10, 20, 50, 100]);
 
         // Template vars injection
-        $vars = array(
+        $vars = [
             'limit' => $limit,
             'changeLimitUrl' => $changeLimitUrl,
             'first_url' => $firstPageUrl,
@@ -145,7 +145,7 @@ class CommonController extends FrameworkBundleAdminController
             'last_url' => $lastPageUrl,
             'jump_page_url' => $jumpPageUrl,
             'limit_choices' => $limitChoices,
-        );
+        ];
         if ($view != 'full') {
             return $this->render('@PrestaShop/Admin/Common/pagination_' . $view . '.html.twig', $vars);
         }
@@ -174,7 +174,7 @@ class CommonController extends FrameworkBundleAdminController
         /* @var $modulesProvider AdminModuleDataProvider */
         $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
-        $modules = array();
+        $modules = [];
         foreach ($moduleIdList as $id) {
             try {
                 $module = $modulesRepository->getModule($id);
@@ -192,10 +192,10 @@ class CommonController extends FrameworkBundleAdminController
         $collection = AddonsCollection::createFrom($modules);
         $modules = $modulesProvider->generateAddonsUrls($collection);
 
-        return array(
+        return [
             'domain' => $domain,
             'modules' => array_slice($modules, 0, $limit, true),
-        );
+        ];
     }
 
     /**
@@ -264,11 +264,11 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function renderFieldAction($formName, $formType, $fieldName, $fieldData)
     {
-        $formData = array(
-            $formName => array(
+        $formData = [
+            $formName => [
                 $fieldName => $fieldData,
-            ),
-        );
+            ],
+        ];
 
         $form = $this->createFormBuilder($formData);
         $form->add($formName, $formType);

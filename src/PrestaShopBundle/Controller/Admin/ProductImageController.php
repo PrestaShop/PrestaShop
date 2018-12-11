@@ -56,14 +56,14 @@ class ProductImageController extends FrameworkBundleAdminController
             return $response;
         }
 
-        $form = $this->createFormBuilder(null, array('csrf_protection' => false))
-            ->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array(
+        $form = $this->createFormBuilder(null, ['csrf_protection' => false])
+            ->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', [
                 'error_bubbling' => true,
                 'constraints' => [
-                    new Assert\NotNull(array('message' => $this->trans('Please select a file', 'Admin.Catalog.Feature'))),
-                    new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M')),
+                    new Assert\NotNull(['message' => $this->trans('Please select a file', 'Admin.Catalog.Feature')]),
+                    new Assert\Image(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M']),
                 ],
-            ))
+            ])
             ->getForm();
 
         $form->handleRequest($request);
@@ -71,16 +71,16 @@ class ProductImageController extends FrameworkBundleAdminController
         if ($request->isMethod('POST')) {
             if ($form->isValid()) {
                 $return_data = $adminProductWrapper->getInstance()->ajaxProcessaddProductImage($idProduct, 'form', false)[0];
-                $return_data = array_merge($return_data, array(
-                    'url_update' => $this->generateUrl('admin_product_image_form', array('idImage' => $return_data['id'])),
-                    'url_delete' => $this->generateUrl('admin_product_image_delete', array('idImage' => $return_data['id'])),
-                ));
+                $return_data = array_merge($return_data, [
+                    'url_update' => $this->generateUrl('admin_product_image_form', ['idImage' => $return_data['id']]),
+                    'url_delete' => $this->generateUrl('admin_product_image_delete', ['idImage' => $return_data['id']]),
+                ]);
             } else {
-                $error_msg = array();
+                $error_msg = [];
                 foreach ($form->getErrors() as $error) {
                     $error_msg[] = $error->getMessage();
                 }
-                $return_data = array('message' => implode(' ', $error_msg));
+                $return_data = ['message' => implode(' ', $error_msg)];
                 $response->setStatusCode(400);
             }
         }
@@ -130,19 +130,19 @@ class ProductImageController extends FrameworkBundleAdminController
 
         $image = $productAdapter->getImage((int) $idImage);
 
-        $form = $this->get('form.factory')->createNamedBuilder('form_image', FormType::class, $image, array('csrf_protection' => false))
-            ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+        $form = $this->get('form.factory')->createNamedBuilder('form_image', FormType::class, $image, ['csrf_protection' => false])
+            ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', [
                 'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
-                'options' => array(),
+                'options' => [],
                 'locales' => $locales,
                 'hideTabs' => true,
                 'label' => $this->trans('Caption', 'Admin.Catalog.Feature'),
                 'required' => false,
-            ))
-            ->add('cover', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
+            ])
+            ->add('cover', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
                 'label' => $this->trans('Cover image', 'Admin.Catalog.Feature'),
                 'required' => false,
-            ))
+            ])
             ->getForm();
 
         $form->handleRequest($request);
@@ -153,22 +153,22 @@ class ProductImageController extends FrameworkBundleAdminController
             if ($form->isValid()) {
                 $jsonResponse->setData($adminProductWrapper->ajaxProcessUpdateImage($idImage, $form->getData()));
             } else {
-                $error_msg = array();
+                $error_msg = [];
                 foreach ($form->getErrors() as $error) {
                     $error_msg[] = $error->getMessage();
                 }
 
-                $jsonResponse->setData(array('message' => implode(' ', $error_msg)));
+                $jsonResponse->setData(['message' => implode(' ', $error_msg)]);
                 $jsonResponse->setStatusCode(400);
             }
 
             return $jsonResponse;
         }
 
-        return array(
+        return [
             'image' => $image,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**

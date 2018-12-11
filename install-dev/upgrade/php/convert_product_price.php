@@ -28,14 +28,14 @@
 function convert_product_price()
 {
     $taxes = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'tax');
-    $taxRates = array();
+    $taxRates = [];
     foreach ($taxes as $data) {
         $taxRates[$data['id_tax']] = (float)($data['rate']) / 100;
     }
     $resource = Db::getInstance()->executeS('SELECT `id_product`, `price`, `id_tax`
 		FROM `'._DB_PREFIX_.'product`', false);
     if (!$resource) {
-        return array('error' => 1, 'msg' => Db::getInstance()->getMsgError());
+        return ['error' => 1, 'msg' => Db::getInstance()->getMsgError()];
     } // was previously die(mysql_error())
 
     while ($row = Db::getInstance()->nextRow($resource)) {

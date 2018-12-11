@@ -37,13 +37,13 @@ class StepList implements IteratorAggregate
      *
      * @var array
      */
-    protected $steps = array();
+    protected $steps = [];
 
     /**
      *
      * @var array
      */
-    private $stepNames = array();
+    private $stepNames = [];
 
     /**
      *

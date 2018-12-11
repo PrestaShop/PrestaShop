@@ -38,7 +38,7 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class TranslationsFactory implements TranslationsFactoryInterface
 {
-    private $providers = array();
+    private $providers = [];
 
     /**
      * Generates extract of global Catalogue, using domain's identifiers.

@@ -100,9 +100,9 @@ class ModuleTabUnregister
             $this->logger->warning(
                 $this->translator->trans(
                     'Failed to uninstall admin tab "%name%".',
-                    array(
+                    [
                         '%name%' => $tab->getClassName(),
-                    ),
+                    ],
                     'Admin.Modules.Notification'));
         }
     }
