@@ -55,4 +55,7 @@ $(() => {
   customerGrid.addExtension(new SubmitBulkExtension());
   customerGrid.addExtension(new SubmitGridExtension());
   customerGrid.addExtension(new LinkRowActionExtension());
+
+  // needed for "Group access" input in Add/Edit customer forms
+  new ChoiceTable();
 });
