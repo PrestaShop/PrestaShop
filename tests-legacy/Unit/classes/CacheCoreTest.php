@@ -129,7 +129,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     public function testSetQueryWithCacheFull()
     {
         Cache::getInstance()->setMaxCachedObjectsByTable(2);
-        
+
         $queries = $this->selectDataProvider();
         $i = 0;
         foreach ($queries as $query) {
@@ -232,7 +232,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $invalidatedKeys = $this->cacheArray[$tableMapKey];
 
         $this->assertArrayHasKey($tableMapKey, $this->cacheArray);
-        
+
         Cache::getInstance()->deleteQuery('SELECT name FROM ps_configuration WHERE id = 1');
 
         $this->assertArrayNotHasKey($tableMapKey, $this->cacheArray);
@@ -280,7 +280,6 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
             $this->assertEquals($counter, $this->cacheArray[$tableCacheKey][$queryHash]['count']);
         }
     }
-
 
     // --- providers ---
 

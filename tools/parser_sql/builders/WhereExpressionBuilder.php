@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id: WhereExpressionBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
@@ -51,12 +51,12 @@ require_once dirname(__FILE__) . '/WhereBracketExpressionBuilder.php';
 require_once dirname(__FILE__) . '/UserVariableBuilder.php';
 
 /**
- * This class implements the builder for expressions within the WHERE part. 
+ * This class implements the builder for expressions within the WHERE part.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
 class WhereExpressionBuilder {
 
@@ -69,37 +69,37 @@ class WhereExpressionBuilder {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
-    
+
     protected function buildOperator($parsed) {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
-    
+
     protected function buildFunction($parsed) {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
-    
+
     protected function buildInList($parsed) {
         $builder = new InListBuilder();
         return $builder->build($parsed);
     }
-    
+
     protected function buildWhereExpression($parsed) {
         $builder = new WhereExpressionBuilder();
         return $builder->build($parsed);
     }
-    
+
     protected function buildWhereBracketExpression($parsed) {
         $builder = new WhereBracketExpressionBuilder();
         return $builder->build($parsed);
     }
-    
+
     protected function buildUserVariable($parsed) {
         $builder = new UserVariableBuilder();
         return $builder->build($parsed);
     }
-    
+
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
             return "";
@@ -126,6 +126,6 @@ class WhereExpressionBuilder {
         $sql = substr($sql, 0, -1);
         return $sql;
     }
-    
+
 }
 ?>

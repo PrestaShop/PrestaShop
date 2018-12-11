@@ -484,7 +484,6 @@ class LegacyUrlConverterTest extends TestCase
             ;
         }
 
-
         return $mockRouter;
     }
 

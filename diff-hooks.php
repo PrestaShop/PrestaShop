@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 $path_to_16 = $argv[1];
 $path_to_17 = $argv[2];
 

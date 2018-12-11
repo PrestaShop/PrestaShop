@@ -56,7 +56,6 @@ if (isset($_SERVER['PHP_AUTH_USER'])) {
     die('401 Unauthorized');
 }
 
-
 $input_xml = null;
 
 // if a XML is in PUT or in POST

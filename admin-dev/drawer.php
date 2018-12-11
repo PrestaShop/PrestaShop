@@ -43,6 +43,7 @@ if (!isset($cookie->id_employee) || !$cookie->id_employee  || $cookie->id_employ
     die(Tools::displayError());
 }
     
+
 if (!Validate::isModuleName($module)) {
     die(Tools::displayError());
 }

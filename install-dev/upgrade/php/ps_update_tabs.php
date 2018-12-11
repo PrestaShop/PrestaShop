@@ -68,7 +68,6 @@ function ps_update_tabs()
                             }
                         }
 
-
                         // store DB data
                         $tab_db_data = array();
                         $results = Db::getInstance()->executeS('
@@ -121,5 +120,4 @@ function ps_update_tabs()
         }
     }
 
-    
 }

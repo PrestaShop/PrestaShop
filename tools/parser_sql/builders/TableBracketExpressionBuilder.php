@@ -31,12 +31,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id: TableBracketExpressionBuilder.php 928 2014-01-08 13:01:57Z phosco@gmx.de $
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
@@ -47,13 +47,13 @@ require_once dirname(__FILE__) . '/CheckBuilder.php';
 require_once dirname(__FILE__) . '/LikeExpressionBuilder.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 /**
- * This class implements the builder for the table expressions 
- * within the create definitions of CREATE TABLE. 
+ * This class implements the builder for the table expressions
+ * within the create definitions of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
 class TableBracketExpressionBuilder {
 
@@ -71,17 +71,17 @@ class TableBracketExpressionBuilder {
         $builder = new ForeignKeyBuilder();
         return $builder->build($parsed);
     }
-    
+
     protected function buildCheck($parsed) {
         $builder = new CheckBuilder();
         return $builder->build($parsed);
     }
-    
+
     protected function buildLikeExpression($parsed) {
         $builder = new LikeExpressionBuilder();
         return $builder->build($parsed);
     }
-    
+
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
             return "";
@@ -94,7 +94,7 @@ class TableBracketExpressionBuilder {
             $sql .= $this->buildCheck($v);
             $sql .= $this->buildLikeExpression($v);
             $sql .= $this->buildForeignKey($v);
-            
+
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE create-def expression subtree', $k, $v, 'expr_type');
             }
@@ -105,6 +105,6 @@ class TableBracketExpressionBuilder {
         $sql = " (" . substr($sql, 0, -2) . ")";
         return $sql;
     }
-    
+
 }
 ?>

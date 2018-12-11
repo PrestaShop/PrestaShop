@@ -34,11 +34,11 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- * 
+ *
  * This class processes the CREATE statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class CreateProcessor extends AbstractProcessor {
 

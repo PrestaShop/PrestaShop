@@ -130,7 +130,6 @@ class ProductPresenterTest extends UnitTestCase
         return $this->_presentProduct('PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter', $field);
     }
 
-
     public function testPriceShouldBeShownInCatalogMode()
     {
         $this->settings->catalog_mode = true;

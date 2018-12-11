@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 spl_autoload_register(function ($className) {
     if (0 === strpos($className, 'InstallControllerConsole')) {
         $fileName = strtolower(str_replace('InstallControllerConsole', '', $className));

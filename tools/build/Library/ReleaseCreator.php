@@ -350,7 +350,7 @@ class ReleaseCreator
 
     /**
      * Get the current version in the project
-     * 
+     *
      * @return string PrestaShop version
      */
     protected function getCurrentVersion()
@@ -363,7 +363,7 @@ class ReleaseCreator
             '~const VERSION = \'(.*)\';~',
             $kernelFileContent,
             $matches
-        ); 
+        );
 
         return $matches[1];
     }
@@ -378,7 +378,6 @@ class ReleaseCreator
     {
         $kernelFile = $this->tempProjectPath.'/app/AppKernel.php';
         $version = new Version($this->version);
-
 
         $kernelFileContent = file_get_contents($kernelFile);
         $kernelFileContent = preg_replace(

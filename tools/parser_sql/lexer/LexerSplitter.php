@@ -32,12 +32,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id: LexerSplitter.php 842 2013-12-30 08:57:53Z phosco@gmx.de $
- * 
+ *
  */
 
 /**
@@ -47,7 +47,7 @@
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
 class LexerSplitter {
 
@@ -59,7 +59,7 @@ class LexerSplitter {
 
     /**
      * Constructor.
-     * 
+     *
      * It initializes some fields.
      */
     public function __construct() {
@@ -69,10 +69,10 @@ class LexerSplitter {
 
     /**
      * Get the maximum length of a split token.
-     * 
+     *
      * The largest element must be on position 0 of the internal $_splitters array,
      * so the function returns the length of that token. It must be > 0.
-     * 
+     *
      * @return int The number of characters for the largest split token.
      */
     public function getMaxLengthOfSplitter() {
@@ -81,10 +81,10 @@ class LexerSplitter {
 
     /**
      * Looks into the internal split token array and compares the given token with
-     * the array content. It returns true, if the token will be found, false otherwise. 
-     *  
-     * @param String $token a string, which could be a split token. 
-     * 
+     * the array content. It returns true, if the token will be found, false otherwise.
+     *
+     * @param String $token a string, which could be a split token.
+     *
      * @return boolean true, if the given string will be a split token, false otherwise
      */
     public function isSplitter($token) {

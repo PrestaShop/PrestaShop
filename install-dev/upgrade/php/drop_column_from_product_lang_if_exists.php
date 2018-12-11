@@ -26,7 +26,7 @@
 
 function drop_column_from_product_lang_if_exists()
 {
-    $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'product_lang` 
+    $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'product_lang`
         WHERE Field IN (\'social_sharing_title\', \'social_sharing_description\')');
 
     if (!empty($columns)) {

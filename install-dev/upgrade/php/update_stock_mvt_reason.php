@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 function update_stock_mvt_reason()
 {
     //Get all stock mvts reasons already presents in the solution (from 1.4.x)

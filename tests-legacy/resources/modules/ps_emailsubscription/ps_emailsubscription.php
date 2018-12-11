@@ -28,7 +28,6 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-
 class Ps_Emailsubscription extends Module
 {
     public function __construct()

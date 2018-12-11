@@ -366,7 +366,6 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
 
-
     /**
      * Attach an existing attachment to the product
      *
@@ -1510,7 +1509,7 @@ class AdminProductsController extends AdminProductsControllerCore
     protected function updateAssoShop($id_object)
     {
         //override AdminController::updateAssoShop() specifically for products because shop association is set with the context in ObjectModel
-        
+
     }
 
     public function processAdd()
@@ -3825,7 +3824,6 @@ class AdminProductsController extends AdminProductsControllerCore
                     $images[$k] = new Image($image['id_image']);
                 }
 
-
                 if ($this->context->shop->getContext() == Shop::CONTEXT_SHOP) {
                     $current_shop_id = (int)$this->context->shop->id;
                 } else {
@@ -4543,7 +4541,6 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
     }
-
 
     /**
      *  AdminProducts display hook
