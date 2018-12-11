@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 
 use DateTimeImmutable;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
@@ -94,7 +95,7 @@ class EditCustomerCommand
     private $isPartnerOffersSubscribed;
 
     /**
-     * @var DateTimeImmutable|null
+     * @var Birthday|null
      */
     private $birthday;
 
@@ -346,7 +347,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @return DateTimeImmutable|null
+     * @return Birthday|null
      */
     public function getBirthday()
     {
@@ -354,11 +355,11 @@ class EditCustomerCommand
     }
 
     /**
-     * @param DateTimeImmutable $birthday
+     * @param Birthday $birthday
      *
      * @return self
      */
-    public function setBirthday(DateTimeImmutable $birthday)
+    public function setBirthday(Birthday $birthday)
     {
         $this->birthday = $birthday;
 

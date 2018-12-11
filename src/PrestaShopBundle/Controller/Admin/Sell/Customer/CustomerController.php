@@ -329,7 +329,7 @@ class CustomerController extends AbstractAdminController
      */
     private function addGroupSelectionToRequest(Request $request)
     {
-        if ($request->isMethod(Request::METHOD_POST)) {
+        if (!$request->isMethod(Request::METHOD_POST)) {
             return;
         }
 
