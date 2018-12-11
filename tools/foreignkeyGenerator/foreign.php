@@ -23,7 +23,7 @@
  */
 
 // Include PrestaShop configuration
-include(_PS_CONFIG_DIR_ . 'config.inc.php');
+include __DIR__ . '/../../config/config.inc.php';
 
 // Include $changes
 include __DIR__ . '/changes.php';

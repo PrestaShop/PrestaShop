@@ -27,7 +27,7 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include_once(_PS_CONFIG_DIR_ . 'config.inc.php');
+include_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 
 $module = Tools::getValue('module');
 $render = Tools::getValue('render');

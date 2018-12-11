@@ -54,6 +54,6 @@ class IntegrationTestCase extends TestCase
     public static function setUpBeforeClass()
     {
         Database::restoreTestDB();
-        require_once(_PS_CONFIG_DIR_ . 'config.inc.php');
+        require_once(__DIR__ . '/../../config/config.inc.php');
     }
 }
