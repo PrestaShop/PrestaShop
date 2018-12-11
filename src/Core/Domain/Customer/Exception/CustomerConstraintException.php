@@ -60,4 +60,9 @@ class CustomerConstraintException extends CustomerException
      * @var int Is used when invalid (not string) private note is provided as private note
      */
     const INVALID_PRIVATE_NOTE = 6;
+
+    /**
+     * @var int Code is used when invalid customer birthday is provided
+     */
+    const INVALID_BIRTHDAY = 7;
 }

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
@@ -82,7 +83,7 @@ class AddCustomerCommand
     private $isPartnerOffersSubscribed;
 
     /**
-     * @var string
+     * @var Birthday
      */
     private $birthday;
 
@@ -137,7 +138,7 @@ class AddCustomerCommand
      * @param int|null $genderId
      * @param bool $isEnabled
      * @param bool $isPartnerOffersSubscribed
-     * @param string $birthday
+     * @param Birthday $birthday
      */
     public function __construct(
         FirstName $firstName,
@@ -150,7 +151,7 @@ class AddCustomerCommand
         $genderId = null,
         $isEnabled = true,
         $isPartnerOffersSubscribed = false,
-        $birthday = '0000-00-00'
+        Birthday $birthday = null
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -162,6 +163,11 @@ class AddCustomerCommand
         $this->genderId = $genderId;
         $this->isEnabled = $isEnabled;
         $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
+
+        if (null === $birthday) {
+            $birthday = new Birthday(Birthday::EMPTY_BIRTHDAY);
+        }
+
         $this->birthday = $birthday;
     }
 
@@ -238,7 +244,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @return string
+     * @return Birthday
      */
     public function getBirthday()
     {
