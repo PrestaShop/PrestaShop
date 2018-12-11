@@ -133,6 +133,9 @@ class CustomerController extends AbstractAdminController
     public function editAction($customerId, Request $request)
     {
         try {
+            /** @var CustomerInformation $customerInformation */
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing(new CustomerId($customerId)));
+
             $customerFormOptions = [
                 'is_password_required' => false,
             ];
@@ -175,6 +178,7 @@ class CustomerController extends AbstractAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/edit.html.twig', [
             'customerForm' => $customerForm->createView(),
+            'customerInformation' => $customerInformation,
         ]);
     }
 
