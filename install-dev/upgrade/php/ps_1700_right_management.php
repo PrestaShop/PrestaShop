@@ -45,7 +45,7 @@ function ps_1700_right_management()
     /**
      * Add access
      */
-    $accessObject = new Access;
+    $accessObject = new Access();
 
     // Tabs
     $oldAccess = Db::getInstance()->executeS('SELECT t.id_tab, a.id_profile, a.view, a.add, a.edit, a.delete FROM `'._DB_PREFIX_.'tab` t LEFT JOIN `'._DB_PREFIX_.'access_old` a USING (id_tab)');

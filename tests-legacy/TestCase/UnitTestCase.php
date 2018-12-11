@@ -122,7 +122,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
         Phake::when($this->context)->cloneContext()->thenReturn($this->context);
 
         $this->context->shop = Phake::mock('Shop');
-        $this->context->controller = new \stdClass;
+        $this->context->controller = new \stdClass();
         Context::setInstanceForTesting($this->context);
 
         $this->cache = Phake::mock('Cache');
