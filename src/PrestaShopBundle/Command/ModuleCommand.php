@@ -81,7 +81,7 @@ class ModuleCommand extends ContainerAwareCommand
         $this->translator = $this->getContainer()->get('translator');
         $this->input = $input;
         $this->output = $output;
-        require _PS_CONFIG_DIR_ . 'config.inc.php';
+        require(_PS_CONFIG_DIR_ . 'config.inc.php');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
