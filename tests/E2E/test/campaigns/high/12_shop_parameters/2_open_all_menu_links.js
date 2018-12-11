@@ -104,6 +104,11 @@ scenario('Open all menu links in the Back Office', () => {
           })
           .then(() => client.pause(1000));
       });
+      test('should stop the "On Boarding"', () => {
+        return promise
+          .then(() => client.isVisible(OnBoarding.stop_button))
+          .then(() => client.closeBoarding(OnBoarding.stop_button));
+      });
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.general_submenu, PagesForm.ShopParameters.general_form, "Shop Parameters", "General");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.general_submenu, PagesForm.ShopParameters.maintenance_tab_form, "Shop Parameters", "Maintenance", 0, Menu.Configure.ShopParameters.maintenance_tab);
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.order_settings_submenu, PagesForm.ShopParameters.order_settings_form, "Order settings");
@@ -129,20 +134,25 @@ scenario('Open all menu links in the Back Office', () => {
           });
       });
     }, 'common_client');
-    scenario('Check all the menu links of "Advanced parameters" in the Back Office', client => {
-      test('should click on "Shop Parameters" menu', () => client.waitForExistAndClick(Menu.Configure.ShopParameters.shop_parameters_menu));
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.information_submenu, PagesForm.AdvancedParameters.check_configuration_box, "Informations");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.performance_submenu, PagesForm.AdvancedParameters.debug_mode_button, "Performance");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.administration_submenu, PagesForm.AdvancedParameters.administration_form, "Administration");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.email_submenu, PagesForm.AdvancedParameters.mail_log_grid_panel, "Email");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.import_submenu, PagesForm.AdvancedParameters.preview_import_form, "Import");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu, PagesForm.AdvancedParameters.employee_form, "Team", "Employees");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu, PagesForm.AdvancedParameters.profiles_form, "Team", "Profiles", 0, Menu.Configure.AdvancedParameters.profiles_tab);
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu, PagesForm.AdvancedParameters.permissions_form, "Team", "Permissions", 0, Menu.Configure.AdvancedParameters.permissions_tab);
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.database_submenu, PagesForm.AdvancedParameters.request_sql_form, "Database", "Sql Manager");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.database_submenu, PagesForm.AdvancedParameters.backup_filter_form, "Database", "DB Backup", 0, Menu.Configure.AdvancedParameters.db_backup_tab);
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.logs_submenu, PagesForm.AdvancedParameters.log_form, "Logs");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.webservice_submenu, PagesForm.AdvancedParameters.webservice_form, "WebService");
-    }, 'common_client');
+    scenario('Check all the menu links of "Advanced parameters" in the Back Office',
+      client => {
+        test('should click on "Shop Parameters" menu', () => {
+          return promise
+            .then(() => client.waitForExistAndClick(Menu.Configure.ShopParameters.shop_parameters_menu))
+            .then(() => client.pause(2000));
+        });
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.information_submenu, PagesForm.AdvancedParameters.check_configuration_box, "Informations");
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.performance_submenu, PagesForm.AdvancedParameters.debug_mode_button, "Performance");
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.administration_submenu, PagesForm.AdvancedParameters.administration_form, "Administration");
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.email_submenu, PagesForm.AdvancedParameters.mail_form, "Email");
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.import_submenu, PagesForm.AdvancedParameters.preview_import_form, "Import");
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu, PagesForm.AdvancedParameters.employee_form, "Team", "Employees");
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu, PagesForm.AdvancedParameters.profiles_form, "Team", "Profiles", 0, Menu.Configure.AdvancedParameters.profiles_tab);
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu, PagesForm.AdvancedParameters.permissions_form, "Team", "Permissions", 0, Menu.Configure.AdvancedParameters.permissions_tab);
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.database_submenu, PagesForm.AdvancedParameters.request_sql_form, "Database", "Sql Manager");
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.database_submenu, PagesForm.AdvancedParameters.backup_filter_form, "Database", "DB Backup", 0, Menu.Configure.AdvancedParameters.db_backup_tab);
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.logs_submenu, PagesForm.AdvancedParameters.log_form, "Logs");
+        common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.webservice_submenu, PagesForm.AdvancedParameters.webservice_form, "WebService");
+      }, 'common_client');
   }, 'common_client');
 }, 'common_client', true);

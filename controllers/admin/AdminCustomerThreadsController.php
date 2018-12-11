@@ -167,6 +167,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         'title' => $this->trans('IMAP URL', array(), 'Admin.Catalog.Feature'),
                         'hint' => $this->trans('URL for your IMAP server (ie.: mail.server.com).', array(), 'Admin.Catalog.Help'),
                         'type' => 'text',
+                        'validation' => 'isValidImapUrl',
                     ),
                     'PS_SAV_IMAP_PORT' => array(
                         'title' => $this->trans('IMAP port', array(), 'Admin.Catalog.Feature'),

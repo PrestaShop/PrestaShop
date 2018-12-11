@@ -125,7 +125,7 @@ class CartControllerCore extends FrontController
 
         $productsInCart = $this->context->cart->getProducts();
         $updatedProducts = array_filter($productsInCart, array($this, 'productInCartMatchesCriteria'));
-        list(, $updatedProduct) = each($updatedProducts);
+        $updatedProduct = reset($updatedProducts);
         $productQuantity = $updatedProduct['quantity'];
 
         if (!$this->errors) {
