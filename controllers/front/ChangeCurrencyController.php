@@ -40,7 +40,5 @@ class ChangeCurrencyControllerCore extends FrontController
             return;
         }
         $this->ajaxRender('0');
-
-        return;
     }
 }

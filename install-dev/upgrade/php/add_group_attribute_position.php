@@ -30,7 +30,7 @@ function add_group_attribute_position()
 	SELECT *
 	FROM `'._DB_PREFIX_.'attribute_group`');
     $i = 0;
-    if (sizeof($groups) && is_array($groups)) {
+    if (count($groups) && is_array($groups)) {
         foreach ($groups as $group) {
             Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'attribute_group`

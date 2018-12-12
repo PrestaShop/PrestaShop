@@ -474,8 +474,6 @@ class AdminCountriesControllerCore extends AdminController
         if (Tools::getIsset('submitBulkAffectZonecountry')) {
             $this->tpl_list_vars['assign_zone'] = true;
         }
-
-        return;
     }
 
     protected function displayValidFields()
