@@ -102,7 +102,7 @@ if (isset($_POST['submit'])) {
         $popup = 0;
     }
 //Sanitize popup
-    $popup = !!$popup;
+    $popup = (bool) $popup;
 
 //view type
     if (!isset($_SESSION['view_type'])) {
