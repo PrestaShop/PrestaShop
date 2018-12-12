@@ -834,9 +834,9 @@ class ValidateCore
     }
 
     /**
-     * Check object validity.
+     * Check color validity.
      *
-     * @param int $object Object to validate
+     * @param string $color Color to validate
      *
      * @return bool Validity is ok or not
      */
