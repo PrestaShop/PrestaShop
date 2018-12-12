@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Unit\Core\Cart;
+namespace LegacyTests\Unit\Core\Cart\CartToOrder;
 
 use Configuration;
 use LegacyTests\Unit\Core\Cart\Calculation\Taxes\CartTaxesTest;
 use Order;
 use OrderCartRule;
-use PaymentModule;
 
 /**
  * this class test the correct copy from cart to order
@@ -80,12 +79,7 @@ class CartToOrderTest extends CartTaxesTest
         $this->cart->update();
 
         // copy to order
-        $paymentModule = new class extends PaymentModule
-        {
-            public $active = 1;
-            public $name = 'payment_test';
-            public $displayName = 'Test order';
-        };
+        $paymentModule = new PaymentModuleFake;
         $paymentModule->validateOrder(
             $this->cart->id,
             Configuration::get('PS_OS_CHEQUE'), // PS_OS_PAYMENT for payment-validated order
