@@ -275,7 +275,6 @@ class CookieCore
         );
         $this->_modified = true;
     }
-
     public function makeNewLog()
     {
         unset(
