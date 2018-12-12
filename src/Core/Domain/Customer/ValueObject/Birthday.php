@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintExcep
 class Birthday
 {
     /**
-     * @var string Empty birthday value
+     * @var string empty birthday value
      *
-     * It is used as a placeholder value when real birthday is not provided.
+     * It is used as a placeholder value when real birthday is not provided
      */
     const EMPTY_BIRTHDAY = '0000-00-00';
 
@@ -103,7 +103,7 @@ class Birthday
 
         if (!is_string($birthday) || false === strtotime($birthday)) {
             throw new CustomerConstraintException(
-                sprintf('Invalid birthday %s value provided.',var_export($birthday, true)),
+                sprintf('Invalid birthday %s value provided.', var_export($birthday, true)),
                 CustomerConstraintException::INVALID_BIRTHDAY
             );
         }

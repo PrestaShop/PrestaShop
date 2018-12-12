@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 
-use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;

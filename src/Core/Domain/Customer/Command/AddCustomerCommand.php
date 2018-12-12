@@ -295,6 +295,7 @@ class AddCustomerCommand
     public function setSiretCode($siretCode)
     {
         $this->siretCode = $siretCode;
+
         return $this;
     }
 
@@ -348,6 +349,7 @@ class AddCustomerCommand
 
     /**
      * @param float|null $allowedOutstandingAmount
+     *
      * @return self
      */
     public function setAllowedOutstandingAmount($allowedOutstandingAmount)
