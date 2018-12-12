@@ -569,13 +569,13 @@ class CMSCategoryCore extends ObjectModel
 			FROM `' . _DB_PREFIX_ . 'cms_category` c
 			LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category`)
 			WHERE `name` = \'' . pSQL($query) . '\'');
-        }  
-            return Db::getInstance()->executeS('
+        }
+
+        return Db::getInstance()->executeS('
 			SELECT c.*, cl.*
 			FROM `' . _DB_PREFIX_ . 'cms_category` c
 			LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = ' . (int) $id_lang . ')
 			WHERE `name` LIKE \'%' . pSQL($query) . '%\' AND c.`id_cms_category` != 1');
-        
     }
 
     /**

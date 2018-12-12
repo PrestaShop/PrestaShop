@@ -174,9 +174,9 @@ class ModuleDataProvider
         AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')');
         if ($result) {
             return (bool) ($result['active'] && $result['shop_active']);
-        }  
-            return false;
-        
+        }
+
+        return false;
     }
 
     public function isInstalled($name)

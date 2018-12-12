@@ -178,8 +178,8 @@ class DebugMode
 
         if ($this->isMainDefinesReadable()) {
             return $this->updateDebugModeValueInMainFile($value);
-        }  
-            return self::DEBUG_MODE_ERROR_NO_READ_ACCESS;
-        
+        }
+
+        return self::DEBUG_MODE_ERROR_NO_READ_ACCESS;
     }
 }

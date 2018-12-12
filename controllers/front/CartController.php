@@ -147,15 +147,14 @@ class CartControllerCore extends FrontController
             ]));
 
             return;
-        }  
-            $this->ajaxRender(Tools::jsonEncode([
+        }
+        $this->ajaxRender(Tools::jsonEncode([
                 'hasError' => true,
                 'errors' => $this->errors,
                 'quantity' => $productQuantity,
             ]));
 
-            return;
-        
+        return;
     }
 
     public function displayAjaxRefresh()

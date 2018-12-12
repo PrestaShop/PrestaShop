@@ -221,14 +221,14 @@ class CustomerThreadCore extends ObjectModel
 				FROM ' . _DB_PREFIX_ . 'customer_thread
 				WHERE 1 ' . Shop::addSqlRestriction()
             );
-        }  
-            return (int) Db::getInstance()->getValue(
+        }
+
+        return (int) Db::getInstance()->getValue(
                 '
 				SELECT COUNT(*)
 				FROM ' . _DB_PREFIX_ . 'customer_thread
 				WHERE ' . $where . Shop::addSqlRestriction()
             );
-        
     }
 
     public static function getMessageCustomerThreads($id_customer_thread)

@@ -419,9 +419,9 @@ class AdminStatusesControllerCore extends AdminController
             return $this->renderOrderStatusForm();
         } elseif (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state')) {
             return $this->renderOrderReturnsForm();
-        }  
-            return parent::renderForm();
-        
+        }
+
+        return parent::renderForm();
     }
 
     protected function renderOrderStatusForm()

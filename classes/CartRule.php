@@ -806,10 +806,9 @@ class CartRuleCore extends ObjectModel
                         // The cart rules are not combinable and the cart rule currently in the cart has priority over the one tested
                         if ($cart_rule->priority <= $this->priority) {
                             return (!$display_error) ? false : $this->trans('This voucher is not combinable with an other voucher already in your cart: %s', array($cart_rule->name), 'Shop.Notifications.Error');
-                        }  
-                            // But if the cart rule that is tested has priority over the one in the cart, we remove the one in the cart and keep this new one
-                            $context->cart->removeCartRule($cart_rule->id);
-                        
+                        }
+                        // But if the cart rule that is tested has priority over the one in the cart, we remove the one in the cart and keep this new one
+                        $context->cart->removeCartRule($cart_rule->id);
                     }
                 }
             }
@@ -907,10 +906,9 @@ class CartRuleCore extends ObjectModel
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 if ($countRulesProduct === 1) {
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
-                                }  
-                                    ++$condition;
-                                    break;
-                                
+                                }
+                                ++$condition;
+                                break;
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
@@ -934,10 +932,9 @@ class CartRuleCore extends ObjectModel
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 if ($countRulesProduct === 1) {
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
-                                }  
-                                    ++$condition;
-                                    break;
-                                
+                                }
+                                ++$condition;
+                                break;
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
@@ -965,10 +962,9 @@ class CartRuleCore extends ObjectModel
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 if ($countRulesProduct === 1) {
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
-                                }  
-                                    ++$condition;
-                                    break;
-                                
+                                }
+                                ++$condition;
+                                break;
                             }
                             // Attribute id is not important for this filter in the global list, so the ids are replaced by 0
                             foreach ($matching_products_list as &$matching_product) {
@@ -994,10 +990,9 @@ class CartRuleCore extends ObjectModel
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 if ($countRulesProduct === 1) {
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
-                                }  
-                                    ++$condition;
-                                    break;
-                                
+                                }
+                                ++$condition;
+                                break;
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
@@ -1019,10 +1014,9 @@ class CartRuleCore extends ObjectModel
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 if ($countRulesProduct === 1) {
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
-                                }  
-                                    ++$condition;
-                                    break;
-                                
+                                }
+                                ++$condition;
+                                break;
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
@@ -1687,9 +1681,9 @@ class CartRuleCore extends ObjectModel
 						LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = ' . (int) $id_lang . ')';
         if ($extended) {
             return Db::getInstance()->executeS('(' . $sql_base . ' WHERE code LIKE \'%' . pSQL($name) . '%\') UNION (' . $sql_base . ' WHERE name LIKE \'%' . pSQL($name) . '%\')');
-        }  
-            return Db::getInstance()->executeS($sql_base . ' WHERE code LIKE \'%' . pSQL($name) . '%\'');
-        
+        }
+
+        return Db::getInstance()->executeS($sql_base . ' WHERE code LIKE \'%' . pSQL($name) . '%\'');
     }
 
     /**

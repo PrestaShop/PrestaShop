@@ -718,9 +718,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         if (!$this->id_object) {
             return $this->processAdd();
-        }  
-            return $this->processUpdate();
-        
+        }
+
+        return $this->processUpdate();
     }
 
     public function postProcess()

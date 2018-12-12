@@ -685,9 +685,9 @@ class AdminCarriersControllerCore extends AdminController
             ));
 
             return $tpl->fetch();
-        }  
-            return;
-        
+        }
+
+        return;
     }
 
     public function displayDeleteLink($token, $id, $name = null)
@@ -724,9 +724,9 @@ class AdminCarriersControllerCore extends AdminController
             $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
             return $tpl->fetch();
-        }  
-            return;
-        
+        }
+
+        return;
     }
 
     protected function initTabModuleList()

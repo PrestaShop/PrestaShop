@@ -96,9 +96,9 @@ class UpgraderCore
         $destPath = realpath($dest) . DIRECTORY_SEPARATOR . $filename;
         if (@copy($this->link, $destPath)) {
             return true;
-        }  
-            return false;
-        
+        }
+
+        return false;
     }
 
     /**
@@ -167,9 +167,9 @@ class UpgraderCore
             $this->need_upgrade = true;
 
             return array('name' => $this->version_name, 'link' => $this->link);
-        }  
-            return false;
-        
+        }
+
+        return false;
     }
 
     /**

@@ -714,9 +714,9 @@ class ConfigurationCore extends ObjectModel
             return ' AND id_shop = ' . (int) $idShop;
         } elseif ($idShopGroup) {
             return ' AND id_shop_group = ' . (int) $idShopGroup . ' AND (id_shop IS NULL OR id_shop = 0)';
-        }  
-            return ' AND (id_shop_group IS NULL OR id_shop_group = 0) AND (id_shop IS NULL OR id_shop = 0)';
-        
+        }
+
+        return ' AND (id_shop_group IS NULL OR id_shop_group = 0) AND (id_shop IS NULL OR id_shop = 0)';
     }
 
     /**

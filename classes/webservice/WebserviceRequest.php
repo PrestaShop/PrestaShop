@@ -799,12 +799,11 @@ class WebserviceRequestCore
                 $this->objOutput->setStatus(401);
 
                 return false;
-            }  
-                // only now we can say the access is authenticated
-                $this->_authenticated = true;
+            }
+            // only now we can say the access is authenticated
+            $this->_authenticated = true;
 
-                return true;
-            
+            return true;
         }
     }
 
@@ -1104,80 +1103,77 @@ class WebserviceRequestCore
                     $this->schemaToDisplay = $this->urlFragments[$schema];
 
                     return true;
-                }  
-                    $this->setError(400, 'Please select a schema of type \'synopsis\' to get the whole schema informations (which fields are required, which kind of content...) or \'blank\' to get an empty schema to fill before using POST request', 28);
+                }
+                $this->setError(400, 'Please select a schema of type \'synopsis\' to get the whole schema informations (which fields are required, which kind of content...) or \'blank\' to get an empty schema to fill before using POST request', 28);
 
-                    return false;
-                
-            }  
-                // if there are filters
-                if (isset($this->urlFragments['filter'])) {
-                    foreach ($this->urlFragments['filter'] as $field => $url_param) {
-                        if ($field != 'sort' && $field != 'limit') {
-                            if (!in_array($field, $available_filters)) {
-                                // if there are linked tables
-                                if (isset($this->resourceConfiguration['linked_tables']) && isset($this->resourceConfiguration['linked_tables'][$field])) {
-                                    // contruct SQL join for linked tables
-                                    $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['linked_tables'][$field]['table']) . '` `' . bqSQL($field) . '` ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = `' . bqSQL($field) . '`.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
+                return false;
+            }
+            // if there are filters
+            if (isset($this->urlFragments['filter'])) {
+                foreach ($this->urlFragments['filter'] as $field => $url_param) {
+                    if ($field != 'sort' && $field != 'limit') {
+                        if (!in_array($field, $available_filters)) {
+                            // if there are linked tables
+                            if (isset($this->resourceConfiguration['linked_tables']) && isset($this->resourceConfiguration['linked_tables'][$field])) {
+                                // contruct SQL join for linked tables
+                                $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['linked_tables'][$field]['table']) . '` `' . bqSQL($field) . '` ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = `' . bqSQL($field) . '`.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
 
-                                    // construct SQL filter for linked tables
-                                    foreach ($url_param as $field2 => $value) {
-                                        if (isset($this->resourceConfiguration['linked_tables'][$field]['fields'][$field2])) {
-                                            $linked_field = $this->resourceConfiguration['linked_tables'][$field]['fields'][$field2];
-                                            $sql_filter .= $this->getSQLRetrieveFilter($linked_field['sqlId'], $value, $field . '.');
-                                        } else {
-                                            $list = array_keys($this->resourceConfiguration['linked_tables'][$field]['fields']);
-                                            $this->setErrorDidYouMean(400, 'This filter does not exist for this linked table', $field2, $list, 29);
-
-                                            return false;
-                                        }
-                                    }
-                                } elseif ($url_param != '' && in_array($field, $i18n_available_filters)) {
-                                    if (!is_array($url_param)) {
-                                        $url_param = array($url_param);
-                                    }
-                                    $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']) . '_lang` AS main_i18n ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = main_i18n.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
-                                    foreach ($url_param as $field2 => $value) {
-                                        $linked_field = $this->resourceConfiguration['fields'][$field];
-                                        $sql_filter .= $this->getSQLRetrieveFilter($linked_field['sqlId'], $value, 'main_i18n.');
-                                        $language_filter = '[' . implode('|', $this->_available_languages) . ']';
-                                        $sql_filter .= $this->getSQLRetrieveFilter('id_lang', $language_filter, 'main_i18n.');
-                                    }
-                                } elseif (is_array($url_param)) {
-                                    // if there are filters on linked tables but there are no linked table
-                                    if (isset($this->resourceConfiguration['linked_tables'])) {
-                                        $this->setErrorDidYouMean(400, 'This linked table does not exist', $field, array_keys($this->resourceConfiguration['linked_tables']), 30);
+                                // construct SQL filter for linked tables
+                                foreach ($url_param as $field2 => $value) {
+                                    if (isset($this->resourceConfiguration['linked_tables'][$field]['fields'][$field2])) {
+                                        $linked_field = $this->resourceConfiguration['linked_tables'][$field]['fields'][$field2];
+                                        $sql_filter .= $this->getSQLRetrieveFilter($linked_field['sqlId'], $value, $field . '.');
                                     } else {
-                                        $this->setError(400, 'There is no existing linked table for this resource', 31);
+                                        $list = array_keys($this->resourceConfiguration['linked_tables'][$field]['fields']);
+                                        $this->setErrorDidYouMean(400, 'This filter does not exist for this linked table', $field2, $list, 29);
+
+                                        return false;
                                     }
-
-                                    return false;
-                                } else {
-                                    $this->setErrorDidYouMean(400, 'This filter does not exist', $field, $available_filters, 32);
-
-                                    return false;
                                 }
-                            } elseif ($url_param == '') {
-                                $this->setError(400, 'The filter "' . $field . '" is malformed.', 33);
+                            } elseif ($url_param != '' && in_array($field, $i18n_available_filters)) {
+                                if (!is_array($url_param)) {
+                                    $url_param = array($url_param);
+                                }
+                                $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']) . '_lang` AS main_i18n ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = main_i18n.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
+                                foreach ($url_param as $field2 => $value) {
+                                    $linked_field = $this->resourceConfiguration['fields'][$field];
+                                    $sql_filter .= $this->getSQLRetrieveFilter($linked_field['sqlId'], $value, 'main_i18n.');
+                                    $language_filter = '[' . implode('|', $this->_available_languages) . ']';
+                                    $sql_filter .= $this->getSQLRetrieveFilter('id_lang', $language_filter, 'main_i18n.');
+                                }
+                            } elseif (is_array($url_param)) {
+                                // if there are filters on linked tables but there are no linked table
+                                if (isset($this->resourceConfiguration['linked_tables'])) {
+                                    $this->setErrorDidYouMean(400, 'This linked table does not exist', $field, array_keys($this->resourceConfiguration['linked_tables']), 30);
+                                } else {
+                                    $this->setError(400, 'There is no existing linked table for this resource', 31);
+                                }
 
                                 return false;
                             } else {
-                                if (isset($this->resourceConfiguration['fields'][$field]['getter'])) {
-                                    $this->setError(400, 'The field "' . $field . '" is dynamic. It is not possible to filter GET query with this field.', 34);
+                                $this->setErrorDidYouMean(400, 'This filter does not exist', $field, $available_filters, 32);
 
-                                    return false;
-                                }  
-                                    if (isset($this->resourceConfiguration['retrieveData']['tableAlias'])) {
-                                        $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param, $this->resourceConfiguration['retrieveData']['tableAlias'] . '.');
-                                    } else {
-                                        $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param);
-                                    }
-                                
+                                return false;
+                            }
+                        } elseif ($url_param == '') {
+                            $this->setError(400, 'The filter "' . $field . '" is malformed.', 33);
+
+                            return false;
+                        } else {
+                            if (isset($this->resourceConfiguration['fields'][$field]['getter'])) {
+                                $this->setError(400, 'The field "' . $field . '" is dynamic. It is not possible to filter GET query with this field.', 34);
+
+                                return false;
+                            }
+                            if (isset($this->resourceConfiguration['retrieveData']['tableAlias'])) {
+                                $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param, $this->resourceConfiguration['retrieveData']['tableAlias'] . '.');
+                            } else {
+                                $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param);
                             }
                         }
                     }
                 }
-            
+            }
         }
 
         if (!$this->setFieldsToDisplay()) {
@@ -1238,9 +1234,8 @@ class WebserviceRequestCore
                 $this->setError(400, 'The "limit" value has to be formed as this example: "5,25" or "10"', 39);
 
                 return false;
-            }  
-                $sql_limit .= ' LIMIT ' . (int) ($limitArgs[0]) . (isset($limitArgs[1]) ? ', ' . (int) ($limitArgs[1]) : '') . "\n"; // LIMIT X|X, Y
-            
+            }
+            $sql_limit .= ' LIMIT ' . (int) ($limitArgs[0]) . (isset($limitArgs[1]) ? ', ' . (int) ($limitArgs[1]) : '') . "\n"; // LIMIT X|X, Y
         }
         $filters['sql_join'] = $sql_join;
         $filters['sql_filter'] = $sql_filter;
@@ -1352,9 +1347,8 @@ class WebserviceRequestCore
 
             if (!$return) {
                 return false;
-            }  
-                $this->objects = $return;
-            
+            }
+            $this->objects = $return;
         }
 
         return true;
@@ -1531,9 +1525,8 @@ class WebserviceRequestCore
                             $this->setError(400, 'parameter "' . $fieldName . '" not writable. Please remove this attribute of this XML', 93);
 
                             return false;
-                        }  
-                            $object->{$fieldProperties['setter']}((string) $attributes->$fieldName);
-                        
+                        }
+                        $object->{$fieldProperties['setter']}((string) $attributes->$fieldName);
                     } elseif (property_exists($object, $sqlId)) {
                         $object->$sqlId = (string) $attributes->$fieldName;
                     } else {
@@ -1575,59 +1568,58 @@ class WebserviceRequestCore
                     $this->setError(400, 'Validation error: "' . $retValidateFields . '"', 85);
 
                     return false;
-                }  
-                    // Call alternative method for add/update
-                    $objectMethod = ($this->method == 'POST' ? 'add' : 'update');
-                    if (isset($this->resourceConfiguration['objectMethods']) && array_key_exists($objectMethod, $this->resourceConfiguration['objectMethods'])) {
-                        $objectMethod = $this->resourceConfiguration['objectMethods'][$objectMethod];
-                    }
-                    $result = $object->{$objectMethod}();
-                    if ($result) {
-                        if (isset($attributes->associations)) {
-                            foreach ($attributes->associations->children() as $association) {
-                                /** @var SimpleXMLElement $association */
-                                // associations
-                                if (isset($this->resourceConfiguration['associations'][$association->getName()])) {
-                                    $assocItems = $association->children();
-                                    $values = array();
-                                    foreach ($assocItems as $assocItem) {
-                                        /** @var SimpleXMLElement $assocItem */
-                                        $fields = $assocItem->children();
-                                        $entry = array();
-                                        foreach ($fields as $fieldName => $fieldValue) {
-                                            $entry[$fieldName] = (string) $fieldValue;
-                                        }
-                                        $values[] = $entry;
+                }
+                // Call alternative method for add/update
+                $objectMethod = ($this->method == 'POST' ? 'add' : 'update');
+                if (isset($this->resourceConfiguration['objectMethods']) && array_key_exists($objectMethod, $this->resourceConfiguration['objectMethods'])) {
+                    $objectMethod = $this->resourceConfiguration['objectMethods'][$objectMethod];
+                }
+                $result = $object->{$objectMethod}();
+                if ($result) {
+                    if (isset($attributes->associations)) {
+                        foreach ($attributes->associations->children() as $association) {
+                            /** @var SimpleXMLElement $association */
+                            // associations
+                            if (isset($this->resourceConfiguration['associations'][$association->getName()])) {
+                                $assocItems = $association->children();
+                                $values = array();
+                                foreach ($assocItems as $assocItem) {
+                                    /** @var SimpleXMLElement $assocItem */
+                                    $fields = $assocItem->children();
+                                    $entry = array();
+                                    foreach ($fields as $fieldName => $fieldValue) {
+                                        $entry[$fieldName] = (string) $fieldValue;
                                     }
-                                    $setter = $this->resourceConfiguration['associations'][$association->getName()]['setter'];
-                                    if (!is_null($setter) && $setter && method_exists($object, $setter) && !$object->$setter($values)) {
-                                        $this->setError(500, 'Error occurred while setting the ' . $association->getName() . ' value', 85);
-
-                                        return false;
-                                    }
-                                } elseif ($association->getName() != 'i18n') {
-                                    $this->setError(400, 'The association "' . $association->getName() . '" does not exists', 86);
+                                    $values[] = $entry;
+                                }
+                                $setter = $this->resourceConfiguration['associations'][$association->getName()]['setter'];
+                                if (!is_null($setter) && $setter && method_exists($object, $setter) && !$object->$setter($values)) {
+                                    $this->setError(500, 'Error occurred while setting the ' . $association->getName() . ' value', 85);
 
                                     return false;
                                 }
+                            } elseif ($association->getName() != 'i18n') {
+                                $this->setError(400, 'The association "' . $association->getName() . '" does not exists', 86);
+
+                                return false;
                             }
                         }
-                        $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
-                        if ($assoc !== false && $assoc['type'] != 'fk_shop') {
-                            // PUT nor POST is destructive, no deletion
-                            $sql = 'INSERT IGNORE INTO `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table'] . '_' . $assoc['type']) . '` (id_shop, `' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`) VALUES ';
-                            foreach (self::$shopIDs as $id) {
-                                $sql .= '(' . (int) $id . ',' . (int) $object->id . ')';
-                                if ($id != end(self::$shopIDs)) {
-                                    $sql .= ', ';
-                                }
-                            }
-                            Db::getInstance()->execute($sql);
-                        }
-                    } else {
-                        $this->setError(500, 'Unable to save resource', 46);
                     }
-                
+                    $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
+                    if ($assoc !== false && $assoc['type'] != 'fk_shop') {
+                        // PUT nor POST is destructive, no deletion
+                        $sql = 'INSERT IGNORE INTO `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table'] . '_' . $assoc['type']) . '` (id_shop, `' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`) VALUES ';
+                        foreach (self::$shopIDs as $id) {
+                            $sql .= '(' . (int) $id . ',' . (int) $object->id . ')';
+                            if ($id != end(self::$shopIDs)) {
+                                $sql .= ', ';
+                            }
+                        }
+                        Db::getInstance()->execute($sql);
+                    }
+                } else {
+                    $this->setError(500, 'Unable to save resource', 46);
+                }
             }
         }
 

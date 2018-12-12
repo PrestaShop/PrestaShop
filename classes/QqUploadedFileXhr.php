@@ -55,35 +55,34 @@ class QqUploadedFileXhrCore
         $product = new Product($_GET['id_product']);
         if (!Validate::isLoadedObject($product)) {
             return array('error' => Context::getContext()->getTranslator()->trans('Cannot add image because product creation failed.', array(), 'Admin.Catalog.Notification'));
-        }  
-            $image = new Image();
-            $image->id_product = (int) ($product->id);
-            $image->position = Image::getHighestPosition($product->id) + 1;
-            $legends = Tools::getValue('legend');
-            if (is_array($legends)) {
-                foreach ($legends as $key => $legend) {
-                    if (Validate::isGenericName($legend)) {
-                        $image->legend[(int) $key] = $legend;
-                    } else {
-                        return array('error' => Context::getContext()->getTranslator()->trans('Error on image caption: "%1s" is not a valid caption.', array(Tools::safeOutput($legend)), 'Admin.Notifications.Error'));
-                    }
+        }
+        $image = new Image();
+        $image->id_product = (int) ($product->id);
+        $image->position = Image::getHighestPosition($product->id) + 1;
+        $legends = Tools::getValue('legend');
+        if (is_array($legends)) {
+            foreach ($legends as $key => $legend) {
+                if (Validate::isGenericName($legend)) {
+                    $image->legend[(int) $key] = $legend;
+                } else {
+                    return array('error' => Context::getContext()->getTranslator()->trans('Error on image caption: "%1s" is not a valid caption.', array(Tools::safeOutput($legend)), 'Admin.Notifications.Error'));
                 }
             }
-            if (!Image::getCover($image->id_product)) {
-                $image->cover = 1;
-            } else {
-                $image->cover = 0;
-            }
+        }
+        if (!Image::getCover($image->id_product)) {
+            $image->cover = 1;
+        } else {
+            $image->cover = 0;
+        }
 
-            if (($validate = $image->validateFieldsLang(false, true)) !== true) {
-                return array('error' => $validate);
-            }
-            if (!$image->add()) {
-                return array('error' => Context::getContext()->getTranslator()->trans('Error while creating additional image', array(), 'Admin.Catalog.Notification'));
-            }  
-                return $this->copyImage($product->id, $image->id);
-            
-        
+        if (($validate = $image->validateFieldsLang(false, true)) !== true) {
+            return array('error' => $validate);
+        }
+        if (!$image->add()) {
+            return array('error' => Context::getContext()->getTranslator()->trans('Error while creating additional image', array(), 'Admin.Catalog.Notification'));
+        }
+
+        return $this->copyImage($product->id, $image->id);
     }
 
     public function copyImage($id_product, $id_image, $method = 'auto')
@@ -125,9 +124,9 @@ class QqUploadedFileXhrCore
         if (isset($_SERVER['CONTENT_LENGTH']) || isset($_SERVER['HTTP_CONTENT_LENGTH'])) {
             if (isset($_SERVER['HTTP_CONTENT_LENGTH'])) {
                 return (int) $_SERVER['HTTP_CONTENT_LENGTH'];
-            }  
-                return (int) $_SERVER['CONTENT_LENGTH'];
-            
+            }
+
+            return (int) $_SERVER['CONTENT_LENGTH'];
         }
 
         return false;

@@ -362,9 +362,8 @@ class AdminRequestSqlControllerCore extends AdminController
                         header('Content-Length: ' . $filesize);
                         readfile($export_dir . $file);
                         die();
-                    }  
-                        $this->errors[] = $this->trans('The file is too large and cannot be downloaded. Please use the LIMIT clause in this query.', array(), 'Admin.Advparameters.Notification');
-                    
+                    }
+                    $this->errors[] = $this->trans('The file is too large and cannot be downloaded. Please use the LIMIT clause in this query.', array(), 'Admin.Advparameters.Notification');
                 }
             }
         }

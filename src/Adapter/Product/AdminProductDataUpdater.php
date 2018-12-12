@@ -211,17 +211,15 @@ class AdminProductDataUpdater implements ProductInterface
 
             if (!Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
-            }  
-                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
-                if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
-                    Search::indexation(false, $product->id);
-                }
+            }
+            $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
+            if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                Search::indexation(false, $product->id);
+            }
 
-                return $product->id;
-            
-        }  
-            throw new \Exception('An error occurred while creating an object.', 5009);
-        
+            return $product->id;
+        }
+        throw new \Exception('An error occurred while creating an object.', 5009);
     }
 
     /**

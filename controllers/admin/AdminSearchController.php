@@ -336,113 +336,112 @@ class AdminSearchControllerCore extends AdminController
 
         if (count($this->errors)) {
             return parent::renderView();
-        }  
-            $nb_results = 0;
-            foreach ($this->_list as $list) {
-                if ($list != false) {
-                    $nb_results += count($list);
-                }
+        }
+        $nb_results = 0;
+        foreach ($this->_list as $list) {
+            if ($list != false) {
+                $nb_results += count($list);
             }
-            $this->tpl_view_vars['nb_results'] = $nb_results;
+        }
+        $this->tpl_view_vars['nb_results'] = $nb_results;
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'features')) {
-                $this->tpl_view_vars['features'] = $this->_list['features'];
-            }
+        if ($this->isCountableAndNotEmpty($this->_list, 'features')) {
+            $this->tpl_view_vars['features'] = $this->_list['features'];
+        }
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'categories')) {
-                $categories = array();
-                foreach ($this->_list['categories'] as $category) {
-                    $categories[] = Tools::getPath(
+        if ($this->isCountableAndNotEmpty($this->_list, 'categories')) {
+            $categories = array();
+            foreach ($this->_list['categories'] as $category) {
+                $categories[] = Tools::getPath(
                         $this->context->link->getAdminLink('AdminCategories', false),
                         $category['id_category']
                     );
-                }
-                $this->tpl_view_vars['categories'] = $categories;
+            }
+            $this->tpl_view_vars['categories'] = $categories;
+        }
+
+        if ($this->isCountableAndNotEmpty($this->_list, 'products')) {
+            $view = '';
+            $this->initProductList();
+
+            $helper = new HelperList();
+            $helper->shopLinkType = '';
+            $helper->simple_header = true;
+            $helper->identifier = 'id_product';
+            $helper->actions = array('edit');
+            $helper->show_toolbar = false;
+            $helper->table = 'product';
+            /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product, a better way need to be find */
+            $helper->currentIndex = $this->context->link->getAdminLink('AdminSearch', false);
+            $helper->currentIndex .= '&action=redirectToProduct';
+
+            $query = trim(Tools::getValue('bo_query'));
+            $searchType = (int) Tools::getValue('bo_search_type');
+
+            if ($query) {
+                $helper->currentIndex .= '&bo_query=' . $query . '&bo_search_type=' . $searchType;
             }
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'products')) {
-                $view = '';
-                $this->initProductList();
+            $helper->token = Tools::getAdminTokenLite('AdminSearch');
 
-                $helper = new HelperList();
-                $helper->shopLinkType = '';
-                $helper->simple_header = true;
-                $helper->identifier = 'id_product';
-                $helper->actions = array('edit');
-                $helper->show_toolbar = false;
-                $helper->table = 'product';
-                /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product, a better way need to be find */
-                $helper->currentIndex = $this->context->link->getAdminLink('AdminSearch', false);
-                $helper->currentIndex .= '&action=redirectToProduct';
-
-                $query = trim(Tools::getValue('bo_query'));
-                $searchType = (int) Tools::getValue('bo_search_type');
-
-                if ($query) {
-                    $helper->currentIndex .= '&bo_query=' . $query . '&bo_search_type=' . $searchType;
-                }
-
-                $helper->token = Tools::getAdminTokenLite('AdminSearch');
-
-                if ($this->_list['products']) {
-                    $view = $helper->generateList($this->_list['products'], $this->fields_list['products']);
-                }
-
-                $this->tpl_view_vars['products'] = $view;
-                $this->tpl_view_vars['productsCount'] = count($this->_list['products']);
+            if ($this->_list['products']) {
+                $view = $helper->generateList($this->_list['products'], $this->fields_list['products']);
             }
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'customers')) {
-                $view = '';
-                $this->initCustomerList();
+            $this->tpl_view_vars['products'] = $view;
+            $this->tpl_view_vars['productsCount'] = count($this->_list['products']);
+        }
 
-                $helper = new HelperList();
-                $helper->shopLinkType = '';
-                $helper->simple_header = true;
-                $helper->identifier = 'id_customer';
-                $helper->actions = array('edit', 'view');
-                $helper->show_toolbar = false;
-                $helper->table = 'customer';
-                $helper->currentIndex = $this->context->link->getAdminLink('AdminCustomers', false);
-                $helper->token = Tools::getAdminTokenLite('AdminCustomers');
+        if ($this->isCountableAndNotEmpty($this->_list, 'customers')) {
+            $view = '';
+            $this->initCustomerList();
 
-                foreach ($this->_list['customers'] as $key => $val) {
-                    $this->_list['customers'][$key]['orders'] = Order::getCustomerNbOrders((int) $val['id_customer']);
-                }
+            $helper = new HelperList();
+            $helper->shopLinkType = '';
+            $helper->simple_header = true;
+            $helper->identifier = 'id_customer';
+            $helper->actions = array('edit', 'view');
+            $helper->show_toolbar = false;
+            $helper->table = 'customer';
+            $helper->currentIndex = $this->context->link->getAdminLink('AdminCustomers', false);
+            $helper->token = Tools::getAdminTokenLite('AdminCustomers');
 
-                $view = $helper->generateList($this->_list['customers'], $this->fields_list['customers']);
-                $this->tpl_view_vars['customers'] = $view;
-                $this->tpl_view_vars['customerCount'] = count($this->_list['customers']);
+            foreach ($this->_list['customers'] as $key => $val) {
+                $this->_list['customers'][$key]['orders'] = Order::getCustomerNbOrders((int) $val['id_customer']);
             }
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'orders')) {
-                $view = '';
-                $this->initOrderList();
+            $view = $helper->generateList($this->_list['customers'], $this->fields_list['customers']);
+            $this->tpl_view_vars['customers'] = $view;
+            $this->tpl_view_vars['customerCount'] = count($this->_list['customers']);
+        }
 
-                $helper = new HelperList();
-                $helper->shopLinkType = '';
-                $helper->simple_header = true;
-                $helper->identifier = 'id_order';
-                $helper->actions = array('view');
-                $helper->show_toolbar = false;
-                $helper->table = 'order';
-                $helper->currentIndex = $this->context->link->getAdminLink('AdminOrders', false);
-                $helper->token = Tools::getAdminTokenLite('AdminOrders');
+        if ($this->isCountableAndNotEmpty($this->_list, 'orders')) {
+            $view = '';
+            $this->initOrderList();
 
-                $view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
-                $this->tpl_view_vars['orders'] = $view;
-            }
+            $helper = new HelperList();
+            $helper->shopLinkType = '';
+            $helper->simple_header = true;
+            $helper->identifier = 'id_order';
+            $helper->actions = array('view');
+            $helper->show_toolbar = false;
+            $helper->table = 'order';
+            $helper->currentIndex = $this->context->link->getAdminLink('AdminOrders', false);
+            $helper->token = Tools::getAdminTokenLite('AdminOrders');
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
-                $this->tpl_view_vars['modules'] = $this->_list['modules'];
-            }
+            $view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
+            $this->tpl_view_vars['orders'] = $view;
+        }
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'addons')) {
-                $this->tpl_view_vars['addons'] = $this->_list['addons'];
-            }
+        if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
+            $this->tpl_view_vars['modules'] = $this->_list['modules'];
+        }
 
-            return parent::renderView();
-        
+        if ($this->isCountableAndNotEmpty($this->_list, 'addons')) {
+            $this->tpl_view_vars['addons'] = $this->_list['addons'];
+        }
+
+        return parent::renderView();
     }
 
     /**

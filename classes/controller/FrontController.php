@@ -1953,9 +1953,9 @@ class FrontControllerCore extends Controller
             );
 
             return false;
-        }  
-            return $matches[0];
-        
+        }
+
+        return $matches[0];
     }
 
     /**

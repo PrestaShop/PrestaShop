@@ -244,8 +244,8 @@ class AttachmentCore extends ObjectModel
             }
 
             return $productAttachments;
-        }  
-            return false;
-        
+        }
+
+        return false;
     }
 }

@@ -161,21 +161,20 @@ class ProductController extends FrameworkBundleAdminController
                     'import_url' => $legacyUrlGenerator->generate('AdminImport'),
                 ]
             );
-        }  
-            // Pagination
-            $paginationParameters = $request->attributes->all();
-            $paginationParameters['_route'] = 'admin_product_catalog';
-            $categoriesForm = $this->createForm(ProductCategories::class);
-            if (!empty($persistedFilterParameters['filter_category'])) {
-                $categoriesForm->setData(
+        }
+        // Pagination
+        $paginationParameters = $request->attributes->all();
+        $paginationParameters['_route'] = 'admin_product_catalog';
+        $categoriesForm = $this->createForm(ProductCategories::class);
+        if (!empty($persistedFilterParameters['filter_category'])) {
+            $categoriesForm->setData(
                     [
                         'categories' => [
                             'tree' => [0 => $persistedFilterParameters['filter_category']],
                         ],
                     ]
                 );
-            }
-        
+        }
 
         $cleanFilterParameters = $filterParametersUpdater->cleanFiltersForPositionOrdering($persistedFilterParameters, $orderBy, $hasCategoryFilter);
 

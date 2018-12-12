@@ -681,9 +681,9 @@ class LinkCore
         // If the module has its own route ... just use it !
         if (Dispatcher::getInstance()->hasRoute('module-' . $module . '-' . $controller, $idLang, $idShop)) {
             return $this->getPageLink('module-' . $module . '-' . $controller, $ssl, $idLang, $params);
-        }  
-            return $url . Dispatcher::getInstance()->createUrl('module', $idLang, $params, $this->allow, '', $idShop);
-        
+        }
+
+        return $url . Dispatcher::getInstance()->createUrl('module', $idLang, $params, $this->allow, '', $idShop);
     }
 
     /**
@@ -763,9 +763,9 @@ class LinkCore
                     }
 
                     return $sfRouter->generate('admin_product_catalog', $sfRouteParams);
-                }  
+                }
                     $params = array_merge($params, $sfRouteParams);
-                
+
                 break;
 
             case 'AdminTranslations':
@@ -1242,9 +1242,9 @@ class LinkCore
         if (!$array) {
             if (count($vars)) {
                 return $url . (!strstr($url, '?') && ($this->allow == 1 || $url == $this->url) ? '?' : '&') . http_build_query($vars, '', '&');
-            }  
-                return $url;
-            
+            }
+
+            return $url;
         }
 
         $vars['requestUrl'] = $url;

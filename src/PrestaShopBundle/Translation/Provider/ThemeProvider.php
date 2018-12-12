@@ -90,11 +90,11 @@ class ThemeProvider extends AbstractProvider
     {
         if (empty($this->domain)) {
             return array('*');
-        }  
-            return array(
+        }
+
+        return array(
                 '^' . $this->getDomain(),
             );
-        
     }
 
     /**
@@ -104,11 +104,11 @@ class ThemeProvider extends AbstractProvider
     {
         if (empty($this->domain)) {
             return array('*');
-        }  
-            return array(
+        }
+
+        return array(
                 '#^' . $this->getDomain() . '#',
             );
-        
     }
 
     /**

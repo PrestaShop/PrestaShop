@@ -708,9 +708,9 @@ class HookCore extends ObjectModel
             }
 
             return count($return) > 0 ? $return : false;
-        }  
-            return $list;
-        
+        }
+
+        return $list;
     }
 
     /**
@@ -774,9 +774,9 @@ class HookCore extends ObjectModel
             }
             if ($array_return) {
                 return array();
-            }  
-                return '';
-            
+            }
+
+            return '';
         }
 
         // Check if hook exists
@@ -786,9 +786,9 @@ class HookCore extends ObjectModel
             }
             if ($array_return) {
                 return array();
-            }  
-                return false;
-            
+            }
+
+            return false;
         }
 
         if (array_key_exists($hook_name, self::$deprecated_hooks)) {

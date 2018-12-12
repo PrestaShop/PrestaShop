@@ -91,9 +91,9 @@ class AdminProductsControllerCore extends AdminController
     {
         if ((int) $tr['is_virtual'] == 1 && $tr['nb_downloadable'] == 0) {
             return '&infin;';
-        }  
-            return $echo;
-        
+        }
+
+        return $echo;
     }
 
     protected function _cleanMetaKeywords($keywords)
@@ -109,9 +109,9 @@ class AdminProductsControllerCore extends AdminController
             }
 
             return (count($out) > 0) ? implode(',', $out) : '';
-        }  
-            return '';
-        
+        }
+
+        return '';
     }
 
     /**
@@ -2183,9 +2183,9 @@ class AdminProductsControllerCore extends AdminController
 
         if (is_null($id_lang)) {
             return !empty($_POST['multishop_check'][$field]);
-        }  
-            return !empty($_POST['multishop_check'][$field][$id_lang]);
-        
+        }
+
+        return !empty($_POST['multishop_check'][$field][$id_lang]);
     }
 
     protected function _removeTaxFromEcotax()
@@ -2837,24 +2837,23 @@ class AdminProductsControllerCore extends AdminController
                             break;
                     }
                     continue;
-                }  
-                    $imagesTypes = ImageType::getImagesTypes('products');
-                    $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
+                }
+                $imagesTypes = ImageType::getImagesTypes('products');
+                $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-                    foreach ($imagesTypes as $imageType) {
-                        if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
+                foreach ($imagesTypes as $imageType) {
+                    if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
+                        $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
+                        continue;
+                    }
+
+                    if ($generate_hight_dpi_images) {
+                        if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $image->image_format, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $image->image_format)) {
                             $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
                             continue;
                         }
-
-                        if ($generate_hight_dpi_images) {
-                            if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $image->image_format, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $image->image_format)) {
-                                $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
-                                continue;
-                            }
-                        }
                     }
-                
+                }
 
                 unlink($file['save_path']);
                 //Necesary to prevent hacking
@@ -2890,9 +2889,9 @@ class AdminProductsControllerCore extends AdminController
 
         if ($die) {
             die(json_encode(array($image_uploader->getName() => $files)));
-        }  
-            return $files;
-        
+        }
+
+        return $files;
     }
 
     public function ajaxProcessProductQuantity()
@@ -3191,9 +3190,8 @@ class AdminProductsControllerCore extends AdminController
 
                 if ($product->save()) {
                     die($bo_product_url);
-                }  
-                    die('error: saving');
-                
+                }
+                die('error: saving');
             }
         }
     }

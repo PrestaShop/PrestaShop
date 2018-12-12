@@ -184,9 +184,9 @@ class CurrencyCore extends ObjectModel
 
         if ($idCurrencyExists) {
             return true;
-        }  
-            return false;
-        
+        }
+
+        return false;
     }
 
     /**

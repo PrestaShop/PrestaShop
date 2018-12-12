@@ -197,9 +197,9 @@ class MediaCore
                 $server = Tools::getMediaServer($tmp);
 
                 return $matches[1] . $protocolLink . $server . $tmp;
-            }  
-                return $matches[0];
-            
+            }
+
+            return $matches[0];
         }
 
         return false;
@@ -271,9 +271,8 @@ class MediaCore
                     return false;
                 } elseif (!@filemtime($fileUriHostMode) || @filesize($fileUriHostMode) === 0) {
                     return false;
-                }  
-                    $mediaUri = $mediaUriHostMode;
-                
+                }
+                $mediaUri = $mediaUriHostMode;
             }
 
             $mediaUri = str_replace('//', '/', $mediaUri);
@@ -461,9 +460,9 @@ class MediaCore
             return Media::getCSSPath($folder . $file);
         } elseif (@file_exists($fileUri . $name . '/' . $file) || (defined('_PS_HOST_MODE_') && @file_exists($fileUriHostMode . $name . '/' . $file))) {
             return Media::getCSSPath($folder . $name . '/' . $file);
-        }  
-            return false;
-        
+        }
+
+        return false;
     }
 
     /**

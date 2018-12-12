@@ -1078,9 +1078,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 if (Tools::isEmpty($value)) {
                     if ($human_errors) {
                         return $this->trans('The %s field is required.', array($this->displayFieldName($field, get_class($this))), 'Admin.Notifications.Error');
-                    }  
-                        return $this->trans('Property %s is empty.', array(get_class($this) . '->' . $field), 'Admin.Notifications.Error');
-                    
+                    }
+
+                    return $this->trans('Property %s is empty.', array(get_class($this) . '->' . $field), 'Admin.Notifications.Error');
                 }
             }
         }
@@ -1110,11 +1110,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                         $language = new Language((int) $id_lang);
 
                         return $this->trans('Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).', array($this->displayFieldName($field, get_class($this)), $language->name, $size['max']), 'Admin.Notifications.Error');
-                    }  
-                        return $this->trans('The %1$s field is too long (%2$d chars max).', array($this->displayFieldName($field, get_class($this)), $size['max']), 'Admin.Notifications.Error');
-                    
-                }  
-                    return $this->trans('The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.',
+                    }
+
+                    return $this->trans('The %1$s field is too long (%2$d chars max).', array($this->displayFieldName($field, get_class($this)), $size['max']), 'Admin.Notifications.Error');
+                }
+
+                return $this->trans('The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.',
                         array(
                             get_class($this) . '->' . $field,
                             $length,
@@ -1123,7 +1124,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                         ),
                         'Admin.Notifications.Error'
                     );
-                
             }
         }
 
@@ -1153,9 +1153,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 if (!$res) {
                     if ($human_errors) {
                         return $this->trans('The %s field is invalid.', array($this->displayFieldName($field, get_class($this))), 'Admin.Notifications.Error');
-                    }  
-                        return $this->trans('Property %s is not valid', array(get_class($this) . '->' . $field), 'Admin.Notifications.Error');
-                    
+                    }
+
+                    return $this->trans('Property %s is not valid', array(get_class($this) . '->' . $field), 'Admin.Notifications.Error');
                 }
             }
         }
@@ -1465,13 +1465,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         if (empty($field_name)) {
             return false;
-        }  
-            return (bool) Db::getInstance()->getValue('
+        }
+
+        return (bool) Db::getInstance()->getValue('
             SELECT id_required_field
             FROM ' . _DB_PREFIX_ . 'required_field
             WHERE field_name = "' . Db::getInstance()->escape($field_name) . '"
             ' . (!$all ? ' AND object_name = \'' . pSQL($this->getObjectName()) . '\'' : ''));
-        
     }
 
     /**
@@ -2092,9 +2092,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
 
             return $this->{$field_name};
-        }  
-            throw new PrestaShopException('Could not load field from definition.');
-        
+        }
+        throw new PrestaShopException('Could not load field from definition.');
     }
 
     /**

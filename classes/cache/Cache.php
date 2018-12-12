@@ -537,9 +537,9 @@ abstract class CacheCore
             }
 
             return array_unique($res[1]);
-        }  
-            return false;
-        
+        }
+
+        return false;
     }
 
     /**

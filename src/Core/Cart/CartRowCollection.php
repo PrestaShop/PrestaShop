@@ -76,9 +76,9 @@ class CartRowCollection implements \Iterator, \Countable
         $keys = array_keys($this->cartRows);
         if (!isset($keys[$iteratorPosition])) {
             return null;
-        }  
-            return $keys[$iteratorPosition];
-        
+        }
+
+        return $keys[$iteratorPosition];
     }
 
     public function count()

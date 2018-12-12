@@ -451,9 +451,9 @@ class CartCore extends ObjectModel
 
         if ($cart_vat_amount == 0 || $cartAmountTaxExcluded == 0) {
             return 0;
-        }  
-            return Tools::ps_round($cart_vat_amount / $cartAmountTaxExcluded, 3);
-        
+        }
+
+        return Tools::ps_round($cart_vat_amount / $cartAmountTaxExcluded, 3);
     }
 
     /**
@@ -1541,14 +1541,13 @@ class CartCore extends ObjectModel
                         `id_address_delivery` = ' . (int) $id_address_delivery . ',
                         `in_cart` = 1
                     WHERE `id_customization` = ' . (int) $id_customization);
-            }  
-                Db::getInstance()->execute('
+            }
+            Db::getInstance()->execute('
                     UPDATE `' . _DB_PREFIX_ . 'customization`
                     SET `id_address_delivery` = ' . (int) $id_address_delivery . ',
                     `id_product_attribute` = ' . (int) $id_product_attribute . ',
                     `in_cart` = 1
                     WHERE `id_customization` = ' . (int) $id_customization);
-            
         }
         // refresh cache of self::_products
         $this->_products = $this->getProducts(true);
@@ -2894,17 +2893,15 @@ class CartCore extends ObjectModel
         if ($order_by_price) {
             if ($order_way) {
                 return ($option1['total_price_with_tax'] < $option2['total_price_with_tax']) * 2 - 1;
-            }  
-                // return -1 or 1
-                return ($option1['total_price_with_tax'] >= $option2['total_price_with_tax']) * 2 - 1;
-            
+            }
+            // return -1 or 1
+            return ($option1['total_price_with_tax'] >= $option2['total_price_with_tax']) * 2 - 1;
         } elseif ($order_way) {
             // return -1 or 1
             return ($option1['position'] < $option2['position']) * 2 - 1;
-        }  
-            // return -1 or 1
-            return ($option1['position'] >= $option2['position']) * 2 - 1;
-        
+        }
+        // return -1 or 1
+        return ($option1['position'] >= $option2['position']) * 2 - 1;
     }
 
     /**
@@ -4909,14 +4906,13 @@ class CartCore extends ObjectModel
         }
         if (!$return_collection) {
             return $addresses_without_carriers;
-        }  
-            $addresses_instance_without_carriers = array();
-            foreach ($addresses_without_carriers as $id_address) {
-                $addresses_instance_without_carriers[] = new Address($id_address);
-            }
+        }
+        $addresses_instance_without_carriers = array();
+        foreach ($addresses_without_carriers as $id_address) {
+            $addresses_instance_without_carriers[] = new Address($id_address);
+        }
 
-            return $addresses_instance_without_carriers;
-        
+        return $addresses_instance_without_carriers;
     }
 
     /**

@@ -112,16 +112,15 @@ class PackCore extends Product
             }
 
             return self::$cacheIsPacked[$cache_key];
-        }  
-            $cache_key = $id_product . '-' . $id_product_attribute;
-            if (!array_key_exists($cache_key, self::$cacheIsPacked)) {
-                $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'pack` WHERE id_product_item = ' . ((int) $id_product) . ' AND
+        }
+        $cache_key = $id_product . '-' . $id_product_attribute;
+        if (!array_key_exists($cache_key, self::$cacheIsPacked)) {
+            $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'pack` WHERE id_product_item = ' . ((int) $id_product) . ' AND
 					id_product_attribute_item = ' . ((int) $id_product_attribute));
-                self::$cacheIsPacked[$cache_key] = ($result > 0);
-            }
+            self::$cacheIsPacked[$cache_key] = ($result > 0);
+        }
 
-            return self::$cacheIsPacked[$cache_key];
-        
+        return self::$cacheIsPacked[$cache_key];
     }
 
     public static function noPackPrice($id_product)

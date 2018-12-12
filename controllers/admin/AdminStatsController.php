@@ -293,8 +293,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
             }
 
             return $sales;
-        }  
-            return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        }
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
 			SELECT SUM(total_products / o.conversion_rate)
 			FROM `' . _DB_PREFIX_ . 'orders` o
@@ -302,7 +303,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o')
             );
-        
     }
 
     public static function get8020SalesCatalog($date_from, $date_to)
@@ -356,8 +356,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
             }
 
             return $orders;
-        }  
-            $orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        }
+        $orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
 			SELECT COUNT(*) AS orders
 			FROM `' . _DB_PREFIX_ . 'orders` o
@@ -365,7 +365,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o')
             );
-        
 
         return $orders;
     }
@@ -555,8 +554,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
             }
 
             return $purchases;
-        }  
-            return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        }
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
 			SELECT SUM(od.`product_quantity` * IF(
 				od.`purchase_supplier_price` > 0,
@@ -569,7 +569,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o')
             );
-        
     }
 
     public static function getExpenses($date_from, $date_to, $granularity = false)

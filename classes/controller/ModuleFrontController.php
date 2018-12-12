@@ -94,8 +94,8 @@ class ModuleFrontControllerCore extends FrontController
     {
         if (isset($this->module) && is_a($this->module, 'Module')) {
             return $this->module->l($string, $specific);
-        }  
-            return $string;
-        
+        }
+
+        return $string;
     }
 }

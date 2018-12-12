@@ -67,9 +67,9 @@ class TaxCore extends ObjectModel
 
         if ($this->isUsed()) {
             return $this->historize();
-        }  
-            return parent::delete();
-        
+        }
+
+        return parent::delete();
     }
 
     /**

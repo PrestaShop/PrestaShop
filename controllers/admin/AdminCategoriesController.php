@@ -843,12 +843,11 @@ class AdminCategoriesControllerCore extends AdminController
                 }
 
                 return true;
-            }  
-                return false;
-            
-        }  
-            $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
-        
+            }
+
+            return false;
+        }
+        $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
     }
 
     public function processDelete()
@@ -1006,27 +1005,24 @@ class AdminCategoriesControllerCore extends AdminController
                 die(json_encode([
                     'message' => $this->trans('Successful update.', [], 'Admin.Notifications.Success'),
                 ]));
-            }  
-                die('{"hasError" : true, errors : "Cannot update categories position"}');
-            
-        }  
-            die('{"hasError" : true, "errors" : "This category cannot be loaded"}');
-        
+            }
+            die('{"hasError" : true, errors : "Cannot update categories position"}');
+        }
+        die('{"hasError" : true, "errors" : "This category cannot be loaded"}');
     }
 
     public function ajaxProcessStatusCategory()
     {
         if (!$id_category = (int) Tools::getValue('id_category')) {
             die(json_encode(array('success' => false, 'error' => true, 'text' => $this->trans('Failed to update the status', array(), 'Admin.Notifications.Error'))));
-        }  
-            $category = new Category((int) $id_category);
-            if (Validate::isLoadedObject($category)) {
-                $category->active = $category->active == 1 ? 0 : 1;
-                $category->save() ?
+        }
+        $category = new Category((int) $id_category);
+        if (Validate::isLoadedObject($category)) {
+            $category->active = $category->active == 1 ? 0 : 1;
+            $category->save() ?
                 die(json_encode(array('success' => true, 'text' => $this->trans('The status has been updated successfully', array(), 'Admin.Notifications.Success')))) :
                 die(json_encode(array('success' => false, 'error' => true, 'text' => $this->trans('Failed to update the status', array(), 'Admin.Notifications.Success'))));
-            }
-        
+        }
     }
 
     public function ajaxProcessuploadThumbnailImages()

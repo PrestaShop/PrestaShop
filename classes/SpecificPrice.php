@@ -388,9 +388,9 @@ class SpecificPriceCore extends ObjectModel
         $second_value = (int) $second_value;
         if ($first_value != $second_value) {
             return 'IN (' . $first_value . ', ' . $second_value . ')';
-        }  
-            return ' = ' . $first_value;
-        
+        }
+
+        return ' = ' . $first_value;
     }
 
     /**

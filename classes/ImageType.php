@@ -203,9 +203,9 @@ class ImageTypeCore extends ObjectModel
             return $nameWithoutThemeName . '_' . $themeName;
         } elseif (self::getByNameNType($themeName . '_' . $nameWithoutThemeName)) {
             return $themeName . '_' . $nameWithoutThemeName;
-        }  
-            return $nameWithoutThemeName . '_default';
-        
+        }
+
+        return $nameWithoutThemeName . '_default';
     }
 
     /**

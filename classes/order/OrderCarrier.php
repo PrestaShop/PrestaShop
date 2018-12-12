@@ -163,9 +163,9 @@ class OrderCarrierCore extends ObjectModel
             (int) $order->id_shop
         )) {
             return true;
-        }  
-            return false;
-        
+        }
+
+        return false;
     }
 
     public function updateWs()

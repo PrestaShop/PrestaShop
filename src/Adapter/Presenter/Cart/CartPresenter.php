@@ -285,9 +285,9 @@ class CartPresenter implements PresenterInterface
                     || $a['id_customization'] > $b['id_customization']
                 ) {
                     return -1;
-                }  
-                    return 1;
-                
+                }
+
+                return 1;
             });
 
             $product['customizations'] = $customizations;

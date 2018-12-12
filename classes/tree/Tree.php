@@ -316,9 +316,9 @@ class TreeCore
                 . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
                 . $this->getTemplateDirectory() . $template;
-        }  
-            return $this->getTemplateDirectory() . $template;
-        
+        }
+
+        return $this->getTemplateDirectory() . $template;
     }
 
     public function setNoJS($value)

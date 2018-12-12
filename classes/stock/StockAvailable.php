@@ -699,9 +699,9 @@ class StockAvailableCore extends ObjectModel
             $id_shops_list = implode(', ', $shop_list);
 
             return Db::getInstance()->update('stock_available', array('quantity' => 0), 'id_shop IN (' . $id_shops_list . ')');
-        }  
-            return Db::getInstance()->update('stock_available', array('quantity' => 0), 'id_shop_group = ' . $shop_group->id);
-        
+        }
+
+        return Db::getInstance()->update('stock_available', array('quantity' => 0), 'id_shop_group = ' . $shop_group->id);
     }
 
     /**

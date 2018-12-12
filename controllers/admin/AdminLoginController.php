@@ -230,9 +230,8 @@ class AdminLoginControllerCore extends AdminController
 
                 if (Tools::isSubmit('ajax')) {
                     die(json_encode(array('hasErrors' => false, 'redirect' => $url)));
-                }  
-                    $this->redirect_after = $url;
-                
+                }
+                $this->redirect_after = $url;
             }
         }
         if (Tools::isSubmit('ajax')) {
@@ -294,12 +293,11 @@ class AdminLoginControllerCore extends AdminController
                     'hasErrors' => false,
                     'confirm' => $this->trans('Please, check your mailbox. A link to reset your password has been sent to you.', array(), 'Admin.Login.Notification'),
                 )));
-            }  
-                die(Tools::jsonEncode(array(
+            }
+            die(Tools::jsonEncode(array(
                     'hasErrors' => true,
                     'errors' => array($this->trans('An error occurred while attempting to reset your password.', array(), 'Admin.Login.Notification')),
                 )));
-            
         } elseif (Tools::isSubmit('ajax')) {
             die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
         }

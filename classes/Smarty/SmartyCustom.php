@@ -207,33 +207,32 @@ class SmartyCustomCore extends Smarty
 
         if (isset($is_in_lazy_cache[$key])) {
             return $is_in_lazy_cache[$key];
-        }  
-            $sql = 'SELECT UNIX_TIMESTAMP(last_update) as last_update, filepath FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache`
+        }
+        $sql = 'SELECT UNIX_TIMESTAMP(last_update) as last_update, filepath FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache`
 							WHERE `template_hash`=\'' . pSQL($template_md5) . '\'';
-            $sql .= ' AND cache_id="' . pSQL((string) $cache_id) . '"';
-            $sql .= ' AND compile_id="' . pSQL((string) $compile_id) . '"';
+        $sql .= ' AND cache_id="' . pSQL((string) $cache_id) . '"';
+        $sql .= ' AND compile_id="' . pSQL((string) $compile_id) . '"';
 
-            $result = Db::getInstance()->getRow($sql, false);
-            // If the filepath is not yet set, it means the cache update is in progress in another process.
-            // In this case do not try to clear the cache again and tell to use the existing cache, if any
-            if ($result !== false && $result['filepath'] == '') {
-                // If the cache update is stalled for more than 1min, something should be wrong,
-                // remove the entry from the lazy cache
-                if ($result['last_update'] < time() - 60) {
-                    $this->delete_from_lazy_cache($template, $cache_id, $compile_id);
-                }
-
-                $return = true;
-            } else {
-                if ($result === false
-                    || @filemtime($this->getCacheDir() . $result['filepath']) < $result['last_update']) {
-                    $return = false;
-                } else {
-                    $return = $result['filepath'];
-                }
+        $result = Db::getInstance()->getRow($sql, false);
+        // If the filepath is not yet set, it means the cache update is in progress in another process.
+        // In this case do not try to clear the cache again and tell to use the existing cache, if any
+        if ($result !== false && $result['filepath'] == '') {
+            // If the cache update is stalled for more than 1min, something should be wrong,
+            // remove the entry from the lazy cache
+            if ($result['last_update'] < time() - 60) {
+                $this->delete_from_lazy_cache($template, $cache_id, $compile_id);
             }
-            $is_in_lazy_cache[$key] = $return;
-        
+
+            $return = true;
+        } else {
+            if ($result === false
+                    || @filemtime($this->getCacheDir() . $result['filepath']) < $result['last_update']) {
+                $return = false;
+            } else {
+                $return = $result['filepath'];
+            }
+        }
+        $is_in_lazy_cache[$key] = $return;
 
         return $return;
     }

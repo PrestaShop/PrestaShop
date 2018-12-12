@@ -270,9 +270,9 @@ class ReferrerCore extends ObjectModel
                 AND `valid` = 1';
 
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-        }  
-            return array('orders' => 0, 'sales' => 0);
-        
+        }
+
+        return array('orders' => 0, 'sales' => 0);
     }
 
     /**

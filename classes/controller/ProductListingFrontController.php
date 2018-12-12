@@ -541,13 +541,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $this->ajaxRender(json_encode($this->getAjaxProductSearchVariables()));
 
             return;
-        }  
-            $variables = $this->getProductSearchVariables();
-            $this->context->smarty->assign(array(
+        }
+        $variables = $this->getProductSearchVariables();
+        $this->context->smarty->assign(array(
                 'listing' => $variables,
             ));
-            $this->setTemplate($template, $params, $locale);
-        
+        $this->setTemplate($template, $params, $locale);
     }
 
     abstract public function getListingLabel();
