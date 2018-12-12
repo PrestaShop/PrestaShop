@@ -273,7 +273,6 @@ class CookieCore
             $this->_content['id_address_invoice'],
             $this->_content['id_address_delivery']
         );
-
         $this->_modified = true;
     }
 
