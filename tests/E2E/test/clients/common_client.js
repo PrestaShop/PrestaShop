@@ -652,7 +652,6 @@ class CommonClient {
         }
       });
   }
-
 }
 
 module.exports = CommonClient;

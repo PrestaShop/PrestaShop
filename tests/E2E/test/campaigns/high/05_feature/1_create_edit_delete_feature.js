@@ -30,6 +30,7 @@ scenario('Create "Feature"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
+  welcomeScenarios.findAndCloseWelcomeModal();
   commonFeature.createFeature(featureData);
   commonProduct.createProduct(AddProductPage, productData);
 

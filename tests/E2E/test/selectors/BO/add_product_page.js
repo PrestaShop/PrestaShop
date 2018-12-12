@@ -61,7 +61,7 @@ module.exports = {
     product_add_feature_btn: '//*[@id="add_feature_button"]',
     feature_select_option: '//*[@id="select2-form_step1_features_0_feature-results"]/li[2]',
     feature_custom_value_height: '//*[@id="form_step1_features_0_custom_value_1"]',
-    feature_select_option: '//*[@id="select2-form_step1_features_%ID_feature-results"]/li[text()="%V"]',
+    feature_select_option_text: '//*[@id="select2-form_step1_features_%ID_feature-results"]/li[text()="%V"]',
     feature_custom_value: '//*[@id="form_step1_features_%ID_custom_value_1"]',
     priceTE_shortcut: '#form_step1_price_shortcut',
     priceTTC_shortcut: '#form_step1_price_ttc_shortcut',
@@ -197,6 +197,7 @@ module.exports = {
     get catalog_submit_filter() {
       return this.catalog_product_table + '.column-filters button[name="products_filter_submit"]';
     },
+    catalog_home: '//*[@id="form_step1_categories"]/ul/li/div/label',
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
     category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
@@ -246,7 +247,7 @@ module.exports = {
     sort_by_icon: '//*[@id="product_catalog_list"]//div[@data-sort-col-name="%B" and @data-sort-direction="%W"]/span[@role="button"]',
     sort_button: '//*[@id="product_catalog_list"]//div[@data-sort-col-name="%B"]/span[@role="button"]',
     status_select: '//*[@id="product_filter_column_active"]//select[@name="filter_column_active"]',
-    product_status: '//*[@id="product_catalog_list"]//tr[%I]/td[9]/a/i[contains(@class, "action-%ACTION")]',
+    product_status: '//*[@id="product_catalog_list"]//tr[%I]/td[10]/a/i[contains(@class, "action-%ACTION")]',
     edit_button: '//*[@id="product_catalog_list"]//i[text()="mode_edit"]',
     pagination_products: '//*[@id="product_catalog_list"]//div[contains(@class, "justify-content-center")]/div[1]',
     dropdown_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//button[@data-toggle="dropdown"])[%POS]',
