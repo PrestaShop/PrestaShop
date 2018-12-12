@@ -178,8 +178,11 @@ class AdminProductDataUpdater implements ProductInterface
             }
         }
 
-        unset($product->id);
-        unset($product->id_product);
+        unset(
+            $product->id,
+            $product->id_product
+        );
+
         $product->indexed = 0;
         $product->active = 0;
 

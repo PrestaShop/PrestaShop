@@ -148,8 +148,10 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             if ($module_instance[$module['name']] = Module::getInstanceByName($module['name'])) {
                 $modules[$m]['displayName'] = $module_instance[$module['name']]->displayName;
             } else {
-                unset($module_instance[$module['name']]);
-                unset($modules[$m]);
+                unset(
+                    $module_instance[$module['name']],
+                    $modules[$m]
+                );
             }
         }
 

@@ -662,8 +662,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                     foreach ($group['attributes'] as $key => $attribute) {
                         if (!in_array((int) $key, $id_attributes)) {
-                            unset($group['attributes'][$key]);
-                            unset($group['attributes_quantity'][$key]);
+                            unset(
+                                $group['attributes'][$key],
+                                $group['attributes_quantity'][$key]
+                            );
                         }
                     }
                 }
