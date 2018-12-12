@@ -59,6 +59,11 @@ class Calculator
     protected $fees;
 
     /**
+     * @var CartRuleCalculator
+     */
+    protected $cartRuleCalculator;
+
+    /**
      * indicates if cart was already processed.
      *
      * @var bool
@@ -72,6 +77,7 @@ class Calculator
         $this->cartRows = new CartRowCollection();
         $this->fees = new Fees();
         $this->cartRules = new CartRuleCollection();
+        $this->cartRuleCalculator = new CartRuleCalculator();
     }
 
     /**
@@ -256,11 +262,10 @@ class Calculator
      */
     public function calculateCartRules()
     {
-        $cartRuleCalculator = new CartRuleCalculator();
-        $cartRuleCalculator->setCartRules($this->cartRules)
-                           ->setCartRows($this->cartRows)
-                           ->setCalculator($this);
-        $cartRuleCalculator->applyCartRules();
+        $this->cartRuleCalculator->setCartRules($this->cartRules)
+            ->setCartRows($this->cartRows)
+            ->setCalculator($this)
+            ->applyCartRules();
     }
 
     /**
@@ -271,5 +276,13 @@ class Calculator
     public function calculateFees($computePrecision)
     {
         $this->fees->processCalculation($this->cart, $this->cartRows, $computePrecision, $this->id_carrier);
+    }
+
+    /**
+     * @return CartRuleCollection
+     */
+    public function getCartRulesData()
+    {
+        return $this->cartRuleCalculator->getCartRulesData();
     }
 }
