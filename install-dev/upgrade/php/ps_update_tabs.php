@@ -120,6 +120,4 @@ function ps_update_tabs()
             }
         }
     }
-
-    
 }
