@@ -73,7 +73,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
         $expr = array_merge($expr, $options);
 
         // followed by references
-        if (sizeof($refs) !== 0) {
+        if (count($refs) !== 0) {
             $expr['sub_tree'] = array_merge($expr['sub_tree'], $refs);
         }
 
@@ -442,4 +442,3 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
         return $expr;
     }
 }
-?>

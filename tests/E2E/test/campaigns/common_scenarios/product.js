@@ -97,10 +97,27 @@ module.exports = {
           });
           test('should click on "Generate" button', () => client.scrollWaitForExistAndClick(AddProductPage.variations_generate));
           test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
-          test('should get the combination data', () => client.getCombinationData(1));
-          test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected));
+
+          /**
+           * Should refresh the page because of the issue here
+           * https://github.com/PrestaShop/PrestaShop/issues/9826
+           **/
+          test('should refresh the page if "Debug" mode is active because of the issue here  "#9826" ', () => {
+            return promise
+              .then(() => client.isVisible(AddProductPage.var_selected))
+              .then(() => {
+                if (global.ps_mode_dev && !isVisible) {
+                  client.refresh();
+                } else {
+                  client.pause(0);
+                }
+              })
+              .then(() => client.getCombinationData(1, 5000));
+          });
+          test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected, 2000));
           test('should set the "Variations quantity" input', () => {
             return promise
+              .then(() => client.pause(4000))
               .then(() => client.setVariationsQuantity(AddProductPage, productData.attribute[1].variation_quantity))
               .then(() => {
                 if (global.ps_mode_dev) {
@@ -171,10 +188,13 @@ module.exports = {
       }
 
       scenario('Save the created product', client => {
-        test('should switch the product online', () => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000));
-        test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
+        test('should switch the product online', () => {
+          return promise
+            .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000))
+            .then(() => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.', 3000));
+        });
         test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 7000));
-        test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
+        test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.', 'equal', 2000));
       }, 'product/product');
 
     }, 'product/product');
@@ -520,5 +540,31 @@ module.exports = {
           }
         });
     });
+  },
+
+  async checkPaginationThenCreateProduct(client, productData) {
+    await client.getProductPageNumber('product_catalog_list', 5000);
+    let productNumber = await 20 - global.productsNumber;
+    if (productNumber !== 0) {
+      for (let i = 0; i < productNumber + 1; i++) {
+        await client.waitForExistAndClick(Menu.Sell.Catalog.products_submenu, 1000);
+        await client.waitForExistAndClick(AddProductPage.new_product_button, 2000);
+        await client.waitAndSetValue(AddProductPage.product_name_input, productData["name"] + date_time);
+        await client.waitAndSetValue(AddProductPage.product_reference, productData["reference"]);
+        await client.waitAndSetValue(AddProductPage.quantity_shortcut_input, productData["quantity"]);
+        await client.setPrice(AddProductPage.priceTE_shortcut, productData["price"]);
+        await client.uploadPicture(productData["image_name"], AddProductPage.picture);
+        if (global.ps_mode_dev) {
+          await client.isVisible(AddProductPage.symfony_toolbar);
+          if (global.isVisible) {
+            await client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+          }
+        }
+        await client.waitForExistAndClick(AddProductPage.product_online_toggle, 1000);
+        await client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.');
+        await client.waitForExistAndClick(AddProductPage.save_product_button, 4000);
+        await client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.');
+      }
+    }
   }
 };

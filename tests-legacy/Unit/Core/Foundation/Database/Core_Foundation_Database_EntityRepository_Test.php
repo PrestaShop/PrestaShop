@@ -46,7 +46,7 @@ class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
         $this->repository = new EntityRepository(
             $mockEntityManager,
             'ps_',
-            new EntityMetaData
+            new EntityMetaData()
         );
     }
 

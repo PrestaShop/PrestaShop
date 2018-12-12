@@ -72,7 +72,7 @@ class Download
     {
         $curl_timeout = 60;
 
-        if (!extension_loaded('openssl') and strpos('https://', $url) === true) {
+        if (!extension_loaded('openssl') && strpos('https://', $url) === true) {
             $url = str_replace('https', 'http', $url);
         }
 

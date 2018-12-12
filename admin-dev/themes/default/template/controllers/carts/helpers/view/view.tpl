@@ -43,7 +43,7 @@
 					{else}
 					<i class="icon-question"></i>
 					{/if}
-					<a href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&amp;id_customer={$customer->id|intval}&amp;viewcustomer">{$customer->firstname} {$customer->lastname}</a></h2>
+					<a href="{$link->getAdminLink('AdminCustomers', true, [], ['id_customer' => $customer->id|intval, 'viewcustomer' => 1])|escape:'html':'UTF-8'}">{$customer->firstname} {$customer->lastname}</a></h2>
 				<div class="form-horizontal">
 					<div class="form-group">
 						<label class="col-lg-3 control-label">{l s='Account registration date:' d='Admin.Orderscustomers.Feature'}</label>
@@ -67,12 +67,12 @@
 		<div class="panel">
 			<h3><i class="icon-shopping-cart"></i> {l s='Order information' d='Admin.Orderscustomers.Feature'}</h3>
 			{if $order->id}
-				<h2><a href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}&amp;vieworder"> {l s='Order #%d' sprintf=[$order->id|string_format:"%06d"] d='Admin.Orderscustomers.Feature'}</a></h2>
+				<h2><a href="{$link->getAdminLink('AdminOrders', true, [], ['id_order' => $order->id|intval, 'vieworder' => 1])|escape:'html':'UTF-8'}"> {l s='Order #%d' sprintf=[$order->id|string_format:"%06d"] d='Admin.Orderscustomers.Feature'}</a></h2>
 				{l s='Made on:' d='Admin.Orderscustomers.Feature'} {dateFormat date=$order->date_add}
 			{else}
 				<h2>{l s='No order was created from this cart.' d='Admin.Orderscustomers.Feature'}</h2>
 				{if $customer->id}
-					<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;id_cart={$cart->id|intval}&amp;addorder"><i class="icon-shopping-cart"></i> {l s='Create an order from this cart.' d='Admin.Orderscustomers.Feature'}</a>
+					<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders', true, [], ['id_cart' => $cart->id|intval, 'addorder' => 1])|escape:'html':'UTF-8'}"><i class="icon-shopping-cart"></i> {l s='Create an order from this cart.' d='Admin.Orderscustomers.Feature'}</a>
 				{/if}
 			{/if}
 		</div>
@@ -208,7 +208,7 @@
 			{foreach from=$discounts item='discount'}
 				<tr>
 					<td class="fixed-width-xs">{$discount.id_discount}</td>
-					<td><a href="{$link->getAdminLink('AdminCartRules')|escape:'html':'UTF-8'}&amp;id_cart_rule={$discount.id_discount}&amp;updatecart_rule">{$discount.name}</a></td>
+					<td><a href="{$link->getAdminLink('AdminCartRules', true, [], ['id_cart_rule' => $discount.id_discount, 'updatecart_rule' => 1])|escape:'html':'UTF-8'}">{$discount.name}</a></td>
 					<td class="text-right fixed-width-md">{if (float)$discount.value_real == 0 && (int)$discount.free_shipping == 1}{l s='Free shipping' d='Admin.Shipping.Feature'}{else}- {displayWtPriceWithCurrency price=$discount.value_real currency=$currency}{/if}</td>
 				</tr>
 			{/foreach}

@@ -125,12 +125,12 @@ class SelectExpressionProcessor extends AbstractProcessor {
                                'base_expr' => trim($last['base_expr']));
                 // remove the last token
                 array_pop($tokens);
-                $base_expr = join("", $tokens);
+                $base_expr = implode("", $tokens);
             }
         }
 
         if (!$alias) {
-            $base_expr = join("", $tokens);
+            $base_expr = implode("", $tokens);
         } else {
             /* remove escape from the alias */
             $alias['no_quotes'] = $this->revokeQuotation($alias['name']);
@@ -167,4 +167,3 @@ class SelectExpressionProcessor extends AbstractProcessor {
     }
 
 }
-?>

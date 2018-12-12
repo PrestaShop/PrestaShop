@@ -125,7 +125,7 @@ class CartControllerCore extends FrontController
 
         $productsInCart = $this->context->cart->getProducts();
         $updatedProducts = array_filter($productsInCart, array($this, 'productInCartMatchesCriteria'));
-        list(, $updatedProduct) = each($updatedProducts);
+        $updatedProduct = reset($updatedProducts);
         $productQuantity = $updatedProduct['quantity'];
 
         if (!$this->errors) {
@@ -174,8 +174,6 @@ class CartControllerCore extends FrontController
             'cart_detailed_actions' => $this->render('checkout/_partials/cart-detailed-actions'),
             'cart_voucher' => $this->render('checkout/_partials/cart-voucher'),
         ]));
-
-        return;
     }
 
     /**
@@ -220,8 +218,6 @@ class CartControllerCore extends FrontController
             'success' => true,
             'productUrl' => $url,
         ]));
-
-        return;
     }
 
     public function postProcess()

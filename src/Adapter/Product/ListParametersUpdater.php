@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Exception\ProductException;
  * Can manage filter parameters from request in Product Catalogue Page.
  * For internal use only.
  */
-final class FilterParametersUpdater
+final class ListParametersUpdater
 {
     /**
      * In case of position ordering all the filters should be reset.
@@ -65,17 +65,47 @@ final class FilterParametersUpdater
      *
      * @throws ProductException
      */
-    public function buildFilters(
+    public function buildListParameters(
         array $queryFilterParameters,
         array $persistedFilterParameters,
         array $defaultFilterParameters
     ) {
-        return [
-            'offset' => (int) $this->getParameter('offset', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
-            'limit' => (int) $this->getParameter('limit', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
-            'orderBy' => (string) $this->getParameter('orderBy', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
-            'sortOrder' => (string) $this->getParameter('sortOrder', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
+        $filters = [
+            'offset' => (int) $this->getParameter(
+                'offset',
+                $queryFilterParameters,
+                $persistedFilterParameters,
+                $defaultFilterParameters
+            ),
+            'limit' => (int) $this->getParameter(
+                'limit',
+                $queryFilterParameters,
+                $persistedFilterParameters,
+                $defaultFilterParameters
+            ),
+            'orderBy' => (string) $this->getParameter(
+                'orderBy',
+                $queryFilterParameters,
+                $persistedFilterParameters,
+                $defaultFilterParameters
+            ),
+            'sortOrder' => (string) $this->getParameter(
+                'sortOrder',
+                $queryFilterParameters,
+                $persistedFilterParameters,
+                $defaultFilterParameters
+            ),
         ];
+
+        /*
+         * We need to force the sort order when the order by
+         * is set to position_ordering
+         */
+        if ('position_ordering' === $filters['orderBy']) {
+            $filters['sortOrder'] = 'asc';
+        }
+
+        return $filters;
     }
 
     /**

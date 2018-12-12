@@ -82,4 +82,3 @@ class ColumnDefinitionBuilder {
         return substr($sql, 0, -1);
     }
 }
-?>

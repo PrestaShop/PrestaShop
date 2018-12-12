@@ -49,7 +49,7 @@ class ExpressionToken {
         $this->noQuotes = null;
     }
 
-    # TODO: we could replace it with a constructor new ExpressionToken(this, "*")
+    // TODO: we could replace it with a constructor new ExpressionToken(this, "*")
     public function addToken($string) {
         $this->token .= $string;
     }
@@ -183,5 +183,3 @@ class ExpressionToken {
         return $result;
     }
 }
-
-?>
