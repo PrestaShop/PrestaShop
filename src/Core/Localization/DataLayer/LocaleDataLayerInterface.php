@@ -74,5 +74,5 @@ interface LocaleDataLayerInterface
      *
      * @return self
      */
-    public function setLowerLayer(self $lowerLayer);
+    public function setLowerLayer(LocaleDataLayerInterface $lowerLayer);
 }
