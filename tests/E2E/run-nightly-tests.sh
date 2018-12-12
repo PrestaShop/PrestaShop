@@ -28,7 +28,6 @@ for directory in test/campaigns/full/* ; do
     docker-compose exec -e TEST_PATH=$TEST_PATH tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80 -- bash /tmp/run-tests.sh
 
     # Push report to gcloud
-    cp mochawesome-report/mochawesome.html "${DIR_PATH}/reports/${TEST_PATH//\//-}.html"
     cp mochawesome-report/mochawesome.json "${DIR_PATH}/reports/${TEST_PATH//\//-}.json"
 
     docker-compose down
