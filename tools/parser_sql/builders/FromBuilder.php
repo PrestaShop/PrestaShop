@@ -88,4 +88,3 @@ class FromBuilder {
         return "FROM " . $sql;
     }
 }
-?>

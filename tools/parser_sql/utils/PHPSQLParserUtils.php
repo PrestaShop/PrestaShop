@@ -153,4 +153,3 @@ class PHPSQLParserUtils {
         return (empty($expr) ? false : $expr);
     }
 }
-?>

@@ -60,4 +60,3 @@ class LimitBuilder {
         return "LIMIT " . $sql;
     }
 }
-?>

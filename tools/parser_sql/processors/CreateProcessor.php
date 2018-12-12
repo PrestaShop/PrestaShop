@@ -96,4 +96,3 @@ class CreateProcessor extends AbstractProcessor {
         return $result;
     }
 }
-?>

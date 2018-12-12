@@ -80,4 +80,3 @@ class UpdateStatementBuilder {
         return $sql;
     }
 }
-?>

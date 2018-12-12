@@ -96,4 +96,3 @@ class TableBuilder {
         return $sql;
     }
 }
-?>

@@ -389,4 +389,3 @@ class TableProcessor extends AbstractProcessor {
         return $result;
     }
 }
-?>

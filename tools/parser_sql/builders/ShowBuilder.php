@@ -125,4 +125,3 @@ class ShowBuilder {
         return "SHOW " . $sql;
     }
 }
-?>

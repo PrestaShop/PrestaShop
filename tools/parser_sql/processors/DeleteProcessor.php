@@ -62,4 +62,3 @@ class DeleteProcessor extends AbstractProcessor {
         return $tokens;
     }
 }
-?>

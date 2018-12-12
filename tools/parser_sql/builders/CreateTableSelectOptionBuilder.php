@@ -61,4 +61,3 @@ class CreateTableSelectOptionBuilder {
         return $sql;
     }
 }
-?>

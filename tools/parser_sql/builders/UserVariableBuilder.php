@@ -59,4 +59,3 @@ class UserVariableBuilder {
         return $parsed['base_expr'];
     }
 }
-?>

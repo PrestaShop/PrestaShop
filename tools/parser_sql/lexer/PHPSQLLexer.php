@@ -372,5 +372,3 @@ class PHPSQLLexer {
         return array_values($tokens);
     }
 }
-
-?>

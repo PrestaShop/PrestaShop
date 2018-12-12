@@ -142,4 +142,3 @@ class PHPSQLCreator {
         return $v['source']['base_expr'] . " TO " . $v['destination']['base_expr'];
     }
 }
-?>

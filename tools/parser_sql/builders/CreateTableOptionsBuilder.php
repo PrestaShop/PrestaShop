@@ -105,4 +105,3 @@ class CreateTableOptionsBuilder {
         return " " . substr($sql, 0, -1);
     }
 }
-?>

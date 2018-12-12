@@ -75,4 +75,3 @@ class ColumnReferenceBuilder {
         return $sql;
     }
 }
-?>

@@ -63,7 +63,7 @@ class ModuleTabRegisterTest extends UnitTestCase
         'doge' => array('Wololo', 'AdminMissing', 'AdminMy'),
     );
 
-    protected  $languages = array(
+    protected $languages = array(
         array(
             "id_lang" => 1,
             "name" => "Français (French)",

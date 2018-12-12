@@ -113,4 +113,3 @@ class ExpressionType {
     const COLUMN_TYPE = "column-type";
     const DEF_VALUE = "default-value";
 }
-?>

@@ -219,5 +219,3 @@ class PositionCalculator {
         }
     }
 }
-
-?>

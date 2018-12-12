@@ -65,4 +65,3 @@ class CreateTableDefinitionBuilder {
         return $this->buildTableBracketExpression($parsed['create-def']);
     }
 }
-?>

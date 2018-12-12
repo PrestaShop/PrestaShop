@@ -90,4 +90,3 @@ class OrderByBuilder {
         return "ORDER BY " . $sql;
     }
 }
-?>
