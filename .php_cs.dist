@@ -41,7 +41,8 @@ return PhpCsFixer\Config::create()
         'combine_consecutive_unsets' => true,
         'hash_to_slash_comment' => true,
         'logical_operators' => true,
-        'no_alternative_syntax' => true,
+        'no_closing_tag' => true,
+        'single_blank_line_at_eof' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache');
