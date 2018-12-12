@@ -633,7 +633,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     $definition['fields'][$field]['type'],
                     false,
                     true,
-                                                  !empty($definition['fields'][$field]['allow_null'])
+                    !empty($definition['fields'][$field]['allow_null']),
                 );
             }
         }
@@ -661,7 +661,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                             $definition['fields'][$field]['type'],
                             false,
                             true,
-                                                          !empty($definition['fields'][$field]['allow_null'])
+                            !empty($definition['fields'][$field]['allow_null']),
                         );
                     }
                 }
