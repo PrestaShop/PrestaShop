@@ -165,4 +165,3 @@ class UnionProcessor extends AbstractProcessor {
     }
 
 }
-?>

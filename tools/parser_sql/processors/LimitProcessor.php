@@ -80,4 +80,3 @@ class LimitProcessor extends AbstractProcessor {
         return array('offset' => trim($offset), 'rowcount' => trim($rowcount));
     }
 }
-?>

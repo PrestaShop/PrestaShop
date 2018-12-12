@@ -79,4 +79,3 @@ class CreateStatementBuilder {
         return $sql;
     }
 }
-?>
