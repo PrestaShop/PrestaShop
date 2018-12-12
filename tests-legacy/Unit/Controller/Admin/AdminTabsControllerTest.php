@@ -123,9 +123,9 @@ class AdminTabsControllerTest extends UnitTestCase
             ->will($this->returnCallback(function ($subject) {
                 if (strpos($subject, 'authorization') !== false) {
                     return array();
-                } else {
+                }  
                     return false;
-                }
+                
             }));
 
         parent::setupDatabaseMock($dbMock);

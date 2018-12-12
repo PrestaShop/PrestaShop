@@ -161,7 +161,7 @@ class ProductController extends FrameworkBundleAdminController
                     'import_url' => $legacyUrlGenerator->generate('AdminImport'),
                 ]
             );
-        } else {
+        }  
             // Pagination
             $paginationParameters = $request->attributes->all();
             $paginationParameters['_route'] = 'admin_product_catalog';
@@ -175,7 +175,7 @@ class ProductController extends FrameworkBundleAdminController
                     ]
                 );
             }
-        }
+        
 
         $cleanFilterParameters = $filterParametersUpdater->cleanFiltersForPositionOrdering($persistedFilterParameters, $orderBy, $hasCategoryFilter);
 

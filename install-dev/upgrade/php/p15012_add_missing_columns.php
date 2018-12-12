@@ -186,7 +186,7 @@ function p15012_add_missing_columns()
     if (sizeof($errors) > 0) {
         $msg = implode("\r", $errors);
         return array('error' => 1, 'msg' => $msg);
-    } else {
+    }  
         return true;
-    }
+    
 }

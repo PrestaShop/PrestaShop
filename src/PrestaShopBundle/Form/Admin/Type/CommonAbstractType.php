@@ -61,9 +61,9 @@ abstract class CommonAbstractType extends AbstractType
         foreach ($list as $item) {
             if (array_key_exists($item[$mapping_name], $new_list)) {
                 return $this->formatDataDuplicateChoicesList($list, $mapping_value, $mapping_name);
-            } else {
+            }  
                 $new_list[$item[$mapping_name]] = $item[$mapping_value];
-            }
+            
         }
 
         return $new_list;

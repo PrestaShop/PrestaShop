@@ -224,9 +224,9 @@ class Install extends AbstractInstall
             $this->setError($this->translator->trans('Cannot write app/config/parameters.php file', array(), 'Install'));
 
             return false;
-        } else {
+        }  
             return $this->emptyYamlParameters();
-        }
+        
     }
 
     /**

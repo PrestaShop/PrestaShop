@@ -147,9 +147,9 @@ class TreeToolbarCore implements ITreeToolbarCore
                 . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
                 . $this->getTemplateDirectory() . $template;
-        } else {
+        }  
             return $this->getTemplateDirectory() . $template;
-        }
+        
     }
 
     /**

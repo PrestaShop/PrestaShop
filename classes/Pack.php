@@ -112,7 +112,7 @@ class PackCore extends Product
             }
 
             return self::$cacheIsPacked[$cache_key];
-        } else {
+        }  
             $cache_key = $id_product . '-' . $id_product_attribute;
             if (!array_key_exists($cache_key, self::$cacheIsPacked)) {
                 $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'pack` WHERE id_product_item = ' . ((int) $id_product) . ' AND
@@ -121,7 +121,7 @@ class PackCore extends Product
             }
 
             return self::$cacheIsPacked[$cache_key];
-        }
+        
     }
 
     public static function noPackPrice($id_product)

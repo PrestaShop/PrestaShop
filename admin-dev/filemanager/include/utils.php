@@ -80,9 +80,9 @@ function create_img($imgfile, $imgthumb, $newwidth, $newheight="")
         $magicianObj -> resizeImage($newwidth, $newheight, 'auto');
         $magicianObj -> saveImage($imgthumb, 80);
         return true;
-    } else {
+    }  
         return false;
-    }
+    
 }
 
 function makeSize($size)
@@ -201,9 +201,9 @@ function fix_strtoupper($str)
 {
     if (function_exists('mb_strtoupper')) {
         return mb_strtoupper($str);
-    } else {
+    }  
         return strtoupper($str);
-    }
+    
 }
 
 
@@ -211,9 +211,9 @@ function fix_strtolower($str)
 {
     if (function_exists('mb_strtoupper')) {
         return mb_strtolower($str);
-    } else {
+    }  
         return strtolower($str);
-    }
+    
 }
 
 function fix_path($path, $transliteration)
@@ -231,9 +231,9 @@ function fix_path($path, $transliteration)
     $str=fix_filename($info['filename'], $transliteration);
     if ($tmp_path!="") {
         return $tmp_path.DIRECTORY_SEPARATOR.$str;
-    } else {
+    }  
         return $str;
-    }
+    
 }
 
 function base_url()
@@ -278,15 +278,15 @@ function image_check_memory_usage($img, $max_breedte, $max_hoogte)
             ini_set('memory_limit', (intval($memory_needed/1024/1024)+5) . 'M');
             if (ini_get('memory_limit') == (intval($memory_needed/1024/1024)+5) . 'M') {
                 return true;
-            } else {
+            }  
                 return false;
-            }
-        } else {
+            
+        }  
             return true;
-        }
-    } else {
+        
+    }  
         return false;
-    }
+    
 }
 
 function endsWith($haystack, $needle)

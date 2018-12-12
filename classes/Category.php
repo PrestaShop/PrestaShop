@@ -428,9 +428,9 @@ class CategoryCore extends ObjectModel
             $category = new Category($idCategory);
             if ($category->isRootCategoryForAShop()) {
                 return false;
-            } else {
+            }  
                 $return &= $category->delete();
-            }
+            
         }
 
         return $return;
@@ -1435,7 +1435,7 @@ class CategoryCore extends ObjectModel
             }
 
             return Cache::retrieve($key);
-        } else {
+        }  
             $sql = new DbQuery();
             $sql->select('c.*, cl.*');
             $sql->from('category', 'c');
@@ -1444,7 +1444,7 @@ class CategoryCore extends ObjectModel
             $sql->where('c.`id_category` != ' . (int) Configuration::get('PS_HOME_CATEGORY'));
 
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-        }
+        
     }
 
     /**
@@ -1842,7 +1842,7 @@ class CategoryCore extends ObjectModel
 
         if (count($results) === 1) {
             return 0;
-        } else {
+        }  
             $maxPosition = (int) Db::getInstance()->getValue('
 				SELECT MAX(cs.`position`)
 				FROM `' . _DB_PREFIX_ . 'category` c
@@ -1851,7 +1851,7 @@ class CategoryCore extends ObjectModel
 				WHERE c.`id_parent` = ' . (int) $idCategoryParent);
 
             return 1 + $maxPosition;
-        }
+        
     }
 
     /**

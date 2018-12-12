@@ -483,12 +483,12 @@ class AdminModulesPositionsControllerCore extends AdminController
             if (Validate::isLoadedObject($module)) {
                 if ($module->updatePosition($id_hook, $way, $position)) {
                     die(true);
-                } else {
+                }  
                     die('{"hasError" : true, "errors" : "Cannot update module position."}');
-                }
-            } else {
+                
+            }  
                 die('{"hasError" : true, "errors" : "This module cannot be loaded."}');
-            }
+            
         }
     }
 

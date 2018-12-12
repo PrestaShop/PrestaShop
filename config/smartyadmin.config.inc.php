@@ -87,9 +87,9 @@ function smartyTranslate($params, $smarty)
 
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
-            } else {
+            }  
                 PrestaShopLogger::addLog($errorMessage);
-            }
+            
         }
 
         if (!is_array($sprintf)) {
@@ -103,11 +103,11 @@ function smartyTranslate($params, $smarty)
 
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
-            } else {
+            }  
                 PrestaShopLogger::addLog($errorMessage);
 
                 return $params['s'];
-            }
+            
         }
 
         return $translator->trans($params['s'], $sprintf, $params['d']);

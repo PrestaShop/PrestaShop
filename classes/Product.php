@@ -1698,9 +1698,9 @@ class ProductCore extends ObjectModel
 
         if ($result && $id_default_attribute) {
             return $id_default_attribute;
-        } else {
+        }  
             return $result;
-        }
+        
     }
 
     /**
@@ -2782,9 +2782,9 @@ class ProductCore extends ObjectModel
             $row['id_product_attribute'] = (int) $result['id_product_attribute'];
 
             return Product::getProductProperties($id_lang, $row);
-        } else {
+        }  
             return false;
-        }
+        
     }
 
     /**
@@ -4015,9 +4015,9 @@ class ProductCore extends ObjectModel
             if (!Product::checkAccessStatic((int) $row['id_product'], false)) {
                 unset($result[$k]);
                 continue;
-            } else {
+            }  
                 $row['id_product_attribute'] = Product::getDefaultAttribute((int) $row['id_product']);
-            }
+            
         }
 
         return $this->getProductsProperties($id_lang, $result);
@@ -6488,9 +6488,9 @@ class ProductCore extends ObjectModel
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Product::usesAdvancedStockManagement($id_product) &&
             StockAvailable::dependsOnStock($id_product, $id_shop)) {
             return $manager->getProductRealQuantities($id_product, $id_product_attribute, $id_warehouse, true);
-        } else {
+        }  
             return StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute, $id_shop);
-        }
+        
     }
 
     /**
@@ -6606,9 +6606,9 @@ class ProductCore extends ObjectModel
 
         if (!$default_category) {
             return array('id_category_default' => Context::getContext()->shop->id_category);
-        } else {
+        }  
             return $default_category;
-        }
+        
     }
 
     public static function getShopsByProduct($id_product)

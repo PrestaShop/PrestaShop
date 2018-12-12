@@ -147,7 +147,7 @@ class CartControllerCore extends FrontController
             ]));
 
             return;
-        } else {
+        }  
             $this->ajaxRender(Tools::jsonEncode([
                 'hasError' => true,
                 'errors' => $this->errors,
@@ -155,7 +155,7 @@ class CartControllerCore extends FrontController
             ]));
 
             return;
-        }
+        
     }
 
     public function displayAjaxRefresh()

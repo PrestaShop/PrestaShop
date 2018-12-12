@@ -140,7 +140,7 @@ function smartyWidgetBlock($params, $content, $smarty)
         });
         // We don't display anything since the template is not rendered yet.
         return '';
-    } else {
+    }  
         // Function gets called for the closing tag of the block.
         // We restore the backed up variables in order not to override
         // template variables.
@@ -152,7 +152,7 @@ function smartyWidgetBlock($params, $content, $smarty)
         }
         // This time content is filled with rendered template, so return it.
         return $content;
-    }
+    
 }
 
 function smartyTranslate($params, $smarty)
@@ -187,9 +187,9 @@ function smartyTranslate($params, $smarty)
 
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
-            } else {
+            }  
                 PrestaShopLogger::addLog($errorMessage);
-            }
+            
         }
 
         if (!is_array($params['sprintf'])) {
@@ -203,11 +203,11 @@ function smartyTranslate($params, $smarty)
 
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
-            } else {
+            }  
                 PrestaShopLogger::addLog($errorMessage);
 
                 return $params['s'];
-            }
+            
         }
     }
 

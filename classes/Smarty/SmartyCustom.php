@@ -207,7 +207,7 @@ class SmartyCustomCore extends Smarty
 
         if (isset($is_in_lazy_cache[$key])) {
             return $is_in_lazy_cache[$key];
-        } else {
+        }  
             $sql = 'SELECT UNIX_TIMESTAMP(last_update) as last_update, filepath FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache`
 							WHERE `template_hash`=\'' . pSQL($template_md5) . '\'';
             $sql .= ' AND cache_id="' . pSQL((string) $cache_id) . '"';
@@ -233,7 +233,7 @@ class SmartyCustomCore extends Smarty
                 }
             }
             $is_in_lazy_cache[$key] = $return;
-        }
+        
 
         return $return;
     }

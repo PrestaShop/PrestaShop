@@ -177,7 +177,7 @@ class DbMySQLiCore extends Db
 
         if (method_exists($result, 'fetch_all')) {
             return $result->fetch_all(MYSQLI_ASSOC);
-        } else {
+        }  
             $ret = array();
 
             while ($row = $this->nextRow($result)) {
@@ -185,7 +185,7 @@ class DbMySQLiCore extends Db
             }
 
             return $ret;
-        }
+        
     }
 
     /**

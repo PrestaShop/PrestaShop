@@ -320,9 +320,9 @@ class ExpressionListProcessor extends AbstractProcessor {
                                 $prev->setTokenType(ExpressionType::CONSTANT);
                                 continue 3;
                                 // skip current token
-                            } else {
+                            }  
                                 $curr->setTokenType(ExpressionType::CONSTANT);
-                            }
+                            
                         } else {
                             $curr->setTokenType(ExpressionType::COLREF);
                             $curr->setNoQuotes($curr->getToken());

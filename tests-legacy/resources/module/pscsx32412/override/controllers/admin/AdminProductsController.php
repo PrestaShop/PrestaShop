@@ -32,9 +32,9 @@ class AdminProductsController extends AdminProductsControllerCore
     {
         if ((int)$tr['is_virtual'] == 1 && $tr['nb_downloadable'] == 0) {
             return '&infin;';
-        } else {
+        }  
             return $echo;
-        }
+        
     }
 
     public function setMedia()
@@ -69,9 +69,9 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
             return ((count($out) > 0) ? implode(',', $out) : '');
-        } else {
+        }  
             return '';
-        }
+        
     }
 
     protected function copyFromPost(&$object, $table)
@@ -1942,9 +1942,9 @@ class AdminProductsController extends AdminProductsControllerCore
 
         if (is_null($id_lang)) {
             return !empty($_POST['multishop_check'][$field]);
-        } else {
+        }  
             return !empty($_POST['multishop_check'][$field][$id_lang]);
-        }
+        
     }
 
     protected function _removeTaxFromEcotax()
@@ -2529,9 +2529,9 @@ class AdminProductsController extends AdminProductsControllerCore
             if ($this->ajax) {
                 if (!isset($this->tpl_form_vars['custom_form'])) {
                     throw new PrestaShopException('custom_form empty for action '.$this->tab_display);
-                } else {
+                }  
                     return $this->tpl_form_vars['custom_form'];
-                }
+                
             }
         }
 
@@ -3746,7 +3746,7 @@ class AdminProductsController extends AdminProductsControllerCore
                             break;
                     }
                     continue;
-                } else {
+                }  
                     $imagesTypes = ImageType::getImagesTypes('products');
                     foreach ($imagesTypes as $imageType) {
                         if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
@@ -3754,7 +3754,7 @@ class AdminProductsController extends AdminProductsControllerCore
                             continue;
                         }
                     }
-                }
+                
 
                 unlink($file['save_path']);
                 //Necesary to prevent hacking
@@ -4688,9 +4688,9 @@ class AdminProductsController extends AdminProductsControllerCore
 
                 if ($product->save()) {
                     die($bo_product_url);
-                } else {
+                }  
                     die('error: saving');
-                }
+                
             }
         }
     }

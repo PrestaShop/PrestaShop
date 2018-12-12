@@ -138,9 +138,9 @@ class gamification extends Module
         if ($id_tab) {
             $tab = new Tab($id_tab);
             return $tab->delete();
-        } else {
+        }  
             return false;
-        }
+        
     }
 
     public function getContent()
@@ -261,9 +261,9 @@ class gamification extends Module
 
         if (version_compare(_PS_VERSION_, '1.6.0', '>=')) {
             return $this->display(__FILE__, 'notification_bt.tpl');
-        } else {
+        }  
             return $this->display(__FILE__, 'notification.tpl');
-        }
+        
     }
 
     public function refreshDatas($iso_lang = null)
@@ -542,8 +542,8 @@ class gamification extends Module
                 return false;
             }
             return ((time() - @filemtime($file)) < $timeout);
-        } else {
+        }  
             return false;
-        }
+        
     }
 }

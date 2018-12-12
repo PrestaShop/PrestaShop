@@ -71,7 +71,7 @@ function move_translations_module_file()
 
     if (!$res||(count($error_list)>0)) {
         return array('error' => 1, 'msg' => implode("\r\n<br/>", $error_list));
-    } else {
+    }  
         return true;
-    }
+    
 }

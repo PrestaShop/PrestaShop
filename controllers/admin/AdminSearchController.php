@@ -336,7 +336,7 @@ class AdminSearchControllerCore extends AdminController
 
         if (count($this->errors)) {
             return parent::renderView();
-        } else {
+        }  
             $nb_results = 0;
             foreach ($this->_list as $list) {
                 if ($list != false) {
@@ -442,7 +442,7 @@ class AdminSearchControllerCore extends AdminController
             }
 
             return parent::renderView();
-        }
+        
     }
 
     /**

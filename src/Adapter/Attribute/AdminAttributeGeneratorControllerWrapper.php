@@ -98,7 +98,7 @@ class AdminAttributeGeneratorControllerWrapper
                     'status' => 'error',
                     'message' => $this->translator->trans('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.', array(), 'Admin.Catalog.Notification'),
                 );
-            } else {
+            }  
                 $product->deleteAttributeCombination((int) $idAttribute);
                 $product->checkDefaultAttributes();
                 Tools::clearColorListCache((int) $product->id);
@@ -114,18 +114,18 @@ class AdminAttributeGeneratorControllerWrapper
                         'status' => 'error',
                         'message' => $this->translator->trans('Error while deleting the stock', array(), 'Admin.Catalog.Notification'),
                     );
-                } else {
+                }  
                     return array(
                         'status' => 'ok',
                         'message' => $this->translator->trans('Successful deletion', array(), 'Admin.Catalog.Notification'),
                     );
-                }
-            }
-        } else {
+                
+            
+        }  
             return array(
                 'status' => 'error',
                 'message' => $this->translator->trans('You cannot delete this attribute.', array(), 'Admin.Catalog.Notification'),
             );
-        }
+        
     }
 }

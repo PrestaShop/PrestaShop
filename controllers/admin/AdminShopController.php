@@ -715,9 +715,9 @@ class AdminShopControllerCore extends AdminController
             ));
 
             return $tpl->fetch();
-        } else {
+        }  
             return;
-        }
+        
     }
 
     public function initCategoriesAssociation($id_root = null)

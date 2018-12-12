@@ -115,9 +115,9 @@ class ProductPresenterTest extends UnitTestCase
 
         if (null === $field) {
             return $product;
-        } else {
+        }  
             return $product[$field];
-        }
+        
     }
 
     private function getPresentedProduct($field = null)

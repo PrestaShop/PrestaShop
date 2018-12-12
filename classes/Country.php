@@ -491,9 +491,9 @@ class CountryCore extends ObjectModel
             $sql = 'INSERT IGNORE INTO `' . _DB_PREFIX_ . 'module_country` (`id_module`, `id_shop`, `id_country`) VALUES ' . rtrim($sql, ',');
 
             return Db::getInstance()->execute($sql);
-        } else {
+        }  
             return true;
-        }
+        
     }
 
     /**

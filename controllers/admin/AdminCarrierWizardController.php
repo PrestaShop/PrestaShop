@@ -769,9 +769,9 @@ class AdminCarrierWizardControllerCore extends AdminController
             }
             @unlink($file);
             die('<return result="success" message="' . Tools::safeOutput(_PS_TMP_IMG_ . $tmp_name) . '" />');
-        } else {
+        }  
             die('<return result="error" message="Cannot upload file" />');
-        }
+        
     }
 
     public function ajaxProcessFinishStep()

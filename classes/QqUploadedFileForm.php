@@ -35,7 +35,7 @@ class QqUploadedFileFormCore
         $product = new Product($_GET['id_product']);
         if (!Validate::isLoadedObject($product)) {
             return array('error' => Context::getContext()->getTranslator()->trans('Cannot add image because product creation failed.', array(), 'Admin.Catalog.Notification'));
-        } else {
+        }  
             $image = new Image();
             $image->id_product = (int) $product->id;
             $image->position = Image::getHighestPosition($product->id) + 1;
@@ -60,10 +60,10 @@ class QqUploadedFileFormCore
             }
             if (!$image->add()) {
                 return array('error' => Context::getContext()->getTranslator()->trans('Error while creating additional image', array(), 'Admin.Catalog.Notification'));
-            } else {
+            }  
                 return $this->copyImage($product->id, $image->id);
-            }
-        }
+            
+        
     }
 
     public function copyImage($id_product, $id_image, $method = 'auto')

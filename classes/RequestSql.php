@@ -142,9 +142,9 @@ class RequestSqlCore extends ObjectModel
             }
 
             return true;
-        } else {
+        }  
             return $this->validateSql($tab, $in, $sql);
-        }
+        
     }
 
     /**
@@ -422,11 +422,11 @@ class RequestSqlCore extends ObjectModel
                         $this->error_sql['checkedFrom'] = $this->error_sql['returnNameTable'];
 
                         return false;
-                    } else {
+                    }  
                         $this->error_sql['checkedFrom'] = false;
 
                         return false;
-                    }
+                    
                 }
             }
         }
@@ -461,11 +461,11 @@ class RequestSqlCore extends ObjectModel
                             $this->error_sql['checkedSelect'] = $this->error_sql['returnNameTable'];
 
                             return false;
-                        } else {
+                        }  
                             $this->error_sql['checkedSelect'] = false;
 
                             return false;
-                        }
+                        
                     }
                 }
             } elseif ($in) {
@@ -504,11 +504,11 @@ class RequestSqlCore extends ObjectModel
                         $this->error_sql['checkedWhere'] = $this->error_sql['returnNameTable'];
 
                         return false;
-                    } else {
+                    }  
                         $this->error_sql['checkedWhere'] = false;
 
                         return false;
-                    }
+                    
                 }
             } elseif ($attribut['expr_type'] == 'operator') {
                 if (!in_array(strtoupper($attribut['base_expr']), $this->tested['operator'])) {
@@ -551,11 +551,11 @@ class RequestSqlCore extends ObjectModel
                         $this->error_sql['checkedHaving'] = $this->error_sql['returnNameTable'];
 
                         return false;
-                    } else {
+                    }  
                         $this->error_sql['checkedHaving'] = false;
 
                         return false;
-                    }
+                    
                 }
             }
 
@@ -594,11 +594,11 @@ class RequestSqlCore extends ObjectModel
                     $this->error_sql['checkedOrder'] = $this->error_sql['returnNameTable'];
 
                     return false;
-                } else {
+                }  
                     $this->error_sql['checkedOrder'] = false;
 
                     return false;
-                }
+                
             }
         }
 
@@ -628,11 +628,11 @@ class RequestSqlCore extends ObjectModel
                     $this->error_sql['checkedGroupBy'] = $this->error_sql['returnNameTable'];
 
                     return false;
-                } else {
+                }  
                     $this->error_sql['checkedGroupBy'] = false;
 
                     return false;
-                }
+                
             }
         }
 

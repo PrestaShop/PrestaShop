@@ -136,8 +136,8 @@ class ChartCore
 					$.plot($(\'#flot' . self::$poolId . '\'), [' . implode(',', $jsCurves) . '], {' . $options . '});
 				});
 			</script>';
-        } else {
+        }  
             return ErrorFacade::Display(PS_ERROR_UNDEFINED, 'No values for this chart.');
-        }
+        
     }
 }

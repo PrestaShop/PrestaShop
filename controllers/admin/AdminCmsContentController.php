@@ -237,12 +237,12 @@ class AdminCmsContentControllerCore extends AdminController
             if (Validate::isLoadedObject($cms)) {
                 if (isset($position) && $cms->updatePosition($way, $position)) {
                     die(true);
-                } else {
+                }  
                     die('{"hasError" : true, "errors" : "Can not update cms position"}');
-                }
-            } else {
+                
+            }  
                 die('{"hasError" : true, "errors" : "This cms can not be loaded"}');
-            }
+            
         }
     }
 
@@ -266,12 +266,12 @@ class AdminCmsContentControllerCore extends AdminController
             if (Validate::isLoadedObject($cms_category)) {
                 if (isset($position) && $cms_category->updatePosition($way, $position)) {
                     die(true);
-                } else {
+                }  
                     die('{"hasError" : true, "errors" : "Can not update cms categories position"}');
-                }
-            } else {
+                
+            }  
                 die('{"hasError" : true, "errors" : "This cms category can not be loaded"}');
-            }
+            
         }
     }
 
@@ -293,12 +293,12 @@ class AdminCmsContentControllerCore extends AdminController
                 $cms->active = 1;
                 if ($cms->save()) {
                     die($bo_cms_url);
-                } else {
+                }  
                     die('error: saving');
-                }
-            } else {
+                
+            }  
                 die('error: parameters');
-            }
+            
         }
     }
 }
