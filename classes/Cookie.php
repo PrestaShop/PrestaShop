@@ -282,7 +282,6 @@ class CookieCore
             $this->_content['id_customer'],
             $this->_content['id_guest']
         );
-
         Guest::setNewGuest($this);
         $this->_modified = true;
     }
