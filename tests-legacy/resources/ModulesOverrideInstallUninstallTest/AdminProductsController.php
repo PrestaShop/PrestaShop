@@ -653,7 +653,6 @@ class AdminProductsController extends AdminProductsControllerCore
                 $product->id,
                 $product->id_product
             );
-            
             $product->indexed = 0;
             $product->active = 0;
             if ($product->add()
@@ -2325,7 +2324,6 @@ class AdminProductsController extends AdminProductsControllerCore
                         $this->context->cookie->{$this->table.'Orderby'},
                         $this->context->cookie->{$this->table.'Orderway'}
                     );
-                    
                 }
             }
             if (!$id_category) {
