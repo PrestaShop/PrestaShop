@@ -93,7 +93,7 @@ class ColumnCollectionTest extends TestCase
             'after_second',
             'before_third',
             'third',
-            'after_third'
+            'after_third',
         ], $this->getColumnPositions($columns));
 
         return $columns;

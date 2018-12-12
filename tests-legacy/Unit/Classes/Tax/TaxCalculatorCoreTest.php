@@ -40,7 +40,7 @@ class TaxCalculatorCoreTest extends TestCase
         $tax2->rate = 5.5;
 
         $tax_calculator = new TaxCalculator(array(
-            $tax, $tax2
+            $tax, $tax2,
         ), TaxCalculator::COMBINE_METHOD);
 
         $totalRate = $tax_calculator->getTotalRate();
@@ -56,7 +56,7 @@ class TaxCalculatorCoreTest extends TestCase
         $tax2->rate = 5.5;
 
         $tax_calculator = new TaxCalculator(array(
-            $tax, $tax2
+            $tax, $tax2,
         ), TaxCalculator::ONE_AFTER_ANOTHER_METHOD);
 
         $totalRate = $tax_calculator->getTotalRate();

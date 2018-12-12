@@ -121,7 +121,7 @@ class ValidateCoreTest extends TestCase
     {
         return array(
             array(false, 'toto'),
-            array(true, '123')
+            array(true, '123'),
         );
     }
 

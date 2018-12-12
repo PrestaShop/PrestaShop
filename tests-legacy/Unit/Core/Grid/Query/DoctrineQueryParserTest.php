@@ -83,7 +83,7 @@ class DoctrineQueryParserTest extends TestCase
                 'ok',
                 'nok',
                 'none',
-            ]
+            ],
         ];
 
         $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation IN ('great', 'good', 'ok', 'nok', 'none')";
@@ -107,7 +107,7 @@ class DoctrineQueryParserTest extends TestCase
                 'ok',
                 'nok',
                 'none',
-            ]
+            ],
         ];
 
         $this->queryParser->parse($preparedQuery, $queryParameters);

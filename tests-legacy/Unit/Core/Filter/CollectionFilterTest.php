@@ -57,7 +57,7 @@ class CollectionFilterTest extends \PHPUnit\Framework\TestCase
             [
                 'foo' => 'something',
                 'bar' => null,
-                'baz' => []
+                'baz' => [],
             ],
             [
                 'foo' => 'something',
@@ -66,7 +66,7 @@ class CollectionFilterTest extends \PHPUnit\Framework\TestCase
                 'bar' => null,
                 'baz' => [],
             ],
-            []
+            [],
         ];
 
         return [
@@ -74,7 +74,7 @@ class CollectionFilterTest extends \PHPUnit\Framework\TestCase
                 'subject' => $subject,
                 'queue' => [
                     (new HashMapWhitelistFilter())
-                        ->whitelist(['foo'])
+                        ->whitelist(['foo']),
                 ],
                 'expectedResult' => [
                     [
@@ -85,8 +85,8 @@ class CollectionFilterTest extends \PHPUnit\Framework\TestCase
                     ],
                     [],
                     [],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 

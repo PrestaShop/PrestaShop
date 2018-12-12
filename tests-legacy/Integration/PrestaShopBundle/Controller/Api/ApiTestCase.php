@@ -93,7 +93,7 @@ abstract class ApiTestCase extends WebTestCase
                 'getEmployeeLanguageIso',
                 'getEmployeeCurrency',
                 'getRootUrl',
-                'getLanguage'
+                'getLanguage',
             ))
             ->getMock()
         ;

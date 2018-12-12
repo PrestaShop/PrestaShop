@@ -116,7 +116,7 @@ abstract class Db extends DbCore
             $this->queries[] = array(
                 'query' => $sql,
                 'time' => $end - $start,
-                'stack' => $stack_light
+                'stack' => $stack_light,
             );
         }
         

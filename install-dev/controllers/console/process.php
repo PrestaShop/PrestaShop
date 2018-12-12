@@ -167,7 +167,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                 'method' => 'addMemberToNewsletter',
                 'language' => $this->datas->lang,
                 'visitorType' => 1,
-                'source' => 'installer'
+                'source' => 'installer',
             ));
             Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
         }

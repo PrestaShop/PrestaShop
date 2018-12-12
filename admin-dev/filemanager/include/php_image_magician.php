@@ -798,7 +798,7 @@ class imageLib
 
         $sharpenMatrix = array( array( -1, -1, -1 ),
             array( -1, 16, -1 ),
-            array( -1, -1, -1 ) );
+            array( -1, -1, -1 ), );
           $divisor = 8;
           $offset = 0;
 
@@ -811,7 +811,7 @@ class imageLib
           $sharpenMatrix  = array(
               array(-1, -2, -1),
               array(-2, $sharpness + 12, -2), //Lessen the effect of a filter by increasing the value in the center cell
-              array(-1, -2, -1)
+              array(-1, -2, -1),
           );
           $divisor    = $sharpness; // adjusts brightness
         $offset     = 0;
@@ -831,7 +831,7 @@ class imageLib
       $sharpenMatrix  = array(
           array($level, $level, $level),
           array($level, (8*$level)+1, $level), //Lessen the effect of a filter by increasing the value in the center cell
-          array($level, $level, $level)
+          array($level, $level, $level),
       );
   }
 
@@ -1517,7 +1517,7 @@ class imageLib
               $width+$blurWidth*(1-$t), $height,     // Point 5 (x, y)
               $width,           $height+$blurHeight*(1-$t),  // Point 6 (x, y)
               $blurWidth,         $height+$blurHeight*(1-$t),  // Point 7 (x, y)
-              $blurWidth*$t,        $height      // Point 8 (x, y)
+              $blurWidth*$t,        $height,      // Point 8 (x, y)
           );
           imagepolygon($shadow, $points, 8, $colour);
       }
@@ -2890,7 +2890,7 @@ class imageLib
             'r' => 255,
             'g' => 255,
             'b' => 255,
-            'a' => 127
+            'a' => 127,
         );
     } else {
 
@@ -2916,7 +2916,7 @@ class imageLib
           'r' => hexdec(substr($color, 0, 2)),
           'g' => hexdec(substr($color, 2, 2)),
           'b' => hexdec(substr($color, 4, 2)),
-          'a' => 0
+          'a' => 0,
       );
       return $rgb;
   }

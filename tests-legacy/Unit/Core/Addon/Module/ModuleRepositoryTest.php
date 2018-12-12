@@ -133,7 +133,7 @@ class ModuleRepositoryTest extends UnitTestCase
                 ),
                 new FakeLogger(),
                 $this->translatorStub,
-                __DIR__.'/../../../../resources/modules/'
+                __DIR__.'/../../../../resources/modules/',
             ))
             ->setMethods(array('readCacheFile', 'generateCacheFile'))
             ->getMock()

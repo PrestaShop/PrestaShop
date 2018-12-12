@@ -48,7 +48,7 @@ $function_array = array(
     'invoices2' => 'generateInvoicesPDF2',
     'slips' => 'generateOrderSlipsPDF',
     'deliveryslips' => 'generateDeliverySlipsPDF',
-    'id_supply_order' => 'generateSupplyOrderFormPDF'
+    'id_supply_order' => 'generateSupplyOrderFormPDF',
 );
 
 $pdf_controller = new AdminPdfController();

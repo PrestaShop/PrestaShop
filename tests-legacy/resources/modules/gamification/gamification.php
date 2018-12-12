@@ -411,7 +411,7 @@ class gamification extends Module
             $formated_badges_lang[$lang->id_ps_badge] = array(
                 'name' => array($id_lang => $lang->name),
                 'description' => array($id_lang => $lang->description),
-                'group_name' => array($id_lang => $lang->group_name));
+                'group_name' => array($id_lang => $lang->group_name), );
         }
 
         $current_badges = array();
@@ -503,7 +503,7 @@ class gamification extends Module
                 Db::getInstance()->insert(
                     'condition_advice',
                     array(
-                    'id_condition' => (int) $cond_ids[$cond], 'id_advice' => (int) $id_advice, 'display' => 1)
+                    'id_condition' => (int) $cond_ids[$cond], 'id_advice' => (int) $id_advice, 'display' => 1, )
                 );
             }
         }
@@ -513,7 +513,7 @@ class gamification extends Module
                 Db::getInstance()->insert(
                     'condition_advice',
                     array(
-                    'id_condition' => (int) $cond_ids[$cond], 'id_advice' => (int) $id_advice, 'display' => 0)
+                    'id_condition' => (int) $cond_ids[$cond], 'id_advice' => (int) $id_advice, 'display' => 0, )
                 );
             }
         }
@@ -524,7 +524,7 @@ class gamification extends Module
                 Db::getInstance()->insert(
                     'tab_advice',
                     array(
-                    'id_tab' => (int)Tab::getIdFromClassName($tab), 'id_advice' => (int) $id_advice)
+                    'id_tab' => (int)Tab::getIdFromClassName($tab), 'id_advice' => (int) $id_advice, )
                 );
             }
         }

@@ -76,7 +76,7 @@ class PositionsControllerTest extends WebTestCase
                         $this->moduleId
                     ),
                     'aa_dd',
-                    'something'
+                    'something',
                 ],
             ]
         );

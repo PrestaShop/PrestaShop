@@ -44,7 +44,7 @@ function cms_multishop()
             'link_rewrite' => pSQL($value['link_rewrite']),
             'meta_title' => pSQL($value['meta_title']),
             'meta_keywords' => pSQL($value['meta_keywords']),
-            'meta_description' => pSQL($value['meta_description'])
+            'meta_description' => pSQL($value['meta_description']),
         );
         foreach ($shops as $shop) {
             if ($shop['id_shop'] != 1) {
@@ -74,7 +74,7 @@ function cms_multishop()
             'link_rewrite' => pSQL($value['link_rewrite']),
             'meta_title' => pSQL($value['meta_title']),
             'meta_keywords' => pSQL($value['meta_keywords']),
-            'meta_description' => pSQL($value['meta_description'])
+            'meta_description' => pSQL($value['meta_description']),
         );
         foreach ($shops as $shop) {
             if ($shop['id_shop'] != 1) {

@@ -99,7 +99,7 @@ class CacheProviderTest extends TestCase
                 [
                     'id_product' => 'productId',
                 ]
-            )
+            ),
         ];
     }
 

@@ -55,7 +55,7 @@ Context::getContext()->smarty->assign(array(
     'js_def' => array(
         'baseAdminDir' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/',
         'baseDir' => __PS_BASE_URI__,
-    )
+    ),
 ));
 echo Context::getContext()->smarty->fetch($header_tpl);
 echo Context::getContext()->smarty->fetch($tool_tpl);

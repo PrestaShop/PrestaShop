@@ -282,7 +282,7 @@ function clean_tabs_15()
     $remove_tabs = array(
         2 => 'AdminAddonsMyAccount', 4 => 'AdminAliases', 5 => 'AdminAppearance', 12 => 'AdminCMSContent',
         13 => 'AdminContact', 16 => 'AdminCounty', 20 => 'AdminDb', 22 => 'AdminDiscounts', 26 => 'AdminGenerator',
-        38 => 'AdminMessages', 45 => 'AdminPDF', 63 => 'AdminStatsConf', 67 => 'AdminSubDomains'
+        38 => 'AdminMessages', 45 => 'AdminPDF', 63 => 'AdminStatsConf', 67 => 'AdminSubDomains',
     );
     $ids = array();
     foreach ($remove_tabs as $tab) {

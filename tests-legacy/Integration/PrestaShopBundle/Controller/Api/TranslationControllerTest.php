@@ -133,14 +133,14 @@ class TranslationControllerTest extends ApiTestCase
                 array(
                     'lang' => 'en',
                     'type' => 'modules',
-                    'selected' => 'ps_baanner' // syntax error wanted
+                    'selected' => 'ps_baanner', // syntax error wanted
                 ),
             ),
             array(
                 array(
                     'lang' => 'en',
                     'type' => 'frront', // syntax error wanted
-                    'selected' => 'classic'
+                    'selected' => 'classic',
                 ),
             ),
         );
@@ -156,14 +156,14 @@ class TranslationControllerTest extends ApiTestCase
                 array(
                     'lang' => 'en',
                     'type' => 'modules',
-                    'selected' => 'ps_banner'
+                    'selected' => 'ps_banner',
                 ),
             ),
             array(
                 array(
                     'lang' => 'en',
                     'type' => 'front',
-                    'selected' => 'classic'
+                    'selected' => 'classic',
                 ),
             ),
         );

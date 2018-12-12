@@ -115,7 +115,7 @@ class ModuleTabRegisterTest extends UnitTestCase
             "is_rtl" => "0",
             "id_shop" => "1",
             "shops" => array(),
-        )
+        ),
     );
 
     /**

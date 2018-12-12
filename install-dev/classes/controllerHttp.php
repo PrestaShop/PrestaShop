@@ -96,32 +96,32 @@ class InstallControllerHttp
             array(
                 'name' => 'welcome',
                 'displayName' => $this->translator->trans('Choose your language', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpWelcome'
+                'controllerClass' => 'InstallControllerHttpWelcome',
             ),
             array(
                 'name' => 'license',
                 'displayName' => $this->translator->trans('License agreements', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpLicense'
+                'controllerClass' => 'InstallControllerHttpLicense',
             ),
             array(
                 'name' => 'system',
                 'displayName' => $this->translator->trans('System compatibility', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpSystem'
+                'controllerClass' => 'InstallControllerHttpSystem',
             ),
             array(
                 'name' => 'configure',
                 'displayName' => $this->translator->trans('Store information', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpConfigure'
+                'controllerClass' => 'InstallControllerHttpConfigure',
             ),
             array(
                 'name' => 'database',
                 'displayName' => $this->translator->trans('System configuration', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpDatabase'
+                'controllerClass' => 'InstallControllerHttpDatabase',
             ),
             array(
                 'name' => 'process',
                 'displayName' => $this->translator->trans('Store installation', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpProcess'
+                'controllerClass' => 'InstallControllerHttpProcess',
             ),
         );
         self::$steps = new StepList($stepConfig);

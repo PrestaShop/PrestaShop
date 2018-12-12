@@ -188,7 +188,7 @@ class LegacyRouteTest extends TestCase
             '_legacy_link' => 'AdminProduct:create',
             '_legacy_parameters' => [
                 'id_product' => 'productId',
-            ]
+            ],
         ]);
         $this->assertEquals('product_create', $legacyRoute->getRouteName());
         $routeParameters = $legacyRoute->getRouteParameters();
@@ -217,7 +217,7 @@ class LegacyRouteTest extends TestCase
             '_legacy_link' => ['AdminProduct:create', 'AdminProduct:new', 'SFProduct:new'],
             '_legacy_parameters' => [
                 'id_product' => 'productId',
-            ]
+            ],
         ]);
         $this->assertEquals('product_create', $legacyRoute->getRouteName());
         $routeParameters = $legacyRoute->getRouteParameters();

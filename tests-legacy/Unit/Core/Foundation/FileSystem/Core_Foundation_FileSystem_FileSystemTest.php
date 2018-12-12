@@ -89,7 +89,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
             $this->fs->joinPaths($this->fixturesPath, 'a', 'a.tmp'),
             $this->fs->joinPaths($this->fixturesPath, 'a', 'b'),
             $this->fs->joinPaths($this->fixturesPath, 'a', 'b', 'b.file'),
-            $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt')
+            $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt'),
         );
 
         $this->assertEquals(
@@ -103,7 +103,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
         $expectedPaths = array(
             $this->fs->joinPaths($this->fixturesPath, 'a', 'a.tmp'),
             $this->fs->joinPaths($this->fixturesPath, 'a', 'b', 'b.file'),
-            $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt')
+            $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt'),
         );
 
         $this->assertEquals(

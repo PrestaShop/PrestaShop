@@ -171,7 +171,7 @@ if (isset($_POST['submit'])) {
             'lang' => Tools::safeOutput($lang),
             'popup' => $popup,
             'field_id' => isset($_GET['field_id']) ? (int)$_GET['field_id'] : '',
-            'fldr' => ''
+            'fldr' => '',
         )
     );
     ?>
@@ -790,7 +790,7 @@ if (isset($_POST['submit'])) {
         "midi",
         "mid",
         "ogg",
-        "wav"
+        "wav",
     );
     foreach ($files as $file_array) {
         $file = $file_array['file'];

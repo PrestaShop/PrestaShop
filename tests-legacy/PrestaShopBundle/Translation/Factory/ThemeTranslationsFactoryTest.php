@@ -97,7 +97,7 @@ class ThemeTranslationsFactoryTest extends TestCase
         return array(
             array(
                 self::TEST_THEME,
-                self::TEST_LOCALE
+                self::TEST_LOCALE,
             ),
         );
     }
@@ -142,11 +142,11 @@ class ThemeTranslationsFactoryTest extends TestCase
             array(
                 'DefaultDomain.'.self::TEST_LOCALE => array(
                     'Default message' => 'Default MESSAGE',
-                    'Default message bis' => 'Bis'
+                    'Default message bis' => 'Bis',
                 ),
                 'ShopFront.'.self::TEST_LOCALE => array(
                     'Add to Cart' => 'Add to Cart',
-                    'Edit product' => 'Edit it'
+                    'Edit product' => 'Edit it',
                 ),
                 'messages.'.self::TEST_LOCALE => array(
                     'foo' => 'Foo',

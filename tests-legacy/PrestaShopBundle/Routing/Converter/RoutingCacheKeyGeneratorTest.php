@@ -66,7 +66,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
             'admin/configure/advanced_parameters/README.md' => 10,
             'admin/improve/international/translations.yml' => 3200,
             'api/stock_movements.yml' => 10,
-            'api/features.yaml' => 5
+            'api/features.yaml' => 5,
         ];
         $this->generateFiles($testFiles);
 
@@ -109,7 +109,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
             'admin/configure/advanced_parameters/README.md' => 10,
             'admin/improve/international/translations.yml' => 3200,
             'api/stock_movements.yml' => 10,
-            'api/features.yaml' => 5
+            'api/features.yaml' => 5,
         ];
         $this->generateFiles($testFiles, $originalTime);
 
@@ -130,7 +130,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
             'admin/configure/advanced_parameters/README.md' => 10,
             'admin/improve/international/translations.yml' => 3200,
             'api/stock_movements.yml' => 10,
-            'api/features.yaml' => 5
+            'api/features.yaml' => 5,
         ];
         $this->generateFiles($testFiles, $originalTime);
 

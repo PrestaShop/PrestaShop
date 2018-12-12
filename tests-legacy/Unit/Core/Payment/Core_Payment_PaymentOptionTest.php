@@ -47,7 +47,7 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
             'logo'      => 'http://example.com/logo.png',
             'action'    => 'http://example.com/submit',
             'form'      => null,
-            'inputs'    => array('key' => 42)
+            'inputs'    => array('key' => 42),
         );
 
         $this->assertEquals(
@@ -72,7 +72,7 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
             'logo'      => 'http://example.com/logo.png',
             'action'    => 'http://example.com/submit',
             'form'      => null,
-            'inputs'    => array('key' => 42)
+            'inputs'    => array('key' => 42),
         );
 
         $legacyOption = array($singleLegacyOption, $singleLegacyOption);

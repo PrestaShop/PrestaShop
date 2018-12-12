@@ -89,7 +89,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
     {
         $this->setCustomerAddressesCount(0);
         $this->assertTemplateParametersInclude([
-            'show_delivery_address_form' => true
+            'show_delivery_address_form' => true,
         ]);
     }
 
@@ -97,7 +97,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
     {
         $this->setCustomerAddressesCount(1);
         $this->assertTemplateParametersInclude([
-            'show_delivery_address_form' => false
+            'show_delivery_address_form' => false,
         ]);
     }
 
@@ -105,9 +105,9 @@ class CheckoutAddressesStepTest extends UnitTestCase
     {
         $this->setCustomerAddressesCount(1);
         $this->assertTemplateParametersInclude([
-            'show_invoice_address_form' => true
+            'show_invoice_address_form' => true,
         ], [
-            'use_same_address' => false
+            'use_same_address' => false,
         ]);
     }
 
@@ -116,10 +116,10 @@ class CheckoutAddressesStepTest extends UnitTestCase
         $this->setCustomerAddressesCount(1);
         $this->assertTemplateParametersInclude([
             'show_delivery_address_form' => true,
-            'form_has_continue_button'   => true
+            'form_has_continue_button'   => true,
         ], [
             'editAddress'   => 'delivery',
-            'id_address'    => null
+            'id_address'    => null,
         ]);
     }
 }

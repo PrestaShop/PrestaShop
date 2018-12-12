@@ -32,19 +32,19 @@ function p15018_change_image_types()
             'medium' => array('medium_default', '125', '125'),
             'large' => array('large_default', '458', '458'),
             'thickbox' => array('thickbox_default', '800', '800'),
-            'home' => array('home_default', '270', '270')
+            'home' => array('home_default', '270', '270'),
         ),
         'others' => array(
             'category' => array('category_default', '870', '217'),
             'large_scene' => array('scene_default', '520', '189'),
-            'thumb_scene' => array('m_scene_default', '161', '58')
-        )
+            'thumb_scene' => array('m_scene_default', '161', '58'),
+        ),
     );
 
     $new_types = array(
         'products' => array(
-            'small' => array('cart_default', '80', '80')
-        )
+            'small' => array('cart_default', '80', '80'),
+        ),
     );
 
     foreach ($new_types as $type => $type_array) {
