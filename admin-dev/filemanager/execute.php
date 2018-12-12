@@ -34,7 +34,12 @@ require_once $language_file;
 
 $base = $current_path;
 
-$path = isset($_POST['path']) ? ($current_path . $_POST['path']) : $current_path;
+if (isset($_POST['path'])) {
+    $path = $current_path.str_replace("\0", '', $_POST['path']);
+} else {
+    $path = $current_path;
+}
+
 $cycle = true;
 $max_cycles = 50;
 $i = 0;
@@ -52,7 +57,7 @@ while ($cycle && $i < $max_cycles) {
     $cycle = false;
 }
 
-$path = $current_path . $_POST['path'];
+$path = $current_path.str_replace("\0", '', $_POST['path']);
 $path_thumb = $_POST['path_thumb'];
 
 if (isset($_POST['name'])) {
