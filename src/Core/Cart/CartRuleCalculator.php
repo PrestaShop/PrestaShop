@@ -263,4 +263,12 @@ class CartRuleCalculator
 
         return $this;
     }
+
+    /**
+     * @return CartRuleCollection
+     */
+    public function getCartRulesData()
+    {
+        return $this->cartRules;
+    }
 }
