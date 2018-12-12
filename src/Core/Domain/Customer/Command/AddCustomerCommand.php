@@ -293,7 +293,6 @@ class AddCustomerCommand
      * @return self
      */
     public function setSiretCode($siretCode)
-
     {
         $this->siretCode = $siretCode;
         return $this;
