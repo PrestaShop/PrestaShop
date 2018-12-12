@@ -39,12 +39,21 @@ class CartToOrderTest extends CartTaxesTest
 {
 
     /**
-     * this test only check if cart rule can be applied on cart, depending on cart content and cart rule parameters
+     * check the correct copy of data from cart to order when processing payment
      *
      * @dataProvider cartToOrderProvider
      *
      * @param $productData
      * @param $cartRuleData
+     * @param $addressId
+     * @param $expected_totalProduct_taxIncl
+     * @param $expected_totalProduct_taxExcl
+     * @param $expected_totalDiscount_taxIncl
+     * @param $expected_totalDiscount_taxExcl
+     * @param $expected_totalShipping_taxIncl
+     * @param $expected_totalShipping_taxExcl
+     * @param $expected_discounts_taxIncl
+     * @param $expected_discounts_taxExcl
      */
     public function testCopyCartToOrder(
         $productData,
