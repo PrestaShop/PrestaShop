@@ -404,7 +404,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $filteredFacets = [];
             /** @var Facet $facet */
             foreach ($result->getFacetCollection()->getFacets() as $facet) {
-                if (Configuration::get('PS_CATALOG_MODE') && 'price' === $facet->getType()) {
+                if ('price' === $facet->getType()) {
                     continue;
                 }
                 $filteredFacets[] = $facet;
