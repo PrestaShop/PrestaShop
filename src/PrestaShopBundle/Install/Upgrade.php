@@ -251,10 +251,12 @@ namespace PrestaShopBundle\Install {
                 $this->oldVersion = Configuration::get('PS_INSTALL_VERSION');
             }
             /**
-             * fix : complete version number if there is not all 4 numbers
-             * for example replace 1.4.3 by 1.4.3.0
-             * consequences : file 1.4.3.0.sql will be skipped if oldversion = 1.4.3
              * @since 1.4.4.0
+             *
+             * Fix complete version number if there is not all 4 numbers
+             * Eg. replace 1.4.3 by 1.4.3.0
+             * Will result in file 1.4.3.0.sql will be skipped if oldversion is 1.4.3
+             * 
              */
             $arrayVersion = preg_split('#\.#', $this->oldVersion);
             $versionNumbers = count($arrayVersion);
