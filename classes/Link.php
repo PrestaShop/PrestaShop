@@ -766,6 +766,7 @@ class LinkCore
                 } else {
                     $params = array_merge($params, $sfRouteParams);
                 }
+
                 break;
 
             case 'AdminTranslations':
@@ -896,6 +897,7 @@ class LinkCore
                 // A shop matching current URL was found
                 if (preg_match('#^' . preg_quote($row['uri'], '#') . '#i', $request_uri)) {
                     $this->urlShopId = $row['id_shop'];
+
                     break;
                 }
             }
@@ -1408,6 +1410,7 @@ class LinkCore
         switch ($params['entity']) {
             case 'language':
                 $link = $context->link->getLanguageLink($params['id']);
+
                 break;
             case 'product':
                 $link = $context->link->getProductLink(
@@ -1421,6 +1424,7 @@ class LinkCore
                     false,
                     $params['relative_protocol']
                 );
+
                 break;
             case 'category':
                 $params = array_merge(array('selected_filters' => null), $params);
@@ -1432,6 +1436,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
             case 'categoryImage':
                 $params = array_merge(array('selected_filters' => null), $params);
@@ -1440,6 +1445,7 @@ class LinkCore
                     $params['id'],
                     $params['type'] = (isset($params['type']) ? $params['type'] : null)
                 );
+
                 break;
             case 'cms':
                 $link = $context->link->getCMSLink(
@@ -1450,6 +1456,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
             case 'module':
                 $params = array_merge(array(
@@ -1466,6 +1473,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
             case 'sf':
                 if (!array_key_exists('route', $params)) {
@@ -1483,6 +1491,7 @@ class LinkCore
                 } else {
                     throw new \InvalidArgumentException('You can\'t use Symfony router in legacy context.');
                 }
+
                 break;
             default:
                 $link = $context->link->getPageLink(
@@ -1494,6 +1503,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
         }
 

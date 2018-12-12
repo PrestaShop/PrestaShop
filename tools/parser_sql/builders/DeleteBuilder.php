@@ -54,6 +54,7 @@ class DeleteBuilder {
         foreach ($parsed['TABLES'] as $k => $v) {
             $sql .= $v . ",";
         }
+
         return substr($sql, 0, -1);
     }
 }

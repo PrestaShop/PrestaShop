@@ -205,6 +205,7 @@ class ModuleDataProvider
         }
 
         $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::PREFER_PHP7);
+
         try {
             $parser->parse(file_get_contents($file_path));
         } catch (PhpParser\Error $exception) {

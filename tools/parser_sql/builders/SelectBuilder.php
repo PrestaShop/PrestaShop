@@ -57,31 +57,37 @@ class SelectBuilder {
 
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildFunction($parsed) {
         $builder = new FunctionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildSelectExpression($parsed) {
         $builder = new SelectExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildSelectBracketExpression($parsed) {
         $builder = new SelectBracketExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
     /**
@@ -112,6 +118,7 @@ class SelectBuilder {
 
             $sql .= $this->getDelimiter($v);
         }
+
         return "SELECT " . $sql;
     }
 }

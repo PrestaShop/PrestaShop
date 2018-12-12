@@ -496,6 +496,7 @@ class MediaCore
 
             if (array_key_exists('host', $urlData)) {
                 $externalCssFiles[$filename] = $media;
+
                 continue;
             }
 
@@ -536,6 +537,7 @@ class MediaCore
             if ($mediaInfos['date'] > $compressedCssFilesInfos[$media]['date']) {
                 if ($compressedCssFilesInfos[$media]['date']) {
                     Configuration::updateValue('PS_CCCCSS_VERSION', ++$version);
+
                     break;
                 }
             }

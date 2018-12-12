@@ -435,6 +435,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             foreach ($this->selected_states as $id_state) {
                 if ($tax_rules_group->hasUniqueTaxRuleForCountry($id_country, $id_state, $id_rule)) {
                     $this->errors[] = $this->trans('A tax rule already exists for this country/state with tax only behavior.', array(), 'Admin.International.Notification');
+
                     continue;
                 }
                 $tr = new TaxRule();

@@ -69,6 +69,7 @@ class bankwire extends PaymentModule
         ) {
             return false;
         }
+
         return true;
     }
 
@@ -80,6 +81,7 @@ class bankwire extends PaymentModule
                 || !parent::uninstall()) {
             return false;
         }
+
         return true;
     }
 

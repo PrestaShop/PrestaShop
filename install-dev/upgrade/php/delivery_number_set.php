@@ -41,6 +41,7 @@ function delivery_number_set()
             $oS = new OrderState((int)($row2['id_order_state']), Configuration::get('PS_LANG_DEFAULT'));
             if ($oS->delivery) {
                 Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'orders SET delivery_number = '.(int)($number++).', `delivery_date` = `date_add` WHERE id_order = '.(int)($order->id));
+
                 break ;
             }
         }

@@ -58,31 +58,37 @@ class SelectStatementBuilder {
 
     protected function buildSELECT($parsed) {
         $builder = new SelectBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildFROM($parsed) {
         $builder = new FromBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildWHERE($parsed) {
         $builder = new WhereBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildGROUP($parsed) {
         $builder = new GroupByBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildORDER($parsed) {
         $builder = new OrderByBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildLIMIT($parsed) {
         $builder = new LimitBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -103,6 +109,7 @@ class SelectStatementBuilder {
         if (isset($parsed['LIMIT'])) {
             $sql .= " " . $this->buildLIMIT($parsed['LIMIT']);
         }
+
         return $sql;
     }
 

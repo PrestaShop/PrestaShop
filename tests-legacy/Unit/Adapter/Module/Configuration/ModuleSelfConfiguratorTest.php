@@ -311,6 +311,7 @@ class ConfigurationMock extends Configuration
     public function set($key, $value, array $options = [])
     {
         $this->configurationData[$key] = $value;
+
         return $this;
     }
 
@@ -322,6 +323,7 @@ class ConfigurationMock extends Configuration
     public function remove($key)
     {
         unset($this->configurationData[$key]);
+
         return $this;
     }
 }
@@ -352,6 +354,7 @@ class ConnectionMock extends Connection
     public function prepare($statement)
     {
         $this->sql[] = $statement;
+
         return new StatementMock($statement, $this);
     }
 }

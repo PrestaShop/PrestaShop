@@ -62,6 +62,7 @@ class AliasBuilder {
             $sql .= " as";
         }
         $sql .= " " . $parsed['alias']['name'];
+
         return $sql;
     }
 }

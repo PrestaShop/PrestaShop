@@ -67,6 +67,7 @@ class IndexColumnBuilder {
         $sql = $parsed['name'];
         $sql .= $this->buildLength($parsed['length']);
         $sql .= $this->buildDirection($parsed['dir']);
+
         return $sql;
     }
 

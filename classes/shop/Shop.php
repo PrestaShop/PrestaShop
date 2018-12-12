@@ -354,6 +354,7 @@ class ShopCore extends ObjectModel
                     if ($row['main']) {
                         $is_main_uri = true;
                     }
+
                     break;
                 }
             }
@@ -964,14 +965,17 @@ class ShopCore extends ObjectModel
             case self::CONTEXT_ALL:
                 self::$context_id_shop = null;
                 self::$context_id_shop_group = null;
+
                 break;
             case self::CONTEXT_GROUP:
                 self::$context_id_shop = null;
                 self::$context_id_shop_group = (int) $id;
+
                 break;
             case self::CONTEXT_SHOP:
                 self::$context_id_shop = (int) $id;
                 self::$context_id_shop_group = Shop::getGroupFromShop($id);
+
                 break;
             default:
                 throw new PrestaShopException('Unknown context for shop');

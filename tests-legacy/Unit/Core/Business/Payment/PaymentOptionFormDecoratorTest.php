@@ -78,6 +78,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
         }
         $doc->preserveWhiteSpace = false;
         $doc->formatOutput = true;
+
         return $doc->saveHTML();
     }
 
@@ -87,6 +88,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
             $this->normalizeHTML($exp),
             $this->normalizeHTML($act)
         );
+
         return $this;
     }
 }

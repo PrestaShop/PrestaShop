@@ -102,6 +102,7 @@ class FromProcessor extends AbstractProcessor {
         $res['ref_clause'] = $parseInfo['ref_expr'];
         $res['base_expr'] = trim($parseInfo['expression']);
         $res['sub_tree'] = $parseInfo['sub_tree'];
+
         return $res;
     }
 
@@ -118,6 +119,7 @@ class FromProcessor extends AbstractProcessor {
             if ($skip_next && $token !== "") {
                 $parseInfo['token_count']++;
                 $skip_next = false;
+
                 continue;
             } else {
                 if ($skip_next) {
@@ -141,6 +143,7 @@ class FromProcessor extends AbstractProcessor {
                 if ($parseInfo['ref_type'] !== false) { // all after ON / USING
                     $parseInfo['ref_expr'] .= $token;
                 }
+
                 break;
             }
 
@@ -158,11 +161,13 @@ class FromProcessor extends AbstractProcessor {
                 $parseInfo['alias']['name'] = $str;
                 $parseInfo['alias']['no_quotes'] = $this->revokeQuotation($str);
                 $parseInfo['alias']['base_expr'] = trim($parseInfo['alias']['base_expr']);
+
                 continue;
 
             case 'INDEX':
                 if ($token_category == 'CREATE') {
                     $token_category = $upper;
+
                     continue 2;
                 }
 
@@ -180,19 +185,24 @@ class FromProcessor extends AbstractProcessor {
             case 'INNER':
             case 'OUTER':
                 $parseInfo['token_count']++;
+
                 continue;
+
                 break;
 
             case 'FOR':
                 $parseInfo['token_count']++;
                 $skip_next = true;
+
                 continue;
+
                 break;
 
             case 'LEFT':
             case 'RIGHT':
             case 'STRAIGHT_JOIN':
                 $parseInfo['next_join_type'] = $upper;
+
                 break;
 
             case ',':
@@ -206,6 +216,7 @@ class FromProcessor extends AbstractProcessor {
 
                 $expr[] = $this->processFromExpression($parseInfo);
                 $parseInfo = $this->initParseInfo($parseInfo);
+
                 break;
 
             default:
@@ -224,12 +235,14 @@ class FromProcessor extends AbstractProcessor {
                                                 'base_expr' => trim($token));
                 }
                 $parseInfo['token_count']++;
+
                 break;
             }
             ++$i;
         }
 
         $expr[] = $this->processFromExpression($parseInfo);
+
         return $expr;
     }
 

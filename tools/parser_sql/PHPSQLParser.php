@@ -92,6 +92,7 @@ class PHPSQLParser {
 
         // store the parsed queries
         $this->parsed = $queries;
+
         return $this->parsed;
     }
 }

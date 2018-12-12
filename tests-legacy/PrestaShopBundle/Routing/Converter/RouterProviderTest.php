@@ -216,6 +216,7 @@ class RouterProviderTest extends TestCase
         $routerProvider = new RouterProvider($router);
 
         $caughtException = null;
+
         try {
             $routerProvider->getLegacyRouteByAction('AdminCategories', 'add');
         } catch (RouteNotFoundException $e) {
@@ -225,6 +226,7 @@ class RouterProviderTest extends TestCase
         $this->assertEquals('Could not find a route matching for legacy controller: AdminCategories', $caughtException->getMessage());
 
         $caughtException = null;
+
         try {
             $routerProvider->getLegacyRouteByAction('AdminProducts', 'edit');
         } catch (RouteNotFoundException $e) {

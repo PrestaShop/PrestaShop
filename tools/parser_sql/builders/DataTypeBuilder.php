@@ -55,6 +55,7 @@ class DataTypeBuilder {
         if ($parsed['expr_type'] !== ExpressionType::DATA_TYPE) {
             return "";
         }
+
         return $parsed['base_expr'];
     }
 }

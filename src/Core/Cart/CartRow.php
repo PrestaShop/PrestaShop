@@ -372,6 +372,7 @@ class CartRow
                     $this->initialUnitPrice->getTaxIncluded() * $quantity,
                     $this->initialUnitPrice->getTaxExcluded() * $quantity
                 );
+
                 break;
             case self::ROUND_MODE_LINE:
                 // round line result
@@ -379,6 +380,7 @@ class CartRow
                     $tools->round($this->initialUnitPrice->getTaxIncluded() * $quantity, $this->precision),
                     $tools->round($this->initialUnitPrice->getTaxExcluded() * $quantity, $this->precision)
                 );
+
                 break;
 
             case self::ROUND_MODE_ITEM:
@@ -392,6 +394,7 @@ class CartRow
                     $this->initialUnitPrice->getTaxIncluded() * $quantity,
                     $this->initialUnitPrice->getTaxExcluded() * $quantity
                 );
+
                 break;
         }
     }

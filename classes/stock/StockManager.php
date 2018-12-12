@@ -137,6 +137,7 @@ class StockManagerCore implements StockManagerInterface
                     $mvt_params['last_wa'] = 0;
                     $mvt_params['current_wa'] = $price_te;
                 }
+
                 break;
 
             // case FIFO / LIFO mode
@@ -169,6 +170,7 @@ class StockManagerCore implements StockManagerInterface
 
             default:
                 return false;
+
                 break;
         }
 
@@ -463,6 +465,7 @@ class StockManagerCore implements StockManagerInterface
                             $stock->update();
                         }
                     }
+
                     break;
             }
 

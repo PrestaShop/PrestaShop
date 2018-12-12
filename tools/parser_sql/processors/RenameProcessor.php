@@ -62,6 +62,7 @@ class RenameProcessor extends AbstractProcessor {
                                              'no_quotes' => $this->revokeQuotation($base_expr),
                                              'base_expr' => $base_expr);
                 $base_expr = "";
+
                 break;
 
             case ',':
@@ -72,10 +73,12 @@ class RenameProcessor extends AbstractProcessor {
                 $resultList[] = $tablePair;
                 $tablePair = array();
                 $base_expr = "";
+
                 break;
 
             default:
                 $base_expr .= $token->getToken();
+
                 break;
             }
         }

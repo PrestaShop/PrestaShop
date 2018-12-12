@@ -51,6 +51,7 @@ class AddressValidatorCore
 
         foreach ($addressesIds as $idAddress) {
             $address = new CustomerAddress((int) $idAddress);
+
             try {
                 $address->validateFields();
             } catch (PrestaShopException $e) {

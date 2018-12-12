@@ -139,6 +139,7 @@ class ExportThemeCommandTest extends TestCase
         $helperSetMock->method('get')
             ->with('formatter')
             ->willReturn($formatterHelperMock);
+
         return $helperSetMock;
     }
 }

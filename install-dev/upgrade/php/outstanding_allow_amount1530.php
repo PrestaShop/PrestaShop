@@ -38,5 +38,6 @@ function outstanding_allow_amount1530()
             Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'address` CHANGE  `outstanding_allow_amount` `outstanding_allow_amount` DECIMAL(20, 6) NOT NULL DEFAULT 0.000000');
         }
     }
+
     return $res;
 }

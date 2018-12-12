@@ -80,6 +80,7 @@ class Tools extends ToolsCore
             $default_controller = 'adminnotfound';
         }
         $controller_class = $controllers[strtolower($default_controller)];
+
         return $controller_class;
     }
 

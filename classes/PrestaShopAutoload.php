@@ -295,6 +295,7 @@ class PrestaShopAutoload
                     foreach (token_get_all($content) as $token) {
                         if ($token[0] === T_NAMESPACE) {
                             $usesNamespace = true;
+
                             break;
                         }
                     }

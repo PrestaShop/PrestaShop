@@ -246,6 +246,7 @@ class AdminCustomersControllerCore extends AdminController
             case 'list':
                 array_pop($this->toolbar_title);
                 $this->toolbar_title[] = $this->trans('Manage your Customers', array(), 'Admin.Orderscustomers.Feature');
+
                 break;
             case 'view':
                 /** @var Customer $customer */
@@ -253,6 +254,7 @@ class AdminCustomersControllerCore extends AdminController
                     array_pop($this->toolbar_title);
                     $this->toolbar_title[] = $this->trans('Information about customer %name%', array('%name%' => Tools::substr($customer->firstname, 0, 1) . '. ' . $customer->lastname), 'Admin.Orderscustomers.Feature');
                 }
+
                 break;
             case 'add':
             case 'edit':
@@ -263,6 +265,7 @@ class AdminCustomersControllerCore extends AdminController
                 } else {
                     $this->toolbar_title[] = $this->trans('Creating a new Customer', array(), 'Admin.Orderscustomers.Feature');
                 }
+
                 break;
         }
 

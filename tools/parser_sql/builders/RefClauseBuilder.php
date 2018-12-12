@@ -56,16 +56,19 @@ class RefClauseBuilder {
 
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildOperator($parsed) {
         $builder = new OperatorBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -86,6 +89,7 @@ class RefClauseBuilder {
 
             $sql .= " ";
         }
+
         return "(" . substr($sql, 0, -1) . ")";
     }
 }

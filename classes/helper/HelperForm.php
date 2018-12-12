@@ -98,6 +98,7 @@ class HelperFormCore extends Helper
                             if (isset($params['multiple']) && $params['multiple'] && stripos($field_name, '[]') === false) {
                                 $params['name'] .= '[]';
                             }
+
                             break;
 
                         case 'categories':
@@ -139,6 +140,7 @@ class HelperFormCore extends Helper
                                 $this->context->smarty->assign('categories_tree', $tree->render());
                                 $categories = false;
                             }
+
                             break;
 
                         case 'file':
@@ -185,6 +187,7 @@ class HelperFormCore extends Helper
 
                             $uploader->setTitle(isset($params['title']) ? $params['title'] : null);
                             $params['file'] = $uploader->render();
+
                             break;
 
                         case 'color':
@@ -194,6 +197,7 @@ class HelperFormCore extends Helper
                                 $this->tpl_vars['color'] = true;
                                 $color = false;
                             }
+
                             break;
 
                         case 'date':
@@ -201,6 +205,7 @@ class HelperFormCore extends Helper
                                 $this->context->controller->addJqueryUI('ui.datepicker');
                                 $date = false;
                             }
+
                             break;
 
                         case 'textarea':
@@ -220,6 +225,7 @@ class HelperFormCore extends Helper
                                 $this->context->controller->addJqueryPlugin('autosize');
                                 $textarea_autosize = false;
                             }
+
                             break;
 
                         case 'shop':
@@ -230,6 +236,7 @@ class HelperFormCore extends Helper
                                     unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
                                 }
                             }
+
                             break;
                     }
                 }
@@ -313,18 +320,21 @@ class HelperFormCore extends Helper
             switch (Shop::getContext()) {
                 case Shop::CONTEXT_SHOP:
                         $assos[Shop::getContextShopID()] = Shop::getContextShopID();
+
                     break;
 
                 case Shop::CONTEXT_GROUP:
                     foreach (Shop::getShops(false, Shop::getContextShopGroupID(), true) as $id_shop) {
                         $assos[$id_shop] = $id_shop;
                     }
+
                     break;
 
                 default:
                     foreach (Shop::getShops(false, null, true) as $id_shop) {
                         $assos[$id_shop] = $id_shop;
                     }
+
                     break;
             }
         }

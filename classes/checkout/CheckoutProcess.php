@@ -163,6 +163,7 @@ class CheckoutProcessCore implements RenderableInterface
         foreach ($this->getSteps() as $step) {
             if (!$step->isReachable()) {
                 $step->setReachable(true);
+
                 break;
             }
             if (!$step->isComplete()) {

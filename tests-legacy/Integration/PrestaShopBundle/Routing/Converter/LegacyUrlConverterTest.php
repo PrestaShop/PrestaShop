@@ -267,6 +267,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
         $caughtException = null;
         $caughtExceptionMessage = '';
+
         try {
             $parameters = [
                 'controller' => $controller,

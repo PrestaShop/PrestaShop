@@ -47,6 +47,7 @@ class pscsx32412 extends Module
         if (parent::install() == false) {
             return false;
         }
+
         return true;
     }
 }

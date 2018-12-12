@@ -62,6 +62,7 @@ class AdminCronJobsController extends ModuleAdminController
 
                 if ($module == false) {
                     Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.bqSQL($this->module->name).' WHERE `id_cronjob` = \''.(int)$cron['id_cronjob'].'\'');
+
                     break;
                 } elseif ($this->shouldBeExecuted($cron) == true) {
                     Hook::exec('actionCronJob', array(), $cron['id_module']);

@@ -670,6 +670,7 @@ class AdminManufacturersControllerCore extends AdminController
                         'desc' => $this->trans('Cancel', array(), 'Admin.Actions'),
                     );
                 }
+
                 break;
 
             default:

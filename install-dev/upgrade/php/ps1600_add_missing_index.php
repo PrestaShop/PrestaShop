@@ -33,5 +33,6 @@ function ps1600_add_missing_index()
     if (!$key_exists) {
         Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'connections` ADD INDEX (`id_guest`)');
     }
+
     return true;
 }

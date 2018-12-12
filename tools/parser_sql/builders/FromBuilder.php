@@ -56,16 +56,19 @@ class FromBuilder {
 
     protected function buildTable($parsed, $key) {
         $builder = new TableBuilder();
+
         return $builder->build($parsed, $key);
     }
 
     protected function buildTableExpression($parsed, $key) {
         $builder = new TableExpressionBuilder();
+
         return $builder->build($parsed, $key);
     }
 
     protected function buildSubQuery($parsed, $key) {
         $builder = new SubQueryBuilder();
+
         return $builder->build($parsed, $key);
     }
 
@@ -81,6 +84,7 @@ class FromBuilder {
                 throw new UnableToCreateSQLException('FROM', $k, $v, 'expr_type');
             }
         }
+
         return "FROM " . $sql;
     }
 }

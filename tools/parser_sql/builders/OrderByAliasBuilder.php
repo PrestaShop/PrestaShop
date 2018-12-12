@@ -54,6 +54,7 @@ class OrderByAliasBuilder {
 
     protected function buildDirection($parsed) {
         $builder = new DirectionBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -61,6 +62,7 @@ class OrderByAliasBuilder {
         if ($parsed['expr_type'] !== ExpressionType::ALIAS) {
             return "";
         }
+
         return $parsed['base_expr'] . $this->buildDirection($parsed);
     }
 }

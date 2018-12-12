@@ -75,6 +75,7 @@ class ReflexionHelper extends TestCase
     public static function getClass($object)
     {
         $namespace = explode('\\', get_class($object));
+
         return preg_replace('/(.*)(?:Core)?Test$/', '$1', end($namespace));
     }
 }

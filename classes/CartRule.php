@@ -477,6 +477,7 @@ class CartRuleCore extends ObjectModel
                             AND crc.id_country = ' . (int) $country['id_country']);
                         if ($id_cart_rule) {
                             $result[] = $result_bak[$key];
+
                             break;
                         }
                     }
@@ -705,6 +706,7 @@ class CartRuleCore extends ObjectModel
             foreach ($products as $product) {
                 if (!$product['reduction_applies']) {
                     $is_ok = true;
+
                     break;
                 }
             }
@@ -909,10 +911,12 @@ class CartRuleCore extends ObjectModel
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     ++$condition;
+
                                     break;
                                 }
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+
                             break;
                         case 'products':
                             $cart_products = Db::getInstance()->executeS('
@@ -936,10 +940,12 @@ class CartRuleCore extends ObjectModel
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     ++$condition;
+
                                     break;
                                 }
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+
                             break;
                         case 'categories':
                             $cart_categories = Db::getInstance()->executeS('
@@ -967,6 +973,7 @@ class CartRuleCore extends ObjectModel
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     ++$condition;
+
                                     break;
                                 }
                             }
@@ -975,6 +982,7 @@ class CartRuleCore extends ObjectModel
                                 $matching_product = preg_replace('/^([0-9]+)-[0-9]+$/', '$1-0', $matching_product);
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+
                             break;
                         case 'manufacturers':
                             $cart_manufacturers = Db::getInstance()->executeS('
@@ -996,10 +1004,12 @@ class CartRuleCore extends ObjectModel
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     ++$condition;
+
                                     break;
                                 }
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+
                             break;
                         case 'suppliers':
                             $cart_suppliers = Db::getInstance()->executeS('
@@ -1021,10 +1031,12 @@ class CartRuleCore extends ObjectModel
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     ++$condition;
+
                                     break;
                                 }
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+
                             break;
                     }
                     if (!count($eligible_products_list)) {
@@ -1339,6 +1351,7 @@ class CartRuleCore extends ObjectModel
                         if ($use_cache && (!isset(CartRule::$only_one_gift[$this->id . '-' . $this->gift_product]) || CartRule::$only_one_gift[$this->id . '-' . $this->gift_product] == 0)) {
                             CartRule::$only_one_gift[$this->id . '-' . $this->gift_product] = $id_address;
                         }
+
                         break;
                     }
                 }

@@ -43,5 +43,6 @@ function p15015_blockadvertising_extension()
             }
         }
     }
+
     return true;
 }

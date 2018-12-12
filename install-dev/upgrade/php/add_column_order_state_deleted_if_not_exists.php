@@ -36,5 +36,6 @@ function add_column_order_state_deleted_if_not_exists()
     if (!$res) {
         return array('error' => Db::getInstance()->getNumberError(), 'msg' => Db::getInstance()->getMsgError());
     }
+
     return true;
 }

@@ -127,6 +127,7 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
             if ('id_request_sql' === $filterName) {
                 $qb->andWhere('rs.id_request_sql = :id_request_sql');
                 $qb->setParameter('id_request_sql', $value);
+
                 continue;
             }
 

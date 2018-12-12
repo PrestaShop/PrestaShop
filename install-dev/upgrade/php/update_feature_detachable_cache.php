@@ -48,5 +48,6 @@ function update_feature_detachable_cache()
             $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) values ("'.pSQL($config_key).'", "'.(int)$count.'")');
         }
     }
+
     return $res;
 }

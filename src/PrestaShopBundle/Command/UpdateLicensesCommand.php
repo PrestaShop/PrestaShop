@@ -141,22 +141,28 @@ class UpdateLicensesCommand extends Command
                     } catch (\PhpParser\Error $exception) {
                         $output->writeln('Syntax error on file ' . $file->getRelativePathname() . '. Continue ...');
                     }
+
                     break;
                 case 'js':
                 case 'css':
                     $this->addLicenseToFile($file);
+
                     break;
                 case 'tpl':
                     $this->addLicenseToSmartyTemplate($file);
+
                     break;
                 case 'twig':
                     $this->addLicenseToTwigTemplate($file);
+
                     break;
                 case 'json':
                     $this->addLicenseToJsonFile($file);
+
                     break;
                 case 'vue':
                     $this->addLicenseToHtmlFile($file);
+
                     break;
             }
             $progress->advance();

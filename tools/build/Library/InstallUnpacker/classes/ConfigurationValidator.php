@@ -95,22 +95,26 @@ class ConfigurationValidator
         list($fileCreationTestPath, $createFileResult) = $this->createFileTest($dirPath);
         if (false === $createFileResult) {
             $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot write files'];
         }
 
         if (false === $this->downloadFileTest($dirPath)) {
             $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot download files from network'];
         }
 
         list($fileMoveTestPath, $moveResult) = $this->moveFileTest($fileCreationTestPath);
         if (false === $moveResult) {
             $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot move files into prestashop root directory'];
         }
 
         if (false === $this->deleteFileTest($fileMoveTestPath)) {
             $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot delete files in prestashop root directory'];
         }
 

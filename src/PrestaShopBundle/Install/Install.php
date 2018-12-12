@@ -597,6 +597,7 @@ class Install extends AbstractInstall
         foreach ($languages_list as $iso) {
             if (!in_array($iso, $languages_available)) {
                 EntityLanguage::downloadAndInstallLanguagePack($iso);
+
                 continue;
             }
 
@@ -1050,6 +1051,7 @@ class Install extends AbstractInstall
             }
 
             $moduleException = null;
+
             try {
                 $moduleInstalled = $moduleManager->install($module_name);
             } catch (\PrestaShopException $e) {

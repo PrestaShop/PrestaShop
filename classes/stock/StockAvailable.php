@@ -381,6 +381,7 @@ class StockAvailableCore extends ObjectModel
                 'id_product_attribute' => $id_product_attribute,
                 'location' => $location,
             ];
+
             throw new \InvalidArgumentException(sprintf(
                 'Could not update location as input data is not valid: %s',
                 json_encode($serializedInputData)
@@ -500,6 +501,7 @@ class StockAvailableCore extends ObjectModel
                 foreach ($colors as $color) {
                     if ($product->isColorUnavailable((int) $color['id_attribute'], (int) $this->id_shop)) {
                         Tools::clearColorListCache($product->id);
+
                         break;
                     }
                 }

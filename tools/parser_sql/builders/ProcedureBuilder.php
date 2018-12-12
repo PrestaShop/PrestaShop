@@ -55,6 +55,7 @@ class ProcedureBuilder {
         if ($parsed['expr_type'] !== ExpressionType::PROCEDURE) {
             return "";
         }
+
         return $parsed['base_expr'];
     }
 }

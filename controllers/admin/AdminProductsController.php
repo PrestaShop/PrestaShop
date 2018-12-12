@@ -2726,6 +2726,7 @@ class AdminProductsControllerCore extends AdminController
                 foreach ($carrier_selected_list as $carrier_selected) {
                     if ($carrier_selected['id_reference'] == $carrier['id_reference']) {
                         $carrier['selected'] = true;
+
                         continue;
                     }
                 }
@@ -2812,6 +2813,7 @@ class AdminProductsControllerCore extends AdminController
             } else {
                 if (!$new_path = $image->getPathForCreation()) {
                     $file['error'] = $this->trans('An error occurred while attempting to create a new folder.', array(), 'Admin.Notifications.Error');
+
                     continue;
                 }
 
@@ -2821,20 +2823,25 @@ class AdminProductsControllerCore extends AdminController
                     switch ($error) {
                         case ImageManager::ERROR_FILE_NOT_EXIST:
                             $file['error'] = $this->trans('An error occurred while copying image, the file does not exist anymore.', array(), 'Admin.Catalog.Notification');
+
                             break;
 
                         case ImageManager::ERROR_FILE_WIDTH:
                             $file['error'] = $this->trans('An error occurred while copying image, the file width is 0px.', array(), 'Admin.Catalog.Notification');
+
                             break;
 
                         case ImageManager::ERROR_MEMORY_LIMIT:
                             $file['error'] = $this->trans('An error occurred while copying image, check your memory limit.', array(), 'Admin.Catalog.Notification');
+
                             break;
 
                         default:
                             $file['error'] = $this->trans('An error occurred while copying the image.', array(), 'Admin.Catalog.Notification');
+
                             break;
                     }
+
                     continue;
                 } else {
                     $imagesTypes = ImageType::getImagesTypes('products');
@@ -2843,12 +2850,14 @@ class AdminProductsControllerCore extends AdminController
                     foreach ($imagesTypes as $imageType) {
                         if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
                             $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
+
                             continue;
                         }
 
                         if ($generate_hight_dpi_images) {
                             if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $image->image_format, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $image->image_format)) {
                                 $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
+
                                 continue;
                             }
                         }
@@ -2862,6 +2871,7 @@ class AdminProductsControllerCore extends AdminController
 
                 if (!$image->update()) {
                     $file['error'] = $this->trans('Error while updating the status.', array(), 'Admin.Notifications.Error');
+
                     continue;
                 }
 
@@ -2934,6 +2944,7 @@ class AdminProductsControllerCore extends AdminController
                 }
 
                 StockAvailable::setProductDependsOnStock($product->id, (int) Tools::getValue('value'));
+
                 break;
 
             case 'pack_stock_type':
@@ -2961,6 +2972,7 @@ class AdminProductsControllerCore extends AdminController
                 }
 
                 Product::setPackStockType($product->id, $value);
+
                 break;
 
             case 'out_of_stock':
@@ -2972,6 +2984,7 @@ class AdminProductsControllerCore extends AdminController
                 }
 
                 StockAvailable::setProductOutOfStock($product->id, (int) Tools::getValue('value'));
+
                 break;
 
             case 'set_qty':
@@ -2992,6 +3005,7 @@ class AdminProductsControllerCore extends AdminController
                     ob_end_clean();
                     die(json_encode(array('error' => $error)));
                 }
+
                 break;
             case 'advanced_stock_management':
                 if (Tools::getValue('value') === false) {
@@ -3008,6 +3022,7 @@ class AdminProductsControllerCore extends AdminController
                 if (StockAvailable::dependsOnStock($product->id) == 1 && (int) Tools::getValue('value') == 0) {
                     StockAvailable::setProductDependsOnStock($product->id, 0);
                 }
+
                 break;
         }
         die(json_encode(array('error' => false)));

@@ -135,6 +135,7 @@ class PositionUpdateFactoryTest extends TestCase
 
         /** @var PositionDataException $caughtException */
         $caughtException = null;
+
         try {
             $positionUpdateFactory->buildPositionUpdate($data, $definition);
         } catch (PositionDataException $e) {

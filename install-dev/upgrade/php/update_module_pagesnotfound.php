@@ -36,5 +36,6 @@ function update_module_pagesnotfound()
             }
         }
     }
+
     return true;
 }

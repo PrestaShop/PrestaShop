@@ -269,28 +269,34 @@ class AdminThemesControllerCore extends AdminController
                 if (Tools::isSubmit('submitAddconfiguration')) {
                     $this->postProcessSubmitAddConfiguration();
                 }
+
                 break;
 
             case 'exporttheme':
                 if (false === $this->postProcessExportTheme()) {
                     return false;
                 }
+
                 break;
 
             case 'enableTheme':
                 $this->postProcessEnableTheme();
+
                 break;
 
             case 'deleteTheme':
                 $this->postProcessDeleteTheme();
+
                 break;
 
             case 'resetToDefaults':
                 $this->postProcessResetToDefaults();
+
                 break;
 
             case 'submitConfigureLayouts':
                 $this->postProcessSubmitConfigureLayouts();
+
                 break;
 
             // Main Theme page

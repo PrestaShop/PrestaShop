@@ -290,6 +290,7 @@ class CronJobsForms
                 if ($module == false) {
                     Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.bqSQL(self::$module->name).' WHERE `id_cronjob` = \''.(int)$cron['id_cronjob'].'\'');
                     unset($crons[$key]);
+
                     break;
                 }
 

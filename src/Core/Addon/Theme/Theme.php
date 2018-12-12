@@ -208,6 +208,7 @@ class Theme implements AddonInterface
             // Required parameters
             if (!isset($entry['id']) || !isset($entry['path'])) {
                 unset($css[$key]);
+
                 continue;
             }
             if (!isset($entry['media'])) {
@@ -234,6 +235,7 @@ class Theme implements AddonInterface
             // Required parameters
             if (!isset($entry['id']) || !isset($entry['path'])) {
                 unset($js[$key]);
+
                 continue;
             }
             if (!isset($entry['position'])) {

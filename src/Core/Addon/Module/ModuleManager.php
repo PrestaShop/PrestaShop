@@ -426,6 +426,7 @@ class ModuleManager implements AddonManagerInterface
         $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
+
         try {
             $result = $module->onDisable();
         } catch (Exception $e) {
@@ -473,6 +474,7 @@ class ModuleManager implements AddonManagerInterface
         $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
+
         try {
             $result = $module->onEnable();
         } catch (Exception $e) {
@@ -536,6 +538,7 @@ class ModuleManager implements AddonManagerInterface
         $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
+
         try {
             $result = $module->onMobileDisable();
         } catch (Exception $e) {
@@ -598,6 +601,7 @@ class ModuleManager implements AddonManagerInterface
         $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
+
         try {
             $result = $module->onMobileEnable();
         } catch (Exception $e) {
@@ -644,6 +648,7 @@ class ModuleManager implements AddonManagerInterface
         $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
+
         try {
             if ((bool) $keep_data && method_exists($module->getInstance(), 'reset')) {
                 $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);

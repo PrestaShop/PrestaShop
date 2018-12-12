@@ -645,6 +645,7 @@ class ReleaseCreator
                     if ($folder.'/'.$file_to_remove == $value) {
                         unset($filesList[$key]);
                         exec("rm -f {$argValue}");
+
                         continue 2;
                     }
                 }
@@ -654,6 +655,7 @@ class ReleaseCreator
                     if ($folder.'/'.$folder_to_remove == $value) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argValue}");
+
                         continue 2;
                     }
                 }
@@ -663,6 +665,7 @@ class ReleaseCreator
                     if (preg_match('#'.$pattern_to_remove.'#', $value) == 1) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argValue}");
+
                         continue 2;
                     }
                 }
@@ -674,6 +677,7 @@ class ReleaseCreator
                     if ($folder.'/'.$folder_to_remove == $key) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argKey}");
+
                         continue 2;
                     }
                 }
@@ -683,6 +687,7 @@ class ReleaseCreator
                     if (preg_match('#'.$pattern_to_remove.'#', $key) == 1) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argKey}");
+
                         continue 2;
                     }
                 }
