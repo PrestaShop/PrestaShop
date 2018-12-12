@@ -120,7 +120,7 @@ class OrderDetailControllerCore extends FrontController
                             ),
                             $to,
                             $toName,
-                            (string) (Configuration::get('PS_SHOP_EMAIL')),
+                            (string) Configuration::get('PS_SHOP_EMAIL'),
                             $customer->firstname . ' ' . $customer->lastname,
                             null,
                             null,
