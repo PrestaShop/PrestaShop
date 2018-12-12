@@ -926,8 +926,7 @@ abstract class PaymentModuleCore extends Module
         $order_status,
         $id_order_state,
         $carrierId = null
-    )
-    {
+    ) {
         $order = new Order();
         $order->product_list = $productList;
 
@@ -978,7 +977,7 @@ abstract class PaymentModuleCore extends Module
         $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId));
         $order->total_discounts = $order->total_discounts_tax_incl;
 
-        $order->total_shipping_tax_excl = (float)$cart->getPackageShippingCost($carrierId, false, null, $order->product_list);
+        $order->total_shipping_tax_excl = (float) $cart->getPackageShippingCost($carrierId, false, null, $order->product_list);
         $order->total_shipping_tax_incl = (float) $cart->getPackageShippingCost($carrierId, true, null, $order->product_list);
         $order->total_shipping = $order->total_shipping_tax_incl;
 
@@ -1052,8 +1051,7 @@ abstract class PaymentModuleCore extends Module
         $total_reduction_value_ti,
         $total_reduction_value_tex,
         $id_order_state
-    )
-    {
+    ) {
         $cart_rule_used = array();
 
         // prepare cart calculator to correctly get the value of each cart rule
