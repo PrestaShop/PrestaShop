@@ -66,7 +66,8 @@ class AdminCmsCategoriesControllerCore extends AdminController
             'active' => array(
                 'title' => $this->trans('Displayed', array(), 'Admin.Global'), 'class' => 'fixed-width-sm', 'active' => 'status',
                 'align' => 'center', 'type' => 'bool', 'orderby' => false,
-            ), );
+            ),
+        );
 
         // The controller can't be call directly
         // In this case, AdminCmsContentController::getCurrentCMSCategory() is null

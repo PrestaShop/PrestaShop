@@ -411,7 +411,8 @@ class gamification extends Module
             $formated_badges_lang[$lang->id_ps_badge] = array(
                 'name' => array($id_lang => $lang->name),
                 'description' => array($id_lang => $lang->description),
-                'group_name' => array($id_lang => $lang->group_name), );
+                'group_name' => array($id_lang => $lang->group_name),
+            );
         }
 
         $current_badges = array();

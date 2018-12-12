@@ -507,7 +507,8 @@ class AdminReferrersControllerCore extends AdminController
             'order_rate' => $this->trans('Order rate', array(), 'Admin.Shopparameters.Feature'),
             'click_fee' => $this->trans('Click fee', array(), 'Admin.Shopparameters.Feature'),
             'base_fee' => $this->trans('Base fee', array(), 'Admin.Shopparameters.Feature'),
-            'percent_fee' => $this->trans('Percent fee', array(), 'Admin.Shopparameters.Feature'), );
+            'percent_fee' => $this->trans('Percent fee', array(), 'Admin.Shopparameters.Feature'),
+        );
 
         $this->tpl_view_vars = array(
             'enable_calendar' => $this->enableCalendar(),

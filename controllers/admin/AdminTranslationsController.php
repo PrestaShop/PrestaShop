@@ -2087,7 +2087,8 @@ class AdminTranslationsControllerCore extends AdminController
 
                     // Adding list, form, option in Helper Translations
                     $list_prefix_key = array('AdminHelpers', 'AdminList', 'AdminView', 'AdminOptions', 'AdminForm',
-                        'AdminCalendar', 'AdminTree', 'AdminUploader', 'AdminDataviz', 'AdminKpi', 'AdminModule_list', 'AdminModulesList', );
+                        'AdminCalendar', 'AdminTree', 'AdminUploader', 'AdminDataviz', 'AdminKpi', 'AdminModule_list', 'AdminModulesList',
+                    );
                     if (in_array($prefix_key, $list_prefix_key)) {
                         $prefix_key = 'Helper';
                     }
@@ -2302,7 +2303,8 @@ class AdminTranslationsControllerCore extends AdminController
         foreach ($files_by_directory['php'] as $dir => $files) {
             foreach ($files as $file) {
                 $exclude_files = array('index.php', 'PrestaShopAutoload.php', 'StockManagerInterface.php',
-                    'TaxManagerInterface.php', 'WebserviceOutputInterface.php', 'WebserviceSpecificManagementInterface.php', );
+                    'TaxManagerInterface.php', 'WebserviceOutputInterface.php', 'WebserviceSpecificManagementInterface.php',
+                );
 
                 if (!preg_match('/\.php$/', $file) || in_array($file, $exclude_files)) {
                     continue;

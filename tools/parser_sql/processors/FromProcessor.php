@@ -53,7 +53,8 @@ class FromProcessor extends AbstractProcessor {
         return array('expression' => "", 'token_count' => 0, 'table' => "", 'no_quotes' => "", 'alias' => false,
             'join_type' => "", 'next_join_type' => "", 'saved_join_type' => $parseInfo['saved_join_type'],
             'ref_type' => false, 'ref_expr' => false, 'base_expr' => false, 'sub_tree' => false,
-            'subquery' => "", );
+            'subquery' => "",
+        );
     }
 
     protected function processFromExpression(&$parseInfo) {
@@ -221,7 +222,8 @@ class FromProcessor extends AbstractProcessor {
                 } elseif ($parseInfo['token_count'] === 1) {
                     $parseInfo['alias'] = array('as' => false, 'name' => trim($token),
                         'no_quotes' => $this->revokeQuotation($token),
-                        'base_expr' => trim($token), );
+                        'base_expr' => trim($token),
+                    );
                 }
                 $parseInfo['token_count']++;
                 break;

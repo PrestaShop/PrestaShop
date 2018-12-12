@@ -2107,7 +2107,8 @@ class OrderCore extends ObjectModel
                 if (!isset($tmp_tax_infos[$tax_infos['rate']])) {
                     $tmp_tax_infos[$tax_infos['rate']] = array('total_amount' => 0,
                         'name' => 0,
-                        'total_price_tax_excl' => 0, );
+                        'total_price_tax_excl' => 0,
+                    );
                 }
 
                 $tmp_tax_infos[$tax_infos['rate']]['total_amount'] += $tax_infos['total_amount'];

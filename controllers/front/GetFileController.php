@@ -275,7 +275,8 @@ class GetFileControllerCore extends FrontController
                 'mxu' => 'video/vnd.mpegurl',
                 'avi' => 'video/x-msvideo',
                 'movie' => 'video/x-sgi-movie',
-                'ice' => 'x-conference-xcooltalk', );
+                'ice' => 'x-conference-xcooltalk',
+            );
 
             if (isset($mimeTypes[$bName])) {
                 $mimeType = $mimeTypes[$bName];

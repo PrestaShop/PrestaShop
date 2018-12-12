@@ -60,7 +60,8 @@ class RenameProcessor extends AbstractProcessor {
             // separate source table from destination
                 $tablePair['source'] = array('expr_type' => ExpressionType::TABLE, 'table' => trim($base_expr),
                     'no_quotes' => $this->revokeQuotation($base_expr),
-                    'base_expr' => $base_expr, );
+                    'base_expr' => $base_expr,
+                );
                 $base_expr = "";
                 break;
 
@@ -68,7 +69,8 @@ class RenameProcessor extends AbstractProcessor {
             // split rename operations
                 $tablePair['destination'] = array('expr_type' => ExpressionType::TABLE, 'table' => trim($base_expr),
                     'no_quotes' => $this->revokeQuotation($base_expr),
-                    'base_expr' => $base_expr, );
+                    'base_expr' => $base_expr,
+                );
                 $resultList[] = $tablePair;
                 $tablePair = array();
                 $base_expr = "";
@@ -83,7 +85,8 @@ class RenameProcessor extends AbstractProcessor {
         if ($base_expr !== "") {
             $tablePair['destination'] = array('expr_type' => ExpressionType::TABLE, 'table' => trim($base_expr),
                 'no_quotes' => $this->revokeQuotation($base_expr),
-                'base_expr' => $base_expr, );
+                'base_expr' => $base_expr,
+            );
             $resultList[] = $tablePair;
         }
 

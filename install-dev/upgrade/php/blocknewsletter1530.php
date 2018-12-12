@@ -31,7 +31,8 @@ function blocknewsletter1530()
     $column_to_add = array(
         'id_shop' => 'INTEGER UNSIGNED NOT NULL DEFAULT \'1\' after `id`',
         'id_shop_group' => 'INTEGER UNSIGNED NOT NULL DEFAULT \'1\' after `id_shop`',
-        'active' => 'TINYINT(1) NOT NULL DEFAULT \'0\' after http_referer', );
+        'active' => 'TINYINT(1) NOT NULL DEFAULT \'0\' after http_referer',
+    );
 
     return generic_add_missing_column('newsletter', $column_to_add);
 }

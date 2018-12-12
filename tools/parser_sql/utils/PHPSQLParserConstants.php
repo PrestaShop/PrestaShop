@@ -95,7 +95,8 @@ class PHPSQLParserConstants {
         'TRAILING', 'TRUE', 'UNDO', 'UNION', 'UNIQUE', 'UNLOCK', 'UNSIGNED', 'UPDATE',
         'USAGE', 'USE', 'USER_RESOURCES', 'USING', 'UTC_DATE', 'UTC_TIME',
         'UTC_TIMESTAMP', 'VALUES', 'VARBINARY', 'VARCHAR', 'VARCHARACTER', 'VARYING',
-        'WHEN', 'WHERE', 'WHILE', 'WITH', 'WRITE', 'XOR', 'YEAR_MONTH', 'ZEROFILL', );
+        'WHEN', 'WHERE', 'WHILE', 'WITH', 'WRITE', 'XOR', 'YEAR_MONTH', 'ZEROFILL',
+    );
 
     protected static $parameterizedFunctions = array('ABS', 'ACOS', 'ADDDATE', 'ADDTIME', 'AES_ENCRYPT', 'AES_DECRYPT',
         'AGAINST', 'ASCII', 'ASIN', 'ATAN', 'AVG', 'BENCHMARK', 'BIN',
@@ -128,7 +129,8 @@ class PHPSQLParserConstants {
         'TIME_TO_SEC', 'TO_DAYS', 'TRIM', 'TRUNCATE', 'UCASE',
         'UNCOMPRESS', 'UNCOMPRESSED_LENGTH', 'UNHEX', 'UPPER', 'VAR_POP',
         'VAR_SAMP', 'VARIANCE', 'WEEK', 'WEEKDAY', 'WEEKOFYEAR', 'YEAR',
-        'YEARWEEK', );
+        'YEARWEEK',
+    );
 
     protected static $functions = array('ABS', 'ACOS', 'ADDDATE', 'ADDTIME', 'AES_ENCRYPT', 'AES_DECRYPT', 'AGAINST',
         'ASCII', 'ASIN', 'ATAN', 'AVG', 'BENCHMARK', 'BIN', 'BIT_AND', 'BIT_OR',
@@ -159,11 +161,13 @@ class PHPSQLParserConstants {
         'TIME_TO_SEC', 'TO_DAYS', 'TRIM', 'TRUNCATE', 'UCASE', 'UNCOMPRESS',
         'UNCOMPRESSED_LENGTH', 'UNHEX', 'UNIX_TIMESTAMP', 'UPPER', 'USER', 'UTC_DATE',
         'UTC_TIME', 'UTC_TIMESTAMP', 'UUID', 'VAR_POP', 'VAR_SAMP', 'VARIANCE',
-        'VERSION', 'WEEK', 'WEEKDAY', 'WEEKOFYEAR', 'YEAR', 'YEARWEEK', );
+        'VERSION', 'WEEK', 'WEEKDAY', 'WEEKOFYEAR', 'YEAR', 'YEARWEEK',
+    );
 
     protected static $aggregateFunctions = array('AVG', 'SUM', 'COUNT', 'MIN', 'MAX', 'STDDEV', 'STDDEV_SAMP',
         'STDDEV_POP', 'VARIANCE', 'VAR_SAMP', 'VAR_POP', 'GROUP_CONCAT',
-        'BIT_AND', 'BIT_OR', 'BIT_XOR', );
+        'BIT_AND', 'BIT_OR', 'BIT_XOR',
+    );
 
     public static function isAggregateFunction($token) {
         return in_array($token, PHPSQLParserConstants::$aggregateFunctions);

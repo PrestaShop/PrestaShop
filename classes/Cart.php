@@ -2670,7 +2670,8 @@ class CartCore extends ObjectModel
                     }
                     $carriers_price[$id_address][$id_package][$id_carrier] = array(
                         'without_tax' => $price_without_tax,
-                        'with_tax' => $price_with_tax, );
+                        'with_tax' => $price_with_tax,
+                    );
 
                     $grade = $carriers_instance[$id_carrier]->grade;
                     if (is_null($best_grade) || $grade > $best_grade) {

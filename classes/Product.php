@@ -4410,7 +4410,8 @@ class ProductCore extends ObjectModel
         foreach ($result as $row) {
             $data = array(
                 'id_product_1' => (int) $id_product_new,
-                'id_product_2' => (int) $row['id_product_2'], );
+                'id_product_2' => (int) $row['id_product_2'],
+            );
             $return &= Db::getInstance()->insert('accessory', $data);
         }
 
