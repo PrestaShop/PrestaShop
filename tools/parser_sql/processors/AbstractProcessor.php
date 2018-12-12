@@ -211,4 +211,3 @@ abstract class AbstractProcessor {
         return $array;
     }
 }
-?>

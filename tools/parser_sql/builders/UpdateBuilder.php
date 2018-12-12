@@ -53,4 +53,3 @@ class UpdateBuilder {
         return "UPDATE " . $parsed[0]['table'];
     }
 }
-?>

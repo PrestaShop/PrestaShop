@@ -65,4 +65,3 @@ class AliasBuilder {
         return $sql;
     }
 }
-?>

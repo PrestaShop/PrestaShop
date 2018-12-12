@@ -72,4 +72,3 @@ class SetBuilder {
         return "SET " . substr($sql, 0, -1);
     }
 }
-?>

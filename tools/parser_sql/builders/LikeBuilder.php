@@ -65,4 +65,3 @@ class LikeBuilder {
         return "LIKE " . $sql;
     }
 }
-?>

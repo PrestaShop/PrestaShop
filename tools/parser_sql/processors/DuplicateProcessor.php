@@ -46,4 +46,3 @@ class DuplicateProcessor extends SetProcessor {
     }
 
 }
-?>
