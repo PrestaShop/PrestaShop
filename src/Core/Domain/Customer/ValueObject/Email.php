@@ -106,7 +106,7 @@ class Email
         $length = function_exists('mb_strlen') ? mb_strlen($email, 'UTF-8') : strlen($email);
         if (self::MAX_LENGTH < $length) {
             throw new CustomerConstraintException(
-                sprintf('Customer email is too long. Max allowed length is %s',self::MAX_LENGTH),
+                sprintf('Customer email is too long. Max allowed length is %s', self::MAX_LENGTH),
                 CustomerConstraintException::INVALID_EMAIL
             );
         }
