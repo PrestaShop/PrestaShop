@@ -57,4 +57,3 @@ class DeleteBuilder {
         return substr($sql, 0, -1);
     }
 }
-?>

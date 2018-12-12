@@ -130,7 +130,7 @@ function deleteImage($id_item, $id_image = null)
         if (file_exists(_PS_TMP_IMG_DIR_.$table.'_'.$id_item.'.jpg')) {
             unlink(_PS_TMP_IMG_DIR_.$table.'_'.$id_item.'.jpg');
         }
-        if (!$id_image and file_exists($path.$id_item.'.jpg')) {
+        if (!$id_image && file_exists($path.$id_item.'.jpg')) {
             unlink($path.$id_item.'.jpg');
         }
 

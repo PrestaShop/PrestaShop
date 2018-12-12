@@ -90,7 +90,6 @@ class InvoicesController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-
      *
      * @return RedirectResponse
      */

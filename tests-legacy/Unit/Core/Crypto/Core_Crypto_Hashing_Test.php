@@ -40,7 +40,7 @@ class Core_Crypto_Hashing_Test extends TestCase
         if (!defined('_COOKIE_KEY_')) {
             define('_COOKIE_KEY_', '2349123849231-4123');
         }
-        $this->hashing = new Hashing;
+        $this->hashing = new Hashing();
     }
 
     public function testSimpleCheckHashMd5()

@@ -198,7 +198,7 @@ class imageLib
 
 ## --------------------------------------------------------
 
-    function __construct($fileName)
+    public function __construct($fileName)
     # Author:     Jarrod Oberto
   # Date:     27-02-08
     # Purpose:    Constructor
@@ -1285,7 +1285,7 @@ class imageLib
     #
   {
       if ($this->imageResized) {
-          if (is_integer($value)) {
+          if (is_int($value)) {
               $degrees = $value;
           }
 
@@ -2901,7 +2901,7 @@ class imageLib
 
   ## --------------------------------------------------------
 
-  function hex2dec($hex)
+  public function hex2dec($hex)
   # Purpose:  Convert #hex color to RGB
   {
       $color = str_replace('#', '', $hex);
@@ -3046,7 +3046,7 @@ class imageLib
 
   ## --------------------------------------------------------
 
-  function checkStringStartsWith($needle, $haystack)
+  public function checkStringStartsWith($needle, $haystack)
   # Check if a string starts with a specific pattern
   {
       return (substr($haystack, 0, strlen($needle))==$needle);

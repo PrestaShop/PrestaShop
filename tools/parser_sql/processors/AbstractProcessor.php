@@ -102,6 +102,7 @@ abstract class AbstractProcessor {
 
             if ($trim[$i] === '\\') {
                 $i += 2; # an escape character, the next character is irrelevant
+
                 continue;
             }
 
@@ -211,4 +212,3 @@ abstract class AbstractProcessor {
         return $array;
     }
 }
-?>

@@ -131,6 +131,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
 
         if (!$alias) {
             $base_expr = join('', $tokens);
+
         } else {
             /* remove escape from the alias */
             $alias['no_quotes'] = $this->revokeQuotation($alias['name']);
@@ -167,4 +168,3 @@ class SelectExpressionProcessor extends AbstractProcessor {
     }
 
 }
-?>

@@ -1,5 +1,4 @@
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
-const {ProductList} = require('../../selectors/BO/add_product_page');
 const {ModulePage} = require('../../selectors/BO/module_page');
 const {OnBoarding} = require('../../selectors/BO/onboarding.js');
 const {Menu} = require('../../selectors/BO/menu.js');
@@ -32,12 +31,17 @@ module.exports = {
       await client.waitForVisibleAndClick(ModulePage.action_dropdown.replace('%moduleTechName', "welcome"));
       await client.waitForExistAndClick(ModulePage.reset_module.split('%moduleTechName').join("welcome"));
       await client.waitForVisibleAndClick(ModulePage.reset_button_modal.replace('%moduleTechName', "welcome"));
-      await client.waitForExistAndClick(AddProductPage.close_validation_button);
+      await client.waitForExistAndClick(AddProductPage.close_validation_button, 2000);
       await client.waitForExistAndClick(Menu.dashboard_menu, 3000);
       await client.waitForExistAndClick(OnBoarding.resume_button, 3000);
     }
   },
   async checkMboModule(client) {
+    await client.pause(2000);
+    await client.isVisible(OnBoarding.welcome_modal);
+    if (isVisible) {
+      await client.closeBoarding(OnBoarding.popup_close_button)
+    }
     await client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu);
     await client.waitForVisibleAndClick(Menu.Improve.Modules.installed_modules_tabs);
     await client.waitAndSetValue(ModulePage.modules_search_input, "ps_mbo");
@@ -49,8 +53,8 @@ module.exports = {
       await client.checkAttributeValue(OnBoarding.welcomeSteps.tutorial_step.replace("%P", '2'), 'class', 'id -done', 'equal');
       await client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '1/2', 'contain', 4000);
       await client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'These payment methods are already available to your customers.', 'equal', 2000);
-      await client.waitForExistAndClick(OnBoarding.payement_check_button.replace("%moduleTechName", "ps_checkpayment"));
-      await client.waitForVisibleAndClick(OnBoarding.resume_button);
+      await client.waitForExistAndClick(OnBoarding.payement_check_button.replace("%moduleTechName", "ps_checkpayment", 3000));
+      await client.waitForVisibleAndClick(OnBoarding.resume_button, 2000);
       await client.waitForExistAndClick(OnBoarding.welcomeSteps.next_button);
 
       await client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '2/2', 'contain', 4000);

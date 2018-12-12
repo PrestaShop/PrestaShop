@@ -98,4 +98,3 @@ class SetExpressionBuilder {
         return $sql;
     }
 }
-?>

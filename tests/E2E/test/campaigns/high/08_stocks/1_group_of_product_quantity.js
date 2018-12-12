@@ -4,6 +4,7 @@ const {Movement} = require('../../../selectors/BO/catalogpage/stocksubmenu/movem
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const common_scenarios = require('../../common_scenarios/product');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 let productData = [{
@@ -25,7 +26,7 @@ scenario('Modify quantity and check the movement of a group of product', client 
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'stocks');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createProduct(AddProductPage, productData[0]);
   common_scenarios.createProduct(AddProductPage, productData[1]);
 

@@ -105,4 +105,3 @@ class DropProcessor extends AbstractProcessor {
         return array('option' => $option, 'warning' => $warning, 'object_list' => $resultList);
     }
 }
-?>
