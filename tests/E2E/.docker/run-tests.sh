@@ -30,7 +30,7 @@ fi
 if [ ! -z "$TEST_PATH" ]; then
   COMMAND="npm run specific-test"
 else
-  if [ "$1" == "high" ]; then
+  if [ "$1" = "high" ]; then
     COMMAND="npm run high-test"
     shift
   else

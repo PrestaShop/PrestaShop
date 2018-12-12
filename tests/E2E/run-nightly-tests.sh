@@ -11,6 +11,7 @@ git clone https://github.com/PrestaShop/PrestaShop.git $DIR_PATH
 
 cd $DIR_PATH
 git checkout $BRANCH
+mkdir -p $DIR_PATH/reports
 
 cd "${DIR_PATH}/tests/E2E"
 for directory in test/campaigns/full/* ; do
@@ -22,11 +23,13 @@ for directory in test/campaigns/full/* ; do
     echo "Wait for docker-compose..."
     sleep 5
 
-    docker-compose exec -e TEST_PATH=${directory/test\/campaigns\//} tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80 -- bash /tmp/run-tests.sh
+    TEST_PATH=${directory/test\/campaigns\//}
+    docker-compose exec -e TEST_PATH=$TEST_PATH tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80 -- bash /tmp/run-tests.sh
 
     # Push report to gcloud
-    # mochawesome-report/mochawesome.html
-    # mochawesome-report/mochawesome.json
+    cp mochawesome-report/mochawesome.html "${DIR_PATH}/reports/${TEST_PATH//\//-}.html"
+    cp mochawesome-report/mochawesome.html "${DIR_PATH}/reports/${TEST_PATH//\//-}.json"
+
     docker-compose down
   fi
 done
