@@ -49,7 +49,7 @@ class PositionsControllerTest extends WebTestCase
 
         parent::setUp();
 
-        /* @var ModuleManager */
+        /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
         if (!Module::isInstalled('bankwire')) {
             $moduleManager->install('bankwire');

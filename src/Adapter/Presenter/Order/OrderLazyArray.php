@@ -50,19 +50,19 @@ use Currency;
 
 class OrderLazyArray extends AbstractLazyArray
 {
-    /* @var CartPresenter */
+    /** @var CartPresenter */
     private $cartPresenter;
 
-    /* @var ObjectPresenter */
+    /** @var ObjectPresenter */
     private $objectPresenter;
 
-    /* @var PriceFormatter */
+    /** @var PriceFormatter */
     private $priceFormatter;
 
-    /* @var TranslatorComponent */
+    /** @var TranslatorComponent */
     private $translator;
 
-    /* @var TaxConfiguration */
+    /** @var TaxConfiguration */
     private $taxConfiguration;
 
     /** @var Order */

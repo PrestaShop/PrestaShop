@@ -49,7 +49,7 @@ class PositionsControllerTest extends WebTestCase
         parent::setUp();
 
         if (!Module::isInstalled('ps_emailsubscription')) {
-            /* @var ModuleManager */
+            /** @var ModuleManager */
             $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
             $moduleManager->install('ps_emailsubscription');
         }

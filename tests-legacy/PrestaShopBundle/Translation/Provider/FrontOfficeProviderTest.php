@@ -34,7 +34,7 @@ use PHPUnit\Framework\TestCase;
  */
 class FrontOfficeProviderTest extends TestCase
 {
-    // @see /resources/translations/en-US/ShopNotificationsWarning.en-US.xlf
+    /** @see /resources/translations/en-US/ShopNotificationsWarning.en-US.xlf */
     private $provider;
     private static $resourcesDir;
 

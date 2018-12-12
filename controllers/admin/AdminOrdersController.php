@@ -2848,7 +2848,7 @@ class AdminOrdersControllerCore extends AdminController
         // Reinject product
         $reinjectable_quantity = (int) $order_detail->product_quantity - (int) $order_detail->product_quantity_reinjected;
         $quantity_to_reinject = $qty_cancel_product > $reinjectable_quantity ? $reinjectable_quantity : $qty_cancel_product;
-        // @since 1.5.0 : Advanced Stock Management
+        /** @since 1.5.0 : Advanced Stock Management */
         $product_to_inject = new Product($order_detail->product_id, false, (int) $this->context->language->id, (int) $order_detail->id_shop);
 
         $product = new Product($order_detail->product_id, false, (int) $this->context->language->id, (int) $order_detail->id_shop);

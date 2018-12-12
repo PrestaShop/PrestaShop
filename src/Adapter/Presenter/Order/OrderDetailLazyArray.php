@@ -44,7 +44,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
     /** @var Context */
     private $context;
 
-    /* @var TranslatorComponent */
+    /** @var TranslatorComponent */
     private $translator;
 
     /**

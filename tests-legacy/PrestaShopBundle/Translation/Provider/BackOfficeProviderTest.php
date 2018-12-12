@@ -34,7 +34,7 @@ use PHPUnit\Framework\TestCase;
  */
 class BackOfficeProviderTest extends TestCase
 {
-    // @see /resources/translations/en-US/AdminActions.en-US.xlf
+    /** @see /resources/translations/en-US/AdminActions.en-US.xlf */
     private $provider;
     private static $resourcesDir;
 

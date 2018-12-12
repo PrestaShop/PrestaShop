@@ -1967,7 +1967,7 @@ abstract class ModuleCore implements ModuleInterface
         return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
     }
 
-    /*
+    /**
      * Reposition module
      *
      * @param bool $id_hook Hook ID
@@ -2027,7 +2027,7 @@ abstract class ModuleCore implements ModuleInterface
         return true;
     }
 
-    /*
+    /**
      * Reorder modules position
      *
      * @param bool $id_hook Hook ID
@@ -2170,7 +2170,7 @@ abstract class ModuleCore implements ModuleInterface
         return $output;
     }
 
-    /*
+    /**
      * Return exceptions for module in hook
      *
      * @param int $id_module Module ID
@@ -2227,7 +2227,7 @@ abstract class ModuleCore implements ModuleInterface
         return $array_return;
     }
 
-    /*
+    /**
      * Return exceptions for module in hook
      *
      * @param int $id_hook Hook ID
@@ -2806,7 +2806,7 @@ abstract class ModuleCore implements ModuleInterface
         return $this->_path;
     }
 
-    /*
+    /**
      * Return module position for a given hook
      *
      * @param bool $id_hook Hook ID

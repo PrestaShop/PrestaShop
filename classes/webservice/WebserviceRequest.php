@@ -364,8 +364,8 @@ class WebserviceRequestCore
         return $resources;
     }
 
-    /* @todo Check how get parameters */
-    /* @todo : set this method out */
+    /** @todo Check how get parameters */
+    /** @todo : set this method out */
 
     /**
      * This method is used for calculate the price for products on the output details.
@@ -386,7 +386,7 @@ class WebserviceRequestCore
         return $field;
     }
 
-    /* @todo : set this method out */
+    /** @todo : set this method out */
 
     /**
      * This method is used for calculate the price for products on a virtual fields.
@@ -432,7 +432,7 @@ class WebserviceRequestCore
         return $arr_return;
     }
 
-    /* @todo : set this method out */
+    /** @todo : set this method out */
 
     /**
      * This method is used for calculate the price for products on a virtual fields.

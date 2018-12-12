@@ -34,7 +34,7 @@ class DbMySQLiCore extends Db
     /** @var mysqli */
     protected $link;
 
-    /* @var mysqli_result */
+    /** @var mysqli_result */
     protected $result;
 
     /**

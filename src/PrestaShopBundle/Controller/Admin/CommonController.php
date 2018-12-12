@@ -167,11 +167,11 @@ class CommonController extends FrameworkBundleAdminController
     public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
     {
         $recommendedModules = $this->get('prestashop.data_provider.modules.recommended');
-        /* @var $recommendedModules RecommendedModules */
+        /** @var $recommendedModules RecommendedModules */
         $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
 
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        /* @var $modulesProvider AdminModuleDataProvider */
+        /** @var $modulesProvider AdminModuleDataProvider */
         $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
         $modules = array();

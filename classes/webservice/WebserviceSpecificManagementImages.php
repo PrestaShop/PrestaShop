@@ -866,7 +866,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             // Delete declinated image if needed
             if ($image_types) {
                 foreach ($image_types as $image_type) {
-                    if ($this->defaultImage) { // @todo products images too !!
+                    if ($this->defaultImage) { /** @todo products images too !! */
                         $declination_path = $parent_path . $this->wsObject->urlSegment[3] . '-default-' . $image_type['name'] . '.jpg';
                     } else {
                         $declination_path = $parent_path . $this->wsObject->urlSegment[2] . '-' . $image_type['name'] . '.jpg';

@@ -342,7 +342,7 @@ class Module implements ModuleInterface
      */
     protected function instanciateLegacyModule()
     {
-        /*
+        /**
          * @TODO Temporary: This test prevents an error when switching branches with the cache.
          * Can be removed at the next release (when we will be sure that it is defined)
          */

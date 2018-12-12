@@ -122,7 +122,7 @@ class ProductController extends FrameworkBundleAdminController
         $request->getSession()->set('_locale', $language->locale);
         $request = $this->get('prestashop.adapter.product.filter_categories_request_purifier')->purify($request);
 
-        /* @var $productProvider ProductInterfaceProvider */
+        /** @var $productProvider ProductInterfaceProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
         // Set values from persistence and replace in the request
@@ -241,7 +241,7 @@ class ProductController extends FrameworkBundleAdminController
         $sortOrder = 'asc',
         $view = 'full'
     ) {
-        /* @var $productProvider ProductInterfaceProvider */
+        /** @var $productProvider ProductInterfaceProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $totalCount = 0;
@@ -351,7 +351,7 @@ class ProductController extends FrameworkBundleAdminController
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $languages = $this->get('prestashop.adapter.legacy.context')->getLanguages();
 
-        /* @var $productProvider ProductInterfaceProvider */
+        /** @var $productProvider ProductInterfaceProvider */
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $productShopCategory = $this->getContext()->shop->id_category;
 
@@ -549,7 +549,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $stockManager = $this->get('prestashop.core.data_provider.stock_interface');
-        /* @var $stockManager StockInterface */
+        /** @var $stockManager StockInterface */
 
         $warehouseProvider = $this->get('prestashop.adapter.data_provider.warehouse');
         /* @var $warehouseProvider WarehouseDataProvider */
@@ -684,10 +684,10 @@ class ProductController extends FrameworkBundleAdminController
 
         $productIdList = $request->request->get('bulk_action_selected_products');
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
-        /* @var $productUpdater ProductInterfaceUpdater */
+        /** @var $productUpdater ProductInterfaceUpdater */
 
         $logger = $this->get('logger');
-        /* @var $logger LoggerInterface */
+        /** @var $logger LoggerInterface */
 
         $hookEventParameters = ['product_list_id' => $productIdList];
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
@@ -844,13 +844,13 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
-        /* @var $productProvider ProductInterfaceProvider */
+        /** @var $productProvider ProductInterfaceProvider */
 
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
-        /* @var $productUpdater ProductInterfaceUpdater */
+        /** @var $productUpdater ProductInterfaceUpdater */
 
         $logger = $this->get('logger');
-        /* @var $logger LoggerInterface */
+        /** @var $logger LoggerInterface */
 
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
@@ -945,10 +945,10 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
-        /* @var $productUpdater ProductInterfaceUpdater */
+        /** @var $productUpdater ProductInterfaceUpdater */
 
         $logger = $this->get('logger');
-        /* @var $logger LoggerInterface */
+        /** @var $logger LoggerInterface */
 
         $hookEventParameters = ['product_id' => $id];
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');

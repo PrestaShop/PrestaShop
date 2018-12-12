@@ -1020,7 +1020,7 @@ class AdminImportControllerCore extends AdminController
         return $options;
     }
 
-    /*
+    /**
     * Return fields to be display AS piece of advise
     *
     * @param $in_array boolean
