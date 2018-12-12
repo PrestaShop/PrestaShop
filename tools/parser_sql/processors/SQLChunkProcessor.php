@@ -183,4 +183,3 @@ class SQLChunkProcessor extends AbstractProcessor {
         return $out;
     }
 }
-?>

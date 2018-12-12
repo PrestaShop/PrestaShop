@@ -238,16 +238,16 @@ if (isset($_GET['element'])) {
   <head>
       <meta charset="UTF-8">
       <title>PrestaShop installation</title>
-      <link rel="stylesheet" type="text/css" href="<?= $selfUri; ?>?element=css">
+      <link rel="stylesheet" type="text/css" href="<?php echo $selfUri; ?>?element=css">
   </head>
   <body>
     <div id="content-install-in-progress"
-       data-extract-url="<?= $selfUri; ?>"
-       data-check-version-url="<?= $selfUri; ?>?run=check-version"
-       data-download-latest-url="<?= $selfUri; ?>">
+       data-extract-url="<?php echo $selfUri; ?>"
+       data-check-version-url="<?php echo $selfUri; ?>?run=check-version"
+       data-download-latest-url="<?php echo $selfUri; ?>">
         <div>
-            <img id="spinner" src="<?= $selfUri; ?>?element=gif"/>
-            <div id="versionPanel" style="display: none;">Installing Prestashop <?= _PS_VERSION_; ?></div>
+            <img id="spinner" src="<?php echo $selfUri; ?>?element=gif"/>
+            <div id="versionPanel" style="display: none;">Installing Prestashop <?php echo _PS_VERSION_; ?></div>
             <div id="initializationMessage">Initialization ...</div>
             <div id="progressContainer">
                 <div class="progressNumber">0 %</div>
@@ -262,7 +262,7 @@ if (isset($_GET['element'])) {
     </div>
     <div id="content-install-form" style="display: none">
       <div>
-        <img id="puffin" src="<?= $selfUri; ?>?element=png-installer"/>
+        <img id="puffin" src="<?php echo $selfUri; ?>?element=png-installer"/>
         <div id="header">
           The version you’re about to install is not
           the latest version of PrestaShop
@@ -284,7 +284,7 @@ if (isset($_GET['element'])) {
         </div>
       </div>
     </div>
-    <script type="text/javascript" src="<?= $selfUri; ?>?element=jquery"></script>
-    <script type="text/javascript" src="<?= $selfUri; ?>?element=js-runner"></script>
+    <script type="text/javascript" src="<?php echo $selfUri; ?>?element=jquery"></script>
+    <script type="text/javascript" src="<?php echo $selfUri; ?>?element=js-runner"></script>
   </body>
 </html>

@@ -228,13 +228,13 @@ class CurrencyTest extends AbstractCartCalculationTest
                 'cartRules'     => [],
             ],
             'one product in cart, quantity 1'        => [
-                'products'      => [1 => 1,],
+                'products'      => [1 => 1],
                 'expectedTotal' => $rate * (static::PRODUCT_FIXTURES[1]['price']
                                             + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE),
                 'cartRules'     => [],
             ],
             'one product in cart, quantity 3'        => [
-                'products'      => [1 => 3,],
+                'products'      => [1 => 3],
                 'expectedTotal' => round(
                     $rate * (3 * static::PRODUCT_FIXTURES[1]['price']
                              + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE),

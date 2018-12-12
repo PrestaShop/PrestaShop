@@ -196,8 +196,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             $order_detail['order_detail_tax'] = $taxes;
             $order_detail['order_detail_tax_label'] = implode(', ', $tax_temp);
         }
-        unset($tax_temp);
-        unset($order_detail);
+        unset(
+            $tax_temp,
+            $order_detail
+        );
 
         if (Configuration::get('PS_PDF_IMG_INVOICE')) {
             foreach ($order_details as &$order_detail) {

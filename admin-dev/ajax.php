@@ -74,12 +74,12 @@ if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_par
 }
 
 if (Tools::isSubmit('getNotifications')) {
-    $notification = new Notification;
+    $notification = new Notification();
     die(json_encode($notification->getLastElements()));
 }
 
 if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
-    $notification = new Notification;
+    $notification = new Notification();
     die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
 }
 

@@ -203,8 +203,8 @@ class ExpressionListProcessor extends AbstractProcessor {
                 }
             } elseif ($curr->isVariableToken()) {
 
-                # a variable
-                # it can be quoted
+                // a variable
+                // it can be quoted
 
                 $curr->setTokenType($this->getVariableType($curr->getUpper()));
                 $curr->setSubTree(false);
@@ -386,4 +386,3 @@ class ExpressionListProcessor extends AbstractProcessor {
         return $this->toArray($resultList);
     }
 }
-?>

@@ -45,4 +45,3 @@ class DescribeProcessor extends ExplainProcessor {
         return parent::isStatement($keys, $needle);
     }
 }
-?>

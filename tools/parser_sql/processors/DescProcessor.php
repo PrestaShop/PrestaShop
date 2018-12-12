@@ -45,4 +45,3 @@ class DescProcessor extends ExplainProcessor {
         return parent::isStatement($keys, $needle);
     }
 }
-?>

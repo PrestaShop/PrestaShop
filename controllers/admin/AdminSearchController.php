@@ -170,7 +170,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a specific string in the products and categories.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchCatalog()
     {
@@ -182,7 +182,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a specific name in the customers.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchCustomer()
     {
@@ -217,7 +217,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a feature in all store.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchFeatures()
     {

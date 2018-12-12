@@ -71,5 +71,3 @@ class UnableToCreateSQLException extends Exception {
         return $this->partkey;
     }
 }
-
-?>

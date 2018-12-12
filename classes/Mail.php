@@ -875,7 +875,7 @@ class MailCore extends ObjectModel
             return $to;
         }
 
-        return $address[0] . '@' . idn_to_ascii($address[1]);
+        return $address[0] . '@' . idn_to_ascii($address[1], 0, INTL_IDNA_VARIANT_UTS46);
     }
 
     /**

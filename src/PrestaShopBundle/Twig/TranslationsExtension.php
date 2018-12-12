@@ -104,7 +104,8 @@ class TranslationsExtension extends \Twig_Extension
         $hasMessages = $this->hasMessages($subtree);
 
         if ($hasMessages) {
-            list($camelizedDomain, $messages) = each($subtree['__messages']);
+            $camelizedDomain = reset(array_keys($subtree['__messages']));
+            $messages = $subtree['__messages'][$camelizedDomain];
 
             foreach ($messages as $translationKey => $translation) {
                 $viewProperties['camelized_domain'] = $camelizedDomain;
@@ -140,9 +141,6 @@ class TranslationsExtension extends \Twig_Extension
         $this->theme = $themeName;
 
         $output = '';
-        end($translationsTree);
-        list($lastTranslationDomain) = each($translationsTree);
-        reset($translationTree);
 
         foreach ($translationsTree as $topLevelDomain => $tree) {
             $output .= $this->concatenateSubtreeHeader($topLevelDomain, $tree);
@@ -163,7 +161,8 @@ class TranslationsExtension extends \Twig_Extension
         $messagesSubtree = $this->hasMessages($tree);
 
         if ($messagesSubtree) {
-            list($camelizedDomain, $messagesTree) = each($tree['__messages']);
+            $camelizedDomain = reset(array_keys($tree['__messages']));
+            $messagesTree = $tree['__messages'][$camelizedDomain];
 
             $formIndex = 0;
             $pageIndex = 1;

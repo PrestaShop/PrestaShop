@@ -1399,7 +1399,7 @@ abstract class ModuleCore implements ModuleInterface
                         $item->onclick_option = method_exists($module, 'onclickOption') ? true : false;
 
                         if ($item->onclick_option) {
-                            $href = Context::getContext()->link->getAdminLink('Module', true) . '&module_name=' . $tmp_module->name . '&tab_module=' . $tmp_module->tab;
+                            $href = Context::getContext()->link->getAdminLink('Module', true, array(), array('module_name' => $tmp_module->name, 'tab_module' => $tmp_module->tab));
                             $item->onclick_option_content = array();
                             $option_tab = array('desactive', 'reset', 'configure', 'delete');
 

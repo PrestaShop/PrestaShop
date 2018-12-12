@@ -139,9 +139,11 @@ final class LegacyUrlConverter
             }
         }
 
-        unset($parameters['controller']);
-        unset($parameters['action']);
-        unset($parameters[$legacyAction]);
+        unset(
+            $parameters['controller'],
+            $parameters['action'],
+            $parameters[$legacyAction]
+        );
 
         return $parameters;
     }

@@ -167,6 +167,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         'title' => $this->trans('IMAP URL', array(), 'Admin.Catalog.Feature'),
                         'hint' => $this->trans('URL for your IMAP server (ie.: mail.server.com).', array(), 'Admin.Catalog.Help'),
                         'type' => 'text',
+                        'validation' => 'isValidImapUrl',
                     ),
                     'PS_SAV_IMAP_PORT' => array(
                         'title' => $this->trans('IMAP port', array(), 'Admin.Catalog.Feature'),
@@ -1171,7 +1172,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
         imap_expunge($mbox);
         imap_close($mbox);
-        if (sizeof($message_errors) > 0) {
+        if (count($message_errors) > 0) {
             if (($more_error = $str_errors . $str_error_delete) && strlen($more_error) > 0) {
                 $message_errors = array_merge(array($more_error), $message_errors);
             }

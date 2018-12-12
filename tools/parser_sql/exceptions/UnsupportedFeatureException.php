@@ -53,5 +53,3 @@ class UnsupportedFeatureException extends Exception {
         return $this->key;
     }
 }
-
-?>

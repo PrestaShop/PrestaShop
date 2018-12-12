@@ -49,7 +49,7 @@ class HookRepositoryTest extends IntegrationTestCase
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
         $this->hookRepository = new HookRepository(
-            new HookInformationProvider,
+            new HookInformationProvider(),
             Context::getContext()->shop,
             Db::getInstance(),
             _DB_PREFIX_

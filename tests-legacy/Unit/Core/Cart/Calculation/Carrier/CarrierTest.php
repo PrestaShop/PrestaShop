@@ -95,7 +95,7 @@ class CarrierTest extends AbstractCarrierTest
                 'carrierId'            => 1,
             ],
             'one product in cart, quantity 1'        => [
-                'products'             => [1 => 1,],
+                'products'             => [1 => 1],
                 'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
                                           + static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
                                           + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
@@ -107,7 +107,7 @@ class CarrierTest extends AbstractCarrierTest
                 'carrierId'            => 1,
             ],
             'one product in cart, quantity 3'        => [
-                'products'             => [1 => 3,],
+                'products'             => [1 => 3],
                 'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           + static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
                                           + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
@@ -154,7 +154,7 @@ class CarrierTest extends AbstractCarrierTest
                 'carrierId'            => 2,
             ],
             'one product in cart, quantity 1'        => [
-                'products'             => [1 => 1,],
+                'products'             => [1 => 1],
                 'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
                                           + static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
                                           + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
@@ -166,7 +166,7 @@ class CarrierTest extends AbstractCarrierTest
                 'carrierId'            => 2,
             ],
             'one product in cart, quantity 3'        => [
-                'products'             => [1 => 3,],
+                'products'             => [1 => 3],
                 'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           + static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
                                           + $shippingHandling + static::DEFAULT_WRAPPING_FEE,

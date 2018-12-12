@@ -73,4 +73,3 @@ class ValuesBuilder {
         return "VALUES " . $sql;
     }    
 }
-?>

@@ -471,7 +471,12 @@ class CountryCore extends ObjectModel
         }
 
         if (!count($countries)) {
-            $countries = Country::getCountries((int) Context::getContext()->cookie->id_lang);
+            if (null !== Context::getContext()->cookie) {
+                $id_lang = (int) Context::getContext()->cookie->id_lang;
+            } else {
+                $id_lang = (int) Context::getContext()->language->id;
+            }
+            $countries = Country::getCountries($id_lang);
         }
 
         if (!count($modules)) {

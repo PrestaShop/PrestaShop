@@ -87,11 +87,11 @@ class bankwire extends PaymentModule
      * tests for ModuleGetPossibleHooks
      */
     public function hookPaymentReturn(){
-        return;
+        
     }
 
     public function hookPaymentOptions(){
-        return;
+        
     }
 
 }
