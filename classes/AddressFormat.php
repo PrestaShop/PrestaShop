@@ -150,7 +150,10 @@ class AddressFormatCore extends ObjectModel
                 ': ' . $className . ': ' . $fieldName;
             }
 
-            unset($obj, $reflect);
+            unset(
+                $obj,
+                $reflect
+            );
         }
 
         return $isValid;
@@ -455,7 +458,10 @@ class AddressFormatCore extends ObjectModel
                     $propertyList[] = $propertyName;
                 }
             }
-            unset($object, $reflect);
+            unset(
+                $object,
+                $reflect
+            );
         }
 
         return $propertyList;
@@ -488,7 +494,10 @@ class AddressFormatCore extends ObjectModel
                     }
                 }
             }
-            unset($object, $reflect);
+            unset(
+                $object,
+                $reflect
+            );
         }
 
         return $objectList;
