@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Unit\Classes\Module;
 
-use DomDocument;
 use Module;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Crawler;

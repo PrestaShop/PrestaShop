@@ -29,8 +29,6 @@ namespace LegacyTests\Unit\Core\Cart\Adding\CartRule;
 use Configuration;
 use Customization;
 use Product;
-use Pack;
-use StockAvailable;
 use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 
 class AddCustomizationTest extends AbstractCartTest

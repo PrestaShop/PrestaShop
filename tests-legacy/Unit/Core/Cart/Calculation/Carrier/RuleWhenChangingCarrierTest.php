@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Unit\Core\Cart\Calculation\Carrier;
 
-use Configuration;
 
 /**
  * these tests aim to check the correct calculation of cart total when applying cart rules

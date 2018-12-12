@@ -31,7 +31,6 @@ use LegacyTests\TestCase\IntegrationTestCase;
 
 use Module;
 use Cache;
-use PrestaShopAutoload;
 
 class ModuleGetPossibleHooksListTest extends IntegrationTestCase
 {

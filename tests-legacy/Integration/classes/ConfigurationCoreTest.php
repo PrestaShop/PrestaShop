@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Integration\classes;
 
-use LegacyTests\TestCase\ReflexionHelper;
 use LegacyTests\TestCase\IntegrationTestCase;
 use Configuration;
 
