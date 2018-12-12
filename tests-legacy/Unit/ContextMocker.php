@@ -39,7 +39,6 @@ use Phake;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Product;
 use Shop;
-use Smarty;
 use SpecificPrice;
 use Tools;
 use Pack;
@@ -78,6 +77,8 @@ class ContextMocker
      */
     public function mockContext()
     {
+        global $smarty;
+
         // need to reset loooot of things
         Product::flushPriceCache();
         SpecificPrice::flushCache();
@@ -110,7 +111,7 @@ class ContextMocker
             ? 'https://' : 'http://';
         $context->link     = new Link($protocol_link, $protocol_content);
         $context->currency = new Currency(1, 1, 1);
-        $context->smarty   = new Smarty();
+        $context->smarty   = $smarty;
 
         return $this;
     }
