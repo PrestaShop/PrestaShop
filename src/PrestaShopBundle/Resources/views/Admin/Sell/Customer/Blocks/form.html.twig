@@ -23,6 +23,7 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
+{% set allowedNameChars = '0-9!<>,;?=+()@#"°{}_$%:' %}
 {% set isGuest = isGuest|default(false) %}
 
 {% block customer_form %}
@@ -49,7 +50,7 @@
             <div class="col-sm">
               {{ form_widget(customerForm.first_name) }}
               <small class="form-text">
-                {{ '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), '0-9!<>,;?=+()@#"°{}_$%:') }}
+                {{ '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars) }}
               </small>
             </div>
           </div>
@@ -62,7 +63,7 @@
             <div class="col-sm">
               {{ form_widget(customerForm.last_name) }}
               <small class="form-text">
-                {{ '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), '0-9!<>,;?=+()@#"°{}_$%:') }}
+                {{ '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars) }}
               </small>
             </div>
           </div>
