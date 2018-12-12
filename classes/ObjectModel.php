@@ -1727,7 +1727,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public function isMultiShopField($field)
     {
-        return isset($this->def['fields'][$field], $this->def['fields'][$field]['shop']) && $this->def['fields'][$field]['shop'];
+        return !empty($this->def['fields'][$field]['shop']);
     }
 
     /**
