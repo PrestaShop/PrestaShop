@@ -83,7 +83,7 @@ class LegacyRoute
             $legacyParameters = $routeDefaults['_legacy_parameters'];
         }
 
-        return new LegacyRoute($routeName, $legacyLinks, $legacyParameters);
+        return new self($routeName, $legacyLinks, $legacyParameters);
     }
 
     /**

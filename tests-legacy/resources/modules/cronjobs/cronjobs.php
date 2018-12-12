@@ -325,7 +325,7 @@ class CronJobs extends Module
             $query = 'INSERT INTO '._DB_PREFIX_.'cronjobs
                 (`description`, `task`, `hour`, `day`, `month`, `day_of_week`, `updated_at`, `one_shot`, `active`, `id_shop`, `id_shop_group`)
                 VALUES (\''. Db::getInstance()->escape($description) .'\', \'' .
-                urlencode($task) . '\', \'0\', \''.CronJobs::EACH.'\', \''.CronJobs::EACH.'\', \''.CronJobs::EACH.'\',
+                urlencode($task) . '\', \'0\', \''.self::EACH.'\', \''.self::EACH.'\', \''.self::EACH.'\',
                     NULL, TRUE, TRUE, '.$id_shop.', '.$id_shop_group.')';
 
             return Db::getInstance()->execute($query);

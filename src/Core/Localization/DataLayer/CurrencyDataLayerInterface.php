@@ -70,5 +70,5 @@ interface CurrencyDataLayerInterface
      *
      * @return self
      */
-    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer);
+    public function setLowerLayer(self $lowerLayer);
 }

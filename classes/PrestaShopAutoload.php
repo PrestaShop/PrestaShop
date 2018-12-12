@@ -58,8 +58,8 @@ class PrestaShopAutoload
     protected function __construct()
     {
         $this->root_dir = _PS_CORE_DIR_ . '/';
-        $file = PrestaShopAutoload::getCacheFileIndex();
-        $stubFile = PrestaShopAutoload::getStubFileIndex();
+        $file = self::getCacheFileIndex();
+        $stubFile = self::getStubFileIndex();
         if (@filemtime($file) && is_readable($file) && @filemtime($stubFile) && is_readable($stubFile)) {
             $this->index = include $file;
         } else {
@@ -74,11 +74,11 @@ class PrestaShopAutoload
      */
     public static function getInstance()
     {
-        if (!PrestaShopAutoload::$instance) {
-            PrestaShopAutoload::$instance = new PrestaShopAutoload();
+        if (!self::$instance) {
+            self::$instance = new self();
         }
 
-        return PrestaShopAutoload::$instance;
+        return self::$instance;
     }
 
     /**
@@ -119,8 +119,8 @@ class PrestaShopAutoload
     public function load($className)
     {
         // Retrocompatibility
-        if (isset(PrestaShopAutoload::$class_aliases[$className]) && !interface_exists($className, false) && !class_exists($className, false)) {
-            return eval('class ' . $className . ' extends ' . PrestaShopAutoload::$class_aliases[$className] . ' {}');
+        if (isset(self::$class_aliases[$className]) && !interface_exists($className, false) && !class_exists($className, false)) {
+            return eval('class ' . $className . ' extends ' . self::$class_aliases[$className] . ' {}');
         }
 
         // regenerate the class index if the requested file doesn't exists
@@ -221,19 +221,19 @@ class PrestaShopAutoload
         $content = '<?php return ' . var_export($classes, true) . '; ?>';
 
         // Write classes index on disc to cache it
-        $filename = PrestaShopAutoload::getCacheFileIndex();
+        $filename = self::getCacheFileIndex();
         @mkdir(_PS_CACHE_DIR_, 0777, true);
 
         if (!$this->dumpFile($filename, $content)) {
             Tools::error_log('Cannot write temporary file ' . $filename);
         }
 
-        $stubFilename = PrestaShopAutoload::getStubFileIndex();
+        $stubFilename = self::getStubFileIndex();
         if (!$this->dumpFile($stubFilename, $contentStub)) {
             Tools::error_log('Cannot write temporary file ' . $stubFilename);
         }
 
-        $namespacedStubFilename = PrestaShopAutoload::getNamespacedStubFileIndex();
+        $namespacedStubFilename = self::getNamespacedStubFileIndex();
         if (!$this->dumpFile($namespacedStubFilename, $contentNamespacedStub)) {
             Tools::error_log('Cannot write temporary file ' . $namespacedStubFilename);
         }

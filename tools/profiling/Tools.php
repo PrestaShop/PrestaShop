@@ -39,7 +39,7 @@ class Tools extends ToolsCore
             if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
                 $url = substr($url, strlen('index.php?controller='));
                 if (Configuration::get('PS_REWRITING_SETTINGS')) {
-                    $url = Tools::strReplaceFirst('&', '?', $url);
+                    $url = self::strReplaceFirst('&', '?', $url);
                 }
             }
 
@@ -101,7 +101,7 @@ class Tools extends ToolsCore
     {
         if (!is_object(Context::getContext()->controller)) {
             try {
-                $controller = Controller::getController(Tools::getDefaultControllerClass());
+                $controller = Controller::getController(self::getDefaultControllerClass());
                 $controller->setRedirectAfter($url);
                 $controller->run();
                 Context::getContext()->controller = $controller;

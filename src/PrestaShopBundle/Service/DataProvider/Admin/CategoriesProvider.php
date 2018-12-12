@@ -252,7 +252,7 @@ class CategoriesProvider
             return $moduleCategoryParent;
         }
 
-        return CategoriesProvider::CATEGORY_OTHER;
+        return self::CATEGORY_OTHER;
     }
 
     /**
