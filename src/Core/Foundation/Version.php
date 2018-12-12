@@ -242,7 +242,7 @@ class Version
     {
         if ($this->checkVersion($version)) {
             $first = (int) trim(str_replace('.', '', $this->version));
-            $second = (int) (trim(str_replace('.', '', $version)));
+            $second = (int) trim(str_replace('.', '', $version));
             $firstLen = strlen($first);
             $secondLen = strlen($second);
             if ($firstLen > $secondLen) {
