@@ -371,7 +371,7 @@ class AdminSearchConfControllerCore extends AdminController
 
     public function processSave()
     {
-        $search = (string) (Tools::getValue('search'));
+        $search = (string) Tools::getValue('search');
         $string = (string) Tools::getValue('alias');
         $aliases = explode(',', $string);
         if (empty($search) || empty($string)) {
