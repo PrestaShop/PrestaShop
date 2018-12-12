@@ -119,16 +119,29 @@ class PasswordControllerCore extends FrontController
                 $this->errors[] = $this->trans('You cannot regenerate the password for this account.', array(), 'Shop.Notifications.Error');
             }
 
-            // Case if both password params not posted or different, then "change password" form is not POSTED, show it.
-            if (!(Tools::isSubmit('passwd'))
-                || !(Tools::isSubmit('confirmation'))
-                || ($passwd = Tools::getValue('passwd')) !== ($confirmation = Tools::getValue('confirmation'))
-                || !Validate::isPasswd($passwd) || !Validate::isPasswd($confirmation)) {
-                // Check if passwords are here anyway, BUT does not match the password validation format
-                if (Tools::isSubmit('passwd') || Tools::isSubmit('confirmation')) {
-                    $this->errors[] = $this->trans('The password and its confirmation do not match.', array(), 'Shop.Notifications.Error');
+            if ($isSubmit = Tools::isSubmit('passwd')) {
+                // If password is submitted validate pass and confirmation
+                if (!$passwd = Tools::getValue('passwd')) {
+                    $this->errors[] = $this->trans("The password is missing: please enter your new password.", array(), 'Shop.Notifications.Error');
                 }
 
+                if (!$confirmation = Tools::getValue('confirmation')) {
+                    $this->errors[] = $this->trans('The confirmation is empty: please fill in the password confirmation as well', array(), 'Shop.Notifications.Error');
+                }
+
+                if ($passwd && $confirmation) {
+                    if ($passwd !== $confirmation) {
+                        $this->errors[] = $this->trans('The password and its confirmation do not match.', array(), 'Shop.Notifications.Error');
+                    }
+
+                    if (!Validate::isPasswd($passwd)) {
+                        $this->errors[] = $this->trans('The password is not in a valid format.', array(), 'Shop.Notifications.Error');
+                    }
+                }
+            }
+
+            if (!$isSubmit || $this->errors) {
+                // If password is NOT submitted OR there are errors, shows the form (and errors)
                 $this->context->smarty->assign([
                     'customer_email' => $customer->email,
                     'customer_token' => $token,
