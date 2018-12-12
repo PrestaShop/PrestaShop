@@ -518,7 +518,7 @@ class SymfonyRequirements extends RequirementCollection
         if (extension_loaded('suhosin')) {
             $this->addPhpIniRequirement(
                 'suhosin.executor.include.whitelist',
-                function ($cfgValue) { return false !== stripos($cfgValue, 'phar'); },
+                function ($cfgValue) { return false !== stripos($cfgValue, "phar"); },
                 false,
                 'suhosin.executor.include.whitelist must be configured correctly in php.ini',
                 'Add "<strong>phar</strong>" to <strong>suhosin.executor.include.whitelist</strong> in php.ini<a href="#phpini">*</a>.'
