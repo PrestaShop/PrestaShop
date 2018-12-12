@@ -310,7 +310,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $context,
             $query
         );
-        $this->filterFacetCollection($result->getFacetCollection());
+        $this->applyCatalogMode($result);
 
         // sort order is useful for template,
         // add it if undefined - it should be the same one
@@ -392,19 +392,37 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     }
 
     /**
-     * @param FacetCollection $facetCollection
+     * @param ProductSearchResult $result
      */
-    protected function filterFacetCollection(FacetCollection $facetCollection)
+    protected function applyCatalogMode(ProductSearchResult $result)
     {
-        $filteredFacets = [];
-        /** @var Facet $facet */
-        foreach ($facetCollection->getFacets() as $facet) {
-            if (Configuration::get('PS_CATALOG_MODE') && 'price' === $facet->getType()) {
-                continue;
-            }
-            $filteredFacets[] = $facet;
+        if (!Configuration::get('PS_CATALOG_MODE')) {
+            return;
         }
-        $facetCollection->setFacets($filteredFacets);
+
+        if ($result->getFacetCollection()) {
+            $filteredFacets = [];
+            /** @var Facet $facet */
+            foreach ($result->getFacetCollection()->getFacets() as $facet) {
+                if (Configuration::get('PS_CATALOG_MODE') && 'price' === $facet->getType()) {
+                    continue;
+                }
+                $filteredFacets[] = $facet;
+            }
+            $result->getFacetCollection()->setFacets($filteredFacets);
+        }
+
+        if ($result->getAvailableSortOrders()) {
+            $filteredOrders = [];
+            /** @var SortOrder $sortOrder */
+            foreach ($result->getAvailableSortOrders() as $sortOrder) {
+                if ('price' === $sortOrder->getField()) {
+                    continue;
+                }
+                $filteredOrders[] = $sortOrder;
+            }
+            $result->setAvailableSortOrders($filteredOrders);
+        }
     }
 
     /**
