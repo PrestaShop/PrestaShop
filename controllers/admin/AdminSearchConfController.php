@@ -372,7 +372,7 @@ class AdminSearchConfControllerCore extends AdminController
     public function processSave()
     {
         $search = (string) (Tools::getValue('search'));
-        $string = (string) (Tools::getValue('alias'));
+        $string = (string) Tools::getValue('alias');
         $aliases = explode(',', $string);
         if (empty($search) || empty($string)) {
             $this->errors[] = $this->trans('Aliases and results are both required.', array(), 'Admin.Shopparameters.Notification');
