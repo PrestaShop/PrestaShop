@@ -42,7 +42,6 @@ class TransferGuestAccountType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id_customer', HiddenType::class)
-        ;
+            ->add('id_customer', HiddenType::class);
     }
 }

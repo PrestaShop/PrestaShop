@@ -158,8 +158,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ])
                         ),
                 ])
-            )
-        ;
+            );
     }
 
     /**
@@ -205,8 +204,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ],
                 ])
                 ->setAssociatedColumn('actions')
-            )
-        ;
+            );
     }
 
     /**
@@ -229,8 +227,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SimpleGridAction('common_export_sql_manager'))
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
-            )
-        ;
+            );
     }
 
     /**
@@ -246,7 +243,6 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'submit_route' => 'admin_metas_delete_bulk',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
-            )
-        ;
+            );
     }
 }

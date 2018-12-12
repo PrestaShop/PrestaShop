@@ -128,8 +128,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
             ->orderBy($filters['orderBy'], $filters['sortOrder'])
             ->setFirstResult($filters['offset'])
-            ->setMaxResults($filters['limit'])
-        ;
+            ->setMaxResults($filters['limit']);
 
         if (!empty($scalarFilters)) {
             foreach ($scalarFilters as $column => $value) {

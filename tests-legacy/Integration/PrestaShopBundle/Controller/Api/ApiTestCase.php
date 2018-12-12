@@ -95,8 +95,7 @@ abstract class ApiTestCase extends WebTestCase
                 'getRootUrl',
                 'getLanguage',
             ))
-            ->getMock()
-        ;
+            ->getMock();
 
         $contextMock = $this->mockContext();
         $legacyContextMock->method('getContext')->willReturn($contextMock);
@@ -155,8 +154,7 @@ abstract class ApiTestCase extends WebTestCase
     private function mockLanguage()
     {
         $languageMock = $this->getMockBuilder('\Language')
-            ->getMock()
-        ;
+            ->getMock();
 
         $languageMock->iso_code = 'en-US';
 
@@ -183,8 +181,7 @@ abstract class ApiTestCase extends WebTestCase
                 'getContextType',
                 'getGroup',
             ))
-            ->getMock()
-        ;
+            ->getMock();
 
         $shopMock->method('getContextualShopId')->willReturn(1);
         $shopMock->method('getCategory')->willReturn(1);
@@ -206,8 +203,7 @@ abstract class ApiTestCase extends WebTestCase
     {
         $controller = $this->getMockBuilder('\AdminController')
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
 
         $controller->controller_type = 'admin';
 

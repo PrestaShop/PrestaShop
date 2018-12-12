@@ -379,8 +379,7 @@ class AttributeGroupCore extends ObjectModel
         ) && Db::getInstance()->execute('
 			UPDATE `' . _DB_PREFIX_ . 'attribute_group`
 			SET `position` = ' . (int) $position . '
-			WHERE `id_attribute_group`=' . (int) $movedGroupAttribute['id_attribute_group'])
-        ;
+			WHERE `id_attribute_group`=' . (int) $movedGroupAttribute['id_attribute_group']);
     }
 
     /**

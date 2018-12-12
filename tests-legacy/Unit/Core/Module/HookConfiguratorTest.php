@@ -49,8 +49,7 @@ class HookConfiguratorTest extends UnitTestCase
     {
         Phake::when($this->hookRepository)
             ->getDisplayHooksWithModules()
-            ->thenReturn($hookConfiguration)
-        ;
+            ->thenReturn($hookConfiguration);
 
         return $this;
     }

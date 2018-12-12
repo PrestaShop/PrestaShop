@@ -57,7 +57,6 @@ final class SubmitGridAction extends AbstractGridAction
             ])
             ->setAllowedTypes('submit_route', 'string')
             ->setAllowedTypes('confirm_message', ['null', 'string'])
-            ->setAllowedValues('submit_method', ['POST', 'GET'])
-        ;
+            ->setAllowedValues('submit_method', ['POST', 'GET']);
     }
 }

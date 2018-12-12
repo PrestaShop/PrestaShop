@@ -689,8 +689,7 @@ class CategoryController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('category_' . date('Y-m-d_His') . '.csv')
-            ;
+            ->setFileName('category_' . date('Y-m-d_His') . '.csv');
     }
 
     /**

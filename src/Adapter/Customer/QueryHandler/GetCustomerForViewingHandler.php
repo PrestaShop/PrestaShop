@@ -171,8 +171,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         $lastUpdateDate = Tools::displayDate($customer->date_upd, null, true);
         $lastVisitDate = $customerStats['last_visit'] ?
             Tools::displayDate($customerStats['last_visit'], null, true) :
-            $this->translator->trans('Never', [], 'Admin.Global')
-        ;
+            $this->translator->trans('Never', [], 'Admin.Global');
 
         $customerShop = new Shop($customer->id_shop);
         $customerLanguage = new Language($customer->id_lang);
@@ -216,8 +215,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
                 WHERE valid = 1
                     AND id_customer != ' . (int) $customerId . '
                 GROUP BY id_customer
-                HAVING SUM(total_paid_real) > ' . (int) $totalPaid
-            ;
+                HAVING SUM(total_paid_real) > ' . (int) $totalPaid;
 
             Db::getInstance()->getValue($sql);
 
@@ -401,8 +399,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         foreach ($messages as $message) {
             $status = isset($messageStatuses[$message['status']]) ?
                 $messageStatuses[$message['status']] :
-                $message['status']
-            ;
+                $message['status'];
 
             $customerMessages[] = new MessageInformation(
                 (int) $message['id_customer_thread'],
@@ -479,8 +476,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         foreach ($connections as $connection) {
             $httpReferer = $connection['http_referer'] ?
                 preg_replace('/^www./', '', parse_url($connection['http_referer'], PHP_URL_HOST)) :
-                $this->translator->trans('Direct link', [], 'Admin.Orderscustomers.Notification')
-            ;
+                $this->translator->trans('Direct link', [], 'Admin.Orderscustomers.Notification');
 
             $lastConnections[] = new LastConnectionInformation(
                 $connection['id_connections'],

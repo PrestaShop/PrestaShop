@@ -108,8 +108,7 @@ class SupplierControllerCore extends ProductListingFrontController
         $query = new ProductSearchQuery();
         $query
             ->setIdSupplier($this->supplier->id)
-            ->setSortOrder(new SortOrder('product', 'position', 'asc'))
-        ;
+            ->setSortOrder(new SortOrder('product', 'position', 'asc'));
 
         return $query;
     }

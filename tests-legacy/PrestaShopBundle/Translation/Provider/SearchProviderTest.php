@@ -41,8 +41,7 @@ class SearchProviderTest extends TestCase
     public function setUp()
     {
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
-            ->getMock()
-        ;
+            ->getMock();
 
         self::$resourcesDir = __DIR__.'/../../resources/translations';
         $this->provider = new SearchProvider($loader, self::$resourcesDir);

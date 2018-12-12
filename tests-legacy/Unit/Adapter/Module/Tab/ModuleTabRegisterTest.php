@@ -139,8 +139,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                 $this->sfKernel->getContainer()->get('filesystem'),
                 $this->languages,
             ))
-            ->getMock()
-        ;
+            ->getMock();
         $this->tabRegister
             ->method('getModuleAdminControllersFilename')
             ->will($this->returnValueMap($this->moduleAdminControllers));

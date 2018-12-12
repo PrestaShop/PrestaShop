@@ -73,8 +73,7 @@ class HookManager
 
             return $hookDispatcher
                 ->dispatchRenderingWithParameters($hook_name, $hook_args)
-                ->getContent()
-            ;
+                ->getContent();
         } else {
             try {
                 return Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);

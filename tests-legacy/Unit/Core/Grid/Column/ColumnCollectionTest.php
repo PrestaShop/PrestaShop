@@ -38,8 +38,7 @@ class ColumnCollectionTest extends TestCase
         $columns = (new ColumnCollection())
             ->add($this->createColumnMock('first'))
             ->add($this->createColumnMock('second'))
-            ->add($this->createColumnMock('third'))
-        ;
+            ->add($this->createColumnMock('third'));
 
         $this->assertEquals([
             'first',
@@ -58,8 +57,7 @@ class ColumnCollectionTest extends TestCase
         $columns
             ->addBefore('first', $this->createColumnMock('before_first'))
             ->addBefore('second', $this->createColumnMock('before_second'))
-            ->addBefore('third', $this->createColumnMock('before_third'))
-        ;
+            ->addBefore('third', $this->createColumnMock('before_third'));
 
         $this->assertEquals([
             'before_first',
@@ -81,8 +79,7 @@ class ColumnCollectionTest extends TestCase
         $columns
             ->addAfter('first', $this->createColumnMock('after_first'))
             ->addAfter('second', $this->createColumnMock('after_second'))
-            ->addAfter('third', $this->createColumnMock('after_third'))
-        ;
+            ->addAfter('third', $this->createColumnMock('after_third'));
 
         $this->assertEquals([
             'before_first',
@@ -125,8 +122,7 @@ class ColumnCollectionTest extends TestCase
             ->add($this->createColumnMock('second'))
             ->remove('to_be_removed')
             ->add($this->createColumnMock('third'))
-            ->addAfter('second', $this->createColumnMock('after_second'))
-        ;
+            ->addAfter('second', $this->createColumnMock('after_second'));
 
         $this->assertEquals([
             'before_first',
@@ -150,8 +146,7 @@ class ColumnCollectionTest extends TestCase
             ->add($this->createColumnMock('second'))
             ->addAfter('second', $this->createColumnMock(9))
             ->addBefore('second', $this->createColumnMock('7'))
-            ->add($this->createColumnMock(5))
-        ;
+            ->add($this->createColumnMock(5));
 
         $this->assertEquals([
             2,
@@ -183,8 +178,7 @@ class ColumnCollectionTest extends TestCase
         $columns = (new ColumnCollection())
             ->add($this->createColumnMock('test_1'))
             ->add($this->createColumnMock('test_2'))
-            ->add($this->createColumnMock('test_3'))
-        ;
+            ->add($this->createColumnMock('test_3'));
 
         $columnsArray = $columns->toArray();
 

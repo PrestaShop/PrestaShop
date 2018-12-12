@@ -106,7 +106,6 @@ class ImportDataConfigurationType extends TranslatorAwareType
             ->add('forceIDs', HiddenType::class)
             ->add('sendemail', HiddenType::class)
             ->add('separator', HiddenType::class)
-            ->add('multiple_value_separator', HiddenType::class)
-        ;
+            ->add('multiple_value_separator', HiddenType::class);
     }
 }

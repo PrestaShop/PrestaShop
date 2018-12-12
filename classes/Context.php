@@ -400,8 +400,7 @@ class ContextCore
             ->files()
             ->name('*.' . $locale . '.xlf')
             ->notName($notName)
-            ->in($this->getTranslationResourcesDirectories())
-        ;
+            ->in($this->getTranslationResourcesDirectories());
 
         foreach ($finder as $file) {
             list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);

@@ -115,7 +115,6 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'placeholder' => $this->trans('Language', 'Admin.Global'),
                 'choices' => $this->getLocaleChoices(),
                 'choice_translation_domain' => false,
-            ])
-        ;
+            ]);
     }
 }

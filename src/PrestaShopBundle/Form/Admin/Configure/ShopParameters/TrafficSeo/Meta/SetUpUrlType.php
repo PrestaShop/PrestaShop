@@ -84,14 +84,12 @@ class SetUpUrlType extends AbstractType
                     'choices' => $this->canonicalUrlChoices,
                     'translation_domain' => false,
                 ]
-            )
-        ;
+            );
 
         if (!$this->isHostMode && $this->isHtaccessFileWritable) {
             $builder
                 ->add('disable_apache_multiview', SwitchType::class)
-                ->add('disable_apache_mod_security', SwitchType::class)
-            ;
+                ->add('disable_apache_mod_security', SwitchType::class);
         }
     }
 }

@@ -450,8 +450,7 @@ class AdminModuleDataProvider implements ModuleInterface
                         $addon->origin = $action;
                         $addon->origin_filter_value = $action_filter_value;
                         $addon->categoryParent = $this->categoriesProvider
-                            ->getParentCategory($addon->categoryName)
-                        ;
+                            ->getParentCategory($addon->categoryName);
                         if (isset($addon->version)) {
                             $addon->version_available = $addon->version;
                         }

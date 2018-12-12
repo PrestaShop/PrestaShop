@@ -181,8 +181,7 @@ class ModuleZipManager
             ->dispatch(
                 ModuleZipManagementEvent::DOWNLOAD,
                 new ModuleZipManagementEvent($this->getSource($source))
-            )
-        ;
+            );
 
         $this->filesystem->remove($sandboxPath);
     }

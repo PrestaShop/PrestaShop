@@ -438,8 +438,7 @@ class EmployeeCore extends ObjectModel
     {
         return $this->isSuperAdmin()
             && Employee::countProfile($this->id_profile, true) == 1
-            && $this->active
-        ;
+            && $this->active;
     }
 
     /**

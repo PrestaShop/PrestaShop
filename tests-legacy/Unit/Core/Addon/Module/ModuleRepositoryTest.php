@@ -87,18 +87,15 @@ class ModuleRepositoryTest extends UnitTestCase
 
         $this->apiClientS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient')
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
 
         $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
 
         $this->categoriesProviderS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider')
             ->disableOriginalConstructor()
-            ->getmock()
-        ;
+            ->getmock();
 
         $this->translatorStub = $this->getMockBuilder('Symfony\Component\Translation\Translator')
             ->disableOriginalConstructor()
@@ -110,8 +107,7 @@ class ModuleRepositoryTest extends UnitTestCase
         $this->adminModuleDataProviderStub = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
             ->setConstructorArgs(array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS, $this->moduleDataProviderStub))
             ->setMethods(array('getCatalogModulesNames'))
-            ->getMock()
-        ;
+            ->getMock();
 
         $this->adminModuleDataProviderStub
             ->method('getCatalogModulesNames')
@@ -136,8 +132,7 @@ class ModuleRepositoryTest extends UnitTestCase
                 __DIR__.'/../../../../resources/modules/',
             ))
             ->setMethods(array('readCacheFile', 'generateCacheFile'))
-            ->getMock()
-        ;
+            ->getMock();
 
         /*
          * Mock function 'readCacheFile()' to disable the cache

@@ -49,7 +49,6 @@ final class ActionColumn extends AbstractColumn
             ->setDefaults([
                 'actions' => null,
             ])
-            ->setAllowedTypes('actions', ['null', RowActionCollection::class])
-        ;
+            ->setAllowedTypes('actions', ['null', RowActionCollection::class]);
     }
 }

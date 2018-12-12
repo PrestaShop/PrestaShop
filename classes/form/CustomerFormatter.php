@@ -93,8 +93,7 @@ class CustomerFormatterCore implements FormFormatterInterface
 
         $format['id_customer'] = (new FormField())
             ->setName('id_customer')
-            ->setType('hidden')
-        ;
+            ->setType('hidden');
 
         $genders = Gender::getGenders($this->language->id);
         if ($genders->count() > 0) {
@@ -107,8 +106,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                         [],
                         'Shop.Forms.Labels'
                     )
-                )
-            ;
+                );
             foreach ($genders as $gender) {
                 $genderField->addAvailableValue($gender->id, $gender->name);
             }
@@ -124,8 +122,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                     'Shop.Forms.Labels'
                 )
             )
-            ->setRequired(true)
-        ;
+            ->setRequired(true);
 
         $format['lastname'] = (new FormField())
             ->setName('lastname')
@@ -136,8 +133,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                     'Shop.Forms.Labels'
                 )
             )
-            ->setRequired(true)
-        ;
+            ->setRequired(true);
 
         if (Configuration::get('PS_B2B_ENABLE')) {
             $format['company'] = (new FormField())
@@ -169,8 +165,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                     'Shop.Forms.Labels'
                 )
             )
-            ->setRequired(true)
-        ;
+            ->setRequired(true);
 
         if ($this->ask_for_password) {
             $format['password'] = (new FormField())
@@ -183,8 +178,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                         'Shop.Forms.Labels'
                     )
                 )
-                ->setRequired($this->password_is_required)
-            ;
+                ->setRequired($this->password_is_required);
         }
 
         if ($this->ask_for_new_password) {
@@ -197,8 +191,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                         [],
                         'Shop.Forms.Labels'
                     )
-                )
-            ;
+                );
         }
 
         if ($this->ask_for_birthdate) {
@@ -216,8 +209,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                 ->addAvailableValue(
                     'comment',
                     $this->translator->trans('(E.g.: %date_format%)', array('%date_format%' => Tools::formatDateStr('31 May 1970')), 'Shop.Forms.Help')
-                )
-            ;
+                );
         }
 
         if ($this->ask_for_partner_optin) {
@@ -231,8 +223,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                         'Shop.Theme.Customeraccount'
                     )
                 )
-                ->setRequired($this->partner_optin_is_required)
-            ;
+                ->setRequired($this->partner_optin_is_required);
         }
 
         // ToDo, replace the hook exec with HookFinder when the associated PR will be merged

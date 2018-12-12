@@ -486,8 +486,7 @@ class ThemeManager implements AddonManagerInterface
 
         $defaultCatalogue = $themeProvider
             ->setLocale($locale)
-            ->getDefaultCatalogue()
-        ;
+            ->getDefaultCatalogue();
 
         if (empty($defaultCatalogue)) {
             return $allDomains;

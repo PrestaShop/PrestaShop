@@ -57,8 +57,7 @@ class ApiClient
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)
             ->setVersion($shopVersion)
-            ->setShopUrl($domain)
-        ;
+            ->setShopUrl($domain);
         $this->defaultQueryParameters = $this->queryParameters;
     }
 
@@ -105,8 +104,7 @@ class ApiClient
     {
         $response = $this->setMethod('listing')
             ->setAction('native')
-            ->getResponse()
-        ;
+            ->getResponse();
 
         $responseArray = json_decode($response);
 
@@ -117,8 +115,7 @@ class ApiClient
     {
         $response = $this->setMethod('listing')
             ->setAction('install-modules')
-            ->getResponse()
-        ;
+            ->getResponse();
         $responseDecoded = json_decode($response);
 
         return isset($responseDecoded->modules) ? $responseDecoded->modules : array();
@@ -128,8 +125,7 @@ class ApiClient
     {
         $response = $this->setMethod('listing')
             ->setAction('must-have')
-            ->getResponse()
-        ;
+            ->getResponse();
 
         $responseArray = json_decode($response);
 
@@ -159,8 +155,7 @@ class ApiClient
     {
         $response = $this->setMethod('listing')
             ->setAction('service')
-            ->getResponse()
-        ;
+            ->getResponse();
 
         $responseArray = json_decode($response);
 
@@ -171,8 +166,7 @@ class ApiClient
     {
         $response = $this->setMethod('listing')
             ->setAction('categories')
-            ->getResponse()
-        ;
+            ->getResponse();
 
         $responseArray = json_decode($response);
 
@@ -184,8 +178,7 @@ class ApiClient
         $response = $this->setMethod('listing')
             ->setAction('module')
             ->setModuleId($moduleId)
-            ->getResponse()
-        ;
+            ->getResponse();
 
         $responseArray = json_decode($response);
 
@@ -205,8 +198,7 @@ class ApiClient
     {
         return $this->setMethod('module')
             ->setModuleId($moduleId)
-            ->getPostResponse()
-        ;
+            ->getPostResponse();
     }
 
     public function getCustomerModules($userMail, $password)
@@ -215,8 +207,7 @@ class ApiClient
             ->setAction('customer')
             ->setUserMail($userMail)
             ->setPassword($password)
-            ->getPostResponse()
-        ;
+            ->getPostResponse();
 
         $responseArray = json_decode($response);
 
@@ -236,8 +227,7 @@ class ApiClient
     {
         $response = $this->setMethod('listing')
             ->setAction('customer-themes')
-            ->getPostResponse()
-        ;
+            ->getPostResponse();
 
         $responseDecoded = json_decode($response);
 
@@ -255,8 +245,7 @@ class ApiClient
                 null,
                 array('query' => $this->queryParameters,
                 )
-            )->getBody()
-        ;
+            )->getBody();
     }
 
     public function getPostResponse()

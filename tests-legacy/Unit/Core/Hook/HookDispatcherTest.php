@@ -61,8 +61,7 @@ class HookDispatcherTest extends TestCase
         $this->hookDispatcherAdapter
             ->expects($this->once())
             ->method('dispatchForParameters')
-            ->with($this->equalTo('hookName'), $this->equalTo([]))
-        ;
+            ->with($this->equalTo('hookName'), $this->equalTo([]));
 
         $this->hookDispatcher->dispatchHook($hook);
     }
@@ -73,8 +72,7 @@ class HookDispatcherTest extends TestCase
         $this->hookDispatcherAdapter
             ->expects($this->once())
             ->method('dispatchForParameters')
-            ->with($this->equalTo('fooHook'), $this->equalTo(['bar' => 'Bar']))
-        ;
+            ->with($this->equalTo('fooHook'), $this->equalTo(['bar' => 'Bar']));
 
         $this->hookDispatcher->dispatchWithParameters('fooHook', ['bar' => 'Bar']);
     }
@@ -94,8 +92,7 @@ class HookDispatcherTest extends TestCase
                 $hook->getName(),
                 $hook->getParameters()
             )
-            ->willReturn($hookEvent)
-        ;
+            ->willReturn($hookEvent);
 
         $renderedHook = $this->hookDispatcher->dispatchRendering($hook);
 
@@ -119,8 +116,7 @@ class HookDispatcherTest extends TestCase
                 $hook->getName(),
                 $hook->getParameters()
             )
-            ->willReturn($hookEvent)
-        ;
+            ->willReturn($hookEvent);
 
         $renderedHook = $this->hookDispatcher->dispatchRenderingWithParameters('Baz', ['hello' => 'World']);
 

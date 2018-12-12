@@ -161,8 +161,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'actions' => $this->getRowActions(),
                 ])
-            )
-        ;
+            );
 
         if ($this->multistoreContextChecker->isSingleShopContext()) {
             $columns->addAfter(
@@ -221,8 +220,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'data-redirect' => $this->redirectActionUrl,
                     ],
                 ])
-            )
-        ;
+            );
 
         if ($this->multistoreContextChecker->isSingleShopContext()) {
             $filters->add(
@@ -276,8 +274,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SimpleGridAction('common_export_sql_manager'))
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
-            )
-        ;
+            );
     }
 
     /**
@@ -306,8 +303,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'categories_bulk_delete_route' => 'admin_category_process_bulk_delete',
                 ])
-            )
-        ;
+            );
     }
 
     /**
@@ -345,7 +341,6 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'category_id_field' => 'id_category',
                     'category_delete_route' => 'admin_category_process_delete',
                 ])
-            )
-        ;
+            );
     }
 }

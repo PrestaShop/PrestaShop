@@ -161,8 +161,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ])
                         ),
                 ])
-            )
-        ;
+            );
     }
 
     /**
@@ -201,8 +200,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                     ],
                 ])
                 ->setAssociatedColumn('actions')
-            )
-        ;
+            );
     }
 
     /**
@@ -219,8 +217,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                     'submit_method' => 'POST',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
-            )
-        ;
+            );
     }
 
     /**
@@ -243,7 +240,6 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                 (new SimpleGridAction('common_export_sql_manager'))
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
-            )
-        ;
+            );
     }
 }

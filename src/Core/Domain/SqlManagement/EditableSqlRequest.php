@@ -64,8 +64,7 @@ class EditableSqlRequest
         $this
             ->setSqlRequestId($requestSqlId)
             ->setName($name)
-            ->setSql($sql)
-        ;
+            ->setSql($sql);
     }
 
     /**

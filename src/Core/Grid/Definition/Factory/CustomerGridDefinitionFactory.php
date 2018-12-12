@@ -240,8 +240,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ])
                         ),
                 ])
-            )
-        ;
+            );
 
         if ($this->isB2bFeatureEnabled) {
             $columns->addAfter(
@@ -344,8 +343,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'redirect_route' => 'admin_customers_index',
                 ])
                 ->setAssociatedColumn('actions')
-            )
-        ;
+            );
 
         if ($this->isB2bFeatureEnabled) {
             $filters->add(
@@ -399,8 +397,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SimpleGridAction('common_export_sql_manager'))
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
-            )
-        ;
+            );
     }
 
     /**
@@ -429,7 +426,6 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'submit_route' => 'admin_customers_index',
                 ])
-            )
-        ;
+            );
     }
 }

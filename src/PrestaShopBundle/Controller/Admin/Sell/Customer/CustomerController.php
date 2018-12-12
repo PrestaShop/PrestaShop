@@ -229,8 +229,7 @@ class CustomerController extends AbstractAdminController
 
             $error = isset($errors[$e->getCode()]) ?
                 $errors[$e->getCode()] :
-                $this->getFallbackErrorMessage(get_class($e), $e->getCode())
-            ;
+                $this->getFallbackErrorMessage(get_class($e), $e->getCode());
 
             $this->addFlash('error', $error);
         } catch (CustomerException $e) {

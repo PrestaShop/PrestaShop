@@ -78,8 +78,7 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
 
         $password = !empty($config['smtp_password']) ?
             urldecode($config['smtp_password']) :
-            $this->configuration->get('PS_MAIL_PASSWD')
-        ;
+            $this->configuration->get('PS_MAIL_PASSWD');
         $password = str_replace(
             ['&lt;', '&gt;', '&quot;', '&amp;'],
             ['<', '>', '"', '&'],

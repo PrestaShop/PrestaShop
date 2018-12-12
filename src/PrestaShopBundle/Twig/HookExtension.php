@@ -162,8 +162,7 @@ class HookExtension extends \Twig_Extension
 
         return $this->hookDispatcher
             ->dispatchRenderingWithParameters($hookName, $hookParameters)
-            ->outputContent()
-        ;
+            ->outputContent();
     }
 
     /**

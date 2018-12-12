@@ -43,8 +43,7 @@ class ModuleProviderTest extends TestCase
     public function setUp()
     {
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
-            ->getMock()
-        ;
+            ->getMock();
 
         $this->moduleName = 'ps_wirepayment';
         self::$resourcesDir = __DIR__.'/../../resources/translations';

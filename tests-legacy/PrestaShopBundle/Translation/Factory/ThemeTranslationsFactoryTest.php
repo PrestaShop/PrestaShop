@@ -52,8 +52,7 @@ class ThemeTranslationsFactoryTest extends TestCase
     {
         $this->themeProviderMock = $this->getMockBuilder('PrestaShopBundle\Translation\Provider\ThemeProvider')
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
 
         $this->factory = new ThemeTranslationsFactory($this->themeProviderMock);
         $this->factory->addProvider($this->mockThemeProvider());
@@ -71,20 +70,17 @@ class ThemeTranslationsFactoryTest extends TestCase
             ->expects($this->once())
             ->method('setThemeName')
             ->with($theme)
-            ->willReturn($this->themeProviderMock)
-        ;
+            ->willReturn($this->themeProviderMock);
 
         $this->themeProviderMock
             ->expects($this->once())
             ->method('setLocale')
             ->with($locale)
-            ->willReturn($this->themeProviderMock)
-        ;
+            ->willReturn($this->themeProviderMock);
 
         $this->themeProviderMock
             ->expects($this->once())
-            ->method('getMessageCatalogue')
-        ;
+            ->method('getMessageCatalogue');
 
         $this->factory->createCatalogue($theme, $locale);
     }
@@ -114,15 +110,13 @@ class ThemeTranslationsFactoryTest extends TestCase
             ->expects($this->once())
             ->method('setThemeName')
             ->with($theme)
-            ->willReturn($this->themeProviderMock)
-        ;
+            ->willReturn($this->themeProviderMock);
 
         $this->themeProviderMock
             ->expects($this->once())
             ->method('setLocale')
             ->with($locale)
-            ->willReturn($this->themeProviderMock)
-        ;
+            ->willReturn($this->themeProviderMock);
 
         $this->translations = $this->factory->createTranslationsArray($theme, $locale);
 
@@ -208,8 +202,7 @@ class ThemeTranslationsFactoryTest extends TestCase
     {
         $providerMock = $this->getMockBuilder($providerPath)
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
 
         $providerMock
             ->expects($this->any())

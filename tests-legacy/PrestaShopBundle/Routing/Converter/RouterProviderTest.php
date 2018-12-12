@@ -245,14 +245,12 @@ class RouterProviderTest extends TestCase
         $mockRouter = $this
             ->getMockBuilder(RouterInterface::class)
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
 
         $mockRouter
             ->expects($this->once())
             ->method('getRouteCollection')
-            ->willReturn($routeCollection)
-        ;
+            ->willReturn($routeCollection);
 
         $mockRouter
             ->method('generate')
@@ -262,8 +260,7 @@ class RouterProviderTest extends TestCase
 
                     return null !== $route ? $route->getPath() : null;
                 }
-            ))
-        ;
+            ));
 
         return $mockRouter;
     }

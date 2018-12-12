@@ -151,8 +151,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
-            )
-        ;
+            );
     }
 
     /**
@@ -226,8 +225,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ],
                 ])
                 ->setAssociatedColumn('actions')
-            )
-        ;
+            );
     }
 
     /**
@@ -259,7 +257,6 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SimpleGridAction('common_export_sql_manager'))
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
-            )
-        ;
+            );
     }
 }

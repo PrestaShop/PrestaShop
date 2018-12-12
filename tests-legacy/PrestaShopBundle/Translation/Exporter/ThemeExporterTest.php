@@ -212,8 +212,7 @@ class ThemeExporterTest extends TestCase
                         'Override Me Twice' => 'Overridden Once',
                     ),
                 )
-            ))
-        ;
+            ));
 
         $this->providerMock->method('getDatabaseCatalogue')
             ->willReturn(new MessageCatalogue(
@@ -224,7 +223,6 @@ class ThemeExporterTest extends TestCase
                         'Override Me Twice' => 'Overridden Twice',
                     ),
                 )
-            ))
-        ;
+            ));
     }
 }

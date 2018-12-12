@@ -193,8 +193,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ])
                         ),
                 ])
-            )
-        ;
+            );
     }
 
     /**
@@ -284,8 +283,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                      ],
                  ])
                  ->setAssociatedColumn('actions')
-             )
-         ;
+             );
     }
 
     /**
@@ -308,8 +306,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SimpleGridAction('common_export_sql_manager'))
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
-            )
-        ;
+            );
     }
 
     /**
@@ -339,7 +336,6 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'submit_route' => 'admin_languages_index',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
-            )
-        ;
+            );
     }
 }

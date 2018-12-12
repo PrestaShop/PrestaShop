@@ -264,8 +264,7 @@ class QueryParamsCollectionTest extends TestCase
         $supplierFilterMessage = 'It should provide with a SQL condition clause on supplier';
         $categoryFilterMessage = 'It should provide with a SQL condition clause on category';
         $keywordsFilterMessage =
-            'It should provide with SQL conditions clauses on product references, names and supplier names'
-        ;
+            'It should provide with SQL conditions clauses on product references, names and supplier names';
         $attributesFilterMessage = 'It should provide with SQL conditions clauses on product attributes';
         $featuresFilterMessage = 'It should provide with SQL conditions clauses on product features';
 

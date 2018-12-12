@@ -131,8 +131,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                             ])
                         ),
                 ])
-            )
-        ;
+            );
     }
 
     /**
@@ -148,7 +147,6 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                     'submit_route' => 'admin_backups_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
-            )
-        ;
+            );
     }
 }

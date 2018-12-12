@@ -468,8 +468,7 @@ class TranslationsExtension extends \Twig_Extension
                     array('%nb_translations%' => $missingTranslationsCount),
                     'Admin.International.Feature'
                 ) .
-                '</div>'
-            ;
+                '</div>';
             $missingTranslationsLongMessage =
                 '<div class="missing-translations-long-message hide">' .
                 $this->translator->trans(
@@ -480,8 +479,7 @@ class TranslationsExtension extends \Twig_Extension
                     ),
                     'Admin.International.Feature'
                 ) .
-                '</div>'
-            ;
+                '</div>';
             $missingTranslationsClass = ' missing-translations';
         }
 
