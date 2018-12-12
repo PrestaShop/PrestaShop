@@ -328,7 +328,7 @@ class PrestaShopAutoload
      */
     public function getClassPath($classname)
     {
-        return (isset($this->index[$classname], $this->index[$classname]['path'])) ? $this->index[$classname]['path'] : null;
+        return (isset($this->index[$classname]['path'])) ? $this->index[$classname]['path'] : null;
     }
 
     /**

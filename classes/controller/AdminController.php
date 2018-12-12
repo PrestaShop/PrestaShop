@@ -3367,7 +3367,7 @@ class AdminControllerCore extends Controller
             $this->fields_list[$orderBy]['order_key'] = $this->fields_list[$orderBy]['filter_key'];
         }
 
-        if (isset($this->fields_list[$orderBy], $this->fields_list[$orderBy]['order_key'])) {
+        if (isset($this->fields_list[$orderBy]['order_key'])) {
             $orderBy = $this->fields_list[$orderBy]['order_key'];
         }
 

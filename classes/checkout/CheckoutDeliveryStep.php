@@ -131,7 +131,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             );
             $this->getCheckoutSession()->setGift(
                 isset($requestParams['gift']) ? $requestParams['gift'] : false,
-                (isset($requestParams['gift'], $requestParams['gift_message'])) ? $requestParams['gift_message'] : ''
+                (isset($requestParams['gift']['gift_message'])) ? $requestParams['gift_message'] : ''
             );
         }
 

@@ -1116,7 +1116,7 @@ class WebserviceRequestCore
                         if ($field != 'sort' && $field != 'limit') {
                             if (!in_array($field, $available_filters)) {
                                 // if there are linked tables
-                                if (isset($this->resourceConfiguration['linked_tables'], $this->resourceConfiguration['linked_tables'][$field])) {
+                                if (isset($this->resourceConfiguration['linked_tables'][$field])) {
                                     // contruct SQL join for linked tables
                                     $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['linked_tables'][$field]['table']) . '` `' . bqSQL($field) . '` ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = `' . bqSQL($field) . '`.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
 
@@ -1305,7 +1305,7 @@ class WebserviceRequestCore
                     $sql .= '_' . $assoc['type'];
                 } else {
                     $def = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
-                    if (isset($def['fields'], $def['fields']['id_shop_group'])) {
+                    if (isset($def['fields']['id_shop_group']) {
                         $check_shop_group = true;
                     }
                 }
@@ -1422,7 +1422,7 @@ class WebserviceRequestCore
                 }
 
                 /* @var ObjectModel $object */
-                if (isset($this->resourceConfiguration['objectMethods'], $this->resourceConfiguration['objectMethods']['delete'])) {
+                if (isset($this->resourceConfiguration['objectMethods']['delete'])) {
                     $result = $object->{$this->resourceConfiguration['objectMethods']['delete']}();
                 } else {
                     $result = $object->delete();
@@ -1561,7 +1561,7 @@ class WebserviceRequestCore
 
             // Apply the modifiers if they exist
             foreach ($this->resourceConfiguration['fields'] as $fieldName => $fieldProperties) {
-                if (isset($fieldProperties['modifier'], $fieldProperties['modifier']['modifier']) && $fieldProperties['modifier']['http_method'] & constant('WebserviceRequest::HTTP_' . $this->method)) {
+                if (isset($fieldProperties['modifier']['modifier']) && $fieldProperties['modifier']['http_method'] & constant('WebserviceRequest::HTTP_' . $this->method)) {
                     $object->{$fieldProperties['modifier']['modifier']}();
                 }
             }

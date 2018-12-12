@@ -3140,7 +3140,7 @@ class CartCore extends ObjectModel
     {
         $delivery_option_list = $this->getDeliveryOptionList();
         foreach ($delivery_option as $key => $value) {
-            if (isset($delivery_option_list[$key], $delivery_option_list[$key][$value])) {
+            if (isset($delivery_option_list[$key][$value])) {
                 if (count($delivery_option_list[$key][$value]['carrier_list']) == 1) {
                     return current(array_keys($delivery_option_list[$key][$value]['carrier_list']));
                 }
