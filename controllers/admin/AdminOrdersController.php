@@ -1915,30 +1915,30 @@ class AdminOrdersControllerCore extends AdminController
             'HOOK_CONTENT_ORDER' => Hook::exec(
                 'displayAdminOrderContentOrder',
                 array(
-                'order' => $order,
-                'products' => $products,
-                'customer' => $customer, )
+                    'order' => $order,
+                    'products' => $products,
+                    'customer' => $customer, )
             ),
             'HOOK_CONTENT_SHIP' => Hook::exec(
                 'displayAdminOrderContentShip',
                 array(
-                'order' => $order,
-                'products' => $products,
-                'customer' => $customer, )
+                    'order' => $order,
+                    'products' => $products,
+                    'customer' => $customer, )
             ),
             'HOOK_TAB_ORDER' => Hook::exec(
                 'displayAdminOrderTabOrder',
                 array(
-                'order' => $order,
-                'products' => $products,
-                'customer' => $customer, )
+                    'order' => $order,
+                    'products' => $products,
+                    'customer' => $customer, )
             ),
             'HOOK_TAB_SHIP' => Hook::exec(
                 'displayAdminOrderTabShip',
                 array(
-                'order' => $order,
-                'products' => $products,
-                'customer' => $customer, )
+                    'order' => $order,
+                    'products' => $products,
+                    'customer' => $customer, )
             ),
         );
 

@@ -81,9 +81,9 @@ class SetUpUrlType extends AbstractType
                 'canonical_url_redirection',
                 ChoiceType::class,
                 [
-                'choices' => $this->canonicalUrlChoices,
-                'translation_domain' => false,
-            ]
+                    'choices' => $this->canonicalUrlChoices,
+                    'translation_domain' => false,
+                ]
             )
         ;
 

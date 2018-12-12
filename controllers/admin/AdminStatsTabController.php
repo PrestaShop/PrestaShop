@@ -284,17 +284,17 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             if (is_array($this->errors) && count($this->errors)) {
                 die(json_encode(
                     array(
-                    'has_errors' => true,
-                    'errors' => array($this->errors),
-                    'date_from' => $this->context->employee->stats_date_from,
-                    'date_to' => $this->context->employee->stats_date_to, )
+                        'has_errors' => true,
+                        'errors' => array($this->errors),
+                        'date_from' => $this->context->employee->stats_date_from,
+                        'date_to' => $this->context->employee->stats_date_to, )
                 ));
             } else {
                 die(json_encode(
                     array(
-                    'has_errors' => false,
-                    'date_from' => $this->context->employee->stats_date_from,
-                    'date_to' => $this->context->employee->stats_date_to, )
+                        'has_errors' => false,
+                        'date_from' => $this->context->employee->stats_date_from,
+                        'date_to' => $this->context->employee->stats_date_to, )
                     ));
             }
         }

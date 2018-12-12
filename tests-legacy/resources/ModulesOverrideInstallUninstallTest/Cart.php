@@ -78,11 +78,11 @@ class Cart extends CartCore
         $result = Hook::exec(
             'ppbsDeleteCartProduct',
             array(
-            'id_product' => $id_product,
-            'id_product_attribute' => $id_product_attribute,
-            'id_customization' => $id_customization,
-            'id_address_delivery' => $id_address_delivery,
-        ),
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+                'id_customization' => $id_customization,
+                'id_address_delivery' => $id_address_delivery,
+            ),
             null,
             false
         );

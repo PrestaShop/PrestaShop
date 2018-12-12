@@ -447,10 +447,10 @@ class AdminCmsControllerCore extends AdminController
         if (!$cms->active) {
             $params = http_build_query(
                 array(
-                'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
-                'ad' => basename(_PS_ADMIN_DIR_),
-                'id_employee' => (int) $this->context->employee->id,
-            )
+                    'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
+                    'ad' => basename(_PS_ADMIN_DIR_),
+                    'id_employee' => (int) $this->context->employee->id,
+                )
             );
             $preview_url .= (strpos($preview_url, '?') === false ? '?' : '&') . $params;
         }

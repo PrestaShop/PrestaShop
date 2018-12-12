@@ -182,10 +182,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
         $tpl->assign(
             array(
-            'option_list' => $res,
-            'key_id' => 'id_country',
-            'key_value' => 'name',
-        )
+                'option_list' => $res,
+                'key_id' => 'id_country',
+                'key_value' => 'name',
+            )
         );
 
         $this->content = $tpl->fetch();
@@ -200,10 +200,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
         $tpl->assign(
             array(
-            'option_list' => $res,
-            'key_id' => 'id_currency',
-            'key_value' => 'name',
-        )
+                'option_list' => $res,
+                'key_id' => 'id_currency',
+                'key_value' => 'name',
+            )
         );
 
         $this->content = $tpl->fetch();
@@ -218,10 +218,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
         $tpl->assign(
             array(
-            'option_list' => $res,
-            'key_id' => 'id_group',
-            'key_value' => 'name',
-        )
+                'option_list' => $res,
+                'key_id' => 'id_group',
+                'key_value' => 'name',
+            )
         );
 
         $this->content = $tpl->fetch();
