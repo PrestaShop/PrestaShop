@@ -51,6 +51,7 @@ class Birthday
      */
     public function __construct($birthday)
     {
+        $this->assertBirthdayIsInValidFormat($birthday);
         $this->assertBirthdayIsNotAFutureDate($birthday);
 
         $this->birthday = $birthday;
@@ -84,6 +85,25 @@ class Birthday
                     'Invalid birthday "%s" provided. Birthday must be a past date.',
                     $birthdayDateTime->format('Y-m-d')
                 ),
+                CustomerConstraintException::INVALID_BIRTHDAY
+            );
+        }
+    }
+
+    /**
+     * Assert that birthday is actual date
+     *
+     * @param string $birthday
+     */
+    private function assertBirthdayIsInValidFormat($birthday)
+    {
+        if (self::EMPTY_BIRTHDAY === $birthday) {
+            return;
+        }
+
+        if (!is_string($birthday) || false === strtotime($birthday)) {
+            throw new CustomerConstraintException(
+                sprintf('Invalid birthday %s value provided.',var_export($birthday, true)),
                 CustomerConstraintException::INVALID_BIRTHDAY
             );
         }
