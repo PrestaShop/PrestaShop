@@ -20,6 +20,7 @@ for directory in test/campaigns/full/* ; do
 
     docker-compose up -d --build --force-recreate
 
+    echo "Run ${TEST_PATH}"
     echo "Wait for docker-compose..."
     sleep 5
 
@@ -28,7 +29,7 @@ for directory in test/campaigns/full/* ; do
 
     # Push report to gcloud
     cp mochawesome-report/mochawesome.html "${DIR_PATH}/reports/${TEST_PATH//\//-}.html"
-    cp mochawesome-report/mochawesome.html "${DIR_PATH}/reports/${TEST_PATH//\//-}.json"
+    cp mochawesome-report/mochawesome.json "${DIR_PATH}/reports/${TEST_PATH//\//-}.json"
 
     docker-compose down
   fi
