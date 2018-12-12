@@ -796,9 +796,9 @@ class imageLib
       // ***
       if ($this->aggresiveSharpening) { # A more aggressive sharpening solution
 
-        $sharpenMatrix = array( array( -1, -1, -1 ),
-            array( -1, 16, -1 ),
-            array( -1, -1, -1 ), );
+        $sharpenMatrix = array(array(-1, -1, -1),
+            array(-1, 16, -1),
+            array(-1, -1, -1), );
           $divisor = 8;
           $offset = 0;
 

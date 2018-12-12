@@ -47,7 +47,7 @@ class PaginationTest extends Testcase
             ['type' => 'page', 'clickable' => true, 'page' => 1,      'current' => false],
             ['type' => 'spacer', 'clickable' => false, 'page' => null,   'current' => false],
             ['type' => 'page', 'clickable' => true, 'page' => 4,      'current' => false],
-            ['type' => 'page', 'clickable' => false, 'page' => 5,      'current' => true ],
+            ['type' => 'page', 'clickable' => false, 'page' => 5,      'current' => true],
             ['type' => 'page', 'clickable' => true, 'page' => 6,      'current' => false],
             ['type' => 'spacer', 'clickable' => false, 'page' => null,   'current' => false],
             ['type' => 'page', 'clickable' => true, 'page' => 10,     'current' => false],
