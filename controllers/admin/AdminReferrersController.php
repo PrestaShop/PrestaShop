@@ -36,7 +36,8 @@ if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers' . (int) Ta
         );
     } elseif (Tools::isSubmit('ajaxFillProducts')) {
         $json_array = array();
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
 			SELECT p.id_product, pl.name
 			FROM ' . _DB_PREFIX_ . 'product p
 			LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl

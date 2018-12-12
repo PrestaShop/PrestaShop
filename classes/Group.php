@@ -164,7 +164,8 @@ class GroupCore extends ObjectModel
     public static function getPriceDisplayMethod($id_group)
     {
         if (!isset(Group::$group_price_display_method[$id_group])) {
-            self::$group_price_display_method[$id_group] = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            self::$group_price_display_method[$id_group] = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
                 SELECT `price_display_method`
                 FROM `' . _DB_PREFIX_ . 'group`
                 WHERE `id_group` = ' . (int) $id_group

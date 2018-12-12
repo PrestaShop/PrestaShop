@@ -207,6 +207,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
                 'message' => 'Module is authenticated.',
                 'pico' => 'https://www.addons.prestashop.com/random-url.jpg',
             ),
-            $presentedModule['attributes']['prestatrust']);
+            $presentedModule['attributes']['prestatrust']
+        );
     }
 }

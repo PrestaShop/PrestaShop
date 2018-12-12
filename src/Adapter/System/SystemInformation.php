@@ -53,7 +53,8 @@ class SystemInformation
     public function __construct(
         HostingInformation $hostingInformation,
         MailingInformation $mailingInformation,
-        ShopInformation $shopInformation)
+        ShopInformation $shopInformation
+    )
     {
         $this->hostingInformation = $hostingInformation;
         $this->mailingInformation = $mailingInformation;

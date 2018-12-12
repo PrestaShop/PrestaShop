@@ -56,7 +56,8 @@ class GroupReductionCore extends ObjectModel
 
     public function delete()
     {
-        $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT cp.`id_product`
 			FROM `' . _DB_PREFIX_ . 'category_product` cp
 			WHERE cp.`id_category` = ' . (int) $this->id_category
@@ -81,7 +82,8 @@ class GroupReductionCore extends ObjectModel
 
     protected function _setCache()
     {
-        $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT cp.`id_product`
 			FROM `' . _DB_PREFIX_ . 'category_product` cp
 			WHERE cp.`id_category` = ' . (int) $this->id_category
@@ -105,11 +107,13 @@ class GroupReductionCore extends ObjectModel
 
     protected function _updateCache()
     {
-        $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT cp.`id_product`
 			FROM `' . _DB_PREFIX_ . 'category_product` cp
 			WHERE cp.`id_category` = ' . (int) $this->id_category,
-        false);
+        false
+        );
 
         $ids = array();
         foreach ($products as $product) {
@@ -130,7 +134,8 @@ class GroupReductionCore extends ObjectModel
     {
         $lang = $id_lang . Shop::addSqlRestrictionOnLang('cl');
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT gr.`id_group_reduction`, gr.`id_group`, gr.`id_category`, gr.`reduction`, cl.`name` AS category_name
 			FROM `' . _DB_PREFIX_ . 'group_reduction` gr
 			LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (cl.`id_category` = gr.`id_category` AND cl.`id_lang` = ' . (int) $lang . ')
@@ -164,7 +169,8 @@ class GroupReductionCore extends ObjectModel
 
     public static function getGroupsByCategoryId($id_category)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT gr.`id_group` as id_group, gr.`reduction` as reduction, id_group_reduction
 			FROM `' . _DB_PREFIX_ . 'group_reduction` gr
 			WHERE `id_category` = ' . (int) $id_category
@@ -190,7 +196,8 @@ class GroupReductionCore extends ObjectModel
 
     public static function getGroupsReductionByCategoryId($id_category)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT gr.`id_group_reduction` as id_group_reduction, id_group
 			FROM `' . _DB_PREFIX_ . 'group_reduction` gr
 			WHERE `id_category` = ' . (int) $id_category
@@ -248,7 +255,8 @@ class GroupReductionCore extends ObjectModel
 
     public static function duplicateReduction($id_product_old, $id_product)
     {
-        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT pgr.`id_product`, pgr.`id_group`, pgr.`reduction`
 			FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache` pgr
 			WHERE pgr.`id_product` = ' . (int) $id_product_old

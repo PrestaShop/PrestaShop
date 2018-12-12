@@ -63,7 +63,8 @@ class SqlTranslationLoader implements LoaderInterface
         if (!array_key_exists($locale, $localeResults)) {
             $locale = Db::getInstance()->escape($locale, false, true);
 
-            $localeResults[$locale] = Db::getInstance()->getRow('SELECT `id_lang`
+            $localeResults[$locale] = Db::getInstance()->getRow(
+                'SELECT `id_lang`
                 FROM `' . _DB_PREFIX_ . 'lang`
                 WHERE `locale` = "' . $locale . '"'
             );

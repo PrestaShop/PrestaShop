@@ -39,8 +39,10 @@ class TreeToolbarSearchCategoriesCore extends TreeToolbarButtonCore implements I
     public function render()
     {
         if ($this->hasAttribute('data')) {
-            $this->setAttribute('typeahead_source',
-                $this->_renderData($this->getAttribute('data')));
+            $this->setAttribute(
+                'typeahead_source',
+                $this->_renderData($this->getAttribute('data'))
+            );
         }
 
         $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);

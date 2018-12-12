@@ -364,8 +364,11 @@ namespace PrestaShopBundle\Install {
             }
 
             if (strpos(_PS_INSTALL_VERSION_, '.') === false) {
-                $this->logError('%install_version% is not a valid version number.', 40,
-                    array('%install_version%' => _PS_INSTALL_VERSION_));
+                $this->logError(
+                    '%install_version% is not a valid version number.',
+                    40,
+                    array('%install_version%' => _PS_INSTALL_VERSION_)
+                );
             }
         }
 

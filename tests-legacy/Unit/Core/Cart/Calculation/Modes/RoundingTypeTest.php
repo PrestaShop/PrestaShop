@@ -121,8 +121,7 @@ class RoundingTypeTest extends AbstractCartCalculationTest
                 'expectedTotal' => Tools::ps_round(
                         3 * Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2)
                         + 2 * Tools::ps_round(static::PRODUCT_FIXTURES[2]['price'], 2)
-                        + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2)
-                        ,
+                        + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2),
                         2
                     )
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,

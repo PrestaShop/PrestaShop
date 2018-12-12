@@ -1088,8 +1088,14 @@ class AdminCategoriesControllerCore extends AdminController
                 }
 
                 //Add image preview and delete url
-                $file['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_ . (int) $category->id . '-' . $id . '_thumb.jpg',
-                    $this->context->controller->table . '_' . (int) $category->id . '-' . $id . '_thumb.jpg', 100, 'jpg', true, true);
+                $file['image'] = ImageManager::thumbnail(
+                    _PS_CAT_IMG_DIR_ . (int) $category->id . '-' . $id . '_thumb.jpg',
+                    $this->context->controller->table . '_' . (int) $category->id . '-' . $id . '_thumb.jpg',
+                    100,
+                    'jpg',
+                    true,
+                    true
+                );
                 $file['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories') . '&deleteThumb='
                     . $id . '&id_category=' . (int) $category->id . '&updatecategory';
             }

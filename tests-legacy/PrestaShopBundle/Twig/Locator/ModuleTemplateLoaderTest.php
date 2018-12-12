@@ -77,7 +77,8 @@ class ModuleTemplateLoaderTest extends TestCase
         self::assertCount(
             3,
             $this->loader->getPaths('PrestaShop'),
-            'One templates should be found.');
+            'One templates should be found.'
+        );
     }
 
     /**

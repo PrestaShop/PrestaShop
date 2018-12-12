@@ -2214,7 +2214,8 @@ class CartCore extends ObjectModel
                 Tools::ps_round(
                     $this->getGiftWrappingPrice($withTaxes),
                     $computePrecision
-                ), Currency::getCurrencyInstance((int) $this->id_currency)
+                ),
+                Currency::getCurrencyInstance((int) $this->id_currency)
             );
         }
 
@@ -3552,7 +3553,8 @@ class CartCore extends ObjectModel
             }
 
             if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int) $id_zone))
-                || ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int) $this->id_currency)
+                || (
+                    $shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int) $this->id_currency)
                 )) {
                 $shipping_cost += 0;
             } else {
@@ -4292,7 +4294,8 @@ class CartCore extends ObjectModel
         }
 
         // Backward compatibility: if true set customizations quantity to 0, they will be updated in Cart::_updateCustomizationQuantity
-        $new_customization_method = (int) Db::getInstance()->getValue('
+        $new_customization_method = (int) Db::getInstance()->getValue(
+            '
             SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
             WHERE `id_cart` = ' . (int) $this->id .
                 ' AND `id_customization` != 0'

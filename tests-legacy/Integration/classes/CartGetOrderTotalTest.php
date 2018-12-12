@@ -520,18 +520,22 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS),
-            $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+            $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::BOTH),
-            $cart->getOrderTotal(true, Cart::BOTH));
+            $cart->getOrderTotal(true, Cart::BOTH)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
-            $cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
+            $cart->getOrderTotal(true, Cart::ONLY_SHIPPING)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
-            $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+            $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS)
+        );
     }
 }

@@ -45,7 +45,8 @@ function generate_tax_rules()
         $id_tax_rules_group = Db::getInstance()->Insert_ID();
 
 
-        $countries = Db::getInstance()->executeS('
+        $countries = Db::getInstance()->executeS(
+            '
 		SELECT * FROM `'._DB_PREFIX_.'country` c
 		LEFT JOIN `'._DB_PREFIX_.'zone` z ON (c.`id_zone` = z.`id_zone`)
 		LEFT JOIN `'._DB_PREFIX_.'tax_zone` tz ON (tz.`id_zone` = z.`id_zone`)
@@ -85,13 +86,15 @@ function generate_tax_rules()
             }
         }
 
-        $res &= Db::getInstance()->execute('
+        $res &= Db::getInstance()->execute(
+            '
 		UPDATE `'._DB_PREFIX_.'product`
 		SET `id_tax_rules_group` = '.$id_tax_rules_group.'
 		WHERE `id_tax` = '.(int)$id_tax
         );
 
-        $res &= Db::getInstance()->execute('
+        $res &= Db::getInstance()->execute(
+            '
 		UPDATE `'._DB_PREFIX_.'carrier`
 		SET `id_tax_rules_group` = '.$id_tax_rules_group.'
 		WHERE `id_tax` = '.(int)$id_tax

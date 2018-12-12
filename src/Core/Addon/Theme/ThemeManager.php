@@ -295,7 +295,8 @@ class ThemeManager implements AddonManagerInterface
                             '%module%' => $moduleName,
                             '%error_details%' => $moduleManager->getError($moduleName),
                         ),
-                        'Admin.Modules.Notification')
+                        'Admin.Modules.Notification'
+                    )
                 );
             }
             if (!$moduleManager->isEnabled($moduleName)) {

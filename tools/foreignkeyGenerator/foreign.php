@@ -43,7 +43,8 @@ function clearForeignKeys()
     ');
     if (is_array($tables)) {
         foreach ($tables as $table) {
-            Db::getInstance()->execute('
+            Db::getInstance()->execute(
+                '
                 ALTER TABLE `' . $table['table_name'] . '`
 				DROP FOREIGN KEY `' . $table['constraint_name'] . '`'
             );
@@ -60,14 +61,16 @@ function clearForeignKeys()
  */
 function noNullParent($table)
 {
-    $rows = Db::getInstance()->executeS('
+    $rows = Db::getInstance()->executeS(
+        '
         SELECT `id_' . $table . '`
 		FROM `' . _DB_PREFIX_ . $table . '`
 		WHERE `id_parent` = 0'
     );
     if (is_array($rows)) {
         foreach ($rows as $row) {
-            Db::getInstance()->execute('
+            Db::getInstance()->execute(
+                '
                 UPDATE `' . _DB_PREFIX_ . $table . '`
 				SET `id_parent` = ' . (int) $row['id_' . $table] . '
 				WHERE `id_' . $table . '` = ' . (int) $row['id_' . $table]
@@ -87,24 +90,28 @@ function updateMismatchForeign()
     noNullParent('cms_category');
 
     // Make sure that the id_tax_rules_group is set
-    Db::getInstance()->execute('
+    Db::getInstance()->execute(
+        '
         UPDATE `' . _DB_PREFIX_ . 'tax_rules_group`
 		SET `id_tax_rules_group` = 1
 		WHERE `id_tax_rules_group` = 0'
     );
     // Make sure the currency is set
-    Db::getInstance()->execute('
+    Db::getInstance()->execute(
+        '
         UPDATE `' . _DB_PREFIX_ . 'country`
         SET `id_currency` = 1
 		WHERE `id_currency` = 0'
     );
 
     // If there is no country, create a default one
-    if (!Db::getInstance()->getValue('
+    if (!Db::getInstance()->getValue(
+        '
         SELECT COUNT(*)
 		FROM `' . _DB_PREFIX_ . 'country`'
     )) {
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
             INSERT INTO `' . _DB_PREFIX_ . 'country`
 			(`id_country`, `id_state`) VALUES(0, 1)'
         );

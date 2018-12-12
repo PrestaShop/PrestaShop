@@ -2825,7 +2825,8 @@ exit;
     public static function getDirectoriesWithGlob($path)
     {
         $directoryList = glob($path . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
-        array_walk($directoryList,
+        array_walk(
+            $directoryList,
             function (&$absolutePath, $key) {
                 $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
             }

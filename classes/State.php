@@ -89,7 +89,8 @@ class StateCore extends ObjectModel
         }
         $cacheId = 'State::getNameById_' . (int) $idState;
         if (!Cache::isStored($cacheId)) {
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
 				SELECT `name`
 				FROM `' . _DB_PREFIX_ . 'state`
 				WHERE `id_state` = ' . (int) $idState
@@ -187,7 +188,8 @@ class StateCore extends ObjectModel
      */
     public function countUsed()
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT COUNT(*)
 			FROM `' . _DB_PREFIX_ . 'address`
 			WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id
@@ -210,7 +212,8 @@ class StateCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'state` s
 			WHERE s.`id_country` = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : '')
@@ -242,7 +245,8 @@ class StateCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT `id_zone`
 			FROM `' . _DB_PREFIX_ . 'state`
 			WHERE `id_state` = ' . (int) $idState

@@ -143,7 +143,8 @@ class StoreCore extends ObjectModel
      */
     public static function getStores($idLang)
     {
-        $stores = Db::getInstance()->executeS('
+        $stores = Db::getInstance()->executeS(
+            '
             SELECT s.id_store AS `id`, s.*, sl.*
             FROM ' . _DB_PREFIX_ . 'store s
             ' . Shop::addSqlAssociation('store', 's') . '
@@ -194,7 +195,8 @@ class StoreCore extends ObjectModel
      */
     public static function storeExists($idStore)
     {
-        $row = Db::getInstance()->getRow('
+        $row = Db::getInstance()->getRow(
+            '
             SELECT `id_store`
             FROM ' . _DB_PREFIX_ . 'store a
             WHERE a.`id_store` = ' . (int) $idStore

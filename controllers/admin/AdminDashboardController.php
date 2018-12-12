@@ -133,7 +133,8 @@ class AdminDashboardControllerCore extends AdminController
                             array(
                                 '%module%' => $module->displayName,
                             ),
-                            'Admin.Dashboard.Help'),
+                            'Admin.Dashboard.Help'
+                        ),
                         'validation' => 'isPrice',
                         'cast' => 'floatval',
                         'type' => 'text',

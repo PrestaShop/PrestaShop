@@ -86,7 +86,8 @@ if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEm
 if (Tools::isSubmit('searchCategory')) {
     $q = Tools::getValue('q');
     $limit = Tools::getValue('limit');
-    $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
+    $results = Db::getInstance()->executeS(
+        'SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0

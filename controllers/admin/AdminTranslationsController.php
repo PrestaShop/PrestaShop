@@ -132,7 +132,8 @@ class AdminTranslationsControllerCore extends AdminController
     public function initForm($method_name)
     {
         // Create a title for each translation page
-        $title = $this->trans('%1$s (Language: %2$s, Theme: %3$s)',
+        $title = $this->trans(
+            '%1$s (Language: %2$s, Theme: %3$s)',
                 array(
                     '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false : $this->translations_informations[$this->type_selected]['name']),
                     '%2$s' => $this->lang_selected->name,
@@ -2436,9 +2437,11 @@ class AdminTranslationsControllerCore extends AdminController
                 }
             }
         } else {
-            $this->warnings[] = $this->trans('A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%',
+            $this->warnings[] = $this->trans(
+                'A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%',
                 array('%iso_code%' => $this->lang_selected->iso_code, '%folder%' => str_replace(_PS_ROOT_DIR_, '', dirname($dir)), '%language%' => $default_language),
-                'Admin.International.Notification');
+                'Admin.International.Notification'
+            );
         }
 
         return $arr_return;

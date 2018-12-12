@@ -198,15 +198,18 @@ class AdminEmployeesControllerCore extends AdminController
             if (Validate::isLoadedObject($obj)) {
                 /* @var Employee $obj */
                 array_pop($this->toolbar_title);
-                $this->toolbar_title[] = $this->trans('Edit: %lastname% %firstname%',
+                $this->toolbar_title[] = $this->trans(
+                    'Edit: %lastname% %firstname%',
                     array(
                         '%lastname%' => $obj->lastname,
                         '%firstname%' => $obj->firstname,
                     ),
                     'Admin.Advparameters.Feature'
                 );
-                $this->page_header_toolbar_title = implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ',
-                    $this->toolbar_title);
+                $this->page_header_toolbar_title = implode(
+                    ' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ',
+                    $this->toolbar_title
+                );
             }
         }
     }

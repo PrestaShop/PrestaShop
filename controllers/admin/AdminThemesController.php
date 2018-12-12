@@ -412,12 +412,14 @@ class AdminThemesControllerCore extends AdminController
                 'fields' => array(
                     'PS_LOGO' => array(
                         'title' => $this->trans('Header logo', array(), 'Admin.Design.Feature'),
-                        'hint' => $this->trans('Will appear on main page. Recommended size for the default theme: height %height% and width %width%.',
+                        'hint' => $this->trans(
+                            'Will appear on main page. Recommended size for the default theme: height %height% and width %width%.',
                             array(
                                 '%height%' => '40px',
                                 '%width%' => '200px',
                             ),
-                            'Admin.Design.Help'),
+                            'Admin.Design.Help'
+                        ),
                         'type' => 'file',
                         'name' => 'PS_LOGO',
                         'tab' => 'logo',

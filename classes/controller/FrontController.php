@@ -317,7 +317,8 @@ class FrontControllerCore extends Controller
                     'Current theme is unavailable. Please check your theme\'s directory name ("%s") and permissions.',
                     array(basename(rtrim(_PS_THEME_DIR_, '/\\'))),
                     'Admin.Design.Notification'
-                ));
+                )
+            );
         }
 
         if (Configuration::get('PS_GEOLOCATION_ENABLED')) {

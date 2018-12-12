@@ -2510,7 +2510,8 @@ class AdminImportControllerCore extends AdminController
                         // until here
                     } else {
                         if (!$validateOnly) {
-                            $this->warnings[] = $this->trans('%data% cannot be saved',
+                            $this->warnings[] = $this->trans(
+                                '%data% cannot be saved',
                                 array(
                                     '%data%' => (isset($image->id_product) ? ' (' . $image->id_product . ')' : ''),
                                 ),
@@ -3994,9 +3995,11 @@ class AdminImportControllerCore extends AdminController
             $error = $this->trans('Date (%date%) cannot be in the past (at line %line%). Format: %date_format%.', array('%date%' => $date_delivery_expected, '%line%' => $current_line + 1, '%date_format%' => $this->trans('YYYY-MM-DD', array(), 'Admin.Advparameters.Notification')), 'Admin.Advparameters.Notification');
         }
         if ($discount_rate < 0 || $discount_rate > 100) {
-            $error = $this->trans('Discount rate (%rate%) is not valid (at line %line%). %format%.',
+            $error = $this->trans(
+                'Discount rate (%rate%) is not valid (at line %line%). %format%.',
                 array('%rate%' => $discount_rate, '%line%' => $current_line + 1, '%format%' => $this->trans('Format: Between 0 and 100', array(), 'Admin.Advparameters.Notification')),
-                'Admin.Advparameters.Notification');
+                'Admin.Advparameters.Notification'
+            );
         }
         if ($supply_order->id > 0 && !$supply_order->isEditable()) {
             $error = $this->trans('Supply Order (%id%) is not editable (at line %line%).', array('%id%' => $supply_order->id, '%line%' => $current_line + 1), 'Admin.Advparameters.Notification');

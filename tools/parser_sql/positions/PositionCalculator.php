@@ -193,8 +193,11 @@ class PositionCalculator {
                 //$this->_printPos("0", $sql, $charPos, $key, $value, $backtracking);
 
                 $subject = substr($sql, $charPos);
-                $pos = $this->findPositionWithinString($subject, $value,
-                    isset($parsed['expr_type']) ? $parsed['expr_type'] : 'alias');
+                $pos = $this->findPositionWithinString(
+                    $subject,
+                    $value,
+                    isset($parsed['expr_type']) ? $parsed['expr_type'] : 'alias'
+                );
                 if ($pos === false) {
                     throw new UnableToCalculatePositionException($value, $subject);
                 }

@@ -1169,7 +1169,9 @@ class imageLib
     // calculate grayscale in percent
     $grayscale = ($r + $g + $b) / 3 / 0xff;
 
-          imagecolorset($this->imageResized, $x,
+          imagecolorset(
+              $this->imageResized,
+              $x,
       $grayscale * $rgb[0],
       $grayscale * $rgb[1],
       $grayscale * $rgb[2]

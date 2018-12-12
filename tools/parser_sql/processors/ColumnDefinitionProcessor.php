@@ -117,8 +117,13 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
             case ',':
             // we stop on a single comma and return
             // the $expr entry and the index $key
-                $expr = $this->buildColDef($expr, trim(substr($base_expr, 0, -strlen($token))), $options, $refs,
-                    $key - 1);
+                $expr = $this->buildColDef(
+                    $expr,
+                    trim(substr($base_expr, 0, -strlen($token))),
+                    $options,
+                    $refs,
+                    $key - 1
+                );
                 break 2;
 
             case 'VARCHAR':

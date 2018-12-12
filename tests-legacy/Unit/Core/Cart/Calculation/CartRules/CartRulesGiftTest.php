@@ -85,7 +85,8 @@ class CartRulesGiftTest extends AbstractCartCalculationTest
                     4 => 1,
                 ],
                 'expectedTotal'        => (1 - static::CART_RULES_FIXTURES[13]['percent'] / 100)
-                * (2 * static::PRODUCT_FIXTURES[1]['price']
+                * (
+                    2 * static::PRODUCT_FIXTURES[1]['price']
                    + 3 * static::PRODUCT_FIXTURES[3]['price']
                 )
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,

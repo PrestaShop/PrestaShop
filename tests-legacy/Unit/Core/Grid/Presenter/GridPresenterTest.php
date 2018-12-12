@@ -88,7 +88,8 @@ class GridPresenterTest extends TestCase
 
         $definition = $this->createMock(GridDefinitionInterface::class);
         $definition->method('getColumns')
-            ->willReturn((new ColumnCollection())
+            ->willReturn(
+                (new ColumnCollection())
                 ->add($this->createColumnMock('test_1'))
                 ->add($this->createColumnMock('test_2'))
                 ->add($this->createColumnMock('test_3'))

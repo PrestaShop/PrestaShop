@@ -119,7 +119,8 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
             ->leftJoin(
                 'e',
                 $this->dbPrefix . 'profile_lang',
-                'pl', 'e.id_profile = pl.id_profile AND pl.id_lang = ' . (int) $this->contextIdLang
+                'pl',
+                'e.id_profile = pl.id_profile AND pl.id_lang = ' . (int) $this->contextIdLang
             )
             ->andWhere('EXISTS (' . $sub->getSQL() . ')')
             ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
