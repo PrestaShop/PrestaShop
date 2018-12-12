@@ -89,7 +89,7 @@ class OrderDetailControllerCore extends FrontController
                         $to = (string) (Configuration::get'PS_SHOP_EMAIL');
                     } else {
                         $to = new Contact((int) Configuration::get('PS_MAIL_EMAIL_MESSAGE'));
-                        $to = (string) ($to->email);
+                        $to = (string) $to->email;
                     }
                     $toName = (string) (Configuration::get('PS_SHOP_NAME'));
                     $customer = $this->context->customer;
