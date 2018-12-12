@@ -95,11 +95,9 @@ class LocaleData
     /**
      * Override this object's data with another LocaleData object.
      *
-     * @param LocaleData $localeData
-     *                               Locale data to use for the override
+     * @param LocaleData $localeData Locale data to use for the override
      *
-     * @return $this
-     *               Fluent interface
+     * @return $this Fluent interface
      */
     public function overrideWith(LocaleData $localeData)
     {

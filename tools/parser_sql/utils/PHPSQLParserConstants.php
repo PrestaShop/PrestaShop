@@ -169,18 +169,18 @@ class PHPSQLParserConstants {
     );
 
     public static function isAggregateFunction($token) {
-        return in_array($token, PHPSQLParserConstants::$aggregateFunctions);
+        return in_array($token, static::$aggregateFunctions);
     }
 
     public static function isReserved($token) {
-        return in_array($token, PHPSQLParserConstants::$reserved);
+        return in_array($token, static::$reserved);
     }
 
     public static function isFunction($token) {
-        return in_array($token, PHPSQLParserConstants::$functions);
+        return in_array($token, static::$functions);
     }
 
     public static function isParameterizedFunction($token) {
-        return in_array($token, PHPSQLParserConstants::$parameterizedFunctions);
+        return in_array($token, static::$parameterizedFunctions);
     }
 }

@@ -71,7 +71,7 @@ class VersionNumber
             ));
         }
 
-        return new VersionNumber(
+        return new static(
             $matches[1],
             $matches[2],
             $matches[3]

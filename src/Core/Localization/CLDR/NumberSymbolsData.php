@@ -157,11 +157,9 @@ class NumberSymbolsData
     /**
      * Override this object's symbols with another NumberSymbolsData object.
      *
-     * @param NumberSymbolsData $symbolsData
-     *                                       Symbols to use for the override
+     * @param NumberSymbolsData $symbolsData Symbols to use for the override
      *
-     * @return $this
-     *               Fluent interface
+     * @return $this Fluent interface
      */
     public function overrideWith(NumberSymbolsData $symbolsData)
     {

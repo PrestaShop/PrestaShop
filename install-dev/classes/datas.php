@@ -180,16 +180,16 @@ class Datas
 
     public static function getInstance()
     {
-        if (Datas::$instance === null) {
-            Datas::$instance = new Datas();
+        if (static::$instance === null) {
+            static::$instance = new static();
         }
 
-        return Datas::$instance;
+        return static::$instance;
     }
 
     public static function getArgs()
     {
-        return Datas::$available_args;
+        return static::$available_args;
     }
 
     public function getAndCheckArgs($argv)
@@ -214,7 +214,7 @@ class Datas
         }
 
         $errors = array();
-        foreach (Datas::getArgs() as $key => $row) {
+        foreach (static::getArgs() as $key => $row) {
             if (isset($row['name'])) {
                 $name = $row['name'];
             } else {

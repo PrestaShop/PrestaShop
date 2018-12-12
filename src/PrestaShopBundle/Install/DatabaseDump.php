@@ -139,7 +139,7 @@ class DatabaseDump
      */
     public static function create()
     {
-        $dump = new DatabaseDump();
+        $dump = new static();
 
         $dump->dump();
     }
@@ -149,7 +149,7 @@ class DatabaseDump
      */
     public static function restoreDb()
     {
-        $dump = new DatabaseDump();
+        $dump = new static();
 
         $dump->restore();
     }

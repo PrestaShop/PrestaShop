@@ -58,8 +58,8 @@ class PrestaShopAutoload
     protected function __construct()
     {
         $this->root_dir = _PS_CORE_DIR_ . '/';
-        $file = PrestaShopAutoload::getCacheFileIndex();
-        $stubFile = PrestaShopAutoload::getStubFileIndex();
+        $file = static::getCacheFileIndex();
+        $stubFile = static::getStubFileIndex();
         if (@filemtime($file) && is_readable($file) && @filemtime($stubFile) && is_readable($stubFile)) {
             $this->index = include $file;
         } else {
@@ -74,11 +74,11 @@ class PrestaShopAutoload
      */
     public static function getInstance()
     {
-        if (!PrestaShopAutoload::$instance) {
-            PrestaShopAutoload::$instance = new PrestaShopAutoload();
+        if (!static::$instance) {
+            static::$instance = new static();
         }
 
-        return PrestaShopAutoload::$instance;
+        return static::$instance;
     }
 
     /**
@@ -119,14 +119,14 @@ class PrestaShopAutoload
     public function load($className)
     {
         // Retrocompatibility
-        if (isset(PrestaShopAutoload::$class_aliases[$className]) && !interface_exists($className, false) && !class_exists($className, false)) {
-            return eval('class ' . $className . ' extends ' . PrestaShopAutoload::$class_aliases[$className] . ' {}');
+        if (isset(static::$class_aliases[$className]) && !interface_exists($className, false) && !class_exists($className, false)) {
+            return eval('class ' . $className . ' extends ' . static::$class_aliases[$className] . ' {}');
         }
 
         // regenerate the class index if the requested file doesn't exists
         if ((isset($this->index[$className]) && $this->index[$className]['path'] && !is_file($this->root_dir . $this->index[$className]['path']))
             || (isset($this->index[$className . 'Core']) && $this->index[$className . 'Core']['path'] && !is_file($this->root_dir . $this->index[$className . 'Core']['path']))
-            || !file_exists(self::getNamespacedStubFileIndex())) {
+            || !file_exists(static::getNamespacedStubFileIndex())) {
             $this->generateIndex();
         }
 
@@ -157,7 +157,7 @@ class PrestaShopAutoload
             require_once $this->root_dir . $this->index[$className]['path'];
         }
         if (strpos($className, 'PrestaShop\PrestaShop\Adapter\Entity') !== false) {
-            require_once self::getNamespacedStubFileIndex();
+            require_once static::getNamespacedStubFileIndex();
         }
     }
 
@@ -221,19 +221,19 @@ class PrestaShopAutoload
         $content = '<?php return ' . var_export($classes, true) . '; ?>';
 
         // Write classes index on disc to cache it
-        $filename = PrestaShopAutoload::getCacheFileIndex();
+        $filename = static::getCacheFileIndex();
         @mkdir(_PS_CACHE_DIR_, 0777, true);
 
         if (!$this->dumpFile($filename, $content)) {
             Tools::error_log('Cannot write temporary file ' . $filename);
         }
 
-        $stubFilename = PrestaShopAutoload::getStubFileIndex();
+        $stubFilename = static::getStubFileIndex();
         if (!$this->dumpFile($stubFilename, $contentStub)) {
             Tools::error_log('Cannot write temporary file ' . $stubFilename);
         }
 
-        $namespacedStubFilename = PrestaShopAutoload::getNamespacedStubFileIndex();
+        $namespacedStubFilename = static::getNamespacedStubFileIndex();
         if (!$this->dumpFile($namespacedStubFilename, $contentNamespacedStub)) {
             Tools::error_log('Cannot write temporary file ' . $namespacedStubFilename);
         }
