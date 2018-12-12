@@ -278,6 +278,7 @@ class ModuleTabRegister
         /**
          * Legacy Tab, to be replaced with Doctrine entity when right management
          * won't be directly linked to the tab creation
+         *
          * @ToDo
          */
         $tab = new Tab();

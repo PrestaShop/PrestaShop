@@ -2175,6 +2175,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param int $id_module Module ID
      * @param int $id_hook Hook ID
+     *
      * @return array Exceptions
      */
     public static function getExceptionsStatic($id_module, $id_hook, $dispatch = false)
@@ -2231,6 +2232,7 @@ abstract class ModuleCore implements ModuleInterface
      * Return exceptions for module in hook
      *
      * @param int $id_hook Hook ID
+     *
      * @return array Exceptions
      */
     public function getExceptions($id_hook, $dispatch = false)
@@ -2810,6 +2812,7 @@ abstract class ModuleCore implements ModuleInterface
      * Return module position for a given hook
      *
      * @param bool $id_hook Hook ID
+     *
      * @return int position
      */
     public function getPosition($id_hook)

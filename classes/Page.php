@@ -56,6 +56,7 @@ class PageCore extends ObjectModel
 
         /**
          * Some pages must be distinguished in order to record exactly what is being seen
+         *
          * @todo dispatcher module
          */
         $specialArray = array(

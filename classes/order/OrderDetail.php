@@ -463,6 +463,7 @@ class OrderDetailCore extends ObjectModel
 
     /**
      * Set virtual product information
+     *
      * @param array $product
      */
     protected function setVirtualProductInformation($product)

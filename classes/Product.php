@@ -4968,11 +4968,12 @@ class ProductCore extends ObjectModel
     }
 
     /**
-    * Select all features for a given language
-    *
-    * @param $id_lang Language id
-    * @return array Array with feature's data
-    */
+     * Select all features for a given language
+     *
+     * @param $id_lang Language id
+     *
+     * @return array Array with feature's data
+     */
     public static function getFrontFeaturesStatic($id_lang, $id_product)
     {
         if (!Feature::isFeatureActive()) {

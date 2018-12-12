@@ -256,7 +256,6 @@ namespace PrestaShopBundle\Install {
              * Fix complete version number if there is not all 4 numbers
              * Eg. replace 1.4.3 by 1.4.3.0
              * Will result in file 1.4.3.0.sql will be skipped if oldversion is 1.4.3
-             * 
              */
             $arrayVersion = preg_split('#\.#', $this->oldVersion);
             $versionNumbers = count($arrayVersion);
