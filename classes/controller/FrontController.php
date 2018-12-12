@@ -1569,7 +1569,13 @@ class FrontControllerCore extends Controller
             $cust = $this->objectPresenter->present($this->context->customer);
         }
 
-        unset($cust['secure_key'], $cust['passwd'], $cust['show_public_prices'], $cust['deleted'], $cust['id_lang']);
+        unset(
+            $cust['secure_key'],
+            $cust['passwd'],
+            $cust['show_public_prices'],
+            $cust['deleted'],
+            $cust['id_lang']
+        );
 
         $cust['is_logged'] = $this->context->customer->isLogged(true);
 
