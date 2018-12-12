@@ -65,9 +65,9 @@ class ColumnDefinitionBuilder {
 
    public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::COLDEF) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildColRef($v);
@@ -77,7 +77,7 @@ class ColumnDefinitionBuilder {
                 throw new UnableToCreateSQLException('CREATE TABLE primary key subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
         return substr($sql, 0, -1);
     }

@@ -71,9 +71,9 @@ class RefClauseBuilder {
 
     public function build($parsed) {
         if ($parsed === false) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildColRef($v);
@@ -84,9 +84,9 @@ class RefClauseBuilder {
                 throw new UnableToCreateSQLException('expression ref_clause', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
-        return "(" . substr($sql, 0, -1) . ")";
+        return '(' . substr($sql, 0, -1) . ')';
     }
 }
 ?>

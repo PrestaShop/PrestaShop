@@ -59,10 +59,10 @@ class InListBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::IN_LIST) {
-            return "";
+            return '';
         }
-        $sql = $this->buildSubTree($parsed, ", ");
-        return "(" . $sql . ")";
+        $sql = $this->buildSubTree($parsed, ', ');
+        return '(' . $sql . ')';
     }
 }
 ?>

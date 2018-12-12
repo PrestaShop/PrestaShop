@@ -137,7 +137,7 @@ echo "- added a required customizable text field to product #1\n";
 Language::checkAndAddLanguage('fr');
 echo "- added French language just so that we have 2\n";
 $languages = Language::getLanguages();
-echo "  Number of languages : ".count($languages)."\n";
+echo '  Number of languages : '.count($languages)."\n";
 
 $order = new Order(5);
 $history = new OrderHistory();

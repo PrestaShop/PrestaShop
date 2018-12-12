@@ -51,14 +51,14 @@ class IndexColumnListProcessor extends AbstractProcessor {
 
         $expr = $this->initExpression();
         $result = array();
-        $base_expr = "";
+        $base_expr = '';
 
         foreach ($tokens as $k => $token) {
 
             $trim = trim($token);
             $base_expr .= $token;
 
-            if ($trim === "") {
+            if ($trim === '') {
                 continue;
             }
 
@@ -77,7 +77,7 @@ class IndexColumnListProcessor extends AbstractProcessor {
                 $result[] = array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr),
                         $expr);
                 $expr = $this->initExpression();
-                $base_expr = "";
+                $base_expr = '';
                 break;
 
             default:

@@ -50,13 +50,13 @@ class OrderByProcessor extends AbstractProcessor {
     }
 
     protected function initParseInfo() {
-        return array('base_expr' => "", 'dir' => "ASC", 'expr_type' => ExpressionType::EXPRESSION);
+        return array('base_expr' => '', 'dir' => 'ASC', 'expr_type' => ExpressionType::EXPRESSION);
     }
 
     protected function processOrderExpression(&$parseInfo, $select) {
         $parseInfo['base_expr'] = trim($parseInfo['base_expr']);
 
-        if ($parseInfo['base_expr'] === "") {
+        if ($parseInfo['base_expr'] === '') {
             return false;
         }
 
@@ -111,11 +111,11 @@ class OrderByProcessor extends AbstractProcessor {
                 break;
 
             case 'DESC':
-                $parseInfo['dir'] = "DESC";
+                $parseInfo['dir'] = 'DESC';
                 break;
 
             case 'ASC':
-                $parseInfo['dir'] = "ASC";
+                $parseInfo['dir'] = 'ASC';
                 break;
 
             default:

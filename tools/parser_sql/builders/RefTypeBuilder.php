@@ -53,13 +53,13 @@ class RefTypeBuilder {
 
     public function build($parsed) {
         if ($parsed === false) {
-            return "";
+            return '';
         }
         if ($parsed === 'ON') {
-            return " ON ";
+            return ' ON ';
         }
         if ($parsed === 'USING') {
-            return " USING ";
+            return ' USING ';
         }
         // TODO: add more
         throw new UnsupportedFeatureException($parsed);

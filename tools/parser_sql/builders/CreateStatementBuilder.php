@@ -71,10 +71,10 @@ class CreateStatementBuilder {
     public function build($parsed) {
         $sql = $this->buildCREATE($parsed);
         if (isset($parsed['LIKE'])) {
-            $sql .= " " . $this->buildLIKE($parsed['LIKE']);
+            $sql .= ' ' . $this->buildLIKE($parsed['LIKE']);
         }
         if (isset($parsed['SELECT'])) {
-            $sql .= " " . $this->buildSelectStatement($parsed);
+            $sql .= ' ' . $this->buildSelectStatement($parsed);
         }
         return $sql;
     }

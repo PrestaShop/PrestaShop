@@ -70,7 +70,7 @@ function deactivate_custom_modules()
     		WHERE name NOT IN ('.implode(',', $arrNativeModules).') ');
     }
 
-    $uninstallMe = array("undefined-modules");
+    $uninstallMe = array('undefined-modules');
     if (is_array($arrNonNative)) {
         foreach ($arrNonNative as $k => $aModule) {
             $uninstallMe[(int)$aModule['id_module']] = $aModule['name'];

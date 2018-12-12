@@ -67,9 +67,9 @@ class LikeExpressionBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::LIKE) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildReserved($v);
@@ -79,7 +79,7 @@ class LikeExpressionBuilder {
                 throw new UnableToCreateSQLException('CREATE TABLE create-def (like) subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
         return substr($sql, 0, -1);
     }

@@ -78,9 +78,9 @@ class SetExpressionBuilder {
     
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildColRef($v);
@@ -92,7 +92,7 @@ class SetExpressionBuilder {
                 throw new UnableToCreateSQLException('SET expression subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
         $sql = substr($sql, 0, -1);
         return $sql;

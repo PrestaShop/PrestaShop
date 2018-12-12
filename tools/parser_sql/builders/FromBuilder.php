@@ -70,7 +70,7 @@ class FromBuilder {
     }
 
     public function build($parsed) {
-        $sql = "";
+        $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildTable($v, $k);
@@ -81,7 +81,7 @@ class FromBuilder {
                 throw new UnableToCreateSQLException('FROM', $k, $v, 'expr_type');
             }
         }
-        return "FROM " . $sql;
+        return 'FROM ' . $sql;
     }
 }
 ?>

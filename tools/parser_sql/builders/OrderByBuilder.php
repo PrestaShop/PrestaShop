@@ -69,7 +69,7 @@ class OrderByBuilder {
     }
 
     public function build($parsed) {
-        $sql = "";
+        $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildOrderByAlias($v);
@@ -80,10 +80,10 @@ class OrderByBuilder {
                 throw new UnableToCreateSQLException('ORDER', $k, $v, 'expr_type');
             }
 
-            $sql .= ", ";
+            $sql .= ', ';
         }
         $sql = substr($sql, 0, -2);
-        return "ORDER BY " . $sql;
+        return 'ORDER BY ' . $sql;
     }
 }
 ?>

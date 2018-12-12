@@ -45,18 +45,18 @@ class Core_Crypto_Hashing_Test extends TestCase
 
     public function testSimpleCheckHashMd5()
     {
-        $this->assertTrue($this->hashing->checkHash("123", md5(_COOKIE_KEY_."123"), _COOKIE_KEY_));
-        $this->assertFalse($this->hashing->checkHash("23", md5(_COOKIE_KEY_."123"), _COOKIE_KEY_));
+        $this->assertTrue($this->hashing->checkHash('123', md5(_COOKIE_KEY_.'123'), _COOKIE_KEY_));
+        $this->assertFalse($this->hashing->checkHash('23', md5(_COOKIE_KEY_.'123'), _COOKIE_KEY_));
     }
 
     public function testSimpleEncrypt()
     {
-        $this->assertInternalType('string', $this->hashing->hash("123", _COOKIE_KEY_));
+        $this->assertInternalType('string', $this->hashing->hash('123', _COOKIE_KEY_));
     }
 
     public function testSimpleFirstHash()
     {
-        $this->assertTrue($this->hashing->isFirstHash("123", $this->hashing->hash("123", _COOKIE_KEY_), _COOKIE_KEY_));
-        $this->assertFalse($this->hashing->isFirstHash("123", md5("123", _COOKIE_KEY_), _COOKIE_KEY_));
+        $this->assertTrue($this->hashing->isFirstHash('123', $this->hashing->hash('123', _COOKIE_KEY_), _COOKIE_KEY_));
+        $this->assertFalse($this->hashing->isFirstHash('123', md5('123', _COOKIE_KEY_), _COOKIE_KEY_));
     }
 }

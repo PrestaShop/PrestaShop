@@ -71,9 +71,9 @@ class ColumnTypeBuilder {
     
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::COLUMN_TYPE) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildDataType($v);
@@ -84,7 +84,7 @@ class ColumnTypeBuilder {
                 throw new UnableToCreateSQLException('CREATE TABLE column-type subtree', $k, $v, 'expr_type');
             }
     
-            $sql .= " ";
+            $sql .= ' ';
         }
     
         return substr($sql, 0, -1);

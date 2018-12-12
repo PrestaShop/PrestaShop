@@ -53,16 +53,16 @@ class JoinBuilder {
 
     public function build($parsed) {
         if ($parsed === 'CROSS') {
-            return ", ";
+            return ', ';
         }
         if ($parsed === 'JOIN') {
-            return " INNER JOIN ";
+            return ' INNER JOIN ';
         }
         if ($parsed === 'LEFT') {
-            return " LEFT JOIN ";
+            return ' LEFT JOIN ';
         }
         if ($parsed === 'RIGHT') {
-            return " RIGHT JOIN ";
+            return ' RIGHT JOIN ';
         }
         // TODO: add more
         throw new UnsupportedFeatureException($parsed);

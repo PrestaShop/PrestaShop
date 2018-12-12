@@ -54,7 +54,7 @@ class RecordProcessor extends AbstractProcessor {
 
         foreach ($values as $k => $v) {
             if ($this->isCommaToken($v)) {
-                $values[$k] = "";
+                $values[$k] = '';
             }
         }
         return $this->expressionListProcessor->process($values);

@@ -61,7 +61,7 @@ class SetProcessor extends AbstractProcessor {
 
     public function process($tokens, $isUpdate = false) {
         $result = array();
-        $baseExpr = "";
+        $baseExpr = '';
         $assignment = false;
         $varType = false;
 
@@ -73,8 +73,8 @@ class SetProcessor extends AbstractProcessor {
             case 'SESSION':
             case 'GLOBAL':
                 if (!$isUpdate) {
-                    $varType = $this->getVariableType("@@" . $upper . ".");
-                    $baseExpr = "";
+                    $varType = $this->getVariableType('@@' . $upper . '.');
+                    $baseExpr = '';
                     continue 2;
                 }
                 break;
@@ -85,7 +85,7 @@ class SetProcessor extends AbstractProcessor {
                     $assignment['sub_tree'][0]['expr_type'] = $varType;
                 }
                 $result[] = $assignment;
-                $baseExpr = "";
+                $baseExpr = '';
                 $varType = false;
                 continue 2;
 
@@ -94,7 +94,7 @@ class SetProcessor extends AbstractProcessor {
             $baseExpr .= $token;
         }
 
-        if (trim($baseExpr) !== "") {
+        if (trim($baseExpr) !== '') {
             $assignment = $this->getAssignment($baseExpr);
             if (!$isUpdate && $varType !== false) {
                 $assignment['sub_tree'][0]['expr_type'] = $varType;

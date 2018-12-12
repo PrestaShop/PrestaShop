@@ -86,7 +86,7 @@ class PHPSQLLexer {
         }
 
         $tokens = array();
-        $token = "";
+        $token = '';
 
         $splitLen = $this->splitters->getMaxLengthOfSplitter();
         $found = false;
@@ -99,13 +99,13 @@ class PHPSQLLexer {
                 $substr = substr($sql, $pos, $i);
                 if ($this->splitters->isSplitter($substr)) {
 
-                    if ($token !== "") {
+                    if ($token !== '') {
                         $tokens[] = $token;
                     }
 
                     $tokens[] = $substr;
                     $pos += $i;
-                    $token = "";
+                    $token = '';
 
                     continue 2;
                 }
@@ -115,7 +115,7 @@ class PHPSQLLexer {
             $pos++;
         }
 
-        if ($token !== "") {
+        if ($token !== '') {
             $tokens[] = $token;
         }
 
@@ -145,12 +145,12 @@ class PHPSQLLexer {
             if ($userdef !== false) {
                 $tokens[$userdef] .= $token;
                 unset($tokens[$i]);
-                if ($token !== "@") {
+                if ($token !== '@') {
                     $userdef = false;
                 }
             }
 
-            if ($userdef === false && $token === "@") {
+            if ($userdef === false && $token === '@') {
                 $userdef = $i;
             }
 
@@ -182,17 +182,17 @@ class PHPSQLLexer {
                     unset($tokens[$i]);
                     $tokens[$comment] .= $token;
                 }
-                if ($inline === false && ($token === "*/")) {
+                if ($inline === false && ($token === '*/')) {
                     $comment = false;
                 }
             }
 
-            if (($comment === false) && ($token === "--")) {
+            if (($comment === false) && ($token === '--')) {
                 $comment = $i;
                 $inline = true;
             }
 
-            if (($comment === false) && ($token === "/*")) {
+            if (($comment === false) && ($token === '/*')) {
                 $comment = $i;
                 $inline = false;
             }
@@ -204,7 +204,7 @@ class PHPSQLLexer {
     }
 
     protected function isBacktick($token) {
-        return ($token === "'" || $token === "\"" || $token === "`");
+        return ($token === "'" || $token === '"' || $token === '`');
     }
 
     protected function balanceBackticks($tokens) {
@@ -274,7 +274,7 @@ class PHPSQLLexer {
                 continue;
             }
 
-            if ($tokens[$i][0] === ".") {
+            if ($tokens[$i][0] === '.') {
 
                 // concat the previous tokens, till the token has been changed
                 $k = $i - 1;
@@ -317,7 +317,7 @@ class PHPSQLLexer {
         $i = 0;
         while ($i < $tokenCount) {
 
-            if ($this->endsWith($tokens[$i], "\\")) {
+            if ($this->endsWith($tokens[$i], '\\')) {
                 $i++;
                 if (isset($tokens[$i])) {
                     $tokens[$i - 1] .= $tokens[$i];

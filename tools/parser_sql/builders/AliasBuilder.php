@@ -55,13 +55,13 @@ class AliasBuilder {
 
     public function build($parsed) {
         if (!isset($parsed['alias']) || $parsed['alias'] === false) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         if ($parsed['alias']['as']) {
-            $sql .= " as";
+            $sql .= ' as';
         }
-        $sql .= " " . $parsed['alias']['name'];
+        $sql .= ' ' . $parsed['alias']['name'];
         return $sql;
     }
 }

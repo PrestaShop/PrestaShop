@@ -48,7 +48,7 @@ class DropProcessor extends AbstractProcessor {
     public function process($tokenList) {
         $skip = 0;
         $warning = true;
-        $base_expr = "";
+        $base_expr = '';
         $expr_type = false;
         $option = false;
         $resultList = array();
@@ -90,7 +90,7 @@ class DropProcessor extends AbstractProcessor {
 
             case ',':
                 $resultList[] = array('expr_type' => $expr_type, 'base_expr' => $base_expr);
-                $base_expr = "";
+                $base_expr = '';
                 break;
 
             default:
@@ -98,7 +98,7 @@ class DropProcessor extends AbstractProcessor {
             }
         }
 
-        if ($base_expr !== "") {
+        if ($base_expr !== '') {
             $resultList[] = array('expr_type' => $expr_type, 'base_expr' => $base_expr);
         }
 

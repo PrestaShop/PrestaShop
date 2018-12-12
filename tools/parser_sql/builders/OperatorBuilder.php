@@ -53,7 +53,7 @@ class OperatorBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::OPERATOR) {
-            return "";
+            return '';
         }
         return $parsed['base_expr'];
     }

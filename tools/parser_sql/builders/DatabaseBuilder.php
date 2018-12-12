@@ -53,7 +53,7 @@ class DatabaseBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::DATABASE) {
-            return "";
+            return '';
         }
         return $parsed['base_expr'];
     }

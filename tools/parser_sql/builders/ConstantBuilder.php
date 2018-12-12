@@ -59,7 +59,7 @@ class ConstantBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::CONSTANT) {
-            return "";
+            return '';
         }
         $sql = $parsed['base_expr'];
         $sql .= $this->buildAlias($parsed);

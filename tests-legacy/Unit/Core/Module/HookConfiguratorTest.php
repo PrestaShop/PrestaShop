@@ -58,22 +58,22 @@ class HookConfiguratorTest extends UnitTestCase
     public function testSingleModuleAppendedToHook()
     {
         $this->setCurrentDisplayHooksConfiguration([
-            "displayTop" => [
-                "block_already_here"
+            'displayTop' => [
+                'block_already_here'
             ]
         ]);
 
         $expected = [
-            "displayTop" => [
-                "block_already_here",
-                "blocklanguages"
+            'displayTop' => [
+                'block_already_here',
+                'blocklanguages'
             ]
         ];
 
         $actual = $this->hookConfigurator->getThemeHooksConfiguration([
-            "displayTop" => [
+            'displayTop' => [
                 null,
-                "blocklanguages"
+                'blocklanguages'
             ]
         ]);
 
@@ -83,30 +83,30 @@ class HookConfiguratorTest extends UnitTestCase
     public function testSingleModuleAppendedToHookWithExceptions()
     {
         $this->setCurrentDisplayHooksConfiguration([
-            "displayTop" => [
-                "block_already_here"
+            'displayTop' => [
+                'block_already_here'
             ]
         ]);
 
         $expected = [
-            "displayTop" => [
-                "block_already_here",
-                "blocklanguages" => [
-                    "except_pages" => [
-                        "category",
-                        "product"
+            'displayTop' => [
+                'block_already_here',
+                'blocklanguages' => [
+                    'except_pages' => [
+                        'category',
+                        'product'
                     ]
                 ]
             ]
         ];
 
         $actual = $this->hookConfigurator->getThemeHooksConfiguration([
-            "displayTop" => [
+            'displayTop' => [
                 null,
-                "blocklanguages" => [
-                    "except_pages" => [
-                        "category",
-                        "product"
+                'blocklanguages' => [
+                    'except_pages' => [
+                        'category',
+                        'product'
                     ]
                 ]
             ]
@@ -118,24 +118,24 @@ class HookConfiguratorTest extends UnitTestCase
     public function testMultipleModulesAppendedToHook()
     {
         $this->setCurrentDisplayHooksConfiguration([
-            "displayTop" => [
-                "block_already_here"
+            'displayTop' => [
+                'block_already_here'
             ]
         ]);
 
         $expected = [
-            "displayTop" => [
-                "block_already_here",
-                "blocklanguages",
-                "blockcurrencies"
+            'displayTop' => [
+                'block_already_here',
+                'blocklanguages',
+                'blockcurrencies'
             ]
         ];
 
         $actual = $this->hookConfigurator->getThemeHooksConfiguration([
-            "displayTop" => [
+            'displayTop' => [
                 null,
-                "blocklanguages",
-                "blockcurrencies"
+                'blocklanguages',
+                'blockcurrencies'
             ]
         ]);
 
@@ -145,25 +145,25 @@ class HookConfiguratorTest extends UnitTestCase
     public function testMultipleTildeInHookModuleList()
     {
         $this->setCurrentDisplayHooksConfiguration([
-            "displayTop" => [
-                "block_already_here"
+            'displayTop' => [
+                'block_already_here'
             ]
         ]);
 
         $expected = [
-            "displayTop" => [
-                "block_already_here",
-                "blocklanguages",
-                "blockcurrencies"
+            'displayTop' => [
+                'block_already_here',
+                'blocklanguages',
+                'blockcurrencies'
             ]
         ];
 
         $actual = $this->hookConfigurator->getThemeHooksConfiguration([
-            "displayTop" => [
+            'displayTop' => [
                 null,
-                "blocklanguages",
+                'blocklanguages',
                 null,
-                "blockcurrencies",
+                'blockcurrencies',
                 null,
             ]
         ]);
@@ -174,21 +174,21 @@ class HookConfiguratorTest extends UnitTestCase
     public function testSingleModulePrependedToHook()
     {
         $this->setCurrentDisplayHooksConfiguration([
-            "displayTop" => [
-                "block_already_here"
+            'displayTop' => [
+                'block_already_here'
             ]
         ]);
 
         $expected = [
-            "displayTop" => [
-                "blocklanguages",
-                "block_already_here"
+            'displayTop' => [
+                'blocklanguages',
+                'block_already_here'
             ]
         ];
 
         $actual = $this->hookConfigurator->getThemeHooksConfiguration([
-            "displayTop" => [
-                "blocklanguages",
+            'displayTop' => [
+                'blocklanguages',
                 null
             ]
         ]);
@@ -199,23 +199,23 @@ class HookConfiguratorTest extends UnitTestCase
     public function testMultipleModulesPrependedToHook()
     {
         $this->setCurrentDisplayHooksConfiguration([
-            "displayTop" => [
-                "block_already_here"
+            'displayTop' => [
+                'block_already_here'
             ]
         ]);
 
         $expected = [
-            "displayTop" => [
-                "blocklanguages",
-                "blockcurrencies",
-                "block_already_here"
+            'displayTop' => [
+                'blocklanguages',
+                'blockcurrencies',
+                'block_already_here'
             ]
         ];
 
         $actual = $this->hookConfigurator->getThemeHooksConfiguration([
-            "displayTop" => [
-                "blocklanguages",
-                "blockcurrencies",
+            'displayTop' => [
+                'blocklanguages',
+                'blockcurrencies',
                 null
             ]
         ]);
@@ -226,22 +226,22 @@ class HookConfiguratorTest extends UnitTestCase
     public function testModulesHookedAreReplaced()
     {
         $this->setCurrentDisplayHooksConfiguration([
-            "displayTop" => [
-                "block_already_here"
+            'displayTop' => [
+                'block_already_here'
             ]
         ]);
 
         $expected = [
-            "displayTop" => [
-                "blocklanguages",
-                "blockcurrencies"
+            'displayTop' => [
+                'blocklanguages',
+                'blockcurrencies'
             ]
         ];
 
         $actual = $this->hookConfigurator->getThemeHooksConfiguration([
-            "displayTop" => [
-                "blocklanguages",
-                "blockcurrencies"
+            'displayTop' => [
+                'blocklanguages',
+                'blockcurrencies'
             ]
         ]);
 
@@ -251,25 +251,25 @@ class HookConfiguratorTest extends UnitTestCase
     public function testWhenAModuleIsHookedItIsUnhookedFromCurrentDisplayHooks()
     {
         $this->setCurrentDisplayHooksConfiguration([
-            "displayTop" => [
-                "blocklanguages"
+            'displayTop' => [
+                'blocklanguages'
             ],
-            "displayNav" => [
-                "block_already_here"
+            'displayNav' => [
+                'block_already_here'
             ]
         ]);
 
         $expected = [
-            "displayTop" => [
+            'displayTop' => [
             ],
-            "displayNav" => [
-                "blocklanguages"
+            'displayNav' => [
+                'blocklanguages'
             ]
         ];
 
         $actual = $this->hookConfigurator->getThemeHooksConfiguration([
-            "displayNav" => [
-                "blocklanguages"
+            'displayNav' => [
+                'blocklanguages'
             ]
         ]);
 
@@ -279,8 +279,8 @@ class HookConfiguratorTest extends UnitTestCase
     public function testNewHookIsCreated()
     {
         $config = [
-            "displayTop" => [
-                "blocklanguages"
+            'displayTop' => [
+                'blocklanguages'
             ]
         ];
         $this->setCurrentDisplayHooksConfiguration([]);

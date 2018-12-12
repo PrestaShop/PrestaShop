@@ -53,7 +53,7 @@ class UserVariableBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::USER_VARIABLE) {
-            return "";
+            return '';
         }
         return $parsed['base_expr'];
     }

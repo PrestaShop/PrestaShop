@@ -32,8 +32,8 @@ use PHPUnit\Framework\TestCase;
 
 class ModuleManagerTest extends TestCase
 {
-    const UNINSTALLED_MODULE = "uninstalled-module";
-    const INSTALLED_MODULE = "installed-module";
+    const UNINSTALLED_MODULE = 'uninstalled-module';
+    const INSTALLED_MODULE = 'installed-module';
 
     private $moduleManager;
     private $adminModuleProviderS;

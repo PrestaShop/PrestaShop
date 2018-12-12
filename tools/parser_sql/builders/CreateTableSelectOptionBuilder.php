@@ -51,7 +51,7 @@ class CreateTableSelectOptionBuilder {
 
     public function build($parsed) {
         if (!isset($parsed['select-option']) || $parsed['select-option'] === false) {
-            return "";
+            return '';
         }
         $option = $parsed['select-option'];
 

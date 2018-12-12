@@ -50,7 +50,7 @@ class ValuesProcessor extends AbstractProcessor {
     }
 
     public function process($tokens) {
-        $unparsed = "";
+        $unparsed = '';
         foreach ($tokens['VALUES'] as $k => $v) {
             if ($this->isWhitespaceToken($v)) {
                 continue;

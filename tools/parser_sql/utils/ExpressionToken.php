@@ -38,9 +38,9 @@ class ExpressionToken {
     private $upper;
     private $noQuotes;
 
-    public function __construct($key = "", $token = "") {
+    public function __construct($key = '', $token = '') {
         $this->subTree = false;
-        $this->expression = "";
+        $this->expression = '';
         $this->key = $key;
         $this->token = $token;
         $this->tokenType = false;
@@ -97,11 +97,11 @@ class ExpressionToken {
     }
 
     public function isWhitespaceToken() {
-        return ($this->trim === "");
+        return ($this->trim === '');
     }
 
     public function isCommaToken() {
-        return ($this->trim === ",");
+        return ($this->trim === ',');
     }
 
     public function isVariableToken() {
@@ -109,7 +109,7 @@ class ExpressionToken {
     }
 
     public function isSubQueryToken() {
-        return preg_match("/^\\(\\s*SELECT/i", $this->trim);
+        return preg_match('/^\\(\\s*SELECT/i', $this->trim);
     }
 
     public function isExpression() {
