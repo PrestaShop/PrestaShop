@@ -4647,7 +4647,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 foreach ($positions as $position => $value) {
                     $pos = explode('_', $value);
 
-                    if ((isset($pos[1], $pos[2])  ) && ($pos[1] == $id_category && (int)$pos[2] === $id_product)) {
+                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product)) {
                         if ($product = new Product((int)$pos[2])) {
                             if (isset($position) && $product->updatePosition($way, $position)) {
                                 $category = new Category((int)$id_category);

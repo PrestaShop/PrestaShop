@@ -301,13 +301,13 @@ class gamification extends Module
                     $this->processImportConditions($data->conditions, $id_lang);
                 }
 
-                if ((isset($data->badges, $data->badges_lang)  ) && (!isset($data->badges_only_visible_awb) && !isset($data->badges_only_visible_lang_awb))) {
+                if ((isset($data->badges, $data->badges_lang)) && (!isset($data->badges_only_visible_awb) && !isset($data->badges_only_visible_lang_awb))) {
                     $this->processImportBadges($data->badges, $data->badges_lang, $id_lang);
                 } else {
                     $this->processImportBadges(array_merge($data->badges_only_visible_awb, $data->badges), array_merge($data->badges_only_visible_lang_awb, $data->badges_lang), $id_lang);
                 }
 
-                if (isset($data->advices, $data->advices_lang)  ) {
+                if (isset($data->advices, $data->advices_lang)) {
                     $this->processImportAdvices($data->advices, $data->advices_lang, $id_lang);
                 }
 
@@ -317,7 +317,7 @@ class gamification extends Module
                     }
                 }
 
-                if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true && isset($data->advices_16, $data->advices_lang_16)  ) {
+                if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true && isset($data->advices_16, $data->advices_lang_16)) {
                     $this->processImportAdvices($data->advices_16, $data->advices_lang_16, $id_lang);
                 }
             }
