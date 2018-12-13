@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
@@ -110,7 +111,7 @@ class CustomerController extends AbstractAdminController
                 ]);
             }
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/create.html.twig', [
@@ -155,7 +156,7 @@ class CustomerController extends AbstractAdminController
                 ]);
             }
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             if ($e instanceof CustomerNotFoundException) {
                 return $this->redirectToRoute('admin_customers_index');
@@ -247,7 +248,7 @@ class CustomerController extends AbstractAdminController
             } catch (CustomerException $e) {
                 $this->addFlash(
                     'error',
-                    $this->getErrorMessageForException($e, $this->getErrorMessages())
+                    $this->getErrorMessageForException($e, $this->getErrorMessages($e))
                 );
             }
         }
@@ -277,7 +278,7 @@ class CustomerController extends AbstractAdminController
             $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_customers_view', [
@@ -350,20 +351,23 @@ class CustomerController extends AbstractAdminController
     /**
      * Get errors that can be used to translate exceptions into user friendly messages
      *
+     * @param CustomerException $e
+     *
      * @return array
      */
-    private function getErrorMessages()
+    private function getErrorMessages(CustomerException $e)
     {
         return [
             CustomerNotFoundException::class => $this->trans(
                 'This customer does not exist.',
                 'Admin.Orderscustomers.Notification'
             ),
+            DuplicateCustomerEmailException::class => sprintf(
+                '%s %s',
+                $this->trans('An account already exists for this email address:', 'Admin.Orderscustomers.Notification'),
+                $e instanceof DuplicateCustomerEmailException ? $e->getEmail()->getValue() : ''
+            ),
             CustomerConstraintException::class => [
-                CustomerConstraintException::DUPLICATE_EMAIL => $this->trans(
-                    'A registered customer account using the defined email address already exists. ',
-                    'Admin.Orderscustomers.Notification'
-                ),
                 CustomerConstraintException::INVALID_PASSWORD => $this->trans(
                     'Password should be at least %length% characters long.',
                     'Admin.Orderscustomers.Help',
@@ -378,6 +382,16 @@ class CustomerController extends AbstractAdminController
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Last name', 'Admin.Global'))]
+                ),
+                CustomerConstraintException::INVALID_EMAIL => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Email', 'Admin.Global'))]
+                ),
+                CustomerConstraintException::INVALID_BIRTHDAY => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Birthday', 'Admin.Orderscustomers.Feature'))]
                 ),
             ],
             CustomerTransformationException::class => [
