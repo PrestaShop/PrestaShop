@@ -277,7 +277,6 @@ class CustomerController extends AbstractAdminController
             $this->getCommandBus()->handle(new TransformGuestToCustomerCommand(new CustomerId((int) $customerId)));
 
             $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-
         } catch (CustomerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
