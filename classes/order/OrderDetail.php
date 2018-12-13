@@ -461,8 +461,9 @@ class OrderDetailCore extends ObjectModel
         return Db::getInstance()->executeS($sql);
     }
 
-    /*
+    /**
      * Set virtual product information
+     *
      * @param array $product
      */
     protected function setVirtualProductInformation($product)
@@ -733,9 +734,10 @@ class OrderDetailCore extends ObjectModel
             $this->create($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse);
         }
 
-        unset($this->vat_address);
-        unset($products);
-        unset($this->customer);
+        unset(
+            $this->vat_address,
+            $products, $this->customer
+        );
     }
 
     /**

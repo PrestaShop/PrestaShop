@@ -80,7 +80,7 @@ class CartRulesCarrierSpecificTest extends AbstractCarrierTest
                 'carrierId'            => 1,
             ],
             ' carrier #1: one product in cart, quantity 1'        => [
-                'products'             => [1 => 1,],
+                'products'             => [1 => 1],
                 'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
                 + static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
                 + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
@@ -102,7 +102,7 @@ class CartRulesCarrierSpecificTest extends AbstractCarrierTest
             ],
             // following is testing the bug http://forge.prestashop.com/browse/BOOM-3307
             ' carrier #2 (voucher specific): one product in cart, quantity 1'        => [
-                'products'             => [1 => 1,],
+                'products'             => [1 => 1],
                 'expectedTotal'        => (1 - static::CART_RULES_FIXTURES[1]['percent'] / 100)
                 * static::PRODUCT_FIXTURES[1]['price']
                 + static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]

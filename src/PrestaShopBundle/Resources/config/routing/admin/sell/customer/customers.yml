@@ -56,3 +56,10 @@ admin_customers_transform_guest_to_customer:
     _legacy_controller: AdminCustomers
   requirements:
     customerId: \d+
+
+admin_customers_set_required_fields:
+  path: /set-required-fields
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:setRequiredFields
+    _legacy_controller: AdminCustomers

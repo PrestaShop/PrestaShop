@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Unit\Core\Stock;
 
-use Exception;
 use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 

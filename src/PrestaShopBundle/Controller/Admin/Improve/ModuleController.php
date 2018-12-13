@@ -214,7 +214,7 @@ class ModuleController extends ModuleAbstractController
      */
     public function configureModuleAction($module_name)
     {
-        /* @var UrlGeneratorInterface $legacyUrlGenerator */
+        /** @var UrlGeneratorInterface $legacyUrlGenerator */
         $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
         $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
         $legacyContext = $legacyContextProvider->getContext();
@@ -779,7 +779,7 @@ class ModuleController extends ModuleAbstractController
      */
     private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
     {
-        /* @var CategoriesProvider */
+        /** @var CategoriesProvider */
         $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
 
         foreach ($categories['categories']->subMenu as $category) {

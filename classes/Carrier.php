@@ -1073,7 +1073,7 @@ class CarrierCore extends ObjectModel
      */
     public static function getCarrierByReference($id_reference, $id_lang = null)
     {
-        // @todo class var $table must became static. here I have to use 'carrier' because this method is static
+        /** @todo class var $table must became static. here I have to use 'carrier' because this method is static */
         $id_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `' . _DB_PREFIX_ . 'carrier`
 			WHERE id_reference = ' . (int) $id_reference . ' AND deleted = 0 ORDER BY id_carrier DESC');
         if (!$id_carrier) {

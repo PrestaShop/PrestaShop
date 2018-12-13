@@ -70,6 +70,8 @@ use Validate;
 
 /**
  * Handles commands which gets customer for viewing in Back Office.
+ *
+ * @internal
  */
 final class GetCustomerForViewingHandler implements GetCustomerForViewingHandlerInterface
 {

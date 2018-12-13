@@ -51,7 +51,7 @@ class AdminThemesControllerCore extends AdminController
     protected $authAccesses = array();
     protected $img_error;
 
-    /* @var LogoUploader $logo_uploader */
+    /** @var LogoUploader $logo_uploader */
     protected $logo_uploader;
 
     public function __construct()

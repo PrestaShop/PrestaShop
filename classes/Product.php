@@ -211,7 +211,7 @@ class ProductCore extends ObjectModel
     /** @var string Object last modification date */
     public $date_upd;
 
-    /*** @var array Tags */
+    /** @var array Tags */
     public $tags;
 
     /** @var int temporary or saved object */
@@ -757,7 +757,7 @@ class ProductCore extends ObjectModel
         return $result;
     }
 
-    /*
+    /**
      * Reorder product position in category $id_category.
      * Call it after deleting a product from a category.
      *
@@ -3777,7 +3777,7 @@ class ProductCore extends ObjectModel
 
     public static function isAvailableWhenOutOfStock($out_of_stock)
     {
-        // @TODO 1.5.0 Update of STOCK_MANAGEMENT & ORDER_OUT_OF_STOCK
+        /** @TODO 1.5.0 Update of STOCK_MANAGEMENT & ORDER_OUT_OF_STOCK */
         $ps_stock_management = Configuration::get('PS_STOCK_MANAGEMENT');
 
         if (!$ps_stock_management) {
@@ -4987,12 +4987,13 @@ class ProductCore extends ObjectModel
         return $results_array;
     }
 
-    /*
-    * Select all features for a given language
-    *
-    * @param $id_lang Language id
-    * @return array Array with feature's data
-    */
+    /**
+     * Select all features for a given language
+     *
+     * @param $id_lang Language id
+     *
+     * @return array Array with feature's data
+     */
     public static function getFrontFeaturesStatic($id_lang, $id_product)
     {
         if (!Feature::isFeatureActive()) {
@@ -5723,8 +5724,10 @@ class ProductCore extends ObjectModel
                     $rows[$keyrow]['id'] = $feature;
                     unset($rows[$keyrow]['id_feature']);
                 }
-                unset($rows[$keyrow]['id_product']);
-                unset($rows[$keyrow]['custom']);
+                unset(
+                    $rows[$keyrow]['id_product'],
+                    $rows[$keyrow]['custom']
+                );
             }
             asort($rows[$keyrow]);
         }

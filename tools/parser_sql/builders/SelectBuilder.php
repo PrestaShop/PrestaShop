@@ -115,4 +115,3 @@ class SelectBuilder {
         return "SELECT " . $sql;
     }
 }
-?>

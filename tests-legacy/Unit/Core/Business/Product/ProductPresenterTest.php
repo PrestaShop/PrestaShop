@@ -29,12 +29,7 @@ namespace LegacyTests\Unit\Core\Product;
 use Phake;
 use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
-use PrestaShop\PrestaShop\Core\Price\PricePresenterInterface;
-use Product;
 use Language;
-use Link;
-use Context;
-use Adapter_ProductPriceCalculator;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter as BasePricePresenter;
 
 class PriceFormatter extends BasePricePresenter

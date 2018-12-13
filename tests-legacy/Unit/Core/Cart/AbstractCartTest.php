@@ -35,7 +35,6 @@ use Context;
 use CustomizationField;
 use DateInterval;
 use DateTime;
-use Db;
 use LegacyTests\TestCase\IntegrationTestCase;
 use Product;
 use Pack;

@@ -445,4 +445,3 @@ class SQLProcessor extends SQLChunkProcessor {
         return parent::process($out);
     }
 }
-?>

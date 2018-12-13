@@ -92,5 +92,3 @@ class LexerSplitter {
         return isset($this->hashSet[$token]);
     }
 }
-
-?>

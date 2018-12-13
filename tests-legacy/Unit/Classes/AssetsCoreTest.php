@@ -90,7 +90,7 @@ class AssetsCoreTest extends TestCase
                     $expectedAsset = $asset;
                 }
             }
-        } else if ('js' === $type) {
+        } elseif ('js' === $type) {
             foreach ($this->listJS as $asset) {
                 if ($asset['id'] === $id) {
                     $found = true;

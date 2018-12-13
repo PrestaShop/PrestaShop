@@ -137,4 +137,3 @@ class ExplainProcessor extends AbstractProcessor {
         return empty($expr) ? null : $expr;
     }
 }
-?>

@@ -54,8 +54,11 @@ class PageCore extends ObjectModel
         $controller = Dispatcher::getInstance()->getController();
         $pageTypeId = Page::getPageTypeByName($controller);
 
-        // Some pages must be distinguished in order to record exactly what is being seen
-        // @todo dispatcher module
+        /**
+         * Some pages must be distinguished in order to record exactly what is being seen
+         *
+         * @todo dispatcher module
+         */
         $specialArray = array(
             'product' => 'id_product',
             'category' => 'id_category',

@@ -198,7 +198,7 @@ class imageLib
 
 ## --------------------------------------------------------
 
-    function __construct($fileName)
+    public function __construct($fileName)
     # Author:     Jarrod Oberto
   # Date:     27-02-08
     # Purpose:    Constructor
@@ -214,7 +214,7 @@ class imageLib
             } else {
                 throw new Exception();
             }
-        };
+        }
 
         $this->initialise();
 
@@ -331,7 +331,7 @@ class imageLib
         } else {
             throw new Exception();
         }
-    };
+    }
 
     // *** Get optimal width and height - based on $option
     $dimensionsArray = $this->getDimensions($newWidth, $newHeight, $option);
@@ -403,7 +403,7 @@ class imageLib
         } else {
             throw new Exception();
         }
-    };
+    }
 
       $this->imageResized = $this->image;
       $this->crop($this->width, $this->height, $newWidth, $newHeight, $cropPos);
@@ -1733,21 +1733,21 @@ class imageLib
         } else {
             return array();
         }
-    };
+    }
       if (!file_exists($this->fileName)) {
           if ($debug) {
               throw new Exception('Image not found.');
           } else {
               return array();
           }
-      };
+      }
       if ($this->fileExtension != '.jpg') {
           if ($debug) {
               throw new Exception('Metadata not supported for this image type.');
           } else {
               return array();
           }
-      };
+      }
       $exifData = exif_read_data($this->fileName, 'IFD0');
 
     // *** Format the apperture value
@@ -2316,7 +2316,7 @@ class imageLib
 
         case 'tr':
           $width = $this->width - $assetWidth - $padding;
-          $height = 0 + $padding;;
+          $height = 0 + $padding;
           break;
 
         case 'l':
@@ -2449,7 +2449,7 @@ class imageLib
             } else {
                 throw new Exception();
             }
-        };
+        }
 
         // *** Get extension
         $extension = strrchr($file, '.');
@@ -2904,7 +2904,7 @@ class imageLib
 
   ## --------------------------------------------------------
 
-  function hex2dec($hex)
+  public function hex2dec($hex)
   # Purpose:  Convert #hex color to RGB
   {
       $color = str_replace('#', '', $hex);
@@ -3049,7 +3049,7 @@ class imageLib
 
   ## --------------------------------------------------------
 
-  function checkStringStartsWith($needle, $haystack)
+  public function checkStringStartsWith($needle, $haystack)
   # Check if a string starts with a specific pattern
   {
       return (substr($haystack, 0, strlen($needle))==$needle);

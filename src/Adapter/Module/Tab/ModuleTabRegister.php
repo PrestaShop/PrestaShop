@@ -275,9 +275,12 @@ class ModuleTabRegister
     {
         $this->checkIsValid($module->get('name'), $tabDetails);
 
-        // Legacy Tab, to be replaced with Doctrine entity when right management
-        // won't be directly linked to the tab creation
-        // @ToDo
+        /**
+         * Legacy Tab, to be replaced with Doctrine entity when right management
+         * won't be directly linked to the tab creation
+         *
+         * @ToDo
+         */
         $tab = new Tab();
         $tab->active = $tabDetails->getBoolean('visible', true);
         $tab->class_name = $tabDetails->get('class_name');

@@ -97,4 +97,3 @@ class TableExpressionBuilder {
         return $sql;
     }
 }
-?>

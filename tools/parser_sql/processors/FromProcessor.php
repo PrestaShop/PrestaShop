@@ -236,4 +236,3 @@ class FromProcessor extends AbstractProcessor {
     }
 
 }
-?>

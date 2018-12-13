@@ -528,8 +528,11 @@ class AdminProductsControllerCore extends AdminController
                     }
                 }
             }
-            unset($product->id);
-            unset($product->id_product);
+            unset(
+                $product->id,
+                $product->id_product
+            );
+
             $product->indexed = 0;
             $product->active = 0;
             if ($product->add()
@@ -1993,7 +1996,7 @@ class AdminProductsControllerCore extends AdminController
      */
     public function checkProduct()
     {
-        // @todo : the call_user_func seems to contains only statics values (className = 'Product')
+        /** @todo : the call_user_func seems to contains only statics values (className = 'Product') */
         $rules = call_user_func(array($this->className, 'getValidationRules'), $this->className);
         $default_language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         $languages = Language::getLanguages(false);

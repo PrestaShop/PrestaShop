@@ -756,8 +756,9 @@ class ToolsCore
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
 
-    /*
+    /**
      * Return a number well formatted
+     *
      * @param float $number A number
      * @param nullable $currency / not used anymaore
      */
@@ -3521,9 +3522,9 @@ exit;
     }
 
     /**
-     * @params string $path Path to scan
-     * @params string $ext Extention to filter files
-     * @params string $dir Add this to prefix output for example /path/dir/*
+     * @param string $path Path to scan
+     * @param string $ext Extention to filter files
+     * @param string $dir Add this to prefix output for example /path/dir/*
      *
      * @return array List of file found
      *
