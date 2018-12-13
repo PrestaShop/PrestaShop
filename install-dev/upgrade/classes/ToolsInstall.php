@@ -49,6 +49,7 @@ class ToolsInstall
      * $array['parent']['child'][1] = 'b';
      * ...And so on.
      * _____________________________________
+     *
      * @param simpleXMLElement $xml the XML to convert
      * @param bool $flattenValues    Choose wether to flatten values
      *                                    or to set them under a particular index.
@@ -65,6 +66,7 @@ class ToolsInstall
      *                            false. Defaults to "@attributes"
      * @param string $childrenKey        index for children, in case $flattenChildren was set to
      *                            false. Defaults to "@children"
+     *
      * @return array the resulting array.
      */
     public static function simpleXMLToArray($xml, $flattenValues = true, $flattenAttributes = true, $flattenChildren = true, $valueKey = '@value', $attributesKey = '@attributes', $childrenKey = '@children')

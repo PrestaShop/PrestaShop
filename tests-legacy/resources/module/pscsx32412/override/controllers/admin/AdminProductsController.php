@@ -1936,6 +1936,7 @@ class AdminProductsController extends AdminProductsControllerCore
      *
      * @param string $field Name of field
      * @param int $id_lang
+     *
      * @return bool
      */
     protected function isProductFieldUpdated($field, $id_lang = null)
@@ -1976,6 +1977,7 @@ class AdminProductsController extends AdminProductsControllerCore
      *
      * @param object $product Product
      * @param mixed $edit
+     *
      * @return bool
      */
     public function updateDownloadProduct($product, $edit = 0)
@@ -2072,6 +2074,7 @@ class AdminProductsController extends AdminProductsControllerCore
      * @param array Languages
      * @param object $product Product
      * @param mixed $languages
+     *
      * @return bool Update result
      */
     public function updateTags($languages, $product)
@@ -3038,6 +3041,7 @@ class AdminProductsController extends AdminProductsControllerCore
      * Get an array of pack items for display from the product object if specified, else from POST/GET values
      *
      * @param Product $product
+     *
      * @return array of pack items
      */
     public function getPackItems($product = null)
@@ -4608,6 +4612,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
     /**
      *  AdminProducts display hook
+     *
      * @param mixed $obj
      */
     public function initFormModules($obj)
@@ -4621,6 +4626,7 @@ class AdminProductsController extends AdminProductsControllerCore
      * if yes, add the pack items from input "inputPackItems"
      *
      * @param Product $product
+     *
      * @return bool
      */
     public function updatePackItems($product)

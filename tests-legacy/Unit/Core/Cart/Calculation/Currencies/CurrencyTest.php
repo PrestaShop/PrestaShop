@@ -81,6 +81,7 @@ class CurrencyTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider currencyDataProvider
+     *
      * @param mixed $productData
      * @param mixed $expectedTotal
      * @param mixed $cartRuleData

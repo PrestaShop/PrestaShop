@@ -203,6 +203,7 @@ class HookCore extends ObjectModel
 
     /**
      * Return hook ID from name.
+     *
      * @param mixed $hook_id
      */
     public static function getNameById($hook_id)

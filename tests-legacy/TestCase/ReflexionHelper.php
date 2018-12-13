@@ -31,6 +31,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class ReflexionHelper
+ *
  * @package LegacyTests\TestCase
  *
  * Provides utilities to access private or protected properties inside classes.

@@ -89,6 +89,7 @@ class SitemapControllerCore extends FrontController
 
     /**
      * @return array
+     *
      * @param mixed $cms
      */
     protected function getCmsTree($cms)

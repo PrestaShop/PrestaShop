@@ -132,6 +132,7 @@ class TreeBuilder
 
     /**
      * @return array
+     *
      * @param mixed $catalogue
      */
     public function makeTranslationsTree($catalogue)

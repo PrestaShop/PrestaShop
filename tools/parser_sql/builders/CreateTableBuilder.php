@@ -35,6 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: CreateTableBuilder.php 892 2013-12-31 00:21:33Z phosco@gmx.de $
  * 
  */

@@ -26,6 +26,7 @@
 
 /**
  * Allow call of Legacy classes from classes in /src and /tests
+ *
  * @see composer.json "files" property for custom autoloading
  */
 require_once __DIR__.'/config/defines.inc.php';

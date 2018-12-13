@@ -551,6 +551,7 @@ class ToolsCore
      * Change language in cookie while clicking on a flag.
      *
      * @return string iso code
+     *
      * @param null|mixed $cookie
      */
     public static function setCookieLanguage($cookie = null)
@@ -668,6 +669,7 @@ class ToolsCore
      * Set cookie currency from POST or default currency.
      *
      * @return Currency object
+     *
      * @param mixed $cookie
      */
     public static function setCurrency($cookie)
@@ -2266,6 +2268,7 @@ class ToolsCore
     /**
      * Converts SomethingLikeThis to something-like-this
      * The name comes from Perl, we like Perl.
+     *
      * @param mixed $string
      */
     public static function camelCaseToKebabCase($string)
@@ -2911,6 +2914,7 @@ exit;
 
     /**
      * Display a warning message indicating that the method is deprecated.
+     *
      * @param null|mixed $message
      */
     public static function displayAsDeprecated($message = null)
@@ -2930,6 +2934,7 @@ exit;
 
     /**
      * Display a warning message indicating that the parameter is deprecated.
+     *
      * @param mixed $parameter
      */
     public static function displayParameterAsDeprecated($parameter)
@@ -3052,6 +3057,7 @@ exit;
      * @desc try to open a zip file in order to check if it's valid
      *
      * @return bool success
+     *
      * @param mixed $from_file
      */
     public static function ZipTest($from_file)
@@ -3075,6 +3081,7 @@ exit;
      * @desc extract a zip file to the given directory
      *
      * @return bool success
+     *
      * @param mixed $from_file
      * @param mixed $to_dir
      */
@@ -3278,6 +3285,7 @@ exit;
 
     /**
      * Clear compile for Smarty.
+     *
      * @param null|mixed $smarty
      */
     public static function clearCompile($smarty = null)
@@ -3309,6 +3317,7 @@ exit;
 
     /**
      * Clear Symfony cache.
+     *
      * @param null|mixed $env
      */
     public static function clearSf2Cache($env = null)
@@ -3364,6 +3373,7 @@ exit;
      * @since 1.5.0
      *
      * @return int the value of a configuration option in octet
+     *
      * @param mixed $option
      */
     public static function getOctets($option)
@@ -3934,6 +3944,7 @@ exit;
      * Allows to display the category description without HTML tags and slashes.
      *
      * @return string
+     *
      * @param mixed $description
      */
     public static function getDescriptionClean($description)

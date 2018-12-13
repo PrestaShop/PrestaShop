@@ -34,6 +34,7 @@
  * This class implements some helper functions.
  * 
  * @author arothe
+ *
  * @deprecated
  */
 class PHPSQLParserUtils {
@@ -74,6 +75,7 @@ class PHPSQLParserUtils {
 
     /**
      * Revokes the quoting characters from an expression
+     *
      * @param mixed $sql
      */
     protected function revokeQuotation($sql) {
@@ -88,6 +90,7 @@ class PHPSQLParserUtils {
     /**
      * This method removes parenthesis from start of the given string.
      * It removes also the associated closing parenthesis.
+     *
      * @param mixed $token
      */
     protected function removeParenthesisFromStart($token) {
@@ -141,6 +144,7 @@ class PHPSQLParserUtils {
 
     /**
      * translates an array of objects into an associative array
+     *
      * @param mixed $tokenList
      */
     public function toArray($tokenList) {

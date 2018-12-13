@@ -53,6 +53,7 @@ function bindDatepicker($id, $time)
 
 /**
  * @deprecated 1.5.3.0 Use Controller::addJqueryUi('ui.datepicker') instead
+ *
  * @param int|array $id ID can be a identifier or an array of identifiers
  * @param bool $time
  */
@@ -129,6 +130,7 @@ function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
  *
  * @param string $sql_date Date in SQL format (YYYY-MM-DD HH:mm:ss)
  * @param bool $with_time Display both date and time
+ *
  * @todo Several formats (french : DD-MM-YYYY)
  */
 function displayDate($sql_date, $with_time = false)
@@ -237,7 +239,9 @@ function checkPSVersion()
 
 /**
  * @deprecated 1.5.4.1 Use Translate::getAdminTranslation($string) instead
+ *
  * @param string $string
+ *
  * @return string
  */
 function translate($string)
@@ -257,6 +261,7 @@ function translate($string)
  * Returns a new Tab object
  *
  * @param string $tab class name
+ *
  * @return mixed(AdminTab, bool) tab object or false if failed
  */
 function checkingTab($tab)
@@ -290,6 +295,7 @@ function checkingTab($tab)
 
 /**
  * @TODO deprecate for Tab::checkTabRights()
+ *
  * @param mixed $id_tab
  */
 function checkTabRights($id_tab)
@@ -330,6 +336,7 @@ function checkTabRights($id_tab)
  * $array['parent']['child'][1] = 'b';
  * ...And so on.
  * _____________________________________
+ *
  * @param simpleXMLElement $xml the XML to convert
  * @param bool $flatten_values    Choose wether to flatten values
  *                                    or to set them under a particular index.
@@ -343,6 +350,7 @@ function checkTabRights($id_tab)
  * @param string $value_key            index for values, in case $flatten_values was set to false. Defaults to "@value"
  * @param string $attributes_key        index for attributes, in case $flatten_attributes was set to false. Defaults to "@attributes"
  * @param string $children_key        index for children, in case $flatten_children was set to false. Defaults to "@children"
+ *
  * @return array the resulting array.
  */
 function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = true, $flatten_children = true, $value_key = '@value', $attributes_key = '@attributes', $children_key = '@children')
@@ -411,6 +419,7 @@ function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = tr
  * for retrocompatibility with old AdminTab, old index.php
  *
  * @return void
+ *
  * @param mixed $tab
  * @param mixed $ajax_mode
  */

@@ -134,6 +134,7 @@ class LanguageCore extends ObjectModel
 
     /**
      * Move translations files after editing language iso code.
+     *
      * @param mixed $newIso
      */
     public function moveToIso($newIso)
@@ -1186,6 +1187,7 @@ class LanguageCore extends ObjectModel
      * @since 1.5.0
      *
      * @return bool
+     *
      * @param null|mixed $id_shop
      */
     public static function isMultiLanguageActivated($id_shop = null)

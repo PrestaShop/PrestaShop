@@ -293,6 +293,7 @@ class InstallControllerHttp
      * Find offset of a step by name
      *
      * @param string $step Step name
+     *
      * @return int
      */
     public static function getStepOffset($step)
@@ -335,6 +336,7 @@ class InstallControllerHttp
      * Check is given step is already finished
      *
      * @param string $step
+     *
      * @return bool
      */
     public function isStepFinished($step)
@@ -457,6 +459,7 @@ class InstallControllerHttp
      * @param string $template Template name
      * @param bool $get_output Is true, return template html
      * @param null|mixed $path
+     *
      * @return string
      */
     public function displayTemplate($template, $get_output = false, $path = null)

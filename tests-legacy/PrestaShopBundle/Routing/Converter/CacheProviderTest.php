@@ -281,6 +281,7 @@ class CacheProviderTest extends TestCase
 
     /**
      * @param array $legacyRoutes
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|LegacyRouteProviderInterface
      */
     private function buildMockRouterProvider(array $legacyRoutes)

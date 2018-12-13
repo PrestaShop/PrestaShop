@@ -74,6 +74,7 @@ class Tools
      * Polyfill for bcadd if BC Math extension is not installed.
      *
      * @deprecated since 1.7.2.2 - Use PrestaShop\Decimal\Number instead
+     *
      * @param mixed $left_operand
      * @param mixed $right_operand
      * @param null|mixed $scale

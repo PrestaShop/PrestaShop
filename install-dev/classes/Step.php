@@ -90,6 +90,7 @@ class Step
     /**
      *
      * @param string $name
+     *
      * @return Step
      */
     public function setName($name)
@@ -102,6 +103,7 @@ class Step
     /**
      *
      * @param string $displayName
+     *
      * @return Step
      */
     public function setDisplayName($displayName)
@@ -115,6 +117,7 @@ class Step
      *
      * @param string $name
      * @param mixed $controllerName
+     *
      * @return Step
      */
     public function setControllerName($controllerName)

@@ -49,6 +49,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * OrderDetailLazyArray constructor.
+     *
      * @param Order $order
      */
     public function __construct(Order $order)

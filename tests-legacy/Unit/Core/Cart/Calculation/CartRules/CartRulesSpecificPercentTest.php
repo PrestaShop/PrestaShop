@@ -40,6 +40,7 @@ class CartRulesSpecificPercentTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartWithOneProductSpecificCartRulesPercentProvider
+     *
      * @param mixed $productData
      * @param mixed $expectedTotal
      * @param mixed $cartRuleData
@@ -58,6 +59,7 @@ class CartRulesSpecificPercentTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartWithMultipleProductSpecificCartRulesPercentProvider
+     *
      * @param mixed $productData
      * @param mixed $expectedTotal
      * @param mixed $cartRuleData

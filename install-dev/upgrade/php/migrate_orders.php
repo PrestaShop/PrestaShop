@@ -215,6 +215,7 @@ function migrate_orders()
  * - no call to Configuration class
  *
  * @param mixed $val
+ *
  * @return void
  */
 function mo_ps_round($val)

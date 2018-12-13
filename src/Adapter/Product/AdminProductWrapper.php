@@ -343,6 +343,7 @@ class AdminProductWrapper
 
     /**
      * Validate a specific price.
+     *
      * @param mixed $id_product
      * @param mixed $id_shop
      * @param mixed $id_currency

@@ -240,6 +240,7 @@ abstract class ApiTestCase extends WebTestCase
 
     /**
      * @param $expectedStatusCode
+     *
      * @return mixed
      */
     protected function assertResponseBodyValidJson($expectedStatusCode)

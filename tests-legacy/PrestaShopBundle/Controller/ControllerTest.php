@@ -64,6 +64,7 @@ class ControllerTest extends TestCase
      * @dataProvider getControllersClasses
      *
      * @param $controllerClass
+     *
      * @return mixed
      */
     public function itShouldRunTheTestedController($controllerClass)
@@ -275,6 +276,7 @@ class ControllerTest extends TestCase
 
     /**
      * @param Controller $testedController
+     *
      * @return Tools
      */
     protected function prophesizeRequest(Controller $testedController)

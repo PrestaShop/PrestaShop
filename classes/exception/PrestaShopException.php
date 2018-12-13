@@ -206,6 +206,7 @@ class PrestaShopExceptionCore extends Exception
 
     /**
      * @deprecated 1.5.5
+     *
      * @param mixed $html
      */
     protected function getExentedMessage($html = true)
@@ -219,6 +220,7 @@ class PrestaShopExceptionCore extends Exception
      * Return the content of the Exception.
      *
      * @return string content of the exception
+     *
      * @param mixed $html
      */
     protected function getExtendedMessage($html = true)

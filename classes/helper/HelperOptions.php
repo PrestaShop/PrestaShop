@@ -253,6 +253,7 @@ class HelperOptionsCore extends Helper
 
     /**
      * Type = image.
+     *
      * @param mixed $key
      * @param mixed $field
      * @param mixed $value
@@ -283,6 +284,7 @@ class HelperOptionsCore extends Helper
 
     /**
      * Type = price.
+     *
      * @param mixed $key
      * @param mixed $field
      * @param mixed $value
@@ -296,6 +298,7 @@ class HelperOptionsCore extends Helper
 
     /**
      * Type = disabled.
+     *
      * @param mixed $key
      * @param mixed $field
      * @param mixed $value

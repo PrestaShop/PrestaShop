@@ -1506,6 +1506,7 @@ class CartCore extends ObjectModel
 
     /**
      * Customization management.
+     *
      * @param mixed $quantity
      * @param mixed $id_customization
      * @param mixed $id_product
@@ -2320,6 +2321,7 @@ class CartCore extends ObjectModel
      *               );
      *
      * @todo Add avaibility check
+     *
      * @param mixed $flush
      */
     public function getPackageList($flush = false)
@@ -3038,6 +3040,7 @@ class CartCore extends ObjectModel
      * The size of this sequence is fixed by the first digit of the return
      *
      * @return int Intified value
+     *
      * @param mixed $string
      * @param mixed $delimiter
      */
@@ -3051,6 +3054,7 @@ class CartCore extends ObjectModel
 
     /**
      * Translate an int option_delivery identifier (3240002000) in a string ('24,3,').
+     *
      * @param mixed $int
      * @param mixed $delimiter
      */
@@ -3313,6 +3317,7 @@ class CartCore extends ObjectModel
 
     /**
      * @deprecated 1.5.0, use Cart->getPackageShippingCost()
+     *
      * @param null|mixed $id_carrier
      * @param mixed $use_tax
      * @param null|Country $default_country
@@ -3679,6 +3684,7 @@ class CartCore extends ObjectModel
      * Return total Cart weight.
      *
      * @return float Total Cart weight
+     *
      * @param null|mixed $products
      */
     public function getTotalWeight($products = null)
@@ -3767,6 +3773,7 @@ class CartCore extends ObjectModel
      * Return useful information about the cart.
      *
      * @return array Cart details
+     *
      * @param null|mixed $id_lang
      * @param mixed $refresh
      */
@@ -4139,6 +4146,7 @@ class CartCore extends ObjectModel
      * Add customer's pictures.
      *
      * @return bool Always true
+     *
      * @param mixed $id_product
      * @param mixed $index
      * @param mixed $type
@@ -4787,6 +4795,7 @@ class CartCore extends ObjectModel
      *
      * @id_carrier int
      * @id_zone int
+     *
      * @param mixed $id_carrier
      * @param mixed $id_zone
      */

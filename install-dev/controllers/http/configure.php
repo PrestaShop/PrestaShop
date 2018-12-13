@@ -217,6 +217,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      * Get a timezone associated to an iso
      *
      * @param string $iso
+     *
      * @return string
      */
     public function getTimezoneByIso($iso)
@@ -308,6 +309,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      * Helper to display error for a field
      *
      * @param string $field
+     *
      * @return string|void
      */
     public function displayError($field)

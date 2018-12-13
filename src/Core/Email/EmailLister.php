@@ -79,6 +79,7 @@ class EmailLister
      * Give in input getAvailableMails(), will output a human readable and proper string name.
      *
      * @return string
+     *
      * @param mixed $mail_name
      */
     public function getCleanedMailName($mail_name)

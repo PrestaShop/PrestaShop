@@ -83,6 +83,7 @@ class ModuleTemplateLoaderTest extends TestCase
 
     /**
      * @dataProvider getSourceContextsProvider
+     *
      * @param string $sourceContent The template file content.
      * @param string $twigPathAsked The Twig path asked during Twig template rendering.
      * @param string $successMessage In case of failure, describe what is expected.

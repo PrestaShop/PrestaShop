@@ -76,6 +76,7 @@ class OrderLazyArray extends AbstractLazyArray
      *
      * @throws AnnotationException
      * @throws ReflectionException
+     *
      * @param Order $order
      */
     public function __construct(Order $order)

@@ -249,6 +249,7 @@ class ReleaseCreator
      * Create a new release.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     public function createRelease()
@@ -332,6 +333,7 @@ class ReleaseCreator
      * Define all config/defines.inc.php constants to the desired version.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function setConfigDefinesConstants()
@@ -372,6 +374,7 @@ class ReleaseCreator
      * Define the PrestaShop version to the desired version.
      *
      * @return self
+     *
      * @throws BuildException
      */
     protected function setupShopVersion()
@@ -418,6 +421,7 @@ class ReleaseCreator
      * Define all install-dev/data/xml/configuration.xml constants to the desired version.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function setInstallDevConfigurationConstants()
@@ -441,6 +445,7 @@ class ReleaseCreator
      * Define all install-dev/install_version.php constants to the desired version.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function setInstallDevInstallVersionConstants()
@@ -461,6 +466,7 @@ class ReleaseCreator
      * in their filename into this unique one.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function generateLicensesFile()
@@ -487,6 +493,7 @@ class ReleaseCreator
      * Install all dependencies.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function runComposerInstall()
@@ -508,6 +515,7 @@ class ReleaseCreator
      * Create some required folders and rename a few.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function createAndRenameFolders()
@@ -578,6 +586,7 @@ class ReleaseCreator
      * Return the directory structure of a given path as an array.
      *
      * @param string $path
+     *
      * @return array
      */
     protected function getDirectoryStructure($path)
@@ -614,7 +623,9 @@ class ReleaseCreator
      * @param array $foldersRemoveList
      * @param array $patternsRemoveList
      * @param string $folder
+     *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function removeUnnecessaryFiles(
@@ -773,6 +784,7 @@ class ReleaseCreator
      * Create a XML file with the checksum of all the PrestaShop release files.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function generateXMLChecksum()
@@ -799,6 +811,7 @@ class ReleaseCreator
      * Return the checksum of the files and folders given as parameter.
      *
      * @param array $files
+     *
      * @return string
      */
     protected function generateXMLDirectoryChecksum(array $files)

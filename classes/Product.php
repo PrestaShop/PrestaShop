@@ -819,6 +819,7 @@ class ProductCore extends ObjectModel
      * Get the default attribute for a product.
      *
      * @return int Attributes list
+     *
      * @param mixed $id_product
      * @param mixed $minimum_quantity
      * @param mixed $reset
@@ -958,6 +959,7 @@ class ProductCore extends ObjectModel
 
     /**
      * @see ObjectModel::validateField()
+     *
      * @param mixed $field
      * @param mixed $value
      * @param null|mixed $id_lang
@@ -1475,6 +1477,7 @@ class ProductCore extends ObjectModel
      * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
      * @see ProductSupplier for manage supplier reference(s)
      * @deprecated since 1.5.0
+     *
      * @param mixed $price
      * @param mixed $weight
      * @param mixed $unit_impact
@@ -1759,6 +1762,7 @@ class ProductCore extends ObjectModel
      * @deprecated since 1.5
      * @see updateAttribute() to use instead
      * @see ProductSupplier for manage supplier reference(s)
+     *
      * @param mixed $id_product_attribute
      * @param mixed $wholesale_price
      * @param mixed $price
@@ -3031,6 +3035,7 @@ class ProductCore extends ObjectModel
      * getProductCategories return an array of categories which this product belongs to.
      *
      * @return array of categories
+     *
      * @param mixed $id_product
      */
     public static function getProductCategories($id_product = '')
@@ -3108,6 +3113,7 @@ class ProductCore extends ObjectModel
 
     /**
      * Sets carriers assigned to the product.
+     *
      * @param mixed $carrier_list
      */
     public function setCarriers($carrier_list)
@@ -3164,6 +3170,7 @@ class ProductCore extends ObjectModel
      * Get product cover image.
      *
      * @return array Product cover image
+     *
      * @param mixed $id_product
      * @param null|Context $context
      */
@@ -4184,6 +4191,7 @@ class ProductCore extends ObjectModel
 
     /**
      * Add new feature to product.
+     *
      * @param mixed $id_value
      * @param mixed $lang
      * @param mixed $cust
@@ -4788,6 +4796,7 @@ class ProductCore extends ObjectModel
 
     /**
      * Get the link of the product page of this product.
+     *
      * @param null|Context $context
      */
     public function getLink(Context $context = null)
@@ -5740,6 +5749,7 @@ class ProductCore extends ObjectModel
 
     /**
      * @deprecated since 1.5.0
+     *
      * @param mixed $id_lang
      */
     public function getStockMvts($id_lang)
@@ -6144,6 +6154,7 @@ class ProductCore extends ObjectModel
      * Webservice setter : set virtual field position in category.
      *
      * @return bool
+     *
      * @param mixed $position
      */
     public function setWsPositionInCategory($position)
@@ -6197,6 +6208,7 @@ class ProductCore extends ObjectModel
      * Webservice setter : set virtual field id_default_image in category.
      *
      * @return bool
+     *
      * @param mixed $id_image
      */
     public function setCoverWs($id_image)
@@ -6308,6 +6320,7 @@ class ProductCore extends ObjectModel
      * Checks if reference exists.
      *
      * @return bool
+     *
      * @param mixed $reference
      */
     public function existsRefInDatabase($reference)
@@ -6514,6 +6527,7 @@ class ProductCore extends ObjectModel
     /**
      * @deprecated 1.7.3.1
      * @see Product::getIdProductAttributeByIdAttributes()
+     *
      * @param mixed $id_product
      * @param mixed $id_attributes
      * @param mixed $find_best
@@ -7018,6 +7032,7 @@ class ProductCore extends ObjectModel
      * Useful when a product list should be checked before a bulk operation on them (Only 1 query => performances).
      *
      * @return array the IDs list, whithout duplicate and only existing ones
+     *
      * @param mixed $ids_or_refs
      */
     public static function getExistingIdsFromIdsOrRefs($ids_or_refs)

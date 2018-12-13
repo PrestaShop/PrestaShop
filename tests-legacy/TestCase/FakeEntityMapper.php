@@ -37,8 +37,11 @@ class FakeEntityMapper extends EntityMapper
 
     /**
      * Stores the given entity in the fake database, so load call with the same id will fill the entity with it.
+     *
      * @param ObjectModel $entity
+     *
      * @return $this
+     *
      * @throws Exception
      */
     public function willReturn(ObjectModel $entity)
@@ -56,6 +59,7 @@ class FakeEntityMapper extends EntityMapper
      * @param $id
      * @param null $id_lang
      * @param null $id_shop
+     *
      * @throws Exception
      */
     public function forId($id, $id_lang = null, $id_shop = null)
@@ -72,6 +76,7 @@ class FakeEntityMapper extends EntityMapper
 
     /**
      * Fills the given entity with fields from the entity stored in the fake database if it exists.
+     *
      * @param $id
      * @param $id_lang
      * @param $entity

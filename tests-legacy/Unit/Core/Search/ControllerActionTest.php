@@ -32,6 +32,7 @@ class ControllerActionTest extends TestCase
 {
     /**
      * @dataProvider getControllers
+     *
      * @param string $fqcn
      * @param array $result
      */

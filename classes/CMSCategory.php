@@ -303,6 +303,7 @@ class CMSCategoryCore extends ObjectModel
      * Delete several categories from database.
      *
      * return boolean Deletion result
+     *
      * @param mixed $categories
      */
     public function deleteSelection($categories)

@@ -46,6 +46,7 @@ class LinkCore
 
     /**
      * Constructor (initialization only).
+     *
      * @param null|mixed $protocolLink
      * @param null|mixed $protocolContent
      */

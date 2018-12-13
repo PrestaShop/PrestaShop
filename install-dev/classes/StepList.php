@@ -73,6 +73,7 @@ class StepList implements IteratorAggregate
     /**
      *
      * @param int $offset
+     *
      * @return StepList
      */
     public function setOffset($offset)
@@ -85,6 +86,7 @@ class StepList implements IteratorAggregate
     /**
      *
      * @param string $stepName
+     *
      * @return StepList
      */
     public function setOffsetFromStepName($stepName)
@@ -97,6 +99,7 @@ class StepList implements IteratorAggregate
     /**
      *
      * @param string $stepName
+     *
      * @return int
      */
     public function getOffsetFromStepName($stepName)

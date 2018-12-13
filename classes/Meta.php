@@ -290,6 +290,7 @@ class MetaCore extends ObjectModel
      * Get meta tags.
      *
      * @since 1.5.0
+     *
      * @param mixed $idLang
      * @param mixed $pageName
      * @param mixed $title
@@ -520,6 +521,7 @@ class MetaCore extends ObjectModel
 
     /**
      * @since 1.5.0
+     *
      * @param mixed $metaTags
      * @param mixed $defaultValue
      * @param null|Context $context

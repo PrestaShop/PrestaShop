@@ -43,6 +43,7 @@ class AdminProductsController extends AdminProductsControllerCore
     /**
      * The order in the array decides the order in the list of tab. If an element's value is a number, it will be preloaded.
      * The tabs are preloaded from the smallest to the highest number.
+     *
      * @var array Product tabs.
      */
     protected $available_tabs = array();

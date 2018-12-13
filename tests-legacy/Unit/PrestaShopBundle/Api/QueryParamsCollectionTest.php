@@ -443,6 +443,7 @@ AND EXISTS(SELECT 1
 
     /**
      * @param array $testedParams
+     *
      * @return \Prophecy\Prophecy\ObjectProphecy|\Symfony\Component\HttpFoundation\ParameterBag
      */
     private function mockQuery(array $testedParams)
@@ -475,6 +476,7 @@ AND EXISTS(SELECT 1
 
     /**
      * @param array $attributes
+     *
      * @return \Prophecy\Prophecy\ObjectProphecy
      */
     private function mockAttributes(array $attributes)
@@ -487,6 +489,7 @@ AND EXISTS(SELECT 1
 
     /**
      * @param array $params
+     *
      * @return \Prophecy\Prophecy\ObjectProphecy
      */
     private function mockRequest(array $params)

@@ -1317,6 +1317,7 @@ class CustomerCore extends ObjectModel
 
     /**
      * @see ObjectModel::getWebserviceObjectList()
+     *
      * @param mixed $sqlJoin
      * @param mixed $sqlFilter
      * @param mixed $sqlSort

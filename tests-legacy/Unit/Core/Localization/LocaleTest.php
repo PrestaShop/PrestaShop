@@ -105,7 +105,6 @@ class LocaleTest extends TestCase
      *
      * @param int|float $number
      *  The number to be formatted
-     *
      * @param string $expected
      *  The formatted number
      *
@@ -164,10 +163,8 @@ class LocaleTest extends TestCase
      *
      * @param int|float|string $number
      *  The number to be formatted
-     *
      * @param string $currencyCode
      *  The currency code
-     *
      * @param string $expected
      *  The formatted number
      *
@@ -206,7 +203,6 @@ class LocaleTest extends TestCase
      *
      * @param mixed $number
      *  Potentially invalid number
-     *
      * @param mixed $currency
      *  Potentially invalid currency
      *

@@ -1232,6 +1232,7 @@ class ValidateCore
      * oProxyCommand option.
      *
      * @return bool
+     *
      * @param mixed $imapUrl
      */
     public static function isValidImapUrl($imapUrl)

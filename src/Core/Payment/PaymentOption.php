@@ -333,6 +333,7 @@ class PaymentOption implements HookContentClassInterface
      * Since this was a mess, this method is provided to convert them.
      * It takes as input a legacy option (in either form) and always
      * returns an array of instances of PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     *
      * @param array $legacyOption
      */
     public static function convertLegacyOption(array $legacyOption)

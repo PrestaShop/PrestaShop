@@ -36,6 +36,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: ExpressionType.php 836 2013-12-20 05:31:55Z phosco@gmx.de $
  * 
  */

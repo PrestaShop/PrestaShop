@@ -561,6 +561,7 @@ class ImageCore extends ObjectModel
     /**
      * Delete the product image from disk and remove the containing folder if empty
      * Handles both legacy and new image filesystems.
+     *
      * @param mixed $forceDelete
      */
     public function deleteImage($forceDelete = false)

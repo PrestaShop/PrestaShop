@@ -35,6 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: ColumnListBuilder.php 894 2013-12-31 00:27:03Z phosco@gmx.de $
  * 
  */

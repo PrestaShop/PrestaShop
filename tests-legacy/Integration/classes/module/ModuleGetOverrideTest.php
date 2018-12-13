@@ -53,6 +53,7 @@ class ModulesGetOverrideTest extends IntegrationTestCase
     /**
      * @dataProvider listModulesOnDisk
      * Note: improves module list fixtures in order to cancel any override.
+     *
      * @param string $moduleName the module name.
      */
     public function testDummyGetOverride($moduleName)

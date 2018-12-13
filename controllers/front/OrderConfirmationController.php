@@ -108,6 +108,7 @@ class OrderConfirmationControllerCore extends FrontController
 
     /**
      * Execute the hook displayPaymentReturn.
+     *
      * @param mixed $order
      */
     public function displayPaymentReturn($order)
@@ -121,6 +122,7 @@ class OrderConfirmationControllerCore extends FrontController
 
     /**
      * Execute the hook displayOrderConfirmation.
+     *
      * @param mixed $order
      */
     public function displayOrderConfirmation($order)

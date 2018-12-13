@@ -60,6 +60,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
      * Returns true if this tax manager is available for this address.
      *
      * @return bool
+     *
      * @param Address $address
      */
     public static function isAvailableForThisAddress(Address $address)

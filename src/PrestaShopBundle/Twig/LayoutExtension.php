@@ -221,6 +221,7 @@ EOF;
 
     /**
      * KISS function to get an embeded iframe from Youtube.
+     *
      * @param mixed $watchUrl
      */
     public function getYoutubeLink($watchUrl)

@@ -380,6 +380,7 @@ abstract class ControllerCore
 
     /**
      * Set $this->redirect_after that will be used by redirect() after the process.
+     *
      * @param mixed $url
      */
     public function setRedirectAfter($url)

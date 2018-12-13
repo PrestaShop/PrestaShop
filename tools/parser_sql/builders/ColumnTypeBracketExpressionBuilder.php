@@ -35,6 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: ColumnTypeBracketExpressionBuilder.php 934 2014-01-08 13:57:16Z phosco@gmx.de $
  * 
  */

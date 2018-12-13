@@ -71,6 +71,7 @@ interface ModuleInterface extends AddonInterface
      * No file modification.
      *
      * @return bool true for success
+     *
      * @param mixed $version
      */
     public function onUpgrade($version);

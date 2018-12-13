@@ -456,6 +456,7 @@ class StockAvailableCore extends ObjectModel
      * Upgrades total_quantity_available after having saved.
      *
      * @see ObjectModel::add()
+     *
      * @param mixed $autodate
      * @param mixed $null_values
      */
@@ -474,6 +475,7 @@ class StockAvailableCore extends ObjectModel
      * Upgrades total_quantity_available after having update.
      *
      * @see ObjectModel::update()
+     *
      * @param mixed $null_values
      */
     public function update($null_values = false)

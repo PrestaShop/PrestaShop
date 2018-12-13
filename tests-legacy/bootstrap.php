@@ -59,6 +59,7 @@ require_once dirname(__FILE__).'/../config/bootstrap.php';
 /**
  * Following code makes tests run under phpstorm
  * Else we get error : Class 'PHPUnit_Util_Configuration' not found
+ *
  * @see https://stackoverflow.com/questions/33299149/phpstorm-8-and-phpunit-problems-with-runinseparateprocess
  */
 if (!defined('PHPUNIT_COMPOSER_INSTALL')) {

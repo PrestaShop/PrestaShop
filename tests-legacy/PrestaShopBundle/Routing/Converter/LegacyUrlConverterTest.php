@@ -222,6 +222,7 @@ class LegacyUrlConverterTest extends TestCase
     /**
      *  The parameter id_product|product_id must not be considered as a non migrated action
      *  (as would have been ?controller=AdminProducts&export_products_xml=1)
+     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
      */
@@ -375,6 +376,7 @@ class LegacyUrlConverterTest extends TestCase
     /**
      * This tests is used to test the component with a list of routes and mainly to
      * check possible conflicts when action is
+     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
      */
@@ -433,6 +435,7 @@ class LegacyUrlConverterTest extends TestCase
      * @param string|array $legacyLink
      * @param array|null $legacyParameters
      * @param array|null $expectedParameters
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
      */
     private function buildRouterMock($routeName, $routePath, $legacyLink, array $legacyParameters = null, array $expectedParameters = null)
@@ -483,6 +486,7 @@ class LegacyUrlConverterTest extends TestCase
 
     /**
      * @param array $routes
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
      */
     private function buildMultipleRouterMock(array $routes)
@@ -513,6 +517,7 @@ class LegacyUrlConverterTest extends TestCase
 
     /**
      * @param array $routes
+     *
      * @return RouteCollection
      */
     private function buildRouteCollection(array $routes)

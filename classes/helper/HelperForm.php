@@ -293,6 +293,7 @@ class HelperFormCore extends Helper
      * Render an area to determinate shop association.
      *
      * @return string
+     *
      * @param mixed $disable_shared
      * @param null|mixed $template_directory
      */

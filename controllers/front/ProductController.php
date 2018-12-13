@@ -514,6 +514,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     /**
      * Assign template vars related to attribute groups and colors.
+     *
      * @param null|mixed $product_for_template
      */
     protected function assignAttributesGroups($product_for_template = null)

@@ -116,6 +116,7 @@ class HelperCore
 
     /**
      * @deprecated 1.5.0
+     *
      * @param mixed $translations
      * @param mixed $selected_cat
      * @param mixed $input_name

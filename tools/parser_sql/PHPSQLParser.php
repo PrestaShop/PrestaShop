@@ -36,6 +36,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: PHPSQLParser.php 757 2013-12-16 09:54:05Z phosco@gmx.de $
  */
 

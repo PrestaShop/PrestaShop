@@ -218,6 +218,7 @@ class SpecificPriceCore extends ObjectModel
 
     /**
      * score generation for quantity discount.
+     *
      * @param mixed $id_product
      * @param mixed $id_shop
      * @param mixed $id_currency

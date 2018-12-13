@@ -57,6 +57,7 @@ class CartTaxesTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartTaxesProvider
+     *
      * @param mixed $productData
      * @param mixed $expectedTotalTaxExcl
      * @param mixed $expectedTotalTaxIncl
@@ -81,6 +82,7 @@ class CartTaxesTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartTaxesProvider
+     *
      * @param mixed $productData
      * @param mixed $expectedTotalTaxExcl
      * @param mixed $expectedTotalTaxIncl

@@ -87,10 +87,8 @@ class RepositoryTest extends TestCase
      *
      * @param string $currencyCode
      *  Alphabetic ISO 4217 currency code passed to retreive the wanted Currency instance
-     *
      * @param array $expectedNames
      *  Expected currency names, indexed by locale code
-     *
      * @param array $expectedSymbols
      *  Expected currency symbols, indexed by locale code
      *

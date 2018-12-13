@@ -142,6 +142,7 @@ class ManufacturerCore extends ObjectModel
      * Delete several objects from database.
      *
      * return boolean Deletion result
+     *
      * @param mixed $selection
      */
     public function deleteSelection($selection)

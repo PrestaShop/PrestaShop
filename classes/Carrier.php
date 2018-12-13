@@ -816,6 +816,7 @@ class CarrierCore extends ObjectModel
      * Get a specific zones.
      *
      * @return array Zone
+     *
      * @param mixed $id_zone
      */
     public function getZone($id_zone)
@@ -829,6 +830,7 @@ class CarrierCore extends ObjectModel
 
     /**
      * Add zone.
+     *
      * @param mixed $id_zone
      */
     public function addZone($id_zone)
@@ -867,6 +869,7 @@ class CarrierCore extends ObjectModel
 
     /**
      * Delete zone.
+     *
      * @param mixed $id_zone
      */
     public function deleteZone($id_zone)
@@ -1080,6 +1083,7 @@ class CarrierCore extends ObjectModel
 
     /**
      * Get carrier using the reference id.
+     *
      * @param mixed $id_reference
      * @param null|mixed $id_lang
      */

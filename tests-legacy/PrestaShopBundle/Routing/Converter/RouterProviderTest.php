@@ -236,6 +236,7 @@ class RouterProviderTest extends TestCase
 
     /**
      * @param array $routes
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
      */
     private function buildMultipleRouterMock(array $routes)
@@ -267,6 +268,7 @@ class RouterProviderTest extends TestCase
 
     /**
      * @param array $routes
+     *
      * @return RouteCollection
      */
     private function buildRouteCollection(array $routes)

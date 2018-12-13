@@ -51,6 +51,7 @@ class FloatParserTest extends TestCase
      * Given a value that is not a string
      * When constructing an ImmutableFloat from that value using ::fromString
      * Then an InvalidArgumentException should be thrown
+     *
      * @param mixed $value
      *
      * @dataProvider provideInvalidValues

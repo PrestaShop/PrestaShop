@@ -165,6 +165,7 @@ class OrderInvoiceCore extends ObjectModel
      * Get order products.
      *
      * @return array Products with price, quantity (with taxe and without)
+     *
      * @param mixed $products
      * @param mixed $selected_products
      * @param mixed $selected_qty

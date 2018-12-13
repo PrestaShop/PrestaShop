@@ -366,9 +366,11 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
     /**
      * Mainly used to ensure the legacy links are not broken.
+     *
      * @param string $expectedUrl
      * @param string $controller
      * @param array|null $parameters
+     *
      * @throws \PrestaShopException
      * @throws \ReflectionException
      */
@@ -463,6 +465,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * Force the static property SymfonyContainer::instance so that the Link class
      * has access to the router
+     *
      * @throws \ReflectionException
      */
     private function initContainerInstance()

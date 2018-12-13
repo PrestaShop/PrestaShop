@@ -302,6 +302,7 @@ class CronJobs extends Module
 
     /**
      * $taks should be a valid URL
+     *
      * @param mixed $task
      * @param mixed $description
      * @param mixed $execution

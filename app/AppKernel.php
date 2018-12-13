@@ -131,6 +131,7 @@ class AppKernel extends Kernel
 
     /**
      * @{inheritdoc}
+     *
      * @throws \Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -148,6 +149,7 @@ class AppKernel extends Kernel
      * Return all active modules.
      *
      * @return array list of modules names.
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     private function getActiveModules()
@@ -178,6 +180,7 @@ class AppKernel extends Kernel
 
     /**
      * @var bool
+     *
      * @return bool
      */
     private function parametersFileExists()
@@ -195,6 +198,7 @@ class AppKernel extends Kernel
 
     /**
      * @return \Doctrine\DBAL\Connection
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     private function getConnection()

@@ -35,6 +35,7 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: CreateTableOptionsBuilder.php 923 2014-01-08 12:20:30Z phosco@gmx.de $
  * 
  */
@@ -74,6 +75,7 @@ class CreateTableOptionsBuilder {
      * you could simply return $parsed['delim'].
      * 
      * @param array $parsed The part of the output array, which contains the current expression.
+     *
      * @return a string, which is added right after the expression
      */
     protected function getDelimiter($parsed) {

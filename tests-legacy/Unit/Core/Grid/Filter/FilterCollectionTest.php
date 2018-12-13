@@ -43,6 +43,7 @@ class FilterCollectionTest extends TestCase
 
     /**
      * @depends testFilterCollectionIsEmptyByDefault
+     *
      * @param FilterCollection $filters
      */
     public function testFilterCanBeAddedToCollection(FilterCollection $filters)
@@ -58,6 +59,7 @@ class FilterCollectionTest extends TestCase
 
     /**
      * @depends testFilterCanBeAddedToCollection
+     *
      * @param FilterCollection $filters
      */
     public function testFilterCanBeRemovedFromCollection(FilterCollection $filters)
