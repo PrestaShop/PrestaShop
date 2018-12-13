@@ -128,13 +128,12 @@ class CurrencyCollection implements IteratorAggregate, Countable
      * Adds a currency collection at the end of the current set by appending all
      * currencies of the added collection.
      *
-     * @param CurrencyCollection $collection
-     *                                       The CurrencyCollection to append at the end of the current one
+     * @param CurrencyCollection $collection The CurrencyCollection to append at the end of the current one                                
      *
-     * @return CurrencyCollection
-     *                            Fluent interface
+     * @return CurrencyCollection Fluent interface
+     *
      */
-    public function addCollection(self $collection)
+    public function addCollection(CurrencyCollection $collection)
     {
         // we need to remove all currencies with the same codes first because just replacing them
         // would not place the new currency at the end of the merged array

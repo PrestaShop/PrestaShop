@@ -95,13 +95,12 @@ class LocaleData
     /**
      * Override this object's data with another LocaleData object.
      *
-     * @param LocaleData $localeData
-     *                               Locale data to use for the override
-     *
-     * @return $this
-     *               Fluent interface
+     * @param LocaleData $localeData Locale data to use for the override
+     * 
+     * @return $this Fluent interface
+     * 
      */
-    public function overrideWith(self $localeData)
+    public function overrideWith(LocaleData $localeData)
     {
         if (isset($localeData->localeCode)) {
             $this->localeCode = $localeData->localeCode;
