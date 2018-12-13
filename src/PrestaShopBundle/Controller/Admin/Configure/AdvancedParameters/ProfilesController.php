@@ -33,6 +33,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ProfilesController is responsible for displaying the
@@ -45,18 +46,16 @@ class ProfilesController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/profiles.html.twig")
-     *
      * @param ProfilesFilters $filters
      *
-     * @return array
+     * @return Response
      */
     public function indexAction(ProfilesFilters $filters)
     {
         $profilesGridFactory = $this->get('prestashop.core.grid.factory.profiles');
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
-        return [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/profiles.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
                     'href' => $this->getAdminLink('AdminProfiles', ['addprofile' => '']),
@@ -67,7 +66,7 @@ class ProfilesController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminProfiles'),
             'grid' => $gridPresenter->present($profilesGridFactory->getGrid($filters)),
-        ];
+        ]);
     }
 
     /**
@@ -92,7 +91,7 @@ class ProfilesController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_profiles', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_profiles_index', ['filters' => $filters]);
     }
 
     /**
@@ -124,7 +123,7 @@ class ProfilesController extends FrameworkBundleAdminController
      *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_profiles")
+     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param int $profileId
      *
@@ -134,7 +133,7 @@ class ProfilesController extends FrameworkBundleAdminController
     {
         //@todo implement
         $this->flashErrors(['not implemented']);
-        return $this->redirectToRoute('admin_profiles');
+        return $this->redirectToRoute('admin_profiles_index');
     }
 
     /**
@@ -144,7 +143,7 @@ class ProfilesController extends FrameworkBundleAdminController
      *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_profiles")
+     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @param Request $request
      *
@@ -156,6 +155,6 @@ class ProfilesController extends FrameworkBundleAdminController
 
         //@todo implement
         $this->flashErrors(['not implemented']);
-        return $this->redirectToRoute('admin_profiles');
+        return $this->redirectToRoute('admin_profiles_index');
     }
 }
