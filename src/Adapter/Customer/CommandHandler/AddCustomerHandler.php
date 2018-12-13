@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\AddCustomerHandler
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\ApeCode;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
@@ -108,7 +107,7 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
     private function fillCustomerWithCommandData(Customer $customer, AddCustomerCommand $command)
     {
         $apeCode = null !== $command->getApeCode() ?
-            (new ApeCode($command->getApeCode()))->getValue() :
+            $command->getApeCode()->getValue() :
             null
         ;
 

@@ -55,6 +55,7 @@ class ApeCodeTest extends TestCase
 
     public function getValidApeCodes()
     {
+        yield [''];
         yield ['001A'];
         yield ['1039B'];
     }
@@ -64,7 +65,6 @@ class ApeCodeTest extends TestCase
         yield ['not_valid'];
         yield ['1236'];
         yield [123];
-        yield [''];
         yield [[]];
     }
 }

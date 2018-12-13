@@ -30,13 +30,8 @@ use DateTime;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\ApeCode;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 
 /**
  * Saves or updates customer data submitted in form
@@ -106,18 +101,22 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
      */
     private function buildCustomerAddCommandFromFormData(array $data)
     {
+        $groupIds = array_map(function ($groupId) {
+            return (int) $groupId;
+        }, $data['group_ids']);
+
         $command = new AddCustomerCommand(
-            new FirstName($data['first_name']),
-            new LastName($data['last_name']),
-            new Email($data['email']),
-            new Password($data['password']),
+            $data['first_name'],
+            $data['last_name'],
+            $data['email'],
+            $data['password'],
             (int) $data['default_group_id'],
-            array_map(function ($groupId) { return (int) $groupId; }, $data['group_ids']),
+            $groupIds,
             $this->contextShopId,
             (int) $data['gender_id'],
             (bool) $data['is_enabled'],
             (bool) $data['is_partner_offers_subscribed'],
-            new Birthday($this->getBirthdayDate($data['birthday']))
+            $data['birthday']
         );
 
         if (!$this->isB2bFeatureEnabled) {
@@ -125,17 +124,14 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
         }
 
         $command
-            ->setCompanyName($data['company_name'])
-            ->setSiretCode($data['siret_code'])
-            ->setWebsite($data['website'])
-            ->setAllowedOutstandingAmount($data['allowed_outstanding_amount'])
-            ->setMaxPaymentDays($data['max_payment_days'])
-            ->setRiskId($data['risk_id'])
+            ->setCompanyName((string) $data['company_name'])
+            ->setSiretCode((string) $data['siret_code'])
+            ->setApeCode((string) $data['ape_code'])
+            ->setWebsite((string) $data['website'])
+            ->setAllowedOutstandingAmount((float) $data['allowed_outstanding_amount'])
+            ->setMaxPaymentDays((int) $data['max_payment_days'])
+            ->setRiskId((int) $data['risk_id'])
         ;
-
-        if (null !== $data['ape_code']) {
-            $command->setApeCode(new ApeCode($data['ape_code']));
-        }
 
         return $command;
     }
@@ -148,16 +144,28 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
      */
     private function buildCustomerEditCommand($customerId, array $data)
     {
-        $command = (new EditCustomerCommand(new CustomerId($customerId)))
+        $groupIds = array_map(function ($groupId) {
+            return (int) $groupId;
+        }, $data['group_ids']);
+
+        // if birthday is not datetime
+        // it means it was reset in form
+        if (!$data['birthday'] instanceof DateTime) {
+            $data['birthday'] = Birthday::EMPTY_BIRTHDAY;
+        } else {
+            $data['birthday'] = $data['birthday']->format('Y-m-d');
+        }
+
+        $command = (new EditCustomerCommand($customerId))
             ->setGenderId($data['gender_id'])
-            ->setEmail(new Email($data['email']))
-            ->setFirstName(new FirstName($data['first_name']))
-            ->setLastName(new LastName($data['last_name']))
+            ->setEmail($data['email'])
+            ->setFirstName($data['first_name'])
+            ->setLastName($data['last_name'])
             ->setIsEnabled($data['is_enabled'])
             ->setIsPartnerOffersSubscribed($data['is_partner_offers_subscribed'])
             ->setDefaultGroupId((int) $data['default_group_id'])
-            ->setGroupIds(array_map(function ($groupId) { return (int) $groupId; }, $data['group_ids']))
-            ->setBirthday(new Birthday($this->getBirthdayDate($data['birthday'])))
+            ->setGroupIds($groupIds)
+            ->setBirthday($data['birthday'])
         ;
 
         if ($this->isB2bFeatureEnabled) {
@@ -173,23 +181,5 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
         }
 
         return $command;
-    }
-
-    /**
-     * Since it's used in context of form data
-     * the value provided by form is either DateTime (when date is selected) or null (when not selected)
-     * in case birthday is null, it means that user wants to reset birthday
-     * or keep it default (not set)
-     *
-     * @param DateTime|null $formBirthdayValue
-     *
-     * @return string
-     */
-    private function getBirthdayDate($formBirthdayValue)
-    {
-        return $formBirthdayValue instanceof DateTime ?
-            $formBirthdayValue->format('Y-m-d') :
-            Birthday::EMPTY_BIRTHDAY
-        ;
     }
 }

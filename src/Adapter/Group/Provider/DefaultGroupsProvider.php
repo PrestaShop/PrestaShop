@@ -68,20 +68,23 @@ final class DefaultGroupsProvider implements DefaultGroupsProviderInterface
         $guestsGroup = new Group($this->configuration->get('PS_GUEST_GROUP'));
         $customersGroup = new Group($this->configuration->get('PS_CUSTOMER_GROUP'));
 
-        $visitorsGroupDto = new DefaultGroup(
-            (int) $visitorsGroup->id,
-            $visitorsGroup->name[$this->contextLangId]
-        );
+        $visitorName = isset($visitorsGroup->name[$this->contextLangId]) ?
+            $visitorsGroup->name[$this->contextLangId] :
+            reset($visitorsGroup->name)
+        ;
+        $visitorsGroupDto = new DefaultGroup((int) $visitorsGroup->id, $visitorName);
 
-        $guestsGroupDto = new DefaultGroup(
-            (int) $guestsGroup->id,
-            $guestsGroup->name[$this->contextLangId]
-        );
+        $groupsName = isset($guestsGroup->name[$this->contextLangId]) ?
+            $guestsGroup->name[$this->contextLangId] :
+            $guestsGroup->name
+        ;
+        $guestsGroupDto = new DefaultGroup((int) $guestsGroup->id, $groupsName);
 
-        $customersGroupDto = new DefaultGroup(
-            (int) $customersGroup->id,
-            $customersGroup->name[$this->contextLangId]
-        );
+        $customersName = isset($customersGroup->name[$this->contextLangId]) ?
+            $customersGroup->name[$this->contextLangId] :
+            reset($customersGroup->name)
+        ;
+        $customersGroupDto = new DefaultGroup((int) $customersGroup->id, $customersName);
 
         return new DefaultGroups(
             $visitorsGroupDto,

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\ApeCode;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
@@ -109,7 +110,7 @@ class EditCustomerCommand
     private $siretCode;
 
     /**
-     * @var string|null
+     * @var ApeCode|null
      */
     private $apeCode;
 
@@ -134,11 +135,11 @@ class EditCustomerCommand
     private $riskId;
 
     /**
-     * @param CustomerId $customerId
+     * @param int $customerId
      */
-    public function __construct(CustomerId $customerId)
+    public function __construct($customerId)
     {
-        $this->customerId = $customerId;
+        $this->customerId = new CustomerId($customerId);
     }
 
     /**
@@ -158,17 +159,13 @@ class EditCustomerCommand
     }
 
     /**
-     * @param string|FirstName $firstName
+     * @param string $firstName
      *
      * @return self
      */
     public function setFirstName($firstName)
     {
-        if (!$firstName instanceof FirstName) {
-            $firstName = new FirstName($firstName);
-        }
-
-        $this->firstName = $firstName;
+        $this->firstName = new FirstName($firstName);
 
         return $this;
     }
@@ -182,17 +179,13 @@ class EditCustomerCommand
     }
 
     /**
-     * @param string|LastName $lastName
+     * @param string $lastName
      *
      * @return self
      */
     public function setLastName($lastName)
     {
-        if (!$lastName instanceof LastName) {
-            $lastName = new LastName($lastName);
-        }
-
-        $this->lastName = $lastName;
+        $this->lastName = new LastName($lastName);
 
         return $this;
     }
@@ -206,17 +199,13 @@ class EditCustomerCommand
     }
 
     /**
-     * @param string|Email $email
+     * @param string $email
      *
      * @return self
      */
     public function setEmail($email)
     {
-        if (!$email instanceof Email) {
-            $email = new Email($email);
-        }
-
-        $this->email = $email;
+        $this->email = new Email($email);
 
         return $this;
     }
@@ -230,17 +219,13 @@ class EditCustomerCommand
     }
 
     /**
-     * @param string|Password $password
+     * @param string $password
      *
      * @return self
      */
     public function setPassword($password)
     {
-        if (!$password instanceof Password) {
-            $password = new Password($password);
-        }
-
-        $this->password = $password;
+        $this->password = new Password($password);
 
         return $this;
     }
@@ -254,7 +239,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @param int|null $defaultGroupId
+     * @param int $defaultGroupId
      *
      * @return self
      */
@@ -274,11 +259,11 @@ class EditCustomerCommand
     }
 
     /**
-     * @param int[]|null $groupIds
+     * @param int[] $groupIds
      *
      * @return self
      */
-    public function setGroupIds($groupIds)
+    public function setGroupIds(array $groupIds)
     {
         $this->groupIds = $groupIds;
 
@@ -294,7 +279,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @param int|null $genderId
+     * @param int $genderId
      *
      * @return self
      */
@@ -306,7 +291,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
     public function isEnabled()
     {
@@ -314,7 +299,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @param bool|null $isEnabled
+     * @param bool $isEnabled
      *
      * @return self
      */
@@ -326,7 +311,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
     public function isPartnerOffersSubscribed()
     {
@@ -334,7 +319,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @param bool|null $isPartnerOffersSubscribed
+     * @param bool $isPartnerOffersSubscribed
      *
      * @return self
      */
@@ -354,13 +339,13 @@ class EditCustomerCommand
     }
 
     /**
-     * @param Birthday $birthday
+     * @param string $birthday
      *
      * @return self
      */
-    public function setBirthday(Birthday $birthday)
+    public function setBirthday($birthday)
     {
-        $this->birthday = $birthday;
+        $this->birthday = new Birthday($birthday);
 
         return $this;
     }
@@ -374,7 +359,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @param string|null $companyName
+     * @param string $companyName
      *
      * @return self
      */
@@ -394,7 +379,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @param string|null $siretCode
+     * @param string $siretCode
      *
      * @return self
      */
@@ -406,7 +391,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @return string|null
+     * @return ApeCode|null
      */
     public function getApeCode()
     {
@@ -414,13 +399,13 @@ class EditCustomerCommand
     }
 
     /**
-     * @param string|null $apeCode
+     * @param string $apeCode
      *
      * @return self
      */
     public function setApeCode($apeCode)
     {
-        $this->apeCode = $apeCode;
+        $this->apeCode = new ApeCode($apeCode);
 
         return $this;
     }
@@ -434,7 +419,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @param string|null $website
+     * @param string $website
      *
      * @return self
      */
@@ -454,7 +439,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @param float|null $allowedOutstandingAmount
+     * @param float $allowedOutstandingAmount
      *
      * @return self
      */
@@ -474,7 +459,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @param int|null $maxPaymentDays
+     * @param int $maxPaymentDays
      *
      * @return self
      */
@@ -494,7 +479,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @param int|null $riskId
+     * @param int $riskId
      *
      * @return self
      */

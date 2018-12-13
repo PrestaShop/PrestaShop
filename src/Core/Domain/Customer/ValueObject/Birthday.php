@@ -47,6 +47,14 @@ class Birthday
     private $birthday;
 
     /**
+     * @return Birthday
+     */
+    public static function createEmpty()
+    {
+        return new self(self::EMPTY_BIRTHDAY);
+    }
+
+    /**
      * @param string $birthday
      */
     public function __construct($birthday)
