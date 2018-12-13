@@ -1076,7 +1076,7 @@ class LinkCore
                 unset($request['controller']);
             }
         } else {
-            // @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ...
+            // @todo html_entity_decode has been added due to '&amp;' => '%3B' ...
             $request = html_entity_decode($request);
             if ($requestUrlEncode) {
                 $request = urlencode($request);
