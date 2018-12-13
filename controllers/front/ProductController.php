@@ -483,7 +483,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $id_currency = (int) $this->context->cookie->id_currency;
         $id_product = (int) $this->product->id;
-        $id_product_attribute = Tools::getValue('id_product_attribute', null);
+        $id_product_attribute = $this->getIdProductAttributeByRequestOrGroup();
         $id_shop = $this->context->shop->id;
 
         $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute, false, (int) $this->context->customer->id);
@@ -501,7 +501,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
         }
 
-        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
+        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute);
+
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
 
         $this->context->smarty->assign(array(
