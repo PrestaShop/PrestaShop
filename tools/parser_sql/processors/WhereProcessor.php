@@ -33,11 +33,9 @@
 require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
 
 /**
- * 
  * This class processes the WHERE statements.
  * 
  * @author arothe
- * 
  */
 class WhereProcessor extends ExpressionListProcessor {
 

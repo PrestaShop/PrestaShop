@@ -33,11 +33,9 @@
 require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
- * 
  * This class processes the LIMIT statements.
  * 
  * @author arothe
- * 
  */
 class LimitProcessor extends AbstractProcessor {
 

@@ -35,11 +35,9 @@ require_once dirname(__FILE__) . '/CreateDefinitionProcessor.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- *
  * This class processes the TABLE statements.
  *
  * @author arothe
- *
  */
 class TableProcessor extends AbstractProcessor {
 

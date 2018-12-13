@@ -37,7 +37,6 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  * @version   SVN: $Id: SelectBuilder.php 903 2014-01-06 11:29:19Z phosco@gmx.de $
- * 
  */
 require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
 require_once dirname(__FILE__) . '/ConstantBuilder.php';
@@ -52,7 +51,6 @@ require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class SelectBuilder {
 

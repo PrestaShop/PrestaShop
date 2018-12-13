@@ -33,11 +33,9 @@
 require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
- * 
  * This class processes the INTO statements.
  * 
  * @author arothe
- * 
  */
 class IntoProcessor extends AbstractProcessor {
 

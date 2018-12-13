@@ -33,11 +33,9 @@
 require_once dirname(__FILE__) . '/FromProcessor.php';
 
 /**
- * 
  * This class processes the USING statements.
  * 
  * @author arothe
- * 
  */
 class UsingProcessor extends FromProcessor {
 

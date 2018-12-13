@@ -37,7 +37,6 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  * @version   SVN: $Id: PrimaryKeyBuilder.php 919 2014-01-08 11:49:02Z phosco@gmx.de $
- * 
  */
 
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
@@ -55,7 +54,6 @@ require_once dirname(__FILE__) . '/IndexParserBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class PrimaryKeyBuilder {
 

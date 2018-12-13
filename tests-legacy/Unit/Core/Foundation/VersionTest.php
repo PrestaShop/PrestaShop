@@ -294,7 +294,6 @@ class VersionTest extends TestCase
      *
      * @param $version string  Version
      * @param $result  boolean Result
-     *
      */
     public function testCheckInvalidVersion($version)
     {

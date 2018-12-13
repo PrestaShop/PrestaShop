@@ -28,31 +28,26 @@
 class Step
 {
     /**
-     *
      * @var string
      */
     protected $name;
 
     /**
-     *
      * @var string
      */
     protected $displayName;
 
     /**
-     *
      * @var string
      */
     protected $controllerName;
 
     /**
-     *
      * @var object
      */
     protected $instance;
 
     /**
-     *
      * @return string
      */
     public function __toString()
@@ -61,7 +56,6 @@ class Step
     }
 
     /**
-     *
      * @return string
      */
     public function getName()
@@ -70,7 +64,6 @@ class Step
     }
 
     /**
-     *
      * @return string
      */
     public function getdisplayName()
@@ -79,7 +72,6 @@ class Step
     }
 
     /**
-     *
      * @return string
      */
     public function getControllerName()
@@ -88,7 +80,6 @@ class Step
     }
 
     /**
-     *
      * @param string $name
      *
      * @return Step
@@ -101,7 +92,6 @@ class Step
     }
 
     /**
-     *
      * @param string $displayName
      *
      * @return Step
@@ -114,7 +104,6 @@ class Step
     }
 
     /**
-     *
      * @param string $name
      * @param mixed $controllerName
      *
@@ -128,7 +117,6 @@ class Step
     }
 
     /**
-     *
      * @return object
      */
     public function getControllerInstance()

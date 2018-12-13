@@ -33,11 +33,9 @@
 require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
- * 
  * This class processes the DELETE statements.
  * 
  * @author arothe
- * 
  */
 class DeleteProcessor extends AbstractProcessor {
 

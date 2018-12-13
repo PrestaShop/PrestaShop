@@ -38,7 +38,6 @@
  * in such a case.
  *  
  * @author arothe
- *
  */
 class UnableToCreateSQLException extends Exception {
 

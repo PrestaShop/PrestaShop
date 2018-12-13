@@ -129,7 +129,6 @@ class CurrencyTest extends TestCase
      * Given a valid Currency instance and un unknown or invalid locale code
      * When requesting the currency symbol for the said locale code
      * Then an exception should be raised
-     *
      */
     public function testGetSymbolWithUnknownLocaleCode()
     {
@@ -172,7 +171,6 @@ class CurrencyTest extends TestCase
      * Given a valid Currency instance and an invalid or unknown locale code
      * When requesting the currency name for the said locale code
      * Then an exception should be raised
-     *
      */
     public function testGetNameWithUnknownLocaleCode()
     {

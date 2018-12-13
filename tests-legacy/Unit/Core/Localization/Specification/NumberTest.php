@@ -106,7 +106,6 @@ class NumberTest extends TestCase
      * Given a valid Number specification
      * When asking it a symbols list for a given INVALID numbering system
      * Then an exception souhd be raised
-     *
      */
     public function testGetSymbolsByNumberingSystemWithInvalidParameter()
     {

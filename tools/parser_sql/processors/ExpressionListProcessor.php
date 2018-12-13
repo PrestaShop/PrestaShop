@@ -36,11 +36,9 @@ require_once dirname(__FILE__) . '/../utils/ExpressionToken.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- * 
  * This class processes expression lists.
  * 
  * @author arothe
- * 
  */
 class ExpressionListProcessor extends AbstractProcessor {
 

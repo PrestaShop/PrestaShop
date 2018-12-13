@@ -33,11 +33,9 @@
 require_once dirname(__FILE__) . '/ExplainProcessor.php';
 
 /**
- * 
  * This class processes the DESCRIBE statements.
  * 
  * @author arothe
- * 
  */
 class DescribeProcessor extends ExplainProcessor {
 

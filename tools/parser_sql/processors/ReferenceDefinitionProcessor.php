@@ -35,7 +35,6 @@ require_once dirname(__FILE__) . '/IndexColumnListProcessor.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- *
  * This class processes the reference definition part of the CREATE TABLE statements.
  *
  * @author arothe

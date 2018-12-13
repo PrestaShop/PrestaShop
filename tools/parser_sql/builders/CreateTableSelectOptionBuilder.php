@@ -37,7 +37,6 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  * @version   SVN: $Id: CreateTableSelectOptionBuilder.php 932 2014-01-08 13:15:26Z phosco@gmx.de $
- * 
  */
 
 /**
@@ -46,7 +45,6 @@
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class CreateTableSelectOptionBuilder {
 

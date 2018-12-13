@@ -38,7 +38,6 @@
  * enhanced. Please open an issue in such a case.
  * 
  * @author arothe
- *
  */
 class UnsupportedFeatureException extends Exception {
 

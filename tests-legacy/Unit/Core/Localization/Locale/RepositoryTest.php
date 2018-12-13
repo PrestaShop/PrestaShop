@@ -119,7 +119,6 @@ class RepositoryTest extends TestCase
      * Given an invalid locale code
      * When asking the repository for the corresponding locale
      * Then an exception should be raised
-     *
      */
     public function testGetLocaleWithInvalidLocaleCode()
     {

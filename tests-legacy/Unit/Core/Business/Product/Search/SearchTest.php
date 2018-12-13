@@ -32,7 +32,6 @@ use Search;
 class SearchTest extends Testcase
 {
     /**
-     *
      * @dataProvider searchStringProvider()
      *
      * @param $input

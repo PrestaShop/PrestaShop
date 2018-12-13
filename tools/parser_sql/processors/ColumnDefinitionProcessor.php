@@ -36,11 +36,9 @@ require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- *
  * This class processes the column definition part of a CREATE TABLE statement.
  *
  * @author arothe
- *
  */
 class ColumnDefinitionProcessor extends AbstractProcessor {
 

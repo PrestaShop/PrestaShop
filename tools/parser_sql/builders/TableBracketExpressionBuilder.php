@@ -37,7 +37,6 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  * @version   SVN: $Id: TableBracketExpressionBuilder.php 928 2014-01-08 13:01:57Z phosco@gmx.de $
- * 
  */
 
 require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
@@ -54,7 +53,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class TableBracketExpressionBuilder {
 

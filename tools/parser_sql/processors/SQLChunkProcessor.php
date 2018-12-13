@@ -60,11 +60,9 @@ require_once dirname(__FILE__) . '/CreateProcessor.php';
 require_once dirname(__FILE__) . '/TableProcessor.php';
 
 /**
- * 
  * This class processes the SQL chunks.
  * 
  * @author arothe
- * 
  */
 class SQLChunkProcessor extends AbstractProcessor {
 

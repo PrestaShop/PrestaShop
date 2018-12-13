@@ -33,11 +33,9 @@
 require_once dirname(__FILE__) . '/SetProcessor.php';
 
 /**
- * 
  * This class processes the DUPLICATE statements.
  * 
  * @author arothe
- * 
  */
 class DuplicateProcessor extends SetProcessor {
 

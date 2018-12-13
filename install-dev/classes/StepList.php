@@ -28,25 +28,21 @@
 class StepList implements IteratorAggregate
 {
     /**
-     *
      * @var integer
      */
     protected $offset = 0;
 
     /**
-     *
      * @var array
      */
     protected $steps = array();
 
     /**
-     *
      * @var array
      */
     private $stepNames = array();
 
     /**
-     *
      * @param array $stepNames
      * @param array $stepConfig
      */
@@ -62,7 +58,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return int
      */
     public function getOffset()
@@ -71,7 +66,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @param int $offset
      *
      * @return StepList
@@ -84,7 +78,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @param string $stepName
      *
      * @return StepList
@@ -97,7 +90,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @param string $stepName
      *
      * @return int
@@ -108,7 +100,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return Step[]
      */
     public function getSteps()
@@ -117,7 +108,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return Step
      */
     public function current()
@@ -126,7 +116,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return Step
      */
     public function next()
@@ -139,7 +128,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return Step
      */
     public function previous()
@@ -152,7 +140,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return boolean
      */
     public function isFirstStep()
@@ -161,7 +148,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return boolean
      */
     public function isLastStep()
@@ -170,7 +156,6 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     *
      * @return Traversable
      */
     public function getIterator()

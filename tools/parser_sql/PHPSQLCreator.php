@@ -37,7 +37,6 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  * @version   SVN: $Id: PHPSQLCreator.php 790 2013-12-17 12:16:48Z phosco@gmx.de $
- * 
  */
 
 require_once dirname(__FILE__) . '/exceptions/UnsupportedFeatureException.php';
@@ -53,7 +52,6 @@ require_once dirname(__FILE__) . '/builders/ShowStatementBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class PHPSQLCreator {
 

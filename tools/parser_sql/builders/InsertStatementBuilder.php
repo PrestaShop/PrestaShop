@@ -37,7 +37,6 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  * @version   SVN: $Id: InsertStatementBuilder.php 834 2013-12-18 10:14:26Z phosco@gmx.de $
- * 
  */
 
 require_once dirname(__FILE__) . '/InsertBuilder.php';
@@ -49,7 +48,6 @@ require_once dirname(__FILE__) . '/ValuesBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class InsertStatementBuilder {
 

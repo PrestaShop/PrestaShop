@@ -35,11 +35,9 @@ require_once dirname(__FILE__) . '/../utils/ExpressionToken.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- * 
  * This class processes the RENAME statements.
  * 
  * @author arothe
- * 
  */
 class RenameProcessor extends AbstractProcessor {
 

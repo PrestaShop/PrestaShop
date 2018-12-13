@@ -38,7 +38,6 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  * @version   SVN: $Id: ExpressionType.php 836 2013-12-20 05:31:55Z phosco@gmx.de $
- * 
  */
 
 /**
@@ -47,7 +46,6 @@
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *
  */
 class ExpressionType {
 

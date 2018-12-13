@@ -35,11 +35,9 @@ require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- * 
  * This class processes the SET statements.
  * 
  * @author arothe
- * 
  */
 class SetProcessor extends AbstractProcessor {
 

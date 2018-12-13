@@ -34,11 +34,9 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
 require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
 
 /**
- * 
  * This class processes records.
  * 
  * @author arothe
- * 
  */
 class RecordProcessor extends AbstractProcessor {
 

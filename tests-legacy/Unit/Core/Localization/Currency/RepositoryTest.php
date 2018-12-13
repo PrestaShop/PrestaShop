@@ -139,7 +139,6 @@ class RepositoryTest extends TestCase
      * Given an unknown or invalid currency code
      * When asking the currency repository for the corresponding Currency
      * Then an exception should be raised
-     *
      */
     public function testGetCurrencyWithUnknownCode()
     {

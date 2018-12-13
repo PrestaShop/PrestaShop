@@ -33,11 +33,9 @@
 require_once dirname(__FILE__) . '/OrderByProcessor.php';
 
 /**
- * 
  * This class processes the GROUP-BY statements.
  * 
  * @author arothe
- * 
  */
 class GroupByProcessor extends OrderByProcessor {
 

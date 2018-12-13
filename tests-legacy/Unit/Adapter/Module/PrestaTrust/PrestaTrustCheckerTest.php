@@ -40,7 +40,6 @@ use LegacyTests\TestCase\UnitTestCase;
 class PrestaTrustCheckerTest extends UnitTestCase
 {
     /**
-     *
      * @var PrestaTrustChecker
      */
     protected $prestatrustChecker;

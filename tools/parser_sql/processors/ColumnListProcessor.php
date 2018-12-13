@@ -34,11 +34,9 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- * 
  * This class processes column-lists.
  * 
  * @author arothe
- * 
  */
 class ColumnListProcessor extends AbstractProcessor {
 

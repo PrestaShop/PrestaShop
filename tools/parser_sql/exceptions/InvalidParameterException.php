@@ -36,7 +36,6 @@
  * is not a String type.
  * 
  * @author arothe
- *
  */
 class InvalidParameterException extends InvalidArgumentException {
 

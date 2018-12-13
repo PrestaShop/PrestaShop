@@ -35,11 +35,9 @@ require_once dirname(__FILE__) . '/RecordProcessor.php';
 require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
- * 
  * This class processes the VALUES statements.
  * 
  * @author arothe
- * 
  */
 class ValuesProcessor extends AbstractProcessor {
 

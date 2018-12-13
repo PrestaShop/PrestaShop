@@ -37,7 +37,6 @@
  * an issue in such a case, it is an application error.
  * 
  * @author arothe
- *
  */
 class UnableToCalculatePositionException extends Exception {
 

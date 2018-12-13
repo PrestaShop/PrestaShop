@@ -39,7 +39,6 @@ require_once dirname(__FILE__) . '/../exceptions/UnableToCalculatePositionExcept
  * of base_expr within the original SQL statement.
  * 
  * @author arothe <andre.rothe@phosco.info>
- * 
  */
 class PositionCalculator {
 

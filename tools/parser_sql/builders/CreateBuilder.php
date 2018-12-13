@@ -37,7 +37,6 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  * @version   SVN: $Id: CreateBuilder.php 833 2013-12-18 10:13:59Z phosco@gmx.de $
- * 
  */
 
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
@@ -50,7 +49,6 @@ require_once dirname(__FILE__) . '/SubTreeBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class CreateBuilder {
 

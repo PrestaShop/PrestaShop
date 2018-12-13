@@ -44,7 +44,6 @@ class MultishopCommandListenerTest extends UnitTestCase
     public $commandListener;
 
     /**
-     *
      * @var Context
      */
     public $multishopContext;

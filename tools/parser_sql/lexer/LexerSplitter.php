@@ -38,7 +38,6 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  * @version   SVN: $Id: LexerSplitter.php 842 2013-12-30 08:57:53Z phosco@gmx.de $
- * 
  */
 
 /**
@@ -48,7 +47,6 @@
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class LexerSplitter {
 

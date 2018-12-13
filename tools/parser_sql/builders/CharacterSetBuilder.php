@@ -37,7 +37,6 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  * @version   SVN: $Id: CharacterSetBuilder.php 914 2014-01-08 11:33:25Z phosco@gmx.de $
- * 
  */
 
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
@@ -53,7 +52,6 @@ require_once dirname(__FILE__) . '/IndexTypeBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class CharacterSetBuilder {
 
