@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use LegacyTests\TestCase\UnitTestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Yaml;
 
 class ModuleSelfConfiguratorTest extends UnitTestCase
 {

@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Unit\Core\Foundation\IoC;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy;

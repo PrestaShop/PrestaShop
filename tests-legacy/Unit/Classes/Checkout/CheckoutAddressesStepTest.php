@@ -31,7 +31,6 @@ use CheckoutProcess;
 use Context;
 use Customer;
 use Language;
-use Link;
 use Phake;
 use LegacyTests\TestCase\UnitTestCase;
 

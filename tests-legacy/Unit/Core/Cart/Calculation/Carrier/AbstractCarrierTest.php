@@ -31,7 +31,6 @@ use Cache;
 use Carrier;
 use CartRule;
 use Configuration;
-use Context;
 use Country;
 use Db;
 use RangePrice;
