@@ -5,6 +5,7 @@
  * Date: 04/07/18
  * Time: 12:24.
  */
+
 namespace PrestaShop\PrestaShop\Core\Search;
 
 use Symfony\Component\HttpFoundation\Request;

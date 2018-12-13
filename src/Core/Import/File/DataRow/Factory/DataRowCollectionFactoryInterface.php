@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory;
 
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowCollectionInterface;
