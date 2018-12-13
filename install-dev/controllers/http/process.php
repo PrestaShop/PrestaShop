@@ -29,7 +29,7 @@ use PrestaShopBundle\Install\XmlLoader;
 
 class InstallControllerHttpProcess extends InstallControllerHttp implements HttpConfigureInterface
 {
-    /** @var  Install */
+    /** @var Install */
     protected $model_install;
     public $process_steps = array();
     public $previous_button = false;
