@@ -84,7 +84,8 @@ class StockManager
 
         if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
             || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-            || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+            || (
+                $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
                 && ($configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
                     || $configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
             )
@@ -183,7 +184,8 @@ class StockManager
             $this->saveMovement($product->id, $id_product_attribute, $delta_quantity, $params);
         }
 
-        $hookManager->exec('actionUpdateQuantity',
+        $hookManager->exec(
+            'actionUpdateQuantity',
             array(
                 'id_product' => $product->id,
                 'id_product_attribute' => $id_product_attribute,

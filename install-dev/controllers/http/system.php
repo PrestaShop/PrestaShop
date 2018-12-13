@@ -103,21 +103,21 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'simplexml' => $this->translator->trans('SimpleXML extension is not loaded', array(), 'Install'),
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
                         'fileinfo' => $this->translator->trans('Fileinfo extension is not enabled', array(), 'Install'),
-                    )
+                    ),
                 ),
                 array(
                     'title' => $this->translator->trans('Required Apache configuration', array(), 'Install'),
                     'success' => 1,
                     'checks' => array(
                         'apache_mod_rewrite' => $this->translator->trans('Enable the Apache mod_rewrite module', array(), 'Install'),
-                    )
+                    ),
                 ),
                 array(
                     'title' => $this->translator->trans('Files', array(), 'Install'),
                     'success' => 1,
                     'checks' => array(
                         'files' => $this->translator->trans('Not all files were successfully uploaded on your server', array(), 'Install'),
-                    )
+                    ),
                 ),
                 array(
                     'title' => $this->translator->trans('Permissions on files and folders', array(), 'Install'),
@@ -137,7 +137,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'virtual_products_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/download/'), 'Install'),
                         'config_sf2_dir' => $this->translator->trans('Write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/config/'), 'Install'),
                         'translations_sf2' => $this->translator->trans('Write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/Resources/translations/'), 'Install'),
-                    )
+                    ),
                 ),
             ),
             'optional' => array(
@@ -149,7 +149,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'mbstring' => $this->translator->trans('Mbstring extension is not enabled', array(), 'Install'),
                         'dom' => $this->translator->trans('Dom extension is not loaded', array(), 'Install'),
                         'fopen' => $this->translator->trans('Cannot open external URLs (requires allow_url_fopen as On)', array(), 'Install'),
-                    )
+                    ),
                 ),
             ),
         );

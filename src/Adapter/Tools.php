@@ -126,7 +126,8 @@ class Tools
      */
     private function generateHtaccessOnMultiViews($disableMultiView = false)
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',
@@ -141,7 +142,8 @@ class Tools
      */
     public function generateHtaccessWithMultiViews()
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',
@@ -156,7 +158,8 @@ class Tools
      */
     public function generateHtaccessWithoutMultiViews()
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',

@@ -98,7 +98,6 @@ class LocalizationConfigurationType extends AbstractType
             ->add('timezone', ChoiceType::class, [
                 'choices' => $this->timezoneChoices,
                 'choice_translation_domain' => false,
-            ])
-        ;
+            ]);
     }
 }

@@ -147,16 +147,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 'title' => $this->trans('Contact options', array(), 'Admin.Catalog.Feature'),
                 'fields' => array(
                     'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => array(
-                            'title' => $this->trans('Allow file uploading', array(), 'Admin.Catalog.Feature'),
-                            'hint' => $this->trans('Allow customers to upload files using the contact page.', array(), 'Admin.Catalog.Help'),
-                            'type' => 'bool',
-                        ),
+                        'title' => $this->trans('Allow file uploading', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Allow customers to upload files using the contact page.', array(), 'Admin.Catalog.Help'),
+                        'type' => 'bool',
+                    ),
                     'PS_CUSTOMER_SERVICE_SIGNATURE' => array(
-                            'title' => $this->trans('Default message', array(), 'Admin.Catalog.Feature'),
-                            'hint' => $this->trans('Please fill out the message fields that appear by default when you answer a thread on the customer service page.', array(), 'Admin.Catalog.Help'),
-                            'type' => 'textareaLang',
-                            'lang' => true,
-                        ),
+                        'title' => $this->trans('Default message', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Please fill out the message fields that appear by default when you answer a thread on the customer service page.', array(), 'Admin.Catalog.Help'),
+                        'type' => 'textareaLang',
+                        'lang' => true,
+                    ),
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             ),
@@ -311,7 +311,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
     {
         if ($id_customer_thread = (int) Tools::getValue('id_customer_thread')) {
             if (($id_contact = (int) Tools::getValue('id_contact'))) {
-                $result = Db::getInstance()->execute('
+                $result = Db::getInstance()->execute(
+                    '
 					UPDATE ' . _DB_PREFIX_ . 'customer_thread
 					SET id_contact = ' . $id_contact . '
 					WHERE id_customer_thread = ' . $id_customer_thread
@@ -382,7 +383,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $employee->firstname . ' ' . $employee->lastname,
                         $current_employee->email,
                         $current_employee->firstname . ' ' . $current_employee->lastname,
-                        null, null, _PS_MAIL_DIR_, true)) {
+                        null,
+                        null,
+                        _PS_MAIL_DIR_,
+                        true
+                    )) {
                         $cm->private = 1;
                         $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature') . ' ' . $employee->firstname . ' ' . $employee->lastname . "\n" . $this->trans('Comment:') . ' ' . $message;
                         $cm->add();
@@ -405,9 +410,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
                             'Emails.Subject',
                             $this->context->language->locale
                         ),
-                        $params, $email, null,
-                        $current_employee->email, $current_employee->firstname . ' ' . $current_employee->lastname,
-                        null, null, _PS_MAIL_DIR_, true)) {
+                        $params,
+                        $email,
+                        null,
+                        $current_employee->email,
+                        $current_employee->firstname . ' ' . $current_employee->lastname,
+                        null,
+                        null,
+                        _PS_MAIL_DIR_,
+                        true
+                    )) {
                         $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature') . ' ' . $email . "\n" . $this->trans('Comment:') . ' ' . $message;
                         $cm->add();
                     }
@@ -471,8 +483,17 @@ class AdminCustomerThreadsControllerCore extends AdminController
                             'Emails.Subject',
                             $language->locale
                         ),
-                        $params, Tools::getValue('msg_email'), null, $from_email, $from_name, $file_attachment, null,
-                        _PS_MAIL_DIR_, true, $ct->id_shop)) {
+                        $params,
+                        Tools::getValue('msg_email'),
+                        null,
+                        $from_email,
+                        $from_name,
+                        $file_attachment,
+                        null,
+                        _PS_MAIL_DIR_,
+                        true,
+                        $ct->id_shop
+                    )) {
                         $ct->status = 'closed';
                         $ct->update();
                     }
@@ -819,8 +840,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $message['message'] = preg_replace(
             '/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',
             '<a href="\1">\1</a>\2',
-            html_entity_decode($message['message'],
-            ENT_QUOTES, 'UTF-8')
+            html_entity_decode(
+                $message['message'],
+            ENT_QUOTES,
+                'UTF-8'
+            )
         );
 
         $is_valid_order_id = true;
@@ -1054,7 +1078,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $exist = Db::getInstance()->getValue(
                 'SELECT `md5_header`
 						 FROM `' . _DB_PREFIX_ . 'customer_message_sync_imap`
-						 WHERE `md5_header` = \'' . pSQL($md5) . '\'');
+						 WHERE `md5_header` = \'' . pSQL($md5) . '\''
+            );
             if ($exist) {
                 if (Configuration::get('PS_SAV_IMAP_DELETE_MSG')) {
                     if (!imap_delete($mbox, $overview->msgno)) {

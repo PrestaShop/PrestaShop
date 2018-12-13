@@ -352,7 +352,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             'iso_country' => $this->session->shop_country,
             'email' => $this->session->admin_email,
             'shop_url' => Tools::getHttpHost(),
-            'version' => _PS_INSTALL_VERSION_
+            'version' => _PS_INSTALL_VERSION_,
         );
 
         if ($lowMemory) {

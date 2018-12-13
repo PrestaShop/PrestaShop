@@ -110,9 +110,11 @@ class CustomerAddressFormCore extends AbstractForm
             if ($postcode->isRequired()) {
                 $country = $this->formatter->getCountry();
                 if (!$country->checkZipCode($postcode->getValue())) {
-                    $postcode->addError($this->translator->trans('Invalid postcode - should look like "%zipcode%"',
+                    $postcode->addError($this->translator->trans(
+                        'Invalid postcode - should look like "%zipcode%"',
                         array('%zipcode%' => $country->zip_code_format),
-                        'Shop.Forms.Errors'));
+                        'Shop.Forms.Errors'
+                    ));
                     $is_valid = false;
                 }
             }

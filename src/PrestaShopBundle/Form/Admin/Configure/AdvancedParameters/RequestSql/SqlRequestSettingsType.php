@@ -45,7 +45,6 @@ class SqlRequestSettingsType extends AbstractType
                     CharsetEncoding::ISO_8859_1 => CharsetEncoding::ISO_8859_1,
                 ],
                 'translation_domain' => false,
-            ])
-        ;
+            ]);
     }
 }

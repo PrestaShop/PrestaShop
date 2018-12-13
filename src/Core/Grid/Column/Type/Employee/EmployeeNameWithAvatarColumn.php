@@ -50,7 +50,6 @@ final class EmployeeNameWithAvatarColumn extends AbstractColumn
             ->setRequired([
                 'field',
             ])
-            ->setAllowedTypes('field', 'string')
-        ;
+            ->setAllowedTypes('field', 'string');
     }
 }

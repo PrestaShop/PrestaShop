@@ -191,8 +191,7 @@ class LogoUploader
             . $logoPrefix
             . '-'
             . (int) Configuration::get('PS_IMG_UPDATE_TIME')
-            . (int) $shopId . $fileExtension
-        ;
+            . (int) $shopId . $fileExtension;
 
         if ($this->shop->getContext() == Shop::CONTEXT_ALL
             || $shopId == 0
@@ -200,8 +199,7 @@ class LogoUploader
         ) {
             $logoName = Tools::link_rewrite($shopName)
                 . '-'
-                . $logoPrefix . '-' . (int) Configuration::get('PS_IMG_UPDATE_TIME') . $fileExtension
-            ;
+                . $logoPrefix . '-' . (int) Configuration::get('PS_IMG_UPDATE_TIME') . $fileExtension;
         }
 
         return $logoName;

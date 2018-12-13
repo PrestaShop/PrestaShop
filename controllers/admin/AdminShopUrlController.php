@@ -233,7 +233,8 @@ class AdminShopUrlControllerCore extends AdminController
         );
 
         if (!defined('_PS_HOST_MODE_')) {
-            $this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
+            $this->fields_form[1]['form']['input'] = array_merge(
+                $this->fields_form[1]['form']['input'],
                 array(
                     array(
                         'type' => 'text',
@@ -246,7 +247,8 @@ class AdminShopUrlControllerCore extends AdminController
             );
         }
 
-        $this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
+        $this->fields_form[1]['form']['input'] = array_merge(
+            $this->fields_form[1]['form']['input'],
             array(
                 array(
                     'type' => 'text',
@@ -369,12 +371,14 @@ class AdminShopUrlControllerCore extends AdminController
                     'Collapse All',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'collapseAll\'); return false;',
-                    'icon-collapse-alt'),
+                    'icon-collapse-alt'
+                ),
                 new TreeToolbarLink(
                     'Expand All',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'expandAll\'); return false;',
-                    'icon-expand-alt'),
+                    'icon-expand-alt'
+                ),
             ))
             ->setAttribute('url_shop_group', $this->context->link->getAdminLink('AdminShopGroup'))
             ->setAttribute('url_shop', $this->context->link->getAdminLink('AdminShop'))

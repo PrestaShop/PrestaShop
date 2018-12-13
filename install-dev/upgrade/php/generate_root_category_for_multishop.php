@@ -79,7 +79,7 @@ function generate_root_category_for_multishop()
             foreach ($shops as $shop) {
                 $data[] = array(
                     'id_category' => $category['id_category'],
-                    'id_shop' => $shop['id_shop']
+                    'id_shop' => $shop['id_shop'],
                 );
             }
         }

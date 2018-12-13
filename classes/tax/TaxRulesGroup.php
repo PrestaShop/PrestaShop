@@ -54,8 +54,8 @@ class TaxRulesGroupCore extends ObjectModel
     );
 
     protected $webserviceParameters = array(
-    'objectsNodeName' => 'tax_rule_groups',
-    'objectNodeName' => 'tax_rule_group',
+        'objectsNodeName' => 'tax_rule_groups',
+        'objectNodeName' => 'tax_rule_group',
         'fields' => array(
         ),
     );
@@ -114,13 +114,15 @@ class TaxRulesGroupCore extends ObjectModel
 
     public function getIdTaxRuleGroupFromHistorizedId($id_tax_rule)
     {
-        $params = Db::getInstance()->getRow('
+        $params = Db::getInstance()->getRow(
+            '
 		SELECT id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior
 		FROM ' . _DB_PREFIX_ . 'tax_rule
 		WHERE id_tax_rule=' . (int) $id_tax_rule
         );
 
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 		SELECT id_tax_rule
 		FROM ' . _DB_PREFIX_ . 'tax_rule
 		WHERE
@@ -162,7 +164,8 @@ class TaxRulesGroupCore extends ObjectModel
      */
     public static function getAssociatedTaxRatesByIdCountry($id_country)
     {
-        $rows = Db::getInstance()->executeS('
+        $rows = Db::getInstance()->executeS(
+            '
 			SELECT rg.`id_tax_rules_group`, t.`rate`
 			FROM `' . _DB_PREFIX_ . 'tax_rules_group` rg
 			LEFT JOIN `' . _DB_PREFIX_ . 'tax_rule` tr ON (tr.`id_tax_rules_group` = rg.`id_tax_rules_group`)
@@ -210,7 +213,8 @@ class TaxRulesGroupCore extends ObjectModel
 
     public function isUsed()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 		SELECT `id_tax_rules_group`
 		FROM `' . _DB_PREFIX_ . 'order_detail`
 		WHERE `id_tax_rules_group` = ' . (int) $this->id

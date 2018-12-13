@@ -112,8 +112,7 @@ class SearchAndResetType extends AbstractType
             ->setAllowedTypes('reset_route', ['string', 'null'])
             ->setAllowedTypes('reset_route_params', 'array')
             ->setAllowedTypes('redirect_route', ['string', 'null'])
-            ->setAllowedTypes('redirect_route_params', 'array')
-        ;
+            ->setAllowedTypes('redirect_route_params', 'array');
     }
 
     /**

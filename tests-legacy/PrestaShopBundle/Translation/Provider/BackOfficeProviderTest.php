@@ -41,8 +41,7 @@ class BackOfficeProviderTest extends TestCase
     public function setUp()
     {
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
-            ->getMock()
-        ;
+            ->getMock();
 
         self::$resourcesDir = __DIR__.'/../../resources/translations';
         $this->provider = new BackOfficeProvider($loader, self::$resourcesDir);

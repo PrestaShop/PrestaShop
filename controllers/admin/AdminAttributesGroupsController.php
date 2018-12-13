@@ -406,14 +406,19 @@ class AdminAttributesGroupsControllerCore extends AdminController
             /** @var AttributeGroup $object */
             $object = new $this->className();
             foreach (Language::getLanguages(false) as $language) {
-                if ($object->isAttribute((int) Tools::getValue('id_attribute_group'),
-                    Tools::getValue('name_' . $language['id_lang']), $language['id_lang'])) {
-                    $this->errors['name_' . $language['id_lang']] = $this->trans('The attribute value "%1$s" already exist for %2$s language',
+                if ($object->isAttribute(
+                    (int) Tools::getValue('id_attribute_group'),
+                    Tools::getValue('name_' . $language['id_lang']),
+                    $language['id_lang']
+                )) {
+                    $this->errors['name_' . $language['id_lang']] = $this->trans(
+                        'The attribute value "%1$s" already exist for %2$s language',
                         array(
                             Tools::getValue('name_' . $language['id_lang']),
                             $language['name'],
                         ),
-                        'Admin.Catalog.Notification');
+                        'Admin.Catalog.Notification'
+                    );
                 }
             }
 
@@ -627,7 +632,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                                 'Edit: %value%',
                                 array(
                                     '%value%' => $obj->name[$this->context->employee->id_lang],
-                                    ),
+                                ),
                                 'Admin.Catalog.Feature'
                             );
                         }

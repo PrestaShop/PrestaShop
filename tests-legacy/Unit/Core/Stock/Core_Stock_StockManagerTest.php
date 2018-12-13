@@ -64,14 +64,14 @@ class FakePackItemsManager4759
             'productObj' => $product,
             'id' => $product->id,
             'id_pack_product_attribute' => $product_attribute_id,
-            'pack_quantity' => $quantity
+            'pack_quantity' => $quantity,
         );
         $this->packs[$pack->id][] = (object) $entry;
         $entry = array(
             'packObj' => $pack,
             'id' => $pack->id,
             'pack_item_quantity' => $quantity,
-            'pack_stock_type' => $pack->pack_stock_type
+            'pack_stock_type' => $pack->pack_stock_type,
 
         );
         $this->items[$product->id][$product_attribute_id][$pack->id] = (object) $entry;
@@ -117,61 +117,61 @@ class StockAvailableTest extends UnitTestCase
                 'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(50), 1, 3),
-                    array(new FakeProduct4759(20), 2, 1)
+                    array(new FakeProduct4759(20), 2, 1),
                 ),
                 'delta' => -3,
-                'expected' => array(7, 41, 17)
+                'expected' => array(7, 41, 17),
             ),
             array( // out of stock case
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(50), 1, 5),
-                    array(new FakeProduct4759(20), 2, 2)
+                    array(new FakeProduct4759(20), 2, 2),
                 ),
                 'delta' => -13,
-                'expected' => array(-3, -15, -6)
+                'expected' => array(-3, -15, -6),
             ),
             array( // default stock type linked case
                 'default_stock_type' => 2, // linked stock mode (Decrement both)
                 'pack' => new FakeProduct4759(10, 3), // 3: default stock type
                 'products' => array(
                     array(new FakeProduct4759(50), 1, 5),
-                    array(new FakeProduct4759(20), 2, 2)
+                    array(new FakeProduct4759(20), 2, 2),
                 ),
                 'delta' => -1,
-                'expected' => array(9, 45, 18)
+                'expected' => array(9, 45, 18),
             ),
             array( // no link stock type case
                 'default_stock_type' => 0, // not linked stock mode
                 'pack' => new FakeProduct4759(5, 3), // 3: default stock type
                 'products' => array(
                     array(new FakeProduct4759(50), 1, 5),
-                    array(new FakeProduct4759(20), 2, 2)
+                    array(new FakeProduct4759(20), 2, 2),
                 ),
                 'delta' => -5,
-                'expected' => array(0, 50, 20)
+                'expected' => array(0, 50, 20),
             ),
             array( // half link stock type case
                 'default_stock_type' => 1, // not linked stock mode
                 'pack' => new FakeProduct4759(5, 3), // 3: default stock type
                 'products' => array(
                     array(new FakeProduct4759(50), 1, 5),
-                    array(new FakeProduct4759(20), 2, 2)
+                    array(new FakeProduct4759(20), 2, 2),
                 ),
                 'delta' => -5,
-                'expected' => array(0, 25, 10)
+                'expected' => array(0, 25, 10),
             ),
             array( // increment case, in linked stock mode
                 'default_stock_type' => 2, // linked stock mode (Decrement both)
                 'pack' => new FakeProduct4759(5, 3), // 3: default stock type
                 'products' => array(
                     array(new FakeProduct4759(50), 1, 5),
-                    array(new FakeProduct4759(20), 2, 2)
+                    array(new FakeProduct4759(20), 2, 2),
                 ),
                 'delta' => 1,
-                'expected' => array(6, 55, 22)
-            )
+                'expected' => array(6, 55, 22),
+            ),
         );
     }
 
@@ -206,60 +206,60 @@ class StockAvailableTest extends UnitTestCase
                 'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(30), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'delta_first_product' => -3,
-                'expected' => array(10, 27, 10)
+                'expected' => array(10, 27, 10),
             ),
             array( // nominal case: pack decreased
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(20), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'delta_first_product' => -1,
-                'expected' => array(9, 19, 10)
+                'expected' => array(9, 19, 10),
             ),
             array( // nominal case: pack decreased
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(20), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'delta_first_product' => -2,
-                'expected' => array(9, 18, 10)
+                'expected' => array(9, 18, 10),
             ),
             array( // increase case: not modification on pack
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(20), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'delta_first_product' => 2,
-                'expected' => array(10, 22, 10)
+                'expected' => array(10, 22, 10),
             ),
             array( // not linked case
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 1), // 1: not linked stock mode
                 'products' => array(
                     array(new FakeProduct4759(20), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'delta_first_product' => -2,
-                'expected' => array(10, 18, 10)
+                'expected' => array(10, 18, 10),
             ),
             array( // out of stock case
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(20), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'delta_first_product' => -22,
-                'expected' => array(0, -2, 10)
+                'expected' => array(0, -2, 10),
             ),
         );
     }
@@ -299,77 +299,77 @@ class StockAvailableTest extends UnitTestCase
                 'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(30), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'product_to_update' => 0, // 0 for pack, 1..n for an item in products
                 'delta' => -3,
-                'expected' => array(7, 24, 7)
+                'expected' => array(7, 24, 7),
             ),
             array( // nominal case: product will decrease pack
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(30), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'product_to_update' => 1, // 0 for pack, 1..n for an item in products
                 'delta' => -11,
-                'expected' => array(9, 19, 10)
+                'expected' => array(9, 19, 10),
             ),
             array( // product won't decrease pack (sufficient stocks)
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(30), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'product_to_update' => 1, // 0 for pack, 1..n for an item in products
                 'delta' => -10,
-                'expected' => array(10, 20, 10)
+                'expected' => array(10, 20, 10),
             ),
             array( // out of stock for pack decrease
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(30), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'product_to_update' => 0, // 0 for pack, 1..n for an item in products
                 'delta' => -12,
-                'expected' => array(-2, 6, -2)
+                'expected' => array(-2, 6, -2),
             ),
             array( // not linked stock mode
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 1), // 2: linked stock mode (Decrement both)
                 'products' => array(
                     array(new FakeProduct4759(30), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'product_to_update' => 1, // 0 for pack, 1..n for an item in products
                 'delta' => -12,
-                'expected' => array(10, 18, 10)
+                'expected' => array(10, 18, 10),
             ),
             array( // not linked stock mode
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 3), // 3: not linked stock mode
                 'products' => array(
                     array(new FakeProduct4759(30), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'product_to_update' => 0, // 0 for pack, 1..n for an item in products
                 'delta' => -8,
-                'expected' => array(2, 30, 10)
+                'expected' => array(2, 30, 10),
             ),
             array( // half linked stock mode
                 'default_stock_type' => 0, // does not matter for this test
                 'pack' => new FakeProduct4759(10, 1), // 1: half linked stock mode (pack decrease will decrease products)
                 'products' => array(
                     array(new FakeProduct4759(30), 1, 2),
-                    array(new FakeProduct4759(10), 2, 1)
+                    array(new FakeProduct4759(10), 2, 1),
                 ),
                 'product_to_update' => 0, // 0 for pack, 1..n for an item in products
                 'delta' => -8,
-                'expected' => array(2, 14, 2)
+                'expected' => array(2, 14, 2),
             ),
         );
     }

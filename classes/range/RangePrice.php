@@ -43,11 +43,11 @@ class RangePriceCore extends ObjectModel
     );
 
     protected $webserviceParameters = array(
-            'objectsNodeName' => 'price_ranges',
-            'objectNodeName' => 'price_range',
-            'fields' => array(
-                'id_carrier' => array('xlink_resource' => 'carriers'),
-            ),
+        'objectsNodeName' => 'price_ranges',
+        'objectNodeName' => 'price_range',
+        'fields' => array(
+            'id_carrier' => array('xlink_resource' => 'carriers'),
+        ),
     );
 
     /**

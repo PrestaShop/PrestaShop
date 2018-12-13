@@ -63,7 +63,8 @@ class SqlTranslationLoader implements LoaderInterface
         if (!array_key_exists($locale, $localeResults)) {
             $locale = Db::getInstance()->escape($locale, false, true);
 
-            $localeResults[$locale] = Db::getInstance()->getRow('SELECT `id_lang`
+            $localeResults[$locale] = Db::getInstance()->getRow(
+                'SELECT `id_lang`
                 FROM `' . _DB_PREFIX_ . 'lang`
                 WHERE `locale` = "' . $locale . '"'
             );
@@ -76,8 +77,7 @@ class SqlTranslationLoader implements LoaderInterface
         $selectTranslationsQuery = '
             SELECT `key`, `translation`, `domain`
             FROM `' . _DB_PREFIX_ . 'translation`
-            WHERE `id_lang` = ' . $localeResults[$locale]['id_lang']
-        ;
+            WHERE `id_lang` = ' . $localeResults[$locale]['id_lang'];
         $translations = Db::getInstance()->executeS($selectTranslationsQuery);
 
         $catalogue = new MessageCatalogue($locale);
@@ -86,8 +86,7 @@ class SqlTranslationLoader implements LoaderInterface
         if (!is_null($this->theme)) {
             $selectThemeTranslationsQuery =
                 $selectTranslationsQuery . "\n" .
-                "AND theme = '" . $this->theme->getName() . "'"
-            ;
+                "AND theme = '" . $this->theme->getName() . "'";
             $themeTranslations = Db::getInstance()->executeS($selectThemeTranslationsQuery);
             $this->addTranslationsToCatalogue($themeTranslations, $catalogue);
         }

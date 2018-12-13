@@ -45,7 +45,8 @@ class PositionCalculator {
 
     private static $_allowedOnOperator = array("\t", "\n", "\r", " ", ",", "(", ")", "_", "'", "\"");
     private static $_allowedOnOther = array("\t", "\n", "\r", " ", ",", "(", ")", "<", ">", "*", "+", "-", "/", "|",
-                                            "&", "=", "!", ";");
+        "&", "=", "!", ";",
+    );
 
     private function _printPos($text, $sql, $charPos, $key, $parsed, $backtracking) {
         if (!isset($_ENV['DEBUG'])) {
@@ -193,8 +194,11 @@ class PositionCalculator {
                 //$this->_printPos("0", $sql, $charPos, $key, $value, $backtracking);
 
                 $subject = substr($sql, $charPos);
-                $pos = $this->findPositionWithinString($subject, $value,
-                    isset($parsed['expr_type']) ? $parsed['expr_type'] : 'alias');
+                $pos = $this->findPositionWithinString(
+                    $subject,
+                    $value,
+                    isset($parsed['expr_type']) ? $parsed['expr_type'] : 'alias'
+                );
                 if ($pos === false) {
                     throw new UnableToCalculatePositionException($value, $subject);
                 }

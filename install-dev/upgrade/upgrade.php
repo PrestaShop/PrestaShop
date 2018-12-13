@@ -117,7 +117,7 @@ if ($upgrade->getInAutoUpgrade()) {
         'nextErrors' => $upgrade->getNextErrors(),
         'next' => $upgrade->getNext(),
         'nextDesc' => $upgrade->getNextDesc(),
-        'warningExists' => $upgrade->hasWarning()
+        'warningExists' => $upgrade->hasWarning(),
     ));
 } else {
     header('Content-Type: text/xml');

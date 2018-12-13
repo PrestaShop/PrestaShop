@@ -130,12 +130,10 @@ class LightWebTestCase extends TestCase
         $currencyDataProviderMock = $this->getMockBuilder(CurrencyDataProvider::class)
             ->disableOriginalConstructor()
             ->setMethods(['getDefaultCurrencyIsoCode'])
-            ->getMock()
-        ;
+            ->getMock();
 
         $currencyDataProviderMock->method('getDefaultCurrencyIsoCode')
-            ->will(self::returnValue('en'))
-        ;
+            ->will(self::returnValue('en'));
 
         $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
             ->setMethods([

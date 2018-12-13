@@ -67,7 +67,6 @@ class DeleteCategoriesType extends AbstractType
                 'entry_type' => HiddenType::class,
                 'label' => false,
                 'allow_add' => true,
-            ])
-        ;
+            ]);
     }
 }

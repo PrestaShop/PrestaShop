@@ -666,8 +666,7 @@ class ProductController extends FrameworkBundleAdminController
             ->add('step5', ProductSeo::class, [
                 'mapping_type' => $product->getRedirectType(),
             ])
-            ->add('step6', ProductOptions::class)
-        ;
+            ->add('step6', ProductOptions::class);
 
         // Prepare combination form (fake but just to validate the form)
         $combinations = $product->getAttributesResume(

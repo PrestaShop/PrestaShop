@@ -304,8 +304,14 @@ class AdminManufacturersControllerCore extends AdminController
         }
 
         $image = _PS_MANU_IMG_DIR_ . $manufacturer->id . '.jpg';
-        $image_url = ImageManager::thumbnail($image, $this->table . '_' . (int) $manufacturer->id . '.' . $this->imageType, 350,
-            $this->imageType, true, true);
+        $image_url = ImageManager::thumbnail(
+            $image,
+            $this->table . '_' . (int) $manufacturer->id . '.' . $this->imageType,
+            350,
+            $this->imageType,
+            true,
+            true
+        );
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
         $this->fields_form = array(
@@ -693,9 +699,9 @@ class AdminManufacturersControllerCore extends AdminController
         /* @var Manufacturer $manufacturer */
 
         $this->toolbar_btn['new'] = array(
-                    'href' => $this->context->link->getAdminLink('AdminManufacturers') . '&addaddress=1&id_manufacturer=' . (int) $manufacturer->id,
-                    'desc' => $this->trans('Add address', array(), 'Admin.Catalog.Feature'),
-                );
+            'href' => $this->context->link->getAdminLink('AdminManufacturers') . '&addaddress=1&id_manufacturer=' . (int) $manufacturer->id,
+            'desc' => $this->trans('Add address', array(), 'Admin.Catalog.Feature'),
+        );
 
         $this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
         $this->toolbar_title[] = $manufacturer->name;

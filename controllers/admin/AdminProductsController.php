@@ -2920,11 +2920,14 @@ class AdminProductsControllerCore extends AdminController
                 }
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
                     && (int) Tools::getValue('value') == 1
-                    && (Pack::isPack($product->id)
+                    && (
+                        Pack::isPack($product->id)
                         && !Pack::allUsesAdvancedStockManagement($product->id)
-                        && ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                        && (
+                            $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
                             || $product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
-                            || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                            || (
+                                $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
                                 && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PRODUCTS_ONLY
                                     || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
                             )
@@ -2950,9 +2953,11 @@ class AdminProductsControllerCore extends AdminController
                 }
                 if ($product->depends_on_stock
                     && !Pack::allUsesAdvancedStockManagement($product->id)
-                    && ((int) $value == 1
+                    && (
+                        (int) $value == 1
                         || (int) $value == 2
-                        || ((int) $value == 3
+                        || (
+                            (int) $value == 3
                             && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PRODUCTS_ONLY
                                 || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
                         )

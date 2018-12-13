@@ -316,8 +316,7 @@ class ModuleController extends ModuleAbstractController
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setStatus(~AddonListFilterStatus::INSTALLED)
-        ;
+            ->setStatus(~AddonListFilterStatus::INSTALLED);
 
         try {
             $modulesFromRepository = AddonsCollection::createFrom($moduleRepository->getFilteredList($filters));

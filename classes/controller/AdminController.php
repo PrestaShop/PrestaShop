@@ -1844,7 +1844,8 @@ class AdminControllerCore extends Controller
                 'page' => $this->json ? json_encode($page) : $page,
                 'header' => $this->context->smarty->fetch($header_tpl),
                 'footer' => $this->context->smarty->fetch($footer_tpl),
-        ));
+            )
+        );
 
         $this->smartyOutputContent($this->layout);
     }
@@ -1968,7 +1969,7 @@ class AdminControllerCore extends Controller
                             '[1]' => '<strong>',
                             '[/1]' => '</strong>',
                             '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true, array(), array('action' => 'filterOnlyAbandonedCarts')) . '">',
-                             '[/2]' => '</a>',
+                            '[/2]' => '</a>',
                             '[3]' => '<br>',
                         ),
                         'Admin.Navigation.Notification'
@@ -3656,9 +3657,11 @@ class AdminControllerCore extends Controller
                     $value = Tools::getValue($field . '_' . $default_language->id);
                     // !isset => not exist || "" == $value can be === 0 (before, empty $value === 0 returned true)
                     if (!isset($value) || '' == $value) {
-                        $this->errors[$field . '_' . $default_language->id] = $this->trans('The field %field_name% is required at least in %lang%.',
+                        $this->errors[$field . '_' . $default_language->id] = $this->trans(
+                            'The field %field_name% is required at least in %lang%.',
                             array('%field_name%' => $object->displayFieldName($field, $class_name), '%lang%' => $default_language->name),
-                            'Admin.Notifications.Error');
+                            'Admin.Notifications.Error'
+                        );
                     }
                 }
 
@@ -3689,9 +3692,11 @@ class AdminControllerCore extends Controller
                             $res = Validate::$function($value);
                         }
                         if (!$res) {
-                            $this->errors[$field_lang . '_' . $language['id_lang']] = $this->trans('The %field_name% field (%lang%) is invalid.',
+                            $this->errors[$field_lang . '_' . $language['id_lang']] = $this->trans(
+                                'The %field_name% field (%lang%) is invalid.',
                                 array('%field_name%' => call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name), '%lang%' => $language['name']),
-                                'Admin.Notifications.Error');
+                                'Admin.Notifications.Error'
+                            );
                         }
                     }
                 }

@@ -59,14 +59,15 @@ class AdminCmsCategoriesControllerCore extends AdminController
         $this->tpl_list_vars['icon'] = 'icon-folder-close';
         $this->tpl_list_vars['title'] = $this->trans('Categories', array(), 'Admin.Catalog.Feature');
         $this->fields_list = array(
-        'id_cms_category' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-        'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'width' => 'auto', 'callback' => 'hideCMSCategoryPosition', 'callback_object' => 'CMSCategory'),
-        'description' => array('title' => $this->trans('Description', array(), 'Admin.Global'), 'maxlength' => 90, 'orderby' => false),
-        'position' => array('title' => $this->trans('Position', array(), 'Admin.Global'), 'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
-        'active' => array(
-            'title' => $this->trans('Displayed', array(), 'Admin.Global'), 'class' => 'fixed-width-sm', 'active' => 'status',
-            'align' => 'center', 'type' => 'bool', 'orderby' => false,
-        ), );
+            'id_cms_category' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'width' => 'auto', 'callback' => 'hideCMSCategoryPosition', 'callback_object' => 'CMSCategory'),
+            'description' => array('title' => $this->trans('Description', array(), 'Admin.Global'), 'maxlength' => 90, 'orderby' => false),
+            'position' => array('title' => $this->trans('Position', array(), 'Admin.Global'), 'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
+            'active' => array(
+                'title' => $this->trans('Displayed', array(), 'Admin.Global'), 'class' => 'fixed-width-sm', 'active' => 'status',
+                'align' => 'center', 'type' => 'bool', 'orderby' => false,
+            ),
+        );
 
         // The controller can't be call directly
         // In this case, AdminCmsContentController::getCurrentCMSCategory() is null

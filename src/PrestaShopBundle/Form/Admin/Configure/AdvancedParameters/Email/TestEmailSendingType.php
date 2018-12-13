@@ -48,7 +48,6 @@ class TestEmailSendingType extends AbstractType
             ->add('smtp_username', HiddenType::class)
             ->add('smtp_password', HiddenType::class)
             ->add('smtp_port', HiddenType::class)
-            ->add('smtp_encryption', HiddenType::class)
-        ;
+            ->add('smtp_encryption', HiddenType::class);
     }
 }

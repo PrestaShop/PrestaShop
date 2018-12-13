@@ -97,7 +97,8 @@ class PageCore extends ObjectModel
      */
     public static function getPageTypeByName($name)
     {
-        if ($value = Db::getInstance()->getValue('
+        if ($value = Db::getInstance()->getValue(
+            '
 				SELECT id_page_type
 				FROM ' . _DB_PREFIX_ . 'page_type
 				WHERE name = \'' . pSQL($name) . '\''

@@ -65,7 +65,9 @@ class OrderControllerCore extends FrontController
                 $this->errors[] = $this->trans('Sorry. We cannot renew your order.', array(), 'Shop.Notifications.Error');
             } elseif (!$duplication['success']) {
                 $this->errors[] = $this->trans(
-                    'Some items are no longer available, and we are unable to renew your order.', array(), 'Shop.Notifications.Error'
+                    'Some items are no longer available, and we are unable to renew your order.',
+                    array(),
+                    'Shop.Notifications.Error'
                 );
             } else {
                 $this->context->cookie->id_cart = $duplication['cart']->id;
@@ -153,8 +155,7 @@ class OrderControllerCore extends FrontController
                     $this->context,
                     $translator
                 )
-            ))
-        ;
+            ));
     }
 
     /**

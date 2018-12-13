@@ -54,7 +54,6 @@ final class SeverityLevelColumn extends AbstractColumn
                 'with_message' => false,
             ])
             ->setAllowedTypes('with_message', 'bool')
-            ->setAllowedTypes('field', 'string')
-        ;
+            ->setAllowedTypes('field', 'string');
     }
 }

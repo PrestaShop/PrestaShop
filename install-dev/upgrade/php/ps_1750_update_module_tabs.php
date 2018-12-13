@@ -33,11 +33,11 @@ function ps_1750_update_module_tabs()
     $moduleTabsToBeAdded = array(
         'AdminModulesUpdates' => array(
             'translations' => 'en:Updates|fr:Mises à jour|es:Actualizaciones|de:Aktualisierung|it:Aggiornamenti',
-            'parent' => 'AdminModulesSf'
+            'parent' => 'AdminModulesSf',
         ),
         'AdminParentModulesCatalog' => array(
             'translations' => 'en:Module Catalog|fr:Catalogue de modules|es:Catálogo de módulos|de:Modulkatalog|it:Catalogo dei moduli',
-            'parent' => 'AdminParentModulesSf'
+            'parent' => 'AdminParentModulesSf',
         ),
     );
 

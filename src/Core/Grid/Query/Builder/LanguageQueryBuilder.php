@@ -63,13 +63,11 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $builder = $this->getLanguageQueryBuilder($searchCriteria)
-            ->select('l.*')
-        ;
+            ->select('l.*');
 
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $builder)
-            ->applyPagination($searchCriteria, $builder)
-        ;
+            ->applyPagination($searchCriteria, $builder);
 
         return $builder;
     }
@@ -90,8 +88,7 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getLanguageQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $builder = $this->connection->createQueryBuilder()
-            ->from($this->dbPrefix . 'lang', 'l')
-        ;
+            ->from($this->dbPrefix . 'lang', 'l');
 
         $this->applyFilters($builder, $searchCriteria);
 

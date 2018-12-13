@@ -45,13 +45,17 @@ class Cart extends CartCore
 
     public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
     {
-        $result = Hook::exec('ppbsDeleteCartProduct', array(
+        $result = Hook::exec(
+            'ppbsDeleteCartProduct',
+            array(
                 'id_product' => $id_product,
                 'id_product_attribute' => $id_product_attribute,
                 'id_customization' => $id_customization,
                 'id_address_delivery' => $id_address_delivery,
             ),
-            null, false);
+            null,
+            false
+        );
         if ($result == false) {
             parent::deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0);
         }

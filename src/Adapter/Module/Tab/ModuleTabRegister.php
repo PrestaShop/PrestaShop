@@ -294,7 +294,9 @@ class ModuleTabRegister
                 $this->translator->trans(
                     'Failed to install admin tab "%name%".',
                     array('%name%' => $tab->name),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
     }
 

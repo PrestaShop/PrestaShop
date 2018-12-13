@@ -57,8 +57,7 @@ class BulkDeleteCategoriesCommand
     {
         $this
             ->setCategoryIds($categoryIds)
-            ->setDeleteMode($deleteMode)
-        ;
+            ->setDeleteMode($deleteMode);
     }
 
     /**

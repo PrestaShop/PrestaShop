@@ -183,14 +183,14 @@ class ModuleManagerTest extends TestCase
                 'uninstall', self::INSTALLED_MODULE, true,
             ],
             [
-                'uninstall', self::UNINSTALLED_MODULE, false
+                'uninstall', self::UNINSTALLED_MODULE, false,
             ],
             [
                 'configure', self::INSTALLED_MODULE, true,
             ],
             [
-                'configure', self::UNINSTALLED_MODULE, false
-            ]
+                'configure', self::UNINSTALLED_MODULE, false,
+            ],
         ];
         $this->moduleProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
             ->disableOriginalConstructor()
@@ -202,11 +202,11 @@ class ModuleManagerTest extends TestCase
 
         $isInstalledValues = [
             [
-                self::INSTALLED_MODULE, true
+                self::INSTALLED_MODULE, true,
             ],
             [
-                self::UNINSTALLED_MODULE, false
-            ]
+                self::UNINSTALLED_MODULE, false,
+            ],
         ];
         $this->moduleProviderS
             ->method('isInstalled')
@@ -214,7 +214,7 @@ class ModuleManagerTest extends TestCase
 
         $isEnabledValues = [
             [self::INSTALLED_MODULE, true],
-            [self::UNINSTALLED_MODULE, false]
+            [self::UNINSTALLED_MODULE, false],
         ];
 
         $this->moduleProviderS

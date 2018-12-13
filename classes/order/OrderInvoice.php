@@ -155,7 +155,8 @@ class OrderInvoiceCore extends ObjectModel
         $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT `id_order_invoice`
             FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE number = ' . (int) $id_invoice);
+            WHERE number = ' . (int) $id_invoice
+        );
 
         return $id_order_invoice ? new OrderInvoice($id_order_invoice) : false;
     }
@@ -321,7 +322,8 @@ class OrderInvoiceCore extends ObjectModel
     		WHERE od.`id_order` = ' . (int) $this->id_order . '
     		AND od.`id_order_invoice` = ' . (int) $this->id . '
     		AND od.`tax_computation_method` = ' . (int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
-            || Configuration::get('PS_INVOICE_TAXES_BREAKDOWN'
+            || Configuration::get(
+                'PS_INVOICE_TAXES_BREAKDOWN'
         );
     }
 

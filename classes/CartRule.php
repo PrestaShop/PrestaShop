@@ -191,7 +191,8 @@ class CartRuleCore extends ObjectModel
         }
 
         Configuration::updateGlobalValue(
-            'PS_CART_RULE_FEATURE_ACTIVE', CartRule::isCurrentlyUsed($this->def['table'], true)
+            'PS_CART_RULE_FEATURE_ACTIVE',
+            CartRule::isCurrentlyUsed($this->def['table'], true)
         );
 
         return true;
@@ -461,7 +462,8 @@ class CartRuleCore extends ObjectModel
         foreach ($result_bak as $key => $cart_rule) {
             if ($cart_rule['country_restriction']) {
                 $country_restriction = true;
-                $countries = Db::getInstance()->executeS('
+                $countries = Db::getInstance()->executeS(
+                    '
                     SELECT `id_country`
                     FROM `' . _DB_PREFIX_ . 'address`
                     WHERE `id_customer` = ' . (int) $id_customer . '
@@ -1475,7 +1477,8 @@ class CartRuleCore extends ObjectModel
             if ($type == 'cart_rule') {
                 $array = $this->getCartRuleCombinations($offset, $limit, $search_cart_rule_name);
             } else {
-                $resource = Db::getInstance()->executeS('
+                $resource = Db::getInstance()->executeS(
+                    '
 				SELECT t.*' . ($i18n ? ', tl.*' : '') . ', IF(crt.id_' . $type . ' IS NULL, 0, 1) as selected
 				FROM `' . _DB_PREFIX_ . $type . '` t
 				' . ($i18n ? 'LEFT JOIN `' . _DB_PREFIX_ . $type . '_lang` tl ON (t.id_' . $type . ' = tl.id_' . $type . ' AND tl.id_lang = ' . (int) Context::getContext()->language->id . ')' : '') . '
@@ -1486,7 +1489,8 @@ class CartRuleCore extends ObjectModel
                     (in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '') .
                     (in_array($type, array('country', 'group')) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
                     $sql_limit,
-                    false);
+                    false
+                );
                 while ($row = Db::getInstance()->nextRow($resource)) {
                     $array[($row['selected'] || $this->{$type . '_restriction'} == 0) ? 'selected' : 'unselected'][] = $row;
                 }

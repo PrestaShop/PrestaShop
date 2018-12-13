@@ -1308,8 +1308,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             return
                 Validate::isLoadedObject($combination)
-                && $combination->id_product == $productId
-            ;
+                && $combination->id_product == $productId;
         }
 
         return false;

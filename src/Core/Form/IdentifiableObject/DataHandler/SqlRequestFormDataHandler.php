@@ -69,8 +69,7 @@ final class SqlRequestFormDataHandler implements FormDataHandlerInterface
 
         $command = (new EditSqlRequestCommand($sqlRequestId))
             ->setName($data['name'])
-            ->setSql($data['sql'])
-        ;
+            ->setSql($data['sql']);
 
         $this->commandBus->handle($command);
 

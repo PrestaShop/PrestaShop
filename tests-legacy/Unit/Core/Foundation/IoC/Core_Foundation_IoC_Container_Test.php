@@ -189,7 +189,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         return array(
             array(new Dummy()),
             array(42),
-            array(array(1, 2, 3))
+            array(array(1, 2, 3)),
         );
     }
 

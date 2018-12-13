@@ -80,8 +80,7 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb)
-        ;
+            ->applySorting($searchCriteria, $qb);
 
         return $qb;
     }

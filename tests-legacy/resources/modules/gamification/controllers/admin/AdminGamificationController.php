@@ -121,8 +121,8 @@ class AdminGamificationController extends ModuleAdminController
         $return = array(
             'refresh_data' => $this->processRefreshData(),
             'daily_calculation' => $this->processMakeDailyCalculation(),
-            'advice_validation' => $this->processAdviceValidation()
-            );
+            'advice_validation' => $this->processAdviceValidation(),
+        );
         
         $return['advices_to_display'] = $this->processGetAdvicesToDisplay();
         //get only one random advice by tab
@@ -191,7 +191,7 @@ class AdminGamificationController extends ModuleAdminController
                         'selector' => $advice['selector'],
                         'html' => GamificationTools::parseMetaData($advice['html']),
                         'location' => $advice['location'],
-                        'weight' => (int)$advice['weight']
+                        'weight' => (int)$advice['weight'],
                     );
                 }
             }

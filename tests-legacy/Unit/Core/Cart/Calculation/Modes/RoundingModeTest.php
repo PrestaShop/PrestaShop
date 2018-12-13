@@ -104,14 +104,14 @@ class RoundingModeTest extends AbstractCartCalculationTest
             'PS_ROUND_UP one product in cart, quantity 1'               => [
                 'products'      => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_UP)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_UP,
             ],
             'PS_ROUND_UP one product in cart, quantity 3'               => [
                 'products'      => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_UP)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_UP,
             ],
@@ -122,9 +122,9 @@ class RoundingModeTest extends AbstractCartCalculationTest
                     3 => 1,
                 ],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_UP)
-                                   + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_UP)
-                                   + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_UP)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_UP)
+                + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_UP)
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_UP,
             ],
@@ -138,14 +138,14 @@ class RoundingModeTest extends AbstractCartCalculationTest
             'PS_ROUND_DOWN one product in cart, quantity 1'             => [
                 'products'      => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_DOWN)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_DOWN,
             ],
             'PS_ROUND_DOWN one product in cart, quantity 3'             => [
                 'products'      => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_DOWN)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_DOWN,
             ],
@@ -156,9 +156,9 @@ class RoundingModeTest extends AbstractCartCalculationTest
                     3 => 1,
                 ],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_DOWN)
-                                   + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_DOWN)
-                                   + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_DOWN)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_DOWN)
+                + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_DOWN)
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_DOWN,
             ],
@@ -172,14 +172,14 @@ class RoundingModeTest extends AbstractCartCalculationTest
             'PS_ROUND_HALF_UP one product in cart, quantity 1'          => [
                 'products'      => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_UP)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_UP,
             ],
             'PS_ROUND_HALF_UP one product in cart, quantity 3'          => [
                 'products'      => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_UP)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_UP,
             ],
@@ -190,9 +190,9 @@ class RoundingModeTest extends AbstractCartCalculationTest
                     3 => 1,
                 ],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_UP)
-                                   + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_UP)
-                                   + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_UP)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_UP)
+                + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_UP)
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_UP,
             ],
@@ -206,14 +206,14 @@ class RoundingModeTest extends AbstractCartCalculationTest
             'PS_ROUND_HALF_DOWN one product in cart, quantity 1'        => [
                 'products'      => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_DOWN)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_DOWN,
             ],
             'PS_ROUND_HALF_DOWN one product in cart, quantity 3'        => [
                 'products'      => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_DOWN)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_DOWN,
             ],
@@ -224,9 +224,9 @@ class RoundingModeTest extends AbstractCartCalculationTest
                     3 => 1,
                 ],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_DOWN)
-                                   + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_DOWN)
-                                   + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_DOWN)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_DOWN)
+                + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_DOWN)
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_DOWN,
             ],
@@ -240,14 +240,14 @@ class RoundingModeTest extends AbstractCartCalculationTest
             'PS_ROUND_HALF_ODD one product in cart, quantity 1'         => [
                 'products'      => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_ODD)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_ODD,
             ],
             'PS_ROUND_HALF_ODD one product in cart, quantity 3'         => [
                 'products'      => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_ODD)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_ODD,
             ],
@@ -258,9 +258,9 @@ class RoundingModeTest extends AbstractCartCalculationTest
                     3 => 1,
                 ],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_ODD)
-                                   + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_ODD)
-                                   + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_ODD)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_ODD)
+                + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_ODD)
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_ODD,
             ],
@@ -274,14 +274,14 @@ class RoundingModeTest extends AbstractCartCalculationTest
             'PS_ROUND_HALF_EVEN one product in cart, quantity 1'        => [
                 'products'      => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_EVEN)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_EVEN,
             ],
             'PS_ROUND_HALF_EVEN one product in cart, quantity 3'        => [
                 'products'      => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_EVEN)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_EVEN,
             ],
@@ -292,9 +292,9 @@ class RoundingModeTest extends AbstractCartCalculationTest
                     3 => 1,
                 ],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_EVEN)
-                                   + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_EVEN)
-                                   + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_EVEN)
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_EVEN)
+                + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_EVEN)
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [],
                 'roundingMode'  => PS_ROUND_HALF_EVEN,
             ],

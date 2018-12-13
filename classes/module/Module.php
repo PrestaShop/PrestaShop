@@ -633,7 +633,7 @@ abstract class ModuleCore implements ModuleInterface
                             'upgrade_function' => array(
                                 'upgrade_module_' . str_replace('.', '_', $file_version),
                                 'upgradeModule' . str_replace('.', '', $file_version), ),
-                            );
+                        );
                     }
                 }
             }
@@ -1794,10 +1794,10 @@ abstract class ModuleCore implements ModuleInterface
         $untrusted = array();
 
         $trusted_modules_xml = array(
-                                    _PS_ROOT_DIR_ . self::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
-                                    _PS_ROOT_DIR_ . self::CACHE_FILE_MUST_HAVE_MODULES_LIST,
-                                    _PS_ROOT_DIR_ . self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST,
-                                );
+            _PS_ROOT_DIR_ . self::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
+            _PS_ROOT_DIR_ . self::CACHE_FILE_MUST_HAVE_MODULES_LIST,
+            _PS_ROOT_DIR_ . self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST,
+        );
 
         if (file_exists(_PS_ROOT_DIR_ . self::CACHE_FILE_CUSTOMER_MODULES_LIST)) {
             $trusted_modules_xml[] = _PS_ROOT_DIR_ . self::CACHE_FILE_CUSTOMER_MODULES_LIST;

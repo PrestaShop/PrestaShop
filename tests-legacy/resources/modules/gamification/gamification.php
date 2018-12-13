@@ -119,7 +119,8 @@ class gamification extends Module
         if (version_compare(_PS_VERSION_, '1.7.0.0', '>=')) {
             //AdminPreferences
             $tab->id_parent = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)
-                                ->getValue('SELECT MIN(id_tab)
+                                ->getValue(
+                                    'SELECT MIN(id_tab)
 											FROM `'._DB_PREFIX_.'tab`
 											WHERE `class_name` = "'.pSQL('ShopParameters').'"'
                                         );
@@ -257,7 +258,7 @@ class gamification extends Module
             'current_id_tab' => (int)$this->context->controller->id,
             'notification' => (int)Configuration::get('GF_NOTIFICATION'),
             'advice_hide_url' => 'http://gamification.prestashop.com/api/AdviceHide/',
-            ));
+        ));
 
         if (version_compare(_PS_VERSION_, '1.6.0', '>=')) {
             return $this->display(__FILE__, 'notification_bt.tpl');
@@ -410,7 +411,8 @@ class gamification extends Module
             $formated_badges_lang[$lang->id_ps_badge] = array(
                 'name' => array($id_lang => $lang->name),
                 'description' => array($id_lang => $lang->description),
-                'group_name' => array($id_lang => $lang->group_name));
+                'group_name' => array($id_lang => $lang->group_name),
+            );
         }
 
         $current_badges = array();
@@ -499,16 +501,20 @@ class gamification extends Module
         Db::getInstance()->delete('condition_advice', 'id_advice='.(int)$id_advice);
         if (is_array($display_conditions)) {
             foreach ($display_conditions as $cond) {
-                Db::getInstance()->insert('condition_advice', array(
-                    'id_condition' => (int) $cond_ids[$cond], 'id_advice' => (int) $id_advice, 'display' => 1)
+                Db::getInstance()->insert(
+                    'condition_advice',
+                    array(
+                        'id_condition' => (int) $cond_ids[$cond], 'id_advice' => (int) $id_advice, 'display' => 1, )
                 );
             }
         }
 
         if (is_array($hide_conditions)) {
             foreach ($hide_conditions as $cond) {
-                Db::getInstance()->insert('condition_advice', array(
-                    'id_condition' => (int) $cond_ids[$cond], 'id_advice' => (int) $id_advice, 'display' => 0)
+                Db::getInstance()->insert(
+                    'condition_advice',
+                    array(
+                        'id_condition' => (int) $cond_ids[$cond], 'id_advice' => (int) $id_advice, 'display' => 0, )
                 );
             }
         }
@@ -516,8 +522,10 @@ class gamification extends Module
         Db::getInstance()->delete('tab_advice', 'id_advice='.(int)$id_advice);
         if (isset($tabs) && is_array($tabs) && count($tabs)) {
             foreach ($tabs as $tab) {
-                Db::getInstance()->insert('tab_advice', array(
-                    'id_tab' => (int)Tab::getIdFromClassName($tab), 'id_advice' => (int) $id_advice)
+                Db::getInstance()->insert(
+                    'tab_advice',
+                    array(
+                        'id_tab' => (int)Tab::getIdFromClassName($tab), 'id_advice' => (int) $id_advice, )
                 );
             }
         }

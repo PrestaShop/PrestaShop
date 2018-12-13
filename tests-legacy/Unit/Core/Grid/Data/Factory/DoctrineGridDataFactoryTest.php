@@ -43,8 +43,7 @@ class DoctrineGridDataFactoryTest extends TestCase
     {
         $hookDispatcher = $this->createHookDispatcherMock();
         $hookDispatcher->expects($this->once())
-            ->method('dispatchWithParameters')
-        ;
+            ->method('dispatchWithParameters');
 
         $queryParser = $this->createQueryParserMock();
 
@@ -96,8 +95,7 @@ class DoctrineGridDataFactoryTest extends TestCase
         $qb->method('getParameters')
             ->willReturn([
                 'id' => 1,
-            ])
-        ;
+            ]);
 
         $doctrineQueryBuilder = $this->createMock(DoctrineQueryBuilderInterface::class);
         $doctrineQueryBuilder->method('getSearchQueryBuilder')
