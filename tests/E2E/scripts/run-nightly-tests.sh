@@ -3,6 +3,7 @@
 DIR_PATH=$(mktemp -d)
 REPORT_PATH=$(mktemp -p)
 BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/TRAVIS_BRANCH -H "Metadata-Flavor: Google")
+OUTPUT_DIR="$(date +%Y-%m-%d)-reports-${BRANCH}"
 
 if [ -d $DIR_PATH ]; then
   rm -rf $DIR_PATH
@@ -12,7 +13,7 @@ git clone https://github.com/PrestaShop/PrestaShop.git $DIR_PATH
 
 cd $DIR_PATH
 git checkout $BRANCH
-mkdir -p $DIR_PATH/reports
+mkdir -p "${DIR_PATH}/reports"
 
 cd "${DIR_PATH}/tests/E2E"
 for directory in test/campaigns/full/* ; do
@@ -34,7 +35,8 @@ for directory in test/campaigns/full/* ; do
   fi
 done
 
-./scripts/combine-reports.py ${REPORT_PATH}/reports ${REPORT_PATH}/results.json
-./node_modules/mochawesome-report-generator/bin/cli.js ${REPORT_PATH}/results.json
+./scripts/combine-reports.py "${REPORT_PATH}/reports" "${REPORT_PATH}/results.json"
+./node_modules/mochawesome-report-generator/bin/cli.js "${REPORT_PATH}/results.json" -o "${REPORT_PATH}/${OUTPUT_DIR}"
+gsutil cp -r "${REPORT_PATH}/${OUTPUT_DIR}" gs://prestashop-core-nightly
 
 sudo halt -p
