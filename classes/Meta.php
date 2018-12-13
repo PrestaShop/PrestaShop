@@ -417,7 +417,6 @@ class MetaCore extends ObjectModel
     /**
      * Get manufacturer meta tags.
      *
-     *
      * @param int $idManufacturer
      * @param int $idLang
      * @param string $pageName
@@ -446,7 +445,6 @@ class MetaCore extends ObjectModel
 
     /**
      * Get supplier meta tags.
-     *
      *
      * @param int $idSupplier
      * @param int $idLang

@@ -459,7 +459,6 @@ class CartCore extends ObjectModel
     /**
      * Get Cart Rules.
      *
-     *
      * @param int $filter Filter enum:
      *                    - FILTER_ACTION_ALL
      *                    - FILTER_ACTION_SHIPPING
