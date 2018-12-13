@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAcc
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\ApeCode;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
 /**
@@ -159,7 +160,9 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         }
 
         if (null !== $command->getApeCode()) {
-            $customer->ape = $command->getApeCode();
+            $apeCode = new ApeCode($command->getApeCode());
+
+            $customer->ape = $apeCode->getValue();
         }
 
         if (null !== $command->getWebsite()) {

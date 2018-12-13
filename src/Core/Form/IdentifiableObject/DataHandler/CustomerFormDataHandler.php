@@ -30,6 +30,7 @@ use DateTime;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\ApeCode;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
@@ -126,12 +127,15 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
         $command
             ->setCompanyName($data['company_name'])
             ->setSiretCode($data['siret_code'])
-            ->setApeCode($data['ape_code'])
             ->setWebsite($data['website'])
             ->setAllowedOutstandingAmount($data['allowed_outstanding_amount'])
             ->setMaxPaymentDays($data['max_payment_days'])
             ->setRiskId($data['risk_id'])
         ;
+
+        if (null !== $data['ape_code']) {
+            $command->setApeCode(new ApeCode($data['ape_code']));
+        }
 
         return $command;
     }
