@@ -51,20 +51,12 @@ export default class DeleteCustomersBulkActionExtension {
       $modal.modal('show');
 
       $modal.on('click', '.js-submit-delete-customers', () => {
-        const $checkboxes = grid.getContainer().find('.js-bulk-action-checkbox:checked');
-        const $customersInput = $('#delete_customers_customers_to_delete');
+        const $selectedCustomerCheckboxes = grid.getContainer().find('.js-bulk-action-checkbox:checked');
 
-        $checkboxes.each((i, value) => {
-          const $input = $(value);
-          const customerInput = $customersInput
-            .data('prototype')
-            .replace(/__name__/g, $input.val())
-          ;
+        $selectedCustomerCheckboxes.each((i, checkbox) => {
+          const $input = $(checkbox);
 
-          const $item = $($.parseHTML(customerInput)[0]);
-          $item.val($input.val());
-
-          $customersInput.append($item);
+          this._addCustomerToDeleteCollectionInput($input.val());
         });
 
         const $form = $modal.find('form');
@@ -73,5 +65,24 @@ export default class DeleteCustomersBulkActionExtension {
         $form.submit();
       });
     });
+  }
+
+  /**
+   * Create input with customer id and add it to delete collection input
+   *
+   * @private
+   */
+  _addCustomerToDeleteCollectionInput(customerId) {
+    const $customersInput = $('#delete_customers_customers_to_delete');
+
+    const customerInput = $customersInput
+      .data('prototype')
+      .replace(/__name__/g, customerId)
+    ;
+
+    const $item = $($.parseHTML(customerInput)[0]);
+    $item.val(customerId);
+
+    $customersInput.append($item);
   }
 }
