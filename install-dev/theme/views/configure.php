@@ -70,7 +70,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 			</label>
 			<label>
 				<input value="lite" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'lite'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
-				<?php echo $this->translator->trans('No', array(), 'Install');; ?>
+				<?php echo $this->translator->trans('No', array(), 'Install'); ?>
 			</label>
 		</div>
 		<p class="userInfos aligned"><?php echo $this->translator->trans('Demo products are a good way to learn how to use PrestaShop. You should install them if you are not familiar with it.', array(), 'Install'); ?></p>
