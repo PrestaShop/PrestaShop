@@ -83,7 +83,7 @@ class LexerSplitter {
      * Looks into the internal split token array and compares the given token with
      * the array content. It returns true, if the token will be found, false otherwise. 
      *  
-     * @param String $token a string, which could be a split token. 
+     * @param string $token a string, which could be a split token. 
      * 
      * @return boolean true, if the given string will be a split token, false otherwise
      */
