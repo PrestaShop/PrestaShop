@@ -159,7 +159,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     {
         $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
 
-        /**
+        /*
          * CycleA depends on CycleB,
          * CycleB depends on CycleA
          */

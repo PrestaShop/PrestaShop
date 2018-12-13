@@ -116,13 +116,13 @@ class CurrencyTest extends TestCase
      */
     public function testGetSymbol()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->assertSame(
             '€',
             $this->currency->getSymbol('fr-FR'),
             'Wrong result for getSymbol()'
         );
-        /** @noinspection end */
+        /* @noinspection end */
     }
 
     /**
@@ -159,13 +159,13 @@ class CurrencyTest extends TestCase
      */
     public function testGetName()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->assertSame(
             'euro',
             $this->currency->getName('fr-FR'),
             'Wrong result for getName()'
         );
-        /** @noinspection end */
+        /* @noinspection end */
     }
 
     /**

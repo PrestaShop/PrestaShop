@@ -76,7 +76,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
 
     public function testInstall()
     {
-        /**
+        /*
          * Both modules install overrides in the same files.
          * This test only checks that modules are installed properly.
          */
@@ -127,7 +127,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
             'AdminProductsController.php file different'
         );
 
-        /** Then it checks that the overrides are removed once the modules are
+        /* Then it checks that the overrides are removed once the modules are
          *  uninstalled.
          */
         foreach ($this->moduleNames as $name) {

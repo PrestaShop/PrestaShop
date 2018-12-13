@@ -76,7 +76,7 @@ class RepositoryTest extends TestCase
             ->method('getDataByCurrencyCode')
             ->willReturnCallback($getDataByCurrencyCode);
 
-        /** @var $dataRepo CurrencyDataRepositoryInterface */
+        /* @var $dataRepo CurrencyDataRepositoryInterface */
         $this->currencyRepository = new CurrencyRepository($dataRepo);
     }
 

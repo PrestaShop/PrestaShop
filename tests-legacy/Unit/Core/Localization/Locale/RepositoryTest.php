@@ -97,8 +97,8 @@ class RepositoryTest extends TestCase
         $currencyRepository->method('getInstalledCurrencies')
             ->willReturn([$currency]);
 
-        /** @var CldrLocaleRepository $cldrLocaleRepository */
-        /** @var CurrencyRepository $currencyRepository */
+        /* @var CldrLocaleRepository $cldrLocaleRepository */
+        /* @var CurrencyRepository $currencyRepository */
         $this->localeRepository = new LocaleRepository($cldrLocaleRepository, $currencyRepository);
     }
 

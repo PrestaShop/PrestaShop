@@ -232,7 +232,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
 $https_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 $context->link = new Link($https_link, $https_link);
 
-/**
+/*
  * @deprecated
  * USE : Configuration::get() method in order to getting the id of order status
  */

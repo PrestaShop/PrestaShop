@@ -470,7 +470,7 @@ AND EXISTS(SELECT 1
         $queryMock = $this->prophet->prophesize('\Symfony\Component\HttpFoundation\ParameterBag');
         $queryMock->all()->willReturn($params);
 
-        /** @var \Prophecy\Prophecy\ObjectProphecy $queryMock */
+        /* @var \Prophecy\Prophecy\ObjectProphecy $queryMock */
         return $queryMock;
     }
 

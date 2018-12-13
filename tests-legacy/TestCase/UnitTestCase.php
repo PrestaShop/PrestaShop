@@ -211,7 +211,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
         Cache::deleteTestingInstance();
         Db::deleteTestingInstance();
         Context::deleteTestingInstance();
-        /**
+        /*
          * @todo proxy static calls inside Configuration to a mockable instance
          * so that Configuration can be (indirectly) mocked.
          * This way we'll avoid doing obscure teardown stuff like below.

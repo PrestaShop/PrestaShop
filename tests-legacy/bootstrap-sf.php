@@ -34,7 +34,7 @@ if (!defined('PS_ADMIN_DIR')) {
 
 require_once dirname(__FILE__).'/../config/config.inc.php';
 
-/**
+/*
  * Following code makes tests run under phpstorm
  * Else we get error : Class 'PHPUnit_Util_Configuration' not found
  *

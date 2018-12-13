@@ -99,19 +99,19 @@ class ToolsCoreTest extends TestCase
      */
     public function testGetValueStripsNullCharsFromReturnedStrings($rawString, $cleanedString)
     {
-        /**
+        /*
          * Check it cleans values stored in POST
          */
         $this->setPostAndGet(array('rawString' => $rawString));
         $this->assertEquals($cleanedString, Tools::getValue('rawString'));
 
-        /**
+        /*
          * Check it cleans values stored in GET
          */
         $this->setPostAndGet(array(), array('rawString' => $rawString));
         $this->assertEquals($cleanedString, Tools::getValue('rawString'));
 
-        /**
+        /*
          * Check it cleans default values too
          */
         $this->setPostAndGet();

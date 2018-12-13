@@ -28,7 +28,7 @@ function ps_1700_right_management()
 {
     $actions = array('CREATE', 'READ', 'UPDATE', 'DELETE');
 
-    /**
+    /*
      * Add roles
      */
     foreach (array('TAB' => 'class_name', 'MODULE' => 'name') as $element => $nameColumn) {
