@@ -1,12 +1,12 @@
 <?php
-include('config/config.php');
+include 'config/config.php';
 
 $_SESSION["verify"] = "RESPONSIVEfilemanager";
 
 if (isset($_POST['submit'])) {
-    include('upload.php');
+    include 'upload.php';
 } else {
-    include('include/utils.php');
+    include 'include/utils.php';
 
 
 
@@ -81,7 +81,7 @@ if (isset($_POST['submit'])) {
             $parent = '';
         }
         if (file_exists($current_path.$parent.'config.php')) {
-            require_once($current_path.$parent.'config.php');
+            require_once $current_path.$parent.'config.php';
             $cycle = false;
         }
 

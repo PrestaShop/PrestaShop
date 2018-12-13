@@ -168,7 +168,7 @@ class AppKernel extends Kernel
     private function getParameters()
     {
         if ($this->parametersFileExists()) {
-            $config = require($this->getParametersFile());
+            $config = require $this->getParametersFile();
 
             return $config['parameters'];
         }

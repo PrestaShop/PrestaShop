@@ -32,7 +32,7 @@ if (defined('_PS_ADMIN_DIR_') === false) {
     define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
 }
 
-require_once(dirname(__FILE__).'/classes/CronJobsForms.php');
+require_once dirname(__FILE__).'/classes/CronJobsForms.php';
 
 class CronJobs extends Module
 {

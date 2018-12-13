@@ -29,8 +29,8 @@
  */
 function migrate_tabs_multi_shop()
 {
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php');
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/migrate_tabs_15.php');
+    include_once _PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php';
+    include_once _PS_INSTALL_PATH_.'upgrade/php/migrate_tabs_15.php';
 
     $nbr_shop = Db::getInstance()->getValue('SELECT count(id_shop) FROM '._DB_PREFIX_.'shop');
     $tab_shop_group_active = false;
