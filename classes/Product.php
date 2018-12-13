@@ -5115,7 +5115,7 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Select all features for a given language
+     * Select all features for a given language.
      *
      * @param $id_lang Language id
      * @param mixed $id_product

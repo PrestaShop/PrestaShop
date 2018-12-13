@@ -1,6 +1,6 @@
 <?php
 /**
- * UnionProcessor.php
+ * UnionProcessor.php.
  *
  * This file implements the processor for the UNION statements.
  *
@@ -56,7 +56,7 @@ class UnionProcessor extends AbstractProcessor {
      * MySQL supports a special form of UNION:
      * (select ...)
      * union
-     * (select ...)
+     * (select ...).
      *
      * This function handles this query syntax. Only one such subquery
      * is supported in each UNION block. (select)(select)union(select) is not legal.

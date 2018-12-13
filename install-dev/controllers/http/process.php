@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -126,7 +126,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     }
 
     /**
-     * PROCESS : generateSettingsFile
+     * PROCESS : generateSettingsFile.
      */
     public function processGenerateSettingsFile()
     {
@@ -148,7 +148,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installDatabase
-     * Create database structure
+     * Create database structure.
      */
     public function processInstallDatabase()
     {
@@ -161,7 +161,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installDefaultData
-     * Create default shop and languages
+     * Create default shop and languages.
      */
     public function processInstallDefaultData()
     {
@@ -178,7 +178,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : populateDatabase
-     * Populate database with default data
+     * Populate database with default data.
      */
     public function processPopulateDatabase()
     {
@@ -196,7 +196,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : configureShop
-     * Set default shop configuration
+     * Set default shop configuration.
      */
     public function processConfigureShop()
     {
@@ -226,7 +226,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installModules
-     * Install all modules in ~/modules/ directory
+     * Install all modules in ~/modules/ directory.
      */
     public function processInstallModules()
     {
@@ -242,7 +242,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installModulesAddons
-     * Install modules from addons
+     * Install modules from addons.
      */
     public function processInstallAddonsModules()
     {
@@ -261,7 +261,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installFixtures
-     * Install fixtures (E.g. demo products)
+     * Install fixtures (E.g. demo products).
      */
     public function processInstallFixtures()
     {
@@ -279,7 +279,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installTheme
-     * Install theme
+     * Install theme.
      */
     public function processInstallTheme()
     {
@@ -369,7 +369,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     }
 
     /**
-     * Check if the fixtures directory is large
+     * Check if the fixtures directory is large.
      *
      * return bool
      */

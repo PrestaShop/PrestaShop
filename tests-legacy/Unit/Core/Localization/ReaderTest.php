@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\Reader;
 class ReaderTest extends TestCase
 {
     /**
-     * CLDR Reader to be tested
+     * CLDR Reader to be tested.
      *
      * @var Reader
      */

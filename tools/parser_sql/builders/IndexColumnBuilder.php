@@ -1,6 +1,6 @@
 <?php
 /**
- * IndexColumnBuilder.php
+ * IndexColumnBuilder.php.
  *
  * Builds the column entries of the column-list parts of CREATE TABLE.
  *

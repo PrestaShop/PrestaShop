@@ -1,6 +1,6 @@
 <?php
 /**
- * UpdateBuilder.php
+ * UpdateBuilder.php.
  *
  * Builds the UPDATE statement parts.
  *

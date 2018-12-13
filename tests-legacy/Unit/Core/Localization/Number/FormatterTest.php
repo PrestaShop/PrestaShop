@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -62,7 +62,7 @@ class FormatterTest extends TestCase
     /**
      * Given a valid number and valid number specification
      * When asking the number formatter to format the said number, following the specification rules
-     * Then the expected result should be retrieved
+     * Then the expected result should be retrieved.
      *
      * @param array $localeParams
      *  The locale params

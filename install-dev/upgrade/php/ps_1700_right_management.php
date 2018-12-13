@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -43,7 +43,7 @@ function ps_1700_right_management()
     }
 
     /**
-     * Add access
+     * Add access.
      */
     $accessObject = new Access();
 

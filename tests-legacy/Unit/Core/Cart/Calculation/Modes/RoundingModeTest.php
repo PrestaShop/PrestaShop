@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -39,7 +39,7 @@ class RoundingModeTest extends AbstractCartCalculationTest
      * PS_ROUND_HALF_UP
      * PS_ROUND_HALF_DOWN
      * PS_ROUND_HALF_EVEN
-     * PS_ROUND_HALF_ODD
+     * PS_ROUND_HALF_ODD.
      */
     protected $defaultRoundingMode;
 
@@ -60,7 +60,7 @@ class RoundingModeTest extends AbstractCartCalculationTest
     }
 
     /**
-     * sets the default rounding mode
+     * sets the default rounding mode.
      *
      * @param string $roundingMode PS_ROUND_UP|PS_ROUND_DOWN|PS_ROUND_HALF_UP|PS_ROUND_HALF_DOWN|PS_ROUND_HALF_DOWN|PS_ROUND_HALF_ODD
      */

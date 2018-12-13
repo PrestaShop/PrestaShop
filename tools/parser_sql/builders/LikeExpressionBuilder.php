@@ -1,6 +1,6 @@
 <?php
 /**
- * LikeExpressionBuilder.php
+ * LikeExpressionBuilder.php.
  *
  * Builds the LIKE keyword within parenthesis.
  *

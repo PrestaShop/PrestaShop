@@ -1,6 +1,6 @@
 <?php
 /**
- * UserVariableBuilder.php
+ * UserVariableBuilder.php.
  *
  * Builds an user variable.
  *

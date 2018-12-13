@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -42,7 +42,7 @@ use StockAvailable;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
 
 /**
- * these tests aim to check cart using mocks
+ * these tests aim to check cart using mocks.
  *
  * products and cartRules are inserted as fixtures
  */
@@ -379,7 +379,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
     /**
      * Silently add the cart rules from data
-     * if a cart rule does not exist or if it is already in cart, do nothing
+     * if a cart rule does not exist or if it is already in cart, do nothing.
      *
      * @param array $cartRuleFixtureIds
      *

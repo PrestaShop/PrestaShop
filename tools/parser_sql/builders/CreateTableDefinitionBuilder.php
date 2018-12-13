@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateTableDefinitionBuilder.php
+ * CreateTableDefinitionBuilder.php.
  *
  * Builds the create definitions of CREATE TABLE.
  *

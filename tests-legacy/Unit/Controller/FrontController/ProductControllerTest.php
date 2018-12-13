@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -73,7 +73,7 @@ class ProductControllerTest extends IntegrationTestCase
     }
 
     /**
-     * here we test that for a given dataset of specific prices, currency, ecotax... we get the correct discount result
+     * here we test that for a given dataset of specific prices, currency, ecotax... we get the correct discount result.
      *
      * @dataProvider specificPricesProvider
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * SetBuilder.php
+ * SetBuilder.php.
  *
  * Builds the SET part of the INSERT statement.
  *

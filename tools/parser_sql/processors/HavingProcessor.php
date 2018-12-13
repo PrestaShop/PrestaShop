@@ -1,6 +1,6 @@
 <?php
 /**
- * HavingProcessor.php
+ * HavingProcessor.php.
  *
  * This file implements the processor for the HAVING statements.
  *

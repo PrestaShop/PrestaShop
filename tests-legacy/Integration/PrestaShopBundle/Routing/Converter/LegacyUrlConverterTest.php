@@ -240,7 +240,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
     }
 
     /**
-     * Looping manually uses MUCH less memory than dataProvider
+     * Looping manually uses MUCH less memory than dataProvider.
      */
     public function testConverterByParameters()
     {
@@ -464,7 +464,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
     /**
      * Force the static property SymfonyContainer::instance so that the Link class
-     * has access to the router
+     * has access to the router.
      *
      * @throws \ReflectionException
      */

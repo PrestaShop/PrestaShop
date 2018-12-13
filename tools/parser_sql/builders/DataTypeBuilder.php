@@ -1,6 +1,6 @@
 <?php
 /**
- * DataTypeBuilder.php
+ * DataTypeBuilder.php.
  *
  * Builds the data-type statement part of CREATE TABLE.
  *

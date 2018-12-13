@@ -1,6 +1,6 @@
 <?php
 /**
- * TableBuilder.php
+ * TableBuilder.php.
  *
  * Builds the table name/join options.
  *

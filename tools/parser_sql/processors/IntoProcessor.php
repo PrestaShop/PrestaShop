@@ -1,6 +1,6 @@
 <?php
 /**
- * IntoProcessor.php
+ * IntoProcessor.php.
  *
  * This file implements the processor for the INTO statements.
  *
@@ -41,7 +41,7 @@ class IntoProcessor extends AbstractProcessor {
 
     /**
      * TODO: This is a dummy function, we cannot parse INTO as part of SELECT
-     * at the moment
+     * at the moment.
      *
      * @param mixed $tokenList
      */

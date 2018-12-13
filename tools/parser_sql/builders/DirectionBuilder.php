@@ -1,6 +1,6 @@
 <?php
 /**
- * DirectionBuilder.php
+ * DirectionBuilder.php.
  *
  * Builds direction (e.g. of the order-by clause).
  *

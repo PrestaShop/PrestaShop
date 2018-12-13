@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2016 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -301,7 +301,7 @@ class CronJobs extends Module
     }
 
     /**
-     * $taks should be a valid URL
+     * $taks should be a valid URL.
      *
      * @param mixed $task
      * @param mixed $description

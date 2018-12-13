@@ -1,6 +1,6 @@
 <?php
 /**
- * InvalidParameterException.php
+ * InvalidParameterException.php.
  *
  * This file implements the InvalidParameterException class which is used within the
  * PHPSQLParser package.

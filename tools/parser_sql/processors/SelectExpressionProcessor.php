@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectExpressionProcessor.php
+ * SelectExpressionProcessor.php.
  *
  * This file implements the processor for SELECT expressions.
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * ColumnListBuilder.php
+ * ColumnListBuilder.php.
  *
  * Builds column-list parts of CREATE TABLE.
  *

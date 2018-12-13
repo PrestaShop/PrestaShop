@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,7 +37,7 @@ class RoundingTypeTest extends AbstractCartCalculationTest
     /**
      * Order::ROUND_ITEM
      * Order::ROUND_LINE
-     * Order::ROUND_TOTAL
+     * Order::ROUND_TOTAL.
      */
     protected $defaultRoundingType;
 
@@ -58,7 +58,7 @@ class RoundingTypeTest extends AbstractCartCalculationTest
     }
 
     /**
-     * sets the default rounding type
+     * sets the default rounding type.
      *
      * @param string $roundingType Order::ROUND_ITEM|Order::ROUND_LINE|Order::ROUND_TOTAL
      */

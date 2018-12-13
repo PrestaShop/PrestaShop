@@ -1,6 +1,6 @@
 <?php
 /**
- * WhereBracketExpressionBuilder.php
+ * WhereBracketExpressionBuilder.php.
  *
  * Builds bracket expressions within the WHERE part.
  *

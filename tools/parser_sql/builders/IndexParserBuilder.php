@@ -1,6 +1,6 @@
 <?php
 /**
- * IndexParserBuilder.php
+ * IndexParserBuilder.php.
  *
  * Builds index parser part of a PRIMARY KEY statement part of CREATE TABLE.
  *

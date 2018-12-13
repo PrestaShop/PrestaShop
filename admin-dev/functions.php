@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -79,7 +79,7 @@ function includeDatepicker($id, $time = false)
 }
 
 /**
- * Generate a new settings file, only transmitted parameters are updated
+ * Generate a new settings file, only transmitted parameters are updated.
  *
  * @param string $baseUri Base URI
  * @param string $theme Theme name (eg. default)
@@ -126,7 +126,7 @@ function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
 }
 
 /**
- * Display SQL date in friendly format
+ * Display SQL date in friendly format.
  *
  * @param string $sql_date Date in SQL format (YYYY-MM-DD HH:mm:ss)
  * @param bool $with_time Display both date and time
@@ -139,7 +139,7 @@ function displayDate($sql_date, $with_time = false)
 }
 
 /**
- * Return path to a product category
+ * Return path to a product category.
  *
  * @param string $url_base Start URL
  * @param int $id_category Start category
@@ -258,7 +258,7 @@ function translate($string)
 }
 
 /**
- * Returns a new Tab object
+ * Returns a new Tab object.
  *
  * @param string $tab class name
  *
@@ -335,7 +335,7 @@ function checkTabRights($id_tab)
  * $array['parent']['child'][0] = 'a';
  * $array['parent']['child'][1] = 'b';
  * ...And so on.
- * _____________________________________
+ * _____________________________________.
  *
  * @param simpleXMLElement $xml the XML to convert
  * @param bool $flatten_values    Choose wether to flatten values
@@ -416,7 +416,7 @@ function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = tr
 }
 
 /**
- * for retrocompatibility with old AdminTab, old index.php
+ * for retrocompatibility with old AdminTab, old index.php.
  *
  *
  * @param mixed $tab

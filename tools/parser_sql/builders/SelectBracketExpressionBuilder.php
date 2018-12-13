@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectBracketExpressionBuilder.php
+ * SelectBracketExpressionBuilder.php.
  *
  * Builds the bracket expressions within a SELECT statement.
  *

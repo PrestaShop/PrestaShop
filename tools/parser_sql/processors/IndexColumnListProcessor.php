@@ -1,6 +1,6 @@
 <?php
 /**
- * IndexColumnListProcessor.php
+ * IndexColumnListProcessor.php.
  *
  * This file implements the processor for index column lists.
  *

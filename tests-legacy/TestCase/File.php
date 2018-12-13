@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace LegacyTests\TestCase;
 class File
 {
     /**
-     * Recursivly copy a directory
+     * Recursivly copy a directory.
      *
      * @var the source path (eg. /home/dir/to/copy)
      * @var $dst the destination path (eg. /home/)
@@ -56,7 +56,7 @@ class File
     }
 
     /**
-     * Recursivly delete a directory
+     * Recursivly delete a directory.
      *
      * @var the directory to delete path (eg. /home/dir/to/delete)
      *

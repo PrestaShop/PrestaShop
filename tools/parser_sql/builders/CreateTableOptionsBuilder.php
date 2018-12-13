@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateTableOptionsBuilder.php
+ * CreateTableOptionsBuilder.php.
  *
  * Builds the table-options statement part of CREATE TABLE.
  *

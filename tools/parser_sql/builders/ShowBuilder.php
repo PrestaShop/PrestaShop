@@ -1,6 +1,6 @@
 <?php
 /**
- * ShowBuilder.php
+ * ShowBuilder.php.
  *
  * Builds the SHOW statement.
  *

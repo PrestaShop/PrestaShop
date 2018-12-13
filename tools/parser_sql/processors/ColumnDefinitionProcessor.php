@@ -1,6 +1,6 @@
 <?php
 /**
- * ColumnDefinitionProcessor.php
+ * ColumnDefinitionProcessor.php.
  *
  * This file implements the processor for column definition part of a CREATE TABLE statement.
  *

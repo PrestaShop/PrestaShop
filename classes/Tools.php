@@ -764,7 +764,7 @@ class ToolsCore
     }
 
     /**
-     * Return a number well formatted
+     * Return a number well formatted.
      *
      * @param float $number A number
      * @param nullable $currency / not used anymaore

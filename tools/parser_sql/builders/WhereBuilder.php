@@ -1,6 +1,6 @@
 <?php
 /**
- * WhereBuilder.php
+ * WhereBuilder.php.
  *
  * Builds the WHERE part.
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateTable.php
+ * CreateTable.php.
  *
  * Builds the CREATE TABLE statement
  *

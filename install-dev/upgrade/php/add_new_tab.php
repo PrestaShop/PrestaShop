@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 use PrestaShopBundle\Security\Voter\PageVoter;
 
 /**
- * Common method to handle the tab registration
+ * Common method to handle the tab registration.
  *
  * @internal
  *
@@ -69,7 +69,7 @@ function register_tab($className, $name, $id_parent, $returnId = false, $parentT
 }
 
 /**
- * Common method for getting the new tab ID
+ * Common method for getting the new tab ID.
  *
  * @internal
  *
@@ -86,7 +86,7 @@ function get_new_tab_id($className, $returnId = false)
 }
 
 /**
- * Entrypoint for adding new tabs prior 1.7 versions of PrestaShop
+ * Entrypoint for adding new tabs prior 1.7 versions of PrestaShop.
  *
  * @param string $className
  * @param string $name Pipe-separated translated values
@@ -112,7 +112,7 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
 }
 
 /**
- * Entrypoint for adding new tabs on +1.7 versions of PrestaShop
+ * Entrypoint for adding new tabs on +1.7 versions of PrestaShop.
  *
  * @param string $className
  * @param string $name Pipe-separated translated values

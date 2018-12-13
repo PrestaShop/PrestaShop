@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -75,7 +75,7 @@ class FormHandlerResult implements FormHandlerResultInterface
     }
 
     /**
-     * Creates form handler result when form which was provided form handling was not submitted
+     * Creates form handler result when form which was provided form handling was not submitted.
      *
      * @return FormHandlerResult
      */
@@ -89,7 +89,7 @@ class FormHandlerResult implements FormHandlerResultInterface
     }
 
     /**
-     * Creates result for submitted but not valid form
+     * Creates result for submitted but not valid form.
      *
      * @return FormHandlerResult
      */

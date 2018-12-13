@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -113,7 +113,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * Rationale: ls /some/non/existing/file => ls: cannot access /some/non/existing/file: No such file or directory
+     * Rationale: ls /some/non/existing/file => ls: cannot access /some/non/existing/file: No such file or directory.
      */
     public function testListEntriesRecursivelyThrowsIfPathDoesNotExist()
     {

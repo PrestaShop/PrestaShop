@@ -1,6 +1,6 @@
 <?php
 /**
- * RecordProcessor.php
+ * RecordProcessor.php.
  *
  * This file implements the processor for records.
  *

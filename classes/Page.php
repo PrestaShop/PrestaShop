@@ -55,7 +55,7 @@ class PageCore extends ObjectModel
         $pageTypeId = Page::getPageTypeByName($controller);
 
         /**
-         * Some pages must be distinguished in order to record exactly what is being seen
+         * Some pages must be distinguished in order to record exactly what is being seen.
          *
          * @todo dispatcher module
          */

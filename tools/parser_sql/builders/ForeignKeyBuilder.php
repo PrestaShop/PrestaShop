@@ -1,6 +1,6 @@
 <?php
 /**
- * ForeignKeyBuilder.php
+ * ForeignKeyBuilder.php.
  *
  * Builds the FOREIGN KEY statement part of CREATE TABLE.
  *

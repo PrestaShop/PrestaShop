@@ -1,6 +1,6 @@
 <?php
 /**
- * OrderByProcessor.php
+ * OrderByProcessor.php.
  *
  * This file implements the processor for the ORDER-BY statements.
  *

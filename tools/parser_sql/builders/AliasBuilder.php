@@ -1,6 +1,6 @@
 <?php
 /**
- * AliasBuilder.php
+ * AliasBuilder.php.
  *
  * Builds aliases.
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -175,7 +175,7 @@ class ReleaseCreator
     protected $useZip;
 
     /**
-     * Consisting of prestashop_ and the version. e.g prestashop_1.7.3.4.zip
+     * Consisting of prestashop_ and the version. e.g prestashop_1.7.3.4.zip.
      *
      * @var string
      */
@@ -351,7 +351,7 @@ class ReleaseCreator
     }
 
     /**
-     * Get the current version in the project
+     * Get the current version in the project.
      * 
      * @return string PrestaShop version
      */

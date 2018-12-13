@@ -1,6 +1,6 @@
 <?php
 /**
- * ColumnTypeBuilder.php
+ * ColumnTypeBuilder.php.
  *
  * Builds the column type statement part of CREATE TABLE.
  *

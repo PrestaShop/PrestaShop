@@ -1975,7 +1975,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Reposition module
+     * Reposition module.
      *
      * @param bool $id_hook Hook ID
      * @param bool $way Up (0) or Down (1)
@@ -2035,7 +2035,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Reorder modules position
+     * Reorder modules position.
      *
      * @param bool $id_hook Hook ID
      * @param array $shop_list List of shop
@@ -2178,7 +2178,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Return exceptions for module in hook
+     * Return exceptions for module in hook.
      *
      * @param int $id_module Module ID
      * @param int $id_hook Hook ID
@@ -2237,7 +2237,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Return exceptions for module in hook
+     * Return exceptions for module in hook.
      *
      * @param int $id_hook Hook ID
      * @param mixed $dispatch
@@ -2822,7 +2822,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Return module position for a given hook
+     * Return module position for a given hook.
      *
      * @param bool $id_hook Hook ID
      *

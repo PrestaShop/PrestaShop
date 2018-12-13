@@ -238,7 +238,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * removes the address from carts using it, to avoid errors on not existing address
+     * removes the address from carts using it, to avoid errors on not existing address.
      */
     protected function deleteCartAddress()
     {

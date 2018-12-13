@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateProcessor.php
+ * CreateProcessor.php.
  *
  * This file implements the processor for the CREATE TABLE statements.
  *

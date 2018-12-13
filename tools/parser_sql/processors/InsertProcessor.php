@@ -1,6 +1,6 @@
 <?php
 /**
- * InsertProcessor.php
+ * InsertProcessor.php.
  *
  * This file implements the processor for the INSERT statements.
  *

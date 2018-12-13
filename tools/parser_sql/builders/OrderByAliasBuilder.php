@@ -1,6 +1,6 @@
 <?php
 /**
- * OrderByAliasBuilder.php
+ * OrderByAliasBuilder.php.
  *
  * Builds an alias within an ORDER-BY clause.
  *

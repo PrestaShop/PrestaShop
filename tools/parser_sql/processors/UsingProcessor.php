@@ -1,6 +1,6 @@
 <?php
 /**
- * UsingProcessor.php
+ * UsingProcessor.php.
  *
  * This file implements the processor for the USING statements.
  *

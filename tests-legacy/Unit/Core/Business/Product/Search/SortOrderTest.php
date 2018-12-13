@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -100,7 +100,7 @@ class SortOrderTest extends TestCase
     }
 
     /**
-     * dataProvider for test_serialization
+     * dataProvider for test_serialization.
      */
     public function serialization_examples()
     {

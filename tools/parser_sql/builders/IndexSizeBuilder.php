@@ -1,6 +1,6 @@
 <?php
 /**
- * IndexSizeBuilder.php
+ * IndexSizeBuilder.php.
  *
  * Builds index size part of a PRIMARY KEY statement part of CREATE TABLE.
  *

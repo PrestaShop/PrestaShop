@@ -1,6 +1,6 @@
 <?php
 /**
- * RefClauseBuilder.php
+ * RefClauseBuilder.php.
  *
  * Builds reference clauses within a JOIN.
  *

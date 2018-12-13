@@ -1,6 +1,6 @@
 <?php
 /**
- * SetExpressionBuilder.php
+ * SetExpressionBuilder.php.
  *
  * Builds the SET part of the INSERT statement.
  *

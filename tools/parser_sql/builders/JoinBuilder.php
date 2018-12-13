@@ -1,6 +1,6 @@
 <?php
 /**
- * JoinBuilder.php
+ * JoinBuilder.php.
  *
  * Builds the JOIN statement parts (within FROM).
  *

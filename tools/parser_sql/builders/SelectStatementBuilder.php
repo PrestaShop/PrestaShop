@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectStatement.php
+ * SelectStatement.php.
  *
  * Builds the SELECT statement
  *

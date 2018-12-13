@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,7 +37,7 @@ if (!function_exists('dump')) {
 }
 
 /**
- * Sanitize data which will be injected into SQL query
+ * Sanitize data which will be injected into SQL query.
  *
  * @param string $string SQL data which will be injected into SQL query
  * @param bool $htmlOK Does data contain HTML code ? (optional)

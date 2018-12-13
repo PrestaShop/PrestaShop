@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,42 +27,42 @@
 abstract class Db extends DbCore
 {
     /**
-     * Add SQL_NO_CACHE in SELECT queries
+     * Add SQL_NO_CACHE in SELECT queries.
      *
      * @var bool
      */
     public $disableCache = true;
 
     /**
-     * Total of queries
+     * Total of queries.
      *
      * @var int
      */
     public $count = 0;
 
     /**
-     * List of queries
+     * List of queries.
      *
      * @var array
      */
     public $queries = array();
     
     /**
-     * List of uniq queries (replace numbers by XX)
+     * List of uniq queries (replace numbers by XX).
      *
      * @var array
      */
     public $uniqQueries = array();
     
     /**
-     * List of tables
+     * List of tables.
      *
      * @var array
      */
     public $tables = array();
 
     /**
-     * Execute the query and log some informations
+     * Execute the query and log some informations.
      *
      * @see DbCore::query()
      *

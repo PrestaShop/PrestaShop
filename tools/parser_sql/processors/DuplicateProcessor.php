@@ -1,6 +1,6 @@
 <?php
 /**
- * DuplicateProcessor.php
+ * DuplicateProcessor.php.
  *
  * This file implements the processor for the DUPLICATE statements.
  *

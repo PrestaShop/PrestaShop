@@ -1,6 +1,6 @@
 <?php
 /**
- * GroupByBuilder.php
+ * GroupByBuilder.php.
  *
  * Builds the GROUP-BY clause.
  *

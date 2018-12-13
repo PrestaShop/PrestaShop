@@ -1,6 +1,6 @@
 <?php
 /**
- * ExplainProcessor.php
+ * ExplainProcessor.php.
  *
  * This file implements the processor for the EXPLAIN statements.
  *

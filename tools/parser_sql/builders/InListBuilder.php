@@ -1,6 +1,6 @@
 <?php
 /**
- * InListBuilder.php
+ * InListBuilder.php.
  *
  * Builds lists of values for the IN statement.
  *

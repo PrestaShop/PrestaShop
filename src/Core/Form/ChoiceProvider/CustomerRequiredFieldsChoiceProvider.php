@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Provides choices for configuring required fields for customer
+ * Provides choices for configuring required fields for customer.
  */
 final class CustomerRequiredFieldsChoiceProvider implements FormChoiceProviderInterface
 {

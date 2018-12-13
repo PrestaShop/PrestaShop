@@ -1,6 +1,6 @@
 <?php
 /**
- * constants.php
+ * constants.php.
  *
  * Some constants for the PHPSQLParser.
  *

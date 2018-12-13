@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateStatement.php
+ * CreateStatement.php.
  *
  * Builds the CREATE statement
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateDefinitionProcessor.php
+ * CreateDefinitionProcessor.php.
  *
  * This file implements the processor for the create definition within the TABLE statements.
  *

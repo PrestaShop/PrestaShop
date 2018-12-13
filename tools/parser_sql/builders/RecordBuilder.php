@@ -1,6 +1,6 @@
 <?php
 /**
- * RecordBuilder.php
+ * RecordBuilder.php.
  *
  * Builds the records within the INSERT statement.
  *

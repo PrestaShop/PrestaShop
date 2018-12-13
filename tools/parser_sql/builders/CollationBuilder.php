@@ -1,6 +1,6 @@
 <?php
 /**
- * CollationBuilder.php
+ * CollationBuilder.php.
  *
  * Builds the collation expression part of CREATE TABLE.
  *

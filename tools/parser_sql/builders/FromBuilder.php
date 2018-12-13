@@ -1,6 +1,6 @@
 <?php
 /**
- * FromBuilder.php
+ * FromBuilder.php.
  *
  * Builds the FROM statement
  *

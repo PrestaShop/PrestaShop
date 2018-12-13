@@ -1,6 +1,6 @@
 <?php
 /**
- * RenameProcessor.php
+ * RenameProcessor.php.
  *
  * This file implements the processor for the RENAME statements.
  *

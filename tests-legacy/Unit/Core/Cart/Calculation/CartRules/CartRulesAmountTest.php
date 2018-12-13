@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\CartRules;
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 /**
- * these tests aim to check the correct calculation of cart total when applying cart rules
+ * these tests aim to check the correct calculation of cart total when applying cart rules.
  *
  * products are inserted as fixtures
  * products are inserted in cart from data providers

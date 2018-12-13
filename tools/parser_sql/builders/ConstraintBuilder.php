@@ -1,6 +1,6 @@
 <?php
 /**
- * ConstraintBuilder.php
+ * ConstraintBuilder.php.
  *
  * Builds the constraint statement part of CREATE TABLE.
  *

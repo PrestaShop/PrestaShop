@@ -1,6 +1,6 @@
 <?php
 /**
- * DatabaseBuilder.php
+ * DatabaseBuilder.php.
  *
  * Builds the database within the SHOW statement.
  *

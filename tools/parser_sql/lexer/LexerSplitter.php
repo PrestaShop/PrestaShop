@@ -1,6 +1,6 @@
 <?php
 /**
- * LexerSplitter.php
+ * LexerSplitter.php.
  *
  * Defines the characters, which are used to split the given SQL string.
  * Part of PHPSQLParser.

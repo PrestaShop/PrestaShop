@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use Symfony\Component\Process\Process;
 class DatabaseCreator
 {
     /**
-     * Create the initialize database used for test
+     * Create the initialize database used for test.
      */
     public static function createTestDB()
     {
@@ -73,7 +73,7 @@ class DatabaseCreator
     }
 
     /**
-     * Restore the test database in its initial state from a dump generated during createTestDB
+     * Restore the test database in its initial state from a dump generated during createTestDB.
      *
      * @throws DBALException
      */

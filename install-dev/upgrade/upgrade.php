@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -125,7 +125,7 @@ if ($upgrade->getInAutoUpgrade()) {
 }
 
 /**
- * displays the help
+ * displays the help.
  */
 function displayHelp()
 {

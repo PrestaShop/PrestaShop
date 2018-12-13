@@ -1,6 +1,6 @@
 <?php
 /**
- * PHPSQLCreator.php
+ * PHPSQLCreator.php.
  *
  * A creator, which generates SQL from the output of PHPSQLParser.
  *

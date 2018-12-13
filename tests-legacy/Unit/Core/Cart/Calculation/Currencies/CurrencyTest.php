@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ class CurrencyTest extends AbstractCartCalculationTest
 {
 
     /**
-     * isoCode : [a-zA-Z]{2,3}  @see Validate::isLanguageIsoCode()
+     * isoCode : [a-zA-Z]{2,3}  @see Validate::isLanguageIsoCode().
      */
     const CURRENCY_FIXTURES = [
         1 => [
@@ -106,7 +106,7 @@ class CurrencyTest extends AbstractCartCalculationTest
     }
 
     /**
-     * sets the default currency change rate to avoid using 1.0 as default
+     * sets the default currency change rate to avoid using 1.0 as default.
      *
      * @param float $changeRate
      * @param mixed $currencyId

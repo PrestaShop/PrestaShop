@@ -1,6 +1,6 @@
 <?php
 /**
- * WhereExpressionBuilder.php
+ * WhereExpressionBuilder.php.
  *
  * Builds expressions within the WHERE part.
  *

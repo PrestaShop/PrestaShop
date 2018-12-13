@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Allow call of Legacy classes from classes in /src and /tests
+ * Allow call of Legacy classes from classes in /src and /tests.
  *
  * @see composer.json "files" property for custom autoloading
  */

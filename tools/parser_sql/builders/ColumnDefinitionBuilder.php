@@ -1,6 +1,6 @@
 <?php
 /**
- * ColumnDefinitionBuilder.php
+ * ColumnDefinitionBuilder.php.
  *
  * Builds the column definition statement part of CREATE TABLE.
  *

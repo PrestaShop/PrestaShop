@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -48,7 +48,7 @@ class ToolsInstall
      * $array['parent']['child'][0] = 'a';
      * $array['parent']['child'][1] = 'b';
      * ...And so on.
-     * _____________________________________
+     * _____________________________________.
      *
      * @param simpleXMLElement $xml the XML to convert
      * @param bool $flattenValues    Choose wether to flatten values

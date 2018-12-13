@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -50,7 +50,7 @@ class AddRuleTest extends AbstractCartTest
     }
 
     /**
-     * this test only check if cart rule can be applied on cart, depending on cart content and cart rule parameters
+     * this test only check if cart rule can be applied on cart, depending on cart content and cart rule parameters.
      *
      * @dataProvider cartRuleValidityProvider
      *

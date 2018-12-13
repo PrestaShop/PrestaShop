@@ -1,6 +1,6 @@
 <?php
 /**
- * DeleteBuilder.php
+ * DeleteBuilder.php.
  *
  * Builds the DELETE statement
  *

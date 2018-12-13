@@ -1,6 +1,6 @@
 <?php
 /**
- * Procedureuilder.php
+ * Procedureuilder.php.
  *
  * Builds the procedures within the SHOW statement.
  *

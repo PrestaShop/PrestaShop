@@ -1,6 +1,6 @@
 <?php
 /**
- * UnsupportedFeatureException.php
+ * UnsupportedFeatureException.php.
  *
  * This file implements the UnsupportedFeatureException class which is used within the
  * PHPSQLParser package.

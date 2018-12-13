@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectExpressionBuilder.php
+ * SelectExpressionBuilder.php.
  *
  * Builds simple expressions within a SELECT statement.
  *

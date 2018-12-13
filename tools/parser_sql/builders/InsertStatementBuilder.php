@@ -1,6 +1,6 @@
 <?php
 /**
- * InsertStatement.php
+ * InsertStatement.php.
  *
  * Builds the INSERT statement
  *

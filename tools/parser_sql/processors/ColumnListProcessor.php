@@ -1,6 +1,6 @@
 <?php
 /**
- * ColumnListProcessor.php
+ * ColumnListProcessor.php.
  *
  * This file implements the processor for column lists like in INSERT statements.
  *

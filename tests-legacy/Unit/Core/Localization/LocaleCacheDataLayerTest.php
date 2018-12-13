@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 class LocaleCacheDataLayerTest extends TestCase
 {
     /**
-     * The tested data layer
+     * The tested data layer.
      *
      * @var LocaleCacheDataLayer
      */

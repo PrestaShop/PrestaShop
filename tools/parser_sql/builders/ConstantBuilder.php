@@ -1,6 +1,6 @@
 <?php
 /**
- * ConstantBuilder.php
+ * ConstantBuilder.php.
  *
  * Builds constant (String, Integer, etc.) parts.
  *

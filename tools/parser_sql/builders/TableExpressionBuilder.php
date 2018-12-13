@@ -1,6 +1,6 @@
 <?php
 /**
- * TableExpressionBuilder.php
+ * TableExpressionBuilder.php.
  *
  * Builds the table name/join options.
  *

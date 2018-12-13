@@ -1,6 +1,6 @@
 <?php
 /**
- * ColumnTypeExpressionBuilder.php
+ * ColumnTypeExpressionBuilder.php.
  *
  * Builds the bracket expressions within a column type.
  *

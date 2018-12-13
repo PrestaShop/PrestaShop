@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -174,7 +174,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     }
 
     /**
-     * PROCESS : generateSettingsFile
+     * PROCESS : generateSettingsFile.
      */
     public function processGenerateSettingsFile()
     {
@@ -190,7 +190,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : installDatabase
-     * Create database structure
+     * Create database structure.
      */
     public function processInstallDatabase()
     {
@@ -199,7 +199,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : installDefaultData
-     * Create default shop and languages
+     * Create default shop and languages.
      */
     public function processInstallDefaultData()
     {
@@ -219,7 +219,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : populateDatabase
-     * Populate database with default data
+     * Populate database with default data.
      */
     public function processPopulateDatabase()
     {
@@ -235,7 +235,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : configureShop
-     * Set default shop configuration
+     * Set default shop configuration.
      */
     public function processConfigureShop()
     {
@@ -259,7 +259,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : installModules
-     * Install all modules in ~/modules/ directory
+     * Install all modules in ~/modules/ directory.
      */
     public function processInstallModules()
     {
@@ -270,7 +270,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : installFixtures
-     * Install fixtures (E.g. demo products)
+     * Install fixtures (E.g. demo products).
      */
     public function processInstallFixtures()
     {
@@ -288,7 +288,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : installModulesAddons
-     * Install modules from addons
+     * Install modules from addons.
      */
     public function processInstallAddonsModules()
     {
@@ -297,7 +297,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     /**
      * PROCESS : installTheme
-     * Install theme
+     * Install theme.
      */
     public function processInstallTheme()
     {

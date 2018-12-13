@@ -1,6 +1,6 @@
 <?php
 /**
- * CheckBuilder.php
+ * CheckBuilder.php.
  *
  * Builds the CHECK statement part of CREATE TABLE.
  *

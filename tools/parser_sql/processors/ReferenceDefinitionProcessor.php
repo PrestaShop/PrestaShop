@@ -1,6 +1,6 @@
 <?php
 /**
- * ReferenceDefinitionProcessor.php
+ * ReferenceDefinitionProcessor.php.
  *
  * This file implements the processor reference definition part of the CREATE TABLE statements.
  *

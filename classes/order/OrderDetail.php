@@ -465,7 +465,7 @@ class OrderDetailCore extends ObjectModel
     }
 
     /**
-     * Set virtual product information
+     * Set virtual product information.
      *
      * @param array $product
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * LikeBuilder.php
+ * LikeBuilder.php.
  *
  * Builds the LIKE statement part of a CREATE TABLE statement.
  *

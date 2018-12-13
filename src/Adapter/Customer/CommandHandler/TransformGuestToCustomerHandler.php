@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationE
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Handles guest to customer transformation command
+ * Handles guest to customer transformation command.
  *
  * @internal
  */

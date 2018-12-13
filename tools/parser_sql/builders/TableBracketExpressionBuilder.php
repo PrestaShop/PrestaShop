@@ -1,6 +1,6 @@
 <?php
 /**
- * TableBracketExpressionBuilder.php
+ * TableBracketExpressionBuilder.php.
  *
  * Builds the table expressions within the create definitions of CREATE TABLE.
  *

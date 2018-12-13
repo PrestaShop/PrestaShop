@@ -1,6 +1,6 @@
 <?php
 /**
- * ReservedBuilder.php
+ * ReservedBuilder.php.
  *
  * Builds reserved keywords.
  *

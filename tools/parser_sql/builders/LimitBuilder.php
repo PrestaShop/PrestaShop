@@ -1,6 +1,6 @@
 <?php
 /**
- * LimitBuilder.php
+ * LimitBuilder.php.
  *
  * Builds the LIMIT statement.
  *

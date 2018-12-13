@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -498,7 +498,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      * This test checks that if PS_ATCP_SHIPWRAP is set to true then:
      * - the shipping cost of the carrier is understood as tax included instead of tax excluded
      * - the tax excluded shipping cost is deduced from the tax included shipping cost
-     * 	 by removing the average tax rate of the cart
+     * 	 by removing the average tax rate of the cart.
      */
     public function testAverageTaxOfCartProductsShippingTax()
     {
@@ -520,7 +520,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     }
 
     /**
-     * Check getOrderTotal return the same value with and without when PS_TAX is disable
+     * Check getOrderTotal return the same value with and without when PS_TAX is disable.
      */
     public function testSameTotalWithoutTax()
     {

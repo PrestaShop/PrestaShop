@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectBuilder.php
+ * SelectBuilder.php.
  *
  * Builds the SELECT statement from the [SELECT] field.
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * ColumnReferenceBuilder.php
+ * ColumnReferenceBuilder.php.
  *
  * Builds Column references.
  *

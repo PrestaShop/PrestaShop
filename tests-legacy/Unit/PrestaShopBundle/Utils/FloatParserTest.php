@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ class FloatParserTest extends TestCase
     /**
      * Given a string containing a number with arbitrary characters as thousand and decimal separators
      * When constructing an ImmutableFloat from that string
-     * Then the string should be interpreted as a float by ImmutableFloat
+     * Then the string should be interpreted as a float by ImmutableFloat.
      *
      * @param string $string
      * @param float $expected
@@ -50,7 +50,7 @@ class FloatParserTest extends TestCase
     /**
      * Given a value that is not a string
      * When constructing an ImmutableFloat from that value using ::fromString
-     * Then an InvalidArgumentException should be thrown
+     * Then an InvalidArgumentException should be thrown.
      *
      * @param mixed $value
      *

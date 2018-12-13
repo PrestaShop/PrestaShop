@@ -1,6 +1,6 @@
 <?php
 /**
- * FunctionBuilder.php
+ * FunctionBuilder.php.
  *
  * Builds function statements.
  *

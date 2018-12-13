@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,17 +28,17 @@
 interface HttpConfigureInterface
 {
     /**
-     * Process form to go to next step
+     * Process form to go to next step.
      */
     public function processNextStep();
 
     /**
-     * Validate current step
+     * Validate current step.
      */
     public function validate();
 
     /**
-     * Display current step view
+     * Display current step view.
      */
     public function display();
 }

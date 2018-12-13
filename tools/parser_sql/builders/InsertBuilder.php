@@ -1,6 +1,6 @@
 <?php
 /**
- * InsertBuilder.php
+ * InsertBuilder.php.
  *
  * Builds the [INSERT] statement part.
  *

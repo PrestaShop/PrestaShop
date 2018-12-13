@@ -205,7 +205,7 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * Transforms guest to customer
+     * Transforms guest to customer.
      *
      * @AdminSecurity(
      *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
@@ -253,7 +253,7 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * Sets required fields for customer
+     * Sets required fields for customer.
      *
      * @AdminSecurity(
      *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",

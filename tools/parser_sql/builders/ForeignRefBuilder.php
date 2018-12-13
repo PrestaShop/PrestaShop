@@ -1,6 +1,6 @@
 <?php
 /**
- * ForeignRefBuilder.php
+ * ForeignRefBuilder.php.
  *
  * Builds the FOREIGN KEY REFERENCES statement part of CREATE TABLE.
  *

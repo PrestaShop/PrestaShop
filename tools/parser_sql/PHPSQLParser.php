@@ -1,7 +1,7 @@
 <?php
 
 /**
- * php-sql-parser.php
+ * php-sql-parser.php.
  *
  * A pure PHP SQL (non validating) parser w/ focus on MySQL dialect of SQL
  *

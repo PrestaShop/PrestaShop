@@ -1,6 +1,6 @@
 <?php
 /**
- * DescProcessor.php
+ * DescProcessor.php.
  *
  * This file implements the processor for the DESC statements, which is a short form of DESCRIBE.
  *

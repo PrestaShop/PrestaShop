@@ -1,6 +1,6 @@
 <?php
 /**
- * CharacterSetBuilder.php
+ * CharacterSetBuilder.php.
  *
  * Builds the CHARACTER SET part of a CREATE TABLE statement.
  *

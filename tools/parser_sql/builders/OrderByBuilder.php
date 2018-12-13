@@ -1,6 +1,6 @@
 <?php
 /**
- * OrderByBuilder.php
+ * OrderByBuilder.php.
  *
  * Builds the ORDERBY clause.
  *

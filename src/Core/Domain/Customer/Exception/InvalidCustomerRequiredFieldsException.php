@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
 /**
- * Thrown when trying to set invalid required fields for customer
+ * Thrown when trying to set invalid required fields for customer.
  */
 class InvalidCustomerRequiredFieldsException extends CustomerException
 {

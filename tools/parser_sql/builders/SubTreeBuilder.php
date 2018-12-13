@@ -1,6 +1,6 @@
 <?php
 /**
- * SubTreeBuilder.php
+ * SubTreeBuilder.php.
  *
  * Builds the statements for [sub_tree] fields.
  *

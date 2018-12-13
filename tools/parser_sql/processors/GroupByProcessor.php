@@ -1,6 +1,6 @@
 <?php
 /**
- * GroupByProcessor.php
+ * GroupByProcessor.php.
  *
  * This file implements the processor for the GROUP-BY statements.
  *

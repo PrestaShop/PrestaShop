@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectProcessor.php
+ * SelectProcessor.php.
  *
  * This file implements the processor for the SELECT statements.
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * IndexTypeBuilder.php
+ * IndexTypeBuilder.php.
  *
  * Builds index type part of a PRIMARY KEY statement part of CREATE TABLE.
  *

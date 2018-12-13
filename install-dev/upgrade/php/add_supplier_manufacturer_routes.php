@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 /**
  * In Prestashop 1.7.5 the supplier_rule and manufacturer_rule have been modified:
  *      {id}__{rewrite} => supplier/{id}-{rewrite}
- *      {id}_{rewrite}  => brand/{id}-{rewrite}
+ *      {id}_{rewrite}  => brand/{id}-{rewrite}.
  *
  * If the merchant kept the original routes the former urls won't be reachable any
  * more and SEO will be lost. So we force a custom rule matching the former format.

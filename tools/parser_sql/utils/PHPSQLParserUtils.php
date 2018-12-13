@@ -1,6 +1,6 @@
 <?php
 /**
- * PHPSQLParserUtils.php
+ * PHPSQLParserUtils.php.
  *
  * These are utility functions for the PHPSQLParser.
  *
@@ -74,7 +74,7 @@ class PHPSQLParserUtils {
     }
 
     /**
-     * Revokes the quoting characters from an expression
+     * Revokes the quoting characters from an expression.
      *
      * @param mixed $sql
      */
@@ -143,7 +143,7 @@ class PHPSQLParserUtils {
     }
 
     /**
-     * translates an array of objects into an associative array
+     * translates an array of objects into an associative array.
      *
      * @param mixed $tokenList
      */

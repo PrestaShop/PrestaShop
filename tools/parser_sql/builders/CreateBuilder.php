@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateBuilder.php
+ * CreateBuilder.php.
  *
  * Builds the CREATE statement
  *

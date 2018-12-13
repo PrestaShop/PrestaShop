@@ -1,6 +1,6 @@
 <?php
 /**
- * ValuesProcessor.php
+ * ValuesProcessor.php.
  *
  * This file implements the processor for the VALUES statements.
  *

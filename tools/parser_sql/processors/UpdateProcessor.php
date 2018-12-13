@@ -1,6 +1,6 @@
 <?php
 /**
- * UpdateProcessor.php
+ * UpdateProcessor.php.
  *
  * This file implements the processor for the UPDATE statements.
  *

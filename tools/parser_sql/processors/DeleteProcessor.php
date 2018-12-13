@@ -1,6 +1,6 @@
 <?php
 /**
- * DeleteProcessor.php
+ * DeleteProcessor.php.
  *
  * This file implements the processor for the DELETE statements.
  *

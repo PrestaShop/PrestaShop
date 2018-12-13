@@ -1,6 +1,6 @@
 <?php
 /**
- * PHPSQLLexer.php
+ * PHPSQLLexer.php.
  *
  * This file contains the lexer, which splits and recombines parts of the 
  * SQL statement just before parsing.
@@ -256,7 +256,7 @@ class PHPSQLLexer {
 
     /**
      * This function concats some tokens to a column reference.
-     * There are two different cases:
+     * There are two different cases:.
      * 
      * 1. If the current token ends with a dot, we will add the next token
      * 2. If the next token starts with a dot, we will add it to the previous token 

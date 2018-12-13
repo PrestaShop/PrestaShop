@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../resources/modul
 class Module
 {
     /**
-     * Copy the directory in resources which get the name $module_dir_name in the module directory
+     * Copy the directory in resources which get the name $module_dir_name in the module directory.
      *
      * @var module_dir_name take the directory name of a module contain in /home/prestashop/tests/resources/module
      *
@@ -47,7 +47,7 @@ class Module
     }
 
     /**
-     * Delete the directory in /home/prestashop/module which get the name $module_dir_name
+     * Delete the directory in /home/prestashop/module which get the name $module_dir_name.
      *
      * @var module_dir_name take the directory name of a module contain in /home/prestashop/module
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * AbstractProcessor.php
+ * AbstractProcessor.php.
  *
  * This file implements an abstract processor, which implements some helper functions.
  *
@@ -50,7 +50,7 @@ abstract class AbstractProcessor {
 
     /**
      * this function splits up a SQL statement into easy to "parse"
-     * tokens for the SQL processor
+     * tokens for the SQL processor.
      *
      * @param mixed $sql
      */
@@ -60,7 +60,7 @@ abstract class AbstractProcessor {
     }
 
     /**
-     * Revokes the quoting characters from an expression
+     * Revokes the quoting characters from an expression.
      *
      * @param mixed $sql
      */
@@ -200,7 +200,7 @@ abstract class AbstractProcessor {
     }
 
     /**
-     * translates an array of objects into an associative array
+     * translates an array of objects into an associative array.
      *
      * @param mixed $tokenList
      */

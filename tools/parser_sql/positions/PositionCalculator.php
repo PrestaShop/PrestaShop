@@ -1,6 +1,6 @@
 <?php
 /**
- * position-calculator.php
+ * position-calculator.php.
  *
  * This file implements the calculator for the position elements of 
  * the output of the PHPSQLParser.

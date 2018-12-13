@@ -1,6 +1,6 @@
 <?php
 /**
- * PrimaryKeyBuilder.php
+ * PrimaryKeyBuilder.php.
  *
  * Builds the PRIMARY KEY statement part of CREATE TABLE.
  *

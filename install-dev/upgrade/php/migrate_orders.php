@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -212,7 +212,7 @@ function migrate_orders()
 /**
  * mo_ps_round is a simplification of Tools::ps_round:
  * - round is always 2
- * - no call to Configuration class
+ * - no call to Configuration class.
  *
  * @param mixed $val
  *

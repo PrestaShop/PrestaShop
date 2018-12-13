@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Step 1 : display language form
+ * Step 1 : display language form.
  */
 class InstallControllerHttpWelcome extends InstallControllerHttp implements HttpConfigureInterface
 {
@@ -39,7 +39,7 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
     }
 
     /**
-     * Change language
+     * Change language.
      */
     public function process()
     {
@@ -58,7 +58,7 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
     }
 
     /**
-     * Display welcome step
+     * Display welcome step.
      */
     public function display()
     {

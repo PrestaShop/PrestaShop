@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ReflexionHelper
+ * Class ReflexionHelper.
  *
  * @package LegacyTests\TestCase
  *

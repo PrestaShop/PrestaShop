@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -182,7 +182,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     }
 
     /**
-     * data provider for test_container_can_bind_values_directly
+     * data provider for test_container_can_bind_values_directly.
      */
     public function valuesToBind()
     {

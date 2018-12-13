@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -83,7 +83,7 @@ class bankwire extends PaymentModule
     }
 
     /**
-     * tests for ModuleGetPossibleHooks
+     * tests for ModuleGetPossibleHooks.
      */
     public function hookPaymentReturn(){
         

@@ -1,6 +1,6 @@
 <?php
 /**
- * OperatorBuilder.php
+ * OperatorBuilder.php.
  *
  * Builds operators.
  *

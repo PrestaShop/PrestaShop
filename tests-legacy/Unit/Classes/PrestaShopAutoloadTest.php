@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -59,7 +59,7 @@ class PrestaShopAutoloadTest extends TestCase
     /**
      * Given PS_DISABLE_OVERRIDES is enabled
      * When the class index is regenerated and we have override
-     * Then the override shouldn't be include in the class index
+     * Then the override shouldn't be include in the class index.
      */
     public function testGenerateIndexWithoutOverride()
     {

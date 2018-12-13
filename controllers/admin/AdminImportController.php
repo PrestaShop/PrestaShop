@@ -1021,7 +1021,7 @@ class AdminImportControllerCore extends AdminController
     }
 
     /**
-     * Return fields to be display AS piece of advise
+     * Return fields to be display AS piece of advise.
      *
      * @param $in_array boolean
      *
