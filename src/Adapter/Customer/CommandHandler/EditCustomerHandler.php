@@ -160,9 +160,7 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         }
 
         if (null !== $command->getApeCode()) {
-            $apeCode = new ApeCode($command->getApeCode());
-
-            $customer->ape = $apeCode->getValue();
+            $customer->ape = $command->getApeCode()->getValue();
         }
 
         if (null !== $command->getWebsite()) {

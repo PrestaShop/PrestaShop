@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\ApeCode;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
@@ -63,7 +64,7 @@ class AddCustomerCommand
     private $defaultGroupId;
 
     /**
-     * @var array|int[]
+     * @var int[]
      */
     private $groupIds;
 
@@ -103,7 +104,7 @@ class AddCustomerCommand
     private $siretCode;
 
     /**
-     * @var string|null Only for B2b customers
+     * @var ApeCode|null Only for B2b customers
      */
     private $apeCode;
 
@@ -128,47 +129,42 @@ class AddCustomerCommand
     private $riskId;
 
     /**
-     * @param FirstName $firstName
-     * @param LastName $lastName
-     * @param Email $email
-     * @param Password $password
+     * @param string $firstName
+     * @param string $lastName
+     * @param string $email
+     * @param string $password
      * @param int $defaultGroupId
      * @param int[] $groupIds
      * @param int $shopId
      * @param int|null $genderId
      * @param bool $isEnabled
      * @param bool $isPartnerOffersSubscribed
-     * @param Birthday $birthday
+     * @param string|null $birthday
      */
     public function __construct(
-        FirstName $firstName,
-        LastName $lastName,
-        Email $email,
-        Password $password,
+        $firstName,
+        $lastName,
+        $email,
+        $password,
         $defaultGroupId,
         array $groupIds,
         $shopId,
         $genderId = null,
         $isEnabled = true,
         $isPartnerOffersSubscribed = false,
-        Birthday $birthday = null
+        $birthday = null
     ) {
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->email = $email;
-        $this->password = $password;
+        $this->firstName = new FirstName($firstName);
+        $this->lastName = new LastName($lastName);
+        $this->email = new Email($email);
+        $this->password = new Password($password);
         $this->defaultGroupId = $defaultGroupId;
         $this->groupIds = $groupIds;
         $this->shopId = $shopId;
         $this->genderId = $genderId;
         $this->isEnabled = $isEnabled;
         $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
-
-        if (null === $birthday) {
-            $birthday = new Birthday(Birthday::EMPTY_BIRTHDAY);
-        }
-
-        $this->birthday = $birthday;
+        $this->birthday = null !== $birthday ? new Birthday($birthday) : Birthday::createEmpty();
     }
 
     /**
@@ -268,7 +264,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @param string|null $companyName
+     * @param string $companyName
      *
      * @return self
      */
@@ -288,7 +284,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @param string|null $siretCode
+     * @param string $siretCode
      *
      * @return self
      */
@@ -300,7 +296,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @return string|null
+     * @return ApeCode|null
      */
     public function getApeCode()
     {
@@ -308,13 +304,13 @@ class AddCustomerCommand
     }
 
     /**
-     * @param string|null $apeCode
+     * @param string $apeCode
      *
      * @return self
      */
     public function setApeCode($apeCode)
     {
-        $this->apeCode = $apeCode;
+        $this->apeCode = new ApeCode($apeCode);
 
         return $this;
     }
@@ -328,7 +324,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @param string|null $website
+     * @param string $website
      *
      * @return self
      */
@@ -348,7 +344,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @param float|null $allowedOutstandingAmount
+     * @param float $allowedOutstandingAmount
      *
      * @return self
      */
@@ -368,7 +364,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @param int|null $maxPaymentDays
+     * @param int $maxPaymentDays
      *
      * @return self
      */
@@ -388,7 +384,7 @@ class AddCustomerCommand
     }
 
     /**
-     * @param int|null $riskId
+     * @param int $riskId
      *
      * @return self
      */
