@@ -396,8 +396,8 @@ class AdminSuppliersControllerCore extends AdminController
             } else {
                 $product_infos = Supplier::getProductInformationsBySupplier(
                     $this->object->id,
-                                                                            $products[$i]->id,
-                                                                            0
+                    $products[$i]->id,
+                    0
                 );
                 $products[$i]->product_supplier_reference = $product_infos['product_supplier_reference'];
                 $products[$i]->product_supplier_price_te = Tools::displayPrice($product_infos['product_supplier_price_te'], new Currency($product_infos['id_currency']));
