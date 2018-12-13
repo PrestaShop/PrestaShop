@@ -112,28 +112,28 @@ class StockMvt
     /**
      * @var int
      *
-     * @ORM\Column(name="sign", type="smallint", nullable=false, options={"default":1})
+     * @ORM\Column(name="sign", type="smallint", nullable=false, options={"default"=1})
      */
     private $sign = '1';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="price_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":"0.000000"})
+     * @ORM\Column(name="price_te", type="decimal", precision=20, scale=6, nullable=true, options={"default"="0.000000"})
      */
     private $priceTe = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="last_wa", type="decimal", precision=20, scale=6, nullable=true, options={"default":"0.000000"})
+     * @ORM\Column(name="last_wa", type="decimal", precision=20, scale=6, nullable=true, options={"default"="0.000000"})
      */
     private $lastWa = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="current_wa", type="decimal", precision=20, scale=6, nullable=true, options={"default":"0.000000"})
+     * @ORM\Column(name="current_wa", type="decimal", precision=20, scale=6, nullable=true, options={"default"="0.000000"})
      */
     private $currentWa = '0.000000';
 
