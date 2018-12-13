@@ -39,7 +39,7 @@ abstract class AbstractLocalizationPackLoader implements LocalizationPackLoaderI
      *
      * @param string $file
      *
-     * @return SimpleXMLElement|null
+     * @return null|SimpleXMLElement
      */
     protected function loadXml($file)
     {

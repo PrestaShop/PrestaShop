@@ -104,7 +104,7 @@ class RoutingCacheKeyGenerator implements CacheKeyGeneratorInterface
     }
 
     /**
-     * @return int|null
+     * @return null|int
      */
     public function getLatestModificationTime()
     {

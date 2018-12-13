@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Stock;
 
 use Exception;
@@ -178,6 +177,12 @@ class StockAvailableTest extends UnitTestCase
 
     /**
      * @dataProvider get_update_pack_quantity_provider
+     *
+     * @param mixed $default_stock_type
+     * @param FakeProduct4759 $pack
+     * @param mixed $products
+     * @param mixed $delta
+     * @param mixed $expected
      */
     public function testUpdatePackQuantity($default_stock_type, FakeProduct4759 $pack, $products, $delta, $expected)
     {
@@ -267,6 +272,12 @@ class StockAvailableTest extends UnitTestCase
 
     /**
      * @dataProvider get_update_product_quantity_provider
+     *
+     * @param mixed $default_stock_type
+     * @param FakeProduct4759 $pack
+     * @param mixed $products
+     * @param mixed $delta
+     * @param mixed $expected
      */
     public function testUpdateProductQuantity($default_stock_type, FakeProduct4759 $pack, $products, $delta, $expected)
     {
@@ -377,6 +388,13 @@ class StockAvailableTest extends UnitTestCase
 
     /**
      * @dataProvider get_update_quantity_provider
+     *
+     * @param mixed $default_stock_type
+     * @param FakeProduct4759 $pack
+     * @param mixed $products
+     * @param mixed $product_to_update
+     * @param mixed $delta
+     * @param mixed $expected
      */
     public function testUpdateQuantity($default_stock_type, FakeProduct4759 $pack, $products, $product_to_update, $delta, $expected)
     {

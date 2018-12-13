@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Integration\Adapter;
 
 use LegacyTests\TestCase\IntegrationTestCase;
@@ -51,6 +50,9 @@ class AdapterDatabaseTest extends IntegrationTestCase
 
     /**
      * @dataProvider test_values_are_escaped_dataProvider
+     *
+     * @param mixed $expectedSanitizedValue
+     * @param mixed $unsafeInput
      */
     public function testValuesAreEscaped($expectedSanitizedValue, $unsafeInput)
     {

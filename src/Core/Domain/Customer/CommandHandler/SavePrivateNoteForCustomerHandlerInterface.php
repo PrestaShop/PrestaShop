@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
 
 /**
- * Defines interface for service that handles command which saves private note for customer
+ * Defines interface for service that handles command which saves private note for customer.
  */
 interface SavePrivateNoteForCustomerHandlerInterface
 {

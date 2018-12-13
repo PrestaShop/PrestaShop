@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\PrestaShopBundle\Api;
 
 use Exception;
@@ -444,6 +443,7 @@ AND EXISTS(SELECT 1
 
     /**
      * @param array $testedParams
+     *
      * @return \Prophecy\Prophecy\ObjectProphecy|\Symfony\Component\HttpFoundation\ParameterBag
      */
     private function mockQuery(array $testedParams)
@@ -470,12 +470,13 @@ AND EXISTS(SELECT 1
         $queryMock = $this->prophet->prophesize('\Symfony\Component\HttpFoundation\ParameterBag');
         $queryMock->all()->willReturn($params);
 
-        /** @var \Prophecy\Prophecy\ObjectProphecy $queryMock */
+        /* @var \Prophecy\Prophecy\ObjectProphecy $queryMock */
         return $queryMock;
     }
 
     /**
      * @param array $attributes
+     *
      * @return \Prophecy\Prophecy\ObjectProphecy
      */
     private function mockAttributes(array $attributes)
@@ -488,6 +489,7 @@ AND EXISTS(SELECT 1
 
     /**
      * @param array $params
+     *
      * @return \Prophecy\Prophecy\ObjectProphecy
      */
     private function mockRequest(array $params)

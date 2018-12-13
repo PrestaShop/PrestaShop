@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Integration\PrestaShopBundle\Routing\Converter;
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -240,7 +239,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
     }
 
     /**
-     * Looping manually uses MUCH less memory than dataProvider
+     * Looping manually uses MUCH less memory than dataProvider.
      */
     public function testConverterByParameters()
     {
@@ -257,8 +256,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * @param string $expectedUrl
      * @param string $controller
-     * @param string|null $action
-     * @param array|null $queryParameters
+     * @param null|string $action
+     * @param null|array $queryParameters
      */
     private function doTestConverterByParameters($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
@@ -310,8 +309,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * @param string $expectedUrl
      * @param string $controller
-     * @param string|null $action
-     * @param array|null $queryParameters
+     * @param null|string $action
+     * @param null|array $queryParameters
      */
     private function doTestLegacyLinkClass($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
@@ -340,8 +339,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * @param string $expectedUrl
      * @param string $controller
-     * @param string|null $action
-     * @param array|null $queryParameters
+     * @param null|string $action
+     * @param null|array $queryParameters
      */
     private function doTestLegacyClassParameterAction($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
@@ -366,9 +365,11 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
     /**
      * Mainly used to ensure the legacy links are not broken.
+     *
      * @param string $expectedUrl
      * @param string $controller
-     * @param array|null $parameters
+     * @param null|array $parameters
+     *
      * @throws \PrestaShopException
      * @throws \ReflectionException
      */
@@ -425,7 +426,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * @param string $expectedUrl
      * @param string $url
-     * @param array|null $ignoredParameters
+     * @param null|array $ignoredParameters
      */
     private function assertSameUrl($expectedUrl, $url, array $ignoredParameters = null)
     {
@@ -459,7 +460,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
     /**
      * Force the static property SymfonyContainer::instance so that the Link class
-     * has access to the router
+     * has access to the router.
+     *
      * @throws \ReflectionException
      */
     private function initContainerInstance()

@@ -47,7 +47,7 @@ use Symfony\Component\Yaml\Yaml;
 class ModuleSelfConfigurator
 {
     /**
-     * @var string|null the module name
+     * @var null|string the module name
      */
     protected $module;
 
@@ -118,9 +118,9 @@ class ModuleSelfConfigurator
      *
      * @param string $name
      *
-     * @return $this
-     *
      * @throws UnexpectedTypeException
+     *
+     * @return $this
      */
     public function setModule($name)
     {
@@ -135,9 +135,9 @@ class ModuleSelfConfigurator
     /**
      * If defined, get the config file path or if possible, guess it.
      *
-     * @return string|null
-     *
      * @throws InvalidArgumentException
+     *
+     * @return string|null
      */
     public function getFile()
     {
@@ -183,9 +183,9 @@ class ModuleSelfConfigurator
      *
      * @param string $filepath
      *
-     * @return $this
-     *
      * @throws UnexpectedTypeException
+     *
+     * @return $this
      */
     public function setFile($filepath)
     {
@@ -287,9 +287,9 @@ class ModuleSelfConfigurator
      *
      * @param array $data
      *
-     * @return string
-     *
      * @throws Exception if file data not provided
+     *
+     * @return string
      */
     protected function extractFilePath($data)
     {

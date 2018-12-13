@@ -47,7 +47,7 @@ class AdminControllerCore extends Controller
     /** @var array */
     public $confirmations = array();
 
-    /** @var string|false */
+    /** @var false|string */
     public $shopShareDatas = false;
 
     /** @var array */
@@ -65,7 +65,7 @@ class AdminControllerCore extends Controller
     /** @var bool */
     public $bootstrap = false;
 
-    /** @var string|array */
+    /** @var array|string */
     protected $meta_title = array();
 
     /** @var string */
@@ -77,7 +77,7 @@ class AdminControllerCore extends Controller
     /** @var string */
     public $list_id;
 
-    /** @var string|false Object identifier inside the associated table */
+    /** @var false|string Object identifier inside the associated table */
     protected $identifier = false;
 
     /** @var string */
@@ -125,10 +125,10 @@ class AdminControllerCore extends Controller
     /** @var array */
     public $tpl_required_fields_vars = array();
 
-    /** @var string|null */
+    /** @var null|string */
     public $base_tpl_view = null;
 
-    /** @var string|null */
+    /** @var null|string */
     public $base_tpl_form = null;
 
     /** @var bool If you want more fieldsets in the form */
@@ -176,7 +176,7 @@ class AdminControllerCore extends Controller
     /** @var string MySQL error */
     protected $_list_error;
 
-    /** @var string|array Toolbar title */
+    /** @var array|string Toolbar title */
     protected $toolbar_title;
 
     /** @var array List of toolbar buttons */
@@ -305,7 +305,7 @@ class AdminControllerCore extends Controller
     /** @var string Identifier to use for changing positions in lists (can be omitted if positions cannot be changed) */
     protected $position_identifier;
 
-    /** @var string|int */
+    /** @var int|string */
     protected $position_group_identifier;
 
     /** @var bool Table records are not deleted but marked as deleted if set to true */
@@ -317,7 +317,7 @@ class AdminControllerCore extends Controller
     /** @var bool */
     protected $noLink;
 
-    /** @var bool|null */
+    /** @var null|bool */
     protected $specificConfirmDelete = null;
 
     /** @var bool */
@@ -558,8 +558,8 @@ class AdminControllerCore extends Controller
     /**
      * Set breadcrumbs array for the controller page.
      *
-     * @param int|null $tab_id
-     * @param array|null $tabs
+     * @param null|int $tab_id
+     * @param null|array $tabs
      */
     public function initBreadcrumbs($tab_id = null, $tabs = null)
     {
@@ -1066,9 +1066,9 @@ class AdminControllerCore extends Controller
     /**
      * Object Delete.
      *
-     * @return ObjectModel|false
-     *
      * @throws PrestaShopException
+     *
+     * @return ObjectModel|false
      */
     public function processDelete()
     {
@@ -1131,9 +1131,9 @@ class AdminControllerCore extends Controller
     /**
      * Object creation.
      *
-     * @return ObjectModel|false
-     *
      * @throws PrestaShopException
+     *
+     * @return ObjectModel|false
      */
     public function processAdd()
     {
@@ -1184,9 +1184,9 @@ class AdminControllerCore extends Controller
     /**
      * Object update.
      *
-     * @return ObjectModel|false|void
-     *
      * @throws PrestaShopException
+     *
+     * @return ObjectModel|false|void
      */
     public function processUpdate()
     {
@@ -1299,9 +1299,9 @@ class AdminControllerCore extends Controller
     /**
      * Change object status (active, inactive).
      *
-     * @return ObjectModel|false
-     *
      * @throws PrestaShopException
+     *
+     * @return ObjectModel|false
      */
     public function processStatus()
     {
@@ -1356,7 +1356,7 @@ class AdminControllerCore extends Controller
     /**
      * Cancel all filters for this tab.
      *
-     * @param int|null $list_id
+     * @param null|int $list_id
      */
     public function processResetFilters($list_id = null)
     {
@@ -2329,10 +2329,10 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @return string
-     *
      * @throws Exception
      * @throws SmartyException
+     *
+     * @return string
      */
     public function renderModal()
     {
@@ -2350,7 +2350,7 @@ class AdminControllerCore extends Controller
     /**
      * Was used to display a list of recommended modules.
      *
-     * @param string|bool $tracking_source Source information for URL used by "Install" button
+     * @param bool|string $tracking_source Source information for URL used by "Install" button
      *
      * @return string Empty
      *
@@ -2364,9 +2364,9 @@ class AdminControllerCore extends Controller
     /**
      * Function used to render the list to display for this controller.
      *
-     * @return string|false
-     *
      * @throws PrestaShopException
+     *
+     * @return string|false
      */
     public function renderList()
     {
@@ -2467,10 +2467,10 @@ class AdminControllerCore extends Controller
     /**
      * Function used to render the form for this controller.
      *
-     * @return string
-     *
      * @throws Exception
      * @throws SmartyException
+     *
+     * @return string
      */
     public function renderForm()
     {
@@ -2709,7 +2709,7 @@ class AdminControllerCore extends Controller
      * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
      *
      * @param string $string Term or expression in english
-     * @param string|null $class Name of the class
+     * @param null|string $class Name of the class
      * @param bool $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
      * @param bool $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
      *
@@ -3080,11 +3080,11 @@ class AdminControllerCore extends Controller
      * Get the current objects' list form the database.
      *
      * @param int $id_lang Language used for display
-     * @param string|null $order_by ORDER BY clause
-     * @param string|null $order_way Order way (ASC, DESC)
+     * @param null|string $order_by ORDER BY clause
+     * @param null|string $order_way Order way (ASC, DESC)
      * @param int $start Offset in LIMIT clause
-     * @param int|null $limit Row count in LIMIT clause
-     * @param int|bool $id_lang_shop
+     * @param null|int $limit Row count in LIMIT clause
+     * @param bool|int $id_lang_shop
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -3477,11 +3477,11 @@ class AdminControllerCore extends Controller
 
     /**
      * @param array|string $filter_modules_list
-     * @param string|bool $tracking_source
-     *
-     * @return bool
+     * @param bool|string $tracking_source
      *
      * @throws PrestaShopException
+     *
+     * @return bool
      */
     public function getModulesList($filter_modules_list, $tracking_source = false)
     {
@@ -3604,7 +3604,7 @@ class AdminControllerCore extends Controller
      *
      * @param ObjectModel $obj Object
      * @param string $key Field name
-     * @param int|null $id_lang Language id (optional)
+     * @param null|int $id_lang Language id (optional)
      *
      * @return string
      */
@@ -3622,7 +3622,7 @@ class AdminControllerCore extends Controller
     /**
      * Manage page display (form, list...).
      *
-     * @param string|bool $class_name Allow to validate a different class than the current one
+     * @param bool|string $class_name Allow to validate a different class than the current one
      *
      * @throws PrestaShopException
      */
@@ -3844,9 +3844,9 @@ class AdminControllerCore extends Controller
      *
      * @param int $id_object
      *
-     * @return bool|void
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return bool|void
      */
     protected function updateAssoShop($id_object)
     {
@@ -3936,9 +3936,9 @@ class AdminControllerCore extends Controller
      * @param int $id
      * @param string $name
      * @param string $dir
-     * @param string|bool $ext
-     * @param int|null $width
-     * @param int|null $height
+     * @param bool|string $ext
+     * @param null|int $width
+     * @param null|int $height
      *
      * @return bool
      */
@@ -4104,9 +4104,9 @@ class AdminControllerCore extends Controller
      *
      * @param bool $status
      *
-     * @return bool true if success
-     *
      * @throws PrestaShopException
+     *
+     * @return bool true if success
      */
     protected function processBulkStatusSelection($status)
     {
@@ -4263,8 +4263,8 @@ class AdminControllerCore extends Controller
     /**
      * @param Module $module
      * @param string $output_type
-     * @param string|null $back
-     * @param string|bool $install_source_tracking
+     * @param null|string $back
+     * @param bool|string $install_source_tracking
      */
     public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
     {
@@ -4320,8 +4320,8 @@ class AdminControllerCore extends Controller
      *
      * @param Module $module
      * @param string $output_type (link or select)
-     * @param string|null $back
-     * @param string|bool $install_source_tracking
+     * @param null|string $back
+     * @param bool|string $install_source_tracking
      *
      * @return string|array
      */

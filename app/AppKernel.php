@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use Doctrine\DBAL\DriverManager;
 use Symfony\Component\HttpKernel\Kernel;
 use PrestaShopBundle\Kernel\ModuleRepository;
@@ -131,6 +130,7 @@ class AppKernel extends Kernel
 
     /**
      * @{inheritdoc}
+     *
      * @throws \Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -147,8 +147,9 @@ class AppKernel extends Kernel
     /**
      * Return all active modules.
      *
-     * @return array list of modules names.
      * @throws \Doctrine\DBAL\DBALException
+     *
+     * @return array list of modules names.
      */
     private function getActiveModules()
     {
@@ -178,6 +179,7 @@ class AppKernel extends Kernel
 
     /**
      * @var bool
+     *
      * @return bool
      */
     private function parametersFileExists()
@@ -194,8 +196,9 @@ class AppKernel extends Kernel
     }
 
     /**
-     * @return \Doctrine\DBAL\Connection
      * @throws \Doctrine\DBAL\DBALException
+     *
+     * @return \Doctrine\DBAL\Connection
      */
     private function getConnection()
     {

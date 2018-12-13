@@ -83,7 +83,7 @@ class UploaderCore
     }
 
     /**
-     * @param string|null $fileName
+     * @param null|string $fileName
      *
      * @return string
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectExpressionProcessor.php
+ * SelectExpressionProcessor.php.
  *
  * This file implements the processor for SELECT expressions.
  *
@@ -29,17 +29,14 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
  * This class processes the SELECT expressions.
  * 
  * @author arothe
- * 
  */
 class SelectExpressionProcessor extends AbstractProcessor {
 
@@ -53,6 +50,8 @@ class SelectExpressionProcessor extends AbstractProcessor {
      * This fuction processes each SELECT clause.
      * We determine what (if any) alias
      * is provided, and we set the type of expression.
+     *
+     * @param mixed $expression
      */
     public function process($expression) {
         $tokens = $this->splitSQLIntoTokens($expression);

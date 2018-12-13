@@ -94,10 +94,10 @@ class ContextCore
      */
     protected $mobile_device = null;
 
-    /** @var bool|null */
+    /** @var null|bool */
     protected $is_mobile = null;
 
-    /** @var bool|null */
+    /** @var null|bool */
     protected $is_tablet = null;
 
     /** @var int */
@@ -227,9 +227,9 @@ class ContextCore
     /**
      * Checks if mobile context is possible.
      *
-     * @return bool
-     *
      * @throws PrestaShopException
+     *
+     * @return bool
      */
     protected function checkMobileContext()
     {

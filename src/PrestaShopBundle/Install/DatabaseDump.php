@@ -97,9 +97,9 @@ class DatabaseDump
      *
      * @param string $command
      *
-     * @return array
-     *
      * @throws Exception
+     *
+     * @return array
      */
     private function exec($command)
     {

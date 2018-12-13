@@ -575,7 +575,7 @@ class SearchCore
      * @param int $id_product
      * @param string $sql_attribute
      *
-     * @return array|null
+     * @return null|array
      */
     protected static function getAttributesFields($db, $id_product, $sql_attribute)
     {

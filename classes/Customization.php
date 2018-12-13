@@ -216,7 +216,7 @@ class CustomizationCore extends ObjectModel
      *
      * @param int $idCustomization Customization ID
      * @param int $idLang Language IOD
-     * @param int|null $idShop Shop ID
+     * @param null|int $idShop Shop ID
      *
      * @return bool|false|null|string
      */
@@ -407,9 +407,9 @@ class CustomizationCore extends ObjectModel
      * @param int $idCustomizationField
      * @param int[] $shopList
      *
-     * @return bool
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return bool
      */
     public static function deleteCustomizationFieldLangByShop($idCustomizationField, $shopList)
     {

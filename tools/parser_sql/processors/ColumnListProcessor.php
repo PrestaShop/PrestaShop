@@ -1,6 +1,6 @@
 <?php
 /**
- * ColumnListProcessor.php
+ * ColumnListProcessor.php.
  *
  * This file implements the processor for column lists like in INSERT statements.
  *
@@ -29,16 +29,13 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once dirname(__FILE__) . '/AbstractProcessor.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- * 
  * This class processes column-lists.
  * 
  * @author arothe
- * 
  */
 class ColumnListProcessor extends AbstractProcessor {
 

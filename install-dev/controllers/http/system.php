@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,11 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Install\System;
 
 /**
- * Step 2 : check system configuration (permissions on folders, PHP version, etc.)
+ * Step 2 : check system configuration (permissions on folders, PHP version, etc.).
  */
 class InstallControllerHttpSystem extends InstallControllerHttp implements HttpConfigureInterface
 {
@@ -55,7 +54,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
     }
 
     /**
-     * Required tests must be passed to validate this step
+     * Required tests must be passed to validate this step.
      *
      * @see HttpConfigureInterface::validate()
      */
@@ -67,7 +66,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
     }
 
     /**
-     * Display system step
+     * Display system step.
      */
     public function display()
     {

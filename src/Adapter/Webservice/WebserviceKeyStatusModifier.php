@@ -55,10 +55,10 @@ final class WebserviceKeyStatusModifier
      *
      * @param int $columnId - an id which identifies the required entity to be modified
      *
-     * @return string[] - if empty when process of status change was successful
-     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     *
+     * @return string[] - if empty when process of status change was successful
      */
     public function toggleStatus($columnId)
     {
@@ -93,10 +93,10 @@ final class WebserviceKeyStatusModifier
      * @param array $columnIds
      * @param int $status
      *
-     * @return bool
-     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     *
+     * @return bool
      */
     public function setStatus(array $columnIds, $status)
     {

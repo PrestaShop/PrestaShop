@@ -140,7 +140,7 @@ class ReferrerCore extends ObjectModel
      * @param int $idProduct
      * @param int $employee
      *
-     * @return array|bool|null|object
+     * @return null|array|bool|object
      */
     public function getStatsVisits($idProduct, $employee)
     {
@@ -216,7 +216,7 @@ class ReferrerCore extends ObjectModel
      * @param int $idProduct
      * @param int $employee
      *
-     * @return array|bool|null|object
+     * @return null|array|bool|object
      */
     public function getStatsSales($idProduct, $employee)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,12 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function ps_1700_right_management()
 {
     $actions = array('CREATE', 'READ', 'UPDATE', 'DELETE');
 
-    /**
+    /*
      * Add roles
      */
     foreach (array('TAB' => 'class_name', 'MODULE' => 'name') as $element => $nameColumn) {
@@ -43,7 +42,7 @@ function ps_1700_right_management()
     }
 
     /**
-     * Add access
+     * Add access.
      */
     $accessObject = new Access;
 

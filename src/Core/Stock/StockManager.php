@@ -53,7 +53,7 @@ class StockManager
      * @param Product $product A product pack object to update its quantity
      * @param StockAvailable $stock_available the stock of the product to fix with correct quantity
      * @param int $delta_quantity The movement of the stock (negative for a decrease)
-     * @param int|null $id_shop Optional shop ID
+     * @param null|int $id_shop Optional shop ID
      */
     public function updatePackQuantity($product, $stock_available, $delta_quantity, $id_shop = null)
     {
@@ -100,7 +100,7 @@ class StockManager
      * @param Product $product A product object to update its quantity
      * @param int $id_product_attribute The product attribute to update
      * @param StockAvailable $stock_available the stock of the product to fix with correct quantity
-     * @param int|null $id_shop Optional shop ID
+     * @param null|int $id_shop Optional shop ID
      */
     public function updatePacksQuantityContainingProduct($product, $id_product_attribute, $stock_available, $id_shop = null)
     {
@@ -145,7 +145,7 @@ class StockManager
      * @param Product $product The product to update its stockAvailable
      * @param int $id_product_attribute The declinaison to update (null if not)
      * @param int $delta_quantity The quantity change (positive or negative)
-     * @param int|null $id_shop Optional
+     * @param null|int $id_shop Optional
      * @param bool $add_movement Optional
      * @param array $params Optional
      */

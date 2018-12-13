@@ -1,6 +1,6 @@
 <?php
 /**
- * UnableToCalculatePositionException.php
+ * UnableToCalculatePositionException.php.
  *
  * This file implements the UnableToCalculatePositionException class which is used within the
  * PHPSQLParser package.
@@ -37,7 +37,6 @@
  * an issue in such a case, it is an application error.
  * 
  * @author arothe
- *
  */
 class UnableToCalculatePositionException extends Exception {
 

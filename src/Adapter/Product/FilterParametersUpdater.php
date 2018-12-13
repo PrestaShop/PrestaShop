@@ -61,9 +61,9 @@ final class FilterParametersUpdater
      * @param array $persistedFilterParameters
      * @param array $defaultFilterParameters
      *
-     * @return array
-     *
      * @throws ProductException
+     *
+     * @return array
      */
     public function buildFilters(
         array $queryFilterParameters,
@@ -84,9 +84,9 @@ final class FilterParametersUpdater
      * @param array $persistedFilterParameters
      * @param array $defaultFilterParameters
      *
-     * @return string|int
-     *
      * @throws ProductException
+     *
+     * @return string|int
      */
     private function getParameter(
         $parameterName,

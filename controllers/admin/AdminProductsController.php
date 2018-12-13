@@ -115,7 +115,7 @@ class AdminProductsControllerCore extends AdminController
     }
 
     /**
-     * @param Product|ObjectModel $object
+     * @param ObjectModel|Product $object
      * @param string $table
      */
     protected function copyFromPost(&$object, $table)
@@ -1663,9 +1663,9 @@ class AdminProductsControllerCore extends AdminController
      * @param int $id_image Image Id for product image filename
      * @param string $method
      *
-     * @return void|false
-     *
      * @throws PrestaShopException
+     *
+     * @return void|false
      */
     public function copyImage($id_product, $id_image, $method = 'auto')
     {
@@ -2756,7 +2756,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * Ajax process upload images.
      *
-     * @param int|null $idProduct
+     * @param null|int $idProduct
      * @param string $inputFileName
      * @param bool $die If method must die or return values
      *

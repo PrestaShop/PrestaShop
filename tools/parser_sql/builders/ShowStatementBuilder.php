@@ -1,6 +1,6 @@
 <?php
 /**
- * ShowStatementBuilder.php
+ * ShowStatementBuilder.php.
  *
  * Builds the SHOW statement.
  *
@@ -35,10 +35,9 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: ShowStatementBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
 require_once dirname(__FILE__) . '/ShowBuilder.php';
 require_once dirname(__FILE__) . '/WhereBuilder.php';
 
@@ -48,7 +47,6 @@ require_once dirname(__FILE__) . '/WhereBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class ShowStatementBuilder {
 

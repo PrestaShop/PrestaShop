@@ -1,6 +1,6 @@
 <?php
 /**
- * RenameProcessor.php
+ * RenameProcessor.php.
  *
  * This file implements the processor for the RENAME statements.
  *
@@ -29,17 +29,14 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionToken.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
  * This class processes the RENAME statements.
  * 
  * @author arothe
- * 
  */
 class RenameProcessor extends AbstractProcessor {
 

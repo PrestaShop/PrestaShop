@@ -87,16 +87,16 @@ class Formatter
     /**
      * Formats the passed number according to specifications.
      *
-     * @param int|float|string $number
+     * @param float|int|string $number
      *                                 The number to format
      * @param NumberSpecification $specification
      *                                           Number specification to be used (can be a number spec, a price spec, a percentage spec)
      *
+     * @throws LocalizationException
+     *
      * @return string
      *                The formatted number
      *                You should use this this value for display, without modifying it
-     *
-     * @throws LocalizationException
      */
     public function format($number, NumberSpecification $specification)
     {

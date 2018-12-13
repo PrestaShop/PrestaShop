@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Cart\Calculation\Currencies;
 
 use Configuration;
@@ -35,7 +34,7 @@ class CurrencyTest extends AbstractCartCalculationTest
 {
 
     /**
-     * isoCode : [a-zA-Z]{2,3}  @see Validate::isLanguageIsoCode()
+     * isoCode : [a-zA-Z]{2,3}  @see Validate::isLanguageIsoCode().
      */
     const CURRENCY_FIXTURES = [
         1 => [
@@ -81,6 +80,12 @@ class CurrencyTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider currencyDataProvider
+     *
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $cartRuleData
+     * @param mixed $defaultCurrencyId
+     * @param mixed $currencyId
      */
     public function testCurrencies(
         $productData,
@@ -100,9 +105,10 @@ class CurrencyTest extends AbstractCartCalculationTest
     }
 
     /**
-     * sets the default currency change rate to avoid using 1.0 as default
+     * sets the default currency change rate to avoid using 1.0 as default.
      *
      * @param float $changeRate
+     * @param mixed $currencyId
      */
     protected function setDefaultCurrency($currencyId)
     {

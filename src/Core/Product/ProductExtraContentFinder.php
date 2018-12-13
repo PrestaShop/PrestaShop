@@ -41,9 +41,9 @@ class ProductExtraContentFinder extends HookFinder
      * Execute hook to get all addionnal product content, and check if valid
      * (not empty and only instances of class ProductExtraContent).
      *
-     * @return array
-     *
      * @throws \Exception
+     *
+     * @return array
      */
     public function find()
     {

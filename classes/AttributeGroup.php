@@ -80,10 +80,10 @@ class AttributeGroupCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` column
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Whether the AttributeGroup has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Whether the AttributeGroup has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -108,10 +108,10 @@ class AttributeGroupCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Whether the AttributeGroup has been succesfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Whether the AttributeGroup has been succesfully updated
      */
     public function update($nullValues = false)
     {
@@ -161,9 +161,9 @@ class AttributeGroupCore extends ObjectModel
     /**
      * Deletes current AttributeGroup from database.
      *
-     * @return bool True if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool True if delete was successful
      */
     public function delete()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Util\HelperCard;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Class HelperCardDocumentationDoesNotExistException
+ * Class HelperCardDocumentationDoesNotExistException.
  */
 class HelperCardDocumentationDoesNotExistException extends CoreException
 {

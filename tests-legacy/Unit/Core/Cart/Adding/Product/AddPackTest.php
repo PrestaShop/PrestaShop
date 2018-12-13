@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Cart\Adding\CartRule;
 
 use Configuration;
@@ -41,14 +40,14 @@ class AddPackTest extends AbstractCartTest
     const ID_PRODUCT_IN_PACK_FIXTURE = 5;
 
     /**
-     * Object from test database
+     * Object from test database.
      *
      * @var int
      */
     protected $pack;
 
     /**
-     * Object from test database
+     * Object from test database.
      *
      * @var int
      */
@@ -59,7 +58,7 @@ class AddPackTest extends AbstractCartTest
     ];
 
     /**
-     * Populate pack and product in pack properties from the test database
+     * Populate pack and product in pack properties from the test database.
      */
     public function setUp()
     {

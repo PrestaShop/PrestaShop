@@ -46,6 +46,9 @@ class LinkCore
 
     /**
      * Constructor (initialization only).
+     *
+     * @param null|mixed $protocolLink
+     * @param null|mixed $protocolContent
      */
     public function __construct($protocolLink = null, $protocolContent = null)
     {
@@ -93,9 +96,9 @@ class LinkCore
      * @param $idLang
      * @param $idShop
      *
-     * @return Product
-     *
      * @throws PrestaShopException
+     *
+     * @return Product
      */
     public function getProductObject($product, $idLang, $idShop)
     {
@@ -122,6 +125,10 @@ class LinkCore
      * @param int $idLang
      * @param int $idShop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
      * @param int $ipa ID product attribute
+     * @param mixed $force_routes
+     * @param mixed $relativeProtocol
+     * @param mixed $addAnchor
+     * @param mixed $extraParams
      *
      * @return string
      */
@@ -236,7 +243,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param int|null $idCustomization
+     * @param null|int $idCustomization
      *
      * @return string
      */
@@ -269,7 +276,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param int|null $idCustomization
+     * @param null|int $idCustomization
      *
      * @return string
      */
@@ -286,7 +293,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param int|null $idCustomization
+     * @param null|int $idCustomization
      *
      * @return string
      */
@@ -303,7 +310,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param int|null $idCustomization
+     * @param null|int $idCustomization
      * @param null $op
      *
      * @return string
@@ -368,10 +375,11 @@ class LinkCore
      *
      * @param $product
      * @param $idLang
-     *
-     * @return Category
+     * @param mixed $category
      *
      * @throws PrestaShopException
+     *
+     * @return Category
      */
     public function getCategoryObject($category, $idLang)
     {
@@ -395,6 +403,8 @@ class LinkCore
      * @param string $alias
      * @param int $idLang
      * @param string $selectedFilters Url parameter to autocheck filters of the module blocklayered
+     * @param null|mixed $idShop
+     * @param mixed $relativeProtocol
      *
      * @return string
      */
@@ -509,6 +519,8 @@ class LinkCore
      * @param string $alias
      * @param bool $ssl
      * @param int $idLang
+     * @param null|mixed $idShop
+     * @param mixed $relativeProtocol
      *
      * @return string
      */
@@ -558,6 +570,8 @@ class LinkCore
      * @param mixed $supplier Supplier object (can be an ID supplier, but deprecated)
      * @param string $alias
      * @param int $idLang
+     * @param null|mixed $idShop
+     * @param mixed $relativeProtocol
      *
      * @return string
      */
@@ -694,9 +708,9 @@ class LinkCore
      * @param array(string) $sfRouteParams Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string
      * @param array $params Optional
      *
-     * @return string url
-     *
      * @throws PrestaShopException
+     *
+     * @return string url
      */
     public function getAdminLink($controller, $withToken = true, $sfRouteParams = array(), $params = array())
     {
@@ -829,13 +843,13 @@ class LinkCore
     }
 
     /**
-     * @param int|null $idShop
-     * @param bool|null $ssl
+     * @param null|int $idShop
+     * @param null|bool $ssl
      * @param bool $relativeProtocol
      *
-     * @return string
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return string
      */
     public function getAdminBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
@@ -1016,6 +1030,7 @@ class LinkCore
      *
      * @param $idStore
      * @param null $type image type (small_default, medium_default, large_default, etc.)
+     * @param mixed $name
      *
      * @return string
      */
@@ -1047,8 +1062,10 @@ class LinkCore
      * @param string $controller
      * @param bool $ssl
      * @param int $idLang
-     * @param string|array $request
+     * @param array|string $request
      * @param bool $requestUrlEncode Use URL encode
+     * @param null|mixed $idShop
+     * @param mixed $relativeProtocol
      *
      * @return string Page link
      */
@@ -1117,9 +1134,9 @@ class LinkCore
      * @param int $idLang Language ID
      * @param Context $context the context if needed
      *
-     * @return string link
-     *
      * @throws PrestaShopException
+     *
+     * @return string link
      */
     public function getLanguageLink($idLang, Context $context = null)
     {
@@ -1274,7 +1291,7 @@ class LinkCore
 
     /**
      * @param null $idLang
-     * @param Context|null $context
+     * @param null|Context $context
      * @param null $idShop
      *
      * @return string
@@ -1302,8 +1319,8 @@ class LinkCore
     }
 
     /**
-     * @param int|null $idShop
-     * @param bool|null $ssl
+     * @param null|int $idShop
+     * @param null|bool $ssl
      * @param bool $relativeProtocol
      *
      * @return string

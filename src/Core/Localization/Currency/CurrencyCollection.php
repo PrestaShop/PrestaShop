@@ -96,7 +96,7 @@ class CurrencyCollection implements IteratorAggregate, Countable
      * @param string $isoCode
      *                        The currency code (alphabetic ISO 4217 code)
      *
-     * @return Currency|null
+     * @return null|Currency
      *                       A Currency instance or null when not found
      */
     public function get($isoCode)

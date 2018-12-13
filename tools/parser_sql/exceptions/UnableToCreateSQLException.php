@@ -1,6 +1,6 @@
 <?php
 /**
- * UnableToCreateSQLException.php
+ * UnableToCreateSQLException.php.
  *
  * This file implements the UnableToCreateSQLException class which is used within the
  * PHPSQLParser package.
@@ -38,7 +38,6 @@
  * in such a case.
  *  
  * @author arothe
- *
  */
 class UnableToCreateSQLException extends Exception {
 

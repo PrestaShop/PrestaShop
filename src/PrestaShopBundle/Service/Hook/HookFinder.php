@@ -61,9 +61,9 @@ class HookFinder
     /**
      * Execute hook specified in params and check if the result matches the expected classes if asked.
      *
-     * @return array Content returned by modules
-     *
      * @throws \Exception if class doesn't match interface or expected classes
+     *
+     * @return array Content returned by modules
      */
     public function find()
     {
@@ -155,7 +155,7 @@ class HookFinder
      * Add an instance of class to be returned by the hook without
      * erasing the other values.
      *
-     * @param string|array $expectedInstanceClasses
+     * @param array|string $expectedInstanceClasses
      *
      * @return \PrestaShopBundle\Service\Hook\Finder
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * ValuesProcessor.php
+ * ValuesProcessor.php.
  *
  * This file implements the processor for the VALUES statements.
  *
@@ -29,17 +29,14 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 require_once(dirname(__FILE__) . '/RecordProcessor.php');
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 
 /**
- * 
  * This class processes the VALUES statements.
  * 
  * @author arothe
- * 
  */
 class ValuesProcessor extends AbstractProcessor {
 

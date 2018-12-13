@@ -49,7 +49,7 @@ interface PositionUpdateHandlerInterface
      *      3 => 3
      * ];
      *
-     * @param string|int $parentId
+     * @param int|string $parentId
      * @param PositionDefinitionInterface $positionDefinition
      *
      * @return array

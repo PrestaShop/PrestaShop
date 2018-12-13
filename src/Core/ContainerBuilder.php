@@ -33,9 +33,9 @@ class ContainerBuilder
     /**
      * Construct PrestaShop Core Service container.
      *
-     * @return \PrestaShop\PrestaShop\Core\Foundation\IoC\Container
-     *
      * @throws \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
+     *
+     * @return \PrestaShop\PrestaShop\Core\Foundation\IoC\Container
      */
     public function build()
     {

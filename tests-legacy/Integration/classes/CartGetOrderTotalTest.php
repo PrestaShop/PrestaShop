@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Integration\classes;
 
 use LegacyTests\TestCase\IntegrationTestCase;
@@ -90,7 +89,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      * Methods starting with get should cache their result for performance,
      * methods starting with make should create a new object each time.
      */
-
     private static function deactivateCurrentCartRules()
     {
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart_rule SET active = 0');
@@ -181,6 +179,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     /**
      * $rate is e.g. 5.5, 20...
      * This is cached by $rate.
+     *
+     * @param mixed $rate
      */
     private static function getIdTax($rate)
     {
@@ -202,6 +202,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
     /**
      * This is cached by $rate.
+     *
+     * @param mixed $rate
      */
     private static function getIdTaxRulesGroup($rate)
     {
@@ -230,6 +232,10 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
     /**
      * This is cached by $name.
+     *
+     * @param mixed $name
+     * @param mixed $price
+     * @param mixed $id_tax_rules_group
      */
     private static function makeProduct($name, $price, $id_tax_rules_group)
     {
@@ -268,6 +274,10 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     /**
      * null $shippingCost is interpreted as free shipping
      * Carriers are cached by $name.
+     *
+     * @param mixed $name
+     * @param null|mixed $shippingCost
+     * @param null|mixed $id_tax_rules_group
      */
     private static function getIdCarrier($name, $shippingCost = null, $id_tax_rules_group = null)
     {
@@ -486,7 +496,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      * This test checks that if PS_ATCP_SHIPWRAP is set to true then:
      * - the shipping cost of the carrier is understood as tax included instead of tax excluded
      * - the tax excluded shipping cost is deduced from the tax included shipping cost
-     * 	 by removing the average tax rate of the cart
+     * 	 by removing the average tax rate of the cart.
      */
     public function testAverageTaxOfCartProductsShippingTax()
     {
@@ -508,7 +518,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     }
 
     /**
-     * Check getOrderTotal return the same value with and without when PS_TAX is disable
+     * Check getOrderTotal return the same value with and without when PS_TAX is disable.
      */
     public function testSameTotalWithoutTax()
     {

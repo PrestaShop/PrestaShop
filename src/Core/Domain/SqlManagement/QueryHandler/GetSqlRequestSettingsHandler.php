@@ -64,7 +64,7 @@ final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandler
     /**
      * File encodings are saved as integer values in databases.
      *
-     * @param int|null $rawValue
+     * @param null|int $rawValue
      *
      * @return string
      */

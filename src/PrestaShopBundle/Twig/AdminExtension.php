@@ -57,7 +57,7 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_InitRunt
     /**
      * AdminExtension constructor.
      *
-     * @param RequestStack|null $requestStack
+     * @param null|RequestStack $requestStack
      * @param ContainerInterface $container
      */
     public function __construct(RequestStack $requestStack = null, ContainerInterface $container)

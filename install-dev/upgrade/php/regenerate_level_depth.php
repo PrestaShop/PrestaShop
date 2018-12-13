@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Regenerate the entire category tree level_depth
+ * Regenerate the entire category tree level_depth.
  */
 function regenerate_level_depth()
 {
@@ -34,7 +34,7 @@ function regenerate_level_depth()
 }
 
 /**
- * Recursively regenerate the level_depth of this category's children
+ * Recursively regenerate the level_depth of this category's children.
  *
  * @param int $id_category
  * @param int $level_depth

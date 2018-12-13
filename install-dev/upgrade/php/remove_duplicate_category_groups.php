@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Removes duplicates from table category_group caused by a bug in category importing in PS < 1.4.2
+ * Removes duplicates from table category_group caused by a bug in category importing in PS < 1.4.2.
  */
 function remove_duplicate_category_groups()
 {

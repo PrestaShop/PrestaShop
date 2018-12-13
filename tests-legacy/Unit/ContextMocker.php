@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit;
 
 use Cache;
@@ -45,7 +44,7 @@ use Tools;
 use Pack;
 
 /**
- * This helper class provides methods to initialize context for front controller tests
+ * This helper class provides methods to initialize context for front controller tests.
  *
  * USAGE :
  *
@@ -72,7 +71,7 @@ class ContextMocker
 
     /**
      * properly mock global context object with required properties
-     * with this mock front controllers are able to be tested
+     * with this mock front controllers are able to be tested.
      *
      * @return static
      */
@@ -116,7 +115,7 @@ class ContextMocker
     }
 
     /**
-     * restore previous context to avoid modifying global properties through tests
+     * restore previous context to avoid modifying global properties through tests.
      */
     public function resetContext()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\PrestaShopBundle\Mock;
 
 use PrestaShopBundle\Security\Voter\PageVoter as BaseVoter;
@@ -35,6 +34,7 @@ class PageVoter extends BaseVoter
      * @param string $attribute
      * @param mixed $subject
      * @param TokenInterface $token
+     *
      * @return bool
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)

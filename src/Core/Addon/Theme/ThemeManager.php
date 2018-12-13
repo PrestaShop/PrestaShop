@@ -224,7 +224,7 @@ class ThemeManager implements AddonManagerInterface
      *
      * @param string $themeName The technical theme name
      *
-     * @return string|null The last error if found
+     * @return null|string The last error if found
      */
     public function getError($themeName)
     {

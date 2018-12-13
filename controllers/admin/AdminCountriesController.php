@@ -133,6 +133,8 @@ class AdminCountriesControllerCore extends AdminController
      * AdminController::setMedia() override.
      *
      * @see AdminController::setMedia()
+     *
+     * @param mixed $isNewTheme
      */
     public function setMedia($isNewTheme = false)
     {

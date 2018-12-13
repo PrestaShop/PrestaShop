@@ -98,9 +98,9 @@ class EditSqlRequestCommand
      *
      * @param string $name
      *
-     * @return self
-     *
      * @throws SqlRequestConstraintException
+     *
+     * @return self
      */
     public function setName($name)
     {
@@ -121,9 +121,9 @@ class EditSqlRequestCommand
      *
      * @param string $sql
      *
-     * @return self
-     *
      * @throws SqlRequestConstraintException
+     *
+     * @return self
      */
     public function setSql($sql)
     {

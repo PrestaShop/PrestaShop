@@ -47,7 +47,7 @@ class TreeCore
     private $_title;
     private $_no_js;
 
-    /** @var TreeToolbar|ITreeToolbar */
+    /** @var ITreeToolbar|TreeToolbar */
     private $_toolbar;
 
     public function __construct($id, $data = null)

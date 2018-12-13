@@ -126,7 +126,7 @@ class CustomerMessageCore extends ObjectModel
     /**
      * Get total CustomerMessages.
      *
-     * @param string|null $where Additional SQL query
+     * @param null|string $where Additional SQL query
      *
      * @return int Amount of CustomerMessages found
      */
@@ -152,9 +152,9 @@ class CustomerMessageCore extends ObjectModel
     /**
      * Deletes current CustomerMessage from the database.
      *
-     * @return bool `true` if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {

@@ -25,7 +25,7 @@
  */
 
 /**
- * File copied from ps_update_tabs.php and modified for only adding modules related tabs
+ * File copied from ps_update_tabs.php and modified for only adding modules related tabs.
  */
 function ps_1750_update_module_tabs()
 {

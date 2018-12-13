@@ -57,9 +57,9 @@ class CMSRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\Enti
      * @param $id_lang
      * @param $id_shop
      *
-     * @return CMS|null
-     *
      * @throws \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
+     *
+     * @return CMS|null
      */
     public function i10nFindOneById($id_cms, $id_lang, $id_shop)
     {

@@ -36,7 +36,7 @@ class ProductColorsRetriever
     /**
      * @param int $id_product
      *
-     * @return mixed|null
+     * @return null|mixed
      */
     public function getColoredVariants($id_product)
     {

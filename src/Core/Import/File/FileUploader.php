@@ -65,9 +65,9 @@ final class FileUploader
      *
      * @param UploadedFile $uploadedFile
      *
-     * @return File
-     *
      * @throws FileUploadException
+     *
+     * @return File
      */
     public function upload(UploadedFile $uploadedFile)
     {
@@ -100,7 +100,7 @@ final class FileUploader
      *
      * @param UploadedFile $uploadedFile
      *
-     * @return string|false Returns error string on error or FALSE otherwise
+     * @return false|string Returns error string on error or FALSE otherwise
      */
     protected function validateUploadedFile(UploadedFile $uploadedFile)
     {

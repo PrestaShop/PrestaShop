@@ -41,7 +41,7 @@ class SupplierController extends FrameworkBundleAdminController
      * @param int $idProduct
      * @param int|string $supplierIds The suppliers ids separate by "-"
      *
-     * @return string|Response
+     * @return Response|string
      */
     public function refreshProductSupplierCombinationFormAction($idProduct, $supplierIds)
     {

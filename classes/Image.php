@@ -97,10 +97,10 @@ class ImageCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Image has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the Image has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -122,10 +122,10 @@ class ImageCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Image has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the Image has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -141,9 +141,9 @@ class ImageCore extends ObjectModel
     /**
      * Deletes current Image from the database.
      *
-     * @return bool `true` if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {
@@ -363,6 +363,7 @@ class ImageCore extends ObjectModel
      *
      * @param int $idProductOld Source product ID
      * @param bool $idProductNew Destination product ID
+     * @param mixed $combinationImages
      */
     public static function duplicateProductImages($idProductOld, $idProductNew, $combinationImages)
     {
@@ -555,6 +556,8 @@ class ImageCore extends ObjectModel
     /**
      * Delete the product image from disk and remove the containing folder if empty
      * Handles both legacy and new image filesystems.
+     *
+     * @param mixed $forceDelete
      */
     public function deleteImage($forceDelete = false)
     {

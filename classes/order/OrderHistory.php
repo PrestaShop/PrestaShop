@@ -427,7 +427,7 @@ class OrderHistoryCore extends ObjectModel
      *
      * @param int $id_order
      *
-     * @return OrderState|bool
+     * @return bool|OrderState
      *
      * @deprecated 1.5.0.4
      * @see Order->current_state

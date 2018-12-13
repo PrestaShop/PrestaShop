@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use PrestaShopBundle\Install\Upgrade;
 
 // Although no arguments execute the script, you can get some help if requested.
@@ -125,7 +123,7 @@ if ($upgrade->getInAutoUpgrade()) {
 }
 
 /**
- * displays the help
+ * displays the help.
  */
 function displayHelp()
 {

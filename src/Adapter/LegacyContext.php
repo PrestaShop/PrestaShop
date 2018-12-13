@@ -162,6 +162,7 @@ class LegacyContext
      * @param bool $showContentHeader can force header toolbar (buttons and title) to be hidden with false value
      * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
      * @param string $helpLink If specified, will be used instead of legacy one
+     * @param mixed $headerTabContent
      *
      * @return string The html layout
      */
@@ -194,7 +195,7 @@ class LegacyContext
      * Returns available languages. The first one is the employee default one.
      *
      * @param bool $active Select only active languages
-     * @param int|bool $id_shop Shop ID
+     * @param bool|int $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
      * @return array Languages
@@ -258,9 +259,9 @@ class LegacyContext
     /**
      * Get employee's default tab name.
      *
-     * @return string Default tab name for employee
-     *
      * @throws RuntimeException Throws exception if employee does not exist in context
+     *
+     * @return string Default tab name for employee
      */
     public function getDefaultEmployeeTab()
     {

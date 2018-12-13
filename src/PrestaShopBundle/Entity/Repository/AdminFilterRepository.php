@@ -40,7 +40,7 @@ class AdminFilterRepository extends EntityRepository
      * @param $controller
      * @param $action
      *
-     * @return AdminFilter|null
+     * @return null|AdminFilter
      */
     public function findByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action)
     {

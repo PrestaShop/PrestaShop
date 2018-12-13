@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,23 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\TestCase;
 
 use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ReflexionHelper
- * @package LegacyTests\TestCase
- *
- * Provides utilities to access private or protected properties inside classes.
- *
- * Please be careful with these feature, testing private fields or methods is often a bad smell :
- *      - you may be testing your implementation details rather than the behaviour of your code.
- *      - if this is because the class under test is too long and complicated, you should defintely consider breaking this class into several smaller ones.
- *
- * In the end, this kind of features is here just for convenience to be able to test quickly dirty legacy code.
+ * Class ReflexionHelper.
  */
 class ReflexionHelper extends TestCase
 {

@@ -201,11 +201,11 @@ class SpecificPriceRuleCore extends ObjectModel
     /**
      * Return the product list affected by this specific rule.
      *
-     * @param bool|array $products products list limitation
-     *
-     * @return array affected products list IDs
+     * @param array|bool $products products list limitation
      *
      * @throws PrestaShopDatabaseException
+     *
+     * @return array affected products list IDs
      */
     public function getAffectedProducts($products = false)
     {

@@ -111,7 +111,7 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
      *
      * @param ImportConfigInterface $importConfig
      *
-     * @return string|null
+     * @return null|string
      */
     private function getSelectedFile(ImportConfigInterface $importConfig)
     {

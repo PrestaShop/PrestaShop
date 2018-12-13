@@ -435,6 +435,7 @@ class ValidateCore
      * Check for HTML field validity (no XSS please !).
      *
      * @param string $html HTML field to validate
+     * @param mixed $allow_iframe
      *
      * @return bool Validity is ok or not
      */
@@ -837,6 +838,7 @@ class ValidateCore
      * Check object validity.
      *
      * @param int $object Object to validate
+     * @param mixed $color
      *
      * @return bool Validity is ok or not
      */

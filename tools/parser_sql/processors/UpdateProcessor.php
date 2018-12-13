@@ -1,6 +1,6 @@
 <?php
 /**
- * UpdateProcessor.php
+ * UpdateProcessor.php.
  *
  * This file implements the processor for the UPDATE statements.
  *
@@ -29,15 +29,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/FromProcessor.php');
 
 /**
- * 
  * This class processes the UPDATE statements.
  * 
  * @author arothe
- * 
  */
 class UpdateProcessor extends FromProcessor {
 

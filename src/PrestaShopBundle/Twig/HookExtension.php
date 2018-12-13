@@ -55,6 +55,7 @@ class HookExtension extends \Twig_Extension
      *
      * @param HookDispatcherInterface $hookDispatcher
      * @param ModuleDataProvider $moduleDataProvider
+     * @param null|ModuleRepository $moduleRepository
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,

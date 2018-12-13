@@ -58,10 +58,10 @@ final class SearchCriteria implements SearchCriteriaInterface
 
     /**
      * @param array $filters
-     * @param string|null $orderBy
-     * @param string|null $orderWay
-     * @param string|null $offset
-     * @param string|null $limit
+     * @param null|string $orderBy
+     * @param null|string $orderWay
+     * @param null|string $offset
+     * @param null|string $limit
      */
     public function __construct(array $filters = [], $orderBy = null, $orderWay = null, $offset = null, $limit = null)
     {

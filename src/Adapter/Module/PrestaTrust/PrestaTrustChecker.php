@@ -164,7 +164,7 @@ class PrestaTrustChecker
      *
      * @param string $path Module root path
      *
-     * @return string|null smart contract address, if found
+     * @return null|string smart contract address, if found
      */
     public function findSmartContrat($path)
     {

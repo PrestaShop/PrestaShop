@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -200,7 +200,7 @@ class AdminModelAdapterTest extends KernelTestCase
     }
 
     /**
-     * Checks that the construction of object still works as expected
+     * Checks that the construction of object still works as expected.
      */
     public function testConstruct()
     {

@@ -59,6 +59,7 @@ class ProductSpecificPrice extends CommonAbstractType
      * @param object $currencyDataprovider
      * @param object $groupDataprovider
      * @param object $legacyContext
+     * @param mixed $customerDataprovider
      */
     public function __construct(
         $router,

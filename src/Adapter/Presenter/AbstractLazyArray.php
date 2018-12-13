@@ -47,7 +47,7 @@ use RuntimeException;
  * If your want to define the ['addresses'] array access in your lazyArray object, just define the public method
  * getAddresses() and add the annotation arrayAccess to it. e.g:
  *
- *     @arrayAccess
+ * @arrayAccess
  *
  *     @return array
  *
@@ -107,9 +107,9 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     /**
      * Make the lazyArray serializable like an array.
      *
-     * @return array
-     *
      * @throws RuntimeException
+     *
+     * @return array
      */
     public function jsonSerialize()
     {
@@ -175,9 +175,9 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @param mixed $index
      *
-     * @return mixed
-     *
      * @throws RuntimeException
+     *
+     * @return mixed
      */
     public function __get($index)
     {
@@ -191,6 +191,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      * @param mixed $offset
      * @param mixed $value
      * @param bool $force if set, allow override of an existing method
+     * @param mixed $name
      *
      * @throws RuntimeException
      */
@@ -205,6 +206,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @param mixed $offset
      * @param bool $force if set, allow unset of an existing method
+     * @param mixed $name
      *
      * @throws RuntimeException
      */
@@ -218,9 +220,9 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @param mixed $index
      *
-     * @return mixed
-     *
      * @throws RuntimeException
+     *
+     * @return mixed
      */
     public function offsetGet($index)
     {
@@ -267,9 +269,9 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     /**
      * Get the result associated with the current index.
      *
-     * @return mixed
-     *
      * @throws RuntimeException
+     *
+     * @return mixed
      */
     public function current()
     {

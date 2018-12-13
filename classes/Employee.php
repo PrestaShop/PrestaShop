@@ -156,9 +156,9 @@ class EmployeeCore extends ObjectModel
     /**
      * EmployeeCore constructor.
      *
-     * @param int|null $id Employee ID
-     * @param int|null $idLang Language ID
-     * @param int|null $idShop Shop ID
+     * @param null|int $id Employee ID
+     * @param null|int $idLang Language ID
+     * @param null|int $idShop Shop ID
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {
@@ -207,10 +207,10 @@ class EmployeeCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Employee has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the Employee has been successfully added
      */
     public function add($autoDate = true, $nullValues = true)
     {
@@ -226,10 +226,10 @@ class EmployeeCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Employee has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the Employee has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -390,6 +390,7 @@ class EmployeeCore extends ObjectModel
      * Check if employee password is the right one.
      *
      * @param string $passwordHash Password
+     * @param mixed $idEmployee
      *
      * @return bool result
      */
@@ -534,6 +535,7 @@ class EmployeeCore extends ObjectModel
      * Check if the employee is associated to a specific shop group.
      *
      * @param int $id_shop_group ShopGroup ID
+     * @param mixed $idShopGroup
      *
      * @return bool
      *

@@ -118,13 +118,13 @@ class Locale implements LocaleInterface
     /**
      * Format a number according to locale rules.
      *
-     * @param int|float|string $number
+     * @param float|int|string $number
      *                                 The number to be formatted
+     *
+     * @throws Exception\LocalizationException
      *
      * @return string
      *                The formatted number
-     *
-     * @throws Exception\LocalizationException
      */
     public function formatNumber($number)
     {
@@ -137,15 +137,15 @@ class Locale implements LocaleInterface
     /**
      * Format a number as a price.
      *
-     * @param int|float|string $number
+     * @param float|int|string $number
      *                                 Number to be formatted as a price
      * @param string $currencyCode
      *                             Currency of the price
      *
+     * @throws Exception\LocalizationException
+     *
      * @return string
      *                The formatted price
-     *
-     * @throws Exception\LocalizationException
      */
     public function formatPrice($number, $currencyCode)
     {

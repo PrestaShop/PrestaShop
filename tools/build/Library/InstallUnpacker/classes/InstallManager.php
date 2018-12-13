@@ -76,9 +76,9 @@ class InstallManager
     }
 
     /**
-     * @return VersionNumber
-     *
      * @throws \RuntimeException
+     *
+     * @return VersionNumber
      */
     public function getLatestStableAvailableVersion()
     {
@@ -86,9 +86,9 @@ class InstallManager
     }
 
     /**
-     * @return bool
-     *
      * @throws PrestashopCouldNotInstallLatestVersionException
+     *
+     * @return bool
      */
     public function downloadUnzipAndReplaceLatestPSVersion()
     {
