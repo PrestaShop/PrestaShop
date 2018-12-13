@@ -106,49 +106,57 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         $columns = (new ColumnCollection())
-            ->add((new BulkActionColumn('customers_bulk'))
+            ->add(
+                (new BulkActionColumn('customers_bulk'))
                 ->setOptions([
                     'bulk_field' => 'id_customer',
                 ])
             )
-            ->add((new DataColumn('id_customer'))
+            ->add(
+                (new DataColumn('id_customer'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_customer',
                 ])
             )
-            ->add((new DataColumn('social_title'))
+            ->add(
+                (new DataColumn('social_title'))
                 ->setName($this->trans('Social title', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'social_title',
                 ])
             )
-            ->add((new DataColumn('firstname'))
+            ->add(
+                (new DataColumn('firstname'))
                 ->setName($this->trans('First name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'firstname',
                 ])
             )
-            ->add((new DataColumn('lastname'))
+            ->add(
+                (new DataColumn('lastname'))
                 ->setName($this->trans('Last name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'lastname',
                 ])
             )
-            ->add((new DataColumn('email'))
+            ->add(
+                (new DataColumn('email'))
                 ->setName($this->trans('Email address', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'email',
                 ])
             )
-            ->add((new BadgeColumn('total_spent'))
+            ->add(
+                (new BadgeColumn('total_spent'))
                 ->setName($this->trans('Sales', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'total_spent',
                     'empty_value' => '--',
                 ])
             )
-            ->add((new ToggleColumn('active'))
+            ->add(
+                (new ToggleColumn('active'))
                 ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
@@ -157,7 +165,8 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_name' => 'customerId',
                 ])
             )
-            ->add((new ToggleColumn('newsletter'))
+            ->add(
+                (new ToggleColumn('newsletter'))
                 ->setName($this->trans('Newsletter', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'newsletter',
@@ -166,7 +175,8 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_name' => 'customerId',
                 ])
             )
-            ->add((new ToggleColumn('optin'))
+            ->add(
+                (new ToggleColumn('optin'))
                 ->setName($this->trans('Partner offers', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
                     'field' => 'optin',
@@ -175,22 +185,26 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_name' => 'customerId',
                 ])
             )
-            ->add((new DataColumn('date_add'))
+            ->add(
+                (new DataColumn('date_add'))
                 ->setName($this->trans('Registration', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
                     'field' => 'date_add',
                 ])
             )
-            ->add((new DataColumn('connect'))
+            ->add(
+                (new DataColumn('connect'))
                 ->setName($this->trans('Last visit', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
                     'field' => 'connect',
                 ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('edit'))
+                        ->add(
+                            (new LinkRowAction('edit'))
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
@@ -199,7 +213,8 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route_param_field' => 'id_customer',
                             ])
                         )
-                        ->add((new LinkRowAction('view'))
+                        ->add(
+                            (new LinkRowAction('view'))
                             ->setName($this->trans('View', [], 'Admin.Actions'))
                             ->setIcon('zoom_in')
                             ->setOptions([
@@ -208,7 +223,8 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route_param_field' => 'id_customer',
                             ])
                         )
-                        ->add((new SubmitRowAction('delete'))
+                        ->add(
+                            (new SubmitRowAction('delete'))
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
@@ -224,11 +240,12 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ])
                         ),
                 ])
-            )
-        ;
+            );
 
         if ($this->isB2bFeatureEnabled) {
-            $columns->addAfter('email', (new DataColumn('company'))
+            $columns->addAfter(
+                'email',
+                (new DataColumn('company'))
                 ->setName($this->trans('Company', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'company',
@@ -237,7 +254,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
         }
 
         if ($this->isMultistoreFeatureEnabled) {
-            $columns->addBefore('actions', (new DataColumn('shop_name'))
+            $columns->addBefore(
+                'actions',
+                (new DataColumn('shop_name'))
                 ->setName($this->trans('Shop', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'shop_name',
@@ -255,13 +274,15 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         $filters = (new FilterCollection())
-            ->add((new Filter('id_customer', NumberType::class))
+            ->add(
+                (new Filter('id_customer', NumberType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('id_customer')
             )
-            ->add((new Filter('social_title', ChoiceType::class))
+            ->add(
+                (new Filter('social_title', ChoiceType::class))
                 ->setTypeOptions([
                     'choices' => $this->genderChoices,
                     'expanded' => false,
@@ -271,40 +292,48 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('social_title')
             )
-            ->add((new Filter('firstname', TextType::class))
+            ->add(
+                (new Filter('firstname', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('firstname')
             )
-            ->add((new Filter('lastname', TextType::class))
+            ->add(
+                (new Filter('lastname', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('lastname')
             )
-            ->add((new Filter('email', TextType::class))
+            ->add(
+                (new Filter('email', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('email')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('active')
             )
-            ->add((new Filter('newsletter', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('newsletter', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('newsletter')
             )
-            ->add((new Filter('optin', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('optin', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('optin')
             )
-            ->add((new Filter('date_add', DateRangeType::class))
+            ->add(
+                (new Filter('date_add', DateRangeType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('date_add')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
                     'reset_route' => 'admin_common_reset_search',
                     'reset_route_params' => [
@@ -314,11 +343,11 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'redirect_route' => 'admin_customers_index',
                 ])
                 ->setAssociatedColumn('actions')
-            )
-        ;
+            );
 
         if ($this->isB2bFeatureEnabled) {
-            $filters->add((new Filter('company', TextType::class))
+            $filters->add(
+                (new Filter('company', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
@@ -335,7 +364,8 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new LinkGridAction('import'))
+            ->add(
+                (new LinkGridAction('import'))
                 ->setName($this->trans('Import', [], 'Admin.Actions'))
                 ->setIcon('cloud_upload')
                 ->setOptions([
@@ -345,26 +375,29 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ],
                 ])
             )
-            ->add((new LinkGridAction('export'))
+            ->add(
+                (new LinkGridAction('export'))
                 ->setName($this->trans('Export', [], 'Admin.Actions'))
                 ->setIcon('cloud_download')
                 ->setOptions([
                     'route' => 'admin_customers_index',
                 ])
             )
-            ->add((new SimpleGridAction('common_refresh_list'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
                 ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
                 ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
                 ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
                 ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
-            )
-        ;
+            );
     }
 
     /**
@@ -373,24 +406,26 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('enable_selection'))
+            ->add(
+                (new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_customers_index',
                 ])
             )
-            ->add((new SubmitBulkAction('disable_selection'))
+            ->add(
+                (new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_customers_index',
                 ])
             )
-            ->add((new SubmitBulkAction('delete_selection'))
+            ->add(
+                (new SubmitBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_customers_index',
                 ])
-            )
-        ;
+            );
     }
 }

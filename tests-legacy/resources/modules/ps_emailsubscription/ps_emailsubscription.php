@@ -53,8 +53,8 @@ class Ps_Emailsubscription extends Module
             'name' => array('newsletter_conf', 'newsletter_voucher'),
             'ext' => array(
                 0 => 'html',
-                1 => 'txt'
-            )
+                1 => 'txt',
+            ),
         );
     }
 

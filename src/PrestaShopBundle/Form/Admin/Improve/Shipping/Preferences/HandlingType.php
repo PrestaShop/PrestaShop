@@ -81,8 +81,7 @@ class HandlingType extends TranslatorAwareType
                 'unit' => $weightUnit,
                 'required' => false,
                 'empty_data' => '0',
-            ])
-        ;
+            ]);
     }
 
     /**

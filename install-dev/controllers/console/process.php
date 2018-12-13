@@ -163,12 +163,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         if ($this->datas->newsletter) {
             $params = http_build_query(array(
-                    'email' => $this->datas->admin_email,
-                    'method' => 'addMemberToNewsletter',
-                    'language' => $this->datas->lang,
-                    'visitorType' => 1,
-                    'source' => 'installer'
-                ));
+                'email' => $this->datas->admin_email,
+                'method' => 'addMemberToNewsletter',
+                'language' => $this->datas->lang,
+                'visitorType' => 1,
+                'source' => 'installer',
+            ));
             Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }

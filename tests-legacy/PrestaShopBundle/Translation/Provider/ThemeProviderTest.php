@@ -41,8 +41,7 @@ class ThemeProviderTest extends TestCase
     public function setUp()
     {
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
-            ->getMock()
-        ;
+            ->getMock();
 
         self::$resourcesDir = __DIR__.'/../../resources/themes/fakeTheme2';
         $this->provider = new ThemeProvider($loader, self::$resourcesDir);

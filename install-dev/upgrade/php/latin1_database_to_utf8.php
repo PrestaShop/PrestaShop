@@ -80,7 +80,7 @@ function latin1_database_to_utf8()
         array('name' => 'tab_lang', 'id' => 'id_tab', 'lang' => true, 'fields' => array('name')),
         array('name' => 'tag', 'id' => 'id_tag', 'fields' => array('name')),
         array('name' => 'tax_lang', 'id' => 'id_tax', 'lang' => true, 'fields' => array('name')),
-        array('name' => 'zone', 'id' => 'id_zone', 'fields' => array('name'))
+        array('name' => 'zone', 'id' => 'id_zone', 'fields' => array('name')),
     );
 
     foreach ($tables as $table) {

@@ -71,7 +71,6 @@ class EmployeeOptionsType extends TranslatorAwareType
             ->add('allow_employee_specific_language', SwitchType::class, [
                 'required' => false,
                 'disabled' => !$this->canOptionsBeChanged,
-            ])
-        ;
+            ]);
     }
 }

@@ -34,15 +34,14 @@ use PHPUnit\Framework\TestCase;
  */
 class ModulesProviderTest extends TestCase
 {
-    // @see /resources/translations/en-US/AdminActions.en-US.xlf
+    /** @see /resources/translations/en-US/AdminActions.en-US.xlf */
     private $provider;
     private static $resourcesDir;
 
     public function setUp()
     {
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
-            ->getMock()
-        ;
+            ->getMock();
 
         self::$resourcesDir = __DIR__.'/../../resources/translations';
         $this->provider = new ModulesProvider($loader, self::$resourcesDir);

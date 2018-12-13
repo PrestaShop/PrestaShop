@@ -68,7 +68,6 @@ class SmtpConfigurationType extends AbstractType
             ])
             ->add('port', TextType::class, [
                 'required' => false,
-            ])
-        ;
+            ]);
     }
 }

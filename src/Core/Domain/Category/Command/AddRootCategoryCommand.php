@@ -45,7 +45,6 @@ class AddRootCategoryCommand extends AbstractCategoryCommand
         $this
             ->setLocalizedNames($name)
             ->setLocalizedLinkRewrites($linkRewrite)
-            ->setIsActive($isActive)
-        ;
+            ->setIsActive($isActive);
     }
 }

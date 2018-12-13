@@ -633,7 +633,7 @@ abstract class ModuleCore implements ModuleInterface
                             'upgrade_function' => array(
                                 'upgrade_module_' . str_replace('.', '_', $file_version),
                                 'upgradeModule' . str_replace('.', '', $file_version), ),
-                            );
+                        );
                     }
                 }
             }
@@ -1794,10 +1794,10 @@ abstract class ModuleCore implements ModuleInterface
         $untrusted = array();
 
         $trusted_modules_xml = array(
-                                    _PS_ROOT_DIR_ . self::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
-                                    _PS_ROOT_DIR_ . self::CACHE_FILE_MUST_HAVE_MODULES_LIST,
-                                    _PS_ROOT_DIR_ . self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST,
-                                );
+            _PS_ROOT_DIR_ . self::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
+            _PS_ROOT_DIR_ . self::CACHE_FILE_MUST_HAVE_MODULES_LIST,
+            _PS_ROOT_DIR_ . self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST,
+        );
 
         if (file_exists(_PS_ROOT_DIR_ . self::CACHE_FILE_CUSTOMER_MODULES_LIST)) {
             $trusted_modules_xml[] = _PS_ROOT_DIR_ . self::CACHE_FILE_CUSTOMER_MODULES_LIST;
@@ -1967,7 +1967,7 @@ abstract class ModuleCore implements ModuleInterface
         return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
     }
 
-    /*
+    /**
      * Reposition module
      *
      * @param bool $id_hook Hook ID
@@ -2027,7 +2027,7 @@ abstract class ModuleCore implements ModuleInterface
         return true;
     }
 
-    /*
+    /**
      * Reorder modules position
      *
      * @param bool $id_hook Hook ID
@@ -2170,11 +2170,12 @@ abstract class ModuleCore implements ModuleInterface
         return $output;
     }
 
-    /*
+    /**
      * Return exceptions for module in hook
      *
      * @param int $id_module Module ID
      * @param int $id_hook Hook ID
+     *
      * @return array Exceptions
      */
     public static function getExceptionsStatic($id_module, $id_hook, $dispatch = false)
@@ -2227,10 +2228,11 @@ abstract class ModuleCore implements ModuleInterface
         return $array_return;
     }
 
-    /*
+    /**
      * Return exceptions for module in hook
      *
      * @param int $id_hook Hook ID
+     *
      * @return array Exceptions
      */
     public function getExceptions($id_hook, $dispatch = false)
@@ -2806,10 +2808,11 @@ abstract class ModuleCore implements ModuleInterface
         return $this->_path;
     }
 
-    /*
+    /**
      * Return module position for a given hook
      *
      * @param bool $id_hook Hook ID
+     *
      * @return int position
      */
     public function getPosition($id_hook)

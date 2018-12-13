@@ -30,9 +30,9 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/IndexColumnListProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/IndexColumnListProcessor.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
  *
@@ -158,13 +158,15 @@ class ReferenceDefinitionProcessor extends AbstractProcessor {
                         $processor = new IndexColumnListProcessor();
                         $cols = $processor->process($this->removeParenthesisFromStart($trim));
                         $expr['sub_tree'][] = array('expr_type' => ExpressionType::COLUMN_LIST, 'base_expr' => $trim,
-                                                    'sub_tree' => $cols);
+                            'sub_tree' => $cols,
+                        );
                         $currCategory = 'REF_COL_LIST';
                         continue 3;
                     }
                     // foreign key reference table name
                     $expr['sub_tree'][] = array('expr_type' => ExpressionType::TABLE, 'table' => $trim,
-                                                'base_expr' => $trim, 'no_quotes' => $this->revokeQuotation($trim));
+                        'base_expr' => $trim, 'no_quotes' => $this->revokeQuotation($trim),
+                    );
                     continue 3;
 
                 default:

@@ -112,54 +112,54 @@ class CartTaxesTest extends AbstractCartCalculationTest
             'tax #1: one product in cart, quantity 1'        => [
                 'products'             => [1 => 1],
                 'expectedTotalTaxExcl' => static::PRODUCT_FIXTURES[1]['price']
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => static::PRODUCT_FIXTURES[1]['price'] * (1 + static::TAX_RATE_1 / 100)
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'addressId'            => static::ADDRESS_ID_1,
             ],
             'tax #2: one product in cart, quantity 1'        => [
                 'products'             => [5 => 1],
                 'expectedTotalTaxExcl' => static::PRODUCT_FIXTURES[5]['price']
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => static::PRODUCT_FIXTURES[5]['price'] * (1 + static::TAX_RATE_2 / 100)
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'addressId'            => static::ADDRESS_ID_2,
             ],
             'tax #3: one product in cart, quantity 1'        => [
                 'products'             => [5 => 1],
                 'expectedTotalTaxExcl' => static::PRODUCT_FIXTURES[5]['price']
-                                          + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => static::PRODUCT_FIXTURES[5]['price'] * (1 + static::TAX_RATE_3 / 100)
-                                          + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'addressId'            => static::ADDRESS_ID_3,
             ],
             'tax #1: one product in cart, quantity 3'        => [
                 'products'             => [1 => 3],
                 'expectedTotalTaxExcl' => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => 3 * static::PRODUCT_FIXTURES[1]['price'] * (1 + static::TAX_RATE_1 / 100)
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'addressId'            => static::ADDRESS_ID_1,
             ],
             'tax #2: one product in cart, quantity 3'        => [
                 'products'             => [5 => 3],
                 'expectedTotalTaxExcl' => 3 * static::PRODUCT_FIXTURES[5]['price']
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => 3 * static::PRODUCT_FIXTURES[5]['price'] * (1 + static::TAX_RATE_2 / 100)
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'addressId'            => static::ADDRESS_ID_2,
             ],
             'tax #3: one product in cart, quantity 3'        => [
                 'products'             => [5 => 3],
                 'expectedTotalTaxExcl' => 3 * static::PRODUCT_FIXTURES[5]['price']
-                                          + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => 3 * static::PRODUCT_FIXTURES[5]['price'] * (1 + static::TAX_RATE_3 / 100)
-                                          + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'addressId'            => static::ADDRESS_ID_3,
             ],
@@ -170,13 +170,13 @@ class CartTaxesTest extends AbstractCartCalculationTest
                     3 => 1,
                 ],
                 'expectedTotalTaxExcl' => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                          + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                          + static::PRODUCT_FIXTURES[3]['price']
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + 2 * static::PRODUCT_FIXTURES[2]['price']
+                + static::PRODUCT_FIXTURES[3]['price']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => (3 * static::PRODUCT_FIXTURES[1]['price']
                                            + 2 * static::PRODUCT_FIXTURES[2]['price']
                                            + static::PRODUCT_FIXTURES[3]['price']) * (1 + static::TAX_RATE_1 / 100)
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'addressId'            => static::ADDRESS_ID_1,
             ],
@@ -187,13 +187,13 @@ class CartTaxesTest extends AbstractCartCalculationTest
                     7 => 1,
                 ],
                 'expectedTotalTaxExcl' => 3 * static::PRODUCT_FIXTURES[5]['price']
-                                          + 2 * static::PRODUCT_FIXTURES[6]['price']
-                                          + static::PRODUCT_FIXTURES[7]['price']
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + 2 * static::PRODUCT_FIXTURES[6]['price']
+                + static::PRODUCT_FIXTURES[7]['price']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => (3 * static::PRODUCT_FIXTURES[5]['price']
                                            + 2 * static::PRODUCT_FIXTURES[6]['price']
                                            + static::PRODUCT_FIXTURES[7]['price']) * (1 + static::TAX_RATE_2 / 100)
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'addressId'            => static::ADDRESS_ID_2,
             ],
@@ -204,13 +204,13 @@ class CartTaxesTest extends AbstractCartCalculationTest
                     7 => 1,
                 ],
                 'expectedTotalTaxExcl' => 3 * static::PRODUCT_FIXTURES[5]['price']
-                                          + 2 * static::PRODUCT_FIXTURES[6]['price']
-                                          + static::PRODUCT_FIXTURES[7]['price']
-                                          + static::DEFAULT_WRAPPING_FEE,
+                + 2 * static::PRODUCT_FIXTURES[6]['price']
+                + static::PRODUCT_FIXTURES[7]['price']
+                + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => (3 * static::PRODUCT_FIXTURES[5]['price']
                                            + 2 * static::PRODUCT_FIXTURES[6]['price']
                                            + static::PRODUCT_FIXTURES[7]['price']) * (1 + static::TAX_RATE_3 / 100)
-                                          + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'addressId'            => static::ADDRESS_ID_3,
             ],

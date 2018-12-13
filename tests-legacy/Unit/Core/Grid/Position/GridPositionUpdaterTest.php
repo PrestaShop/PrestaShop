@@ -148,8 +148,7 @@ class GridPositionUpdaterTest extends TestCase
                 'Could not update #%i',
                 'Admin.Catalog.Notification',
                 [5]
-            ))
-        ;
+            ));
 
         return $updaterMock;
 

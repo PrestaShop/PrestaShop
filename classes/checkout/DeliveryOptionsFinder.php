@@ -88,7 +88,9 @@ class DeliveryOptionsFinderCore
                             $carrier['delay'] = $delay;
                             if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
                                 $carrier['price'] = $this->translator->trans(
-                                    'Free', array(), 'Shop.Theme.Checkout'
+                                    'Free',
+                                    array(),
+                                    'Shop.Theme.Checkout'
                                 );
                             } else {
                                 if ($include_taxes) {

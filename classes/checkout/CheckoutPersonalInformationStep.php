@@ -55,8 +55,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
                     ->getCheckoutProcess()
                     ->getCheckoutSession()
                     ->getCustomer()
-            )
-        ;
+            );
 
         if (isset($requestParameters['submitCreate'])) {
             $this->registerForm->fillWith($requestParameters);
@@ -83,8 +82,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->logged_in = $this
             ->getCheckoutProcess()
             ->getCheckoutSession()
-            ->customerHasLoggedIn()
-        ;
+            ->customerHasLoggedIn();
 
         if ($this->logged_in && !$this->getCheckoutSession()->getCustomer()->is_guest) {
             $this->step_is_complete = true;
@@ -102,7 +100,9 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
     public function render(array $extraParams = array())
     {
         return $this->renderTemplate(
-            $this->getTemplate(), $extraParams, array(
+            $this->getTemplate(),
+            $extraParams,
+            array(
                 'show_login_form' => $this->show_login_form,
                 'login_form' => $this->loginForm->getProxy(),
                 'register_form' => $this->registerForm->getProxy(),

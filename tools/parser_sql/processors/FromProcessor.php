@@ -30,10 +30,10 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
-require_once(dirname(__FILE__) . '/DefaultProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
+require_once dirname(__FILE__) . '/DefaultProcessor.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
  *
@@ -50,10 +50,12 @@ class FromProcessor extends AbstractProcessor {
             $parseInfo = array('join_type' => '', 'saved_join_type' => 'JOIN');
         }
         // loop init
-        return array('expression' => '', 'token_count' => 0, 'table' => '', 'no_quotes' => '', 'alias' => false,
-                     'join_type' => '', 'next_join_type' => '', 'saved_join_type' => $parseInfo['saved_join_type'],
-                     'ref_type' => false, 'ref_expr' => false, 'base_expr' => false, 'sub_tree' => false,
-                     'subquery' => '');
+        return array(
+            'expression' => '', 'token_count' => 0, 'table' => '', 'no_quotes' => '', 'alias' => false,
+            'join_type' => '', 'next_join_type' => '', 'saved_join_type' => $parseInfo['saved_join_type'],
+            'ref_type' => false, 'ref_expr' => false, 'base_expr' => false, 'sub_tree' => false,
+            'subquery' => '',
+        );
     }
 
     protected function processFromExpression(&$parseInfo) {
@@ -222,8 +224,9 @@ class FromProcessor extends AbstractProcessor {
                     }
                 } elseif ($parseInfo['token_count'] === 1) {
                     $parseInfo['alias'] = array('as' => false, 'name' => trim($token),
-                                                'no_quotes' => $this->revokeQuotation($token),
-                                                'base_expr' => trim($token));
+                        'no_quotes' => $this->revokeQuotation($token),
+                        'base_expr' => trim($token),
+                    );
                 }
                 $parseInfo['token_count']++;
                 break;

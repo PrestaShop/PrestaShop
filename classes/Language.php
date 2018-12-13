@@ -95,12 +95,12 @@ class LanguageCore extends ObjectModel
     );
 
     protected $translationsFilesAndVars = array(
-            'fields' => '_FIELDS',
-            'errors' => '_ERRORS',
-            'admin' => '_LANGADM',
-            'pdf' => '_LANGPDF',
-            'tabs' => 'tabs',
-        );
+        'fields' => '_FIELDS',
+        'errors' => '_ERRORS',
+        'admin' => '_LANGADM',
+        'pdf' => '_LANGPDF',
+        'tabs' => 'tabs',
+    );
 
     public function __construct($id = null, $id_lang = null)
     {
@@ -164,7 +164,7 @@ class LanguageCore extends ObjectModel
                         ->buildRepository()
                         ->getList();
         foreach ($themes as $theme) {
-            /* @var Theme $theme */
+            /** @var Theme $theme */
             $theme_dir = $theme->getDirectory();
             if (file_exists(_PS_ALL_THEMES_DIR_ . $theme_dir . '/lang/' . $this->iso_code . '.php')) {
                 rename(_PS_ALL_THEMES_DIR_ . $theme_dir . '/lang/' . $this->iso_code . '.php', _PS_ALL_THEMES_DIR_ . $theme_dir . '/lang/' . $newIso . '.php');
@@ -422,7 +422,7 @@ class LanguageCore extends ObjectModel
 
         $return = true;
 
-        /* @var Shop[] $shops */
+        /** @var Shop[] $shops */
         $shops = Shop::getShopsCollection(false);
         foreach ($shops as $shop) {
             // retrieve default language to duplicate database rows

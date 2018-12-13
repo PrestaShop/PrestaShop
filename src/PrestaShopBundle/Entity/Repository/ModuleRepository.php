@@ -76,8 +76,7 @@ class ModuleRepository
             ->where('mc.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mc.id_shop = :id_shop')
-            ->setParameter('id_shop', $shopId)
-        ;
+            ->setParameter('id_shop', $shopId);
 
         return $qb->execute()->fetchAll(PDO::FETCH_COLUMN);
     }
@@ -98,8 +97,7 @@ class ModuleRepository
             ->where('mc.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mc.id_shop = :id_shop')
-            ->setParameter('id_shop', $shopId)
-        ;
+            ->setParameter('id_shop', $shopId);
 
         return $qb->execute()->fetchAll(PDO::FETCH_COLUMN);
     }
@@ -120,8 +118,7 @@ class ModuleRepository
             ->where('mg.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mg.id_shop = :id_shop')
-            ->setParameter('id_shop', $shopId)
-        ;
+            ->setParameter('id_shop', $shopId);
 
         return $qb->execute()->fetchAll(PDO::FETCH_COLUMN);
     }
@@ -142,8 +139,7 @@ class ModuleRepository
             ->where('mc.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mc.id_shop = :id_shop')
-            ->setParameter('id_shop', $shopId)
-        ;
+            ->setParameter('id_shop', $shopId);
 
         return $qb->execute()->fetchAll(PDO::FETCH_COLUMN);
     }

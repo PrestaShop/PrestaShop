@@ -51,9 +51,9 @@ class DeliveryController extends FrameworkBundleAdminController
      */
     public function slipAction(Request $request)
     {
-        /* @var $formHandler FormHandler */
+        /** @var $formHandler FormHandler */
         $formHandler = $this->get('prestashop.adapter.order.delivery.slip.options.form_handler');
-        /* @var $form Form */
+        /** @var $form Form */
         $form = $formHandler->getForm();
 
         $form->handleRequest($request);
@@ -94,9 +94,9 @@ class DeliveryController extends FrameworkBundleAdminController
      */
     public function generatePdfAction(Request $request)
     {
-        /* @var $formHandler FormHandler */
+        /** @var $formHandler FormHandler */
         $formHandler = $this->get('prestashop.adapter.order.delivery.slip.pdf.form_handler');
-        /* @var $form Form */
+        /** @var $form Form */
         $form = $formHandler->getForm();
 
         $form->handleRequest($request);

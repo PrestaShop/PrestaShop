@@ -55,7 +55,6 @@ class Ps_FeaturedProducts extends Module
             && $this->registerHook('updateproduct')
             && $this->registerHook('deleteproduct')
             && $this->registerHook('categoryUpdate')
-            && $this->registerHook('displayHome')
-        ;
+            && $this->registerHook('displayHome');
     }
 }

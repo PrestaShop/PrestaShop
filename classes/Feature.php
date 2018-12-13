@@ -66,7 +66,8 @@ class FeatureCore extends ObjectModel
      */
     public static function getFeature($idLang, $idFeature)
     {
-        return Db::getInstance()->getRow('
+        return Db::getInstance()->getRow(
+            '
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'feature` f
 			LEFT JOIN `' . _DB_PREFIX_ . 'feature_lang` fl
@@ -199,12 +200,14 @@ class FeatureCore extends ObjectModel
 			WHERE
 				`' . _DB_PREFIX_ . 'feature_value`.`id_feature` = ' . (int) $this->id . '
 		');
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			DELETE FROM `' . _DB_PREFIX_ . 'feature_value`
 			WHERE `id_feature` = ' . (int) $this->id
         );
         // Also delete related products
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			DELETE FROM `' . _DB_PREFIX_ . 'feature_product`
 			WHERE `id_feature` = ' . (int) $this->id
         );
@@ -299,7 +302,8 @@ class FeatureCore extends ObjectModel
      */
     public function updatePosition($way, $position, $idFeature = null)
     {
-        if (!$res = Db::getInstance()->executeS('
+        if (!$res = Db::getInstance()->executeS(
+            '
 			SELECT `position`, `id_feature`
 			FROM `' . _DB_PREFIX_ . 'feature`
 			WHERE `id_feature` = ' . (int) ($idFeature ? $idFeature : $this->id) . '

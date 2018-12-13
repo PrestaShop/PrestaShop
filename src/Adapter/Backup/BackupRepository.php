@@ -48,8 +48,7 @@ final class BackupRepository implements BackupRepositoryInterface
             ->files()
             ->in(PrestaShopBackup::getBackupPath())
             ->name('/^([_a-zA-Z0-9\-]*[\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/')
-            ->depth(0)
-        ;
+            ->depth(0);
 
         $backups = new BackupCollection();
 

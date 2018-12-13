@@ -70,7 +70,6 @@ final class PositionColumn extends AbstractColumn
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('update_method', 'string')
             ->setAllowedTypes('record_route_params', ['array'])
-            ->setAllowedValues('update_method', ['GET', 'POST'])
-        ;
+            ->setAllowedValues('update_method', ['GET', 'POST']);
     }
 }

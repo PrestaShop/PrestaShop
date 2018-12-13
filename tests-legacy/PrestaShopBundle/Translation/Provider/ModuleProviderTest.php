@@ -34,8 +34,10 @@ use PHPUnit\Framework\TestCase;
  */
 class ModuleProviderTest extends TestCase
 {
-    // @see /resources/translations/en-US/ModulesWirePaymentAdmin.en-US.xlf
-    // @see /resources/translations/en-US/ModulesWirePaymentShop.en-US.xlf
+    /**
+     * @see /resources/translations/en-US/ModulesWirePaymentAdmin.en-US.xlf
+     * @see /resources/translations/en-US/ModulesWirePaymentShop.en-US.xlf
+     */
     private $provider;
     private $moduleName;
     private static $resourcesDir;
@@ -43,8 +45,7 @@ class ModuleProviderTest extends TestCase
     public function setUp()
     {
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
-            ->getMock()
-        ;
+            ->getMock();
 
         $this->moduleName = 'ps_wirepayment';
         self::$resourcesDir = __DIR__.'/../../resources/translations';

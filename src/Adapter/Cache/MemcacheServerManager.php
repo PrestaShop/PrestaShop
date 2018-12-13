@@ -61,9 +61,9 @@ class MemcacheServerManager
     public function addServer($serverIp, $serverPort, $serverWeight)
     {
         $this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', array(
-           'serverIp' => $serverIp,
-           'serverPort' => (int) $serverPort,
-           'serverWeight' => (int) $serverWeight,
+            'serverIp' => $serverIp,
+            'serverPort' => (int) $serverPort,
+            'serverWeight' => (int) $serverWeight,
         ));
 
         return array(

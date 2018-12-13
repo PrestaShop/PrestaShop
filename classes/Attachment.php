@@ -133,7 +133,8 @@ class AttachmentCore extends ObjectModel
      */
     public static function getAttachments($idLang, $idProduct, $include = true)
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 			SELECT *
 			FROM ' . _DB_PREFIX_ . 'attachment a
 			LEFT JOIN ' . _DB_PREFIX_ . 'attachment_lang al

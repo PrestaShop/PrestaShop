@@ -51,7 +51,6 @@ final class DeleteCategoriesBulkAction extends AbstractBulkAction
             ->setRequired([
                 'categories_bulk_delete_route',
             ])
-            ->setAllowedTypes('categories_bulk_delete_route', 'string')
-        ;
+            ->setAllowedTypes('categories_bulk_delete_route', 'string');
     }
 }

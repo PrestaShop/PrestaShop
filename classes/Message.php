@@ -95,7 +95,8 @@ class MessageCore extends ObjectModel
      */
     public static function getMessageByCartId($idCart)
     {
-        return Db::getInstance()->getRow('
+        return Db::getInstance()->getRow(
+            '
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'message`
 			WHERE `id_cart` = ' . (int) $idCart

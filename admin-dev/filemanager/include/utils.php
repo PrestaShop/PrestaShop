@@ -63,7 +63,7 @@ function rename_folder($old_path, $name, $transliteration)
 function create_img_gd($imgfile, $imgthumb, $newwidth, $newheight='')
 {
     if (image_check_memory_usage($imgfile, $newwidth, $newheight)) {
-        require_once('php_image_magician.php');
+        require_once 'php_image_magician.php';
         $magicianObj = new imageLib($imgfile);
         $magicianObj -> resizeImage($newwidth, $newheight, 'crop');
         $magicianObj -> saveImage($imgthumb, 80);
@@ -75,7 +75,7 @@ function create_img_gd($imgfile, $imgthumb, $newwidth, $newheight='')
 function create_img($imgfile, $imgthumb, $newwidth, $newheight='')
 {
     if (image_check_memory_usage($imgfile, $newwidth, $newheight)) {
-        require_once('php_image_magician.php');
+        require_once 'php_image_magician.php';
         $magicianObj = new imageLib($imgfile);
         $magicianObj -> resizeImage($newwidth, $newheight, 'auto');
         $magicianObj -> saveImage($imgthumb, 80);
@@ -248,7 +248,7 @@ function base_url()
 function config_loading($current_path, $fld)
 {
     if (file_exists($current_path.$fld.'.config')) {
-        require_once($current_path.$fld.'.config');
+        require_once $current_path.$fld.'.config';
         return true;
     }
     echo '!!!!'.$parent=fix_dirname($fld);

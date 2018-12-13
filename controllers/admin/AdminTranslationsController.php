@@ -132,7 +132,8 @@ class AdminTranslationsControllerCore extends AdminController
     public function initForm($method_name)
     {
         // Create a title for each translation page
-        $title = $this->trans('%1$s (Language: %2$s, Theme: %3$s)',
+        $title = $this->trans(
+            '%1$s (Language: %2$s, Theme: %3$s)',
                 array(
                     '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false : $this->translations_informations[$this->type_selected]['name']),
                     '%2$s' => $this->lang_selected->name,
@@ -2086,7 +2087,8 @@ class AdminTranslationsControllerCore extends AdminController
 
                     // Adding list, form, option in Helper Translations
                     $list_prefix_key = array('AdminHelpers', 'AdminList', 'AdminView', 'AdminOptions', 'AdminForm',
-                        'AdminCalendar', 'AdminTree', 'AdminUploader', 'AdminDataviz', 'AdminKpi', 'AdminModule_list', 'AdminModulesList', );
+                        'AdminCalendar', 'AdminTree', 'AdminUploader', 'AdminDataviz', 'AdminKpi', 'AdminModule_list', 'AdminModulesList',
+                    );
                     if (in_array($prefix_key, $list_prefix_key)) {
                         $prefix_key = 'Helper';
                     }
@@ -2301,7 +2303,8 @@ class AdminTranslationsControllerCore extends AdminController
         foreach ($files_by_directory['php'] as $dir => $files) {
             foreach ($files as $file) {
                 $exclude_files = array('index.php', 'PrestaShopAutoload.php', 'StockManagerInterface.php',
-                    'TaxManagerInterface.php', 'WebserviceOutputInterface.php', 'WebserviceSpecificManagementInterface.php', );
+                    'TaxManagerInterface.php', 'WebserviceOutputInterface.php', 'WebserviceSpecificManagementInterface.php',
+                );
 
                 if (!preg_match('/\.php$/', $file) || in_array($file, $exclude_files)) {
                     continue;
@@ -2436,9 +2439,11 @@ class AdminTranslationsControllerCore extends AdminController
                 }
             }
         } else {
-            $this->warnings[] = $this->trans('A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%',
+            $this->warnings[] = $this->trans(
+                'A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%',
                 array('%iso_code%' => $this->lang_selected->iso_code, '%folder%' => str_replace(_PS_ROOT_DIR_, '', dirname($dir)), '%language%' => $default_language),
-                'Admin.International.Notification');
+                'Admin.International.Notification'
+            );
         }
 
         return $arr_return;
@@ -2575,8 +2580,8 @@ class AdminTranslationsControllerCore extends AdminController
             $str_return .= '<p class="error">
                 ' . $this->trans('There was a problem getting the mail files.', array(), 'Admin.International.Notification') . '<br>
                 ' . $this->trans('English language files must exist in %folder% folder', array(
-                    '%folder%' => '<em>' . preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']) . '</em>',
-                ), 'Admin.International.Notification') . '
+                '%folder%' => '<em>' . preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']) . '</em>',
+            ), 'Admin.International.Notification') . '
             </p>';
         }
 

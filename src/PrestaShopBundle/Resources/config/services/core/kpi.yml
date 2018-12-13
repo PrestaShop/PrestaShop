@@ -21,3 +21,11 @@ services:
           - '@prestashop.adapter.kpi.empty_categories'
           - '@prestashop.adapter.kpi.top_category'
           - '@prestashop.adapter.kpi.average_products_in_category'
+
+    prestashop.core.kpi_row.factory.customers:
+        class: PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactory
+        arguments:
+            - '@prestashop.adapter.kpi.most_common_customers_gender'
+            - '@prestashop.adapter.kpi.average_customer_age'
+            - '@prestashop.adapter.kpi.order_per_customer'
+            - '@prestashop.adapter.kpi.newsletter_registrations'

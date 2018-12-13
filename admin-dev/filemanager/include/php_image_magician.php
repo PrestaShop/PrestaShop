@@ -214,7 +214,7 @@ class imageLib
             } else {
                 throw new Exception();
             }
-        };
+        }
 
         $this->initialise();
 
@@ -331,7 +331,7 @@ class imageLib
         } else {
             throw new Exception();
         }
-    };
+    }
 
     // *** Get optimal width and height - based on $option
     $dimensionsArray = $this->getDimensions($newWidth, $newHeight, $option);
@@ -403,7 +403,7 @@ class imageLib
         } else {
             throw new Exception();
         }
-    };
+    }
 
       $this->imageResized = $this->image;
       $this->crop($this->width, $this->height, $newWidth, $newHeight, $cropPos);
@@ -796,9 +796,10 @@ class imageLib
       // ***
       if ($this->aggresiveSharpening) { // A more aggressive sharpening solution
 
-        $sharpenMatrix = array( array( -1, -1, -1 ),
-                         array( -1, 16, -1 ),
-                         array( -1, -1, -1 ) );
+        $sharpenMatrix = array(array(-1, -1, -1),
+            array(-1, 16, -1),
+            array(-1, -1, -1),
+        );
           $divisor = 8;
           $offset = 0;
 
@@ -809,10 +810,10 @@ class imageLib
         $sharpness  = $this->findSharp($this->widthOriginal, $this->width);
 
           $sharpenMatrix  = array(
-          array(-1, -2, -1),
-          array(-2, $sharpness + 12, -2), //Lessen the effect of a filter by increasing the value in the center cell
-          array(-1, -2, -1)
-        );
+              array(-1, -2, -1),
+              array(-2, $sharpness + 12, -2), //Lessen the effect of a filter by increasing the value in the center cell
+              array(-1, -2, -1),
+          );
           $divisor    = $sharpness; // adjusts brightness
         $offset     = 0;
           imageconvolution($this->imageResized, $sharpenMatrix, $divisor, $offset);
@@ -829,9 +830,9 @@ class imageLib
   private function sharpen2($level)
   {
       $sharpenMatrix  = array(
-        array($level, $level, $level),
-        array($level, (8*$level)+1, $level), //Lessen the effect of a filter by increasing the value in the center cell
-        array($level, $level, $level)
+          array($level, $level, $level),
+          array($level, (8*$level)+1, $level), //Lessen the effect of a filter by increasing the value in the center cell
+          array($level, $level, $level),
       );
   }
 
@@ -1169,7 +1170,9 @@ class imageLib
     // calculate grayscale in percent
     $grayscale = ($r + $g + $b) / 3 / 0xff;
 
-          imagecolorset($this->imageResized, $x,
+          imagecolorset(
+              $this->imageResized,
+              $x,
       $grayscale * $rgb[0],
       $grayscale * $rgb[1],
       $grayscale * $rgb[2]
@@ -1508,15 +1511,15 @@ class imageLib
 
           $colour = imagecolorallocate($shadow, $intensity, $intensity, $intensity);
           $points = array(
-        $blurWidth*$t,        $blurHeight,     // Point 1 (x, y)
-        $blurWidth,         $blurHeight*$t,  // Point 2 (x, y)
-        $width,           $blurHeight*$t,  // Point 3 (x, y)
-        $width+$blurWidth*(1-$t), $blurHeight,     // Point 4 (x, y)
-        $width+$blurWidth*(1-$t), $height,     // Point 5 (x, y)
-        $width,           $height+$blurHeight*(1-$t),  // Point 6 (x, y)
-        $blurWidth,         $height+$blurHeight*(1-$t),  // Point 7 (x, y)
-        $blurWidth*$t,        $height      // Point 8 (x, y)
-      );
+              $blurWidth*$t,        $blurHeight,     // Point 1 (x, y)
+              $blurWidth,         $blurHeight*$t,  // Point 2 (x, y)
+              $width,           $blurHeight*$t,  // Point 3 (x, y)
+              $width+$blurWidth*(1-$t), $blurHeight,     // Point 4 (x, y)
+              $width+$blurWidth*(1-$t), $height,     // Point 5 (x, y)
+              $width,           $height+$blurHeight*(1-$t),  // Point 6 (x, y)
+              $blurWidth,         $height+$blurHeight*(1-$t),  // Point 7 (x, y)
+              $blurWidth*$t,        $height,      // Point 8 (x, y)
+          );
           imagepolygon($shadow, $points, 8, $colour);
       }
 
@@ -1730,21 +1733,21 @@ class imageLib
         } else {
             return array();
         }
-    };
+    }
       if (!file_exists($this->fileName)) {
           if ($debug) {
               throw new Exception('Image not found.');
           } else {
               return array();
           }
-      };
+      }
       if ($this->fileExtension != '.jpg') {
           if ($debug) {
               throw new Exception('Metadata not supported for this image type.');
           } else {
               return array();
           }
-      };
+      }
       $exifData = exif_read_data($this->fileName, 'IFD0');
 
     // *** Format the apperture value
@@ -2313,7 +2316,7 @@ class imageLib
 
         case 'tr':
           $width = $this->width - $assetWidth - $padding;
-          $height = 0 + $padding;;
+          $height = 0 + $padding;
           break;
 
         case 'l':
@@ -2446,7 +2449,7 @@ class imageLib
             } else {
                 throw new Exception();
             }
-        };
+        }
 
         // *** Get extension
         $extension = strrchr($file, '.');
@@ -2885,11 +2888,11 @@ class imageLib
         }
     } elseif (fix_strtolower($value) == 'transparent') {
         $rgbArray = array(
-        'r' => 255,
-        'g' => 255,
-        'b' => 255,
-        'a' => 127
-      );
+            'r' => 255,
+            'g' => 255,
+            'b' => 255,
+            'a' => 127,
+        );
     } else {
 
       // *** ...Else it should be hex. Let's make it RGB
@@ -2911,11 +2914,11 @@ class imageLib
       }
 
       $rgb = array(
-      'r' => hexdec(substr($color, 0, 2)),
-      'g' => hexdec(substr($color, 2, 2)),
-      'b' => hexdec(substr($color, 4, 2)),
-      'a' => 0
-    );
+          'r' => hexdec(substr($color, 0, 2)),
+          'g' => hexdec(substr($color, 2, 2)),
+          'b' => hexdec(substr($color, 4, 2)),
+          'a' => 0,
+      );
       return $rgb;
   }
 
@@ -3301,7 +3304,7 @@ class imageLib
   //
   {
       if (file_exists($this->psdReaderPath)) {
-          include_once($this->psdReaderPath);
+          include_once $this->psdReaderPath;
 
           $psdReader = new PhpPsdReader($fileName);
 

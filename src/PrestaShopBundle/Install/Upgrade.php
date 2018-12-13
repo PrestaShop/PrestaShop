@@ -250,10 +250,10 @@ namespace PrestaShopBundle\Install {
             if (empty($this->oldVersion)) {
                 $this->oldVersion = Configuration::get('PS_INSTALL_VERSION');
             }
-            // fix : complete version number if there is not all 4 numbers
-            // for example replace 1.4.3 by 1.4.3.0
-            // consequences : file 1.4.3.0.sql will be skipped if oldversion = 1.4.3
-            // @since 1.4.4.0
+            // Since 1.4.4.0
+            // Fix complete version number if there is not all 4 numbers
+            // Eg. replace 1.4.3 by 1.4.3.0
+            // Will result in file 1.4.3.0.sql will be skipped if oldversion is 1.4.3
             $arrayVersion = preg_split('#\.#', $this->oldVersion);
             $versionNumbers = count($arrayVersion);
 
@@ -262,7 +262,7 @@ namespace PrestaShopBundle\Install {
             }
 
             $this->oldVersion = implode('.', $arrayVersion);
-            // end of fix
+            // End of fix
 
             if (!defined('_PS_CACHE_ENABLED_')) {
                 define('_PS_CACHE_ENABLED_', '0');
@@ -364,8 +364,11 @@ namespace PrestaShopBundle\Install {
             }
 
             if (strpos(_PS_INSTALL_VERSION_, '.') === false) {
-                $this->logError('%install_version% is not a valid version number.', 40,
-                    array('%install_version%' => _PS_INSTALL_VERSION_));
+                $this->logError(
+                    '%install_version% is not a valid version number.',
+                    40,
+                    array('%install_version%' => _PS_INSTALL_VERSION_)
+                );
             }
         }
 
@@ -1141,25 +1144,25 @@ namespace PrestaShopBundle\Install {
 
                 $parameters = array(
                     'parameters' => array(
-                            'database_host' => $db_server,
-                            'database_port' => $db_port,
-                            'database_user' => _LEGACY_DB_USER_,
-                            'database_password' => _LEGACY_DB_PASSWD_,
-                            'database_name' => _LEGACY_DB_NAME_,
-                            'database_prefix' => _LEGACY_DB_PREFIX_,
-                            'database_engine' => defined(_LEGACY_MYSQL_ENGINE_) ? _LEGACY_MYSQL_ENGINE_ : 'InnoDB',
-                            'cookie_key' => _LEGACY_COOKIE_KEY_,
-                            'cookie_iv' => _LEGACY_COOKIE_IV_,
-                            'new_cookie_key' => _LEGACY_NEW_COOKIE_KEY_,
-                            'ps_caching' => defined(_LEGACY_PS_CACHING_SYSTEM_) ? _LEGACY_PS_CACHING_SYSTEM_ : 'CacheMemcache',
-                            'ps_cache_enable' => defined(_LEGACY_PS_CACHE_ENABLED_) ? _LEGACY_PS_CACHE_ENABLED_ : false,
-                            'ps_creation_date' => defined(_LEGACY_PS_CREATION_DATE_) ? _LEGACY_PS_CREATION_DATE_ : date('Y-m-d H:i:s'),
-                            'secret' => $secret,
-                            'mailer_transport' => 'smtp',
-                            'mailer_host' => '127.0.0.1',
-                            'mailer_user' => '',
-                            'mailer_password' => '',
-                        ) + $default_parameters['parameters'],
+                        'database_host' => $db_server,
+                        'database_port' => $db_port,
+                        'database_user' => _LEGACY_DB_USER_,
+                        'database_password' => _LEGACY_DB_PASSWD_,
+                        'database_name' => _LEGACY_DB_NAME_,
+                        'database_prefix' => _LEGACY_DB_PREFIX_,
+                        'database_engine' => defined(_LEGACY_MYSQL_ENGINE_) ? _LEGACY_MYSQL_ENGINE_ : 'InnoDB',
+                        'cookie_key' => _LEGACY_COOKIE_KEY_,
+                        'cookie_iv' => _LEGACY_COOKIE_IV_,
+                        'new_cookie_key' => _LEGACY_NEW_COOKIE_KEY_,
+                        'ps_caching' => defined(_LEGACY_PS_CACHING_SYSTEM_) ? _LEGACY_PS_CACHING_SYSTEM_ : 'CacheMemcache',
+                        'ps_cache_enable' => defined(_LEGACY_PS_CACHE_ENABLED_) ? _LEGACY_PS_CACHE_ENABLED_ : false,
+                        'ps_creation_date' => defined(_LEGACY_PS_CREATION_DATE_) ? _LEGACY_PS_CREATION_DATE_ : date('Y-m-d H:i:s'),
+                        'secret' => $secret,
+                        'mailer_transport' => 'smtp',
+                        'mailer_host' => '127.0.0.1',
+                        'mailer_user' => '',
+                        'mailer_password' => '',
+                    ) + $default_parameters['parameters'],
                 );
             } elseif (file_exists($root_dir . '/app/config/parameters.yml')) {
                 $parameters = Yaml::parse(file_get_contents($root_dir . '/app/config/parameters.yml'));

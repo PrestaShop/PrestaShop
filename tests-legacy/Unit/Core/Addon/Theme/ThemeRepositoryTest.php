@@ -62,7 +62,8 @@ class ThemeRepositoryTest extends TestCase
     public function testGetInstanceByName()
     {
         $expectedTheme = $this->repository->getInstanceByName('classic');
-        $this->assertInstanceOf('PrestaShop\PrestaShop\Core\Addon\Theme\Theme',
+        $this->assertInstanceOf(
+            'PrestaShop\PrestaShop\Core\Addon\Theme\Theme',
             $expectedTheme,
             self::NOTICE.sprintf('expected `getInstanceByName to return Theme, get %s`', gettype($expectedTheme))
         );
@@ -85,12 +86,14 @@ class ThemeRepositoryTest extends TestCase
     {
         $themeListWithoutRestrictions = $this->repository->GetListExcluding([]);
         $themeListWithoutClassic = $this->repository->GetListExcluding(['classic']);
-        $this->assertEquals($themeListWithoutRestrictions,
+        $this->assertEquals(
+            $themeListWithoutRestrictions,
             $this->repository->getList(),
             self::NOTICE.sprintf('expected list excluding without args to return complete list of themes `see ThemeRepository::getListExcluding`')
         );
 
-        $this->assertCount((count($themeListWithoutRestrictions) - 1),
+        $this->assertCount(
+            (count($themeListWithoutRestrictions) - 1),
             $themeListWithoutClassic,
             self::NOTICE.sprintf('expected list excluding with classic to list of themes without classic')
         );

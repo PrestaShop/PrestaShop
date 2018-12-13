@@ -29,7 +29,7 @@
  */
 class AdminAccessControllerCore extends AdminController
 {
-    /* @var array : Black list of id_tab that do not have access */
+    /** @var array : Black list of id_tab that do not have access */
     public $accesses_black_list = array();
 
     public function __construct()

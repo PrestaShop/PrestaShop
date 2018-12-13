@@ -205,7 +205,7 @@ class AdminImportControllerCore extends AdminController
                     'is_root_category' => array(
                         'label' => $this->trans('Root category (0/1)', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('A category root is where a category tree can begin. This is used with multistore.', array(), 'Admin.Advparameters.Help'),
-                        ),
+                    ),
                     'description' => array('label' => $this->trans('Description', array(), 'Admin.Global')),
                     'meta_title' => array('label' => $this->trans('Meta title', array(), 'Admin.Global')),
                     'meta_keywords' => array('label' => $this->trans('Meta keywords', array(), 'Admin.Global')),
@@ -485,7 +485,7 @@ class AdminImportControllerCore extends AdminController
                     'alias' => array('label' => $this->trans('Alias', array(), 'Admin.Shopparameters.Feature') . '*'),
                     'search' => array('label' => $this->trans('Search', array(), 'Admin.Shopparameters.Feature') . '*'),
                     'active' => array('label' => $this->trans('Active', array(), 'Admin.Global')),
-                    );
+                );
                 self::$default_values = array(
                     'active' => '1',
                 );
@@ -1020,12 +1020,13 @@ class AdminImportControllerCore extends AdminController
         return $options;
     }
 
-    /*
-    * Return fields to be display AS piece of advise
-    *
-    * @param $in_array boolean
-    * @return string or return array
-    */
+    /**
+     * Return fields to be display AS piece of advise
+     *
+     * @param $in_array boolean
+     *
+     * @return string or return array
+     */
     public function getAvailableFields($in_array = false)
     {
         $i = 0;
@@ -2510,7 +2511,8 @@ class AdminImportControllerCore extends AdminController
                         // until here
                     } else {
                         if (!$validateOnly) {
-                            $this->warnings[] = $this->trans('%data% cannot be saved',
+                            $this->warnings[] = $this->trans(
+                                '%data% cannot be saved',
                                 array(
                                     '%data%' => (isset($image->id_product) ? ' (' . $image->id_product . ')' : ''),
                                 ),
@@ -3994,9 +3996,11 @@ class AdminImportControllerCore extends AdminController
             $error = $this->trans('Date (%date%) cannot be in the past (at line %line%). Format: %date_format%.', array('%date%' => $date_delivery_expected, '%line%' => $current_line + 1, '%date_format%' => $this->trans('YYYY-MM-DD', array(), 'Admin.Advparameters.Notification')), 'Admin.Advparameters.Notification');
         }
         if ($discount_rate < 0 || $discount_rate > 100) {
-            $error = $this->trans('Discount rate (%rate%) is not valid (at line %line%). %format%.',
+            $error = $this->trans(
+                'Discount rate (%rate%) is not valid (at line %line%). %format%.',
                 array('%rate%' => $discount_rate, '%line%' => $current_line + 1, '%format%' => $this->trans('Format: Between 0 and 100', array(), 'Admin.Advparameters.Notification')),
-                'Admin.Advparameters.Notification');
+                'Admin.Advparameters.Notification'
+            );
         }
         if ($supply_order->id > 0 && !$supply_order->isEditable()) {
             $error = $this->trans('Supply Order (%id%) is not editable (at line %line%).', array('%id%' => $supply_order->id, '%line%' => $current_line + 1), 'Admin.Advparameters.Notification');

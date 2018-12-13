@@ -1,12 +1,12 @@
 <?php
-include('config/config.php');
+include 'config/config.php';
 
 $_SESSION['verify'] = 'RESPONSIVEfilemanager';
 
 if (isset($_POST['submit'])) {
-    include('upload.php');
+    include 'upload.php';
 } else {
-    include('include/utils.php');
+    include 'include/utils.php';
 
 
 
@@ -81,7 +81,7 @@ if (isset($_POST['submit'])) {
             $parent = '';
         }
         if (file_exists($current_path.$parent.'config.php')) {
-            require_once($current_path.$parent.'config.php');
+            require_once $current_path.$parent.'config.php';
             $cycle = false;
         }
 
@@ -171,7 +171,7 @@ if (isset($_POST['submit'])) {
             'lang' => Tools::safeOutput($lang),
             'popup' => $popup,
             'field_id' => isset($_GET['field_id']) ? (int)$_GET['field_id'] : '',
-            'fldr' => ''
+            'fldr' => '',
         )
     );
     ?>
@@ -790,7 +790,7 @@ if (isset($_POST['submit'])) {
         'midi',
         'mid',
         'ogg',
-        'wav'
+        'wav',
     );
     foreach ($files as $file_array) {
         $file = $file_array['file'];

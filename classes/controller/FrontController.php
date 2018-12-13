@@ -317,7 +317,8 @@ class FrontControllerCore extends Controller
                     'Current theme is unavailable. Please check your theme\'s directory name ("%s") and permissions.',
                     array(basename(rtrim(_PS_THEME_DIR_, '/\\'))),
                     'Admin.Design.Notification'
-                ));
+                )
+            );
         }
 
         if (Configuration::get('PS_GEOLOCATION_ENABLED')) {
@@ -1569,11 +1570,13 @@ class FrontControllerCore extends Controller
             $cust = $this->objectPresenter->present($this->context->customer);
         }
 
-        unset($cust['secure_key']);
-        unset($cust['passwd']);
-        unset($cust['show_public_prices']);
-        unset($cust['deleted']);
-        unset($cust['id_lang']);
+        unset(
+            $cust['secure_key'],
+            $cust['passwd'],
+            $cust['show_public_prices'],
+            $cust['deleted'],
+            $cust['id_lang']
+        );
 
         $cust['is_logged'] = $this->context->customer->isLogged(true);
 
@@ -1780,7 +1783,7 @@ class FrontControllerCore extends Controller
         } elseif (Tools::getValue('fc') == 'module' && $module_name != '' && (Module::getInstanceByName($module_name) instanceof PaymentModule)) {
             $page_name = 'module-payment-submit';
         } elseif (preg_match('#^' . preg_quote($this->context->shop->physical_uri, '#') . 'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m)) {
-            // @retrocompatibility Are we in a module ?
+            /** @retrocompatibility Are we in a module ? */
             $page_name = 'module-' . $m[1] . '-' . str_replace(array('.php', '/'), array('', '-'), $m[2]);
         } else {
             $page_name = Dispatcher::getInstance()->getController();
@@ -1857,8 +1860,7 @@ class FrontControllerCore extends Controller
         $formatter
             ->setAskForPartnerOptin(Configuration::get('PS_CUSTOMER_OPTIN'))
             ->setAskForBirthdate(Configuration::get('PS_CUSTOMER_BIRTHDATE'))
-            ->setPartnerOptinRequired($customer->isFieldRequired('optin'))
-        ;
+            ->setPartnerOptinRequired($customer->isFieldRequired('optin'));
 
         return $formatter;
     }

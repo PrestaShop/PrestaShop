@@ -228,13 +228,15 @@ class CarrierCore extends ObjectModel
         }
 
         // Register reference
-        Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . $this->def['table'] . '` SET `id_reference` = ' .
+        Db::getInstance()->execute(
+            'UPDATE `' . _DB_PREFIX_ . $this->def['table'] . '` SET `id_reference` = ' .
             (int) $this->id . ' WHERE `id_carrier` = ' . (int) $this->id
         );
 
         foreach (Shop::getContextListShopID() as $shopId) {
             foreach (Module::getPaymentModules() as $module) {
-                Db::getInstance()->execute('
+                Db::getInstance()->execute(
+                    '
                     INSERT INTO `' . _DB_PREFIX_ . 'module_' . bqSQL('carrier') . '`
                     (`id_module`, `id_shop`, `id_' . bqSQL('reference') . '`)
                     VALUES (' . (int) $module['id_module'] . ',' . (int) $shopId . ',' . (int) $this->id . ')'
@@ -582,7 +584,8 @@ class CarrierCore extends ObjectModel
      */
     public static function getIdTaxRulesGroupMostUsed()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 					SELECT id_tax_rules_group
 					FROM (
 						SELECT COUNT(*) n, c.id_tax_rules_group
@@ -1070,7 +1073,7 @@ class CarrierCore extends ObjectModel
      */
     public static function getCarrierByReference($id_reference, $id_lang = null)
     {
-        // @todo class var $table must became static. here I have to use 'carrier' because this method is static
+        /** @todo class var $table must became static. here I have to use 'carrier' because this method is static */
         $id_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `' . _DB_PREFIX_ . 'carrier`
 			WHERE id_reference = ' . (int) $id_reference . ' AND deleted = 0 ORDER BY id_carrier DESC');
         if (!$id_carrier) {

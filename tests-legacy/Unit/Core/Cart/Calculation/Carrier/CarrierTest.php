@@ -97,10 +97,10 @@ class CarrierTest extends AbstractCarrierTest
             'one product in cart, quantity 1'        => [
                 'products'             => [1 => 1],
                 'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
-                                          + static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
+                + static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
+                + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
                 'expectedShippingFees' => static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling,
+                + $shippingHandling,
                 'expectedWrappingFees' => 0,
                 'cartRules'            => [],
                 'addressId'            => 1,
@@ -109,10 +109,10 @@ class CarrierTest extends AbstractCarrierTest
             'one product in cart, quantity 3'        => [
                 'products'             => [1 => 3],
                 'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                          + static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
+                + static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
+                + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
                 'expectedShippingFees' => static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling,
+                + $shippingHandling,
                 'expectedWrappingFees' => 0,
                 'cartRules'            => [],
                 'addressId'            => 1,
@@ -125,12 +125,12 @@ class CarrierTest extends AbstractCarrierTest
                     3 => 1,
                 ],
                 'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                          + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                          + static::PRODUCT_FIXTURES[3]['price']
-                                          + static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
+                + 2 * static::PRODUCT_FIXTURES[2]['price']
+                + static::PRODUCT_FIXTURES[3]['price']
+                + static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
+                + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
                 'expectedShippingFees' => static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling,
+                + $shippingHandling,
                 'expectedWrappingFees' => 0,
                 'cartRules'            => [],
                 'addressId'            => 1,
@@ -156,10 +156,10 @@ class CarrierTest extends AbstractCarrierTest
             'one product in cart, quantity 1'        => [
                 'products'             => [1 => 1],
                 'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
-                                          + static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
+                + static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
+                + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
                 'expectedShippingFees' => static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling,
+                + $shippingHandling,
                 'expectedWrappingFees' => 0,
                 'cartRules'            => [],
                 'addressId'            => 1,
@@ -168,10 +168,10 @@ class CarrierTest extends AbstractCarrierTest
             'one product in cart, quantity 3'        => [
                 'products'             => [1 => 3],
                 'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                          + static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
+                + static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
+                + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
                 'expectedShippingFees' => static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling,
+                + $shippingHandling,
                 'expectedWrappingFees' => 0,
                 'cartRules'            => [],
                 'addressId'            => 1,
@@ -184,12 +184,12 @@ class CarrierTest extends AbstractCarrierTest
                     3 => 1,
                 ],
                 'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                          + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                          + static::PRODUCT_FIXTURES[3]['price']
-                                          + static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
+                + 2 * static::PRODUCT_FIXTURES[2]['price']
+                + static::PRODUCT_FIXTURES[3]['price']
+                + static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
+                + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
                 'expectedShippingFees' => static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
-                                          + $shippingHandling,
+                + $shippingHandling,
                 'expectedWrappingFees' => 0,
                 'cartRules'            => [],
                 'addressId'            => 1,

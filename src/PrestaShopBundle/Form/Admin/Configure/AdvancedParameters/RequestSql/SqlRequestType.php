@@ -71,7 +71,6 @@ class SqlRequestType extends AbstractType
                         ),
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 }

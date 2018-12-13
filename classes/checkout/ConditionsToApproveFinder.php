@@ -50,8 +50,7 @@ class ConditionsToApproveFinderCore
                 $this->translator->trans('I agree to the [terms of service] and will adhere to them unconditionally.', array(), 'Shop.Theme.Checkout'),
                 $link
             )
-            ->setIdentifier('terms-and-conditions')
-        ;
+            ->setIdentifier('terms-and-conditions');
 
         return $termsAndConditions;
     }

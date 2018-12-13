@@ -103,7 +103,9 @@ class ModuleTabUnregister
                     array(
                         '%name%' => $tab->getClassName(),
                     ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
     }
 

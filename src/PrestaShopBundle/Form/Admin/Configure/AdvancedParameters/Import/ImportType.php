@@ -74,8 +74,7 @@ class ImportType extends TranslatorAwareType
             ->add('match_ref', SwitchType::class)
             ->add('regenerate', SwitchType::class)
             ->add('forceIDs', SwitchType::class)
-            ->add('sendemail', SwitchType::class)
-        ;
+            ->add('sendemail', SwitchType::class);
 
         $builder->get('entity')
             ->addModelTransformer(new CallbackTransformer(
@@ -89,8 +88,7 @@ class ImportType extends TranslatorAwareType
                 function ($entity) {
                     return $entity;
                 }
-            ))
-        ;
+            ));
     }
 
     /**

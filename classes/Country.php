@@ -185,7 +185,8 @@ class CountryCore extends ObjectModel
         if (!Validate::isLanguageIsoCode($isoCode)) {
             die(Tools::displayError());
         }
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+            '
 			SELECT `id_country`
 			FROM `' . _DB_PREFIX_ . 'country`
 			WHERE `iso_code` = \'' . pSQL(strtoupper($isoCode)) . '\''
@@ -242,7 +243,8 @@ class CountryCore extends ObjectModel
     {
         $key = 'country_getNameById_' . $idCountry . '_' . $idLang;
         if (!Cache::isStored($key)) {
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
 							SELECT `name`
 							FROM `' . _DB_PREFIX_ . 'country_lang`
 							WHERE `id_lang` = ' . (int) $idLang . '

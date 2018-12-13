@@ -123,7 +123,7 @@ class CronJobsForms
             'desc' => self::$module->l('At what time should this task be executed?', 'CronJobsForms'),
             'options' => array(
                 'query' => self::getHoursFormOptions(),
-                'id' => 'id', 'name' => 'name'
+                'id' => 'id', 'name' => 'name',
             ),
         );
         $form[0]['form']['input'][] = array(
@@ -132,7 +132,7 @@ class CronJobsForms
             'desc' => self::$module->l('On which day of the month should this task be executed?', 'CronJobsForms'),
             'options' => array(
                 'query' => self::getDaysFormOptions(),
-                'id' => 'id', 'name' => 'name'
+                'id' => 'id', 'name' => 'name',
             ),
         );
         $form[0]['form']['input'][] = array(
@@ -141,7 +141,7 @@ class CronJobsForms
             'desc' => self::$module->l('On what month should this task be executed?', 'CronJobsForms'),
             'options' => array(
                 'query' => self::getMonthsFormOptions(),
-                'id' => 'id', 'name' => 'name'
+                'id' => 'id', 'name' => 'name',
             ),
         );
         $form[0]['form']['input'][] = array(
@@ -150,7 +150,7 @@ class CronJobsForms
             'desc' => self::$module->l('On which day of the week should this task be executed?', 'CronJobsForms'),
             'options' => array(
                 'query' => self::getDaysofWeekFormOptions(),
-                'id' => 'id', 'name' => 'name'
+                'id' => 'id', 'name' => 'name',
             ),
         );
 
@@ -172,9 +172,9 @@ class CronJobsForms
                         'label' => self::$module->l('Cron mode', 'CronJobsForms'),
                         'values' => array(
                             array('id' => 'webservice', 'value' => 'webservice', 'label' => self::$module->l('Basic', 'CronJobsForms'),
-                                'p' => self::$module->l('Use the PrestaShop cron tasks webservice to execute your tasks.', 'CronJobsForms')),
+                                'p' => self::$module->l('Use the PrestaShop cron tasks webservice to execute your tasks.', 'CronJobsForms'), ),
                             array('id' => 'advanced', 'value' => 'advanced', 'label' => self::$module->l('Advanced', 'CronJobsForms'),
-                                'p' => self::$module->l('For advanced users only: use your own crontab manager instead of PrestaShop cron tasks service.', 'CronJobsForms'))
+                                'p' => self::$module->l('For advanced users only: use your own crontab manager instead of PrestaShop cron tasks service.', 'CronJobsForms'), ),
                         ),
                     ),
                 ),
@@ -205,17 +205,17 @@ class CronJobsForms
         return array(
             'cron_mode' => Configuration::get('CRONJOBS_MODE'),
             'advanced_help' =>
-                '<div class="alert alert-info">
+            '<div class="alert alert-info">
                     <p>'
-                        .self::$module->l('The Advanced mode enables you to use your own cron tasks manager instead of PrestaShop cron tasks webservice.', 'CronJobsForms').' '
-                        .self::$module->l('First of all, make sure the \'curl\' library is installed on your server.', 'CronJobsForms')
-                        .'<br />'.self::$module->l('To execute your cron tasks, please insert the following line in your cron tasks manager:', 'CronJobsForms').'
+                    .self::$module->l('The Advanced mode enables you to use your own cron tasks manager instead of PrestaShop cron tasks webservice.', 'CronJobsForms').' '
+                    .self::$module->l('First of all, make sure the \'curl\' library is installed on your server.', 'CronJobsForms')
+                    .'<br />'.self::$module->l('To execute your cron tasks, please insert the following line in your cron tasks manager:', 'CronJobsForms').'
                     </p>
                     <br />
                     <ul class="list-unstyled">
                         <li><code>0 * * * * curl '.(Configuration::get('PS_SSL_ENABLED') ? '-k ' : null).'"'.$curl_url.'"</code></li>
                     </ul>
-                </div>'
+                </div>',
         );
     }
 

@@ -27,15 +27,15 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 /* Getting cookie or logout */
-require_once(_PS_ADMIN_DIR_.'/init.php');
+require_once _PS_ADMIN_DIR_.'/init.php';
 
 $context = Context::getContext();
 
 if (Tools::isSubmit('ajaxReferrers')) {
-    require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
+    require _PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php';
 }
 
 if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
@@ -86,7 +86,8 @@ if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEm
 if (Tools::isSubmit('searchCategory')) {
     $q = Tools::getValue('q');
     $limit = Tools::getValue('limit');
-    $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
+    $results = Db::getInstance()->executeS(
+        'SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0

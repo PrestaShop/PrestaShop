@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminProductsController extends AdminProductsControllerCore
 {
@@ -69,8 +68,8 @@ class AdminProductsController extends AdminProductsControllerCore
             'delete' => array(
                 'text' => $this->l('Delete selected'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->l('Delete selected items?')
-            )
+                'confirm' => $this->l('Delete selected items?'),
+            ),
         );
         if (!Tools::getValue('id_product')) {
             $this->multishop_context_group = false;
@@ -197,7 +196,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'title' => $this->l('ID'),
             'align' => 'center',
             'class' => 'fixed-width-xs',
-            'type' => 'int'
+            'type' => 'int',
         );
         $this->fields_list['image'] = array(
             'title' => $this->l('Image'),
@@ -205,11 +204,11 @@ class AdminProductsController extends AdminProductsControllerCore
             'image' => 'p',
             'orderby' => false,
             'filter' => false,
-            'search' => false
+            'search' => false,
         );
         $this->fields_list['name'] = array(
             'title' => $this->l('Name'),
-            'filter_key' => 'b!name'
+            'filter_key' => 'b!name',
         );
         $this->fields_list['reference'] = array(
             'title' => $this->l('Reference'),
@@ -231,7 +230,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'title' => $this->l('Base price'),
             'type' => 'price',
             'align' => 'text-right',
-            'filter_key' => 'a!price'
+            'filter_key' => 'a!price',
         );
         $this->fields_list['price_final'] = array(
             'title' => $this->l('Final price'),
@@ -239,7 +238,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'align' => 'text-right',
             'havingFilter' => true,
             'orderby' => false,
-            'search' => false
+            'search' => false,
         );
 
         if (Configuration::get('PS_STOCK_MANAGEMENT')) {
@@ -261,7 +260,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'align' => 'text-center',
             'type' => 'bool',
             'class' => 'fixed-width-sm',
-            'orderby' => false
+            'orderby' => false,
         );
 
         if ($join_category && (int)$this->id_current_category) {
@@ -269,7 +268,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 'title' => $this->l('Position'),
                 'filter_key' => 'cp!position',
                 'align' => 'center',
-                'position' => 'position'
+                'position' => 'position',
             );
         }
     }

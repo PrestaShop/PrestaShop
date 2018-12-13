@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustome
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
@@ -37,9 +39,11 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
+use PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,12 +63,16 @@ class CustomerController extends AbstractAdminController
      */
     public function indexAction(Request $request, CustomerFilters $filters)
     {
+        $customersKpiFactory = $this->get('prestashop.core.kpi_row.factory.customers');
+
         $customerGridFactory = $this->get('prestashop.core.grid.factory.customer');
         $customerGrid = $customerGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerGrid' => $this->presentGrid($customerGrid),
+            'customersKpi' => $customersKpiFactory->build(),
+            'customerRequiredFieldsForm' => $this->getRequiredFieldsForm()->createView(),
         ]);
     }
 
@@ -229,8 +237,7 @@ class CustomerController extends AbstractAdminController
 
             $error = isset($errors[$e->getCode()]) ?
                 $errors[$e->getCode()] :
-                $this->getFallbackErrorMessage(get_class($e), $e->getCode())
-            ;
+                $this->getFallbackErrorMessage(get_class($e), $e->getCode());
 
             $this->addFlash('error', $error);
         } catch (CustomerException $e) {
@@ -243,5 +250,43 @@ class CustomerController extends AbstractAdminController
         return $this->redirectToRoute('admin_customers_view', [
             'customerId' => $customerId,
         ]);
+    }
+
+    /**
+     * Sets required fields for customer
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
+     *      redirectRoute="admin_customers_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function setRequiredFieldsAction(Request $request)
+    {
+        $requiredFieldsForm = $this->getRequiredFieldsForm();
+        $requiredFieldsForm->handleRequest($request);
+
+        if ($requiredFieldsForm->isSubmitted()) {
+            $data = $requiredFieldsForm->getData();
+
+            $this->getCommandBus()->handle(new SetRequiredFieldsForCustomerCommand($data['required_fields']));
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        }
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * @return FormInterface
+     */
+    private function getRequiredFieldsForm()
+    {
+        $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForCustomer());
+
+        return $this->createForm(RequiredFieldsType::class, ['required_fields' => $requiredFields]);
     }
 }

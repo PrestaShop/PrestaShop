@@ -30,8 +30,8 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
  *
@@ -74,8 +74,10 @@ class IndexColumnListProcessor extends AbstractProcessor {
 
             case ',':
             // the next column
-                $result[] = array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr),
-                        $expr);
+                $result[] = array_merge(
+                    array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr),
+                        $expr
+                );
                 $expr = $this->initExpression();
                 $base_expr = '';
                 break;

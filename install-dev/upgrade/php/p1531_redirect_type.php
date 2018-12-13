@@ -26,7 +26,7 @@
 
 function p1531_redirect_type()
 {
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/generic_add_missing_column.php');
+    include_once _PS_INSTALL_PATH_.'upgrade/php/generic_add_missing_column.php';
 
     $result = generic_add_missing_column('product', array('redirect_type' => 'ENUM(\'\', \'404\', \'301\', \'302\') NOT NULL DEFAULT \'404\' AFTER `active`'));
     $result &= generic_add_missing_column('product_shop', array('redirect_type' => 'ENUM(\'\', \'404\', \'301\', \'302\') NOT NULL DEFAULT \'404\' AFTER `active`'));

@@ -60,7 +60,7 @@ class ProductControllerTest extends WebTestCase
             ['delete'],
             ['duplicate'],
             ['activate'],
-            ['deactivate']
+            ['deactivate'],
         );
     }
 
@@ -72,7 +72,7 @@ class ProductControllerTest extends WebTestCase
     public function testBulkAction($action)
     {
         $actionUrl = $this->router->generate('admin_product_bulk_action', array(
-            'action' => $action
+            'action' => $action,
         ));
         $this->client->request('POST', $actionUrl);
         $this->assertSessionFlagBagContainsFailureMessage();
@@ -84,7 +84,7 @@ class ProductControllerTest extends WebTestCase
             ['activate_all'],
             ['deactivate_all'],
             ['duplicate_all'],
-            ['delete_all']
+            ['delete_all'],
         );
     }
 

@@ -44,7 +44,6 @@ class PrivateNoteType extends AbstractType
             ->add('note', TextareaType::class, [
                 'required' => false,
                 'empty_data' => '',
-            ])
-        ;
+            ]);
     }
 }

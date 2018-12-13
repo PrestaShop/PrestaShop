@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Unit\Core\Foundation\IoC;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
@@ -190,7 +189,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         return array(
             array(new Dummy()),
             array(42),
-            array(array(1, 2, 3))
+            array(array(1, 2, 3)),
         );
     }
 

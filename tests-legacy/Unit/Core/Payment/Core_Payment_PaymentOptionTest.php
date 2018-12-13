@@ -39,15 +39,14 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
             ->setLogo('http://example.com/logo.png')
             ->setAction('http://example.com/submit')
             ->setForm(null)
-            ->setInputs(array('key' => 42))
-        ;
+            ->setInputs(array('key' => 42));
 
         $legacyOption = array(
             'cta_text'  => 'Pay by bankwire',
             'logo'      => 'http://example.com/logo.png',
             'action'    => 'http://example.com/submit',
             'form'      => null,
-            'inputs'    => array('key' => 42)
+            'inputs'    => array('key' => 42),
         );
 
         $this->assertEquals(
@@ -64,15 +63,14 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
             ->setLogo('http://example.com/logo.png')
             ->setAction('http://example.com/submit')
             ->setForm(null)
-            ->setInputs(array('key' => 42))
-        ;
+            ->setInputs(array('key' => 42));
 
         $singleLegacyOption = array(
             'cta_text'  => 'Pay by bankwire',
             'logo'      => 'http://example.com/logo.png',
             'action'    => 'http://example.com/submit',
             'form'      => null,
-            'inputs'    => array('key' => 42)
+            'inputs'    => array('key' => 42),
         );
 
         $legacyOption = array($singleLegacyOption, $singleLegacyOption);

@@ -42,7 +42,6 @@ class GeolocationByIpAddressType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('geolocation_enabled', SwitchType::class)
-        ;
+            ->add('geolocation_enabled', SwitchType::class);
     }
 }
