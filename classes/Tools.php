@@ -551,6 +551,7 @@ class ToolsCore
      * Change language in cookie while clicking on a flag.
      *
      * @param null|mixed $cookie
+     *
      * @return string iso code
      */
     public static function setCookieLanguage($cookie = null)
@@ -668,6 +669,7 @@ class ToolsCore
      * Set cookie currency from POST or default currency.
      *
      * @param mixed $cookie
+     *
      * @return Currency object
      */
     public static function setCurrency($cookie)
@@ -711,6 +713,7 @@ class ToolsCore
      * @param null $language_code
      *
      * @throws PrestaShopException
+     *
      * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
      */
     public static function getCldr(Context $context = null, $language_code = null)
@@ -1094,6 +1097,7 @@ class ToolsCore
      * @param null|Context $context DEPRECATED since 1.7.4.0
      *
      * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
+     *
      * @return string
      */
     public static function displayError($errorMessage = null, $htmlentities = null, Context $context = null)
@@ -3053,6 +3057,7 @@ exit;
      * @desc try to open a zip file in order to check if it's valid
      *
      * @param mixed $from_file
+     *
      * @return bool success
      */
     public static function ZipTest($from_file)
@@ -3077,6 +3082,7 @@ exit;
      *
      * @param mixed $from_file
      * @param mixed $to_dir
+     *
      * @return bool success
      */
     public static function ZipExtract($from_file, $to_dir)
@@ -3367,6 +3373,7 @@ exit;
      * @since 1.5.0
      *
      * @param mixed $option
+     *
      * @return int the value of a configuration option in octet
      */
     public static function getOctets($option)
@@ -3937,6 +3944,7 @@ exit;
      * Allows to display the category description without HTML tags and slashes.
      *
      * @param mixed $description
+     *
      * @return string
      */
     public static function getDescriptionClean($description)

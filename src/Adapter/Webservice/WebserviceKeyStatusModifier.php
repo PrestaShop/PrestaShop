@@ -57,6 +57,7 @@ final class WebserviceKeyStatusModifier
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     *
      * @return string[] - if empty when process of status change was successful
      */
     public function toggleStatus($columnId)
@@ -94,6 +95,7 @@ final class WebserviceKeyStatusModifier
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     *
      * @return bool
      */
     public function setStatus(array $columnIds, $status)

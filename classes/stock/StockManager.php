@@ -54,6 +54,7 @@ class StockManagerCore implements StockManagerInterface
      * @param null|Employee $employee
      *
      * @throws PrestaShopException
+     *
      * @return bool
      */
     public function addProduct(
@@ -211,6 +212,7 @@ class StockManagerCore implements StockManagerInterface
      * @param null|Employee $employee
      *
      * @throws PrestaShopException
+     *
      * @return array
      */
     public function removeProduct(
@@ -760,6 +762,7 @@ class StockManagerCore implements StockManagerInterface
      * @param mixed $id_product_attribute
      * @param mixed $coverage
      * @param null|mixed $id_warehouse
+     *
      * @return int number of days left (-1 if infinite)
      */
     public function getProductCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null)

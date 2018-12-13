@@ -1067,6 +1067,7 @@ class AdminControllerCore extends Controller
      * Object Delete.
      *
      * @throws PrestaShopException
+     *
      * @return ObjectModel|false
      */
     public function processDelete()
@@ -1131,6 +1132,7 @@ class AdminControllerCore extends Controller
      * Object creation.
      *
      * @throws PrestaShopException
+     *
      * @return ObjectModel|false
      */
     public function processAdd()
@@ -1183,6 +1185,7 @@ class AdminControllerCore extends Controller
      * Object update.
      *
      * @throws PrestaShopException
+     *
      * @return ObjectModel|false|void
      */
     public function processUpdate()
@@ -1295,6 +1298,7 @@ class AdminControllerCore extends Controller
      * Change object status (active, inactive).
      *
      * @throws PrestaShopException
+     *
      * @return ObjectModel|false
      */
     public function processStatus()
@@ -2329,6 +2333,7 @@ class AdminControllerCore extends Controller
     /**
      * @throws Exception
      * @throws SmartyException
+     *
      * @return string
      */
     public function renderModal()
@@ -2362,6 +2367,7 @@ class AdminControllerCore extends Controller
      * Function used to render the list to display for this controller.
      *
      * @throws PrestaShopException
+     *
      * @return string|false
      */
     public function renderList()
@@ -2465,6 +2471,7 @@ class AdminControllerCore extends Controller
      *
      * @throws Exception
      * @throws SmartyException
+     *
      * @return string
      */
     public function renderForm()
@@ -3475,6 +3482,7 @@ class AdminControllerCore extends Controller
      * @param bool|string $tracking_source
      *
      * @throws PrestaShopException
+     *
      * @return bool
      */
     public function getModulesList($filter_modules_list, $tracking_source = false)
@@ -3843,6 +3851,7 @@ class AdminControllerCore extends Controller
      * @param int $id_object
      *
      * @throws PrestaShopDatabaseException
+     *
      * @return bool|void
      */
     protected function updateAssoShop($id_object)
@@ -4102,6 +4111,7 @@ class AdminControllerCore extends Controller
      * @param bool $status
      *
      * @throws PrestaShopException
+     *
      * @return bool true if success
      */
     protected function processBulkStatusSelection($status)

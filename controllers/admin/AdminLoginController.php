@@ -157,6 +157,7 @@ class AdminLoginControllerCore extends AdminController
      * All BO users can access the login page.
      *
      * @param mixed $disable
+     *
      * @return bool
      */
     public function viewAccess($disable = false)

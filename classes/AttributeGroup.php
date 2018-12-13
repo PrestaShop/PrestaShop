@@ -82,6 +82,7 @@ class AttributeGroupCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
      * @return bool Whether the AttributeGroup has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
@@ -109,6 +110,7 @@ class AttributeGroupCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
      * @return bool Whether the AttributeGroup has been succesfully updated
      */
     public function update($nullValues = false)
@@ -160,6 +162,7 @@ class AttributeGroupCore extends ObjectModel
      * Deletes current AttributeGroup from database.
      *
      * @throws PrestaShopException
+     *
      * @return bool True if delete was successful
      */
     public function delete()

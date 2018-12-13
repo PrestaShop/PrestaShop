@@ -56,6 +56,7 @@ class CurrencyDataProvider
      * @param mixed $object
      * @param mixed $active
      * @param mixed $group_by
+     *
      * @return array Currencies
      */
     public function getCurrencies($object = false, $active = true, $group_by = false)

@@ -67,6 +67,7 @@ class Reader implements ReaderInterface
      *
      * @throws LocalizationException
      *                               When the locale code is unknown or invalid
+     *
      * @return LocaleData
      *                    A LocaleData object
      */
@@ -143,6 +144,7 @@ class Reader implements ReaderInterface
      *
      * @throws LocalizationException
      *                               When locale code is invalid or unknown
+     *
      * @return array
      *               The lookup
      *               ['root', <intermediate codes>, $localeCode]
@@ -168,6 +170,7 @@ class Reader implements ReaderInterface
      *  eg.: en, fr, en_GB, fr_FR...
      *
      * @throws LocalizationException
+     *
      * @return string|null
      *                     The parent locale code (CLDR filenames' style). Null if no parent.
      */
@@ -233,6 +236,7 @@ class Reader implements ReaderInterface
      *
      * @throws LocalizationException
      *                               If this locale code has no corresponding xml file
+     *
      * @return SimplexmlElement
      *                          The locale data
      */
@@ -248,6 +252,7 @@ class Reader implements ReaderInterface
      * @param string $filename (Optional) The filename to be added to the path
      *
      * @throws LocalizationException
+     *
      * @return string The realpath of CLDR main data folder
      */
     protected function mainPath($filename = '')
@@ -267,6 +272,7 @@ class Reader implements ReaderInterface
      * @param string $localeTag The wanted locale. Can be either a language code (e.g.: fr) of an IETF tag (e.g.: en-US)
      *
      * @throws LocalizationException
+     *
      * @return LocaleData
      */
     protected function getLocaleData($localeTag)

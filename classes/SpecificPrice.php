@@ -273,6 +273,7 @@ class SpecificPriceCore extends ObjectModel
      * @param int $threshold
      *
      * @throws PrestaShopDatabaseException
+     *
      * @return string
      */
     protected static function filterOutField($field_name, $field_value, $threshold = 1000)

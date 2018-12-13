@@ -96,6 +96,7 @@ class FrameworkBundleAdminController extends Controller
      * @param Form $form The form
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     *
      * @return array[array[string]] Errors
      */
     public function getFormErrorsForJS(Form $form)
@@ -160,6 +161,7 @@ class FrameworkBundleAdminController extends Controller
      * @param array $parameters The hook parameters
      *
      * @throws \Exception
+     *
      * @return array The responses of hooks
      */
     protected function renderHook($hookName, array $parameters)
@@ -233,6 +235,7 @@ class FrameworkBundleAdminController extends Controller
      * @param string $controller name of the controller to valide access
      *
      * @throws \LogicException
+     *
      * @return int
      */
     protected function authorizationLevel($controller)
@@ -306,6 +309,7 @@ class FrameworkBundleAdminController extends Controller
      * @param string $suffix
      *
      * @throws \LogicException
+     *
      * @return bool
      */
     protected function actionIsAllowed($action, $object = '', $suffix = '')
@@ -328,6 +332,7 @@ class FrameworkBundleAdminController extends Controller
      * @param string $suffix
      *
      * @throws \Exception
+     *
      * @return string
      */
     protected function getForbiddenActionMessage($action, $suffix = '')

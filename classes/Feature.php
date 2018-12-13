@@ -122,6 +122,7 @@ class FeatureCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
      * @return bool Indicates whether the Feature has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
@@ -143,6 +144,7 @@ class FeatureCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
      * @return bool Indicates whether the Feature has been successfully updated
      */
     public function update($nullValues = false)
@@ -183,6 +185,7 @@ class FeatureCore extends ObjectModel
      * Deletes current Feature from the database.
      *
      * @throws PrestaShopException
+     *
      * @return bool `true` if delete was successful
      */
     public function delete()

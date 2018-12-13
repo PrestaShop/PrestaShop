@@ -228,6 +228,7 @@ class ContextCore
      * Checks if mobile context is possible.
      *
      * @throws PrestaShopException
+     *
      * @return bool
      */
     protected function checkMobileContext()

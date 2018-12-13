@@ -158,6 +158,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param int $webserviceAccountId
      *
      * @throws \PrestaShopException
+     *
      * @return RedirectResponse
      */
     public function deleteSingleWebserviceAction($webserviceAccountId)
@@ -186,6 +187,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @throws \PrestaShopException
+     *
      * @return RedirectResponse
      */
     public function deleteMultipleWebserviceAction(Request $request)
@@ -217,6 +219,7 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     *
      * @return RedirectResponse
      */
     public function enableMultipleStatusAction(Request $request)
@@ -239,6 +242,7 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     *
      * @return RedirectResponse
      */
     public function disableMultipleStatusAction(Request $request)
@@ -261,6 +265,7 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     *
      * @return RedirectResponse
      */
     public function toggleStatusAction($webserviceAccountId)
@@ -289,6 +294,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @throws \Exception
+     *
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)

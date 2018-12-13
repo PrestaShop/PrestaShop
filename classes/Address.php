@@ -452,6 +452,7 @@ class AddressCore extends ObjectModel
      * @param bool $with_geoloc
      *
      * @throws PrestaShopException
+     *
      * @return Address address
      */
     public static function initialize($id_address = null, $with_geoloc = false)

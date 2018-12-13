@@ -79,6 +79,7 @@ class ShopGroupCore extends ObjectModel
 
     /**
      * @param mixed $active
+     *
      * @return int Total of shop groups
      */
     public static function getTotalShopGroup($active = true)

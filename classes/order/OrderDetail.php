@@ -363,6 +363,7 @@ class OrderDetailCore extends ObjectModel
      *
      * @param Order $order
      * @param mixed $replace
+     *
      * @return bool
      */
     public function saveTaxCalculator(Order $order, $replace = false)

@@ -105,6 +105,7 @@ class ProductController extends FrameworkBundleAdminController
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
      * @throws \Symfony\Component\Form\Exception\LogicException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
+     *
      * @return array|Template|RedirectResponse|Response
      */
     public function catalogAction(
@@ -369,6 +370,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @throws \LogicException
      * @throws \PrestaShopException
+     *
      * @return RedirectResponse
      */
     public function newAction()
@@ -418,6 +420,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @throws \LogicException
+     *
      * @return array|Response Template vars
      */
     public function formAction($id, Request $request)
@@ -646,6 +649,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param AdminModelAdapter $modelMapper
      *
      * @throws \Symfony\Component\Process\Exception\LogicException
+     *
      * @return FormInterface
      */
     private function createProductForm(Product $product, AdminModelAdapter $modelMapper)
@@ -1135,6 +1139,7 @@ class ProductController extends FrameworkBundleAdminController
 
     /**
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     *
      * @return CsvResponse
      */
     public function exportAction()
@@ -1179,6 +1184,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param mixed $productId
      * @param mixed $step
      * @param mixed $fieldName
+     *
      * @throws \OutOfBoundsException
      * @throws \LogicException
      * @throws \PrestaShopException

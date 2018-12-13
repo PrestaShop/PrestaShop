@@ -202,6 +202,7 @@ class PackCore extends Product
      * @param null|Cart $cart
      *
      * @throws PrestaShopException
+     *
      * @return bool
      */
     public static function isInStock($idProduct, $wantedQuantity = 1, Cart $cart = null)
@@ -235,6 +236,7 @@ class PackCore extends Product
      * @param null|mixed $idProductAttribute
      *
      * @throws PrestaShopException
+     *
      * @return int
      */
     public static function getQuantity(
@@ -454,6 +456,7 @@ class PackCore extends Product
      * @param int $id_attribute_item
      *
      * @throws PrestaShopDatabaseException
+     *
      * @return bool true if everything was fine
      */
     public static function addItem($id_product, $id_item, $qty, $id_attribute_item = 0)

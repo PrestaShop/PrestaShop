@@ -58,6 +58,7 @@ class OrderReturnPresenter implements PresenterInterface
      * @param $orderReturn
      *
      * @throws \ReflectionException
+     *
      * @return OrderReturnLazyArray
      */
     public function present($orderReturn)

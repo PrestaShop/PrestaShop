@@ -200,6 +200,7 @@ abstract class PaymentModuleCore extends Module
      * @param Shop $shop
      *
      * @throws PrestaShopException
+     *
      * @return bool
      */
     public function validateOrder(

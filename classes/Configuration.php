@@ -302,6 +302,7 @@ class ConfigurationCore extends ObjectModel
      * @param int $idLang Language ID
      * @param int $idShopGroup
      * @param int $idShop
+     *
      * @throws PrestaShopException
      *
      * @return array Values

@@ -166,6 +166,7 @@ class ModuleTabRegister
      * @param ParameterBag $data
      *
      * @throws Exception in case of invalid data
+     *
      * @return bool (= true) when no issue detected
      */
     protected function checkIsValid($moduleName, ParameterBag $data)

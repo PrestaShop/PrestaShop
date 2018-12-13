@@ -65,6 +65,7 @@ class PhpEncryptionCore
      * @param string $cipherText Cipher text
      *
      * @throws Exception
+     *
      * @return bool|string Plaintext
      *                     `false` if unable to decrypt
      */
@@ -78,6 +79,7 @@ class PhpEncryptionCore
      * @param $bytes
      *
      * @throws \Defuse\Crypto\Exception\EnvironmentIsBrokenException
+     *
      * @return string
      */
     public static function saveBytesToChecksummedAsciiSafeString($header, $bytes)
@@ -89,6 +91,7 @@ class PhpEncryptionCore
 
     /**
      * @throws Exception
+     *
      * @return string
      */
     public static function createNewRandomKey()

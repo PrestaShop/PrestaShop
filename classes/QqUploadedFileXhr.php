@@ -33,6 +33,7 @@ class QqUploadedFileXhrCore
      * Save the file to the specified path.
      *
      * @param mixed $path
+     *
      * @return bool TRUE on success
      */
     public function upload($path)

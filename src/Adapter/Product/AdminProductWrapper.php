@@ -522,6 +522,7 @@ class AdminProductWrapper
      * @param int $id
      *
      * @throws PrestaShopObjectNotFoundException
+     *
      * @return SpecificPrice
      */
     public function getSpecificPriceDataById($id)

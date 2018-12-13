@@ -143,6 +143,7 @@ class TaxCore extends ObjectModel
      *
      * @param mixed $id_lang
      * @param mixed $active_only
+     *
      * @return array Taxes
      */
     public static function getTaxes($id_lang = false, $active_only = true)

@@ -47,6 +47,7 @@ class MaintenanceController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param null|FormInterface $form
+     *
      * @return Response
      */
     public function indexAction(Request $request, FormInterface $form = null)

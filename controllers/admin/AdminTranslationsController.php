@@ -2168,7 +2168,9 @@ class AdminTranslationsControllerCore extends AdminController
      * Check if directory and file exist and return an list of modules.
      *
      * @param mixed $withInstance
+     *
      * @throws PrestaShopException
+     *
      * @return array List of modules
      */
     public function getListModules($withInstance = false)

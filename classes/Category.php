@@ -175,6 +175,7 @@ class CategoryCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
      * @return bool Indicates whether the Category has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
@@ -216,6 +217,7 @@ class CategoryCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
      * @return bool Indicates whether the CartRule has been successfully updated
      */
     public function update($nullValues = false)
@@ -372,6 +374,7 @@ class CategoryCore extends ObjectModel
      * Deletes current CartRule from the database.
      *
      * @throws PrestaShopException
+     *
      * @return bool `true` if successfully deleted
      */
     public function delete()
@@ -437,6 +440,7 @@ class CategoryCore extends ObjectModel
      * Get the depth level for the category.
      *
      * @throws PrestaShopException
+     *
      * @return int Depth level
      */
     public function calcLevelDepth()
@@ -931,6 +935,7 @@ class CategoryCore extends ObjectModel
      * @param null|Context $context Instance of Context
      *
      * @throws PrestaShopDatabaseException
+     *
      * @return array|false|int Products, number of products or false (no access)
      */
     public function getProducts(
@@ -1413,6 +1418,7 @@ class CategoryCore extends ObjectModel
      * @param bool $skipCache Skip the Cache
      *
      * @throws PrestaShopDatabaseException
+     *
      * @return array Corresponding categories
      */
     public static function searchByName($idLang, $query, $unrestricted = false, $skipCache = false)
@@ -2310,6 +2316,7 @@ class CategoryCore extends ObjectModel
      * Deletes all Categories from the Shop ID.
      *
      * @param mixed $idShop
+     *
      * @return bool Indicates whether the Categories have been successfully removed
      */
     public static function deleteCategoriesFromShop($idShop)

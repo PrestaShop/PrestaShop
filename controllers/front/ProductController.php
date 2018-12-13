@@ -970,6 +970,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * or by the group request parameter.
      *
      * @throws PrestaShopException
+     *
      * @return int|null
      */
     private function getIdProductAttributeByRequestOrGroup()
@@ -1021,6 +1022,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * Return id_product_attribute by the group request parameter.
      *
      * @throws PrestaShopException
+     *
      * @return int|null
      */
     private function getIdProductAttributeByGroup()

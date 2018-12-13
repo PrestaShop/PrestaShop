@@ -252,6 +252,7 @@ class CartCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
      * @return bool Whether the Cart has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
@@ -276,6 +277,7 @@ class CartCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
      * @return bool Whether the Cart has been successfully updated
      */
     public function update($nullValues = false)
@@ -333,6 +335,7 @@ class CartCore extends ObjectModel
      * Deletes current Cart from the database.
      *
      * @throws PrestaShopException
+     *
      * @return bool True if delete was successful
      */
     public function delete()
@@ -536,6 +539,7 @@ class CartCore extends ObjectModel
      *                    - FILTER_ACTION_ALL_NOCAP
      *
      * @throws PrestaShopDatabaseException
+     *
      * @return array
      */
     public function getOrderedCartRulesIds($filter = CartRule::FILTER_ACTION_ALL)
@@ -1892,6 +1896,7 @@ class CartCore extends ObjectModel
      * @param bool $use_cache @deprecated
      *
      * @throws \Exception
+     *
      * @return float Order total
      */
     public function getOrderTotal(
@@ -2307,6 +2312,7 @@ class CartCore extends ObjectModel
      * @todo Add avaibility check
      *
      * @param mixed $flush
+     *
      * @return array array(
      *               0 => array( // First address
      *               0 => array(  // First package
@@ -3034,6 +3040,7 @@ class CartCore extends ObjectModel
      *
      * @param mixed $string
      * @param mixed $delimiter
+     *
      * @return int Intified value
      */
     public static function intifier($string, $delimiter = ',')
@@ -3676,6 +3683,7 @@ class CartCore extends ObjectModel
      * Return total Cart weight.
      *
      * @param null|mixed $products
+     *
      * @return float Total Cart weight
      */
     public function getTotalWeight($products = null)
@@ -3765,6 +3773,7 @@ class CartCore extends ObjectModel
      *
      * @param null|mixed $id_lang
      * @param mixed $refresh
+     *
      * @return array Cart details
      */
     public function getSummaryDetails($id_lang = null, $refresh = false)
@@ -4139,6 +4148,7 @@ class CartCore extends ObjectModel
      * @param mixed $index
      * @param mixed $type
      * @param mixed $file
+     *
      * @return bool Always true
      */
     public function addPictureToProduct($id_product, $index, $type, $file)

@@ -66,6 +66,7 @@ final class FileUploader
      * @param UploadedFile $uploadedFile
      *
      * @throws FileUploadException
+     *
      * @return File
      */
     public function upload(UploadedFile $uploadedFile)

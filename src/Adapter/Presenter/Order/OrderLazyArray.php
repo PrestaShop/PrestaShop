@@ -75,6 +75,7 @@ class OrderLazyArray extends AbstractLazyArray
      * OrderArray constructor.
      *
      * @param Order $order
+     *
      * @throws AnnotationException
      * @throws ReflectionException
      */
@@ -146,6 +147,7 @@ class OrderLazyArray extends AbstractLazyArray
      * @arrayAccess
      *
      * @throws PrestaShopException
+     *
      * @return mixed
      */
     public function getShipping()

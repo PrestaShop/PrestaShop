@@ -67,6 +67,7 @@ class AddCategoryCommand extends AbstractCategoryCommand
      * @param int $parentCategoryId
      *
      * @throws CategoryConstraintException
+     *
      * @return self
      */
     public function setParentCategoryId($parentCategoryId)

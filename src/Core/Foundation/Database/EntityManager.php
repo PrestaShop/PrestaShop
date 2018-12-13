@@ -87,6 +87,7 @@ class EntityManager
      * @param $className
      *
      * @throws \PrestaShop\PrestaShop\Adapter\CoreException
+     *
      * @return mixed
      */
     public function getEntityMetaData($className)

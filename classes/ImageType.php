@@ -90,6 +90,7 @@ class ImageTypeCore extends ObjectModel
      * @param null|mixed $type
      *
      * @throws PrestaShopDatabaseException
+     *
      * @return array Image type definitions
      */
     public static function getImagesTypes($type = null, $orderBySize = false)

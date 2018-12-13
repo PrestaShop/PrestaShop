@@ -193,7 +193,9 @@ class DispatcherCore
      * Get current instance of dispatcher (singleton).
      *
      * @param null|SymfonyRequest $request
+     *
      * @throws PrestaShopException
+     *
      * @return Dispatcher
      */
     public static function getInstance(SymfonyRequest $request = null)
@@ -874,6 +876,7 @@ class DispatcherCore
      * @param null $id_shop
      *
      * @throws PrestaShopException
+     *
      * @return string
      */
     public function createUrl(
@@ -1083,6 +1086,7 @@ class DispatcherCore
      * @var mixed
      *
      * @param mixed $dirs
+     *
      * @return array
      */
     public static function getControllers($dirs)

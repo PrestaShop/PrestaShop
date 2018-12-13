@@ -150,6 +150,7 @@ class CartRuleCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
      * @return bool Indicates whether the CartRule has been successfully added
      */
     public function add($autodate = true, $null_values = false)
@@ -174,6 +175,7 @@ class CartRuleCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
      * @return bool Indicates whether the CartRule has been successfully updated
      */
     public function update($null_values = false)
@@ -200,6 +202,7 @@ class CartRuleCore extends ObjectModel
      * Deletes current CartRule from the database.
      *
      * @throws PrestaShopException
+     *
      * @return bool True if delete was successful
      */
     public function delete()
@@ -355,6 +358,7 @@ class CartRuleCore extends ObjectModel
      * @param bool $highlight_only Highlighted vouchers only
      *
      * @throws PrestaShopDatabaseException
+     *
      * @return array
      */
     public static function getCustomerCartRules(
@@ -835,6 +839,7 @@ class CartRuleCore extends ObjectModel
      * @param bool $alreadyInCart
      *
      * @throws PrestaShopDatabaseException
+     *
      * @return array|bool|string
      */
     public function checkProductRestrictions(Context $context, $returnProducts = false, $displayError = true, $alreadyInCart = false)
@@ -855,6 +860,7 @@ class CartRuleCore extends ObjectModel
      * @param bool $alreadyInCart
      *
      * @throws PrestaShopDatabaseException
+     *
      * @return array|bool|string
      */
     public function checkProductRestrictionsFromCart(Cart $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
@@ -1426,6 +1432,7 @@ class CartRuleCore extends ObjectModel
      * @param string $search_cart_rule_name CartRule name to search for
      *
      * @throws PrestaShopDatabaseException
+     *
      * @return array|bool Array with DB rows of requested type
      */
     public function getAssociatedRestrictions(

@@ -137,6 +137,7 @@ class LogsController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs")
      *
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     *
      * @return RedirectResponse
      */
     public function deleteAllAction()

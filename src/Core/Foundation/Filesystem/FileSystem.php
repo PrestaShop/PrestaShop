@@ -83,6 +83,7 @@ class FileSystem
      * and return it in an array.
      *
      * @param mixed $path
+     *
      * @return an array of SplFileInfo object indexed by file path
      */
     public function listEntriesRecursively($path)
