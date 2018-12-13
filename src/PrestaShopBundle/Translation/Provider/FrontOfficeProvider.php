@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
@@ -99,7 +98,7 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
         return parent::getDatabaseCatalogue($themeName);
     }
 
-    /**{@inheritdoc}
+    /*{@inheritdoc}
      */
     public function getDefaultResourceDirectory()
     {

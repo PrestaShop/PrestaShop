@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -294,7 +294,6 @@ class VersionTest extends TestCase
      *
      * @param $version string  Version
      * @param $result  boolean Result
-     *
      */
     public function testCheckInvalidVersion($version)
     {

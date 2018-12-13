@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -157,9 +156,9 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @param int $webserviceAccountId
      *
-     * @return RedirectResponse
-     *
      * @throws \PrestaShopException
+     *
+     * @return RedirectResponse
      */
     public function deleteSingleWebserviceAction($webserviceAccountId)
     {
@@ -186,9 +185,9 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
-     *
      * @throws \PrestaShopException
+     *
+     * @return RedirectResponse
      */
     public function deleteMultipleWebserviceAction(Request $request)
     {
@@ -217,10 +216,10 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
-     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     *
+     * @return RedirectResponse
      */
     public function enableMultipleStatusAction(Request $request)
     {
@@ -240,10 +239,10 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
-     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     *
+     * @return RedirectResponse
      */
     public function disableMultipleStatusAction(Request $request)
     {
@@ -263,10 +262,10 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @param int $webserviceAccountId
      *
-     * @return RedirectResponse
-     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     *
+     * @return RedirectResponse
      */
     public function toggleStatusAction($webserviceAccountId)
     {
@@ -293,9 +292,9 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
-     *
      * @throws \Exception
+     *
+     * @return RedirectResponse
      */
     public function processFormAction(Request $request)
     {

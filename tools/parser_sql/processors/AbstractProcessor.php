@@ -1,6 +1,6 @@
 <?php
 /**
- * AbstractProcessor.php
+ * AbstractProcessor.php.
  *
  * This file implements an abstract processor, which implements some helper functions.
  *
@@ -29,28 +29,29 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 require_once dirname(__FILE__) . '/../lexer/PHPSQLLexer.php';
 
 /**
- * 
  * This class processes contains some general functions for a processor.
  * 
  * @author arothe
- * 
  */
 abstract class AbstractProcessor {
 
     /**
      * This function implements the main functionality of a processor class.
      * Always use default valuses for additional parameters within overridden functions.
+     *
+     * @param mixed $tokens
      */
     abstract public function process($tokens);
 
     /**
      * this function splits up a SQL statement into easy to "parse"
-     * tokens for the SQL processor
+     * tokens for the SQL processor.
+     *
+     * @param mixed $sql
      */
     public function splitSQLIntoTokens($sql) {
         $lexer = new PHPSQLLexer();
@@ -58,7 +59,9 @@ abstract class AbstractProcessor {
     }
 
     /**
-     * Revokes the quoting characters from an expression
+     * Revokes the quoting characters from an expression.
+     *
+     * @param mixed $sql
      */
     protected function revokeQuotation($sql) {
         $result = trim($sql);
@@ -84,6 +87,8 @@ abstract class AbstractProcessor {
     /**
      * This method removes parenthesis from start of the given string.
      * It removes also the associated closing parenthesis.
+     *
+     * @param mixed $token
      */
     protected function removeParenthesisFromStart($token) {
         $parenthesisRemoved = 0;
@@ -194,7 +199,9 @@ abstract class AbstractProcessor {
     }
 
     /**
-     * translates an array of objects into an associative array
+     * translates an array of objects into an associative array.
+     *
+     * @param mixed $tokenList
      */
     public function toArray($tokenList) {
         $expr = array();

@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use Link;
@@ -117,9 +116,9 @@ class OrderReturnLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return string
-     *
      * @throws PrestaShopException
+     *
+     * @return string
      */
     public function getReturnDate()
     {

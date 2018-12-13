@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
@@ -41,9 +40,9 @@ class ContainerBuilder
      * @param string $name
      * @param bool $isDebug
      *
-     * @return SfContainerBuilder
-     *
      * @throws \Exception
+     *
+     * @return SfContainerBuilder
      */
     public static function getContainer($name, $isDebug)
     {

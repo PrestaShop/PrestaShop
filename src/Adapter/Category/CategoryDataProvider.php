@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
 use ObjectModel;
@@ -84,10 +83,10 @@ class CategoryDataProvider
     /**
      * Get all nested categories.
      *
-     * @param int|null $root_category
+     * @param null|int $root_category
      * @param bool|int $id_lang
      * @param bool $active
-     * @param int|null $groups
+     * @param null|int $groups
      * @param bool $use_shop_restriction
      * @param string $sql_filter
      * @param string $sql_sort
@@ -107,7 +106,7 @@ class CategoryDataProvider
     /**
      * Return available categories Names - excluding Root category.
      *
-     * @param int|null $root_category
+     * @param null|int $root_category
      * @param bool|int $id_lang
      * @param bool $active return only active categories
      * @param $groups
@@ -259,8 +258,8 @@ class CategoryDataProvider
     }
 
     /**
-     * @param int|null $idLang
-     * @param Shop|null $shop
+     * @param null|int $idLang
+     * @param null|Shop $shop
      *
      * @return Category
      */

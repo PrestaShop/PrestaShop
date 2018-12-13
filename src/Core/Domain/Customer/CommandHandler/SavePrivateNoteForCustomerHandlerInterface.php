@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,13 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
 
 /**
- * Defines interface for service that handles command which saves private note for customer
+ * Defines interface for service that handles command which saves private note for customer.
  */
 interface SavePrivateNoteForCustomerHandlerInterface
 {

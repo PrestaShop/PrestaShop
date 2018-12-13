@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
 use PrestaShop\Decimal\Number;
@@ -208,9 +207,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array|bool
-     *
      * @throws InvalidArgumentException
+     *
+     * @return array|bool
      */
     public function getCondition()
     {
@@ -298,9 +297,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array
-     *
      * @throws \ReflectionException
+     *
+     * @return array
      */
     public function getAttachments()
     {
@@ -381,9 +380,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array
-     *
      * @throws InvalidArgumentException
+     *
+     * @return array
      */
     public function getLabels()
     {
@@ -418,9 +417,9 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array
-     *
      * @throws InvalidArgumentException
+     *
+     * @return array
      */
     public function getFlags()
     {

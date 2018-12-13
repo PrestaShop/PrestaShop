@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlManagementConstraintException;
@@ -68,9 +67,9 @@ class DatabaseTableField
     /**
      * @param string $name
      *
-     * @return self
-     *
      * @throws SqlManagementConstraintException
+     *
+     * @return self
      */
     private function setName($name)
     {
@@ -97,9 +96,9 @@ class DatabaseTableField
     /**
      * @param string $type
      *
-     * @return self
-     *
      * @throws SqlManagementConstraintException
+     *
+     * @return self
      */
     private function setType($type)
     {

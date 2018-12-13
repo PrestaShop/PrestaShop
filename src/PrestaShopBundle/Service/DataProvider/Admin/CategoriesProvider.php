@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
@@ -84,7 +83,8 @@ class CategoriesProvider
     /**
      * Return the list of categories with the associated modules.
      *
-     * @param array|AddonsCollection the list of modules
+     * @param AddonsCollection|array the list of modules
+     * @param mixed $modules
      *
      * @return array the list of categories
      */
@@ -178,6 +178,7 @@ class CategoriesProvider
      * Considering a category name, return his category parent name.
      *
      * @param string the category
+     * @param mixed $categoryName
      *
      * @return string the category
      */

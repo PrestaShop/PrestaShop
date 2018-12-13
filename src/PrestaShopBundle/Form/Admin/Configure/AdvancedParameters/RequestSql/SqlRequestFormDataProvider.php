@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
@@ -117,9 +116,9 @@ class SqlRequestFormDataProvider
     /**
      * @param array $requestSqlData
      *
-     * @return AddSqlRequestCommand
-     *
      * @throws SqlRequestConstraintException
+     *
+     * @return AddSqlRequestCommand
      */
     private function getAddRequestSqlCommand(array $requestSqlData)
     {
@@ -132,9 +131,9 @@ class SqlRequestFormDataProvider
     /**
      * @param array $requestSqlData
      *
-     * @return EditSqlRequestCommand
-     *
      * @throws SqlRequestException
+     *
+     * @return EditSqlRequestCommand
      */
     private function getEditRequestSqlCommand(array $requestSqlData)
     {

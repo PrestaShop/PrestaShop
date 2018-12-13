@@ -1,6 +1,6 @@
 <?php
 /**
- * ColumnDefinitionProcessor.php
+ * ColumnDefinitionProcessor.php.
  *
  * This file implements the processor for column definition part of a CREATE TABLE statement.
  *
@@ -29,18 +29,15 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once dirname(__FILE__) . '/AbstractProcessor.php';
 require_once dirname(__FILE__) . '/ReferenceDefinitionProcessor.php';
 require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- *
  * This class processes the column definition part of a CREATE TABLE statement.
  *
  * @author arothe
- *
  */
 class ColumnDefinitionProcessor extends AbstractProcessor {
 

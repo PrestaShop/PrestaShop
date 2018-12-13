@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
@@ -50,6 +49,8 @@ class Context implements MultistoreContextCheckerInterface
 
     /**
      * Get current ID of shop if context is CONTEXT_SHOP.
+     *
+     * @param mixed $null_value_without_multishop
      *
      * @return int
      */

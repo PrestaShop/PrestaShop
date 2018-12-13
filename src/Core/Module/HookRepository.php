@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Module;
 
 use Db;
@@ -117,6 +116,8 @@ class HookRepository
      * ]
      * Only hooks present as keys in the $hooks array are affected and all changes
      * are only done for the shop this Repository belongs to.
+     *
+     * @param array $hooks
      */
     public function persistHooksConfiguration(array $hooks)
     {

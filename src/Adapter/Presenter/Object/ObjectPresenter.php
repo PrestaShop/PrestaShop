@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Object;
 
 use Hook;
@@ -36,9 +35,9 @@ class ObjectPresenter implements PresenterInterface
     /**
      * @param ObjectModel $object
      *
-     * @return array
-     *
      * @throws Exception
+     *
+     * @return array
      */
     public function present($object)
     {

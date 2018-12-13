@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 
 use Db;
@@ -87,9 +86,9 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
      *
      * @param array $records
      *
-     * @return array Records with hidden sensitive data
-     *
      * @throws PrestaShopException
+     *
+     * @return array Records with hidden sensitive data
      */
     private function hideSensitiveData(array $records)
     {

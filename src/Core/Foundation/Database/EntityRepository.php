@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager\QueryBuilder;
@@ -91,9 +90,9 @@ class EntityRepository
     /**
      * Return ID field name.
      *
-     * @return mixed
-     *
      * @throws Exception
+     *
+     * @return mixed
      */
     protected function getIdFieldName()
     {
@@ -192,9 +191,9 @@ class EntityRepository
      * @param $one
      * @param array $cumulativeConditions
      *
-     * @return array|mixed|null
-     *
      * @throws Exception
+     *
+     * @return array|mixed|null
      */
     private function doFind($one, array $cumulativeConditions)
     {
@@ -216,9 +215,9 @@ class EntityRepository
      *
      * @param $id
      *
-     * @return array|mixed|null
-     *
      * @throws Exception
+     *
+     * @return array|mixed|null
      */
     public function findOne($id)
     {

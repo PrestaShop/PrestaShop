@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
@@ -300,9 +299,9 @@ class CartPresenter implements PresenterInterface
      * @param Cart $cart
      * @param bool $shouldSeparateGifts
      *
-     * @return array
-     *
      * @throws \Exception
+     *
+     * @return array
      */
     public function present($cart, $shouldSeparateGifts = false)
     {

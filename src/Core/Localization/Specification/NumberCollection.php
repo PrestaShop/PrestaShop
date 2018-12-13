@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 
 use ArrayIterator;
@@ -118,7 +117,7 @@ class NumberCollection implements IteratorAggregate, Countable
     /**
      * Removes a Number specification item or an array of Number specification items by index from the collection.
      *
-     * @param int|string|int[]|string[]|array $index
+     * @param array|int|int[]|string|string[] $index
      *                                               The Number specification item index or an array of Number specification item indexes
      *
      * @return NumberCollection

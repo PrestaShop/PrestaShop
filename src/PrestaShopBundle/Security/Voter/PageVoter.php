@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Security\Voter;
 
 use Access;
@@ -86,9 +85,9 @@ class PageVoter extends Voter
      * @param string $action
      * @param int $employeeProfileId
      *
-     * @return bool
-     *
      * @throws \Exception
+     *
+     * @return bool
      */
     protected function can($action, $employeeProfileId)
     {

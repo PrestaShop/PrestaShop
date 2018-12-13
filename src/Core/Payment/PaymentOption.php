@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Payment;
 
 use PrestaShopBundle\Service\Hook\HookContentClassInterface;
@@ -333,6 +332,8 @@ class PaymentOption implements HookContentClassInterface
      * Since this was a mess, this method is provided to convert them.
      * It takes as input a legacy option (in either form) and always
      * returns an array of instances of PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     *
+     * @param array $legacyOption
      */
     public static function convertLegacyOption(array $legacyOption)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Localization\Currency;
 
 use PHPUnit\Framework\TestCase;
@@ -76,21 +75,19 @@ class RepositoryTest extends TestCase
             ->method('getDataByCurrencyCode')
             ->willReturnCallback($getDataByCurrencyCode);
 
-        /** @var $dataRepo CurrencyDataRepositoryInterface */
+        /* @var $dataRepo CurrencyDataRepositoryInterface */
         $this->currencyRepository = new CurrencyRepository($dataRepo);
     }
 
     /**
      * Given a valid currency code
      * When asking the currency repository for the corresponding Currency
-     * Then the expected Currency instance should be returned
+     * Then the expected Currency instance should be returned.
      *
      * @param string $currencyCode
      *  Alphabetic ISO 4217 currency code passed to retreive the wanted Currency instance
-     *
      * @param array $expectedNames
      *  Expected currency names, indexed by locale code
-     *
      * @param array $expectedSymbols
      *  Expected currency symbols, indexed by locale code
      *
@@ -110,7 +107,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * Provide valid currency codes and the expected results
+     * Provide valid currency codes and the expected results.
      *
      * Each data set item is structured as following :
      *  'Data set identifier' => [
@@ -140,8 +137,7 @@ class RepositoryTest extends TestCase
     /**
      * Given an unknown or invalid currency code
      * When asking the currency repository for the corresponding Currency
-     * Then an exception should be raised
-     *
+     * Then an exception should be raised.
      */
     public function testGetCurrencyWithUnknownCode()
     {

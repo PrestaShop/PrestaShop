@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Foundation\Filesystem;
 
 use SplFileInfo;
@@ -33,6 +32,8 @@ class FileSystem
     /**
      * Replaces directory separators with the system's native one
      * and trims the trailing separator.
+     *
+     * @param mixed $path
      */
     public function normalizePath($path)
     {
@@ -79,6 +80,8 @@ class FileSystem
      * Throws exception if $path is not a file.
      * If $path is a file and not a directory, just gets the file info for it
      * and return it in an array.
+     *
+     * @param mixed $path
      *
      * @return an array of SplFileInfo object indexed by file path
      */
@@ -127,6 +130,8 @@ class FileSystem
 
     /**
      * Filter used by listFilesRecursively.
+     *
+     * @param SplFileInfo $info
      */
     private function matchOnlyFiles(SplFileInfo $info)
     {
@@ -135,6 +140,8 @@ class FileSystem
 
     /**
      * Same as listEntriesRecursively but returns only files.
+     *
+     * @param mixed $path
      */
     public function listFilesRecursively($path)
     {

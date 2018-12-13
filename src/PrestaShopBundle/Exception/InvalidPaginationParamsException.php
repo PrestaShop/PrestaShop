@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Exception;
 
 use OutOfBoundsException;
@@ -34,7 +33,7 @@ class InvalidPaginationParamsException extends OutOfBoundsException
     /**
      * @param string $message
      * @param int $code
-     * @param Exception|null $previous
+     * @param null|Exception $previous
      */
     public function __construct(
         $message = '',

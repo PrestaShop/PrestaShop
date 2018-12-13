@@ -591,6 +591,8 @@ class ShopCore extends ObjectModel
     /**
      * Get the associated table if available.
      *
+     * @param mixed $table
+     *
      * @return array
      */
     public static function getAssoTable($table)
@@ -604,6 +606,8 @@ class ShopCore extends ObjectModel
 
     /**
      * check if the table has an id_shop_default.
+     *
+     * @param mixed $table
      *
      * @return bool
      */
@@ -875,6 +879,7 @@ class ShopCore extends ObjectModel
      * Retrieve group ID of a shop.
      *
      * @param int $shop_id Shop ID
+     * @param mixed $as_id
      *
      * @return int Group ID
      */
@@ -1009,6 +1014,8 @@ class ShopCore extends ObjectModel
     /**
      * Get current ID of shop if context is CONTEXT_SHOP.
      *
+     * @param mixed $null_value_without_multishop
+     *
      * @return int
      */
     public static function getContextShopID($null_value_without_multishop = false)
@@ -1034,6 +1041,8 @@ class ShopCore extends ObjectModel
 
     /**
      * Get current ID of shop group if context is CONTEXT_SHOP or CONTEXT_GROUP.
+     *
+     * @param mixed $null_value_without_multishop
      *
      * @return int
      */
@@ -1089,6 +1098,7 @@ class ShopCore extends ObjectModel
      * @param string $alias Alias of table
      * @param bool $inner_join Use or not INNER JOIN
      * @param string $on
+     * @param mixed $force_not_default
      *
      * @return string
      */
@@ -1122,6 +1132,7 @@ class ShopCore extends ObjectModel
      *
      * @param string $alias
      * @param Context $context
+     * @param null|mixed $id_shop
      *
      * @return string
      */
@@ -1266,6 +1277,7 @@ class ShopCore extends ObjectModel
 
     /**
      * @param int $id
+     * @param mixed $only_id
      *
      * @return array
      */
@@ -1299,6 +1311,8 @@ class ShopCore extends ObjectModel
     /**
      * @param string $entity
      * @param int $id_shop
+     * @param mixed $active
+     * @param mixed $delete
      *
      * @return array|bool
      */

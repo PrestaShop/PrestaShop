@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestSettingsConstraintException;
@@ -61,9 +60,9 @@ class SaveSqlRequestSettingsCommand
     /**
      * @param string $fileEncoding
      *
-     * @return self
-     *
      * @throws SqlRequestSettingsConstraintException
+     *
+     * @return self
      */
     private function setFileEncoding($fileEncoding)
     {

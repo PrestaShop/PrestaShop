@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -37,7 +36,7 @@ interface DoctrineQueryBuilderInterface
     /**
      * Get query that searches grid rows.
      *
-     * @param SearchCriteriaInterface|null $searchCriteria
+     * @param null|SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */
@@ -46,7 +45,7 @@ interface DoctrineQueryBuilderInterface
     /**
      * Get query that counts grid rows.
      *
-     * @param SearchCriteriaInterface|null $searchCriteria
+     * @param null|SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */

@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Translation\View;
 
 use PrestaShopBundle\Translation\Provider\AbstractProvider;
@@ -131,6 +130,8 @@ class TreeBuilder
     }
 
     /**
+     * @param mixed $catalogue
+     *
      * @return array
      */
     public function makeTranslationsTree($catalogue)

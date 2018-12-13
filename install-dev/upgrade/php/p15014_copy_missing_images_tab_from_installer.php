@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,6 @@
 /**
  * This function copy all images located in /install/data/img/* that are missing in previous upgrade
  *  in the matching img dir. This does not modify images that are already present.
- *
  */
 function p15014_copy_missing_images_tab_from_installer()
 {

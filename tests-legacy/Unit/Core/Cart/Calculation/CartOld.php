@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Cart\Calculation;
 
 use \Cart;
@@ -36,13 +35,13 @@ use Tax;
 use Tools;
 
 /**
- * legacy code here : used to test behaviour between recent and previous version
+ * legacy code here : used to test behaviour between recent and previous version.
  */
 class CartOld extends Cart
 {
 
     /**
-     * This function returns the total cart amount
+     * This function returns the total cart amount.
      *
      * @param bool  $with_taxes With or without taxes
      * @param int   $type       Total type enum

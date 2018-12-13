@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Twig;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -55,6 +54,7 @@ class HookExtension extends \Twig_Extension
      *
      * @param HookDispatcherInterface $hookDispatcher
      * @param ModuleDataProvider $moduleDataProvider
+     * @param null|ModuleRepository $moduleRepository
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,

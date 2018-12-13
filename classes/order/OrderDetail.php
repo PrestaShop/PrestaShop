@@ -361,6 +361,9 @@ class OrderDetailCore extends ObjectModel
      *             because we need the full order object to do a good job here.
      *             Will no longer be supported after 1.6.1
      *
+     * @param Order $order
+     * @param mixed $replace
+     *
      * @return bool
      */
     public function saveTaxCalculator(Order $order, $replace = false)
@@ -535,6 +538,7 @@ class OrderDetailCore extends ObjectModel
      * Set specific price of the product.
      *
      * @param object $order
+     * @param null|mixed $product
      */
     protected function setSpecificPrice(Order $order, $product = null)
     {
@@ -659,6 +663,8 @@ class OrderDetailCore extends ObjectModel
      * @param int $id_order_status
      * @param int $id_order_invoice
      * @param bool $use_taxes set to false if you don't want to use taxes
+     * @param mixed $id_order_state
+     * @param mixed $id_warehouse
      */
     protected function create(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0)
     {
@@ -720,6 +726,9 @@ class OrderDetailCore extends ObjectModel
      * @param int $id_order_status
      * @param int $id_order_invoice
      * @param bool $use_taxes set to false if you don't want to use taxes
+     * @param mixed $id_order_state
+     * @param mixed $product_list
+     * @param mixed $id_warehouse
      */
     public function createList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0)
     {

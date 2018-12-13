@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Meta;
 
 use PrestaShopException;
@@ -57,6 +56,7 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
      *
      * @param ShopUrl $mainShopUrl
      * @param ConfigurationInterface $configuration
+     * @param HtaccessFileGenerator $htaccessFileGenerator
      */
     public function __construct(
         ShopUrl $mainShopUrl,

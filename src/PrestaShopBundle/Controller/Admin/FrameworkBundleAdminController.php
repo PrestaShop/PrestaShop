@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
@@ -95,9 +94,9 @@ class FrameworkBundleAdminController extends Controller
      *
      * @param Form $form The form
      *
-     * @return array[array[string]] Errors
-     *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     *
+     * @return array[array[string]] Errors
      */
     public function getFormErrorsForJS(Form $form)
     {
@@ -160,9 +159,9 @@ class FrameworkBundleAdminController extends Controller
      * @param string $hookName The hook name
      * @param array $parameters The hook parameters
      *
-     * @return array The responses of hooks
-     *
      * @throws \Exception
+     *
+     * @return array The responses of hooks
      */
     protected function renderHook($hookName, array $parameters)
     {
@@ -234,9 +233,9 @@ class FrameworkBundleAdminController extends Controller
      *
      * @param string $controller name of the controller to valide access
      *
-     * @return int
-     *
      * @throws \LogicException
+     *
+     * @return int
      */
     protected function authorizationLevel($controller)
     {
@@ -308,9 +307,9 @@ class FrameworkBundleAdminController extends Controller
      * @param $object
      * @param string $suffix
      *
-     * @return bool
-     *
      * @throws \LogicException
+     *
+     * @return bool
      */
     protected function actionIsAllowed($action, $object = '', $suffix = '')
     {
@@ -331,9 +330,9 @@ class FrameworkBundleAdminController extends Controller
      * @param $action
      * @param string $suffix
      *
-     * @return string
-     *
      * @throws \Exception
+     *
+     * @return string
      */
     protected function getForbiddenActionMessage($action, $suffix = '')
     {

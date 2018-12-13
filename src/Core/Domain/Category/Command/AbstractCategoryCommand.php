@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
@@ -105,9 +104,9 @@ abstract class AbstractCategoryCommand
     /**
      * @param string[] $localizedNames
      *
-     * @return $this
-     *
      * @throws CategoryConstraintException
+     *
+     * @return $this
      */
     public function setLocalizedNames(array $localizedNames)
     {
@@ -134,9 +133,9 @@ abstract class AbstractCategoryCommand
     /**
      * @param string[] $localizedLinkRewrites
      *
-     * @return $this
-     *
      * @throws CategoryConstraintException
+     *
+     * @return $this
      */
     public function setLocalizedLinkRewrites(array $localizedLinkRewrites)
     {
@@ -183,9 +182,9 @@ abstract class AbstractCategoryCommand
     /**
      * @param bool $isActive
      *
-     * @return $this
-     *
      * @throws CategoryConstraintException
+     *
+     * @return $this
      */
     public function setIsActive($isActive)
     {

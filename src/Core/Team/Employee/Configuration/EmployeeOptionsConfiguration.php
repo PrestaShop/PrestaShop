@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Team\Employee\Configuration;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
@@ -46,6 +45,7 @@ final class EmployeeOptionsConfiguration implements DataConfigurationInterface
 
     /**
      * @param ConfigurationInterface $configuration
+     * @param OptionsCheckerInterface $optionsChecker
      */
     public function __construct(ConfigurationInterface $configuration, OptionsCheckerInterface $optionsChecker)
     {

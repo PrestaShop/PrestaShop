@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Cart;
 
 use Cart;
@@ -132,9 +131,9 @@ class Calculator
     /**
      * @param bool $withTaxes
      *
-     * @return AmountImmutable
-     *
      * @throws \Exception
+     *
+     * @return AmountImmutable
      */
     public function getTotal()
     {
@@ -156,9 +155,9 @@ class Calculator
     }
 
     /**
-     * @return AmountImmutable
-     *
      * @throws \Exception
+     *
+     * @return AmountImmutable
      */
     public function getRowTotal()
     {
@@ -171,9 +170,9 @@ class Calculator
     }
 
     /**
-     * @return AmountImmutable
-     *
      * @throws \Exception
+     *
+     * @return AmountImmutable
      */
     public function getDiscountTotal()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * UnionProcessor.php
+ * UnionProcessor.php.
  *
  * This file implements the processor for the UNION statements.
  *
@@ -29,18 +29,15 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 require_once(dirname(__FILE__) . '/SQLProcessor.php');
 require_once(dirname(__FILE__) . '/DefaultProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
  * This class processes the UNION statements.
  * 
  * @author arothe
- * 
  */
 class UnionProcessor extends AbstractProcessor {
 
@@ -58,11 +55,13 @@ class UnionProcessor extends AbstractProcessor {
      * MySQL supports a special form of UNION:
      * (select ...)
      * union
-     * (select ...)
+     * (select ...).
      *
      * This function handles this query syntax. Only one such subquery
      * is supported in each UNION block. (select)(select)union(select) is not legal.
      * The extra queries will be silently ignored.
+     *
+     * @param mixed $queries
      */
     protected function processMySQLUnion($queries) {
         $unionTypes = array('UNION', 'UNION ALL');

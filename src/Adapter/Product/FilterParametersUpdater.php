@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
@@ -61,9 +60,9 @@ final class FilterParametersUpdater
      * @param array $persistedFilterParameters
      * @param array $defaultFilterParameters
      *
-     * @return array
-     *
      * @throws ProductException
+     *
+     * @return array
      */
     public function buildFilters(
         array $queryFilterParameters,
@@ -84,9 +83,9 @@ final class FilterParametersUpdater
      * @param array $persistedFilterParameters
      * @param array $defaultFilterParameters
      *
-     * @return string|int
-     *
      * @throws ProductException
+     *
+     * @return string|int
      */
     private function getParameter(
         $parameterName,

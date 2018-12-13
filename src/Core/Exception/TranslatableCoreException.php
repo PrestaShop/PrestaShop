@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Exception;
 
 /**
@@ -51,7 +50,7 @@ class TranslatableCoreException extends CoreException
      * @param string $domain
      * @param array $parameters
      * @param int $code
-     * @param Throwable|Exception|null $previous
+     * @param null|Exception|Throwable $previous
      */
     public function __construct(
         $key,

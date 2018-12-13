@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Product;
 
 use PrestaShopBundle\Component\CsvResponse;
@@ -57,10 +56,10 @@ final class ProductCsvExporter implements ProductExporterInterface
      *
      * @param array $products
      *
-     * @return CsvResponse
-     *
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     *
+     * @return CsvResponse
      */
     public function export(array $products = array())
     {
@@ -101,9 +100,9 @@ final class ProductCsvExporter implements ProductExporterInterface
      * @param $key
      * @param $domain
      *
-     * @return string
-     *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     *
+     * @return string
      */
     private function trans($key, $domain)
     {

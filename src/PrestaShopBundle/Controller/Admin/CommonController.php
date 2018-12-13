@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
@@ -238,9 +237,9 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $controller
      * @param string $action
      *
-     * @return JsonResponse
-     *
      * @throws \LogicException
+     *
+     * @return JsonResponse
      */
     public function resetSearchAction($controller, $action)
     {

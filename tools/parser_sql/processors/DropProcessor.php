@@ -1,6 +1,6 @@
 <?php
 /**
- * DropProcessor.php
+ * DropProcessor.php.
  *
  * This file implements the processor for the DROP statements.
  *
@@ -29,17 +29,14 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/../utils/ExpressionToken.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 
 /**
- * 
  * This class processes the DROP statements.
  * 
  * @author arothe
- * 
  */
 class DropProcessor extends AbstractProcessor {
 

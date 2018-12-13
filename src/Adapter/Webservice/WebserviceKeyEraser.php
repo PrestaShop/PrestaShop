@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Webservice;
 
 use PrestaShopCollection;
@@ -39,9 +38,9 @@ final class WebserviceKeyEraser
      *
      * @param int[] $webServiceKeyIds
      *
-     * @return string[] - array of errors. If array is empty then erase operation succeeded.
-     *
      * @throws \PrestaShopException
+     *
+     * @return string[] - array of errors. If array is empty then erase operation succeeded.
      */
     public function erase(array $webServiceKeyIds)
     {

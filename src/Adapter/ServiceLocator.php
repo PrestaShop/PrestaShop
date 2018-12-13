@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
@@ -52,9 +51,9 @@ class ServiceLocator
      *
      * @param $serviceName
      *
-     * @return mixed|object
-     *
      * @throws CoreException
+     *
+     * @return mixed|object
      */
     public static function get($serviceName)
     {

@@ -52,6 +52,8 @@ abstract class AbstractLoggerCore
      *
      * @param string message
      * @param level
+     * @param mixed $message
+     * @param mixed $level
      */
     abstract protected function logMessage($message, $level);
 
@@ -60,6 +62,8 @@ abstract class AbstractLoggerCore
      *
      * @param string message
      * @param level
+     * @param mixed $message
+     * @param mixed $level
      */
     public function log($message, $level = self::DEBUG)
     {
@@ -72,6 +76,7 @@ abstract class AbstractLoggerCore
      * Log a debug message.
      *
      * @param string message
+     * @param mixed $message
      */
     public function logDebug($message)
     {
@@ -82,6 +87,7 @@ abstract class AbstractLoggerCore
      * Log an info message.
      *
      * @param string message
+     * @param mixed $message
      */
     public function logInfo($message)
     {
@@ -92,6 +98,7 @@ abstract class AbstractLoggerCore
      * Log a warning message.
      *
      * @param string message
+     * @param mixed $message
      */
     public function logWarning($message)
     {
@@ -102,6 +109,7 @@ abstract class AbstractLoggerCore
      * Log an error message.
      *
      * @param string message
+     * @param mixed $message
      */
     public function logError($message)
     {

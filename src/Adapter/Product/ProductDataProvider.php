@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Image;
@@ -57,9 +56,9 @@ class ProductDataProvider
      *
      * @param int $id_product
      * @param bool $full
-     * @param int|null $id_lang
-     * @param int|null $id_shop
-     * @param object|null $context
+     * @param null|int $id_lang
+     * @param null|int $id_shop
+     * @param null|object $context
      *
      * @throws \LogicException If the product id is not set
      *
@@ -102,8 +101,8 @@ class ProductDataProvider
      * Get product quantity.
      *
      * @param int $id_product
-     * @param int|null $id_product_attribute
-     * @param bool|null $cache_is_pack
+     * @param null|int $id_product_attribute
+     * @param null|bool $cache_is_pack
      *
      * @return int stock
      */

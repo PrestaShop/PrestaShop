@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -224,7 +223,7 @@ class ThemeManager implements AddonManagerInterface
      *
      * @param string $themeName The technical theme name
      *
-     * @return string|null The last error if found
+     * @return null|string The last error if found
      */
     public function getError($themeName)
     {

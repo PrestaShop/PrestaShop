@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
@@ -170,9 +169,9 @@ class Number implements NumberInterface
      * @param string $numberingSystem
      *                                Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
      *
-     * @return NumberSymbolList
-     *
      * @throws LocalizationException
+     *
+     * @return NumberSymbolList
      */
     public function getSymbolsByNumberingSystem($numberingSystem = null)
     {

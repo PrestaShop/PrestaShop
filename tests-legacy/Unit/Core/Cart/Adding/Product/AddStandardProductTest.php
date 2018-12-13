@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Cart\Adding\CartRule;
 
 use Configuration;
@@ -82,6 +81,11 @@ class AddStandardProductTest extends AbstractCartTest
 
     /**
      * @dataProvider updateQuantitiesProvider
+     *
+     * @param mixed $quantity
+     * @param mixed $operator
+     * @param mixed $expected
+     * @param mixed $quantityExpected
      */
     public function testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce(
         $quantity,
@@ -120,6 +124,9 @@ class AddStandardProductTest extends AbstractCartTest
 
     /**
      * @dataProvider multipleUpdateQuantitiesProvider
+     *
+     * @param mixed $first
+     * @param mixed $second
      */
     public function testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityTwice($first, $second)
     {

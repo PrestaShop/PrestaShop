@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Localization\Locale;
 
 use PrestaShop\Decimal\Operation\Rounding;
@@ -134,10 +133,10 @@ class Repository implements RepositoryInterface
      *                           Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
      *                           eg: fr-FR, en-US
      *
+     * @throws LocalizationException
+     *
      * @return NumberSpecification
      *                             A Number specification
-     *
-     * @throws LocalizationException
      */
     protected function getNumberSpecification($localeCode)
     {
@@ -159,10 +158,10 @@ class Repository implements RepositoryInterface
      *                           Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
      *                           eg: fr-FR, en-US
      *
+     * @throws LocalizationException
+     *
      * @return PriceSpecificationMap
      *                               All installed currencies' Price specifications
-     *
-     * @throws LocalizationException
      */
     protected function getPriceSpecifications($localeCode)
     {
@@ -191,9 +190,9 @@ class Repository implements RepositoryInterface
      * @param CldrLocale $cldrLocale
      *                               This CldrLocale object is a low level data object extracted from CLDR data source
      *
-     * @return NumberSpecification
-     *
      * @throws LocalizationException
+     *
+     * @return NumberSpecification
      */
     protected function buildNumberSpecification($cldrLocale)
     {
@@ -221,9 +220,9 @@ class Repository implements RepositoryInterface
      *                           Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
      *                           eg: fr-FR, en-US
      *
-     * @return PriceSpecification
-     *
      * @throws LocalizationException
+     *
+     * @return PriceSpecification
      */
     protected function buildPriceSpecification(CldrLocale $cldrLocale, Currency $currency, $localeCode)
     {

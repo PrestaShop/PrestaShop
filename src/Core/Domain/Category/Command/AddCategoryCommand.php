@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
@@ -67,9 +66,9 @@ class AddCategoryCommand extends AbstractCategoryCommand
     /**
      * @param int $parentCategoryId
      *
-     * @return self
-     *
      * @throws CategoryConstraintException
+     *
+     * @return self
      */
     public function setParentCategoryId($parentCategoryId)
     {

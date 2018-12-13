@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Upload;
 
 use Exception;
@@ -74,9 +73,12 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
     /**
      * Update the file upload limit if possible.
      *
-     * @return array the errors list during the update operation
+     *
+     * @param array $configuration
      *
      * @throws Exception
+     *
+     * @return array the errors list during the update operation
      */
     private function updateFileUploadConfiguration(array $configuration)
     {
@@ -112,6 +114,7 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
      * Map array key to the related configuration property.
      *
      * @param string the array key
+     * @param mixed $key
      *
      * @return string the related configuration key
      */

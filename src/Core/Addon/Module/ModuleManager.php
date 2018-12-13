@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Exception;
@@ -594,6 +593,7 @@ class ModuleManager implements AddonManagerInterface
      * Actions to perform to restaure default settings.
      *
      * @param string $name The theme name to reset
+     * @param mixed $keep_data
      *
      * @return bool True for success
      */
@@ -681,7 +681,7 @@ class ModuleManager implements AddonManagerInterface
      *
      * @param string $name The technical module name
      *
-     * @return string|null The last error added to the module if found
+     * @return null|string The last error added to the module if found
      */
     public function getError($name)
     {

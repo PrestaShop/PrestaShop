@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
@@ -40,9 +39,9 @@ interface PositionUpdateFactoryInterface
      * @param array $data
      * @param PositionDefinition $positionDefinition
      *
-     * @return PositionUpdate
-     *
      * @throws PositionDataException
+     *
+     * @return PositionUpdate
      */
     public function buildPositionUpdate(array $data, PositionDefinition $positionDefinition);
 }

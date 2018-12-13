@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Import\Sample;
 
 use Symfony\Component\HttpFoundation\File\File;
@@ -38,7 +37,7 @@ interface SampleFileProviderInterface
      *
      * @param string $sampleFileName
      *
-     * @return File|null File if files was found or null otherwise
+     * @return null|File File if files was found or null otherwise
      */
     public function getFile($sampleFileName);
 }

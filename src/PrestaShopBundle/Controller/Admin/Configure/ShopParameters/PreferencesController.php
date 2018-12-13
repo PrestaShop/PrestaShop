@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use Doctrine\ORM\EntityManager;
@@ -45,13 +44,13 @@ class PreferencesController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
-     * @param FormInterface|null $form
+     * @param null|FormInterface $form
      *
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/preferences.html.twig")
      *
-     * @return array
-     *
      * @throws \LogicException
+     *
+     * @return array
      */
     public function indexAction(Request $request, FormInterface $form = null)
     {
@@ -85,9 +84,9 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
      * @throws \LogicException
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function processFormAction(Request $request)
     {

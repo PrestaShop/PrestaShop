@@ -142,6 +142,7 @@ class HookCore extends ObjectModel
      * Return Hooks List.
      *
      * @param bool $position
+     * @param mixed $only_display_hooks
      *
      * @return array Hooks List
      */
@@ -201,6 +202,8 @@ class HookCore extends ObjectModel
 
     /**
      * Return hook ID from name.
+     *
+     * @param mixed $hook_id
      */
     public static function getNameById($hook_id)
     {

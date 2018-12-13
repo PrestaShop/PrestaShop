@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Carrier;
 
 use Carrier;
@@ -69,7 +68,7 @@ class CarrierDataProvider
     /**
      * Get all active carriers in given language, usable for choice form type.
      *
-     * @param int|null $languageId if not provided - will use the default language
+     * @param null|int $languageId if not provided - will use the default language
      *
      * @return array carrier choices
      */

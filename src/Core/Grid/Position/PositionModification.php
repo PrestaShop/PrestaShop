@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
 /**
@@ -48,7 +47,7 @@ final class PositionModification implements PositionModificationInterface
     private $newPosition;
 
     /**
-     * @param string|int $id
+     * @param int|string $id
      * @param int $oldPosition
      * @param int $newPosition
      */

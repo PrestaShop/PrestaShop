@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Order;
@@ -166,6 +165,8 @@ class PreferencesType extends TranslatorAwareType
      * Enabled only if the form is accessed using HTTPS protocol.
      *
      * @var bool
+     *
+     * @param mixed $isSecure
      */
     public function setIsSecure($isSecure)
     {

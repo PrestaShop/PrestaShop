@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
@@ -109,7 +108,7 @@ final class FormBuilder implements FormBuilderInterface
     /**
      * @param string $formType
      * @param array $data
-     * @param int|null $id
+     * @param null|int $id
      * @param array $options
      *
      * @return FormInterface

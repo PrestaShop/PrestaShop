@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Address;
@@ -37,7 +36,7 @@ class AddressFactory
      * Initialize an address corresponding to the specified id address or if empty to the
      * default shop configuration.
      *
-     * @param int|null $id_address
+     * @param null|int $id_address
      * @param bool $with_geoloc
      *
      * @return Address

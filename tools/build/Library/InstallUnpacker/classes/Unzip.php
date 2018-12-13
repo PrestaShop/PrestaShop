@@ -35,9 +35,9 @@ class Unzip
      * @param string $zipFilepath
      * @param string $pathWhereToExtract
      *
-     * @return bool
-     *
      * @throws PrestashopCouldNotUnzipLatestVersionException
+     *
+     * @return bool
      */
     public function unzipArchive($zipFilepath, $pathWhereToExtract)
     {
@@ -57,9 +57,9 @@ class Unzip
      * @param string $fromFile
      * @param string $toDir
      *
-     * @return bool
-     *
      * @throws PrestashopCouldNotUnzipLatestVersionException
+     *
+     * @return bool
      */
     private function extract($fromFile, $toDir)
     {
@@ -83,9 +83,9 @@ class Unzip
      * @param string $fromFile
      * @param string $toDir
      *
-     * @return bool
-     *
      * @throws PrestashopCouldNotUnzipLatestVersionException
+     *
+     * @return bool
      */
     private function extractWithZipArchive($fromFile, $toDir)
     {
@@ -107,9 +107,9 @@ class Unzip
     /**
      * @param string $zipFile
      *
-     * @return ZipArchive
-     *
      * @throws PrestashopCouldNotUnzipLatestVersionException
+     *
+     * @return ZipArchive
      */
     private function openWithZipArchive($zipFile)
     {

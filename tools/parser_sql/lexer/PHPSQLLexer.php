@@ -1,6 +1,6 @@
 <?php
 /**
- * PHPSQLLexer.php
+ * PHPSQLLexer.php.
  *
  * This file contains the lexer, which splits and recombines parts of the 
  * SQL statement just before parsing.
@@ -36,10 +36,9 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: PHPSQLLexer.php 842 2013-12-30 08:57:53Z phosco@gmx.de $
- * 
  */
-
 require_once dirname(__FILE__) . '/LexerSplitter.php';
 require_once dirname(__FILE__) . '/../exceptions/InvalidParameterException.php';
 
@@ -49,7 +48,6 @@ require_once dirname(__FILE__) . '/../exceptions/InvalidParameterException.php';
  * 
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *
  */
 class PHPSQLLexer {
 
@@ -257,11 +255,12 @@ class PHPSQLLexer {
 
     /**
      * This function concats some tokens to a column reference.
-     * There are two different cases:
+     * There are two different cases:.
      * 
      * 1. If the current token ends with a dot, we will add the next token
      * 2. If the next token starts with a dot, we will add it to the previous token 
      *
+     * @param mixed $tokens
      */
     protected function concatColReferences($tokens) {
 

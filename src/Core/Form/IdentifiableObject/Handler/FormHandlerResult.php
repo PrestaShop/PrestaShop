@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
 /**
@@ -47,7 +46,7 @@ class FormHandlerResult implements FormHandlerResultInterface
     private $identifiableObjectId;
 
     /**
-     * @param int|null $identifiableObjectId ID of identifiable object or null if it does not exist
+     * @param null|int $identifiableObjectId ID of identifiable object or null if it does not exist
      * @param bool $isSubmitted
      * @param bool $isValid
      */
@@ -75,7 +74,7 @@ class FormHandlerResult implements FormHandlerResultInterface
     }
 
     /**
-     * Creates form handler result when form which was provided form handling was not submitted
+     * Creates form handler result when form which was provided form handling was not submitted.
      *
      * @return FormHandlerResult
      */
@@ -89,7 +88,7 @@ class FormHandlerResult implements FormHandlerResultInterface
     }
 
     /**
-     * Creates result for submitted but not valid form
+     * Creates result for submitted but not valid form.
      *
      * @return FormHandlerResult
      */

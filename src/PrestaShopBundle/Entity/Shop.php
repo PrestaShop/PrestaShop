@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -31,7 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Shop.
  *
- * @ORM\Table()
+ * @ORM\Table
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ShopRepository")
  */
 class Shop

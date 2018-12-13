@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Api;
 
 use Doctrine\Common\Util\Inflector;
@@ -509,6 +508,7 @@ abstract class QueryParamsCollection
     /**
      * @param array $filters
      * @param dateAdd
+     * @param mixed $dateAdd
      *
      * @return array
      */
@@ -555,6 +555,7 @@ abstract class QueryParamsCollection
     /**
      * @param array $filters
      * @param active
+     * @param mixed $active
      *
      * @return array
      */

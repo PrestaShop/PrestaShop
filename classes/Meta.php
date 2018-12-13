@@ -211,10 +211,10 @@ class MetaCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Meta has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the Meta has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -228,9 +228,9 @@ class MetaCore extends ObjectModel
     /**
      * Deletes current Meta from the database.
      *
-     * @return bool `true` if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {
@@ -290,6 +290,10 @@ class MetaCore extends ObjectModel
      * Get meta tags.
      *
      * @since 1.5.0
+     *
+     * @param mixed $idLang
+     * @param mixed $pageName
+     * @param mixed $title
      */
     public static function getMetaTags($idLang, $pageName, $title = '')
     {
@@ -365,6 +369,7 @@ class MetaCore extends ObjectModel
      * @param int $idCategory
      * @param int $idLang
      * @param string $pageName
+     * @param mixed $title
      *
      * @return array
      *
@@ -412,7 +417,6 @@ class MetaCore extends ObjectModel
     /**
      * Get manufacturer meta tags.
      *
-     *
      * @param int $idManufacturer
      * @param int $idLang
      * @param string $pageName
@@ -441,7 +445,6 @@ class MetaCore extends ObjectModel
 
     /**
      * Get supplier meta tags.
-     *
      *
      * @param int $idSupplier
      * @param int $idLang
@@ -516,6 +519,10 @@ class MetaCore extends ObjectModel
 
     /**
      * @since 1.5.0
+     *
+     * @param mixed $metaTags
+     * @param mixed $defaultValue
+     * @param null|Context $context
      */
     public static function completeMetaTags($metaTags, $defaultValue, Context $context = null)
     {

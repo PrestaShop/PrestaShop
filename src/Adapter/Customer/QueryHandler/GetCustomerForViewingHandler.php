@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Carrier;
@@ -203,7 +202,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     /**
      * @param int $customerId
      *
-     * @return int|null customer rank or null if customer is not ranked
+     * @return null|int customer rank or null if customer is not ranked
      */
     private function getCustomerRankBySales($customerId)
     {

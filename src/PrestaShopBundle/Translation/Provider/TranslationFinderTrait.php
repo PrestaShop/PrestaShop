@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Finder\Finder;
@@ -37,9 +36,9 @@ trait TranslationFinderTrait
      * @param $locale
      * @param null $pattern
      *
-     * @return MessageCatalogue
-     *
      * @throws \Exception
+     *
+     * @return MessageCatalogue
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {

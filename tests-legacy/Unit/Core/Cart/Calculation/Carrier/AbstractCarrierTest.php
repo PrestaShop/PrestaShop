@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Cart\Calculation\Carrier;
 
 use Address;
@@ -346,6 +345,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 
     /**
      * @param int $id fixture id
+     * @param mixed $isoCode
      *
      * @return Country|null
      */

@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Localization\RTL;
 
 use PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException;
@@ -195,9 +194,9 @@ class StylesheetGenerator
      * @param string $content Base content
      * @param string $baseFile Path to the processed file
      *
-     * @return string Content with RTL fix applied
-     *
      * @throws GenerationException If unable to read from .rtlfix file
+     *
+     * @return string Content with RTL fix applied
      */
     private function appendRtlFixIfNecessary($content, $baseFile)
     {

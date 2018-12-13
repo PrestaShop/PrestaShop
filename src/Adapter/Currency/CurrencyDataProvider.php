@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -53,6 +52,10 @@ class CurrencyDataProvider
     /**
      * Return available currencies.
      *
+     * @param mixed $object
+     * @param mixed $active
+     * @param mixed $group_by
+     *
      * @return array Currencies
      */
     public function getCurrencies($object = false, $active = true, $group_by = false)
@@ -65,7 +68,7 @@ class CurrencyDataProvider
      *
      * @param string $isoCode
      *                        An ISO 4217 currency code
-     * @param int|null $idLang
+     * @param null|int $idLang
      *                         Set this parameter if you want the currency in a specific language.
      *                         If null, default language will be used
      *
@@ -92,7 +95,7 @@ class CurrencyDataProvider
      *
      * @param string $isoCode
      *                        An ISO 4217 currency code
-     * @param int|null $idLang
+     * @param null|int $idLang
      *                         Set this parameter if you want the currency in a specific language.
      *                         If null, default language will be used
      *

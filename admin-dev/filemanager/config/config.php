@@ -120,9 +120,9 @@ $mime_video = array('video/mpeg', 'video/mp4', 'video/x-msvideo', 'audio/x-ms-wm
 
 $mime = array_merge($mime_img, $mime_file, $mime_video);
 
-/******************
+/*
  * AVIARY config
-*******************/
+*/
 $aviary_active=false;
 $aviary_key="dvh8qudbp6yx2bnp";
 $aviary_secret="m6xaym5q42rpw433";
@@ -143,9 +143,9 @@ $hidden_folders = array();
 // set the names of any files you want hidden. Remember these names will be hidden in all folders (eg "this_document.pdf", "that_image.jpg" )
 $hidden_files = array('config.php');
 
-/*******************
+/*
  * JAVA upload
- *******************/
+ */
 $java_upload=false;
 $JAVAMaxSizeUpload=200; //Gb
 

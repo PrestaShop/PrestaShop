@@ -1,6 +1,6 @@
 <?php
 /**
- * RecordProcessor.php
+ * RecordProcessor.php.
  *
  * This file implements the processor for records.
  *
@@ -29,16 +29,13 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
 
 /**
- * 
  * This class processes records.
  * 
  * @author arothe
- * 
  */
 class RecordProcessor extends AbstractProcessor {
 

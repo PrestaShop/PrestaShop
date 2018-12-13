@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Module\PrestaTrust;
 
 use Exception;
@@ -164,7 +163,7 @@ class PrestaTrustChecker
      *
      * @param string $path Module root path
      *
-     * @return string|null smart contract address, if found
+     * @return null|string smart contract address, if found
      */
     public function findSmartContrat($path)
     {

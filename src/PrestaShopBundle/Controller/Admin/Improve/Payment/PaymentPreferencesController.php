@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -43,7 +42,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['read'], request.get('_legacy_controller'))",
-     *      message="Access denied."
+     *     message="Access denied."
      * )
      *
      * @param Request $request

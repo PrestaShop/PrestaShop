@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
 
 use Exception;
@@ -157,9 +156,9 @@ class ModuleTabRegister
      * @param string $moduleName
      * @param ParameterBag $data
      *
-     * @return bool (= true) when no issue detected
-     *
      * @throws Exception in case of invalid data
+     *
+     * @return bool (= true) when no issue detected
      */
     protected function checkIsValid($moduleName, ParameterBag $data)
     {

@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Service;
 
 use Exception;
@@ -54,9 +53,9 @@ class TranslationService
     /**
      * @param $locale
      *
-     * @return mixed
-     *
      * @throws Exception
+     *
+     * @return mixed
      */
     public function findLanguageByLocale($locale)
     {
@@ -72,9 +71,9 @@ class TranslationService
     }
 
     /**
-     * @return mixed
-     *
      * @throws Exception
+     *
+     * @return mixed
      */
     private function getLangToLocalesMapping()
     {

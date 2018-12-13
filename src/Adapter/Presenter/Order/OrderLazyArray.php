@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
@@ -73,6 +72,8 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * OrderArray constructor.
+     *
+     * @param Order $order
      *
      * @throws AnnotationException
      * @throws ReflectionException
@@ -144,9 +145,9 @@ class OrderLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return mixed
-     *
      * @throws PrestaShopException
+     *
+     * @return mixed
      */
     public function getShipping()
     {

@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Hook;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -139,9 +138,9 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      * @param $eventName string The hook name
      * @param array $parameters Hook parameters
      *
-     * @return Event the event that has been passed to each listener
-     *
      * @throws \Exception
+     *
+     * @return Event the event that has been passed to each listener
      */
     public function dispatchForParameters($eventName, array $parameters = [])
     {
@@ -157,9 +156,9 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      * @param string $eventName the hook name
      * @param array $parameters Hook parameters
      *
-     * @return Event The event that has been passed to each listener. Contains the responses.
-     *
      * @throws \Exception
+     *
+     * @return Event The event that has been passed to each listener. Contains the responses.
      */
     public function renderForParameters($eventName, array $parameters = [])
     {

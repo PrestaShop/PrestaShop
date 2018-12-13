@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\Decimal\Number;
@@ -74,6 +73,10 @@ class Tools
      * Polyfill for bcadd if BC Math extension is not installed.
      *
      * @deprecated since 1.7.2.2 - Use PrestaShop\Decimal\Number instead
+     *
+     * @param mixed $left_operand
+     * @param mixed $right_operand
+     * @param null|mixed $scale
      */
     public function bcadd($left_operand, $right_operand, $scale = null)
     {
@@ -89,7 +92,7 @@ class Tools
 
     /**
      * @param string $html
-     * @param string|null $uri_unescape
+     * @param null|string $uri_unescape
      * @param bool $allow_style
      *
      * @return string
@@ -171,6 +174,7 @@ class Tools
      *
      * @param float $value
      * @param int $precision
+     * @param null|mixed $round_mode
      *
      * @return float
      */

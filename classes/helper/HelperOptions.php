@@ -253,6 +253,10 @@ class HelperOptionsCore extends Helper
 
     /**
      * Type = image.
+     *
+     * @param mixed $key
+     * @param mixed $field
+     * @param mixed $value
      */
     public function displayOptionTypeImage($key, $field, $value)
     {
@@ -280,6 +284,10 @@ class HelperOptionsCore extends Helper
 
     /**
      * Type = price.
+     *
+     * @param mixed $key
+     * @param mixed $field
+     * @param mixed $value
      */
     public function displayOptionTypePrice($key, $field, $value)
     {
@@ -290,6 +298,10 @@ class HelperOptionsCore extends Helper
 
     /**
      * Type = disabled.
+     *
+     * @param mixed $key
+     * @param mixed $field
+     * @param mixed $value
      */
     public function displayOptionTypeDisabled($key, $field, $value)
     {

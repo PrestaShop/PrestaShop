@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Filter;
 
 /**
@@ -42,9 +41,9 @@ class CollectionFilter implements FilterInterface
      *
      * @param FilterInterface[] $filters
      *
-     * @return $this
-     *
      * @throws FilterException
+     *
+     * @return $this
      */
     public function queue(array $filters)
     {
@@ -76,9 +75,9 @@ class CollectionFilter implements FilterInterface
      *
      * @param array $subject Collection to filter
      *
-     * @return array
-     *
      * @throws FilterException
+     *
+     * @return array
      */
     public function filter($subject)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * IndexColumnBuilder.php
+ * IndexColumnBuilder.php.
  *
  * Builds the column entries of the column-list parts of CREATE TABLE.
  *
@@ -35,10 +35,9 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: IndexColumnBuilder.php 917 2014-01-08 11:47:42Z phosco@gmx.de $
- * 
  */
-
 require_once dirname(__FILE__) . '/../exceptions/UnsupportedFeatureException.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 /**
@@ -48,7 +47,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class IndexColumnBuilder {
 

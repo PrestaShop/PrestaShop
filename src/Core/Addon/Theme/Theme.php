@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
@@ -120,6 +119,8 @@ class Theme implements AddonInterface
     /**
      * Execute up files. You can update configuration, update sql schema.
      * No file modification.
+     *
+     * @param mixed $version
      *
      * @return bool true for success
      */

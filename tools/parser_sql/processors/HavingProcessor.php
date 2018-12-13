@@ -1,6 +1,6 @@
 <?php
 /**
- * HavingProcessor.php
+ * HavingProcessor.php.
  *
  * This file implements the processor for the HAVING statements.
  *
@@ -29,15 +29,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
 
 /**
- * 
  * This class processes the HAVING statements.
  * 
  * @author arothe
- * 
  */
 class HavingProcessor extends ExpressionListProcessor {
 

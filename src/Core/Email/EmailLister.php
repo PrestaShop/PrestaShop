@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Email;
 
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
@@ -77,6 +76,8 @@ class EmailLister
 
     /**
      * Give in input getAvailableMails(), will output a human readable and proper string name.
+     *
+     * @param mixed $mail_name
      *
      * @return string
      */

@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Routing\Converter;
 
 use PrestaShopBundle\Routing\Converter\Exception\ArgumentException;
@@ -64,10 +63,10 @@ final class LegacyUrlConverter
     /**
      * @param array $parameters
      *
-     * @return string
-     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
+     *
+     * @return string
      */
     public function convertByParameters(array $parameters)
     {
@@ -85,10 +84,10 @@ final class LegacyUrlConverter
     /**
      * @param string $url
      *
-     * @return string
-     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
+     *
+     * @return string
      */
     public function convertByUrl($url)
     {
@@ -109,10 +108,10 @@ final class LegacyUrlConverter
      *
      * @param Request $request
      *
-     * @return string
-     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
+     *
+     * @return string
      */
     public function convertByRequest(Request $request)
     {
@@ -149,9 +148,9 @@ final class LegacyUrlConverter
     /**
      * @param array $parameters
      *
-     * @return LegacyRoute
-     *
      * @throws RouteNotFoundException
+     *
+     * @return LegacyRoute
      */
     private function findLegacyRouteNameByParameters(array $parameters)
     {

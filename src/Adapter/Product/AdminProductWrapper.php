@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Attachment;
@@ -76,6 +75,7 @@ class AdminProductWrapper
      * Constructor : Inject Symfony\Component\Translation Translator.
      *
      * @param object $translator
+     * @param mixed $legacyContext
      */
     public function __construct($translator, $legacyContext)
     {
@@ -245,6 +245,7 @@ class AdminProductWrapper
      * @param int $id_product
      * @param array $specificPriceValues the posted values
      * @param int (optional) $id_specific_price if this is an update of an existing specific price, null else
+     * @param null|mixed $idSpecificPrice
      *
      * @return AdminProductsController instance
      */
@@ -341,6 +342,21 @@ class AdminProductWrapper
 
     /**
      * Validate a specific price.
+     *
+     * @param mixed $id_product
+     * @param mixed $id_shop
+     * @param mixed $id_currency
+     * @param mixed $id_country
+     * @param mixed $id_group
+     * @param mixed $id_customer
+     * @param mixed $price
+     * @param mixed $from_quantity
+     * @param mixed $reduction
+     * @param mixed $reduction_type
+     * @param mixed $from
+     * @param mixed $to
+     * @param mixed $id_combination
+     * @param mixed $isThisAnUpdate
      */
     private function validateSpecificPrice(
         $id_product,
@@ -504,9 +520,9 @@ class AdminProductWrapper
     /**
      * @param int $id
      *
-     * @return SpecificPrice
-     *
      * @throws PrestaShopObjectNotFoundException
+     *
+     * @return SpecificPrice
      */
     public function getSpecificPriceDataById($id)
     {
@@ -788,7 +804,7 @@ class AdminProductWrapper
      * @param array $data
      * @param array $locales
      *
-     * @return object|null Attachement
+     * @return null|object Attachement
      */
     public function processAddAttachment($product, $data, $locales)
     {

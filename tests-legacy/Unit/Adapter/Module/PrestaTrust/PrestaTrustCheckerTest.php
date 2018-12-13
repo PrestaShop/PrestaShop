@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -40,7 +40,6 @@ use LegacyTests\TestCase\UnitTestCase;
 class PrestaTrustCheckerTest extends UnitTestCase
 {
     /**
-     *
      * @var PrestaTrustChecker
      */
     protected $prestatrustChecker;

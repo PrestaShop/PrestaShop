@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function drop_image_type_non_unique_index()
 {
     $index = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'image_type` WHERE column_name="name" AND non_unique=1');

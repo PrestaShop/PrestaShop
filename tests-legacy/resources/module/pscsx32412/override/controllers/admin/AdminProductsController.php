@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminProductsController extends AdminProductsControllerCore
@@ -368,7 +367,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
 
     /**
-     * Attach an existing attachment to the product
+     * Attach an existing attachment to the product.
      *
      * @return void
      */
@@ -745,7 +744,7 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-     * This function is never called at the moment (specific prices cannot be edited)
+     * This function is never called at the moment (specific prices cannot be edited).
      */
     public function processPricesModification()
     {
@@ -945,7 +944,7 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-     * Overrides parent for custom redirect link
+     * Overrides parent for custom redirect link.
      */
     public function processPosition()
     {
@@ -1101,7 +1100,7 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-     * postProcess handle every checks before saving products information
+     * postProcess handle every checks before saving products information.
      *
      * @return void
      */
@@ -1435,9 +1434,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-     * Add or update a product image
+     * Add or update a product image.
      *
      * @param object $product Product object to add image
+     * @param mixed $method
      */
     public function addProductImage($product, $method = 'auto')
     {
@@ -1471,10 +1471,11 @@ class AdminProductsController extends AdminProductsControllerCore
         return ((isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false);
     }
     /**
-     * Copy a product image
+     * Copy a product image.
      *
      * @param int $id_product Product Id for product image filename
      * @param int $id_image Image Id for product image filename
+     * @param mixed $method
      */
     public function copyImage($id_product, $id_image, $method = 'auto')
     {
@@ -1772,7 +1773,7 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-     * Check that a saved product is valid
+     * Check that a saved product is valid.
      */
     public function checkProduct()
     {
@@ -1922,10 +1923,11 @@ class AdminProductsController extends AdminProductsControllerCore
 
     /**
      * Check if a field is edited (if the checkbox is checked)
-     * This method will do something only for multishop with a context all / group
+     * This method will do something only for multishop with a context all / group.
      *
      * @param string $field Name of field
      * @param int $id_lang
+     *
      * @return bool
      */
     protected function isProductFieldUpdated($field, $id_lang = null)
@@ -1962,9 +1964,11 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-     * Update product download
+     * Update product download.
      *
      * @param object $product Product
+     * @param mixed $edit
+     *
      * @return bool
      */
     public function updateDownloadProduct($product, $edit = 0)
@@ -2039,7 +2043,7 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-     * Update product accessories
+     * Update product accessories.
      *
      * @param object $product Product
      */
@@ -2056,10 +2060,12 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-     * Update product tags
+     * Update product tags.
      *
      * @param array Languages
      * @param object $product Product
+     * @param mixed $languages
+     *
      * @return bool Update result
      */
     public function updateTags($languages, $product)
@@ -2255,12 +2261,15 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-     * Build a categories tree
+     * Build a categories tree.
      *
      * @param array $indexedCategories Array with categories where product is indexed (in order to check checkbox)
      * @param array $categories Categories to list
      * @param array $current Current category
      * @param int $id_category Current category id
+     * @param mixed $id_obj
+     * @param null|mixed $id_category_default
+     * @param mixed $has_suite
      */
     public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = array())
     {
@@ -2417,7 +2426,7 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-     * renderForm contains all necessary initialization needed for all tabs
+     * renderForm contains all necessary initialization needed for all tabs.
      *
      * @return string|void
      */
@@ -2570,7 +2579,7 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-    * Post treatment for suppliers
+    * Post treatment for suppliers.
     */
     public function processSuppliers()
     {
@@ -2728,7 +2737,7 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-    * Post treatment for warehouses
+    * Post treatment for warehouses.
     */
     public function processWarehouses()
     {
@@ -3010,9 +3019,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-     * Get an array of pack items for display from the product object if specified, else from POST/GET values
+     * Get an array of pack items for display from the product object if specified, else from POST/GET values.
      *
      * @param Product $product
+     *
      * @return array of pack items
      */
     public function getPackItems($product = null)
@@ -4546,7 +4556,9 @@ class AdminProductsController extends AdminProductsControllerCore
 
 
     /**
-     *  AdminProducts display hook
+     *  AdminProducts display hook.
+     *
+     * @param mixed $obj
      */
     public function initFormModules($obj)
     {
@@ -4556,9 +4568,10 @@ class AdminProductsController extends AdminProductsControllerCore
 
     /**
      * delete all items in pack, then check if type_product value is 2.
-     * if yes, add the pack items from input "inputPackItems"
+     * if yes, add the pack items from input "inputPackItems".
      *
      * @param Product $product
+     *
      * @return bool
      */
     public function updatePackItems($product)

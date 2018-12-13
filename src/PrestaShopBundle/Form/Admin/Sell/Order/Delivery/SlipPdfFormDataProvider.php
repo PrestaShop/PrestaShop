@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
 
 use PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipPdfConfiguration;

@@ -67,6 +67,7 @@ class TranslateCore
      * @param string $class
      * @param bool $addslashes
      * @param bool $htmlentities
+     * @param null|mixed $sprintf
      *
      * @return string
      */
@@ -155,7 +156,7 @@ class TranslateCore
     /**
      * Get a translation for a module.
      *
-     * @param string|Module $module
+     * @param Module|string $module
      * @param string $originalString
      * @param string $source
      * @param null $sprintf
@@ -287,6 +288,7 @@ class TranslateCore
      * Get a translation for a PDF.
      *
      * @param string $string
+     * @param null|mixed $sprintf
      *
      * @return string
      */
@@ -347,6 +349,9 @@ class TranslateCore
 
     /**
      * Perform operations on translations after everything is escaped and before displaying it.
+     *
+     * @param mixed $string
+     * @param mixed $params
      */
     public static function postProcessTranslation($string, $params)
     {
@@ -375,6 +380,9 @@ class TranslateCore
      * Compatibility method that just calls postProcessTranslation.
      *
      * @deprecated renamed this to postProcessTranslation, since it is not only used in relation to smarty
+     *
+     * @param mixed $string
+     * @param mixed $params
      */
     public static function smartyPostProcessTranslation($string, $params)
     {
@@ -385,6 +393,9 @@ class TranslateCore
      * Helper function to make calls to postProcessTranslation more readable.
      *
      * @deprecated 1.7.1.0
+     *
+     * @param mixed $string
+     * @param mixed $tags
      */
     public static function ppTags($string, $tags)
     {

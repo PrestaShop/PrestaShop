@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module;
@@ -71,6 +70,8 @@ class ModuleTabUnregister
      * Uninstall all module-defined tabs.
      *
      * This is done automatically as part of the module uninstallation.
+     *
+     * @param Module $module
      *
      * @return bool returns true if the module tabs were successfully uninstalled, false if any of them failed to do so
      */

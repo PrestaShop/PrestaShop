@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Localization\Specification;
 
 use PHPUnit\Framework\TestCase;
@@ -72,7 +71,7 @@ class NumberTest extends TestCase
     /**
      * Given a valid Number specification
      * When adding several symbols lists
-     * Then calling getAllSymbols() should return an array of available symbols lists, indexed by numbering system
+     * Then calling getAllSymbols() should return an array of available symbols lists, indexed by numbering system.
      *
      * (also tests addSymbols() at the same time)
      */
@@ -90,23 +89,22 @@ class NumberTest extends TestCase
     /**
      * Given a valid Number specification
      * When asking it a symbols list for a given numbering system
-     * Then the good list should be retrieved
+     * Then the good list should be retrieved.
      */
     public function testGetSymbolsByNumberingSystem()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->assertSame(
             $this->latinSymbolList,
             $this->latinNumberSpec->getSymbolsByNumberingSystem('latin')
         );
-        /** @noinspection end */
+        /* @noinspection end */
     }
 
     /**
      * Given a valid Number specification
      * When asking it a symbols list for a given INVALID numbering system
-     * Then an exception souhd be raised
-     *
+     * Then an exception souhd be raised.
      */
     public function testGetSymbolsByNumberingSystemWithInvalidParameter()
     {

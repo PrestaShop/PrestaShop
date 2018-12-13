@@ -1,6 +1,6 @@
 <?php
 /**
-* 2007-2016 PrestaShop
+* 2007-2016 PrestaShop.
 *
 * NOTICE OF LICENSE
 *
@@ -23,7 +23,6 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -301,7 +300,11 @@ class CronJobs extends Module
     }
 
     /**
-     * $taks should be a valid URL
+     * $taks should be a valid URL.
+     *
+     * @param mixed $task
+     * @param mixed $description
+     * @param mixed $execution
      */
     public static function addOneShotTask($task, $description, $execution = array())
     {

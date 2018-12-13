@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core;
 
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
@@ -33,9 +32,9 @@ class ContainerBuilder
     /**
      * Construct PrestaShop Core Service container.
      *
-     * @return \PrestaShop\PrestaShop\Core\Foundation\IoC\Container
-     *
      * @throws \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
+     *
+     * @return \PrestaShop\PrestaShop\Core\Foundation\IoC\Container
      */
     public function build()
     {

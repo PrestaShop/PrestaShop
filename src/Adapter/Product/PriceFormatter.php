@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Tools;
@@ -35,7 +34,7 @@ class PriceFormatter
 {
     /**
      * @param float $price
-     * @param string|null $currency
+     * @param null|string $currency
      *
      * @return float
      */
@@ -46,7 +45,7 @@ class PriceFormatter
 
     /**
      * @param float $price
-     * @param string|null $currency
+     * @param null|string $currency
      *
      * @return string
      */

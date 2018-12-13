@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 
 use Category;
@@ -93,7 +92,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     /**
      * @param CategoryId $categoryId
      *
-     * @return array|null cover image data or null if category does not have cover
+     * @return null|array cover image data or null if category does not have cover
      */
     private function getCoverImage(CategoryId $categoryId)
     {

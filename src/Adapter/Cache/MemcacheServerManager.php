@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Cache;
 
 use Memcache;
@@ -79,6 +78,7 @@ class MemcacheServerManager
      *
      * @param string $serverIp
      * @param string @serverPort
+     * @param mixed $serverPort
      *
      * @return bool
      */
@@ -99,6 +99,7 @@ class MemcacheServerManager
      * Delete a memcache server (a deletion returns the number of rows deleted).
      *
      * @param int $serverId_server id (in database)
+     * @param mixed $serverId
      *
      * @return bool
      */

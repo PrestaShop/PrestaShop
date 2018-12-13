@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
@@ -57,9 +56,9 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
      * @param ProductSearchQuery $query
      * @param string $type
      *
-     * @return array|false|int
-     *
      * @throws \PrestaShopDatabaseException
+     *
+     * @return array|false|int
      */
     private function getProductsOrCount(
         ProductSearchContext $context,
@@ -94,9 +93,9 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
      * @param ProductSearchContext $context
      * @param ProductSearchQuery $query
      *
-     * @return ProductSearchResult
-     *
      * @throws \PrestaShopDatabaseException
+     *
+     * @return ProductSearchResult
      */
     public function runQuery(
         ProductSearchContext $context,

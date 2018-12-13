@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\EditableSqlRequest;
@@ -57,9 +56,9 @@ final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHan
     /**
      * @param SqlRequestId $requestSqlId
      *
-     * @return RequestSql
-     *
      * @throws SqlRequestNotFoundException
+     *
+     * @return RequestSql
      */
     private function loadById(SqlRequestId $requestSqlId)
     {
@@ -87,9 +86,9 @@ final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHan
     /**
      * @param RequestSql $entity
      *
-     * @return EditableSqlRequest
-     *
      * @throws SqlRequestException
+     *
+     * @return EditableSqlRequest
      */
     private function buildEditableSqlRequest(RequestSql $entity)
     {

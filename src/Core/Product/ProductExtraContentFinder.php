@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Product;
 
 use PrestaShopBundle\Service\Hook\HookFinder;
@@ -41,9 +40,9 @@ class ProductExtraContentFinder extends HookFinder
      * Execute hook to get all addionnal product content, and check if valid
      * (not empty and only instances of class ProductExtraContent).
      *
-     * @return array
-     *
      * @throws \Exception
+     *
+     * @return array
      */
     public function find()
     {

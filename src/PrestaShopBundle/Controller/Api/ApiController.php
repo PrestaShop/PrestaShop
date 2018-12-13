@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
@@ -105,7 +104,7 @@ abstract class ApiController
      * Add additional info to JSON return.
      *
      * @param Request $request
-     * @param QueryParamsCollection|null $queryParams
+     * @param null|QueryParamsCollection $queryParams
      * @param array $headers
      *
      * @return array
@@ -169,7 +168,7 @@ abstract class ApiController
 
     /**
      * @param Request $request
-     * @param QueryParamsCollection|null $queryParams
+     * @param null|QueryParamsCollection $queryParams
      * @param null $data
      * @param int $status
      * @param array $headers

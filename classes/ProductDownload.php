@@ -174,6 +174,7 @@ class ProductDownloadCore extends ObjectModel
      * Return the id_product_download from an id_product.
      *
      * @param int $idProduct Product the id
+     * @param mixed $active
      *
      * @return int Product the id for this virtual product
      */

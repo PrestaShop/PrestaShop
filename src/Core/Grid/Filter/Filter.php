@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 /**
@@ -47,7 +46,7 @@ final class Filter implements FilterInterface
     private $name;
 
     /**
-     * @var string|null Column ID if filter is associated with columns
+     * @var null|string Column ID if filter is associated with columns
      */
     private $column;
 

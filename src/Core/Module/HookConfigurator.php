@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Module;
 
 class HookConfigurator
@@ -52,6 +51,8 @@ class HookConfigurator
      *         ]
      *     ]
      * ].
+     *
+     * @param array $hooks
      */
     public function getThemeHooksConfiguration(array $hooks)
     {

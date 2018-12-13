@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminProductsController extends AdminProductsControllerCore
@@ -44,6 +43,7 @@ class AdminProductsController extends AdminProductsControllerCore
     /**
      * The order in the array decides the order in the list of tab. If an element's value is a number, it will be preloaded.
      * The tabs are preloaded from the smallest to the highest number.
+     *
      * @var array Product tabs.
      */
     protected $available_tabs = array();

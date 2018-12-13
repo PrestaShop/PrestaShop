@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Grid\Position;
 
 use PHPUnit\Framework\TestCase;
@@ -122,9 +121,9 @@ class PositionUpdateFactoryTest extends TestCase
 
     /**
      * @param array $data
-     * @param string|null $expectedErrorKey
-     * @param array|null $expectedErrorParameters
-     * @param PositionDefinition|null $definition
+     * @param null|string $expectedErrorKey
+     * @param null|array $expectedErrorParameters
+     * @param null|PositionDefinition $definition
      */
     private function checkDataValidation(array $data, $expectedErrorKey = null, $expectedErrorParameters = null, $definition = null)
     {

@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
 use PrestaShop\PrestaShop\Adapter\EntityMetaDataRetriever;
@@ -86,9 +85,9 @@ class EntityManager
      *
      * @param $className
      *
-     * @return mixed
-     *
      * @throws \PrestaShop\PrestaShop\Adapter\CoreException
+     *
+     * @return mixed
      */
     public function getEntityMetaData($className)
     {

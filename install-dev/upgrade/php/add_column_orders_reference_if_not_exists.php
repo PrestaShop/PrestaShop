@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function add_column_orders_reference_if_not_exists()
 {
     $column = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'orders` LIKE "reference"');

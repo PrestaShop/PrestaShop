@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
 /**
@@ -50,7 +49,7 @@ final class PositionUpdate implements PositionUpdateInterface
     /**
      * @param PositionModificationCollectionInterface $positionModificationCollection
      * @param PositionDefinitionInterface $positionDefinition
-     * @param string|null $parentId
+     * @param null|string $parentId
      */
     public function __construct(
         PositionModificationCollectionInterface $positionModificationCollection,

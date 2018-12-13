@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
 /**
@@ -66,7 +65,7 @@ interface ProductInterface
     /**
      * Combines new filter values with old ones (persisted), then persists the combination and returns it.
      *
-     * @param string[]|null $paramsIn New filter params values to take into account. If not given, the method will simply return persisted values.
+     * @param null|string[] $paramsIn New filter params values to take into account. If not given, the method will simply return persisted values.
      * @param bool $avoidPersistence true to avoid persisting these preferences (for an export for example)
      *
      * @return string[] The new filter params values

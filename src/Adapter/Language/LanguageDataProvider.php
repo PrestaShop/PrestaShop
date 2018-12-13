@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Language;
 
 use Exception;
@@ -65,9 +64,9 @@ class LanguageDataProvider
      *
      * @param string $locale
      *
-     * @return array
-     *
      * @throws Exception
+     *
+     * @return array
      */
     public function getLanguageDetails($locale)
     {

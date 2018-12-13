@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Cache;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -162,6 +161,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
      * Update Cache version of assets if needed.
      *
      * @param array the configuration
+     * @param array $configuration
      */
     private function updateCachesVersionsIfNeeded(array $configuration)
     {

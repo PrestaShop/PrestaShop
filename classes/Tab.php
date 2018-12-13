@@ -215,6 +215,9 @@ class TabCore extends ObjectModel
     /**
      * Get tab.
      *
+     * @param mixed $idLang
+     * @param mixed $idTab
+     *
      * @return array tab
      */
     public static function getTab($idLang, $idTab)
@@ -329,6 +332,8 @@ class TabCore extends ObjectModel
 
     /**
      * @deprecated 1.7.0, to be removed in 1.7.1. Upgrade module to 1.7.
+     *
+     * @param mixed $className
      */
     private static function getClassName($className)
     {
@@ -649,6 +654,8 @@ class TabCore extends ObjectModel
 
     /**
      * @since 1.5.0
+     *
+     * @param mixed $idTab
      */
     public static function getClassNameById($idTab)
     {

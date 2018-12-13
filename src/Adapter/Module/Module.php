@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
@@ -171,9 +170,9 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @return legacyInstance|void
-     *
      * @throws \Exception
+     *
+     * @return legacyInstance|void
      */
     public function getInstance()
     {

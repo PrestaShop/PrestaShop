@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Data\Layer;
 
 use Exception;
@@ -80,10 +79,10 @@ abstract class AbstractDataLayer
      * @param mixed $id
      *                  The data object identifier
      *
+     * @throws DataLayerException
+     *
      * @return mixed|null
      *                    A data object. Null if not found.
-     *
-     * @throws DataLayerException
      */
     public function read($id)
     {
@@ -116,12 +115,12 @@ abstract class AbstractDataLayer
      * @param mixed $data
      *                    The data object to write
      *
+     * @throws DataLayerException
+     *                            When write fails
+     *
      * @return mixed
      *               The data object to be written by the upper data layer
      *               (each layer might hydrate/update the data object for upper layers)
-     *
-     * @throws DataLayerException
-     *                            When write fails
      */
     public function write($id, $data)
     {
@@ -140,9 +139,9 @@ abstract class AbstractDataLayer
      * @param $field
      *  The field to read
      *
-     * @return mixed|null
-     *
      * @throws DataLayerException
+     *
+     * @return mixed|null
      */
     protected function propagateRead($field)
     {
@@ -161,11 +160,11 @@ abstract class AbstractDataLayer
      * @param mixed $data
      *                    The data object to write into this field
      *
-     * @return mixed
-     *               The data object to be written by the upper data layer
-     *
      * @throws DataLayerException
      *                            When write fails
+     *
+     * @return mixed
+     *               The data object to be written by the upper data layer
      */
     protected function propagateWrite($id, $data)
     {
@@ -214,11 +213,11 @@ abstract class AbstractDataLayer
      * @param mixed $data
      *                    Data object received from lower layers
      *
-     * @return mixed
-     *               Data object to be written by upper layer
-     *
      * @throws DataLayerException
      *                            When write failed
+     *
+     * @return mixed
+     *               Data object to be written by upper layer
      */
     protected function saveWritePropagationResult($id, $data)
     {
@@ -279,11 +278,11 @@ abstract class AbstractDataLayer
      * @param mixed $id
      *                  The data object identifier
      *
-     * @return mixed|null
-     *                    The wanted data object (null if not found)
-     *
      * @throws DataLayerException
      *                            When read fails
+     *
+     * @return mixed|null
+     *                    The wanted data object (null if not found)
      */
     abstract protected function doRead($id);
 

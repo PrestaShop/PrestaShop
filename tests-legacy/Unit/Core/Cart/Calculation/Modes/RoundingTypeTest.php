@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Cart\Calculation\Modes;
 
 use Configuration;
@@ -37,7 +36,7 @@ class RoundingTypeTest extends AbstractCartCalculationTest
     /**
      * Order::ROUND_ITEM
      * Order::ROUND_LINE
-     * Order::ROUND_TOTAL
+     * Order::ROUND_TOTAL.
      */
     protected $defaultRoundingType;
 
@@ -58,7 +57,7 @@ class RoundingTypeTest extends AbstractCartCalculationTest
     }
 
     /**
-     * sets the default rounding type
+     * sets the default rounding type.
      *
      * @param string $roundingType Order::ROUND_ITEM|Order::ROUND_LINE|Order::ROUND_TOTAL
      */
@@ -70,6 +69,11 @@ class RoundingTypeTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider roundingTypeDataProvider
+     *
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $cartRuleData
+     * @param mixed $roundingType
      */
     public function testRoundingTypes(
         $productData,

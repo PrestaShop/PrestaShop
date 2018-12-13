@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Addon;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module as Addon;
@@ -214,6 +213,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      * Remove an addon from the collection by key.
      *
      * @param mixed the key (can be int or string)
+     * @param mixed $key
      *
      * @return bool true if the addon has been found and removed
      */

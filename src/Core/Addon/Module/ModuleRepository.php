@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Doctrine\Common\Cache\ArrayCache;
@@ -192,7 +191,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @param string $name The technical module name to instanciate
      *
-     * @return \Module|null Instance of legacy Module, if valid
+     * @return null|\Module Instance of legacy Module, if valid
      */
     public function getInstanceByName($name)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Classes;
 
 use PHPUnit\Framework\TestCase;
@@ -93,22 +92,25 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testGetValueStripsNullCharsFromReturnedStringsExamples
+     *
+     * @param mixed $rawString
+     * @param mixed $cleanedString
      */
     public function testGetValueStripsNullCharsFromReturnedStrings($rawString, $cleanedString)
     {
-        /**
+        /*
          * Check it cleans values stored in POST
          */
         $this->setPostAndGet(array('rawString' => $rawString));
         $this->assertEquals($cleanedString, Tools::getValue('rawString'));
 
-        /**
+        /*
          * Check it cleans values stored in GET
          */
         $this->setPostAndGet(array(), array('rawString' => $rawString));
         $this->assertEquals($cleanedString, Tools::getValue('rawString'));
 
-        /**
+        /*
          * Check it cleans default values too
          */
         $this->setPostAndGet();
@@ -200,6 +202,8 @@ class ToolsCoreTest extends TestCase
     /**
      *  @dataProvider dirProvider
      *
+     * @param mixed $path
+     * @param mixed $haveFiles
      */
     public function testGetDirectories($path, $haveFiles)
     {
@@ -225,6 +229,12 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testSpreadAmountExamples
+     *
+     * @param mixed $expectedRows
+     * @param mixed $amount
+     * @param mixed $precision
+     * @param mixed $rows
+     * @param mixed $column
      */
     public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column)
     {
@@ -320,6 +330,10 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testCamelCaseExample
+     *
+     * @param mixed $source
+     * @param mixed $expected
+     * @param mixed $firstCharUpperCase
      */
     public function testToCamelCase($source, $expected, $firstCharUpperCase)
     {
@@ -334,6 +348,12 @@ class ToolsCoreTest extends TestCase
 
     /**
      * @dataProvider testStrReplaceFirstProvider
+     *
+     * @param mixed $search
+     * @param mixed $replace
+     * @param mixed $subject
+     * @param mixed $cur
+     * @param mixed $expected
      */
     public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected) {
         $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));

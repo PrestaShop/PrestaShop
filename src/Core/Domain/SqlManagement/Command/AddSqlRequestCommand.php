@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
@@ -78,9 +77,9 @@ class AddSqlRequestCommand
      *
      * @param string $name
      *
-     * @return self
-     *
      * @throws SqlRequestConstraintException
+     *
+     * @return self
      */
     private function setName($name)
     {
@@ -101,9 +100,9 @@ class AddSqlRequestCommand
      *
      * @param string $sql
      *
-     * @return $this
-     *
      * @throws SqlRequestConstraintException
+     *
+     * @return $this
      */
     private function setSql($sql)
     {

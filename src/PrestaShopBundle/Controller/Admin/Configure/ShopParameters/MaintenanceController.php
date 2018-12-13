@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -44,6 +43,9 @@ class MaintenanceController extends FrameworkBundleAdminController
     /**
      * @var FormInterface
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig")
+     *
+     * @param Request $request
+     * @param null|FormInterface $form
      *
      * @return Response
      */

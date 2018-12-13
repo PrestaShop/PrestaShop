@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -57,7 +56,7 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_InitRunt
     /**
      * AdminExtension constructor.
      *
-     * @param RequestStack|null $requestStack
+     * @param null|RequestStack $requestStack
      * @param ContainerInterface $container
      */
     public function __construct(RequestStack $requestStack = null, ContainerInterface $container)

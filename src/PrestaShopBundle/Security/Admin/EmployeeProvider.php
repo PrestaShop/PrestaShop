@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Security\Admin;
 
 use Access;
@@ -60,10 +59,10 @@ class EmployeeProvider implements UserProviderInterface
      *
      * @param string $username
      *
-     * @return Employee
-     *
      * @throws \Psr\Cache\InvalidArgumentException
      * @throws \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     *
+     * @return Employee
      */
     public function loadUserByUsername($username)
     {

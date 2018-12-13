@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Service\DataUpdater\Admin;
 
 /**
@@ -49,6 +48,7 @@ interface ProductInterface
      * Do a safe delete on given product IDs.
      *
      * @param array $productListId The ID list of products to delete
+     * @param array $productIdList
      *
      * @throws \PrestaShopBundle\Exception\UpdateProductException If deletion failed (some normal cases can brings this, it's not a Development error)
      *
@@ -60,6 +60,7 @@ interface ProductInterface
      * Duplicates the given product IDs.
      *
      * @param array $productListId The ID list of products to delete
+     * @param array $productIdList
      *
      * @throws \PrestaShopBundle\Exception\UpdateProductException if duplication failed
      *

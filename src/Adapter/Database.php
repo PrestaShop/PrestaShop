@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
@@ -39,9 +38,9 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
      *
      * @param string $sqlString
      *
-     * @return array|false
-     *
      * @throws \PrestaShopDatabaseException
+     *
+     * @return array|false
      */
     public function select($sqlString)
     {
@@ -63,7 +62,7 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
     /**
      * Returns a value from the first row, first column of a SELECT query.
      *
-     * @param string|DbQuery $sql
+     * @param DbQuery|string $sql
      * @param bool $useMaster
      * @param bool $useCache
      *

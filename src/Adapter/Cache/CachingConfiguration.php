@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Cache;
 
 use PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters;
@@ -121,6 +120,8 @@ class CachingConfiguration implements DataConfigurationInterface
 
     /**
      * Update the Php configuration for Cache feature and system.
+     *
+     * @param array $configuration
      *
      * @return array the errors list during the update operation
      */

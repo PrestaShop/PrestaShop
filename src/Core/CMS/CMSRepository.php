@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\CMS;
 
 class CMSRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\EntityRepository
@@ -57,9 +56,9 @@ class CMSRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\Enti
      * @param $id_lang
      * @param $id_shop
      *
-     * @return CMS|null
-     *
      * @throws \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
+     *
+     * @return CMS|null
      */
     public function i10nFindOneById($id_cms, $id_lang, $id_shop)
     {

@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Routes;
 
 use Dispatcher;
@@ -53,9 +52,9 @@ class RouteValidator
      * @param string $routeId
      * @param string $rule Rule to verify
      *
-     * @return array - returns list of missing keywords
-     *
      * @throws PrestaShopException
+     *
+     * @return array - returns list of missing keywords
      */
     public function doesRouteContainsRequiredKeywords($routeId, $rule)
     {

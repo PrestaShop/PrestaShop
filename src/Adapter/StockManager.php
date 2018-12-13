@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShopBundle\Service\DataProvider\StockInterface;
@@ -94,8 +93,8 @@ class StockManager implements StockInterface
      * @param $shopId
      * @param $errorState
      * @param $cancellationState
-     * @param int|null $idProduct
-     * @param int|null $idOrder
+     * @param null|int $idProduct
+     * @param null|int $idOrder
      *
      * @return bool
      */
@@ -122,8 +121,8 @@ class StockManager implements StockInterface
      * @param $shopId
      * @param $errorState
      * @param $cancellationState
-     * @param int|null $idProduct
-     * @param int|null $idOrder
+     * @param null|int $idProduct
+     * @param null|int $idOrder
      *
      * @return bool
      */

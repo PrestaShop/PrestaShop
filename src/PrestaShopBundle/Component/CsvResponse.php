@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Component;
 
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -70,7 +69,7 @@ class CsvResponse extends StreamedResponse
     /**
      * Constructor.
      *
-     * @param callable|null $callback A valid PHP callback or null to set it later
+     * @param null|callable $callback A valid PHP callback or null to set it later
      * @param int $status The response status code
      * @param array $headers An array of response headers
      */
@@ -149,9 +148,9 @@ class CsvResponse extends StreamedResponse
     /**
      * @param string $fileName
      *
-     * @return $this
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return $this
      */
     public function setFileName($fileName)
     {

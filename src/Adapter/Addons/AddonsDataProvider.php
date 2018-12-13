@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
@@ -75,9 +74,9 @@ class AddonsDataProvider implements AddonsInterface
     /**
      * @param $module_id
      *
-     * @return bool
-     *
      * @throws Exception
+     *
+     * @return bool
      */
     public function downloadModule($module_id)
     {
@@ -189,9 +188,9 @@ class AddonsDataProvider implements AddonsInterface
     }
 
     /**
-     * @return array
-     *
      * @throws Exception
+     *
+     * @return array
      */
     protected function getAddonsCredentials()
     {
@@ -205,7 +204,7 @@ class AddonsDataProvider implements AddonsInterface
         );
     }
 
-    /** Does this function should be in a User related class ? **/
+    /** Does this function should be in a User related class ? */
     public function getAddonsEmail()
     {
         $request = Request::createFromGlobals();

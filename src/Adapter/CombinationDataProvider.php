@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\Decimal\Number;
@@ -88,10 +87,10 @@ class CombinationDataProvider
      * @param array $combinationIds
      * @param int $languageId
      *
-     * @return array a list of formatted combinations
-     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     *
+     * @return array a list of formatted combinations
      */
     public function getFormCombinations(array $combinationIds, $languageId)
     {

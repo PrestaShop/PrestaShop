@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Hook;
 
 use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
@@ -141,7 +140,9 @@ class HookDispatcherTest extends TestCase
 
     /**
      * The event dispatcher puts every parameter dispatched in an array.
+     *
      * @param array $parameters
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|RenderingHookEvent
      */
     private function createRenderingHookEvent($parameters = [])

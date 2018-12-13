@@ -217,6 +217,10 @@ class StockMvtWSCore extends ObjectModelCore
 
     /**
      * @see ObjectModel
+     *
+     * @param null|mixed $id
+     * @param null|mixed $id_lang
+     * @param null|mixed $id_shop
      */
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
@@ -236,6 +240,12 @@ class StockMvtWSCore extends ObjectModelCore
     /**
      * @see ObjectModel::getWebserviceObjectList()
      * Added $full for this specific object
+     *
+     * @param mixed $join
+     * @param mixed $filter
+     * @param mixed $sort
+     * @param mixed $limit
+     * @param mixed $full
      */
     public function getWebserviceObjectList($join, $filter, $sort, $limit, $full = false)
     {

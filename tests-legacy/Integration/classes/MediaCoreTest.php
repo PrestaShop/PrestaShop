@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Classes;
 
 use LegacyTests\TestCase\IntegrationTestCase;
@@ -79,6 +78,10 @@ class MediaCoreTest extends IntegrationTestCase
 
     /**
      * @dataProvider isCssInputsProvider
+     *
+     * @param mixed $input
+     * @param mixed $fileuri
+     * @param mixed $output
      */
     public function testMinifyCSS($input, $fileuri, $output)
     {
@@ -89,6 +92,11 @@ class MediaCoreTest extends IntegrationTestCase
 
     /**
      * @dataProvider isCssInputsProvider
+     *
+     * @param mixed $input
+     * @param mixed $fileuri
+     * @param mixed $output
+     * @param mixed $expected
      */
     public function testReplaceByAbsoluteURLPattern($input, $fileuri, $output, $expected)
     {

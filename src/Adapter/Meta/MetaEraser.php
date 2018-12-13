@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Meta;
 
 use Meta;
@@ -40,9 +39,9 @@ final class MetaEraser
      *
      * @param array $metaIds
      *
-     * @return array
-     *
      * @throws PrestaShopException
+     *
+     * @return array
      */
     public function erase(array $metaIds)
     {

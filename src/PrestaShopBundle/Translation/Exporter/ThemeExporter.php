@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Translation\Exporter;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
@@ -149,9 +148,9 @@ class ThemeExporter
     /**
      * @param $filePath
      *
-     * @return bool
-     *
      * @throws \Exception
+     *
+     * @return bool
      */
     protected function ensureFileBelongsToExportDirectory($filePath)
     {
@@ -278,9 +277,9 @@ class ThemeExporter
      * @param $themeName
      * @param $locale
      *
-     * @return string
-     *
      * @throws \Exception
+     *
+     * @return string
      */
     protected function makeArchiveParentDirectory($themeName, $locale)
     {
@@ -357,7 +356,7 @@ class ThemeExporter
     }
 
     /**
-     * @param array|null $metadata
+     * @param null|array $metadata
      *
      * @return array
      */

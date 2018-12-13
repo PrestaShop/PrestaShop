@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,12 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Security\Voter\PageVoter;
 
 /**
- * Common method to handle the tab registration
+ * Common method to handle the tab registration.
+ *
  * @internal
+ *
+ * @param mixed $className
+ * @param mixed $name
+ * @param mixed $id_parent
+ * @param mixed $returnId
+ * @param null|mixed $parentTab
+ * @param mixed $module
  */
 function register_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
@@ -61,8 +68,12 @@ function register_tab($className, $name, $id_parent, $returnId = false, $parentT
 }
 
 /**
- * Common method for getting the new tab ID
+ * Common method for getting the new tab ID.
+ *
  * @internal
+ *
+ * @param mixed $className
+ * @param mixed $returnId
  */
 function get_new_tab_id($className, $returnId = false)
 {
@@ -74,7 +85,7 @@ function get_new_tab_id($className, $returnId = false)
 }
 
 /**
- * Entrypoint for adding new tabs prior 1.7 versions of PrestaShop
+ * Entrypoint for adding new tabs prior 1.7 versions of PrestaShop.
  *
  * @param string $className
  * @param string $name Pipe-separated translated values
@@ -83,7 +94,7 @@ function get_new_tab_id($className, $returnId = false)
  * @param string $parentTab
  * @param string $module
  *
- * @return int|null Tab id if requested
+ * @return null|int Tab id if requested
  */
 function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
@@ -100,7 +111,7 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
 }
 
 /**
- * Entrypoint for adding new tabs on +1.7 versions of PrestaShop
+ * Entrypoint for adding new tabs on +1.7 versions of PrestaShop.
  *
  * @param string $className
  * @param string $name Pipe-separated translated values
@@ -109,7 +120,7 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
  * @param string $parentTab
  * @param string $module
  *
- * @return int|null Tab id if requested
+ * @return null|int Tab id if requested
  */
 function add_new_tab_17($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {

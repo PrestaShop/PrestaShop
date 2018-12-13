@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
@@ -93,7 +92,7 @@ final class FormHandler implements FormHandlerInterface
 
     /**
      * @param FormInterface $form
-     * @param int|null $id
+     * @param null|int $id
      *
      * @return FormHandlerResultInterface
      */

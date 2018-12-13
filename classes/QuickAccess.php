@@ -57,6 +57,8 @@ class QuickAccessCore extends ObjectModel
     /**
      * Get all available quick_accesses.
      *
+     * @param mixed $idLang
+     *
      * @return array QuickAccesses
      */
     public static function getQuickAccesses($idLang)
@@ -70,6 +72,9 @@ class QuickAccessCore extends ObjectModel
 
     /**
      * Get all available quick_accesses with token.
+     *
+     * @param mixed $idLang
+     * @param mixed $idEmployee
      *
      * @return array QuickAccesses
      */
@@ -118,9 +123,9 @@ class QuickAccessCore extends ObjectModel
     /**
      * Toggle new window.
      *
-     * @return bool
-     *
      * @throws PrestaShopException
+     *
+     * @return bool
      */
     public function toggleNewWindow()
     {

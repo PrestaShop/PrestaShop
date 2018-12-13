@@ -34,6 +34,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
     /**
      * @param OrderInvoice $order_invoice
      * @param $smarty
+     * @param mixed $bulk_mode
      *
      * @throws PrestaShopException
      */

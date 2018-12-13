@@ -1,6 +1,6 @@
 <?php
 /**
- * DescProcessor.php
+ * DescProcessor.php.
  *
  * This file implements the processor for the DESC statements, which is a short form of DESCRIBE.
  *
@@ -29,15 +29,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/ExplainProcessor.php');
 
 /**
- * 
  * This class processes the DESC statement.
  * 
  * @author arothe
- * 
  */
 class DescProcessor extends ExplainProcessor {
 

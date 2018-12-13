@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Classes;
 
 use LegacyTests\TestCase\IntegrationTestCase;
@@ -34,6 +33,11 @@ class SearchCoreTest extends IntegrationTestCase
 {
     /**
      * @dataProvider keywordsProvider
+     *
+     * @param mixed $word
+     * @param mixed $expectedKeyWord
+     * @param mixed $withStart
+     * @param mixed $withEnd
      */
     public function testGenerationOfSearchKeywordsFromWord($word, $expectedKeyWord, $withStart, $withEnd)
     {

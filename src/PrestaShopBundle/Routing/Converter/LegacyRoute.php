@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Routing\Converter;
 
 /**
@@ -54,7 +53,7 @@ class LegacyRoute
     private $controllersActions;
 
     /**
-     * @param string|null $action
+     * @param null|string $action
      *
      * @return bool
      */

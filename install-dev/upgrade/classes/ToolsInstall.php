@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class ToolsInstall
 {
     /**
@@ -48,7 +47,8 @@ class ToolsInstall
              * $array['parent']['child'][0] = 'a';
              * $array['parent']['child'][1] = 'b';
              * ...And so on.
-             * _____________________________________
+             * _____________________________________.
+             *
              * @param simpleXMLElement $xml the XML to convert
              * @param bool $flattenValues    Choose wether to flatten values
              *                                    or to set them under a particular index.
@@ -65,6 +65,7 @@ class ToolsInstall
                             *                            false. Defaults to "@attributes"
              * @param string $childrenKey        index for children, in case $flattenChildren was set to
                             *                            false. Defaults to "@children"
+                            *
              * @return array the resulting array.
              */
     public static function simpleXMLToArray($xml, $flattenValues = true, $flattenAttributes = true, $flattenChildren = true, $valueKey = '@value', $attributesKey = '@attributes', $childrenKey = '@children')
