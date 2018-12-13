@@ -35,13 +35,13 @@ use Product;
  */
 class AdminModelAdapterTest extends KernelTestCase
 {
-    /* @var $adminModelAdapter AdminModelAdapter */
+    /** @var $adminModelAdapter AdminModelAdapter */
     private $adminModelAdapter;
 
     private $container;
     protected static $kernel;
 
-    /* @var $product Product */
+    /** @var $product Product */
     private $product;
 
     private function fakeFormData()

@@ -756,8 +756,9 @@ class ToolsCore
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
 
-    /*
+    /**
      * Return a number well formatted
+     *
      * @param float $number A number
      * @param nullable $currency / not used anymaore
      */

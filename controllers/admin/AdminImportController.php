@@ -1020,12 +1020,13 @@ class AdminImportControllerCore extends AdminController
         return $options;
     }
 
-    /*
-    * Return fields to be display AS piece of advise
-    *
-    * @param $in_array boolean
-    * @return string or return array
-    */
+    /**
+     * Return fields to be display AS piece of advise
+     *
+     * @param $in_array boolean
+     *
+     * @return string or return array
+     */
     public function getAvailableFields($in_array = false)
     {
         $i = 0;

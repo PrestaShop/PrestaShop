@@ -38,7 +38,7 @@ use Tools;
  */
 class LogoUploader
 {
-    /* @var $shop the shop */
+    /** @var $shop the shop */
     private $shop;
 
     public function __construct(Shop $shop)

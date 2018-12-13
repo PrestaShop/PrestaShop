@@ -1782,7 +1782,7 @@ class FrontControllerCore extends Controller
         } elseif (Tools::getValue('fc') == 'module' && $module_name != '' && (Module::getInstanceByName($module_name) instanceof PaymentModule)) {
             $page_name = 'module-payment-submit';
         } elseif (preg_match('#^' . preg_quote($this->context->shop->physical_uri, '#') . 'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m)) {
-            // @retrocompatibility Are we in a module ?
+            /** @retrocompatibility Are we in a module ? */
             $page_name = 'module-' . $m[1] . '-' . str_replace(array('.php', '/'), array('', '-'), $m[2]);
         } else {
             $page_name = Dispatcher::getInstance()->getController();

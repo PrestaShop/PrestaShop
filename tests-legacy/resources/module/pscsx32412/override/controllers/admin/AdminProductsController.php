@@ -1779,7 +1779,7 @@ class AdminProductsController extends AdminProductsControllerCore
     public function checkProduct()
     {
         $className = 'Product';
-        // @todo : the call_user_func seems to contains only statics values (className = 'Product')
+        /** @todo : the call_user_func seems to contains only statics values (className = 'Product') */
         $rules = call_user_func(array($this->className, 'getValidationRules'), $this->className);
         $default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $languages = Language::getLanguages(false);
@@ -3113,7 +3113,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->tab_display = 'VirtualProduct';
         }
 
-        // @todo handle is_virtual with the value of the product
+        /** @todo handle is_virtual with the value of the product */
         $exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
         $data->assign('product_downloaded', $product->productDownload->id);
 

@@ -227,7 +227,7 @@ class AdminControllerCore extends Controller
     /** @var array List of row ids associated with a given action for witch this action have to not be available */
     protected $list_skip_actions = array();
 
-    /* @var bool Don't show header & footer */
+    /** @var bool Don't show header & footer */
     protected $lite_display = false;
 
     /** @var bool List content lines are clickable if true */
@@ -275,7 +275,7 @@ class AdminControllerCore extends Controller
      */
     protected $bulk_actions;
 
-    /* @var array Ids of the rows selected */
+    /** @var array Ids of the rows selected */
     protected $boxes;
 
     /** @var string Do not automatically select * anymore but select only what is necessary */

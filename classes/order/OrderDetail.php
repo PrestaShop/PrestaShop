@@ -461,8 +461,9 @@ class OrderDetailCore extends ObjectModel
         return Db::getInstance()->executeS($sql);
     }
 
-    /*
+    /**
      * Set virtual product information
+     *
      * @param array $product
      */
     protected function setVirtualProductInformation($product)

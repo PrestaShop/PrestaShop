@@ -36,7 +36,7 @@ use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
  */
 class ContextCore
 {
-    /* @var Context */
+    /** @var Context */
     protected static $instance;
 
     /** @var Cart */

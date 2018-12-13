@@ -438,7 +438,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                     . $this->trans('___________ CUSTOM ___________', array(), 'Admin.Design.Feature')
                     . '</option>';
 
-        // @todo do something better with controllers
+        /** @todo do something better with controllers */
         $controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
         ksort($controllers);
 
