@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\AddCustomerHandler
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\ApeCode;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
@@ -106,6 +107,11 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
      */
     private function fillCustomerWithCommandData(Customer $customer, AddCustomerCommand $command)
     {
+        $apeCode = null !== $command->getApeCode() ?
+            (new ApeCode($command->getApeCode()))->getValue() :
+            null
+        ;
+
         $hashedPassword = $this->hashing->hash(
             $command->getPassword()->getValue(),
             $this->legacyCookieKey
@@ -126,7 +132,7 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
         // fill b2b customer fields
         $customer->company = $command->getCompanyName();
         $customer->siret = $command->getSiretCode();
-        $customer->ape = $command->getApeCode();
+        $customer->ape = $apeCode;
         $customer->website = $command->getWebsite();
         $customer->outstanding_allow_amount = $command->getAllowedOutstandingAmount();
         $customer->max_payment_days = $command->getMaxPaymentDays();

@@ -398,6 +398,11 @@ class CustomerController extends AbstractAdminController
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Birthday', 'Admin.Orderscustomers.Feature'))]
                 ),
+                CustomerConstraintException::INVALID_APE_CODE => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('APE', 'Admin.Orderscustomers.Feature'))]
+                ),
             ],
             CustomerTransformationException::class => [
                 CustomerTransformationException::CUSTOMER_IS_NOT_GUEST => $this->trans(
