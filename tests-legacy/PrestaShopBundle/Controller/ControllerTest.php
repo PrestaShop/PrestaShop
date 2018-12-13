@@ -70,7 +70,7 @@ class ControllerTest extends TestCase
     public function itShouldRunTheTestedController($controllerClass)
     {
         /**
-         * @var Controller $testedController
+         * @var Controller
          */
         $testedController = new $controllerClass();
 
