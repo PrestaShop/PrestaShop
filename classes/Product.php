@@ -3374,7 +3374,7 @@ class ProductCore extends ObjectModel
      * @param mixed $id_customization
      *
      * @return float Product price
-     **/
+     */
     public static function priceCalculation(
         $id_shop,
         $id_product,

@@ -205,7 +205,7 @@ class AddonsDataProvider implements AddonsInterface
         );
     }
 
-    /** Does this function should be in a User related class ? **/
+    /** Does this function should be in a User related class ? */
     public function getAddonsEmail()
     {
         $request = Request::createFromGlobals();

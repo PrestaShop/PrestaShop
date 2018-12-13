@@ -563,11 +563,11 @@ class SupplyOrderCore extends ObjectModel
         );
     }
 
-    /*********************************\
+    /*\
      *
      * Webservices Specific Methods
      *
-     *********************************/
+     */
 
     /**
      * Webservice : gets the ids supply_order_detail associated to this order.

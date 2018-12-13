@@ -131,7 +131,7 @@ class PriceCalculator
      * @param int $idCustomization
      *
      * @return float Product price
-     **/
+     */
     public function priceCalculation(
         $idShop,
         $idProduct,
