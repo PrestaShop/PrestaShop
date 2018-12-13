@@ -30,6 +30,7 @@ use Customer;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\AddCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
@@ -76,6 +77,7 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
         }
 
         $this->assertCustomerWithGivenEmailDoesNotExist($command->getEmail());
+        $this->assertCustomerCanAccessDefaultGroup($command);
 
         $customer->add();
 
@@ -129,5 +131,17 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
         $customer->outstanding_allow_amount = $command->getAllowedOutstandingAmount();
         $customer->max_payment_days = $command->getMaxPaymentDays();
         $customer->id_risk = $command->getRiskId();
+    }
+
+    /**
+     * @param AddCustomerCommand $command
+     */
+    private function assertCustomerCanAccessDefaultGroup(AddCustomerCommand $command)
+    {
+        if (!in_array($command->getDefaultGroupId(), $command->getGroupIds())) {
+            throw new CustomerDefaultGroupAccessException(
+                sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId())
+            );
+        }
     }
 }
