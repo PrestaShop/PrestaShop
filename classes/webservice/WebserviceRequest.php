@@ -1305,7 +1305,7 @@ class WebserviceRequestCore
                     $sql .= '_' . $assoc['type'];
                 } else {
                     $def = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
-                    if (isset($def['fields']['id_shop_group']) {
+                    if (isset($def['fields']['id_shop_group'])) {
                         $check_shop_group = true;
                     }
                 }
