@@ -447,9 +447,9 @@ class LanguageCore extends ObjectModel
      * @param $shopDefaultLangId
      * @param $shopId
      *
+     * @throws \PrestaShopDatabaseException
      * @return bool
      *
-     * @throws \PrestaShopDatabaseException
      */
     private function duplicateRowsFromDefaultShopLang($tableName, $shopDefaultLangId, $shopId)
     {
@@ -751,9 +751,9 @@ class LanguageCore extends ObjectModel
      *
      * @param string $isoCode
      *
+     * @throws Exception
      * @return string|false
      *
-     * @throws Exception
      */
     public static function getLocaleByIso($isoCode)
     {
@@ -773,9 +773,9 @@ class LanguageCore extends ObjectModel
      *
      * @param string $locale
      *
+     * @throws Exception
      * @return string|false
      *
-     * @throws Exception
      */
     public static function getIsoByLocale($locale)
     {
@@ -1186,9 +1186,9 @@ class LanguageCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @return bool
      *
      * @param null|mixed $id_shop
+     * @return bool
      */
     public static function isMultiLanguageActivated($id_shop = null)
     {

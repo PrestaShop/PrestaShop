@@ -1231,9 +1231,9 @@ class ValidateCore
      * this PHP version otherwise disable the
      * oProxyCommand option.
      *
-     * @return bool
      *
      * @param mixed $imapUrl
+     * @return bool
      */
     public static function isValidImapUrl($imapUrl)
     {

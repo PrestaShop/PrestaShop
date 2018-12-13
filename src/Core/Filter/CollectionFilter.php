@@ -42,9 +42,9 @@ class CollectionFilter implements FilterInterface
      *
      * @param FilterInterface[] $filters
      *
+     * @throws FilterException
      * @return $this
      *
-     * @throws FilterException
      */
     public function queue(array $filters)
     {
@@ -76,9 +76,9 @@ class CollectionFilter implements FilterInterface
      *
      * @param array $subject Collection to filter
      *
+     * @throws FilterException
      * @return array
      *
-     * @throws FilterException
      */
     public function filter($subject)
     {

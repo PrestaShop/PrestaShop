@@ -53,9 +53,9 @@ class ShopUrlDataProvider
     /**
      * Gets main shop url data.
      *
+     * @throws PrestaShopException
      * @return ShopUrl
      *
-     * @throws PrestaShopException
      */
     public function getMainShopUrl()
     {
@@ -72,9 +72,9 @@ class ShopUrlDataProvider
     /**
      * Checks whenever the main shop url exists for current shop context.
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     public function doesMainShopUrlExist()
     {

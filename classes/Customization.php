@@ -411,9 +411,9 @@ class CustomizationCore extends ObjectModel
      * @param int $idCustomizationField
      * @param int[] $shopList
      *
+     * @throws PrestaShopDatabaseException
      * @return bool
      *
-     * @throws PrestaShopDatabaseException
      */
     public static function deleteCustomizationFieldLangByShop($idCustomizationField, $shopList)
     {

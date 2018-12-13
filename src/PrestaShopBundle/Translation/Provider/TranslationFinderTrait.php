@@ -37,9 +37,9 @@ trait TranslationFinderTrait
      * @param $locale
      * @param null $pattern
      *
+     * @throws \Exception
      * @return MessageCatalogue
      *
-     * @throws \Exception
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {

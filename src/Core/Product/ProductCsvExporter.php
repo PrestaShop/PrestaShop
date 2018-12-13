@@ -57,10 +57,10 @@ final class ProductCsvExporter implements ProductExporterInterface
      *
      * @param array $products
      *
-     * @return CsvResponse
-     *
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     * @return CsvResponse
+     *
      */
     public function export(array $products = array())
     {
@@ -101,9 +101,9 @@ final class ProductCsvExporter implements ProductExporterInterface
      * @param $key
      * @param $domain
      *
+     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      * @return string
      *
-     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
     private function trans($key, $domain)
     {

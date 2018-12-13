@@ -118,9 +118,9 @@ class ModuleSelfConfigurator
      *
      * @param string $name
      *
+     * @throws UnexpectedTypeException
      * @return $this
      *
-     * @throws UnexpectedTypeException
      */
     public function setModule($name)
     {
@@ -135,9 +135,9 @@ class ModuleSelfConfigurator
     /**
      * If defined, get the config file path or if possible, guess it.
      *
+     * @throws InvalidArgumentException
      * @return string|null
      *
-     * @throws InvalidArgumentException
      */
     public function getFile()
     {
@@ -183,9 +183,9 @@ class ModuleSelfConfigurator
      *
      * @param string $filepath
      *
+     * @throws UnexpectedTypeException
      * @return $this
      *
-     * @throws UnexpectedTypeException
      */
     public function setFile($filepath)
     {
@@ -287,9 +287,9 @@ class ModuleSelfConfigurator
      *
      * @param array $data
      *
+     * @throws Exception if file data not provided
      * @return string
      *
-     * @throws Exception if file data not provided
      */
     protected function extractFilePath($data)
     {

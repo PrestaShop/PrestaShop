@@ -347,9 +347,9 @@ class TranslationControllerTest extends ApiTestCase
     }
 
     /**
-     * @return array
      *
      * @param mixed $params
+     * @return array
      */
     private function assertOkResponseOnTranslationEdition($params)
     {

@@ -368,9 +368,9 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_shop Optional
      * @param int $id_product_attribute Optional
      *
+     * @throws PrestaShopDatabaseException
      * @return bool
      *
-     * @throws PrestaShopDatabaseException
      */
     public static function setLocation($id_product, $location, $id_shop = null, $id_product_attribute = 0)
     {

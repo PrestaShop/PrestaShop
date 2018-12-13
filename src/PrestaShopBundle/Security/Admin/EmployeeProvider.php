@@ -60,10 +60,10 @@ class EmployeeProvider implements UserProviderInterface
      *
      * @param string $username
      *
-     * @return Employee
-     *
      * @throws \Psr\Cache\InvalidArgumentException
      * @throws \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     * @return Employee
+     *
      */
     public function loadUserByUsername($username)
     {

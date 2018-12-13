@@ -600,9 +600,9 @@ class Install extends AbstractInstall
     /**
      * Install languages.
      *
-     * @return array Association between ID and iso array(id_lang => iso, ...)
      *
      * @param null|mixed $languages_list
+     * @return array Association between ID and iso array(id_lang => iso, ...)
      */
     public function installLanguages($languages_list = null)
     {

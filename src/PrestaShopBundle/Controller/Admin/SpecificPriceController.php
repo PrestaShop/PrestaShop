@@ -253,9 +253,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * @param string $dateAsString
      *
+     * @throws \PrestaShopDatabaseExceptionCore if date is not valid
      * @return null|string If date is 0000-00-00 00:00:00, null is returned
      *
-     * @throws \PrestaShopDatabaseExceptionCore if date is not valid
      */
     private static function formatForDatePicker($dateAsString)
     {

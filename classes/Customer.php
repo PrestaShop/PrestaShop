@@ -228,10 +228,10 @@ class CustomerCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Customer has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Indicates whether the Customer has been successfully added
+     *
      */
     public function add($autoDate = true, $nullValues = true)
     {
@@ -269,10 +269,10 @@ class CustomerCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Customer has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Indicates whether the Customer has been successfully updated
+     *
      */
     public function update($nullValues = false)
     {
@@ -307,9 +307,9 @@ class CustomerCore extends ObjectModel
     /**
      * Deletes current Customer from the database.
      *
+     * @throws PrestaShopException
      * @return bool True if delete was successful
      *
-     * @throws PrestaShopException
      */
     public function delete()
     {
@@ -765,9 +765,9 @@ class CustomerCore extends ObjectModel
      * @param string $query Searched string
      * @param null|int $limit Limit query results
      *
+     * @throws PrestaShopDatabaseException
      * @return null|array|false|mysqli_result|PDOStatement|resource Corresponding customers
      *
-     * @throws PrestaShopDatabaseException
      */
     public static function searchByName($query, $limit = null)
     {

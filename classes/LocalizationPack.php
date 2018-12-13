@@ -140,9 +140,9 @@ class LocalizationPackCore
     /**
      * @param SimpleXMLElement $xml
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     protected function _installStates($xml)
     {
@@ -212,9 +212,9 @@ class LocalizationPackCore
     /**
      * @param SimpleXMLElement $xml
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     protected function _installTaxes($xml)
     {
@@ -323,9 +323,9 @@ class LocalizationPackCore
      * @param SimpleXMLElement $xml
      * @param bool $install_mode
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     protected function _installCurrencies($xml, $install_mode = false)
     {

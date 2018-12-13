@@ -40,9 +40,9 @@ class FakeEntityMapper extends EntityMapper
      *
      * @param ObjectModel $entity
      *
+     * @throws Exception
      * @return $this
      *
-     * @throws Exception
      */
     public function willReturn(ObjectModel $entity)
     {

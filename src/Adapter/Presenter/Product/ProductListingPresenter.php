@@ -36,9 +36,9 @@ class ProductListingPresenter extends ProductPresenter
      * @param array $product
      * @param Language $language
      *
+     * @throws \ReflectionException
      * @return ProductLazyArray|ProductListingLazyArray
      *
-     * @throws \ReflectionException
      */
     public function present(
         ProductPresentationSettings $settings,

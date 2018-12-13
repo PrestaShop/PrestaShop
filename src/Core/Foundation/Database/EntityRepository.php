@@ -91,9 +91,9 @@ class EntityRepository
     /**
      * Return ID field name.
      *
+     * @throws Exception
      * @return mixed
      *
-     * @throws Exception
      */
     protected function getIdFieldName()
     {
@@ -192,9 +192,9 @@ class EntityRepository
      * @param $one
      * @param array $cumulativeConditions
      *
+     * @throws Exception
      * @return array|mixed|null
      *
-     * @throws Exception
      */
     private function doFind($one, array $cumulativeConditions)
     {
@@ -216,9 +216,9 @@ class EntityRepository
      *
      * @param $id
      *
+     * @throws Exception
      * @return array|mixed|null
      *
-     * @throws Exception
      */
     public function findOne($id)
     {

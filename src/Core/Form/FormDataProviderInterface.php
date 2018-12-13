@@ -41,9 +41,9 @@ interface FormDataProviderInterface
      *
      * @param array $data
      *
+     * @throws UndefinedOptionsException
      * @return array $errors if data can't persisted an array of errors messages
      *
-     * @throws UndefinedOptionsException
      */
     public function setData(array $data);
 }

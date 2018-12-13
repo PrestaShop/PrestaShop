@@ -194,9 +194,9 @@ class StylesheetGenerator
      * @param string $content Base content
      * @param string $baseFile Path to the processed file
      *
+     * @throws GenerationException If unable to read from .rtlfix file
      * @return string Content with RTL fix applied
      *
-     * @throws GenerationException If unable to read from .rtlfix file
      */
     private function appendRtlFixIfNecessary($content, $baseFile)
     {

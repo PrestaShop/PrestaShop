@@ -215,10 +215,10 @@ class TabCore extends ObjectModel
     /**
      * Get tab.
      *
-     * @return array tab
      *
      * @param mixed $idLang
      * @param mixed $idTab
+     * @return array tab
      */
     public static function getTab($idLang, $idTab)
     {

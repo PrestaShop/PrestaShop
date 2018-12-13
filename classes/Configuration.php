@@ -298,12 +298,12 @@ class ConfigurationCore extends ObjectModel
     /**
      * Get several configuration values (in one language only).
      *
-     * @throws PrestaShopException
      *
      * @param array $keys Keys wanted
      * @param int $idLang Language ID
      * @param int $idShopGroup
      * @param int $idShop
+     * @throws PrestaShopException
      *
      * @return array Values
      */

@@ -62,10 +62,10 @@ class PhpEncryptionEngineCore
      *
      * @param string $cipherText Cipher text
      *
+     * @throws Exception
      * @return bool|string Plaintext
      *                     `false` if unable to decrypt
      *
-     * @throws Exception
      */
     public function decrypt($cipherText)
     {
@@ -86,9 +86,9 @@ class PhpEncryptionEngineCore
      * @param $header
      * @param $bytes
      *
+     * @throws \Defuse\Crypto\Exception\EnvironmentIsBrokenException
      * @return string
      *
-     * @throws \Defuse\Crypto\Exception\EnvironmentIsBrokenException
      */
     public static function saveBytesToChecksummedAsciiSafeString($header, $bytes)
     {
@@ -116,9 +116,9 @@ class PhpEncryptionEngineCore
     }
 
     /**
+     * @throws Exception
      * @return string
      *
-     * @throws Exception
      *
      * @see https://github.com/paragonie/random_compat/blob/v1.4.1/lib/random_bytes_openssl.php
      * @see https://github.com/paragonie/random_compat/blob/v1.4.1/lib/random_bytes_mcrypt.php

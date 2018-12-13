@@ -130,9 +130,9 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      *
+     * @throws PrestaShopException
      * @return array - if array is not empty then error strings are returned
      *
-     * @throws PrestaShopException
      */
     private function validateData(array $data)
     {
@@ -150,9 +150,9 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      *
      * @param array $configuration
      *
+     * @throws PrestaShopException
      * @return array
      *
-     * @throws PrestaShopException
      */
     private function validateUrlSchema(array $configuration)
     {

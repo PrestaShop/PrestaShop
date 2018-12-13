@@ -189,11 +189,11 @@ class StoreCore extends ObjectModel
     /**
      * This method is allow to know if a store exists for AdminImportController.
      *
-     * @return bool
      *
      * @since 1.7.0
      *
      * @param mixed $idStore
+     * @return bool
      */
     public static function storeExists($idStore)
     {

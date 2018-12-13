@@ -59,9 +59,9 @@ class GetDatabaseTableFieldsList
     /**
      * @param string $tableName
      *
+     * @throws SqlManagementConstraintException
      * @return self
      *
-     * @throws SqlManagementConstraintException
      */
     public function setTableName($tableName)
     {

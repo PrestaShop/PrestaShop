@@ -550,9 +550,9 @@ class ToolsCore
     /**
      * Change language in cookie while clicking on a flag.
      *
-     * @return string iso code
      *
      * @param null|mixed $cookie
+     * @return string iso code
      */
     public static function setCookieLanguage($cookie = null)
     {
@@ -668,9 +668,9 @@ class ToolsCore
     /**
      * Set cookie currency from POST or default currency.
      *
-     * @return Currency object
      *
      * @param mixed $cookie
+     * @return Currency object
      */
     public static function setCurrency($cookie)
     {
@@ -712,9 +712,9 @@ class ToolsCore
      * @param null|Context $context
      * @param null $language_code
      *
+     * @throws PrestaShopException
      * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
      *
-     * @throws PrestaShopException
      */
     public static function getCldr(Context $context = null, $language_code = null)
     {
@@ -1096,9 +1096,9 @@ class ToolsCore
      * @param bool $htmlentities DEPRECATED since 1.7.4.0
      * @param null|Context $context DEPRECATED since 1.7.4.0
      *
+     * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
      * @return string
      *
-     * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
      */
     public static function displayError($errorMessage = null, $htmlentities = null, Context $context = null)
     {
@@ -3056,9 +3056,9 @@ exit;
     /**
      * @desc try to open a zip file in order to check if it's valid
      *
-     * @return bool success
      *
      * @param mixed $from_file
+     * @return bool success
      */
     public static function ZipTest($from_file)
     {
@@ -3080,10 +3080,10 @@ exit;
     /**
      * @desc extract a zip file to the given directory
      *
-     * @return bool success
      *
      * @param mixed $from_file
      * @param mixed $to_dir
+     * @return bool success
      */
     public static function ZipExtract($from_file, $to_dir)
     {
@@ -3372,9 +3372,9 @@ exit;
      *
      * @since 1.5.0
      *
-     * @return int the value of a configuration option in octet
      *
      * @param mixed $option
+     * @return int the value of a configuration option in octet
      */
     public static function getOctets($option)
     {
@@ -3943,9 +3943,9 @@ exit;
     /**
      * Allows to display the category description without HTML tags and slashes.
      *
-     * @return string
      *
      * @param mixed $description
+     * @return string
      */
     public static function getDescriptionClean($description)
     {

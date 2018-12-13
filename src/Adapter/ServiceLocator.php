@@ -52,9 +52,9 @@ class ServiceLocator
      *
      * @param $serviceName
      *
+     * @throws CoreException
      * @return mixed|object
      *
-     * @throws CoreException
      */
     public static function get($serviceName)
     {

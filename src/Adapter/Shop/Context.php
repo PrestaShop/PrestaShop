@@ -51,9 +51,9 @@ class Context implements MultistoreContextCheckerInterface
     /**
      * Get current ID of shop if context is CONTEXT_SHOP.
      *
-     * @return int
      *
      * @param mixed $null_value_without_multishop
+     * @return int
      */
     public function getContextShopID($null_value_without_multishop = false)
     {

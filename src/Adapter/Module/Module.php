@@ -171,9 +171,9 @@ class Module implements ModuleInterface
     }
 
     /**
+     * @throws \Exception
      * @return legacyInstance|void
      *
-     * @throws \Exception
      */
     public function getInstance()
     {

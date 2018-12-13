@@ -363,9 +363,9 @@ abstract class DbCore
      *
      * @param DbQuery|string $sql
      *
+     * @throws PrestaShopDatabaseException
      * @return bool|mysqli_result|PDOStatement|resource
      *
-     * @throws PrestaShopDatabaseException
      */
     public function query($sql)
     {
@@ -398,9 +398,9 @@ abstract class DbCore
      * @param int $type Must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE
      * @param bool $add_prefix Add or not _DB_PREFIX_ before table name
      *
+     * @throws PrestaShopDatabaseException
      * @return bool
      *
-     * @throws PrestaShopDatabaseException
      */
     public function insert($table, $data, $null_values = false, $use_cache = true, $type = Db::INSERT, $add_prefix = true)
     {
@@ -578,9 +578,9 @@ abstract class DbCore
      * @param bool $array Return an array instead of a result object (deprecated since 1.5.0.1, use query method instead)
      * @param bool $use_cache
      *
+     * @throws PrestaShopDatabaseException
      * @return array|false|null|mysqli_result|PDOStatement|resource
      *
-     * @throws PrestaShopDatabaseException
      */
     public function executeS($sql, $array = true, $use_cache = true)
     {
@@ -726,9 +726,9 @@ abstract class DbCore
      * @param DbQuery|string $sql
      * @param bool $use_cache
      *
+     * @throws PrestaShopDatabaseException
      * @return bool|mysqli_result|PDOStatement|resource
      *
-     * @throws PrestaShopDatabaseException
      */
     protected function q($sql, $use_cache = true)
     {

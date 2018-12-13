@@ -79,9 +79,9 @@ class TaxRulesGroupCore extends ObjectModel
     /**
      * Save the object with the field deleted to true.
      *
-     *  @return bool
      *
      * @param TaxRulesGroup $tax_rules_group
+     *  @return bool
      */
     public function historize(TaxRulesGroup $tax_rules_group)
     {
@@ -162,9 +162,9 @@ class TaxRulesGroupCore extends ObjectModel
     }
 
     /**
-     * @return array
      *
      * @param mixed $id_country
+     * @return array
      */
     public static function getAssociatedTaxRatesByIdCountry($id_country)
     {

@@ -173,10 +173,10 @@ class CategoryCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Category has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Indicates whether the Category has been successfully added
+     *
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -215,10 +215,10 @@ class CategoryCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the CartRule has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Indicates whether the CartRule has been successfully updated
+     *
      */
     public function update($nullValues = false)
     {
@@ -373,9 +373,9 @@ class CategoryCore extends ObjectModel
     /**
      * Deletes current CartRule from the database.
      *
+     * @throws PrestaShopException
      * @return bool `true` if successfully deleted
      *
-     * @throws PrestaShopException
      */
     public function delete()
     {
@@ -439,9 +439,9 @@ class CategoryCore extends ObjectModel
     /**
      * Get the depth level for the category.
      *
+     * @throws PrestaShopException
      * @return int Depth level
      *
-     * @throws PrestaShopException
      */
     public function calcLevelDepth()
     {
@@ -934,9 +934,9 @@ class CategoryCore extends ObjectModel
      *                          can see the products from this category
      * @param null|Context $context Instance of Context
      *
+     * @throws PrestaShopDatabaseException
      * @return array|false|int Products, number of products or false (no access)
      *
-     * @throws PrestaShopDatabaseException
      */
     public function getProducts(
         $idLang,
@@ -1417,9 +1417,9 @@ class CategoryCore extends ObjectModel
      * @param bool $unrestricted Allows search without lang and includes first category and exact match
      * @param bool $skipCache Skip the Cache
      *
+     * @throws PrestaShopDatabaseException
      * @return array Corresponding categories
      *
-     * @throws PrestaShopDatabaseException
      */
     public static function searchByName($idLang, $query, $unrestricted = false, $skipCache = false)
     {
@@ -2315,9 +2315,9 @@ class CategoryCore extends ObjectModel
     /**
      * Deletes all Categories from the Shop ID.
      *
-     * @return bool Indicates whether the Categories have been successfully removed
      *
      * @param mixed $idShop
+     * @return bool Indicates whether the Categories have been successfully removed
      */
     public static function deleteCategoriesFromShop($idShop)
     {

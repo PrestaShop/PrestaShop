@@ -82,9 +82,9 @@ class FileSystem
      * If $path is a file and not a directory, just gets the file info for it
      * and return it in an array.
      *
-     * @return an array of SplFileInfo object indexed by file path
      *
      * @param mixed $path
+     * @return an array of SplFileInfo object indexed by file path
      */
     public function listEntriesRecursively($path)
     {

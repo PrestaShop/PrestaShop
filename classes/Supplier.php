@@ -110,7 +110,6 @@ class SupplierCore extends ObjectModel
     /**
      * Return suppliers.
      *
-     * @return array Suppliers
      *
      * @param mixed $getNbProducts
      * @param mixed $idLang
@@ -119,6 +118,7 @@ class SupplierCore extends ObjectModel
      * @param mixed $n
      * @param mixed $allGroups
      * @param mixed $withProduct
+     * @return array Suppliers
      */
     public static function getSuppliers($getNbProducts = false, $idLang = 0, $active = true, $p = false, $n = false, $allGroups = false, $withProduct = false)
     {

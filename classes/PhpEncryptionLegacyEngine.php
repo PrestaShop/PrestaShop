@@ -84,10 +84,10 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      *
      * @param string $cipherText Cipher text
      *
+     * @throws Exception
      * @return bool|string Plaintext
      *                     `false` if unable to decrypt
      *
-     * @throws Exception
      */
     public function decrypt($cipherText)
     {

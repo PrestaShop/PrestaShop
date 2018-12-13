@@ -361,10 +361,10 @@ class OrderDetailCore extends ObjectModel
      *             because we need the full order object to do a good job here.
      *             Will no longer be supported after 1.6.1
      *
-     * @return bool
      *
      * @param Order $order
      * @param mixed $replace
+     * @return bool
      */
     public function saveTaxCalculator(Order $order, $replace = false)
     {

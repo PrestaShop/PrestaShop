@@ -1666,9 +1666,9 @@ class AdminProductsControllerCore extends AdminController
      * @param int $id_image Image Id for product image filename
      * @param string $method
      *
+     * @throws PrestaShopException
      * @return void|false
      *
-     * @throws PrestaShopException
      */
     public function copyImage($id_product, $id_image, $method = 'auto')
     {

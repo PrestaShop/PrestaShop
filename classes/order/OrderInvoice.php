@@ -164,11 +164,11 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Get order products.
      *
-     * @return array Products with price, quantity (with taxe and without)
      *
      * @param mixed $products
      * @param mixed $selected_products
      * @param mixed $selected_qty
+     * @return array Products with price, quantity (with taxe and without)
      */
     public function getProducts($products = false, $selected_products = false, $selected_qty = false)
     {
@@ -671,9 +671,9 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @param int $id
      *
+     * @throws PrestaShopException
      * @return OrderInvoice
      *
-     * @throws PrestaShopException
      */
     public static function retrieveOneById($id)
     {

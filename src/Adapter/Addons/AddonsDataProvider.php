@@ -75,9 +75,9 @@ class AddonsDataProvider implements AddonsInterface
     /**
      * @param $module_id
      *
+     * @throws Exception
      * @return bool
      *
-     * @throws Exception
      */
     public function downloadModule($module_id)
     {
@@ -189,9 +189,9 @@ class AddonsDataProvider implements AddonsInterface
     }
 
     /**
+     * @throws Exception
      * @return array
      *
-     * @throws Exception
      */
     protected function getAddonsCredentials()
     {

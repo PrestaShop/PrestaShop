@@ -248,9 +248,9 @@ class ReleaseCreator
     /**
      * Create a new release.
      *
+     * @throws BuildException
      * @return $this
      *
-     * @throws BuildException
      */
     public function createRelease()
     {
@@ -332,9 +332,9 @@ class ReleaseCreator
     /**
      * Define all config/defines.inc.php constants to the desired version.
      *
+     * @throws BuildException
      * @return $this
      *
-     * @throws BuildException
      */
     protected function setConfigDefinesConstants()
     {
@@ -373,9 +373,9 @@ class ReleaseCreator
     /**
      * Define the PrestaShop version to the desired version.
      *
+     * @throws BuildException
      * @return self
      *
-     * @throws BuildException
      */
     protected function setupShopVersion()
     {
@@ -420,9 +420,9 @@ class ReleaseCreator
     /**
      * Define all install-dev/data/xml/configuration.xml constants to the desired version.
      *
+     * @throws BuildException
      * @return $this
      *
-     * @throws BuildException
      */
     protected function setInstallDevConfigurationConstants()
     {
@@ -444,9 +444,9 @@ class ReleaseCreator
     /**
      * Define all install-dev/install_version.php constants to the desired version.
      *
+     * @throws BuildException
      * @return $this
      *
-     * @throws BuildException
      */
     protected function setInstallDevInstallVersionConstants()
     {
@@ -465,9 +465,9 @@ class ReleaseCreator
      * Generate the /LICENCES file. Concatenate all text files which contains the 'licence' word
      * in their filename into this unique one.
      *
+     * @throws BuildException
      * @return $this
      *
-     * @throws BuildException
      */
     protected function generateLicensesFile()
     {
@@ -492,9 +492,9 @@ class ReleaseCreator
     /**
      * Install all dependencies.
      *
+     * @throws BuildException
      * @return $this
      *
-     * @throws BuildException
      */
     protected function runComposerInstall()
     {
@@ -514,9 +514,9 @@ class ReleaseCreator
     /**
      * Create some required folders and rename a few.
      *
+     * @throws BuildException
      * @return $this
      *
-     * @throws BuildException
      */
     protected function createAndRenameFolders()
     {
@@ -624,9 +624,9 @@ class ReleaseCreator
      * @param array $patternsRemoveList
      * @param string $folder
      *
+     * @throws BuildException
      * @return $this
      *
-     * @throws BuildException
      */
     protected function removeUnnecessaryFiles(
         array &$filesList,
@@ -783,9 +783,9 @@ class ReleaseCreator
     /**
      * Create a XML file with the checksum of all the PrestaShop release files.
      *
+     * @throws BuildException
      * @return $this
      *
-     * @throws BuildException
      */
     protected function generateXMLChecksum()
     {
