@@ -27,17 +27,18 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
@@ -366,6 +367,10 @@ class CustomerController extends AbstractAdminController
                 '%s %s',
                 $this->trans('An account already exists for this email address:', 'Admin.Orderscustomers.Notification'),
                 $e instanceof DuplicateCustomerEmailException ? $e->getEmail()->getValue() : ''
+            ),
+            CustomerDefaultGroupAccessException::class => $this->trans(
+                'A default customer group must be selected in group box.',
+                'Admin.Orderscustomers.Notification'
             ),
             CustomerConstraintException::class => [
                 CustomerConstraintException::INVALID_PASSWORD => $this->trans(

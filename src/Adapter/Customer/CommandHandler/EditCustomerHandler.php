@@ -30,6 +30,7 @@ use Customer;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
@@ -76,6 +77,7 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         }
 
         $this->assertCustomerWithUpdatedEmailDoesNotExist($customer, $command);
+        $this->assertCustomerCanAccessDefaultGroup($customer, $command);
 
         $this->updateCustomerWithCommandData($customer, $command);
 
@@ -200,6 +202,37 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
             throw new DuplicateCustomerEmailException(
                 $command->getEmail(),
                 sprintf('Customer with email "%s" already exists', $command->getEmail()->getValue())
+            );
+        }
+    }
+
+    /**
+     * @param Customer $customer
+     * @param EditCustomerCommand $command
+     */
+    private function assertCustomerCanAccessDefaultGroup(Customer $customer, EditCustomerCommand $command)
+    {
+        // if neither default group
+        // nor group ids are being edited
+        // then no need to assert
+        if (null === $command->getDefaultGroupId()
+            || null === $command->getGroupIds()
+        ) {
+            return;
+        }
+
+        $defaultGroupId = null !== $command->getDefaultGroupId() ?
+            $command->getDefaultGroupId() :
+            $customer->id_default_group
+        ;
+        $groupIds = null !== $command->getGroupIds() ?
+            $command->getGroupIds() :
+            $customer->getGroups()
+         ;
+
+        if (!in_array($defaultGroupId, $groupIds)) {
+            throw new CustomerDefaultGroupAccessException(
+                sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId())
             );
         }
     }
