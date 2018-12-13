@@ -72,4 +72,3 @@ class InsertProcessor extends AbstractProcessor {
     }
 
 }
-?>

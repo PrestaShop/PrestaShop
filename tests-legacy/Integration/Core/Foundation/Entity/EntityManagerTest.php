@@ -80,7 +80,7 @@ class EntityManagerTest extends IntegrationTestCase
     {
         $repository = $this->entityManager->getRepository('CMSRole');
 
-        $entity = new CMSRole;
+        $entity = new CMSRole();
 
         $name = "Yo CMS Role " . mt_rand(0, mt_getrandmax());
 

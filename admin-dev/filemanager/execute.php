@@ -1,12 +1,14 @@
 <?php
 include('config/config.php');
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
-    die('forbiden');
+    die('Forbidden');
 }
 include('include/utils.php');
 
-$_POST['path_thumb'] = $thumbs_base_path.$_POST['path_thumb'];
-if (!isset($_POST['path_thumb']) && trim($_POST['path_thumb']) == '') {
+$_POST['path'] = isset($_POST['path']) ? str_replace("\0", '', $_POST['path']) : null;
+$_POST['path_thumb'] = isset($_POST['path_thumb']) ? $thumbs_base_path . str_replace("\0", '', $_POST['path_thumb']) : null;
+
+if (trim($_POST['path_thumb']) == '') {
     die('wrong path');
 }
 
@@ -31,12 +33,7 @@ if (isset($_GET['lang']) && $_GET['lang'] != 'undefined' && $_GET['lang'] != '')
 require_once $language_file;
 
 $base = $current_path;
-
-if (isset($_POST['path'])) {
-    $path = $current_path.str_replace("\0", "", $_POST['path']);
-} else {
-    $path = $current_path;
-}
+$path = isset($_POST['path']) ? ($current_path . $_POST['path']) : $current_path;
 
 $cycle = true;
 $max_cycles = 50;
@@ -55,8 +52,9 @@ while ($cycle && $i < $max_cycles) {
     $cycle = false;
 }
 
-$path = $current_path.str_replace("\0", "", $_POST['path']);
+$path = $current_path . $_POST['path'];
 $path_thumb = $_POST['path_thumb'];
+
 if (isset($_POST['name'])) {
     $name = $_POST['name'];
     if (preg_match('/\.{1,2}[\/|\\\]/', $name) !== 0) {

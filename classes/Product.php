@@ -1119,8 +1119,9 @@ class ProductCore extends ObjectModel
         }
 
         $new_categ_pos = array();
+        // The first position must be 1 instead of 0
         foreach ($categories as $id_category) {
-            $new_categ_pos[$id_category] = isset($new_categories[$id_category]) ? $new_categories[$id_category] : 0;
+            $new_categ_pos[$id_category] = isset($new_categories[$id_category]) ? $new_categories[$id_category] : 1;
         }
 
         $product_cats = array();
@@ -5697,8 +5698,10 @@ class ProductCore extends ObjectModel
                     $rows[$keyrow]['id'] = $feature;
                     unset($rows[$keyrow]['id_feature']);
                 }
-                unset($rows[$keyrow]['id_product']);
-                unset($rows[$keyrow]['custom']);
+                unset(
+                    $rows[$keyrow]['id_product'],
+                    $rows[$keyrow]['custom']
+                );
             }
             asort($rows[$keyrow]);
         }

@@ -52,7 +52,7 @@ class PHPSQLParserUtils {
             return $x;
         }  
             if (isset($_ENV['DEBUG'])) {
-                print $x . "\n";
+                echo $x . "\n";
             }
         
     }
@@ -104,7 +104,7 @@ class PHPSQLParserUtils {
         while ($i < strlen($trim)) {
 
             if ($trim[$i] === "\\") {
-                $i += 2; # an escape character, the next character is irrelevant
+                $i += 2; // an escape character, the next character is irrelevant
                 continue;
             }
 
@@ -147,4 +147,3 @@ class PHPSQLParserUtils {
         return (empty($expr) ? false : $expr);
     }
 }
-?>

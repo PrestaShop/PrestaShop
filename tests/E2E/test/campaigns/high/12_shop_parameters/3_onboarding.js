@@ -3,6 +3,7 @@ const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const common = require('../../common_scenarios/shop_parameters');
 const {ProductList} = require('../../../selectors/BO/add_product_page');
+const {Menu} = require('../../../selectors/BO/menu.js');
 
 let promise = Promise.resolve();
 
@@ -24,9 +25,21 @@ scenario('Welcome Module', () => {
 
   scenario('The first tutorial step : Create the first product ', () => {
     scenario('Step 1/5', client => {
-      test('should click on "Start" button', () => client.waitForExistAndClick(OnBoarding.start_button, 2000));
+      test('should click on "Start" or "Resume" button', () => {
+        return promise
+          .then(() => client.isVisible(OnBoarding.start_button, 1000))
+          .then(() => {
+            if (isVisible) {
+              client.waitForExistAndClick(OnBoarding.start_button, 1000)
+            } else {
+              client.waitForExistAndClick(Menu.dashboard_menu, 3000);
+              client.waitForExistAndClick(OnBoarding.resume_button, 2000);
+              client.waitForExistAndClick(OnBoarding.start_button, 1000)
+            }
+          });
+      });
       test('should check that the current step has started', () => client.checkAttributeValue(OnBoarding.welcomeSteps.tutorial_step.replace("%P", '0'), 'class', 'id -done'));
-      test('should check the existence of the onboarding-tooltip', () => client.isExisting(OnBoarding.welcomeSteps.onboarding_tooltip, 2000));
+      test('should check the existence of the onboarding-tooltip', () => client.isExisting(OnBoarding.welcomeSteps.onboarding_tooltip, 4000));
       test('should check the first onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'Give your product a catchy name.'));
       test('should check that the step number is equal to "1"', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '1/5'));
       test('should set the "Product name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, 'productTest' + date_time));
@@ -126,7 +139,7 @@ scenario('Welcome Module', () => {
       });
       test('should click on "Video tutorial" button', () => {
         return promise
-          .then(() => client.waitForExistAndClick(OnBoarding.welcomeSteps.video_tutorial_button))
+          .then(() => client.waitForExist(OnBoarding.welcomeSteps.video_tutorial_button))
           .then(() => client.switchWindow(4))
           .then(() => client.checkTextValue(OnBoarding.externals.youtube_channel_title, "PrestaShop", 'equal', 5000))
           .then(() => client.switchWindow(0));

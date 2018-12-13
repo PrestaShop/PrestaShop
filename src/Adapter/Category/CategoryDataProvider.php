@@ -227,7 +227,7 @@ class CategoryDataProvider
             $query = "AND cl.name LIKE '%" . pSQL($query) . "%'";
         }
 
-        if (is_integer($limit)) {
+        if (is_int($limit)) {
             $limit = 'LIMIT ' . $limit;
         } else {
             $limit = '';

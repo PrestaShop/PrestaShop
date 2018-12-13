@@ -195,10 +195,12 @@ class AdminRequestSqlControllerCore extends AdminController
             $request_sql = new RequestSql();
             $attributes = $request_sql->getAttributesByTable($table);
             foreach ($attributes as $key => $attribute) {
-                unset($attributes[$key]['Null']);
-                unset($attributes[$key]['Key']);
-                unset($attributes[$key]['Default']);
-                unset($attributes[$key]['Extra']);
+                unset(
+                    $attributes[$key]['Null'],
+                    $attributes[$key]['Key'],
+                    $attributes[$key]['Default'],
+                    $attributes[$key]['Extra']
+                );
             }
             die(json_encode($attributes));
         }
@@ -338,12 +340,12 @@ class AdminRequestSqlControllerCore extends AdminController
                 $results = Db::getInstance()->executeS($sql[0]['sql']);
                 foreach (array_keys($results[0]) as $key) {
                     $tab_key[] = $key;
-                    fputs($csv, $key . ';');
+                    fwrite($csv, $key . ';');
                 }
                 foreach ($results as $result) {
-                    fputs($csv, "\n");
+                    fwrite($csv, "\n");
                     foreach ($tab_key as $name) {
-                        fputs($csv, $textDelimiter . strip_tags($result[$name]) . $textDelimiter . ';');
+                        fwrite($csv, $textDelimiter . strip_tags($result[$name]) . $textDelimiter . ';');
                     }
                 }
                 if (file_exists($export_dir . $file)) {

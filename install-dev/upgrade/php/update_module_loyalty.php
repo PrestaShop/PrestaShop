@@ -25,8 +25,8 @@
  */
 
 /**
-* backward compatibility vouchers should be available in all categories
-*/
+ * backward compatibility vouchers should be available in all categories
+ */
 function update_module_loyalty()
 {
     $ps_loyalty_point_value = Db::getInstance()->getValue('SELECT value

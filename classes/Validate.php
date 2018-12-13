@@ -834,9 +834,9 @@ class ValidateCore
     }
 
     /**
-     * Check object validity.
+     * Check color validity.
      *
-     * @param int $object Object to validate
+     * @param string $color Color to validate
      *
      * @return bool Validity is ok or not
      */
@@ -1223,5 +1223,21 @@ class ValidateCore
     public static function isThemeName($theme_name)
     {
         return (bool) preg_match('/^[\w-]{3,255}$/u', $theme_name);
+    }
+
+    /**
+     * Check if enable_insecure_rsh exists in
+     * this PHP version otherwise disable the
+     * oProxyCommand option.
+     *
+     * @return bool
+     */
+    public static function isValidImapUrl($imapUrl)
+    {
+        if (false === ini_get('imap.enable_insecure_rsh')) {
+            return preg_match('~^((?!oProxyCommand).)*$~i', $imapUrl);
+        }
+
+        return true;
     }
 }

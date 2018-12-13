@@ -181,4 +181,3 @@ class PHPSQLParserConstants {
         return in_array($token, PHPSQLParserConstants::$parameterizedFunctions);
     }
 }
-?>

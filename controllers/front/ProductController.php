@@ -393,8 +393,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             ),
             'product' => $productForTemplate,
         )));
-
-        return;
     }
 
     public function displayAjaxRefresh()
@@ -437,8 +435,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
         )));
-
-        return;
     }
 
     /**
@@ -666,8 +662,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                     foreach ($group['attributes'] as $key => $attribute) {
                         if (!in_array((int) $key, $id_attributes)) {
-                            unset($group['attributes'][$key]);
-                            unset($group['attributes_quantity'][$key]);
+                            unset(
+                                $group['attributes'][$key],
+                                $group['attributes_quantity'][$key]
+                            );
                         }
                     }
                 }

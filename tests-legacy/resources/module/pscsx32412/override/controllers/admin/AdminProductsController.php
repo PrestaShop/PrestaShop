@@ -396,8 +396,10 @@ class AdminProductsController extends AdminProductsControllerCore
                     }
                 }
             }
-            unset($product->id);
-            unset($product->id_product);
+            unset(
+                $product->id,
+                $product->id_product
+            );
             $product->indexed = 0;
             $product->active = 0;
             if ($product->add()
@@ -1510,7 +1512,7 @@ class AdminProductsController extends AdminProductsControllerCore
     protected function updateAssoShop($id_object)
     {
         //override AdminController::updateAssoShop() specifically for products because shop association is set with the context in ObjectModel
-        return;
+        
     }
 
     public function processAdd()
@@ -2132,8 +2134,10 @@ class AdminProductsController extends AdminProductsControllerCore
             if (!$id_category) {
                 $this->_defaultOrderBy = $this->identifier;
                 if ($this->context->cookie->{$this->table.'Orderby'} == 'position') {
-                    unset($this->context->cookie->{$this->table.'Orderby'});
-                    unset($this->context->cookie->{$this->table.'Orderway'});
+                    unset(
+                        $this->context->cookie->{$this->table.'Orderby'},
+                        $this->context->cookie->{$this->table.'Orderway'}
+                    );
                 }
             }
             if (!$id_category) {
@@ -2570,8 +2574,8 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-    * Post treatment for suppliers
-    */
+     * Post treatment for suppliers
+     */
     public function processSuppliers()
     {
         if ((int)Tools::getValue('supplier_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product')))) {
@@ -2728,8 +2732,8 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /**
-    * Post treatment for warehouses
-    */
+     * Post treatment for warehouses
+     */
     public function processWarehouses()
     {
         if ((int)Tools::getValue('warehouse_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)$id_product = Tools::getValue('id_product')))) {

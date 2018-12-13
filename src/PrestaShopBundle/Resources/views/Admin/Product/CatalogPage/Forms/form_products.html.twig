@@ -27,7 +27,7 @@
   id="product_catalog_list"
   method="post"
   action="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
-  orderingurl="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': 'name', 'sortOrder': 'asc'}) }}"
+  orderingurl="{{ path('admin_product_catalog', {offset: 0, 'limit': 300, 'orderBy': 'position_ordering', 'sortOrder': sortOrder}) }}"
   newproducturl="{{ path('admin_product_new') }}"
 >
   <div class="row">

@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<form action="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}&amp;viewcustomer_thread&amp;id_customer_thread={$id_customer_thread|intval}" method="post" enctype="multipart/form-data" class="form-horizontal">
+<form action="{$link->getAdminLink('AdminCustomerThreads', true, [], ['id_customer_thread' => $id_customer_thread|intval, 'viewcustomer_thread' => 1])|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">

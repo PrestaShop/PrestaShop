@@ -319,7 +319,7 @@ function mo_setProductPrices($row, $tax_calculation_method)
         }
     }
 
-    if (($row['reduction_percent'] or $row['reduction_amount'] or $row['group_reduction']) and $tax_calculation_method == PS_TAX_EXC) {
+    if (($row['reduction_percent'] || $row['reduction_amount'] || $row['group_reduction']) && $tax_calculation_method == PS_TAX_EXC) {
         $row['product_price'] = mo_ps_round($row['product_price']);
     }
 

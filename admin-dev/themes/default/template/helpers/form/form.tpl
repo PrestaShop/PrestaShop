@@ -850,7 +850,7 @@
 						</button>
 						{/if}
 						{if isset($show_cancel_button) && $show_cancel_button}
-						<a href="{$back_url|escape:'html':'UTF-8'}" class="btn btn-default" {if $table}id="{$table}_form_cancel_btn"{/if} onclick="window.history.back();">
+						<a href="#" class="btn btn-default" {if $table}id="{$table}_form_cancel_btn"{/if} onclick="window.history.back();">
 							<i class="process-icon-cancel"></i> {l s='Cancel' d='Admin.Actions'}
 						</a>
 						{/if}
@@ -913,10 +913,10 @@
 		// precedence conflicts with other document.ready() blocks
 		{foreach $languages as $k => $language}
 			languages[{$k}] = {
-				id_lang: {$language.id_lang},
-				iso_code: '{$language.iso_code}',
-				name: '{$language.name}',
-				is_default: '{$language.is_default}'
+				id_lang: {$language.id_lang|escape:'javascript'},
+				iso_code: '{$language.iso_code|escape:'javascript'}',
+				name: '{$language.name|escape:'javascript'}',
+				is_default: '{$language.is_default|escape:'javascript'}'
 			};
 		{/foreach}
 		// we need allowEmployeeFormLang var in ajax request

@@ -528,8 +528,11 @@ class AdminProductsControllerCore extends AdminController
                     }
                 }
             }
-            unset($product->id);
-            unset($product->id_product);
+            unset(
+                $product->id,
+                $product->id_product
+            );
+
             $product->indexed = 0;
             $product->active = 0;
             if ($product->add()
@@ -1701,7 +1704,6 @@ class AdminProductsControllerCore extends AdminController
     protected function updateAssoShop($id_object)
     {
         //override AdminController::updateAssoShop() specifically for products because shop association is set with the context in ObjectModel
-        return;
     }
 
     public function processAdd()

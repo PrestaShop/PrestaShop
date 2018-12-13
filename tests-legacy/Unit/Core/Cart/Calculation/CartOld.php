@@ -26,7 +26,7 @@
 
 namespace LegacyTests\Unit\Core\Cart\Calculation;
 
-use \Cart;
+use Cart;
 use CartRule;
 use Context;
 use Order;

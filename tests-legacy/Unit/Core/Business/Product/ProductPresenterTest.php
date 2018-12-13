@@ -58,7 +58,7 @@ class ProductPresenterTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->settings = new ProductPresentationSettings;
+        $this->settings = new ProductPresentationSettings();
 
         $this->settings->catalog_mode = false;
         $this->settings->restricted_country_mode = false;
@@ -83,7 +83,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['new'] = false;
         $this->product['pack'] = false;
         $this->product['show_price'] = true;
-        $this->language = new Language;
+        $this->language = new Language();
     }
 
     private function _presentProduct($presenterClass, $field)
@@ -102,7 +102,7 @@ class ProductPresenterTest extends UnitTestCase
         $presenter = new $presenterClass(
             $imageRetriever,
             $link,
-            new PriceFormatter,
+            new PriceFormatter(),
             Phake::mock('PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever'),
             $translator
         );

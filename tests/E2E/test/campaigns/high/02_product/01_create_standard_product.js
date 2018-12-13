@@ -4,16 +4,19 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
 
-scenario('Create Standard Product in the Back Office', client => {
-  test('should open browser', () => client.open());
-  test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
-  test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
-  test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(AddProductPage.new_product_button));
-
+scenario('Create Standard Product in the Back Office', () => {
+  scenario('Login in the Back Office', client => {
+    test('should open browser', () => client.open());
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+  }, 'product/product');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Edit Basic settings', client => {
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+    test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(AddProductPage.new_product_button));
     test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.standard.name + date_time));
     test('should set the "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, "10"));
     test('should set the "Summary" text', () => client.setEditorText(AddProductPage.summary_textarea, data.common.summary));
@@ -31,7 +34,7 @@ scenario('Create Standard Product in the Back Office', client => {
         .then(() => client.waitForVisible(AddProductPage.created_category))
         .then(() => client.scrollWaitForExistAndClick(AddProductPage.home_delete_button));
     });
-   // test('should open all categories', () => client.openAllCategories()); //TODO: Verify if we should close then open all categories
+    // test('should open all categories', () => client.openAllCategories()); //TODO: Verify if we should close then open all categories
     test('should check the existence of the first category Radio button', () => client.checkCategoryRadioButton(4));
     test('should check the existence of the second category Radio button', () => client.checkCategoryRadioButton(5));
     test('should check the existence of the third Radio button', () => client.checkCategoryRadioButton(7));

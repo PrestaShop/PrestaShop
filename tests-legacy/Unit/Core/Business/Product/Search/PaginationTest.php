@@ -33,7 +33,7 @@ class PaginationTest extends Testcase
 {
     public function setUp()
     {
-        $this->pagination = new Pagination;
+        $this->pagination = new Pagination();
     }
 
     public function testPaginationAddsContextFirstAndLastPageAndPreviousNext()

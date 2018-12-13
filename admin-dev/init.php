@@ -53,7 +53,7 @@ try {
 
     /* Server Params */
     $protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-    $protocol_content = (isset($useSSL) and $useSSL and Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+    $protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
     $link = new Link($protocol_link, $protocol_content);
     $context->link = $link;
     if (!defined('_PS_BASE_URL_')) {

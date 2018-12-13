@@ -219,7 +219,7 @@ namespace PrestaShopBundle\Install {
             }
 
             // if _PS_ROOT_DIR_ is defined, use it instead of "guessing" the module dir.
-            if (defined('_PS_ROOT_DIR_') and !defined('_PS_MODULE_DIR_')) {
+            if (defined('_PS_ROOT_DIR_') && !defined('_PS_MODULE_DIR_')) {
                 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
             } elseif (!defined('_PS_MODULE_DIR_')) {
                 define('_PS_MODULE_DIR_', _PS_INSTALL_PATH_ . '/../modules/');
@@ -255,7 +255,7 @@ namespace PrestaShopBundle\Install {
             // consequences : file 1.4.3.0.sql will be skipped if oldversion = 1.4.3
             // @since 1.4.4.0
             $arrayVersion = preg_split('#\.#', $this->oldVersion);
-            $versionNumbers = sizeof($arrayVersion);
+            $versionNumbers = count($arrayVersion);
 
             if ($versionNumbers != 4) {
                 $arrayVersion = array_pad($arrayVersion, 4, '0');
@@ -480,7 +480,7 @@ namespace PrestaShopBundle\Install {
                                 /* Or an object method, not supported */
                                 $this->logWarning('[ERROR] ' . $version . ' PHP - Object Method call is forbidden (' . $php[0] . '::' . str_replace($pattern[0], '', $php[1]) . ')', 42, array(), true);
                             }
-                            if ((is_array($phpRes) and !empty($phpRes['error'])) || $phpRes === false) {
+                            if ((is_array($phpRes) && !empty($phpRes['error'])) || $phpRes === false) {
                                 $this->logWarning('[ERROR] PHP ' . $version . ' ' . $query . "\n" . '
 								' . (empty($phpRes['error']) ? '' : $phpRes['error'] . "\n") . '
 								' . (empty($phpRes['msg']) ? '' : ' - ' . $phpRes['msg']), $version, array(), true);
@@ -620,7 +620,7 @@ namespace PrestaShopBundle\Install {
             foreach ($arrayToClean as $dir) {
                 if (file_exists($dir)) {
                     foreach (scandir($dir, SCANDIR_SORT_NONE) as $file) {
-                        if ($file[0] != '.' and $file != 'index.php' and $file != '.htaccess') {
+                        if ($file[0] != '.' && $file != 'index.php' && $file != '.htaccess') {
                             if (is_file($dir . $file)) {
                                 unlink($dir . $file);
                             } elseif (is_dir($dir . $file . DIRECTORY_SEPARATOR)) {

@@ -153,8 +153,6 @@ class StoresControllerCore extends FrontController
         header('Content-type: text/xml');
 
         $this->ajaxRender($parnode->asXML());
-
-        return;
     }
 
     /**

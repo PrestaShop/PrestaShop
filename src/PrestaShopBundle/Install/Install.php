@@ -1049,11 +1049,19 @@ class Install extends AbstractInstall
                 continue;
             }
 
-            if (!$moduleManager->install($module_name)) {
-                /*$module_errors = $module->getErrors();
-                if (empty($module_errors)) {*/
+            $moduleException = null;
+            try {
+                $moduleInstalled = $moduleManager->install($module_name);
+            } catch (\PrestaShopException $e) {
+                $moduleInstalled = false;
+                $moduleException = $e->getMessage();
+            }
+
+            if (!$moduleInstalled) {
                 $module_errors = [$this->translator->trans('Cannot install module "%module%"', array('%module%' => $module_name), 'Install')];
-                /*}*/
+                if (null !== $moduleException) {
+                    $module_errors[] = $moduleException;
+                }
                 $errors[$module_name] = $module_errors;
             }
         }

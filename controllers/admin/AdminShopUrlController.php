@@ -521,7 +521,7 @@ class AdminShopUrlControllerCore extends AdminController
         }
 
         if ($this->redirect_shop_url) {
-            $this->redirect_after = $object->getBaseURI() . basename(_PS_ADMIN_DIR_) . '/' . $this->context->link->getAdminLink('AdminShopUrl');
+            $this->redirect_after = $this->context->link->getAdminLink('AdminShopUrl');
         }
     }
 

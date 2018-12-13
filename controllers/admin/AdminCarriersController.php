@@ -34,7 +34,7 @@ class AdminCarriersControllerCore extends AdminController
     public function __construct()
     {
         if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier')) {
-            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard') . '&id_carrier=' . (int) $id_carrier);
+            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard', true, array(), array('id_carrier' => (int) $id_carrier)));
         }
 
         $this->bootstrap = true;
@@ -679,7 +679,7 @@ class AdminCarriersControllerCore extends AdminController
             }
 
             $tpl->assign(array(
-                'href' => $this->context->link->getAdminLink('AdminCarrierWizard') . '&id_carrier=' . (int) $id,
+                'href' => $this->context->link->getAdminLink('AdminCarrierWizard', true, array(), array('id_carrier' => (int) $id)),
                 'action' => self::$cache_lang['Edit'],
                 'id' => $id,
             ));
@@ -713,7 +713,7 @@ class AdminCarriersControllerCore extends AdminController
 
             $data = array(
                 $this->identifier => $id,
-                'href' => $this->context->link->getAdminLink('AdminCarriers') . '&id_carrier=' . (int) $id . '&deletecarrier=1',
+                'href' => $this->context->link->getAdminLink('AdminCarriers', true, array(), array('id_carrier' => (int) $id, 'deletecarrier' => 1)),
                 'action' => self::$cache_lang['Delete'],
             );
 

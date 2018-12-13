@@ -1269,8 +1269,6 @@ class AdminControllerCore extends Controller
         if (isset($object)) {
             return $object;
         }
-
-        return;
     }
 
     /**
@@ -1388,8 +1386,10 @@ class AdminControllerCore extends Controller
 
         $_POST = array();
         $this->_filter = false;
-        unset($this->_filterHaving);
-        unset($this->_having);
+        unset(
+            $this->_filterHaving,
+            $this->_having
+        );
     }
 
     /**
@@ -1916,6 +1916,7 @@ class AdminControllerCore extends Controller
                 'multishop_context' => $this->multishop_context,
                 'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int) Context::getContext()->employee->default_tab)),
                 'login_link' => $this->context->link->getAdminLink('AdminLogin'),
+                'logout_link' => $this->context->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]),
                 'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int) $this->context->cookie->collapse_menu : 0,
             ));
         } else {
@@ -1965,7 +1966,7 @@ class AdminControllerCore extends Controller
                         array(
                             '[1]' => '<strong>',
                             '[/1]' => '</strong>',
-                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts') . '&action=filterOnlyAbandonedCarts">',
+                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true, array(), array('action' => 'filterOnlyAbandonedCarts')) . '">',
                              '[/2]' => '</a>',
                             '[3]' => '<br>',
                         ),

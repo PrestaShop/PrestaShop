@@ -34,7 +34,7 @@ class AdapterDatabaseTest extends IntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->db = new Database;
+        $this->db = new Database();
     }
 
     public function testValuesAreEscapedDataProvider()
