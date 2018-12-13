@@ -47,7 +47,7 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     private $limit;
 
     /**
-     * @var array import entity fields mapping.
+     * @var array import entity fields mapping
      */
     private $entityFields;
 
@@ -77,7 +77,7 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     private $postSizeLimit;
 
     /**
-     * @var int total number of rows to be imported.
+     * @var int total number of rows to be imported
      */
     private $totalNumberOfRows;
 

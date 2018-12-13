@@ -98,7 +98,7 @@ final class Importer implements ImporterInterface
     ) {
         $this->setUp($importHandler, $importConfig, $runtimeConfig);
 
-        $importFile = new SplFileInfo($this->importDir.$importConfig->getFileName());
+        $importFile = new SplFileInfo($this->importDir . $importConfig->getFileName());
 
         // Current row index
         $rowIndex = 0;
@@ -115,12 +115,12 @@ final class Importer implements ImporterInterface
 
         foreach ($this->fileReader->read($importFile) as $dataRow) {
             if ($isFirstIteration) {
-                $totalNumberOfRows++;
+                ++$totalNumberOfRows;
             }
 
             // Skip rows until the correct row is reached.
             if ($rowIndex < $skipRows) {
-                $rowIndex++;
+                ++$rowIndex;
                 continue;
             }
 
@@ -145,8 +145,8 @@ final class Importer implements ImporterInterface
             } catch (SkippedIterationException $e) {
                 continue;
             } finally {
-                $processedRows++;
-                $rowIndex++;
+                ++$processedRows;
+                ++$rowIndex;
             }
         }
 

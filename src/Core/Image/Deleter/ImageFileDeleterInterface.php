@@ -34,10 +34,10 @@ interface ImageFileDeleterInterface
     /**
      * Recursively deletes all images in the given path and removes empty folders.
      *
-     * @param string $path images directory.
-     * @param bool $recursively if true deletes images from subdirectories.
-     * @param bool $deleteSubdirectories if true deletes the subdirectories as well.
-     * @param string $format image format.
+     * @param string $path images directory
+     * @param bool $recursively if true deletes images from subdirectories
+     * @param bool $deleteSubdirectories if true deletes the subdirectories as well
+     * @param string $format image format
      *
      * @return bool
      */

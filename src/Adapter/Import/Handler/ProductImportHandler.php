@@ -33,7 +33,7 @@ use Feature;
 use FeatureValue;
 use Image;
 use Manufacturer;
-use \Module;
+use Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShop\PrestaShop\Adapter\Import\ImageCopier;
@@ -153,8 +153,8 @@ final class ProductImportHandler extends AbstractImportHandler
         );
 
         $this->connection = $connection;
-        $this->productTable = $dbPrefix.'product';
-        $this->accessoryTable = $dbPrefix.'accessory';
+        $this->productTable = $dbPrefix . 'product';
+        $this->accessoryTable = $dbPrefix . 'accessory';
         $this->defaultValues = [
             'id_category' => [$this->configuration->getInt('PS_HOME_CATEGORY')],
             'id_category_default' => null,
@@ -274,7 +274,7 @@ final class ProductImportHandler extends AbstractImportHandler
                     !empty($productId) ? $this->tools->sanitize($productId) : 'No ID'
                 ));
 
-                $this->error($fieldsError.$langFieldsError.$this->legacyDatabase->getErrorMessage());
+                $this->error($fieldsError . $langFieldsError . $this->legacyDatabase->getErrorMessage());
             } else {
                 if (!$runtimeConfig->shouldValidateData()) {
                     $this->saveProductSupplier($product);
@@ -363,7 +363,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 $error = true !== $fieldsError ? $fieldsError : '';
                 $error .= true !== $langFieldsError ? $langFieldsError : '';
 
-                $this->error($error.$this->legacyDatabase->getErrorMessage());
+                $this->error($error . $this->legacyDatabase->getErrorMessage());
             }
         }
     }
@@ -394,9 +394,9 @@ final class ProductImportHandler extends AbstractImportHandler
             if ($productReference) {
                 $statement = $this->connection->query(
                     'SELECT p.`id_product`
-                    FROM `'.$this->productTable.'` p
-                    '.Shop::addSqlAssociation('product', 'p').'
-                    WHERE p.`reference` = "'.pSQL($productReference).'"'
+                    FROM `' . $this->productTable . '` p
+                    ' . Shop::addSqlAssociation('product', 'p') . '
+                    WHERE p.`reference` = "' . pSQL($productReference) . '"'
                 );
                 $row = $statement->fetch();
 
@@ -506,7 +506,7 @@ final class ProductImportHandler extends AbstractImportHandler
      * Load manufacturer data into the product object.
      *
      * @param Product $product
-     * @param bool $validateOnly if true, will not create new manufacturer if not exists.
+     * @param bool $validateOnly if true, will not create new manufacturer if not exists
      */
     private function loadManufacturer(Product $product, $validateOnly)
     {
@@ -551,7 +551,7 @@ final class ProductImportHandler extends AbstractImportHandler
                         $error = true !== $fieldsError ? $fieldsError : '';
                         $error .= true !== $langFieldsError ? $langFieldsError : '';
 
-                        $this->error($error.$this->legacyDatabase->getErrorMessage());
+                        $this->error($error . $this->legacyDatabase->getErrorMessage());
                     }
                 }
             }
@@ -562,7 +562,7 @@ final class ProductImportHandler extends AbstractImportHandler
      * Load supplier data into the product object.
      *
      * @param Product $product
-     * @param bool $validateOnly if true, will not create new supplier if not exists.
+     * @param bool $validateOnly if true, will not create new supplier if not exists
      */
     private function loadSupplier(Product $product, $validateOnly)
     {
@@ -607,7 +607,7 @@ final class ProductImportHandler extends AbstractImportHandler
                         $error = true !== $fieldsError ? $fieldsError : '';
                         $error .= true !== $langFieldsError ? $langFieldsError : '';
 
-                        $this->error($error.$this->legacyDatabase->getErrorMessage());
+                        $this->error($error . $this->legacyDatabase->getErrorMessage());
                     }
                 }
             }
@@ -685,7 +685,7 @@ final class ProductImportHandler extends AbstractImportHandler
                                 $error = true !== $fieldsError ? $fieldsError : '';
                                 $error .= true !== $langFieldsError ? $langFieldsError : '';
 
-                                $this->error($error.$this->legacyDatabase->getErrorMessage());
+                                $this->error($error . $this->legacyDatabase->getErrorMessage());
                             }
                         }
                     }
@@ -831,21 +831,21 @@ final class ProductImportHandler extends AbstractImportHandler
 
         if ($productExistsById || $productExistsByReference) {
             $sqlPart = 'SELECT product_shop.`date_add`, p.`id_product`
-                FROM `'._DB_PREFIX_.'product` p
-                '.Shop::addSqlAssociation('product', 'p').'
+                FROM `' . _DB_PREFIX_ . 'product` p
+                ' . Shop::addSqlAssociation('product', 'p') . '
                 WHERE ';
 
             if ($productExistsByReference) {
-                $sqlPart .= 'p.`reference` = "'.pSQL($product->reference).'"';
+                $sqlPart .= 'p.`reference` = "' . pSQL($product->reference) . '"';
             } elseif ($productExistsById) {
-                $sqlPart .= 'p.`id_product` = '.(int)$product->id;
+                $sqlPart .= 'p.`id_product` = ' . (int) $product->id;
             }
 
             $statement = $this->connection->query($sqlPart);
             $row = $statement->fetch();
 
             if ($productExistsByReference) {
-                $product->id = (int)$row['id_product'];
+                $product->id = (int) $row['id_product'];
             }
 
             $product->date_add = $row['date_add'];
@@ -992,7 +992,7 @@ final class ProductImportHandler extends AbstractImportHandler
      *
      * @param Product $product
      * @param ImportConfigInterface $importConfig
-     * @param string $productName product name, used for error messages.
+     * @param string $productName product name, used for error messages
      */
     private function saveProductTags(Product $product, ImportConfigInterface $importConfig, $productName)
     {
@@ -1402,7 +1402,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 $this->connection->delete(
                     $this->accessoryTable,
                     [
-                        'id_product_1' => (int) $productId
+                        'id_product_1' => (int) $productId,
                     ]
                 );
                 Product::changeAccessoriesForProduct($uniqueIds, $productId);

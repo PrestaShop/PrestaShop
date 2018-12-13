@@ -170,7 +170,7 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
     {
         $protectedCategoriesIds = [
             $this->configuration->getInt('PS_HOME_CATEGORY'),
-            $this->configuration->getInt('PS_ROOT_CATEGORY')
+            $this->configuration->getInt('PS_ROOT_CATEGORY'),
         ];
 
         $this->connection->executeQuery(
@@ -299,7 +299,7 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
         foreach ($tables as $table) {
             $tableExists = $this->connection->getSchemaManager()->tablesExist(
                 [
-                    "{$this->dbPrefix}{$table}"
+                    "{$this->dbPrefix}{$table}",
                 ]
             );
 
