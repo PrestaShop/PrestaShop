@@ -132,6 +132,7 @@ class WarehouseCore extends ObjectModel
      * Gets the carriers associated to the current warehouse.
      *
      * @return array Ids of the associated carriers
+     * @param mixed $return_reference
      */
     public function getCarriers($return_reference = false)
     {
@@ -509,6 +510,7 @@ class WarehouseCore extends ObjectModel
      * For a given pack, returns the warehouse it can be shipped from.
      *
      * @param int $id_product
+     * @param null|mixed $id_shop
      *
      * @return array|bool id_warehouse or false
      */

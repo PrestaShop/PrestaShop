@@ -48,6 +48,7 @@ class StepList implements IteratorAggregate
     /**
      *
      * @param array $stepNames
+     * @param array $stepConfig
      */
     public function __construct(array $stepConfig)
     {

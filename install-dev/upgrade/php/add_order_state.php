@@ -22,6 +22,15 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
+ * @param mixed $conf_name
+ * @param mixed $name
+ * @param mixed $invoice
+ * @param mixed $send_email
+ * @param mixed $color
+ * @param mixed $unremovable
+ * @param mixed $logable
+ * @param mixed $delivery
+ * @param null|mixed $template
  */
 
 function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unremovable, $logable, $delivery, $template = null)

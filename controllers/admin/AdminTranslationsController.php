@@ -2170,6 +2170,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @return array List of modules
      *
      * @throws PrestaShopException
+     * @param mixed $withInstance
      */
     public function getListModules($withInstance = false)
     {

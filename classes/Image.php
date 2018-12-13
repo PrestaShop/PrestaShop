@@ -365,6 +365,7 @@ class ImageCore extends ObjectModel
      *
      * @param int $idProductOld Source product ID
      * @param bool $idProductNew Destination product ID
+     * @param mixed $combinationImages
      */
     public static function duplicateProductImages($idProductOld, $idProductNew, $combinationImages)
     {
@@ -560,6 +561,7 @@ class ImageCore extends ObjectModel
     /**
      * Delete the product image from disk and remove the containing folder if empty
      * Handles both legacy and new image filesystems.
+     * @param mixed $forceDelete
      */
     public function deleteImage($forceDelete = false)
     {

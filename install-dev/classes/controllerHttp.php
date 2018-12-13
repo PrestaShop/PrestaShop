@@ -456,6 +456,7 @@ class InstallControllerHttp
      *
      * @param string $template Template name
      * @param bool $get_output Is true, return template html
+     * @param null|mixed $path
      * @return string
      */
     public function displayTemplate($template, $get_output = false, $path = null)

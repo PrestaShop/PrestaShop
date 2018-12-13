@@ -509,6 +509,7 @@ abstract class QueryParamsCollection
     /**
      * @param array $filters
      * @param dateAdd
+     * @param mixed $dateAdd
      *
      * @return array
      */
@@ -555,6 +556,7 @@ abstract class QueryParamsCollection
     /**
      * @param array $filters
      * @param active
+     * @param mixed $active
      *
      * @return array
      */

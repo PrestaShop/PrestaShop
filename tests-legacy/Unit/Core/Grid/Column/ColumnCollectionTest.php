@@ -51,6 +51,7 @@ class ColumnCollectionTest extends TestCase
 
     /**
      * @depends testItAddsColumnsToCollection
+     * @param ColumnCollection $columns
      */
     public function testItAddsColumnsBeforeGivenColumn(ColumnCollection $columns)
     {
@@ -73,6 +74,7 @@ class ColumnCollectionTest extends TestCase
 
     /**
      * @depends testItAddsColumnsBeforeGivenColumn
+     * @param ColumnCollection $columns
      */
     public function testItAddsColumnsAfterGivenColumn(ColumnCollection $columns)
     {
@@ -98,6 +100,7 @@ class ColumnCollectionTest extends TestCase
 
     /**
      * @depends testItAddsColumnsAfterGivenColumn
+     * @param ColumnCollection $columns
      */
     public function testItRemovesColumnById(ColumnCollection $columns)
     {

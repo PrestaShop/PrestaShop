@@ -1024,6 +1024,11 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 use $this->registerJavascript() and $this->registerStylesheet() to manage your assets.
+     * @param mixed $media_uri
+     * @param null|mixed $css_media_type
+     * @param null|mixed $offset
+     * @param mixed $remove
+     * @param mixed $check_path
      */
     public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false, $check_path = true)
     {
@@ -1035,6 +1040,9 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 this method has not effect with PrestaShop 1.7+
+     * @param mixed $media_uri
+     * @param null|mixed $css_media_type
+     * @param mixed $check_path
      */
     public function removeMedia($media_uri, $css_media_type = null, $check_path = true)
     {
@@ -1093,6 +1101,10 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function shouldn't be used, use $this->registerStylesheet() instead
+     * @param mixed $css_uri
+     * @param mixed $css_media_type
+     * @param null|mixed $offset
+     * @param mixed $check_path
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
     {
@@ -1114,6 +1126,9 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterStylesheet() instead
+     * @param mixed $css_uri
+     * @param mixed $css_media_type
+     * @param mixed $check_path
      */
     public function removeCSS($css_uri, $css_media_type = 'all', $check_path = true)
     {
@@ -1135,6 +1150,8 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() instead
+     * @param mixed $js_uri
+     * @param mixed $check_path
      */
     public function addJS($js_uri, $check_path = true)
     {
@@ -1156,6 +1173,8 @@ class FrontControllerCore extends Controller
 
     /**
      * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterJavascript() instead
+     * @param mixed $js_uri
+     * @param mixed $check_path
      */
     public function removeJS($js_uri, $check_path = true)
     {
@@ -1178,6 +1197,9 @@ class FrontControllerCore extends Controller
     /**
      * @deprecated 1.7  This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core on every theme.
      *                  Have a look at the /themes/_core folder.
+     * @param null|mixed $version
+     * @param null|mixed $folder
+     * @param mixed $minifier
      */
     public function addJquery($version = null, $folder = null, $minifier = true)
     {
@@ -1207,6 +1229,7 @@ class FrontControllerCore extends Controller
 
     /**
      * Add Library not included with classic theme.
+     * @param array $libraries
      */
     public function requireAssets(array $libraries)
     {
@@ -1287,6 +1310,9 @@ class FrontControllerCore extends Controller
      * Sets template file for page content output.
      *
      * @param string $default_template
+     * @param mixed $template
+     * @param mixed $params
+     * @param null|mixed $locale
      */
     public function setTemplate($template, $params = array(), $locale = null)
     {
@@ -1726,6 +1752,7 @@ class FrontControllerCore extends Controller
      *
      * Otherwise, params from $extraParams that have a null value are stripped,
      * and other params are added. Params not in $extraParams are unchanged.
+     * @param null|array $extraParams
      */
     protected function updateQueryString(array $extraParams = null)
     {

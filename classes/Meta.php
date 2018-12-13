@@ -290,6 +290,9 @@ class MetaCore extends ObjectModel
      * Get meta tags.
      *
      * @since 1.5.0
+     * @param mixed $idLang
+     * @param mixed $pageName
+     * @param mixed $title
      */
     public static function getMetaTags($idLang, $pageName, $title = '')
     {
@@ -365,6 +368,7 @@ class MetaCore extends ObjectModel
      * @param int $idCategory
      * @param int $idLang
      * @param string $pageName
+     * @param mixed $title
      *
      * @return array
      *
@@ -516,6 +520,9 @@ class MetaCore extends ObjectModel
 
     /**
      * @since 1.5.0
+     * @param mixed $metaTags
+     * @param mixed $defaultValue
+     * @param null|Context $context
      */
     public static function completeMetaTags($metaTags, $defaultValue, Context $context = null)
     {

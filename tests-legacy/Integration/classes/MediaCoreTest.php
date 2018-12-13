@@ -79,6 +79,9 @@ class MediaCoreTest extends IntegrationTestCase
 
     /**
      * @dataProvider isCssInputsProvider
+     * @param mixed $input
+     * @param mixed $fileuri
+     * @param mixed $output
      */
     public function testMinifyCSS($input, $fileuri, $output)
     {
@@ -89,6 +92,10 @@ class MediaCoreTest extends IntegrationTestCase
 
     /**
      * @dataProvider isCssInputsProvider
+     * @param mixed $input
+     * @param mixed $fileuri
+     * @param mixed $output
+     * @param mixed $expected
      */
     public function testReplaceByAbsoluteURLPattern($input, $fileuri, $output, $expected)
     {

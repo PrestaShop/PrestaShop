@@ -3910,6 +3910,9 @@ class AdminImportControllerCore extends AdminController
 
     /**
      * @since 1.5.0
+     * @param mixed $offset
+     * @param mixed $limit
+     * @param mixed $validateOnly
      */
     public function supplyOrdersImport($offset = false, $limit = false, $validateOnly = false)
     {

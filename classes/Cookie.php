@@ -60,6 +60,10 @@ class CookieCore
      *
      * @param $name string Cookie name before encrypting
      * @param $path string
+     * @param null|mixed $expire
+     * @param null|mixed $shared_urls
+     * @param mixed $standalone
+     * @param mixed $secure
      */
     public function __construct($name, $path = '', $expire = null, $shared_urls = null, $standalone = false, $secure = false)
     {
@@ -206,6 +210,7 @@ class CookieCore
      * @deprecated as of version 1.5 use Customer::isLogged() instead
      *
      * @return bool customer validity
+     * @param mixed $withGuest
      */
     public function isLogged($withGuest = false)
     {
@@ -287,6 +292,7 @@ class CookieCore
 
     /**
      * Get cookie content.
+     * @param mixed $nullValues
      */
     public function update($nullValues = false)
     {
@@ -404,6 +410,7 @@ class CookieCore
 
     /**
      * Get a family of variables (e.g. "filter_").
+     * @param mixed $origin
      */
     public function getFamily($origin)
     {

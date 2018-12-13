@@ -437,6 +437,7 @@ class ImageManagerCore
      *
      * @param array $file Upload $_FILE value
      * @param int $maxFileSize Maximum upload size
+     * @param null|mixed $types
      *
      * @return bool|string Return false if no error encountered
      */

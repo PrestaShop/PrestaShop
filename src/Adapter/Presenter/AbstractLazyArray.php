@@ -191,6 +191,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      * @param mixed $offset
      * @param mixed $value
      * @param bool $force if set, allow override of an existing method
+     * @param mixed $name
      *
      * @throws RuntimeException
      */
@@ -205,6 +206,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @param mixed $offset
      * @param bool $force if set, allow unset of an existing method
+     * @param mixed $name
      *
      * @throws RuntimeException
      */

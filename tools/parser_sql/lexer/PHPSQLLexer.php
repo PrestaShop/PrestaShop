@@ -262,6 +262,7 @@ class PHPSQLLexer {
      * 1. If the current token ends with a dot, we will add the next token
      * 2. If the next token starts with a dot, we will add it to the previous token 
      *
+     * @param mixed $tokens
      */
     protected function concatColReferences($tokens) {
 

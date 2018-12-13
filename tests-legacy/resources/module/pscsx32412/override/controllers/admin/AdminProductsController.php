@@ -1446,6 +1446,7 @@ class AdminProductsController extends AdminProductsControllerCore
      * Add or update a product image
      *
      * @param object $product Product object to add image
+     * @param mixed $method
      */
     public function addProductImage($product, $method = 'auto')
     {
@@ -1483,6 +1484,7 @@ class AdminProductsController extends AdminProductsControllerCore
      *
      * @param int $id_product Product Id for product image filename
      * @param int $id_image Image Id for product image filename
+     * @param mixed $method
      */
     public function copyImage($id_product, $id_image, $method = 'auto')
     {
@@ -1973,6 +1975,7 @@ class AdminProductsController extends AdminProductsControllerCore
      * Update product download
      *
      * @param object $product Product
+     * @param mixed $edit
      * @return bool
      */
     public function updateDownloadProduct($product, $edit = 0)
@@ -2068,6 +2071,7 @@ class AdminProductsController extends AdminProductsControllerCore
      *
      * @param array Languages
      * @param object $product Product
+     * @param mixed $languages
      * @return bool Update result
      */
     public function updateTags($languages, $product)
@@ -2271,6 +2275,9 @@ class AdminProductsController extends AdminProductsControllerCore
      * @param array $categories Categories to list
      * @param array $current Current category
      * @param int $id_category Current category id
+     * @param mixed $id_obj
+     * @param null|mixed $id_category_default
+     * @param mixed $has_suite
      */
     public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = array())
     {
@@ -4601,6 +4608,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
     /**
      *  AdminProducts display hook
+     * @param mixed $obj
      */
     public function initFormModules($obj)
     {

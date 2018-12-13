@@ -345,6 +345,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 
     /**
      * @param int $id fixture id
+     * @param mixed $isoCode
      *
      * @return Country|null
      */

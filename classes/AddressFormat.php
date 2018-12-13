@@ -251,6 +251,9 @@ class AddressFormatCore extends ObjectModel
      * Set the layout key with the liable value
      * example : (firstname) => 'Presta' will result (Presta)
      *         : (firstname-lastname) => 'Presta' and 'Shop' result '(Presta-Shop)'.
+     * @param & $formattedValueList
+     * @param mixed $currentLine
+     * @param mixed $currentKeyList
      */
     protected static function _setOriginalDisplayFormat(&$formattedValueList, $currentLine, $currentKeyList)
     {
@@ -302,6 +305,7 @@ class AddressFormatCore extends ObjectModel
 
     /**
      * Cleaned the layout set by the user.
+     * @param & $orderedAddressField
      */
     public static function cleanOrderedAddress(&$orderedAddressField)
     {
@@ -322,6 +326,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @param Address $address Address object
      * @param AddressFormat $addressFormat The format
+     * @param null|mixed $id_lang
      *
      * @return array
      */
@@ -440,6 +445,7 @@ class AddressFormatCore extends ObjectModel
      * Returns selected fields required for an address in an array according to a selection hash.
      *
      * @return array String values
+     * @param mixed $className
      */
     public static function getValidateFields($className)
     {
@@ -536,6 +542,7 @@ class AddressFormatCore extends ObjectModel
 
     /**
      * Return a data array containing ordered, formatedValue and object fields.
+     * @param mixed $address
      */
     public static function getFormattedLayoutData($address)
     {

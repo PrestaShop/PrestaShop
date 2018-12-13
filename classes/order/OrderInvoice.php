@@ -165,6 +165,9 @@ class OrderInvoiceCore extends ObjectModel
      * Get order products.
      *
      * @return array Products with price, quantity (with taxe and without)
+     * @param mixed $products
+     * @param mixed $selected_products
+     * @param mixed $selected_qty
      */
     public function getProducts($products = false, $selected_products = false, $selected_qty = false)
     {
@@ -852,6 +855,7 @@ class OrderInvoiceCore extends ObjectModel
      * @since 1.5.0.2
      *
      * @param int $id_lang for invoice_prefix
+     * @param null|mixed $id_shop
      *
      * @return string
      */

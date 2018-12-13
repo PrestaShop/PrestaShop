@@ -134,6 +134,7 @@ class StateCore extends ObjectModel
      * Get a state id with its iso code.
      *
      * @param string $isoCode Iso code
+     * @param null|mixed $idCountry
      *
      * @return int state id
      */

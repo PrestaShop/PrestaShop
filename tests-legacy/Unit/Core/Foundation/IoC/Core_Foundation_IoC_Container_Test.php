@@ -195,6 +195,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
 
     /**
      * @dataProvider valuesToBind
+     * @param mixed $value
      */
     public function testContainerCanBindValuesDirectly($value)
     {

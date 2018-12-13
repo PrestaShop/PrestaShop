@@ -46,6 +46,8 @@ class LinkCore
 
     /**
      * Constructor (initialization only).
+     * @param null|mixed $protocolLink
+     * @param null|mixed $protocolContent
      */
     public function __construct($protocolLink = null, $protocolContent = null)
     {
@@ -122,6 +124,10 @@ class LinkCore
      * @param int $idLang
      * @param int $idShop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
      * @param int $ipa ID product attribute
+     * @param mixed $force_routes
+     * @param mixed $relativeProtocol
+     * @param mixed $addAnchor
+     * @param mixed $extraParams
      *
      * @return string
      */
@@ -368,6 +374,7 @@ class LinkCore
      *
      * @param $product
      * @param $idLang
+     * @param mixed $category
      *
      * @return Category
      *
@@ -395,6 +402,8 @@ class LinkCore
      * @param string $alias
      * @param int $idLang
      * @param string $selectedFilters Url parameter to autocheck filters of the module blocklayered
+     * @param null|mixed $idShop
+     * @param mixed $relativeProtocol
      *
      * @return string
      */
@@ -509,6 +518,8 @@ class LinkCore
      * @param string $alias
      * @param bool $ssl
      * @param int $idLang
+     * @param null|mixed $idShop
+     * @param mixed $relativeProtocol
      *
      * @return string
      */
@@ -558,6 +569,8 @@ class LinkCore
      * @param mixed $supplier Supplier object (can be an ID supplier, but deprecated)
      * @param string $alias
      * @param int $idLang
+     * @param null|mixed $idShop
+     * @param mixed $relativeProtocol
      *
      * @return string
      */
@@ -1016,6 +1029,7 @@ class LinkCore
      *
      * @param $idStore
      * @param null $type image type (small_default, medium_default, large_default, etc.)
+     * @param mixed $name
      *
      * @return string
      */
@@ -1049,6 +1063,8 @@ class LinkCore
      * @param int $idLang
      * @param string|array $request
      * @param bool $requestUrlEncode Use URL encode
+     * @param null|mixed $idShop
+     * @param mixed $relativeProtocol
      *
      * @return string Page link
      */

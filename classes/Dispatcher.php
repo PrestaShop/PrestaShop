@@ -195,6 +195,7 @@ class DispatcherCore
      * @return Dispatcher
      *
      * @throws PrestaShopException
+     * @param null|SymfonyRequest $request
      */
     public static function getInstance(SymfonyRequest $request = null)
     {
@@ -1084,6 +1085,7 @@ class DispatcherCore
      * @var mixed
      *
      * @return array
+     * @param mixed $dirs
      */
     public static function getControllers($dirs)
     {

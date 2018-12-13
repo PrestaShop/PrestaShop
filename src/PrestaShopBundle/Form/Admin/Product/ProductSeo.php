@@ -48,6 +48,7 @@ class ProductSeo extends CommonAbstractType
      *
      * @param object $translator
      * @param object $legacyContext
+     * @param mixed $router
      */
     public function __construct($translator, $legacyContext, $router)
     {

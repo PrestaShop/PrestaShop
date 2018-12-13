@@ -117,6 +117,7 @@ class UpgraderCore
      * checkPSVersion ask to prestashop.com if there is a new version. return an array if yes, false otherwise.
      *
      * @return mixed
+     * @param mixed $force
      */
     public function checkPSVersion($force = false)
     {

@@ -324,6 +324,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
     /**
      * Genrating a export file.
+     * @param mixed $textDelimiter
      */
     public function processExport($textDelimiter = '"')
     {

@@ -84,6 +84,7 @@ class FeatureValueCore extends ObjectModel
      *
      * @param int $idLang Language id
      * @param bool $idFeature Feature id
+     * @param mixed $custom
      *
      * @return array Array with feature's values
      */

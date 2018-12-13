@@ -53,6 +53,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
      * This fuction processes each SELECT clause.
      * We determine what (if any) alias
      * is provided, and we set the type of expression.
+     * @param mixed $expression
      */
     public function process($expression) {
         $tokens = $this->splitSQLIntoTokens($expression);

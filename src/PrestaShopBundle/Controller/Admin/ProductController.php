@@ -1184,6 +1184,9 @@ class ProductController extends FrameworkBundleAdminController
      * @throws \OutOfBoundsException
      * @throws \LogicException
      * @throws \PrestaShopException
+     * @param mixed $productId
+     * @param mixed $step
+     * @param mixed $fieldName
      */
     public function renderFieldAction($productId, $step, $fieldName)
     {

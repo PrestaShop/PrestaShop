@@ -79,6 +79,7 @@ class MemcacheServerManager
      *
      * @param string $serverIp
      * @param string @serverPort
+     * @param mixed $serverPort
      *
      * @return bool
      */
@@ -99,6 +100,7 @@ class MemcacheServerManager
      * Delete a memcache server (a deletion returns the number of rows deleted).
      *
      * @param int $serverId_server id (in database)
+     * @param mixed $serverId
      *
      * @return bool
      */

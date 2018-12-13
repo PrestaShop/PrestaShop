@@ -80,6 +80,7 @@ class TaxRulesGroupCore extends ObjectModel
      * Save the object with the field deleted to true.
      *
      *  @return bool
+     * @param TaxRulesGroup $tax_rules_group
      */
     public function historize(TaxRulesGroup $tax_rules_group)
     {
@@ -161,6 +162,7 @@ class TaxRulesGroupCore extends ObjectModel
 
     /**
      * @return array
+     * @param mixed $id_country
      */
     public static function getAssociatedTaxRatesByIdCountry($id_country)
     {
@@ -223,6 +225,10 @@ class TaxRulesGroupCore extends ObjectModel
 
     /**
      * @deprecated since 1.5
+     * @param mixed $id_tax_rules_group
+     * @param mixed $id_country
+     * @param mixed $id_state
+     * @param mixed $zipcode
      */
     public static function getTaxesRate($id_tax_rules_group, $id_country, $id_state, $zipcode)
     {
@@ -239,6 +245,10 @@ class TaxRulesGroupCore extends ObjectModel
      * Return taxes associated to this para.
      *
      * @deprecated since 1.5
+     * @param mixed $id_tax_rules_group
+     * @param mixed $id_country
+     * @param mixed $id_state
+     * @param mixed $id_county
      */
     public static function getTaxes($id_tax_rules_group, $id_country, $id_state, $id_county)
     {

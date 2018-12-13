@@ -40,6 +40,11 @@ class CartRulesGiftTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartWithGiftProvider
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $cartRuleData
+     * @param mixed $expectedProductCount
+     * @param mixed $knownToFailOnV1
      */
     public function testCartWithGift(
         $productData,

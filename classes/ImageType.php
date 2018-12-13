@@ -87,6 +87,7 @@ class ImageTypeCore extends ObjectModel
      *
      * @param string|null Image type
      * @param bool $orderBySize
+     * @param null|mixed $type
      *
      * @return array Image type definitions
      *
@@ -138,6 +139,7 @@ class ImageTypeCore extends ObjectModel
      *
      * @param string $name
      * @param string $type
+     * @param mixed $order
      */
     public static function getByNameNType($name, $type = null, $order = 0)
     {

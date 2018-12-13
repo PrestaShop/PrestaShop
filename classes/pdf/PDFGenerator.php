@@ -216,6 +216,7 @@ class PDFGeneratorCore extends TCPDF
 
     /**
      * Override of TCPDF::getRandomSeed() - getmypid() is blocked on several hosting.
+     * @param mixed $seed
      */
     protected function getRandomSeed($seed = '')
     {

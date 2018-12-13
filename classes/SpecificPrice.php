@@ -218,6 +218,12 @@ class SpecificPriceCore extends ObjectModel
 
     /**
      * score generation for quantity discount.
+     * @param mixed $id_product
+     * @param mixed $id_shop
+     * @param mixed $id_currency
+     * @param mixed $id_country
+     * @param mixed $id_group
+     * @param mixed $id_customer
      */
     protected static function _getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer)
     {
@@ -318,6 +324,7 @@ class SpecificPriceCore extends ObjectModel
      * @param int|null $id_cart
      * @param string|null $beginning
      * @param string|null $ending
+     * @param mixed $id_customer
      *
      * @return string
      */

@@ -192,6 +192,7 @@ class StoreCore extends ObjectModel
      * @return bool
      *
      * @since 1.7.0
+     * @param mixed $idStore
      */
     public static function storeExists($idStore)
     {

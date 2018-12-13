@@ -624,6 +624,7 @@ class ModuleManager implements AddonManagerInterface
      * Actions to perform to restaure default settings.
      *
      * @param string $name The theme name to reset
+     * @param mixed $keep_data
      *
      * @return bool True for success
      */

@@ -1293,6 +1293,11 @@ class CartCore extends ObjectModel
      * @param int $id_product Product ID
      * @param int $id_product_attribute Attribute ID if needed
      * @param string $operator Indicate if quantity must be increased or decreased
+     * @param mixed $id_customization
+     * @param mixed $id_address_delivery
+     * @param null|Shop $shop
+     * @param mixed $auto_add_cart_rule
+     * @param mixed $skipAvailabilityCheckOutOfStock
      *
      * @return bool Whether the quantity has been succesfully updated
      */
@@ -1501,6 +1506,12 @@ class CartCore extends ObjectModel
 
     /**
      * Customization management.
+     * @param mixed $quantity
+     * @param mixed $id_customization
+     * @param mixed $id_product
+     * @param mixed $id_product_attribute
+     * @param mixed $id_address_delivery
+     * @param mixed $operator
      */
     protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $id_address_delivery, $operator = 'up')
     {
@@ -2226,6 +2237,7 @@ class CartCore extends ObjectModel
      * Get the gift wrapping price.
      *
      * @param bool $with_taxes With or without taxes
+     * @param null|mixed $id_address
      *
      * @return float wrapping price
      */
@@ -2308,6 +2320,7 @@ class CartCore extends ObjectModel
      *               );
      *
      * @todo Add avaibility check
+     * @param mixed $flush
      */
     public function getPackageList($flush = false)
     {
@@ -3025,6 +3038,8 @@ class CartCore extends ObjectModel
      * The size of this sequence is fixed by the first digit of the return
      *
      * @return int Intified value
+     * @param mixed $string
+     * @param mixed $delimiter
      */
     public static function intifier($string, $delimiter = ',')
     {
@@ -3036,6 +3051,8 @@ class CartCore extends ObjectModel
 
     /**
      * Translate an int option_delivery identifier (3240002000) in a string ('24,3,').
+     * @param mixed $int
+     * @param mixed $delimiter
      */
     public static function desintifier($int, $delimiter = ',')
     {
@@ -3296,6 +3313,10 @@ class CartCore extends ObjectModel
 
     /**
      * @deprecated 1.5.0, use Cart->getPackageShippingCost()
+     * @param null|mixed $id_carrier
+     * @param mixed $use_tax
+     * @param null|Country $default_country
+     * @param null|mixed $product_list
      */
     public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
     {
@@ -3658,6 +3679,7 @@ class CartCore extends ObjectModel
      * Return total Cart weight.
      *
      * @return float Total Cart weight
+     * @param null|mixed $products
      */
     public function getTotalWeight($products = null)
     {
@@ -3725,6 +3747,10 @@ class CartCore extends ObjectModel
      * @deprecated 1.5.0
      *
      * @param CartRule $obj
+     * @param mixed $discounts
+     * @param mixed $order_total
+     * @param mixed $products
+     * @param mixed $check_cart_discount
      *
      * @return bool|string
      */
@@ -3741,6 +3767,8 @@ class CartCore extends ObjectModel
      * Return useful information about the cart.
      *
      * @return array Cart details
+     * @param null|mixed $id_lang
+     * @param mixed $refresh
      */
     public function getSummaryDetails($id_lang = null, $refresh = false)
     {
@@ -4097,6 +4125,7 @@ class CartCore extends ObjectModel
      * @param int $index
      * @param int $type
      * @param string $textValue
+     * @param mixed $text_value
      *
      * @return bool Always true
      * @todo: Improve this PHPDoc comment
@@ -4110,6 +4139,10 @@ class CartCore extends ObjectModel
      * Add customer's pictures.
      *
      * @return bool Always true
+     * @param mixed $id_product
+     * @param mixed $index
+     * @param mixed $type
+     * @param mixed $file
      */
     public function addPictureToProduct($id_product, $index, $type, $file)
     {
@@ -4754,6 +4787,8 @@ class CartCore extends ObjectModel
      *
      * @id_carrier int
      * @id_zone int
+     * @param mixed $id_carrier
+     * @param mixed $id_zone
      */
     public function isCarrierInRange($id_carrier, $id_zone)
     {
@@ -4817,6 +4852,7 @@ class CartCore extends ObjectModel
      *
      * @param bool $ignore_virtual Ignore virtual products
      * @param bool $exclusive (DEPRECATED) If true, the validation is exclusive : it must be present product in stock and out of stock
+     * @param mixed $ignoreVirtual
      *
      * @since 1.5.0
      *

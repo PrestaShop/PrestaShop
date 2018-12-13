@@ -135,6 +135,7 @@ class StockAvailableCore extends ObjectModel
      * For a given id_product, synchronizes StockAvailable::quantity with Stock::usable_quantity.
      *
      * @param int $id_product
+     * @param null|mixed $order_id_shop
      */
     public static function synchronize($id_product, $order_id_shop = null)
     {
@@ -294,6 +295,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product
      * @param int $depends_on_stock Optional : true by default
      * @param int $id_shop Optional : gets context by default
+     * @param mixed $id_product_attribute
      */
     public static function setProductDependsOnStock($id_product, $depends_on_stock = true, $id_shop = null, $id_product_attribute = 0)
     {
@@ -330,6 +332,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product
      * @param int $out_of_stock Optional false by default
      * @param int $id_shop Optional gets context by default
+     * @param mixed $id_product_attribute
      */
     public static function setProductOutOfStock($id_product, $out_of_stock = false, $id_shop = null, $id_product_attribute = 0)
     {
@@ -453,6 +456,8 @@ class StockAvailableCore extends ObjectModel
      * Upgrades total_quantity_available after having saved.
      *
      * @see ObjectModel::add()
+     * @param mixed $autodate
+     * @param mixed $null_values
      */
     public function add($autodate = true, $null_values = false)
     {
@@ -469,6 +474,7 @@ class StockAvailableCore extends ObjectModel
      * Upgrades total_quantity_available after having update.
      *
      * @see ObjectModel::update()
+     * @param mixed $null_values
      */
     public function update($null_values = false)
     {
@@ -762,6 +768,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product
      * @param int id_product_attribute Optional
      * @param int $id_shop Optional
+     * @param null|mixed $id_product_attribute
      *
      * @return bool|string
      */

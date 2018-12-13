@@ -1063,6 +1063,7 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idLang Language ID
      * @param bool $active return only active categories
+     * @param mixed $idShop
      *
      * @return array categories
      */
@@ -1861,6 +1862,7 @@ class CategoryCore extends ObjectModel
     /**
      * @see self::getUrlRewriteInformation()
      * @deprecated 1.7.0
+     * @param mixed $idCategory
      */
     public static function getUrlRewriteInformations($idCategory)
     {
@@ -2041,6 +2043,8 @@ class CategoryCore extends ObjectModel
     /**
      * @see self::getCategoryInformation()
      * @deprecated 1.7.0
+     * @param mixed $idsCategory
+     * @param null|mixed $idLang
      */
     public static function getCategoryInformations($idsCategory, $idLang = null)
     {
@@ -2310,6 +2314,7 @@ class CategoryCore extends ObjectModel
      * Deletes all Categories from the Shop ID.
      *
      * @return bool Indicates whether the Categories have been successfully removed
+     * @param mixed $idShop
      */
     public static function deleteCategoriesFromShop($idShop)
     {
@@ -2320,6 +2325,7 @@ class CategoryCore extends ObjectModel
      * Add some categories to a shop.
      *
      * @param array $categories
+     * @param mixed $idShop
      *
      * @return bool Indicates whether the Categories were successfully added to the given Shop
      */

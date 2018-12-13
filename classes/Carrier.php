@@ -514,6 +514,9 @@ class CarrierCore extends ObjectModel
      *                             - PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE
      *                             - ALL_CARRIERS
      * @param bool $active Returns only active carriers when true
+     * @param mixed $delete
+     * @param mixed $id_zone
+     * @param null|mixed $ids_group
      *
      * @return array Carriers
      */
@@ -813,6 +816,7 @@ class CarrierCore extends ObjectModel
      * Get a specific zones.
      *
      * @return array Zone
+     * @param mixed $id_zone
      */
     public function getZone($id_zone)
     {
@@ -825,6 +829,7 @@ class CarrierCore extends ObjectModel
 
     /**
      * Add zone.
+     * @param mixed $id_zone
      */
     public function addZone($id_zone)
     {
@@ -862,6 +867,7 @@ class CarrierCore extends ObjectModel
 
     /**
      * Delete zone.
+     * @param mixed $id_zone
      */
     public function deleteZone($id_zone)
     {
@@ -898,6 +904,7 @@ class CarrierCore extends ObjectModel
      * Clean delivery prices (weight/price).
      *
      * @param string $rangeTable Table name to clean (weight or price according to shipping method)
+     * @param mixed $range_table
      *
      * @return bool Deletion result
      */
@@ -920,6 +927,8 @@ class CarrierCore extends ObjectModel
      * Add new delivery prices.
      *
      * @param array $priceList Prices list in multiple arrays (changed to array since 1.5.0)
+     * @param mixed $price_list
+     * @param mixed $delete
      *
      * @return bool Insertion result
      */
@@ -980,6 +989,7 @@ class CarrierCore extends ObjectModel
      * Copy old carrier informations when update carrier.
      *
      * @param int $oldId Old id carrier (copy from that id)
+     * @param mixed $old_id
      */
     public function copyCarrierData($old_id)
     {
@@ -1070,6 +1080,8 @@ class CarrierCore extends ObjectModel
 
     /**
      * Get carrier using the reference id.
+     * @param mixed $id_reference
+     * @param null|mixed $id_lang
      */
     public static function getCarrierByReference($id_reference, $id_lang = null)
     {
@@ -1308,6 +1320,8 @@ class CarrierCore extends ObjectModel
      * @since 1.5
      *
      * @param Address $address Address
+     * @param null|mixed $id_order
+     * @param mixed $use_average_tax_of_products
      *
      * @return TaxCalculator Tax calculator object
      */
@@ -1328,6 +1342,7 @@ class CarrierCore extends ObjectModel
      * @since 1.5.0
      *
      * @param string $range_table Range table
+     * @param mixed $alias
      *
      * @return string SQL quoer to get the delivery range table in this Shop(Group)
      */

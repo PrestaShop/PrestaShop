@@ -29,6 +29,12 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 /**
  * Common method to handle the tab registration
  * @internal
+ * @param mixed $className
+ * @param mixed $name
+ * @param mixed $id_parent
+ * @param mixed $returnId
+ * @param null|mixed $parentTab
+ * @param mixed $module
  */
 function register_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
@@ -63,6 +69,8 @@ function register_tab($className, $name, $id_parent, $returnId = false, $parentT
 /**
  * Common method for getting the new tab ID
  * @internal
+ * @param mixed $className
+ * @param mixed $returnId
  */
 function get_new_tab_id($className, $returnId = false)
 {

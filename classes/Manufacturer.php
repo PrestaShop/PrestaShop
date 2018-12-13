@@ -142,6 +142,7 @@ class ManufacturerCore extends ObjectModel
      * Delete several objects from database.
      *
      * return boolean Deletion result
+     * @param mixed $selection
      */
     public function deleteSelection($selection)
     {
@@ -182,6 +183,8 @@ class ManufacturerCore extends ObjectModel
      * @param int $p
      * @param int $n
      * @param bool $allGroup
+     * @param mixed $group_by
+     * @param mixed $withProduct
      *
      * @return array Manufacturers
      */
@@ -260,6 +263,7 @@ class ManufacturerCore extends ObjectModel
      * List of manufacturers.
      *
      * @param int $idLang Specify the id of the language used
+     * @param mixed $format
      *
      * @return array Manufacturers lite tree
      */

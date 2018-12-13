@@ -36,6 +36,8 @@ class SaveSqlRequestSettingsHandlerTest extends TestCase
 {
     /**
      * @dataProvider getSettings
+     * @param mixed $configuredValue
+     * @param mixed $expectedValueFormat
      */
     public function testItSavesSettingsInCorrectFormat($configuredValue, $expectedValueFormat)
     {

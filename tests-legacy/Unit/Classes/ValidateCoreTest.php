@@ -33,6 +33,8 @@ class ValidateCoreTest extends TestCase
 {
     /**
      * @dataProvider isIp2LongDataProvider
+     * @param mixed $expected
+     * @param mixed $input
      */
     public function testIsIp2Long($expected, $input)
     {
@@ -52,6 +54,8 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isEmailDataProvider
+     * @param mixed $expected
+     * @param mixed $input
      */
     public function testIsEmail($expected, $input)
     {
@@ -60,6 +64,8 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isBirthDateProvider
+     * @param mixed $expected
+     * @param mixed $input
      */
     public function testIsBirthDate($expected, $input)
     {
@@ -68,6 +74,8 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isDateOrNullProvider
+     * @param mixed $expected
+     * @param mixed $input
      */
     public function testIsDateOrNull($expected, $input)
     {
@@ -76,6 +84,8 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isMd5DataProvider
+     * @param mixed $expected
+     * @param mixed $input
      */
     public function testIsMd5($expected, $input)
     {
@@ -84,6 +94,8 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isSha1DataProvider
+     * @param mixed $expected
+     * @param mixed $input
      */
     public function testIsSha1($expected, $input)
     {
@@ -92,6 +104,8 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isFloatDataProvider
+     * @param mixed $expected
+     * @param mixed $input
      */
     public function testIsFloat($expected, $input)
     {
@@ -100,6 +114,8 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isUnsignedFloatDataProvider
+     * @param mixed $expected
+     * @param mixed $input
      */
     public function testIsUnsignedFloat($expected, $input)
     {
@@ -109,6 +125,8 @@ class ValidateCoreTest extends TestCase
     /**
      * @depends testIsFloat
      * @dataProvider isOptFloatDataProvider
+     * @param mixed $expected
+     * @param mixed $input
      */
     public function testIsOptFloat($expected, $input)
     {

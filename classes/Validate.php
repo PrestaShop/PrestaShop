@@ -435,6 +435,7 @@ class ValidateCore
      * Check for HTML field validity (no XSS please !).
      *
      * @param string $html HTML field to validate
+     * @param mixed $allow_iframe
      *
      * @return bool Validity is ok or not
      */
@@ -1231,6 +1232,7 @@ class ValidateCore
      * oProxyCommand option.
      *
      * @return bool
+     * @param mixed $imapUrl
      */
     public static function isValidImapUrl($imapUrl)
     {

@@ -42,6 +42,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
     /**
      * @param Address $address
      * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
+     * @param null|PrestaShop\PrestaShop\Core\ConfigurationInterface $configurationManager
      */
     public function __construct(Address $address, $type, PrestaShop\PrestaShop\Core\ConfigurationInterface $configurationManager = null)
     {
@@ -59,6 +60,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
      * Returns true if this tax manager is available for this address.
      *
      * @return bool
+     * @param Address $address
      */
     public static function isAvailableForThisAddress(Address $address)
     {

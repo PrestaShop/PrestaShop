@@ -77,6 +77,7 @@ class FakeEntityMapper extends EntityMapper
      * @param $entity
      * @param $entity_defs
      * @param $id_shop
+     * @param mixed $should_cache_objects
      */
     public function load($id, $id_lang, $entity, $entity_defs, $id_shop, $should_cache_objects)
     {

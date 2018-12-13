@@ -330,6 +330,7 @@ class DbMySQLiCore extends Db
      * @param bool $newDbLink
      * @param string|bool $engine
      * @param int $timeout
+     * @param mixed $new_db_link
      *
      * @return int Error code or 0 if connection was successful
      */

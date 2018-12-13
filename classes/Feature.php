@@ -80,6 +80,7 @@ class FeatureCore extends ObjectModel
      * Get all features for a given language.
      *
      * @param int $idLang Language id
+     * @param mixed $withShop
      *
      * @return array Multiple arrays with feature's data
      */
@@ -297,6 +298,7 @@ class FeatureCore extends ObjectModel
      *
      * @param bool $way Up (1)  or Down (0)
      * @param int $position
+     * @param null|mixed $idFeature
      *
      * @return bool Update result
      */

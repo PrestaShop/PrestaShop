@@ -360,6 +360,7 @@ class WebserviceOutputBuilderCore
      * @param string|array $fields_to_display the fields allow for the output
      * @param int $depth depth for the tree diagram output
      * @param int $type_of_view use the 2 constants WebserviceOutputBuilder::VIEW_LIST WebserviceOutputBuilder::VIEW_DETAILS
+     * @param mixed $override
      *
      * @return string in the output format specified by WebserviceOutputBuilder::objectRender
      */

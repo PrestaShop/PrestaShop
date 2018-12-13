@@ -622,6 +622,7 @@ class CartRuleCore extends ObjectModel
      * @param Context $context Context instance
      * @param bool $alreadyInCart Check if the voucher is already on the cart
      * @param bool $display_error Display error
+     * @param mixed $check_carrier
      *
      * @return bool|mixed|string
      */
@@ -1054,6 +1055,8 @@ class CartRuleCore extends ObjectModel
      * @param bool $use_tax Apply taxes
      * @param Context $context Context instance
      * @param bool $use_cache Allow using cache to avoid multiple free gift using multishipping
+     * @param null|mixed $filter
+     * @param null|mixed $package
      *
      * @return float|int|string
      */
