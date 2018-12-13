@@ -59,7 +59,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     protected $contextShopIds;
 
     /**
-     * @var bool whether the multistore feature is enabled.
+     * @var bool whether the multistore feature is enabled
      */
     protected $isMultistoreEnabled;
 
@@ -79,7 +79,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     protected $allShopIds;
 
     /**
-     * @var string import type label.
+     * @var string import type label
      */
     protected $importTypeLabel;
 
@@ -122,7 +122,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      * Callback methods with field names as keys.
      * Callback methods are executed on fields during import process.
      *
-     * @var array.
+     * @var array
      */
     private $callbacks = [];
 
@@ -171,7 +171,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     private $logger;
 
     /**
-     * @var int employee ID, used for logs.
+     * @var int employee ID, used for logs
      */
     private $employeeId;
 
@@ -405,7 +405,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      * Fetch a data value by given entity field name out of data row.
      *
      * @param DataRowInterface $dataRow
-     * @param array $entityFields required to find the data cell index in data row.
+     * @param array $entityFields required to find the data cell index in data row
      * @param string $entityFieldName
      *
      * @return string data value

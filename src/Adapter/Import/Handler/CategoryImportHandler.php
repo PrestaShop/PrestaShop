@@ -52,7 +52,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 final class CategoryImportHandler extends AbstractImportHandler
 {
     /**
-     * @var array core categories IDs, such as Root and Home.
+     * @var array core categories IDs, such as Root and Home
      */
     private $coreCategories;
 
@@ -170,7 +170,7 @@ final class CategoryImportHandler extends AbstractImportHandler
         $this->checkCategoryId($categoryId);
 
         if ($categoryId && ($importConfig->forceIds() || ObjectModel::existsInDatabase($categoryId, 'category'))) {
-            $category = new Category((int)$categoryId);
+            $category = new Category((int) $categoryId);
         } else {
             $category = new Category();
         }
@@ -316,7 +316,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                         $error = true !== $fieldsError ? $fieldsError : '';
                         $error .= true !== $langFieldsError ? $langFieldsError : '';
 
-                        $this->error($error.$this->legacyDatabase->getErrorMessage());
+                        $this->error($error . $this->legacyDatabase->getErrorMessage());
                     }
                 }
             }
@@ -349,7 +349,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                     $this->translator->trans(
                         'URL rewriting failed to auto-generate a friendly URL for: %category_name%',
                         [
-                            '%category_name%' => $category->name[$this->defaultLanguageId]
+                            '%category_name%' => $category->name[$this->defaultLanguageId],
                         ],
                         'Admin.Advparameters.Notification'
                     )
@@ -486,8 +486,8 @@ final class CategoryImportHandler extends AbstractImportHandler
 
             if (!$copyResult) {
                 $this->warning(
-                    $category->image.
-                    ' '.
+                    $category->image .
+                    ' ' .
                     $this->translator->trans('cannot be copied.', [], 'Admin.Advparameters.Notification')
                 );
             }
@@ -517,7 +517,7 @@ final class CategoryImportHandler extends AbstractImportHandler
             // Associate category to shop
             if ($this->isMultistoreEnabled) {
                 $this->connection->delete(
-                    $this->dbPrefix.'category_shop',
+                    $this->dbPrefix . 'category_shop',
                     [
                         'id_category' => (int) $category->id,
                     ]

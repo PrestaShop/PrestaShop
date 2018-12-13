@@ -52,8 +52,8 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
             $this->deleteByPattern($pattern, $path, $file);
 
             // Delete fileType file if it exists in the same directory.
-            if (file_exists($path.'fileType')) {
-                unlink($path.'fileType');
+            if (file_exists($path . 'fileType')) {
+                unlink($path . 'fileType');
             }
         }
 
@@ -86,7 +86,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
     {
         foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
             $this->deleteByPattern(
-                '/(.*)\.'.$format.'$/',
+                '/(.*)\.' . $format . '$/',
                 $path,
                 $file
             );
@@ -103,7 +103,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
     private function deleteByPattern($pattern, $path, $filename)
     {
         if (preg_match($pattern, $filename)) {
-            unlink($path.$filename);
+            unlink($path . $filename);
         }
     }
 }

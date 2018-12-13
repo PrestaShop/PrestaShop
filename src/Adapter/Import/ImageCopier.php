@@ -193,12 +193,12 @@ final class ImageCopier
                             $pathInfos[] = array($targetWidth, $targetHeight, $path . '-' . stripslashes($imageType['name']) . '.jpg');
                         }
                         if ($entity == 'products') {
-                            $file = $tmpDir.'product_mini_'.(int) $entityId.'.jpg';
+                            $file = $tmpDir . 'product_mini_' . (int) $entityId . '.jpg';
                             if (is_file($file)) {
                                 unlink($file);
                             }
 
-                            $file = $tmpDir.'product_mini_'.(int) $entityId.'_'.(int) $this->contextShopId.'.jpg';
+                            $file = $tmpDir . 'product_mini_' . (int) $entityId . '_' . (int) $this->contextShopId . '.jpg';
                             if (is_file($file)) {
                                 unlink($file);
                             }
@@ -209,7 +209,7 @@ final class ImageCopier
                             'actionWatermark',
                             [
                                 'id_image' => $imageId,
-                                'id_product' => $entityId
+                                'id_product' => $entityId,
                             ]
                         );
                     }
