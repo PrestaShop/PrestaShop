@@ -31,7 +31,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TabLang.
  *
- * @ORM\Table()
+ * @ORM\Table
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TabLangRepository")
  */
 class TabLang
