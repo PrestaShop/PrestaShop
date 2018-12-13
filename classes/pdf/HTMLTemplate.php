@@ -106,7 +106,7 @@ abstract class HTMLTemplateCore
             $logo = _PS_IMG_ . Configuration::get('PS_LOGO', null, null, $id_shop);
         }
 
-         return Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . $logo;
+        return Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . $logo;
     }
 
     /**
