@@ -49,7 +49,7 @@ class WebserviceRequestCore
      *
      * @var WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch|WebserviceSpecificManagementAttachments|false
      */
-    protected $objectSpecificManagement = false;
+    public $objectSpecificManagement = false;
 
     /**
      * Base PrestaShop webservice URL.
@@ -1412,7 +1412,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    protected function executeEntityPost()
+    public function executeEntityPost()
     {
         return $this->saveEntityFromXml(201);
     }
@@ -1422,7 +1422,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    protected function executeEntityPut()
+    public function executeEntityPut()
     {
         return $this->saveEntityFromXml(200);
     }
@@ -1432,7 +1432,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    protected function executeEntityDelete()
+    public function executeEntityDelete()
     {
         $objects = [];
         $arr_avoid_id = [];
