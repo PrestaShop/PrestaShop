@@ -34,11 +34,11 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 require_once dirname(__FILE__) . '/../lexer/PHPSQLLexer.php';
 
 /**
- * 
+ *
  * This class processes contains some general functions for a processor.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 abstract class AbstractProcessor {
 
@@ -101,7 +101,7 @@ abstract class AbstractProcessor {
         while ($i < strlen($trim)) {
 
             if ($trim[$i] === '\\') {
-                $i += 2; # an escape character, the next character is irrelevant
+                $i += 2; // an escape character, the next character is irrelevant
 
                 continue;
             }

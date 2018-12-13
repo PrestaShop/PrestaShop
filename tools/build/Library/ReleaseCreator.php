@@ -350,7 +350,7 @@ class ReleaseCreator
 
     /**
      * Get the current version in the project
-     * 
+     *
      * @return string PrestaShop version
      */
     protected function getCurrentVersion()

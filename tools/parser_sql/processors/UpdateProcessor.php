@@ -33,11 +33,11 @@
 require_once(dirname(__FILE__) . '/FromProcessor.php');
 
 /**
- * 
+ *
  * This class processes the UPDATE statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class UpdateProcessor extends FromProcessor {
 

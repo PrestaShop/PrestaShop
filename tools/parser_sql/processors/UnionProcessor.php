@@ -36,11 +36,11 @@ require_once(dirname(__FILE__) . '/DefaultProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
+ *
  * This class processes the UNION statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class UnionProcessor extends AbstractProcessor {
 

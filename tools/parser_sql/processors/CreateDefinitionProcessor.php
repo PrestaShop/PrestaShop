@@ -120,7 +120,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
 
             case 'PRIMARY':
                 if ($prevCategory === '' || $prevCategory === 'CONSTRAINT') {
-                    # next one is KEY
+                    // next one is KEY
                     $expr[] = array('expr_type' => ExpressionType::PRIMARY_KEY, 'base_expr' => $trim);
                     $currCategory = $upper;
                     continue 2;
@@ -130,7 +130,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
 
             case 'UNIQUE':
                 if ($prevCategory === '' || $prevCategory === 'CONSTRAINT') {
-                    # next one is KEY
+                    // next one is KEY
                     $expr[] = array('expr_type' => ExpressionType::UNIQUE_IDX, 'base_expr' => $trim);
                     $currCategory = $upper;
                     continue 2;

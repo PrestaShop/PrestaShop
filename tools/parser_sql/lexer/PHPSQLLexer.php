@@ -2,9 +2,9 @@
 /**
  * PHPSQLLexer.php
  *
- * This file contains the lexer, which splits and recombines parts of the 
+ * This file contains the lexer, which splits and recombines parts of the
  * SQL statement just before parsing.
- * 
+ *
  * PHP version 5
  *
  * LICENSE:
@@ -32,12 +32,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id: PHPSQLLexer.php 842 2013-12-30 08:57:53Z phosco@gmx.de $
- * 
+ *
  */
 
 require_once dirname(__FILE__) . '/LexerSplitter.php';
@@ -46,7 +46,7 @@ require_once dirname(__FILE__) . '/../exceptions/InvalidParameterException.php';
 /**
  * This class splits the SQL string into little parts, which the parser can
  * use to build the result array.
- * 
+ *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
@@ -56,8 +56,8 @@ class PHPSQLLexer {
     protected $splitters;
 
     /**
-     * Constructor. 
-     * 
+     * Constructor.
+     *
      * It initializes some fields.
      */
     public function __construct() {
@@ -66,10 +66,10 @@ class PHPSQLLexer {
 
     /**
      * Ends the given string $haystack with the string $needle?
-     * 
+     *
      * @param string $haystack
      * @param string $needle
-     * 
+     *
      * @return boolean true, if the parameter $haystack ends with the character sequences $needle, false otherwise
      */
     protected function endsWith($haystack, $needle) {
@@ -258,9 +258,9 @@ class PHPSQLLexer {
     /**
      * This function concats some tokens to a column reference.
      * There are two different cases:
-     * 
+     *
      * 1. If the current token ends with a dot, we will add the next token
-     * 2. If the next token starts with a dot, we will add it to the previous token 
+     * 2. If the next token starts with a dot, we will add it to the previous token
      *
      */
     protected function concatColReferences($tokens) {

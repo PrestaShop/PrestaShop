@@ -35,11 +35,11 @@ require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
+ *
  * This class processes the SELECT expressions.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class SelectExpressionProcessor extends AbstractProcessor {
 

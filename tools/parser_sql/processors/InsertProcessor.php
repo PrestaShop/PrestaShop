@@ -35,11 +35,11 @@ require_once(dirname(__FILE__) . '/ColumnListProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
+ *
  * This class processes the INSERT statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class InsertProcessor extends AbstractProcessor {
 

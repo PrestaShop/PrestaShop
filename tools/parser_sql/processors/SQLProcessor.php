@@ -34,11 +34,11 @@ require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 require_once(dirname(__FILE__) . '/SQLChunkProcessor.php');
 
 /**
- * 
+ *
  * This class processes the base SQL statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class SQLProcessor extends SQLChunkProcessor {
 
@@ -68,12 +68,12 @@ class SQLProcessor extends SQLChunkProcessor {
              */
             if ($skip_next > 0) {
                 if ($trim === '') {
-                    if ($token_category !== '') { # is this correct??
+                    if ($token_category !== '') { // is this correct??
                         $out[$token_category][] = $token;
                     }
                     continue;
                 }
-                #to skip the token we replace it with whitespace
+                //to skip the token we replace it with whitespace
                 $trim = '';
                 $token = '';
                 $skip_next--;
@@ -390,6 +390,7 @@ class SQLProcessor extends SQLChunkProcessor {
                 if ($token_category === 'RENAME') {
                     break;
                 }
+                // no break
             case 'BY':
             case 'ALL':
             case 'SHARE':
