@@ -131,7 +131,6 @@ class TreeBuilder
     }
 
     /**
-     *
      * @param mixed $catalogue
      * @return array
      */

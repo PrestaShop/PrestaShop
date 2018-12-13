@@ -971,7 +971,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @throws PrestaShopException
      * @return int|null
-     *
      */
     private function getIdProductAttributeByRequestOrGroup()
     {
@@ -1023,7 +1022,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @throws PrestaShopException
      * @return int|null
-     *
      */
     private function getIdProductAttributeByGroup()
     {

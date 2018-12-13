@@ -172,7 +172,6 @@ class Number implements NumberInterface
      *
      * @throws LocalizationException
      * @return NumberSymbolList
-     *
      */
     public function getSymbolsByNumberingSystem($numberingSystem = null)
     {

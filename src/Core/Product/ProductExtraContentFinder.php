@@ -43,7 +43,6 @@ class ProductExtraContentFinder extends HookFinder
      *
      * @throws \Exception
      * @return array
-     *
      */
     public function find()
     {

@@ -63,7 +63,6 @@ class HookFinder
      *
      * @throws \Exception if class doesn't match interface or expected classes
      * @return array Content returned by modules
-     *
      */
     public function find()
     {

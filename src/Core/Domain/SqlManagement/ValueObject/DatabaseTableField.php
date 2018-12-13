@@ -69,7 +69,6 @@ class DatabaseTableField
      *
      * @throws SqlManagementConstraintException
      * @return self
-     *
      */
     private function setName($name)
     {
@@ -98,7 +97,6 @@ class DatabaseTableField
      *
      * @throws SqlManagementConstraintException
      * @return self
-     *
      */
     private function setType($type)
     {

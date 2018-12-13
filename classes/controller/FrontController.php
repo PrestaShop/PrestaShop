@@ -526,7 +526,6 @@ class FrontControllerCore extends Controller
      * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
      * @throws PrestaShopException
      * @return array Variables to be inserted in the "prestashop" javascript object
-     *
      */
     protected function buildFrontEndObject($object)
     {
@@ -652,7 +651,6 @@ class FrontControllerCore extends Controller
      * @throws Exception
      * @throws SmartyException
      * @return bool
-     *
      */
     public function display()
     {
@@ -943,7 +941,6 @@ class FrontControllerCore extends Controller
      *
      * @throws PrestaShopDatabaseException
      * @return array
-     *
      */
     public static function getCurrentCustomerGroups()
     {

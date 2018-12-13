@@ -119,7 +119,6 @@ class OrderReturnLazyArray extends AbstractLazyArray
      *
      * @throws PrestaShopException
      * @return string
-     *
      */
     public function getReturnDate()
     {

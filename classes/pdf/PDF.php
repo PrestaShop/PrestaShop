@@ -100,7 +100,6 @@ class PDFCore
      *
      * @throws PrestaShopException
      * @return mixed
-     *
      */
     public function render($display = true)
     {
@@ -149,7 +148,6 @@ class PDFCore
      *
      * @throws PrestaShopException
      * @return HTMLTemplate|false
-     *
      */
     public function getTemplateObject($object)
     {

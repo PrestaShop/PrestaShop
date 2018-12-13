@@ -44,7 +44,6 @@ class CollectionFilter implements FilterInterface
      *
      * @throws FilterException
      * @return $this
-     *
      */
     public function queue(array $filters)
     {
@@ -78,7 +77,6 @@ class CollectionFilter implements FilterInterface
      *
      * @throws FilterException
      * @return array
-     *
      */
     public function filter($subject)
     {

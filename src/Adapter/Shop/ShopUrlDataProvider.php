@@ -55,7 +55,6 @@ class ShopUrlDataProvider
      *
      * @throws PrestaShopException
      * @return ShopUrl
-     *
      */
     public function getMainShopUrl()
     {
@@ -74,7 +73,6 @@ class ShopUrlDataProvider
      *
      * @throws PrestaShopException
      * @return bool
-     *
      */
     public function doesMainShopUrlExist()
     {

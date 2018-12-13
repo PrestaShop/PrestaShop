@@ -115,7 +115,6 @@ class CountryCore extends ObjectModel
      *
      * @throws PrestaShopException
      * @return bool True if delete was successful
-     *
      */
     public function delete()
     {
@@ -512,7 +511,6 @@ class CountryCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @return bool Indicates whether the Country has been successfully added
-     *
      */
     public function add($autoDate = true, $nullValues = false)
     {

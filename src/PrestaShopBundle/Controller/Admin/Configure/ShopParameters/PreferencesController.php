@@ -51,7 +51,6 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @throws \LogicException
      * @return array
-     *
      */
     public function indexAction(Request $request, FormInterface $form = null)
     {
@@ -87,7 +86,6 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @throws \LogicException
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
      */
     public function processFormAction(Request $request)
     {

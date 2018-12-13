@@ -55,7 +55,6 @@ class AccessCore extends ObjectModel
      *
      * @throws Exception
      * @return bool Whether access is granted
-     *
      */
     public static function isGranted($role, $idProfile)
     {
@@ -336,7 +335,6 @@ class AccessCore extends ObjectModel
      *
      * @throws Exception
      * @return string Whether legacy access has been successfully updated ("ok", "error")
-     *
      */
     public function updateLgcAccess($idProfile, $idTab, $lgcAuth, $enabled, $addFromParent = 0)
     {

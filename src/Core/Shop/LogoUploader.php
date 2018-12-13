@@ -83,7 +83,6 @@ class LogoUploader
      *
      * @throws PrestaShopException in case of upload failure
      * @return bool
-     *
      */
     public function update($fieldName, $logoPrefix, array $files = [])
     {

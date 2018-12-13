@@ -253,7 +253,6 @@ class CartCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @return bool Whether the Cart has been successfully added
-     *
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -278,7 +277,6 @@ class CartCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @return bool Whether the Cart has been successfully updated
-     *
      */
     public function update($nullValues = false)
     {
@@ -336,7 +334,6 @@ class CartCore extends ObjectModel
      *
      * @throws PrestaShopException
      * @return bool True if delete was successful
-     *
      */
     public function delete()
     {
@@ -540,7 +537,6 @@ class CartCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @return array
-     *
      */
     public function getOrderedCartRulesIds($filter = CartRule::FILTER_ACTION_ALL)
     {
@@ -1897,7 +1893,6 @@ class CartCore extends ObjectModel
      *
      * @throws \Exception
      * @return float Order total
-     *
      */
     public function getOrderTotal(
         $withTaxes = true,
@@ -2308,7 +2303,6 @@ class CartCore extends ObjectModel
 
     /**
      * Get products grouped by package and by addresses to be sent individualy (one package = one shipping cost).
-     *
      *
      * @todo Add avaibility check
      *
@@ -3038,7 +3032,6 @@ class CartCore extends ObjectModel
      * This method replace the delimiter by a sequence of '0'.
      * The size of this sequence is fixed by the first digit of the return
      *
-     *
      * @param mixed $string
      * @param mixed $delimiter
      * @return int Intified value
@@ -3682,7 +3675,6 @@ class CartCore extends ObjectModel
     /**
      * Return total Cart weight.
      *
-     *
      * @param null|mixed $products
      * @return float Total Cart weight
      */
@@ -3770,7 +3762,6 @@ class CartCore extends ObjectModel
 
     /**
      * Return useful information about the cart.
-     *
      *
      * @param null|mixed $id_lang
      * @param mixed $refresh
@@ -4143,7 +4134,6 @@ class CartCore extends ObjectModel
 
     /**
      * Add customer's pictures.
-     *
      *
      * @param mixed $id_product
      * @param mixed $index

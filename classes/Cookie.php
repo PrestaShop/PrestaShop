@@ -209,7 +209,6 @@ class CookieCore
      *
      * @deprecated as of version 1.5 use Customer::isLogged() instead
      *
-     *
      * @param mixed $withGuest
      * @return bool customer validity
      */

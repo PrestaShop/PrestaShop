@@ -136,7 +136,6 @@ class AdminTaxesControllerCore extends AdminController
      * @throws Exception
      * @throws SmartyException
      * @return string
-     *
      */
     public function displayDeleteLink($token, $id)
     {

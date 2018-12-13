@@ -41,7 +41,6 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
      *
      * @throws \PrestaShopDatabaseException
      * @return array|false
-     *
      */
     public function select($sqlString)
     {

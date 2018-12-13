@@ -96,7 +96,6 @@ class Formatter
      * @return string
      *                The formatted number
      *                You should use this this value for display, without modifying it
-     *
      */
     public function format($number, NumberSpecification $specification)
     {

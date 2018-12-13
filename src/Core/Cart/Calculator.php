@@ -134,7 +134,6 @@ class Calculator
      *
      * @throws \Exception
      * @return AmountImmutable
-     *
      */
     public function getTotal()
     {
@@ -158,7 +157,6 @@ class Calculator
     /**
      * @throws \Exception
      * @return AmountImmutable
-     *
      */
     public function getRowTotal()
     {
@@ -173,7 +171,6 @@ class Calculator
     /**
      * @throws \Exception
      * @return AmountImmutable
-     *
      */
     public function getDiscountTotal()
     {

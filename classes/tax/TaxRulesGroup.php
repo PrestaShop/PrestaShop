@@ -79,7 +79,6 @@ class TaxRulesGroupCore extends ObjectModel
     /**
      * Save the object with the field deleted to true.
      *
-     *
      * @param TaxRulesGroup $tax_rules_group
      *  @return bool
      */
@@ -162,7 +161,6 @@ class TaxRulesGroupCore extends ObjectModel
     }
 
     /**
-     *
      * @param mixed $id_country
      * @return array
      */

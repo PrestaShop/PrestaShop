@@ -153,7 +153,6 @@ class AttributeCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @return bool Whether the Attribute has been successfully added
-     *
      */
     public function add($autoDate = true, $nullValues = false)
     {

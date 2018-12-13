@@ -53,7 +53,6 @@ class CurrencyDataProvider
     /**
      * Return available currencies.
      *
-     *
      * @param mixed $object
      * @param mixed $active
      * @param mixed $group_by

@@ -210,7 +210,6 @@ class CarrierCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @return bool Whether the Carrier has been successfully added
-     *
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -814,7 +813,6 @@ class CarrierCore extends ObjectModel
 
     /**
      * Get a specific zones.
-     *
      *
      * @param mixed $id_zone
      * @return array Zone
@@ -1483,7 +1481,6 @@ class CarrierCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @return array Available Carriers
-     *
      */
     public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = array())
     {

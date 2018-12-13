@@ -106,7 +106,6 @@ class ProductController extends FrameworkBundleAdminController
      * @throws \Symfony\Component\Form\Exception\LogicException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @return array|Template|RedirectResponse|Response
-     *
      */
     public function catalogAction(
         Request $request,
@@ -371,7 +370,6 @@ class ProductController extends FrameworkBundleAdminController
      * @throws \LogicException
      * @throws \PrestaShopException
      * @return RedirectResponse
-     *
      */
     public function newAction()
     {
@@ -421,7 +419,6 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @throws \LogicException
      * @return array|Response Template vars
-     *
      */
     public function formAction($id, Request $request)
     {
@@ -650,7 +647,6 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @return FormInterface
-     *
      */
     private function createProductForm(Product $product, AdminModelAdapter $modelMapper)
     {
@@ -1140,7 +1136,6 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      * @return CsvResponse
-     *
      */
     public function exportAction()
     {
@@ -1180,7 +1175,6 @@ class ProductController extends FrameworkBundleAdminController
 
     /**
      * @deprecated since 1.7.5.0, to be removed in 1.8 rely on CommonController::renderFieldAction
-     *
      *
      * @param mixed $productId
      * @param mixed $step

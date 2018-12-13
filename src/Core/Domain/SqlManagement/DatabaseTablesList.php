@@ -61,7 +61,6 @@ class DatabaseTablesList
      *
      * @throws SqlRequestException
      * @return self
-     *
      */
     private function setTables(array $tables)
     {

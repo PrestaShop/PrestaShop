@@ -108,7 +108,6 @@ class EditableSqlRequest
      *
      * @throws SqlRequestException
      * @return EditableSqlRequest
-     *
      */
     private function setName($name)
     {
@@ -126,7 +125,6 @@ class EditableSqlRequest
      *
      * @throws SqlRequestException
      * @return EditableSqlRequest
-     *
      */
     private function setSql($sql)
     {

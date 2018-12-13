@@ -70,7 +70,6 @@ interface ModuleInterface extends AddonInterface
      * Execute up files. You can update configuration, update sql schema.
      * No file modification.
      *
-     *
      * @param mixed $version
      * @return bool true for success
      */

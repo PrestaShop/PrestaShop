@@ -63,7 +63,6 @@ class BasicFileCache
      *
      * @throws Exception
      * @return bool
-     *
      */
     public function save($data, $filename)
     {

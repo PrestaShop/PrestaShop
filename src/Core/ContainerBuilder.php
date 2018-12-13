@@ -35,7 +35,6 @@ class ContainerBuilder
      *
      * @throws \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      * @return \PrestaShop\PrestaShop\Core\Foundation\IoC\Container
-     *
      */
     public function build()
     {

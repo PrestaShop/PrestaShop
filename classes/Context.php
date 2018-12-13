@@ -229,7 +229,6 @@ class ContextCore
      *
      * @throws PrestaShopException
      * @return bool
-     *
      */
     protected function checkMobileContext()
     {

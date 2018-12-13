@@ -361,7 +361,6 @@ class OrderDetailCore extends ObjectModel
      *             because we need the full order object to do a good job here.
      *             Will no longer be supported after 1.6.1
      *
-     *
      * @param Order $order
      * @param mixed $replace
      * @return bool

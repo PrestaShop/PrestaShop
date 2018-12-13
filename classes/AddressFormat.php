@@ -446,7 +446,6 @@ class AddressFormatCore extends ObjectModel
     /**
      * Returns selected fields required for an address in an array according to a selection hash.
      *
-     *
      * @param mixed $className
      * @return array String values
      */

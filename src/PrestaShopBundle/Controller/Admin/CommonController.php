@@ -240,7 +240,6 @@ class CommonController extends FrameworkBundleAdminController
      *
      * @throws \LogicException
      * @return JsonResponse
-     *
      */
     public function resetSearchAction($controller, $action)
     {

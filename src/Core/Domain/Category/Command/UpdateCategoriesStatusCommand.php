@@ -82,7 +82,6 @@ class UpdateCategoriesStatusCommand
      * @throws CategoryConstraintException
      * @throws CategoryException
      * @return self
-     *
      */
     private function setCategoryIds(array $categoryIds)
     {

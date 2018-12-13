@@ -41,7 +41,6 @@ final class WebserviceKeyEraser
      *
      * @throws \PrestaShopException
      * @return string[] - array of errors. If array is empty then erase operation succeeded.
-     *
      */
     public function erase(array $webServiceKeyIds)
     {

@@ -141,7 +141,6 @@ class TaxCore extends ObjectModel
     /**
      * Get all available taxes.
      *
-     *
      * @param mixed $id_lang
      * @param mixed $active_only
      * @return array Taxes

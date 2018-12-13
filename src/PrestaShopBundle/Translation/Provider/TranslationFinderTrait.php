@@ -39,7 +39,6 @@ trait TranslationFinderTrait
      *
      * @throws \Exception
      * @return MessageCatalogue
-     *
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {

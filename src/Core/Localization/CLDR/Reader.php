@@ -69,7 +69,6 @@ class Reader implements ReaderInterface
      *                               When the locale code is unknown or invalid
      * @return LocaleData
      *                    A LocaleData object
-     *
      */
     public function readLocaleData($localeCode)
     {
@@ -148,7 +147,6 @@ class Reader implements ReaderInterface
      *               The lookup
      *               ['root', <intermediate codes>, $localeCode]
      *
-     *
      * @see http://www.unicode.org/reports/tr35/tr35.html#Lookup
      */
     protected function getLookup($localeCode)
@@ -172,7 +170,6 @@ class Reader implements ReaderInterface
      * @throws LocalizationException
      * @return string|null
      *                     The parent locale code (CLDR filenames' style). Null if no parent.
-     *
      */
     protected function getParentLocale($localeCode)
     {
@@ -238,7 +235,6 @@ class Reader implements ReaderInterface
      *                               If this locale code has no corresponding xml file
      * @return SimplexmlElement
      *                          The locale data
-     *
      */
     protected function getMainXmlData($localeCode)
     {
@@ -253,7 +249,6 @@ class Reader implements ReaderInterface
      *
      * @throws LocalizationException
      * @return string The realpath of CLDR main data folder
-     *
      */
     protected function mainPath($filename = '')
     {
@@ -273,7 +268,6 @@ class Reader implements ReaderInterface
      *
      * @throws LocalizationException
      * @return LocaleData
-     *
      */
     protected function getLocaleData($localeTag)
     {

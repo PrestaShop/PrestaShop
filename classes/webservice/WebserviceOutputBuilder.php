@@ -81,7 +81,6 @@ class WebserviceOutputBuilderCore
      *
      * @throws WebserviceException
      * @return WebserviceOutputBuilder
-     *
      */
     public function setObjectRender(WebserviceOutputInterface $obj_render)
     {
@@ -148,7 +147,6 @@ class WebserviceOutputBuilderCore
      *
      * @throws WebserviceException If the key or the value are corrupted (use Validate::isCleanHtml method)
      * @return WebserviceOutputBuilder
-     *
      */
     public function setHeaderParams($key, $value)
     {
@@ -761,7 +759,6 @@ class WebserviceOutputBuilderCore
      * @throws Exception
      * @throws WebserviceException
      * @return WebserviceOutputBuilder
-     *
      */
     public function setSpecificField($object, $method, $field_name, $entity_name)
     {

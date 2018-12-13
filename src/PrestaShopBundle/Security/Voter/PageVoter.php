@@ -88,7 +88,6 @@ class PageVoter extends Voter
      *
      * @throws \Exception
      * @return bool
-     *
      */
     protected function can($action, $employeeProfileId)
     {

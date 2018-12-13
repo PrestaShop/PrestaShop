@@ -54,7 +54,6 @@ final class DoctrineQueryParser implements QueryParserInterface
      *
      * @throws UnsupportedParameterException
      * @return string the partial raw parameter
-     *
      */
     private function parseValue($value)
     {

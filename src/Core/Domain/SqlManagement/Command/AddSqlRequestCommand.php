@@ -79,7 +79,6 @@ class AddSqlRequestCommand
      *
      * @throws SqlRequestConstraintException
      * @return self
-     *
      */
     private function setName($name)
     {
@@ -102,7 +101,6 @@ class AddSqlRequestCommand
      *
      * @throws SqlRequestConstraintException
      * @return $this
-     *
      */
     private function setSql($sql)
     {

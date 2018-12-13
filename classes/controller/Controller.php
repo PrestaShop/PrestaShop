@@ -752,7 +752,6 @@ abstract class ControllerCore
      *
      * @throws Exception
      * @return object The associated service
-     *
      */
     public function get($serviceId)
     {
@@ -766,7 +765,6 @@ abstract class ControllerCore
      *
      * @throws InvalidArgumentException if the parameter is not defined
      * @return mixed The parameter value
-     *
      */
     public function getParameter($parameterId)
     {

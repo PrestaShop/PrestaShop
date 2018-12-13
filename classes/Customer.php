@@ -231,7 +231,6 @@ class CustomerCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @return bool Indicates whether the Customer has been successfully added
-     *
      */
     public function add($autoDate = true, $nullValues = true)
     {
@@ -272,7 +271,6 @@ class CustomerCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @return bool Indicates whether the Customer has been successfully updated
-     *
      */
     public function update($nullValues = false)
     {
@@ -309,7 +307,6 @@ class CustomerCore extends ObjectModel
      *
      * @throws PrestaShopException
      * @return bool True if delete was successful
-     *
      */
     public function delete()
     {
@@ -767,7 +764,6 @@ class CustomerCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @return null|array|false|mysqli_result|PDOStatement|resource Corresponding customers
-     *
      */
     public static function searchByName($query, $limit = null)
     {

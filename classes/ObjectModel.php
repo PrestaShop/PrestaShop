@@ -278,7 +278,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return array All object fields
-     *
      */
     public function getFields()
     {
@@ -324,7 +323,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return array
-     *
      */
     public function getFieldsLang()
     {
@@ -502,7 +500,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return bool Insertion result
-     *
      */
     public function save($null_values = false, $auto_date = true)
     {
@@ -518,7 +515,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @return bool Insertion result
-     *
      */
     public function add($auto_date = true, $null_values = false)
     {
@@ -610,7 +606,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      * @return ObjectModel|false
-     *
      */
     public function duplicateObject()
     {
@@ -692,7 +687,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @return bool
-     *
      */
     public function update($null_values = false)
     {
@@ -816,7 +810,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return bool True if delete was successful
-     *
      */
     public function delete()
     {
@@ -885,7 +878,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return bool Update result
-     *
      */
     public function toggleStatus()
     {
@@ -911,7 +903,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return array
-     *
      */
     protected function getTranslationsFields($fields_array)
     {
@@ -977,7 +968,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return bool|string true, false or error message
-     *
      */
     public function validateFields($die = true, $error_return = false)
     {
@@ -1011,7 +1001,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return bool|string true, false or error message
-     *
      */
     public function validateFieldsLang($die = true, $errorReturn = false)
     {
@@ -1065,7 +1054,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return string|true true or error message string
-     *
      */
     public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
     {
@@ -1378,7 +1366,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      * @return array|null
-     *
      */
     public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
     {
@@ -1422,7 +1409,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return array
-     *
      */
     public function validateFieldsRequiredDatabase($htmlentities = true)
     {
@@ -1456,7 +1442,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      * @return array|null
-     *
      */
     public function getFieldsRequiredDatabase($all = false)
     {
@@ -1535,7 +1520,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      * @return bool
-     *
      */
     public function addFieldsRequiredDatabase($fields)
     {
@@ -1622,7 +1606,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      * @return bool|void
-     *
      */
     public function associateTo($id_shops)
     {
@@ -1658,7 +1641,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      * @return array
-     *
      */
     public function getAssociatedShops()
     {
@@ -1684,7 +1666,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      * @return bool|void
-     *
      */
     public function duplicateShops($id)
     {
@@ -1923,7 +1904,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return array
-     *
      */
     public static function hydrateCollection($class, array $datas, $id_lang = null)
     {
@@ -2093,7 +2073,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      * @return mixed
-     *
      */
     public function getFieldByLang($field_name, $id_lang = null)
     {

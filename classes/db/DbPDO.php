@@ -117,7 +117,6 @@ class DbPDOCore extends Db
      *
      * @throws PrestaShopException
      * @return PDO
-     *
      */
     public function connect()
     {

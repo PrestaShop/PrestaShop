@@ -91,7 +91,6 @@ class CombinationDataProvider
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      * @return array a list of formatted combinations
-     *
      */
     public function getFormCombinations(array $combinationIds, $languageId)
     {

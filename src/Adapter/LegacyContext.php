@@ -261,7 +261,6 @@ class LegacyContext
      *
      * @throws RuntimeException Throws exception if employee does not exist in context
      * @return string Default tab name for employee
-     *
      */
     public function getDefaultEmployeeTab()
     {

@@ -55,7 +55,6 @@ class StockManagerCore implements StockManagerInterface
      *
      * @throws PrestaShopException
      * @return bool
-     *
      */
     public function addProduct(
         $id_product,
@@ -213,7 +212,6 @@ class StockManagerCore implements StockManagerInterface
      *
      * @throws PrestaShopException
      * @return array
-     *
      */
     public function removeProduct(
         $id_product,
@@ -757,7 +755,6 @@ class StockManagerCore implements StockManagerInterface
     /**
      * @see StockManagerInterface::getProductCoverage()
      * Here, $coverage is a number of days
-     *
      *
      * @param mixed $id_product
      * @param mixed $id_product_attribute

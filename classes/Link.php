@@ -98,7 +98,6 @@ class LinkCore
      *
      * @throws PrestaShopException
      * @return Product
-     *
      */
     public function getProductObject($product, $idLang, $idShop)
     {
@@ -379,7 +378,6 @@ class LinkCore
      *
      * @throws PrestaShopException
      * @return Category
-     *
      */
     public function getCategoryObject($category, $idLang)
     {
@@ -710,7 +708,6 @@ class LinkCore
      *
      * @throws PrestaShopException
      * @return string url
-     *
      */
     public function getAdminLink($controller, $withToken = true, $sfRouteParams = array(), $params = array())
     {
@@ -849,7 +846,6 @@ class LinkCore
      *
      * @throws PrestaShopDatabaseException
      * @return string
-     *
      */
     public function getAdminBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
@@ -1136,7 +1132,6 @@ class LinkCore
      *
      * @throws PrestaShopException
      * @return string link
-     *
      */
     public function getLanguageLink($idLang, Context $context = null)
     {

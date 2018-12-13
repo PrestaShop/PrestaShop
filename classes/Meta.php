@@ -214,7 +214,6 @@ class MetaCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @return bool Indicates whether the Meta has been successfully updated
-     *
      */
     public function update($nullValues = false)
     {
@@ -230,7 +229,6 @@ class MetaCore extends ObjectModel
      *
      * @throws PrestaShopException
      * @return bool `true` if delete was successful
-     *
      */
     public function delete()
     {

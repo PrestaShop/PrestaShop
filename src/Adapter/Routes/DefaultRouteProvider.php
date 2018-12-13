@@ -40,7 +40,6 @@ class DefaultRouteProvider
      * @throws PrestaShopException
      * @return array - the key is the route id  - product_rule, category_rule etc... and the values are keyword array
      *               used to generate the route. If param field exists in keywords array then it is mandatory field to use.
-     *
      */
     public function getKeywords()
     {
@@ -59,7 +58,6 @@ class DefaultRouteProvider
      *
      * @throws PrestaShopException
      * @return array - he key is the route id  - product_rule, category_rule etc... and the value is rule itself.
-     *
      */
     public function getRules()
     {
@@ -78,7 +76,6 @@ class DefaultRouteProvider
      *
      * @throws PrestaShopException
      * @return array
-     *
      */
     private function getDefaultRoutes()
     {

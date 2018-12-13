@@ -100,7 +100,6 @@ class EditSqlRequestCommand
      *
      * @throws SqlRequestConstraintException
      * @return self
-     *
      */
     public function setName($name)
     {
@@ -123,7 +122,6 @@ class EditSqlRequestCommand
      *
      * @throws SqlRequestConstraintException
      * @return self
-     *
      */
     public function setSql($sql)
     {

@@ -213,7 +213,6 @@ class ConfigurationValidator
      *
      * @throws \RuntimeException
      * @return bool
-     *
      */
     private function checkRandomNameIsNotAlreadyUsed($dirPath)
     {

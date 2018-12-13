@@ -818,7 +818,6 @@ class ProductCore extends ObjectModel
     /**
      * Get the default attribute for a product.
      *
-     *
      * @param mixed $id_product
      * @param mixed $minimum_quantity
      * @param mixed $reset
@@ -2296,7 +2295,6 @@ class ProductCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @return bool
-     *
      */
     public function addAttributeCombinationMultiple($id_attributes, $combinations)
     {
@@ -3034,7 +3032,6 @@ class ProductCore extends ObjectModel
     /**
      * getProductCategories return an array of categories which this product belongs to.
      *
-     *
      * @param mixed $id_product
      * @return array of categories
      */
@@ -3168,7 +3165,6 @@ class ProductCore extends ObjectModel
 
     /**
      * Get product cover image.
-     *
      *
      * @param mixed $id_product
      * @param null|Context $context
@@ -5543,7 +5539,6 @@ class ProductCore extends ObjectModel
      *
      * @throws \PrestaShopDatabaseException
      * @return bool
-     *
      */
     public function hasActivatedRequiredCustomizableFields()
     {
@@ -6153,7 +6148,6 @@ class ProductCore extends ObjectModel
     /**
      * Webservice setter : set virtual field position in category.
      *
-     *
      * @param mixed $position
      * @return bool
      */
@@ -6206,7 +6200,6 @@ class ProductCore extends ObjectModel
 
     /**
      * Webservice setter : set virtual field id_default_image in category.
-     *
      *
      * @param mixed $id_image
      * @return bool
@@ -6318,7 +6311,6 @@ class ProductCore extends ObjectModel
 
     /**
      * Checks if reference exists.
-     *
      *
      * @param mixed $reference
      * @return bool
@@ -6440,7 +6432,6 @@ class ProductCore extends ObjectModel
      *
      * @throws PrestaShopException
      * @return int
-     *
      */
     public static function getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest = false)
     {
@@ -7031,7 +7022,6 @@ class ProductCore extends ObjectModel
      * Gets a list of IDs from a list of IDs/Refs. The result will avoid duplicates, and checks if given IDs/Refs exists in DB.
      * Useful when a product list should be checked before a bulk operation on them (Only 1 query => performances).
      *
-     *
      * @param mixed $ids_or_refs
      * @return array the IDs list, whithout duplicate and only existing ones
      */
@@ -7117,7 +7107,6 @@ class ProductCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @return bool
-     *
      */
     public function deleteUnusedCustomizationFields($customizationIds)
     {
@@ -7145,7 +7134,6 @@ class ProductCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @return bool
-     *
      */
     public function softDeleteCustomizationFields($customizationIds)
     {

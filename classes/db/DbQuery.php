@@ -278,7 +278,6 @@ class DbQueryCore
      *
      * @throws PrestaShopException
      * @return string
-     *
      */
     public function build()
     {

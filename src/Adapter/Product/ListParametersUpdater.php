@@ -63,7 +63,6 @@ final class ListParametersUpdater
      *
      * @throws ProductException
      * @return array
-     *
      */
     public function buildListParameters(
         array $queryFilterParameters,
@@ -116,7 +115,6 @@ final class ListParametersUpdater
      *
      * @throws ProductException
      * @return string|int
-     *
      */
     private function getParameter(
         $parameterName,

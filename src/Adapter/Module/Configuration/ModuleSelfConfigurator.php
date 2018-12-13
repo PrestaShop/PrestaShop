@@ -120,7 +120,6 @@ class ModuleSelfConfigurator
      *
      * @throws UnexpectedTypeException
      * @return $this
-     *
      */
     public function setModule($name)
     {
@@ -137,7 +136,6 @@ class ModuleSelfConfigurator
      *
      * @throws InvalidArgumentException
      * @return string|null
-     *
      */
     public function getFile()
     {
@@ -185,7 +183,6 @@ class ModuleSelfConfigurator
      *
      * @throws UnexpectedTypeException
      * @return $this
-     *
      */
     public function setFile($filepath)
     {
@@ -289,7 +286,6 @@ class ModuleSelfConfigurator
      *
      * @throws Exception if file data not provided
      * @return string
-     *
      */
     protected function extractFilePath($data)
     {

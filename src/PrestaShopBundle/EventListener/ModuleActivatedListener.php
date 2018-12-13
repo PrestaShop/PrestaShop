@@ -157,7 +157,6 @@ class ModuleActivatedListener
      * @throws AnnotationException
      * @throws \ReflectionException
      * @return null|ModuleActivated
-     *
      */
     private function getAnnotation($controllerObject, $methodName)
     {

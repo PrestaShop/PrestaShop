@@ -113,7 +113,6 @@ class HashMapWhitelistFilter implements FilterInterface
      *
      * @throws FilterException if $key is not scalar
      * @return $this
-     *
      */
     public function removeFromWhitelist($key)
     {
@@ -158,7 +157,6 @@ class HashMapWhitelistFilter implements FilterInterface
      *
      * @throws \RuntimeException
      * @return array The filtered subject
-     *
      */
     public function filter($subject)
     {

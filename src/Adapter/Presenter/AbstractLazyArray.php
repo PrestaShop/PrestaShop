@@ -109,7 +109,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      * @return array
-     *
      */
     public function jsonSerialize()
     {
@@ -177,7 +176,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      * @return mixed
-     *
      */
     public function __get($index)
     {
@@ -222,7 +220,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      * @return mixed
-     *
      */
     public function offsetGet($index)
     {
@@ -271,7 +268,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      * @return mixed
-     *
      */
     public function current()
     {

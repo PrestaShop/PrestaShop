@@ -85,7 +85,6 @@ class OrderDetailLazyArray extends AbstractLazyArray
      *
      * @throws PrestaShopException
      * @return string
-     *
      */
     public function getOrderDate()
     {

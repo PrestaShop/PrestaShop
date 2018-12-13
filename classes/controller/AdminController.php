@@ -1068,7 +1068,6 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      * @return ObjectModel|false
-     *
      */
     public function processDelete()
     {
@@ -1133,7 +1132,6 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      * @return ObjectModel|false
-     *
      */
     public function processAdd()
     {
@@ -1186,7 +1184,6 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      * @return ObjectModel|false|void
-     *
      */
     public function processUpdate()
     {
@@ -1299,7 +1296,6 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      * @return ObjectModel|false
-     *
      */
     public function processStatus()
     {
@@ -2334,7 +2330,6 @@ class AdminControllerCore extends Controller
      * @throws Exception
      * @throws SmartyException
      * @return string
-     *
      */
     public function renderModal()
     {
@@ -2368,7 +2363,6 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      * @return string|false
-     *
      */
     public function renderList()
     {
@@ -2472,7 +2466,6 @@ class AdminControllerCore extends Controller
      * @throws Exception
      * @throws SmartyException
      * @return string
-     *
      */
     public function renderForm()
     {
@@ -3483,7 +3476,6 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      * @return bool
-     *
      */
     public function getModulesList($filter_modules_list, $tracking_source = false)
     {
@@ -3852,7 +3844,6 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopDatabaseException
      * @return bool|void
-     *
      */
     protected function updateAssoShop($id_object)
     {
@@ -4112,7 +4103,6 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      * @return bool true if success
-     *
      */
     protected function processBulkStatusSelection($status)
     {

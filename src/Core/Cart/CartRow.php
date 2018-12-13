@@ -192,7 +192,6 @@ class CartRow
      *
      * @throws \Exception
      * @return AmountImmutable
-     *
      */
     public function getInitialUnitPrice()
     {
@@ -208,7 +207,6 @@ class CartRow
      *
      * @throws \Exception
      * @return AmountImmutable
-     *
      */
     public function getFinalUnitPrice()
     {
@@ -224,7 +222,6 @@ class CartRow
      *
      * @throws \Exception
      * @return AmountImmutable
-     *
      */
     public function getFinalTotalPrice()
     {

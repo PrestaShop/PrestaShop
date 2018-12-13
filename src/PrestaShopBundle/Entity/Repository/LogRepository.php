@@ -160,7 +160,6 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      *
      * @throws \Doctrine\DBAL\DBALException
      * @return int the number of affected rows
-     *
      */
     public function deleteAll()
     {

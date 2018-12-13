@@ -250,7 +250,6 @@ class ReleaseCreator
      *
      * @throws BuildException
      * @return $this
-     *
      */
     public function createRelease()
     {
@@ -334,7 +333,6 @@ class ReleaseCreator
      *
      * @throws BuildException
      * @return $this
-     *
      */
     protected function setConfigDefinesConstants()
     {
@@ -375,7 +373,6 @@ class ReleaseCreator
      *
      * @throws BuildException
      * @return self
-     *
      */
     protected function setupShopVersion()
     {
@@ -422,7 +419,6 @@ class ReleaseCreator
      *
      * @throws BuildException
      * @return $this
-     *
      */
     protected function setInstallDevConfigurationConstants()
     {
@@ -446,7 +442,6 @@ class ReleaseCreator
      *
      * @throws BuildException
      * @return $this
-     *
      */
     protected function setInstallDevInstallVersionConstants()
     {
@@ -467,7 +462,6 @@ class ReleaseCreator
      *
      * @throws BuildException
      * @return $this
-     *
      */
     protected function generateLicensesFile()
     {
@@ -494,7 +488,6 @@ class ReleaseCreator
      *
      * @throws BuildException
      * @return $this
-     *
      */
     protected function runComposerInstall()
     {
@@ -516,7 +509,6 @@ class ReleaseCreator
      *
      * @throws BuildException
      * @return $this
-     *
      */
     protected function createAndRenameFolders()
     {
@@ -626,7 +618,6 @@ class ReleaseCreator
      *
      * @throws BuildException
      * @return $this
-     *
      */
     protected function removeUnnecessaryFiles(
         array &$filesList,
@@ -785,7 +776,6 @@ class ReleaseCreator
      *
      * @throws BuildException
      * @return $this
-     *
      */
     protected function generateXMLChecksum()
     {

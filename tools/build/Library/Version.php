@@ -137,7 +137,6 @@ class Version
      *
      * @throws InvalidVersionException If the provided version is invalid
      * @return bool
-     *
      */
     public function isGreaterThan($version)
     {
@@ -151,7 +150,6 @@ class Version
      *
      * @throws InvalidVersionException If the provided version is invalid
      * @return bool
-     *
      */
     public function isGreaterThanOrEqualTo($version)
     {
@@ -165,7 +163,6 @@ class Version
      *
      * @throws InvalidVersionException If the provided version is invalid
      * @return bool
-     *
      */
     public function isLessThan($version)
     {
@@ -179,7 +176,6 @@ class Version
      *
      * @throws InvalidVersionException If the provided version is invalid
      * @return bool
-     *
      */
     public function isLessThanOrEqualTo($version)
     {
@@ -193,7 +189,6 @@ class Version
      *
      * @throws InvalidVersionException If the provided version is invalid
      * @return bool
-     *
      */
     public function isEqualTo($version)
     {
@@ -207,7 +202,6 @@ class Version
      *
      * @throws InvalidVersionException If the provided version is invalid
      * @return bool
-     *
      */
     public function isNotEqualTo($version)
     {
@@ -224,7 +218,6 @@ class Version
      *
      * @throws InvalidVersionException if the provided version is invalid
      * @return bool result of the comparison
-     *
      */
     private function versionCompare($version, $operator)
     {
@@ -250,7 +243,6 @@ class Version
      *
      * @throws InvalidVersionException If the provided version is invalid
      * @return bool true only if version is valid, else throw an exception
-     *
      */
     private function checkVersion($version)
     {

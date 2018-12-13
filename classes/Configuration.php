@@ -298,7 +298,6 @@ class ConfigurationCore extends ObjectModel
     /**
      * Get several configuration values (in one language only).
      *
-     *
      * @param array $keys Keys wanted
      * @param int $idLang Language ID
      * @param int $idShopGroup

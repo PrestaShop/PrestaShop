@@ -579,7 +579,6 @@ class XmlLoader
      *
      * @throws PrestaShopDatabaseException
      * @return $this
-     *
      */
     public function createEntityPack($identifier, array $data, array $data_lang)
     {

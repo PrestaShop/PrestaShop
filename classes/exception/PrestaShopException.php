@@ -219,7 +219,6 @@ class PrestaShopExceptionCore extends Exception
     /**
      * Return the content of the Exception.
      *
-     *
      * @param mixed $html
      * @return string content of the exception
      */

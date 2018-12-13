@@ -302,7 +302,6 @@ class CartPresenter implements PresenterInterface
      *
      * @throws \Exception
      * @return array
-     *
      */
     public function present($cart, $shouldSeparateGifts = false)
     {

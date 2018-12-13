@@ -142,7 +142,6 @@ class LocalizationPackCore
      *
      * @throws PrestaShopException
      * @return bool
-     *
      */
     protected function _installStates($xml)
     {
@@ -214,7 +213,6 @@ class LocalizationPackCore
      *
      * @throws PrestaShopException
      * @return bool
-     *
      */
     protected function _installTaxes($xml)
     {
@@ -325,7 +323,6 @@ class LocalizationPackCore
      *
      * @throws PrestaShopException
      * @return bool
-     *
      */
     protected function _installCurrencies($xml, $install_mode = false)
     {

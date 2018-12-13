@@ -147,7 +147,6 @@ class Download
     /**
      * @throws Exception
      * @return SimpleXMLElement
-     *
      */
     private function getFeed()
     {
@@ -176,7 +175,6 @@ class Download
      *
      * @throws PrestashopCouldNotDownloadLatestVersionException
      * @return \StdClass
-     *
      */
     private function getLatestStableBranchObjectFromFeed($feed)
     {
@@ -221,7 +219,6 @@ class Download
     /**
      * @throws Exception
      * @return string
-     *
      */
     private function getXmlFeedFromCache()
     {
@@ -233,7 +230,6 @@ class Download
      *
      * @throws Exception
      * @return bool
-     *
      */
     private function storeFeedIntoFileCache($xml)
     {

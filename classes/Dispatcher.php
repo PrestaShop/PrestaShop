@@ -192,8 +192,6 @@ class DispatcherCore
     /**
      * Get current instance of dispatcher (singleton).
      *
-     *
-     *
      * @param null|SymfonyRequest $request
      * @throws PrestaShopException
      * @return Dispatcher
@@ -877,7 +875,6 @@ class DispatcherCore
      *
      * @throws PrestaShopException
      * @return string
-     *
      */
     public function createUrl(
         $route_id,
@@ -1084,7 +1081,6 @@ class DispatcherCore
      * Get list of all available FO controllers.
      *
      * @var mixed
-     *
      *
      * @param mixed $dirs
      * @return array

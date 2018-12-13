@@ -87,7 +87,6 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      * @throws Exception
      * @return bool|string Plaintext
      *                     `false` if unable to decrypt
-     *
      */
     public function decrypt($cipherText)
     {

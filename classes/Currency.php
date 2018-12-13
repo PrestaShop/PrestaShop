@@ -156,7 +156,6 @@ class CurrencyCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @return bool Indicates whether the CartRule has been successfully updated
-     *
      */
     public function update($nullValues = false)
     {
@@ -222,7 +221,6 @@ class CurrencyCore extends ObjectModel
      *
      * @throws PrestaShopException
      * @return bool True if delete was successful
-     *
      */
     public function delete()
     {

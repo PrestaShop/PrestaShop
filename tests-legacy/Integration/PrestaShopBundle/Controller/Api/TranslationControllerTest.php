@@ -347,7 +347,6 @@ class TranslationControllerTest extends ApiTestCase
     }
 
     /**
-     *
      * @param mixed $params
      * @return array
      */
