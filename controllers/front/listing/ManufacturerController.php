@@ -77,9 +77,10 @@ class ManufacturerControllerCore extends ProductListingFrontController
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
                 $this->assignManufacturer();
                 $this->label = $this->trans(
-                    'List of products by brand %brand_name%', array(
+                    'List of products by brand %brand_name%',
+                    array(
                         '%brand_name%' => $this->manufacturer->name,
-                        ),
+                    ),
                     'Shop.Theme.Catalog'
                 );
                 $this->doProductSearch(
@@ -89,7 +90,9 @@ class ManufacturerControllerCore extends ProductListingFrontController
             } else {
                 $this->assignAll();
                 $this->label = $this->trans(
-                    'List of all brands', array(), 'Shop.Theme.Catalog'
+                    'List of all brands',
+                    array(),
+                    'Shop.Theme.Catalog'
                 );
                 $this->setTemplate('catalog/manufacturers', array('entity' => 'manufacturers'));
             }

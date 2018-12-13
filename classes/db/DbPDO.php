@@ -34,7 +34,7 @@ class DbPDOCore extends Db
     /** @var PDO */
     protected $link;
 
-    /* @var PDOStatement */
+    /** @var PDOStatement */
     protected $result;
 
     /**

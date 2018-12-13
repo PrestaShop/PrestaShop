@@ -111,8 +111,7 @@ class StylesheetGenerator
             // does not end with .rtlfix
             && substr(rtrim($file, '.' . $this->fileType), -4) !== $this->rtlSuffix
             // RTL file does not exist or we are regenerating them
-            && ($regenerate || !file_exists($this->getRtlFileName($file)))
-        ;
+            && ($regenerate || !file_exists($this->getRtlFileName($file)));
     }
 
     /**

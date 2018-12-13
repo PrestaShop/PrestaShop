@@ -107,8 +107,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'choices' => $this->invoiceModelChoiceProvider->getChoices(),
                 'translation_domain' => false,
             ])
-            ->add('use_disk_cache', SwitchType::class)
-        ;
+            ->add('use_disk_cache', SwitchType::class);
     }
 
     /**

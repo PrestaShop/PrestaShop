@@ -1,5 +1,6 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const commonScenarios = require('../../common_scenarios/category');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let categoryData = {
     name: 'category',
@@ -30,6 +31,7 @@ scenario('Create, edit, delete and check "Category"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'category');
+  welcomeScenarios.findAndCloseWelcomeModal();
   commonScenarios.createCategory(categoryData);
   commonScenarios.checkCategoryBO(categoryData);
   commonScenarios.configureMainMenu();

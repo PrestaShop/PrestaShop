@@ -65,4 +65,3 @@ class RefTypeBuilder {
         throw new UnsupportedFeatureException($parsed);
     }
 }
-?>

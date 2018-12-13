@@ -38,7 +38,7 @@ ServiceLocator::setServiceContainerInstance($container);
 if (!file_exists(_PS_CACHE_DIR_)) {
     @mkdir(_PS_CACHE_DIR_);
     $warmer = new CacheWarmerAggregate([
-        new PrestaShopBundle\Cache\LocalizationWarmer(_PS_VERSION_, 'en') //@replace hard-coded Lang
+        new PrestaShopBundle\Cache\LocalizationWarmer(_PS_VERSION_, 'en'), //@replace hard-coded Lang
     ]);
     $warmer->warmUp(_PS_CACHE_DIR_);
 }
@@ -75,7 +75,7 @@ if ($lastParametersModificationTime) {
     if (!$lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
         // When parameters file is available, update its cache if it is stale.
         if (file_exists($phpParametersFilepath)) {
-            $config = require($phpParametersFilepath);
+            $config = require $phpParametersFilepath;
             $exportPhpConfigFile($config, $cachedParameters);
         } elseif (file_exists($yamlParametersFilepath)) {
             $config = Yaml::parse($yamlParametersFilepath);
@@ -143,6 +143,6 @@ if ($lastParametersModificationTime) {
         define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
         define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
     }
-} else if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
-    require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
+} elseif (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
+    require_once _PS_ROOT_DIR_.'/config/settings.inc.php';
 }

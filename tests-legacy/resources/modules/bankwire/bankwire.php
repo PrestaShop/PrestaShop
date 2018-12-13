@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -87,11 +86,11 @@ class bankwire extends PaymentModule
      * tests for ModuleGetPossibleHooks
      */
     public function hookPaymentReturn(){
-        return;
+        
     }
 
     public function hookPaymentOptions(){
-        return;
+        
     }
 
 }

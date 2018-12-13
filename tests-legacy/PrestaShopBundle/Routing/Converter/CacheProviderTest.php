@@ -99,7 +99,7 @@ class CacheProviderTest extends TestCase
                 [
                     'id_product' => 'productId',
                 ]
-            )
+            ),
         ];
     }
 
@@ -207,19 +207,16 @@ class CacheProviderTest extends TestCase
         $itemMock
             ->expects($this->once())
             ->method('isHit')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $itemMock
             ->expects($this->never())
-            ->method('set')
-        ;
+            ->method('set');
 
         $itemMock
             ->expects($this->once())
             ->method('get')
-            ->willReturn($this->expectedCacheValue)
-        ;
+            ->willReturn($this->expectedCacheValue);
 
         //AdapterInterface mock
         $cacheMock = $this
@@ -230,13 +227,11 @@ class CacheProviderTest extends TestCase
         $cacheMock
             ->expects($this->once())
             ->method('getItem')
-            ->willReturn($itemMock)
-        ;
+            ->willReturn($itemMock);
 
         $cacheMock
             ->expects($this->never())
-            ->method('save')
-        ;
+            ->method('save');
 
         return $cacheMock;
     }
@@ -255,19 +250,16 @@ class CacheProviderTest extends TestCase
         $itemMock
             ->expects($this->once())
             ->method('isHit')
-            ->willReturn(false)
-        ;
+            ->willReturn(false);
 
         $itemMock
             ->expects($this->once())
             ->method('set')
-            ->with($this->expectedCacheValue)
-        ;
+            ->with($this->expectedCacheValue);
 
         $itemMock
             ->expects($this->never())
-            ->method('get')
-        ;
+            ->method('get');
 
         //AdapterInterface mock
         $cacheMock = $this
@@ -278,13 +270,11 @@ class CacheProviderTest extends TestCase
         $cacheMock
             ->expects($this->once())
             ->method('getItem')
-            ->willReturn($itemMock)
-        ;
+            ->willReturn($itemMock);
 
         $cacheMock
             ->expects($this->once())
-            ->method('save')
-        ;
+            ->method('save');
 
         return $cacheMock;
     }
@@ -303,8 +293,7 @@ class CacheProviderTest extends TestCase
         $providerMock
             ->expects($this->once()) //Very important to assert this method is only called once to create the cache
             ->method('getLegacyRoutes')
-            ->willReturn($legacyRoutes)
-        ;
+            ->willReturn($legacyRoutes);
 
         return $providerMock;
     }
@@ -321,8 +310,7 @@ class CacheProviderTest extends TestCase
 
         $providerMock
             ->expects($this->never()) //Very important to assert this method is only called once to create the cache
-            ->method('getLegacyRoutes')
-        ;
+            ->method('getLegacyRoutes');
 
         return $providerMock;
     }
@@ -339,8 +327,7 @@ class CacheProviderTest extends TestCase
 
         $generatorMock
             ->method('getCacheKey')
-            ->willReturn(self::CACHE_KEY)
-        ;
+            ->willReturn(self::CACHE_KEY);
 
         return $generatorMock;
     }

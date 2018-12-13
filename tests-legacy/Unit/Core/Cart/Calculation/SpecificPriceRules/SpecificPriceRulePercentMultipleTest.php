@@ -68,8 +68,8 @@ class SpecificPriceRulePercentMultipleTest extends AbstractSpecificPriceRuleTest
                     1 => 1,
                 ],
                 'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
-                                          * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'specificCartRuleData' => [1, 2],
             ],
@@ -78,8 +78,8 @@ class SpecificPriceRulePercentMultipleTest extends AbstractSpecificPriceRuleTest
                     1 => 1,
                 ],
                 'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
-                                          * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction'] / 100)
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction'] / 100)
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'specificCartRuleData' => [2, 1],
             ],

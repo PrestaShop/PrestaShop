@@ -71,8 +71,7 @@ class HookConfigurator
             $firstNullValueFound = true;
             $existing = isset($currentHooks[$hookName]) ?
                 $currentHooks[$hookName] :
-                []
-            ;
+                [];
             $currentHooks[$hookName] = [];
             foreach ($modules as $key => $module) {
                 if ($module === null && $firstNullValueFound) {

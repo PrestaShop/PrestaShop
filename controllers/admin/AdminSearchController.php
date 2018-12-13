@@ -170,7 +170,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a specific string in the products and categories.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchCatalog()
     {
@@ -182,7 +182,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a specific name in the customers.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchCustomer()
     {
@@ -217,7 +217,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a feature in all store.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchFeatures()
     {
@@ -230,7 +230,8 @@ class AdminSearchControllerCore extends AdminController
 
         $tabs = array();
         $key_match = array();
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
 		SELECT class_name, name
 		FROM ' . _DB_PREFIX_ . 'tab t
 		INNER JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $this->context->employee->id_lang . ')

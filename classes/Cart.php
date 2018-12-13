@@ -2214,7 +2214,8 @@ class CartCore extends ObjectModel
                 Tools::ps_round(
                     $this->getGiftWrappingPrice($withTaxes),
                     $computePrecision
-                ), Currency::getCurrencyInstance((int) $this->id_currency)
+                ),
+                Currency::getCurrencyInstance((int) $this->id_currency)
             );
         }
 
@@ -2669,7 +2670,8 @@ class CartCore extends ObjectModel
                     }
                     $carriers_price[$id_address][$id_package][$id_carrier] = array(
                         'without_tax' => $price_without_tax,
-                        'with_tax' => $price_with_tax, );
+                        'with_tax' => $price_with_tax,
+                    );
 
                     $grade = $carriers_instance[$id_carrier]->grade;
                     if (is_null($best_grade) || $grade > $best_grade) {
@@ -2979,7 +2981,7 @@ class CartCore extends ObjectModel
                 foreach ($option['carrier_list'] as $carrier) {
                     $nameList[] = $carrier['instance']->name;
                 }
-                $name = join(' -', $nameList);
+                $name = implode(' -', $nameList);
                 $img = ''; // No images if multiple carriers
                 $delay = '';
             }
@@ -3552,7 +3554,8 @@ class CartCore extends ObjectModel
             }
 
             if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int) $id_zone))
-                || ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int) $this->id_currency)
+                || (
+                    $shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int) $this->id_currency)
                 )) {
                 $shipping_cost += 0;
             } else {
@@ -4090,10 +4093,10 @@ class CartCore extends ObjectModel
     /**
      * Add customer's text.
      *
-     * @params int $id_product Product ID
-     * @params int $index
-     * @params int $type
-     * @params string $textValue
+     * @param int $id_product Product ID
+     * @param int $index
+     * @param int $type
+     * @param string $textValue
      *
      * @return bool Always true
      * @todo: Improve this PHPDoc comment
@@ -4292,7 +4295,8 @@ class CartCore extends ObjectModel
         }
 
         // Backward compatibility: if true set customizations quantity to 0, they will be updated in Cart::_updateCustomizationQuantity
-        $new_customization_method = (int) Db::getInstance()->getValue('
+        $new_customization_method = (int) Db::getInstance()->getValue(
+            '
             SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
             WHERE `id_cart` = ' . (int) $this->id .
                 ' AND `id_customization` != 0'

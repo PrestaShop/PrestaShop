@@ -55,7 +55,6 @@ final class LinkGridAction extends AbstractGridAction
                 'route_params' => [],
             ])
             ->setAllowedTypes('route', 'string')
-            ->setAllowedTypes('route_params', 'array')
-        ;
+            ->setAllowedTypes('route_params', 'array');
     }
 }

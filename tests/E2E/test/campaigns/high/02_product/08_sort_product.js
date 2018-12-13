@@ -1,4 +1,3 @@
-const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {ProductList} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Menu} = require('../../../selectors/BO/menu.js');

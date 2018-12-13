@@ -30,8 +30,8 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
 
 /**
  * 
@@ -61,4 +61,3 @@ class RecordProcessor extends AbstractProcessor {
     }
 
 }
-?>

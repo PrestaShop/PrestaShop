@@ -59,8 +59,7 @@ class TextWithLengthCounterType extends AbstractType
                 'position' => 'before',
             ])
             ->setAllowedTypes('max_length', 'int')
-            ->setAllowedValues('position', ['before', 'after'])
-        ;
+            ->setAllowedValues('position', ['before', 'after']);
     }
 
     /**

@@ -118,8 +118,7 @@ class SqlRequestFormHandler
             ->add('request_sql', SqlRequestType::class)
             ->setData([
                 'request_sql' => $formData,
-            ])
-        ;
+            ]);
 
         return $builder->getForm();
     }

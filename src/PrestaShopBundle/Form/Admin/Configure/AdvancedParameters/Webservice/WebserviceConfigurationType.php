@@ -47,8 +47,7 @@ class WebserviceConfigurationType extends AbstractType
             ])
             ->add('enable_cgi', SwitchType::class, [
                 'required' => true,
-            ])
-        ;
+            ]);
     }
 
     /**

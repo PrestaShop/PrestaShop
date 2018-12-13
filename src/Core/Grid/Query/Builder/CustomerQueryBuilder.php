@@ -71,8 +71,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $searchQueryBuilder = $this->getCustomerQueryBuilder($searchCriteria)
             ->select('c.id_customer, c.firstname, c.lastname, c.email, c.active, c.newsletter, c.optin')
-            ->addSelect('c.date_add, gl.name as social_title, s.name as shop_name, c.company')
-        ;
+            ->addSelect('c.date_add, gl.name as social_title, s.name as shop_name, c.company');
 
         $this->appendTotalSpentQuery($searchQueryBuilder);
         $this->appendLastVisitQuery($searchQueryBuilder);
@@ -87,8 +86,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $countQueryBuilder = $this->getCustomerQueryBuilder($searchCriteria)
-            ->select('COUNT(*)')
-        ;
+            ->select('COUNT(*)');
 
         return $countQueryBuilder;
     }
@@ -117,8 +115,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             ->where('c.deleted = 0')
             ->andWhere('c.id_shop IN (:context_shop_ids)')
             ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
-            ->setParameter('context_lang_id', $this->contextLangId)
-        ;
+            ->setParameter('context_lang_id', $this->contextLangId);
 
         $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
 
@@ -136,8 +133,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             ->where('o.id_customer = c.id_customer')
             ->andWhere('o.id_shop IN (:context_shop_ids)')
             ->andWhere('o.valid = 1')
-            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
-        ;
+            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 
         $queryBuilder->addSelect('(' . $totalSpentQueryBuilder->getSQL() . ') as total_spent');
     }
@@ -155,8 +151,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             ->leftJoin('g', $this->dbPrefix . 'connections', 'con', 'con.id_guest = g.id_guest')
             ->where('g.id_customer = c.id_customer')
             ->orderBy('c.date_add', 'DESC')
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $queryBuilder->addSelect('(' . $lastVisitQueryBuilder->getSQL() . ') as connect');
     }

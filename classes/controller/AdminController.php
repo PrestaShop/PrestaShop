@@ -227,7 +227,7 @@ class AdminControllerCore extends Controller
     /** @var array List of row ids associated with a given action for witch this action have to not be available */
     protected $list_skip_actions = array();
 
-    /* @var bool Don't show header & footer */
+    /** @var bool Don't show header & footer */
     protected $lite_display = false;
 
     /** @var bool List content lines are clickable if true */
@@ -275,7 +275,7 @@ class AdminControllerCore extends Controller
      */
     protected $bulk_actions;
 
-    /* @var array Ids of the rows selected */
+    /** @var array Ids of the rows selected */
     protected $boxes;
 
     /** @var string Do not automatically select * anymore but select only what is necessary */
@@ -1269,8 +1269,6 @@ class AdminControllerCore extends Controller
         if (isset($object)) {
             return $object;
         }
-
-        return;
     }
 
     /**
@@ -1388,8 +1386,10 @@ class AdminControllerCore extends Controller
 
         $_POST = array();
         $this->_filter = false;
-        unset($this->_filterHaving);
-        unset($this->_having);
+        unset(
+            $this->_filterHaving,
+            $this->_having
+        );
     }
 
     /**
@@ -1844,7 +1844,8 @@ class AdminControllerCore extends Controller
                 'page' => $this->json ? json_encode($page) : $page,
                 'header' => $this->context->smarty->fetch($header_tpl),
                 'footer' => $this->context->smarty->fetch($footer_tpl),
-        ));
+            )
+        );
 
         $this->smartyOutputContent($this->layout);
     }
@@ -1917,6 +1918,7 @@ class AdminControllerCore extends Controller
                 'multishop_context' => $this->multishop_context,
                 'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int) Context::getContext()->employee->default_tab)),
                 'login_link' => $this->context->link->getAdminLink('AdminLogin'),
+                'logout_link' => $this->context->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]),
                 'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int) $this->context->cookie->collapse_menu : 0,
             ));
         } else {
@@ -1966,8 +1968,8 @@ class AdminControllerCore extends Controller
                         array(
                             '[1]' => '<strong>',
                             '[/1]' => '</strong>',
-                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts') . '&action=filterOnlyAbandonedCarts">',
-                             '[/2]' => '</a>',
+                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true, array(), array('action' => 'filterOnlyAbandonedCarts')) . '">',
+                            '[/2]' => '</a>',
                             '[3]' => '<br>',
                         ),
                         'Admin.Navigation.Notification'
@@ -3655,9 +3657,11 @@ class AdminControllerCore extends Controller
                     $value = Tools::getValue($field . '_' . $default_language->id);
                     // !isset => not exist || "" == $value can be === 0 (before, empty $value === 0 returned true)
                     if (!isset($value) || '' == $value) {
-                        $this->errors[$field . '_' . $default_language->id] = $this->trans('The field %field_name% is required at least in %lang%.',
+                        $this->errors[$field . '_' . $default_language->id] = $this->trans(
+                            'The field %field_name% is required at least in %lang%.',
                             array('%field_name%' => $object->displayFieldName($field, $class_name), '%lang%' => $default_language->name),
-                            'Admin.Notifications.Error');
+                            'Admin.Notifications.Error'
+                        );
                     }
                 }
 
@@ -3688,9 +3692,11 @@ class AdminControllerCore extends Controller
                             $res = Validate::$function($value);
                         }
                         if (!$res) {
-                            $this->errors[$field_lang . '_' . $language['id_lang']] = $this->trans('The %field_name% field (%lang%) is invalid.',
+                            $this->errors[$field_lang . '_' . $language['id_lang']] = $this->trans(
+                                'The %field_name% field (%lang%) is invalid.',
                                 array('%field_name%' => call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name), '%lang%' => $language['name']),
-                                'Admin.Notifications.Error');
+                                'Admin.Notifications.Error'
+                            );
                         }
                     }
                 }

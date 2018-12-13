@@ -64,4 +64,3 @@ class OrderByAliasBuilder {
         return $parsed['base_expr'] . $this->buildDirection($parsed);
     }
 }
-?>

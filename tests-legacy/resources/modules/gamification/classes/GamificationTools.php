@@ -30,7 +30,7 @@ class GamificationTools
     {
         $meta_data = array(
             'PREFIX_' => _DB_PREFIX_,
-            );
+        );
         //replace define
         $content = str_replace(array_keys($meta_data), array_values($meta_data), $content);
         

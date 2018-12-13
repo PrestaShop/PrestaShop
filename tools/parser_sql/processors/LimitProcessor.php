@@ -30,7 +30,7 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
  * 
@@ -80,4 +80,3 @@ class LimitProcessor extends AbstractProcessor {
         return array('offset' => trim($offset), 'rowcount' => trim($rowcount));
     }
 }
-?>

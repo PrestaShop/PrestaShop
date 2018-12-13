@@ -27,7 +27,7 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-require_once(_PS_ADMIN_DIR_.'/../images.inc.php');
+require_once _PS_ADMIN_DIR_.'/../images.inc.php';
 function bindDatepicker($id, $time)
 {
     if ($time) {
@@ -208,7 +208,7 @@ function getDirContent($path)
     if (is_dir($path)) {
         $d = dir($path);
         while (false !== ($entry = $d->read())) {
-            if ($entry{0} != '.') {
+            if ($entry[0] != '.') {
                 $content[] = $entry;
             }
         }
@@ -276,7 +276,7 @@ function checkingTab($tab)
         echo sprintf(Tools::displayError('The class %s cannot be found.'), $tab);
         return false;
     }
-    $admin_obj = new $tab;
+    $admin_obj = new $tab();
     if (!$admin_obj->viewAccess() && ($admin_obj->table != 'employee' || Context::getContext()->employee->id != Tools::getValue('id_employee') || !Tools::isSubmit('updateemployee'))) {
         $admin_obj->_errors = array(Tools::displayError('Access denied.'));
         echo $admin_obj->displayErrors();
@@ -412,7 +412,7 @@ function runAdminTab($tab, $ajax_mode = false)
 {
     $ajax_mode = (bool)$ajax_mode;
 
-    require_once(_PS_ADMIN_DIR_.'/init.php');
+    require_once _PS_ADMIN_DIR_.'/init.php';
     $cookie = Context::getContext()->cookie;
     if (empty($tab) && !count($_POST)) {
         $tab = 'AdminDashboard';
@@ -431,7 +431,7 @@ function runAdminTab($tab, $ajax_mode = false)
             $admin_obj->run();
         } else {
             if (!$ajax_mode) {
-                require_once(_PS_ADMIN_DIR_.'/header.inc.php');
+                require_once _PS_ADMIN_DIR_.'/header.inc.php';
             }
             $iso_user = Context::getContext()->language->id;
             $tabs = array();
@@ -514,7 +514,7 @@ function runAdminTab($tab, $ajax_mode = false)
                         $admin_obj->postProcess();
                         $admin_obj->displayErrors();
                         $admin_obj->display();
-                        include(_PS_ADMIN_DIR_.'/footer.inc.php');
+                        include _PS_ADMIN_DIR_.'/footer.inc.php';
                     }
                 } else {
                     if ($ajax_mode) {

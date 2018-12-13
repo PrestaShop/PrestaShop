@@ -29,10 +29,8 @@ namespace LegacyTests\Integration\Core\Foundation\Entity;
 use LegacyTests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use CMSRole;
-use CMSRoleRepository;
 use Db;
 use LegacyTests\Unit\ContextMocker;
-use Product;
 
 class EntityManagerTest extends IntegrationTestCase
 {
@@ -80,7 +78,7 @@ class EntityManagerTest extends IntegrationTestCase
     {
         $repository = $this->entityManager->getRepository('CMSRole');
 
-        $entity = new CMSRole;
+        $entity = new CMSRole();
 
         $name = "Yo CMS Role " . mt_rand(0, mt_getrandmax());
 

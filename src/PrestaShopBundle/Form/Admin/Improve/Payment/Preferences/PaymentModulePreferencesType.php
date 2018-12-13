@@ -122,8 +122,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
                 'label' => $this->trans('Carrier restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->carrierChoices,
                 'multiple_choices' => $this->getCarrierChoicesForPaymentModules(),
-            ])
-        ;
+            ]);
     }
 
     /**

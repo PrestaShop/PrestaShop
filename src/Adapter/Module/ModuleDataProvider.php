@@ -212,7 +212,9 @@ class ModuleDataProvider
                 $this->translator->trans(
                     'Parse error detected in main class of module %module%!',
                     array('%module%' => $name),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
 
             return false;
         }
@@ -233,7 +235,9 @@ class ModuleDataProvider
                         array(
                             '%module%' => $name,
                             '%error_message%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                        'Admin.Modules.Notification'
+                    )
+                );
 
                 return false;
             }

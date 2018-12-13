@@ -51,15 +51,15 @@ class CartProductTest extends AbstractCartCalculationTest
                 'cartRules'     => array(),
             ),
             'one product in cart, quantity 1'        => array(
-                'products'      => array(1 => 1,),
+                'products'      => array(1 => 1),
                 'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => array(),
             ),
             'one product in cart, quantity 3'        => array(
-                'products'      => array(1 => 3,),
+                'products'      => array(1 => 3),
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => array(),
             ),
             '3 products in cart, several quantities' => array(
@@ -69,9 +69,9 @@ class CartProductTest extends AbstractCartCalculationTest
                     3 => 1,
                 ),
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                   + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                   + static::PRODUCT_FIXTURES[3]['price']
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + 2 * static::PRODUCT_FIXTURES[2]['price']
+                + static::PRODUCT_FIXTURES[3]['price']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => array(),
             ),
         );

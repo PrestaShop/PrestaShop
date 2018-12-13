@@ -128,8 +128,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
             ->orderBy($filters['orderBy'], $filters['sortOrder'])
             ->setFirstResult($filters['offset'])
-            ->setMaxResults($filters['limit'])
-        ;
+            ->setMaxResults($filters['limit']);
 
         if (!empty($scalarFilters)) {
             foreach ($scalarFilters as $column => $value) {
@@ -142,8 +141,8 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         if (!empty($wheres['date_from']) && !empty($wheres['date_to'])) {
             $qb->andWhere('l.date_add BETWEEN :date_from AND :date_to');
             $qb->setParameters(array(
-               'date_from' => $wheres['date_from'],
-               'date_to' => $wheres['date_to'],
+                'date_from' => $wheres['date_from'],
+                'date_to' => $wheres['date_to'],
             ));
         }
 

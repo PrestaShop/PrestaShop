@@ -30,9 +30,9 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/../utils/ExpressionToken.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
+require_once dirname(__FILE__) . '/../utils/ExpressionToken.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
  * 
@@ -105,4 +105,3 @@ class DropProcessor extends AbstractProcessor {
         return array('option' => $option, 'warning' => $warning, 'object_list' => $resultList);
     }
 }
-?>

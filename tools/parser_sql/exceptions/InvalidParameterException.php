@@ -51,5 +51,3 @@ class InvalidParameterException extends InvalidArgumentException {
         return $this->argument;
     }
 }
-
-?>

@@ -393,8 +393,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             ),
             'product' => $productForTemplate,
         )));
-
-        return;
     }
 
     public function displayAjaxRefresh()
@@ -437,8 +435,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
         )));
-
-        return;
     }
 
     /**
@@ -487,7 +483,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $id_currency = (int) $this->context->cookie->id_currency;
         $id_product = (int) $this->product->id;
-        $id_product_attribute = Tools::getValue('id_product_attribute', null);
+        $id_product_attribute = $this->getIdProductAttributeByRequestOrGroup();
         $id_shop = $this->context->shop->id;
 
         $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute, false, (int) $this->context->customer->id);
@@ -505,7 +501,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
         }
 
-        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
+        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute);
+
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
 
         $this->context->smarty->assign(array(
@@ -524,7 +521,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $groups = array();
         $this->combinations = array();
 
-        // @todo (RM) should only get groups and not all declination ?
+        /** @todo (RM) should only get groups and not all declination ? */
         $attributes_groups = $this->product->getAttributesGroups($this->context->language->id);
         if (is_array($attributes_groups) && $attributes_groups) {
             $combination_images = $this->product->getCombinationImages($this->context->language->id);
@@ -666,8 +663,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                     foreach ($group['attributes'] as $key => $attribute) {
                         if (!in_array((int) $key, $id_attributes)) {
-                            unset($group['attributes'][$key]);
-                            unset($group['attributes_quantity'][$key]);
+                            unset(
+                                $group['attributes'][$key],
+                                $group['attributes_quantity'][$key]
+                            );
                         }
                     }
                 }
@@ -1309,8 +1308,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             return
                 Validate::isLoadedObject($combination)
-                && $combination->id_product == $productId
-            ;
+                && $combination->id_product == $productId;
         }
 
         return false;

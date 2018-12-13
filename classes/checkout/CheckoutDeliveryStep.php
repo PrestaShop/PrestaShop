@@ -148,8 +148,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             // - the module associated to the delivery option confirms
             $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
             $this->step_is_complete =
-                !empty($deliveryOptions) && $this->getCheckoutSession()->getSelectedDeliveryOption() && $this->isModuleComplete($requestParams)
-            ;
+                !empty($deliveryOptions) && $this->getCheckoutSession()->getSelectedDeliveryOption() && $this->isModuleComplete($requestParams);
         }
 
         $this->setTitle($this->getTranslator()->trans('Shipping Method', array(), 'Shop.Theme.Checkout'));
@@ -201,7 +200,8 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                 'request_params' => $requestParams,
                 'completed' => &$isComplete,
             ),
-            Module::getModuleIdByName($currentDeliveryOption['external_module_name']));
+            Module::getModuleIdByName($currentDeliveryOption['external_module_name'])
+        );
 
         return $isComplete;
     }

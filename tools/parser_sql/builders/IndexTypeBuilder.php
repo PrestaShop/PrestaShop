@@ -80,4 +80,3 @@ class IndexTypeBuilder {
         return substr($sql, 0, -1);
     }
 }
-?>

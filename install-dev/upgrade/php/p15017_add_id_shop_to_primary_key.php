@@ -31,7 +31,7 @@ function p15017_add_id_shop_to_primary_key()
         'category_lang_index' => 'category_lang',
         'shipper_lang_index' => 'carrier_lang',
         'product_lang_index' => 'product_lang',
-        'id_category_shop' => 'category_shop'
+        'id_category_shop' => 'category_shop',
     );
     foreach ($old_indexes as $index => $table) {
         if (Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.$table.'` WHERE Key_name = "'.$index.'"')) {

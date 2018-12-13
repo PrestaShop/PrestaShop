@@ -205,7 +205,7 @@ class AdminImportControllerCore extends AdminController
                     'is_root_category' => array(
                         'label' => $this->trans('Root category (0/1)', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('A category root is where a category tree can begin. This is used with multistore.', array(), 'Admin.Advparameters.Help'),
-                        ),
+                    ),
                     'description' => array('label' => $this->trans('Description', array(), 'Admin.Global')),
                     'meta_title' => array('label' => $this->trans('Meta title', array(), 'Admin.Global')),
                     'meta_keywords' => array('label' => $this->trans('Meta keywords', array(), 'Admin.Global')),
@@ -485,7 +485,7 @@ class AdminImportControllerCore extends AdminController
                     'alias' => array('label' => $this->trans('Alias', array(), 'Admin.Shopparameters.Feature') . '*'),
                     'search' => array('label' => $this->trans('Search', array(), 'Admin.Shopparameters.Feature') . '*'),
                     'active' => array('label' => $this->trans('Active', array(), 'Admin.Global')),
-                    );
+                );
                 self::$default_values = array(
                     'active' => '1',
                 );
@@ -592,9 +592,9 @@ class AdminImportControllerCore extends AdminController
             }
         }
 
-        $this->separator = ($separator = Tools::substr(strval(trim(Tools::getValue('separator'))), 0, 1)) ? $separator : ';';
+        $this->separator = ($separator = Tools::substr((string) (trim(Tools::getValue('separator'))), 0, 1)) ? $separator : ';';
         $this->convert = false;
-        $this->multiple_value_separator = ($separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator : ',';
+        $this->multiple_value_separator = ($separator = Tools::substr((string) (trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator : ',';
     }
 
     public function setMedia($isNewTheme = false)
@@ -1020,12 +1020,13 @@ class AdminImportControllerCore extends AdminController
         return $options;
     }
 
-    /*
-    * Return fields to be display AS piece of advise
-    *
-    * @param $in_array boolean
-    * @return string or return array
-    */
+    /**
+     * Return fields to be display AS piece of advise
+     *
+     * @param $in_array boolean
+     *
+     * @return string or return array
+     */
     public function getAvailableFields($in_array = false)
     {
         $i = 0;
@@ -2297,7 +2298,7 @@ class AdminImportControllerCore extends AdminController
                         if ($price == 0) {
                             $price = 0.000001;
                         }
-                        $price = round(floatval($price), 6);
+                        $price = round((float) $price, 6);
                         $warehouse = new Warehouse($product->warehouse);
                         if ($stock_manager->addProduct((int) $product->id, 0, $warehouse, (int) $product->quantity, 1, $price, true)) {
                             StockAvailable::synchronize((int) $product->id);
@@ -2510,7 +2511,8 @@ class AdminImportControllerCore extends AdminController
                         // until here
                     } else {
                         if (!$validateOnly) {
-                            $this->warnings[] = $this->trans('%data% cannot be saved',
+                            $this->warnings[] = $this->trans(
+                                '%data% cannot be saved',
                                 array(
                                     '%data%' => (isset($image->id_product) ? ' (' . $image->id_product . ')' : ''),
                                 ),
@@ -2671,7 +2673,7 @@ class AdminImportControllerCore extends AdminController
 
                     // if a reference is specified for this product, get the associate id_product_attribute to UPDATE
                     if (isset($info['reference']) && !empty($info['reference'])) {
-                        $id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
+                        $id_product_attribute = Combination::getIdByReference($product->id, (string) ($info['reference']));
 
                         // updates the attribute
                         if ($id_product_attribute && !$validateOnly) {
@@ -2833,7 +2835,7 @@ class AdminImportControllerCore extends AdminController
                         if ($price == 0) {
                             $price = 0.000001;
                         }
-                        $price = round(floatval($price), 6);
+                        $price = round((float) $price, 6);
                         $warehouse = new Warehouse($info['warehouse']);
                         if (!$validateOnly && $stock_manager->addProduct((int) $product->id, $id_product_attribute, $warehouse, (int) $info['quantity'], 1, $price, true)) {
                             StockAvailable::synchronize((int) $product->id);
@@ -3994,9 +3996,11 @@ class AdminImportControllerCore extends AdminController
             $error = $this->trans('Date (%date%) cannot be in the past (at line %line%). Format: %date_format%.', array('%date%' => $date_delivery_expected, '%line%' => $current_line + 1, '%date_format%' => $this->trans('YYYY-MM-DD', array(), 'Admin.Advparameters.Notification')), 'Admin.Advparameters.Notification');
         }
         if ($discount_rate < 0 || $discount_rate > 100) {
-            $error = $this->trans('Discount rate (%rate%) is not valid (at line %line%). %format%.',
+            $error = $this->trans(
+                'Discount rate (%rate%) is not valid (at line %line%). %format%.',
                 array('%rate%' => $discount_rate, '%line%' => $current_line + 1, '%format%' => $this->trans('Format: Between 0 and 100', array(), 'Admin.Advparameters.Notification')),
-                'Admin.Advparameters.Notification');
+                'Admin.Advparameters.Notification'
+            );
         }
         if ($supply_order->id > 0 && !$supply_order->isEditable()) {
             $error = $this->trans('Supply Order (%id%) is not editable (at line %line%).', array('%id%' => $supply_order->id, '%line%' => $current_line + 1), 'Admin.Advparameters.Notification');
@@ -4269,7 +4273,7 @@ class AdminImportControllerCore extends AdminController
     protected function excelToCsvFile($filename)
     {
         if (preg_match('#(.*?)\.(csv)#is', $filename)) {
-            $dest_file = AdminImportController::getPath(strval(preg_replace('/\.{2,}/', '.', $filename)));
+            $dest_file = AdminImportController::getPath((string) (preg_replace('/\.{2,}/', '.', $filename)));
         } else {
             $csv_folder = AdminImportController::getPath();
             $excel_folder = $csv_folder . 'csvfromexcel/';
@@ -4488,7 +4492,7 @@ class AdminImportControllerCore extends AdminController
             $crossStepsVariables = array();
             if ($crossStepsVars = Tools::getValue('crossStepsVars')) {
                 $crossStepsVars = json_decode($crossStepsVars, true);
-                if (sizeof($crossStepsVars) > 0) {
+                if (count($crossStepsVars) > 0) {
                     $crossStepsVariables = $crossStepsVars;
                 }
             }

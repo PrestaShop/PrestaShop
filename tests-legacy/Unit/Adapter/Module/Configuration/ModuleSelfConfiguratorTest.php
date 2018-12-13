@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use LegacyTests\TestCase\UnitTestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Yaml;
 
 class ModuleSelfConfiguratorTest extends UnitTestCase
 {
@@ -57,7 +56,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     public function setUp()
     {
         $this->configuration = new ConfigurationMock();
-        $this->connection = new ConnectionMock(array(), new Driver);
+        $this->connection = new ConnectionMock(array(), new Driver());
         $this->mockModuleRepository();
 
         $this->defaultDir = __DIR__.'/../../../../resources/module-self-config-files';

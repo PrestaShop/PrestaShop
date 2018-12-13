@@ -437,7 +437,7 @@ class AdminCartsControllerCore extends AdminController
             $this->setMedia(false);
             $this->initFooter();
             $this->context->smarty->assign(array('customization_errors' => implode('<br />', $errors),
-                                                            'css_files' => $this->css_files, ));
+                'css_files' => $this->css_files, ));
 
             return $this->smartyOutputContent('controllers/orders/form_customization_feedback.tpl');
         }
@@ -769,7 +769,8 @@ class AdminCartsControllerCore extends AdminController
             }
         }
         if ($orders || $carts) {
-            $to_return = array_merge($this->ajaxReturnVars(),
+            $to_return = array_merge(
+                $this->ajaxReturnVars(),
                 array(
                     'carts' => $carts,
                     'orders' => $orders,
@@ -818,7 +819,8 @@ class AdminCartsControllerCore extends AdminController
             'id_cart' => $id_cart,
             'order_message' => $message_content,
             'link_order' => $this->context->link->getPageLink(
-                'order', false,
+                'order',
+                false,
                 (int) $this->context->cart->id_lang,
                 'step=3&recover_cart=' . $id_cart . '&token_cart=' . md5(_COOKIE_KEY_ . 'recover_cart_' . $id_cart)
             ),

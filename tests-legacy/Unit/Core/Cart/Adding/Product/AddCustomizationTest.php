@@ -29,8 +29,6 @@ namespace LegacyTests\Unit\Core\Cart\Adding\CartRule;
 use Configuration;
 use Customization;
 use Product;
-use Pack;
-use StockAvailable;
 use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 
 class AddCustomizationTest extends AbstractCartTest
@@ -49,7 +47,7 @@ class AddCustomizationTest extends AbstractCartTest
     protected function addCustomization(Product $product)
     {
 
-        $customization                       = new Customization;
+        $customization                       = new Customization();
         $customization->id_product           = $product->id;
         $customization->id_product_attribute = 0;
         $customization->id_address_delivery  = 0;

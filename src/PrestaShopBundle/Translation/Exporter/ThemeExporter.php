@@ -326,8 +326,7 @@ class ThemeExporter
     {
         return !is_null($metadata) && array_key_exists('notes', $metadata) && is_array($metadata['notes']) &&
             array_key_exists(0, $metadata['notes']) && is_array($metadata['notes'][0]) &&
-            array_key_exists('content', $metadata['notes'][0])
-        ;
+            array_key_exists('content', $metadata['notes'][0]);
     }
 
     /**

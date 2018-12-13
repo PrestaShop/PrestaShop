@@ -96,8 +96,7 @@ final class PageLayoutCustomizationFormFactory implements PageLayoutCustomizatio
         foreach ($customizationPages as $page) {
             $selectedLayout = isset($pageLayouts[$page->getPage()]) ?
                 $pageLayouts[$page->getPage()] :
-                $defaultLayout['key']
-            ;
+                $defaultLayout['key'];
 
             $layouts[$page->getPage()] = $selectedLayout;
         }

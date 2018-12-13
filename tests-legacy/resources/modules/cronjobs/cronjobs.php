@@ -1,28 +1,28 @@
 <?php
 /**
-* 2007-2016 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2016 PrestaShop SA
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-2016 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2016 PrestaShop SA
+ *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -32,7 +32,7 @@ if (defined('_PS_ADMIN_DIR_') === false) {
     define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
 }
 
-require_once(dirname(__FILE__).'/classes/CronJobsForms.php');
+require_once dirname(__FILE__).'/classes/CronJobsForms.php';
 
 class CronJobs extends Module
 {
@@ -424,7 +424,7 @@ class CronJobs extends Module
             'href' => $this->context->link->getAdminLink('AdminModules', false)
             .'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name
             .'&newcronjobs=1&token='.Tools::getAdminTokenLite('AdminModules'),
-            'desc' => $this->l('Add new task')
+            'desc' => $this->l('Add new task'),
         );
 
         $helper->token = Tools::getAdminTokenLite('AdminModules');
@@ -679,13 +679,13 @@ class CronJobs extends Module
             'domain' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__,
             'cronjob' => $cron_url.'&token='.Configuration::getGlobalValue('CRONJOBS_EXECUTION_TOKEN'),
             'cron_token' => Configuration::getGlobalValue('CRONJOBS_EXECUTION_TOKEN'),
-            'active' => (bool)$use_webservice
+            'active' => (bool)$use_webservice,
         );
 
         $context_options = array('http' => array(
             'method' => (is_null($webservice_id) == true) ? 'POST' : 'PUT',
             'header'  => 'Content-type: application/x-www-form-urlencoded',
-            'content' => http_build_query($data)
+            'content' => http_build_query($data),
         ));
 
         $result = Tools::file_get_contents($this->webservice_url.$webservice_id, false, stream_context_create($context_options));

@@ -68,4 +68,3 @@ class JoinBuilder {
         throw new UnsupportedFeatureException($parsed);
     }
 }
-?>

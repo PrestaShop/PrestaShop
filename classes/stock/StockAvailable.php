@@ -201,13 +201,14 @@ class StockAvailableCore extends ObjectModel
 
                     $product_quantity = $manager->getProductRealQuantities($id_product, null, $allowed_warehouse_for_product_clean, true);
 
-                    Hook::exec('actionUpdateQuantity',
+                    Hook::exec(
+                        'actionUpdateQuantity',
                                     array(
                                         'id_product' => $id_product,
                                         'id_product_attribute' => 0,
                                         'quantity' => $product_quantity,
                                         'id_shop' => $id_shop,
-                                        )
+                                    )
                     );
                 } else {
                     // else this product has attributes, hence loops on $ids_product_attribute
@@ -255,7 +256,8 @@ class StockAvailableCore extends ObjectModel
 
                         $product_quantity += $quantity;
 
-                        Hook::exec('actionUpdateQuantity',
+                        Hook::exec(
+                            'actionUpdateQuantity',
                                     array(
                                         'id_product' => $id_product,
                                         'id_product_attribute' => $id_product_attribute,
@@ -506,7 +508,8 @@ class StockAvailableCore extends ObjectModel
             }
         }
 
-        $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT SUM(quantity) as quantity
 			FROM ' . _DB_PREFIX_ . 'stock_available
 			WHERE id_product = ' . (int) $this->id_product . '
@@ -610,7 +613,8 @@ class StockAvailableCore extends ObjectModel
                 }
             }
 
-            Hook::exec('actionUpdateQuantity',
+            Hook::exec(
+                'actionUpdateQuantity',
                 array(
                     'id_product' => $id_product,
                     'id_product_attribute' => $id_product_attribute,

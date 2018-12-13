@@ -98,7 +98,7 @@ class ModifyTranslationsType extends TranslatorAwareType
             ])
             ->add('theme', ChoiceType::class, [
                 'choices' => [$noTheme => 0] +
-                    $this->themeChoices,
+                $this->themeChoices,
                 'choice_attr' => [
                     $noTheme => [
                         'class' => 'js-no-theme',
@@ -115,7 +115,6 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'placeholder' => $this->trans('Language', 'Admin.Global'),
                 'choices' => $this->getLocaleChoices(),
                 'choice_translation_domain' => false,
-            ])
-        ;
+            ]);
     }
 }

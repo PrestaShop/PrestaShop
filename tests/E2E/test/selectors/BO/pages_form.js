@@ -18,7 +18,7 @@ module.exports = {
       supplier_form: '//*[@id="subtab-AdminSuppliers"]',
       attachment_form: '//*[@id="form-attachment"]',
       cart_rule_form: '//*[@id="form-cart_rule"]',
-      cart_price_rule_form: '//*[@id="subtab-AdminSpecificPriceRule"]',
+      cart_price_rule_form: '//*[@id="form-specific_price_rule"]',
       search_box: '//*[@id="search"]' // Search products in stock and movements page
     },
     Customers: {
@@ -94,8 +94,7 @@ module.exports = {
       check_configuration_box: '//*[@id="checkConfiguration"]',
       debug_mode_button: '//form[contains(@class, "form-horizontal")]', // performance page
       administration_form: '//form[contains(@class, "form-horizontal")]',
-      mail_form: '//*[@id="main-div"]//form[@name="form"]',
-      mail_log_grid_panel: '//*[@id="emaillogs_grid_panel"]',
+      mail_form: '//*[@id="email_logs_grid_panel"] | //*[@id="form_mail"]',
       preview_import_form: '//form[contains(@class, "import")]',
       employee_form: '//*[@id="form-employee"]', //team page
       profiles_form: '//*[@id="form-profile"]',

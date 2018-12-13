@@ -211,7 +211,7 @@ class ProductCore extends ObjectModel
     /** @var string Object last modification date */
     public $date_upd;
 
-    /*** @var array Tags */
+    /** @var array Tags */
     public $tags;
 
     /** @var int temporary or saved object */
@@ -507,7 +507,7 @@ class ProductCore extends ObjectModel
             'tags' => array('resource' => 'tag',
                 'fields' => array(
                     'id' => array('required' => true),
-            ), ),
+                ), ),
             'stock_availables' => array('resource' => 'stock_available',
                 'fields' => array(
                     'id' => array('required' => true),
@@ -757,7 +757,7 @@ class ProductCore extends ObjectModel
         return $result;
     }
 
-    /*
+    /**
      * Reorder product position in category $id_category.
      * Call it after deleting a product from a category.
      *
@@ -1057,7 +1057,7 @@ class ProductCore extends ObjectModel
         $return = 1;
         if (is_array($products) && ($count = count($products))) {
             // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
-            if (intval(ini_get('max_execution_time')) < round($count * 1.5)) {
+            if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
                 ini_set('max_execution_time', round($count * 1.5));
             }
 
@@ -1119,8 +1119,9 @@ class ProductCore extends ObjectModel
         }
 
         $new_categ_pos = array();
+        // The first position must be 1 instead of 0
         foreach ($categories as $id_category) {
-            $new_categ_pos[$id_category] = isset($new_categories[$id_category]) ? $new_categories[$id_category] : 0;
+            $new_categ_pos[$id_category] = isset($new_categories[$id_category]) ? $new_categories[$id_category] : 1;
         }
 
         $product_cats = array();
@@ -1156,7 +1157,8 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
             SELECT c.`id_category`
             FROM `' . _DB_PREFIX_ . 'category_product` cp
             LEFT JOIN `' . _DB_PREFIX_ . 'category` c ON (c.`id_category` = cp.`id_category`)
@@ -1272,7 +1274,8 @@ class ProductCore extends ObjectModel
      */
     public function deleteImages()
     {
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
             SELECT `id_image`
             FROM `' . _DB_PREFIX_ . 'image`
             WHERE `id_product` = ' . (int) $this->id
@@ -1973,7 +1976,8 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
             SELECT SUM(quantity) as quantity
             FROM ' . _DB_PREFIX_ . 'stock_available
             WHERE id_product = ' . (int) $this->id . '
@@ -2098,7 +2102,8 @@ class ProductCore extends ObjectModel
      */
     public function deleteAttachments($update_attachment_cache = true)
     {
-        $res = Db::getInstance()->execute('
+        $res = Db::getInstance()->execute(
+            '
             DELETE FROM `' . _DB_PREFIX_ . 'product_attachment`
             WHERE `id_product` = ' . (int) $this->id
         );
@@ -2127,8 +2132,7 @@ class ProductCore extends ObjectModel
                 'DELETE `' . _DB_PREFIX_ . 'customization_field_lang` FROM `' . _DB_PREFIX_ . 'customization_field_lang` LEFT JOIN `' . _DB_PREFIX_ . 'customization_field`
                 ON (' . _DB_PREFIX_ . 'customization_field.id_customization_field = ' . _DB_PREFIX_ . 'customization_field_lang.id_customization_field)
                 WHERE ' . _DB_PREFIX_ . 'customization_field.id_customization_field IS NULL'
-            )
-        ;
+            );
     }
 
     /**
@@ -2174,8 +2178,7 @@ class ProductCore extends ObjectModel
                 'DELETE sw FROM `' . _DB_PREFIX_ . 'search_word` sw
                 LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.id_word=si.id_word)
                 WHERE si.id_word IS NULL;'
-            )
-        ;
+            );
     }
 
     /**
@@ -2479,7 +2482,8 @@ class ProductCore extends ObjectModel
             $ids[] = (int) $product_attribute['id_product_attribute'];
         }
 
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
             SELECT pai.`id_image`, pai.`id_product_attribute`, il.`legend`
             FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
             LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (il.`id_image` = pai.`id_image`)
@@ -2506,7 +2510,8 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
             SELECT pai.`id_image`, pai.`id_product_attribute`, il.`legend`
             FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
             LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (il.`id_image` = pai.`id_image`)
@@ -2532,7 +2537,8 @@ class ProductCore extends ObjectModel
             return 0;
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
             SELECT COUNT(*)
             FROM `' . _DB_PREFIX_ . 'product_attribute` pa
             ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
@@ -2935,7 +2941,8 @@ class ProductCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $ret = array();
 
-            $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                '
                 SELECT `id_category` FROM `' . _DB_PREFIX_ . 'category_product`
                 WHERE `id_product` = ' . (int) $id_product
             );
@@ -2960,7 +2967,8 @@ class ProductCore extends ObjectModel
         }
 
         $ret = array();
-        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
             SELECT cp.`id_category`, cl.`name`, cl.`link_rewrite` FROM `' . _DB_PREFIX_ . 'category_product` cp
             LEFT JOIN `' . _DB_PREFIX_ . 'category` c ON (c.id_category = cp.id_category)
             LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (cp.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . ')
@@ -3041,7 +3049,8 @@ class ProductCore extends ObjectModel
      */
     public function getImages($id_lang, Context $context = null)
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
             SELECT image_shop.`cover`, i.`id_image`, il.`legend`, i.`position`
             FROM `' . _DB_PREFIX_ . 'image` i
             ' . Shop::addSqlAssociation('image', 'i') . '
@@ -3513,7 +3522,8 @@ class ProductCore extends ObjectModel
         }
 
         $id_group = $context->customer->id_default_group;
-        $cart_quantity = !$context->cart ? 0 : Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $cart_quantity = !$context->cart ? 0 : Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
             SELECT SUM(`quantity`)
             FROM `' . _DB_PREFIX_ . 'cart_product`
             WHERE `id_product` = ' . (int) $id_product . ' AND `id_cart` = ' . (int) $context->cart->id
@@ -3602,7 +3612,8 @@ class ProductCore extends ObjectModel
             return 0;
         }
 
-        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
             SELECT pa.`id_product_attribute`
             FROM `' . _DB_PREFIX_ . 'product_attribute` pa
             ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
@@ -3766,7 +3777,7 @@ class ProductCore extends ObjectModel
 
     public static function isAvailableWhenOutOfStock($out_of_stock)
     {
-        // @TODO 1.5.0 Update of STOCK_MANAGEMENT & ORDER_OUT_OF_STOCK
+        /** @TODO 1.5.0 Update of STOCK_MANAGEMENT & ORDER_OUT_OF_STOCK */
         $ps_stock_management = Configuration::get('PS_STOCK_MANAGEMENT');
 
         if (!$ps_stock_management) {
@@ -3816,7 +3827,8 @@ class ProductCore extends ObjectModel
                     . Shop::addSqlRestriction(false, 'product_attribute_shop'));
         }
 
-        $row = Db::getInstance()->getRow('
+        $row = Db::getInstance()->getRow(
+            '
             SELECT pa.id_product
             FROM `' . _DB_PREFIX_ . 'product_attribute` pa
             ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
@@ -3827,7 +3839,8 @@ class ProductCore extends ObjectModel
             return true;
         }
 
-        $mini = Db::getInstance()->getRow('
+        $mini = Db::getInstance()->getRow(
+            '
         SELECT MIN(pa.id_product_attribute) as `id_attr`
         FROM `' . _DB_PREFIX_ . 'product_attribute` pa
             ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
@@ -3853,7 +3866,8 @@ class ProductCore extends ObjectModel
         $id_lang = Context::getContext()->language->id;
 
         $check_stock = !Configuration::get('PS_DISP_UNAVAILABLE_ATTR');
-        if (!$res = Db::getInstance()->executeS('
+        if (!$res = Db::getInstance()->executeS(
+            '
             SELECT pa.`id_product`, a.`color`, pac.`id_product_attribute`, ' . ($check_stock ? 'SUM(IF(stock.`quantity` > 0, 1, 0))' : '0') . ' qty, a.`id_attribute`, al.`name`, IF(color = "", a.id_attribute, color) group_by
             FROM `' . _DB_PREFIX_ . 'product_attribute` pa
             ' . Shop::addSqlAssociation('product_attribute', 'pa') .
@@ -3953,7 +3967,8 @@ class ProductCore extends ObjectModel
      */
     public static function getAccessoriesLight($id_lang, $id_product)
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
             SELECT p.`id_product`, p.`reference`, pl.`name`
             FROM `' . _DB_PREFIX_ . 'accessory`
             LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (p.`id_product`= `id_product_2`)
@@ -4082,7 +4097,8 @@ class ProductCore extends ObjectModel
 
     public static function addFeatureProductImport($id_product, $id_feature, $id_feature_value)
     {
-        return Db::getInstance()->execute('
+        return Db::getInstance()->execute(
+            '
             INSERT INTO `' . _DB_PREFIX_ . 'feature_product` (`id_feature`, `id_product`, `id_feature_value`)
             VALUES (' . (int) $id_feature . ', ' . (int) $id_product . ', ' . (int) $id_feature_value . ')
             ON DUPLICATE KEY UPDATE `id_feature_value` = ' . (int) $id_feature_value
@@ -4105,7 +4121,8 @@ class ProductCore extends ObjectModel
             return array();
         }
         if (!array_key_exists($id_product, self::$_cacheFeatures)) {
-            self::$_cacheFeatures[$id_product] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            self::$_cacheFeatures[$id_product] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                '
                 SELECT fp.id_feature, fp.id_product, fp.id_feature_value, custom
                 FROM `' . _DB_PREFIX_ . 'feature_product` fp
                 LEFT JOIN `' . _DB_PREFIX_ . 'feature_value` fv ON (fp.id_feature_value = fv.id_feature_value)
@@ -4253,7 +4270,8 @@ class ProductCore extends ObjectModel
         $return = true;
         $combination_images = array();
 
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
         SELECT pa.*, product_attribute_shop.*
             FROM `' . _DB_PREFIX_ . 'product_attribute` pa
             ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
@@ -4266,7 +4284,8 @@ class ProductCore extends ObjectModel
             if (!isset($combinations[$id_product_attribute_old])) {
                 $id_combination = null;
                 $id_shop = null;
-                $result2 = Db::getInstance()->executeS('
+                $result2 = Db::getInstance()->executeS(
+                    '
                 SELECT *
                 FROM `' . _DB_PREFIX_ . 'product_attribute_combination`
                     WHERE `id_product_attribute` = ' . $id_product_attribute_old
@@ -4345,7 +4364,8 @@ class ProductCore extends ObjectModel
         $result = Db::getInstance()->executeS(
             'SELECT ai.`id_attribute`, ai.`price`, ai.`weight`
             FROM `' . _DB_PREFIX_ . 'attribute_impact` ai
-            WHERE ai.`id_product` = ' . (int) $id_product);
+            WHERE ai.`id_product` = ' . (int) $id_product
+        );
 
         if (!$result) {
             return array();
@@ -4390,7 +4410,8 @@ class ProductCore extends ObjectModel
         foreach ($result as $row) {
             $data = array(
                 'id_product_1' => (int) $id_product_new,
-                'id_product_2' => (int) $row['id_product_2'], );
+                'id_product_2' => (int) $row['id_product_2'],
+            );
             $return &= Db::getInstance()->insert('accessory', $data);
         }
 
@@ -4966,19 +4987,21 @@ class ProductCore extends ObjectModel
         return $results_array;
     }
 
-    /*
-    * Select all features for a given language
-    *
-    * @param $id_lang Language id
-    * @return array Array with feature's data
-    */
+    /**
+     * Select all features for a given language
+     *
+     * @param $id_lang Language id
+     *
+     * @return array Array with feature's data
+     */
     public static function getFrontFeaturesStatic($id_lang, $id_product)
     {
         if (!Feature::isFeatureActive()) {
             return array();
         }
         if (!array_key_exists($id_product . '-' . $id_lang, self::$_frontFeaturesCache)) {
-            self::$_frontFeaturesCache[$id_product . '-' . $id_lang] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            self::$_frontFeaturesCache[$id_product . '-' . $id_lang] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                '
                 SELECT name, value, pf.id_feature, f.position
                 FROM ' . _DB_PREFIX_ . 'feature_product pf
                 LEFT JOIN ' . _DB_PREFIX_ . 'feature_lang fl ON (fl.id_feature = pf.id_feature AND fl.id_lang = ' . (int) $id_lang . ')
@@ -5191,7 +5214,8 @@ class ProductCore extends ObjectModel
             'SELECT `id_customization_field`, `type`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `id_product` = ' . (int) $this->id . '
-            ORDER BY `id_customization_field`')
+            ORDER BY `id_customization_field`'
+            )
         ) === false) {
             return false;
         }
@@ -5328,7 +5352,8 @@ class ProductCore extends ObjectModel
                 if (!Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'customization_field`
                     SET `required` = ' . (int) $is_required . '
-                    WHERE `id_customization_field` = ' . (int) $tmp[2])) {
+                    WHERE `id_customization_field` = ' . (int) $tmp[2]
+                )) {
                     return false;
                 }
             }
@@ -5435,7 +5460,8 @@ class ProductCore extends ObjectModel
             return array();
         }
 
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
             SELECT `id_customization_field`, `type`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `id_product` = ' . (int) $id . '
@@ -5698,8 +5724,10 @@ class ProductCore extends ObjectModel
                     $rows[$keyrow]['id'] = $feature;
                     unset($rows[$keyrow]['id_feature']);
                 }
-                unset($rows[$keyrow]['id_product']);
-                unset($rows[$keyrow]['custom']);
+                unset(
+                    $rows[$keyrow]['id_product'],
+                    $rows[$keyrow]['custom']
+                );
             }
             asort($rows[$keyrow]);
         }
@@ -5716,7 +5744,8 @@ class ProductCore extends ObjectModel
      */
     public function setWsProductFeatures($product_features)
     {
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
             DELETE FROM `' . _DB_PREFIX_ . 'feature_product`
             WHERE `id_product` = ' . (int) $this->id
         );
@@ -6110,7 +6139,8 @@ class ProductCore extends ObjectModel
                     $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'tag` WHERE `id_tag`=' . (int) $id);
                     $sql_values[] = '(' . (int) $this->id . ', ' . (int) $id . ', ' . (int) $id_lang . ')';
                 }
-                $result = Db::getInstance()->execute('
+                $result = Db::getInstance()->execute(
+                    '
                     INSERT INTO `' . _DB_PREFIX_ . 'product_tag` (`id_product`, `id_tag`, `id_lang`)
                     VALUES ' . implode(',', $sql_values)
                 );
@@ -6571,7 +6601,8 @@ class ProductCore extends ObjectModel
 
     public function useAdvancedStockManagement()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
                     SELECT `advanced_stock_management`
                     FROM ' . _DB_PREFIX_ . 'product_shop
                     WHERE id_product=' . (int) $this->id . Shop::addSqlRestriction()
@@ -6582,7 +6613,8 @@ class ProductCore extends ObjectModel
     {
         $this->advanced_stock_management = (int) $value;
         if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1) {
-            Db::getInstance()->execute('
+            Db::getInstance()->execute(
+                '
                 UPDATE `' . _DB_PREFIX_ . 'product_shop`
                 SET `advanced_stock_management`=' . (int) $value . '
                 WHERE id_product=' . (int) $this->id . Shop::addSqlRestriction()
@@ -6687,7 +6719,8 @@ class ProductCore extends ObjectModel
 
     public function hasAttributesInOtherShops()
     {
-        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
             SELECT pa.id_product_attribute
             FROM `' . _DB_PREFIX_ . 'product_attribute` pa
             LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` pas ON (pa.`id_product_attribute` = pas.`id_product_attribute`)
@@ -6697,7 +6730,8 @@ class ProductCore extends ObjectModel
 
     public static function getIdTaxRulesGroupMostUsed()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
                     SELECT id_tax_rules_group
                     FROM (
                         SELECT COUNT(*) n, product_shop.id_tax_rules_group
@@ -6812,7 +6846,8 @@ class ProductCore extends ObjectModel
 
     public function isColorUnavailable($id_attribute, $id_shop)
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
             SELECT sa.id_product_attribute
             FROM ' . _DB_PREFIX_ . 'stock_available sa
             WHERE id_product=' . (int) $this->id . ' AND quantity <= 0

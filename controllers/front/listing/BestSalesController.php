@@ -62,8 +62,7 @@ class BestSalesControllerCore extends ProductListingFrontController
         $query = new ProductSearchQuery();
         $query
             ->setQueryType('best-sales')
-            ->setSortOrder(new SortOrder('product', 'name', 'asc'))
-        ;
+            ->setSortOrder(new SortOrder('product', 'name', 'asc'));
 
         return $query;
     }

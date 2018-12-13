@@ -162,8 +162,9 @@ class Product extends CommonClient {
     }
   }
 
-  getProductPageNumber(selector) {
+  getProductPageNumber(selector, pause = 0) {
     return this.client
+      .pause(pause)
       .execute(function (selector) {
         return document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
       }, selector)

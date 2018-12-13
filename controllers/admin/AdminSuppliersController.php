@@ -97,8 +97,14 @@ class AdminSuppliersControllerCore extends AdminController
         }
 
         $image = _PS_SUPP_IMG_DIR_ . $obj->id . '.jpg';
-        $image_url = ImageManager::thumbnail($image, $this->table . '_' . (int) $obj->id . '.' . $this->imageType, 350,
-            $this->imageType, true, true);
+        $image_url = ImageManager::thumbnail(
+            $image,
+            $this->table . '_' . (int) $obj->id . '.' . $this->imageType,
+            350,
+            $this->imageType,
+            true,
+            true
+        );
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
         $tmp_addr = new Address();
@@ -126,7 +132,8 @@ class AdminSuppliersControllerCore extends AdminController
                     'col' => 4,
                     'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                 ),
-                (in_array('company', $required_fields) ?
+                (
+                    in_array('company', $required_fields) ?
                     array(
                         'type' => 'text',
                         'label' => $this->trans('Company', array(), 'Admin.Global'),
@@ -358,9 +365,11 @@ class AdminSuppliersControllerCore extends AdminController
             // Build attributes combinations
             $combinations = $products[$i]->getAttributeCombinations($this->context->language->id);
             foreach ($combinations as $combination) {
-                $comb_infos = Supplier::getProductInformationsBySupplier($this->object->id,
-                                                                         $products[$i]->id,
-                                                                         $combination['id_product_attribute']);
+                $comb_infos = Supplier::getProductInformationsBySupplier(
+                    $this->object->id,
+                    $products[$i]->id,
+                    $combination['id_product_attribute']
+                );
                 $comb_array[$combination['id_product_attribute']]['product_supplier_reference'] = $comb_infos['product_supplier_reference'];
                 $comb_array[$combination['id_product_attribute']]['product_supplier_price_te'] = Tools::displayPrice($comb_infos['product_supplier_price_te'], new Currency($comb_infos['id_currency']));
                 $comb_array[$combination['id_product_attribute']]['reference'] = $combination['reference'];
@@ -385,9 +394,11 @@ class AdminSuppliersControllerCore extends AdminController
                 isset($comb_array) ? $products[$i]->combination = $comb_array : '';
                 unset($comb_array);
             } else {
-                $product_infos = Supplier::getProductInformationsBySupplier($this->object->id,
-                                                                            $products[$i]->id,
-                                                                            0);
+                $product_infos = Supplier::getProductInformationsBySupplier(
+                    $this->object->id,
+                    $products[$i]->id,
+                    0
+                );
                 $products[$i]->product_supplier_reference = $product_infos['product_supplier_reference'];
                 $products[$i]->product_supplier_price_te = Tools::displayPrice($product_infos['product_supplier_price_te'], new Currency($product_infos['id_currency']));
             }

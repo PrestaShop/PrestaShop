@@ -80,8 +80,8 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
                     1 => 1,
                 ],
                 'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
-                                     * static::PRODUCT_FIXTURES[1]['price']
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * static::PRODUCT_FIXTURES[1]['price']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'       => [2],
                 'knownToFailOnV1' => false,
             ],
@@ -90,8 +90,8 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
                     1 => 3,
                 ],
                 'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
-                                     * 3 * static::PRODUCT_FIXTURES[1]['price']
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * 3 * static::PRODUCT_FIXTURES[1]['price']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'       => [2],
                 'knownToFailOnV1' => false,
             ],
@@ -103,10 +103,10 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
                     // total without rule : 155.41
                 ],
                 'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
-                                     * (3 * static::PRODUCT_FIXTURES[1]['price']
-                                        + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                        + static::PRODUCT_FIXTURES[3]['price'])
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * (3 * static::PRODUCT_FIXTURES[1]['price']
+                   + 2 * static::PRODUCT_FIXTURES[2]['price']
+                   + static::PRODUCT_FIXTURES[3]['price'])
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'       => [2],
                 'knownToFailOnV1' => false,
             ],
@@ -127,9 +127,9 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
                     1 => 1,
                 ],
                 'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
-                                     * (1 - static::CART_RULES_FIXTURES[3]['percent'] / 100)
-                                     * static::PRODUCT_FIXTURES[1]['price']
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * (1 - static::CART_RULES_FIXTURES[3]['percent'] / 100)
+                * static::PRODUCT_FIXTURES[1]['price']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'       => [2, 3],
                 'knownToFailOnV1' => true,
             ],
@@ -143,7 +143,7 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
                                          * 3 * static::PRODUCT_FIXTURES[1]['price'],
                                          2
                                      )
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'       => [2, 3],
                 'knownToFailOnV1' => true,
             ],
@@ -155,12 +155,13 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
                     // total without rule : 155.41
                 ],
                 'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
-                                     * (1 - static::CART_RULES_FIXTURES[3]['percent'] / 100)
-                                     * (3 * static::PRODUCT_FIXTURES[1]['price']
-                                        + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                        + static::PRODUCT_FIXTURES[3]['price']
-                                     )
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * (1 - static::CART_RULES_FIXTURES[3]['percent'] / 100)
+                * (
+                    3 * static::PRODUCT_FIXTURES[1]['price']
+                   + 2 * static::PRODUCT_FIXTURES[2]['price']
+                   + static::PRODUCT_FIXTURES[3]['price']
+                )
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'       => [2, 3],
                 'knownToFailOnV1' => true,
             ],

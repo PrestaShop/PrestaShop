@@ -47,9 +47,9 @@ class ColumnListProcessor extends AbstractProcessor {
         $cols = array();
         foreach ($columns as $k => $v) {
             $cols[] = array('expr_type' => ExpressionType::COLREF, 'base_expr' => trim($v),
-                            'no_quotes' => $this->revokeQuotation($v));
+                'no_quotes' => $this->revokeQuotation($v),
+            );
         }
         return $cols;
     }
 }
-?>

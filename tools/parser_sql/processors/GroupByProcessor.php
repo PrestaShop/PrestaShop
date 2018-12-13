@@ -30,7 +30,7 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/OrderByProcessor.php');
+require_once dirname(__FILE__) . '/OrderByProcessor.php';
 
 /**
  * 
@@ -71,4 +71,3 @@ class GroupByProcessor extends OrderByProcessor {
         return $out;
     }
 }
-?>

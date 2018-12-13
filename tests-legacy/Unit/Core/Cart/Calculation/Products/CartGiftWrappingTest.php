@@ -73,22 +73,22 @@ class CartGiftWrappingTest extends AbstractCartCalculationTest
                 'cartRules'     => [],
             ],
             'one product in cart, quantity 1'        => [
-                'products'                      => [1 => 1,],
+                'products'                      => [1 => 1],
                 'expectedTotal'                 => static::PRODUCT_FIXTURES[1]['price']
-                                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalWithGiftWrapping' => static::PRODUCT_FIXTURES[1]['price']
-                                                   + static::DEFAULT_SHIPPING_FEE
-                                                   + static::DEFAULT_WRAPPING_FEE
-                                                   + static::GIFT_WRAPPING_PRICE,
+                + static::DEFAULT_SHIPPING_FEE
+                + static::DEFAULT_WRAPPING_FEE
+                + static::GIFT_WRAPPING_PRICE,
             ],
             'one product in cart, quantity 3'        => [
-                'products'                      => [1 => 3,],
+                'products'                      => [1 => 3],
                 'expectedTotal'                 => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalWithGiftWrapping' => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                                   + static::DEFAULT_SHIPPING_FEE
-                                                   + static::DEFAULT_WRAPPING_FEE
-                                                   + static::GIFT_WRAPPING_PRICE,
+                + static::DEFAULT_SHIPPING_FEE
+                + static::DEFAULT_WRAPPING_FEE
+                + static::GIFT_WRAPPING_PRICE,
             ],
             '3 products in cart, several quantities' => [
                 'products'                      => [
@@ -97,15 +97,15 @@ class CartGiftWrappingTest extends AbstractCartCalculationTest
                     3 => 1,
                 ],
                 'expectedTotal'                 => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                                   + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                                   + static::PRODUCT_FIXTURES[3]['price']
-                                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + 2 * static::PRODUCT_FIXTURES[2]['price']
+                + static::PRODUCT_FIXTURES[3]['price']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalWithGiftWrapping' => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                                   + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                                   + static::PRODUCT_FIXTURES[3]['price']
-                                                   + static::DEFAULT_SHIPPING_FEE
-                                                   + static::DEFAULT_WRAPPING_FEE
-                                                   + static::GIFT_WRAPPING_PRICE,
+                + 2 * static::PRODUCT_FIXTURES[2]['price']
+                + static::PRODUCT_FIXTURES[3]['price']
+                + static::DEFAULT_SHIPPING_FEE
+                + static::DEFAULT_WRAPPING_FEE
+                + static::GIFT_WRAPPING_PRICE,
             ],
         ];
     }

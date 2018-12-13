@@ -592,7 +592,7 @@ abstract class PaymentModuleCore extends Module
                             // Set a new voucher code
                             $voucher->code = empty($voucher->code) ? substr(md5($order->id . '-' . $order->id_customer . '-' . $cart_rule['obj']->id), 0, 16) : $voucher->code . '-2';
                             if (preg_match('/\-([0-9]{1,2})\-([0-9]{1,2})$/', $voucher->code, $matches) && $matches[1] == $matches[2]) {
-                                $voucher->code = preg_replace('/' . $matches[0] . '$/', '-' . (intval($matches[1]) + 1), $voucher->code);
+                                $voucher->code = preg_replace('/' . $matches[0] . '$/', '-' . ((int) ($matches[1]) + 1), $voucher->code);
                             }
 
                             // Set the new voucher value
@@ -649,7 +649,13 @@ abstract class PaymentModuleCore extends Module
                                     $params,
                                     $this->context->customer->email,
                                     $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
-                                    null, null, null, null, _PS_MAIL_DIR_, false, (int) $order->id_shop
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    _PS_MAIL_DIR_,
+                                    false,
+                                    (int) $order->id_shop
                                 );
                             }
 
@@ -769,58 +775,59 @@ abstract class PaymentModuleCore extends Module
                         $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
 
                         $data = array(
-                        '{firstname}' => $this->context->customer->firstname,
-                        '{lastname}' => $this->context->customer->lastname,
-                        '{email}' => $this->context->customer->email,
-                        '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, "\n"),
-                        '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, "\n"),
-                        '{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', array(
-                            'firstname' => '<span style="font-weight:bold;">%s</span>',
-                            'lastname' => '<span style="font-weight:bold;">%s</span>',
-                        )),
-                        '{invoice_block_html}' => $this->_getFormatedAddress($invoice, '<br />', array(
+                            '{firstname}' => $this->context->customer->firstname,
+                            '{lastname}' => $this->context->customer->lastname,
+                            '{email}' => $this->context->customer->email,
+                            '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, "\n"),
+                            '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, "\n"),
+                            '{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', array(
                                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                                 'lastname' => '<span style="font-weight:bold;">%s</span>',
-                        )),
-                        '{delivery_company}' => $delivery->company,
-                        '{delivery_firstname}' => $delivery->firstname,
-                        '{delivery_lastname}' => $delivery->lastname,
-                        '{delivery_address1}' => $delivery->address1,
-                        '{delivery_address2}' => $delivery->address2,
-                        '{delivery_city}' => $delivery->city,
-                        '{delivery_postal_code}' => $delivery->postcode,
-                        '{delivery_country}' => $delivery->country,
-                        '{delivery_state}' => $delivery->id_state ? $delivery_state->name : '',
-                        '{delivery_phone}' => ($delivery->phone) ? $delivery->phone : $delivery->phone_mobile,
-                        '{delivery_other}' => $delivery->other,
-                        '{invoice_company}' => $invoice->company,
-                        '{invoice_vat_number}' => $invoice->vat_number,
-                        '{invoice_firstname}' => $invoice->firstname,
-                        '{invoice_lastname}' => $invoice->lastname,
-                        '{invoice_address2}' => $invoice->address2,
-                        '{invoice_address1}' => $invoice->address1,
-                        '{invoice_city}' => $invoice->city,
-                        '{invoice_postal_code}' => $invoice->postcode,
-                        '{invoice_country}' => $invoice->country,
-                        '{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
-                        '{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
-                        '{invoice_other}' => $invoice->other,
-                        '{order_name}' => $order->getUniqReference(),
-                        '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
-                        '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', array(), 'Admin.Payment.Notification') : $carrier->name,
-                        '{payment}' => Tools::substr($order->payment, 0, 255),
-                        '{products}' => $product_list_html,
-                        '{products_txt}' => $product_list_txt,
-                        '{discounts}' => $cart_rules_list_html,
-                        '{discounts_txt}' => $cart_rules_list_txt,
-                        '{total_paid}' => Tools::displayPrice($order->total_paid, $this->context->currency, false),
-                        '{total_products}' => Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? $order->total_products : $order->total_products_wt, $this->context->currency, false),
-                        '{total_discounts}' => Tools::displayPrice($order->total_discounts, $this->context->currency, false),
-                        '{total_shipping}' => Tools::displayPrice($order->total_shipping, $this->context->currency, false),
-                        '{total_shipping_tax_excl}' => Tools::displayPrice($order->total_shipping_tax_excl, $this->context->currency, false),
-                        '{total_shipping_tax_incl}' => Tools::displayPrice($order->total_shipping_tax_incl, $this->context->currency, false),
-                        '{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false),
-                        '{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency, false), );
+                            )),
+                            '{invoice_block_html}' => $this->_getFormatedAddress($invoice, '<br />', array(
+                                'firstname' => '<span style="font-weight:bold;">%s</span>',
+                                'lastname' => '<span style="font-weight:bold;">%s</span>',
+                            )),
+                            '{delivery_company}' => $delivery->company,
+                            '{delivery_firstname}' => $delivery->firstname,
+                            '{delivery_lastname}' => $delivery->lastname,
+                            '{delivery_address1}' => $delivery->address1,
+                            '{delivery_address2}' => $delivery->address2,
+                            '{delivery_city}' => $delivery->city,
+                            '{delivery_postal_code}' => $delivery->postcode,
+                            '{delivery_country}' => $delivery->country,
+                            '{delivery_state}' => $delivery->id_state ? $delivery_state->name : '',
+                            '{delivery_phone}' => ($delivery->phone) ? $delivery->phone : $delivery->phone_mobile,
+                            '{delivery_other}' => $delivery->other,
+                            '{invoice_company}' => $invoice->company,
+                            '{invoice_vat_number}' => $invoice->vat_number,
+                            '{invoice_firstname}' => $invoice->firstname,
+                            '{invoice_lastname}' => $invoice->lastname,
+                            '{invoice_address2}' => $invoice->address2,
+                            '{invoice_address1}' => $invoice->address1,
+                            '{invoice_city}' => $invoice->city,
+                            '{invoice_postal_code}' => $invoice->postcode,
+                            '{invoice_country}' => $invoice->country,
+                            '{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
+                            '{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
+                            '{invoice_other}' => $invoice->other,
+                            '{order_name}' => $order->getUniqReference(),
+                            '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
+                            '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', array(), 'Admin.Payment.Notification') : $carrier->name,
+                            '{payment}' => Tools::substr($order->payment, 0, 255),
+                            '{products}' => $product_list_html,
+                            '{products_txt}' => $product_list_txt,
+                            '{discounts}' => $cart_rules_list_html,
+                            '{discounts_txt}' => $cart_rules_list_txt,
+                            '{total_paid}' => Tools::displayPrice($order->total_paid, $this->context->currency, false),
+                            '{total_products}' => Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? $order->total_products : $order->total_products_wt, $this->context->currency, false),
+                            '{total_discounts}' => Tools::displayPrice($order->total_discounts, $this->context->currency, false),
+                            '{total_shipping}' => Tools::displayPrice($order->total_shipping, $this->context->currency, false),
+                            '{total_shipping_tax_excl}' => Tools::displayPrice($order->total_shipping_tax_excl, $this->context->currency, false),
+                            '{total_shipping_tax_incl}' => Tools::displayPrice($order->total_shipping_tax_incl, $this->context->currency, false),
+                            '{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false),
+                            '{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency, false),
+                        );
 
                         if (is_array($extra_vars)) {
                             $data = array_merge($data, $extra_vars);
@@ -860,7 +867,10 @@ abstract class PaymentModuleCore extends Module
                                 null,
                                 null,
                                 $file_attachement,
-                                null, _PS_MAIL_DIR_, false, (int) $order->id_shop
+                                null,
+                                _PS_MAIL_DIR_,
+                                false,
+                                (int) $order->id_shop
                             );
                         }
                     }
@@ -889,7 +899,7 @@ abstract class PaymentModuleCore extends Module
                     );
                 } else {
                     $error = $this->trans('Order creation failed', array(), 'Admin.Payment.Notification');
-                    PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));
+                    PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', (int) ($order->id_cart));
                     die($error);
                 }
             } // End foreach $order_detail_list
@@ -906,7 +916,7 @@ abstract class PaymentModuleCore extends Module
             return true;
         } else {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', array(), 'Admin.Payment.Notification');
-            PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', intval($this->context->cart->id));
+            PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
             die($error);
         }
     }

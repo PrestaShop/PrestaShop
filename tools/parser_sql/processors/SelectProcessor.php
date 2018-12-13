@@ -30,7 +30,7 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/SelectExpressionProcessor.php');
+require_once dirname(__FILE__) . '/SelectExpressionProcessor.php';
 
 /**
  * 
@@ -83,4 +83,3 @@ class SelectProcessor extends SelectExpressionProcessor {
         return $expressionList;
     }
 }
-?>

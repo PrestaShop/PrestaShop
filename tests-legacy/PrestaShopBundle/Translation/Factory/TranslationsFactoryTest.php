@@ -42,28 +42,22 @@ class TranslationsFactoryTest extends TestCase
     {
         $this->providerMock = $this->getMockBuilder('PrestaShopBundle\Translation\Provider\AbstractProvider')
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
 
         $this->providerMock->method('getIdentifier')
-            ->willReturn('mock')
-        ;
+            ->willReturn('mock');
 
         $this->providerMock->method('setLocale')
-            ->will($this->returnSelf())
-        ;
+            ->will($this->returnSelf());
 
         $this->providerMock->method('getMessageCatalogue')
-            ->willReturn(new MessageCatalogue('en-US'))
-        ;
+            ->willReturn(new MessageCatalogue('en-US'));
 
         $this->providerMock->method('getDefaultCatalogue')
-            ->willReturn(new MessageCatalogue('en-US'))
-        ;
+            ->willReturn(new MessageCatalogue('en-US'));
 
         $this->providerMock->method('getDatabaseCatalogue')
-            ->willReturn(new MessageCatalogue('en-US'))
-        ;
+            ->willReturn(new MessageCatalogue('en-US'));
 
         $this->factory = new TranslationsFactory();
     }
@@ -72,8 +66,7 @@ class TranslationsFactoryTest extends TestCase
     {
         $this->expectException('PrestaShopBundle\Translation\Factory\ProviderNotFoundException');
         $expected = $this->factory
-            ->createCatalogue($this->providerMock->getIdentifier())
-        ;
+            ->createCatalogue($this->providerMock->getIdentifier());
     }
 
     public function testCreateCatalogueWithProvider()
@@ -81,8 +74,7 @@ class TranslationsFactoryTest extends TestCase
         $this->factory->addProvider($this->providerMock);
 
         $expected = $this->factory
-            ->createCatalogue($this->providerMock->getIdentifier())
-        ;
+            ->createCatalogue($this->providerMock->getIdentifier());
 
         $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expected);
     }
@@ -91,20 +83,17 @@ class TranslationsFactoryTest extends TestCase
     {
         $this->expectException('PrestaShopBundle\Translation\Factory\ProviderNotFoundException');
         $expected = $this->factory
-            ->createTranslationsArray($this->providerMock->getIdentifier())
-        ;
+            ->createTranslationsArray($this->providerMock->getIdentifier());
     }
 
     public function testCreateTranslationsArrayWithProvider()
     {
         $this->providerMock->method('getXliffCatalogue')
-            ->willReturn(new MessageCatalogue('en-US'))
-        ;
+            ->willReturn(new MessageCatalogue('en-US'));
 
         $this->factory->addProvider($this->providerMock);
 
         $expected = $this->factory
-            ->createTranslationsArray($this->providerMock->getIdentifier())
-        ;
+            ->createTranslationsArray($this->providerMock->getIdentifier());
     }
 }

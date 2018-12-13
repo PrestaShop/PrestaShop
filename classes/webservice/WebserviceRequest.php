@@ -364,8 +364,8 @@ class WebserviceRequestCore
         return $resources;
     }
 
-    /* @todo Check how get parameters */
-    /* @todo : set this method out */
+    /** @todo Check how get parameters */
+    /** @todo : set this method out */
 
     /**
      * This method is used for calculate the price for products on the output details.
@@ -386,7 +386,7 @@ class WebserviceRequestCore
         return $field;
     }
 
-    /* @todo : set this method out */
+    /** @todo : set this method out */
 
     /**
      * This method is used for calculate the price for products on a virtual fields.
@@ -424,15 +424,31 @@ class WebserviceRequestCore
             $use_ecotax = (int) (isset($value['use_ecotax']) ? $value['use_ecotax'] : Configuration::get('PS_USE_ECOTAX'));
             $specific_price_output = null;
             $id_county = (int) (isset($value['county']) ? $value['county'] : 0);
-            $return_value = Product::priceCalculation($id_shop, $value['object_id'], $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity,
-                                    $use_tax, $decimals, $only_reduc, $use_reduc, $use_ecotax, $specific_price_output, null);
+            $return_value = Product::priceCalculation(
+                $id_shop,
+                $value['object_id'],
+                $id_product_attribute,
+                $id_country,
+                $id_state,
+                $id_county,
+                $id_currency,
+                $id_group,
+                $quantity,
+                $use_tax,
+                $decimals,
+                $only_reduc,
+                $use_reduc,
+                $use_ecotax,
+                $specific_price_output,
+                null
+            );
             $arr_return[$name] = array('sqlId' => strtolower($name), 'value' => sprintf('%f', $return_value));
         }
 
         return $arr_return;
     }
 
-    /* @todo : set this method out */
+    /** @todo : set this method out */
 
     /**
      * This method is used for calculate the price for products on a virtual fields.
@@ -604,8 +620,10 @@ class WebserviceRequestCore
             }
         }
         $return = $this->returnOutput();
-        unset($webservice_call);
-        unset($display_errors);
+        unset(
+            $webservice_call,
+            $display_errors
+        );
 
         return $return;
     }

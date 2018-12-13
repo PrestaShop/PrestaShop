@@ -756,8 +756,9 @@ class ToolsCore
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
 
-    /*
+    /**
      * Return a number well formatted
+     *
      * @param float $number A number
      * @param nullable $currency / not used anymaore
      */
@@ -1185,8 +1186,7 @@ class ToolsCore
     {
         return
             isset($_POST[$submit]) || isset($_POST[$submit . '_x']) || isset($_POST[$submit . '_y'])
-            || isset($_GET[$submit]) || isset($_GET[$submit . '_x']) || isset($_GET[$submit . '_y'])
-        ;
+            || isset($_GET[$submit]) || isset($_GET[$submit . '_x']) || isset($_GET[$submit . '_y']);
     }
 
     /**
@@ -1487,16 +1487,17 @@ class ToolsCore
             /* YI */ '/[\x{0407}]/u',
             /* YO */ '/[\x{0401}]/u',
             /* YU */ '/[\x{042E}]/u',
-            /* ZH */ '/[\x{0416}]/u', );
+            /* ZH */ '/[\x{0416}]/u',
+        );
 
         // ö to oe
         // å to aa
         // ä to ae
 
         $replacements = array(
-                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 'ss', 't', 'u', 'v', 'w', 'y', 'z', 'ae', 'ch', 'kh', 'oe', 'sh', 'shh', 'ya', 'ye', 'yi', 'yo', 'yu', 'zh',
-                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', 'AE', 'CH', 'KH', 'OE', 'SH', 'SHH', 'YA', 'YE', 'YI', 'YO', 'YU', 'ZH',
-            );
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 'ss', 't', 'u', 'v', 'w', 'y', 'z', 'ae', 'ch', 'kh', 'oe', 'sh', 'shh', 'ya', 'ye', 'yi', 'yo', 'yu', 'zh',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', 'AE', 'CH', 'KH', 'OE', 'SH', 'SHH', 'YA', 'YE', 'YI', 'YO', 'YU', 'ZH',
+        );
 
         return preg_replace($patterns, $replacements, $str);
     }
@@ -2825,7 +2826,8 @@ exit;
     public static function getDirectoriesWithGlob($path)
     {
         $directoryList = glob($path . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
-        array_walk($directoryList,
+        array_walk(
+            $directoryList,
             function (&$absolutePath, $key) {
                 $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
             }
@@ -3482,8 +3484,6 @@ exit;
             $array[key($array2)] = current($array2);
             next($array2);
         }
-
-        return;
     }
 
     /**
@@ -3522,9 +3522,9 @@ exit;
     }
 
     /**
-     * @params string $path Path to scan
-     * @params string $ext Extention to filter files
-     * @params string $dir Add this to prefix output for example /path/dir/*
+     * @param string $path Path to scan
+     * @param string $ext Extention to filter files
+     * @param string $dir Add this to prefix output for example /path/dir/*
      *
      * @return array List of file found
      *

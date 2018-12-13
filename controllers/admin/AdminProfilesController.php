@@ -53,12 +53,12 @@ class AdminProfilesControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_profile' => array(
-                        'title' => $this->trans('ID', array(), 'Admin.Global'),
-                        'align' => 'center',
-                        'class' => 'fixed-width-xs',
-                        ),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ),
             'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
-            );
+        );
 
         $this->identifier = 'id_profile';
 

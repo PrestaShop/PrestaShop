@@ -35,7 +35,7 @@ if (Tools::getValue('bo')) {
     $directory = _PS_THEME_DIR_.'templates/';
 }
 
-require_once(_PS_ROOT_DIR_.'/config/smarty.config.inc.php');
+require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 
 $smarty->setTemplateDir($directory);
 ob_start();

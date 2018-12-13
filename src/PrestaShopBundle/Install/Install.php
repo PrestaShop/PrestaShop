@@ -144,9 +144,12 @@ class Install extends AbstractInstall
             !file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $this->settingsFile)
             && !is_writable(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . dirname($this->settingsFile))
         ) {
-            $this->setError($this->translator->trans(
+            $this->setError(
+                $this->translator->trans(
                 '%folder% folder is not writable (check permissions)',
-                array('%folder%' => dirname($this->settingsFile)), 'Install')
+                array('%folder%' => dirname($this->settingsFile)),
+                'Install'
+            )
             );
 
             return false;
@@ -1049,11 +1052,19 @@ class Install extends AbstractInstall
                 continue;
             }
 
-            if (!$moduleManager->install($module_name)) {
-                /*$module_errors = $module->getErrors();
-                if (empty($module_errors)) {*/
+            $moduleException = null;
+            try {
+                $moduleInstalled = $moduleManager->install($module_name);
+            } catch (\PrestaShopException $e) {
+                $moduleInstalled = false;
+                $moduleException = $e->getMessage();
+            }
+
+            if (!$moduleInstalled) {
                 $module_errors = [$this->translator->trans('Cannot install module "%module%"', array('%module%' => $module_name), 'Install')];
-                /*}*/
+                if (null !== $moduleException) {
+                    $module_errors[] = $moduleException;
+                }
                 $errors[$module_name] = $module_errors;
             }
         }
