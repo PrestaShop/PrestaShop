@@ -218,6 +218,13 @@ class SpecificPriceCore extends ObjectModel
 
     /**
      * score generation for quantity discount.
+     *
+     * @param mixed $id_product
+     * @param mixed $id_shop
+     * @param mixed $id_currency
+     * @param mixed $id_country
+     * @param mixed $id_group
+     * @param mixed $id_customer
      */
     protected static function _getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer)
     {
@@ -265,9 +272,9 @@ class SpecificPriceCore extends ObjectModel
      * @param int $field_value
      * @param int $threshold
      *
-     * @return string
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return string
      */
     protected static function filterOutField($field_name, $field_value, $threshold = 1000)
     {
@@ -313,11 +320,12 @@ class SpecificPriceCore extends ObjectModel
     /**
      * Remove or add useless fields value depending on the values in the database (cache friendly).
      *
-     * @param int|null $id_product
-     * @param int|null $id_product_attribute
-     * @param int|null $id_cart
-     * @param string|null $beginning
-     * @param string|null $ending
+     * @param null|int $id_product
+     * @param null|int $id_product_attribute
+     * @param null|int $id_cart
+     * @param null|string $beginning
+     * @param null|string $ending
+     * @param mixed $id_customer
      *
      * @return string
      */

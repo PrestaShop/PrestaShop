@@ -115,9 +115,9 @@ class ImageRetriever
      * @param $object
      * @param int $id_image
      *
-     * @return array|null
-     *
      * @throws \PrestaShopDatabaseException
+     *
+     * @return array|null
      */
     public function getImage($object, $id_image)
     {
@@ -239,9 +239,9 @@ class ImageRetriever
     /**
      * @param Language $language
      *
-     * @return array
-     *
      * @throws \PrestaShopDatabaseException
+     *
+     * @return array
      */
     public function getNoPictureImage(Language $language)
     {

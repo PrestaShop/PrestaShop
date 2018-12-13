@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Saves private note for customer that can only be seen in Back Office
+ * Saves private note for customer that can only be seen in Back Office.
  */
 class SavePrivateNoteForCustomerCommand
 {

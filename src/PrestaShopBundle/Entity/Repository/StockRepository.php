@@ -147,6 +147,8 @@ class StockRepository extends StockManagementRepository
 
     /**
      * Sync all stock with Manager.
+     *
+     * @param mixed $idProduct
      */
     private function syncAllStock($idProduct)
     {

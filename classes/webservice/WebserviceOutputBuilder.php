@@ -38,7 +38,7 @@ class WebserviceOutputBuilderCore
     protected $wsUrl;
     protected $output;
 
-    /** @var WebserviceOutputInterface|WebserviceOutputXML|WebserviceOutputJSON */
+    /** @var WebserviceOutputInterface|WebserviceOutputJSON|WebserviceOutputXML */
     public $objectRender;
     protected $wsResource;
     protected $depth = 0;
@@ -79,9 +79,9 @@ class WebserviceOutputBuilderCore
      * @param WebserviceOutputInterface $obj_render
      * @throw WebserviceException if the object render is not an instance of WebserviceOutputInterface
      *
-     * @return WebserviceOutputBuilder
-     *
      * @throws WebserviceException
+     *
+     * @return WebserviceOutputBuilder
      */
     public function setObjectRender(WebserviceOutputInterface $obj_render)
     {
@@ -146,9 +146,9 @@ class WebserviceOutputBuilderCore
      * @param string $key The normalized key expected for an http response
      * @param string $value
      *
-     * @return WebserviceOutputBuilder
-     *
      * @throws WebserviceException If the key or the value are corrupted (use Validate::isCleanHtml method)
+     *
+     * @return WebserviceOutputBuilder
      */
     public function setHeaderParams($key, $value)
     {
@@ -357,9 +357,10 @@ class WebserviceOutputBuilderCore
      *        @see WebserviceOutputBuilder::executeEntityGetAndHead
      *
      * @param null|string $schema_to_display if null display the entities list or entity details
-     * @param string|array $fields_to_display the fields allow for the output
+     * @param array|string $fields_to_display the fields allow for the output
      * @param int $depth depth for the tree diagram output
      * @param int $type_of_view use the 2 constants WebserviceOutputBuilder::VIEW_LIST WebserviceOutputBuilder::VIEW_DETAILS
+     * @param mixed $override
      *
      * @return string in the output format specified by WebserviceOutputBuilder::objectRender
      */
@@ -752,15 +753,15 @@ class WebserviceOutputBuilderCore
     }
 
     /**
-     * @param string|object $object
+     * @param object|string $object
      * @param string $method
      * @param $field_name
      * @param $entity_name
      *
-     * @return WebserviceOutputBuilder
-     *
      * @throws Exception
      * @throws WebserviceException
+     *
+     * @return WebserviceOutputBuilder
      */
     public function setSpecificField($object, $method, $field_name, $entity_name)
     {

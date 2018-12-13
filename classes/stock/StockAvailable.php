@@ -135,6 +135,7 @@ class StockAvailableCore extends ObjectModel
      * For a given id_product, synchronizes StockAvailable::quantity with Stock::usable_quantity.
      *
      * @param int $id_product
+     * @param null|mixed $order_id_shop
      */
     public static function synchronize($id_product, $order_id_shop = null)
     {
@@ -294,6 +295,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product
      * @param int $depends_on_stock Optional : true by default
      * @param int $id_shop Optional : gets context by default
+     * @param mixed $id_product_attribute
      */
     public static function setProductDependsOnStock($id_product, $depends_on_stock = true, $id_shop = null, $id_product_attribute = 0)
     {
@@ -330,6 +332,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product
      * @param int $out_of_stock Optional false by default
      * @param int $id_shop Optional gets context by default
+     * @param mixed $id_product_attribute
      */
     public static function setProductOutOfStock($id_product, $out_of_stock = false, $id_shop = null, $id_product_attribute = 0)
     {
@@ -365,9 +368,9 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_shop Optional
      * @param int $id_product_attribute Optional
      *
-     * @return bool
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return bool
      */
     public static function setLocation($id_product, $location, $id_shop = null, $id_product_attribute = 0)
     {
@@ -453,6 +456,9 @@ class StockAvailableCore extends ObjectModel
      * Upgrades total_quantity_available after having saved.
      *
      * @see ObjectModel::add()
+     *
+     * @param mixed $autodate
+     * @param mixed $null_values
      */
     public function add($autodate = true, $null_values = false)
     {
@@ -469,6 +475,8 @@ class StockAvailableCore extends ObjectModel
      * Upgrades total_quantity_available after having update.
      *
      * @see ObjectModel::update()
+     *
+     * @param mixed $null_values
      */
     public function update($null_values = false)
     {
@@ -629,8 +637,8 @@ class StockAvailableCore extends ObjectModel
      * Removes a given product from the stock available.
      *
      * @param int $id_product
-     * @param int|null $id_product_attribute Optional
-     * @param Shop|null $shop Shop id or shop object Optional
+     * @param null|int $id_product_attribute Optional
+     * @param null|Shop $shop Shop id or shop object Optional
      *
      * @return bool
      */
@@ -762,6 +770,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product
      * @param int id_product_attribute Optional
      * @param int $id_shop Optional
+     * @param null|mixed $id_product_attribute
      *
      * @return bool|string
      */
@@ -789,11 +798,11 @@ class StockAvailableCore extends ObjectModel
     /**
      * Add an sql restriction for shops fields - specific to StockAvailable.
      *
-     * @param DbQuery|string|null $sql Reference to the query object
-     * @param Shop|int|null $shop Optional : The shop ID
-     * @param string|null $alias Optional : The current table alias
+     * @param null|DbQuery|string $sql Reference to the query object
+     * @param null|int|Shop $shop Optional : The shop ID
+     * @param null|string $alias Optional : The current table alias
      *
-     * @return string|DbQuery DbQuery object or the sql restriction string
+     * @return DbQuery|string DbQuery object or the sql restriction string
      */
     public static function addSqlShopRestriction($sql = null, $shop = null, $alias = null)
     {

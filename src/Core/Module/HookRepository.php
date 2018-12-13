@@ -117,6 +117,8 @@ class HookRepository
      * ]
      * Only hooks present as keys in the $hooks array are affected and all changes
      * are only done for the shop this Repository belongs to.
+     *
+     * @param array $hooks
      */
     public function persistHooksConfiguration(array $hooks)
     {

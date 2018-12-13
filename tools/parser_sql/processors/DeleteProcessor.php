@@ -1,6 +1,6 @@
 <?php
 /**
- * DeleteProcessor.php
+ * DeleteProcessor.php.
  *
  * This file implements the processor for the DELETE statements.
  *
@@ -29,15 +29,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 
 /**
- * 
  * This class processes the DELETE statements.
  * 
  * @author arothe
- * 
  */
 class DeleteProcessor extends AbstractProcessor {
 

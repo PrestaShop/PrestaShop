@@ -170,8 +170,8 @@ class CarrierCore extends ObjectModel
     /**
      * CarrierCore constructor.
      *
-     * @param int|null $id Carrier ID
-     * @param int|null $id_lang Language ID
+     * @param null|int $id Carrier ID
+     * @param null|int $id_lang Language ID
      */
     public function __construct($id = null, $id_lang = null)
     {
@@ -207,10 +207,10 @@ class CarrierCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Whether the Carrier has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Whether the Carrier has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -279,7 +279,7 @@ class CarrierCore extends ObjectModel
      * @param float $total_weight Total order weight
      * @param int $id_zone Zone ID (for customer delivery address)
      *
-     * @return float|bool Delivery price, false if not possible
+     * @return bool|float Delivery price, false if not possible
      */
     public function getDeliveryPriceByWeight($total_weight, $id_zone)
     {
@@ -318,7 +318,7 @@ class CarrierCore extends ObjectModel
      * @param float $total_weight Total weight
      * @param int $id_zone Zone ID
      *
-     * @return float|bool Delivery price, false if not possible
+     * @return bool|float Delivery price, false if not possible
      */
     public static function checkDeliveryPriceByWeight($id_carrier, $total_weight, $id_zone)
     {
@@ -351,7 +351,7 @@ class CarrierCore extends ObjectModel
      *
      * @param int $id_zone Zone ID
      *
-     * @return false|null|string Maximum delivery price
+     * @return null|false|string Maximum delivery price
      */
     public function getMaxDeliveryPriceByWeight($id_zone)
     {
@@ -378,7 +378,7 @@ class CarrierCore extends ObjectModel
      *
      * @param float $order_total Order total to pay
      * @param int $id_zone Zone id (for customer delivery address)
-     * @param int|null $id_currency Currency ID
+     * @param null|int $id_currency Currency ID
      *
      * @return float Maximum delivery price
      */
@@ -422,7 +422,7 @@ class CarrierCore extends ObjectModel
      * @param int $id_carrier Carrier ID
      * @param float $order_total Order total to pay
      * @param int $id_zone Zone id (for customer delivery address)
-     * @param int|null $id_currency Currency ID
+     * @param null|int $id_currency Currency ID
      *
      * @return float Delivery price
      */
@@ -514,6 +514,9 @@ class CarrierCore extends ObjectModel
      *                             - PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE
      *                             - ALL_CARRIERS
      * @param bool $active Returns only active carriers when true
+     * @param mixed $delete
+     * @param mixed $id_zone
+     * @param null|mixed $ids_group
      *
      * @return array Carriers
      */
@@ -580,7 +583,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get most used Tax rules group.
      *
-     * @return false|null|string Most used Tax rules group ID
+     * @return null|false|string Most used Tax rules group ID
      */
     public static function getIdTaxRulesGroupMostUsed()
     {
@@ -683,7 +686,7 @@ class CarrierCore extends ObjectModel
      *
      * @param int $id_zone Zone ID
      * @param array $groups Group of the Customer
-     * @param Cart|null $cart Optional Cart object
+     * @param null|Cart $cart Optional Cart object
      * @param array &$error Contains an error message if an error occurs
      *
      * @return array Carriers for the order
@@ -812,6 +815,8 @@ class CarrierCore extends ObjectModel
     /**
      * Get a specific zones.
      *
+     * @param mixed $id_zone
+     *
      * @return array Zone
      */
     public function getZone($id_zone)
@@ -825,6 +830,8 @@ class CarrierCore extends ObjectModel
 
     /**
      * Add zone.
+     *
+     * @param mixed $id_zone
      */
     public function addZone($id_zone)
     {
@@ -862,6 +869,8 @@ class CarrierCore extends ObjectModel
 
     /**
      * Delete zone.
+     *
+     * @param mixed $id_zone
      */
     public function deleteZone($id_zone)
     {
@@ -898,6 +907,7 @@ class CarrierCore extends ObjectModel
      * Clean delivery prices (weight/price).
      *
      * @param string $rangeTable Table name to clean (weight or price according to shipping method)
+     * @param mixed $range_table
      *
      * @return bool Deletion result
      */
@@ -920,6 +930,8 @@ class CarrierCore extends ObjectModel
      * Add new delivery prices.
      *
      * @param array $priceList Prices list in multiple arrays (changed to array since 1.5.0)
+     * @param mixed $price_list
+     * @param mixed $delete
      *
      * @return bool Insertion result
      */
@@ -980,6 +992,7 @@ class CarrierCore extends ObjectModel
      * Copy old carrier informations when update carrier.
      *
      * @param int $oldId Old id carrier (copy from that id)
+     * @param mixed $old_id
      */
     public function copyCarrierData($old_id)
     {
@@ -1070,6 +1083,9 @@ class CarrierCore extends ObjectModel
 
     /**
      * Get carrier using the reference id.
+     *
+     * @param mixed $id_reference
+     * @param null|mixed $id_lang
      */
     public static function getCarrierByReference($id_reference, $id_lang = null)
     {
@@ -1143,7 +1159,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get Range object, price or weight, depending on the shipping method given.
      *
-     * @param int|bool $shipping_method Shipping method enumerator
+     * @param bool|int $shipping_method Shipping method enumerator
      *                                  Use false in order to let this method find the correct one
      *
      * @return bool|RangePrice|RangeWeight
@@ -1166,7 +1182,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get range suffix.
      *
-     * @param Currency|null $currency Currency
+     * @param null|Currency $currency Currency
      *
      * @return string Currency sign in suffix to use for the range
      */
@@ -1186,9 +1202,9 @@ class CarrierCore extends ObjectModel
     /**
      * Get TaxRulesGroup ID for this Carrier.
      *
-     * @param Context|null $context Context
+     * @param null|Context $context Context
      *
-     * @return false|null|string TaxrulesGroup ID
+     * @return null|false|string TaxrulesGroup ID
      *                           false if not found
      */
     public function getIdTaxRulesGroup(Context $context = null)
@@ -1200,9 +1216,9 @@ class CarrierCore extends ObjectModel
      * Get TaxRulesGroup ID for a given Carrier.
      *
      * @param int $id_carrier Carrier ID
-     * @param Context|null $context Context
+     * @param null|Context $context Context
      *
-     * @return false|null|string TaxRulesGroup ID
+     * @return null|false|string TaxRulesGroup ID
      *                           false if not found
      */
     public static function getIdTaxRulesGroupByIdCarrier($id_carrier, Context $context = null)
@@ -1264,7 +1280,7 @@ class CarrierCore extends ObjectModel
     /**
      * Delete TaxRulesGroup from this Carrier.
      *
-     * @param array|null $shops Shops
+     * @param null|array $shops Shops
      *
      * @return bool Whether the TaxRulesGroup has been successfully removed from this Carrier
      */
@@ -1308,6 +1324,8 @@ class CarrierCore extends ObjectModel
      * @since 1.5
      *
      * @param Address $address Address
+     * @param null|mixed $id_order
+     * @param mixed $use_average_tax_of_products
      *
      * @return TaxCalculator Tax calculator object
      */
@@ -1328,6 +1346,7 @@ class CarrierCore extends ObjectModel
      * @since 1.5.0
      *
      * @param string $range_table Range table
+     * @param mixed $alias
      *
      * @return string SQL quoer to get the delivery range table in this Shop(Group)
      */
@@ -1462,9 +1481,9 @@ class CarrierCore extends ObjectModel
      * @param Cart $cart Cart object
      * @param array &$error contain an error message if an error occurs
      *
-     * @return array Available Carriers
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return array Available Carriers
      */
     public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = array())
     {
@@ -1611,7 +1630,7 @@ class CarrierCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @param int|array $id_group_list Group ID or array of Group IDs
+     * @param array|int $id_group_list Group ID or array of Group IDs
      * @param array $exception List of Carrier IDs to ignore
      *
      * @return bool

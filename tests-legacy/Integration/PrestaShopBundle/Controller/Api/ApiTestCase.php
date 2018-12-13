@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Integration\PrestaShopBundle\Controller\Api;
 
 use Context;
@@ -49,7 +48,7 @@ abstract class ApiTestCase extends WebTestCase
     protected $oldContext;
 
     /**
-     * Symfony\Component\DependencyInjection\ContainerInterface
+     * Symfony\Component\DependencyInjection\ContainerInterface.
      */
     protected static $container;
 
@@ -240,6 +239,7 @@ abstract class ApiTestCase extends WebTestCase
 
     /**
      * @param $expectedStatusCode
+     *
      * @return mixed
      */
     protected function assertResponseBodyValidJson($expectedStatusCode)

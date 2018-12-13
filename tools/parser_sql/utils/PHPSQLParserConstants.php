@@ -1,6 +1,6 @@
 <?php
 /**
- * constants.php
+ * constants.php.
  *
  * Some constants for the PHPSQLParser.
  *
@@ -29,7 +29,6 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 class PHPSQLParserConstants {
 
     protected static $reserved = array('ABS', 'ACOS', 'ADDDATE', 'ADDTIME', 'AES_ENCRYPT', 'AES_DECRYPT', 'AGAINST',

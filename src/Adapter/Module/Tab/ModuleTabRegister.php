@@ -165,9 +165,9 @@ class ModuleTabRegister
      * @param string $moduleName
      * @param ParameterBag $data
      *
-     * @return bool (= true) when no issue detected
-     *
      * @throws Exception in case of invalid data
+     *
+     * @return bool (= true) when no issue detected
      */
     protected function checkIsValid($moduleName, ParameterBag $data)
     {
@@ -277,7 +277,7 @@ class ModuleTabRegister
 
         /**
          * Legacy Tab, to be replaced with Doctrine entity when right management
-         * won't be directly linked to the tab creation
+         * won't be directly linked to the tab creation.
          *
          * @ToDo
          */

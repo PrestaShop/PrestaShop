@@ -1,6 +1,6 @@
 <?php
 /**
- * SubQueryBuilder.php
+ * SubQueryBuilder.php.
  *
  * Builds the statements for sub-queries.
  *
@@ -35,10 +35,9 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: SubQueryBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
 require_once dirname(__FILE__) . '/RefClauseBuilder.php';
 require_once dirname(__FILE__) . '/RefTypeBuilder.php';
 require_once dirname(__FILE__) . '/JoinBuilder.php';
@@ -52,7 +51,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class SubQueryBuilder {
 

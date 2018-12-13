@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -22,8 +22,10 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
+ *
+ * @param mixed $module_name
+ * @param mixed $hook_name
  */
-
 function add_module_to_hook($module_name, $hook_name)
 {
     $res = true;

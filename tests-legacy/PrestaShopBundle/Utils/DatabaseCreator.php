@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\PrestaShopBundle\Utils;
 
 use Doctrine\DBAL\DBALException;
@@ -34,7 +33,7 @@ use Symfony\Component\Process\Process;
 class DatabaseCreator
 {
     /**
-     * Create the initialize database used for test
+     * Create the initialize database used for test.
      */
     public static function createTestDB()
     {
@@ -73,7 +72,7 @@ class DatabaseCreator
     }
 
     /**
-     * Restore the test database in its initial state from a dump generated during createTestDB
+     * Restore the test database in its initial state from a dump generated during createTestDB.
      *
      * @throws DBALException
      */

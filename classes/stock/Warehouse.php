@@ -131,6 +131,8 @@ class WarehouseCore extends ObjectModel
     /**
      * Gets the carriers associated to the current warehouse.
      *
+     * @param mixed $return_reference
+     *
      * @return array Ids of the associated carriers
      */
     public function getCarriers($return_reference = false)
@@ -509,6 +511,7 @@ class WarehouseCore extends ObjectModel
      * For a given pack, returns the warehouse it can be shipped from.
      *
      * @param int $id_product
+     * @param null|mixed $id_shop
      *
      * @return array|bool id_warehouse or false
      */
@@ -566,11 +569,11 @@ class WarehouseCore extends ObjectModel
         }
     }
 
-    /*********************************\
+    /*\
      *
      * Webservices Specific Methods
      *
-     *********************************/
+     */
 
     /**
      * Webservice : gets the value of the warehouse.

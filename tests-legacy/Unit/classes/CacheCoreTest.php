@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Classes;
 
 use PHPUnit_Framework_TestCase;
@@ -92,7 +91,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     /**
      * When we set a query into cache
      * Then the cache should contain an entry with the cache key and its result
-     * AND entries which link each table from the query to the cache key
+     * AND entries which link each table from the query to the cache key.
      */
     public function testSetQuery()
     {
@@ -123,7 +122,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     /**
      * When we set a query into cache AND the cache is full
      * Then we should make room into the cache by removing some entries
-     * No LRU strategy used here
+     * No LRU strategy used here.
      */
     public function testSetQueryWithCacheFull()
     {
@@ -159,7 +158,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     /**
      * When we set a query into cache AND the cache is full
      * Then we should make room into the cache by removing some entries using a LRU strategy.
-     * We verify the LRU strategy is working properly
+     * We verify the LRU strategy is working properly.
      */
     public function testCacheLRUWithCacheFull()
     {
@@ -216,7 +215,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
      * When the cache is invalidated for a given table
      * Then all the associated queries should be invalidated,
      * AND if those queries are present into other table <=> query map (in case of a join for example)
-     * Then the entries from those maps should be removed as well
+     * Then the entries from those maps should be removed as well.
      */
     public function testCacheInvalidation()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,13 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
-
 class Cart extends CartCore
 {
     /**
-     * Update the address id of the cart
+     * Update the address id of the cart.
      *
      * @param int $id_address Current address id to change
      * @param int $id_address_new New address id

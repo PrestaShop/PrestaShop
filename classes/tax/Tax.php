@@ -141,6 +141,9 @@ class TaxCore extends ObjectModel
     /**
      * Get all available taxes.
      *
+     * @param mixed $id_lang
+     * @param mixed $active_only
+     *
      * @return array Taxes
      */
     public static function getTaxes($id_lang = false, $active_only = true)
@@ -190,6 +193,7 @@ class TaxCore extends ObjectModel
      * Returns the ecotax tax rate.
      *
      * @param id_address
+     * @param null|mixed $id_address
      *
      * @return float $tax_rate
      */
@@ -207,6 +211,8 @@ class TaxCore extends ObjectModel
      * Returns the carrier tax rate.
      *
      * @param id_address
+     * @param mixed $id_carrier
+     * @param null|mixed $id_address
      *
      * @return float $tax_rate
      */
@@ -226,6 +232,8 @@ class TaxCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $id_country
+     * @param mixed $id_state
+     * @param mixed $zipcode
      *
      * @return Tax
      *
@@ -248,6 +256,8 @@ class TaxCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $id_country
+     * @param null|mixed $id_address
+     * @param null|Context $context
      *
      * @return Tax
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Integration;
 
 
@@ -76,7 +75,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
 
     public function testInstall()
     {
-        /**
+        /*
          * Both modules install overrides in the same files.
          * This test only checks that modules are installed properly.
          */
@@ -89,6 +88,8 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
      * Used to normalize the PHP source code for file comparison
      * and to strip dates that are inserted in comments when
      * overrides are installed.
+     *
+     * @param mixed $str
      */
     private function cleanup($str)
     {
@@ -103,7 +104,6 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
          * This tests first checks that the overrides installed in the previous step
          * resulted in the expected merged files.
          */
-
         $ressource_path = realpath(dirname(__FILE__).'/../../../resources/ModulesOverrideInstallUninstallTest/');
         $override_path_cart = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('Cart');
         $override_path_admin_product_controller = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('AdminProductsController');
@@ -125,7 +125,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
             'AdminProductsController.php file different'
         );
 
-        /** Then it checks that the overrides are removed once the modules are
+        /* Then it checks that the overrides are removed once the modules are
          *  uninstalled.
          */
         foreach ($this->moduleNames as $name) {

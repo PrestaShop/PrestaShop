@@ -1,6 +1,6 @@
 <?php
 /**
- * FromProcessor.php
+ * FromProcessor.php.
  *
  * This file implements the processor for the FROM statements.
  *
@@ -29,18 +29,15 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
 require_once(dirname(__FILE__) . '/DefaultProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
  * This class processes the FROM statements.
  * 
  * @author arothe
- * 
  */
 class FromProcessor extends AbstractProcessor {
 

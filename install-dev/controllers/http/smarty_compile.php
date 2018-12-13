@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 define('_PS_DO_NOT_LOAD_CONFIGURATION_', true);
 if (Tools::getValue('bo')) {
     if (!is_dir(_PS_ROOT_DIR_.'/admin/')) {

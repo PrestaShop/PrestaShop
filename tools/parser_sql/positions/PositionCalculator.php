@@ -1,6 +1,6 @@
 <?php
 /**
- * position-calculator.php
+ * position-calculator.php.
  *
  * This file implements the calculator for the position elements of 
  * the output of the PHPSQLParser.
@@ -30,7 +30,6 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once dirname(__FILE__) . '/../utils/PHPSQLParserConstants.php';
 require_once dirname(__FILE__) . '/../exceptions/UnableToCalculatePositionException.php';
 
@@ -39,7 +38,6 @@ require_once dirname(__FILE__) . '/../exceptions/UnableToCalculatePositionExcept
  * of base_expr within the original SQL statement.
  * 
  * @author arothe <andre.rothe@phosco.info>
- * 
  */
 class PositionCalculator {
 

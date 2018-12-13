@@ -201,6 +201,8 @@ class AdminAccessControllerCore extends AdminController
 
     /**
      * return human readable Tabs hierarchy for display.
+     *
+     * @param array $tabs
      */
     protected function displayTabs(array $tabs)
     {

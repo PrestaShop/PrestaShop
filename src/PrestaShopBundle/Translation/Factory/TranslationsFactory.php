@@ -46,9 +46,9 @@ class TranslationsFactory implements TranslationsFactoryInterface
      * @param string $domainIdentifier Domain identifier
      * @param string $locale Locale identifier
      *
-     * @return MessageCatalogue A MessageCatalogue instance
-     *
      * @throws ProviderNotFoundException
+     *
+     * @return MessageCatalogue A MessageCatalogue instance
      */
     public function createCatalogue($domainIdentifier, $locale = 'en_US')
     {
@@ -67,10 +67,11 @@ class TranslationsFactory implements TranslationsFactoryInterface
      * @param string $domainIdentifier Domain identifier
      * @param string $locale Locale identifier
      * @param string $theme Theme name
-     *
-     * @return array Translation tree structure
+     * @param null|mixed $search
      *
      * @throws ProviderNotFoundException
+     *
+     * @return array Translation tree structure
      */
     public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null, $search = null)
     {

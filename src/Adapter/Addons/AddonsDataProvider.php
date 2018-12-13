@@ -75,9 +75,9 @@ class AddonsDataProvider implements AddonsInterface
     /**
      * @param $module_id
      *
-     * @return bool
-     *
      * @throws Exception
+     *
+     * @return bool
      */
     public function downloadModule($module_id)
     {
@@ -189,9 +189,9 @@ class AddonsDataProvider implements AddonsInterface
     }
 
     /**
-     * @return array
-     *
      * @throws Exception
+     *
+     * @return array
      */
     protected function getAddonsCredentials()
     {
@@ -205,7 +205,7 @@ class AddonsDataProvider implements AddonsInterface
         );
     }
 
-    /** Does this function should be in a User related class ? **/
+    /** Does this function should be in a User related class ? */
     public function getAddonsEmail()
     {
         $request = Request::createFromGlobals();

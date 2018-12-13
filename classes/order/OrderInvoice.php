@@ -164,6 +164,10 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Get order products.
      *
+     * @param mixed $products
+     * @param mixed $selected_products
+     * @param mixed $selected_qty
+     *
      * @return array Products with price, quantity (with taxe and without)
      */
     public function getProducts($products = false, $selected_products = false, $selected_qty = false)
@@ -667,9 +671,9 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @param int $id
      *
-     * @return OrderInvoice
-     *
      * @throws PrestaShopException
+     *
+     * @return OrderInvoice
      */
     public static function retrieveOneById($id)
     {
@@ -723,7 +727,7 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @since 1.5.0.14
      *
-     * @return PrestaShopCollection|array Collection of OrderInvoice or empty array
+     * @return array|PrestaShopCollection Collection of OrderInvoice or empty array
      */
     public function getSibling()
     {
@@ -852,6 +856,7 @@ class OrderInvoiceCore extends ObjectModel
      * @since 1.5.0.2
      *
      * @param int $id_lang for invoice_prefix
+     * @param null|mixed $id_shop
      *
      * @return string
      */

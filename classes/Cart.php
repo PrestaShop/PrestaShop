@@ -103,7 +103,7 @@ class CartCore extends ObjectModel
     protected static $_taxes_rate = null;
     protected static $_attributesLists = array();
 
-    /** @var Customer|null */
+    /** @var null|Customer */
     protected static $_customer = null;
 
     protected static $cacheDeliveryOption = array();
@@ -179,16 +179,16 @@ class CartCore extends ObjectModel
     const ONLY_SHIPPING = 5;
     const ONLY_WRAPPING = 6;
 
-    /** @deprecated since 1.7 **/
+    /** @deprecated since 1.7 */
     const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
     const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
 
     /**
      * CartCore constructor.
      *
-     * @param int|null $id Cart ID
+     * @param null|int $id Cart ID
      *                     null = new Cart
-     * @param int|null $idLang Language ID
+     * @param null|int $idLang Language ID
      *                         null = Language ID of current Context
      */
     public function __construct($id = null, $idLang = null)
@@ -250,10 +250,10 @@ class CartCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Whether the Cart has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Whether the Cart has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -275,10 +275,10 @@ class CartCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Whether the Cart has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Whether the Cart has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -334,9 +334,9 @@ class CartCore extends ObjectModel
     /**
      * Deletes current Cart from the database.
      *
-     * @return bool True if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool True if delete was successful
      */
     public function delete()
     {
@@ -435,9 +435,9 @@ class CartCore extends ObjectModel
     /**
      * The arguments are optional and only serve as return values in case caller needs the details.
      *
-     * @param float|null $cartAmountTaxExcluded If the reference is given, it will be updated with the
+     * @param null|float $cartAmountTaxExcluded If the reference is given, it will be updated with the
      *                                          total amount in the Cart excluding Taxes
-     * @param float|null $cartAmountTaxIncluded If the reference is given, it will be updated with the
+     * @param null|float $cartAmountTaxIncluded If the reference is given, it will be updated with the
      *                                          total amount in the Cart including Taxes
      *
      * @return float Average Tax Rate on Products
@@ -459,7 +459,6 @@ class CartCore extends ObjectModel
     /**
      * Get Cart Rules.
      *
-     *
      * @param int $filter Filter enum:
      *                    - FILTER_ACTION_ALL
      *                    - FILTER_ACTION_SHIPPING
@@ -468,7 +467,7 @@ class CartCore extends ObjectModel
      *                    - FILTER_ACTION_ALL_NOCAP
      * @param bool $autoAdd automaticaly adds cart ruls without code to cart
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Database result
+     * @return null|array|false|mysqli_result|PDOStatement|resource Database result
      */
     public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true)
     {
@@ -539,9 +538,9 @@ class CartCore extends ObjectModel
      *                    - FILTER_ACTION_GIFT
      *                    - FILTER_ACTION_ALL_NOCAP
      *
-     * @return array
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return array
      */
     public function getOrderedCartRulesIds($filter = CartRule::FILTER_ACTION_ALL)
     {
@@ -1293,6 +1292,11 @@ class CartCore extends ObjectModel
      * @param int $id_product Product ID
      * @param int $id_product_attribute Attribute ID if needed
      * @param string $operator Indicate if quantity must be increased or decreased
+     * @param mixed $id_customization
+     * @param mixed $id_address_delivery
+     * @param null|Shop $shop
+     * @param mixed $auto_add_cart_rule
+     * @param mixed $skipAvailabilityCheckOutOfStock
      *
      * @return bool Whether the quantity has been succesfully updated
      */
@@ -1501,6 +1505,13 @@ class CartCore extends ObjectModel
 
     /**
      * Customization management.
+     *
+     * @param mixed $quantity
+     * @param mixed $id_customization
+     * @param mixed $id_product
+     * @param mixed $id_product_attribute
+     * @param mixed $id_address_delivery
+     * @param mixed $operator
      */
     protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $id_address_delivery, $operator = 'up')
     {
@@ -1884,9 +1895,9 @@ class CartCore extends ObjectModel
      * @param int $id_carrier
      * @param bool $use_cache @deprecated
      *
-     * @return float Order total
-     *
      * @throws \Exception
+     *
+     * @return float Order total
      */
     public function getOrderTotal(
         $withTaxes = true,
@@ -2226,6 +2237,7 @@ class CartCore extends ObjectModel
      * Get the gift wrapping price.
      *
      * @param bool $with_taxes With or without taxes
+     * @param null|mixed $id_address
      *
      * @return float wrapping price
      */
@@ -2297,6 +2309,11 @@ class CartCore extends ObjectModel
     /**
      * Get products grouped by package and by addresses to be sent individualy (one package = one shipping cost).
      *
+     *
+     * @todo Add avaibility check
+     *
+     * @param mixed $flush
+     *
      * @return array array(
      *               0 => array( // First address
      *               0 => array(  // First package
@@ -2306,8 +2323,6 @@ class CartCore extends ObjectModel
      *               ),
      *               ),
      *               );
-     *
-     * @todo Add avaibility check
      */
     public function getPackageList($flush = false)
     {
@@ -3024,6 +3039,9 @@ class CartCore extends ObjectModel
      * This method replace the delimiter by a sequence of '0'.
      * The size of this sequence is fixed by the first digit of the return
      *
+     * @param mixed $string
+     * @param mixed $delimiter
+     *
      * @return int Intified value
      */
     public static function intifier($string, $delimiter = ',')
@@ -3036,6 +3054,9 @@ class CartCore extends ObjectModel
 
     /**
      * Translate an int option_delivery identifier (3240002000) in a string ('24,3,').
+     *
+     * @param mixed $int
+     * @param mixed $delimiter
      */
     public static function desintifier($int, $delimiter = ',')
     {
@@ -3156,7 +3177,7 @@ class CartCore extends ObjectModel
      * Get the delivery option selected, or if no delivery option was selected,
      * the cheapest option for each address.
      *
-     * @param Country|null $default_country Default country
+     * @param null|Country $default_country Default country
      * @param bool $dontAutoSelectOptions Do not auto select delivery option
      * @param bool $use_cache Use cache
      *
@@ -3226,9 +3247,9 @@ class CartCore extends ObjectModel
     /**
      * Return shipping total for the cart.
      *
-     * @param array|null $delivery_option Array of the delivery option for each address
+     * @param null|array $delivery_option Array of the delivery option for each address
      * @param bool $use_tax Use taxes
-     * @param Country|null $default_country Default Country
+     * @param null|Country $default_country Default Country
      *
      * @return float Shipping total
      */
@@ -3264,8 +3285,8 @@ class CartCore extends ObjectModel
      * @param int $id_carrier Carrier ID
      * @param array $delivery_option Array of the delivery option for each address
      * @param bool $useTax Use Taxes
-     * @param Country|null $default_country Default Country
-     * @param array|null $delivery_option Delivery options array
+     * @param null|Country $default_country Default Country
+     * @param null|array $delivery_option Delivery options array
      *
      * @return float Shipping total
      */
@@ -3296,6 +3317,11 @@ class CartCore extends ObjectModel
 
     /**
      * @deprecated 1.5.0, use Cart->getPackageShippingCost()
+     *
+     * @param null|mixed $id_carrier
+     * @param mixed $use_tax
+     * @param null|Country $default_country
+     * @param null|mixed $product_list
      */
     public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
     {
@@ -3309,12 +3335,12 @@ class CartCore extends ObjectModel
      *
      * @param int $id_carrier Carrier ID (default : current carrier)
      * @param bool $use_tax
-     * @param Country|null $default_country
-     * @param array|null $product_list list of product concerned by the shipping.
+     * @param null|Country $default_country
+     * @param null|array $product_list list of product concerned by the shipping.
      *                                 If null, all the product of the cart are used to calculate the shipping cost
-     * @param int|null $id_zone Zone ID
+     * @param null|int $id_zone Zone ID
      *
-     * @return float|bool Shipping total, false if not possible to ship with the given carrier
+     * @return bool|float Shipping total, false if not possible to ship with the given carrier
      */
     public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null, $id_zone = null)
     {
@@ -3657,6 +3683,8 @@ class CartCore extends ObjectModel
     /**
      * Return total Cart weight.
      *
+     * @param null|mixed $products
+     *
      * @return float Total Cart weight
      */
     public function getTotalWeight($products = null)
@@ -3725,6 +3753,10 @@ class CartCore extends ObjectModel
      * @deprecated 1.5.0
      *
      * @param CartRule $obj
+     * @param mixed $discounts
+     * @param mixed $order_total
+     * @param mixed $products
+     * @param mixed $check_cart_discount
      *
      * @return bool|string
      */
@@ -3739,6 +3771,9 @@ class CartCore extends ObjectModel
 
     /**
      * Return useful information about the cart.
+     *
+     * @param null|mixed $id_lang
+     * @param mixed $refresh
      *
      * @return array Cart details
      */
@@ -3902,7 +3937,7 @@ class CartCore extends ObjectModel
      *
      * @param bool $returnProductOnFailure Return the first found product with not enough quantity
      *
-     * @return bool|array If all products are in stock: true; if not: either false or an array
+     * @return array|bool If all products are in stock: true; if not: either false or an array
      *                    containing the first found product which is not in stock in the
      *                    requested amount
      */
@@ -4078,7 +4113,7 @@ class CartCore extends ObjectModel
      *
      * @param int $id_order Order ID
      *
-     * @return int|bool Cart ID, false if not found
+     * @return bool|int Cart ID, false if not found
      */
     public static function getCartIdByOrderId($id_order)
     {
@@ -4097,6 +4132,7 @@ class CartCore extends ObjectModel
      * @param int $index
      * @param int $type
      * @param string $textValue
+     * @param mixed $text_value
      *
      * @return bool Always true
      * @todo: Improve this PHPDoc comment
@@ -4108,6 +4144,11 @@ class CartCore extends ObjectModel
 
     /**
      * Add customer's pictures.
+     *
+     * @param mixed $id_product
+     * @param mixed $index
+     * @param mixed $type
+     * @param mixed $file
      *
      * @return bool Always true
      */
@@ -4203,7 +4244,7 @@ class CartCore extends ObjectModel
      * @param int $id_customer Customer ID
      * @param bool $with_order Only return Carts that have been converted into an Order
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource DB result
+     * @return null|array|false|mysqli_result|PDOStatement|resource DB result
      */
     public static function getCustomerCarts($id_customer, $with_order = true)
     {
@@ -4375,7 +4416,7 @@ class CartCore extends ObjectModel
     /**
      * Get Cart rows from DB for the webservice.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource DB result
+     * @return null|array|false|mysqli_result|PDOStatement|resource DB result
      */
     public function getWsCartRows()
     {
@@ -4754,6 +4795,9 @@ class CartCore extends ObjectModel
      *
      * @id_carrier int
      * @id_zone int
+     *
+     * @param mixed $id_carrier
+     * @param mixed $id_zone
      */
     public function isCarrierInRange($id_carrier, $id_zone)
     {
@@ -4817,6 +4861,7 @@ class CartCore extends ObjectModel
      *
      * @param bool $ignore_virtual Ignore virtual products
      * @param bool $exclusive (DEPRECATED) If true, the validation is exclusive : it must be present product in stock and out of stock
+     * @param mixed $ignoreVirtual
      *
      * @since 1.5.0
      *

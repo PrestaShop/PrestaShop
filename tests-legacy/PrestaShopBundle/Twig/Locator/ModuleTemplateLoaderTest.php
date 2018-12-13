@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\PrestaShopBundle\Twig\Locator;
 
 use PrestaShopBundle\Twig\Locator\ModuleTemplateLoader;
@@ -83,6 +82,7 @@ class ModuleTemplateLoaderTest extends TestCase
 
     /**
      * @dataProvider getSourceContextsProvider
+     *
      * @param string $sourceContent The template file content.
      * @param string $twigPathAsked The Twig path asked during Twig template rendering.
      * @param string $successMessage In case of failure, describe what is expected.

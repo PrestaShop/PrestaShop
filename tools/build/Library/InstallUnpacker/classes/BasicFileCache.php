@@ -61,9 +61,9 @@ class BasicFileCache
      * @param string $data
      * @param string $filename
      *
-     * @return bool
-     *
      * @throws Exception
+     *
+     * @return bool
      */
     public function save($data, $filename)
     {

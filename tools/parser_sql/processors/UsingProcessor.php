@@ -1,6 +1,6 @@
 <?php
 /**
- * UsingProcessor.php
+ * UsingProcessor.php.
  *
  * This file implements the processor for the USING statements.
  *
@@ -29,15 +29,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/FromProcessor.php');
 
 /**
- * 
  * This class processes the USING statements.
  * 
  * @author arothe
- * 
  */
 class UsingProcessor extends FromProcessor {
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\TestCase;
 
 define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../resources/module/'));
@@ -31,9 +30,11 @@ define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../resources/modul
 class Module
 {
     /**
-     * Copy the directory in resources which get the name $module_dir_name in the module directory
+     * Copy the directory in resources which get the name $module_dir_name in the module directory.
      *
      * @var module_dir_name take the directory name of a module contain in /home/prestashop/tests/resources/module
+     *
+     * @param mixed $module_dir_name
      */
     public static function addModule($module_dir_name)
     {
@@ -45,9 +46,11 @@ class Module
     }
 
     /**
-     * Delete the directory in /home/prestashop/module which get the name $module_dir_name
+     * Delete the directory in /home/prestashop/module which get the name $module_dir_name.
      *
      * @var module_dir_name take the directory name of a module contain in /home/prestashop/module
+     *
+     * @param mixed $module_dir_name
      */
     public static function removeModule($module_dir_name)
     {

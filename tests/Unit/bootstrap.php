@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 define('_PS_IN_TEST_', true);
 define('_PS_ROOT_DIR_', __DIR__ . '/../..');
 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests-legacy/resources/modules/');

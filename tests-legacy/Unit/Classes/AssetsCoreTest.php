@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Classes;
 
 use PHPUnit\Framework\TestCase;
@@ -78,6 +77,11 @@ class AssetsCoreTest extends TestCase
 
     /**
      * @dataProvider isAssetsDataProvider
+     *
+     * @param mixed $id
+     * @param mixed $toBeFound
+     * @param mixed $expectedPath
+     * @param mixed $type
      */
     public function testIsAssets($id, $toBeFound, $expectedPath, $type)
     {

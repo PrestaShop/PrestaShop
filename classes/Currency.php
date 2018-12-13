@@ -153,10 +153,10 @@ class CurrencyCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the CartRule has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the CartRule has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -220,9 +220,9 @@ class CurrencyCore extends ObjectModel
     /**
      * Deletes current object from database.
      *
-     * @return bool True if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool True if delete was successful
      */
     public function delete()
     {
@@ -257,9 +257,9 @@ class CurrencyCore extends ObjectModel
      * Is this currency installed for a given shop ?
      * (current shop by default).
      *
-     * @param int|null $currencyId
+     * @param null|int $currencyId
      *                             The currency to look for (
-     * @param int|null $shopId
+     * @param null|int $shopId
      *                         The given shop's id
      *
      * @return bool
@@ -644,7 +644,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Count active Currencies.
      *
-     * @param int|null $idShop Shop ID
+     * @param null|int $idShop Shop ID
      *
      * @return mixed Amount of active Currencies
      *               `false` if none found
@@ -669,7 +669,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Is multi Currency activated?
      *
-     * @param int|null $idShop Shop ID
+     * @param null|int $idShop Shop ID
      *
      * @return bool Indicates whether multi Currency is actived
      */

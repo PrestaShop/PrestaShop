@@ -1,6 +1,6 @@
 <?php
 /**
- * SetProcessor.php
+ * SetProcessor.php.
  *
  * This file implements the processor for the SET statements.
  *
@@ -29,17 +29,14 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- * 
  * This class processes the SET statements.
  * 
  * @author arothe
- * 
  */
 class SetProcessor extends AbstractProcessor {
 
@@ -52,6 +49,8 @@ class SetProcessor extends AbstractProcessor {
     /**
      * A SET list is simply a list of key = value expressions separated by comma (,).
      * This function produces a list of the key/value expressions.
+     *
+     * @param mixed $base_expr
      */
     protected function getAssignment($base_expr) {
         $assignment = $this->expressionListProcessor->process($this->splitSQLIntoTokens($base_expr));

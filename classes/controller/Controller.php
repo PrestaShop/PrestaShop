@@ -380,6 +380,8 @@ abstract class ControllerCore
 
     /**
      * Set $this->redirect_after that will be used by redirect() after the process.
+     *
+     * @param mixed $url
      */
     public function setRedirectAfter($url)
     {
@@ -389,9 +391,9 @@ abstract class ControllerCore
     /**
      * Adds a new stylesheet(s) to the page header.
      *
-     * @param string|array $css_uri Path to CSS file, or list of css files like this : array(array(uri => media_type), ...)
+     * @param array|string $css_uri Path to CSS file, or list of css files like this : array(array(uri => media_type), ...)
      * @param string $css_media_type
-     * @param int|null $offset
+     * @param null|int $offset
      * @param bool $check_path
      *
      * @return true
@@ -432,7 +434,7 @@ abstract class ControllerCore
     /**
      * Removes CSS stylesheet(s) from the queued stylesheet list.
      *
-     * @param string|array $css_uri Path to CSS file or an array like: array(array(uri => media_type), ...)
+     * @param array|string $css_uri Path to CSS file or an array like: array(array(uri => media_type), ...)
      * @param string $css_media_type
      * @param bool $check_path
      */
@@ -470,7 +472,7 @@ abstract class ControllerCore
     /**
      * Adds a new JavaScript file(s) to the page header.
      *
-     * @param string|array $js_uri Path to JS file or an array like: array(uri, ...)
+     * @param array|string $js_uri Path to JS file or an array like: array(uri, ...)
      * @param bool $check_path
      */
     public function addJS($js_uri, $check_path = true)
@@ -499,7 +501,7 @@ abstract class ControllerCore
     /**
      * Removes JS file(s) from the queued JS file list.
      *
-     * @param string|array $js_uri Path to JS file or an array like: array(uri, ...)
+     * @param array|string $js_uri Path to JS file or an array like: array(uri, ...)
      * @param bool $check_path
      */
     public function removeJS($js_uri, $check_path = true)
@@ -522,8 +524,8 @@ abstract class ControllerCore
     /**
      * Adds jQuery library file to queued JS file list.
      *
-     * @param string|null $version jQuery library version
-     * @param string|null $folder jQuery file folder
+     * @param null|string $version jQuery library version
+     * @param null|string $folder jQuery file folder
      * @param bool $minifier if set tot true, a minified version will be included
      */
     public function addJquery($version = null, $folder = null, $minifier = true)
@@ -534,7 +536,7 @@ abstract class ControllerCore
     /**
      * Adds jQuery UI component(s) to queued JS file list.
      *
-     * @param string|array $component
+     * @param array|string $component
      * @param string $theme
      * @param bool $check_dependencies
      */
@@ -554,7 +556,7 @@ abstract class ControllerCore
     /**
      * Adds jQuery plugin(s) to queued JS file list.
      *
-     * @param string|array $name
+     * @param array|string $name
      * @param string null $folder
      * @param bool $css
      */
@@ -628,8 +630,8 @@ abstract class ControllerCore
      * Checks if a template is cached.
      *
      * @param string $template
-     * @param string|null $cache_id Cache item ID
-     * @param string|null $compile_id
+     * @param null|string $cache_id Cache item ID
+     * @param null|string $compile_id
      *
      * @return bool
      */
@@ -692,9 +694,9 @@ abstract class ControllerCore
      * @deprecated deprecated since 1.7.5.0, use ajaxRender instead
      * Dies and echoes output value
      *
-     * @param string|null $value
-     * @param string|null $controller
-     * @param string|null $method
+     * @param null|string $value
+     * @param null|string $controller
+     * @param null|string $method
      *
      * @throws PrestaShopException
      */
@@ -748,9 +750,9 @@ abstract class ControllerCore
      *
      * @param string $serviceId Service identifier
      *
-     * @return object The associated service
-     *
      * @throws Exception
+     *
+     * @return object The associated service
      */
     public function get($serviceId)
     {
@@ -762,9 +764,9 @@ abstract class ControllerCore
      *
      * @param string $parameterId The parameter name
      *
-     * @return mixed The parameter value
-     *
      * @throws InvalidArgumentException if the parameter is not defined
+     *
+     * @return mixed The parameter value
      */
     public function getParameter($parameterId)
     {

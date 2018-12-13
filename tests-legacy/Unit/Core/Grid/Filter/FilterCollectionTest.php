@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Grid\Filter;
 
 use PHPUnit\Framework\TestCase;
@@ -43,6 +42,8 @@ class FilterCollectionTest extends TestCase
 
     /**
      * @depends testFilterCollectionIsEmptyByDefault
+     *
+     * @param FilterCollection $filters
      */
     public function testFilterCanBeAddedToCollection(FilterCollection $filters)
     {
@@ -57,6 +58,8 @@ class FilterCollectionTest extends TestCase
 
     /**
      * @depends testFilterCanBeAddedToCollection
+     *
+     * @param FilterCollection $filters
      */
     public function testFilterCanBeRemovedFromCollection(FilterCollection $filters)
     {

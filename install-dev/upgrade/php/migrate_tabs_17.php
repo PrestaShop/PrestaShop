@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,12 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Install\Install;
 use PrestaShopBundle\Install\LanguageList;
 
 /**
- * Migrate BO tabs for 1.7 (new reorganization of BO)
+ * Migrate BO tabs for 1.7 (new reorganization of BO).
  */
 function migrate_tabs_17()
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateTableOptionsBuilder.php
+ * CreateTableOptionsBuilder.php.
  *
  * Builds the table-options statement part of CREATE TABLE.
  *
@@ -35,10 +35,9 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: CreateTableOptionsBuilder.php 923 2014-01-08 12:20:30Z phosco@gmx.de $
- * 
  */
-
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 require_once dirname(__FILE__) . '/SelectExpressionBuilder.php';
 require_once dirname(__FILE__) . '/CharacterSetBuilder.php';
@@ -50,7 +49,6 @@ require_once dirname(__FILE__) . '/CollationBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class CreateTableOptionsBuilder {
 
@@ -74,6 +72,7 @@ class CreateTableOptionsBuilder {
      * you could simply return $parsed['delim'].
      * 
      * @param array $parsed The part of the output array, which contains the current expression.
+     *
      * @return a string, which is added right after the expression
      */
     protected function getDelimiter($parsed) {

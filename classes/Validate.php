@@ -435,6 +435,7 @@ class ValidateCore
      * Check for HTML field validity (no XSS please !).
      *
      * @param string $html HTML field to validate
+     * @param mixed $allow_iframe
      *
      * @return bool Validity is ok or not
      */
@@ -1229,6 +1230,8 @@ class ValidateCore
      * Check if enable_insecure_rsh exists in
      * this PHP version otherwise disable the
      * oProxyCommand option.
+     *
+     * @param mixed $imapUrl
      *
      * @return bool
      */

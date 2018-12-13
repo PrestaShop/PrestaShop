@@ -1,6 +1,6 @@
 <?php
 /**
- * SQLChunkProcessor.php
+ * SQLChunkProcessor.php.
  *
  * This file implements the processor for the SQL chunks.
  *
@@ -29,7 +29,6 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 require_once(dirname(__FILE__) . '/FromProcessor.php');
 require_once(dirname(__FILE__) . '/RecordProcessor.php');
@@ -60,11 +59,9 @@ require_once(dirname(__FILE__) . '/CreateProcessor.php');
 require_once(dirname(__FILE__) . '/TableProcessor.php');
 
 /**
- * 
  * This class processes the SQL chunks.
  * 
  * @author arothe
- * 
  */
 class SQLChunkProcessor extends AbstractProcessor {
 

@@ -57,6 +57,7 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
      *
      * @param ShopUrl $mainShopUrl
      * @param ConfigurationInterface $configuration
+     * @param HtaccessFileGenerator $htaccessFileGenerator
      */
     public function __construct(
         ShopUrl $mainShopUrl,

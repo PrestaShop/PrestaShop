@@ -50,12 +50,12 @@ class StockManagerCore implements StockManagerInterface
      * @param int $id_stock_mvt_reason
      * @param float $price_te
      * @param bool $is_usable
-     * @param int|null $id_supply_order
-     * @param Employee|null $employee
-     *
-     * @return bool
+     * @param null|int $id_supply_order
+     * @param null|Employee $employee
      *
      * @throws PrestaShopException
+     *
+     * @return bool
      */
     public function addProduct(
         $id_product,
@@ -202,18 +202,18 @@ class StockManagerCore implements StockManagerInterface
      * @see StockManagerInterface::removeProduct()
      *
      * @param int $id_product
-     * @param int|null $id_product_attribute
+     * @param null|int $id_product_attribute
      * @param Warehouse $warehouse
      * @param int $quantity
      * @param int $id_stock_mvt_reason
      * @param bool $is_usable
-     * @param int|null $id_order
+     * @param null|int $id_order
      * @param int $ignore_pack
-     * @param Employee|null $employee
-     *
-     * @return array
+     * @param null|Employee $employee
      *
      * @throws PrestaShopException
+     *
+     * @return array
      */
     public function removeProduct(
         $id_product,
@@ -523,6 +523,11 @@ class StockManagerCore implements StockManagerInterface
 
     /**
      * @see StockManagerInterface::getProductPhysicalQuantities()
+     *
+     * @param mixed $id_product
+     * @param mixed $id_product_attribute
+     * @param null|mixed $ids_warehouse
+     * @param mixed $usable
      */
     public function getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
     {
@@ -558,6 +563,11 @@ class StockManagerCore implements StockManagerInterface
 
     /**
      * @see StockManagerInterface::getProductRealQuantities()
+     *
+     * @param mixed $id_product
+     * @param mixed $id_product_attribute
+     * @param null|mixed $ids_warehouse
+     * @param mixed $usable
      */
     public function getProductRealQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
     {
@@ -667,6 +677,14 @@ class StockManagerCore implements StockManagerInterface
 
     /**
      * @see StockManagerInterface::transferBetweenWarehouses()
+     *
+     * @param mixed $id_product
+     * @param mixed $id_product_attribute
+     * @param mixed $quantity
+     * @param mixed $id_warehouse_from
+     * @param mixed $id_warehouse_to
+     * @param mixed $usable_from
+     * @param mixed $usable_to
      */
     public function transferBetweenWarehouses(
         $id_product,
@@ -740,6 +758,11 @@ class StockManagerCore implements StockManagerInterface
      * @see StockManagerInterface::getProductCoverage()
      * Here, $coverage is a number of days
      *
+     * @param mixed $id_product
+     * @param mixed $id_product_attribute
+     * @param mixed $coverage
+     * @param null|mixed $id_warehouse
+     *
      * @return int number of days left (-1 if infinite)
      */
     public function getProductCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null)
@@ -793,7 +816,7 @@ class StockManagerCore implements StockManagerInterface
      * For a given stock, calculates its new WA(Weighted Average) price based on the new quantities and price
      * Formula : (physicalStock * lastCump + quantityToAdd * unitPrice) / (physicalStock + quantityToAdd).
      *
-     * @param Stock|PrestaShopCollection $stock
+     * @param PrestaShopCollection|Stock $stock
      * @param int $quantity
      * @param float $price_te
      *

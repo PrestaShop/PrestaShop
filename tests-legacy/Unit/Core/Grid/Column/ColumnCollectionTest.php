@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Grid\Column;
 
 use PHPUnit\Framework\TestCase;
@@ -51,6 +50,8 @@ class ColumnCollectionTest extends TestCase
 
     /**
      * @depends testItAddsColumnsToCollection
+     *
+     * @param ColumnCollection $columns
      */
     public function testItAddsColumnsBeforeGivenColumn(ColumnCollection $columns)
     {
@@ -73,6 +74,8 @@ class ColumnCollectionTest extends TestCase
 
     /**
      * @depends testItAddsColumnsBeforeGivenColumn
+     *
+     * @param ColumnCollection $columns
      */
     public function testItAddsColumnsAfterGivenColumn(ColumnCollection $columns)
     {
@@ -98,6 +101,8 @@ class ColumnCollectionTest extends TestCase
 
     /**
      * @depends testItAddsColumnsAfterGivenColumn
+     *
+     * @param ColumnCollection $columns
      */
     public function testItRemovesColumnById(ColumnCollection $columns)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Product\Search;
 
 use PHPUnit\Framework\TestCase;
@@ -100,7 +99,7 @@ class SortOrderTest extends TestCase
     }
 
     /**
-     * dataProvider for test_serialization
+     * dataProvider for test_serialization.
      */
     public function serialization_examples()
     {
@@ -113,6 +112,8 @@ class SortOrderTest extends TestCase
 
     /**
      * @dataProvider serialization_examples
+     *
+     * @param mixed $data
      */
     public function testSerialization($data)
     {

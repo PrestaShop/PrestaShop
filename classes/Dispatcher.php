@@ -192,9 +192,12 @@ class DispatcherCore
     /**
      * Get current instance of dispatcher (singleton).
      *
-     * @return Dispatcher
+     *
+     * @param null|SymfonyRequest $request
      *
      * @throws PrestaShopException
+     *
+     * @return Dispatcher
      */
     public static function getInstance(SymfonyRequest $request = null)
     {
@@ -211,7 +214,7 @@ class DispatcherCore
     /**
      * Needs to be instantiated from getInstance() method.
      *
-     * @param SymfonyRequest|null $request
+     * @param null|SymfonyRequest $request
      *
      * @throws PrestaShopException
      */
@@ -250,7 +253,7 @@ class DispatcherCore
     /**
      * Either sets a given request or a new one.
      *
-     * @param SymfonyRequest|null $request
+     * @param null|SymfonyRequest $request
      */
     private function setRequest(SymfonyRequest $request = null)
     {
@@ -275,7 +278,7 @@ class DispatcherCore
      * Sets and returns the default controller.
      *
      * @param int $frontControllerType The front controller type
-     * @param Employee|null $employee The current employee
+     * @param null|Employee $employee The current employee
      *
      * @return string
      */
@@ -873,9 +876,9 @@ class DispatcherCore
      * @param string $anchor Optional anchor to add at the end of this url
      * @param null $id_shop
      *
-     * @return string
-     *
      * @throws PrestaShopException
+     *
+     * @return string
      */
     public function createUrl(
         $route_id,
@@ -1082,6 +1085,8 @@ class DispatcherCore
      * Get list of all available FO controllers.
      *
      * @var mixed
+     *
+     * @param mixed $dirs
      *
      * @return array
      */

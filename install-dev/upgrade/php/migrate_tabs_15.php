@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Migrate BO tabs for 1.5 (new reorganization of BO)
+ * Migrate BO tabs for 1.5 (new reorganization of BO).
  */
 function migrate_tabs_15()
 {

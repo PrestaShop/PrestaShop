@@ -1,6 +1,6 @@
 <?php
 /**
- * ForeignKeyBuilder.php
+ * ForeignKeyBuilder.php.
  *
  * Builds the FOREIGN KEY statement part of CREATE TABLE.
  *
@@ -35,10 +35,9 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: ForeignKeyBuilder.php 927 2014-01-08 13:01:17Z phosco@gmx.de $
- * 
  */
-
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
 require_once dirname(__FILE__) . '/ConstantBuilder.php';
@@ -52,7 +51,6 @@ require_once dirname(__FILE__) . '/ForeignRefBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class ForeignKeyBuilder {
 

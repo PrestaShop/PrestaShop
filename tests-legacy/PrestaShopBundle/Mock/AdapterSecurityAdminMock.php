@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\PrestaShopBundle\Mock;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -31,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
- * Admin Middleware security
+ * Admin Middleware security.
  */
 class AdapterSecurityAdminMock
 {
@@ -41,7 +40,7 @@ class AdapterSecurityAdminMock
 
     /**
      * Check if employee is logged in
-     * If not loggedin in, redirect to admin home page
+     * If not loggedin in, redirect to admin home page.
      *
      * @param GetResponseEvent $event
      *

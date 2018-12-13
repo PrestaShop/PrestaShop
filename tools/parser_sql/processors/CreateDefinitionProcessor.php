@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateDefinitionProcessor.php
+ * CreateDefinitionProcessor.php.
  *
  * This file implements the processor for the create definition within the TABLE statements.
  *
@@ -29,7 +29,6 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once dirname(__FILE__) . '/AbstractProcessor.php';
 require_once dirname(__FILE__) . '/ColumnDefinitionProcessor.php';
 require_once dirname(__FILE__) . '/IndexColumnListProcessor.php';
@@ -37,11 +36,9 @@ require_once dirname(__FILE__) . '/ReferenceDefinitionProcessor.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- *
  * This class processes the create definition of the TABLE statements.
  *
  * @author arothe
- *
  */
 class CreateDefinitionProcessor extends AbstractProcessor {
 

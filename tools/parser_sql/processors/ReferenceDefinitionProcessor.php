@@ -1,6 +1,6 @@
 <?php
 /**
- * ReferenceDefinitionProcessor.php
+ * ReferenceDefinitionProcessor.php.
  *
  * This file implements the processor reference definition part of the CREATE TABLE statements.
  *
@@ -29,13 +29,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
 require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 require_once(dirname(__FILE__) . '/IndexColumnListProcessor.php');
 require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 
 /**
- *
  * This class processes the reference definition part of the CREATE TABLE statements.
  *
  * @author arothe

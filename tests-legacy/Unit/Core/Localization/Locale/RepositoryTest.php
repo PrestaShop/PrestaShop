@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Localization\Locale;
 
 use PHPUnit\Framework\TestCase;
@@ -47,7 +46,7 @@ class RepositoryTest extends TestCase
     protected function setUp()
     {
         /**
-         * Mock the LocaleRepository dependencies :
+         * Mock the LocaleRepository dependencies :.
          */
         /** CLDR Locale data object */
         $cldrLocale = $this->getMockBuilder(CldrLocale::class)
@@ -97,15 +96,15 @@ class RepositoryTest extends TestCase
         $currencyRepository->method('getInstalledCurrencies')
             ->willReturn([$currency]);
 
-        /** @var CldrLocaleRepository $cldrLocaleRepository */
-        /** @var CurrencyRepository $currencyRepository */
+        /* @var CldrLocaleRepository $cldrLocaleRepository */
+        /* @var CurrencyRepository $currencyRepository */
         $this->localeRepository = new LocaleRepository($cldrLocaleRepository, $currencyRepository);
     }
 
     /**
      * Given a valid locale code
      * When asking the repository for the corresponding locale
-     * Then the expected Locale instance should be retrieved
+     * Then the expected Locale instance should be retrieved.
      */
     public function testGetLocale()
     {
@@ -118,8 +117,7 @@ class RepositoryTest extends TestCase
     /**
      * Given an invalid locale code
      * When asking the repository for the corresponding locale
-     * Then an exception should be raised
-     *
+     * Then an exception should be raised.
      */
     public function testGetLocaleWithInvalidLocaleCode()
     {

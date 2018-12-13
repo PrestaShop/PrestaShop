@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Integration\PrestaShopBundle\Controller\Api;
 
 /**
@@ -181,6 +180,8 @@ class TranslationControllerTest extends ApiTestCase
     /**
      * @dataProvider getGoodEditTranslations
      * @test
+     *
+     * @param mixed $params
      */
     public function itShouldReturnValidResponseWhenRequestingTranslationsEdition($params)
     {
@@ -223,6 +224,8 @@ class TranslationControllerTest extends ApiTestCase
     /**
      * @dataProvider getGoodResetTranslations
      * @test
+     *
+     * @param mixed $params
      */
     public function itShouldReturnValidResponseWhenRequestingTranslationsReset($params)
     {
@@ -343,6 +346,8 @@ class TranslationControllerTest extends ApiTestCase
     }
 
     /**
+     * @param mixed $params
+     *
      * @return array
      */
     private function assertOkResponseOnTranslationEdition($params)

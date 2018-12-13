@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 
 /**
- * Defines interface for service that get required fields for customer sign up
+ * Defines interface for service that get required fields for customer sign up.
  */
 interface GetRequiredFieldsForCustomerHandlerInterface
 {

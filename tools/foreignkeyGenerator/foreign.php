@@ -58,6 +58,7 @@ function clearForeignKeys()
  * Set id_parent to id_self when id_parent = 0.
  *
  * @param string table name to process
+ * @param mixed $table
  */
 function noNullParent($table)
 {
@@ -177,6 +178,7 @@ function forgeChangesQueries($changes)
  * Forge the Foreign keys queries.
  *
  * @param relations Array describing the foreign keys
+ * @param mixed $relations
  *
  * @return array of queries to be executed
  */

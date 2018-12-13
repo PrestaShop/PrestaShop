@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Localization\Number;
 
 use PHPUnit\Framework\TestCase;
@@ -62,17 +61,14 @@ class FormatterTest extends TestCase
     /**
      * Given a valid number and valid number specification
      * When asking the number formatter to format the said number, following the specification rules
-     * Then the expected result should be retrieved
+     * Then the expected result should be retrieved.
      *
      * @param array $localeParams
      *  The locale params
-     *
      * @param NumberSpecificationInterface $numberSpecification
      *  The number specification
-     *
-     * @param int|float|string $number
+     * @param float|int|string $number
      *  The number to be formatted
-     *
      * @param string $expectedResult
      *  The formatted number
      *

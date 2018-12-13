@@ -61,9 +61,9 @@ final class ListParametersUpdater
      * @param array $persistedFilterParameters
      * @param array $defaultFilterParameters
      *
-     * @return array
-     *
      * @throws ProductException
+     *
+     * @return array
      */
     public function buildListParameters(
         array $queryFilterParameters,
@@ -114,9 +114,9 @@ final class ListParametersUpdater
      * @param array $persistedFilterParameters
      * @param array $defaultFilterParameters
      *
-     * @return string|int
-     *
      * @throws ProductException
+     *
+     * @return string|int
      */
     private function getParameter(
         $parameterName,

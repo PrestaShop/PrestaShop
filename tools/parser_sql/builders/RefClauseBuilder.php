@@ -1,6 +1,6 @@
 <?php
 /**
- * RefClauseBuilder.php
+ * RefClauseBuilder.php.
  *
  * Builds reference clauses within a JOIN.
  *
@@ -35,10 +35,9 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: RefClauseBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
 require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
 require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
 require_once dirname(__FILE__) . '/OperatorBuilder.php';
@@ -50,7 +49,6 @@ require_once dirname(__FILE__) . '/ConstantBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class RefClauseBuilder {
 

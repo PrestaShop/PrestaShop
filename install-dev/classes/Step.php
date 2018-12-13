@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,36 +23,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 class Step
 {
     /**
-     *
      * @var string
      */
     protected $name;
 
     /**
-     *
      * @var string
      */
     protected $displayName;
 
     /**
-     *
      * @var string
      */
     protected $controllerName;
 
     /**
-     *
      * @var object
      */
     protected $instance;
 
     /**
-     *
      * @return string
      */
     public function __toString()
@@ -61,7 +54,6 @@ class Step
     }
 
     /**
-     *
      * @return string
      */
     public function getName()
@@ -70,7 +62,6 @@ class Step
     }
 
     /**
-     *
      * @return string
      */
     public function getdisplayName()
@@ -79,7 +70,6 @@ class Step
     }
 
     /**
-     *
      * @return string
      */
     public function getControllerName()
@@ -88,8 +78,8 @@ class Step
     }
 
     /**
-     *
      * @param string $name
+     *
      * @return Step
      */
     public function setName($name)
@@ -100,8 +90,8 @@ class Step
     }
 
     /**
-     *
      * @param string $displayName
+     *
      * @return Step
      */
     public function setDisplayName($displayName)
@@ -112,8 +102,9 @@ class Step
     }
 
     /**
-     *
      * @param string $name
+     * @param mixed $controllerName
+     *
      * @return Step
      */
     public function setControllerName($controllerName)
@@ -124,7 +115,6 @@ class Step
     }
 
     /**
-     *
      * @return object
      */
     public function getControllerInstance()

@@ -335,8 +335,10 @@ function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path,
 }
 
 /**
- * Get a file from a URL using whichever mechanism is enabled
+ * Get a file from a URL using whichever mechanism is enabled.
+ *
  * @param string $url the url to get the file from
+ *
  * @return bool|string false or the file's string content
  */
 function get_file_by_url($url)

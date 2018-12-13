@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustome
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetRequiredFieldsForCustomerHandlerInterface;
 
 /**
- * Handles query which gets required fields for customer sign up
+ * Handles query which gets required fields for customer sign up.
  *
  * @internal
  */

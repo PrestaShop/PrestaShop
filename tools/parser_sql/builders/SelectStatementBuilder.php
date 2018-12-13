@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectStatement.php
+ * SelectStatement.php.
  *
  * Builds the SELECT statement
  *
@@ -35,10 +35,9 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: SelectStatementBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
 require_once dirname(__FILE__) . '/LimitBuilder.php';
 require_once dirname(__FILE__) . '/SelectBuilder.php';
 require_once dirname(__FILE__) . '/FromBuilder.php';
@@ -52,7 +51,6 @@ require_once dirname(__FILE__) . '/OrderByBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class SelectStatementBuilder {
 

@@ -49,6 +49,7 @@ interface ProductInterface
      * Do a safe delete on given product IDs.
      *
      * @param array $productListId The ID list of products to delete
+     * @param array $productIdList
      *
      * @throws \PrestaShopBundle\Exception\UpdateProductException If deletion failed (some normal cases can brings this, it's not a Development error)
      *
@@ -60,6 +61,7 @@ interface ProductInterface
      * Duplicates the given product IDs.
      *
      * @param array $productListId The ID list of products to delete
+     * @param array $productIdList
      *
      * @throws \PrestaShopBundle\Exception\UpdateProductException if duplication failed
      *

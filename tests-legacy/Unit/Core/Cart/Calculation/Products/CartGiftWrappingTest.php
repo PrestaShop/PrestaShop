@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Cart\Calculation\Products;
 
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
@@ -54,6 +53,10 @@ class CartGiftWrappingTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartWithoutCartRulesProvider
+     *
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $expectedTotalWithGiftWrapping
      */
     public function testCartWithGiftWrapping($productData, $expectedTotal, $expectedTotalWithGiftWrapping)
     {

@@ -177,6 +177,8 @@ class SupplyOrderCore extends ObjectModel
 
     /**
      * @see ObjectModel::update()
+     *
+     * @param mixed $null_values
      */
     public function update($null_values = false)
     {
@@ -193,6 +195,9 @@ class SupplyOrderCore extends ObjectModel
 
     /**
      * @see ObjectModel::add()
+     *
+     * @param mixed $autodate
+     * @param mixed $null_values
      */
     public function add($autodate = true, $null_values = false)
     {
@@ -487,6 +492,9 @@ class SupplyOrderCore extends ObjectModel
 
     /**
      * @see ObjectModel::hydrate()
+     *
+     * @param array $data
+     * @param null|mixed $id_lang
      */
     public function hydrate(array $data, $id_lang = null)
     {
@@ -558,11 +566,11 @@ class SupplyOrderCore extends ObjectModel
         );
     }
 
-    /*********************************\
+    /*\
      *
      * Webservices Specific Methods
      *
-     *********************************/
+     */
 
     /**
      * Webservice : gets the ids supply_order_detail associated to this order.

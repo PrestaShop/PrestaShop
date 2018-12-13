@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,12 +25,12 @@
  */
 
 /**
- * Step 2 : display license form
+ * Step 2 : display license form.
  */
 class InstallControllerHttpLicense extends InstallControllerHttp implements HttpConfigureInterface
 {
     /**
-     * Process license form
+     * Process license form.
      *
      * @see HttpConfigureInterface::process()
      */
@@ -41,7 +41,7 @@ class InstallControllerHttpLicense extends InstallControllerHttp implements Http
     }
 
     /**
-     * Licence agrement must be checked to validate this step
+     * Licence agrement must be checked to validate this step.
      *
      * @see HttpConfigureInterface::validate()
      */
@@ -55,7 +55,7 @@ class InstallControllerHttpLicense extends InstallControllerHttp implements Http
     }
 
     /**
-     * Display license step
+     * Display license step.
      */
     public function display()
     {

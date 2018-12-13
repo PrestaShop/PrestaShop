@@ -67,7 +67,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var bool */
     protected $get_shop_from_context = true;
 
-    /** @var array|null Holds required fields for each ObjectModel class */
+    /** @var null|array Holds required fields for each ObjectModel class */
     protected static $fieldsRequiredDatabase = null;
 
     /**
@@ -163,13 +163,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var array Contains current object definition. */
     protected $def;
 
-    /** @var array|null List of specific fields to update (all fields if null). */
+    /** @var null|array List of specific fields to update (all fields if null). */
     protected $update_fields = null;
 
     /** @var Db An instance of the db in order to avoid calling Db::getInstance() thousands of times. */
     protected static $db = false;
 
-    /** @var array|null List of HTML field (based on self::TYPE_HTML) */
+    /** @var null|array List of HTML field (based on self::TYPE_HTML) */
     public static $htmlFields = null;
 
     /** @var bool Enables to define an ID before adding object. */
@@ -209,10 +209,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Builds the object.
      *
-     * @param int|null $id if specified, loads and existing object from DB (optional)
-     * @param int|null $id_lang required if object is multilingual (optional)
-     * @param int|null $id_shop ID shop for objects with multishop tables
+     * @param null|int $id if specified, loads and existing object from DB (optional)
+     * @param null|int $id_lang required if object is multilingual (optional)
+     * @param null|int $id_shop ID shop for objects with multishop tables
      * @param PrestaShopBundle\Translation\Translator
+     * @param null|mixed $translator
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -275,9 +276,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * Prepare fields for ObjectModel class (add, update)
      * All fields are verified (pSQL, intval, ...).
      *
-     * @return array All object fields
-     *
      * @throws PrestaShopException
+     *
+     * @return array All object fields
      */
     public function getFields()
     {
@@ -321,9 +322,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @return array
-     *
      * @throws PrestaShopException
+     *
+     * @return array
      */
     public function getFieldsLang()
     {
@@ -499,9 +500,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param bool $null_values
      * @param bool $auto_date
      *
-     * @return bool Insertion result
-     *
      * @throws PrestaShopException
+     *
+     * @return bool Insertion result
      */
     public function save($null_values = false, $auto_date = true)
     {
@@ -514,10 +515,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param bool $auto_date
      * @param bool $null_values
      *
-     * @return bool Insertion result
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Insertion result
      */
     public function add($auto_date = true, $null_values = false)
     {
@@ -607,9 +608,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * Takes current object ID, gets its values from database,
      * saves them in a new row and loads newly saved values as a new object.
      *
-     * @return ObjectModel|false
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return ObjectModel|false
      */
     public function duplicateObject()
     {
@@ -688,10 +689,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param bool $null_values
      *
-     * @return bool
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool
      */
     public function update($null_values = false)
     {
@@ -813,9 +814,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Deletes current object from database.
      *
-     * @return bool True if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool True if delete was successful
      */
     public function delete()
     {
@@ -882,9 +883,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Toggles object status in database.
      *
-     * @return bool Update result
-     *
      * @throws PrestaShopException
+     *
+     * @return bool Update result
      */
     public function toggleStatus()
     {
@@ -908,9 +909,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param array $fields_array
      *
-     * @return array
-     *
      * @throws PrestaShopException
+     *
+     * @return array
      */
     protected function getTranslationsFields($fields_array)
     {
@@ -974,9 +975,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param bool $die
      * @param bool $error_return
      *
-     * @return bool|string true, false or error message
-     *
      * @throws PrestaShopException
+     *
+     * @return bool|string true, false or error message
      */
     public function validateFields($die = true, $error_return = false)
     {
@@ -1008,9 +1009,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param bool $die
      * @param bool $errorReturn
      *
-     * @return bool|string true, false or error message
-     *
      * @throws PrestaShopException
+     *
+     * @return bool|string true, false or error message
      */
     public function validateFieldsLang($die = true, $errorReturn = false)
     {
@@ -1058,13 +1059,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param string $field Field name
      * @param mixed $value Field value
-     * @param int|null $id_lang Language ID
+     * @param null|int $id_lang Language ID
      * @param array $skip array of fields to skip
      * @param bool $human_errors if true, uses more descriptive, translatable error strings
      *
-     * @return true|string true or error message string
-     *
      * @throws PrestaShopException
+     *
+     * @return string|true true or error message string
      */
     public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
     {
@@ -1181,7 +1182,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param string $field Field name
      * @param string $class ObjectModel class name
      * @param bool $htmlentities If true, applies htmlentities() to result string
-     * @param Context|null $context Context object
+     * @param null|Context $context Context object
      *
      * @return string
      */
@@ -1271,7 +1272,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Returns webservice parameters of this object.
      *
-     * @param string|null $ws_params_attribute_name
+     * @param null|string $ws_params_attribute_name
      *
      * @return array
      */
@@ -1375,9 +1376,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param string $sql_sort
      * @param string $sql_limit
      *
-     * @return array|null
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return array|null
      */
     public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
     {
@@ -1419,9 +1420,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param bool $htmlentities
      *
-     * @return array
-     *
      * @throws PrestaShopException
+     *
+     * @return array
      */
     public function validateFieldsRequiredDatabase($htmlentities = true)
     {
@@ -1453,9 +1454,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param bool $all if true, returns required fields of all object classes
      *
-     * @return array|null
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return array|null
      */
     public function getFieldsRequiredDatabase($all = false)
     {
@@ -1532,9 +1533,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param array $fields
      *
-     * @return bool
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return bool
      */
     public function addFieldsRequiredDatabase($fields)
     {
@@ -1582,7 +1583,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @param int|null $id_shop
+     * @param null|int $id_shop
      *
      * @return bool
      */
@@ -1617,11 +1618,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * This function associate an item to its context.
      *
-     * @param int|array $id_shops
-     *
-     * @return bool|void
+     * @param array|int $id_shops
      *
      * @throws PrestaShopDatabaseException
+     *
+     * @return bool|void
      */
     public function associateTo($id_shops)
     {
@@ -1655,9 +1656,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @return array
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return array
      */
     public function getAssociatedShops()
     {
@@ -1681,9 +1682,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param $id
      *
-     * @return bool|void
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return bool|void
      */
     public function duplicateShops($id)
     {
@@ -1867,7 +1868,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @param string|null $table Name of table linked to entity
+     * @param null|string $table Name of table linked to entity
      * @param bool $has_active_column True if the table has an active column
      *
      * @return bool
@@ -1895,7 +1896,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @since 1.5.0.1
      *
      * @param array $data
-     * @param int|null $id_lang
+     * @param null|int $id_lang
      */
     public function hydrate(array $data, $id_lang = null)
     {
@@ -1918,11 +1919,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param string $class Class of objects to hydrate
      * @param array $datas List of data (multi-dimensional array)
-     * @param int|null $id_lang
-     *
-     * @return array
+     * @param null|int $id_lang
      *
      * @throws PrestaShopException
+     *
+     * @return array
      */
     public static function hydrateCollection($class, array $datas, $id_lang = null)
     {
@@ -1974,7 +1975,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * Returns object definition.
      *
      * @param string $class Name of object
-     * @param string|null $field Name of field if we want the definition of one field only
+     * @param null|string $field Name of field if we want the definition of one field only
      *
      * @return array
      */
@@ -2088,11 +2089,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @since 1.5.0.1
      *
      * @param string $field_name
-     * @param int|null $id_lang
-     *
-     * @return mixed
+     * @param null|int $id_lang
      *
      * @throws PrestaShopException
+     *
+     * @return mixed
      */
     public function getFieldByLang($field_name, $id_lang = null)
     {

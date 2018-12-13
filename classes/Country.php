@@ -113,9 +113,9 @@ class CountryCore extends ObjectModel
     /**
      * Deletes current Country from the database.
      *
-     * @return bool True if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool True if delete was successful
      */
     public function delete()
     {
@@ -283,7 +283,7 @@ class CountryCore extends ObjectModel
     /**
      * Get a country id with its name.
      *
-     * @param int|null $idLang Language ID
+     * @param null|int $idLang Language ID
      * @param string $country Country Name
      *
      * @return int Country ID
@@ -509,10 +509,10 @@ class CountryCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Country has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the Country has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {

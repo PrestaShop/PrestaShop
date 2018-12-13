@@ -264,6 +264,7 @@ class ModuleController extends ModuleAbstractController
      * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
      *
      * @param Request $request
+     * @param mixed $moduleId
      *
      * @return Response
      */
@@ -774,6 +775,7 @@ class ModuleController extends ModuleAbstractController
      * Get categories and its modules.
      *
      * @param array $modules List of installed modules
+     * @param AdminModuleDataProvider $modulesProvider
      *
      * @return array
      */

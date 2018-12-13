@@ -84,6 +84,7 @@ class FeatureValueCore extends ObjectModel
      *
      * @param int $idLang Language id
      * @param bool $idFeature Feature id
+     * @param mixed $custom
      *
      * @return array Array with feature's values
      */
@@ -198,10 +199,10 @@ class FeatureValueCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the FeatureValue has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the FeatureValue has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -218,10 +219,10 @@ class FeatureValueCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the FeatureValue has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     *
+     * @return bool Indicates whether the FeatureValue has been successfully updated
      */
     public function update($nullValues = false)
     {
@@ -236,9 +237,9 @@ class FeatureValueCore extends ObjectModel
     /**
      * Deletes current FeatureValue from the database.
      *
-     * @return bool `true` if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {

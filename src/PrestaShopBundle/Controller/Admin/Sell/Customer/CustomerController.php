@@ -161,7 +161,7 @@ class CustomerController extends AbstractAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
-     *      redirectRoute="admin_customers_index"
+     *     redirectRoute="admin_customers_index"
      * )
      *
      * @param int $customerId
@@ -205,11 +205,11 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * Transforms guest to customer
+     * Transforms guest to customer.
      *
      * @AdminSecurity(
      *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
-     *      redirectRoute="admin_customers_index"
+     *     redirectRoute="admin_customers_index"
      * )
      *
      * @param int $customerId
@@ -253,11 +253,11 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * Sets required fields for customer
+     * Sets required fields for customer.
      *
      * @AdminSecurity(
      *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
-     *      redirectRoute="admin_customers_index"
+     *     redirectRoute="admin_customers_index"
      * )
      *
      * @param Request $request

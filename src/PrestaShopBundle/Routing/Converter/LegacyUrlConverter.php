@@ -64,10 +64,10 @@ final class LegacyUrlConverter
     /**
      * @param array $parameters
      *
-     * @return string
-     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
+     *
+     * @return string
      */
     public function convertByParameters(array $parameters)
     {
@@ -85,10 +85,10 @@ final class LegacyUrlConverter
     /**
      * @param string $url
      *
-     * @return string
-     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
+     *
+     * @return string
      */
     public function convertByUrl($url)
     {
@@ -109,10 +109,10 @@ final class LegacyUrlConverter
      *
      * @param Request $request
      *
-     * @return string
-     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
+     *
+     * @return string
      */
     public function convertByRequest(Request $request)
     {
@@ -151,9 +151,9 @@ final class LegacyUrlConverter
     /**
      * @param array $parameters
      *
-     * @return LegacyRoute
-     *
      * @throws RouteNotFoundException
+     *
+     * @return LegacyRoute
      */
     private function findLegacyRouteNameByParameters(array $parameters)
     {

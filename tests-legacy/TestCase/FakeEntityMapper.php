@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,9 +37,12 @@ class FakeEntityMapper extends EntityMapper
 
     /**
      * Stores the given entity in the fake database, so load call with the same id will fill the entity with it.
+     *
      * @param ObjectModel $entity
-     * @return $this
+     *
      * @throws Exception
+     *
+     * @return $this
      */
     public function willReturn(ObjectModel $entity)
     {
@@ -56,6 +59,7 @@ class FakeEntityMapper extends EntityMapper
      * @param $id
      * @param null $id_lang
      * @param null $id_shop
+     *
      * @throws Exception
      */
     public function forId($id, $id_lang = null, $id_shop = null)
@@ -72,11 +76,13 @@ class FakeEntityMapper extends EntityMapper
 
     /**
      * Fills the given entity with fields from the entity stored in the fake database if it exists.
+     *
      * @param $id
      * @param $id_lang
      * @param $entity
      * @param $entity_defs
      * @param $id_shop
+     * @param mixed $should_cache_objects
      */
     public function load($id, $id_lang, $entity, $entity_defs, $id_shop, $should_cache_objects)
     {

@@ -40,9 +40,9 @@ final class MetaEraser
      *
      * @param array $metaIds
      *
-     * @return array
-     *
      * @throws PrestaShopException
+     *
+     * @return array
      */
     public function erase(array $metaIds)
     {

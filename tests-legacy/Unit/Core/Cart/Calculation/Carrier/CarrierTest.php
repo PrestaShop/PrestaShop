@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Cart\Calculation\Carrier;
 
 use Configuration;
@@ -33,6 +32,14 @@ class CarrierTest extends AbstractCarrierTest
 
     /**
      * @dataProvider shippingFeesProviderCarrier1
+     *
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $expectedShippingFees
+     * @param mixed $expectedWrappingFees
+     * @param mixed $cartRuleData
+     * @param mixed $addressId
+     * @param mixed $carrierId
      */
     public function testShippingFeesCarrier1(
         $productData,
@@ -56,6 +63,14 @@ class CarrierTest extends AbstractCarrierTest
 
     /**
      * @dataProvider shippingFeesProviderCarrier2
+     *
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $expectedShippingFees
+     * @param mixed $expectedWrappingFees
+     * @param mixed $cartRuleData
+     * @param mixed $addressId
+     * @param mixed $carrierId
      */
     public function testShippingFeesCarrier2(
         $productData,

@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
@@ -236,6 +235,7 @@ class RouterProviderTest extends TestCase
 
     /**
      * @param array $routes
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
      */
     private function buildMultipleRouterMock(array $routes)
@@ -267,6 +267,7 @@ class RouterProviderTest extends TestCase
 
     /**
      * @param array $routes
+     *
      * @return RouteCollection
      */
     private function buildRouteCollection(array $routes)

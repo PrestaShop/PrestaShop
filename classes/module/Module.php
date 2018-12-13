@@ -156,7 +156,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var Smarty_Data */
     protected $smarty;
 
-    /** @var Smarty_Internal_Template|null */
+    /** @var null|Smarty_Internal_Template */
     protected $current_subtemplate = null;
 
     protected static $update_translations_after_install = true;
@@ -185,7 +185,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
 
-    /** @var array|null used to cache module ids */
+    /** @var null|array used to cache module ids */
     private static $cachedModuleNames = null;
 
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
@@ -967,6 +967,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param mixed $id_hook Hook id (can be a hook name since 1.5.0)
      * @param array $shop_list List of shop
+     * @param mixed $hook_id
      *
      * @return bool result
      */
@@ -980,6 +981,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param int $id_hook Hook id
      * @param array $shop_list List of shop
+     * @param mixed $hook_id
      *
      * @return bool result
      */
@@ -1035,6 +1037,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param int $hookID Hook id
      * @param array $excepts List of shopID and file name
+     * @param mixed $id_hook
      *
      * @return bool result
      */
@@ -1239,6 +1242,8 @@ abstract class ModuleCore implements ModuleInterface
      * Return available modules.
      *
      * @param bool $use_config in order to use config.xml file in module dir
+     * @param mixed $logged_on_addons
+     * @param mixed $id_employee
      *
      * @return array Modules
      */
@@ -1707,6 +1712,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $name The module name (the folder name)
      * @param string $key The key provided by addons
+     * @param mixed $module_name
      *
      * @return int
      */
@@ -1873,6 +1879,7 @@ abstract class ModuleCore implements ModuleInterface
      * Create the Addons API call from the module name only.
      *
      * @param string $name Module dir name
+     * @param mixed $module_name
      *
      * @return bool Returns if the module is trusted by addons.prestashop.com
      */
@@ -1954,7 +1961,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $string String to translate
      * @param bool|string $specific filename to use in translation key
-     * @param string|null $locale Give a context for the translation
+     * @param null|string $locale Give a context for the translation
      *
      * @return string Translation
      */
@@ -1968,7 +1975,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Reposition module
+     * Reposition module.
      *
      * @param bool $id_hook Hook ID
      * @param bool $way Up (0) or Down (1)
@@ -2028,7 +2035,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Reorder modules position
+     * Reorder modules position.
      *
      * @param bool $id_hook Hook ID
      * @param array $shop_list List of shop
@@ -2061,7 +2068,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Helper displaying error message(s).
      *
-     * @param string|array $error
+     * @param array|string $error
      *
      * @return string
      */
@@ -2093,7 +2100,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Helper displaying warning message(s).
      *
-     * @param string|array $warning
+     * @param array|string $warning
      *
      * @return string
      */
@@ -2143,7 +2150,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Helper displaying information message(s).
      *
-     * @param string|array $information
+     * @param array|string $information
      *
      * @return string
      */
@@ -2171,10 +2178,11 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Return exceptions for module in hook
+     * Return exceptions for module in hook.
      *
      * @param int $id_module Module ID
      * @param int $id_hook Hook ID
+     * @param mixed $dispatch
      *
      * @return array Exceptions
      */
@@ -2229,9 +2237,10 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Return exceptions for module in hook
+     * Return exceptions for module in hook.
      *
      * @param int $id_hook Hook ID
+     * @param mixed $dispatch
      *
      * @return array Exceptions
      */
@@ -2303,6 +2312,9 @@ abstract class ModuleCore implements ModuleInterface
 
     /**
      * Template management (display, overload, cache).
+     *
+     * @param mixed $module_name
+     * @param mixed $template
      */
     protected static function _isTemplateOverloadedStatic($module_name, $template)
     {
@@ -2417,8 +2429,8 @@ abstract class ModuleCore implements ModuleInterface
 
     /**
      * @param string $template
-     * @param string|null $cache_id
-     * @param string|null $compile_id
+     * @param null|string $cache_id
+     * @param null|string $compile_id
      *
      * @return Smarty_Internal_Template
      */
@@ -2725,6 +2737,7 @@ abstract class ModuleCore implements ModuleInterface
      * Get authorized modules for a client group.
      *
      * @param int $group_id
+     * @param mixed $shops
      *
      * @return array|null
      */
@@ -2809,7 +2822,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Return module position for a given hook
+     * Return module position for a given hook.
      *
      * @param bool $id_hook Hook ID
      *
@@ -3366,7 +3379,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $serviceName
      *
-     * @return object|false if a container is not available, it returns false
+     * @return false|object if a container is not available, it returns false
      */
     public function get($serviceName)
     {

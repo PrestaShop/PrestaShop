@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Select all current payment modules for the carrier restriction
+ * Select all current payment modules for the carrier restriction.
  */
 function select_current_payment_modules()
 {

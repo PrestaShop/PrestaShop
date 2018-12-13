@@ -1,7 +1,7 @@
 <?php
 
 /**
- * php-sql-parser.php
+ * php-sql-parser.php.
  *
  * A pure PHP SQL (non validating) parser w/ focus on MySQL dialect of SQL
  *
@@ -36,9 +36,9 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: PHPSQLParser.php 757 2013-12-16 09:54:05Z phosco@gmx.de $
  */
-
 require_once dirname(__FILE__) . '/positions/PositionCalculator.php';
 require_once dirname(__FILE__) . '/processors/DefaultProcessor.php';
 
@@ -57,7 +57,7 @@ class PHPSQLParser {
      * Constructor. It simply calls the parse() function. 
      * Use the public variable $parsed to get the output.
      * 
-     * @param String  $sql           The SQL statement.
+     * @param string  $sql           The SQL statement.
      * @param boolean $calcPositions True, if the output should contain [position], false otherwise.
      */
     public function __construct($sql = false, $calcPositions = false) {
@@ -74,7 +74,7 @@ class PHPSQLParser {
      * of the positions needs some time, if you don't need positions in
      * your application, set the parameter to false.
      * 
-     * @param String  $sql           The SQL statement.
+     * @param string  $sql           The SQL statement.
      * @param boolean $calcPositions True, if the output should contain [position], false otherwise.
      * 
      * @return array An associative array with all meta information about the SQL statement.

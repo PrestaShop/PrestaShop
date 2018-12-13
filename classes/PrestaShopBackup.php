@@ -184,6 +184,8 @@ class PrestaShopBackupCore
     /**
      * Deletes a range of backup files.
      *
+     * @param mixed $list
+     *
      * @return bool True on success
      */
     public function deleteSelection($list)

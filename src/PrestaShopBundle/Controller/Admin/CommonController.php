@@ -238,9 +238,9 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $controller
      * @param string $action
      *
-     * @return JsonResponse
-     *
      * @throws \LogicException
+     *
+     * @return JsonResponse
      */
     public function resetSearchAction($controller, $action)
     {

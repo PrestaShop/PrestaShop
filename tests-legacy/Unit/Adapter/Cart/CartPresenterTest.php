@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Adapter\Cart;
 
 use Configuration;
@@ -56,7 +55,7 @@ class CartPresenterTest extends UnitTestCase
     /**
      * We check that our attributes are properly parsed from a string, EVEN IF their value or label also have the
      * separator in them.
-     * See https://regex101.com/r/wlRNtX/1 for examples used
+     * See https://regex101.com/r/wlRNtX/1 for examples used.
      *
      * @param string $asString
      * @param array $asArray

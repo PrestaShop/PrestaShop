@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,16 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\TestCase;
 
 class File
 {
     /**
-     * Recursivly copy a directory
+     * Recursivly copy a directory.
      *
-     * @var $src the source path (eg. /home/dir/to/copy)
+     * @var the source path (eg. /home/dir/to/copy)
      * @var $dst the destination path (eg. /home/)
+     *
+     * @param mixed $src
+     * @param mixed $dst
      */
     public static function recurseCopy($src, $dst)
     {
@@ -53,9 +55,11 @@ class File
     }
 
     /**
-     * Recursivly delete a directory
+     * Recursivly delete a directory.
      *
-     * @var $dir the directory to delete path (eg. /home/dir/to/delete)
+     * @var the directory to delete path (eg. /home/dir/to/delete)
+     *
+     * @param mixed $dir
      */
     public static function recurseDelete($dir)
     {

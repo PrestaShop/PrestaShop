@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Install\LanguageList;
 
 class InstallControllerHttp
@@ -61,7 +60,7 @@ class InstallControllerHttp
     public $session;
 
     /**
-     * LanguageList
+     * LanguageList.
      */
     public $language;
 
@@ -275,7 +274,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get steps list
+     * Get steps list.
      *
      * @return array
      */
@@ -290,9 +289,10 @@ class InstallControllerHttp
     }
 
     /**
-     * Find offset of a step by name
+     * Find offset of a step by name.
      *
      * @param string $step Step name
+     *
      * @return int
      */
     public static function getStepOffset($step)
@@ -301,7 +301,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Make a HTTP redirection to a step
+     * Make a HTTP redirection to a step.
      *
      * @param string $step
      */
@@ -312,7 +312,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Check if current step is first step in list of steps
+     * Check if current step is first step in list of steps.
      *
      * @return bool
      */
@@ -322,7 +322,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Check if current step is last step in list of steps
+     * Check if current step is last step in list of steps.
      *
      * @return bool
      */
@@ -332,9 +332,10 @@ class InstallControllerHttp
     }
 
     /**
-     * Check is given step is already finished
+     * Check is given step is already finished.
      *
      * @param string $step
+     *
      * @return bool
      */
     public function isStepFinished($step)
@@ -343,7 +344,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get telephone used for this language
+     * Get telephone used for this language.
      *
      * @return string
      */
@@ -365,7 +366,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get link to documentation for this language
+     * Get link to documentation for this language.
      *
      * Enter description here ...
      */
@@ -376,7 +377,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get link to tutorial video for this language
+     * Get link to tutorial video for this language.
      *
      * Enter description here ...
      */
@@ -387,7 +388,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get link to tailored help for this language
+     * Get link to tailored help for this language.
      *
      * Enter description here ...
      */
@@ -398,7 +399,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get link to forum for this language
+     * Get link to forum for this language.
      *
      * Enter description here ...
      */
@@ -409,7 +410,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get link to blog for this language
+     * Get link to blog for this language.
      *
      * Enter description here ...
      */
@@ -419,7 +420,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get link to support for this language
+     * Get link to support for this language.
      *
      * Enter description here ...
      */
@@ -434,7 +435,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Send AJAX response in JSON format {success: bool, message: string}
+     * Send AJAX response in JSON format {success: bool, message: string}.
      *
      * @param bool $success
      * @param string $message
@@ -452,10 +453,12 @@ class InstallControllerHttp
     }
 
     /**
-     * Display a template
+     * Display a template.
      *
      * @param string $template Template name
      * @param bool $get_output Is true, return template html
+     * @param null|mixed $path
+     *
      * @return string
      */
     public function displayTemplate($template, $get_output = false, $path = null)

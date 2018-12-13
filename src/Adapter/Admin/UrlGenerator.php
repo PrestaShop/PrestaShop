@@ -59,6 +59,7 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @param LegacyContext $legacyContext
      * @param Router
+     * @param Router $router
      */
     public function __construct(LegacyContext $legacyContext, Router $router)
     {

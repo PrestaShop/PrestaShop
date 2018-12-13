@@ -1,6 +1,6 @@
 <?php
 /**
- * ColumnReferenceBuilder.php
+ * ColumnReferenceBuilder.php.
  *
  * Builds Column references.
  *
@@ -35,10 +35,9 @@
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: ColumnReferenceBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
 require_once dirname(__FILE__) . '/AliasBuilder.php';
 require_once dirname(__FILE__) . '/DirectionBuilder.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
@@ -48,7 +47,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
 class ColumnReferenceBuilder {
 

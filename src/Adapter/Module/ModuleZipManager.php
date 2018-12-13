@@ -80,9 +80,9 @@ class ModuleZipManager
      *
      * @param string $source
      *
-     * @return string
-     *
      * @throws Exception If unable to find the module name
+     *
+     * @return string
      */
     public function getName($source)
     {

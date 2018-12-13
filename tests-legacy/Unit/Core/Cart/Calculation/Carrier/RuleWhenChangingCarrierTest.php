@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,12 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Cart\Calculation\Carrier;
 
 
 /**
- * these tests aim to check the correct calculation of cart total when applying cart rules
+ * these tests aim to check the correct calculation of cart total when applying cart rules.
  *
  * products are inserted as fixtures
  * products are inserted in cart from data providers

@@ -105,8 +105,8 @@ class ManufacturerCore extends ObjectModel
     /**
      * ManufacturerCore constructor.
      *
-     * @param int|null $id
-     * @param int|null $idLang
+     * @param null|int $id
+     * @param null|int $idLang
      */
     public function __construct($id = null, $idLang = null)
     {
@@ -119,9 +119,9 @@ class ManufacturerCore extends ObjectModel
     /**
      * Deletes current Manufacturer from the database.
      *
-     * @return bool `true` if delete was successful
-     *
      * @throws PrestaShopException
+     *
+     * @return bool `true` if delete was successful
      */
     public function delete()
     {
@@ -142,6 +142,8 @@ class ManufacturerCore extends ObjectModel
      * Delete several objects from database.
      *
      * return boolean Deletion result
+     *
+     * @param mixed $selection
      */
     public function deleteSelection($selection)
     {
@@ -182,6 +184,8 @@ class ManufacturerCore extends ObjectModel
      * @param int $p
      * @param int $n
      * @param bool $allGroup
+     * @param mixed $group_by
+     * @param mixed $withProduct
      *
      * @return array Manufacturers
      */
@@ -260,6 +264,7 @@ class ManufacturerCore extends ObjectModel
      * List of manufacturers.
      *
      * @param int $idLang Specify the id of the language used
+     * @param mixed $format
      *
      * @return array Manufacturers lite tree
      */
@@ -362,7 +367,7 @@ class ManufacturerCore extends ObjectModel
      * @param bool $getTotal
      * @param bool $active
      * @param bool $activeCategory
-     * @param Context|null $context
+     * @param null|Context $context
      *
      * @return array|bool
      */

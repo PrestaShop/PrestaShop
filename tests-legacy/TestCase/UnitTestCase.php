@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\TestCase;
 
 use Cache;
@@ -86,6 +85,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * @param null $mock
+     *
      * @return Db|mixed
      */
     public function setupDatabaseMock($mock = null)
@@ -210,7 +210,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
         Cache::deleteTestingInstance();
         Db::deleteTestingInstance();
         Context::deleteTestingInstance();
-        /**
+        /*
          * @todo proxy static calls inside Configuration to a mockable instance
          * so that Configuration can be (indirectly) mocked.
          * This way we'll avoid doing obscure teardown stuff like below.
@@ -231,7 +231,8 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
      * @param array  $parameters Array of parameters to pass into method.
      *
      * @return mixed Method return.
-     * @link https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
+     *
+     * @see https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
      */
     protected function invokeMethod(&$object, $methodName, array $parameters = array())
     {

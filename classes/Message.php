@@ -108,6 +108,7 @@ class MessageCore extends ObjectModel
      *
      * @param int $idOrder Order ID
      * @param bool $private return WITH private messages
+     * @param null|Context $context
      *
      * @return array Messages
      */
@@ -142,6 +143,8 @@ class MessageCore extends ObjectModel
      *
      * @param int $id_order Order ID
      * @param bool $private return WITH private messages
+     * @param mixed $idCart
+     * @param null|Context $context
      *
      * @return array Messages
      */
@@ -174,6 +177,7 @@ class MessageCore extends ObjectModel
      *
      * @param int $idMessage Message ID
      * @param int $id_emplyee Employee ID
+     * @param mixed $idEmployee
      *
      * @return bool
      */

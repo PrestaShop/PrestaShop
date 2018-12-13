@@ -106,6 +106,7 @@ abstract class StockManagementRepository
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
      * @param $tablePrefix
+     * @param EntityManager $entityManager
      *
      * @throws NotImplementedException
      */
@@ -334,8 +335,8 @@ abstract class StockManagementRepository
 
     /**
      * @param Statement $statement
-     * @param QueryParamsCollection|null $queryParams
-     * @param ProductIdentity|null $productIdentity
+     * @param null|QueryParamsCollection $queryParams
+     * @param null|ProductIdentity $productIdentity
      */
     protected function bindStockManagementValues(
         Statement $statement,

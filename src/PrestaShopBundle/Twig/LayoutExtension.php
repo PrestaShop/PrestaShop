@@ -57,6 +57,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      *
      * @param LegacyContext $context
      * @param string environment
+     * @param mixed $environment
      */
     public function __construct(LegacyContext $context, $environment)
     {
@@ -209,6 +210,7 @@ EOF;
      * @param string $controller the controller name
      * @param bool $withToken
      * @param array[string] $extraParams
+     * @param mixed $controllerName
      *
      * @return string
      */
@@ -219,6 +221,8 @@ EOF;
 
     /**
      * KISS function to get an embeded iframe from Youtube.
+     *
+     * @param mixed $watchUrl
      */
     public function getYoutubeLink($watchUrl)
     {

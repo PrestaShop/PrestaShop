@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Foundation\FileSystem;
 
 use LegacyTests\TestCase\UnitTestCase;
@@ -113,7 +112,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * Rationale: ls /some/non/existing/file => ls: cannot access /some/non/existing/file: No such file or directory
+     * Rationale: ls /some/non/existing/file => ls: cannot access /some/non/existing/file: No such file or directory.
      */
     public function testListEntriesRecursivelyThrowsIfPathDoesNotExist()
     {

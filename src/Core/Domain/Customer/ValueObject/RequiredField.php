@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 class RequiredField
 {
     /**
-     * Partner offers field name
+     * Partner offers field name.
      */
     const PARTNER_OFFERS = 'optin';
 }

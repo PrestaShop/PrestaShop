@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Transforms guest (customer without password) into registered customer account
+ * Transforms guest (customer without password) into registered customer account.
  */
 class TransformGuestToCustomerCommand
 {

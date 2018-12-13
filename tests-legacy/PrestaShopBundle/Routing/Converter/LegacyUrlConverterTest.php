@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
@@ -152,7 +151,7 @@ class LegacyUrlConverterTest extends TestCase
 
     /**
      * If a non existent action is used in the url (meaning one that has not been
-     * migrated yet) it must not return the index route but throw an Exception instead
+     * migrated yet) it must not return the index route but throw an Exception instead.
      */
     public function testNonExistentAction()
     {
@@ -221,7 +220,8 @@ class LegacyUrlConverterTest extends TestCase
 
     /**
      *  The parameter id_product|product_id must not be considered as a non migrated action
-     *  (as would have been ?controller=AdminProducts&export_products_xml=1)
+     *  (as would have been ?controller=AdminProducts&export_products_xml=1).
+     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
      */
@@ -374,7 +374,8 @@ class LegacyUrlConverterTest extends TestCase
 
     /**
      * This tests is used to test the component with a list of routes and mainly to
-     * check possible conflicts when action is
+     * check possible conflicts when action is.
+     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
      */
@@ -430,9 +431,10 @@ class LegacyUrlConverterTest extends TestCase
     /**
      * @param string $routeName
      * @param string $routePath
-     * @param string|array $legacyLink
-     * @param array|null $legacyParameters
-     * @param array|null $expectedParameters
+     * @param array|string $legacyLink
+     * @param null|array $legacyParameters
+     * @param null|array $expectedParameters
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
      */
     private function buildRouterMock($routeName, $routePath, $legacyLink, array $legacyParameters = null, array $expectedParameters = null)
@@ -483,6 +485,7 @@ class LegacyUrlConverterTest extends TestCase
 
     /**
      * @param array $routes
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
      */
     private function buildMultipleRouterMock(array $routes)
@@ -513,6 +516,7 @@ class LegacyUrlConverterTest extends TestCase
 
     /**
      * @param array $routes
+     *
      * @return RouteCollection
      */
     private function buildRouteCollection(array $routes)

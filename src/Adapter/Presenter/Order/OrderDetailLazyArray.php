@@ -49,6 +49,8 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * OrderDetailLazyArray constructor.
+     *
+     * @param Order $order
      */
     public function __construct(Order $order)
     {
@@ -81,9 +83,9 @@ class OrderDetailLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return string
-     *
      * @throws PrestaShopException
+     *
+     * @return string
      */
     public function getOrderDate()
     {

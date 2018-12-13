@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\InvalidCustomerRequired
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 
 /**
- * Sets required fields for new customer when signing up in Front Office
+ * Sets required fields for new customer when signing up in Front Office.
  */
 class SetRequiredFieldsForCustomerCommand
 {

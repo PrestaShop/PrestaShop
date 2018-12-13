@@ -77,7 +77,7 @@ class ProductCore extends ObjectModel
     /** @var int Minimal quantity for add to cart */
     public $minimal_quantity = 1;
 
-    /** @var int|null Low stock for mail alert */
+    /** @var null|int Low stock for mail alert */
     public $low_stock_threshold = null;
 
     /** @var bool Low stock mail alert activated */
@@ -655,7 +655,7 @@ class ProductCore extends ObjectModel
      *
      * @see Group::getPriceDisplayMethod()
      *
-     * @param int|null $id_customer
+     * @param null|int $id_customer
      */
     public static function initPricesComputation($id_customer = null)
     {
@@ -688,7 +688,7 @@ class ProductCore extends ObjectModel
      *
      * @see initPricesComputation()
      *
-     * @param int|null $id_customer
+     * @param null|int $id_customer
      *
      * @return int Returns 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
      */
@@ -762,6 +762,7 @@ class ProductCore extends ObjectModel
      * Call it after deleting a product from a category.
      *
      * @param int $id_category
+     * @param mixed $position
      */
     public static function cleanPositions($id_category, $position = 0)
     {
@@ -816,6 +817,10 @@ class ProductCore extends ObjectModel
 
     /**
      * Get the default attribute for a product.
+     *
+     * @param mixed $id_product
+     * @param mixed $minimum_quantity
+     * @param mixed $reset
      *
      * @return int Attributes list
      */
@@ -954,6 +959,12 @@ class ProductCore extends ObjectModel
 
     /**
      * @see ObjectModel::validateField()
+     *
+     * @param mixed $field
+     * @param mixed $value
+     * @param null|mixed $id_lang
+     * @param mixed $skip
+     * @param mixed $human_errors
      */
     public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
     {
@@ -1148,6 +1159,7 @@ class ProductCore extends ObjectModel
      *
      * @param string $productCategories Categories list to index product into
      * @param bool $keeping_current_pos (deprecated, no more used)
+     * @param mixed $categories
      *
      * @return array Update/insertion result
      */
@@ -1300,6 +1312,9 @@ class ProductCore extends ObjectModel
      * @param int $limit Number of products to return
      * @param string $order_by Field for ordering
      * @param string $order_way Way for ordering (ASC or DESC)
+     * @param mixed $id_category
+     * @param mixed $only_active
+     * @param null|Context $context
      *
      * @return array Products details
      */
@@ -1462,6 +1477,23 @@ class ProductCore extends ObjectModel
      * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
      * @see ProductSupplier for manage supplier reference(s)
      * @deprecated since 1.5.0
+     *
+     * @param mixed $price
+     * @param mixed $weight
+     * @param mixed $unit_impact
+     * @param mixed $ecotax
+     * @param mixed $quantity
+     * @param mixed $id_images
+     * @param mixed $reference
+     * @param mixed $id_supplier
+     * @param mixed $ean13
+     * @param mixed $default
+     * @param mixed $location
+     * @param mixed $upc
+     * @param mixed $minimal_quantity
+     * @param mixed $isbn
+     * @param null|mixed $low_stock_threshold
+     * @param mixed $low_stock_alert
      */
     public function addProductAttribute(
         $price,
@@ -1570,6 +1602,24 @@ class ProductCore extends ObjectModel
     /**
      * @param int $quantity DEPRECATED
      * @param string $supplier_reference DEPRECATED
+     * @param mixed $wholesale_price
+     * @param mixed $price
+     * @param mixed $weight
+     * @param mixed $unit_impact
+     * @param mixed $ecotax
+     * @param mixed $id_images
+     * @param mixed $reference
+     * @param mixed $id_supplier
+     * @param mixed $ean13
+     * @param mixed $default
+     * @param null|mixed $location
+     * @param null|mixed $upc
+     * @param mixed $minimal_quantity
+     * @param array $id_shop_list
+     * @param null|mixed $available_date
+     * @param mixed $isbn
+     * @param null|mixed $low_stock_threshold
+     * @param mixed $low_stock_alert
      */
     public function addCombinationEntity(
         $wholesale_price,
@@ -1712,6 +1762,25 @@ class ProductCore extends ObjectModel
      * @deprecated since 1.5
      * @see updateAttribute() to use instead
      * @see ProductSupplier for manage supplier reference(s)
+     *
+     * @param mixed $id_product_attribute
+     * @param mixed $wholesale_price
+     * @param mixed $price
+     * @param mixed $weight
+     * @param mixed $unit
+     * @param mixed $ecotax
+     * @param mixed $id_images
+     * @param mixed $reference
+     * @param mixed $id_supplier
+     * @param mixed $ean13
+     * @param mixed $default
+     * @param mixed $location
+     * @param mixed $upc
+     * @param mixed $minimal_quantity
+     * @param mixed $available_date
+     * @param mixed $isbn
+     * @param null|mixed $low_stock_threshold
+     * @param mixed $low_stock_alert
      */
     public function updateProductAttribute(
         $id_product_attribute,
@@ -1812,8 +1881,13 @@ class ProductCore extends ObjectModel
      * @param string $upc Upc barcode
      * @param string $minimal_quantity Minimal quantity
      * @param string $isbn ISBN reference
-     * @param int|null $low_stock_threshold Low stock alert
+     * @param null|int $low_stock_threshold Low stock alert
      * @param bool $low_stock_alert send email on low stock
+     * @param mixed $id_images
+     * @param null|mixed $location
+     * @param null|mixed $available_date
+     * @param mixed $update_all_fields
+     * @param array $id_shop_list
      *
      * @return array Update result
      */
@@ -1918,7 +1992,14 @@ class ProductCore extends ObjectModel
      * @param bool $default Is default attribute for product
      * @param int $minimal_quantity Minimal quantity to add to cart
      * @param string $isbn ISBN reference
-     * @param int|null $low_stock Low stock alert
+     * @param null|int $low_stock Low stock alert
+     * @param mixed $unit_impact
+     * @param null|mixed $upc
+     * @param array $id_shop_list
+     * @param null|mixed $available_date
+     * @param mixed $quantity
+     * @param null|mixed $low_stock_threshold
+     * @param mixed $low_stock_alert
      *
      * @return mixed $id_product_attribute or false
      */
@@ -2097,6 +2178,7 @@ class ProductCore extends ObjectModel
      * Delete product attachments.
      *
      * @param bool $update_cache If set to true attachment cache will be updated
+     * @param mixed $update_attachment_cache
      *
      * @return array Deletion result
      */
@@ -2212,9 +2294,9 @@ class ProductCore extends ObjectModel
      * @param $id_attributes
      * @param $combinations
      *
-     * @return bool
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return bool
      */
     public function addAttributeCombinationMultiple($id_attributes, $combinations)
     {
@@ -2307,6 +2389,8 @@ class ProductCore extends ObjectModel
      * Get all available product attributes resume.
      *
      * @param int $id_lang Language id
+     * @param mixed $attribute_value_separator
+     * @param mixed $attribute_separator
      *
      * @return array Product attributes combinations
      */
@@ -2417,6 +2501,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product_attribute
      * @param int $id_lang Language id
+     * @param mixed $groupByIdAttributeGroup
      *
      * @return array Product attribute combination by id_product_attribute
      */
@@ -2552,6 +2637,12 @@ class ProductCore extends ObjectModel
      * @param int $id_lang Language id
      * @param int $pageNumber Start from (optional)
      * @param int $nbProducts Number of products to return (optional)
+     * @param mixed $page_number
+     * @param mixed $nb_products
+     * @param mixed $count
+     * @param null|mixed $order_by
+     * @param null|mixed $order_way
+     * @param null|Context $context
      *
      * @return array New products
      */
@@ -2706,6 +2797,9 @@ class ProductCore extends ObjectModel
      * Get a random special.
      *
      * @param int $id_lang Language id
+     * @param mixed $beginning
+     * @param mixed $ending
+     * @param null|Context $context
      *
      * @return array Special
      */
@@ -2800,6 +2894,13 @@ class ProductCore extends ObjectModel
      * @param int $pageNumber Start from (optional)
      * @param int $nbProducts Number of products to return (optional)
      * @param bool $count Only in order to get total number (optional)
+     * @param mixed $page_number
+     * @param mixed $nb_products
+     * @param null|mixed $order_by
+     * @param null|mixed $order_way
+     * @param mixed $beginning
+     * @param mixed $ending
+     * @param null|Context $context
      *
      * @return array Prices drop
      */
@@ -2933,6 +3034,8 @@ class ProductCore extends ObjectModel
     /**
      * getProductCategories return an array of categories which this product belongs to.
      *
+     * @param mixed $id_product
+     *
      * @return array of categories
      */
     public static function getProductCategories($id_product = '')
@@ -3010,6 +3113,8 @@ class ProductCore extends ObjectModel
 
     /**
      * Sets carriers assigned to the product.
+     *
+     * @param mixed $carrier_list
      */
     public function setCarriers($carrier_list)
     {
@@ -3044,6 +3149,7 @@ class ProductCore extends ObjectModel
      * Get product images and legends.
      *
      * @param int $id_lang Language id for multilingual legends
+     * @param null|Context $context
      *
      * @return array Product images and legends
      */
@@ -3062,6 +3168,9 @@ class ProductCore extends ObjectModel
 
     /**
      * Get product cover image.
+     *
+     * @param mixed $id_product
+     * @param null|Context $context
      *
      * @return array Product cover image
      */
@@ -3091,20 +3200,20 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product Product id
      * @param bool $usetax With taxes or not (optional)
-     * @param int|null $id_product_attribute product attribute id (optional).
+     * @param null|int $id_product_attribute product attribute id (optional).
      *                                       If set to false, do not apply the combination price impact.
      *                                       NULL does apply the default combination price impact
      * @param int $decimals Number of decimals (optional)
-     * @param int|null $divisor Useful when paying many time without fees (optional)
+     * @param null|int $divisor Useful when paying many time without fees (optional)
      * @param bool $only_reduc Returns only the reduction amount
      * @param bool $usereduc Set if the returned amount will include reduction
      * @param int $quantity Required for quantity discount application (default value: 1)
      * @param bool $force_associated_tax DEPRECATED - NOT USED Force to apply the associated tax.
      *                                   Only works when the parameter $usetax is true
-     * @param int|null $id_customer Customer ID (for customer group reduction)
-     * @param int|null $id_cart Cart ID. Required when the cookie is not accessible
+     * @param null|int $id_customer Customer ID (for customer group reduction)
+     * @param null|int $id_cart Cart ID. Required when the cookie is not accessible
      *                          (e.g., inside a payment module, a cron task...)
-     * @param int|null $id_address Customer address ID. Required for price (tax included)
+     * @param null|int $id_address Customer address ID. Required for price (tax included)
      *                             calculation regarding the guest localization
      * @param null $specific_price_output If a specific price applies regarding the previous parameters,
      *                                    this variable is filled with the corresponding SpecificPrice object
@@ -3112,6 +3221,7 @@ class ProductCore extends ObjectModel
      * @param bool $use_group_reduction
      * @param Context $context
      * @param bool $use_customer_price
+     * @param null|mixed $id_customization
      *
      * @return float Product price
      */
@@ -3268,9 +3378,10 @@ class ProductCore extends ObjectModel
      * @param bool $use_customer_price
      * @param int $id_cart
      * @param int $real_quantity
+     * @param mixed $id_customization
      *
      * @return float Product price
-     **/
+     */
     public static function priceCalculation(
         $id_shop,
         $id_product,
@@ -3545,6 +3656,9 @@ class ProductCore extends ObjectModel
      * @param int $id_product_attribute Product attribute id (optional)
      * @param int $decimals Number of decimals (optional)
      * @param int $divisor Util when paying many time without fees (optional)
+     * @param mixed $only_reduc
+     * @param mixed $usereduc
+     * @param mixed $quantity
      *
      * @return float Product price in euros
      */
@@ -3676,8 +3790,8 @@ class ProductCore extends ObjectModel
      *
      * @param int $idProduct Product id
      * @param int $idProductAttribute Product attribute id (optional)
-     * @param bool|null $cacheIsPack
-     * @param Cart|null $cart
+     * @param null|bool $cacheIsPack
+     * @param null|Cart $cart
      * @param int $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
@@ -3711,9 +3825,12 @@ class ProductCore extends ObjectModel
      * Create JOIN query with 'stock_available' table.
      *
      * @param string $productAlias Alias of product table
-     * @param string|int $productAttribute If string : alias of PA table ; if int : value of PA ; if null : nothing about PA
+     * @param int|string $productAttribute If string : alias of PA table ; if int : value of PA ; if null : nothing about PA
      * @param bool $innerJoin LEFT JOIN or INNER JOIN
      * @param Shop $shop
+     * @param mixed $product_alias
+     * @param null|mixed $product_attribute
+     * @param mixed $inner_join
      *
      * @return string
      */
@@ -3985,6 +4102,7 @@ class ProductCore extends ObjectModel
      * Get product accessories.
      *
      * @param int $id_lang Language id
+     * @param mixed $active
      *
      * @return array Product accessories
      */
@@ -4059,6 +4177,7 @@ class ProductCore extends ObjectModel
      *
      * @param array $accessories_id Accessories ids
      * @param int the product ID to link accessories on
+     * @param mixed $product_id
      */
     public static function changeAccessoriesForProduct($accessories_id, $product_id)
     {
@@ -4072,6 +4191,10 @@ class ProductCore extends ObjectModel
 
     /**
      * Add new feature to product.
+     *
+     * @param mixed $id_value
+     * @param mixed $lang
+     * @param mixed $cust
      */
     public function addFeaturesCustomToDB($id_value, $lang, $cust)
     {
@@ -4202,6 +4325,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_lang Language id
      * @param string $query Search query
+     * @param null|Context $context
      *
      * @return array Matching products
      */
@@ -4500,6 +4624,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product_old Old product id
      * @param int $id_product_old New product id
+     * @param mixed $id_product_new
      */
     public static function duplicateFeatures($id_product_old, $id_product_new)
     {
@@ -4671,6 +4796,8 @@ class ProductCore extends ObjectModel
 
     /**
      * Get the link of the product page of this product.
+     *
+     * @param null|Context $context
      */
     public function getLink(Context $context = null)
     {
@@ -4988,9 +5115,10 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Select all features for a given language
+     * Select all features for a given language.
      *
      * @param $id_lang Language id
+     * @param mixed $id_product
      *
      * @return array Array with feature's data
      */
@@ -5413,9 +5541,9 @@ class ProductCore extends ObjectModel
     /**
      * check if product has an activated and required customizationFields.
      *
-     * @return bool
-     *
      * @throws \PrestaShopDatabaseException
+     *
+     * @return bool
      */
     public function hasActivatedRequiredCustomizableFields()
     {
@@ -5621,6 +5749,8 @@ class ProductCore extends ObjectModel
 
     /**
      * @deprecated since 1.5.0
+     *
+     * @param mixed $id_lang
      */
     public function getStockMvts($id_lang)
     {
@@ -5694,7 +5824,7 @@ class ProductCore extends ObjectModel
     /**
      * Returns tax rate.
      *
-     * @param Address|null $address
+     * @param null|Address $address
      *
      * @return float The total taxes rate applied to the product
      */
@@ -6023,6 +6153,8 @@ class ProductCore extends ObjectModel
     /**
      * Webservice setter : set virtual field position in category.
      *
+     * @param mixed $position
+     *
      * @return bool
      */
     public function setWsPositionInCategory($position)
@@ -6074,6 +6206,8 @@ class ProductCore extends ObjectModel
 
     /**
      * Webservice setter : set virtual field id_default_image in category.
+     *
+     * @param mixed $id_image
      *
      * @return bool
      */
@@ -6185,6 +6319,8 @@ class ProductCore extends ObjectModel
     /**
      * Checks if reference exists.
      *
+     * @param mixed $reference
+     *
      * @return bool
      */
     public function existsRefInDatabase($reference)
@@ -6203,6 +6339,7 @@ class ProductCore extends ObjectModel
      * @since 1.5.0
      *
      * @param int $id_product the id of the product
+     * @param mixed $shop_only
      *
      * @return array product attribute id list
      */
@@ -6220,6 +6357,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $product_attribute_id
+     * @param mixed $id_product_attribute
      *
      * @return array
      */
@@ -6300,9 +6438,9 @@ class ProductCore extends ObjectModel
      * @param int|int[] $idAttributes
      * @param bool $findBest
      *
-     * @return int
-     *
      * @throws PrestaShopException
+     *
+     * @return int
      */
     public static function getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest = false)
     {
@@ -6389,6 +6527,10 @@ class ProductCore extends ObjectModel
     /**
      * @deprecated 1.7.3.1
      * @see Product::getIdProductAttributeByIdAttributes()
+     *
+     * @param mixed $id_product
+     * @param mixed $id_attributes
+     * @param mixed $find_best
      */
     public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
     {
@@ -6399,6 +6541,7 @@ class ProductCore extends ObjectModel
      * Get the combination url anchor of the product.
      *
      * @param int $id_product_attribute
+     * @param mixed $with_id
      *
      * @return string
      */
@@ -6888,6 +7031,8 @@ class ProductCore extends ObjectModel
      * Gets a list of IDs from a list of IDs/Refs. The result will avoid duplicates, and checks if given IDs/Refs exists in DB.
      * Useful when a product list should be checked before a bulk operation on them (Only 1 query => performances).
      *
+     * @param mixed $ids_or_refs
+     *
      * @return array the IDs list, whithout duplicate and only existing ones
      */
     public static function getExistingIdsFromIdsOrRefs($ids_or_refs)
@@ -6970,9 +7115,9 @@ class ProductCore extends ObjectModel
      *
      * @param array $customizationIds - Array of customization fields IDs
      *
-     * @return bool
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return bool
      */
     public function deleteUnusedCustomizationFields($customizationIds)
     {
@@ -6998,9 +7143,9 @@ class ProductCore extends ObjectModel
      *
      * @param array $customizationIds - Array of excluded customization fields IDs
      *
-     * @return bool
-     *
      * @throws PrestaShopDatabaseException
+     *
+     * @return bool
      */
     public function softDeleteCustomizationFields($customizationIds)
     {

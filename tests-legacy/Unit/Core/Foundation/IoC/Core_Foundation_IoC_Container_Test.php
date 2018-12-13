@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace LegacyTests\Unit\Core\Foundation\IoC;
 
 use PHPUnit\Framework\TestCase;
@@ -159,7 +158,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     {
         $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
 
-        /**
+        /*
          * CycleA depends on CycleB,
          * CycleB depends on CycleA
          */
@@ -182,7 +181,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     }
 
     /**
-     * data provider for test_container_can_bind_values_directly
+     * data provider for test_container_can_bind_values_directly.
      */
     public function valuesToBind()
     {
@@ -195,6 +194,8 @@ class Core_Foundation_IoC_Container_Test extends TestCase
 
     /**
      * @dataProvider valuesToBind
+     *
+     * @param mixed $value
      */
     public function testContainerCanBindValuesDirectly($value)
     {
