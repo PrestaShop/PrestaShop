@@ -26,38 +26,36 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
+
 /**
- * Is thrown when customer constraint is violated
+ * Exception is thrown when email which already exists is being used to create or update other customer
  */
-class CustomerConstraintException extends CustomerException
+class DuplicateCustomerEmailException extends CustomerException
 {
     /**
-     * @var int Code is used when invalid email is provided for customer
+     * @var Email
      */
-    const INVALID_EMAIL = 1;
+    private $email;
 
     /**
-     * @var int Code is used when invalid first name is provided for customer
+     * @param Email $email
+     * @param string $message
+     * @param int $code
+     * @param null $previous
      */
-    const INVALID_FIRST_NAME = 2;
+    public function __construct(Email $email, $message = '', $code = 0, $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->email = $email;
+    }
 
     /**
-     * @var int Code is used when invalid last name is provided for customer
+     * @return Email
      */
-    const INVALID_LAST_NAME = 3;
-
-    /**
-     * @var int Code is used when invalid password is provided for customer
-     */
-    const INVALID_PASSWORD = 4;
-
-    /**
-     * @var int Is used when invalid (not string) private note is provided as private note
-     */
-    const INVALID_PRIVATE_NOTE = 6;
-
-    /**
-     * @var int Code is used when invalid customer birthday is provided
-     */
-    const INVALID_BIRTHDAY = 7;
+    public function getEmail()
+    {
+        return $this->email;
+    }
 }

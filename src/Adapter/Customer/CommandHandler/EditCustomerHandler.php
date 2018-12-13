@@ -30,9 +30,9 @@ use Customer;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
 /**
@@ -197,9 +197,9 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         $customerByEmail->getByEmail($command->getEmail()->getValue());
 
         if ($customerByEmail->id) {
-            throw new CustomerConstraintException(
-                sprintf('Customer with email "%s" already exists', $command->getEmail()->getValue()),
-                CustomerConstraintException::DUPLICATE_EMAIL
+            throw new DuplicateCustomerEmailException(
+                $command->getEmail(),
+                sprintf('Customer with email "%s" already exists', $command->getEmail()->getValue())
             );
         }
     }
