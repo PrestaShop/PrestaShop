@@ -1,4 +1,4 @@
-admin_profiles:
+admin_profiles_index:
     path: /
     methods: GET
     defaults:
