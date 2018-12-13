@@ -582,7 +582,7 @@ class OrderCore extends ObjectModel
      * (Order History).
      *
      * @deprecated
-     * @param & $row
+     * @param mixed $row
      */
     public function setProductPrices(&$row)
     {
