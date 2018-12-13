@@ -153,7 +153,7 @@ class ToolsCore
      * @param string $url Desired URL
      * @param string $base_uri Base URI (optional)
      * @param Link $link
-     * @param string|array $headers A list of headers to send before redirection
+     * @param array|string $headers A list of headers to send before redirection
      */
     public static function redirect($url, $base_uri = __PS_BASE_URI__, Link $link = null, $headers = null)
     {
@@ -604,7 +604,7 @@ class ToolsCore
     /**
      * If necessary change cookie language ID and context language.
      *
-     * @param Context|null $context
+     * @param null|Context $context
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -709,7 +709,7 @@ class ToolsCore
     /**
      * Return the CLDR associated with the context or given language_code.
      *
-     * @param Context|null $context
+     * @param null|Context $context
      * @param null $language_code
      *
      * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
@@ -737,7 +737,7 @@ class ToolsCore
      * Return price with currency sign for a given product.
      *
      * @param float $price Product price
-     * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
+     * @param array|object $currency Current currency (object, id_currency, NULL => context currency)
      * @param mixed $no_utf8
      * @param null|Context $context
      *
@@ -794,7 +794,7 @@ class ToolsCore
      * @deprecated since 1.7.4 use convertPriceToCurrency()
      *
      * @param float $price Product price
-     * @param object|array $currency Current currency object
+     * @param array|object $currency Current currency object
      * @param bool $to_currency convert to currency or from currency to default currency
      * @param Context $context
      *
@@ -1092,9 +1092,9 @@ class ToolsCore
     /**
      * Depending on _PS_MODE_DEV_ throws an exception or returns a error message.
      *
-     * @param string|null $errorMessage Error message (defaults to "Fatal error")
+     * @param null|string $errorMessage Error message (defaults to "Fatal error")
      * @param bool $htmlentities DEPRECATED since 1.7.4.0
-     * @param Context|null $context DEPRECATED since 1.7.4.0
+     * @param null|Context $context DEPRECATED since 1.7.4.0
      *
      * @return string
      *
@@ -1175,9 +1175,9 @@ class ToolsCore
      * @see error_log()
      *
      * @param mixed $object
-     * @param int|null $message_type
-     * @param string|null $destination
-     * @param string|null $extra_headers
+     * @param null|int $message_type
+     * @param null|string $destination
+     * @param null|string $extra_headers
      *
      * @return bool
      */

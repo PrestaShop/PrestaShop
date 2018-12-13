@@ -199,7 +199,7 @@ class PackCore extends Product
      *
      * @param int $idProduct
      * @param int $wantedQuantity
-     * @param Cart|null $cart
+     * @param null|Cart $cart
      *
      * @return bool
      *
@@ -229,7 +229,7 @@ class PackCore extends Product
      *
      * @param int $id_product Product id
      * @param int $id_product_attribute Product attribute id (optional)
-     * @param bool|null $cacheIsPack
+     * @param null|bool $cacheIsPack
      * @param Cart $cart
      * @param int $idCustomization Product customization id (optional)
      * @param mixed $idProduct

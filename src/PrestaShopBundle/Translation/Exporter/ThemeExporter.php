@@ -356,7 +356,7 @@ class ThemeExporter
     }
 
     /**
-     * @param array|null $metadata
+     * @param null|array $metadata
      *
      * @return array
      */

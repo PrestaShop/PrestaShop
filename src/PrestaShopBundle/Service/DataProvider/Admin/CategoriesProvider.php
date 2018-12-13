@@ -84,7 +84,7 @@ class CategoriesProvider
     /**
      * Return the list of categories with the associated modules.
      *
-     * @param array|AddonsCollection the list of modules
+     * @param AddonsCollection|array the list of modules
      * @param mixed $modules
      *
      * @return array the list of categories

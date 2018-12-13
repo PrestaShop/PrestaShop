@@ -92,7 +92,7 @@ final class DoctrineQueryParser implements QueryParserInterface
     }
 
     /**
-     * @param int|float $value
+     * @param float|int $value
      *
      * @return int|float
      */

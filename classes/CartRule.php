@@ -298,7 +298,7 @@ class CartRuleCore extends ObjectModel
      *
      * @param string $code Voucher code
      *
-     * @return int|bool CartRule ID
+     * @return bool|int CartRule ID
      *                  false if not found
      */
     public static function getIdByCode($code)
@@ -353,7 +353,7 @@ class CartRuleCore extends ObjectModel
      * @param bool $active Active vouchers only
      * @param bool $includeGeneric Include generic AND highlighted vouchers, regardless of highlight_only setting
      * @param bool $inStock Vouchers in stock only
-     * @param Cart|null $cart Cart
+     * @param null|Cart $cart Cart
      * @param bool $free_shipping_only Free shipping only
      * @param bool $highlight_only Highlighted vouchers only
      *
@@ -1506,7 +1506,7 @@ class CartRuleCore extends ObjectModel
     /**
      * Automatically add this CartRule to the Cart.
      *
-     * @param Context|null $context Context instance
+     * @param null|Context $context Context instance
      */
     public static function autoAddToCart(Context $context = null)
     {
@@ -1580,7 +1580,7 @@ class CartRuleCore extends ObjectModel
     /**
      * Automatically remove this CartRule from the Cart.
      *
-     * @param Context|null $context Context instance
+     * @param null|Context $context Context instance
      *
      * @return array Error messages
      */

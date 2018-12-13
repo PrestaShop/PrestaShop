@@ -105,8 +105,8 @@ class ManufacturerCore extends ObjectModel
     /**
      * ManufacturerCore constructor.
      *
-     * @param int|null $id
-     * @param int|null $idLang
+     * @param null|int $id
+     * @param null|int $idLang
      */
     public function __construct($id = null, $idLang = null)
     {
@@ -367,7 +367,7 @@ class ManufacturerCore extends ObjectModel
      * @param bool $getTotal
      * @param bool $active
      * @param bool $activeCategory
-     * @param Context|null $context
+     * @param null|Context $context
      *
      * @return array|bool
      */

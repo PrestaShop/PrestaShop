@@ -805,7 +805,7 @@ class AdminProductWrapper
      * @param array $data
      * @param array $locales
      *
-     * @return object|null Attachement
+     * @return null|object Attachement
      */
     public function processAddAttachment($product, $data, $locales)
     {

@@ -156,7 +156,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var Smarty_Data */
     protected $smarty;
 
-    /** @var Smarty_Internal_Template|null */
+    /** @var null|Smarty_Internal_Template */
     protected $current_subtemplate = null;
 
     protected static $update_translations_after_install = true;
@@ -185,7 +185,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
 
-    /** @var array|null used to cache module ids */
+    /** @var null|array used to cache module ids */
     private static $cachedModuleNames = null;
 
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
@@ -1961,7 +1961,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $string String to translate
      * @param bool|string $specific filename to use in translation key
-     * @param string|null $locale Give a context for the translation
+     * @param null|string $locale Give a context for the translation
      *
      * @return string Translation
      */
@@ -2068,7 +2068,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Helper displaying error message(s).
      *
-     * @param string|array $error
+     * @param array|string $error
      *
      * @return string
      */
@@ -2100,7 +2100,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Helper displaying warning message(s).
      *
-     * @param string|array $warning
+     * @param array|string $warning
      *
      * @return string
      */
@@ -2150,7 +2150,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Helper displaying information message(s).
      *
-     * @param string|array $information
+     * @param array|string $information
      *
      * @return string
      */
@@ -2429,8 +2429,8 @@ abstract class ModuleCore implements ModuleInterface
 
     /**
      * @param string $template
-     * @param string|null $cache_id
-     * @param string|null $compile_id
+     * @param null|string $cache_id
+     * @param null|string $compile_id
      *
      * @return Smarty_Internal_Template
      */
@@ -3379,7 +3379,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $serviceName
      *
-     * @return object|false if a container is not available, it returns false
+     * @return false|object if a container is not available, it returns false
      */
     public function get($serviceName)
     {

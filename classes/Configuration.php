@@ -84,7 +84,7 @@ class ConfigurationCore extends ObjectModel
     /**
      * @see ObjectModel::getFieldsLang()
      *
-     * @return bool|array Multilingual fields
+     * @return array|bool Multilingual fields
      */
     public function getFieldsLang()
     {
@@ -248,7 +248,7 @@ class ConfigurationCore extends ObjectModel
      * Get global value.
      *
      * @param string $key Configuration key
-     * @param int|null $idLang Language ID
+     * @param null|int $idLang Language ID
      *
      * @return string
      */

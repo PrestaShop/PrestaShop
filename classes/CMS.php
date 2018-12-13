@@ -131,7 +131,7 @@ class CMSCore extends ObjectModel
      * @param int $idLang Language ID
      * @param null $selection
      * @param bool $active
-     * @param Link|null $link
+     * @param null|Link $link
      *
      * @return array
      */
@@ -329,8 +329,8 @@ class CMSCore extends ObjectModel
 
     /**
      * @param int $idCms
-     * @param int|null $idLang
-     * @param int|null $idShop
+     * @param null|int $idLang
+     * @param null|int $idShop
      *
      * @return array|bool|null|object
      */

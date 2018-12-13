@@ -47,7 +47,7 @@ final class Filter implements FilterInterface
     private $name;
 
     /**
-     * @var string|null Column ID if filter is associated with columns
+     * @var null|string Column ID if filter is associated with columns
      */
     private $column;
 

@@ -93,7 +93,7 @@ class HashMapWhitelistFilter implements FilterInterface
      * - FilterInterface[] an array of filters, indexed by keys to keep
      * - A mixture of the two
      *
-     * @param string[]|FilterInterface[] $definition
+     * @param FilterInterface[]|string[] $definition
      *
      * @return $this
      */
@@ -109,7 +109,7 @@ class HashMapWhitelistFilter implements FilterInterface
     /**
      * Removes the provided key from the whitelist.
      *
-     * @param string|int $key
+     * @param int|string $key
      *
      * @return $this
      *
@@ -189,7 +189,7 @@ class HashMapWhitelistFilter implements FilterInterface
      * Adds an element to the whitelist.
      *
      * @param int|string $paramKey
-     * @param string|FilterInterface $paramValue
+     * @param FilterInterface|string $paramValue
      *
      * @return $this
      */

@@ -118,7 +118,7 @@ class Locale implements LocaleInterface
     /**
      * Format a number according to locale rules.
      *
-     * @param int|float|string $number
+     * @param float|int|string $number
      *                                 The number to be formatted
      *
      * @return string
@@ -137,7 +137,7 @@ class Locale implements LocaleInterface
     /**
      * Format a number as a price.
      *
-     * @param int|float|string $number
+     * @param float|int|string $number
      *                                 Number to be formatted as a price
      * @param string $currencyCode
      *                             Currency of the price

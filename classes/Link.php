@@ -243,7 +243,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param int|null $idCustomization
+     * @param null|int $idCustomization
      *
      * @return string
      */
@@ -276,7 +276,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param int|null $idCustomization
+     * @param null|int $idCustomization
      *
      * @return string
      */
@@ -293,7 +293,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param int|null $idCustomization
+     * @param null|int $idCustomization
      *
      * @return string
      */
@@ -310,7 +310,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param int|null $idCustomization
+     * @param null|int $idCustomization
      * @param null $op
      *
      * @return string
@@ -843,8 +843,8 @@ class LinkCore
     }
 
     /**
-     * @param int|null $idShop
-     * @param bool|null $ssl
+     * @param null|int $idShop
+     * @param null|bool $ssl
      * @param bool $relativeProtocol
      *
      * @return string
@@ -1062,7 +1062,7 @@ class LinkCore
      * @param string $controller
      * @param bool $ssl
      * @param int $idLang
-     * @param string|array $request
+     * @param array|string $request
      * @param bool $requestUrlEncode Use URL encode
      * @param null|mixed $idShop
      * @param mixed $relativeProtocol
@@ -1291,7 +1291,7 @@ class LinkCore
 
     /**
      * @param null $idLang
-     * @param Context|null $context
+     * @param null|Context $context
      * @param null $idShop
      *
      * @return string
@@ -1319,8 +1319,8 @@ class LinkCore
     }
 
     /**
-     * @param int|null $idShop
-     * @param bool|null $ssl
+     * @param null|int $idShop
+     * @param null|bool $ssl
      * @param bool $relativeProtocol
      *
      * @return string

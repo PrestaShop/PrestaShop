@@ -1482,7 +1482,7 @@ class WebserviceRequestCore
             return;
         }
 
-        /** @var SimpleXMLElement|Countable $xmlEntities */
+        /** @var Countable|SimpleXMLElement $xmlEntities */
         $xmlEntities = $xml->children();
         $object = null;
 

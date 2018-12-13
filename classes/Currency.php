@@ -257,9 +257,9 @@ class CurrencyCore extends ObjectModel
      * Is this currency installed for a given shop ?
      * (current shop by default).
      *
-     * @param int|null $currencyId
+     * @param null|int $currencyId
      *                             The currency to look for (
-     * @param int|null $shopId
+     * @param null|int $shopId
      *                         The given shop's id
      *
      * @return bool
@@ -644,7 +644,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Count active Currencies.
      *
-     * @param int|null $idShop Shop ID
+     * @param null|int $idShop Shop ID
      *
      * @return mixed Amount of active Currencies
      *               `false` if none found
@@ -669,7 +669,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Is multi Currency activated?
      *
-     * @param int|null $idShop Shop ID
+     * @param null|int $idShop Shop ID
      *
      * @return bool Indicates whether multi Currency is actived
      */

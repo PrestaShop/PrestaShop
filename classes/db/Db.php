@@ -55,10 +55,10 @@ abstract class DbCore
     /** @var bool */
     protected $is_cache_enabled;
 
-    /** @var PDO|mysqli|resource Resource link */
+    /** @var mysqli|PDO|resource Resource link */
     protected $link;
 
-    /** @var PDOStatement|mysqli_result|resource|bool SQL cached result */
+    /** @var bool|mysqli_result|PDOStatement|resource SQL cached result */
     protected $result;
 
     /** @var array List of DB instances */
@@ -140,7 +140,7 @@ abstract class DbCore
     /**
      * Get next row for a query which does not return an array.
      *
-     * @param PDOStatement|mysqli_result|resource|bool $result
+     * @param bool|mysqli_result|PDOStatement|resource $result
      *
      * @return array|object|false|null
      */
@@ -149,7 +149,7 @@ abstract class DbCore
     /**
      * Get all rows for a query which return an array.
      *
-     * @param PDOStatement|mysqli_result|resource|bool|null $result
+     * @param null|bool|mysqli_result|PDOStatement|resource $result
      *
      * @return array
      */
@@ -361,7 +361,7 @@ abstract class DbCore
     /**
      * Execute a query and get result resource.
      *
-     * @param string|DbQuery $sql
+     * @param DbQuery|string $sql
      *
      * @return bool|mysqli_result|PDOStatement|resource
      *
@@ -552,7 +552,7 @@ abstract class DbCore
     /**
      * Executes a query.
      *
-     * @param string|DbQuery $sql
+     * @param DbQuery|string $sql
      * @param bool $use_cache
      *
      * @return bool
@@ -574,7 +574,7 @@ abstract class DbCore
     /**
      * Executes return the result of $sql as array.
      *
-     * @param string|DbQuery $sql Query to execute
+     * @param DbQuery|string $sql Query to execute
      * @param bool $array Return an array instead of a result object (deprecated since 1.5.0.1, use query method instead)
      * @param bool $use_cache
      *
@@ -635,7 +635,7 @@ abstract class DbCore
      * Returns an associative array containing the first row of the query
      * This function automatically adds "LIMIT 1" to the query.
      *
-     * @param string|DbQuery $sql the select query (without "LIMIT 1")
+     * @param DbQuery|string $sql the select query (without "LIMIT 1")
      * @param bool $use_cache Find it in cache first
      *
      * @return array|bool|object|null
@@ -683,7 +683,7 @@ abstract class DbCore
     /**
      * Returns a value from the first row, first column of a SELECT query.
      *
-     * @param string|DbQuery $sql
+     * @param DbQuery|string $sql
      * @param bool $use_cache
      *
      * @return string|false|null
@@ -723,7 +723,7 @@ abstract class DbCore
     /**
      * Executes a query.
      *
-     * @param string|DbQuery $sql
+     * @param DbQuery|string $sql
      * @param bool $use_cache
      *
      * @return bool|mysqli_result|PDOStatement|resource
@@ -752,7 +752,7 @@ abstract class DbCore
     /**
      * Displays last SQL error.
      *
-     * @param string|bool $sql
+     * @param bool|string $sql
      *
      * @throws PrestaShopDatabaseException
      */
@@ -811,7 +811,7 @@ abstract class DbCore
      * @param string $pwd Password for database connection
      * @param string $db Database name
      * @param bool $new_db_link
-     * @param string|bool $engine
+     * @param bool|string $engine
      * @param int $timeout
      *
      * @return int Error code or 0 if connection was successful
@@ -859,7 +859,7 @@ abstract class DbCore
      * @param string $pwd
      * @param string $db
      * @param string $prefix
-     * @param string|null $engine Table engine
+     * @param null|string $engine Table engine
      *
      * @return bool|string True, false or error
      */
@@ -885,7 +885,7 @@ abstract class DbCore
     /**
      * Get used link instance.
      *
-     * @return PDO|mysqli|resource Resource
+     * @return mysqli|PDO|resource Resource
      */
     public function getLink()
     {

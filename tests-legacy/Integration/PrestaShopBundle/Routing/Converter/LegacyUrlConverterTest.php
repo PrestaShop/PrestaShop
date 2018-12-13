@@ -257,8 +257,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * @param string $expectedUrl
      * @param string $controller
-     * @param string|null $action
-     * @param array|null $queryParameters
+     * @param null|string $action
+     * @param null|array $queryParameters
      */
     private function doTestConverterByParameters($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
@@ -310,8 +310,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * @param string $expectedUrl
      * @param string $controller
-     * @param string|null $action
-     * @param array|null $queryParameters
+     * @param null|string $action
+     * @param null|array $queryParameters
      */
     private function doTestLegacyLinkClass($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
@@ -340,8 +340,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * @param string $expectedUrl
      * @param string $controller
-     * @param string|null $action
-     * @param array|null $queryParameters
+     * @param null|string $action
+     * @param null|array $queryParameters
      */
     private function doTestLegacyClassParameterAction($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
@@ -369,7 +369,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
      *
      * @param string $expectedUrl
      * @param string $controller
-     * @param array|null $parameters
+     * @param null|array $parameters
      *
      * @throws \PrestaShopException
      * @throws \ReflectionException
@@ -427,7 +427,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * @param string $expectedUrl
      * @param string $url
-     * @param array|null $ignoredParameters
+     * @param null|array $ignoredParameters
      */
     private function assertSameUrl($expectedUrl, $url, array $ignoredParameters = null)
     {

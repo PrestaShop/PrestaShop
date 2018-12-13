@@ -77,7 +77,7 @@ class ProductCore extends ObjectModel
     /** @var int Minimal quantity for add to cart */
     public $minimal_quantity = 1;
 
-    /** @var int|null Low stock for mail alert */
+    /** @var null|int Low stock for mail alert */
     public $low_stock_threshold = null;
 
     /** @var bool Low stock mail alert activated */
@@ -655,7 +655,7 @@ class ProductCore extends ObjectModel
      *
      * @see Group::getPriceDisplayMethod()
      *
-     * @param int|null $id_customer
+     * @param null|int $id_customer
      */
     public static function initPricesComputation($id_customer = null)
     {
@@ -688,7 +688,7 @@ class ProductCore extends ObjectModel
      *
      * @see initPricesComputation()
      *
-     * @param int|null $id_customer
+     * @param null|int $id_customer
      *
      * @return int Returns 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
      */
@@ -1881,7 +1881,7 @@ class ProductCore extends ObjectModel
      * @param string $upc Upc barcode
      * @param string $minimal_quantity Minimal quantity
      * @param string $isbn ISBN reference
-     * @param int|null $low_stock_threshold Low stock alert
+     * @param null|int $low_stock_threshold Low stock alert
      * @param bool $low_stock_alert send email on low stock
      * @param mixed $id_images
      * @param null|mixed $location
@@ -1992,7 +1992,7 @@ class ProductCore extends ObjectModel
      * @param bool $default Is default attribute for product
      * @param int $minimal_quantity Minimal quantity to add to cart
      * @param string $isbn ISBN reference
-     * @param int|null $low_stock Low stock alert
+     * @param null|int $low_stock Low stock alert
      * @param mixed $unit_impact
      * @param null|mixed $upc
      * @param array $id_shop_list
@@ -3200,20 +3200,20 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product Product id
      * @param bool $usetax With taxes or not (optional)
-     * @param int|null $id_product_attribute product attribute id (optional).
+     * @param null|int $id_product_attribute product attribute id (optional).
      *                                       If set to false, do not apply the combination price impact.
      *                                       NULL does apply the default combination price impact
      * @param int $decimals Number of decimals (optional)
-     * @param int|null $divisor Useful when paying many time without fees (optional)
+     * @param null|int $divisor Useful when paying many time without fees (optional)
      * @param bool $only_reduc Returns only the reduction amount
      * @param bool $usereduc Set if the returned amount will include reduction
      * @param int $quantity Required for quantity discount application (default value: 1)
      * @param bool $force_associated_tax DEPRECATED - NOT USED Force to apply the associated tax.
      *                                   Only works when the parameter $usetax is true
-     * @param int|null $id_customer Customer ID (for customer group reduction)
-     * @param int|null $id_cart Cart ID. Required when the cookie is not accessible
+     * @param null|int $id_customer Customer ID (for customer group reduction)
+     * @param null|int $id_cart Cart ID. Required when the cookie is not accessible
      *                          (e.g., inside a payment module, a cron task...)
-     * @param int|null $id_address Customer address ID. Required for price (tax included)
+     * @param null|int $id_address Customer address ID. Required for price (tax included)
      *                             calculation regarding the guest localization
      * @param null $specific_price_output If a specific price applies regarding the previous parameters,
      *                                    this variable is filled with the corresponding SpecificPrice object
@@ -3790,8 +3790,8 @@ class ProductCore extends ObjectModel
      *
      * @param int $idProduct Product id
      * @param int $idProductAttribute Product attribute id (optional)
-     * @param bool|null $cacheIsPack
-     * @param Cart|null $cart
+     * @param null|bool $cacheIsPack
+     * @param null|Cart $cart
      * @param int $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
@@ -3825,7 +3825,7 @@ class ProductCore extends ObjectModel
      * Create JOIN query with 'stock_available' table.
      *
      * @param string $productAlias Alias of product table
-     * @param string|int $productAttribute If string : alias of PA table ; if int : value of PA ; if null : nothing about PA
+     * @param int|string $productAttribute If string : alias of PA table ; if int : value of PA ; if null : nothing about PA
      * @param bool $innerJoin LEFT JOIN or INNER JOIN
      * @param Shop $shop
      * @param mixed $product_alias
@@ -5824,7 +5824,7 @@ class ProductCore extends ObjectModel
     /**
      * Returns tax rate.
      *
-     * @param Address|null $address
+     * @param null|Address $address
      *
      * @return float The total taxes rate applied to the product
      */

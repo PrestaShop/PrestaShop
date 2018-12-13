@@ -158,7 +158,7 @@ class Localize
     /**
      * Gets the best locale value, looking after the input, the browser and the environment locales.
      *
-     * @param null|string|Localize $locale
+     * @param null|Localize|string $locale
      *
      * @return string The best fitting locale
      */
@@ -230,7 +230,7 @@ class Localize
      *
      * @param $locale the locale to fix
      *
-     * @return array|null|string the fixed locale format
+     * @return null|array|string the fixed locale format
      */
     private static function canonicalize($locale)
     {

@@ -50,8 +50,8 @@ class StockManagerCore implements StockManagerInterface
      * @param int $id_stock_mvt_reason
      * @param float $price_te
      * @param bool $is_usable
-     * @param int|null $id_supply_order
-     * @param Employee|null $employee
+     * @param null|int $id_supply_order
+     * @param null|Employee $employee
      *
      * @return bool
      *
@@ -202,14 +202,14 @@ class StockManagerCore implements StockManagerInterface
      * @see StockManagerInterface::removeProduct()
      *
      * @param int $id_product
-     * @param int|null $id_product_attribute
+     * @param null|int $id_product_attribute
      * @param Warehouse $warehouse
      * @param int $quantity
      * @param int $id_stock_mvt_reason
      * @param bool $is_usable
-     * @param int|null $id_order
+     * @param null|int $id_order
      * @param int $ignore_pack
-     * @param Employee|null $employee
+     * @param null|Employee $employee
      *
      * @return array
      *
@@ -816,7 +816,7 @@ class StockManagerCore implements StockManagerInterface
      * For a given stock, calculates its new WA(Weighted Average) price based on the new quantities and price
      * Formula : (physicalStock * lastCump + quantityToAdd * unitPrice) / (physicalStock + quantityToAdd).
      *
-     * @param Stock|PrestaShopCollection $stock
+     * @param PrestaShopCollection|Stock $stock
      * @param int $quantity
      * @param float $price_te
      *

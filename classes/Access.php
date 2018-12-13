@@ -235,7 +235,7 @@ class AccessCore extends ObjectModel
      *
      * @param string $legacyAuth Legacy authorization
      *
-     * @return bool|string|array Authorization
+     * @return array|bool|string Authorization
      */
     public static function getAuthorizationFromLegacy($legacyAuth)
     {

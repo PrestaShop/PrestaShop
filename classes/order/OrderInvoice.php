@@ -727,7 +727,7 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @since 1.5.0.14
      *
-     * @return PrestaShopCollection|array Collection of OrderInvoice or empty array
+     * @return array|PrestaShopCollection Collection of OrderInvoice or empty array
      */
     public function getSibling()
     {

@@ -318,7 +318,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
 
     /**
      * @param array $fileOffsets
-     * @param int|null $originalTime
+     * @param null|int $originalTime
      */
     private function generateFiles(array $fileOffsets, $originalTime = null)
     {

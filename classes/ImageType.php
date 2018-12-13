@@ -85,7 +85,7 @@ class ImageTypeCore extends ObjectModel
     /**
      * Returns image type definitions.
      *
-     * @param string|null Image type
+     * @param null|string Image type
      * @param bool $orderBySize
      * @param null|mixed $type
      *

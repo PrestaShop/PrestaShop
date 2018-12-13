@@ -41,7 +41,7 @@ class LocalizationPackCore
      * @param SimpleXMLElement|string $pack Localization pack as SimpleXMLElement or plain XML string
      * @param array $selection Content to import selection
      * @param bool $install_mode Whether mode is installation or not
-     * @param string|null $iso_localization_pack Country Alpha-2 ISO code
+     * @param null|string $iso_localization_pack Country Alpha-2 ISO code
      *
      * @return bool
      */

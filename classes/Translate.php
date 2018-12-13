@@ -156,7 +156,7 @@ class TranslateCore
     /**
      * Get a translation for a module.
      *
-     * @param string|Module $module
+     * @param Module|string $module
      * @param string $originalString
      * @param string $source
      * @param null $sprintf

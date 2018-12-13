@@ -86,7 +86,7 @@ class DbQueryCore
      * Sets table for FROM clause.
      *
      * @param string $table Table name
-     * @param string|null $alias Table alias
+     * @param null|string $alias Table alias
      *
      * @return DbQuery
      */
@@ -120,8 +120,8 @@ class DbQueryCore
      * Adds a LEFT JOIN clause.
      *
      * @param string $table Table name (without prefix)
-     * @param string|null $alias Table alias
-     * @param string|null $on ON clause
+     * @param null|string $alias Table alias
+     * @param null|string $on ON clause
      *
      * @return DbQuery
      */
@@ -135,8 +135,8 @@ class DbQueryCore
      * E.g. $this->innerJoin('product p ON ...').
      *
      * @param string $table Table name (without prefix)
-     * @param string|null $alias Table alias
-     * @param string|null $on ON clause
+     * @param null|string $alias Table alias
+     * @param null|string $on ON clause
      *
      * @return DbQuery
      */
@@ -149,8 +149,8 @@ class DbQueryCore
      * Adds a LEFT OUTER JOIN clause.
      *
      * @param string $table Table name (without prefix)
-     * @param string|null $alias Table alias
-     * @param string|null $on ON clause
+     * @param null|string $alias Table alias
+     * @param null|string $on ON clause
      *
      * @return DbQuery
      */
@@ -163,7 +163,7 @@ class DbQueryCore
      * Adds a NATURAL JOIN clause.
      *
      * @param string $table Table name (without prefix)
-     * @param string|null $alias Table alias
+     * @param null|string $alias Table alias
      *
      * @return DbQuery
      */
@@ -176,8 +176,8 @@ class DbQueryCore
      * Adds a RIGHT JOIN clause.
      *
      * @param string $table Table name (without prefix)
-     * @param string|null $alias Table alias
-     * @param string|null $on ON clause
+     * @param null|string $alias Table alias
+     * @param null|string $on ON clause
      *
      * @return DbQuery
      */

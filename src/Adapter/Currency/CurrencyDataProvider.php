@@ -69,7 +69,7 @@ class CurrencyDataProvider
      *
      * @param string $isoCode
      *                        An ISO 4217 currency code
-     * @param int|null $idLang
+     * @param null|int $idLang
      *                         Set this parameter if you want the currency in a specific language.
      *                         If null, default language will be used
      *
@@ -96,7 +96,7 @@ class CurrencyDataProvider
      *
      * @param string $isoCode
      *                        An ISO 4217 currency code
-     * @param int|null $idLang
+     * @param null|int $idLang
      *                         Set this parameter if you want the currency in a specific language.
      *                         If null, default language will be used
      *

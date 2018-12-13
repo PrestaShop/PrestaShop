@@ -283,7 +283,7 @@ class CountryCore extends ObjectModel
     /**
      * Get a country id with its name.
      *
-     * @param int|null $idLang Language ID
+     * @param null|int $idLang Language ID
      * @param string $country Country Name
      *
      * @return int Country ID

@@ -126,7 +126,7 @@ class CustomerMessageCore extends ObjectModel
     /**
      * Get total CustomerMessages.
      *
-     * @param string|null $where Additional SQL query
+     * @param null|string $where Additional SQL query
      *
      * @return int Amount of CustomerMessages found
      */

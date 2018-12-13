@@ -63,7 +63,7 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
     /**
      * Returns a value from the first row, first column of a SELECT query.
      *
-     * @param string|DbQuery $sql
+     * @param DbQuery|string $sql
      * @param bool $useMaster
      * @param bool $useCache
      *

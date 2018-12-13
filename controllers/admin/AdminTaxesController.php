@@ -130,7 +130,7 @@ class AdminTaxesControllerCore extends AdminController
     /**
      * Display delete action link.
      *
-     * @param string|null $token
+     * @param null|string $token
      * @param int $id
      *
      * @return string

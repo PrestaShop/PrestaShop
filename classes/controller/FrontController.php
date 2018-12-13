@@ -1219,7 +1219,7 @@ class FrontControllerCore extends Controller
     /**
      * Adds jQuery UI component(s) to queued JS file list.
      *
-     * @param string|array $component
+     * @param array|string $component
      * @param string $theme
      * @param bool $check_dependencies
      */
@@ -1253,7 +1253,7 @@ class FrontControllerCore extends Controller
     /**
      * Adds jQuery plugin(s) to queued JS file list.
      *
-     * @param string|array $name
+     * @param array|string $name
      * @param string null $folder
      * @param bool $css
      */

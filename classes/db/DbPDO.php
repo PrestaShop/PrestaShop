@@ -346,7 +346,7 @@ class DbPDOCore extends Db
      * @param string $pwd
      * @param string $db
      * @param string $prefix
-     * @param string|null $engine Table engine
+     * @param null|string $engine Table engine
      *
      * @return bool|string True, false or error
      */
@@ -386,7 +386,7 @@ class DbPDOCore extends Db
      * @param string $pwd Password for database connection
      * @param string $db Database name
      * @param bool $newDbLink
-     * @param string|bool $engine
+     * @param bool|string $engine
      * @param int $timeout
      * @param mixed $new_db_link
      *

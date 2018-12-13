@@ -944,7 +944,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @param array $files
      * @param string $theme_name
      * @param string $module_name
-     * @param string|bool $dir
+     * @param bool|string $dir
      *
      * @throws PrestaShopException
      */
@@ -1058,7 +1058,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @param array $files
      * @param string $theme_name
      * @param string $module_name
-     * @param string|bool $dir
+     * @param bool|string $dir
      */
     protected function findAndFillTranslations($files, $theme_name, $module_name, $dir = false)
     {
@@ -1230,7 +1230,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @param $content
      * @param $type_translation : front, back, errors, modules...
-     * @param string|bool $type_file : (tpl|php)
+     * @param bool|string $type_file : (tpl|php)
      * @param string $module_name : name of the module
      *
      * @return array
@@ -2483,7 +2483,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @param Language $obj_lang
      * @param string $id_html Use for set html id attribute for the block
      * @param string $title Set the title for the block
-     * @param string|bool $name_for_module Is not false define add a name for distinguish mails module
+     * @param bool|string $name_for_module Is not false define add a name for distinguish mails module
      *
      * @return string
      */
@@ -2601,7 +2601,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @param string $lang ISO code of the needed language
      * @param string $mail_name Name of the file to translate (same for txt and html files)
      * @param string $group_name group name allow to distinguish each block of mail
-     * @param string|bool $name_for_module Is not false define add a name for distinguish mails module
+     * @param bool|string $name_for_module Is not false define add a name for distinguish mails module
      *
      * @return string
      */
@@ -2630,7 +2630,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @param string $url The html page and displaying an outline
      * @param string $mail_name Name of the file to translate (same for txt and html files)
      * @param string $group_name group name allow to distinguish each block of mail
-     * @param string|bool $name_for_module Is not false define add a name for distinguish mails module
+     * @param bool|string $name_for_module Is not false define add a name for distinguish mails module
      *
      * @return string
      */
@@ -3024,7 +3024,7 @@ class AdminTranslationsControllerCore extends AdminController
      * The file depend on $lang param.
      *
      * @param array $modules List of modules
-     * @param string|null $root_dir path where it get each modules
+     * @param null|string $root_dir path where it get each modules
      * @param string $lang ISO code of chosen language to translate
      * @param bool $is_default Set it if modules are located in root/prestashop/modules folder
      *                         This allow to distinguish overridden prestashop theme and original module

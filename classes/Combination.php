@@ -55,7 +55,7 @@ class CombinationCore extends ObjectModel
 
     public $minimal_quantity = 1;
 
-    /** @var int|null Low stock for mail alert */
+    /** @var null|int Low stock for mail alert */
     public $low_stock_threshold = null;
 
     /** @var bool Low stock mail alert activated */

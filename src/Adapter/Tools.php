@@ -93,7 +93,7 @@ class Tools
 
     /**
      * @param string $html
-     * @param string|null $uri_unescape
+     * @param null|string $uri_unescape
      * @param bool $allow_style
      *
      * @return string

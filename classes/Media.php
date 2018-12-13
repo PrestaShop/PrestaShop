@@ -415,7 +415,7 @@ class MediaCore
      * return jquery plugin path.
      *
      * @param mixed $name
-     * @param string|null $folder
+     * @param null|string $folder
      *
      * @return bool|string
      */
@@ -447,7 +447,7 @@ class MediaCore
      * return jquery plugin css path if exist.
      *
      * @param mixed $name
-     * @param string|null $folder
+     * @param null|string $folder
      *
      * @return bool|string
      */

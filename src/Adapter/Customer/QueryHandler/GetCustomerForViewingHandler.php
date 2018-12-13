@@ -204,7 +204,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     /**
      * @param int $customerId
      *
-     * @return int|null customer rank or null if customer is not ranked
+     * @return null|int customer rank or null if customer is not ranked
      */
     private function getCustomerRankBySales($customerId)
     {

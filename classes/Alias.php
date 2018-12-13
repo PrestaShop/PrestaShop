@@ -49,10 +49,10 @@ class AliasCore extends ObjectModel
     /**
      * AliasCore constructor.
      *
-     * @param int|null $id Alias ID
-     * @param string|null $alias Alias
-     * @param string|null $search Search string
-     * @param int|null $idLang Language ID
+     * @param null|int $id Alias ID
+     * @param null|string $alias Alias
+     * @param null|string $search Search string
+     * @param null|int $idLang Language ID
      */
     public function __construct($id = null, $alias = null, $search = null, $idLang = null)
     {

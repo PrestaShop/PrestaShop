@@ -588,7 +588,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get simplified Addresses arrays.
      *
-     * @param int|null $idLang Language ID
+     * @param null|int $idLang Language ID
      *
      * @return array
      */
@@ -616,7 +616,7 @@ class CustomerCore extends ObjectModel
      * Get Address as array.
      *
      * @param int $idAddress Address ID
-     * @param int|null $idLang Language ID
+     * @param null|int $idLang Language ID
      *
      * @return array|false|mysqli_result|null|PDOStatement|resource
      */
@@ -659,8 +659,8 @@ class CustomerCore extends ObjectModel
     /**
      * Get SQL query to retrieve Address in an array.
      *
-     * @param int|null $idAddress Address ID
-     * @param int|null $idLang Language ID
+     * @param null|int $idAddress Address ID
+     * @param null|int $idLang Language ID
      *
      * @return string
      */
@@ -765,7 +765,7 @@ class CustomerCore extends ObjectModel
      * @param string $query Searched string
      * @param null|int $limit Limit query results
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Corresponding customers
+     * @return null|array|false|mysqli_result|PDOStatement|resource Corresponding customers
      *
      * @throws PrestaShopDatabaseException
      */
@@ -896,7 +896,7 @@ class CustomerCore extends ObjectModel
      *
      * @param int $idCustomer Customer ID
      *
-     * @return int|null Customer ID if found
+     * @return null|int Customer ID if found
      */
     public static function customerIdExistsStatic($idCustomer)
     {
@@ -1038,7 +1038,7 @@ class CustomerCore extends ObjectModel
      * Get current Country.
      *
      * @param int $idCustomer
-     * @param Cart|null $cart
+     * @param null|Cart $cart
      *
      * @return int Country ID
      */
@@ -1077,7 +1077,7 @@ class CustomerCore extends ObjectModel
      * Transform the Guest to a Customer.
      *
      * @param int $idLang Language ID
-     * @param string|null $password Password
+     * @param null|string $password Password
      *
      * @return bool
      */

@@ -70,7 +70,7 @@ class CsvResponse extends StreamedResponse
     /**
      * Constructor.
      *
-     * @param callable|null $callback A valid PHP callback or null to set it later
+     * @param null|callable $callback A valid PHP callback or null to set it later
      * @param int $status The response status code
      * @param array $headers An array of response headers
      */

@@ -213,7 +213,7 @@ class DispatcherCore
     /**
      * Needs to be instantiated from getInstance() method.
      *
-     * @param SymfonyRequest|null $request
+     * @param null|SymfonyRequest $request
      *
      * @throws PrestaShopException
      */
@@ -252,7 +252,7 @@ class DispatcherCore
     /**
      * Either sets a given request or a new one.
      *
-     * @param SymfonyRequest|null $request
+     * @param null|SymfonyRequest $request
      */
     private function setRequest(SymfonyRequest $request = null)
     {
@@ -277,7 +277,7 @@ class DispatcherCore
      * Sets and returns the default controller.
      *
      * @param int $frontControllerType The front controller type
-     * @param Employee|null $employee The current employee
+     * @param null|Employee $employee The current employee
      *
      * @return string
      */

@@ -202,7 +202,7 @@ class SpecificPriceRuleCore extends ObjectModel
     /**
      * Return the product list affected by this specific rule.
      *
-     * @param bool|array $products products list limitation
+     * @param array|bool $products products list limitation
      *
      * @return array affected products list IDs
      *

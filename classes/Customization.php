@@ -218,7 +218,7 @@ class CustomizationCore extends ObjectModel
      *
      * @param int $idCustomization Customization ID
      * @param int $idLang Language IOD
-     * @param int|null $idShop Shop ID
+     * @param null|int $idShop Shop ID
      *
      * @return bool|false|null|string
      */
