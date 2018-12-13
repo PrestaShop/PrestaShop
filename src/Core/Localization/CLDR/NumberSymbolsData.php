@@ -160,7 +160,6 @@ class NumberSymbolsData
      * @param NumberSymbolsData $symbolsData Symbols to use for the override
      *
      * @return $this Fluent interface
-     *        
      */
     public function overrideWith(NumberSymbolsData $symbolsData)
     {
