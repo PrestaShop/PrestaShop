@@ -72,5 +72,5 @@ class ValuesBuilder {
         $sql = substr($sql, 0, -1);
 
         return "VALUES " . $sql;
-    }    
+    }
 }

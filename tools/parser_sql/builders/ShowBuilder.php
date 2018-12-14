@@ -122,5 +122,5 @@ class ShowBuilder {
         $sql = substr($sql, 0, -1);
 
         return "SHOW " . $sql;
-    }    
+    }
 }

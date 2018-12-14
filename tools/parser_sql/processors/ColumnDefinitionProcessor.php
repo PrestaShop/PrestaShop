@@ -56,7 +56,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
     }
     
     protected function removeComma($tokens) {
-        $res = array();        
+        $res = array();
         foreach ($tokens as $token) {
             if (trim($token) !== ',') {
                 $res[] = $token;

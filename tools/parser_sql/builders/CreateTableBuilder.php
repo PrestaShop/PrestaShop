@@ -78,5 +78,5 @@ class CreateTableBuilder {
         $sql .= $this->buildCreateTableSelectOption($parsed);
 
         return $sql;
-    }    
+    }
 }

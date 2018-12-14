@@ -109,5 +109,5 @@ class TableBracketExpressionBuilder {
         $sql = " (" . substr($sql, 0, -2) . ")";
 
         return $sql;
-    }    
+    }
 }

@@ -363,7 +363,7 @@ class ReleaseCreator
             '~const VERSION = \'(.*)\';~',
             $kernelFileContent,
             $matches
-        ); 
+        );
 
         return $matches[1];
     }

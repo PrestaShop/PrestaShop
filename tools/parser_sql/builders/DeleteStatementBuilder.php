@@ -77,5 +77,5 @@ class DeleteStatementBuilder {
         }
 
         return $sql;
-    }    
+    }
 }

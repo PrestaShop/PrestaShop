@@ -90,5 +90,5 @@ class ColumnTypeBuilder {
         }
     
         return substr($sql, 0, -1);
-    }    
+    }
 }

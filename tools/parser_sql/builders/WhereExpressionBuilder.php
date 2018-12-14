@@ -133,5 +133,5 @@ class WhereExpressionBuilder {
         $sql = substr($sql, 0, -1);
 
         return $sql;
-    }    
+    }
 }

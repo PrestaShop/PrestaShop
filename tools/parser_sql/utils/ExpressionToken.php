@@ -178,7 +178,7 @@ class ExpressionToken {
         $result['expr_type'] = $this->tokenType;
         $result['base_expr'] = $this->token;
         if (!empty($this->noQuotes)) {
-            $result['no_quotes'] = $this->noQuotes;   
+            $result['no_quotes'] = $this->noQuotes;
         }
         $result['sub_tree'] = $this->subTree;
 

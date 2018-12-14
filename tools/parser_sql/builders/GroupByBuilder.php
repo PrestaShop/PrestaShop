@@ -88,5 +88,5 @@ class GroupByBuilder {
         $sql = substr($sql, 0, -2);
 
         return "GROUP BY " . $sql;
-    }    
+    }
 }
