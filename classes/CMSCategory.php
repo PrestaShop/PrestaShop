@@ -337,7 +337,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @param int $id_lang Language ID
      * @param bool $active return only active categories
-     * @param mixed $order
+     * @param bool $order
      *
      * @return array Categories
      */
