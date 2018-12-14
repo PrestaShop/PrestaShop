@@ -815,7 +815,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get a specific zones.
      *
-     * @param mixed $id_zone
+     * @param int $id_zone
      *
      * @return array Zone
      */
