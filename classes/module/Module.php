@@ -1340,7 +1340,7 @@ abstract class ModuleCore implements ModuleInterface
                     $module_list[$item->name . '_disk'] = $item;
 
                     $module_name_list[] = '\'' . pSQL($item->name) . '\'';
-                    $modules_name_to_cursor[Tools::strtolower(strval($item->name))] = $item;
+                    $modules_name_to_cursor[Tools::strtolower((string) ($item->name))] = $item;
                 }
             }
 

@@ -888,7 +888,7 @@ class AdminCustomersControllerCore extends AdminController
             $this->redirect_after = false;
         }
         // Check that the new email is not already in use
-        $customer_email = strval(Tools::getValue('email'));
+        $customer_email = (string) (Tools::getValue('email'));
         $customer = new Customer();
         if (Validate::isEmail($customer_email)) {
             $customer->getByEmail($customer_email);
@@ -914,7 +914,7 @@ class AdminCustomersControllerCore extends AdminController
     public function processUpdate()
     {
         if (Validate::isLoadedObject($this->object)) {
-            $customer_email = strval(Tools::getValue('email'));
+            $customer_email = (string) (Tools::getValue('email'));
 
             // check if e-mail already used
             if ($customer_email != $this->object->email) {

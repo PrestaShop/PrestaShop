@@ -36,7 +36,7 @@ function ps_1740_update_module_tabs()
         'AdminModulesNotifications' => 'en:Notifications|fr:Notifications|es:Notificaciones|de:Nachrichten|it:Notifiche',
     );
 
-    include_once('add_new_tab.php');
+    include_once 'add_new_tab.php';
     foreach ($moduleTabsToBeAdded as $className => $translations) {
         add_new_tab_17($className, $translations, 0, false, 'AdminModulesSf');
     }

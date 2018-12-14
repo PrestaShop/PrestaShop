@@ -27,7 +27,7 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-require_once(_PS_ADMIN_DIR_.'/../images.inc.php');
+require_once _PS_ADMIN_DIR_.'/../images.inc.php';
 function bindDatepicker($id, $time)
 {
     if ($time) {
@@ -422,7 +422,7 @@ function runAdminTab($tab, $ajax_mode = false)
 {
     $ajax_mode = (bool)$ajax_mode;
 
-    require_once(_PS_ADMIN_DIR_.'/init.php');
+    require_once _PS_ADMIN_DIR_.'/init.php';
     $cookie = Context::getContext()->cookie;
     if (empty($tab) && !count($_POST)) {
         $tab = 'AdminDashboard';
@@ -441,7 +441,7 @@ function runAdminTab($tab, $ajax_mode = false)
             $admin_obj->run();
         } else {
             if (!$ajax_mode) {
-                require_once(_PS_ADMIN_DIR_.'/header.inc.php');
+                require_once _PS_ADMIN_DIR_.'/header.inc.php';
             }
             $iso_user = Context::getContext()->language->id;
             $tabs = array();
@@ -524,7 +524,7 @@ function runAdminTab($tab, $ajax_mode = false)
                         $admin_obj->postProcess();
                         $admin_obj->displayErrors();
                         $admin_obj->display();
-                        include(_PS_ADMIN_DIR_.'/footer.inc.php');
+                        include _PS_ADMIN_DIR_.'/footer.inc.php';
                     }
                 } else {
                     if ($ajax_mode) {

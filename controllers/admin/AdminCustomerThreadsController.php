@@ -1092,7 +1092,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 preg_match('/\#ct([0-9]*)/', $subject, $matches1);
                 preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
                 $match_found = false;
-                if (isset($matches1[1]) && isset($matches2[1])) {
+                if (isset($matches1[1], $matches2[1])) {
                     $match_found = true;
                 }
 

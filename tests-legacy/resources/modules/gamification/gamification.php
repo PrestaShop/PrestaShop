@@ -92,7 +92,7 @@ class gamification extends Module
     public function installDb()
     {
         $return = true;
-        include(dirname(__FILE__).'/sql_install.php');
+        include dirname(__FILE__).'/sql_install.php';
         foreach ($sql as $s) {
             $return &= Db::getInstance()->execute($s);
         }
@@ -102,7 +102,7 @@ class gamification extends Module
 
     public function uninstallDb()
     {
-        include(dirname(__FILE__).'/sql_install.php');
+        include dirname(__FILE__).'/sql_install.php';
         foreach ($sql as $name => $v) {
             Db::getInstance()->execute('DROP TABLE '.$name);
         }
@@ -309,13 +309,13 @@ class gamification extends Module
                     $this->processImportConditions($data->conditions, $id_lang);
                 }
 
-                if ((isset($data->badges) && isset($data->badges_lang)) && (!isset($data->badges_only_visible_awb) && !isset($data->badges_only_visible_lang_awb))) {
+                if ((isset($data->badges, $data->badges_lang)) && (!isset($data->badges_only_visible_awb) && !isset($data->badges_only_visible_lang_awb))) {
                     $this->processImportBadges($data->badges, $data->badges_lang, $id_lang);
                 } else {
                     $this->processImportBadges(array_merge($data->badges_only_visible_awb, $data->badges), array_merge($data->badges_only_visible_lang_awb, $data->badges_lang), $id_lang);
                 }
 
-                if (isset($data->advices) && isset($data->advices_lang)) {
+                if (isset($data->advices, $data->advices_lang)) {
                     $this->processImportAdvices($data->advices, $data->advices_lang, $id_lang);
                 }
 
@@ -325,7 +325,7 @@ class gamification extends Module
                     }
                 }
 
-                if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true && isset($data->advices_16) && isset($data->advices_lang_16)) {
+                if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true && isset($data->advices_16, $data->advices_lang_16)) {
                     $this->processImportAdvices($data->advices_16, $data->advices_lang_16, $id_lang);
                 }
             }

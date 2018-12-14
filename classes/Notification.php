@@ -119,7 +119,7 @@ class NotificationCore
         $json = array('total' => $total, 'results' => array());
         foreach ($result as $value) {
             $customerName = '';
-            if (isset($value['firstname']) && isset($value['lastname'])) {
+            if (isset($value['firstname'], $value['lastname'])) {
                 $customerName = Tools::safeOutput($value['firstname'] . ' ' . $value['lastname']);
             } elseif (isset($value['email'])) {
                 $customerName = Tools::safeOutput($value['email']);

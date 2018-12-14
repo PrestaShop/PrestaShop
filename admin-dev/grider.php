@@ -27,7 +27,7 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 $module = Tools::getValue('module');
 $render = Tools::getValue('render');
@@ -93,7 +93,7 @@ if (!$shop_id) {
     Context::getContext()->shop = new Shop($shop_id);
 }
 
-    require_once($module_path);
+require_once $module_path;
 
 $grid = new $module();
 $grid->setEmployee($id_employee);

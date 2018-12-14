@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_tab.php');
+require_once _PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_tab.php';
 
 function create_multistore()
 {

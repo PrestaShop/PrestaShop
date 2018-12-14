@@ -24,7 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-include('../config/config.inc.php');
+include '../config/config.inc.php';
+
 header('content-type: application/x-javascript');
 
 $jquery_folder = dirname(__FILE__).'/jquery/';

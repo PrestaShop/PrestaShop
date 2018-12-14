@@ -602,9 +602,9 @@ class AdminImportControllerCore extends AdminController
             }
         }
 
-        $this->separator = ($separator = Tools::substr(strval(trim(Tools::getValue('separator'))), 0, 1)) ? $separator : ';';
+        $this->separator = ($separator = Tools::substr((string) (trim(Tools::getValue('separator'))), 0, 1)) ? $separator : ';';
         $this->convert = false;
-        $this->multiple_value_separator = ($separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator : ',';
+        $this->multiple_value_separator = ($separator = Tools::substr((string) (trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator : ',';
     }
 
     public function setMedia($isNewTheme = false)
@@ -1847,7 +1847,7 @@ class AdminImportControllerCore extends AdminController
             if ($product->tax_rate) {
                 $product->price = (float) number_format($product->price / (1 + $product->tax_rate / 100), 6, '.', '');
             }
-        } elseif (isset($product->price_tin) && isset($product->price_tex)) {
+        } elseif (isset($product->price_tin, $product->price_tex)) {
             $product->price = $product->price_tex;
         }
 
@@ -2326,7 +2326,7 @@ class AdminImportControllerCore extends AdminController
                         if ($price == 0) {
                             $price = 0.000001;
                         }
-                        $price = round(floatval($price), 6);
+                        $price = round((float) $price, 6);
                         $warehouse = new Warehouse($product->warehouse);
                         if ($stock_manager->addProduct((int) $product->id, 0, $warehouse, (int) $product->quantity, 1, $price, true)) {
                             StockAvailable::synchronize((int) $product->id);
@@ -2703,7 +2703,7 @@ class AdminImportControllerCore extends AdminController
 
                     // if a reference is specified for this product, get the associate id_product_attribute to UPDATE
                     if (isset($info['reference']) && !empty($info['reference'])) {
-                        $id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
+                        $id_product_attribute = Combination::getIdByReference($product->id, (string) ($info['reference']));
 
                         // updates the attribute
                         if ($id_product_attribute && !$validateOnly) {
@@ -2865,7 +2865,7 @@ class AdminImportControllerCore extends AdminController
                         if ($price == 0) {
                             $price = 0.000001;
                         }
-                        $price = round(floatval($price), 6);
+                        $price = round((float) $price, 6);
                         $warehouse = new Warehouse($info['warehouse']);
                         if (!$validateOnly && $stock_manager->addProduct((int) $product->id, $id_product_attribute, $warehouse, (int) $info['quantity'], 1, $price, true)) {
                             StockAvailable::synchronize((int) $product->id);
@@ -4310,7 +4310,7 @@ class AdminImportControllerCore extends AdminController
     protected function excelToCsvFile($filename)
     {
         if (preg_match('#(.*?)\.(csv)#is', $filename)) {
-            $dest_file = AdminImportController::getPath(strval(preg_replace('/\.{2,}/', '.', $filename)));
+            $dest_file = AdminImportController::getPath((string) (preg_replace('/\.{2,}/', '.', $filename)));
         } else {
             $csv_folder = AdminImportController::getPath();
             $excel_folder = $csv_folder . 'csvfromexcel/';

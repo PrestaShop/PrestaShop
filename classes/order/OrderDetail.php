@@ -296,7 +296,7 @@ class OrderDetailCore extends ObjectModel
         $sql = 'SELECT *
         FROM `' . _DB_PREFIX_ . 'order_detail` od
         LEFT JOIN `' . _DB_PREFIX_ . 'product_download` pd ON (od.`product_id`=pd.`id_product`)
-        WHERE od.`download_hash` = \'' . pSQL(strval($hash)) . '\'
+        WHERE od.`download_hash` = \'' . pSQL((string) $hash) . '\'
         AND pd.`active` = 1';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -518,7 +518,7 @@ class OrderDetailCore extends ObjectModel
      */
     protected function setProductTax(Order $order, $product)
     {
-        $this->ecotax = Tools::convertPrice(floatval($product['ecotax']), intval($order->id_currency));
+        $this->ecotax = Tools::convertPrice((float) ($product['ecotax']), (int) ($order->id_currency));
 
         // Exclude VAT
         if (!Tax::excludeTaxeOption()) {
@@ -627,7 +627,7 @@ class OrderDetailCore extends ObjectModel
         $unit_price = Product::getPriceStatic(
             (int) $product['id_product'],
             true,
-            ($product['id_product_attribute'] ? intval($product['id_product_attribute']) : null),
+            ($product['id_product_attribute'] ? (int) ($product['id_product_attribute']) : null),
             2,
             null,
             false,

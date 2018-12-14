@@ -650,7 +650,7 @@ class ToolsCore
     public static function getCountry($address = null)
     {
         $id_country = (int) Tools::getValue('id_country');
-        if (!$id_country && isset($address) && isset($address->id_country) && $address->id_country) {
+        if (!$id_country && isset($address, $address->id_country) && $address->id_country) {
             $id_country = (int) $address->id_country;
         } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
@@ -3738,7 +3738,7 @@ exit;
                 break;
             case 'module':
                 $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
-                if (isset($params['username_addons']) && isset($params['password_addons'])) {
+                if (isset($params['username_addons'], $params['password_addons'])) {
                     $post_data .= '&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
                 }
 

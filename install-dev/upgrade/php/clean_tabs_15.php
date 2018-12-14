@@ -26,7 +26,7 @@
 
 function clean_tabs_15()
 {
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/migrate_tabs_15.php');
+    include_once _PS_INSTALL_PATH_.'upgrade/php/migrate_tabs_15.php';
 
     $clean_tabs_15 = array(
         9 => array(

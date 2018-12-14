@@ -26,7 +26,7 @@
 
 function blocknewsletter1530()
 {
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/generic_add_missing_column.php');
+    include_once _PS_INSTALL_PATH_.'upgrade/php/generic_add_missing_column.php';
 
     $column_to_add = array(
         'id_shop' => 'INTEGER UNSIGNED NOT NULL DEFAULT \'1\' after `id`',

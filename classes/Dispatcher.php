@@ -809,8 +809,7 @@ class DispatcherCore
             $id_shop = (int) Context::getContext()->shop->id;
         }
 
-        return isset($this->routes[$id_shop]) && isset($this->routes[$id_shop][$id_lang])
-            && isset($this->routes[$id_shop][$id_lang][$route_id]);
+        return isset($this->routes[$id_shop][$id_lang][$route_id]);
     }
 
     /**

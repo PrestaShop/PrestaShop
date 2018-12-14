@@ -587,7 +587,7 @@ class imageLib
   #               4 = Resize the image as much as possible, then crop the
   #         remainder.
   {
-      switch (strval($option)) {
+      switch ((string) $option) {
             case '0':
       case 'exact':
                 $optimalWidth = $newWidth;
@@ -3331,7 +3331,7 @@ class imageLib
   #
   {
       if (file_exists($this->psdReaderPath)) {
-          include_once($this->psdReaderPath);
+          include_once $this->psdReaderPath;
 
           $psdReader = new PhpPsdReader($fileName);
 
