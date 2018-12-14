@@ -475,10 +475,13 @@
 
 	function searchCustomers()
 	{
-    var customer_search = $('#customer').val();
+	  var $customer_search_input = $('#customer');
+    var customer_search = $customer_search_input.val();
+    var customer_search_url = $customer_search_input.data('customers-search-url');
+
 		$.ajax({
-			type:"POST",
-			url : "{$link->getAdminLink('AdminCustomers')}",
+			type:"GET",
+			url : customer_search_url,
 			async: true,
 			dataType: "json",
 			data : {
@@ -1112,7 +1115,7 @@
 				<div class="row">
 					<div class="col-lg-6">
 						<div class="input-group">
-							<input type="text" id="customer" value="" />
+							<input type="text" id="customer" value="" data-customers-search-url="{$customersSearchUrl|escape:'html':'UTF-8'}" />
 							<span class="input-group-addon">
 								<i class="icon-search"></i>
 							</span>
