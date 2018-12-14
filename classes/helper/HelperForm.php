@@ -26,8 +26,8 @@
  use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
  /**
-  * @since 1.5.0
-  */
+ * @since 1.5.0
+ */
 class HelperFormCore extends Helper
 {
     public $id;
