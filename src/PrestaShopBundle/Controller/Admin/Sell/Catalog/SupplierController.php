@@ -43,9 +43,9 @@ use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class SupplierController is responsible for "Sell > Catalog > Brands & Suppliers > Suppliers" page.
@@ -55,13 +55,11 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Show suppliers listing.
      *
-     * @Template("@PrestaShop/Admin/Sell/Catalog/Suppliers/index.html.twig")
-     *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param SupplierFilters $filters
      *
-     * @return array
+     * @return Response
      */
     public function indexAction(SupplierFilters $filters)
     {
@@ -71,9 +69,9 @@ class SupplierController extends FrameworkBundleAdminController
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
-        return [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/index.html.twig', [
             'supplierGrid' => $gridPresenter->present($supplierGrid),
-        ];
+        ]);
     }
 
     /**
