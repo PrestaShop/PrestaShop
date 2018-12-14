@@ -160,7 +160,7 @@ function returnDestImage($type, $ressource, $filename)
 /**
  *  @deprecated 1.5.0
  *
- * @param int $id_item
+ * @param mixed $id_item
  * @param null|mixed $id_image
  */
 function deleteImage($id_item, $id_image = null)

@@ -965,7 +965,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Unregister module from hook.
      *
-     * @param int $id_hook Hook id (can be a hook name since 1.5.0)
+     * @param mixed $id_hook Hook id (can be a hook name since 1.5.0)
      * @param array $shop_list List of shop
      * @param mixed $hook_id
      *
@@ -1037,7 +1037,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param int $hookID Hook id
      * @param array $excepts List of shopID and file name
-     * @param int $id_hook
+     * @param mixed $id_hook
      *
      * @return bool result
      */
@@ -1243,7 +1243,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param bool $use_config in order to use config.xml file in module dir
      * @param mixed $logged_on_addons
-     * @param int $id_employee
+     * @param mixed $id_employee
      *
      * @return array Modules
      */

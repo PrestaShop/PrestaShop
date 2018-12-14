@@ -1292,8 +1292,8 @@ class CartCore extends ObjectModel
      * @param int $id_product Product ID
      * @param int $id_product_attribute Attribute ID if needed
      * @param string $operator Indicate if quantity must be increased or decreased
-     * @param int $id_customization
-     * @param int $id_address_delivery
+     * @param mixed $id_customization
+     * @param mixed $id_address_delivery
      * @param null|Shop $shop
      * @param mixed $auto_add_cart_rule
      * @param mixed $skipAvailabilityCheckOutOfStock
@@ -1507,10 +1507,10 @@ class CartCore extends ObjectModel
      * Customization management.
      *
      * @param mixed $quantity
-     * @param int $id_customization
-     * @param int $id_product
-     * @param int $id_product_attribute
-     * @param int $id_address_delivery
+     * @param mixed $id_customization
+     * @param mixed $id_product
+     * @param mixed $id_product_attribute
+     * @param mixed $id_address_delivery
      * @param mixed $operator
      */
     protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $id_address_delivery, $operator = 'up')
@@ -4144,7 +4144,7 @@ class CartCore extends ObjectModel
     /**
      * Add customer's pictures.
      *
-     * @param int $id_product
+     * @param mixed $id_product
      * @param mixed $index
      * @param mixed $type
      * @param mixed $file
@@ -4795,8 +4795,8 @@ class CartCore extends ObjectModel
      * @id_carrier int
      * @id_zone int
      *
-     * @param int $id_carrier
-     * @param int $id_zone
+     * @param mixed $id_carrier
+     * @param mixed $id_zone
      */
     public function isCarrierInRange($id_carrier, $id_zone)
     {

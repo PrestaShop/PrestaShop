@@ -291,7 +291,7 @@ class MetaCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @param int $idLang
+     * @param mixed $idLang
      * @param mixed $pageName
      * @param mixed $title
      */

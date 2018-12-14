@@ -162,7 +162,7 @@ class TaxRulesGroupCore extends ObjectModel
     }
 
     /**
-     * @param int $id_country
+     * @param mixed $id_country
      *
      * @return array
      */
@@ -228,9 +228,9 @@ class TaxRulesGroupCore extends ObjectModel
     /**
      * @deprecated since 1.5
      *
-     * @param int $id_tax_rules_group
-     * @param int $id_country
-     * @param int $id_state
+     * @param mixed $id_tax_rules_group
+     * @param mixed $id_country
+     * @param mixed $id_state
      * @param mixed $zipcode
      */
     public static function getTaxesRate($id_tax_rules_group, $id_country, $id_state, $zipcode)
@@ -249,10 +249,10 @@ class TaxRulesGroupCore extends ObjectModel
      *
      * @deprecated since 1.5
      *
-     * @param int $id_tax_rules_group
-     * @param int $id_country
-     * @param int $id_state
-     * @param int $id_county
+     * @param mixed $id_tax_rules_group
+     * @param mixed $id_country
+     * @param mixed $id_state
+     * @param mixed $id_county
      */
     public static function getTaxes($id_tax_rules_group, $id_country, $id_state, $id_county)
     {

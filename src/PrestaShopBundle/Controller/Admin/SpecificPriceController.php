@@ -158,7 +158,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      *
      * @param int idSpecificPrice
      * @param Request $request
-     * @param int $idSpecificPrice
+     * @param mixed $idSpecificPrice
      *
      * @return string
      */

@@ -818,7 +818,7 @@ class ProductCore extends ObjectModel
     /**
      * Get the default attribute for a product.
      *
-     * @param int $id_product
+     * @param mixed $id_product
      * @param mixed $minimum_quantity
      * @param mixed $reset
      *
@@ -1202,7 +1202,7 @@ class ProductCore extends ObjectModel
     /**
      * deleteCategory delete this product from the category $id_category.
      *
-     * @param int $id_category
+     * @param mixed $id_category
      * @param mixed $clean_positions
      *
      * @return bool
@@ -1312,7 +1312,7 @@ class ProductCore extends ObjectModel
      * @param int $limit Number of products to return
      * @param string $order_by Field for ordering
      * @param string $order_way Way for ordering (ASC or DESC)
-     * @param int $id_category
+     * @param mixed $id_category
      * @param mixed $only_active
      * @param null|Context $context
      *
@@ -1483,9 +1483,9 @@ class ProductCore extends ObjectModel
      * @param mixed $unit_impact
      * @param mixed $ecotax
      * @param mixed $quantity
-     * @param int $id_images
+     * @param mixed $id_images
      * @param mixed $reference
-     * @param int $id_supplier
+     * @param mixed $id_supplier
      * @param mixed $ean13
      * @param mixed $default
      * @param mixed $location
@@ -1607,9 +1607,9 @@ class ProductCore extends ObjectModel
      * @param mixed $weight
      * @param mixed $unit_impact
      * @param mixed $ecotax
-     * @param int $id_images
+     * @param mixed $id_images
      * @param mixed $reference
-     * @param int $id_supplier
+     * @param mixed $id_supplier
      * @param mixed $ean13
      * @param mixed $default
      * @param null|mixed $location
@@ -1763,15 +1763,15 @@ class ProductCore extends ObjectModel
      * @see updateAttribute() to use instead
      * @see ProductSupplier for manage supplier reference(s)
      *
-     * @param int $id_product_attribute
+     * @param mixed $id_product_attribute
      * @param mixed $wholesale_price
      * @param mixed $price
      * @param mixed $weight
      * @param mixed $unit
      * @param mixed $ecotax
-     * @param int $id_images
+     * @param mixed $id_images
      * @param mixed $reference
-     * @param int $id_supplier
+     * @param mixed $id_supplier
      * @param mixed $ean13
      * @param mixed $default
      * @param mixed $location
@@ -1883,7 +1883,7 @@ class ProductCore extends ObjectModel
      * @param string $isbn ISBN reference
      * @param null|int $low_stock_threshold Low stock alert
      * @param bool $low_stock_alert send email on low stock
-     * @param int $id_images
+     * @param mixed $id_images
      * @param null|mixed $location
      * @param null|mixed $available_date
      * @param mixed $update_all_fields
@@ -3034,7 +3034,7 @@ class ProductCore extends ObjectModel
     /**
      * getProductCategories return an array of categories which this product belongs to.
      *
-     * @param int $id_product
+     * @param mixed $id_product
      *
      * @return array of categories
      */
@@ -3169,7 +3169,7 @@ class ProductCore extends ObjectModel
     /**
      * Get product cover image.
      *
-     * @param int $id_product
+     * @param mixed $id_product
      * @param null|Context $context
      *
      * @return array Product cover image
@@ -3378,7 +3378,7 @@ class ProductCore extends ObjectModel
      * @param bool $use_customer_price
      * @param int $id_cart
      * @param int $real_quantity
-     * @param int $id_customization
+     * @param mixed $id_customization
      *
      * @return float Product price
      */
@@ -4192,7 +4192,7 @@ class ProductCore extends ObjectModel
     /**
      * Add new feature to product.
      *
-     * @param int $id_value
+     * @param mixed $id_value
      * @param mixed $lang
      * @param mixed $cust
      */
@@ -4624,7 +4624,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product_old Old product id
      * @param int $id_product_old New product id
-     * @param int $id_product_new
+     * @param mixed $id_product_new
      */
     public static function duplicateFeatures($id_product_old, $id_product_new)
     {
@@ -5118,7 +5118,7 @@ class ProductCore extends ObjectModel
      * Select all features for a given language.
      *
      * @param $id_lang Language id
-     * @param int $id_product
+     * @param mixed $id_product
      *
      * @return array Array with feature's data
      */
@@ -5750,7 +5750,7 @@ class ProductCore extends ObjectModel
     /**
      * @deprecated since 1.5.0
      *
-     * @param int $id_lang
+     * @param mixed $id_lang
      */
     public function getStockMvts($id_lang)
     {
@@ -6207,7 +6207,7 @@ class ProductCore extends ObjectModel
     /**
      * Webservice setter : set virtual field id_default_image in category.
      *
-     * @param int $id_image
+     * @param mixed $id_image
      *
      * @return bool
      */
@@ -6357,7 +6357,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $product_attribute_id
-     * @param int $id_product_attribute
+     * @param mixed $id_product_attribute
      *
      * @return array
      */
@@ -6528,8 +6528,8 @@ class ProductCore extends ObjectModel
      * @deprecated 1.7.3.1
      * @see Product::getIdProductAttributeByIdAttributes()
      *
-     * @param int $id_product
-     * @param int $id_attributes
+     * @param mixed $id_product
+     * @param mixed $id_attributes
      * @param mixed $find_best
      */
     public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
@@ -7031,7 +7031,7 @@ class ProductCore extends ObjectModel
      * Gets a list of IDs from a list of IDs/Refs. The result will avoid duplicates, and checks if given IDs/Refs exists in DB.
      * Useful when a product list should be checked before a bulk operation on them (Only 1 query => performances).
      *
-     * @param int $ids_or_refs
+     * @param mixed $ids_or_refs
      *
      * @return array the IDs list, whithout duplicate and only existing ones
      */

@@ -87,7 +87,7 @@ class RangePriceCore extends ObjectModel
     /**
      * Get all available price ranges.
      *
-     * @param int $id_carrier
+     * @param mixed $id_carrier
      *
      * @return array Ranges
      */

@@ -232,7 +232,7 @@ class PackCore extends Product
      * @param null|bool $cacheIsPack
      * @param Cart $cart
      * @param int $idCustomization Product customization id (optional)
-     * @param int $idProduct
+     * @param mixed $idProduct
      * @param null|mixed $idProductAttribute
      *
      * @throws PrestaShopException

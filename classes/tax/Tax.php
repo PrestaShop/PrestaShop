@@ -141,7 +141,7 @@ class TaxCore extends ObjectModel
     /**
      * Get all available taxes.
      *
-     * @param int $id_lang
+     * @param mixed $id_lang
      * @param mixed $active_only
      *
      * @return array Taxes
@@ -211,7 +211,7 @@ class TaxCore extends ObjectModel
      * Returns the carrier tax rate.
      *
      * @param id_address
-     * @param int $id_carrier
+     * @param mixed $id_carrier
      * @param null|mixed $id_address
      *
      * @return float $tax_rate
@@ -232,7 +232,7 @@ class TaxCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $id_country
-     * @param int $id_state
+     * @param mixed $id_state
      * @param mixed $zipcode
      *
      * @return Tax

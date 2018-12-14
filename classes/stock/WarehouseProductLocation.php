@@ -105,7 +105,7 @@ class WarehouseProductLocationCore extends ObjectModel
      * @param int $id_product
      * @param int $id_product_attribute
      * @param int $id_supplier
-     * @param int $id_warehouse
+     * @param mixed $id_warehouse
      *
      * @return int $id_warehouse_product_location ID of the WarehouseProductLocation
      */

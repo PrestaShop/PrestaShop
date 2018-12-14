@@ -390,7 +390,7 @@ class EmployeeCore extends ObjectModel
      * Check if employee password is the right one.
      *
      * @param string $passwordHash Password
-     * @param int $idEmployee
+     * @param mixed $idEmployee
      *
      * @return bool result
      */
@@ -536,7 +536,7 @@ class EmployeeCore extends ObjectModel
      * Check if the employee is associated to a specific shop group.
      *
      * @param int $id_shop_group ShopGroup ID
-     * @param int $idShopGroup
+     * @param mixed $idShopGroup
      *
      * @return bool
      *

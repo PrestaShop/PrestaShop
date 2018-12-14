@@ -33,7 +33,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
  *
  * @param mixed $className
  * @param mixed $name
- * @param int $id_parent
+ * @param mixed $id_parent
  * @param mixed $returnId
  * @param null|mixed $parentTab
  * @param mixed $module

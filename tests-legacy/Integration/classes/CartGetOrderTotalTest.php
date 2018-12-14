@@ -237,7 +237,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      *
      * @param mixed $name
      * @param mixed $price
-     * @param int $id_tax_rules_group
+     * @param mixed $id_tax_rules_group
      */
     private static function makeProduct($name, $price, $id_tax_rules_group)
     {

@@ -385,7 +385,7 @@ class HelperListCore extends Helper
      * Display duplicate action link.
      *
      * @param mixed $token
-     * @param int $id
+     * @param mixed $id
      * @param null|mixed $name
      */
     public function displayDuplicateLink($token, $id, $name = null)
@@ -438,7 +438,7 @@ class HelperListCore extends Helper
      *   }.
      *
      * @param mixed $token
-     * @param int $id
+     * @param mixed $id
      * @param null|mixed $name
      */
     public function displayDetailsLink($token, $id, $name = null)
@@ -470,7 +470,7 @@ class HelperListCore extends Helper
      * Display view action link.
      *
      * @param mixed $token
-     * @param int $id
+     * @param mixed $id
      * @param null|mixed $name
      */
     public function displayViewLink($token, $id, $name = null)
@@ -492,7 +492,7 @@ class HelperListCore extends Helper
      * Display edit action link.
      *
      * @param mixed $token
-     * @param int $id
+     * @param mixed $id
      * @param null|mixed $name
      */
     public function displayEditLink($token, $id, $name = null)
@@ -530,7 +530,7 @@ class HelperListCore extends Helper
      * Display delete action link.
      *
      * @param mixed $token
-     * @param int $id
+     * @param mixed $id
      * @param null|mixed $name
      */
     public function displayDeleteLink($token, $id, $name = null)
@@ -587,7 +587,7 @@ class HelperListCore extends Helper
      * Display default action link.
      *
      * @param mixed $token
-     * @param int $id
+     * @param mixed $id
      * @param null|mixed $name
      */
     public function displayDefaultLink($token, $id, $name = null)
