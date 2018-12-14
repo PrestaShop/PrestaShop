@@ -387,6 +387,7 @@ class OrderDetailCore extends ObjectModel
         foreach ($order->getCartRules() as $cart_rule) {
             if ($cart_rule['free_shipping']) {
                 $shipping_tax_amount = $order->total_shipping_tax_excl;
+
                 break;
             }
         }
@@ -401,14 +402,17 @@ class OrderDetailCore extends ObjectModel
                 case Order::ROUND_ITEM:
                     $unit_amount = (float) Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_);
                     $total_amount = $unit_amount * $this->product_quantity;
+
                     break;
                 case Order::ROUND_LINE:
                     $unit_amount = $amount;
                     $total_amount = Tools::ps_round($unit_amount * $this->product_quantity, _PS_PRICE_COMPUTE_PRECISION_);
+
                     break;
                 case Order::ROUND_TOTAL:
                     $unit_amount = $amount;
                     $total_amount = $unit_amount * $this->product_quantity;
+
                     break;
             }
 
@@ -548,6 +552,7 @@ class OrderDetailCore extends ObjectModel
             switch ($this->specificPrice['reduction_type']) {
                 case 'percentage':
                     $this->reduction_percent = (float) $this->specificPrice['reduction'] * 100;
+
                     break;
 
                 case 'amount':
@@ -567,6 +572,7 @@ class OrderDetailCore extends ObjectModel
                         $this->reduction_amount_tax_incl = Tools::ps_round($this->tax_calculator->addTaxes($this->reduction_amount), _PS_PRICE_COMPUTE_PRECISION_);
                         $this->reduction_amount_tax_excl = $this->reduction_amount;
                     }
+
                     break;
             }
         }

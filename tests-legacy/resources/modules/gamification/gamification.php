@@ -72,6 +72,7 @@ class gamification extends Module
             !Configuration::updateGlobalValue('GF_NOTIFICATION', 0) || !parent::install() || !$this->registerHook('displayBackOfficeHeader')) {
             return false;
         }
+
         return true;
     }
 
@@ -84,6 +85,7 @@ class gamification extends Module
             !Configuration::updateGlobalValue('GF_CURRENT_LEVEL_PERCENT', 0)) {
             return false;
         }
+
         return true;
     }
 
@@ -94,6 +96,7 @@ class gamification extends Module
         foreach ($sql as $s) {
             $return &= Db::getInstance()->execute($s);
         }
+
         return $return;
     }
 
@@ -103,6 +106,7 @@ class gamification extends Module
         foreach ($sql as $name => $v) {
             Db::getInstance()->execute('DROP TABLE '.$name);
         }
+
         return true;
     }
 
@@ -130,6 +134,7 @@ class gamification extends Module
         }
 
         $tab->module = $this->name;
+
         return $tab->add();
     }
 
@@ -138,6 +143,7 @@ class gamification extends Module
         $id_tab = (int)Tab::getIdFromClassName('AdminGamification');
         if ($id_tab) {
             $tab = new Tab($id_tab);
+
             return $tab->delete();
         } else {
             return false;
@@ -175,6 +181,7 @@ class gamification extends Module
     public function isUpdating()
     {
         $db_version = Db::getInstance()->getValue('SELECT `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->name).'\'');
+
         return version_compare($this->version, $db_version, '>');
     }
 
@@ -373,6 +380,7 @@ class gamification extends Module
                 if (isset($condition->id)) {
                     unset($condition->id);
                 }
+
                 try {
                     $cond = new Condition();
                     if (in_array($condition->id_ps_condition, $current_conditions)) {
@@ -549,6 +557,7 @@ class gamification extends Module
             if (filesize($file) < 1) {
                 return false;
             }
+
             return ((time() - @filemtime($file)) < $timeout);
         } else {
             return false;

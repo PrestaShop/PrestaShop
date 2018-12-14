@@ -243,6 +243,7 @@ class AttributeController extends FrameworkBundleAdminController
 
             if ($res['status'] == 'error') {
                 $response->setStatusCode(400);
+
                 break;
             }
         }

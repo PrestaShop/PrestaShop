@@ -55,16 +55,19 @@ class DeleteStatementBuilder {
 
     protected function buildWHERE($parsed) {
         $builder = new WhereBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildFROM($parsed) {
         $builder = new FromBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildDELETE($parsed) {
         $builder = new DeleteBuilder();
+
         return $builder->build($parsed);
     }
     
@@ -73,6 +76,7 @@ class DeleteStatementBuilder {
         if (isset($parsed['WHERE'])) {
             $sql .= " " . $this->processWHERE($parsed['WHERE']);
         }
+
         return $sql;
     }
     

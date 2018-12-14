@@ -56,16 +56,19 @@ class CreateTableBuilder {
 
     protected function buildCreateTableDefinition($parsed) {
         $builder = new CreateTableDefinitionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildCreateTableOptions($parsed) {
         $builder = new CreateTableOptionsBuilder();
+
         return $builder->build($parsed);
     }
     
     protected function buildCreateTableSelectOption($parsed) {
         $builder = new CreateTableSelectOptionBuilder();
+
         return $builder->build($parsed);
     }
     
@@ -74,6 +77,7 @@ class CreateTableBuilder {
         $sql .= $this->buildCreateTableDefinition($parsed);
         $sql .= $this->buildCreateTableOptions($parsed);
         $sql .= $this->buildCreateTableSelectOption($parsed);
+
         return $sql;
     }
     

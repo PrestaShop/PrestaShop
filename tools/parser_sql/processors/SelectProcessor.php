@@ -68,6 +68,7 @@ class SelectProcessor extends SelectExpressionProcessor {
                     $expression['delim'] = ' ';
                     $expressionList[] = $expression;
                     $expression = "";
+
                     break;
 
                 default:
@@ -80,6 +81,7 @@ class SelectProcessor extends SelectExpressionProcessor {
             $expression['delim'] = false;
             $expressionList[] = $expression;
         }
+
         return $expressionList;
     }
 }

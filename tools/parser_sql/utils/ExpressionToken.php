@@ -93,6 +93,7 @@ class ExpressionToken {
         }
 
         $start = $length * -1;
+
         return (substr($this->token, $start) === $needle);
     }
 
@@ -166,9 +167,11 @@ class ExpressionToken {
             $quote = $qchars[$i];
             if (($result[0] === $quote) && ($result[strlen($result) - 1] === $quote)) {
                 $result = substr($result, 1, -1);
+
                 return trim(str_replace($quote.$quote, $quote, $result));
             }
         }
+
         return $token;
     }
     
@@ -180,6 +183,7 @@ class ExpressionToken {
             $result['no_quotes'] = $this->noQuotes;   
         }
         $result['sub_tree'] = $this->subTree;
+
         return $result;
     }
 }

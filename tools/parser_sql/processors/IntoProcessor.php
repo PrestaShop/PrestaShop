@@ -53,6 +53,7 @@ class IntoProcessor extends AbstractProcessor {
             }
         }
         $tokenList['INTO'] = array_values($unparsed);
+
         return $tokenList;
     }
 }

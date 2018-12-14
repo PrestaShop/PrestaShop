@@ -56,16 +56,19 @@ class CreateTableOptionsBuilder {
 
     protected function buildExpression($parsed) {
         $builder = new SelectExpressionBuilder();
+
         return $builder->build($parsed);
     }
 	
     protected function buildCharacterSet($parsed) {
         $builder = new CharacterSetBuilder();
+
         return $builder->build($parsed);
     }
     
     protected function buildCollation($parsed) {
         $builder = new CollationBuilder();
+
         return $builder->build($parsed);
     }
     
@@ -98,6 +101,7 @@ class CreateTableOptionsBuilder {
 
             $sql .= $this->getDelimiter($v);
         }
+
         return " " . substr($sql, 0, -1);
     }
 }

@@ -172,6 +172,7 @@ class Advice extends ObjectModel
                 $ids[] = $advice['id_advice'];
             }
         }
+
         return $ids;
     }
     
@@ -195,6 +196,7 @@ class Advice extends ObjectModel
                 $ids[] = $advice['id_advice'];
             }
         }
+
         return $ids;
     }
 }

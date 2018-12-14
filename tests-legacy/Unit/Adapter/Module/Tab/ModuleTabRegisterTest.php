@@ -168,10 +168,12 @@ class ModuleTabRegisterTest extends UnitTestCase
                     continue;
                 }
                 $data = new ParameterBag($tab);
+
                 try {
                     $this->invokeMethod($this->tabRegister, 'checkIsValid', array($moduleName, $data));
                 } catch (\Exception $e) {
                     $this->assertEquals($e->getMessage(), $tab['exception']);
+
                     continue;
                 }
                 $this->fail('Expected Exception "'.$tab['exception'].'" has not been raised.');

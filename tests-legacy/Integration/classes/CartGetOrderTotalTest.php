@@ -123,21 +123,27 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         switch ($modeStr) {
             case 'up':
                 $mode = PS_ROUND_UP;
+
                 break;
             case 'down':
                 $mode = PS_ROUND_DOWN;
+
                 break;
             case 'half_up':
                 $mode = PS_ROUND_HALF_UP;
+
                 break;
             case 'half_down':
                 $mode = PS_ROUND_HALF_DOWN;
+
                 break;
             case 'half_even':
                 $mode = PS_ROUND_HALF_DOWN;
+
                 break;
             case 'hald_odd':
                 $mode = PS_ROUND_HALF_ODD;
+
                 break;
             default:
                 throw new Exception(sprintf('Unknown rounding mode `%s`.', $modeStr));
@@ -155,12 +161,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         switch ($typeStr) {
             case 'item':
                 $type = Order::ROUND_ITEM;
+
                 break;
             case 'line':
                 $type = Order::ROUND_LINE;
+
                 break;
             case 'total':
                 $type = Order::ROUND_TOTAL;
+
                 break;
             default:
                 throw new Exception(sprintf('Unknown rounding type `%s`.', $typeStr));
@@ -239,6 +248,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $product->price = $price;
         $product->link_rewrite = Tools::link_rewrite($name);
         Assert::assertTrue($product->save());
+
         return $product;
     }
 
@@ -252,6 +262,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $address->alias = microtime().getmypid();
         $address->city = 'Levallois';
         Assert::assertTrue($address->save());
+
         return $address;
     }
 
@@ -262,6 +273,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cart->id_address_invoice = self::$id_address;
         Assert::assertTrue($cart->save());
         Context::getContext()->cart = $cart;
+
         return $cart;
     }
 

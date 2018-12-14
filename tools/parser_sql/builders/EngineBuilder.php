@@ -55,6 +55,7 @@ class EngineBuilder {
         if ($parsed['expr_type'] !== ExpressionType::ENGINE) {
             return "";
         }
+
         return $parsed['base_expr'];
     }
 }

@@ -54,6 +54,7 @@ class LikeBuilder {
 
     protected function buildTable($parsed, $index) {
         $builder = new TableBuilder();
+
         return $builder->build($parsed, $index);
     }
     
@@ -62,6 +63,7 @@ class LikeBuilder {
         if (strlen($sql) === 0) {
             throw new UnableToCreateSQLException('LIKE', "", $like, 'table');
         }
+
         return "LIKE " . $sql;
     }
 }

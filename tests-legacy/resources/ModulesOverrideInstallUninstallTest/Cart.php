@@ -186,6 +186,7 @@ class Cart extends CartCore
          || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id)) {
             return false;
         }
+
         return parent::delete();
     }
 }

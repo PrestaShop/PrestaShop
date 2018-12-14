@@ -69,6 +69,7 @@ class InsertProcessor extends AbstractProcessor {
         $tokenList[$token_category][0] = array('table' => $table, 'columns' => $cols, 'base_expr' => $table,
             'no_quotes' => $this->revokeQuotation($table),
         );
+
         return $tokenList;
     }
 

@@ -82,6 +82,7 @@ class Badge extends ObjectModel
     {
         $this->validated = 1;
         $this->save();
+
         return true;
     }
     
@@ -113,6 +114,7 @@ class Badge extends ObjectModel
         foreach ($result as $badge) {
             $ids[] = $badge['id_badge'];
         }
+
         return $ids;
     }
     
@@ -123,6 +125,7 @@ class Badge extends ObjectModel
         $query->from('badge', 'b');
         $query->where('b.id_group = \''.pSQL($this->id_group).'\' AND b.validated = 0');
         $query->orderBy('b.group_position');
+
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 }

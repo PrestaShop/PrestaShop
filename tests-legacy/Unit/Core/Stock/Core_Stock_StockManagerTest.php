@@ -89,6 +89,7 @@ class FakePackItemsManager4759
     public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
     {
         $id_product_attribute = $id_product_attribute?$id_product_attribute:0;
+
         return $this->stockAvailables[$product->id][$id_product_attribute];
     }
     public function isPack($product)

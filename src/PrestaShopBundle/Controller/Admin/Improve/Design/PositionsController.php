@@ -84,6 +84,7 @@ class PositionsController extends FrameworkBundleAdminController
             // No module found, no need to continue
             if (!is_array($hooks[$key]['modules'])) {
                 unset($hooks[$key]);
+
                 continue;
             }
 
@@ -97,6 +98,7 @@ class PositionsController extends FrameworkBundleAdminController
             // No module remaining after the check, no need to continue
             if ($hooks[$key]['modules_count'] === 0) {
                 unset($hooks[$key]);
+
                 continue;
             }
 
@@ -168,6 +170,7 @@ class PositionsController extends FrameworkBundleAdminController
                     'This module cannot be loaded.',
                     'Admin.Modules.Notification'
                 );
+
                 continue;
             }
 
@@ -176,6 +179,7 @@ class PositionsController extends FrameworkBundleAdminController
                     'Hook cannot be loaded.',
                     'Admin.Modules.Notification'
                 );
+
                 continue;
             }
 

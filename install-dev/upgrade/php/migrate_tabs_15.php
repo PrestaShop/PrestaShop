@@ -183,6 +183,7 @@ function get_tab_id($class_name)
     if (!isset($cache[$class_name])) {
         $cache[$class_name] = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = \''.pSQL($class_name).'\'');
     }
+
     return $cache[$class_name];
 }
 

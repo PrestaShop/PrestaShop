@@ -54,6 +54,7 @@ class InsertBuilder {
 
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -81,6 +82,7 @@ class InsertBuilder {
         }
 
         $sql .= $columns;
+
         return $sql;
     }
     

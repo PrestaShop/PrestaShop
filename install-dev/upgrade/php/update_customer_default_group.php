@@ -72,5 +72,6 @@ function update_customer_default_group()
             @chmod($filename, 0664);
         }
     }
+
     return $result;
 }

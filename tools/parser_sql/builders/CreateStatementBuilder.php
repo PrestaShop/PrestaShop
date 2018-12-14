@@ -55,16 +55,19 @@ class CreateStatementBuilder {
 
     protected function buildLIKE($parsed) {
         $builder = new LikeBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildSelectStatement($parsed) {
         $builder = new SelectStatementBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildCREATE($parsed) {
         $builder = new CreateBuilder();
+
         return $builder->build($parsed);
     }
     
@@ -76,6 +79,7 @@ class CreateStatementBuilder {
         if (isset($parsed['SELECT'])) {
             $sql .= " " . $this->buildSelectStatement($parsed);
         }
+
         return $sql;
     }
 }

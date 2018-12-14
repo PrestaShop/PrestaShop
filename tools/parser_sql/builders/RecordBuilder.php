@@ -57,16 +57,19 @@ class RecordBuilder {
 
     protected function buildOperator($parsed) {
         $builder = new OperatorBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildFunction($parsed) {
         $builder = new FunctionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -88,6 +91,7 @@ class RecordBuilder {
             $sql .= ",";
         }
         $sql = substr($sql, 0, -1);
+
         return "(" . $sql . ")";
     }
 

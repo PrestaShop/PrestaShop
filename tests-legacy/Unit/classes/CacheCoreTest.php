@@ -149,6 +149,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
                 // check the query hash is in the table map
                 $this->assertCount(2, $this->cacheArray[$tableCacheKey]);
             }
+
             break;
         }
 

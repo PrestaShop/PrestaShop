@@ -53,6 +53,7 @@ class ColumnTypeBracketExpressionBuilder {
 
     protected function buildSubTree($parsed, $delim) {
         $builder = new SubTreeBuilder();
+
         return $builder->build($parsed, $delim);
     }
 
@@ -62,6 +63,7 @@ class ColumnTypeBracketExpressionBuilder {
         }
         $sql = $this->buildSubTree($parsed, ",");
         $sql = "(" . $sql . ")";
+
         return $sql;
     }
 }

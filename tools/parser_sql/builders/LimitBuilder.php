@@ -56,6 +56,7 @@ class LimitBuilder {
         if ($sql === "") {
             throw new UnableToCreateSQLException('LIMIT', 'rowcount', $parsed, 'rowcount');
         }
+
         return "LIMIT " . $sql;
     }
 }
