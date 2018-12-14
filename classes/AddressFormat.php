@@ -254,7 +254,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @param array $formattedValueList
      * @param string $currentLine
-     * @param mixed $currentKeyList
+     * @param array $currentKeyList
      */
     protected static function _setOriginalDisplayFormat(&$formattedValueList, $currentLine, $currentKeyList)
     {
