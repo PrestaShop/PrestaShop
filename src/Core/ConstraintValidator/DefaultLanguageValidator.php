@@ -69,7 +69,7 @@ class DefaultLanguageValidator extends ConstraintValidator
             throw new UnexpectedTypeException($value, 'array');
         }
 
-        if (!isset($value[$this->defaultLanguageId]) || !$value[$this->defaultLanguageId]) {
+        if (empty($value[$this->defaultLanguageId])) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
                 ->setParameters([
