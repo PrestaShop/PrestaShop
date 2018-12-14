@@ -1084,7 +1084,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get carrier using the reference id.
      *
-     * @param mixed $id_reference
+     * @param int $id_reference
      * @param null|mixed $id_lang
      */
     public static function getCarrierByReference($id_reference, $id_lang = null)
