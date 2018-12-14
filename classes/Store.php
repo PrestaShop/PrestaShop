@@ -191,7 +191,7 @@ class StoreCore extends ObjectModel
      *
      * @since 1.7.0
      *
-     * @param mixed $idStore
+     * @param int $idStore
      *
      * @return bool
      */

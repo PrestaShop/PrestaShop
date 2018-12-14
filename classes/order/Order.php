@@ -845,7 +845,7 @@ class OrderCore extends ObjectModel
     /**
      * Get current order status name (eg. Awaiting payment, Delivered...).
      *
-     * @param mixed $id_lang
+     * @param int $id_lang
      *
      * @return array Order status details
      */
@@ -2344,7 +2344,7 @@ class OrderCore extends ObjectModel
      *
      * @since 1.5.0.14
      *
-     * @param mixed $id_order
+     * @param int $id_order
      */
     public static function getUniqReferenceOf($id_order)
     {

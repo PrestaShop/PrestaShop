@@ -2278,7 +2278,7 @@ class AdminProductsController extends AdminProductsControllerCore
      * @param array $categories Categories to list
      * @param array $current Current category
      * @param int $id_category Current category id
-     * @param mixed $id_obj
+     * @param int $id_obj
      * @param null|mixed $id_category_default
      * @param mixed $has_suite
      */

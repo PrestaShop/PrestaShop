@@ -77,7 +77,7 @@ abstract class AbstractDataLayer
      *
      * Lower layer might be called if nothing found in current layer
      *
-     * @param mixed $id
+     * @param int $id
      *                  The data object identifier
      *
      * @throws DataLayerException
@@ -111,7 +111,7 @@ abstract class AbstractDataLayer
      * Write request is propagated to lower layer, and the propagation result is actually written in
      * current layer (because lower layer might hydrate/update the data object).
      *
-     * @param mixed $id
+     * @param int $id
      *                  The data object identifier
      * @param mixed $data
      *                    The data object to write
@@ -156,7 +156,7 @@ abstract class AbstractDataLayer
     /**
      * Propagate write to lower layer.
      *
-     * @param mixed $id
+     * @param int $id
      *                  The data object identifier
      * @param mixed $data
      *                    The data object to write into this field
@@ -181,7 +181,7 @@ abstract class AbstractDataLayer
      *
      * This data object is written in the current layer to avoid read propagation next time.
      *
-     * @param mixed $id
+     * @param int $id
      *                  Data object identifier
      * @param mixed $data
      *                    Data object received from lower layers
@@ -209,7 +209,7 @@ abstract class AbstractDataLayer
      *
      * This data object is written in the current layer after lower layers have hydrated/updated (and written) it
      *
-     * @param mixed $id
+     * @param int $id
      *                  Data object identifier
      * @param mixed $data
      *                    Data object received from lower layers
@@ -276,7 +276,7 @@ abstract class AbstractDataLayer
      *
      * Might be a file access, cache read, DB select...
      *
-     * @param mixed $id
+     * @param int $id
      *                  The data object identifier
      *
      * @throws DataLayerException
@@ -292,7 +292,7 @@ abstract class AbstractDataLayer
      *
      * Might be a file edit, cache update, DB insert/update...
      *
-     * @param mixed $id
+     * @param int $id
      *                  The data object identifier
      * @param mixed $data
      *                    The data object to be written

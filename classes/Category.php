@@ -1063,7 +1063,7 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idLang Language ID
      * @param bool $active return only active categories
-     * @param mixed $idShop
+     * @param int $idShop
      *
      * @return array categories
      */
@@ -1678,7 +1678,7 @@ class CategoryCore extends ObjectModel
     /**
      * checkAccess return true if id_customer is in a group allowed to see this category.
      *
-     * @param mixed $idCustomer
+     * @param int $idCustomer
      *
      * @return bool true if access allowed for customer $id_customer
      */
@@ -1795,7 +1795,7 @@ class CategoryCore extends ObjectModel
      * but remove duplicate position. Should not be used if positions
      * are clean at the beginning !
      *
-     * @param mixed $idCategoryParent
+     * @param int $idCategoryParent
      *
      * @return bool true if succeed
      */
@@ -1863,7 +1863,7 @@ class CategoryCore extends ObjectModel
      * @see self::getUrlRewriteInformation()
      * @deprecated 1.7.0
      *
-     * @param mixed $idCategory
+     * @param int $idCategory
      */
     public static function getUrlRewriteInformations($idCategory)
     {
@@ -2045,7 +2045,7 @@ class CategoryCore extends ObjectModel
      * @see self::getCategoryInformation()
      * @deprecated 1.7.0
      *
-     * @param mixed $idsCategory
+     * @param int $idsCategory
      * @param null|mixed $idLang
      */
     public static function getCategoryInformations($idsCategory, $idLang = null)
@@ -2315,7 +2315,7 @@ class CategoryCore extends ObjectModel
     /**
      * Deletes all Categories from the Shop ID.
      *
-     * @param mixed $idShop
+     * @param int $idShop
      *
      * @return bool Indicates whether the Categories have been successfully removed
      */
@@ -2328,7 +2328,7 @@ class CategoryCore extends ObjectModel
      * Add some categories to a shop.
      *
      * @param array $categories
-     * @param mixed $idShop
+     * @param int $idShop
      *
      * @return bool Indicates whether the Categories were successfully added to the given Shop
      */

@@ -111,7 +111,7 @@ class SupplierCore extends ObjectModel
      * Return suppliers.
      *
      * @param mixed $getNbProducts
-     * @param mixed $idLang
+     * @param int $idLang
      * @param mixed $active
      * @param mixed $p
      * @param mixed $n

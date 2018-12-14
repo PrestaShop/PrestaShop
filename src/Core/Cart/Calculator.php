@@ -201,7 +201,7 @@ class Calculator
     }
 
     /**
-     * @param mixed $id_carrier
+     * @param int $id_carrier
      *
      * @return Calculator
      */

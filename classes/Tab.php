@@ -215,8 +215,8 @@ class TabCore extends ObjectModel
     /**
      * Get tab.
      *
-     * @param mixed $idLang
-     * @param mixed $idTab
+     * @param int $idLang
+     * @param int $idTab
      *
      * @return array tab
      */
@@ -453,7 +453,7 @@ class TabCore extends ObjectModel
     /**
      * return an available position in subtab for parent $id_parent.
      *
-     * @param mixed $idParent
+     * @param int $idParent
      *
      * @return int
      */
@@ -662,7 +662,7 @@ class TabCore extends ObjectModel
     /**
      * @since 1.5.0
      *
-     * @param mixed $idTab
+     * @param int $idTab
      */
     public static function getClassNameById($idTab)
     {

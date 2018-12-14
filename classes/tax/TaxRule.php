@@ -114,7 +114,7 @@ class TaxRuleCore extends ObjectModel
     /**
      * @deprecated since 1.5
      *
-     * @param mixed $id_county
+     * @param int $id_county
      */
     public static function deleteTaxRuleByIdCounty($id_county)
     {

@@ -344,19 +344,19 @@ class AdminProductWrapper
     /**
      * Validate a specific price.
      *
-     * @param mixed $id_product
-     * @param mixed $id_shop
-     * @param mixed $id_currency
-     * @param mixed $id_country
-     * @param mixed $id_group
-     * @param mixed $id_customer
+     * @param int $id_product
+     * @param int $id_shop
+     * @param int $id_currency
+     * @param int $id_country
+     * @param int $id_group
+     * @param int $id_customer
      * @param mixed $price
      * @param mixed $from_quantity
      * @param mixed $reduction
      * @param mixed $reduction_type
      * @param mixed $from
      * @param mixed $to
-     * @param mixed $id_combination
+     * @param int $id_combination
      * @param mixed $isThisAnUpdate
      */
     private function validateSpecificPrice(

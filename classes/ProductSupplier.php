@@ -222,7 +222,7 @@ class ProductSupplierCore extends ObjectModel
      * @param int $idProduct
      * @param int $idProductAttribute Optional
      * @param bool $convertedPrice Optional
-     * @param mixed $idSupplier
+     * @param int $idSupplier
      *
      * @return array keys: price_te, id_currency
      */

@@ -57,7 +57,7 @@ class QuickAccessCore extends ObjectModel
     /**
      * Get all available quick_accesses.
      *
-     * @param mixed $idLang
+     * @param int $idLang
      *
      * @return array QuickAccesses
      */
@@ -73,8 +73,8 @@ class QuickAccessCore extends ObjectModel
     /**
      * Get all available quick_accesses with token.
      *
-     * @param mixed $idLang
-     * @param mixed $idEmployee
+     * @param int $idLang
+     * @param int $idEmployee
      *
      * @return array QuickAccesses
      */
