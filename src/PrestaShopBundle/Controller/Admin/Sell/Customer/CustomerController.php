@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType;
@@ -678,6 +679,59 @@ class CustomerController extends AbstractAdminController
         }
 
         return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Export filtered customers
+     *
+     * @param CustomerFilters $filters
+     *
+     * @return CsvResponse
+     */
+    public function exportAction(CustomerFilters $filters)
+    {
+        $gridFactory = $this->get('prestashop.core.grid.factory.customer');
+        $grid = $gridFactory->getGrid($filters);
+
+        $headers = [
+            'id_customer' => $this->trans('ID', 'Admin.Global'),
+            'social_title' => $this->trans('Social title', 'Admin.Global'),
+            'firstname' => $this->trans('First name', 'Admin.Global'),
+            'lastname' => $this->trans('Last name', 'Admin.Global'),
+            'email' => $this->trans('Email address', 'Admin.Global'),
+            'company' => $this->trans('Company', 'Admin.Global'),
+            'total_spent' => $this->trans('Sales', 'Admin.Global'),
+            'enabled' => $this->trans('Enabled', 'Admin.Global'),
+            'newsletter' => $this->trans('Newsletter', 'Admin.Global'),
+            'partner_offers' => $this->trans('Partner offers', 'Admin.Orderscustomers.Feature'),
+            'registration' => $this->trans('Registration', 'Admin.Orderscustomers.Feature'),
+            'connect' => $this->trans('Last visit', 'Admin.Orderscustomers.Feature'),
+        ];
+
+        $data = [];
+
+        foreach ($grid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_customer' => $record['id_customer'],
+                'social_title' => '--' === $record['social_title'] ? '' : $record['social_title'],
+                'firstname' => $record['firstname'],
+                'lastname' => $record['firstname'],
+                'email' => $record['firstname'],
+                'company' => '--' === $record['company'] ? '' : $record['company'],
+                'total_spent' => '--' === $record['total_spent'] ? '' : $record['total_spent'],
+                'enabled' => $record['active'],
+                'newsletter' => $record['newsletter'],
+                'partner_offers' => $record['optin'],
+                'registration' => $record['date_add'],
+                'connect' => '--' === $record['connect'] ? '' : $record['connect'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('customer_' . date('Y-m-d_His') . '.csv')
+        ;
     }
 
     /**

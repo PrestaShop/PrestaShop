@@ -374,7 +374,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Export', [], 'Admin.Actions'))
                 ->setIcon('cloud_download')
                 ->setOptions([
-                    'route' => 'admin_customers_index',
+                    'route' => 'admin_customers_export',
                 ])
             )
             ->add(
