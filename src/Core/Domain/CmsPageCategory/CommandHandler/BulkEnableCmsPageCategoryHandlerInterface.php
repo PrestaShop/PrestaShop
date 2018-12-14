@@ -35,8 +35,6 @@ interface BulkEnableCmsPageCategoryHandlerInterface
 {
     /**
      * @param BulkEnableCmsPageCategoryCommand $command
-     *
-     * @return void
      */
     public function handle(BulkEnableCmsPageCategoryCommand $command);
 }
