@@ -1076,7 +1076,12 @@ abstract class PaymentModuleCore extends Module
             //  This is an "amount" reduction, not a reduction in % or a gift
             // THEN
             //  The voucher is cloned with a new value corresponding to the remainder
-            if (count($order_list) == 1 && $values['tax_incl'] > ($order->total_products_wt - $total_reduction_value_ti) && $cartRule->partial_use == 1 && $cartRule->reduction_amount > 0) {
+            if ($cartRule->reduction_tax) {
+                $remainingValue = $cartRule->reduction_amount - $values['tax_incl'];
+            } else {
+                $remainingValue = $cartRule->reduction_amount - $values['tax_excl'];
+            }
+            if (count($order_list) == 1 && $remainingValue > 0 && $cartRule->partial_use == 1 && $cartRule->reduction_amount > 0) {
                 // Create a new voucher from the original
                 $voucher = new CartRule((int) $cartRule->id); // We need to instantiate the CartRule without lang parameter to allow saving it
                 unset($voucher->id);
@@ -1088,16 +1093,13 @@ abstract class PaymentModuleCore extends Module
                 }
 
                 // Set the new voucher value
+                $voucher->reduction_amount = $remainingValue;
                 if ($voucher->reduction_tax) {
-                    $voucher->reduction_amount = ($total_reduction_value_ti + $values['tax_incl']) - $order->total_products_wt;
-
                     // Add total shipping amout only if reduction amount > total shipping
                     if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_incl) {
                         $voucher->reduction_amount -= $order->total_shipping_tax_incl;
                     }
                 } else {
-                    $voucher->reduction_amount = ($total_reduction_value_tex + $values['tax_excl']) - $order->total_products;
-
                     // Add total shipping amout only if reduction amount > total shipping
                     if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_excl) {
                         $voucher->reduction_amount -= $order->total_shipping_tax_excl;
