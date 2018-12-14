@@ -175,7 +175,7 @@ class AddressCore extends ObjectModel
      * @see ObjectModel::add()
      *
      * @param bool $autodate
-     * @param mixed $null_values
+     * @param bool $null_values
      */
     public function add($autodate = true, $null_values = false)
     {
