@@ -47,8 +47,8 @@ class LinkCore
     /**
      * Constructor (initialization only).
      *
-     * @param null|mixed $protocolLink
-     * @param null|mixed $protocolContent
+     * @param mixed|null $protocolLink
+     * @param mixed|null $protocolContent
      */
     public function __construct($protocolLink = null, $protocolContent = null)
     {
@@ -243,7 +243,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param null|int $idCustomization
+     * @param int|null $idCustomization
      *
      * @return string
      */
@@ -276,7 +276,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param null|int $idCustomization
+     * @param int|null $idCustomization
      *
      * @return string
      */
@@ -293,7 +293,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param null|int $idCustomization
+     * @param int|null $idCustomization
      *
      * @return string
      */
@@ -310,7 +310,7 @@ class LinkCore
      *
      * @param int $idProduct
      * @param int $idProductAttribute
-     * @param null|int $idCustomization
+     * @param int|null $idCustomization
      * @param null $op
      *
      * @return string
@@ -403,7 +403,7 @@ class LinkCore
      * @param string $alias
      * @param int $idLang
      * @param string $selectedFilters Url parameter to autocheck filters of the module blocklayered
-     * @param null|mixed $idShop
+     * @param mixed|null $idShop
      * @param mixed $relativeProtocol
      *
      * @return string
@@ -519,7 +519,7 @@ class LinkCore
      * @param string $alias
      * @param bool $ssl
      * @param int $idLang
-     * @param null|mixed $idShop
+     * @param mixed|null $idShop
      * @param mixed $relativeProtocol
      *
      * @return string
@@ -570,7 +570,7 @@ class LinkCore
      * @param mixed $supplier Supplier object (can be an ID supplier, but deprecated)
      * @param string $alias
      * @param int $idLang
-     * @param null|mixed $idShop
+     * @param mixed|null $idShop
      * @param mixed $relativeProtocol
      *
      * @return string
@@ -843,8 +843,8 @@ class LinkCore
     }
 
     /**
-     * @param null|int $idShop
-     * @param null|bool $ssl
+     * @param int|null $idShop
+     * @param bool|null $ssl
      * @param bool $relativeProtocol
      *
      * @throws PrestaShopDatabaseException
@@ -1064,7 +1064,7 @@ class LinkCore
      * @param int $idLang
      * @param array|string $request
      * @param bool $requestUrlEncode Use URL encode
-     * @param null|mixed $idShop
+     * @param mixed|null $idShop
      * @param mixed $relativeProtocol
      *
      * @return string Page link
@@ -1206,7 +1206,7 @@ class LinkCore
      * @param bool $pagination Show page number attribute
      * @param bool $array If false return an url, if true return an array
      *
-     * @return string|array
+     * @return array|string
      */
     public function getPaginationLink($type, $idObject, $nb = false, $sort = false, $pagination = false, $array = false)
     {
@@ -1291,7 +1291,7 @@ class LinkCore
 
     /**
      * @param null $idLang
-     * @param null|Context $context
+     * @param Context|null $context
      * @param null $idShop
      *
      * @return string
@@ -1319,8 +1319,8 @@ class LinkCore
     }
 
     /**
-     * @param null|int $idShop
-     * @param null|bool $ssl
+     * @param int|null $idShop
+     * @param bool|null $ssl
      * @param bool $relativeProtocol
      *
      * @return string

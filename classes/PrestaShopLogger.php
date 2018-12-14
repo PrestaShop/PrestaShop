@@ -110,7 +110,7 @@ class PrestaShopLoggerCore extends ObjectModel
      * @param string $objectType
      * @param int $objectId
      * @param bool $allowDuplicate if set to true, can log several time the same information (not recommended)
-     * @param null|mixed $idEmployee
+     * @param mixed|null $idEmployee
      *
      * @return bool true if succeed
      */

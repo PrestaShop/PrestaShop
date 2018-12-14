@@ -47,7 +47,7 @@ class FormHandlerResult implements FormHandlerResultInterface
     private $identifiableObjectId;
 
     /**
-     * @param null|int $identifiableObjectId ID of identifiable object or null if it does not exist
+     * @param int|null $identifiableObjectId ID of identifiable object or null if it does not exist
      * @param bool $isSubmitted
      * @param bool $isValid
      */

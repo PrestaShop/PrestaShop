@@ -393,7 +393,7 @@ abstract class ControllerCore
      *
      * @param array|string $css_uri Path to CSS file, or list of css files like this : array(array(uri => media_type), ...)
      * @param string $css_media_type
-     * @param null|int $offset
+     * @param int|null $offset
      * @param bool $check_path
      *
      * @return true
@@ -524,8 +524,8 @@ abstract class ControllerCore
     /**
      * Adds jQuery library file to queued JS file list.
      *
-     * @param null|string $version jQuery library version
-     * @param null|string $folder jQuery file folder
+     * @param string|null $version jQuery library version
+     * @param string|null $folder jQuery file folder
      * @param bool $minifier if set tot true, a minified version will be included
      */
     public function addJquery($version = null, $folder = null, $minifier = true)
@@ -630,8 +630,8 @@ abstract class ControllerCore
      * Checks if a template is cached.
      *
      * @param string $template
-     * @param null|string $cache_id Cache item ID
-     * @param null|string $compile_id
+     * @param string|null $cache_id Cache item ID
+     * @param string|null $compile_id
      *
      * @return bool
      */
@@ -694,9 +694,9 @@ abstract class ControllerCore
      * @deprecated deprecated since 1.7.5.0, use ajaxRender instead
      * Dies and echoes output value
      *
-     * @param null|string $value
-     * @param null|string $controller
-     * @param null|string $method
+     * @param string|null $value
+     * @param string|null $controller
+     * @param string|null $method
      *
      * @throws PrestaShopException
      */

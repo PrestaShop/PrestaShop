@@ -31,7 +31,7 @@ interface PresenterInterface
     /**
      * @param mixed $object
      *
-     * @return array|AbstractLazyArray
+     * @return AbstractLazyArray|array
      */
     public function present($object);
 }

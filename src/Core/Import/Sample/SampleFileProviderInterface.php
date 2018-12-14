@@ -38,7 +38,7 @@ interface SampleFileProviderInterface
      *
      * @param string $sampleFileName
      *
-     * @return null|File File if files was found or null otherwise
+     * @return File|null File if files was found or null otherwise
      */
     public function getFile($sampleFileName);
 }

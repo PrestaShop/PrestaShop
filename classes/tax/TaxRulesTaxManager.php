@@ -42,7 +42,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
     /**
      * @param Address $address
      * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
-     * @param null|PrestaShop\PrestaShop\Core\ConfigurationInterface $configurationManager
+     * @param PrestaShop\PrestaShop\Core\ConfigurationInterface|null $configurationManager
      */
     public function __construct(Address $address, $type, PrestaShop\PrestaShop\Core\ConfigurationInterface $configurationManager = null)
     {

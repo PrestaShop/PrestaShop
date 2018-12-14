@@ -913,7 +913,7 @@ class OrderCore extends ObjectModel
      *
      * @param int $id_customer Customer id
      * @param bool $show_hidden_status Display or not hidden order statuses
-     * @param null|Context $context
+     * @param Context|null $context
      *
      * @return array Customer orders
      */
@@ -1202,7 +1202,7 @@ class OrderCore extends ObjectModel
      * @param string $name
      * @param array $values
      * @param int $id_order_invoice
-     * @param null|mixed $free_shipping
+     * @param mixed|null $free_shipping
      *
      * @return bool
      */

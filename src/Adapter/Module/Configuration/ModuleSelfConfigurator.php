@@ -47,7 +47,7 @@ use Symfony\Component\Yaml\Yaml;
 class ModuleSelfConfigurator
 {
     /**
-     * @var null|string the module name
+     * @var string|null the module name
      */
     protected $module;
 

@@ -50,8 +50,8 @@ class StockManagerCore implements StockManagerInterface
      * @param int $id_stock_mvt_reason
      * @param float $price_te
      * @param bool $is_usable
-     * @param null|int $id_supply_order
-     * @param null|Employee $employee
+     * @param int|null $id_supply_order
+     * @param Employee|null $employee
      *
      * @throws PrestaShopException
      *
@@ -202,14 +202,14 @@ class StockManagerCore implements StockManagerInterface
      * @see StockManagerInterface::removeProduct()
      *
      * @param int $id_product
-     * @param null|int $id_product_attribute
+     * @param int|null $id_product_attribute
      * @param Warehouse $warehouse
      * @param int $quantity
      * @param int $id_stock_mvt_reason
      * @param bool $is_usable
-     * @param null|int $id_order
+     * @param int|null $id_order
      * @param int $ignore_pack
-     * @param null|Employee $employee
+     * @param Employee|null $employee
      *
      * @throws PrestaShopException
      *
@@ -526,7 +526,7 @@ class StockManagerCore implements StockManagerInterface
      *
      * @param mixed $id_product
      * @param mixed $id_product_attribute
-     * @param null|mixed $ids_warehouse
+     * @param mixed|null $ids_warehouse
      * @param mixed $usable
      */
     public function getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
@@ -566,7 +566,7 @@ class StockManagerCore implements StockManagerInterface
      *
      * @param mixed $id_product
      * @param mixed $id_product_attribute
-     * @param null|mixed $ids_warehouse
+     * @param mixed|null $ids_warehouse
      * @param mixed $usable
      */
     public function getProductRealQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
@@ -761,7 +761,7 @@ class StockManagerCore implements StockManagerInterface
      * @param mixed $id_product
      * @param mixed $id_product_attribute
      * @param mixed $coverage
-     * @param null|mixed $id_warehouse
+     * @param mixed|null $id_warehouse
      *
      * @return int number of days left (-1 if infinite)
      */

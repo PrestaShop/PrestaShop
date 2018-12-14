@@ -84,7 +84,7 @@ function includeDatepicker($id, $time = false)
  * @param string $baseUri Base URI
  * @param string $theme Theme name (eg. default)
  * @param array $array_db Parameters in order to connect to database
- * @param null|mixed $base_urls
+ * @param mixed|null $base_urls
  */
 function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
 {

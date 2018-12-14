@@ -298,7 +298,7 @@ class FeatureCore extends ObjectModel
      *
      * @param bool $way Up (1)  or Down (0)
      * @param int $position
-     * @param null|mixed $idFeature
+     * @param mixed|null $idFeature
      *
      * @return bool Update result
      */

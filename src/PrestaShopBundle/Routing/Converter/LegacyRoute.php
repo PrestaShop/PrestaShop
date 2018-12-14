@@ -54,7 +54,7 @@ class LegacyRoute
     private $controllersActions;
 
     /**
-     * @param null|string $action
+     * @param string|null $action
      *
      * @return bool
      */

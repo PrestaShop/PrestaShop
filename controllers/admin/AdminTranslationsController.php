@@ -3024,7 +3024,7 @@ class AdminTranslationsControllerCore extends AdminController
      * The file depend on $lang param.
      *
      * @param array $modules List of modules
-     * @param null|string $root_dir path where it get each modules
+     * @param string|null $root_dir path where it get each modules
      * @param string $lang ISO code of chosen language to translate
      * @param bool $is_default Set it if modules are located in root/prestashop/modules folder
      *                         This allow to distinguish overridden prestashop theme and original module

@@ -1262,7 +1262,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * postProcess for new form archi (need object return).
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function postCoreProcess()
     {
@@ -1624,7 +1624,7 @@ class AdminProductsControllerCore extends AdminController
      * @param Product $product Product object to add image
      * @param string $method
      *
-     * @return int|false
+     * @return false|int
      */
     public function addProductImage($product, $method = 'auto')
     {
@@ -1668,7 +1668,7 @@ class AdminProductsControllerCore extends AdminController
      *
      * @throws PrestaShopException
      *
-     * @return void|false
+     * @return false|void
      */
     public function copyImage($id_product, $id_image, $method = 'auto')
     {
@@ -2402,7 +2402,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * Post treatment for suppliers.
      *
-     * @param null|int $id_product
+     * @param int|null $id_product
      */
     public function processSuppliers($id_product = null)
     {
@@ -2758,7 +2758,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * Ajax process upload images.
      *
-     * @param null|int $idProduct
+     * @param int|null $idProduct
      * @param string $inputFileName
      * @param bool $die If method must die or return values
      *

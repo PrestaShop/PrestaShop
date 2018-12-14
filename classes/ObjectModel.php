@@ -67,7 +67,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var bool */
     protected $get_shop_from_context = true;
 
-    /** @var null|array Holds required fields for each ObjectModel class */
+    /** @var array|null Holds required fields for each ObjectModel class */
     protected static $fieldsRequiredDatabase = null;
 
     /**
@@ -163,13 +163,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var array Contains current object definition. */
     protected $def;
 
-    /** @var null|array List of specific fields to update (all fields if null). */
+    /** @var array|null List of specific fields to update (all fields if null). */
     protected $update_fields = null;
 
     /** @var Db An instance of the db in order to avoid calling Db::getInstance() thousands of times. */
     protected static $db = false;
 
-    /** @var null|array List of HTML field (based on self::TYPE_HTML) */
+    /** @var array|null List of HTML field (based on self::TYPE_HTML) */
     public static $htmlFields = null;
 
     /** @var bool Enables to define an ID before adding object. */
@@ -209,11 +209,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Builds the object.
      *
-     * @param null|int $id if specified, loads and existing object from DB (optional)
-     * @param null|int $id_lang required if object is multilingual (optional)
-     * @param null|int $id_shop ID shop for objects with multishop tables
+     * @param int|null $id if specified, loads and existing object from DB (optional)
+     * @param int|null $id_lang required if object is multilingual (optional)
+     * @param int|null $id_shop ID shop for objects with multishop tables
      * @param PrestaShopBundle\Translation\Translator
-     * @param null|mixed $translator
+     * @param mixed|null $translator
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -610,7 +610,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function duplicateObject()
     {
@@ -1059,7 +1059,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param string $field Field name
      * @param mixed $value Field value
-     * @param null|int $id_lang Language ID
+     * @param int|null $id_lang Language ID
      * @param array $skip array of fields to skip
      * @param bool $human_errors if true, uses more descriptive, translatable error strings
      *
@@ -1182,7 +1182,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param string $field Field name
      * @param string $class ObjectModel class name
      * @param bool $htmlentities If true, applies htmlentities() to result string
-     * @param null|Context $context Context object
+     * @param Context|null $context Context object
      *
      * @return string
      */
@@ -1272,7 +1272,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Returns webservice parameters of this object.
      *
-     * @param null|string $ws_params_attribute_name
+     * @param string|null $ws_params_attribute_name
      *
      * @return array
      */
@@ -1583,7 +1583,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @param null|int $id_shop
+     * @param int|null $id_shop
      *
      * @return bool
      */
@@ -1868,7 +1868,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @param null|string $table Name of table linked to entity
+     * @param string|null $table Name of table linked to entity
      * @param bool $has_active_column True if the table has an active column
      *
      * @return bool
@@ -1896,7 +1896,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @since 1.5.0.1
      *
      * @param array $data
-     * @param null|int $id_lang
+     * @param int|null $id_lang
      */
     public function hydrate(array $data, $id_lang = null)
     {
@@ -1919,7 +1919,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param string $class Class of objects to hydrate
      * @param array $datas List of data (multi-dimensional array)
-     * @param null|int $id_lang
+     * @param int|null $id_lang
      *
      * @throws PrestaShopException
      *
@@ -1975,7 +1975,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * Returns object definition.
      *
      * @param string $class Name of object
-     * @param null|string $field Name of field if we want the definition of one field only
+     * @param string|null $field Name of field if we want the definition of one field only
      *
      * @return array
      */
@@ -2089,7 +2089,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @since 1.5.0.1
      *
      * @param string $field_name
-     * @param null|int $id_lang
+     * @param int|null $id_lang
      *
      * @throws PrestaShopException
      *

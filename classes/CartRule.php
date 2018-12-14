@@ -353,7 +353,7 @@ class CartRuleCore extends ObjectModel
      * @param bool $active Active vouchers only
      * @param bool $includeGeneric Include generic AND highlighted vouchers, regardless of highlight_only setting
      * @param bool $inStock Vouchers in stock only
-     * @param null|Cart $cart Cart
+     * @param Cart|null $cart Cart
      * @param bool $free_shipping_only Free shipping only
      * @param bool $highlight_only Highlighted vouchers only
      *
@@ -1055,8 +1055,8 @@ class CartRuleCore extends ObjectModel
      * @param bool $use_tax Apply taxes
      * @param Context $context Context instance
      * @param bool $use_cache Allow using cache to avoid multiple free gift using multishipping
-     * @param null|mixed $filter
-     * @param null|mixed $package
+     * @param mixed|null $filter
+     * @param mixed|null $package
      *
      * @return float|int|string
      */
@@ -1506,7 +1506,7 @@ class CartRuleCore extends ObjectModel
     /**
      * Automatically add this CartRule to the Cart.
      *
-     * @param null|Context $context Context instance
+     * @param Context|null $context Context instance
      */
     public static function autoAddToCart(Context $context = null)
     {
@@ -1580,7 +1580,7 @@ class CartRuleCore extends ObjectModel
     /**
      * Automatically remove this CartRule from the Cart.
      *
-     * @param null|Context $context Context instance
+     * @param Context|null $context Context instance
      *
      * @return array Error messages
      */

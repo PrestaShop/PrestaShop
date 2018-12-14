@@ -287,7 +287,7 @@ class RequestSqlCore extends ObjectModel
      *
      * @param bool $alias
      * @param $tables
-     * @param null|mixed $attr
+     * @param mixed|null $attr
      *
      * @return array|bool
      */

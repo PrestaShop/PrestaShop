@@ -121,7 +121,7 @@ class TranslatedConfigurationCore extends Configuration
      * @param string $sqlSort
      * @param string $sqlLimit
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWebserviceObjectList($sqlJoin, $sqlFilter, $sqlSort, $sqlLimit)
     {

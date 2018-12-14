@@ -219,7 +219,7 @@ class DbPDOCore extends Db
      *
      * @see DbCore::Insert_ID()
      *
-     * @return string|int
+     * @return int|string
      */
     public function Insert_ID()
     {
@@ -346,7 +346,7 @@ class DbPDOCore extends Db
      * @param string $pwd
      * @param string $db
      * @param string $prefix
-     * @param null|string $engine Table engine
+     * @param string|null $engine Table engine
      *
      * @return bool|string True, false or error
      */

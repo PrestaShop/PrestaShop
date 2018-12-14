@@ -36,7 +36,7 @@ interface LocalizationPackLoaderInterface
     /**
      * Get localization packs list.
      *
-     * @return null|SimpleXMLElement SimpleXMLElement with localization packs data or null if packs are not available
+     * @return SimpleXMLElement|null SimpleXMLElement with localization packs data or null if packs are not available
      */
     public function getLocalizationPackList();
 

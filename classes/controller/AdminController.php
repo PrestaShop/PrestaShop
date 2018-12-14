@@ -125,10 +125,10 @@ class AdminControllerCore extends Controller
     /** @var array */
     public $tpl_required_fields_vars = array();
 
-    /** @var null|string */
+    /** @var string|null */
     public $base_tpl_view = null;
 
-    /** @var null|string */
+    /** @var string|null */
     public $base_tpl_form = null;
 
     /** @var bool If you want more fieldsets in the form */
@@ -317,7 +317,7 @@ class AdminControllerCore extends Controller
     /** @var bool */
     protected $noLink;
 
-    /** @var null|bool */
+    /** @var bool|null */
     protected $specificConfirmDelete = null;
 
     /** @var bool */
@@ -558,8 +558,8 @@ class AdminControllerCore extends Controller
     /**
      * Set breadcrumbs array for the controller page.
      *
-     * @param null|int $tab_id
-     * @param null|array $tabs
+     * @param int|null $tab_id
+     * @param array|null $tabs
      */
     public function initBreadcrumbs($tab_id = null, $tabs = null)
     {
@@ -917,7 +917,7 @@ class AdminControllerCore extends Controller
     /**
      * @TODO uses redirectAdmin only if !$this->ajax
      *
-     * @return ObjectModel|bool
+     * @return bool|ObjectModel
      */
     public function postProcess()
     {
@@ -979,7 +979,7 @@ class AdminControllerCore extends Controller
     /**
      * Object Delete images.
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processDeleteImage()
     {
@@ -1068,7 +1068,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processDelete()
     {
@@ -1115,7 +1115,7 @@ class AdminControllerCore extends Controller
     /**
      * Call the right method for creating or updating object.
      *
-     * @return ObjectModel|false|void
+     * @return false|ObjectModel|void
      */
     public function processSave()
     {
@@ -1133,7 +1133,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processAdd()
     {
@@ -1186,7 +1186,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return ObjectModel|false|void
+     * @return false|ObjectModel|void
      */
     public function processUpdate()
     {
@@ -1299,7 +1299,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processStatus()
     {
@@ -1333,7 +1333,7 @@ class AdminControllerCore extends Controller
     /**
      * Change object position.
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processPosition()
     {
@@ -1354,7 +1354,7 @@ class AdminControllerCore extends Controller
     /**
      * Cancel all filters for this tab.
      *
-     * @param null|int $list_id
+     * @param int|null $list_id
      */
     public function processResetFilters($list_id = null)
     {
@@ -1650,7 +1650,7 @@ class AdminControllerCore extends Controller
      *
      * @param bool $opt Return an empty object if load fail
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     protected function loadObject($opt = false)
     {
@@ -2368,7 +2368,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return string|false
+     * @return false|string
      */
     public function renderList()
     {
@@ -2459,7 +2459,7 @@ class AdminControllerCore extends Controller
     /**
      * Override to render the view page.
      *
-     * @return string|false
+     * @return false|string
      */
     public function renderDetails()
     {
@@ -2711,7 +2711,7 @@ class AdminControllerCore extends Controller
      * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
      *
      * @param string $string Term or expression in english
-     * @param null|string $class Name of the class
+     * @param string|null $class Name of the class
      * @param bool $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
      * @param bool $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
      *
@@ -3082,10 +3082,10 @@ class AdminControllerCore extends Controller
      * Get the current objects' list form the database.
      *
      * @param int $id_lang Language used for display
-     * @param null|string $order_by ORDER BY clause
-     * @param null|string $order_way Order way (ASC, DESC)
+     * @param string|null $order_by ORDER BY clause
+     * @param string|null $order_way Order way (ASC, DESC)
      * @param int $start Offset in LIMIT clause
-     * @param null|int $limit Row count in LIMIT clause
+     * @param int|null $limit Row count in LIMIT clause
      * @param bool|int $id_lang_shop
      *
      * @throws PrestaShopDatabaseException
@@ -3606,7 +3606,7 @@ class AdminControllerCore extends Controller
      *
      * @param ObjectModel $obj Object
      * @param string $key Field name
-     * @param null|int $id_lang Language id (optional)
+     * @param int|null $id_lang Language id (optional)
      *
      * @return string
      */
@@ -3943,8 +3943,8 @@ class AdminControllerCore extends Controller
      * @param string $name
      * @param string $dir
      * @param bool|string $ext
-     * @param null|int $width
-     * @param null|int $height
+     * @param int|null $width
+     * @param int|null $height
      *
      * @return bool
      */
@@ -4269,7 +4269,7 @@ class AdminControllerCore extends Controller
     /**
      * @param Module $module
      * @param string $output_type
-     * @param null|string $back
+     * @param string|null $back
      * @param bool|string $install_source_tracking
      */
     public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
@@ -4326,10 +4326,10 @@ class AdminControllerCore extends Controller
      *
      * @param Module $module
      * @param string $output_type (link or select)
-     * @param null|string $back
+     * @param string|null $back
      * @param bool|string $install_source_tracking
      *
-     * @return string|array
+     * @return array|string
      */
     public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false)
     {

@@ -170,8 +170,8 @@ class CarrierCore extends ObjectModel
     /**
      * CarrierCore constructor.
      *
-     * @param null|int $id Carrier ID
-     * @param null|int $id_lang Language ID
+     * @param int|null $id Carrier ID
+     * @param int|null $id_lang Language ID
      */
     public function __construct($id = null, $id_lang = null)
     {
@@ -351,7 +351,7 @@ class CarrierCore extends ObjectModel
      *
      * @param int $id_zone Zone ID
      *
-     * @return null|false|string Maximum delivery price
+     * @return false|string|null Maximum delivery price
      */
     public function getMaxDeliveryPriceByWeight($id_zone)
     {
@@ -378,7 +378,7 @@ class CarrierCore extends ObjectModel
      *
      * @param float $order_total Order total to pay
      * @param int $id_zone Zone id (for customer delivery address)
-     * @param null|int $id_currency Currency ID
+     * @param int|null $id_currency Currency ID
      *
      * @return float Maximum delivery price
      */
@@ -422,7 +422,7 @@ class CarrierCore extends ObjectModel
      * @param int $id_carrier Carrier ID
      * @param float $order_total Order total to pay
      * @param int $id_zone Zone id (for customer delivery address)
-     * @param null|int $id_currency Currency ID
+     * @param int|null $id_currency Currency ID
      *
      * @return float Delivery price
      */
@@ -515,8 +515,8 @@ class CarrierCore extends ObjectModel
      *                             - ALL_CARRIERS
      * @param bool $active Returns only active carriers when true
      * @param bool $delete
-     * @param int|false $id_zone
-     * @param null|array $ids_group
+     * @param false|int $id_zone
+     * @param array|null $ids_group
      *
      * @return array Carriers
      */
@@ -583,7 +583,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get most used Tax rules group.
      *
-     * @return null|false|string Most used Tax rules group ID
+     * @return false|string|null Most used Tax rules group ID
      */
     public static function getIdTaxRulesGroupMostUsed()
     {
@@ -686,7 +686,7 @@ class CarrierCore extends ObjectModel
      *
      * @param int $id_zone Zone ID
      * @param array $groups Group of the Customer
-     * @param null|Cart $cart Optional Cart object
+     * @param Cart|null $cart Optional Cart object
      * @param array &$error Contains an error message if an error occurs
      *
      * @return array Carriers for the order
@@ -1083,7 +1083,7 @@ class CarrierCore extends ObjectModel
      * Get carrier using the reference id.
      *
      * @param int $id_reference
-     * @param null|int $id_lang
+     * @param int|null $id_lang
      */
     public static function getCarrierByReference($id_reference, $id_lang = null)
     {
@@ -1180,7 +1180,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get range suffix.
      *
-     * @param null|Currency $currency Currency
+     * @param Currency|null $currency Currency
      *
      * @return string Currency sign in suffix to use for the range
      */
@@ -1200,9 +1200,9 @@ class CarrierCore extends ObjectModel
     /**
      * Get TaxRulesGroup ID for this Carrier.
      *
-     * @param null|Context $context Context
+     * @param Context|null $context Context
      *
-     * @return null|false|string TaxrulesGroup ID
+     * @return false|string|null TaxrulesGroup ID
      *                           false if not found
      */
     public function getIdTaxRulesGroup(Context $context = null)
@@ -1214,9 +1214,9 @@ class CarrierCore extends ObjectModel
      * Get TaxRulesGroup ID for a given Carrier.
      *
      * @param int $id_carrier Carrier ID
-     * @param null|Context $context Context
+     * @param Context|null $context Context
      *
-     * @return null|false|string TaxRulesGroup ID
+     * @return false|string|null TaxRulesGroup ID
      *                           false if not found
      */
     public static function getIdTaxRulesGroupByIdCarrier($id_carrier, Context $context = null)
@@ -1278,7 +1278,7 @@ class CarrierCore extends ObjectModel
     /**
      * Delete TaxRulesGroup from this Carrier.
      *
-     * @param null|array $shops Shops
+     * @param array|null $shops Shops
      *
      * @return bool Whether the TaxRulesGroup has been successfully removed from this Carrier
      */
@@ -1322,7 +1322,7 @@ class CarrierCore extends ObjectModel
      * @since 1.5
      *
      * @param Address $address Address
-     * @param null|int $id_order
+     * @param int|null $id_order
      * @param bool $use_average_tax_of_products
      *
      * @return TaxCalculator Tax calculator object

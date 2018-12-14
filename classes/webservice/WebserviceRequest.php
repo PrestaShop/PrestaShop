@@ -47,7 +47,7 @@ class WebserviceRequestCore
     /**
      * Set if the management is specific or if it is classic (entity management).
      *
-     * @var WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch|false
+     * @var false|WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch
      */
     protected $objectSpecificManagement = false;
 

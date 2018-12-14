@@ -135,7 +135,7 @@ class StockAvailableCore extends ObjectModel
      * For a given id_product, synchronizes StockAvailable::quantity with Stock::usable_quantity.
      *
      * @param int $id_product
-     * @param null|mixed $order_id_shop
+     * @param mixed|null $order_id_shop
      */
     public static function synchronize($id_product, $order_id_shop = null)
     {
@@ -637,8 +637,8 @@ class StockAvailableCore extends ObjectModel
      * Removes a given product from the stock available.
      *
      * @param int $id_product
-     * @param null|int $id_product_attribute Optional
-     * @param null|Shop $shop Shop id or shop object Optional
+     * @param int|null $id_product_attribute Optional
+     * @param Shop|null $shop Shop id or shop object Optional
      *
      * @return bool
      */
@@ -770,7 +770,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product
      * @param int id_product_attribute Optional
      * @param int $id_shop Optional
-     * @param null|mixed $id_product_attribute
+     * @param mixed|null $id_product_attribute
      *
      * @return bool|string
      */
@@ -798,9 +798,9 @@ class StockAvailableCore extends ObjectModel
     /**
      * Add an sql restriction for shops fields - specific to StockAvailable.
      *
-     * @param null|DbQuery|string $sql Reference to the query object
-     * @param null|int|Shop $shop Optional : The shop ID
-     * @param null|string $alias Optional : The current table alias
+     * @param DbQuery|string|null $sql Reference to the query object
+     * @param int|Shop|null $shop Optional : The shop ID
+     * @param string|null $alias Optional : The current table alias
      *
      * @return DbQuery|string DbQuery object or the sql restriction string
      */

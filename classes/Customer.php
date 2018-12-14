@@ -348,7 +348,7 @@ class CustomerCore extends ObjectModel
     /**
      * Return customers list.
      *
-     * @param null|bool $onlyActive Returns only active customers when `true`
+     * @param bool|null $onlyActive Returns only active customers when `true`
      *
      * @return array Customers
      */
@@ -588,7 +588,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get simplified Addresses arrays.
      *
-     * @param null|int $idLang Language ID
+     * @param int|null $idLang Language ID
      *
      * @return array
      */
@@ -616,9 +616,9 @@ class CustomerCore extends ObjectModel
      * Get Address as array.
      *
      * @param int $idAddress Address ID
-     * @param null|int $idLang Language ID
+     * @param int|null $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getSimpleAddress($idAddress, $idLang = null)
     {
@@ -659,8 +659,8 @@ class CustomerCore extends ObjectModel
     /**
      * Get SQL query to retrieve Address in an array.
      *
-     * @param null|int $idAddress Address ID
-     * @param null|int $idLang Language ID
+     * @param int|null $idAddress Address ID
+     * @param int|null $idLang Language ID
      *
      * @return string
      */
@@ -763,11 +763,11 @@ class CustomerCore extends ObjectModel
      * Light back office search for customers.
      *
      * @param string $query Searched string
-     * @param null|int $limit Limit query results
+     * @param int|null $limit Limit query results
      *
      * @throws PrestaShopDatabaseException
      *
-     * @return null|array|false|mysqli_result|PDOStatement|resource Corresponding customers
+     * @return array|false|mysqli_result|PDOStatement|resource|null Corresponding customers
      */
     public static function searchByName($query, $limit = null)
     {
@@ -805,7 +805,7 @@ class CustomerCore extends ObjectModel
      *
      * @param string $ip Searched string
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function searchByIp($ip)
     {
@@ -850,7 +850,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get last 10 emails sent to the Customer.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getLastEmails()
     {
@@ -870,7 +870,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get last 10 Connections of the Customer.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getLastConnections()
     {
@@ -896,7 +896,7 @@ class CustomerCore extends ObjectModel
      *
      * @param int $idCustomer Customer ID
      *
-     * @return null|int Customer ID if found
+     * @return int|null Customer ID if found
      */
     public static function customerIdExistsStatic($idCustomer)
     {
@@ -994,7 +994,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get Products bought by this Customer.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getBoughtProducts()
     {
@@ -1009,7 +1009,7 @@ class CustomerCore extends ObjectModel
      *
      * @param int $idCustomer Customer ID
      *
-     * @return mixed|null|string
+     * @return mixed|string|null
      */
     public static function getDefaultGroupId($idCustomer)
     {
@@ -1038,7 +1038,7 @@ class CustomerCore extends ObjectModel
      * Get current Country.
      *
      * @param int $idCustomer
-     * @param null|Cart $cart
+     * @param Cart|null $cart
      *
      * @return int Country ID
      */
@@ -1077,7 +1077,7 @@ class CustomerCore extends ObjectModel
      * Transform the Guest to a Customer.
      *
      * @param int $idLang Language ID
-     * @param null|string $password Password
+     * @param string|null $password Password
      *
      * @return bool
      */
@@ -1282,7 +1282,7 @@ class CustomerCore extends ObjectModel
      * Get Customer Groups
      * (for webservice).
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsGroups()
     {

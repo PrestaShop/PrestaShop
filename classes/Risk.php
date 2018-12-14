@@ -66,7 +66,7 @@ class RiskCore extends ObjectModel
     /**
      * Get Risks.
      *
-     * @param null|int $idLang Language ID
+     * @param int|null $idLang Language ID
      *
      * @return PrestaShopCollection
      */

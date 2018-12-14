@@ -128,8 +128,8 @@ class CMSCategoryCore extends ObjectModel
      * @param int $currentDepth specify the current depth in the tree (don't use it, only for rucursivity!)
      * @param array $excluded_ids_array specify a list of ids to exclude of results
      * @param int $idLang Specify the id of the language used
-     * @param null|int $id_lang
-     * @param null|Link $link
+     * @param int|null $id_lang
+     * @param Link|null $link
      *
      * @return array Subcategories lite tree
      */

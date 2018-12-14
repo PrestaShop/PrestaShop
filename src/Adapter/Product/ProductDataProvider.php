@@ -57,9 +57,9 @@ class ProductDataProvider
      *
      * @param int $id_product
      * @param bool $full
-     * @param null|int $id_lang
-     * @param null|int $id_shop
-     * @param null|object $context
+     * @param int|null $id_lang
+     * @param int|null $id_shop
+     * @param object|null $context
      *
      * @throws \LogicException If the product id is not set
      *
@@ -102,8 +102,8 @@ class ProductDataProvider
      * Get product quantity.
      *
      * @param int $id_product
-     * @param null|int $id_product_attribute
-     * @param null|bool $cache_is_pack
+     * @param int|null $id_product_attribute
+     * @param bool|null $cache_is_pack
      *
      * @return int stock
      */

@@ -67,7 +67,7 @@ class TranslateCore
      * @param string $class
      * @param bool $addslashes
      * @param bool $htmlentities
-     * @param null|mixed $sprintf
+     * @param mixed|null $sprintf
      *
      * @return string
      */
@@ -161,7 +161,7 @@ class TranslateCore
      * @param string $source
      * @param null $sprintf
      * @param bool $js
-     * @param null|string $locale
+     * @param string|null $locale
      *
      * @return mixed|string
      */
@@ -288,7 +288,7 @@ class TranslateCore
      * Get a translation for a PDF.
      *
      * @param string $string
-     * @param null|mixed $sprintf
+     * @param mixed|null $sprintf
      *
      * @return string
      */

@@ -283,7 +283,7 @@ class CountryCore extends ObjectModel
     /**
      * Get a country id with its name.
      *
-     * @param null|int $idLang Language ID
+     * @param int|null $idLang Language ID
      * @param string $country Country Name
      *
      * @return int Country ID
@@ -331,7 +331,7 @@ class CountryCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      *
-     * @return bool|false|null|string
+     * @return bool|false|string|null
      */
     public static function getZipCodeFormat($idCountry)
     {
@@ -357,7 +357,7 @@ class CountryCore extends ObjectModel
      * @param int $idZone Zone ID
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getCountriesByZoneId($idZone, $idLang)
     {

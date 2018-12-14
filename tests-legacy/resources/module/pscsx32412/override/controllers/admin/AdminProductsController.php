@@ -2279,7 +2279,7 @@ class AdminProductsController extends AdminProductsControllerCore
      * @param array $current Current category
      * @param int $id_category Current category id
      * @param mixed $id_obj
-     * @param null|mixed $id_category_default
+     * @param mixed|null $id_category_default
      * @param mixed $has_suite
      */
     public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = array())

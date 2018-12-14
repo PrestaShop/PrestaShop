@@ -77,7 +77,7 @@ class Tools
      *
      * @param mixed $left_operand
      * @param mixed $right_operand
-     * @param null|mixed $scale
+     * @param mixed|null $scale
      */
     public function bcadd($left_operand, $right_operand, $scale = null)
     {
@@ -93,7 +93,7 @@ class Tools
 
     /**
      * @param string $html
-     * @param null|string $uri_unescape
+     * @param string|null $uri_unescape
      * @param bool $allow_style
      *
      * @return string
@@ -178,7 +178,7 @@ class Tools
      *
      * @param float $value
      * @param int $precision
-     * @param null|mixed $round_mode
+     * @param mixed|null $round_mode
      *
      * @return float
      */

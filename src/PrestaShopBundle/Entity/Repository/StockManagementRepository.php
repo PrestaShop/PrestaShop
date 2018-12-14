@@ -335,8 +335,8 @@ abstract class StockManagementRepository
 
     /**
      * @param Statement $statement
-     * @param null|QueryParamsCollection $queryParams
-     * @param null|ProductIdentity $productIdentity
+     * @param QueryParamsCollection|null $queryParams
+     * @param ProductIdentity|null $productIdentity
      */
     protected function bindStockManagementValues(
         Statement $statement,

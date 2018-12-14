@@ -74,7 +74,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
      * @param string $name template name
      * @param string $cache_id cache id
      * @param string $compile_id compile id
-     * @param null|int $exp_time seconds till expiration time in seconds or null
+     * @param int|null $exp_time seconds till expiration time in seconds or null
      * @param string $content content to cache
      *
      * @return bool success
@@ -99,7 +99,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
      * @param string $name template name
      * @param string $cache_id cache id
      * @param string $compile_id compile id
-     * @param null|int $exp_time seconds till expiration or null
+     * @param int|null $exp_time seconds till expiration or null
      *
      * @return int number of deleted caches
      */

@@ -42,7 +42,7 @@ class ProductPresenterFactoryCore
      * ProductPresenterFactoryCore constructor.
      *
      * @param Context $context
-     * @param null|\TaxConfiguration $taxConfiguration
+     * @param \TaxConfiguration|null $taxConfiguration
      */
     public function __construct(Context $context, TaxConfiguration $taxConfiguration = null)
     {

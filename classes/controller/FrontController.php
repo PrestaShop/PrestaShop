@@ -1026,8 +1026,8 @@ class FrontControllerCore extends Controller
      * @deprecated 1.7 use $this->registerJavascript() and $this->registerStylesheet() to manage your assets.
      *
      * @param mixed $media_uri
-     * @param null|mixed $css_media_type
-     * @param null|mixed $offset
+     * @param mixed|null $css_media_type
+     * @param mixed|null $offset
      * @param mixed $remove
      * @param mixed $check_path
      */
@@ -1043,7 +1043,7 @@ class FrontControllerCore extends Controller
      * @deprecated 1.7 this method has not effect with PrestaShop 1.7+
      *
      * @param mixed $media_uri
-     * @param null|mixed $css_media_type
+     * @param mixed|null $css_media_type
      * @param mixed $check_path
      */
     public function removeMedia($media_uri, $css_media_type = null, $check_path = true)
@@ -1106,7 +1106,7 @@ class FrontControllerCore extends Controller
      *
      * @param mixed $css_uri
      * @param mixed $css_media_type
-     * @param null|mixed $offset
+     * @param mixed|null $offset
      * @param mixed $check_path
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
@@ -1204,8 +1204,8 @@ class FrontControllerCore extends Controller
      * @deprecated 1.7  This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core on every theme.
      *                  Have a look at the /themes/_core folder.
      *
-     * @param null|mixed $version
-     * @param null|mixed $folder
+     * @param mixed|null $version
+     * @param mixed|null $folder
      * @param mixed $minifier
      */
     public function addJquery($version = null, $folder = null, $minifier = true)
@@ -1286,7 +1286,7 @@ class FrontControllerCore extends Controller
     /**
      * Recovers cart information.
      *
-     * @return int|false
+     * @return false|int
      */
     protected function recoverCart()
     {
@@ -1320,7 +1320,7 @@ class FrontControllerCore extends Controller
      * @param string $default_template
      * @param mixed $template
      * @param mixed $params
-     * @param null|mixed $locale
+     * @param mixed|null $locale
      */
     public function setTemplate($template, $params = array(), $locale = null)
     {
@@ -1761,7 +1761,7 @@ class FrontControllerCore extends Controller
      * Otherwise, params from $extraParams that have a null value are stripped,
      * and other params are added. Params not in $extraParams are unchanged.
      *
-     * @param null|array $extraParams
+     * @param array|null $extraParams
      */
     protected function updateQueryString(array $extraParams = null)
     {

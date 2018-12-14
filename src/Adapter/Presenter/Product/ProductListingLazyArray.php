@@ -33,7 +33,7 @@ class ProductListingLazyArray extends ProductLazyArray
     /**
      * @arrayAccess
      *
-     * @return null|string
+     * @return string|null
      */
     public function getAddToCartUrl()
     {

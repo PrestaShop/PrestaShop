@@ -149,7 +149,7 @@ class PDFCore
      *
      * @throws PrestaShopException
      *
-     * @return HTMLTemplate|false
+     * @return false|HTMLTemplate
      */
     public function getTemplateObject($object)
     {

@@ -77,7 +77,7 @@ class ProductCore extends ObjectModel
     /** @var int Minimal quantity for add to cart */
     public $minimal_quantity = 1;
 
-    /** @var null|int Low stock for mail alert */
+    /** @var int|null Low stock for mail alert */
     public $low_stock_threshold = null;
 
     /** @var bool Low stock mail alert activated */
@@ -655,7 +655,7 @@ class ProductCore extends ObjectModel
      *
      * @see Group::getPriceDisplayMethod()
      *
-     * @param null|int $id_customer
+     * @param int|null $id_customer
      */
     public static function initPricesComputation($id_customer = null)
     {
@@ -688,7 +688,7 @@ class ProductCore extends ObjectModel
      *
      * @see initPricesComputation()
      *
-     * @param null|int $id_customer
+     * @param int|null $id_customer
      *
      * @return int Returns 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
      */
@@ -962,7 +962,7 @@ class ProductCore extends ObjectModel
      *
      * @param mixed $field
      * @param mixed $value
-     * @param null|mixed $id_lang
+     * @param mixed|null $id_lang
      * @param mixed $skip
      * @param mixed $human_errors
      */
@@ -1314,7 +1314,7 @@ class ProductCore extends ObjectModel
      * @param string $order_way Way for ordering (ASC or DESC)
      * @param mixed $id_category
      * @param mixed $only_active
-     * @param null|Context $context
+     * @param Context|null $context
      *
      * @return array Products details
      */
@@ -1492,7 +1492,7 @@ class ProductCore extends ObjectModel
      * @param mixed $upc
      * @param mixed $minimal_quantity
      * @param mixed $isbn
-     * @param null|mixed $low_stock_threshold
+     * @param mixed|null $low_stock_threshold
      * @param mixed $low_stock_alert
      */
     public function addProductAttribute(
@@ -1612,13 +1612,13 @@ class ProductCore extends ObjectModel
      * @param mixed $id_supplier
      * @param mixed $ean13
      * @param mixed $default
-     * @param null|mixed $location
-     * @param null|mixed $upc
+     * @param mixed|null $location
+     * @param mixed|null $upc
      * @param mixed $minimal_quantity
      * @param array $id_shop_list
-     * @param null|mixed $available_date
+     * @param mixed|null $available_date
      * @param mixed $isbn
-     * @param null|mixed $low_stock_threshold
+     * @param mixed|null $low_stock_threshold
      * @param mixed $low_stock_alert
      */
     public function addCombinationEntity(
@@ -1779,7 +1779,7 @@ class ProductCore extends ObjectModel
      * @param mixed $minimal_quantity
      * @param mixed $available_date
      * @param mixed $isbn
-     * @param null|mixed $low_stock_threshold
+     * @param mixed|null $low_stock_threshold
      * @param mixed $low_stock_alert
      */
     public function updateProductAttribute(
@@ -1881,11 +1881,11 @@ class ProductCore extends ObjectModel
      * @param string $upc Upc barcode
      * @param string $minimal_quantity Minimal quantity
      * @param string $isbn ISBN reference
-     * @param null|int $low_stock_threshold Low stock alert
+     * @param int|null $low_stock_threshold Low stock alert
      * @param bool $low_stock_alert send email on low stock
      * @param mixed $id_images
-     * @param null|mixed $location
-     * @param null|mixed $available_date
+     * @param mixed|null $location
+     * @param mixed|null $available_date
      * @param mixed $update_all_fields
      * @param array $id_shop_list
      *
@@ -1992,13 +1992,13 @@ class ProductCore extends ObjectModel
      * @param bool $default Is default attribute for product
      * @param int $minimal_quantity Minimal quantity to add to cart
      * @param string $isbn ISBN reference
-     * @param null|int $low_stock Low stock alert
+     * @param int|null $low_stock Low stock alert
      * @param mixed $unit_impact
-     * @param null|mixed $upc
+     * @param mixed|null $upc
      * @param array $id_shop_list
-     * @param null|mixed $available_date
+     * @param mixed|null $available_date
      * @param mixed $quantity
-     * @param null|mixed $low_stock_threshold
+     * @param mixed|null $low_stock_threshold
      * @param mixed $low_stock_alert
      *
      * @return mixed $id_product_attribute or false
@@ -2640,9 +2640,9 @@ class ProductCore extends ObjectModel
      * @param mixed $page_number
      * @param mixed $nb_products
      * @param mixed $count
-     * @param null|mixed $order_by
-     * @param null|mixed $order_way
-     * @param null|Context $context
+     * @param mixed|null $order_by
+     * @param mixed|null $order_way
+     * @param Context|null $context
      *
      * @return array New products
      */
@@ -2799,7 +2799,7 @@ class ProductCore extends ObjectModel
      * @param int $id_lang Language id
      * @param mixed $beginning
      * @param mixed $ending
-     * @param null|Context $context
+     * @param Context|null $context
      *
      * @return array Special
      */
@@ -2896,11 +2896,11 @@ class ProductCore extends ObjectModel
      * @param bool $count Only in order to get total number (optional)
      * @param mixed $page_number
      * @param mixed $nb_products
-     * @param null|mixed $order_by
-     * @param null|mixed $order_way
+     * @param mixed|null $order_by
+     * @param mixed|null $order_way
      * @param mixed $beginning
      * @param mixed $ending
-     * @param null|Context $context
+     * @param Context|null $context
      *
      * @return array Prices drop
      */
@@ -3149,7 +3149,7 @@ class ProductCore extends ObjectModel
      * Get product images and legends.
      *
      * @param int $id_lang Language id for multilingual legends
-     * @param null|Context $context
+     * @param Context|null $context
      *
      * @return array Product images and legends
      */
@@ -3170,7 +3170,7 @@ class ProductCore extends ObjectModel
      * Get product cover image.
      *
      * @param mixed $id_product
-     * @param null|Context $context
+     * @param Context|null $context
      *
      * @return array Product cover image
      */
@@ -3200,20 +3200,20 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product Product id
      * @param bool $usetax With taxes or not (optional)
-     * @param null|int $id_product_attribute product attribute id (optional).
+     * @param int|null $id_product_attribute product attribute id (optional).
      *                                       If set to false, do not apply the combination price impact.
      *                                       NULL does apply the default combination price impact
      * @param int $decimals Number of decimals (optional)
-     * @param null|int $divisor Useful when paying many time without fees (optional)
+     * @param int|null $divisor Useful when paying many time without fees (optional)
      * @param bool $only_reduc Returns only the reduction amount
      * @param bool $usereduc Set if the returned amount will include reduction
      * @param int $quantity Required for quantity discount application (default value: 1)
      * @param bool $force_associated_tax DEPRECATED - NOT USED Force to apply the associated tax.
      *                                   Only works when the parameter $usetax is true
-     * @param null|int $id_customer Customer ID (for customer group reduction)
-     * @param null|int $id_cart Cart ID. Required when the cookie is not accessible
+     * @param int|null $id_customer Customer ID (for customer group reduction)
+     * @param int|null $id_cart Cart ID. Required when the cookie is not accessible
      *                          (e.g., inside a payment module, a cron task...)
-     * @param null|int $id_address Customer address ID. Required for price (tax included)
+     * @param int|null $id_address Customer address ID. Required for price (tax included)
      *                             calculation regarding the guest localization
      * @param null $specific_price_output If a specific price applies regarding the previous parameters,
      *                                    this variable is filled with the corresponding SpecificPrice object
@@ -3221,7 +3221,7 @@ class ProductCore extends ObjectModel
      * @param bool $use_group_reduction
      * @param Context $context
      * @param bool $use_customer_price
-     * @param null|mixed $id_customization
+     * @param mixed|null $id_customization
      *
      * @return float Product price
      */
@@ -3790,8 +3790,8 @@ class ProductCore extends ObjectModel
      *
      * @param int $idProduct Product id
      * @param int $idProductAttribute Product attribute id (optional)
-     * @param null|bool $cacheIsPack
-     * @param null|Cart $cart
+     * @param bool|null $cacheIsPack
+     * @param Cart|null $cart
      * @param int $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
@@ -3829,7 +3829,7 @@ class ProductCore extends ObjectModel
      * @param bool $innerJoin LEFT JOIN or INNER JOIN
      * @param Shop $shop
      * @param mixed $product_alias
-     * @param null|mixed $product_attribute
+     * @param mixed|null $product_attribute
      * @param mixed $inner_join
      *
      * @return string
@@ -4325,7 +4325,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_lang Language id
      * @param string $query Search query
-     * @param null|Context $context
+     * @param Context|null $context
      *
      * @return array Matching products
      */
@@ -4797,7 +4797,7 @@ class ProductCore extends ObjectModel
     /**
      * Get the link of the product page of this product.
      *
-     * @param null|Context $context
+     * @param Context|null $context
      */
     public function getLink(Context $context = null)
     {
@@ -5824,7 +5824,7 @@ class ProductCore extends ObjectModel
     /**
      * Returns tax rate.
      *
-     * @param null|Address $address
+     * @param Address|null $address
      *
      * @return float The total taxes rate applied to the product
      */

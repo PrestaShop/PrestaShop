@@ -35,7 +35,7 @@ interface PositionModificationInterface
     /**
      * The row id allowing to match it.
      *
-     * @return string|int
+     * @return int|string
      */
     public function getId();
 

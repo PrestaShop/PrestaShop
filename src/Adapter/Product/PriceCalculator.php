@@ -37,28 +37,28 @@ class PriceCalculator
     /**
      * @param int $idProduct Product id
      * @param bool $useTax With taxes or not (optional)
-     * @param null|int $idProductAttribute product attribute id (optional).
+     * @param int|null $idProductAttribute product attribute id (optional).
      *                                     If set to false, do not apply the combination price impact.
      *                                     NULL does apply the default combination price impact
      * @param int $decimals Number of decimals (optional)
-     * @param null|int $divisor Useful when paying many time without fees (optional)
+     * @param int|null $divisor Useful when paying many time without fees (optional)
      * @param bool $onlyReduc Returns only the reduction amount
      * @param bool $useReduc Set if the returned amount will include reduction
      * @param int $quantity Required for quantity discount application (default value: 1)
      * @param bool $forceAssociatedTax DEPRECATED - NOT USED Force to apply the associated tax.
      *                                 Only works when the parameter $usetax is true
-     * @param null|int $idCustomer Customer ID (for customer group reduction)
-     * @param null|int $idCart Cart ID. Required when the cookie is not accessible
+     * @param int|null $idCustomer Customer ID (for customer group reduction)
+     * @param int|null $idCart Cart ID. Required when the cookie is not accessible
      *                         (e.g., inside a payment module, a cron task...)
-     * @param null|int $idAddress Customer address ID. Required for price (tax included)
+     * @param int|null $idAddress Customer address ID. Required for price (tax included)
      *                            calculation regarding the guest localization
      * @param null $specificPriceOutput If a specific price applies regarding the previous parameters,
      *                                  this variable is filled with the corresponding SpecificPrice object
      * @param bool $withEcotax insert ecotax in price output
      * @param bool $useGroupReduction
-     * @param null|Context $context
+     * @param Context|null $context
      * @param bool $useCustomerPrice
-     * @param null|int $idCustomization
+     * @param int|null $idCustomization
      *
      * @return float Product price
      */

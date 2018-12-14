@@ -409,7 +409,7 @@ class ImageManagerCore
      * Check if image file extension is correct.
      *
      * @param string $filename Real filename
-     * @param null|array $authorizedExtensions
+     * @param array|null $authorizedExtensions
      *
      * @return bool True if it's correct
      */
@@ -437,7 +437,7 @@ class ImageManagerCore
      *
      * @param array $file Upload $_FILE value
      * @param int $maxFileSize Maximum upload size
-     * @param null|mixed $types
+     * @param mixed|null $types
      *
      * @return bool|string Return false if no error encountered
      */

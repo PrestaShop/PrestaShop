@@ -117,7 +117,7 @@ class CartRuleCalculator
 
         // Discount (%) on the cheapest product
         if ($cartRule->reduction_percent && $cartRule->reduction_product == -1) {
-            /** @var null|CartRow $cartRowCheapest */
+            /** @var CartRow|null $cartRowCheapest */
             $cartRowCheapest = null;
             foreach ($this->cartRows as $cartRow) {
                 if ($cartRowCheapest === null

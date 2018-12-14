@@ -550,7 +550,7 @@ class ToolsCore
     /**
      * Change language in cookie while clicking on a flag.
      *
-     * @param null|mixed $cookie
+     * @param mixed|null $cookie
      *
      * @return string iso code
      */
@@ -604,7 +604,7 @@ class ToolsCore
     /**
      * If necessary change cookie language ID and context language.
      *
-     * @param null|Context $context
+     * @param Context|null $context
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -709,7 +709,7 @@ class ToolsCore
     /**
      * Return the CLDR associated with the context or given language_code.
      *
-     * @param null|Context $context
+     * @param Context|null $context
      * @param null $language_code
      *
      * @throws PrestaShopException
@@ -739,7 +739,7 @@ class ToolsCore
      * @param float $price Product price
      * @param array|object $currency Current currency (object, id_currency, NULL => context currency)
      * @param mixed $no_utf8
-     * @param null|Context $context
+     * @param Context|null $context
      *
      * @return string Price correctly formated (sign, decimal separator...)
      *                if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
@@ -1092,9 +1092,9 @@ class ToolsCore
     /**
      * Depending on _PS_MODE_DEV_ throws an exception or returns a error message.
      *
-     * @param null|string $errorMessage Error message (defaults to "Fatal error")
+     * @param string|null $errorMessage Error message (defaults to "Fatal error")
      * @param bool $htmlentities DEPRECATED since 1.7.4.0
-     * @param null|Context $context DEPRECATED since 1.7.4.0
+     * @param Context|null $context DEPRECATED since 1.7.4.0
      *
      * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
      *
@@ -1175,9 +1175,9 @@ class ToolsCore
      * @see error_log()
      *
      * @param mixed $object
-     * @param null|int $message_type
-     * @param null|string $destination
-     * @param null|string $extra_headers
+     * @param int|null $message_type
+     * @param string|null $destination
+     * @param string|null $extra_headers
      *
      * @return bool
      */
@@ -1259,7 +1259,7 @@ class ToolsCore
      *
      * @param string $token token to encrypt
      * @param mixed $page
-     * @param null|Context $context
+     * @param Context|null $context
      */
     public static function getToken($page = true, Context $context = null)
     {
@@ -1851,7 +1851,7 @@ class ToolsCore
      *
      * @param float $value
      * @param int $precision
-     * @param null|mixed $round_mode
+     * @param mixed|null $round_mode
      *
      * @return float
      */
@@ -2915,7 +2915,7 @@ exit;
     /**
      * Display a warning message indicating that the method is deprecated.
      *
-     * @param null|mixed $message
+     * @param mixed|null $message
      */
     public static function displayAsDeprecated($message = null)
     {
@@ -3259,8 +3259,8 @@ exit;
      *
      * @param Smarty $smarty
      * @param mixed $tpl
-     * @param null|mixed $cache_id
-     * @param null|mixed $compile_id
+     * @param mixed|null $cache_id
+     * @param mixed|null $compile_id
      */
     public static function clearCache($smarty = null, $tpl = false, $cache_id = null, $compile_id = null)
     {
@@ -3286,7 +3286,7 @@ exit;
     /**
      * Clear compile for Smarty.
      *
-     * @param null|mixed $smarty
+     * @param mixed|null $smarty
      */
     public static function clearCompile($smarty = null)
     {
@@ -3318,7 +3318,7 @@ exit;
     /**
      * Clear Symfony cache.
      *
-     * @param null|mixed $env
+     * @param mixed|null $env
      */
     public static function clearSf2Cache($env = null)
     {

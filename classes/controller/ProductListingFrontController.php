@@ -529,7 +529,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      *
      * @param string $template the template for this page
      * @param mixed $params
-     * @param null|mixed $locale
+     * @param mixed|null $locale
      */
     protected function doProductSearch($template, $params = array(), $locale = null)
     {

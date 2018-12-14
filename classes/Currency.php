@@ -257,9 +257,9 @@ class CurrencyCore extends ObjectModel
      * Is this currency installed for a given shop ?
      * (current shop by default).
      *
-     * @param null|int $currencyId
+     * @param int|null $currencyId
      *                             The currency to look for (
-     * @param null|int $shopId
+     * @param int|null $shopId
      *                         The given shop's id
      *
      * @return bool
@@ -397,7 +397,7 @@ class CurrencyCore extends ObjectModel
      * @param int $idModule Module ID
      * @param null $idShop Shop ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getPaymentCurrencies($idModule, $idShop = null)
     {
@@ -423,7 +423,7 @@ class CurrencyCore extends ObjectModel
      * @param int $idModule Module ID
      * @param null $idShop Shop ID
      *
-     * @return array|null|PDOStatement|resource
+     * @return array|PDOStatement|resource|null
      */
     public static function checkPaymentCurrencies($idModule, $idShop = null)
     {
@@ -451,7 +451,7 @@ class CurrencyCore extends ObjectModel
      *
      * @param int $idCurrency Currency ID
      *
-     * @return array|bool|null|object
+     * @return array|bool|object|null
      */
     public static function getCurrency($idCurrency)
     {
@@ -644,7 +644,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Count active Currencies.
      *
-     * @param null|int $idShop Shop ID
+     * @param int|null $idShop Shop ID
      *
      * @return mixed Amount of active Currencies
      *               `false` if none found
@@ -669,7 +669,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Is multi Currency activated?
      *
-     * @param null|int $idShop Shop ID
+     * @param int|null $idShop Shop ID
      *
      * @return bool Indicates whether multi Currency is actived
      */

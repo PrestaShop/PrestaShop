@@ -156,9 +156,9 @@ class EmployeeCore extends ObjectModel
     /**
      * EmployeeCore constructor.
      *
-     * @param null|int $id Employee ID
-     * @param null|int $idLang Language ID
-     * @param null|int $idShop Shop ID
+     * @param int|null $id Employee ID
+     * @param int|null $idLang Language ID
+     * @param int|null $idShop Shop ID
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {

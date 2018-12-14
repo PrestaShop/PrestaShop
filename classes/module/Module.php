@@ -156,7 +156,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var Smarty_Data */
     protected $smarty;
 
-    /** @var null|Smarty_Internal_Template */
+    /** @var Smarty_Internal_Template|null */
     protected $current_subtemplate = null;
 
     protected static $update_translations_after_install = true;
@@ -185,7 +185,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
 
-    /** @var null|array used to cache module ids */
+    /** @var array|null used to cache module ids */
     private static $cachedModuleNames = null;
 
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
@@ -1961,7 +1961,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $string String to translate
      * @param bool|string $specific filename to use in translation key
-     * @param null|string $locale Give a context for the translation
+     * @param string|null $locale Give a context for the translation
      *
      * @return string Translation
      */
@@ -2429,8 +2429,8 @@ abstract class ModuleCore implements ModuleInterface
 
     /**
      * @param string $template
-     * @param null|string $cache_id
-     * @param null|string $compile_id
+     * @param string|null $cache_id
+     * @param string|null $compile_id
      *
      * @return Smarty_Internal_Template
      */

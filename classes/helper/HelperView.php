@@ -30,7 +30,7 @@ class HelperViewCore extends Helper
     public $table;
     public $token;
 
-    /** @var null|string If not null, a title will be added on that list */
+    /** @var string|null If not null, a title will be added on that list */
     public $title = null;
 
     public function __construct()

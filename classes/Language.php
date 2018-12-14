@@ -711,7 +711,7 @@ class LanguageCore extends ObjectModel
      * @param string $iso_code Iso code
      * @param bool $no_cache
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function getIdByIso($iso_code, $no_cache = false)
     {
@@ -753,7 +753,7 @@ class LanguageCore extends ObjectModel
      *
      * @throws Exception
      *
-     * @return string|false
+     * @return false|string
      */
     public static function getLocaleByIso($isoCode)
     {
@@ -775,7 +775,7 @@ class LanguageCore extends ObjectModel
      *
      * @throws Exception
      *
-     * @return string|false
+     * @return false|string
      */
     public static function getIsoByLocale($locale)
     {
@@ -1186,7 +1186,7 @@ class LanguageCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @param null|mixed $id_shop
+     * @param mixed|null $id_shop
      *
      * @return bool
      */

@@ -218,9 +218,9 @@ class StockMvtWSCore extends ObjectModelCore
     /**
      * @see ObjectModel
      *
-     * @param null|mixed $id
-     * @param null|mixed $id_lang
-     * @param null|mixed $id_shop
+     * @param mixed|null $id
+     * @param mixed|null $id_lang
+     * @param mixed|null $id_shop
      */
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {

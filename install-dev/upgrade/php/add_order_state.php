@@ -31,7 +31,7 @@
  * @param mixed $unremovable
  * @param mixed $logable
  * @param mixed $delivery
- * @param null|mixed $template
+ * @param mixed|null $template
  */
 
 function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unremovable, $logable, $delivery, $template = null)

@@ -511,7 +511,7 @@ class WarehouseCore extends ObjectModel
      * For a given pack, returns the warehouse it can be shipped from.
      *
      * @param int $id_product
-     * @param null|mixed $id_shop
+     * @param mixed|null $id_shop
      *
      * @return array|bool id_warehouse or false
      */

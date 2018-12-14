@@ -539,7 +539,7 @@ class OrderDetailCore extends ObjectModel
      * Set specific price of the product.
      *
      * @param object $order
-     * @param null|mixed $product
+     * @param mixed|null $product
      */
     protected function setSpecificPrice(Order $order, $product = null)
     {

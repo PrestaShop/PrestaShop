@@ -66,8 +66,8 @@ class ProductSaleCore
      * @param int $idLang Language id
      * @param int $pageNumber Start from (optional)
      * @param int $nbProducts Number of products to return (optional)
-     * @param null|mixed $orderBy
-     * @param null|mixed $orderWay
+     * @param mixed|null $orderBy
+     * @param mixed|null $orderWay
      *
      * @return array|bool from Product::getProductProperties
      *                    `false` if failure
@@ -169,7 +169,7 @@ class ProductSaleCore
      * @param int $idLang Language id
      * @param int $pageNumber Start from (optional)
      * @param int $nbProducts Number of products to return (optional)
-     * @param null|Context $context
+     * @param Context|null $context
      *
      * @return array keys : id_product, link_rewrite, name, id_image, legend, sales, ean13, upc, link
      */

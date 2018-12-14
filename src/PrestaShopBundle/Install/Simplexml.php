@@ -36,8 +36,8 @@ class SimplexmlElement extends \SimpleXMLElement
      * @see SimpleXMLElement::addChild()
      *
      * @param mixed $name
-     * @param null|mixed $value
-     * @param null|mixed $namespace
+     * @param mixed|null $value
+     * @param mixed|null $namespace
      */
     public function addChild($name, $value = null, $namespace = null)
     {
@@ -65,7 +65,7 @@ class SimplexmlElement extends \SimpleXMLElement
      *
      * @see SimpleXMLElement::asXML()
      *
-     * @param null|mixed $filename
+     * @param mixed|null $filename
      */
     public function asXML($filename = null)
     {

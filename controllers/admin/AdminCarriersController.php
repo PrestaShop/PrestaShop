@@ -626,10 +626,10 @@ class AdminCarriersControllerCore extends AdminController
      * Modifying initial getList method to display position feature (drag and drop).
      *
      * @param int $id_lang
-     * @param null|string $order_by
-     * @param null|string $order_way
+     * @param string|null $order_by
+     * @param string|null $order_way
      * @param int $start
-     * @param null|int $limit
+     * @param int|null $limit
      * @param bool|int $id_lang_shop
      *
      * @throws PrestaShopException

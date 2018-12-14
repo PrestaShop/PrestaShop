@@ -65,7 +65,7 @@ function checkImageUploadError($file)
  *  @deprecated 1.5.0
  *
  * @param mixed $file
- * @param null|mixed $types
+ * @param mixed|null $types
  */
 function isPicture($file, $types = null)
 {
@@ -90,8 +90,8 @@ function checkIco($file, $maxFileSize = 0)
  *
  * @param mixed $sourceFile
  * @param mixed $destFile
- * @param null|mixed $destWidth
- * @param null|mixed $destHeight
+ * @param mixed|null $destWidth
+ * @param mixed|null $destHeight
  * @param mixed $fileType
  */
 function imageResize($sourceFile, $destFile, $destWidth = null, $destHeight = null, $fileType = 'jpg')
@@ -105,8 +105,8 @@ function imageResize($sourceFile, $destFile, $destWidth = null, $destHeight = nu
  *
  * @param mixed $srcFile
  * @param mixed $destFile
- * @param null|mixed $destWidth
- * @param null|mixed $destHeight
+ * @param mixed|null $destWidth
+ * @param mixed|null $destHeight
  * @param mixed $fileType
  * @param mixed $destX
  * @param mixed $destY
@@ -161,7 +161,7 @@ function returnDestImage($type, $ressource, $filename)
  *  @deprecated 1.5.0
  *
  * @param mixed $id_item
- * @param null|mixed $id_image
+ * @param mixed|null $id_image
  */
 function deleteImage($id_item, $id_image = null)
 {

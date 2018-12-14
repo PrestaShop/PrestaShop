@@ -58,7 +58,7 @@ class CsvResponse extends StreamedResponse
     private $modeType = self::MODE_PAGINATION;
 
     /**
-     * @var null|int
+     * @var int|null
      */
     private $start = null;
 
@@ -70,7 +70,7 @@ class CsvResponse extends StreamedResponse
     /**
      * Constructor.
      *
-     * @param null|callable $callback A valid PHP callback or null to set it later
+     * @param callable|null $callback A valid PHP callback or null to set it later
      * @param int $status The response status code
      * @param array $headers An array of response headers
      */

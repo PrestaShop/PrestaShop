@@ -109,7 +109,7 @@ final class FormBuilder implements FormBuilderInterface
     /**
      * @param string $formType
      * @param array $data
-     * @param null|int $id
+     * @param int|null $id
      * @param array $options
      *
      * @return FormInterface

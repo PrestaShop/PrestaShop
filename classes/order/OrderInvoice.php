@@ -856,7 +856,7 @@ class OrderInvoiceCore extends ObjectModel
      * @since 1.5.0.2
      *
      * @param int $id_lang for invoice_prefix
-     * @param null|mixed $id_shop
+     * @param mixed|null $id_shop
      *
      * @return string
      */

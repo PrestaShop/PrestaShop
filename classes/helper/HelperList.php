@@ -108,7 +108,7 @@ class HelperListCore extends Helper
     /** @var bool If true, activates color on hover */
     public $row_hover = true;
 
-    /** @var null|string If not null, a title will be added on that list */
+    /** @var string|null If not null, a title will be added on that list */
     public $title = null;
 
     /** @var bool ask for simple header : no filters, no paginations and no sorting */
@@ -386,7 +386,7 @@ class HelperListCore extends Helper
      *
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
+     * @param mixed|null $name
      */
     public function displayDuplicateLink($token, $id, $name = null)
     {
@@ -439,7 +439,7 @@ class HelperListCore extends Helper
      *
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
+     * @param mixed|null $name
      */
     public function displayDetailsLink($token, $id, $name = null)
     {
@@ -471,7 +471,7 @@ class HelperListCore extends Helper
      *
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
+     * @param mixed|null $name
      */
     public function displayViewLink($token, $id, $name = null)
     {
@@ -493,7 +493,7 @@ class HelperListCore extends Helper
      *
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
+     * @param mixed|null $name
      */
     public function displayEditLink($token, $id, $name = null)
     {
@@ -531,7 +531,7 @@ class HelperListCore extends Helper
      *
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
+     * @param mixed|null $name
      */
     public function displayDeleteLink($token, $id, $name = null)
     {
@@ -588,7 +588,7 @@ class HelperListCore extends Helper
      *
      * @param mixed $token
      * @param mixed $id
-     * @param null|mixed $name
+     * @param mixed|null $name
      */
     public function displayDefaultLink($token, $id, $name = null)
     {

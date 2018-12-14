@@ -406,7 +406,7 @@ class XmlLoader
      * Load an entity XML file.
      *
      * @param string $entity
-     * @param null|mixed $iso
+     * @param mixed|null $iso
      *
      * @return \SimpleXMLElement
      */
@@ -1295,7 +1295,7 @@ class XmlLoader
      * @param mixed $entity
      * @param mixed $primary
      * @param array $row
-     * @param null|mixed $id_format
+     * @param mixed|null $id_format
      */
     public function generateId($entity, $primary, array $row = array(), $id_format = null)
     {

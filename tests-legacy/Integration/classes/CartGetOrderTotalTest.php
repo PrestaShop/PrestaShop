@@ -278,8 +278,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      * Carriers are cached by $name.
      *
      * @param mixed $name
-     * @param null|mixed $shippingCost
-     * @param null|mixed $id_tax_rules_group
+     * @param mixed|null $shippingCost
+     * @param mixed|null $id_tax_rules_group
      */
     private static function getIdCarrier($name, $shippingCost = null, $id_tax_rules_group = null)
     {

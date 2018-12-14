@@ -103,7 +103,7 @@ class CartCore extends ObjectModel
     protected static $_taxes_rate = null;
     protected static $_attributesLists = array();
 
-    /** @var null|Customer */
+    /** @var Customer|null */
     protected static $_customer = null;
 
     protected static $cacheDeliveryOption = array();
@@ -186,9 +186,9 @@ class CartCore extends ObjectModel
     /**
      * CartCore constructor.
      *
-     * @param null|int $id Cart ID
+     * @param int|null $id Cart ID
      *                     null = new Cart
-     * @param null|int $idLang Language ID
+     * @param int|null $idLang Language ID
      *                         null = Language ID of current Context
      */
     public function __construct($id = null, $idLang = null)
@@ -435,9 +435,9 @@ class CartCore extends ObjectModel
     /**
      * The arguments are optional and only serve as return values in case caller needs the details.
      *
-     * @param null|float $cartAmountTaxExcluded If the reference is given, it will be updated with the
+     * @param float|null $cartAmountTaxExcluded If the reference is given, it will be updated with the
      *                                          total amount in the Cart excluding Taxes
-     * @param null|float $cartAmountTaxIncluded If the reference is given, it will be updated with the
+     * @param float|null $cartAmountTaxIncluded If the reference is given, it will be updated with the
      *                                          total amount in the Cart including Taxes
      *
      * @return float Average Tax Rate on Products
@@ -467,7 +467,7 @@ class CartCore extends ObjectModel
      *                    - FILTER_ACTION_ALL_NOCAP
      * @param bool $autoAdd automaticaly adds cart ruls without code to cart
      *
-     * @return null|array|false|mysqli_result|PDOStatement|resource Database result
+     * @return array|false|mysqli_result|PDOStatement|resource|null Database result
      */
     public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true)
     {
@@ -1294,7 +1294,7 @@ class CartCore extends ObjectModel
      * @param string $operator Indicate if quantity must be increased or decreased
      * @param mixed $id_customization
      * @param mixed $id_address_delivery
-     * @param null|Shop $shop
+     * @param Shop|null $shop
      * @param mixed $auto_add_cart_rule
      * @param mixed $skipAvailabilityCheckOutOfStock
      *
@@ -1798,7 +1798,7 @@ class CartCore extends ObjectModel
      * @param int $id_customization Customization Id
      * @param null $id_product Unused
      * @param null $id_product_attribute Unused
-     * @param null|int $id_address_delivery Unused
+     * @param int|null $id_address_delivery Unused
      *
      * @return bool Indicates if the Customization was successfully deleted
      * @todo: Remove unused parameters
@@ -2237,7 +2237,7 @@ class CartCore extends ObjectModel
      * Get the gift wrapping price.
      *
      * @param bool $with_taxes With or without taxes
-     * @param null|mixed $id_address
+     * @param mixed|null $id_address
      *
      * @return float wrapping price
      */
@@ -3176,7 +3176,7 @@ class CartCore extends ObjectModel
      * Get the delivery option selected, or if no delivery option was selected,
      * the cheapest option for each address.
      *
-     * @param null|Country $default_country Default country
+     * @param Country|null $default_country Default country
      * @param bool $dontAutoSelectOptions Do not auto select delivery option
      * @param bool $use_cache Use cache
      *
@@ -3246,9 +3246,9 @@ class CartCore extends ObjectModel
     /**
      * Return shipping total for the cart.
      *
-     * @param null|array $delivery_option Array of the delivery option for each address
+     * @param array|null $delivery_option Array of the delivery option for each address
      * @param bool $use_tax Use taxes
-     * @param null|Country $default_country Default Country
+     * @param Country|null $default_country Default Country
      *
      * @return float Shipping total
      */
@@ -3284,8 +3284,8 @@ class CartCore extends ObjectModel
      * @param int $id_carrier Carrier ID
      * @param array $delivery_option Array of the delivery option for each address
      * @param bool $useTax Use Taxes
-     * @param null|Country $default_country Default Country
-     * @param null|array $delivery_option Delivery options array
+     * @param Country|null $default_country Default Country
+     * @param array|null $delivery_option Delivery options array
      *
      * @return float Shipping total
      */
@@ -3317,10 +3317,10 @@ class CartCore extends ObjectModel
     /**
      * @deprecated 1.5.0, use Cart->getPackageShippingCost()
      *
-     * @param null|mixed $id_carrier
+     * @param mixed|null $id_carrier
      * @param mixed $use_tax
-     * @param null|Country $default_country
-     * @param null|mixed $product_list
+     * @param Country|null $default_country
+     * @param mixed|null $product_list
      */
     public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
     {
@@ -3334,10 +3334,10 @@ class CartCore extends ObjectModel
      *
      * @param int $id_carrier Carrier ID (default : current carrier)
      * @param bool $use_tax
-     * @param null|Country $default_country
-     * @param null|array $product_list list of product concerned by the shipping.
+     * @param Country|null $default_country
+     * @param array|null $product_list list of product concerned by the shipping.
      *                                 If null, all the product of the cart are used to calculate the shipping cost
-     * @param null|int $id_zone Zone ID
+     * @param int|null $id_zone Zone ID
      *
      * @return bool|float Shipping total, false if not possible to ship with the given carrier
      */
@@ -3682,7 +3682,7 @@ class CartCore extends ObjectModel
     /**
      * Return total Cart weight.
      *
-     * @param null|mixed $products
+     * @param mixed|null $products
      *
      * @return float Total Cart weight
      */
@@ -3771,7 +3771,7 @@ class CartCore extends ObjectModel
     /**
      * Return useful information about the cart.
      *
-     * @param null|mixed $id_lang
+     * @param mixed|null $id_lang
      * @param mixed $refresh
      *
      * @return array Cart details
@@ -4243,7 +4243,7 @@ class CartCore extends ObjectModel
      * @param int $id_customer Customer ID
      * @param bool $with_order Only return Carts that have been converted into an Order
      *
-     * @return null|array|false|mysqli_result|PDOStatement|resource DB result
+     * @return array|false|mysqli_result|PDOStatement|resource|null DB result
      */
     public static function getCustomerCarts($id_customer, $with_order = true)
     {
@@ -4415,7 +4415,7 @@ class CartCore extends ObjectModel
     /**
      * Get Cart rows from DB for the webservice.
      *
-     * @return null|array|false|mysqli_result|PDOStatement|resource DB result
+     * @return array|false|mysqli_result|PDOStatement|resource|null DB result
      */
     public function getWsCartRows()
     {

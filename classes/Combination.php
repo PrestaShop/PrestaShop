@@ -55,7 +55,7 @@ class CombinationCore extends ObjectModel
 
     public $minimal_quantity = 1;
 
-    /** @var null|int Low stock for mail alert */
+    /** @var int|null Low stock for mail alert */
     public $low_stock_threshold = null;
 
     /** @var bool Low stock mail alert activated */
@@ -280,7 +280,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsProductOptionValues()
     {
@@ -294,7 +294,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsImages()
     {
@@ -356,7 +356,7 @@ class CombinationCore extends ObjectModel
     /**
      * @param $idLang
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getAttributesName($idLang)
     {
@@ -424,7 +424,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getColorsAttributes()
     {

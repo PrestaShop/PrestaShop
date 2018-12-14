@@ -193,7 +193,7 @@ class GridExtension extends AbstractExtension
      * @param array $column
      * @param array $grid
      * @param string $basePath
-     * @param null|string $defaultTemplate
+     * @param string|null $defaultTemplate
      *
      * @return string|null
      */

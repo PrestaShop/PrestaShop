@@ -166,7 +166,7 @@ final class LegacyUrlConverter
     /**
      * @param array $parameters
      *
-     * @return null|string
+     * @return string|null
      */
     private function getActionFromParameters(array $parameters)
     {

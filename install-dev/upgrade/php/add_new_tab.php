@@ -35,7 +35,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
  * @param mixed $name
  * @param mixed $id_parent
  * @param mixed $returnId
- * @param null|mixed $parentTab
+ * @param mixed|null $parentTab
  * @param mixed $module
  */
 function register_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
@@ -95,7 +95,7 @@ function get_new_tab_id($className, $returnId = false)
  * @param string $parentTab
  * @param string $module
  *
- * @return null|int Tab id if requested
+ * @return int|null Tab id if requested
  */
 function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
@@ -121,7 +121,7 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
  * @param string $parentTab
  * @param string $module
  *
- * @return null|int Tab id if requested
+ * @return int|null Tab id if requested
  */
 function add_new_tab_17($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {

@@ -115,7 +115,7 @@ class LanguageList
     /**
      * Get current language.
      *
-     * @param null|mixed $iso
+     * @param mixed|null $iso
      *
      * @return Language
      */
@@ -172,7 +172,7 @@ class LanguageList
     /**
      * Parse HTTP_ACCEPT_LANGUAGE and get first data matching list of available languages.
      *
-     * @return bool|array
+     * @return array|bool
      */
     public function detectLanguage()
     {

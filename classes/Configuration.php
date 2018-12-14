@@ -195,8 +195,8 @@ class ConfigurationCore extends ObjectModel
      *
      * @param string $key Key wanted
      * @param int $idLang Language ID
-     * @param null|mixed $idShopGroup
-     * @param null|mixed $idShop
+     * @param mixed|null $idShopGroup
+     * @param mixed|null $idShop
      * @param mixed $default
      *
      * @return string Value
@@ -248,7 +248,7 @@ class ConfigurationCore extends ObjectModel
      * Get global value.
      *
      * @param string $key Configuration key
-     * @param null|int $idLang Language ID
+     * @param int|null $idLang Language ID
      *
      * @return string
      */

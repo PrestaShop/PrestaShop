@@ -51,7 +51,7 @@ class TranslatableCoreException extends CoreException
      * @param string $domain
      * @param array $parameters
      * @param int $code
-     * @param null|Exception|Throwable $previous
+     * @param Exception|Throwable|null $previous
      */
     public function __construct(
         $key,

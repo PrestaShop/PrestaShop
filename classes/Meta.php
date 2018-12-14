@@ -522,7 +522,7 @@ class MetaCore extends ObjectModel
      *
      * @param mixed $metaTags
      * @param mixed $defaultValue
-     * @param null|Context $context
+     * @param Context|null $context
      */
     public static function completeMetaTags($metaTags, $defaultValue, Context $context = null)
     {

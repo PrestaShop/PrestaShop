@@ -94,8 +94,8 @@ class StockManager implements StockInterface
      * @param $shopId
      * @param $errorState
      * @param $cancellationState
-     * @param null|int $idProduct
-     * @param null|int $idOrder
+     * @param int|null $idProduct
+     * @param int|null $idOrder
      *
      * @return bool
      */
@@ -122,8 +122,8 @@ class StockManager implements StockInterface
      * @param $shopId
      * @param $errorState
      * @param $cancellationState
-     * @param null|int $idProduct
-     * @param null|int $idOrder
+     * @param int|null $idProduct
+     * @param int|null $idOrder
      *
      * @return bool
      */

@@ -622,7 +622,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      *
-     * @return null|false|string Address format
+     * @return false|string|null Address format
      *
      * @since 1.7.0
      */

@@ -53,7 +53,7 @@ class LanguageDataProvider
      *
      * @param string $isoCode - ISO 3166-2 alpha-2 format code
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public function getLanguageCodeByIso($isoCode)
     {

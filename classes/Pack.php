@@ -199,7 +199,7 @@ class PackCore extends Product
      *
      * @param int $idProduct
      * @param int $wantedQuantity
-     * @param null|Cart $cart
+     * @param Cart|null $cart
      *
      * @throws PrestaShopException
      *
@@ -229,11 +229,11 @@ class PackCore extends Product
      *
      * @param int $id_product Product id
      * @param int $id_product_attribute Product attribute id (optional)
-     * @param null|bool $cacheIsPack
+     * @param bool|null $cacheIsPack
      * @param Cart $cart
      * @param int $idCustomization Product customization id (optional)
      * @param mixed $idProduct
-     * @param null|mixed $idProductAttribute
+     * @param mixed|null $idProductAttribute
      *
      * @throws PrestaShopException
      *

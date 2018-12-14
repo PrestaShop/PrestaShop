@@ -490,7 +490,7 @@ class Install extends AbstractInstall
      * PROCESS : populateDatabase
      * Populate database with default data.
      *
-     * @param null|mixed $entity
+     * @param mixed|null $entity
      */
     public function populateDatabase($entity = null)
     {
@@ -600,7 +600,7 @@ class Install extends AbstractInstall
     /**
      * Install languages.
      *
-     * @param null|mixed $languages_list
+     * @param mixed|null $languages_list
      *
      * @return array Association between ID and iso array(id_lang => iso, ...)
      */
@@ -1032,7 +1032,7 @@ class Install extends AbstractInstall
      * PROCESS : installModules
      * Download module from addons and Install all modules in ~/modules/ directory.
      *
-     * @param null|mixed $module
+     * @param mixed|null $module
      */
     public function installModulesAddons($module = null)
     {
@@ -1055,7 +1055,7 @@ class Install extends AbstractInstall
      * PROCESS : installModules
      * Download module from addons and Install all modules in ~/modules/ directory.
      *
-     * @param null|mixed $module
+     * @param mixed|null $module
      */
     public function installModules($module = null)
     {
@@ -1109,7 +1109,7 @@ class Install extends AbstractInstall
      * PROCESS : installFixtures
      * Install fixtures (E.g. demo products).
      *
-     * @param null|mixed $entity
+     * @param mixed|null $entity
      * @param array $data
      */
     public function installFixtures($entity = null, array $data = array())

@@ -60,7 +60,7 @@ class TaxManagerFactoryCore
      * @param Address $address
      * @param string $type
      *
-     * @return TaxManagerInterface|false
+     * @return false|TaxManagerInterface
      */
     public static function execHookTaxManagerFactory(Address $address, $type)
     {

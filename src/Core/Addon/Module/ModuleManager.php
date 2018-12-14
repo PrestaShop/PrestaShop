@@ -712,7 +712,7 @@ class ModuleManager implements AddonManagerInterface
      *
      * @param string $name The technical module name
      *
-     * @return null|string The last error added to the module if found
+     * @return string|null The last error added to the module if found
      */
     public function getError($name)
     {

@@ -54,9 +54,9 @@ class GenderCore extends ObjectModel
     /**
      * GenderCore constructor.
      *
-     * @param null|int $id
-     * @param null|int $idLang
-     * @param null|int $idShop
+     * @param int|null $id
+     * @param int|null $idLang
+     * @param int|null $idShop
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {
@@ -68,7 +68,7 @@ class GenderCore extends ObjectModel
     /**
      * Get all Genders.
      *
-     * @param null|int $idLang Language ID
+     * @param int|null $idLang Language ID
      *
      * @return PrestaShopCollection
      */

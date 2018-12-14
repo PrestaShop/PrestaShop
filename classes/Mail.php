@@ -735,8 +735,8 @@ class MailCore extends ObjectModel
      * we have to return a sentence with accents.
      *
      * @param string $string raw sentence (write directly in file)
-     * @param null|mixed $idLang
-     * @param null|Context $context
+     * @param mixed|null $idLang
+     * @param Context|null $context
      *
      * @return mixed
      */

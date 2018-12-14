@@ -116,7 +116,7 @@ final class ListParametersUpdater
      *
      * @throws ProductException
      *
-     * @return string|int
+     * @return int|string
      */
     private function getParameter(
         $parameterName,

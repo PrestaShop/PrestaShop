@@ -60,8 +60,8 @@ class CookieCore
      *
      * @param $name string Cookie name before encrypting
      * @param $path string
-     * @param null|mixed $expire
-     * @param null|mixed $shared_urls
+     * @param mixed|null $expire
+     * @param mixed|null $shared_urls
      * @param mixed $standalone
      * @param mixed $secure
      */
@@ -341,7 +341,7 @@ class CookieCore
     /**
      * Encrypt and set the Cookie.
      *
-     * @param null|string $cookie Cookie content
+     * @param string|null $cookie Cookie content
      *
      * @return bool Indicates whether the Cookie was successfully set
      *
@@ -355,7 +355,7 @@ class CookieCore
     /**
      * Encrypt and set the Cookie.
      *
-     * @param null|string $cookie Cookie content
+     * @param string|null $cookie Cookie content
      *
      * @return bool Indicates whether the Cookie was successfully set
      *

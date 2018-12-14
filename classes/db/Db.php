@@ -96,7 +96,7 @@ abstract class DbCore
     /**
      * Opens a database connection.
      *
-     * @return PDO|mysqli|resource
+     * @return mysqli|PDO|resource
      */
     abstract public function connect();
 
@@ -110,7 +110,7 @@ abstract class DbCore
      *
      * @param string $sql
      *
-     * @return PDOStatement|mysqli_result|resource|bool
+     * @return bool|mysqli_result|PDOStatement|resource
      */
     abstract protected function _query($sql);
 
@@ -142,14 +142,14 @@ abstract class DbCore
      *
      * @param bool|mysqli_result|PDOStatement|resource $result
      *
-     * @return array|object|false|null
+     * @return array|false|object|null
      */
     abstract public function nextRow($result = false);
 
     /**
      * Get all rows for a query which return an array.
      *
-     * @param null|bool|mysqli_result|PDOStatement|resource $result
+     * @param bool|mysqli_result|PDOStatement|resource|null $result
      *
      * @return array
      */
@@ -580,7 +580,7 @@ abstract class DbCore
      *
      * @throws PrestaShopDatabaseException
      *
-     * @return array|false|null|mysqli_result|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function executeS($sql, $array = true, $use_cache = true)
     {
@@ -686,7 +686,7 @@ abstract class DbCore
      * @param DbQuery|string $sql
      * @param bool $use_cache
      *
-     * @return string|false|null
+     * @return false|string|null
      */
     public function getValue($sql, $use_cache = true)
     {
@@ -859,7 +859,7 @@ abstract class DbCore
      * @param string $pwd
      * @param string $db
      * @param string $prefix
-     * @param null|string $engine Table engine
+     * @param string|null $engine Table engine
      *
      * @return bool|string True, false or error
      */

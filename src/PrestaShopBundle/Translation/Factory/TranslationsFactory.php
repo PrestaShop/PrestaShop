@@ -67,7 +67,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
      * @param string $domainIdentifier Domain identifier
      * @param string $locale Locale identifier
      * @param string $theme Theme name
-     * @param null|mixed $search
+     * @param mixed|null $search
      *
      * @throws ProviderNotFoundException
      *

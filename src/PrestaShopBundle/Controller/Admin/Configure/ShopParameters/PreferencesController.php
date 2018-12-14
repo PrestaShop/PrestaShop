@@ -45,7 +45,7 @@ class PreferencesController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
-     * @param null|FormInterface $form
+     * @param FormInterface|null $form
      *
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/preferences.html.twig")
      *

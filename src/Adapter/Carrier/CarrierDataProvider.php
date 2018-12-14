@@ -51,7 +51,7 @@ class CarrierDataProvider
      * @param bool $active Returns only active carriers when true
      * @param bool $delete
      * @param bool|int $id_zone
-     * @param null|string $ids_group
+     * @param string|null $ids_group
      * @param $modules_filters , possible values:
      * PS_CARRIERS_ONLY
      * CARRIERS_MODULE
@@ -69,7 +69,7 @@ class CarrierDataProvider
     /**
      * Get all active carriers in given language, usable for choice form type.
      *
-     * @param null|int $languageId if not provided - will use the default language
+     * @param int|null $languageId if not provided - will use the default language
      *
      * @return array carrier choices
      */

@@ -290,7 +290,7 @@ class MediaCore
      * return jquery path.
      *
      * @param mixed $version
-     * @param null|mixed $folder
+     * @param mixed|null $folder
      * @param mixed $minifier
      *
      * @return string
@@ -415,7 +415,7 @@ class MediaCore
      * return jquery plugin path.
      *
      * @param mixed $name
-     * @param null|string $folder
+     * @param string|null $folder
      *
      * @return bool|string
      */
@@ -447,7 +447,7 @@ class MediaCore
      * return jquery plugin css path if exist.
      *
      * @param mixed $name
-     * @param null|string $folder
+     * @param string|null $folder
      *
      * @return bool|string
      */
@@ -588,7 +588,7 @@ class MediaCore
     /**
      * Get backtrack limit.
      *
-     * @return int|null|string
+     * @return int|string|null
      */
     public static function getBackTrackLimit()
     {

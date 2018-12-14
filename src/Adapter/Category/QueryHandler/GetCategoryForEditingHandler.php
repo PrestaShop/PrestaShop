@@ -93,7 +93,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     /**
      * @param CategoryId $categoryId
      *
-     * @return null|array cover image data or null if category does not have cover
+     * @return array|null cover image data or null if category does not have cover
      */
     private function getCoverImage(CategoryId $categoryId)
     {

@@ -246,7 +246,7 @@ class AdminProductWrapper
      * @param int $id_product
      * @param array $specificPriceValues the posted values
      * @param int (optional) $id_specific_price if this is an update of an existing specific price, null else
-     * @param null|mixed $idSpecificPrice
+     * @param mixed|null $idSpecificPrice
      *
      * @return AdminProductsController instance
      */
@@ -569,7 +569,7 @@ class AdminProductWrapper
     /**
      * Get price priority.
      *
-     * @param null|int $idProduct
+     * @param int|null $idProduct
      *
      * @return array
      */
@@ -805,7 +805,7 @@ class AdminProductWrapper
      * @param array $data
      * @param array $locales
      *
-     * @return null|object Attachement
+     * @return object|null Attachement
      */
     public function processAddAttachment($product, $data, $locales)
     {

@@ -94,10 +94,10 @@ class ContextCore
      */
     protected $mobile_device = null;
 
-    /** @var null|bool */
+    /** @var bool|null */
     protected $is_mobile = null;
 
-    /** @var null|bool */
+    /** @var bool|null */
     protected $is_tablet = null;
 
     /** @var int */

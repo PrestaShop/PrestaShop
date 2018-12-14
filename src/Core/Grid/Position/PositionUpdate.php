@@ -50,7 +50,7 @@ final class PositionUpdate implements PositionUpdateInterface
     /**
      * @param PositionModificationCollectionInterface $positionModificationCollection
      * @param PositionDefinitionInterface $positionDefinition
-     * @param null|string $parentId
+     * @param string|null $parentId
      */
     public function __construct(
         PositionModificationCollectionInterface $positionModificationCollection,

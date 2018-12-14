@@ -1132,7 +1132,7 @@ class ShopCore extends ObjectModel
      *
      * @param string $alias
      * @param Context $context
-     * @param null|mixed $id_shop
+     * @param mixed|null $id_shop
      *
      * @return string
      */

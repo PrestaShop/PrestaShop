@@ -35,7 +35,7 @@ use AppKernel;
 class CheckMissingOrUpdatedFiles
 {
     /**
-     * @param null|string $dir
+     * @param string|null $dir
      * @param string $path
      *
      * @return array

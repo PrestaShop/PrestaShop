@@ -67,7 +67,7 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
      * @param bool $useMaster
      * @param bool $useCache
      *
-     * @return string|false|null
+     * @return false|string|null
      */
     public function getValue($sql, $useMaster = true, $useCache = true)
     {

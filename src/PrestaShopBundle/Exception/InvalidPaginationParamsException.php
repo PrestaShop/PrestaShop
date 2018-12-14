@@ -34,7 +34,7 @@ class InvalidPaginationParamsException extends OutOfBoundsException
     /**
      * @param string $message
      * @param int $code
-     * @param null|Exception $previous
+     * @param Exception|null $previous
      */
     public function __construct(
         $message = '',

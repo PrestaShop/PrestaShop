@@ -753,7 +753,7 @@ class ModuleController extends ModuleAbstractController
      *
      * @param array $pageVoter
      *
-     * @return void|JsonResponse
+     * @return JsonResponse|void
      */
     private function checkPermissions(array $pageVoter)
     {

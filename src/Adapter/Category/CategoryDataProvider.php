@@ -84,10 +84,10 @@ class CategoryDataProvider
     /**
      * Get all nested categories.
      *
-     * @param null|int $root_category
+     * @param int|null $root_category
      * @param bool|int $id_lang
      * @param bool $active
-     * @param null|int $groups
+     * @param int|null $groups
      * @param bool $use_shop_restriction
      * @param string $sql_filter
      * @param string $sql_sort
@@ -107,7 +107,7 @@ class CategoryDataProvider
     /**
      * Return available categories Names - excluding Root category.
      *
-     * @param null|int $root_category
+     * @param int|null $root_category
      * @param bool|int $id_lang
      * @param bool $active return only active categories
      * @param $groups
@@ -259,8 +259,8 @@ class CategoryDataProvider
     }
 
     /**
-     * @param null|int $idLang
-     * @param null|Shop $shop
+     * @param int|null $idLang
+     * @param Shop|null $shop
      *
      * @return Category
      */

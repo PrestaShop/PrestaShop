@@ -51,7 +51,7 @@ class ModuleFrontControllerCore extends FrontController
      *
      * @param string $template Template filename
      * @param mixed $params
-     * @param null|mixed $locale
+     * @param mixed|null $locale
      *
      * @throws PrestaShopException
      */
@@ -86,7 +86,7 @@ class ModuleFrontControllerCore extends FrontController
      *
      * @param string $string Term or expression in english
      * @param false|string $specific Specific name, only for ModuleFrontController
-     * @param null|string $class Name of the class
+     * @param string|null $class Name of the class
      * @param bool $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes()
      * @param bool $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
      *
