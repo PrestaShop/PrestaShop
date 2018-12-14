@@ -26,7 +26,11 @@
 
 namespace LegacyTests\Unit\Core\Cart\CartToOrder;
 
+use Address;
+use CartRule;
 use Configuration;
+use Context;
+use Customer;
 use LegacyTests\Unit\Core\Cart\Calculation\Taxes\CartTaxesTest;
 use Order;
 use OrderCartRule;
@@ -53,6 +57,7 @@ class CartToOrderTest extends CartTaxesTest
      * @param $expected_totalShipping_taxExcl
      * @param $expected_discounts_taxIncl
      * @param $expected_discounts_taxExcl
+     * @param $expected_newVoucherValue
      */
     public function testCopyCartToOrder(
         $productData,
@@ -65,7 +70,8 @@ class CartToOrderTest extends CartTaxesTest
         $expected_totalShipping_taxIncl,
         $expected_totalShipping_taxExcl,
         $expected_discounts_taxIncl,
-        $expected_discounts_taxExcl
+        $expected_discounts_taxExcl,
+        $expected_newVoucherValue = 0
     )
     {
         // prepare cart
@@ -77,6 +83,19 @@ class CartToOrderTest extends CartTaxesTest
         // need to update secret_key in order to get payment working
         $this->cart->secure_key = md5('xxx');
         $this->cart->update();
+
+        // need to set customer to have a valid email
+        $customer = new Customer();
+        $customer->firstname = 'fake';
+        $customer->lastname = 'fake';
+        $customer->passwd = 'fakefake';
+        $customer->email = 'fake@prestashop.com';
+        $customer->add();
+        $address = new Address($addressId);
+        $address->id_customer = $customer->id;
+        $address->update();
+
+        Context::getContext()->updateCustomer($customer);
 
         // copy to order
         $paymentModule = new PaymentModuleFake;
@@ -116,6 +135,14 @@ class CartToOrderTest extends CartTaxesTest
             $this->assertEquals($expected_discounts_taxIncl[$i], $orderCartRule->value);
             $this->assertEquals($expected_discounts_taxExcl[$i], $orderCartRule->value_tax_excl);
         }
+
+        // check if new voucher should have been created
+        if ($expected_newVoucherValue > 0) {
+            $vouchers = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
+            $this->assertCount(1, $vouchers);
+            $voucher = new CartRule($vouchers[0]['id_cart_rule']);
+            $this->assertEquals($expected_newVoucherValue, $voucher->reduction_amount);
+        }
     }
 
     public function cartToOrderProvider()
@@ -133,6 +160,7 @@ class CartToOrderTest extends CartTaxesTest
                 'expected_totalShipping_taxExcl' => 7,
                 'expected_discounts_taxIncl' => [10.3],
                 'expected_discounts_taxExcl' => [9.91],
+                'expected_newVoucherValue' => 0,
             ],
             '1 product in cart, 2 cart rules' => [
                 'products' => [1 => 1],
@@ -146,6 +174,7 @@ class CartToOrderTest extends CartTaxesTest
                 'expected_totalShipping_taxExcl' => 7,
                 'expected_discounts_taxIncl' => [10.3, 5.15],
                 'expected_discounts_taxExcl' => [9.91, 4.95],
+                'expected_newVoucherValue' => 0,
             ],
             '3 product in cart, 1 cart rule' => [
                 'products' => [1 => 1, 2 => 1, 3 => 2],
@@ -159,6 +188,7 @@ class CartToOrderTest extends CartTaxesTest
                 'expected_totalShipping_taxExcl' => 7,
                 'expected_discounts_taxIncl' => [59.58],
                 'expected_discounts_taxExcl' => [57.29],
+                'expected_newVoucherValue' => 0,
             ],
             '3 product in cart, 3 cart rules' => [
                 'products' => [1 => 1, 2 => 1, 3 => 2],
@@ -172,6 +202,21 @@ class CartToOrderTest extends CartTaxesTest
                 'expected_totalShipping_taxExcl' => 7,
                 'expected_discounts_taxIncl' => [59.58, 29.79],
                 'expected_discounts_taxExcl' => [57.29, 28.65],
+                'expected_newVoucherValue' => 0,
+            ],
+            '1 product in cart, 1 cart rule with too-much amount' => [
+                'products' => [1 => 1],
+                'cartRules' => [5],
+                'addressId' => CartTaxesTest::ADDRESS_ID_1,
+                'expected_totalProduct_taxIncl' => 20.6,
+                'expected_totalProduct_taxExcl' => 19.81,
+                'expected_totalDiscount_taxIncl' => 20.6,
+                'expected_totalDiscount_taxExcl' => 19.81,
+                'expected_totalShipping_taxIncl' => 7,
+                'expected_totalShipping_taxExcl' => 7,
+                'expected_discounts_taxIncl' => [20.6],
+                'expected_discounts_taxExcl' => [19.81],
+                'expected_newVoucherValue' => 480.19,
             ],
         ];
     }

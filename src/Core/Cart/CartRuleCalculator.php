@@ -159,13 +159,6 @@ class CartRuleCalculator
         // Discount (¤) : weighted calculation on all concerned rows
         //                weight factor got from price with same tax (incl/excl) as voucher
         if ((float) $cartRule->reduction_amount > 0) {
-            // currency conversion
-            $discountConverted = $this->convertAmountBetweenCurrencies(
-                $cartRule->reduction_amount,
-                new \Currency($cartRule->reduction_currency),
-                new \Currency($cart->id_currency)
-            );
-
             $concernedRows = new CartRowCollection();
             if ($cartRule->reduction_product > 0) {
                 // discount on single product
@@ -185,12 +178,23 @@ class CartRuleCalculator
              * elseif ($this->reduction_product == -2)
              */
 
+            // currency conversion
+            $discountConverted = $this->convertAmountBetweenCurrencies(
+                $cartRule->reduction_amount,
+                new \Currency($cartRule->reduction_currency),
+                new \Currency($cart->id_currency)
+            );
+
             // get total of concerned rows
             $totalTaxIncl = $totalTaxExcl = 0;
             foreach ($concernedRows as $concernedRow) {
                 $totalTaxIncl += $concernedRow->getFinalTotalPrice()->getTaxIncluded();
                 $totalTaxExcl += $concernedRow->getFinalTotalPrice()->getTaxExcluded();
             }
+
+            // The reduction cannot exceed the products total, except when we do not want it to be limited (for the partial use calculation)
+            $discountConverted = min($discountConverted, $cartRule->reduction_tax ? $totalTaxIncl : $totalTaxExcl);
+
             // apply weighted discount :
             // on each line we apply a part of the discount corresponding to discount*rowWeight/total
             foreach ($concernedRows as $concernedRow) {
