@@ -74,7 +74,7 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate($incorrectRewriteUrl, new IsUrlRewrite());
 
         $this->buildViolation((new IsUrlRewrite())->message)
-            ->setParameter('%value%', $incorrectRewriteUrl)
+            ->setParameter('%s', $incorrectRewriteUrl)
             ->assertRaised()
         ;
     }

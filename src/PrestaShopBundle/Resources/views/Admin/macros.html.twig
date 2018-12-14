@@ -102,15 +102,20 @@
   {% set attr = vars.attr|default({}) %}
   {% set errors = [] %}
 
-  {% for parentError in form.vars.errors %}
-    {% set errors = errors|merge([parentError.message]) %}
-  {% endfor %}
-
-  {% for child in form.children %}
-    {% for error in child.vars.errors %}
-      {% set errors = errors|merge([error.message]) %}
+  {% if not form.vars.valid  %}
+    {% for parentError in form.vars.errors %}
+      {% set errors = errors|merge([parentError.message]) %}
     {% endfor %}
-  {% endfor %}
+
+    {{ dump(form.vars.errors) }}
+
+    {% for child in form.children %}
+      {{ dump(child.vars.errors) }}
+      {% for error in child.vars.errors %}
+        {% set errors = errors|merge([error.message]) %}
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
 
   {% set attr = attr|merge({'class': (attr.class is defined ? attr.class : '') ~ (errors|length > 0 ? ' is-invalid' : '')} ) %}
   {% set vars = vars|merge({'attr': attr}) %}

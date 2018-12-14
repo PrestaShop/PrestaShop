@@ -36,8 +36,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class IsUrlRewrite extends Constraint
 {
-    // todo: test maybe similar translations already exist
-    public $message = 'Value "%value%" is invalid.';
+    public $message = '%s is invalid.';
 
     /**
      * {@inheritdoc}
