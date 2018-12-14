@@ -234,7 +234,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @param array &$toDelete Array reference where categories ID will be saved
      * @param array|int $id_cms_category Parent CMSCategory ID
-     * @param mixed $to_delete
+     * @param array $to_delete
      */
     protected function recursiveDelete(&$to_delete, $id_cms_category)
     {
