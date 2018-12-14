@@ -37,6 +37,18 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
  */
 class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
 {
+    /**
+     * @var bool
+     */
+    private $useAscendedChars;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->useAscendedChars = false;
+    }
+
     public function testItThrowsUnexpectedTypeExceptionOnIncorrectConstraintProvided()
     {
         $this->expectException(UnexpectedTypeException::class);
@@ -73,6 +85,20 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
     public function testItFindsCorrectUrlRewritePatterns($correctRewriteUrl)
     {
         $this->validator->validate($correctRewriteUrl, new IsUrlRewrite());
+
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider getCorrectRewriteUlrUsingAscendingChars
+     */
+    public function testItFindsCorrectUrlRewritePatternUsingAscendedChars($correctRewriteUrl)
+    {
+        $this->useAscendedChars = true;
+
+        $validator = $this->createValidator();
+
+        $validator->validate($correctRewriteUrl, new IsUrlRewrite());
 
         $this->assertNoViolation();
     }
@@ -122,9 +148,23 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
         ];
     }
 
+    public function getCorrectRewriteUlrUsingAscendingChars()
+    {
+        return [
+            [
+              'aĮأ',
+            ],
+            [
+              'Šarūnas',
+            ],
+            [
+                '_$'
+            ],
+        ];
+    }
+
     protected function createValidator()
     {
-        //todo: missing test case with ascendedCharsAllowed
-        return new IsUrlRewriteValidator(false);
+        return new IsUrlRewriteValidator($this->useAscendedChars);
     }
 }
