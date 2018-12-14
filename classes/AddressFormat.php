@@ -252,7 +252,7 @@ class AddressFormatCore extends ObjectModel
      * example : (firstname) => 'Presta' will result (Presta)
      *         : (firstname-lastname) => 'Presta' and 'Shop' result '(Presta-Shop)'.
      *
-     * @param & $formattedValueList
+     * @param array $formattedValueList
      * @param mixed $currentLine
      * @param mixed $currentKeyList
      */
