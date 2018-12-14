@@ -35,8 +35,6 @@ interface ToggleCmsPageCategoryStatusHandlerInterface
 {
     /**
      * @param ToggleCmsPageCategoryStatusCommand $command
-     *
-     * @return void
      */
     public function handle(ToggleCmsPageCategoryStatusCommand $command);
 }
