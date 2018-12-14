@@ -115,7 +115,7 @@ class VersionNumber
      *
      * @return int 1 if this version number is higher, -1 if lower, 0 if equal
      */
-    public function compare(self $otherNumber)
+    public function compare(VersionNumber $otherNumber)
     {
         if ($this->major > $otherNumber->getMajor()) {
             return 1;

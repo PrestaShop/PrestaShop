@@ -59,7 +59,7 @@ class CategoryId
      *
      * @return bool
      */
-    public function isEqual(self $categoryId)
+    public function isEqual(CategoryId $categoryId)
     {
         return $this->getValue() === $categoryId->getValue();
     }

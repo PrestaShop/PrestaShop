@@ -71,7 +71,7 @@ class CategoryStatus
      *
      * @return bool
      */
-    public function isEqualTo(self $status)
+    public function isEqualTo(CategoryStatus $status)
     {
         return $this->getValue() === $status->getValue();
     }
