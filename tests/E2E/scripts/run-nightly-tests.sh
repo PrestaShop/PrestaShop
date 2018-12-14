@@ -1,9 +1,9 @@
 #!/bin/bash
 
+BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/TRAVIS_BRANCH -H "Metadata-Flavor: Google")
 DIR_PATH=$(mktemp -d)
 REPORT_PATH=$(mktemp -d)
-BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/TRAVIS_BRANCH -H "Metadata-Flavor: Google")
-OUTPUT_NAME="$(date +%Y-%m-%d)-${BRANCH}"
+REPORT_OUTPUT_NAME="$(date +%Y-%m-%d)-${BRANCH}"
 
 if [ -d $DIR_PATH ]; then
   rm -rf $DIR_PATH
@@ -38,8 +38,8 @@ for test_file in test/campaigns/regular/* ; do
 done
 
 if [ "$(ls ${REPORT_PATH}/campaigns)" ]; then
-  ./scripts/combine-reports.py "${REPORT_PATH}/campaigns" "${REPORT_PATH}/${OUTPUT_NAME}.json"
-  nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${REPORT_PATH}/${OUTPUT_NAME}.json" -o "${REPORT_PATH}/reports"
+  ./scripts/combine-reports.py "${REPORT_PATH}/campaigns" "${REPORT_PATH}/${REPORT_OUTPUT_NAME}.json"
+  nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${REPORT_PATH}/${REPORT_OUTPUT_NAME}.json" -o "${REPORT_PATH}/reports"
   gsutil cp -r "${REPORT_PATH}/reports" gs://prestashop-core-nightly
 fi
 
