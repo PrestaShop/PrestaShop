@@ -307,7 +307,7 @@ class AddressFormatCore extends ObjectModel
     /**
      * Cleaned the layout set by the user.
      *
-     * @param & $orderedAddressField
+     * @param array $orderedAddressField
      */
     public static function cleanOrderedAddress(&$orderedAddressField)
     {
