@@ -193,7 +193,7 @@ class AddressCore extends ObjectModel
     /**
      * @see ObjectModel::update()
      *
-     * @param mixed $null_values
+     * @param bool $null_values
      */
     public function update($null_values = false)
     {
