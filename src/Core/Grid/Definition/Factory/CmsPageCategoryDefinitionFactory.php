@@ -60,19 +60,10 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
     private $cmsCategoryParentId;
 
     /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    /**
-     * @param UrlGeneratorInterface $urlGenerator
      * @param RequestStack $requestStack
      */
-    public function __construct(
-        UrlGeneratorInterface $urlGenerator,
-        RequestStack $requestStack
-    ) {
-        $this->urlGenerator = $urlGenerator;
+    public function __construct(RequestStack $requestStack)
+    {
         $this->setCmsPageCategoryParentId($requestStack);
     }
 
@@ -205,15 +196,6 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getFilters()
     {
-        $resetActionUrl = $this->urlGenerator->generate('admin_common_reset_search', [
-            'controller' => 'CmsPage',
-            'action' => 'index',
-        ]);
-
-        $redirectionUrl = $this->urlGenerator->generate('admin_cms_pages_index', [
-            'cmsCategoryParentId' => $this->cmsCategoryParentId,
-        ]);
-
         return (new FilterCollection())
             ->add((new Filter('id_cms_category', TextType::class))
                 ->setTypeOptions([
@@ -244,9 +226,14 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
             )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
-                    'attr' => [
-                        'data-url' => $resetActionUrl,
-                        'data-redirect' => $redirectionUrl,
+                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route_params' => [
+                        'controller' => 'CmsPage',
+                        'action' => 'index',
+                    ],
+                    'redirect_route' => 'admin_cms_pages_index',
+                    'redirect_route_params' => [
+                        'cmsCategoryParentId' => $this->cmsCategoryParentId,
                     ],
                 ])
                 ->setAssociatedColumn('actions')
