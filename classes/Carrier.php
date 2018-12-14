@@ -1324,7 +1324,7 @@ class CarrierCore extends ObjectModel
      * @since 1.5
      *
      * @param Address $address Address
-     * @param null|mixed $id_order
+     * @param null|int $id_order
      * @param bool $use_average_tax_of_products
      *
      * @return TaxCalculator Tax calculator object
