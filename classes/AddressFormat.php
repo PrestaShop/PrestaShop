@@ -546,7 +546,7 @@ class AddressFormatCore extends ObjectModel
     /**
      * Return a data array containing ordered, formatedValue and object fields.
      *
-     * @param mixed $address
+     * @param Address $address
      */
     public static function getFormattedLayoutData($address)
     {
