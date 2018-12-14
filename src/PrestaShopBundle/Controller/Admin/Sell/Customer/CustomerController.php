@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
@@ -44,6 +45,7 @@ use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -278,6 +280,32 @@ class CustomerController extends AbstractAdminController
         }
 
         return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Search for customers by query.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function searchAction(Request $request)
+    {
+        $query = $request->query->get('customer_search');
+        $isRequestFromLegacyPage = !$request->query->has('sf2');
+
+        $customers = $this->getQueryBus()->handle(new SearchCustomers($query));
+
+        // if call is made from legacy page
+        // it will return response so legacy can understand it
+        if ($isRequestFromLegacyPage) {
+            return $this->json([
+                'found' => !empty($customers),
+                'customers' => $customers,
+            ]);
+        }
+
+        return $this->json($customers);
     }
 
     /**
