@@ -205,7 +205,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getFilters()
     {
-        $resetActionUrl =  $this->urlGenerator->generate('admin_common_reset_search', [
+        $resetActionUrl = $this->urlGenerator->generate('admin_common_reset_search', [
             'controller' => 'CmsPage',
             'action' => 'index',
         ]);
