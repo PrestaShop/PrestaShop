@@ -258,6 +258,7 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function updateCmsCategoryPositionAction(Request $request, $cmsCategoryParentId)
     {
+        //todo: position update using ajax
         $positionsData = [
             'positions' => $request->request->get('positions'),
             'parentId' => $cmsCategoryParentId,
