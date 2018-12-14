@@ -210,10 +210,12 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'attr' => [
-                        'data-url' => $this->resetActionUrl,
-                        'data-redirect' => $this->redirectActionUrl,
+                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route_params' => [
+                        'controller' => 'supplier',
+                        'action' => 'index',
                     ],
+                    'redirect_route' => 'admin_suppliers_index',
                 ])
             )
         ;
