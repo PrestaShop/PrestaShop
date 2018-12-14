@@ -486,7 +486,7 @@ class CMSCategoryCore extends ObjectModel
      * Check if CMSCategory can be moved in another one.
      *
      * @param int $id_parent Parent candidate
-     * @param mixed $id_cms_category
+     * @param int $id_cms_category
      *
      * @return bool Parent validity
      */
