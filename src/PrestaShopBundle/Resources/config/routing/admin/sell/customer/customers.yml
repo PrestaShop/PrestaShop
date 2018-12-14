@@ -93,3 +93,10 @@ admin_customers_disable_bulk:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:disableBulk
     _legacy_controller: AdminCustomers
+
+admin_customers_export:
+  path: /export
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:export
+    _legacy_controller: AdminCustomers
