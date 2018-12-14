@@ -1,4 +1,5 @@
 <?php
+
 include('config/config.php');
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
     die('Forbidden');
