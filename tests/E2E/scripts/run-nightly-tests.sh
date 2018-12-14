@@ -43,4 +43,4 @@ if [ "$(ls ${REPORT_PATH}/campaigns)" ]; then
   gsutil cp -r "${REPORT_PATH}/reports" gs://prestashop-core-nightly
 fi
 
-sudo halt -p
+halt -p
