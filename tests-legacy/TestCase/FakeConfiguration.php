@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace LegacyTests\TestCase;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;

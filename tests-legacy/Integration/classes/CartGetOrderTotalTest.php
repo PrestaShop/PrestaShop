@@ -479,7 +479,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $product = self::makeProduct('Yo Product', 10, self::getIdTaxRulesGroup(20));
 
-
         self::makeCartRule(5, 'before tax')->id;
         $cart = self::makeCart();
 

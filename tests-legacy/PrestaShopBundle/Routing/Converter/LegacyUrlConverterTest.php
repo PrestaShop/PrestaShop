@@ -478,7 +478,6 @@ class LegacyUrlConverterTest extends TestCase
                 ->willReturn($routePath);
         }
 
-
         return $mockRouter;
     }
 

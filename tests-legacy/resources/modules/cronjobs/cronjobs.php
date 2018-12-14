@@ -108,7 +108,6 @@ class CronJobs extends Module
             Configuration::updateValue('CRONJOBS_MODULE_VERSION', $this->version);
             Configuration::updateValue('CRONJOBS_ADMIN_DIR', Tools::encrypt($this->getAdminDir()));
 
-
             if (Configuration::get('CRONJOBS_MODE') == 'webservice') {
                 $this->updateWebservice(true);
 

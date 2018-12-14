@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 require_once dirname(__FILE__) . '/ExpressionType.php';
 
 class ExpressionToken {

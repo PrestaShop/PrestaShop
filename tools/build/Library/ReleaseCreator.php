@@ -379,7 +379,6 @@ class ReleaseCreator
         $kernelFile = $this->tempProjectPath.'/app/AppKernel.php';
         $version = new Version($this->version);
 
-
         $kernelFileContent = file_get_contents($kernelFile);
         $kernelFileContent = preg_replace(
             '~const VERSION = \'(.*)\';~',

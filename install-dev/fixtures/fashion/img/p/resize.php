@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 include('../../../../../config/config.inc.php');
 ini_set('max_execution_time', 7200);
 ini_set('memory_limit', '512M');

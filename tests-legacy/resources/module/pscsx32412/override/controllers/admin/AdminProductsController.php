@@ -3901,7 +3901,6 @@ class AdminProductsController extends AdminProductsControllerCore
                     $images[$k] = new Image($image['id_image']);
                 }
 
-
                 if ($this->context->shop->getContext() == Shop::CONTEXT_SHOP) {
                     $current_shop_id = (int)$this->context->shop->id;
                 } else {

@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace LegacyTests\Integration;
 
 use LegacyTests\TestCase\IntegrationTestCase;

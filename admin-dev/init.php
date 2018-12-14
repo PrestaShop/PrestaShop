@@ -101,7 +101,6 @@ try {
 
     $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
-
     if ($context->employee->isLoggedBack()) {
         $shop_id = '';
         Shop::setContext(Shop::CONTEXT_ALL);

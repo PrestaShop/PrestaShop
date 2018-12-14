@@ -213,7 +213,6 @@ class Condition extends ObjectModel
             $ids[] = $r['id_condition'];
         }
         
-
         return array_unique($ids);
     }
     

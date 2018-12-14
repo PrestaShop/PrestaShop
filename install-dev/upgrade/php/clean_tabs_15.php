@@ -297,7 +297,6 @@ function clean_tabs_15()
 
     //=====================================/
 
-
     //===== step 2 move all no native tabs in AdminTools  =====/
 
     $id_admin_tools = get_tab_id('AdminTools');
@@ -346,7 +345,6 @@ function clean_tabs_15()
 }
 
 //==== functions =====/
-
 
 function get_simple_clean_tab15($clean_tabs_15)
 {

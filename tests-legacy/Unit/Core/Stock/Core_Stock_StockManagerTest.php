@@ -111,7 +111,6 @@ class FakePackItemsManager4759
     }
 }
 
-
 class StockAvailableTest extends UnitTestCase
 {
     private function setStockType($packStockType)
@@ -394,7 +393,6 @@ class StockAvailableTest extends UnitTestCase
         }
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $this->packItemsManager);
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
-
 
         $productToUpdate = ($product_to_update === 0)? $pack : $products[$product_to_update-1][0];
         $productAttributeToUpdate = ($product_to_update === 0)? null : $products[$product_to_update-1][1];

@@ -260,7 +260,6 @@ class TranslationControllerTest extends ApiTestCase
         self::$client->request('POST', $editTranslationRoute);
         $this->assertResponseBodyValidJson(400);
 
-
         self::$client->request('POST', $editTranslationRoute, array(), array(), array(), '{}');
         $this->assertResponseBodyValidJson(400);
 
@@ -305,7 +304,6 @@ class TranslationControllerTest extends ApiTestCase
 
         self::$client->request('POST', $resetTranslationRoute);
         $this->assertResponseBodyValidJson(400);
-
 
         self::$client->request('POST', $resetTranslationRoute, array(), array(), array(), '{}');
         $this->assertResponseBodyValidJson(400);

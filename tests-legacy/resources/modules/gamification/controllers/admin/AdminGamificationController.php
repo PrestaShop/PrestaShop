@@ -158,7 +158,6 @@ class AdminGamificationController extends ModuleAdminController
             }
         }
         
-        
         $return['level_badge_validation'] = $this->processLevelAndBadgeValidation(Badge::getIdsBadgesToValidate());
         $return['header_notification'] = $this->module->renderHeaderNotification();
         
@@ -174,7 +173,6 @@ class AdminGamificationController extends ModuleAdminController
     {
         $return = array('advices' => array());
 
-        
         $id_tab = (int)Tools::getValue('id_tab');
         $ids_ps_advice = Tools::getValue('ids_ps_advice');
         

@@ -219,7 +219,6 @@ class CurrencyTest extends AbstractCartCalculationTest
             $rate = static::CURRENCY_FIXTURES[$currencyId]['changeRate'];
         }
 
-
         return [
             'empty cart'                             => [
                 'products'      => [],

@@ -37,7 +37,6 @@ if (!$products_accesses['edit'] && !$cms_accesses['edit']) {
 //    |   |   |   |- responsivefilemanager
 //    |   |   |   |   |- plugin.min.js
 
-
 $base_url = Tools::getHttpHost(true);  // DON'T TOUCH (base url (only domain) of site (without final /)).
 $base_url = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE') ? $base_url : str_replace('https', 'http', $base_url);
 $upload_dir = Context::getContext()->shop->getBaseURI().'img/cms/'; // path from base_url to base of upload folder (with start and final /)
@@ -130,7 +129,6 @@ $aviary_secret="m6xaym5q42rpw433";
 $aviary_version=3;
 $aviary_language='en';
 
-
 //The filter and sorter are managed through both javascript and php scripts because if you have a lot of
 //file in a folder the javascript script can't sort all or filter all, so the filemanager switch to php script.
 //The plugin automatic swich javascript to php when the current folder exceeds the below limit of files number
@@ -150,11 +148,9 @@ $hidden_files = array('config.php');
 $java_upload=false;
 $JAVAMaxSizeUpload=200; //Gb
 
-
 //************************************
 //Thumbnail for external use creation
 //************************************
-
 
 // New image resized creation with fixed path from filemanager folder after uploading (thumbnails in fixed mode)
 // If you want create images resized out of upload folder for use with external script you can choose this method,
@@ -168,7 +164,6 @@ $fixed_image_creation_name_to_prepend   = array('','test_'); //name to prepend o
 $fixed_image_creation_to_append         = array('_test',''); //name to appendon filename
 $fixed_image_creation_width             = array(300,400); //width of image (you can leave empty if you set height)
 $fixed_image_creation_height            = array(200,''); //height of image (you can leave empty if you set width)
-
 
 // New image resized creation with relative path inside to upload folder after uploading (thumbnails in relative mode)
 // With Responsive filemanager you can create automatically resized image inside the upload folder, also more than one at a time

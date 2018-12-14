@@ -214,7 +214,6 @@ function fix_strtoupper($str)
     }
 }
 
-
 function fix_strtolower($str)
 {
     if (function_exists('mb_strtoupper')) {
@@ -267,7 +266,6 @@ function config_loading($current_path, $fld)
 
     return false;
 }
-
 
 function image_check_memory_usage($img, $max_breedte, $max_hoogte)
 {

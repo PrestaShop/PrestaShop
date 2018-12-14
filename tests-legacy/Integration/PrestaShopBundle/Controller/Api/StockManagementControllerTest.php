@@ -262,7 +262,6 @@ class StockManagementControllerTest extends ApiTestCase
         self::$client->request('POST', $editProductStockRoute);
         $this->assertResponseBodyValidJson(400);
 
-
         self::$client->request('POST', $editProductStockRoute, array(), array(), array(), '{}');
         $this->assertResponseBodyValidJson(400);
 
@@ -338,7 +337,6 @@ class StockManagementControllerTest extends ApiTestCase
             ),
             $content
         );
-
 
         self::$client->request('POST', $editProductStockRoute, array('delta' => -4));
         $content = $this->assertResponseBodyValidJson(200);

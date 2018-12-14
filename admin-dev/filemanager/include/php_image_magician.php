@@ -159,7 +159,6 @@
    #
    # ========================================================================#
 
-
 class imageLib
 {
     private $fileName;
@@ -195,7 +194,6 @@ class imageLib
 
     private $cropFromTopPercent = 10;
 
-
 ## --------------------------------------------------------
 
     public function __construct($fileName)
@@ -225,7 +223,6 @@ class imageLib
         // *** Open up the file
         $this->image = $this->openImage($fileName);
 
-
     // *** Assign here so we don't modify the original
     $this->imageResized = $this->image;
 
@@ -236,7 +233,6 @@ class imageLib
             $this->widthOriginal = imagesx($this->image);
             $this->height = imagesy($this->image);
             $this->heightOriginal = imagesy($this->image);
-
 
         /*  Added 15-09-08
          *  Get the filesize using this build in method.
@@ -340,7 +336,6 @@ class imageLib
     $this->imageResized = imagecreatetruecolor($optimalWidth, $optimalHeight);
         $this->keepTransparancy($optimalWidth, $optimalHeight, $this->imageResized);
         imagecopyresampled($this->imageResized, $this->image, 0, 0, 0, 0, $optimalWidth, $optimalHeight, $this->width, $this->height);
-
 
     // *** If '4', then crop too
     if ($option == 4 || $option == 'crop') {
@@ -714,7 +709,6 @@ class imageLib
         } else {
             // *** Image to be resizerd is a square
 
-
       if ($newHeight < $newWidth) {
           //$optimalWidth = $newWidth;
         //$optimalHeight= $this->getSizeByFixedWidth($newWidth);
@@ -947,14 +941,12 @@ class imageLib
           $g = $rgbArray['g'];
           $b = $rgbArray['b'];
 
-
           $x1 = 0;
           $y1 = 0;
           $x2 = imagesx($this->imageResized) - 1;
           $y2 = imagesy($this->imageResized) - 1;
 
           $rgbArray = imagecolorallocate($this->imageResized, $r, $g, $b);
-
 
           for ($i = 0; $i < $thickness; $i++) {
               imagerectangle($this->imageResized, $x1++, $y1++, $x2--, $y2--, $rgbArray);
@@ -1226,7 +1218,6 @@ class imageLib
 
       $transparencyAmount = $this->invertTransparency($startingTransparency, 100);
 
-
     // *** Fade
     if ($stretch) {
         $step = 100/($reflectionHeight + $startingTransparency);
@@ -1247,11 +1238,9 @@ class imageLib
     // *** Apply fade
     imagecopymerge($im, $li, 0, 0, 0, 0, $this->width, $divider, 100); // Divider
 
-
     // *** width, height of reflection.
     $x = imagesx($im);
       $y = imagesy($im);
-
 
     // *** Determines if the reflection should be displayed inside or outside the image
     if ($inside) {
@@ -1370,7 +1359,6 @@ class imageLib
           }
       }
 
-
     // *** If we use transparency, we need to color our curved mask with a unique color
     if ($isTransparent) {
         $bgColor = $this->findUnusedGreen();
@@ -1385,8 +1373,6 @@ class imageLib
           $a = $rgbArray['a'];
       }
 
-
-
     // *** Create top-left corner mask (square)
     $cornerImg = imagecreatetruecolor($radius, $radius);
     //$cornerImg = imagecreate($radius, $radius);
@@ -1400,24 +1386,16 @@ class imageLib
     // *** Give it a color
     $maskColor = imagecolorallocate($cornerImg, 0, 0, 0);
 
-
-
     // *** Replace the mask color (black) to transparent
     imagecolortransparent($cornerImg, $maskColor);
-
-
 
     // *** Create the image background color
     $imagebgColor = imagecolorallocate($cornerImg, $r, $g, $b);
 
-
-
     // *** Fill the corner area to the user defined color
     imagefill($cornerImg, 0, 0, $imagebgColor);
 
-
       imagefilledellipse($cornerImg, $radius, $radius, $radius * 2, $radius * 2, $maskColor);
-
 
     // *** Map to top left corner
     imagecopymerge($this->imageResized, $cornerImg, 0, 0, 0, 0, $radius, $radius, 100); #tl
@@ -1431,7 +1409,6 @@ class imageLib
 
     $cornerImg = imagerotate($cornerImg, 90, 0);
       imagecopymerge($this->imageResized, $cornerImg, $this->width - $radius, 0, 0, 0, $radius, $radius, 100); #tr
-
 
     // *** If corners are to be transparent, we fill our chromakey color as transparent.
     if ($isTransparent) {
@@ -1466,7 +1443,6 @@ class imageLib
     // *** Set blur width and height
     $blurWidth = $blurHeight = $blur;
 
-
       if ($shadowAngle == 0) {
           $distWidth = 0;
           $distHeight = 0;
@@ -1474,7 +1450,6 @@ class imageLib
           $distWidth = $shadowDistance * cos(deg2rad($shadowAngle));
           $distHeight = $shadowDistance * sin(deg2rad($shadowAngle));
       }
-
 
     // *** Convert color
     if (fix_strtolower($bgColor) != 'transparent') {
@@ -1484,15 +1459,12 @@ class imageLib
         $b0 = $rgbArray['b'];
     }
 
-
       $image = $this->imageResized;
       $width = $this->width;
       $height = $this->height;
 
-
       $newImage = imagecreatetruecolor($width, $height);
       imagecopyresampled($newImage, $image, 0, 0, 0, 0, $width, $height, $width, $height);
-
 
     // *** RGB
     $rgb = imagecreatetruecolor($width+$blurWidth, $height+$blurHeight);
@@ -1504,13 +1476,11 @@ class imageLib
     //imagecopymerge($rgb, $newImage, 1+$blurWidth*0.5-$distWidth, 1+$blurHeight*0.5-$distHeight, 0,0, $width, $height, 100);
     imagecopymerge($rgb, $newImage, $blurWidth*0.5-$distWidth, $blurHeight*0.5-$distHeight, 0, 0, $width+$blurWidth, $height+$blurHeight, 100);
 
-
     // *** Shadow (alpha)
     $shadow = imagecreatetruecolor($width+$blurWidth, $height+$blurHeight);
       imagealphablending($shadow, false);
       $colour = imagecolorallocate($shadow, 0, 0, 0);
       imagefilledrectangle($shadow, 0, 0, $width+$blurWidth, $height+$blurHeight, $colour);
-
 
       for ($i=0;$i<=STEPS;$i++) {
           $t = ((1.0*$i)/STEPS);
@@ -1541,11 +1511,9 @@ class imageLib
           imagefilledarc($shadow, $blurWidth-1, $height, 2*(1-$t)*$blurWidth, 2*(1-$t)*$blurHeight, 90, 180, $colour, IMG_ARC_PIE);
       }
 
-
       $colour = imagecolorallocate($shadow, 255, 255, 255);
       imagefilledrectangle($shadow, $blurWidth, $blurHeight, $width, $height, $colour);
       imagefilledrectangle($shadow, $blurWidth*0.5-$distWidth, $blurHeight*0.5-$distHeight, $width+$blurWidth*0.5-1-$distWidth, $height+$blurHeight*0.5-1-$distHeight, $colour);
-
 
     // *** The magic
         imagealphablending($rgb, false);
@@ -1618,7 +1586,6 @@ class imageLib
       // *** Store incase we want to use method addTextToCaptionBox()
       $this->captionBoxPositionArray = $positionArray;
 
-
       $transparencyAmount = $this->invertTransparency($transparencyAmount, 127, false);
       $transparent = imagecolorallocatealpha($this->imageResized, $r, $g, $b, $transparencyAmount);
       imagefilledrectangle($this->imageResized, $positionArray['x1'], $positionArray['y1'], $positionArray['x2'], $positionArray['y2'], $transparent);
@@ -1651,7 +1618,6 @@ class imageLib
             return false;
         }
     }
-
 
     // *** Get text font
     $font = $this->getTextFont($font);
@@ -1795,7 +1761,6 @@ class imageLib
           $ep = $this->resolveExposureProgram($ep);
       }
 
-
     // *** Resolve MeteringMode
     $mm = $exifData['MeteringMode'];
       $mm = $this->resolveMeteringMode($mm);
@@ -1803,7 +1768,6 @@ class imageLib
     // *** Resolve Flash
     $flash = $exifData['Flash'];
       $flash = $this->resolveFlash($flash);
-
 
       if (isset($exifData['Make'])) {
           $exifDataArray['make'] = $exifData['Make'];
@@ -2104,7 +2068,6 @@ class imageLib
   Get IPTC Data
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-
   Write IPTC Data
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
@@ -2172,7 +2135,6 @@ class imageLib
 
   //http://xmpphptoolkit.sourceforge.net/
 
-
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-
   Add Text
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
@@ -2219,7 +2181,6 @@ class imageLib
   {
       // *** Font path (shou
     $fontPath =  dirname(__FILE__) . '/' . $this->fontDir;
-
 
     // *** The below is/may be needed depending on your version (see ref)
     putenv('GDFONTPATH=' . realpath('.'));
@@ -2531,7 +2492,6 @@ class imageLib
 
                 break;
 
-
             // ... etc
 
             default:
@@ -2643,7 +2603,6 @@ class imageLib
 
           break;
 
-
             // ... etc
 
             default:
@@ -2716,7 +2675,6 @@ class imageLib
         // *** No extension - No save.
                 break;
         }
-
 
     //imagedestroy($this->imageResized);
   }
@@ -3398,9 +3356,6 @@ class imageLib
 
 ## --------------------------------------------------------
 }
-
-
-
 
 /*
  *    Example with some API calls (outdated):

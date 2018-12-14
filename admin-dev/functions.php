@@ -313,7 +313,6 @@ function checkTabRights($id_tab)
     return false;
 }
 
-
 /**
  * Converts a simpleXML element into an array. Preserves attributes and everything.
  * You can choose to get your elements either flattened, or stored in a custom index that
