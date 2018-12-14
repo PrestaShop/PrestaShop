@@ -108,10 +108,7 @@ abstract class AbstractDeleteSupplierHandler
                 );
             }
 
-            $this->startTransaction();
-
             if (false === $this->deleteProductSupplierRelation($supplierId)) {
-                $this->rollbackTransaction();
 
                 throw new CannotDeleteSupplierProductRelationException(
                     sprintf(
@@ -122,7 +119,6 @@ abstract class AbstractDeleteSupplierHandler
             }
 
             if (false === $this->deleteSupplierAddress($supplierId)) {
-                $this->rollbackTransaction();
 
                 throw new CannotDeleteSupplierAddressException(
                     sprintf(
@@ -133,7 +129,6 @@ abstract class AbstractDeleteSupplierHandler
             }
 
             if (false === $entity->delete()) {
-                $this->rollbackTransaction();
 
                 throw new CannotDeleteSupplierException(
                     $supplierId,
@@ -143,8 +138,6 @@ abstract class AbstractDeleteSupplierHandler
                     )
                 );
             }
-
-            $this->commitTransaction();
         } catch (PrestaShopException $exception) {
             throw new SupplierException(
                 sprintf(
@@ -155,30 +148,6 @@ abstract class AbstractDeleteSupplierHandler
                 $exception
             );
         }
-    }
-
-    /**
-     * Starts mysql transaction.
-     */
-    private function startTransaction()
-    {
-        Db::getInstance()->execute('START TRANSACTION;');
-    }
-
-    /**
-     * Cancels mysql transaction which prevents from adding, updating, deleting unwanted data.
-     */
-    private function rollbackTransaction()
-    {
-        Db::getInstance()->execute('ROLLBACK;');
-    }
-
-    /**
-     * Commits mysql transaction.
-     */
-    private function commitTransaction()
-    {
-        Db::getInstance()->execute('COMMIT;');
     }
 
     /**
