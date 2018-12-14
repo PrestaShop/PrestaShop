@@ -20,7 +20,7 @@ admin_suppliers_view:
     _legacy_controller: AdminSuppliers
 
 admin_suppliers_create:
-  path: /add
+  path: /new
   methods: [GET,POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:create'
