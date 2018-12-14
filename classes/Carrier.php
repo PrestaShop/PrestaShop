@@ -514,7 +514,7 @@ class CarrierCore extends ObjectModel
      *                             - PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE
      *                             - ALL_CARRIERS
      * @param bool $active Returns only active carriers when true
-     * @param mixed $delete
+     * @param bool $delete
      * @param mixed $id_zone
      * @param null|mixed $ids_group
      *
