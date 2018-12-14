@@ -907,7 +907,6 @@ class CarrierCore extends ObjectModel
      * Clean delivery prices (weight/price).
      *
      * @param string $rangeTable Table name to clean (weight or price according to shipping method)
-     * @param mixed $range_table
      *
      * @return bool Deletion result
      */
@@ -991,8 +990,7 @@ class CarrierCore extends ObjectModel
     /**
      * Copy old carrier informations when update carrier.
      *
-     * @param int $oldId Old id carrier (copy from that id)
-     * @param mixed $old_id
+     * @param int $old_id Old id carrier (copy from that id
      */
     public function copyCarrierData($old_id)
     {
