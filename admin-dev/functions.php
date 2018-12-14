@@ -147,7 +147,7 @@ function displayDate($sql_date, $with_time = false)
  * @param string $highlight String to highlight (in XHTML/CSS)
  * @param string $type Category type (products/cms)
  * @param string $category_type
- * @param mixed $home
+ * @param bool $home
  */
 function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
 {
