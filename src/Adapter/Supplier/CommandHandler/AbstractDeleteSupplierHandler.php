@@ -109,7 +109,6 @@ abstract class AbstractDeleteSupplierHandler
             }
 
             if (false === $this->deleteProductSupplierRelation($supplierId)) {
-
                 throw new CannotDeleteSupplierProductRelationException(
                     sprintf(
                         'Unable to delete suppliers with id "%s" product relation from product_supplier table',
@@ -119,7 +118,6 @@ abstract class AbstractDeleteSupplierHandler
             }
 
             if (false === $this->deleteSupplierAddress($supplierId)) {
-
                 throw new CannotDeleteSupplierAddressException(
                     sprintf(
                         'Unable to set deleted flag for supplier with id "%s" address',
@@ -129,7 +127,6 @@ abstract class AbstractDeleteSupplierHandler
             }
 
             if (false === $entity->delete()) {
-
                 throw new CannotDeleteSupplierException(
                     $supplierId,
                     sprintf(
