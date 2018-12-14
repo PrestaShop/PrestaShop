@@ -328,7 +328,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @param Address $address Address object
      * @param AddressFormat $addressFormat The format
-     * @param null|mixed $id_lang
+     * @param int|null $id_lang
      *
      * @return array
      */
