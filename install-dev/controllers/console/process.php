@@ -28,7 +28,6 @@ use PrestaShopBundle\Install\Database;
 
 class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
 {
-
     public $process_steps = array();
     public $previous_button = false;
 

@@ -52,7 +52,6 @@ require_once dirname(__FILE__) . '/../exceptions/InvalidParameterException.php';
  *
  */
 class PHPSQLLexer {
-
     protected $splitters;
 
     /**

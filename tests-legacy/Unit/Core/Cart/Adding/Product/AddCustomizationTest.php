@@ -33,7 +33,6 @@ use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 
 class AddCustomizationTest extends AbstractCartTest
 {
-
     protected $customizations = [];
 
     public function tearDown()

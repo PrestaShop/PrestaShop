@@ -42,7 +42,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  * 
  */
 class OrderByProcessor extends AbstractProcessor {
-
     private $selectExpressionProcessor;
 
     public function __construct() {

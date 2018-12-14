@@ -42,7 +42,6 @@ require_once(dirname(__FILE__) . '/AbstractProcessor.php');
  * 
  */
 class ValuesProcessor extends AbstractProcessor {
-
     private $recordProcessor;
 
     public function __construct() {

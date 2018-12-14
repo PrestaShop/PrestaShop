@@ -42,7 +42,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  * 
  */
 class SelectExpressionProcessor extends AbstractProcessor {
-
     private $expressionListProcessor;
 
     public function __construct() {

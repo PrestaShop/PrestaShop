@@ -43,7 +43,6 @@ require_once(dirname(__FILE__) . '/AbstractProcessor.php');
  * 
  */
 class ShowProcessor extends AbstractProcessor {
-
     private $limitProcessor;
 
     public function __construct() {
