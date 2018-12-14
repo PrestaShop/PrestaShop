@@ -296,7 +296,7 @@ function checkingTab($tab)
 /**
  * @TODO deprecate for Tab::checkTabRights()
  *
- * @param mixed $id_tab
+ * @param array $id_tab
  */
 function checkTabRights($id_tab)
 {
