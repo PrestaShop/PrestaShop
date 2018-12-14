@@ -258,13 +258,13 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function updateCmsCategoryPositionAction(Request $request, $cmsCategoryParentId)
     {
-        //todo: position update using ajax
+        //todo: position update using ajax and position search fix in another PR.
         $positionsData = [
             'positions' => $request->request->get('positions'),
             'parentId' => $cmsCategoryParentId,
         ];
 
-        $positionDefinition =  $this->get('prestashop.core.grid.cms_page_category.position_definition');
+        $positionDefinition = $this->get('prestashop.core.grid.cms_page_category.position_definition');
 
         $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
 
@@ -482,8 +482,7 @@ class CmsPageController extends FrameworkBundleAdminController
     {
         $exceptionTypeDictionary = [
             CmsPageCategoryConstraintException::class => [
-                CmsPageCategoryConstraintException::MISSING_BULK_DATA =>
-                $this->trans(
+                CmsPageCategoryConstraintException::MISSING_BULK_DATA => $this->trans(
                     'You must select at least one element to delete.',
                     'Admin.Notifications.Error'
                 ),
