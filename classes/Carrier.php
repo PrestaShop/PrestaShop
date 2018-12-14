@@ -990,7 +990,7 @@ class CarrierCore extends ObjectModel
     /**
      * Copy old carrier informations when update carrier.
      *
-     * @param int $old_id Old id carrier (copy from that id
+     * @param int $old_id Old id carrier (copy from that id)
      */
     public function copyCarrierData($old_id)
     {
