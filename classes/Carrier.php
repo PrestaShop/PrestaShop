@@ -514,9 +514,9 @@ class CarrierCore extends ObjectModel
      *                             - PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE
      *                             - ALL_CARRIERS
      * @param bool $active Returns only active carriers when true
-     * @param mixed $delete
-     * @param mixed $id_zone
-     * @param null|mixed $ids_group
+     * @param bool $delete
+     * @param int|false $id_zone
+     * @param null|array $ids_group
      *
      * @return array Carriers
      */
@@ -815,7 +815,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get a specific zones.
      *
-     * @param mixed $id_zone
+     * @param int $id_zone
      *
      * @return array Zone
      */
@@ -831,7 +831,7 @@ class CarrierCore extends ObjectModel
     /**
      * Add zone.
      *
-     * @param mixed $id_zone
+     * @param int $id_zone
      */
     public function addZone($id_zone)
     {
@@ -870,7 +870,7 @@ class CarrierCore extends ObjectModel
     /**
      * Delete zone.
      *
-     * @param mixed $id_zone
+     * @param int $id_zone
      */
     public function deleteZone($id_zone)
     {
@@ -929,8 +929,8 @@ class CarrierCore extends ObjectModel
      * Add new delivery prices.
      *
      * @param array $priceList Prices list in multiple arrays (changed to array since 1.5.0)
-     * @param mixed $price_list
-     * @param mixed $delete
+     * @param array $price_list
+     * @param bool $delete
      *
      * @return bool Insertion result
      */
@@ -1082,8 +1082,8 @@ class CarrierCore extends ObjectModel
     /**
      * Get carrier using the reference id.
      *
-     * @param mixed $id_reference
-     * @param null|mixed $id_lang
+     * @param int $id_reference
+     * @param null|int $id_lang
      */
     public static function getCarrierByReference($id_reference, $id_lang = null)
     {
@@ -1322,8 +1322,8 @@ class CarrierCore extends ObjectModel
      * @since 1.5
      *
      * @param Address $address Address
-     * @param null|mixed $id_order
-     * @param mixed $use_average_tax_of_products
+     * @param null|int $id_order
+     * @param bool $use_average_tax_of_products
      *
      * @return TaxCalculator Tax calculator object
      */
@@ -1344,7 +1344,7 @@ class CarrierCore extends ObjectModel
      * @since 1.5.0
      *
      * @param string $range_table Range table
-     * @param mixed $alias
+     * @param string $alias
      *
      * @return string SQL quoer to get the delivery range table in this Shop(Group)
      */

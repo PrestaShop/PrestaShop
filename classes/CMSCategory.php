@@ -128,7 +128,7 @@ class CMSCategoryCore extends ObjectModel
      * @param int $currentDepth specify the current depth in the tree (don't use it, only for rucursivity!)
      * @param array $excluded_ids_array specify a list of ids to exclude of results
      * @param int $idLang Specify the id of the language used
-     * @param null|mixed $id_lang
+     * @param null|int $id_lang
      * @param null|Link $link
      *
      * @return array Subcategories lite tree
@@ -234,7 +234,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @param array &$toDelete Array reference where categories ID will be saved
      * @param array|int $id_cms_category Parent CMSCategory ID
-     * @param mixed $to_delete
+     * @param array $to_delete
      */
     protected function recursiveDelete(&$to_delete, $id_cms_category)
     {
@@ -304,7 +304,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * return boolean Deletion result
      *
-     * @param mixed $categories
+     * @param array $categories
      */
     public function deleteSelection($categories)
     {
@@ -337,7 +337,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @param int $id_lang Language ID
      * @param bool $active return only active categories
-     * @param mixed $order
+     * @param bool $order
      *
      * @return array Categories
      */
@@ -486,7 +486,7 @@ class CMSCategoryCore extends ObjectModel
      * Check if CMSCategory can be moved in another one.
      *
      * @param int $id_parent Parent candidate
-     * @param mixed $id_cms_category
+     * @param int $id_cms_category
      *
      * @return bool Parent validity
      */

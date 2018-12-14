@@ -146,8 +146,8 @@ function displayDate($sql_date, $with_time = false)
  * @param string $path Current path
  * @param string $highlight String to highlight (in XHTML/CSS)
  * @param string $type Category type (products/cms)
- * @param mixed $category_type
- * @param mixed $home
+ * @param string $category_type
+ * @param bool $home
  */
 function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
 {
@@ -296,7 +296,7 @@ function checkingTab($tab)
 /**
  * @TODO deprecate for Tab::checkTabRights()
  *
- * @param mixed $id_tab
+ * @param array $id_tab
  */
 function checkTabRights($id_tab)
 {
@@ -418,8 +418,8 @@ function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = tr
 /**
  * for retrocompatibility with old AdminTab, old index.php.
  *
- * @param mixed $tab
- * @param mixed $ajax_mode
+ * @param string $tab
+ * @param bool $ajax_mode
  * @return void
  */
 function runAdminTab($tab, $ajax_mode = false)

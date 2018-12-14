@@ -61,8 +61,8 @@ class AttachmentCore extends ObjectModel
     /**
      * @see ObjectModel::add()
      *
-     * @param mixed $autoDate
-     * @param mixed $nullValues
+     * @param bool $autoDate
+     * @param bool $nullValues
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -74,7 +74,7 @@ class AttachmentCore extends ObjectModel
     /**
      * @see ObjectModel::update()
      *
-     * @param mixed $nullValues
+     * @param bool $nullValues
      */
     public function update($nullValues = false)
     {
