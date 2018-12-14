@@ -44,6 +44,7 @@ final class GetMetaForEditingHandler implements GetMetaForEditingHandlerInterfac
      */
     public function handle(GetMetaForEditing $query)
     {
+        //todo: it gets also removed languages - fix it.
         $metaId = $query->getMetaId();
 
         $entity = new Meta($metaId->getValue());
