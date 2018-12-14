@@ -56,7 +56,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class TableBracketExpressionBuilder {
-
     protected function buildColDef($parsed) {
         $builder = new ColumnDefinitionBuilder();
 
@@ -110,6 +109,5 @@ class TableBracketExpressionBuilder {
         $sql = " (" . substr($sql, 0, -2) . ")";
 
         return $sql;
-    }
-    
+    }    
 }

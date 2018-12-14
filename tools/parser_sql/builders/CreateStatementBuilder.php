@@ -52,7 +52,6 @@ require_once dirname(__FILE__) . '/CreateBuilder.php';
  *  
  */
 class CreateStatementBuilder {
-
     protected function buildLIKE($parsed) {
         $builder = new LikeBuilder();
 

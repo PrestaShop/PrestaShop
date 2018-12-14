@@ -32,10 +32,12 @@ use PrestaShop\PrestaShop\Core\Stock\StockManager;
 class FakeStockAvailable4759
 {
     public $quantity = 0;
+
     public function __construct($quantity)
     {
         $this->quantity = $quantity;
     }
+
     public function update()
     {
     }
@@ -46,6 +48,7 @@ class FakeProduct4759
     public $id;
     public $pack_stock_type;
     public $stock_available;
+
     public function __construct($stock_available, $pack_stock_type = false)
     {
         $this->id = ++FakeProduct4759::$LAST_ID;
@@ -58,6 +61,7 @@ class FakePackItemsManager4759
     private $packs = array();
     private $items = array();
     private $stockAvailables = array();
+
     public function addProduct(FakeProduct4759 $pack, FakeProduct4759 $product, $product_attribute_id, $quantity)
     {
         $entry = array(
@@ -78,24 +82,29 @@ class FakePackItemsManager4759
         $this->stockAvailables[$pack->id][0] = $pack->stock_available;
         $this->stockAvailables[$product->id][$product_attribute_id] = $product->stock_available;
     }
+
     public function getPackItems($pack, $id_lang = false)
     {
         return $this->packs[$pack->id];
     }
+
     public function getPacksContainingItem($item, $item_attribute_id, $id_lang = false)
     {
         return $this->items[$item->id][$item_attribute_id];
     }
+
     public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
     {
         $id_product_attribute = $id_product_attribute?$id_product_attribute:0;
 
         return $this->stockAvailables[$product->id][$id_product_attribute];
     }
+
     public function isPack($product)
     {
         return isset($this->packs[$product->id]);
     }
+
     public function isPacked($product, $id_product_attribute = false)
     {
         return isset($this->items[$product->id][$id_product_attribute]);
@@ -198,7 +207,6 @@ class StockAvailableTest extends UnitTestCase
         }
     }
 
-
     public function get_update_product_quantity_provider()
     {
         return array(
@@ -290,7 +298,6 @@ class StockAvailableTest extends UnitTestCase
             $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
         }
     }
-
 
     public function get_update_quantity_provider()
     {

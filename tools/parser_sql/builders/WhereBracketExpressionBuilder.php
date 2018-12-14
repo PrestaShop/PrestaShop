@@ -59,7 +59,6 @@ require_once dirname(__FILE__) . '/UserVariableBuilder.php';
  *  
  */
 class WhereBracketExpressionBuilder {
-
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
 
@@ -129,5 +128,4 @@ class WhereBracketExpressionBuilder {
 
         return $sql;
     }
-
 }

@@ -50,7 +50,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class ReservedBuilder {
-
     public function isReserved($parsed) {
         return ($parsed['expr_type'] === ExpressionType::RESERVED);
     }

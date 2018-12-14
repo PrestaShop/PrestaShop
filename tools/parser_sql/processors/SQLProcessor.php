@@ -41,7 +41,6 @@ require_once(dirname(__FILE__) . '/SQLChunkProcessor.php');
  * 
  */
 class SQLProcessor extends SQLChunkProcessor {
-
     /*
      * This function breaks up the SQL statement into logical sections. 
      * Some sections are then further handled by specialized processors.

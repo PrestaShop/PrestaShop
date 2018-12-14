@@ -51,7 +51,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class ColumnListBuilder {
-
     protected function buildIndexColumn($parsed) {
         $builder = new IndexColumnBuilder();
 
@@ -76,5 +75,4 @@ class ColumnListBuilder {
  
         return "(" . substr($sql, 0, -1) . ")";
     }
-
 }

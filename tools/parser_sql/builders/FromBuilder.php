@@ -53,7 +53,6 @@ require_once dirname(__FILE__) . '/SubQueryBuilder.php';
  *  
  */
 class FromBuilder {
-
     protected function buildTable($parsed, $key) {
         $builder = new TableBuilder();
 

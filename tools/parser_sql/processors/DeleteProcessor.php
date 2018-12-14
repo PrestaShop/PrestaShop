@@ -40,7 +40,6 @@ require_once(dirname(__FILE__) . '/AbstractProcessor.php');
  * 
  */
 class DeleteProcessor extends AbstractProcessor {
-
     public function process($tokens) {
         $tables = array();
         $del = $tokens['DELETE'];

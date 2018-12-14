@@ -50,7 +50,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class ProcedureBuilder {
-
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::PROCEDURE) {
             return "";

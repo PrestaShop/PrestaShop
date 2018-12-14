@@ -56,7 +56,6 @@ require_once dirname(__FILE__) . '/IndexTypeBuilder.php';
  *  
  */
 class IndexParserBuilder {
-
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
 

@@ -55,7 +55,6 @@ require_once dirname(__FILE__) . '/IndexTypeBuilder.php';
  *  
  */
 class CharacterSetBuilder {
-
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
 

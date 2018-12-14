@@ -52,7 +52,6 @@ require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
  *  
  */
 class OrderByBuilder {
-
     protected function buildFunction($parsed) {
         $builder = new FunctionBuilder();
 

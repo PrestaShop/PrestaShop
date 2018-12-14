@@ -48,7 +48,6 @@
  *  
  */
 class AliasBuilder {
-
     public function hasAlias($parsed) {
         return isset($parsed['alias']);
     }

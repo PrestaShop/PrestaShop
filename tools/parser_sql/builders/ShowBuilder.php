@@ -57,7 +57,6 @@ require_once dirname(__FILE__) . '/TableBuilder.php';
  *  
  */
 class ShowBuilder {
-
     protected function buildTable($parsed, $delim) {
         $builder = new TableBuilder();
 

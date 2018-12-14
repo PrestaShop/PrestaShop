@@ -54,7 +54,6 @@ require_once dirname(__FILE__) . '/RefClauseBuilder.php';
  *  
  */
 class TableBuilder {
-
     protected function buildAlias($parsed) {
         $builder = new AliasBuilder();
 

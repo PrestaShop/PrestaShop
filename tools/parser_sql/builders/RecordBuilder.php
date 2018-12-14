@@ -54,7 +54,6 @@ require_once dirname(__FILE__) . '/FunctionBuilder.php';
  *  
  */
 class RecordBuilder {
-
     protected function buildOperator($parsed) {
         $builder = new OperatorBuilder();
 
@@ -94,5 +93,4 @@ class RecordBuilder {
 
         return "(" . $sql . ")";
     }
-
 }

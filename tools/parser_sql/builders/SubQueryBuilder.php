@@ -55,7 +55,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class SubQueryBuilder {
-
     protected function buildRefClause($parsed) {
         $builder = new RefClauseBuilder();
 

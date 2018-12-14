@@ -66,7 +66,9 @@ class HookDispatcherTest extends KernelTestCase
         $hookDisptacher->dispatch('test_test');
         $this->assertTrue($this->testedListenerCallbackCalled);
     }
+
     private $testedListenerCallbackCalled = false;
+
     public function listenerCallback(Event $event, $eventName)
     {
         $this->assertEquals('test_test', $eventName);

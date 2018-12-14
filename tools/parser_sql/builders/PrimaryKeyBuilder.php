@@ -57,7 +57,6 @@ require_once dirname(__FILE__) . '/IndexParserBuilder.php';
  *  
  */
 class PrimaryKeyBuilder {
-
     protected function buildColumnList($parsed) {
         $builder = new ColumnListBuilder();
 

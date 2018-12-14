@@ -43,7 +43,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  * 
  */
 class ExpressionListProcessor extends AbstractProcessor {
-
     public function process($tokens) {
         $resultList = array();
         $skip_next = false;

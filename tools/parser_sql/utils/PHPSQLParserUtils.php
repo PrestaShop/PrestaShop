@@ -37,7 +37,6 @@
  * @deprecated
  */
 class PHPSQLParserUtils {
-
     /**
      * Prints an array only if debug mode is on.
      * 

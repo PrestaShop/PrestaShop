@@ -53,7 +53,6 @@ require_once dirname(__FILE__) . '/FunctionBuilder.php';
  *  
  */
 class GroupByBuilder {
-
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
 
@@ -89,6 +88,5 @@ class GroupByBuilder {
         $sql = substr($sql, 0, -2);
 
         return "GROUP BY " . $sql;
-    }
-    
+    }    
 }

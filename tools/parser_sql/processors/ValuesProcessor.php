@@ -76,5 +76,4 @@ class ValuesProcessor extends AbstractProcessor {
 
         return $tokens;
     }
-
 }

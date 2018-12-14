@@ -31,7 +31,6 @@ use PHPUnit\Framework\TestCase;
 
 class FloatParserTest extends TestCase
 {
-
     /**
      * Given a string containing a number with arbitrary characters as thousand and decimal separators
      * When constructing an ImmutableFloat from that string

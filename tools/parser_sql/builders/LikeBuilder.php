@@ -51,7 +51,6 @@ require_once dirname(__FILE__) . '/TableBuilder.php';
  *  
  */
 class LikeBuilder {
-
     protected function buildTable($parsed, $index) {
         $builder = new TableBuilder();
 

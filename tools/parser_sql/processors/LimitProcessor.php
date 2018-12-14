@@ -40,7 +40,6 @@ require_once(dirname(__FILE__) . '/AbstractProcessor.php');
  * 
  */
 class LimitProcessor extends AbstractProcessor {
-
     public function process($tokens) {
         $rowcount = "";
         $offset = "";

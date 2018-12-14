@@ -55,7 +55,6 @@ require_once dirname(__FILE__) . '/ForeignRefBuilder.php';
  *  
  */
 class ForeignKeyBuilder {
-
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
 

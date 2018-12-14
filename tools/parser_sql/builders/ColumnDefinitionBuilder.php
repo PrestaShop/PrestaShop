@@ -52,7 +52,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class ColumnDefinitionBuilder {
-
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
 

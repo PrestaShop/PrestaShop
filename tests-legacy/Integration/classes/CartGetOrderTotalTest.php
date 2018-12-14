@@ -90,7 +90,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      * Methods starting with get should cache their result for performance,
      * methods starting with make should create a new object each time.
      */
-
     private static function deactivateCurrentCartRules()
     {
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart_rule SET active = 0');

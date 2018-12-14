@@ -48,7 +48,6 @@
  *  
  */
 class DirectionBuilder {
-
     public function build($parsed) {
         if (!isset($parsed['direction']) || $parsed['direction'] === false) {
             return "";

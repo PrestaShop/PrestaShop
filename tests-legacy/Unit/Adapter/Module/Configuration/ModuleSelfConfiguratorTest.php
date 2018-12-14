@@ -361,5 +361,6 @@ class ConnectionMock extends Connection
 class StatementMock extends Statement
 {
     public function __construct($sql, Connection $conn) { }
+
     public function execute($params = null) { }
 }

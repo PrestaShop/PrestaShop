@@ -60,7 +60,6 @@ require_once dirname(__FILE__) . '/SubQueryBuilder.php';
  *  
  */
 class WhereBuilder {
-
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
 
@@ -139,5 +138,4 @@ class WhereBuilder {
 
         return substr($sql, 0, -1);
     }
-
 }

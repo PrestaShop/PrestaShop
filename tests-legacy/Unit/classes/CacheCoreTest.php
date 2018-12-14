@@ -281,7 +281,6 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         }
     }
 
-
     // --- providers ---
 
     public function selectDataProvider()

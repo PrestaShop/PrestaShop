@@ -52,7 +52,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class CheckBuilder {
-
     protected function buildSelectBracketExpression($parsed) {
         $builder = new SelectBracketExpressionBuilder();
 

@@ -53,7 +53,6 @@ require_once dirname(__FILE__) . '/CollationBuilder.php';
  *  
  */
 class CreateTableOptionsBuilder {
-
     protected function buildExpression($parsed) {
         $builder = new SelectExpressionBuilder();
 

@@ -54,7 +54,6 @@ require_once dirname(__FILE__) . '/ReservedBuilder.php';
  *  
  */
 class CollationBuilder {
-
     protected function buildOperator($parsed) {
         $builder = new OperatorBuilder();
 

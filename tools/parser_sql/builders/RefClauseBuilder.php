@@ -53,7 +53,6 @@ require_once dirname(__FILE__) . '/ConstantBuilder.php';
  *  
  */
 class RefClauseBuilder {
-
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
 

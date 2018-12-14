@@ -55,7 +55,6 @@ require_once dirname(__FILE__) . '/FromBuilder.php';
  *  
  */
 class TableExpressionBuilder {
-
     protected function buildFROM($parsed) {
         $builder = new FromBuilder();
 

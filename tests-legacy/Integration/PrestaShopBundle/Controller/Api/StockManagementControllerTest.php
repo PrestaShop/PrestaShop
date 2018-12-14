@@ -88,8 +88,6 @@ class StockManagementControllerTest extends ApiTestCase
         }
     }
 
-
-
     /**
      * @dataProvider getProductsStockParams
      * @test
@@ -134,8 +132,6 @@ class StockManagementControllerTest extends ApiTestCase
             ),
         );
     }
-
-
 
     /**
      * @dataProvider getProductsCombinationsParams
@@ -291,8 +287,6 @@ class StockManagementControllerTest extends ApiTestCase
 
         $this->assertResponseBodyValidJson(404);
     }
-
-
 
     private function assertOkResponseOnEditProductCombination()
     {

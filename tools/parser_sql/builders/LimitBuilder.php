@@ -50,7 +50,6 @@ require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php'
  *  
  */
 class LimitBuilder {
-
     public function build($parsed) {
         $sql = ($parsed['offset'] ? $parsed['offset'] . ", " : "") . $parsed['rowcount'];
         if ($sql === "") {

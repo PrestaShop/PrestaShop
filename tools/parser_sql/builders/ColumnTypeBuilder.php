@@ -53,7 +53,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class ColumnTypeBuilder {
-
     protected function buildColumnTypeBracketExpression($parsed) {
         $builder = new ColumnTypeBracketExpressionBuilder();
 
@@ -91,6 +90,5 @@ class ColumnTypeBuilder {
         }
     
         return substr($sql, 0, -1);
-    }
-    
+    }    
 }

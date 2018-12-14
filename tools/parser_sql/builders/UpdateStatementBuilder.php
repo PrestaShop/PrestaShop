@@ -52,7 +52,6 @@ require_once dirname(__FILE__) . '/UpdateBuilder.php';
  *  
  */
 class UpdateStatementBuilder {
-
     protected function buildWHERE($parsed) {
         $builder = new WhereBuilder();
 

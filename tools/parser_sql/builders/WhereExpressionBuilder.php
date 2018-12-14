@@ -59,7 +59,6 @@ require_once dirname(__FILE__) . '/UserVariableBuilder.php';
  *  
  */
 class WhereExpressionBuilder {
-
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
 
@@ -134,6 +133,5 @@ class WhereExpressionBuilder {
         $sql = substr($sql, 0, -1);
 
         return $sql;
-    }
-    
+    }    
 }

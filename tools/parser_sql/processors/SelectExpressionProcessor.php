@@ -169,5 +169,4 @@ class SelectExpressionProcessor extends AbstractProcessor {
 
         return $result;
     }
-
 }

@@ -59,7 +59,6 @@ require_once dirname(__FILE__) . '/DirectionBuilder.php';
  *  
  */
 class FunctionBuilder {
-
     protected function buildDirection($parsed) {
         $builder = new DirectionBuilder();
 
@@ -137,5 +136,4 @@ class FunctionBuilder {
 
         return $parsed['base_expr'] . "(" . substr($sql, 0, -1) . ")" . $this->buildAlias($parsed) . $this->buildDirection($parsed);
     }
-
 }

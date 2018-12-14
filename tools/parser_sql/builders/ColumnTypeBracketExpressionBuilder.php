@@ -50,7 +50,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class ColumnTypeBracketExpressionBuilder {
-
     protected function buildSubTree($parsed, $delim) {
         $builder = new SubTreeBuilder();
 

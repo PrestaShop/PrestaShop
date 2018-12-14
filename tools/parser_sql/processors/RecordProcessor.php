@@ -60,5 +60,4 @@ class RecordProcessor extends AbstractProcessor {
 
         return $this->expressionListProcessor->process($values);
     }
-
 }

@@ -54,7 +54,6 @@ require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
  *  
  */
 class SelectBuilder {
-
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
 
@@ -90,6 +89,7 @@ class SelectBuilder {
 
         return $builder->build($parsed);
     }
+
     /**
      * Returns a well-formatted delimiter string. If you don't need nice SQL,
      * you could simply return $parsed['delim'].

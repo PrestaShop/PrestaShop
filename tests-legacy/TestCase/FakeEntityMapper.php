@@ -93,7 +93,6 @@ class FakeEntityMapper extends EntityMapper
         }
     }
 
-
     private function buildCacheId($id, $class_name, $id_lang, $id_shop)
     {
         return 'objectmodel_' . $class_name . '_' . (int)$id . '_' . (int)$id_shop . '_' . (int)$id_lang;

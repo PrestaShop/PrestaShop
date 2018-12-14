@@ -109,5 +109,4 @@ class SetProcessor extends AbstractProcessor {
 
         return $result;
     }
-
 }

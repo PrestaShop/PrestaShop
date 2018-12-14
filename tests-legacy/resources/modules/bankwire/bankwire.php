@@ -94,5 +94,4 @@ class bankwire extends PaymentModule
     public function hookPaymentOptions(){
         
     }
-
 }

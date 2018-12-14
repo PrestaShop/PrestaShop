@@ -371,7 +371,6 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
 
-
     /**
      * Attach an existing attachment to the product
      *
@@ -1483,6 +1482,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
         return ((isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false);
     }
+
     /**
      * Copy a product image
      *
@@ -4634,7 +4634,6 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
     }
-
 
     /**
      *  AdminProducts display hook

@@ -44,7 +44,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *
  */
 class CreateDefinitionProcessor extends AbstractProcessor {
-
     protected function correctExpressionType(&$expr) {
         $type = ExpressionType::EXPRESSION;
         if (!isset($expr[0]) || !isset($expr[0]['expr_type'])) {

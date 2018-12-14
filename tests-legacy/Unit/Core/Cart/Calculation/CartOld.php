@@ -40,7 +40,6 @@ use Tools;
  */
 class CartOld extends Cart
 {
-
     /**
      * This function returns the total cart amount
      *

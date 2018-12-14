@@ -41,7 +41,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  * 
  */
 class ExplainProcessor extends AbstractProcessor {
-
     protected function isStatement($keys, $needle = "EXPLAIN") {
         $pos = array_search($needle, $keys);
         if (isset($keys[$pos + 1])) {

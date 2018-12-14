@@ -42,7 +42,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  *
  */
 class TableProcessor extends AbstractProcessor {
-
     protected function getReservedType($token) {
         return array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $token);
     }

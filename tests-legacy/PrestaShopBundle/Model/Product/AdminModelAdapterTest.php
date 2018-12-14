@@ -130,6 +130,7 @@ class AdminModelAdapterTest extends KernelTestCase
             ],
         ];
     }
+
     private function fakeCombination()
     {
         return array('0' => [

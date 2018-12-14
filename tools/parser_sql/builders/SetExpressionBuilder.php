@@ -55,7 +55,6 @@ require_once dirname(__FILE__) . '/FunctionBuilder.php';
  *  
  */
 class SetExpressionBuilder {
-
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
 

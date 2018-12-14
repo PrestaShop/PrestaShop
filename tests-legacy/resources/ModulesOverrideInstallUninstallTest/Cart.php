@@ -69,6 +69,7 @@ class Cart extends CartCore
     * version: 1
     */
     protected static $_customer = null;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
@@ -91,6 +92,7 @@ class Cart extends CartCore
             parent::deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0);
         }
     }
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
@@ -147,6 +149,7 @@ class Cart extends CartCore
 				AND `id_address_delivery` = '.(int)$id_address;
         Db::getInstance()->execute($sql);
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 15:56:35

@@ -169,7 +169,6 @@ class TranslationControllerTest extends ApiTestCase
         );
     }
 
-
     /**
      * @test
      */
@@ -209,8 +208,6 @@ class TranslationControllerTest extends ApiTestCase
             ),
         );
     }
-
-
 
     /**
      * @test

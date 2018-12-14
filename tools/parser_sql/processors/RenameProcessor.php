@@ -42,7 +42,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  * 
  */
 class RenameProcessor extends AbstractProcessor {
-
     public function process($tokenList) {
         $base_expr = "";
         $resultList = array();
@@ -95,5 +94,4 @@ class RenameProcessor extends AbstractProcessor {
 
         return $resultList;
     }
-
 }

@@ -116,5 +116,4 @@ class AddCustomizationTest extends AbstractCartTest
 
         Configuration::set('PS_ORDER_OUT_OF_STOCK', $oldOrderOutOfStock);
     }
-
 }

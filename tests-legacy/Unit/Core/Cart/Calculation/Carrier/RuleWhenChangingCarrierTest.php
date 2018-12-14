@@ -168,5 +168,4 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
         $cartRules = $this->cart->getCartRules();
         $this->assertCount(0, $cartRules);
     }
-
 }

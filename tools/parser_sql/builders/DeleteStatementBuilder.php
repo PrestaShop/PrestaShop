@@ -52,7 +52,6 @@ require_once dirname(__FILE__) . '/DeleteBuilder.php';
  *  
  */
 class DeleteStatementBuilder {
-
     protected function buildWHERE($parsed) {
         $builder = new WhereBuilder();
 
@@ -78,6 +77,5 @@ class DeleteStatementBuilder {
         }
 
         return $sql;
-    }
-    
+    }    
 }

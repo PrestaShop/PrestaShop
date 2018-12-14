@@ -41,7 +41,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  * 
  */
 class IndexColumnListProcessor extends AbstractProcessor {
-
     protected function initExpression() {
         return array('name' => false, 'no_quotes' => false, 'length' => false, 'dir' => false);
     }

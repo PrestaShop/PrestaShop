@@ -43,7 +43,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  * 
  */
 class FromProcessor extends AbstractProcessor {
-
     protected function initParseInfo($parseInfo = false) {
         // first init
         if ($parseInfo === false) {
@@ -247,5 +246,4 @@ class FromProcessor extends AbstractProcessor {
 
         return $expr;
     }
-
 }

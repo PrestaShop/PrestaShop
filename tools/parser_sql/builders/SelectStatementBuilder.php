@@ -55,7 +55,6 @@ require_once dirname(__FILE__) . '/OrderByBuilder.php';
  *  
  */
 class SelectStatementBuilder {
-
     protected function buildSELECT($parsed) {
         $builder = new SelectBuilder();
 
@@ -112,5 +111,4 @@ class SelectStatementBuilder {
 
         return $sql;
     }
-
 }

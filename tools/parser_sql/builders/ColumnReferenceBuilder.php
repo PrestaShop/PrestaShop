@@ -51,7 +51,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class ColumnReferenceBuilder {
-
     protected function buildDirection($parsed) {
         $builder = new DirectionBuilder();
 

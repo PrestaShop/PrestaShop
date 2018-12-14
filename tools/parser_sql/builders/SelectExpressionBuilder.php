@@ -52,7 +52,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class SelectExpressionBuilder {
-
     protected function buildSubTree($parsed, $delim) {
         $builder = new SubTreeBuilder();
 

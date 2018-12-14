@@ -51,7 +51,6 @@ require_once dirname(__FILE__) . '/ConstantBuilder.php';
  *  
  */
 class ConstraintBuilder {
-
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
 
@@ -66,5 +65,4 @@ class ConstraintBuilder {
 
         return "CONSTRAINT" . (empty($sql) ? '' : (' ' . $sql));
     }
-
 }

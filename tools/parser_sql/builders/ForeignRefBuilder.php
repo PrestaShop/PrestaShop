@@ -55,7 +55,6 @@ require_once dirname(__FILE__) . '/ColumnListBuilder.php';
  *  
  */
 class ForeignRefBuilder {
-
     protected function buildTable($parsed) {
         $builder = new TableBuilder();
 

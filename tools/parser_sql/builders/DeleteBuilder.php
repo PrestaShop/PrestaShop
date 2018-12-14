@@ -48,7 +48,6 @@
  *  
  */
 class DeleteBuilder {
-
     public function build($parsed) {
         $sql = "DELETE";
         foreach ($parsed['TABLES'] as $k => $v) {

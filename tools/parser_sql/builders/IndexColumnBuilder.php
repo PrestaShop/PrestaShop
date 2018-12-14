@@ -51,7 +51,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class IndexColumnBuilder {
-
     protected function buildLength($parsed) {
         return ($parsed === false ? '' : ('(' . $parsed . ')'));
     }
@@ -70,5 +69,4 @@ class IndexColumnBuilder {
 
         return $sql;
     }
-
 }
