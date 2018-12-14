@@ -930,7 +930,7 @@ class CarrierCore extends ObjectModel
      * Add new delivery prices.
      *
      * @param array $priceList Prices list in multiple arrays (changed to array since 1.5.0)
-     * @param mixed $price_list
+     * @param array $price_list
      * @param mixed $delete
      *
      * @return bool Insertion result
