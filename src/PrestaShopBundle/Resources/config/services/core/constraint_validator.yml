@@ -8,3 +8,9 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_ALLOW_ACCENTED_CHARS_URL")'
     tags:
       - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.default_language_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\DefaultLanguageValidator'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().name'
