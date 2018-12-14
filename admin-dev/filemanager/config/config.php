@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 if (!defined('_PS_ADMIN_DIR_')) {
