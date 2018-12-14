@@ -4763,6 +4763,8 @@ class ProductCore extends ObjectModel
         if (isset($row['quantity_wanted'])) {
             // 'quantity_wanted' may very well be zero even if set
             $quantity = max((int) $row['minimal_quantity'], (int) $row['quantity_wanted']);
+        } elseif (isset($row['cart_quantity'])) {
+            $quantity = max((int) $row['minimal_quantity'], (int) $row['cart_quantity']);
         } else {
             $quantity = (int) $row['minimal_quantity'];
         }
