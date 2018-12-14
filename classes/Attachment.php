@@ -74,7 +74,7 @@ class AttachmentCore extends ObjectModel
     /**
      * @see ObjectModel::update()
      *
-     * @param mixed $nullValues
+     * @param bool $nullValues
      */
     public function update($nullValues = false)
     {
