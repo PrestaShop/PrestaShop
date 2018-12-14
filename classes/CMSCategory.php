@@ -304,7 +304,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * return boolean Deletion result
      *
-     * @param mixed $categories
+     * @param array $categories
      */
     public function deleteSelection($categories)
     {
