@@ -831,7 +831,7 @@ class CarrierCore extends ObjectModel
     /**
      * Add zone.
      *
-     * @param mixed $id_zone
+     * @param int $id_zone
      */
     public function addZone($id_zone)
     {
