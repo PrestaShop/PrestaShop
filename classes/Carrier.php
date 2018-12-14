@@ -931,7 +931,7 @@ class CarrierCore extends ObjectModel
      *
      * @param array $priceList Prices list in multiple arrays (changed to array since 1.5.0)
      * @param array $price_list
-     * @param mixed $delete
+     * @param bool $delete
      *
      * @return bool Insertion result
      */
