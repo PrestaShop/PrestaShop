@@ -73,7 +73,8 @@ class DefaultLanguageValidator extends ConstraintValidator
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
                 ->setParameters([
-                    '%field_name%' => '',
+                    '%field_name%' =>
+                        null !== $this->context->getObject() ? $this->context->getObject()->getName() : '',
                     '%lang%' => $this->defaultLanguageName,
                 ])
                 ->addViolation()

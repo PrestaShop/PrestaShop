@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -114,9 +115,10 @@ class MetaType extends AbstractType
 
             if ('index' !== $formData['page_name']) {
                 $form = $event->getForm();
-
                 $form->add('url_rewrite', TranslatableType::class, [
-                    'constraints' => [],
+                    'constraints' => [
+                        new DefaultLanguage(),
+                    ],
                     'options' => [
                         'constraints' => [
                             new IsUrlRewrite(),

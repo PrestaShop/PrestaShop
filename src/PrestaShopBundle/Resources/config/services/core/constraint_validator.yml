@@ -14,3 +14,5 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
       - '@=service("prestashop.adapter.legacy.context").getLanguage().name'
+    tags:
+      - { name: validator.constraint_validator }
