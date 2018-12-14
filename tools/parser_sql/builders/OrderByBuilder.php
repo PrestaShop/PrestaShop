@@ -57,7 +57,7 @@ class OrderByBuilder {
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
 

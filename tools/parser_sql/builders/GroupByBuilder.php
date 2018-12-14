@@ -70,7 +70,7 @@ class GroupByBuilder {
 
         return $builder->build($parsed);
     }
-        
+
     public function build($parsed) {
         $sql = "";
         foreach ($parsed as $k => $v) {

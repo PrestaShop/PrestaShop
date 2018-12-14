@@ -80,19 +80,19 @@ class PrimaryKeyBuilder {
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildIndexSize($parsed) {
         $builder = new IndexSizeBuilder();
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildIndexParser($parsed) {
         $builder = new IndexParserBuilder();
 
         return $builder->build($parsed);
     }
-    
+
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::PRIMARY_KEY) {
             return "";

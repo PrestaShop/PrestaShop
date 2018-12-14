@@ -48,13 +48,13 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
 
         return $processor->process($parsed);
     }
-    
+
     protected function processReferenceDefinition($parsed) {
         $processor = new ReferenceDefinitionProcessor();
 
         return $processor->process($parsed);
     }
-    
+
     protected function removeComma($tokens) {
         $res = array();
         foreach ($tokens as $token) {
@@ -65,7 +65,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
 
         return $res;
     }
-    
+
     protected function buildColDef($expr, $base_expr, $options, $refs, $key) {
         $expr = array('expr_type' => ExpressionType::COLUMN_TYPE, 'base_expr' => $base_expr, 'sub_tree' => $expr);
 
@@ -431,7 +431,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     $parsed = array('expr_type' => ExpressionType::CONSTANT, 'base_expr' => trim($parsed));
                     $last = array_pop($expr);
                     $last['length'] = $parsed['base_expr'];
-                    
+
                     $expr[] = $last;
                     $expr[] = array('expr_type' => ExpressionType::BRACKET_EXPRESSION, 'base_expr' => $trim,
                         'sub_tree' => array($parsed),
@@ -452,7 +452,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     $last = array_pop($expr);
                     $last['length'] = $parsed[0]['base_expr'];
                     $last['decimals'] = isset($parsed[1]) ? $parsed[1]['base_expr'] : false;
-                    
+
                     $expr[] = $last;
                     $expr[] = array('expr_type' => ExpressionType::BRACKET_EXPRESSION, 'base_expr' => $trim,
                         'sub_tree' => $parsed,

@@ -67,7 +67,7 @@ class IndexParserBuilder {
 
         return $builder->build($parsed);
     }
-    
+
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::INDEX_PARSER) {
             return "";

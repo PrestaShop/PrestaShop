@@ -441,7 +441,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
             $parameters['token'],
             $parameters['_token']
         );
-        
+
         if (null !== $ignoredParameters) {
             foreach ($ignoredParameters as $ignoredParameter) {
                 unset($parameters[$ignoredParameter]);

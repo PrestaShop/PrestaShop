@@ -92,7 +92,7 @@ if (!$shop_id) {
 } elseif (Context::getContext()->shop->id != $shop_id) {
     Context::getContext()->shop = new Shop($shop_id);
 }
-    
+
     require_once($module_path);
 
 $grid = new $module();
@@ -101,6 +101,6 @@ $grid->setLang($id_lang);
 if ($option) {
     $grid->setOption($option);
 }
-    
+
 $grid->create($render, $type, $width, $height, $start, $limit, $sort, $dir);
 $grid->render();

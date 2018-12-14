@@ -27,31 +27,31 @@
 class Condition extends ObjectModel
 {
     public $id;
-    
+
     public $id_ps_condition;
-        
+
     public $type;
-    
+
     public $request;
-    
+
     public $operator;
-    
+
     public $value;
-    
+
     public $result;
-    
+
     public $calculation_type;
-    
+
     public $calculation_detail;
-    
+
     public $validated;
-    
+
     public $date_add;
 
     public $date_upd;
-    
+
     public static $unauthorized = array('DELETE', 'DROP');
-    
+
     /**
      * @see ObjectModel::$definition
      */
@@ -72,22 +72,22 @@ class Condition extends ObjectModel
             'date_upd' =>                array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
         ),
     );
-    
+
     public static function getIdByIdPs($id_ps_condition)
     {
         $query = new DbQuery();
         $query->select('id_condition');
         $query->from('condition', 'c');
         $query->where('`id_ps_condition` = '.(int)$id_ps_condition);
-        
+
         return (int)Db::getInstance()->getValue($query);
     }
-    
+
     public static function getIdsByHookCalculation($hook_name)
     {
         $ids = array();
         $in = array();
-        
+
         $sub_query = new DbQuery();
         $sub_query->select('id_badge');
         $sub_query->from('badge', 'b');
@@ -116,7 +116,7 @@ class Condition extends ObjectModel
         foreach ($result as $r) {
             $ids[] = $r['id_condition'];
         }
-        
+
         $sub_query = new DbQuery();
         $sub_query->select('id_advice');
         $sub_query->from('advice', 'a');
@@ -128,7 +128,7 @@ class Condition extends ObjectModel
         foreach ($sub_results as $sub_result) {
             $in[] = $sub_result['id_advice'];
         }
-        
+
         $query = new DbQuery();
         $query->select('c.`id_condition`');
         $query->from('condition', 'c');
@@ -141,14 +141,14 @@ class Condition extends ObjectModel
         }
         $query->groupBy('c.`id_condition`');
         $result = Db::getInstance()->executeS($query);
-        
+
         foreach ($result as $r) {
             $ids[] = $r['id_condition'];
         }
-        
+
         return array_unique($ids);
     }
-    
+
     public static function getIdsDailyCalculation()
     {
         $ids = array();
@@ -176,13 +176,13 @@ class Condition extends ObjectModel
             $query->where('cb.`id_badge` IN ('.implode(',', $in).')');
         }
         $query->groupBy('c.`id_condition`');
-        
+
         $result = Db::getInstance()->executeS($query);
 
         foreach ($result as $r) {
             $ids[] = $r['id_condition'];
         }
-        
+
         //advice conditions validation
         $sub_query = new DbQuery();
         $sub_query->select('id_advice');
@@ -195,7 +195,7 @@ class Condition extends ObjectModel
         foreach ($sub_results as $sub_result) {
             $in[] = $sub_result['id_advice'];
         }
-        
+
         $query = new DbQuery();
         $query->select('c.`id_condition`');
         $query->from('condition', 'c');
@@ -207,26 +207,26 @@ class Condition extends ObjectModel
             $query->where('ca.`id_advice` IN ('.implode(',', $in).')');
         }
         $query->groupBy('c.`id_condition`');
-        
+
         $result = Db::getInstance()->executeS($query);
         foreach ($result as $r) {
             $ids[] = $r['id_condition'];
         }
-        
+
         return array_unique($ids);
     }
-    
+
     public static function getIdsByBadgeGroupPosition($badge_group_position)
     {
         $ids = array();
-        
+
         $sub_query = new DbQuery();
         $sub_query->select('id_badge');
         $sub_query->from('badge', 'b');
         $sub_query->where('b.`group_position` = '.(int)$badge_group_position);
         $sub_query->where('b.`validated` = 0');
         $sub_query->groupBy('b.`id_group`');
-        
+
         $query = new DbQuery();
         $query->select('c.`id_condition`');
         $query->from('condition', 'c');
@@ -234,7 +234,7 @@ class Condition extends ObjectModel
         $query->where('c.`validated` = 0');
         $query->where('cb.`id_badge` IN ('.$sub_query.')');
         $query->groupBy('c.`id_condition`');
-        
+
         $result = Db::getInstance()->executeS($query);
         foreach ($result as $r) {
             $ids[] = $r['id_condition'];
@@ -242,18 +242,18 @@ class Condition extends ObjectModel
 
         return $ids;
     }
-    
+
     public static function getIdsByBadgeGroup($badge_group)
     {
         $ids = array();
-        
+
         $sub_query = new DbQuery();
         $sub_query->select('id_badge');
         $sub_query->from('badge', 'b');
         $sub_query->where('b.`id_group` = '.(int)$badge_group);
         $sub_query->where('b.`validated` = 0');
         $sub_query->groupBy('b.`id_group`');
-        
+
         $query = new DbQuery();
         $query->select('c.`id_condition`');
         $query->from('condition', 'c');
@@ -261,7 +261,7 @@ class Condition extends ObjectModel
         $query->where('c.`validated` = 0');
         $query->where('cb.`id_badge` IN ('.$sub_query.')');
         $query->groupBy('c.`id_condition`');
-        
+
         $result = Db::getInstance()->executeS($query);
         foreach ($result as $r) {
             $ids[] = $r['id_condition'];
@@ -269,7 +269,7 @@ class Condition extends ObjectModel
 
         return $ids;
     }
-        
+
     public function processCalculation()
     {
         switch ($this->type) {
@@ -287,25 +287,25 @@ class Condition extends ObjectModel
             break;
         }
     }
-    
+
     protected function processSql()
     {
         if (preg_match('/'.implode('|', self::$unauthorized).'/', $this->request)) {
             return false;
         }
-        
+
         try {
             $this->result = (int)Db::getInstance()->getValue(GamificationTools::parseMetaData($this->request));
         } catch (Exception $e) {
             return false;
         }
-        
+
         if ($this->makeCalculation($this->operator, $this->result, $this->value)) {
             $this->validated = 1;
         }
         $this->save();
     }
-    
+
     protected function processConfiguration()
     {
         $this->result = Configuration::get($this->request);
@@ -314,7 +314,7 @@ class Condition extends ObjectModel
         }
         $this->save();
     }
-    
+
     protected function processInstall()
     {
         $install = strtotime(_PS_CREATION_DATE_.' 00:00:00');
@@ -326,7 +326,7 @@ class Condition extends ObjectModel
 
         $this->save();
     }
-    
+
     protected function makeCalculation($operator, $arg1, $arg2)
     {
         $result = false;

@@ -64,13 +64,13 @@ class CreateTableBuilder {
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildCreateTableSelectOption($parsed) {
         $builder = new CreateTableSelectOptionBuilder();
 
         return $builder->build($parsed);
     }
-    
+
     public function build($parsed) {
         $sql = $parsed['name'];
         $sql .= $this->buildCreateTableDefinition($parsed);

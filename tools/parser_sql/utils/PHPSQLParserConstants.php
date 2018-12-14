@@ -175,11 +175,11 @@ class PHPSQLParserConstants {
     public static function isReserved($token) {
         return in_array($token, PHPSQLParserConstants::$reserved);
     }
-    
+
     public static function isFunction($token) {
         return in_array($token, PHPSQLParserConstants::$functions);
     }
-    
+
     public static function isParameterizedFunction($token) {
         return in_array($token, PHPSQLParserConstants::$parameterizedFunctions);
     }

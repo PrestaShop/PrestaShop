@@ -62,43 +62,43 @@ class ShowBuilder {
 
         return $builder->build($parsed, $delim);
     }
-    
+
     protected function buildFunction($parsed) {
         $builder = new FunctionBuilder();
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildProcedure($parsed) {
         $builder = new ProcedureBuilder();
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildDatabase($parsed) {
         $builder = new DatabaseBuilder();
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildEngine($parsed) {
         $builder = new EngineBuilder();
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
 
         return $builder->build($parsed);
     }
-    
+
     public function build($parsed) {
         $show = $parsed['SHOW'];
         $sql = "";

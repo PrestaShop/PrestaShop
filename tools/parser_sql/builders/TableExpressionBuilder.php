@@ -60,7 +60,7 @@ class TableExpressionBuilder {
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildAlias($parsed) {
         $builder = new AliasBuilder();
 
@@ -72,13 +72,13 @@ class TableExpressionBuilder {
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildRefType($parsed) {
         $builder = new RefTypeBuilder();
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildRefClause($parsed) {
         $builder = new RefClauseBuilder();
 

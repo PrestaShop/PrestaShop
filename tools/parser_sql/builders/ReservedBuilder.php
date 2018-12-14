@@ -53,7 +53,7 @@ class ReservedBuilder {
     public function isReserved($parsed) {
         return ($parsed['expr_type'] === ExpressionType::RESERVED);
     }
-    
+
     public function build($parsed) {
         if (!$this->isReserved($parsed)) {
             return "";

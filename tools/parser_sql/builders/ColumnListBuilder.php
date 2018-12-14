@@ -72,7 +72,7 @@ class ColumnListBuilder {
 
             $sql .= " ";
         }
- 
+
         return "(" . substr($sql, 0, -1) . ")";
     }
 }

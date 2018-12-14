@@ -64,7 +64,7 @@ class FunctionBuilder {
 
         return $builder->build($parsed);
     }
-    
+
     protected function buildAlias($parsed) {
         $builder = new AliasBuilder();
 
@@ -94,7 +94,7 @@ class FunctionBuilder {
 
         return $builder->isReserved($parsed);
     }
-    
+
     protected function buildSelectExpression($parsed) {
         $builder = new SelectExpressionBuilder();
 

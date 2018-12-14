@@ -58,7 +58,7 @@ class IndexColumnBuilder {
     protected function buildDirection($parsed) {
         return ($parsed === false ? '' : (' ' . $parsed));
     }
-    
+
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::INDEX_COLUMN) {
             return "";
