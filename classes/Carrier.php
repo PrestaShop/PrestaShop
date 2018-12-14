@@ -515,7 +515,7 @@ class CarrierCore extends ObjectModel
      *                             - ALL_CARRIERS
      * @param bool $active Returns only active carriers when true
      * @param bool $delete
-     * @param mixed $id_zone
+     * @param int|false $id_zone
      * @param null|mixed $ids_group
      *
      * @return array Carriers
