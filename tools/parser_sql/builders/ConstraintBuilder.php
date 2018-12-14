@@ -54,6 +54,7 @@ class ConstraintBuilder {
 
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -62,6 +63,7 @@ class ConstraintBuilder {
             return "";
         }
         $sql = $this->buildConstant($parsed['sub_tree']);
+
         return "CONSTRAINT" . (empty($sql) ? '' : (' ' . $sql));
     }
 

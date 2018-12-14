@@ -44,6 +44,7 @@ class SmartySettingsTest extends IntegrationTestCase
     private function render($templateString, array $parameters)
     {
         $this->smarty->assign($parameters);
+
         return $this->smarty->fetch('string:' . $templateString);
     }
 

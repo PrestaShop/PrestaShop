@@ -59,11 +59,13 @@ class IndexSizeBuilder {
 
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
     
@@ -83,6 +85,7 @@ class IndexSizeBuilder {
 
             $sql .= " ";
         }
+
         return substr($sql, 0, -1);
     }
 }

@@ -357,6 +357,7 @@ function get_simple_clean_tab15($clean_tabs_15)
             $light_tab = array_merge($light_tab, get_simple_clean_tab15($tab['children']));
         }
     }
+
     return $light_tab;
 }
 

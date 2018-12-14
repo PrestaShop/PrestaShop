@@ -54,11 +54,13 @@ class InsertStatementBuilder {
 
     protected function buildVALUES($parsed) {
         $builder = new ValuesBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildINSERT($parsed) {
         $builder = new InsertBuilder($parsed);
+
         return $builder->build($parsed);
     }
 

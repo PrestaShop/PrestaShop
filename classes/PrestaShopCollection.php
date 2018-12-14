@@ -171,12 +171,14 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 case '=':
                 case 'in':
                     $this->query->$method($this->parseField($field) . ' IN(' . implode(', ', $this->formatValue($value, $field)) . ')');
+
                     break;
 
                 case '!=':
                 case '<>':
                 case 'notin':
                     $this->query->$method($this->parseField($field) . ' NOT IN(' . implode(', ', $this->formatValue($value, $field)) . ')');
+
                     break;
 
                 default:
@@ -195,14 +197,17 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 case 'like':
                 case 'regexp':
                     $this->query->$method($this->parseField($field) . ' ' . $operator . ' ' . $this->formatValue($value, $field));
+
                     break;
 
                 case 'notlike':
                     $this->query->$method($this->parseField($field) . ' NOT LIKE ' . $this->formatValue($value, $field));
+
                     break;
 
                 case 'notregexp':
                     $this->query->$method($this->parseField($field) . ' NOT REGEXP ' . $this->formatValue($value, $field));
+
                     break;
 
                 default:
@@ -348,14 +353,17 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             switch ($data['type']) {
                 case self::LEFT_JOIN:
                     $this->query->leftJoin($data['table'], $data['alias'], $on);
+
                     break;
 
                 case self::INNER_JOIN:
                     $this->query->innerJoin($data['table'], $data['alias'], $on);
+
                     break;
 
                 case self::LEFT_OUTER_JOIN:
                     $this->query->leftOuterJoin($data['table'], $data['alias'], $on);
+
                     break;
             }
         }
@@ -577,6 +585,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 // Special case for lang alias
                 if ($asso == self::LANG_ALIAS) {
                     $is_lang = true;
+
                     break;
                 }
 

@@ -56,16 +56,19 @@ class GroupByBuilder {
 
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildPosition($parsed) {
         $builder = new PositionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildFunction($parsed) {
         $builder = new FunctionBuilder();
+
         return $builder->build($parsed);
     }
         
@@ -84,6 +87,7 @@ class GroupByBuilder {
             $sql .= ", ";
         }
         $sql = substr($sql, 0, -2);
+
         return "GROUP BY " . $sql;
     }
     

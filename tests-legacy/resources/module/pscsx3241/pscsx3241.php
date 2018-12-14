@@ -48,6 +48,7 @@ class pscsx3241 extends Module
         if (parent::install() == false) {
             return false;
         }
+
         return true;
     }
 }

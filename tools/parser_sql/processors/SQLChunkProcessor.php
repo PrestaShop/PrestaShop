@@ -180,6 +180,7 @@ class SQLChunkProcessor extends AbstractProcessor {
             $processor = new ShowProcessor();
             $out['SHOW'] = $processor->process($out['SHOW']);
         }
+
         return $out;
     }
 }

@@ -55,6 +55,7 @@ class PositionBuilder {
         if ($parsed['expr_type'] !== ExpressionType::POSITION) {
             return "";
         }
+
         return $parsed['base_expr'];
     }
 }

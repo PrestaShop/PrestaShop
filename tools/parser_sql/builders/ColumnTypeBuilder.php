@@ -56,16 +56,19 @@ class ColumnTypeBuilder {
 
     protected function buildColumnTypeBracketExpression($parsed) {
         $builder = new ColumnTypeBracketExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildDataType($parsed) {
         $builder = new DataTypeBuilder();
+
         return $builder->build($parsed);
     }
     

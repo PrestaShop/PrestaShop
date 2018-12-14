@@ -359,12 +359,15 @@ class imageLib
             switch ($exifData['orientation']) {
             case 8:
                 $this->imageResized = imagerotate($this->imageResized, 90, 0);
+
                 break;
             case 3:
                 $this->imageResized = imagerotate($this->imageResized, 180, 0);
+
                 break;
             case 6:
                 $this->imageResized = imagerotate($this->imageResized, -90, 0);
+
                 break;
         }
         }
@@ -491,46 +494,55 @@ class imageLib
         case 'tl':
           $cropStartX = 0;
           $cropStartY = 0;
+
           break;
 
         case 't':
           $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
           $cropStartY = 0;
+
           break;
 
         case 'tr':
           $cropStartX = $optimalWidth - $newWidth;
           $cropStartY = 0;
+
           break;
 
         case 'l':
           $cropStartX = 0;
           $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
+
           break;
 
         case 'm':
           $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
           $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
+
           break;
 
         case 'r':
           $cropStartX = $optimalWidth - $newWidth;
           $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
+
           break;
 
         case 'bl':
           $cropStartX = 0;
           $cropStartY = $optimalHeight - $newHeight;
+
           break;
 
         case 'b':
           $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
           $cropStartY = $optimalHeight - $newHeight;
+
           break;
 
         case 'br':
           $cropStartX = $optimalWidth - $newWidth;
           $cropStartY = $optimalHeight - $newHeight;
+
           break;
 
         case 'auto':
@@ -544,12 +556,14 @@ class imageLib
             $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
               $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
           }
+
           break;
 
         default:
           // *** Default to center
           $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
           $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
+
           break;
       }
     }
@@ -586,30 +600,35 @@ class imageLib
       case 'exact':
                 $optimalWidth = $newWidth;
                 $optimalHeight= $newHeight;
+
                 break;
             case '1':
       case 'portrait':
                 $dimensionsArray = $this->getSizeByFixedHeight($newWidth, $newHeight);
         $optimalWidth = $dimensionsArray['optimalWidth'];
         $optimalHeight = $dimensionsArray['optimalHeight'];
+
                 break;
             case '2':
       case 'landscape':
                 $dimensionsArray = $this->getSizeByFixedWidth($newWidth, $newHeight);
         $optimalWidth = $dimensionsArray['optimalWidth'];
         $optimalHeight = $dimensionsArray['optimalHeight'];
+
                 break;
             case '3':
       case 'auto':
                 $dimensionsArray = $this->getSizeByAuto($newWidth, $newHeight);
         $optimalWidth = $dimensionsArray['optimalWidth'];
         $optimalHeight = $dimensionsArray['optimalHeight'];
+
                 break;
       case '4':
       case 'crop':
                 $dimensionsArray = $this->getOptimalCrop($newWidth, $newHeight);
         $optimalWidth = $dimensionsArray['optimalWidth'];
         $optimalHeight = $dimensionsArray['optimalHeight'];
+
                 break;
         }
 
@@ -906,6 +925,7 @@ class imageLib
         $this->addBorder(6, '#f2f1f0');
         $this->addBorder(2, '#fff');
         $this->addBorder(1, '#ccc');
+
         break;
       default:
         break;
@@ -1151,6 +1171,7 @@ class imageLib
       imagecopymerge($im, $comp, 0, 0, 0, 0, $width, $height, $amount);
 
       imagedestroy($comp);
+
       return $im;
   }
 
@@ -1307,12 +1328,15 @@ class imageLib
               switch ($value) {
           case 'left':
             $degrees = 90;
+
             break;
           case 'right':
             $degrees = 270;
+
             break;
           case 'upside':
             $degrees = 180;
+
             break;
           default:
             break;
@@ -1680,24 +1704,28 @@ class imageLib
         $positionArray['y1'] = $padding;
         $positionArray['x2'] = $this->width;
         $positionArray['y2'] = $thickness + $padding;
+
         break;
       case 'r':
         $positionArray['x1'] = $this->width - $thickness - $padding;
         $positionArray['y1'] = 0;
         $positionArray['x2'] = $this->width - $padding;
         $positionArray['y2'] = $this->height;
+
         break;
       case 'b':
         $positionArray['x1'] = 0;
         $positionArray['y1'] = $this->height - $thickness - $padding;
         $positionArray['x2'] = $this->width;
         $positionArray['y2'] = $this->height - $padding;
+
         break;
       case 'l':
         $positionArray['x1'] = $padding;
         $positionArray['y1'] = 0;
         $positionArray['x2'] = $thickness + $padding;
         $positionArray['y2'] = $this->height;
+
         break;
 
       default:
@@ -1902,30 +1930,39 @@ class imageLib
       switch ($ep) {
       case 0:
         $ep = '';
+
         break;
       case 1:
         $ep = 'manual';
+
         break;
       case 2:
         $ep = 'normal program';
+
         break;
       case 3:
         $ep = 'aperture priority';
+
         break;
       case 4:
         $ep = 'shutter priority';
+
         break;
       case 5:
         $ep = 'creative program';
+
         break;
       case 6:
         $ep = 'action program';
+
         break;
       case 7:
         $ep = 'portrait mode';
+
         break;
       case 8:
         $ep = 'landscape mode';
+
         break;
 
       default:
@@ -1942,27 +1979,35 @@ class imageLib
       switch ($mm) {
       case 0:
         $mm = 'unknown';
+
         break;
       case 1:
         $mm = 'average';
+
         break;
       case 2:
         $mm = 'center weighted average';
+
         break;
       case 3:
         $mm = 'spot';
+
         break;
       case 4:
         $mm = 'multi spot';
+
         break;
       case 5:
         $mm = 'pattern';
+
         break;
       case 6:
         $mm = 'partial';
+
         break;
       case 255:
         $mm = 'other';
+
         break;
 
       default:
@@ -1979,69 +2024,91 @@ class imageLib
       switch ($flash) {
       case 0:
         $flash = 'flash did not fire';
+
         break;
       case 1:
         $flash = 'flash fired';
+
         break;
       case 5:
         $flash = 'strobe return light not detected';
+
         break;
       case 7:
         $flash = 'strobe return light detected';
+
         break;
       case 9:
         $flash = 'flash fired, compulsory flash mode';
+
         break;
       case 13:
         $flash = 'flash fired, compulsory flash mode, return light not detected';
+
         break;
       case 15:
         $flash = 'flash fired, compulsory flash mode, return light detected';
+
         break;
       case 16:
         $flash = 'flash did not fire, compulsory flash mode';
+
         break;
       case 24:
         $flash = 'flash did not fire, auto mode';
+
         break;
       case 25:
         $flash = 'flash fired, auto mode';
+
         break;
       case 29:
         $flash = 'flash fired, auto mode, return light not detected';
+
         break;
       case 31:
         $flash = 'flash fired, auto mode, return light detected';
+
         break;
       case 32:
         $flash = 'no flash function';
+
         break;
       case 65:
         $flash = 'flash fired, red-eye reduction mode';
+
         break;
       case 69:
         $flash = 'flash fired, red-eye reduction mode, return light not detected';
+
         break;
       case 71:
         $flash = 'flash fired, red-eye reduction mode, return light detected';
+
         break;
       case 73:
         $flash = 'flash fired, compulsory flash mode, red-eye reduction mode';
+
         break;
       case 77:
         $flash = 'flash fired, compulsory flash mode, red-eye reduction mode, return light not detected';
+
         break;
       case 79:
         $flash = 'flash fired, compulsory flash mode, red-eye reduction mode, return light detected';
+
         break;
       case 89:
         $flash = 'flash fired, auto mode, red-eye reduction mode';
+
         break;
       case 93:
         $flash = 'flash fired, auto mode, return light not detected, red-eye reduction mode';
+
         break;
       case 95:
         $flash = 'flash fired, auto mode, return light detected, red-eye reduction mode';
+
         break;
 
       default:
@@ -2307,51 +2374,61 @@ class imageLib
         case 'tl':
           $width = 0 + $padding;
           $height = 0 + $padding;
+
           break;
 
         case 't':
           $width = ($this->width / 2) - ($assetWidth / 2);
           $height = 0 + $padding;
+
           break;
 
         case 'tr':
           $width = $this->width - $assetWidth - $padding;
           $height = 0 + $padding;
+
           break;
 
         case 'l':
           $width = 0 + $padding;
           $height = ($this->height / 2) - ($assetHeight / 2);
+
           break;
 
         case 'm':
           $width = ($this->width / 2) - ($assetWidth / 2);
           $height = ($this->height / 2) - ($assetHeight / 2);
+
           break;
 
         case 'r':
           $width = $this->width - $assetWidth - $padding;
           $height = ($this->height / 2) - ($assetHeight / 2);
+
           break;
 
         case 'bl':
           $width = 0 + $padding;
           $height = $this->height - $assetHeight - $padding;
+
           break;
 
         case 'b':
           $width = ($this->width / 2) - ($assetWidth / 2);
           $height = $this->height - $assetHeight - $padding;
+
           break;
 
         case 'br':
           $width = $this->width - $assetWidth - $padding;
           $height = $this->height - $assetHeight - $padding;
+
           break;
 
         default:
           $width = 0;
           $height = 0;
+
           break;
       }
     }
@@ -2458,18 +2535,23 @@ class imageLib
             case '.jpg':
             case '.jpeg':
                 $img = @imagecreatefromjpeg($file);
+
                 break;
             case '.gif':
                 $img = @imagecreatefromgif($file);
+
                 break;
             case '.png':
                 $img = @imagecreatefrompng($file);
+
                 break;
             case '.bmp':
                 $img = @$this->ImageCreateFromBMP($file);
+
                 break;
             case '.psd':
                 $img = @$this->imagecreatefrompsd($file);
+
                 break;
 
 
@@ -2477,6 +2559,7 @@ class imageLib
 
             default:
                 $img = false;
+
                 break;
         }
 
@@ -2549,6 +2632,7 @@ class imageLib
         } else {
             $error = 'jpg';
         }
+
                 break;
 
             case '.gif':
@@ -2558,6 +2642,7 @@ class imageLib
         } else {
             $error = 'gif';
         }
+
                 break;
 
             case '.png':
@@ -2573,10 +2658,12 @@ class imageLib
         } else {
             $error = 'png';
         }
+
                 break;
 
             case '.bmp':
         file_put_contents($savePath, $this->GD2BMPstring($this->imageResized));
+
           break;
 
 
@@ -2585,6 +2672,7 @@ class imageLib
             default:
         // *** No extension - No save.
         $this->errorArray[] = 'This file type (' . $extension . ') is not supported. File not saved.';
+
                 break;
         }
 
@@ -2621,10 +2709,12 @@ class imageLib
             case 'jpeg':
         header('Content-type: image/jpeg');
         imagejpeg($this->imageResized, '', $imageQuality);
+
                 break;
             case 'gif':
         header('Content-type: image/gif');
         imagegif($this->imageResized);
+
                 break;
             case 'png':
         header('Content-type: image/png');
@@ -2636,9 +2726,11 @@ class imageLib
         $invertScaleQuality = 9 - $scaleQuality;
 
         imagepng($this->imageResized, '', $invertScaleQuality);
+
         break;
       case 'bmp':
         echo 'bmp file format is not supported.';
+
         break;
 
             // ... etc
@@ -2919,6 +3011,7 @@ class imageLib
           'b' => hexdec(substr($color, 4, 2)),
           'a' => 0,
       );
+
       return $rgb;
   }
 
@@ -3125,6 +3218,7 @@ class imageLib
       if (!is_resource($img)) {
           return false;
       }
+
       return @imagecolorsforindex($img, @imagecolorat($img, $x, $y));
   }
 
@@ -3144,6 +3238,7 @@ class imageLib
           $intstring = $intstring.chr($number & 255);
           $number >>= 8;
       }
+
       return str_pad($intstring, $minbytes, "\x00", STR_PAD_RIGHT);
   }
 

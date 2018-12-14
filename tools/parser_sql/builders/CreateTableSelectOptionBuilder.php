@@ -57,6 +57,7 @@ class CreateTableSelectOptionBuilder {
 
         $sql = ($option['duplicates'] === false ? '' : (' ' . $option['duplicates']));
         $sql .= ($option['as'] === false ? '' : ' AS');
+
         return $sql;
     }
 }

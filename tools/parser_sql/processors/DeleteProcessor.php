@@ -58,6 +58,7 @@ class DeleteProcessor extends AbstractProcessor {
         }
 
         $tokens['DELETE'] = array('TABLES' => $tables);
+
         return $tokens;
     }
 }

@@ -102,6 +102,7 @@ if (isset($_GET['action'])) {
                     }
                 }
             }
+
             break;
         case 'delete_folder':
             if ($delete_folders) {
@@ -125,11 +126,13 @@ if (isset($_GET['action'])) {
                     }
                 }
             }
+
             break;
         case 'create_folder':
             if ($create_folders) {
                 create_folder(fix_path($path, $transliteration), fix_path($path_thumb, $transliteration));
             }
+
             break;
         case 'rename_folder':
             if ($rename_folders) {
@@ -155,6 +158,7 @@ if (isset($_GET['action'])) {
                     die(lang_Empty_name);
                 }
             }
+
             break;
         case 'rename_file':
             if ($rename_files) {
@@ -181,6 +185,7 @@ if (isset($_GET['action'])) {
                     die(lang_Empty_name);
                 }
             }
+
             break;
         case 'duplicate_file':
             if ($duplicate_files) {
@@ -206,9 +211,11 @@ if (isset($_GET['action'])) {
                     die(lang_Empty_name);
                 }
             }
+
             break;
         default:
             die('wrong action');
+
             break;
     }
 }

@@ -60,31 +60,37 @@ class PrimaryKeyBuilder {
 
     protected function buildColumnList($parsed) {
         $builder = new ColumnListBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildConstraint($parsed) {
         $builder = new ConstraintBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildIndexType($parsed) {
         $builder = new IndexTypeBuilder();
+
         return $builder->build($parsed);
     }
     
     protected function buildIndexSize($parsed) {
         $builder = new IndexSizeBuilder();
+
         return $builder->build($parsed);
     }
     
     protected function buildIndexParser($parsed) {
         $builder = new IndexParserBuilder();
+
         return $builder->build($parsed);
     }
     
@@ -108,6 +114,7 @@ class PrimaryKeyBuilder {
 
             $sql .= " ";
         }
+
         return substr($sql, 0, -1);
     }
 }

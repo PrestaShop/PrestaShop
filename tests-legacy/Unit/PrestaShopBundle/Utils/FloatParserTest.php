@@ -65,6 +65,7 @@ class FloatParserTest extends TestCase
     public function provideValidStrings()
     {
         $expected = 1234567.89;
+
         return [
             ['1234567.89', $expected],
             ['1234567,89', $expected],

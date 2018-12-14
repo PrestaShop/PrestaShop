@@ -579,6 +579,7 @@ class ProductController extends FrameworkBundleAdminController
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
             }
+
             throw $e;
         }
 
@@ -764,6 +765,7 @@ class ProductController extends FrameworkBundleAdminController
                         'actionAdminProductsControllerActivateAfter',
                         $hookEventParameters
                     );
+
                     break;
                 case 'deactivate_all':
                     $hookDispatcher->dispatchWithParameters(
@@ -792,6 +794,7 @@ class ProductController extends FrameworkBundleAdminController
                         'actionAdminProductsControllerDeactivateAfter',
                         $hookEventParameters
                     );
+
                     break;
                 case 'delete_all':
                     $hookDispatcher->dispatchWithParameters(
@@ -820,6 +823,7 @@ class ProductController extends FrameworkBundleAdminController
                         'actionAdminProductsControllerDeleteAfter',
                         $hookEventParameters
                     );
+
                     break;
                 case 'duplicate_all':
                     $hookDispatcher->dispatchWithParameters(
@@ -848,6 +852,7 @@ class ProductController extends FrameworkBundleAdminController
                         'actionAdminProductsControllerDuplicateAfter',
                         $hookEventParameters
                     );
+
                     break;
                 default:
                     /*
@@ -855,6 +860,7 @@ class ProductController extends FrameworkBundleAdminController
                      * restricted to a set of action values in YML file.
                      */
                     $logger->error('Bulk action from ProductController received a bad parameter.');
+
                     throw new Exception(
                         'Bad action received from call to ProductController::bulkAction: "' . $action . '"',
                         2001
@@ -907,6 +913,7 @@ class ProductController extends FrameworkBundleAdminController
 
         /* Initialize router params variable. */
         $routerParams = [];
+
         try {
             switch ($action) {
                 case 'sort':
@@ -957,6 +964,7 @@ class ProductController extends FrameworkBundleAdminController
                         'actionAdminProductsControllerSortAfter',
                         $hookEventParameters
                     );
+
                     break;
                 default:
                     /*
@@ -964,6 +972,7 @@ class ProductController extends FrameworkBundleAdminController
                      * restricted to a set of action values in YML file.
                      */
                     $logger->error('Mass edit action from ProductController received a bad parameter.');
+
                     throw new Exception(
                         'Bad action received from call to ProductController::massEditAction: "' . $action . '"',
                         2001
@@ -1039,6 +1048,7 @@ class ProductController extends FrameworkBundleAdminController
                         'actionAdminProductsControllerDeleteAfter',
                         $hookEventParameters
                     );
+
                     break;
                 case 'duplicate':
                     $hookDispatcher->dispatchWithParameters(
@@ -1090,6 +1100,7 @@ class ProductController extends FrameworkBundleAdminController
                         'actionAdminProductsControllerActivateAfter',
                         $hookEventParameters
                     );
+
                     break;
                 case 'deactivate':
                     $hookDispatcher->dispatchWithParameters(
@@ -1115,6 +1126,7 @@ class ProductController extends FrameworkBundleAdminController
                         'actionAdminProductsControllerDeactivateAfter',
                         $hookEventParameters
                     );
+
                     break;
                 default:
                     /*
@@ -1122,6 +1134,7 @@ class ProductController extends FrameworkBundleAdminController
                      * restricted to a set of action values in YML file.
                      */
                     $logger->error('Unit action from ProductController received a bad parameter.');
+
                     throw new Exception(
                         'Bad action received from call to ProductController::unitAction: "' . $action . '"',
                         2002
@@ -1211,21 +1224,27 @@ class ProductController extends FrameworkBundleAdminController
         switch ($step) {
             case 'step1':
                 $form->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation');
+
                 break;
             case 'step2':
                 $form->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice');
+
                 break;
             case 'step3':
                 $form->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity');
+
                 break;
             case 'step4':
                 $form->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping');
+
                 break;
             case 'step5':
                 $form->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo');
+
                 break;
             case 'step6':
                 $form->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
+
                 break;
             case 'default':
         }

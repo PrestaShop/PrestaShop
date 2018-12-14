@@ -108,5 +108,6 @@ function generate_tax_rules()
 			set value="'.$id_tax_rules_group.'" WHERE name="SOCOLISSIMO_OVERCOST_TAX"');
         }
     }
+
     return $res;
 }

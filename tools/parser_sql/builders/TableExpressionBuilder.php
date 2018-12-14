@@ -58,26 +58,31 @@ class TableExpressionBuilder {
 
     protected function buildFROM($parsed) {
         $builder = new FromBuilder();
+
         return $builder->build($parsed);
     }
     
     protected function buildAlias($parsed) {
         $builder = new AliasBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildJoin($parsed) {
         $builder = new JoinBuilder();
+
         return $builder->build($parsed);
     }
     
     protected function buildRefType($parsed) {
         $builder = new RefTypeBuilder();
+
         return $builder->build($parsed);
     }
     
     protected function buildRefClause($parsed) {
         $builder = new RefClauseBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -94,6 +99,7 @@ class TableExpressionBuilder {
             $sql .= $this->buildRefType($parsed['ref_type']);
             $sql .= $this->buildRefClause($parsed['ref_clause']);
         }
+
         return $sql;
     }
 }

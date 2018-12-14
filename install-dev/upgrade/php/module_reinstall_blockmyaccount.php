@@ -42,7 +42,9 @@ function module_reinstall_blockmyaccount()
 				WHERE h.name = "'.$hook_name.'" group by id_hook');
             $res &= Db::getInstance()->insert('hook_module', $row);
         }
+
         return $res;
     }
+
     return true;
 }

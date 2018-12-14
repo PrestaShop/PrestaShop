@@ -54,6 +54,7 @@ abstract class AbstractProcessor {
      */
     public function splitSQLIntoTokens($sql) {
         $lexer = new PHPSQLLexer();
+
         return $lexer->split($sql);
     }
 
@@ -65,16 +66,19 @@ abstract class AbstractProcessor {
 
         if (($result[0] === '`') && ($result[strlen($result) - 1] === '`')) {
             $result = substr($result, 1, -1);
+
             return trim(str_replace('``', '`', $result));
         }
 
         if (($result[0] === "'") && ($result[strlen($result) - 1] === "'")) {
             $result = substr($result, 1, -1);
+
             return trim(str_replace("''", "'", $result));
         }
 
         if (($result[0] === "\"") && ($result[strlen($result) - 1] === "\"")) {
             $result = substr($result, 1, -1);
+
             return trim(str_replace("\"\"", "\"", $result));
         }
 
@@ -122,6 +126,7 @@ abstract class AbstractProcessor {
             }
             $i++;
         }
+
         return trim($trim);
     }
 
@@ -136,15 +141,19 @@ abstract class AbstractProcessor {
         switch ($type) {
         case 'GLOBAL':
             $type = ExpressionType::GLOBAL_VARIABLE;
+
             break;
         case 'LOCAL':
             $type = ExpressionType::LOCAL_VARIABLE;
+
             break;
         case 'SESSION':
         default:
             $type = ExpressionType::SESSION_VARIABLE;
+
             break;
         }
+
         return $type;
     }
 
@@ -201,6 +210,7 @@ abstract class AbstractProcessor {
         foreach ($tokenList as $token) {
             $expr[] = $token->toArray();
         }
+
         return (empty($expr) ? false : $expr);
     }
 
@@ -208,6 +218,7 @@ abstract class AbstractProcessor {
         $idx = array_search($key, array_keys($array));
         $array = array_slice($array, 0, $idx + 1, true) + $entry
             + array_slice($array, $idx + 1, count($array) - 1, true);
+
         return $array;
     }
 }

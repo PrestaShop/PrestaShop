@@ -73,6 +73,7 @@ class ValuesProcessor extends AbstractProcessor {
         }
 
         $tokens['VALUES'] = array_values($values);
+
         return $tokens;
     }
 

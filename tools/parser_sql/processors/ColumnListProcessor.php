@@ -50,6 +50,7 @@ class ColumnListProcessor extends AbstractProcessor {
                 'no_quotes' => $this->revokeQuotation($v),
             );
         }
+
         return $cols;
     }
 }

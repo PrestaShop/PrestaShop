@@ -69,6 +69,7 @@ class PositionCalculator {
         $charPos = 0;
         $backtracking = array();
         $this->lookForBaseExpression($sql, $charPos, $parsed, 0, $backtracking);
+
         return $parsed;
     }
 
@@ -108,6 +109,7 @@ class PositionCalculator {
 
                 if (!$ok) {
                     $offset = $pos + 1;
+
                     continue;
                 }
 

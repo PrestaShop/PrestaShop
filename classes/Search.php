@@ -480,15 +480,19 @@ class SearchCore
                     switch ($key) {
                         case 'pa_reference':
                             $sql .= ', pa.reference AS pa_reference';
+
                             break;
                         case 'pa_supplier_reference':
                             $sql .= ', pa.supplier_reference AS pa_supplier_reference';
+
                             break;
                         case 'pa_ean13':
                             $sql .= ', pa.ean13 AS pa_ean13';
+
                             break;
                         case 'pa_upc':
                             $sql .= ', pa.upc AS pa_upc';
+
                             break;
                     }
                 }
@@ -526,30 +530,39 @@ class SearchCore
                     switch ($key) {
                         case 'pname':
                             $sql .= ', pl.name pname';
+
                             break;
                         case 'reference':
                             $sql .= ', p.reference';
+
                             break;
                         case 'supplier_reference':
                             $sql .= ', p.supplier_reference';
+
                             break;
                         case 'ean13':
                             $sql .= ', p.ean13';
+
                             break;
                         case 'upc':
                             $sql .= ', p.upc';
+
                             break;
                         case 'description_short':
                             $sql .= ', pl.description_short';
+
                             break;
                         case 'description':
                             $sql .= ', pl.description';
+
                             break;
                         case 'cname':
                             $sql .= ', cl.name cname';
+
                             break;
                         case 'mname':
                             $sql .= ', m.name mname';
+
                             break;
                     }
                 }

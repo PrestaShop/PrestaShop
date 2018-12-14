@@ -59,26 +59,31 @@ class TableBracketExpressionBuilder {
 
     protected function buildColDef($parsed) {
         $builder = new ColumnDefinitionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildPrimaryKey($parsed) {
         $builder = new PrimaryKeyBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildForeignKey($parsed) {
         $builder = new ForeignKeyBuilder();
+
         return $builder->build($parsed);
     }
     
     protected function buildCheck($parsed) {
         $builder = new CheckBuilder();
+
         return $builder->build($parsed);
     }
     
     protected function buildLikeExpression($parsed) {
         $builder = new LikeExpressionBuilder();
+
         return $builder->build($parsed);
     }
     
@@ -103,6 +108,7 @@ class TableBracketExpressionBuilder {
         }
 
         $sql = " (" . substr($sql, 0, -2) . ")";
+
         return $sql;
     }
     

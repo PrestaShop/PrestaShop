@@ -504,15 +504,19 @@ if (isset($_POST['submit'])) {
     switch ($sort_by) {
         case 'name':
             usort($sorted, 'filenameSort');
+
             break;
         case 'date':
             usort($sorted, 'dateSort');
+
             break;
         case 'size':
             usort($sorted, 'sizeSort');
+
             break;
         case 'extension':
             usort($sorted, 'extensionSort');
+
             break;
         default:
             break;

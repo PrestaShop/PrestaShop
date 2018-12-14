@@ -54,6 +54,7 @@ class ConstantBuilder {
 
     protected function buildAlias($parsed) {
         $builder = new AliasBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -63,6 +64,7 @@ class ConstantBuilder {
         }
         $sql = $parsed['base_expr'];
         $sql .= $this->buildAlias($parsed);
+
         return $sql;
     }
 }

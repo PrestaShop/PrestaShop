@@ -55,6 +55,7 @@ $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
     } catch (IOException $e) {
         return false;
     }
+
     return true;
 };
 

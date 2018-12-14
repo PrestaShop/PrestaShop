@@ -183,6 +183,7 @@ class Datas
         if (Datas::$instance === null) {
             Datas::$instance = new Datas();
         }
+
         return Datas::$instance;
     }
 

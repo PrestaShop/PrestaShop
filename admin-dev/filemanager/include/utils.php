@@ -20,6 +20,7 @@ function deleteDir($dir)
             return false;
         }
     }
+
     return rmdir($dir);
 }
 
@@ -31,6 +32,7 @@ function duplicate_file($old_path, $name)
         if (file_exists($new_path)) {
             return false;
         }
+
         return copy($old_path, $new_path);
     }
 }
@@ -44,6 +46,7 @@ function rename_file($old_path, $name, $transliteration)
         if (file_exists($new_path)) {
             return false;
         }
+
         return rename($old_path, $new_path);
     }
 }
@@ -56,6 +59,7 @@ function rename_folder($old_path, $name, $transliteration)
         if (file_exists($new_path)) {
             return false;
         }
+
         return rename($old_path, $new_path);
     }
 }
@@ -67,8 +71,10 @@ function create_img_gd($imgfile, $imgthumb, $newwidth, $newheight="")
         $magicianObj = new imageLib($imgfile);
         $magicianObj -> resizeImage($newwidth, $newheight, 'crop');
         $magicianObj -> saveImage($imgthumb, 80);
+
         return true;
     }
+
     return false;
 }
 
@@ -79,6 +85,7 @@ function create_img($imgfile, $imgthumb, $newwidth, $newheight="")
         $magicianObj = new imageLib($imgfile);
         $magicianObj -> resizeImage($newwidth, $newheight, 'auto');
         $magicianObj -> saveImage($imgthumb, 80);
+
         return true;
     } else {
         return false;
@@ -93,6 +100,7 @@ function makeSize($size)
         $size = $size / 1024;
         $u++;
     }
+
     return (number_format($size, 0) . " " . $units[$u]);
 }
 
@@ -249,6 +257,7 @@ function config_loading($current_path, $fld)
 {
     if (file_exists($current_path.$fld.".config")) {
         require_once($current_path.$fld.".config");
+
         return true;
     }
     echo "!!!!".$parent=fix_dirname($fld);
@@ -331,6 +340,7 @@ function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path,
             }
         }
     }
+
     return $all_ok;
 }
 
