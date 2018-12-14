@@ -870,7 +870,7 @@ class CarrierCore extends ObjectModel
     /**
      * Delete zone.
      *
-     * @param mixed $id_zone
+     * @param int $id_zone
      */
     public function deleteZone($id_zone)
     {
