@@ -253,7 +253,7 @@ class AddressFormatCore extends ObjectModel
      *         : (firstname-lastname) => 'Presta' and 'Shop' result '(Presta-Shop)'.
      *
      * @param array $formattedValueList
-     * @param mixed $currentLine
+     * @param string $currentLine
      * @param mixed $currentKeyList
      */
     protected static function _setOriginalDisplayFormat(&$formattedValueList, $currentLine, $currentKeyList)
