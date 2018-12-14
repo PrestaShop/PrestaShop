@@ -44,9 +44,9 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
 
     public function setUp()
     {
-        parent::setUp();
-
         $this->useAscendedChars = false;
+
+        parent::setUp();
     }
 
     public function testItThrowsUnexpectedTypeExceptionOnIncorrectConstraintProvided()
@@ -73,7 +73,7 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
     {
         $this->validator->validate($incorrectRewriteUrl, new IsUrlRewrite());
 
-        $this->buildViolation('Value "%value%" is invalid.')
+        $this->buildViolation((new IsUrlRewrite())->message)
             ->setParameter('%value%', $incorrectRewriteUrl)
             ->assertRaised()
         ;
