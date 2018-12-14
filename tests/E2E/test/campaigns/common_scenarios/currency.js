@@ -38,7 +38,7 @@ module.exports = {
   },
 
   checkCurrencyByIsoCode(currencyData) {
-    scenario('Search then check the "' + currencyData.name.toUpperCase() + '" currency in the back office', client => {
+    scenario('Search then check the "' + (currencyData.name).toUpperCase() + '" currency in the back office', client => {
       test('should search for the currency by "Iso code"', () => client.searchByValue(Localization.Currencies.search_iso_code_input, Localization.Currencies.search_button, currencyData.name));
       test('should check the appearance of the  currency', () => client.checkTextValue(Localization.Currencies.currency_iso_code_column.replace('%ID', 1), currencyData.name, 'contain'));
     }, 'common_client');
