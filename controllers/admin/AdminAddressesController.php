@@ -443,6 +443,18 @@ class AdminAddressesControllerCore extends AdminController
                 //update order shipping cost
                 $order = new Order($id_order);
                 $order->refreshShippingCost();
+
+                // update cart
+                $cart = Cart::getCartByOrderId($id_order);
+                if (Validate::isLoadedObject($cart)) {
+                    if ($address_type == 'invoice') {
+                        $cart->id_address_invoice = (int) $this->object->id;
+                    } else {
+                        $cart->id_address_delivery = (int) $this->object->id;
+                    }
+                    $cart->update();
+                }
+                // redirect
                 Tools::redirectAdmin(urldecode(Tools::getValue('back')) . '&conf=4');
             }
         }
