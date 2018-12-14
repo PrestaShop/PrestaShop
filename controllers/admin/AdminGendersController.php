@@ -195,7 +195,7 @@ class AdminGendersControllerCore extends AdminController
 
     protected function postImage($id)
     {
-        if (isset($this->fieldImageSettings['name']) && isset($this->fieldImageSettings['dir'])) {
+        if (isset($this->fieldImageSettings['name'], $this->fieldImageSettings['dir'])) {
             if (!Validate::isInt(Tools::getValue('img_width')) || !Validate::isInt(Tools::getValue('img_height'))) {
                 $this->errors[] = $this->trans('Width and height must be numeric values.', array(), 'Admin.Shopparameters.Notification');
             } else {

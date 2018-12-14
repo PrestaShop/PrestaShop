@@ -158,7 +158,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $context = Context::getContext();
         $logged_on_addons = false;
-        if (isset($context->cookie->username_addons) && isset($context->cookie->password_addons)
+        if (isset($context->cookie->username_addons, $context->cookie->password_addons)
             && !empty($context->cookie->username_addons) && !empty($context->cookie->password_addons)
         ) {
             $logged_on_addons = true;

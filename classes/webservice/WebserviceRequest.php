@@ -914,7 +914,7 @@ class WebserviceRequestCore
     {
         if (!in_array($this->method, array('GET', 'POST', 'PUT', 'DELETE', 'HEAD'))) {
             $this->setError(405, 'Method ' . $this->method . ' is not valid', 23);
-        } elseif (isset($this->urlSegment[0]) && isset($this->resourceList[$this->urlSegment[0]]['forbidden_method']) && in_array($this->method, $this->resourceList[$this->urlSegment[0]]['forbidden_method'])) {
+        } elseif (isset($this->urlSegment[0], $this->resourceList[$this->urlSegment[0]]['forbidden_method']) && in_array($this->method, $this->resourceList[$this->urlSegment[0]]['forbidden_method'])) {
             $this->setError(405, 'Method ' . $this->method . ' is not allowed for the resource ' . $this->urlSegment[0], 101);
         } elseif ($this->urlSegment[0] && !in_array($this->method, $this->keyPermissions[$this->urlSegment[0]])) {
             $this->setError(405, 'Method ' . $this->method . ' is not allowed for the resource ' . $this->urlSegment[0] . ' with this authentication key', 25);
@@ -1134,7 +1134,7 @@ class WebserviceRequestCore
                         if ($field != 'sort' && $field != 'limit') {
                             if (!in_array($field, $available_filters)) {
                                 // if there are linked tables
-                                if (isset($this->resourceConfiguration['linked_tables']) && isset($this->resourceConfiguration['linked_tables'][$field])) {
+                                if (isset($this->resourceConfiguration['linked_tables'][$field])) {
                                     // contruct SQL join for linked tables
                                     $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['linked_tables'][$field]['table']) . '` `' . bqSQL($field) . '` ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = `' . bqSQL($field) . '`.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
 
@@ -1323,7 +1323,7 @@ class WebserviceRequestCore
                     $sql .= '_' . $assoc['type'];
                 } else {
                     $def = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
-                    if (isset($def['fields']) && isset($def['fields']['id_shop_group'])) {
+                    if (isset($def['fields']['id_shop_group'])) {
                         $check_shop_group = true;
                     }
                 }
@@ -1440,7 +1440,7 @@ class WebserviceRequestCore
                 }
 
                 /* @var ObjectModel $object */
-                if (isset($this->resourceConfiguration['objectMethods']) && isset($this->resourceConfiguration['objectMethods']['delete'])) {
+                if (isset($this->resourceConfiguration['objectMethods']['delete'])) {
                     $result = $object->{$this->resourceConfiguration['objectMethods']['delete']}();
                 } else {
                     $result = $object->delete();
@@ -1541,7 +1541,7 @@ class WebserviceRequestCore
                 if ($fieldName == 'id') {
                     $sqlId = $fieldName;
                 }
-                if (isset($attributes->$fieldName) && isset($fieldProperties['sqlId']) && (!isset($fieldProperties['i18n']) || !$fieldProperties['i18n'])) {
+                if (isset($attributes->$fieldName, $fieldProperties['sqlId']) && (!isset($fieldProperties['i18n']) || !$fieldProperties['i18n'])) {
                     if (isset($fieldProperties['setter'])) {
                         // if we have to use a specific setter
                         if (!$fieldProperties['setter']) {
@@ -1579,7 +1579,7 @@ class WebserviceRequestCore
 
             // Apply the modifiers if they exist
             foreach ($this->resourceConfiguration['fields'] as $fieldName => $fieldProperties) {
-                if (isset($fieldProperties['modifier']) && isset($fieldProperties['modifier']['modifier']) && $fieldProperties['modifier']['http_method'] & constant('WebserviceRequest::HTTP_' . $this->method)) {
+                if (isset($fieldProperties['modifier']['modifier']) && $fieldProperties['modifier']['http_method'] & constant('WebserviceRequest::HTTP_' . $this->method)) {
                     $object->{$fieldProperties['modifier']['modifier']}();
                 }
             }
