@@ -1346,7 +1346,7 @@ class CarrierCore extends ObjectModel
      * @since 1.5.0
      *
      * @param string $range_table Range table
-     * @param mixed $alias
+     * @param string $alias
      *
      * @return string SQL quoer to get the delivery range table in this Shop(Group)
      */
