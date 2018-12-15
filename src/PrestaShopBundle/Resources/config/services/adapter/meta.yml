@@ -22,6 +22,8 @@ services:
 
     prestashop.adapter.meta.command_handler.edit_meta:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\EditMetaHandler'
+        arguments:
+          - '@validator'
         tags:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand'

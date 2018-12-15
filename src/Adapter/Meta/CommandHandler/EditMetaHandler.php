@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
 
 use Meta;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\EditMetaHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\CannotEditMetaException;
@@ -97,11 +98,25 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                 new DefaultLanguage()
             );
 
-            if (!empty($urlRewriteErrors) && 'index' !== $entity->page) {
+            if ('index' !== $entity->page && 0 === count($urlRewriteErrors)) {
                 throw new MetaConstraintException(
                     'The url rewrite is missing for the default language when editing meta record',
                     MetaConstraintException::INVALID_URL_REWRITE
                 );
+            }
+
+            foreach ($entity->url_rewrite as $idLang => $rewriteUrl) {
+                $errors = $this->validator->validate($rewriteUrl, new IsUrlRewrite());
+
+                if (0 === count($errors)) {
+                    throw new MetaConstraintException(
+                        sprintf(
+                            'Url rewrtie %s for language with id %s is not valid',
+                            $rewriteUrl,
+                            $idLang
+                        )
+                    );
+                }
             }
 
             if (false === $entity->update()) {

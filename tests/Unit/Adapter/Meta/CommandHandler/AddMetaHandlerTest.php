@@ -54,18 +54,7 @@ class AddMetaHandlerTest extends TestCase
         $this->mockedValidator = $this->createMock(ValidatorInterface::class);
     }
 
-    /**
-     * @dataProvider getInvalidPageNames
-     */
-    public function testItThrowsAnExceptionOnInvalidPageName($invalidPageName)
-    {
-        $this->expectException(MetaConstraintException::class);
-        $this->expectExceptionCode(MetaConstraintException::INVALID_PAGE_NAME);
-
-        $addMetaCommand = new AddMetaCommand($invalidPageName);
-    }
-
-    public function testItThrowsAnExceptionOnInvalidUrlRewrite()
+    public function testItThrowsAnExceptionOnMissingUrlRewriteForDefaultLanguage()
     {
         $this->expectException(MetaConstraintException::class);
         $this->expectExceptionCode(MetaConstraintException::INVALID_URL_REWRITE);
@@ -83,20 +72,5 @@ class AddMetaHandlerTest extends TestCase
 
         $command = new AddMetaCommand('not-index-page');
         $handler->handle($command);
-    }
-
-    public function getInvalidPageNames()
-    {
-        return [
-            [
-                null,
-            ],
-            [
-                '',
-            ],
-            [
-              [],
-            ],
-        ];
     }
 }
