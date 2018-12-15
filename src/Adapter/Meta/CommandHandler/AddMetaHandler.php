@@ -86,9 +86,9 @@ final class AddMetaHandler implements AddMetaHandlerInterface
             new DefaultLanguage()
         );
 
-        if ($urlRewriteErrors !== null && 'index' !== $command->getPageName()) {
+        if (!empty($urlRewriteErrors) && 'index' !== $command->getPageName()) {
             throw new MetaConstraintException(
-                'The url rewrite is missing in the default language',
+                'The url rewrite is missing for the default language when creating new meta record',
                 MetaConstraintException::INVALID_URL_REWRITE
             );
         }

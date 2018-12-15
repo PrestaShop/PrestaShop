@@ -27,33 +27,15 @@
 namespace Tests\Unit\Adapter\Meta\CommandHandler;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\AddMetaHandler;
-use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
- * Class AddMetaHandlerTest
+ * Class EditMetaHandlerTest
  */
-class AddMetaHandlerTest extends TestCase
+class EditMetaHandlerTest  extends TestCase
 {
-    /**
-     * @var HookDispatcherInterface
-     */
-    private $mockedHook;
-
-    /**
-     * @var ValidatorInterface
-     */
-    private $mockedValidator;
-
-    public function setUp()
-    {
-        $this->mockedHook = $this->createMock(HookDispatcherInterface::class);
-        $this->mockedValidator = $this->createMock(ValidatorInterface::class);
-    }
-
     /**
      * @dataProvider getInvalidPageNames
      */
@@ -62,27 +44,8 @@ class AddMetaHandlerTest extends TestCase
         $this->expectException(MetaConstraintException::class);
         $this->expectExceptionCode(MetaConstraintException::INVALID_PAGE_NAME);
 
-        $addMetaCommand = new AddMetaCommand($invalidPageName);
-    }
-
-    public function testItThrowsAnExceptionOnInvalidUrlRewrite()
-    {
-        $this->expectException(MetaConstraintException::class);
-        $this->expectExceptionCode(MetaConstraintException::INVALID_URL_REWRITE);
-
-        $this->mockedValidator
-            ->method('validate')
-            ->willReturn(['error'])
-        ;
-
-        $handler = new AddMetaHandler(
-            $this->mockedHook,
-            $this->mockedValidator,
-            1
-        );
-
-        $command = new AddMetaCommand('not-index-page');
-        $handler->handle($command);
+        $editMetaCommand = new EditMetaCommand(new MetaId(1));
+        $editMetaCommand->setPageName($invalidPageName);
     }
 
     public function getInvalidPageNames()
@@ -95,7 +58,7 @@ class AddMetaHandlerTest extends TestCase
                 '',
             ],
             [
-              [],
+                [],
             ],
         ];
     }

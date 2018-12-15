@@ -27,13 +27,16 @@
 namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
 
 use Meta;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\EditMetaHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\CannotEditMetaException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 use PrestaShopException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class EditMetaHandler is responsible for editing meta data,
@@ -41,13 +44,25 @@ use PrestaShopException;
 final class EditMetaHandler implements EditMetaHandlerInterface
 {
     /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
+     * @param ValidatorInterface $validator
+     */
+    public function __construct(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws MetaException
      */
     public function handle(EditMetaCommand $command)
     {
-        //todo: rewrite url validation
         try {
             $entity = new Meta($command->getMetaId()->getValue());
 
@@ -57,8 +72,13 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                 );
             }
 
-            $entity->page = $command->getPageName();
-            $entity->url_rewrite = $command->getRewriteUrl();
+            if (null !== $command->getPageName()) {
+                $entity->page = $command->getPageName();
+            }
+
+            if (null !== $command->getRewriteUrl()) {
+                $entity->url_rewrite = $command->getRewriteUrl();
+            }
 
             if (null !== $command->getPageTitle()) {
                 $entity->title = $command->getPageTitle();
@@ -70,6 +90,18 @@ final class EditMetaHandler implements EditMetaHandlerInterface
 
             if (null !== $command->getMetaKeywords()) {
                 $entity->keywords = $command->getMetaKeywords();
+            }
+
+            $urlRewriteErrors = $this->validator->validate(
+                $entity->url_rewrite,
+                new DefaultLanguage()
+            );
+
+            if (!empty($urlRewriteErrors) && 'index' !== $entity->page) {
+                throw new MetaConstraintException(
+                    'The url rewrite is missing for the default language when editing meta record',
+                    MetaConstraintException::INVALID_URL_REWRITE
+                );
             }
 
             if (false === $entity->update()) {
