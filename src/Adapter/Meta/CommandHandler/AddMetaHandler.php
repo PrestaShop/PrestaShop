@@ -45,9 +45,21 @@ final class AddMetaHandler implements AddMetaHandlerInterface
      */
     private $hookDispatcher;
 
-    public function __construct(HookDispatcherInterface $hookDispatcher)
-    {
+    /**
+     * @var int
+     */
+    private $defaultLanguageId;
+
+    /**
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param int $defaultLanguageId
+     */
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        $defaultLanguageId
+    ) {
         $this->hookDispatcher = $hookDispatcher;
+        $this->defaultLanguageId = $defaultLanguageId;
     }
 
     /**
@@ -65,7 +77,15 @@ final class AddMetaHandler implements AddMetaHandlerInterface
             $entity->title = $command->getPageTitle();
             $entity->description = $command->getMetaDescription();
             $entity->keywords = $command->getMetaKeywords();
-            $entity->url_rewrite = $command->getRewriteUrl();
+
+            $rewriteUrls = $command->getRewriteUrl();
+            foreach ($rewriteUrls as $idLang => $rewriteUrl) {
+                if (!$rewriteUrl) {
+                    $rewriteUrls[$idLang] = $rewriteUrls[$this->defaultLanguageId];
+                }
+            }
+
+            $entity->url_rewrite = $rewriteUrls;
             $entity->add();
 
             if (0 >= $entity->id) {

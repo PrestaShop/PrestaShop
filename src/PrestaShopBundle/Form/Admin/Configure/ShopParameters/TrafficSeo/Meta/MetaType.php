@@ -113,7 +113,7 @@ class MetaType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $formData = $event->getData();
 
-            if ('index' !== $formData['page_name']) {
+            if (isset($formData['page_name']) && 'index' !== $formData['page_name']) {
                 $form = $event->getForm();
                 $form->add('url_rewrite', TranslatableType::class, [
                     'error_bubbling' => false,

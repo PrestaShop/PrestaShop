@@ -14,8 +14,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\AddMetaHandler'
         arguments:
             - '@prestashop.core.hook.dispatcher'
-            - ''
-            - '@=service("prestashop.adapter.data_provider.language").getLanguages(false, false, true)'
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
         tags:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand'
