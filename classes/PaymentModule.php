@@ -1080,11 +1080,7 @@ abstract class PaymentModuleCore extends Module
             //  This is an "amount" reduction, not a reduction in % or a gift
             // THEN
             //  The voucher is cloned with a new value corresponding to the remainder
-            if ($cartRule->reduction_tax) {
-                $remainingValue = $cartRule->reduction_amount - $values['tax_incl'];
-            } else {
-                $remainingValue = $cartRule->reduction_amount - $values['tax_excl'];
-            }
+            $remainingValue = $cartRule->reduction_amount - $values[$cartRule->reduction_tax ? 'tax_incl' : 'tax_excl'];
             if (count($order_list) == 1 && $remainingValue > 0 && $cartRule->partial_use == 1 && $cartRule->reduction_amount > 0) {
                 // Create a new voucher from the original
                 $voucher = new CartRule((int) $cartRule->id); // We need to instantiate the CartRule without lang parameter to allow saving it
