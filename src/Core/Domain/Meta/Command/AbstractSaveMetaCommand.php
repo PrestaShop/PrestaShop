@@ -34,8 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 abstract class AbstractSaveMetaCommand
 {
     /**
-     * @todo: finish all validations
-     * 
      * Validates page name.
      *
      * @param string $pageName
@@ -44,9 +42,32 @@ abstract class AbstractSaveMetaCommand
      */
     protected function validatePageName($pageName)
     {
-        if (!is_string($pageName) || !$pageName) {
+        if (!is_string($pageName) || !$pageName || !preg_match('/^[a-zA-Z0-9_.-]+$/', $pageName)) {
             throw new MetaConstraintException(
                 sprintf('Invalid Meta page name %s', var_export($pageName, true)),
+                MetaConstraintException::INVALID_PAGE_NAME
+            );
+        }
+    }
+
+    /**
+     * @param int $languageId
+     * @param string $value
+     *
+     * @throws MetaConstraintException
+     */
+    protected function validateName($languageId, $value)
+    {
+        $regex = '/^[^<>={}]*$/u';
+
+        if ($value && !preg_match('/^[^<>={}]*$/u', $value)) {
+            throw new MetaConstraintException(
+                sprintf(
+                    'Value %s for language id %s did not passed the regex expression %s',
+                    $value,
+                    $languageId,
+                    $regex
+                ),
                 MetaConstraintException::INVALID_PAGE_NAME
             );
         }

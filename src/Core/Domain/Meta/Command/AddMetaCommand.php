@@ -90,9 +90,15 @@ class AddMetaCommand extends AbstractSaveMetaCommand
      * @param string[] $pageTitle
      *
      * @return self
+     *
+     * @throws MetaConstraintException
      */
     public function setPageTitle($pageTitle)
     {
+        foreach ($pageTitle as $idLang => $title) {
+            $this->validateName($idLang, $title);
+        }
+
         $this->pageTitle = $pageTitle;
 
         return $this;
@@ -110,9 +116,15 @@ class AddMetaCommand extends AbstractSaveMetaCommand
      * @param string[] $metaDescription
      *
      * @return self
+     *
+     * @throws MetaConstraintException
      */
     public function setMetaDescription($metaDescription)
     {
+        foreach ($metaDescription as $idLang => $description) {
+            $this->validateName($idLang, $description);
+        }
+
         $this->metaDescription = $metaDescription;
 
         return $this;
@@ -130,10 +142,17 @@ class AddMetaCommand extends AbstractSaveMetaCommand
      * @param string[] $metaKeywords
      *
      * @return self
+     *
+     * @throws MetaConstraintException
      */
     public function setMetaKeywords($metaKeywords)
     {
+        foreach ($metaKeywords as $idLang => $metaKeyword) {
+            $this->validateName($idLang, $metaKeyword);
+        }
+
         $this->metaKeywords = $metaKeywords;
+
         return $this;
     }
 
