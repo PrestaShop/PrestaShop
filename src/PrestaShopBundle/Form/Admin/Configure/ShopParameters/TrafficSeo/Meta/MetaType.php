@@ -36,6 +36,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Class MetaType is responsible for providing form fields for Shop parameters -> Traffic & Seo ->
@@ -80,20 +82,77 @@ class MetaType extends AbstractType
                     $this->trans('Module pages',[],  'Admin.Shopparameters.Feature') =>
                         $this->modulePageChoices,
                 ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            [
+                                sprintf('"%s"', $this->trans('Page name', [], 'Admin.Shopparameters.Feature')),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9_.-]+$/',
+                        'message' => $this->trans(
+                            'The %s field is not valid',
+                            [
+                                sprintf('"%s"', $this->trans('Page name', [], 'Admin.Shopparameters.Feature')),
+                            ],
+                            'Admin.Notifications.Error'
+                        )
+                    ])
+                ],
                 'choice_translation_domain' => false,
             ])
             ->add('page_title', TranslatableType::class, [
                 'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans(
+                                'The %s field is not valid',
+                                [
+                                    sprintf('"%s"', $this->trans('Page title', [], 'Admin.Shopparameters.Feature')),
+                                ],
+                                'Admin.Notifications.Error'
+                            )
+                        ]),
+                    ],
                     'required' => false,
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
                 'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans(
+                                'The %s field is not valid',
+                                [
+                                    sprintf('"%s"', $this->trans('Meta description', [], 'Admin.Global')),
+                                ],
+                                'Admin.Notifications.Error'
+                            )
+                        ]),
+                    ],
                     'required' => false,
                 ],
             ])
             ->add('meta_keywords', TranslatableType::class, [
                 'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans(
+                                'The %s field is not valid',
+                                [
+                                    sprintf('"%s"', $this->trans('Meta keywords', [], 'Admin.Global')),
+                                ],
+                                'Admin.Notifications.Error'
+                            )
+                        ]),
+                    ],
                     'attr' => [
                         'class' => 'js-token-field',
                         'placeholder' => $this->trans('Add tag', [],  'Admin.Actions'),

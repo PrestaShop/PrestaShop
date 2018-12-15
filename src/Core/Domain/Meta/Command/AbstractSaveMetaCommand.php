@@ -60,15 +60,15 @@ abstract class AbstractSaveMetaCommand
     {
         $regex = '/^[^<>={}]*$/u';
 
-        if ($value && !preg_match('/^[^<>={}]*$/u', $value)) {
+        if ($value && !preg_match($regex, $value)) {
             throw new MetaConstraintException(
                 sprintf(
-                    'Value %s for language id %s did not passed the regex expression %s',
+                    'Value "%s" for language id %s did not passed the regex expression: %s',
                     $value,
                     $languageId,
                     $regex
                 ),
-                MetaConstraintException::INVALID_PAGE_NAME
+                MetaConstraintException::INVALID_META_NAME
             );
         }
     }
