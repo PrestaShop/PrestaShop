@@ -92,6 +92,7 @@ class TranslatableType extends AbstractType
         $resolver->setAllowedTypes('locales', 'array');
         $resolver->setAllowedTypes('options', 'array');
         $resolver->setAllowedTypes('type', 'string');
+        $resolver->setAllowedTypes('error_bubbling', 'bool');
     }
 
     /**

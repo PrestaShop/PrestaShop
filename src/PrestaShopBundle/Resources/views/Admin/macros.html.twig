@@ -107,10 +107,7 @@
       {% set errors = errors|merge([parentError.message]) %}
     {% endfor %}
 
-    {{ dump(form.vars.errors) }}
-
     {% for child in form.children %}
-      {{ dump(child.vars.errors) }}
       {% for error in child.vars.errors %}
         {% set errors = errors|merge([error.message]) %}
       {% endfor %}
