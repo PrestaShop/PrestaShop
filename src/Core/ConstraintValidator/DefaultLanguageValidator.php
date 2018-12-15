@@ -42,18 +42,11 @@ class DefaultLanguageValidator extends ConstraintValidator
     private $defaultLanguageId;
 
     /**
-     * @var string
-     */
-    private $defaultLanguageName;
-
-    /**
      * @param int $defaultLanguageId
-     * @param string $defaultLanguageName
      */
-    public function __construct($defaultLanguageId, $defaultLanguageName)
+    public function __construct($defaultLanguageId)
     {
         $this->defaultLanguageId = $defaultLanguageId;
-        $this->defaultLanguageName = $defaultLanguageName;
     }
 
     /**
@@ -72,11 +65,10 @@ class DefaultLanguageValidator extends ConstraintValidator
         if (empty($value[$this->defaultLanguageId])) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
-                ->setParameters([
-                    '%field_name%' =>
-                        null !== $this->context->getObject() ? $this->context->getObject()->getName() : '',
-                    '%lang%' => $this->defaultLanguageName,
-                ])
+                ->setParameter(
+                    '%field_name%',
+                    $this->context->getObject() ? $this->context->getObject()->getName() : ''
+                )
                 ->addViolation()
             ;
         }

@@ -42,15 +42,9 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
      */
     private $defaultLanguageId;
 
-    /**
-     * @var string
-     */
-    private $defaultLanguageName;
-
     public function setUp()
     {
         $this->defaultLanguageId = 1;
-        $this->defaultLanguageName = 'Lithuanian (LT)';
 
         parent::setUp();
     }
@@ -91,10 +85,7 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate($valueWithMissingDefaultLanguage, new DefaultLanguage());
 
         $this->buildViolation((new DefaultLanguage())->message)
-            ->setParameters([
-                '%field_name%' => '',
-                '%lang%' => $this->defaultLanguageName,
-            ])
+            ->setParameter('%field_name%', '')
             ->assertRaised()
         ;
     }
@@ -142,6 +133,6 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator()
     {
-        return new DefaultLanguageValidator($this->defaultLanguageId, $this->defaultLanguageName);
+        return new DefaultLanguageValidator($this->defaultLanguageId);
     }
 }

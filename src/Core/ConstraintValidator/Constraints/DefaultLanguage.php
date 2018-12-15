@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class DefaultLanguage extends Constraint
 {
-    public $message = 'The field %field_name% is required at least in %lang%.';
+    public $message = 'The field %field_name% is required at least in your default language.';
 
     /**
      * {@inheritdoc}

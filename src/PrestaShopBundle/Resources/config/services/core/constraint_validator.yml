@@ -12,7 +12,6 @@ services:
   prestashop.core.constraint_validator.default_language_validator:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\DefaultLanguageValidator'
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
-      - '@=service("prestashop.adapter.legacy.context").getLanguage().name'
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
     tags:
       - { name: validator.constraint_validator }

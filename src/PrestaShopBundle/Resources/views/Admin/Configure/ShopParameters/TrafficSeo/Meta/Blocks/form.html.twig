@@ -89,7 +89,8 @@
               </label>
               <div class="col-sm">
                 {#todo: individual inputs are not being highlighted#}
-                {{ ps.form_widget_with_error(metaForm.url_rewrite, {attr: {novalidate: 'novalidate'}}) }}
+                {#todo: class attribute does not work inside form_widget_with_error #}
+                {{ ps.form_widget_with_error(metaForm.url_rewrite) }}
               </div>
             </div>
             {{ form_rest(metaForm) }}
