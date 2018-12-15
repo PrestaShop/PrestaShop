@@ -27,13 +27,16 @@
 namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
 
 use Meta;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\AddMetaHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\CannotAddMetaException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class SaveMetaHandler is responsible for saving meta data.
@@ -51,15 +54,23 @@ final class AddMetaHandler implements AddMetaHandlerInterface
     private $defaultLanguageId;
 
     /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
      * @param HookDispatcherInterface $hookDispatcher
+     * @param ValidatorInterface $validator
      * @param int $defaultLanguageId
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
+        ValidatorInterface $validator,
         $defaultLanguageId
     ) {
         $this->hookDispatcher = $hookDispatcher;
         $this->defaultLanguageId = $defaultLanguageId;
+        $this->validator = $validator;
     }
 
     /**
@@ -70,7 +81,18 @@ final class AddMetaHandler implements AddMetaHandlerInterface
      */
     public function handle(AddMetaCommand $command)
     {
-        //todo: copy from default language the values to the empty link rewrites
+        $urlRewriteErrors = $this->validator->validate(
+            $command->getRewriteUrl(),
+            new DefaultLanguage()
+        );
+
+        if ($urlRewriteErrors !== null && 'index' !== $command->getPageName()) {
+            throw new MetaConstraintException(
+                'The url rewrite is missing in the default language',
+                MetaConstraintException::INVALID_URL_REWRITE
+            );
+        }
+
         try {
             $entity = new Meta();
             $entity->page = $command->getPageName();

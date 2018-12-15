@@ -14,6 +14,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\AddMetaHandler'
         arguments:
             - '@prestashop.core.hook.dispatcher'
+            - '@validator'
             - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
         tags:
             - name: 'tactician.handler'
