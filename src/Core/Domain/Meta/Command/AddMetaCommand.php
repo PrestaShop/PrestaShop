@@ -169,7 +169,7 @@ class AddMetaCommand extends AbstractSaveMetaCommand
      *
      * @return self
      */
-    public function setRewriteUrl($rewriteUrl)
+    public function setRewriteUrl(array $rewriteUrl)
     {
         $this->rewriteUrl = $rewriteUrl;
 
