@@ -422,6 +422,14 @@ class CommonClient {
     return this.client.alertDismiss();
   }
 
+  getText(selector) {
+    return this.client.getText(selector);
+  }
+
+  alertText() {
+    return this.client.alertText();
+  }
+
   showElement(className, order) {
     return this.client
       .execute(function (className, order) {

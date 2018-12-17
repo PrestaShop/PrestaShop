@@ -2,17 +2,22 @@ const {AccessPageBO} = require('../../../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../../../selectors/FO/access_page');
 const {languageFO} = require('../../../../../selectors/FO/index');
 const commonLocalization = require('../../../../common_scenarios/localization');
+const commonCurrency = require('../../../../common_scenarios/currency');
 const {Localization} = require('../../../../../selectors/BO/international/localization');
 const {accountPage} = require('../../../../../selectors/FO/add_account_page');
 var data = require('../../../../../datas/country_language');
 let promise = Promise.resolve();
 
 let defaultLocalUnitsData = {
-  weight: 'kg',
-  distance: 'km',
-  volume: 'cl',
-  dimension: 'cm'
-};
+    weight: 'kg',
+    distance: 'km',
+    volume: 'cl',
+    dimension: 'cm'
+  },
+  currencyData = {
+    name: 'USD',
+    exchangeRate: '1.13'
+  };
 
 scenario('"Configuration"', () => {
     scenario('Login in the Back Office', client => {
@@ -89,6 +94,12 @@ scenario('"Configuration"', () => {
     }, 'international');
     commonLocalization.configureLocalization(true, false, 'Euro');
     commonLocalization.localUnits(defaultLocalUnitsData, 'cm', 'kg', 2);
+    commonLocalization.deleteLanguage('Italian', false);
+    scenario('Delete the "USD" currency', () => {
+      commonCurrency.accessToCurrencies();
+      commonCurrency.checkCurrencyByIsoCode(currencyData);
+      commonCurrency.deleteCurrency(true, '×\nSuccessful deletion.');
+    }, 'common_client');
     scenario('Logout from the Back Office', client => {
       test('should logout successfully from Back Office', () => client.signOutBO());
     }, 'common_client');

@@ -28,14 +28,15 @@ scenario('"Local units"', () => {
         .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
         .then(() => {
           if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
           }
         });
     });
     test('should check and click on "Stop the OnBoarding" button', () => {
       return promise
         .then(() => client.isVisible(OnBoarding.stop_button))
-        .then(() => client.stopOnBoarding(OnBoarding.stop_button));
+        .then(() => client.stopOnBoarding(OnBoarding.stop_button))
+        .then(() => client.pause(2000));
     });
   }, 'onboarding');
   commonLocalization.localUnits(secondLocalUnitsData, 'in', 'lb');

@@ -19,6 +19,12 @@ const firstCurrencyData = {
     name: 'EUR',
     exchangeRate: '0,86'
   };
+let firstLocalUnitsData = {
+  weight: 'kg',
+  distance: 'km',
+  volume: 'cl',
+  dimension: 'cm'
+};
 
 scenario('"Import a localization pack and check you can use it"', () => {
   scenario('Login in the Back Office', client => {
@@ -59,7 +65,7 @@ scenario('"Import a localization pack and check you can use it"', () => {
   commonLocalization.checkExistenceLanguage('Italian');
   commonCurrency.accessToCurrencies();
   commonCurrency.checkCurrencyByIsoCode(thirdCurrencyData);
-  scenario('Delete created languages and currencies', () => {
+  scenario('Delete created languages and currencies and edit default local units', () => {
     commonLocalization.deleteLanguage('Arabic', false);
     commonLocalization.deleteLanguage('Italian', false);
     commonCurrency.accessToCurrencies();
@@ -70,6 +76,7 @@ scenario('"Import a localization pack and check you can use it"', () => {
     scenario('Click on "Reset" button', client => {
       test('should click on reset button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
     }, 'common_client');
+    commonLocalization.localUnits(firstLocalUnitsData, 'cm', 'kg', 2);
   }, 'common_client');
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from Back Office', () => client.signOutBO());
