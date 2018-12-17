@@ -16,7 +16,7 @@ git checkout $BRANCH
 mkdir -p "${REPORT_PATH}/campaigns"
 
 cd "${DIR_PATH}/tests/E2E"
-for test_file in test/campaigns/regular/* ; do
+for test_file in test/campaigns/full/* ; do
   if [ -f "${test_file}" ]; then
     docker stop $(docker ps -qa)
 
