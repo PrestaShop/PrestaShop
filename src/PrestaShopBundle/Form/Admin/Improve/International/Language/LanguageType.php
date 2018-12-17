@@ -39,6 +39,19 @@ use Symfony\Component\Form\FormBuilderInterface;
 class LanguageType extends AbstractType
 {
     /**
+     * @var bool
+     */
+    private $isMultistoreFeatureActive;
+
+    /**
+     * @param bool $isMultistoreFeatureActive
+     */
+    public function __construct($isMultistoreFeatureActive)
+    {
+        $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -49,11 +62,18 @@ class LanguageType extends AbstractType
             ->add('tag_ietf', TextType::class)
             ->add('short_date_format', TextType::class)
             ->add('full_date_format', TextType::class)
-            ->add('flag_image', FileType::class)
-            ->add('no_picture_image', FileType::class)
+            ->add('flag_image', FileType::class, [
+                'required' => false,
+            ])
+            ->add('no_picture_image', FileType::class, [
+                'required' => false,
+            ])
             ->add('is_rtl', SwitchType::class)
             ->add('is_active', SwitchType::class)
-            ->add('shop_association', ShopChoiceTreeType::class)
         ;
+
+        if ($this->isMultistoreFeatureActive) {
+            $builder->add('shop_association', ShopChoiceTreeType::class);
+        }
     }
 }
