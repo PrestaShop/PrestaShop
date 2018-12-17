@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Localization\RTL;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
- * Class StyleSheetStyleSheetProcessorFactory
+ * Class StyleSheetProcessorFactory
  */
-final class StyleSheetStyleSheetProcessorFactory implements StyleSheetProcessorFactoryInterface
+final class StyleSheetProcessorFactory implements StyleSheetProcessorFactoryInterface
 {
     /**
      * @var ConfigurationInterface
@@ -61,14 +61,18 @@ final class StyleSheetStyleSheetProcessorFactory implements StyleSheetProcessorF
 
         $themesDir = $this->configuration->get('_PS_ROOT_DIR_') . DIRECTORY_SEPARATOR . 'themes';
 
+        // @todo: improve modules configuration
+        // see: https://github.com/PrestaShop/PrestaShop/pull/11169#discussion_r231824489
+        $modulesToProcess = [
+            $moduleDir . 'gamification',
+            $moduleDir . 'welcome',
+            $moduleDir . 'cronjobs',
+        ];
+
         return new Processor(
             $adminDir,
             $themesDir,
-            [
-                $moduleDir . 'gamification',
-                $moduleDir . 'welcome',
-                $moduleDir . 'cronjobs',
-            ]
+            $modulesToProcess
         );
     }
 }
