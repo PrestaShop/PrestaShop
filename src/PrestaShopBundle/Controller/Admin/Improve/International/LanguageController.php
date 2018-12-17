@@ -65,10 +65,17 @@ class LanguageController extends AbstractAdminController
      */
     public function createAction(Request $request)
     {
+        $languageFormHandler = $this->get('prestashop.core.form.identifiable_object.language_form_handler');
         $languageFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.language_form_builder');
 
         $languageForm = $languageFormBuilder->getForm();
         $languageForm->handleRequest($request);
+
+        $result = $languageFormHandler->handle($languageForm);
+
+        if (null !== $result->getIdentifiableObjectId()) {
+            return $this->redirectToRoute('admin_languages_index');
+        }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Language/create.html.twig', [
             'languageForm' => $languageForm->createView(),

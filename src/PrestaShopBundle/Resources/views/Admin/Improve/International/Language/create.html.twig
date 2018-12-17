@@ -39,7 +39,10 @@
         <div class="card-block row">
           <div class="card-text">
             <div class="form-group row">
-              <label for="{{ languageForm.name.vars.id }}" class="form-control-label">{{ 'Name'|trans({}, 'Admin.Global') }}</label>
+              <label for="{{ languageForm.name.vars.id }}" class="form-control-label">
+                <span class="text-danger">*</span>
+                {{ 'Name'|trans({}, 'Admin.Global') }}
+              </label>
 
               <div class="col-sm">
                 {{ form_widget(languageForm.name) }}
@@ -48,6 +51,7 @@
 
             <div class="form-group row">
               <label for="{{ languageForm.iso_code.vars.id }}" class="form-control-label">
+                <span class="text-danger">*</span>
                 {{ 'ISO code'|trans({}, 'Admin.International.Feature') }}
               </label>
 
@@ -61,6 +65,7 @@
 
             <div class="form-group row">
               <label for="{{ languageForm.tag_ietf.vars.id }}" class="form-control-label">
+                <span class="text-danger">*</span>
                 {{ 'Language code'|trans({}, 'Admin.International.Feature') }}
               </label>
 
@@ -74,6 +79,7 @@
 
             <div class="form-group row">
               <label for="{{ languageForm.short_date_format.vars.id }}" class="form-control-label">
+                <span class="text-danger">*</span>
                 {{ 'Date format'|trans({}, 'Admin.International.Feature') }}
               </label>
 
@@ -87,6 +93,7 @@
 
             <div class="form-group row">
               <label for="{{ languageForm.full_date_format.vars.id }}" class="form-control-label">
+                <span class="text-danger">*</span>
                 {{ 'Date format (full)'|trans({}, 'Admin.International.Feature') }}
               </label>
 
@@ -100,6 +107,7 @@
 
             <div class="form-group row">
               <label for="{{ languageForm.flag_image.vars.id }}" class="form-control-label">
+                <span class="text-danger">*</span>
                 {{ 'Flag'|trans({}, 'Admin.International.Feature') }}
               </label>
 
@@ -151,15 +159,17 @@
               </div>
             </div>
 
-            <div class="form-group row">
-              <label for="{{ languageForm.shop_association.vars.id }}" class="form-control-label">
-                {{ 'Shop association'|trans({}, 'Admin.Global') }}
-              </label>
+            {% if languageForm.shop_association is defined %}
+              <div class="form-group row">
+                <label for="{{ languageForm.shop_association.vars.id }}" class="form-control-label">
+                  {{ 'Shop association'|trans({}, 'Admin.Global') }}
+                </label>
 
-              <div class="col-sm">
-                {{ form_widget(languageForm.shop_association) }}
+                <div class="col-sm">
+                  {{ form_widget(languageForm.shop_association) }}
+                </div>
               </div>
-            </div>
+            {% endif %}
           </div>
         </div>
         <div class="card-footer">

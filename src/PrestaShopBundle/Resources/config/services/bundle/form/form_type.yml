@@ -672,3 +672,10 @@ services:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
+
+    form.type.international.language:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Language\LanguageType'
+        arguments:
+            - '@=service("prestashop.adapter.multistore_feature").isActive()'
+        tags:
+            - { name: form.type }
