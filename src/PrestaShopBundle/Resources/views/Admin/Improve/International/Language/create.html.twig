@@ -1,0 +1,179 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {{ form_start(languageForm) }}
+      <div class="card">
+        <h3 class="card-header">
+          <i class="material-icons">language</i>
+          {{ 'Languages'|trans({}, 'Admin.Global') }}
+        </h3>
+        <div class="card-block row">
+          <div class="card-text">
+            <div class="form-group row">
+              <label for="{{ languageForm.name.vars.id }}" class="form-control-label">{{ 'Name'|trans({}, 'Admin.Global') }}</label>
+
+              <div class="col-sm">
+                {{ form_widget(languageForm.name) }}
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="{{ languageForm.iso_code.vars.id }}" class="form-control-label">
+                {{ 'ISO code'|trans({}, 'Admin.International.Feature') }}
+              </label>
+
+              <div class="col-sm">
+                {{ form_widget(languageForm.iso_code) }}
+                <small class="form-text">
+                  {{ 'Two-letter ISO code (e.g. FR, EN, DE).'|trans({}, 'Admin.International.Help') }}
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="{{ languageForm.tag_ietf.vars.id }}" class="form-control-label">
+                {{ 'Language code'|trans({}, 'Admin.International.Feature') }}
+              </label>
+
+              <div class="col-sm">
+                {{ form_widget(languageForm.tag_ietf) }}
+                <small class="form-text">
+                  {{ 'IETF language tag (e.g. en-US, pt-BR).'|trans({}, 'Admin.International.Help') }}
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="{{ languageForm.short_date_format.vars.id }}" class="form-control-label">
+                {{ 'Date format'|trans({}, 'Admin.International.Feature') }}
+              </label>
+
+              <div class="col-sm">
+                {{ form_widget(languageForm.short_date_format) }}
+                <small class="form-text">
+                  {{ 'Short date format (e.g., Y-m-d).'|trans({}, 'Admin.International.Help') }}
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="{{ languageForm.full_date_format.vars.id }}" class="form-control-label">
+                {{ 'Date format (full)'|trans({}, 'Admin.International.Feature') }}
+              </label>
+
+              <div class="col-sm">
+                {{ form_widget(languageForm.full_date_format) }}
+                <small class="form-text">
+                  {{ 'Full date format (e.g., Y-m-d H:i:s).'|trans({}, 'Admin.International.Help') }}
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="{{ languageForm.flag_image.vars.id }}" class="form-control-label">
+                {{ 'Flag'|trans({}, 'Admin.International.Feature') }}
+              </label>
+
+              <div class="col-sm">
+                {{ form_widget(languageForm.flag_image) }}
+                <small class="form-text">
+                  {{ 'Upload the country flag from your computer.'|trans({}, 'Admin.International.Help') }}
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="{{ languageForm.no_picture_image.vars.id }}" class="form-control-label">
+                {{ '"No-picture" image'|trans({}, 'Admin.International.Feature') }}
+              </label>
+
+              <div class="col-sm">
+                {{ form_widget(languageForm.no_picture_image) }}
+                <small class="form-text">
+                  {{ 'Image is displayed when "no picture is found".'|trans({}, 'Admin.International.Help') }}
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="{{ languageForm.is_rtl.vars.id }}" class="form-control-label">
+                {{ 'Is RTL language'|trans({}, 'Admin.International.Feature') }}
+              </label>
+
+              <div class="col-sm">
+                {{ form_widget(languageForm.is_rtl) }}
+                <small class="form-text">
+                  {{ 'Enable if this language is read from right to left.'|trans({}, 'Admin.International.Help') }}
+                  {{ '(Experimental: your theme must be compliant with RTL languages).'|trans({}, 'Admin.International.Help') }}
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="{{ languageForm.is_active.vars.id }}" class="form-control-label">
+                {{ 'Status'|trans({}, 'Admin.Global') }}
+              </label>
+
+              <div class="col-sm">
+                {{ form_widget(languageForm.is_active) }}
+                <small class="form-text">
+                  {{ 'Activate this language.'|trans({}, 'Admin.International.Feature') }}
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="{{ languageForm.shop_association.vars.id }}" class="form-control-label">
+                {{ 'Shop association'|trans({}, 'Admin.Global') }}
+              </label>
+
+              <div class="col-sm">
+                {{ form_widget(languageForm.shop_association) }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a href="{{ path('admin_languages_index') }}" class="btn btn-outline-secondary">
+            <i class="material-icons">cancel</i>
+            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+          </a>
+          <button class="btn btn-primary float-right">
+            <i class="material-icons">save</i>
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      </div>
+      {{ form_end(languageForm) }}
+    </div>
+  </div>
+{% endblock %}
