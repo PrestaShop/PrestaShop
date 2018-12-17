@@ -153,6 +153,7 @@ services:
             - '@prestashop.admin.import.form_builder'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.import.form_data_provider'
+            - []
             - 'ImportPage'
 
     prestashop.admin.import_data_configuration.form_handler:

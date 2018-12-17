@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
 use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -35,17 +35,17 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 /**
  * Class ImportFormDataProvider is responsible for providing Import's 1st step form data.
  */
-final class ImportFormDataProvider implements ImportFormDataProviderInterface
+final class ImportFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * @var FileFinder
-     */
-    private $importFileFinder;
-
     /**
      * @var SessionInterface
      */
     private $session;
+
+    /**
+     * @var FileFinder
+     */
+    private $importFileFinder;
 
     /**
      * @var null|RequestStack current request
@@ -67,7 +67,7 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData(ImportConfigInterface $importConfig)
+    public function getData()
     {
         // If import entity is available in the query - grab it and preselect in the form,
         // otherwise - take it from the session.
@@ -95,13 +95,18 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Data is persisted into session,
+     * so when user comes from 2nd import step to 1st one, data is still saved.
+     *
+     * @param array $data
+     *
+     * @return array
      */
     public function setData(array $data)
     {
         $errors = [];
 
-        if (empty($data['csv'])) {
+        if (!isset($data['csv']) || empty($data['csv'])) {
             $errors[] = [
                 'key' => 'To proceed, please upload a file first.',
                 'domain' => 'Admin.Advparameters.Notification',
@@ -124,18 +129,18 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
     }
 
     /**
-     * Get selected file after confirming that it is available in file system.
-     *
-     * @param ImportConfigInterface $importConfig
+     * Get selected file from session if it exists
+     * and check if file is available in file system.
      *
      * @return string|null
      */
-    private function getSelectedFile(ImportConfigInterface $importConfig)
+    protected function getSelectedFile()
     {
         $importFiles = $this->importFileFinder->getImportFileNames();
-        $selectedFile = $importConfig->getFileName();
+        $selectedFile = $this->session->get('csv');
 
         if ($selectedFile && !in_array($selectedFile, $importFiles)) {
+            $this->session->remove('csv');
             $selectedFile = null;
         }
 

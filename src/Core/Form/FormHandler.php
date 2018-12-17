@@ -67,8 +67,6 @@ class FormHandler implements FormHandlerInterface
     protected $formName;
 
     /**
-     * FormHandler constructor.
-     *
      * @param FormBuilderInterface $formBuilder
      * @param HookDispatcherInterface $hookDispatcher
      * @param FormDataProviderInterface $formDataProvider
