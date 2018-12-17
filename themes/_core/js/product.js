@@ -93,7 +93,7 @@ function getProductUpdateUrl() {
  */
 function updateProduct(event, eventType, updateUrl) {
   const $productActions = $('.product-actions');
-  const $quantityWantedInput = $productActions.find('#quantity_wanted:first');
+  const $quantityWantedInput = $productActions.find('#quantity_wanted');
   const formSerialized = $productActions.find('form:first').serialize();
   let preview = psGetRequestParameter('preview');
 
@@ -327,5 +327,14 @@ $(document).ready(() => {
       document.title,
       args.product_url
     );
+  });
+
+  prestashop.on('updateCart', (event) => {
+    if (!event || !event.reason || event.reason.linkAction !== 'add-to-cart' ) {
+      return;
+    }
+    const $quantityWantedInput = $('#quantity_wanted');
+    //Force value to 1, it will automatically trigger updateProduct and reset the appropriate min value if needed
+    $quantityWantedInput.val(1);
   });
 });
