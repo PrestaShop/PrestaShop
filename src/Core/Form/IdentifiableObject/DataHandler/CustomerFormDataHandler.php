@@ -148,14 +148,6 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             return (int) $groupId;
         }, $data['group_ids']);
 
-        // if birthday is not datetime
-        // it means it was reset in form
-        if (!$data['birthday'] instanceof DateTime) {
-            $data['birthday'] = Birthday::EMPTY_BIRTHDAY;
-        } else {
-            $data['birthday'] = $data['birthday']->format('Y-m-d');
-        }
-
         $command = (new EditCustomerCommand($customerId))
             ->setGenderId($data['gender_id'])
             ->setEmail($data['email'])
@@ -167,6 +159,10 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             ->setGroupIds($groupIds)
             ->setBirthday($data['birthday'])
         ;
+
+        if (null !== $data['password']) {
+            $command->setPassword($data['password']);
+        }
 
         if ($this->isB2bFeatureEnabled) {
             $command
