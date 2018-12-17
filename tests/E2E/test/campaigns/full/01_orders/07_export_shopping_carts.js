@@ -16,5 +16,6 @@ scenario('Export shopping carts in the Back Office', () => {
     test('should get the "Shopping Carts" number', () => client.getShoppingCartNumber(ShoppingCart.id_shopping_carts));
     test('should get the "Shopping Carts" info', () => orderCommonScenarios.getShoppingCartsInfo(client));
     test('should export the "Shopping Carts" then check the exported file information', () => orderCommonScenarios.checkExportedFile(client));
+    test('should delete the downloaded file', () => client.deleteFile(global.downloadsFolderPath, global.exportCartFileName, "", 2000));
   }, 'order');
 }, 'order', true);

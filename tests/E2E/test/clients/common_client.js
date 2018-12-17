@@ -3,6 +3,7 @@ const {languageFO} = require('../selectors/FO/index');
 let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
+const exec = require('child_process').exec;
 
 global.tab = [];
 global.isOpen = false;
@@ -314,10 +315,10 @@ class CommonClient {
    * @param text
    * @returns {*}
    */
-  checkDocument(folderPath, fileName, text) {
-    pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
+  async checkDocument(folderPath, fileName, text) {
+   await pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
       global.data = global.data + data;
-      global.indexText = global.data.indexOf(text)
+      global.indexText = global.data.indexOf(text);
     });
 
     return this.client
@@ -679,8 +680,16 @@ class CommonClient {
       .waitForExistAndClick(selector.update_status_button)
   }
 
-  deleteFile(folderPath, fileName, pause = 0) {
-    fs.unlinkSync(folderPath+fileName);
+  getDocumentName(selector) {
+    return this.client
+      .then(() => this.client.getText(selector))
+      .then((name) => {
+        global.invoiceFileName = name.replace('#', '')
+      });
+  }
+
+  deleteFile(folderPath, fileName, extension = "", pause = 0) {
+    fs.unlinkSync(folderPath + fileName + extension);
     return this.client
       .pause(pause)
   }
