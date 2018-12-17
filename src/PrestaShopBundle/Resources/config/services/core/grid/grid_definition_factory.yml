@@ -22,7 +22,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'email', 'action': 'index'})"
-            - "@=service('router').generate('admin_email')"
+            - "@=service('router').generate('admin_emails_index')"
             - '@prestashop.core.form.choice_provider.language_by_id'
         public: true
 
@@ -31,7 +31,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'sqlmanager', 'action': 'index'})"
-            - "@=service('router').generate('admin_sql_request')"
+            - "@=service('router').generate('admin_sql_requests_index')"
         public: true
 
     prestashop.core.grid.definition.factory.backup:
