@@ -28,16 +28,20 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Language;
 
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Builds language's add/edit form
  */
 class LanguageType extends AbstractType
 {
+    use TranslatorAwareTrait;
+
     /**
      * @var bool
      */
@@ -57,23 +61,69 @@ class LanguageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('iso_code', TextType::class)
-            ->add('tag_ietf', TextType::class)
-            ->add('short_date_format', TextType::class)
-            ->add('full_date_format', TextType::class)
+            ->add('name', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ])
+            ->add('iso_code', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ])
+            ->add('tag_ietf', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ])
+            ->add('short_date_format', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ])
+            ->add('full_date_format', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ])
             ->add('flag_image', FileType::class, [
-                'required' => false,
+                //'required' => false,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ])
             ->add('no_picture_image', FileType::class, [
+                //'required' => false,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ])
+            ->add('is_rtl', SwitchType::class, [
                 'required' => false,
             ])
-            ->add('is_rtl', SwitchType::class)
-            ->add('is_active', SwitchType::class)
+            ->add('is_active', SwitchType::class, [
+                'required' => false,
+            ])
         ;
 
         if ($this->isMultistoreFeatureActive) {
-            $builder->add('shop_association', ShopChoiceTreeType::class);
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'required' => false,
+            ]);
         }
     }
 }
