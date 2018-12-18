@@ -9,8 +9,8 @@
  * http://docs.jquery.com/UI/Autocomplete#theming
  */
 .ui-autocomplete {
-	position: absolute;
-	top: 0;
-	left: 0;
-	cursor: default;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: default;
 }

@@ -33,14 +33,14 @@ i.mce-i-checkbox {
     font-size: 16px;
     line-height: 16px;
     display: inline;
-    color : #6C868E;
+    color: #6c868e;
 }
 
 .mce-checked i.mce-i-checkbox {
     font-size: 16px;
     line-height: 16px;
     text-indent: -52px;
-    Color : #25B9D7;
+    color: #25b9d7;
 }
 .mce-widget button:hover {
     background-color: transparent !important;
@@ -62,10 +62,11 @@ i.mce-i-checkbox {
     color: #24abce !important;
 }
 
-.mce-btn.mce-active, .mce-btn.mce-active:hover, .mce-btn:not(.mce-disabled):active {
+.mce-btn.mce-active,
+.mce-btn.mce-active:hover,
+.mce-btn:not(.mce-disabled):active {
     background-color: #eee !important;
 }
-
 
 .mce-container-body .mce-flow-layout {
     border-bottom: solid 1px #eee;
