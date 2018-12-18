@@ -31,6 +31,7 @@ use Language;
 use Context;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\AddLanguageHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageWithGivenIsoCodeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
@@ -61,14 +62,14 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
     /**
      * @param IsoCode $isoCode
      *
-     * @throws LanguageWithGivenIsoCodeAlreadyExistsException
+     * @throws LanguageConstraintException
      */
     private function assertLanguageWithIsoCodeDoesNotExist(IsoCode $isoCode)
     {
         if (Language::getIdByIso($isoCode->getValue())) {
-            throw new LanguageWithGivenIsoCodeAlreadyExistsException(
-                $isoCode,
-                sprintf('Language with ISO code "%s" already exists', $isoCode->getValue())
+            throw new LanguageConstraintException(
+                sprintf('Language with ISO code "%s" already exists', $isoCode->getValue()),
+                LanguageConstraintException::INVALID_ISO_CODE
             );
         }
     }

@@ -97,7 +97,6 @@ class LanguageType extends AbstractType
                 ],
             ])
             ->add('flag_image', FileType::class, [
-                //'required' => false,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
@@ -105,7 +104,6 @@ class LanguageType extends AbstractType
                 ],
             ])
             ->add('no_picture_image', FileType::class, [
-                //'required' => false,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
