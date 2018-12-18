@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Handles submitted language form data
