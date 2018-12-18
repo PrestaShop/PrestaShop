@@ -32,6 +32,7 @@ use Configuration;
 use Context;
 use Customer;
 use LegacyTests\Unit\Core\Cart\Calculation\Taxes\CartTaxesTest;
+use Mail;
 use Order;
 use OrderCartRule;
 
@@ -40,6 +41,23 @@ use OrderCartRule;
  */
 class CartToOrderTest extends CartTaxesTest
 {
+
+    protected $previousConfigurationMailMethod;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->previousConfigurationMailMethod = Configuration::get('PS_MAIL_METHOD');
+        Configuration::set('PS_MAIL_METHOD', Mail::METHOD_DISABLE);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        Configuration::set('PS_MAIL_METHOD', $this->previousConfigurationMailMethod);
+    }
 
     /**
      * check the correct copy of data from cart to order when processing payment
