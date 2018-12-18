@@ -41,7 +41,8 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
  * @author arothe
  * 
  */
-class DropProcessor extends AbstractProcessor {
+class DropProcessor extends AbstractProcessor
+{
 
     // TODO: we should enhance it to get the positions for the IF EXISTS keywords
     // look into the CreateProcessor to get an idea.

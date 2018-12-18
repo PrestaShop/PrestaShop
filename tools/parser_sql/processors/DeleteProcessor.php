@@ -39,7 +39,8 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
  * @author arothe
  * 
  */
-class DeleteProcessor extends AbstractProcessor {
+class DeleteProcessor extends AbstractProcessor
+{
 
     public function process($tokens) {
         $tables = array();

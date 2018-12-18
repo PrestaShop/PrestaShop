@@ -54,7 +54,8 @@ require_once dirname(__FILE__) . '/builders/ShowStatementBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class PHPSQLCreator {
+class PHPSQLCreator
+{
 
     public function __construct($parsed = false) {
         if ($parsed) {

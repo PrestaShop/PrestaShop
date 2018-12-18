@@ -40,7 +40,8 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class ExplainProcessor extends AbstractProcessor {
+class ExplainProcessor extends AbstractProcessor
+{
 
     protected function isStatement($keys, $needle = "EXPLAIN") {
         $pos = array_search($needle, $keys);

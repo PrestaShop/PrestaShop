@@ -47,7 +47,8 @@
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateTableSelectOptionBuilder {
+class CreateTableSelectOptionBuilder
+{
 
     public function build($parsed) {
         if (!isset($parsed['select-option']) || $parsed['select-option'] === false) {

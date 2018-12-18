@@ -51,7 +51,8 @@ require_once dirname(__FILE__) . '/DeleteBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class DeleteStatementBuilder {
+class DeleteStatementBuilder
+{
 
     protected function buildWHERE($parsed) {
         $builder = new WhereBuilder();

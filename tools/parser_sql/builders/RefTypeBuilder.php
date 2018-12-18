@@ -49,7 +49,8 @@ require_once dirname(__FILE__) . '/../exceptions/UnsupportedFeatureException.php
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class RefTypeBuilder {
+class RefTypeBuilder
+{
 
     public function build($parsed) {
         if ($parsed === false) {

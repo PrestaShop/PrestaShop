@@ -54,7 +54,8 @@ require_once dirname(__FILE__) . '/FromBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class TableExpressionBuilder {
+class TableExpressionBuilder
+{
 
     protected function buildFROM($parsed) {
         $builder = new FromBuilder();

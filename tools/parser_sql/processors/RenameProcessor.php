@@ -41,7 +41,8 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class RenameProcessor extends AbstractProcessor {
+class RenameProcessor extends AbstractProcessor
+{
 
     public function process($tokenList) {
         $base_expr = "";

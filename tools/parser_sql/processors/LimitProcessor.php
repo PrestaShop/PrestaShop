@@ -39,7 +39,8 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
  * @author arothe
  * 
  */
-class LimitProcessor extends AbstractProcessor {
+class LimitProcessor extends AbstractProcessor
+{
 
     public function process($tokens) {
         $rowcount = "";

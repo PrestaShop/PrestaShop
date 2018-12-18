@@ -52,7 +52,8 @@ require_once dirname(__FILE__) . '/CollationBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateTableOptionsBuilder {
+class CreateTableOptionsBuilder
+{
 
     protected function buildExpression($parsed) {
         $builder = new SelectExpressionBuilder();

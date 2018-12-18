@@ -40,7 +40,8 @@ require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
  * @author arothe
  * 
  */
-class RecordProcessor extends AbstractProcessor {
+class RecordProcessor extends AbstractProcessor
+{
 
     private $expressionListProcessor;
 

@@ -53,7 +53,8 @@ require_once dirname(__FILE__) . '/ReservedBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CollationBuilder {
+class CollationBuilder
+{
 
     protected function buildOperator($parsed) {
         $builder = new OperatorBuilder();

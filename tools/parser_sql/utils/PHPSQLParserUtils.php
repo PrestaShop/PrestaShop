@@ -36,7 +36,8 @@
  * @author arothe
  * @deprecated
  */
-class PHPSQLParserUtils {
+class PHPSQLParserUtils
+{
 
     /**
      * Prints an array only if debug mode is on.

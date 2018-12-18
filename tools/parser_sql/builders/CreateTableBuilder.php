@@ -52,7 +52,8 @@ require_once dirname(__FILE__) . '/CreateTableOptionsBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateTableBuilder {
+class CreateTableBuilder
+{
 
     protected function buildCreateTableDefinition($parsed) {
         $builder = new CreateTableDefinitionBuilder();

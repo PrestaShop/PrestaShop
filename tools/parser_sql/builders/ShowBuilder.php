@@ -56,7 +56,8 @@ require_once dirname(__FILE__) . '/TableBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ShowBuilder {
+class ShowBuilder
+{
 
     protected function buildTable($parsed, $delim) {
         $builder = new TableBuilder();

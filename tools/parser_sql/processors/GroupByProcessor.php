@@ -39,7 +39,8 @@ require_once dirname(__FILE__) . '/OrderByProcessor.php';
  * @author arothe
  * 
  */
-class GroupByProcessor extends OrderByProcessor {
+class GroupByProcessor extends OrderByProcessor
+{
 
     public function process($tokens, $select = array()) {
         $out = array();

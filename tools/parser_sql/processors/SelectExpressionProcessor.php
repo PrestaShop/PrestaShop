@@ -41,7 +41,8 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class SelectExpressionProcessor extends AbstractProcessor {
+class SelectExpressionProcessor extends AbstractProcessor
+{
 
     private $expressionListProcessor;
 

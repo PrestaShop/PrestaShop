@@ -42,7 +42,8 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class UnionProcessor extends AbstractProcessor {
+class UnionProcessor extends AbstractProcessor
+{
 
     public function isUnion($queries) {
         $unionTypes = array('UNION', 'UNION ALL');

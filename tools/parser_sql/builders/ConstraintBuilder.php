@@ -50,7 +50,8 @@ require_once dirname(__FILE__) . '/ConstantBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ConstraintBuilder {
+class ConstraintBuilder
+{
 
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();

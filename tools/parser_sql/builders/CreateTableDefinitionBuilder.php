@@ -49,7 +49,8 @@ require_once dirname(__FILE__) . '/TableBracketExpressionBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateTableDefinitionBuilder {
+class CreateTableDefinitionBuilder
+{
 
     protected function buildTableBracketExpression($parsed) {
         $builder = new TableBracketExpressionBuilder();

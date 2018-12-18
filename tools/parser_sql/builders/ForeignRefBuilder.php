@@ -54,7 +54,8 @@ require_once dirname(__FILE__) . '/ColumnListBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ForeignRefBuilder {
+class ForeignRefBuilder
+{
 
     protected function buildTable($parsed) {
         $builder = new TableBuilder();

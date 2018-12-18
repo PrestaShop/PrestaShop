@@ -43,7 +43,8 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  *
  */
-class CreateDefinitionProcessor extends AbstractProcessor {
+class CreateDefinitionProcessor extends AbstractProcessor
+{
 
     protected function correctExpressionType(&$expr) {
         $type = ExpressionType::EXPRESSION;

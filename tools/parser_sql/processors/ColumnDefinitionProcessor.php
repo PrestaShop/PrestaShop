@@ -42,7 +42,8 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  *
  */
-class ColumnDefinitionProcessor extends AbstractProcessor {
+class ColumnDefinitionProcessor extends AbstractProcessor
+{
 
     protected function processExpressionList($parsed) {
         $processor = new ExpressionListProcessor();
