@@ -42,7 +42,7 @@ class PHPSQLParserUtils {
      * Prints an array only if debug mode is on.
      * 
      * @param array $s
-     * @param bool $return, if true, the formatted array is returned via return parameter
+     * @param boolean $return, if true, the formatted array is returned via return parameter
      */
     protected function preprint($arr, $return = false) {
         $x = "<pre>";
@@ -68,7 +68,7 @@ class PHPSQLParserUtils {
         if ($length == 0) {
             return true;
         }
-        return substr($haystack, -$length) === $needle;
+        return (substr($haystack, -$length) === $needle);
     }
 
     /**
@@ -144,6 +144,6 @@ class PHPSQLParserUtils {
         foreach ($tokenList as $token) {
             $expr[] = $token->toArray();
         }
-        return empty($expr) ? false : $expr;
+        return (empty($expr) ? false : $expr);
     }
 }

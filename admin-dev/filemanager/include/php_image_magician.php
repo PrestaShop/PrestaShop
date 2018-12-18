@@ -3052,7 +3052,7 @@ class imageLib
   public function checkStringStartsWith($needle, $haystack)
   # Check if a string starts with a specific pattern
   {
-      return substr($haystack, 0, strlen($needle))==$needle;
+      return (substr($haystack, 0, strlen($needle))==$needle);
   }
 
 

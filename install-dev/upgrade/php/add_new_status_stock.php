@@ -144,5 +144,5 @@ function configuration_exists($confName)
         WHERE `name` = \'' . $confName . '\''
     );
 
-    return $count > 0;
+    return ($count > 0);
 }

@@ -29,7 +29,7 @@
 <!--
 var install_is_done = '<?php echo addslashes($this->translator->trans('Done!', array(), 'Install')) ?>';
 var process_steps = <?php echo json_encode($this->process_steps) ?>;
-var admin = '<?php echo file_exists('../admin-dev') ? '../admin-dev' : '../admin' ?>';
+var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin') ?>';
 -->
 </script>
 

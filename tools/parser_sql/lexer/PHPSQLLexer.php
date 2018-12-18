@@ -70,14 +70,14 @@ class PHPSQLLexer {
      * @param string $haystack
      * @param string $needle
      * 
-     * @return bool true, if the parameter $haystack ends with the character sequences $needle, false otherwise
+     * @return boolean true, if the parameter $haystack ends with the character sequences $needle, false otherwise
      */
     protected function endsWith($haystack, $needle) {
         $length = strlen($needle);
         if ($length == 0) {
             return true;
         }
-        return substr($haystack, -$length) === $needle;
+        return (substr($haystack, -$length) === $needle);
     }
 
     public function split($sql) {
@@ -204,7 +204,7 @@ class PHPSQLLexer {
     }
 
     protected function isBacktick($token) {
-        return $token === "'" || $token === "\"" || $token === "`";
+        return ($token === "'" || $token === "\"" || $token === "`");
     }
 
     protected function balanceBackticks($tokens) {

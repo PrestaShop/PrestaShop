@@ -53,11 +53,11 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 class IndexColumnBuilder {
 
     protected function buildLength($parsed) {
-        return $parsed === false ? '' : ('(' . $parsed . ')');
+        return ($parsed === false ? '' : ('(' . $parsed . ')'));
     }
 
     protected function buildDirection($parsed) {
-        return $parsed === false ? '' : (' ' . $parsed);
+        return ($parsed === false ? '' : (' ' . $parsed));
     }
     
     public function build($parsed) {

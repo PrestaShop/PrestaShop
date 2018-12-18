@@ -92,7 +92,7 @@ class SelectBuilder {
      * @return a string, which is added right after the expression
      */
     protected function getDelimiter($parsed) {
-        return $parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' ');
+        return ($parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
     }
 
     public function build($parsed) {
