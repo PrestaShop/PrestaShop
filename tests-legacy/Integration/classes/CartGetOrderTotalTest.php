@@ -28,7 +28,7 @@
 namespace LegacyTests\Integration\classes;
 
 use LegacyTests\TestCase\IntegrationTestCase;
-use PHPUnit_Framework_Assert as Assert;
+use PHPUnit\Framework\Assert as Assert;
 use Exception;
 use Address;
 use Carrier;
