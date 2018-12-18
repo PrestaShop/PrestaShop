@@ -775,7 +775,7 @@ class LanguageCore extends ObjectModel
      *
      * @throws Exception
      *
-     * @return false|string
+     * @return string|false
      */
     public static function getIsoByLocale($locale)
     {
