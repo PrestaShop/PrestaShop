@@ -27,12 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
 use Db;
+use ImageManager;
+use ImageType;
 use Language;
 use Context;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\AddLanguageHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CopyingNoPictureException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageWithGivenIsoCodeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -51,6 +53,8 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
     public function handle(AddLanguageCommand $command)
     {
         $this->assertLanguageWithIsoCodeDoesNotExist($command->getIsoCode());
+
+        $this->copyNoPictureImage($command);
 
         $language = $this->createLegacyLanguageObjectFromCommand($command);
 
@@ -137,7 +141,7 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
         $language = new Language();
         $language->name = $command->getName();
         $language->iso_code = $command->getIsoCode()->getValue();
-        $language->language_code = $command->getTagIETF();
+        $language->language_code = $command->getTagIETF()->getValue();
         $language->date_format_lite = $command->getShortDateFormat();
         $language->date_format_full = $command->getFullDateFormat();
         $language->is_rtl = $command->isRtlLanguage();
@@ -150,5 +154,73 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
         }
 
         return $language;
+    }
+
+    /**
+     * Copies placeholder image for specific language
+     *
+     * @param AddLanguageCommand $command
+     */
+    private function copyNoPictureImage(AddLanguageCommand $command)
+    {
+        $isoCode = $command->getIsoCode()->getValue();
+
+        if (!($temporaryImage = tempnam(_PS_TMP_IMG_DIR_, 'PS'))
+            || !move_uploaded_file($command->getNoPictureImagePath(), $temporaryImage)
+        ) {
+            return;
+        }
+
+        if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'p/' . $isoCode . '.jpg')) {
+            throw new CopyingNoPictureException(
+                sprintf('An error occurred while copying "No Picture" image to product directory'),
+                CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR
+            );
+        }
+
+        if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'c/' . $isoCode . '.jpg')) {
+            throw new CopyingNoPictureException(
+                sprintf('An error occurred while copying "No Picture" image to category directory'),
+                CopyingNoPictureException::CATEGORY_IMAGE_COPY_ERROR
+            );
+        }
+
+        if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'm/' . $isoCode . '.jpg')) {
+            throw new CopyingNoPictureException(
+                sprintf('An error occurred while copying "No Picture" image to brand directory'),
+                CopyingNoPictureException::BRAND_IMAGE_COPY_ERROR
+            );
+        }
+
+        $imagesTypes = ImageType::getImagesTypes('products');
+
+        foreach ($imagesTypes as $imagesType) {
+            $imageName = $isoCode . '-default-' . stripslashes($imagesType['name']) . '.jpg';
+            $imageWidth = $imagesType['width'];
+            $imageHeight = $imagesType['height'];
+
+            if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'p/' . $imageName, $imageWidth, $imageHeight)) {
+                throw new CopyingNoPictureException(
+                    sprintf('An error occurred while copying "No Picture" image to product directory'),
+                    CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR
+                );
+            }
+
+            if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'c/' . $imageName, $imageWidth, $imageHeight)) {
+                throw new CopyingNoPictureException(
+                    sprintf('An error occurred while copying "No Picture" image to category directory'),
+                    CopyingNoPictureException::CATEGORY_IMAGE_COPY_ERROR
+                );
+            }
+
+            if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'm/' . $imageName, $imageWidth, $imageHeight)) {
+                throw new CopyingNoPictureException(
+                    sprintf('An error occurred while copying "No Picture" image to brand directory'),
+                    CopyingNoPictureException::BRAND_IMAGE_COPY_ERROR
+                );
+            }
+        }
+
+        unlink($temporaryImage);
     }
 }
