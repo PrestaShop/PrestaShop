@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Language\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
 
 /**
  * Adds new language with given data
@@ -44,9 +45,21 @@ class AddLanguageCommand
     private $isoCode;
 
     /**
-     * @var string IETF language tag, e.g. en-US
+     * @var TagIETF IETF language tag, e.g. en-US
      */
     private $tagIETF;
+
+    /**
+     * @var string
+     */
+    private $flagImagePath;
+
+    /**
+     * @var string Image that is used as fallback image for product, category and brand
+     *             when the actual image is not available.
+     *             Each language has different "No picture" image.
+     */
+    private $noPictureImagePath;
 
     /**
      * @var string Short date format. e.g. Y-m-d
@@ -78,6 +91,8 @@ class AddLanguageCommand
      * @param string $tagIETF
      * @param string $shortDateFormat
      * @param string $fullDateFormat
+     * @param string $flagImagePath
+     * @param string $noPictureImagePath
      * @param bool $isRtlLanguage
      * @param bool $isActive
      * @param int[] $shopAssociation
@@ -88,15 +103,19 @@ class AddLanguageCommand
         $tagIETF,
         $shortDateFormat,
         $fullDateFormat,
-        $isRtlLanguage = false,
-        $isActive = true,
-        array $shopAssociation = []
+        $flagImagePath,
+        $noPictureImagePath,
+        $isRtlLanguage,
+        $isActive,
+        array $shopAssociation
     ) {
         $this->name = $name;
         $this->isoCode = new IsoCode($isoCode);
-        $this->tagIETF = $tagIETF;
+        $this->tagIETF = new TagIETF($tagIETF);
         $this->shortDateFormat = $shortDateFormat;
         $this->fullDateFormat = $fullDateFormat;
+        $this->flagImagePath = $flagImagePath;
+        $this->noPictureImagePath = $noPictureImagePath;
         $this->isRtlLanguage = $isRtlLanguage;
         $this->isActive = $isActive;
         $this->shopAssociation = $shopAssociation;
@@ -119,7 +138,7 @@ class AddLanguageCommand
     }
 
     /**
-     * @return string
+     * @return TagIETF
      */
     public function getTagIETF()
     {
@@ -140,6 +159,22 @@ class AddLanguageCommand
     public function getFullDateFormat()
     {
         return $this->fullDateFormat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFlagImagePath()
+    {
+        return $this->flagImagePath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNoPictureImagePath()
+    {
+        return $this->noPictureImagePath;
     }
 
     /**

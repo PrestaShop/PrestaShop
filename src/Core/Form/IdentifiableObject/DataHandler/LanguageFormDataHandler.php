@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Handles submitted language form data
@@ -53,9 +54,14 @@ final class LanguageFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        if (isset($data['shop_association']) && !$data['shop_association']) {
+        if (!isset($data['shop_association']) || !$data['shop_association']) {
             $data['shop_association'] = [];
         }
+
+        /** @var UploadedFile $uploadedFlagImage */
+        $uploadedFlagImage = $data['flag_image'];
+        /** @var UploadedFile $uploadedFlagImage */
+        $uploadedNoPictureImage = $data['no_picture_image'];
 
         /** @var LanguageId $languageId */
         $languageId = $this->bus->handle(new AddLanguageCommand(
@@ -64,6 +70,8 @@ final class LanguageFormDataHandler implements FormDataHandlerInterface
             $data['tag_ietf'],
             $data['short_date_format'],
             $data['full_date_format'],
+            $uploadedFlagImage->getPathname(),
+            $uploadedNoPictureImage->getPathname(),
             $data['is_rtl'],
             $data['is_active'],
             $data['shop_association']
