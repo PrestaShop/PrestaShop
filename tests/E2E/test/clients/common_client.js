@@ -316,7 +316,8 @@ class CommonClient {
    */
   checkDocument(folderPath, fileName, text) {
     pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
-      global.indexText = data.indexOf(text)
+      global.data = global.data + data;
+      global.indexText = global.data.indexOf(text)
     });
 
     return this.client
@@ -659,6 +660,23 @@ class CommonClient {
           }
         }
       });
+  }
+
+  displayHiddenBlock(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementsByClassName(selector).style = '';
+      })
+  }
+
+  changeOrderState(selector, state) {
+    return this.client
+      .waitForExist(selector.order_state_select, 90000)
+      .execute(function () {
+        document.querySelector('#id_order_state').style = "";
+      })
+      .selectByVisibleText(selector.order_state_select, state)
+      .waitForExistAndClick(selector.update_status_button)
   }
 }
 

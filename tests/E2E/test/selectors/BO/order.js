@@ -3,7 +3,7 @@ module.exports = {
     orders_subtab: '#subtab-AdminParentOrders',
     form: '#form-order',
     view_order_button: '//*[@id="form-order"]//tr[%NUMBER]//div[contains(@class,"pull-right")]//a',
-    order_state_select: '//*[@id="id_order_state"]',
+    order_state_select: '#id_order_state',
     update_status_button: '//*[@id="status"]/form//button[@name="submitState"]',
     order_quantity: '//*[@id="orderProducts"]//tr[%NUMBER]/td[4]',
     order_status: '//*[@id="status"]//table[contains(@class,"history-status")]//tr[1]/td[2]',
@@ -31,8 +31,37 @@ module.exports = {
     stock_product: '//*[@id="orderProducts"]//tr[%NUMBER]/td[5]',
     total_order: '//*[@id="total_order"]/td[@class="amount text-right nowrap"]/strong',
     total_product_price: '//*[@id="orderProducts"]//tr[%NUMBER]/td[6]',
-    first_shopping_cart_checkbox : '//*[@id="table-cart"]//tr[1]//input[@name="cartBox[]"]',
-    first_dropdown_button: '//*[@id="table-cart"]/tbody//tr[1]//button[@data-toggle="dropdown"]'
+    first_shopping_cart_checkbox: '//*[@id="table-cart"]//tr[1]//input[@name="cartBox[]"]',
+    first_dropdown_button: '//*[@id="table-cart"]/tbody//tr[1]//button[@data-toggle="dropdown"]',
+    total_price_tax_included: '//*[@id="orderProducts"]//td[@class="total_product"]',
+    order_view_button: '//*[@id="form-order"]//table//tr[%ORDERNumber]//td[12]//a',
+    partial_refund: '//*[@id="desc-order-partial_refund"]',
+    product_total: '//*[@id="documents"]//tr[contains(@id,"orderslip")]/td[4]',
+    re_stock_product: '//label[@for="reinjectQuantitiesRefund"]',
+    generate_credit_slip_checkbox: '//label[@for="generateCreditSlip"]',
+    refund_products_button: '//button[@name="partialRefund"]',
+    success_msg: '(//*[@id="main"]//div[contains(@class,"alert-success")])[1]',
+    order_date: '(//*[@id="content"]//div[@class="kpi-content"])[1]/span[2]',
+    order_ref: '(//*[@id="content"]//span[@class="badge"])[1]',
+    product_information: '//*[@id="orderProducts"]//tr[1]/td[2]/a',
+    empty_page_logo: '//*[@id="documents_table"]//div[@class="list-empty-msg"]',
+    pdf_icon: '//*[@id="table-order"]//tr[%ORDER]//td[11]//i',
+    invoice_document: '//table//td[3]/a',
+    product_quantity: '//*[@id="orderProducts"]//span[contains(@class,"product_quantity_show")]',
+    product_name_tab: '//*[@id="orderProducts"]//span[contains(@class,"productName")]',
+    product_unit_price: '//*[@id="orderProducts"]//input[@name="product_price_tax_excl"]',
+    product_unit_price_tax_included: '//*[@id="orderProducts"]//span[@class="product_price_show"]',
+    product_price: '//*[@id="orderProducts"]//input[@name="product_price_tax_incl"]',
+    total_order_price: '//*[@id="total_order"]/td[2]/strong',
+    total_product: '//*[@id="total_products"]/td[2]',
+    shipping_cost_price: '//*[@id="total_shipping"]/td[2]',
+    total: '//*[@id="total_order"]/td[2]/strong',
+    total_tax: '//*[@id="total_taxes"]/td[2]',
+    carrier: '//*[@id="shipping_table"]//tr[1]/td[3]',
+    payment_method: '//*[@id="formAddPayment"]//tr[1]/td[2]',
+    order_id: '(//*[@id="content"]//span[@class="badge"])[2]',
+    credit_slip_document_name: '//*[@id="documents_table"]//tr[3]//a',
+    quantity_refund: '//*[@id="orderProducts"]//div[@class="input-group"]/input[@onchange="checkPartialRefundProductQuantity(this)"]'
   },
 
   CreateOrder: {
@@ -76,5 +105,17 @@ module.exports = {
     customer_online: '//*[@id="table-cart"]//tr[%NUMBER]/td[7]',
     id_shopping_carts: 'table-cart',
     reset_button: '//*[@name="submitResetcart"]'
+  },
+
+  CreditSlip: {
+    download_btn: '//*[@id="table-order_slip"]//td[contains(text(),"%ID")]/..//a',
+    date_form: '//*[@id="date_from"]',
+    date_to: '//*[@id="date_to"]',
+    generate_button: '//*[@id="submitPrint"]',
+    alerte_message: '//*[@id="content"]/div[4]/div',
+    credit_slip_prefix_input: '//*[@id="conf_id_PS_CREDIT_SLIP_PREFIX"]//div[@class="translatable-field lang-1"]//input',
+    save_button: '//*[@id="order_slip_fieldset_general"]//button[@type="submit"]',
+    green_validation: '//*[@id="content"]//div[@class="alert alert-success"]',
+    first_credit_slip_download_btn: '//*[@id="table-order_slip"]/tbody/tr[1]/td[4]/a'
   }
 };

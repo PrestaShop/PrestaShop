@@ -246,7 +246,8 @@ module.exports = {
     tooltip_box_content: '//div[contains(@class, "popover")]/div[2]',
     input_pack_item: '//*[@id="js_form_step1_inputPackItems"]',
     calendar_form: '//*[@id="calendar"]',
-    right_sidebar: '//*[@id="right-sidebar"]'
+    right_sidebar: '//*[@id="right-sidebar"]',
+    tax_rule:'//*[@id="select2-step2_id_tax_rules_group_rendered-container"]'
   },
   ProductList: {
     product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',
