@@ -65,7 +65,7 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
      */
     private function assertLanguageWithIsoCodeDoesNotExist(IsoCode $isoCode)
     {
-        if (Language::getIdByIso($isoCode)) {
+        if (Language::getIdByIso($isoCode->getValue())) {
             throw new LanguageWithGivenIsoCodeAlreadyExistsException(
                 $isoCode,
                 sprintf('Language with ISO code "%s" already exists', $isoCode->getValue())
