@@ -103,7 +103,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
-            $steps = array('database','fixtures','theme','modules','addons_modules');
+            $steps = array('database', 'fixtures', 'theme', 'modules', 'addons_modules');
         }
 
         if (in_array('database', $steps)) {

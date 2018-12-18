@@ -162,11 +162,11 @@ $JAVAMaxSizeUpload=200; //Gb
 // path_from_filemanager/test/test1/
 // PS if there isn't write permission in your destination folder you must set it
 $fixed_image_creation                   = false; //activate or not the creation of one or more image resized with fixed path from filemanager folder
-$fixed_path_from_filemanager            = array('../test/','../test1/'); //fixed path of the image folder from the current position on upload folder
-$fixed_image_creation_name_to_prepend   = array('','test_'); //name to prepend on filename
-$fixed_image_creation_to_append         = array('_test',''); //name to appendon filename
-$fixed_image_creation_width             = array(300,400); //width of image (you can leave empty if you set height)
-$fixed_image_creation_height            = array(200,''); //height of image (you can leave empty if you set width)
+$fixed_path_from_filemanager            = array('../test/', '../test1/'); //fixed path of the image folder from the current position on upload folder
+$fixed_image_creation_name_to_prepend   = array('', 'test_'); //name to prepend on filename
+$fixed_image_creation_to_append         = array('_test', ''); //name to appendon filename
+$fixed_image_creation_width             = array(300, 400); //width of image (you can leave empty if you set height)
+$fixed_image_creation_height            = array(200, ''); //height of image (you can leave empty if you set width)
 
 
 // New image resized creation with relative path inside to upload folder after uploading (thumbnails in relative mode)
@@ -174,8 +174,8 @@ $fixed_image_creation_height            = array(200,''); //height of image (you 
 // just simply add a value in the array
 // The image creation path is always relative so if i'm inside source/test/test1 and I upload an image, the path start from here
 $relative_image_creation                = false; //activate or not the creation of one or more image resized with relative path from upload folder
-$relative_path_from_current_pos         = array('thumb/','thumb/'); //relative path of the image folder from the current position on upload folder
-$relative_image_creation_name_to_prepend= array('','test_'); //name to prepend on filename
-$relative_image_creation_name_to_append = array('_test',''); //name to append on filename
-$relative_image_creation_width          = array(300,400); //width of image (you can leave empty if you set height)
-$relative_image_creation_height         = array(200,''); //height of image (you can leave empty if you set width)
+$relative_path_from_current_pos         = array('thumb/', 'thumb/'); //relative path of the image folder from the current position on upload folder
+$relative_image_creation_name_to_prepend= array('', 'test_'); //name to prepend on filename
+$relative_image_creation_name_to_append = array('_test', ''); //name to append on filename
+$relative_image_creation_width          = array(300, 400); //width of image (you can leave empty if you set height)
+$relative_image_creation_height         = array(200, ''); //height of image (you can leave empty if you set width)
