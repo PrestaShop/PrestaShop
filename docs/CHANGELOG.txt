@@ -25,6 +25,13 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
+#   v1.7.5.0 - (2018-12-17)
+####################################
+- Front Office:
+  - Bug fix:
+    - #11777: Do not perform updateProductRequest() AJAX call if no valid data input
+
+####################################
 #   v1.7.5.0 RC 1 - (2018-12-10)
 ####################################
 - Back Office:

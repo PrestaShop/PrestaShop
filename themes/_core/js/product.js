@@ -124,6 +124,11 @@ function updateProduct(event, eventType, updateUrl) {
   }
 
   currentRequestDelayedId = setTimeout(function updateProductRequest() {
+
+    if (formSerialized === '') {
+      return;
+    }
+
     currentRequest = $.ajax({
       url: updateUrl + ((updateUrl.indexOf('?') === -1) ? '?' : '&') + formSerialized + preview,
       method: 'POST',
