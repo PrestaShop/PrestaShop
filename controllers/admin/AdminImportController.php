@@ -969,7 +969,7 @@ class AdminImportControllerCore extends AdminController
                 $uniqid_path = _PS_UPLOAD_DIR_ . uniqid();
             } while (file_exists($uniqid_path));
             file_put_contents($uniqid_path, $field);
-            $fd = fopen($uniqid_path, 'r');
+            $fd = fopen($uniqid_path, 'rb');
         }
 
         if ($fd === false) {
@@ -4240,7 +4240,7 @@ class AdminImportControllerCore extends AdminController
             if (!mb_check_encoding(file_get_contents($file), 'UTF-8')) {
                 $this->convert = true;
             }
-            $handle = fopen($file, 'r');
+            $handle = fopen($file, 'rb');
         }
 
         if (!$handle) {

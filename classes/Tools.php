@@ -2174,11 +2174,11 @@ class ToolsCore
      */
     public static function createFileFromUrl($url)
     {
-        $remoteFile = fopen($url, 'r');
+        $remoteFile = fopen($url, 'rb');
         if (!$remoteFile) {
             return false;
         }
-        $localFile = fopen(basename($url), 'w');
+        $localFile = fopen(basename($url), 'wb');
         if (!$localFile) {
             return false;
         }
@@ -2364,7 +2364,7 @@ class ToolsCore
         }
 
         // Write .htaccess data
-        if (!$write_fd = @fopen($path, 'w')) {
+        if (!$write_fd = @fopen($path, 'wb')) {
             return false;
         }
         if ($specific_before) {
@@ -2610,7 +2610,7 @@ FileETag none
     {
         $robots_file = _PS_ROOT_DIR_ . '/robots.txt';
 
-        if (!$write_fd = @fopen($robots_file, 'w')) {
+        if (!$write_fd = @fopen($robots_file, 'wb')) {
             return false;
         }
 

@@ -333,7 +333,7 @@ class AdminRequestSqlControllerCore extends AdminController
             die(Tools::displayError());
         }
         $file = 'request_sql_' . $id . '.csv';
-        if ($csv = fopen($export_dir . $file, 'w')) {
+        if ($csv = fopen($export_dir . $file, 'wb')) {
             $sql = RequestSql::getRequestSqlById($id);
 
             if ($sql) {

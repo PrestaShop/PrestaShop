@@ -115,7 +115,7 @@ function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
         $content .= 'define(\''.$k.'\', \''.addslashes($value).'\');'."\n";
     }
     copy(_PS_ADMIN_DIR_.'/../config/settings.inc.php', _PS_ADMIN_DIR_.'/../config/settings.old.php');
-    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w')) {
+    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'wb')) {
         fwrite($fd, $content);
         fclose($fd);
         return true;
