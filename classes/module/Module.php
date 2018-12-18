@@ -967,7 +967,6 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param mixed $id_hook Hook id (can be a hook name since 1.5.0)
      * @param array $shop_list List of shop
-     * @param mixed $hook_id
      *
      * @return bool result
      */
@@ -981,7 +980,6 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param int $id_hook Hook id
      * @param array $shop_list List of shop
-     * @param mixed $hook_id
      *
      * @return bool result
      */
@@ -1060,7 +1058,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param mixed $current_class the
      *
-     * @return bool|string if the class belongs to a module, will return the module name. Otherwise, return false.
+     * @return string|bool if the class belongs to a module, will return the module name. Otherwise, return false.
      */
     public static function getModuleNameFromClass($current_class)
     {
@@ -1712,7 +1710,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $name The module name (the folder name)
      * @param string $key The key provided by addons
-     * @param mixed $module_name
+     * @param string $module_name The module name (the folder name)
      *
      * @return int
      */
@@ -1879,7 +1877,7 @@ abstract class ModuleCore implements ModuleInterface
      * Create the Addons API call from the module name only.
      *
      * @param string $name Module dir name
-     * @param mixed $module_name
+     * @param string $module_name Module dir name
      *
      * @return bool Returns if the module is trusted by addons.prestashop.com
      */
@@ -1960,7 +1958,7 @@ abstract class ModuleCore implements ModuleInterface
      * when module is loaded with eval() Module::getModulesOnDisk()
      *
      * @param string $string String to translate
-     * @param bool|string $specific filename to use in translation key
+     * @param string|bool $specific filename to use in translation key
      * @param string|null $locale Give a context for the translation
      *
      * @return string Translation

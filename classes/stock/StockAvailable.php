@@ -295,7 +295,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product
      * @param int $depends_on_stock Optional : true by default
      * @param int $id_shop Optional : gets context by default
-     * @param mixed $id_product_attribute
+     * @param int $id_product_attribute
      */
     public static function setProductDependsOnStock($id_product, $depends_on_stock = true, $id_shop = null, $id_product_attribute = 0)
     {
@@ -332,7 +332,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product
      * @param int $out_of_stock Optional false by default
      * @param int $id_shop Optional gets context by default
-     * @param mixed $id_product_attribute
+     * @param int $id_product_attribute
      */
     public static function setProductOutOfStock($id_product, $out_of_stock = false, $id_shop = null, $id_product_attribute = 0)
     {
@@ -772,7 +772,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_shop Optional
      * @param mixed|null $id_product_attribute
      *
-     * @return bool|string
+     * @return string|bool
      */
     public static function getLocation($id_product, $id_product_attribute = null, $id_shop = null)
     {

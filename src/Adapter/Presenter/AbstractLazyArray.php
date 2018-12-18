@@ -47,7 +47,7 @@ use RuntimeException;
  * If your want to define the ['addresses'] array access in your lazyArray object, just define the public method
  * getAddresses() and add the annotation arrayAccess to it. e.g:
  *
- * @arrayAccess
+ *     @arrayAccess
  *
  *     @return array
  *

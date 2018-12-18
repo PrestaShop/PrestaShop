@@ -343,7 +343,7 @@ class Module implements ModuleInterface
     protected function instanciateLegacyModule()
     {
         /**
-         * @TODO Temporary: This test prevents an error when switching branches with the cache.
+         * @todo Temporary: This test prevents an error when switching branches with the cache.
          * Can be removed at the next release (when we will be sure that it is defined)
          */
         $path = $this->disk->get('path', ''); // Variable needed for empty() test

@@ -50,7 +50,7 @@ class CarrierDataProvider
      * @param int $id_lang Language id
      * @param bool $active Returns only active carriers when true
      * @param bool $delete
-     * @param bool|int $id_zone
+     * @param int|bool $id_zone
      * @param string|null $ids_group
      * @param $modules_filters , possible values:
      * PS_CARRIERS_ONLY

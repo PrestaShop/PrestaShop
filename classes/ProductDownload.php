@@ -85,7 +85,7 @@ class ProductDownloadCore extends ObjectModel
     public function __construct($idProductDownload = null)
     {
         parent::__construct($idProductDownload);
-        // @TODO check if the file is present on hard drive
+        // @todo check if the file is present on hard drive
     }
 
     /**

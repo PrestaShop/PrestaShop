@@ -62,7 +62,7 @@ class ToolsCore
      * @param int $length Desired length (optional)
      * @param string $flag Output type (NUMERIC, ALPHANUMERIC, NO_NUMERIC, RANDOM)
      *
-     * @return bool|string Password
+     * @return string|bool Password
      */
     public static function passwdGen($length = 8, $flag = 'ALPHANUMERIC')
     {
@@ -109,7 +109,7 @@ class ToolsCore
      *
      * @param int $length Desired length of random bytes
      *
-     * @return bool|string Random bytes
+     * @return string|bool Random bytes
      */
     public static function getBytes($length)
     {
@@ -2127,7 +2127,7 @@ class ToolsCore
      * @param int $curl_timeout
      * @param bool $fallback whether or not to use the fallback if the main solution fails
      *
-     * @return bool|string false or the string content
+     * @return string|bool false or the string content
      */
     public static function file_get_contents(
         $url,
@@ -2184,7 +2184,7 @@ class ToolsCore
      *
      * @param string $url the remote location
      *
-     * @return bool|string false if failure, else the local filename
+     * @return string|bool false if failure, else the local filename
      */
     public static function createFileFromUrl($url)
     {
@@ -2269,7 +2269,7 @@ class ToolsCore
      * Converts SomethingLikeThis to something-like-this
      * The name comes from Perl, we like Perl.
      *
-     * @param mixed $string
+     * @param string $str String to transform
      */
     public static function camelCaseToKebabCase($string)
     {
@@ -3450,7 +3450,7 @@ exit;
     /**
      * apacheModExists return true if the apache module $name is loaded.
      *
-     * @TODO move this method in class Information (when it will exist)
+     * @todo move this method in class Information (when it will exist)
      *
      * Notes: This method requires either apache_get_modules or phpinfo()
      * to be available. With CGI mod, we cannot get php modules
@@ -4132,7 +4132,7 @@ exit;
      * @param string $path Current path
      * @param string $highlight String to highlight (in XHTML/CSS)
      * @param string $type Category type (products/cms)
-     * @param mixed $category_type
+     * @param string $category_type Category type (products/cms)
      * @param mixed $home
      */
     public static function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)

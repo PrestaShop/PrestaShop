@@ -1892,7 +1892,7 @@ class OrderCore extends ObjectModel
             }
         }
         $delivery_slips = $this->getDeliverySlipsCollection()->getResults();
-        // @TODO review
+        // @todo review
         foreach ($delivery_slips as $key => $delivery) {
             $delivery->is_delivery = true;
             $delivery->date_add = $delivery->delivery_date;

@@ -205,7 +205,7 @@ class CountryCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      *
-     * @return bool|int
+     * @return int|bool
      */
     public static function getIdZone($idCountry)
     {
@@ -331,7 +331,7 @@ class CountryCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      *
-     * @return bool|false|string|null
+     * @return string|bool|false|null
      */
     public static function getZipCodeFormat($idCountry)
     {

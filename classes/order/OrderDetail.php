@@ -724,7 +724,6 @@ class OrderDetailCore extends ObjectModel
      *
      * @param object $order
      * @param object $cart
-     * @param int $id_order_status
      * @param int $id_order_invoice
      * @param bool $use_taxes set to false if you don't want to use taxes
      * @param mixed $id_order_state

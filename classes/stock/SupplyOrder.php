@@ -519,7 +519,7 @@ class SupplyOrderCore extends ObjectModel
      *
      * @param int $id_supply_order
      *
-     * @return bool|string
+     * @return string|bool
      */
     public static function getReferenceById($id_supply_order)
     {

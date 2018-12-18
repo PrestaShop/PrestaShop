@@ -220,7 +220,7 @@ class CustomizationCore extends ObjectModel
      * @param int $idLang Language IOD
      * @param int|null $idShop Shop ID
      *
-     * @return bool|false|string|null
+     * @return string|bool|false|null
      */
     public static function getLabel($idCustomization, $idLang, $idShop = null)
     {

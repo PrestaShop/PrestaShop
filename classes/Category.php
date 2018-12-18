@@ -603,7 +603,7 @@ class CategoryCore extends ObjectModel
     /**
      * Return available categories.
      *
-     * @param bool|int $idLang Language ID
+     * @param int|bool $idLang Language ID
      * @param bool $active Only return active categories
      * @param bool $order Order the results
      * @param string $sqlFilter Additional SQL clause(s) to filter results
@@ -645,7 +645,7 @@ class CategoryCore extends ObjectModel
 
     /**
      * @param int $idRootCategory ID of root Category
-     * @param bool|int $idLang Language ID
+     * @param int|bool $idLang Language ID
      *                         `false` if language filter should not be applied
      * @param bool $active Only return active categories
      * @param null $groups
@@ -720,7 +720,7 @@ class CategoryCore extends ObjectModel
      * Get nested categories.
      *
      * @param int|null $idRootCategory Root Category ID
-     * @param bool|int $idLang Language ID
+     * @param int|bool $idLang Language ID
      *                         `false` if language filter should not be used
      * @param bool $active Whether the category must be active
      * @param null $groups
@@ -936,7 +936,7 @@ class CategoryCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      *
-     * @return array|false|int Products, number of products or false (no access)
+     * @return array|int|false Products, number of products or false (no access)
      */
     public function getProducts(
         $idLang,
@@ -1837,7 +1837,7 @@ class CategoryCore extends ObjectModel
      */
     public static function getLastPosition($idCategoryParent, $idShop)
     {
-        // @TODO, if we remove this query, the position will begin at 1 instead of 0, but is this really a problem?
+        // @todo, if we remove this query, the position will begin at 1 instead of 0, but is this really a problem?
         $results = Db::getInstance()->executeS('
 				SELECT 1
 				FROM `' . _DB_PREFIX_ . 'category` c
@@ -2016,7 +2016,7 @@ class CategoryCore extends ObjectModel
     /**
      * Recursively get amount of Products for the webservice.
      *
-     * @return false|int|null|string
+     * @return int|false|null|string
      */
     public function getWsNbProductsRecursive()
     {

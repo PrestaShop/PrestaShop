@@ -279,7 +279,7 @@ class ModuleTabRegister
          * Legacy Tab, to be replaced with Doctrine entity when right management
          * won't be directly linked to the tab creation.
          *
-         * @ToDo
+         * @todo
          */
         $tab = new Tab();
         $tab->active = $tabDetails->getBoolean('visible', true);

@@ -273,7 +273,7 @@ class AdminCartRulesControllerCore extends AdminController
     }
 
     /**
-     * @TODO Move this function into CartRule
+     * @todo Move this function into CartRule
      *
      * @param ObjectModel $currentObject
      *

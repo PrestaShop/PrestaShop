@@ -87,7 +87,7 @@ class MediaServerConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      *
-     * @todo: when PHP minimum version will be 7.1, use "FILTER_VALIDATE_DOMAIN" constraint.
+     * @todo when PHP minimum version will be 7.1, use "FILTER_VALIDATE_DOMAIN" constraint.
      */
     public function validateConfiguration(array $configuration)
     {

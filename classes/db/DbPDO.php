@@ -93,7 +93,7 @@ class DbPDOCore extends Db
      * @param string $dbname
      * @param bool $dropit if true, drops the created database
      *
-     * @return bool|int
+     * @return int|bool
      */
     public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
     {
@@ -348,7 +348,7 @@ class DbPDOCore extends Db
      * @param string $prefix
      * @param string|null $engine Table engine
      *
-     * @return bool|string True, false or error
+     * @return string|bool True, false or error
      */
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {
@@ -386,7 +386,7 @@ class DbPDOCore extends Db
      * @param string $pwd Password for database connection
      * @param string $db Database name
      * @param bool $newDbLink
-     * @param bool|string $engine
+     * @param string|bool $engine
      * @param int $timeout
      * @param mixed $new_db_link
      *

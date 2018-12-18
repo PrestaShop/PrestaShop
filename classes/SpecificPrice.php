@@ -219,7 +219,7 @@ class SpecificPriceCore extends ObjectModel
     /**
      * score generation for quantity discount.
      *
-     * @param mixed $id_product
+     * @param int $id_product
      * @param mixed $id_shop
      * @param mixed $id_currency
      * @param mixed $id_country
@@ -719,7 +719,7 @@ class SpecificPriceCore extends ObjectModel
     /**
      * Duplicate a product.
      *
-     * @param bool|int $id_product The product ID to duplicate, false when duplicating the current product
+     * @param int|bool $id_product The product ID to duplicate, false when duplicating the current product
      *
      * @return bool
      */

@@ -81,10 +81,10 @@ class AddStandardProductTest extends AbstractCartTest
     /**
      * @dataProvider updateQuantitiesProvider
      *
-     * @param mixed $quantity
-     * @param mixed $operator
+     * @param int $quantity
+     * @param string $operator
      * @param mixed $expected
-     * @param mixed $quantityExpected
+     * @param int $quantityExpected
      */
     public function testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce(
         $quantity,

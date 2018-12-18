@@ -1262,7 +1262,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * postProcess for new form archi (need object return).
      *
-     * @return false|ObjectModel
+     * @return ObjectModel|false
      */
     public function postCoreProcess()
     {
@@ -1624,7 +1624,7 @@ class AdminProductsControllerCore extends AdminController
      * @param Product $product Product object to add image
      * @param string $method
      *
-     * @return false|int
+     * @return int|false
      */
     public function addProductImage($product, $method = 'auto')
     {
@@ -2678,7 +2678,7 @@ class AdminProductsControllerCore extends AdminController
                 $pack_items[$i]['id_product_attribute'] = isset($pack_item->id_pack_product_attribute) && $pack_item->id_pack_product_attribute ? $pack_item->id_pack_product_attribute : 0;
                 $cover = $pack_item->id_pack_product_attribute ? Product::getCombinationImageById($pack_item->id_pack_product_attribute, Context::getContext()->language->id) : Product::getCover($pack_item->id);
                 $pack_items[$i]['image'] = Context::getContext()->link->getImageLink($pack_item->link_rewrite, $cover['id_image'], 'home_default');
-                // @todo: don't rely on 'home_default'
+                // @todo don't rely on 'home_default'
                 //$path_to_image = _PS_IMG_DIR_.'p/'.Image::getImgFolderStatic($cover['id_image']).(int)$cover['id_image'].'.jpg';
                 //$pack_items[$i]['image'] = ImageManager::thumbnail($path_to_image, 'pack_mini_'.$pack_item->id.'_'.$this->context->shop->id.'.jpg', 120);
                 ++$i;

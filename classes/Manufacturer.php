@@ -164,7 +164,7 @@ class ManufacturerCore extends ObjectModel
     /**
      * Get Manufacturer Address ID.
      *
-     * @return bool|false|string|null
+     * @return string|bool|false|null
      */
     protected function getManufacturerAddress()
     {
@@ -327,7 +327,7 @@ class ManufacturerCore extends ObjectModel
      *
      * @param string $name
      *
-     * @return bool|int
+     * @return int|bool
      */
     public static function getIdByName($name)
     {

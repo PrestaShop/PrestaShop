@@ -328,7 +328,7 @@ class DbMySQLiCore extends Db
      * @param string $pwd Password for database connection
      * @param string $db Database name
      * @param bool $newDbLink
-     * @param bool|string $engine
+     * @param string|bool $engine
      * @param int $timeout
      * @param mixed $new_db_link
      *
@@ -399,7 +399,7 @@ class DbMySQLiCore extends Db
      * @param string $prefix
      * @param string|null $engine Table engine
      *
-     * @return bool|string True, false or error
+     * @return string|bool True, false or error
      */
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {

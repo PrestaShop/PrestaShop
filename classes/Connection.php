@@ -133,7 +133,7 @@ class ConnectionCore extends ObjectModel
     /**
      * @param Cookie $cookie
      *
-     * @return bool|int Connection ID
+     * @return int|bool Connection ID
      *                  `false` if failure
      */
     public static function setNewConnection($cookie)

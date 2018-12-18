@@ -527,7 +527,7 @@ class StockManagementControllerTest extends ApiTestCase
     public function getMovementsStockParams()
     {
         return array(
-            // @TODO when entity manager can save movements in db
+            // @todo when entity manager can save movements in db
             //            array(
             //                array(),
             //                $expectedTotalPages = 1

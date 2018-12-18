@@ -818,7 +818,7 @@ class ProductCore extends ObjectModel
     /**
      * Get the default attribute for a product.
      *
-     * @param mixed $id_product
+     * @param int $id_product
      * @param mixed $minimum_quantity
      * @param mixed $reset
      *
@@ -1482,7 +1482,7 @@ class ProductCore extends ObjectModel
      * @param mixed $weight
      * @param mixed $unit_impact
      * @param mixed $ecotax
-     * @param mixed $quantity
+     * @param int $quantity
      * @param mixed $id_images
      * @param mixed $reference
      * @param mixed $id_supplier
@@ -1763,7 +1763,7 @@ class ProductCore extends ObjectModel
      * @see updateAttribute() to use instead
      * @see ProductSupplier for manage supplier reference(s)
      *
-     * @param mixed $id_product_attribute
+     * @param int $id_product_attribute
      * @param mixed $wholesale_price
      * @param mixed $price
      * @param mixed $weight
@@ -1997,11 +1997,11 @@ class ProductCore extends ObjectModel
      * @param mixed|null $upc
      * @param array $id_shop_list
      * @param mixed|null $available_date
-     * @param mixed $quantity
+     * @param int $quantity
      * @param mixed|null $low_stock_threshold
      * @param mixed $low_stock_alert
      *
-     * @return mixed $id_product_attribute or false
+     * @return int $id_product_attribute or false
      */
     public function addAttribute(
         $price,
@@ -2638,7 +2638,7 @@ class ProductCore extends ObjectModel
      * @param int $pageNumber Start from (optional)
      * @param int $nbProducts Number of products to return (optional)
      * @param mixed $page_number
-     * @param mixed $nb_products
+     * @param int $nb_products Number of products to return (optional)
      * @param mixed $count
      * @param mixed|null $order_by
      * @param mixed|null $order_way
@@ -2895,7 +2895,7 @@ class ProductCore extends ObjectModel
      * @param int $nbProducts Number of products to return (optional)
      * @param bool $count Only in order to get total number (optional)
      * @param mixed $page_number
-     * @param mixed $nb_products
+     * @param int $nb_products Number of products to return (optional)
      * @param mixed|null $order_by
      * @param mixed|null $order_way
      * @param mixed $beginning
@@ -3034,7 +3034,7 @@ class ProductCore extends ObjectModel
     /**
      * getProductCategories return an array of categories which this product belongs to.
      *
-     * @param mixed $id_product
+     * @param int $id_product
      *
      * @return array of categories
      */
@@ -3169,7 +3169,7 @@ class ProductCore extends ObjectModel
     /**
      * Get product cover image.
      *
-     * @param mixed $id_product
+     * @param int $id_product
      * @param Context|null $context
      *
      * @return array Product cover image
@@ -3378,7 +3378,7 @@ class ProductCore extends ObjectModel
      * @param bool $use_customer_price
      * @param int $id_cart
      * @param int $real_quantity
-     * @param mixed $id_customization
+     * @param int|false $id_customization
      *
      * @return float Product price
      */
@@ -3658,7 +3658,7 @@ class ProductCore extends ObjectModel
      * @param int $divisor Util when paying many time without fees (optional)
      * @param mixed $only_reduc
      * @param mixed $usereduc
-     * @param mixed $quantity
+     * @param int $quantity
      *
      * @return float Product price in euros
      */
@@ -3894,7 +3894,7 @@ class ProductCore extends ObjectModel
 
     public static function isAvailableWhenOutOfStock($out_of_stock)
     {
-        /** @TODO 1.5.0 Update of STOCK_MANAGEMENT & ORDER_OUT_OF_STOCK */
+        /** @todo 1.5.0 Update of STOCK_MANAGEMENT & ORDER_OUT_OF_STOCK */
         $ps_stock_management = Configuration::get('PS_STOCK_MANAGEMENT');
 
         if (!$ps_stock_management) {
@@ -4624,7 +4624,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product_old Old product id
      * @param int $id_product_old New product id
-     * @param mixed $id_product_new
+     * @param int $id_product_new
      */
     public static function duplicateFeatures($id_product_old, $id_product_new)
     {
@@ -5118,7 +5118,7 @@ class ProductCore extends ObjectModel
      * Select all features for a given language.
      *
      * @param $id_lang Language id
-     * @param mixed $id_product
+     * @param int $id_product
      *
      * @return array Array with feature's data
      */
@@ -6357,7 +6357,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $product_attribute_id
-     * @param mixed $id_product_attribute
+     * @param int $id_product_attribute
      *
      * @return array
      */
@@ -6528,7 +6528,7 @@ class ProductCore extends ObjectModel
      * @deprecated 1.7.3.1
      * @see Product::getIdProductAttributeByIdAttributes()
      *
-     * @param mixed $id_product
+     * @param int $id_product
      * @param mixed $id_attributes
      * @param mixed $find_best
      */
@@ -7077,7 +7077,7 @@ class ProductCore extends ObjectModel
     /**
      * Get object of redirect_type.
      *
-     * @return bool|string
+     * @return string|bool
      */
     public function getRedirectType()
     {

@@ -207,7 +207,7 @@ class AdminCountriesControllerCore extends AdminController
                     'class' => 'uppercase',
                     'required' => true,
                     'hint' => $this->trans('Two -- or three -- letter ISO code (e.g. "us" for United States).', array(), 'Admin.International.Help'),
-                    /* @TODO - add two lines for the hint? */
+                    /* @todo - add two lines for the hint? */
                     /*'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
                             <a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
                                 $this->l('Official list here').'

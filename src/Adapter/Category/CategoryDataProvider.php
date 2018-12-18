@@ -85,7 +85,7 @@ class CategoryDataProvider
      * Get all nested categories.
      *
      * @param int|null $root_category
-     * @param bool|int $id_lang
+     * @param int|bool $id_lang
      * @param bool $active
      * @param int|null $groups
      * @param bool $use_shop_restriction
@@ -108,7 +108,7 @@ class CategoryDataProvider
      * Return available categories Names - excluding Root category.
      *
      * @param int|null $root_category
-     * @param bool|int $id_lang
+     * @param int|bool $id_lang
      * @param bool $active return only active categories
      * @param $groups
      * @param bool $use_shop_restriction

@@ -152,7 +152,7 @@ class MediaCore
      * @param bool $fileUri
      * @param array $importUrl
      *
-     * @return bool|string
+     * @return string|bool
      */
     public static function minifyCSS($cssContent, $fileUri = false, &$importUrl = array())
     {
@@ -185,7 +185,7 @@ class MediaCore
      *
      * @param array $matches
      *
-     * @return bool|string
+     * @return string|bool
      */
     public static function replaceByAbsoluteURL($matches)
     {
@@ -417,7 +417,7 @@ class MediaCore
      * @param mixed $name
      * @param string|null $folder
      *
-     * @return bool|string
+     * @return string|bool
      */
     public static function getJqueryPluginPath($name, $folder = null)
     {
@@ -449,7 +449,7 @@ class MediaCore
      * @param mixed $name
      * @param string|null $folder
      *
-     * @return bool|string
+     * @return string|bool
      */
     public static function getJqueryPluginCSSPath($name, $folder = null)
     {
@@ -834,7 +834,7 @@ class MediaCore
      *
      * @param array $matches
      *
-     * @return bool|string Empty string or original script lines
+     * @return string|bool Empty string or original script lines
      */
     public static function deferScript($matches)
     {

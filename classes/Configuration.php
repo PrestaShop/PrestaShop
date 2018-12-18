@@ -415,7 +415,7 @@ class ConfigurationCore extends ObjectModel
      * Values are inserted/updated directly using SQL, because using (Configuration) ObjectModel
      * may not insert values correctly (for example, HTML is escaped, when it should not be).
      *
-     * @TODO Fix saving HTML values in Configuration model
+     * @todo Fix saving HTML values in Configuration model
      *
      * @param string $key Configuration key
      * @param mixed $values $values is an array if the configuration is multilingual, a single string else

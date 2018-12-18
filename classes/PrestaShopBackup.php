@@ -64,7 +64,7 @@ class PrestaShopBackupCore
     /**
      * you can set a different path with that function.
      *
-     * @TODO include the prefix name
+     * @todo include the prefix name
      *
      * @param string $dir
      *

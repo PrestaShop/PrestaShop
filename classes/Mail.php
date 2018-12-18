@@ -127,7 +127,7 @@ class MailCore extends ObjectModel
      * @param string $replyTo Reply-To recipient address
      * @param string $replyToName Reply-To recipient name
      *
-     * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
+     * @return int|bool Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
     public static function send(
         $idLang,
@@ -680,9 +680,9 @@ class MailCore extends ObjectModel
      * @param string $smtpLogin SMTP login name
      * @param string $smtpPassword SMTP password
      * @param int $smtpPort SMTP Port
-     * @param bool|string $smtpEncryption Encryption type. "off" or false disable encryption.
+     * @param string|bool $smtpEncryption Encryption type. "off" or false disable encryption.
      *
-     * @return bool|string True if succeeded, otherwise the error message
+     * @return string|bool True if succeeded, otherwise the error message
      */
     public static function sendMailTest(
         $smtpChecked,

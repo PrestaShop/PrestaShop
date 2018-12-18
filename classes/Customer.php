@@ -496,7 +496,7 @@ class CustomerCore extends ObjectModel
      * @param bool $returnId
      * @param bool $ignoreGuest To exclude guest customer
      *
-     * @return bool|int Customer ID if found
+     * @return int|bool Customer ID if found
      *                  `false` otherwise
      */
     public static function customerExists($email, $returnId = false, $ignoreGuest = true)
@@ -1218,7 +1218,7 @@ class CustomerCore extends ObjectModel
      *
      * @param bool|true $withOrder
      *
-     * @return bool|int
+     * @return int|bool
      */
     public function getLastEmptyCart($withOrder = true)
     {

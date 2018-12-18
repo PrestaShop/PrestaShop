@@ -129,7 +129,7 @@ class SurvivalTest extends WebTestCase
             'admin_order_delivery_slip' => ['Delivery Slips', 'admin_order_delivery_slip'],
             'admin_logs_index' => ['Logs', 'admin_logs_index'],
             'admin_system_information' => ['Information', 'admin_system_information'],
-            // @todo: something is missing for Vuejs application in translations page.
+            // @todo something is missing for Vuejs application in translations page.
             //'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
             'admin_theme_catalog' => ['Themes Catalog', 'admin_theme_catalog'],
             'admin_module_catalog' => ['Module selection', 'admin_module_catalog'],

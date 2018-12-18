@@ -58,7 +58,7 @@ class PackItemsManager
      *
      * @param Product $item
      * @param int $item_attribute_id
-     * @param bool|int $id_lang Optional
+     * @param int|bool $id_lang Optional
      *
      * @return array(Pack) The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
      */

@@ -614,7 +614,7 @@ class LanguageCore extends ObjectModel
      * Returns available languages.
      *
      * @param bool $active Select only active languages
-     * @param bool|int $id_shop Shop ID
+     * @param int|bool $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
      * @return array Languages
@@ -641,7 +641,7 @@ class LanguageCore extends ObjectModel
      * Returns an array of language IDs.
      *
      * @param bool $active Select only active languages
-     * @param bool|int $id_shop Shop ID
+     * @param int|bool $id_shop Shop ID
      *
      * @return array
      */
@@ -711,7 +711,7 @@ class LanguageCore extends ObjectModel
      * @param string $iso_code Iso code
      * @param bool $no_cache
      *
-     * @return false|string|null
+     * @return string|false|null
      */
     public static function getIdByIso($iso_code, $no_cache = false)
     {
@@ -753,7 +753,7 @@ class LanguageCore extends ObjectModel
      *
      * @throws Exception
      *
-     * @return false|string
+     * @return string|false
      */
     public static function getLocaleByIso($isoCode)
     {
@@ -775,7 +775,7 @@ class LanguageCore extends ObjectModel
      *
      * @throws Exception
      *
-     * @return false|string
+     * @return string|false
      */
     public static function getIsoByLocale($locale)
     {
@@ -835,7 +835,6 @@ class LanguageCore extends ObjectModel
      * Return array (id_lang, iso_code).
      *
      * @param string $iso_code Iso code
-     * @param mixed $active
      *
      * @return array Language (id_lang, iso_code)
      */

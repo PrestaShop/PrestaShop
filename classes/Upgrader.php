@@ -85,7 +85,7 @@ class UpgraderCore
      *
      * @return bool
      *
-     * @TODO ftp if copy is not possible (safe_mode for example)
+     * @todo ftp if copy is not possible (safe_mode for example)
      */
     public function downloadLast($dest, $filename = 'prestashop.zip')
     {

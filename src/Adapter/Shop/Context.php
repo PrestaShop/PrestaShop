@@ -63,7 +63,7 @@ class Context implements MultistoreContextCheckerInterface
     /**
      * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID).
      *
-     * @param bool|string $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
+     * @param string|bool $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
      *
      * @return array
      */

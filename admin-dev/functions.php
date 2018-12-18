@@ -81,10 +81,9 @@ function includeDatepicker($id, $time = false)
 /**
  * Generate a new settings file, only transmitted parameters are updated.
  *
- * @param string $baseUri Base URI
+ * @param string|null $base_urls Base URI
  * @param string $theme Theme name (eg. default)
  * @param array $array_db Parameters in order to connect to database
- * @param mixed|null $base_urls
  */
 function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
 {
@@ -294,9 +293,9 @@ function checkingTab($tab)
 }
 
 /**
- * @TODO deprecate for Tab::checkTabRights()
+ * @todo deprecate for Tab::checkTabRights()
  *
- * @param array $id_tab
+ * @param int $id_tab
  */
 function checkTabRights($id_tab)
 {
@@ -488,7 +487,7 @@ function runAdminTab($tab, $ajax_mode = false)
                             $admin_obj->ajaxProcess();
                         }
 
-                        // @TODO We should use a displayAjaxError
+                        // @todo We should use a displayAjaxError
                         $admin_obj->displayErrors();
                         if (!empty($action) && method_exists($admin_obj, 'displayAjax'.Tools::toCamelCase($action))) {
                             $admin_obj->{'displayAjax'.$action}();

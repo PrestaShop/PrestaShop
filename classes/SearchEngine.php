@@ -49,7 +49,7 @@ class SearchEngineCore extends ObjectModel
      *
      * @param string $url
      *
-     * @return bool|string
+     * @return string|bool
      */
     public static function getKeywords($url)
     {

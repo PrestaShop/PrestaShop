@@ -47,7 +47,7 @@ class ConfigurationValidator
             $errors[] = 'Cannot unzip files as php class ZipArchive is not available.';
         }
 
-        // @todo: be able to use fallback util directories
+        // @todo be able to use fallback util directories
         $downloadDirPath = __DIR__ . DIRECTORY_SEPARATOR . 'download';
         if (is_dir($downloadDirPath) || file_exists($downloadDirPath)) {
             $errors[] = "Directory 'download' already exists.";

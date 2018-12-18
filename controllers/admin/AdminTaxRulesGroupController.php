@@ -542,7 +542,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
      */
     protected function validateTaxRule(TaxRule $tr)
     {
-        // @TODO: check if the rule already exists
+        // @todo check if the rule already exists
         return $tr->validateController();
     }
 

@@ -592,7 +592,7 @@ class CartControllerCore extends FrontController
     /**
      * Check if the products in the cart are available.
      *
-     * @return bool|string
+     * @return string|bool
      */
     protected function areProductsAvailable()
     {

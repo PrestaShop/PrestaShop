@@ -225,7 +225,7 @@ class Install extends AbstractInstall
      *
      * @param $parameters
      *
-     * @return bool|int
+     * @return int|bool
      */
     public function processParameters($parameters)
     {

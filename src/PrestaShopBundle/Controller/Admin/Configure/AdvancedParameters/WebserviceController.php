@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Responsible of "Configure > Advanced Parameters > Webservice" page display.
  *
- * @todo: add unit tests
+ * @todo add unit tests
  */
 class WebserviceController extends FrameworkBundleAdminController
 {
@@ -95,7 +95,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function createAction()
     {
-        //@todo: this action should point to new add page
+        //@todo this action should point to new add page
         $legacyLink = $this->getAdminLink('AdminWebservice', [
             'addwebservice_account' => 1,
         ]);

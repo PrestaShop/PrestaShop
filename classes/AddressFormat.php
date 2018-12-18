@@ -166,7 +166,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @param string $patternName The composition of the class and field name
      * @param string $fieldsValidate The list of available field for the Address class
-     * @todo: Why is $fieldsValidate unused?
+     * @todo Why is $fieldsValidate unused?
      */
     protected function _checkLiableAssociation($patternName, $fieldsValidate)
     {
@@ -622,7 +622,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      *
-     * @return false|string|null Address format
+     * @return string|false|null Address format
      *
      * @since 1.7.0
      */

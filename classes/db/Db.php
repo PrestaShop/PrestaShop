@@ -191,7 +191,7 @@ abstract class DbCore
      *
      * @param string $db_name
      *
-     * @return bool|int
+     * @return int|bool
      */
     abstract public function set_db($db_name);
 
@@ -686,7 +686,7 @@ abstract class DbCore
      * @param DbQuery|string $sql
      * @param bool $use_cache
      *
-     * @return false|string|null
+     * @return string|false|null
      */
     public function getValue($sql, $use_cache = true)
     {
@@ -752,7 +752,7 @@ abstract class DbCore
     /**
      * Displays last SQL error.
      *
-     * @param bool|string $sql
+     * @param string|bool $sql
      *
      * @throws PrestaShopDatabaseException
      */
@@ -811,7 +811,7 @@ abstract class DbCore
      * @param string $pwd Password for database connection
      * @param string $db Database name
      * @param bool $new_db_link
-     * @param bool|string $engine
+     * @param string|bool $engine
      * @param int $timeout
      *
      * @return int Error code or 0 if connection was successful
@@ -861,7 +861,7 @@ abstract class DbCore
      * @param string $prefix
      * @param string|null $engine Table engine
      *
-     * @return bool|string True, false or error
+     * @return string|bool True, false or error
      */
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {

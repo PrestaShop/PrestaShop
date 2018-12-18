@@ -56,7 +56,7 @@ class Download
      * @param string $source
      * @param string $destination
      *
-     * @return bool|int
+     * @return int|bool
      */
     public static function copy($source, $destination)
     {

@@ -472,7 +472,7 @@ class AdminImagesControllerCore extends AdminController
      * @param $type
      * @param bool $productsImages
      *
-     * @return bool|string
+     * @return string|bool
      */
     protected function _regenerateNewImages($dir, $type, $productsImages = false)
     {

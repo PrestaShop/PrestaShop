@@ -194,7 +194,7 @@ class StockManager implements StockInterface
      * @param null $productAttributeId
      * @param null $shopId
      *
-     * @return bool|int
+     * @return int|bool
      */
     public function getStockAvailableIdByProductId($productId, $productAttributeId = null, $shopId = null)
     {

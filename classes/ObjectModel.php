@@ -212,8 +212,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param int|null $id if specified, loads and existing object from DB (optional)
      * @param int|null $id_lang required if object is multilingual (optional)
      * @param int|null $id_shop ID shop for objects with multishop tables
-     * @param PrestaShopBundle\Translation\Translator
-     * @param mixed|null $translator
+     * @param PrestaShopBundle\Translation\Translator|null $translator
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -610,7 +609,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopDatabaseException
      *
-     * @return false|ObjectModel
+     * @return ObjectModel|false
      */
     public function duplicateObject()
     {
@@ -977,7 +976,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      *
-     * @return bool|string true, false or error message
+     * @return string|bool true, false or error message
      */
     public function validateFields($die = true, $error_return = false)
     {
@@ -1011,7 +1010,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      *
-     * @return bool|string true, false or error message
+     * @return string|bool true, false or error message
      */
     public function validateFieldsLang($die = true, $errorReturn = false)
     {
@@ -2017,7 +2016,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Retrocompatibility for classes without $definition static.
      *
-     * @TODO Remove this in 1.6 !
+     * @todo Remove this in 1.6 !
      *
      * @since 1.5.0.1
      */

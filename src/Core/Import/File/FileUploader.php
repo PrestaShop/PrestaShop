@@ -100,7 +100,7 @@ final class FileUploader
      *
      * @param UploadedFile $uploadedFile
      *
-     * @return false|string Returns error string on error or FALSE otherwise
+     * @return string|false Returns error string on error or FALSE otherwise
      */
     protected function validateUploadedFile(UploadedFile $uploadedFile)
     {

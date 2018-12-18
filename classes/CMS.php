@@ -260,7 +260,7 @@ class CMSCore extends ObjectModel
     /**
      * @param $idCategory
      *
-     * @return false|string|null
+     * @return string|false|null
      */
     public static function getLastPosition($idCategory)
     {

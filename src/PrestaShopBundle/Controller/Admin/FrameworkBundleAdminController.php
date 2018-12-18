@@ -173,7 +173,7 @@ class FrameworkBundleAdminController extends Controller
      * Generates a documentation link.
      *
      * @param string $section Legacy controller name
-     * @param bool|string $title Help title
+     * @param string|bool $title Help title
      *
      * @return string
      */

@@ -143,7 +143,7 @@ class CategoryControllerCore extends ProductListingFrontController
     /**
      * overrides layout if category is not visible.
      *
-     * @return bool|string
+     * @return string|bool
      */
     public function getLayout()
     {

@@ -421,7 +421,7 @@ class AddressCore extends ObjectModel
      * @param int $id_customer Customer id
      * @param bool $active Active addresses only
      *
-     * @return bool|int|null
+     * @return int|bool|null
      */
     public static function getFirstCustomerAddressId($id_customer, $active = true)
     {
@@ -539,8 +539,8 @@ class AddressCore extends ObjectModel
      * @param int $id_address Address id
      * @param int $id_customer Customer id
      *
-     * @return false|string|null Amount of aliases found
-     * @todo: Find out if we shouldn't be returning an int instead? (breaking change)
+     * @return string|false|null Amount of aliases found
+     * @todo Find out if we shouldn't be returning an int instead? (breaking change)
      */
     public static function aliasExist($alias, $id_address, $id_customer)
     {

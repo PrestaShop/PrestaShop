@@ -3,7 +3,7 @@
  * Note: This file has been modified for PHP 7.2 compatibility.
  * See:
  * - https://github.com/PrestaShop/PrestaShop/pull/9409
- * - https://github.com/sensiolabs/SensioDistributionBundle/pull/336.
+ * - https://github.com/sensiolabs/SensioDistributionBundle/pull/336
  */
 
 /*
@@ -370,7 +370,7 @@ class RequirementCollection implements IteratorAggregate
     /**
      * Returns the PHP configuration file (php.ini) path.
      *
-     * @return false|string php.ini file path
+     * @return string|false php.ini file path
      */
     public function getPhpIniConfigPath()
     {
@@ -803,7 +803,7 @@ class SymfonyRequirements extends RequirementCollection
     /**
      * Defines PHP required version from Symfony version.
      *
-     * @return false|string The PHP required version or false if it could not be guessed
+     * @return string|false The PHP required version or false if it could not be guessed
      */
     protected function getPhpRequiredVersion()
     {

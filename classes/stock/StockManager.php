@@ -524,8 +524,8 @@ class StockManagerCore implements StockManagerInterface
     /**
      * @see StockManagerInterface::getProductPhysicalQuantities()
      *
-     * @param mixed $id_product
-     * @param mixed $id_product_attribute
+     * @param int $id_product
+     * @param int $id_product_attribute
      * @param mixed|null $ids_warehouse
      * @param mixed $usable
      */
@@ -564,8 +564,8 @@ class StockManagerCore implements StockManagerInterface
     /**
      * @see StockManagerInterface::getProductRealQuantities()
      *
-     * @param mixed $id_product
-     * @param mixed $id_product_attribute
+     * @param int $id_product
+     * @param int $id_product_attribute
      * @param mixed|null $ids_warehouse
      * @param mixed $usable
      */
@@ -678,9 +678,9 @@ class StockManagerCore implements StockManagerInterface
     /**
      * @see StockManagerInterface::transferBetweenWarehouses()
      *
-     * @param mixed $id_product
-     * @param mixed $id_product_attribute
-     * @param mixed $quantity
+     * @param int $id_product
+     * @param int $id_product_attribute
+     * @param int $quantity
      * @param mixed $id_warehouse_from
      * @param mixed $id_warehouse_to
      * @param mixed $usable_from
@@ -758,8 +758,8 @@ class StockManagerCore implements StockManagerInterface
      * @see StockManagerInterface::getProductCoverage()
      * Here, $coverage is a number of days
      *
-     * @param mixed $id_product
-     * @param mixed $id_product_attribute
+     * @param int $id_product
+     * @param int $id_product_attribute
      * @param mixed $coverage
      * @param mixed|null $id_warehouse
      *

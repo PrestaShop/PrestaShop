@@ -903,7 +903,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
      * @param string|null $order_way
      * @param int $start
      * @param int|null $limit
-     * @param bool|int $id_lang_shop
+     * @param int|bool $id_lang_shop
      *
      * @throws PrestaShopException
      */

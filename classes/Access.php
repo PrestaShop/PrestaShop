@@ -133,7 +133,7 @@ class AccessCore extends ObjectModel
      * @param string $authSlug Slug
      *
      * @return string Tab ID
-     * @todo: Find out if we should return an int instead. (breaking change)
+     * @todo Find out if we should return an int instead. (breaking change)
      */
     public static function findIdTabByAuthSlug($authSlug)
     {
@@ -235,7 +235,7 @@ class AccessCore extends ObjectModel
      *
      * @param string $legacyAuth Legacy authorization
      *
-     * @return array|bool|string Authorization
+     * @return array|string|bool Authorization
      */
     public static function getAuthorizationFromLegacy($legacyAuth)
     {

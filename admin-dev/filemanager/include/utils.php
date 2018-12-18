@@ -339,7 +339,7 @@ function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path,
  *
  * @param string $url the url to get the file from
  *
- * @return bool|string false or the file's string content
+ * @return string|bool false or the file's string content
  */
 function get_file_by_url($url)
 {

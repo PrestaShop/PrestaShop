@@ -30,9 +30,8 @@ class FileLoggerCore extends AbstractLogger
     /**
      * Write the message in the log file.
      *
-     * @param string message
+     * @param string $message Message
      * @param level
-     * @param mixed $message
      * @param mixed $level
      */
     protected function logMessage($message, $level)

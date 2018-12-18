@@ -574,7 +574,7 @@ class CartCore extends ObjectModel
      * @param int $id_cart_rule CartRule ID
      *
      * @return int Amount of Customer Discounts
-     * @todo: What are customer discounts? Isn't this just a PriceRule and shouldn't this method be renamed instead?
+     * @todo What are customer discounts? Isn't this just a PriceRule and shouldn't this method be renamed instead?
      */
     public function getDiscountsCustomer($id_cart_rule)
     {
@@ -1292,11 +1292,11 @@ class CartCore extends ObjectModel
      * @param int $id_product Product ID
      * @param int $id_product_attribute Attribute ID if needed
      * @param string $operator Indicate if quantity must be increased or decreased
-     * @param mixed $id_customization
-     * @param mixed $id_address_delivery
+     * @param int|false $id_customization
+     * @param int $id_address_delivery
      * @param Shop|null $shop
-     * @param mixed $auto_add_cart_rule
-     * @param mixed $skipAvailabilityCheckOutOfStock
+     * @param bool $auto_add_cart_rule
+     * @param bool $skipAvailabilityCheckOutOfStock
      *
      * @return bool Whether the quantity has been succesfully updated
      */
@@ -1506,12 +1506,12 @@ class CartCore extends ObjectModel
     /**
      * Customization management.
      *
-     * @param mixed $quantity
-     * @param mixed $id_customization
-     * @param mixed $id_product
-     * @param mixed $id_product_attribute
-     * @param mixed $id_address_delivery
-     * @param mixed $operator
+     * @param int $quantity
+     * @param int|false $id_customization
+     * @param int $id_product
+     * @param int $id_product_attribute
+     * @param int $id_address_delivery
+     * @param string $operator
      */
     protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $id_address_delivery, $operator = 'up')
     {
@@ -1801,7 +1801,7 @@ class CartCore extends ObjectModel
      * @param int|null $id_address_delivery Unused
      *
      * @return bool Indicates if the Customization was successfully deleted
-     * @todo: Remove unused parameters
+     * @todo Remove unused parameters
      */
     protected function _deleteCustomization($id_customization, $id_product, $id_product_attribute, $id_address_delivery = 0)
     {
@@ -1871,7 +1871,7 @@ class CartCore extends ObjectModel
      * @param int $id_cart Cart ID
      *
      * @return string Formatted total amount in Cart
-     * @todo: What is this?
+     * @todo What is this?
      */
     public static function getOrderTotalUsingTaxCalculationMethod($id_cart)
     {
@@ -3757,7 +3757,7 @@ class CartCore extends ObjectModel
      * @param mixed $products
      * @param mixed $check_cart_discount
      *
-     * @return bool|string
+     * @return string|bool
      */
     public function checkDiscountValidity($obj, $discounts, $order_total, $products, $check_cart_discount = false)
     {
@@ -4013,7 +4013,7 @@ class CartCore extends ObjectModel
      *
      * @param int $id_customer Customer ID
      *
-     * @return bool|int Last abandoned Cart ID
+     * @return int|bool Last abandoned Cart ID
      *                  false if not found
      */
     public static function lastNoneOrderedCart($id_customer)
@@ -4112,7 +4112,7 @@ class CartCore extends ObjectModel
      *
      * @param int $id_order Order ID
      *
-     * @return bool|int Cart ID, false if not found
+     * @return int|bool Cart ID, false if not found
      */
     public static function getCartIdByOrderId($id_order)
     {
@@ -4130,11 +4130,10 @@ class CartCore extends ObjectModel
      * @param int $id_product Product ID
      * @param int $index
      * @param int $type
-     * @param string $textValue
-     * @param mixed $text_value
+     * @param string $text_value
      *
      * @return bool Always true
-     * @todo: Improve this PHPDoc comment
+     * @todo Improve this PHPDoc comment
      */
     public function addTextFieldToProduct($id_product, $index, $type, $text_value)
     {
@@ -4144,7 +4143,7 @@ class CartCore extends ObjectModel
     /**
      * Add customer's pictures.
      *
-     * @param mixed $id_product
+     * @param int $id_product
      * @param mixed $index
      * @param mixed $type
      * @param mixed $file
@@ -4178,7 +4177,7 @@ class CartCore extends ObjectModel
      * @param int $index
      *
      * @return bool
-     * @todo: Improve this PHPDoc comment
+     * @todo Improve this PHPDoc comment
      */
     public function deleteCustomizationToProduct($id_product, $index)
     {
@@ -4262,7 +4261,7 @@ class CartCore extends ObjectModel
      * @param string $tr Unused parameter
      *
      * @return string
-     * @todo: Remove unused parameter
+     * @todo Remove unused parameter
      */
     public static function replaceZeroByShopName($echo, $tr)
     {
@@ -4432,7 +4431,7 @@ class CartCore extends ObjectModel
      * @param array $values Values from webservice
      *
      * @return bool Whether the values have been successfully inserted
-     * @todo: This function always returns true, make it depend on actual result of DB query
+     * @todo This function always returns true, make it depend on actual result of DB query
      */
     public function setWsCartRows($values)
     {

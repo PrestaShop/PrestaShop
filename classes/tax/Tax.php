@@ -192,7 +192,6 @@ class TaxCore extends ObjectModel
     /**
      * Returns the ecotax tax rate.
      *
-     * @param id_address
      * @param mixed|null $id_address
      *
      * @return float $tax_rate
@@ -210,7 +209,6 @@ class TaxCore extends ObjectModel
     /**
      * Returns the carrier tax rate.
      *
-     * @param id_address
      * @param mixed $id_carrier
      * @param mixed|null $id_address
      *

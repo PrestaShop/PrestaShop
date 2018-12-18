@@ -298,7 +298,7 @@ class CartRuleCore extends ObjectModel
      *
      * @param string $code Voucher code
      *
-     * @return bool|int CartRule ID
+     * @return int|bool CartRule ID
      *                  false if not found
      */
     public static function getIdByCode($code)
@@ -840,7 +840,7 @@ class CartRuleCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      *
-     * @return array|bool|string
+     * @return array|string|bool
      */
     public function checkProductRestrictions(Context $context, $returnProducts = false, $displayError = true, $alreadyInCart = false)
     {
@@ -861,7 +861,7 @@ class CartRuleCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      *
-     * @return array|bool|string
+     * @return array|string|bool
      */
     public function checkProductRestrictionsFromCart(Cart $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
     {

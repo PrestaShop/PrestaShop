@@ -60,7 +60,7 @@ class InstallManager
         $this->download = new Download();
         $this->unzip = new Unzip();
 
-        // @todo: be able to use fallback util directories
+        // @todo be able to use fallback util directories
         $this->downloadDirectoryPath = __DIR__ . DIRECTORY_SEPARATOR . 'download';
         $this->extractDirectoryPath = __DIR__ . DIRECTORY_SEPARATOR . 'extracted';
     }
@@ -117,7 +117,7 @@ class InstallManager
             );
         }
 
-        // @todo: validate checksum ?
+        // @todo validate checksum ?
 
         // unzip archive into 'extracted' directory
         $this->unzip->unzipArchive($destinationPath, $this->extractDirectoryPath);

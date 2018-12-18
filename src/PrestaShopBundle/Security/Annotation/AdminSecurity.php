@@ -48,7 +48,7 @@ class AdminSecurity extends Security
     /**
      * The route for the redirection.
      *
-     * @todo: Once the onboarding page is migrated, set default to his route name.
+     * @todo Once the onboarding page is migrated, set default to his route name.
      *
      * @var string
      */

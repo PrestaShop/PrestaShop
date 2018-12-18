@@ -47,7 +47,7 @@ class AdminControllerCore extends Controller
     /** @var array */
     public $confirmations = array();
 
-    /** @var false|string */
+    /** @var string|false */
     public $shopShareDatas = false;
 
     /** @var array */
@@ -77,7 +77,7 @@ class AdminControllerCore extends Controller
     /** @var string */
     public $list_id;
 
-    /** @var false|string Object identifier inside the associated table */
+    /** @var string|false Object identifier inside the associated table */
     protected $identifier = false;
 
     /** @var string */
@@ -915,7 +915,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @TODO uses redirectAdmin only if !$this->ajax
+     * @todo uses redirectAdmin only if !$this->ajax
      *
      * @return bool|ObjectModel
      */
@@ -979,7 +979,7 @@ class AdminControllerCore extends Controller
     /**
      * Object Delete images.
      *
-     * @return false|ObjectModel
+     * @return ObjectModel|false
      */
     public function processDeleteImage()
     {
@@ -1068,7 +1068,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return false|ObjectModel
+     * @return ObjectModel|false
      */
     public function processDelete()
     {
@@ -1115,7 +1115,7 @@ class AdminControllerCore extends Controller
     /**
      * Call the right method for creating or updating object.
      *
-     * @return false|ObjectModel|void
+     * @return ObjectModel|false|void
      */
     public function processSave()
     {
@@ -1133,7 +1133,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return false|ObjectModel
+     * @return ObjectModel|false
      */
     public function processAdd()
     {
@@ -1186,7 +1186,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return false|ObjectModel|void
+     * @return ObjectModel|false|void
      */
     public function processUpdate()
     {
@@ -1299,7 +1299,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return false|ObjectModel
+     * @return ObjectModel|false
      */
     public function processStatus()
     {
@@ -1333,7 +1333,7 @@ class AdminControllerCore extends Controller
     /**
      * Change object position.
      *
-     * @return false|ObjectModel
+     * @return ObjectModel|false
      */
     public function processPosition()
     {
@@ -1650,7 +1650,7 @@ class AdminControllerCore extends Controller
      *
      * @param bool $opt Return an empty object if load fail
      *
-     * @return false|ObjectModel
+     * @return ObjectModel|false
      */
     protected function loadObject($opt = false)
     {
@@ -2352,7 +2352,7 @@ class AdminControllerCore extends Controller
     /**
      * Was used to display a list of recommended modules.
      *
-     * @param bool|string $tracking_source Source information for URL used by "Install" button
+     * @param string|bool $tracking_source Source information for URL used by "Install" button
      *
      * @return string Empty
      *
@@ -2368,7 +2368,7 @@ class AdminControllerCore extends Controller
      *
      * @throws PrestaShopException
      *
-     * @return false|string
+     * @return string|false
      */
     public function renderList()
     {
@@ -2459,7 +2459,7 @@ class AdminControllerCore extends Controller
     /**
      * Override to render the view page.
      *
-     * @return false|string
+     * @return string|false
      */
     public function renderDetails()
     {
@@ -3086,7 +3086,7 @@ class AdminControllerCore extends Controller
      * @param string|null $order_way Order way (ASC, DESC)
      * @param int $start Offset in LIMIT clause
      * @param int|null $limit Row count in LIMIT clause
-     * @param bool|int $id_lang_shop
+     * @param int|bool $id_lang_shop
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -3344,7 +3344,7 @@ class AdminControllerCore extends Controller
     /**
      * @param $orderBy
      *
-     * @return false|string
+     * @return string|false
      */
     protected function checkOrderBy($orderBy)
     {
@@ -3479,7 +3479,7 @@ class AdminControllerCore extends Controller
 
     /**
      * @param array|string $filter_modules_list
-     * @param bool|string $tracking_source
+     * @param string|bool $tracking_source
      *
      * @throws PrestaShopException
      *
@@ -3624,7 +3624,7 @@ class AdminControllerCore extends Controller
     /**
      * Manage page display (form, list...).
      *
-     * @param bool|string $class_name Allow to validate a different class than the current one
+     * @param string|bool $class_name Allow to validate a different class than the current one
      *
      * @throws PrestaShopException
      */
@@ -3942,7 +3942,7 @@ class AdminControllerCore extends Controller
      * @param int $id
      * @param string $name
      * @param string $dir
-     * @param bool|string $ext
+     * @param string|bool $ext
      * @param int|null $width
      * @param int|null $height
      *
@@ -4270,7 +4270,7 @@ class AdminControllerCore extends Controller
      * @param Module $module
      * @param string $output_type
      * @param string|null $back
-     * @param bool|string $install_source_tracking
+     * @param string|bool $install_source_tracking
      */
     public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
     {
@@ -4327,7 +4327,7 @@ class AdminControllerCore extends Controller
      * @param Module $module
      * @param string $output_type (link or select)
      * @param string|null $back
-     * @param bool|string $install_source_tracking
+     * @param string|bool $install_source_tracking
      *
      * @return array|string
      */

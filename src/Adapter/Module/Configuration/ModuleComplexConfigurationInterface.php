@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 
 /**
- * @todo: document what is the contract of this interface.
+ * @todo document what is the contract of this interface.
  */
 interface ModuleComplexConfigurationInterface
 {

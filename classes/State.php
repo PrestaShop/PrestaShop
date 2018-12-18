@@ -238,7 +238,7 @@ class StateCore extends ObjectModel
      *
      * @param int $idState State ID
      *
-     * @return false|string|null
+     * @return string|false|null
      */
     public static function getIdZone($idState)
     {

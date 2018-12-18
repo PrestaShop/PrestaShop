@@ -439,7 +439,7 @@ class ImageManagerCore
      * @param int $maxFileSize Maximum upload size
      * @param mixed|null $types
      *
-     * @return bool|string Return false if no error encountered
+     * @return string|bool Return false if no error encountered
      */
     public static function validateUpload($file, $maxFileSize = 0, $types = null)
     {
@@ -462,7 +462,7 @@ class ImageManagerCore
      * @param array $file Upload $_FILE value
      * @param int $maxFileSize Maximum upload size
      *
-     * @return bool|string Return false if no error encountered
+     * @return string|bool Return false if no error encountered
      */
     public static function validateIconUpload($file, $maxFileSize = 0)
     {

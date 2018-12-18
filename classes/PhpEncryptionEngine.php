@@ -64,7 +64,7 @@ class PhpEncryptionEngineCore
      *
      * @throws Exception
      *
-     * @return bool|string Plaintext
+     * @return string|bool Plaintext
      *                     `false` if unable to decrypt
      */
     public function decrypt($cipherText)

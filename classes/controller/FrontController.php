@@ -1286,7 +1286,7 @@ class FrontControllerCore extends Controller
     /**
      * Recovers cart information.
      *
-     * @return false|int
+     * @return int|false
      */
     protected function recoverCart()
     {
@@ -1360,7 +1360,7 @@ class FrontControllerCore extends Controller
      *
      * @since 1.5.0.13
      *
-     * @return bool|string
+     * @return string|bool
      */
     public function getLayout()
     {

@@ -57,7 +57,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
      * @param string $cache_id cache id
      * @param string $compile_id compile id
      *
-     * @return bool|int timestamp (epoch) the template was modified, or false if not found
+     * @return int|bool timestamp (epoch) the template was modified, or false if not found
      */
     protected function fetchTimestamp($id, $name, $cache_id, $compile_id)
     {

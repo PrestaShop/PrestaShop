@@ -351,7 +351,7 @@ class CarrierCore extends ObjectModel
      *
      * @param int $id_zone Zone ID
      *
-     * @return false|string|null Maximum delivery price
+     * @return string|false|null Maximum delivery price
      */
     public function getMaxDeliveryPriceByWeight($id_zone)
     {
@@ -515,7 +515,7 @@ class CarrierCore extends ObjectModel
      *                             - ALL_CARRIERS
      * @param bool $active Returns only active carriers when true
      * @param bool $delete
-     * @param false|int $id_zone
+     * @param int|false $id_zone
      * @param array|null $ids_group
      *
      * @return array Carriers
@@ -583,7 +583,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get most used Tax rules group.
      *
-     * @return false|string|null Most used Tax rules group ID
+     * @return string|false|null Most used Tax rules group ID
      */
     public static function getIdTaxRulesGroupMostUsed()
     {
@@ -1140,7 +1140,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get range table of carrier.
      *
-     * @return bool|string Range table, false if not found
+     * @return string|bool Range table, false if not found
      */
     public function getRangeTable()
     {
@@ -1157,7 +1157,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get Range object, price or weight, depending on the shipping method given.
      *
-     * @param bool|int $shipping_method Shipping method enumerator
+     * @param int|bool $shipping_method Shipping method enumerator
      *                                  Use false in order to let this method find the correct one
      *
      * @return bool|RangePrice|RangeWeight
@@ -1202,7 +1202,7 @@ class CarrierCore extends ObjectModel
      *
      * @param Context|null $context Context
      *
-     * @return false|string|null TaxrulesGroup ID
+     * @return string|false|null TaxrulesGroup ID
      *                           false if not found
      */
     public function getIdTaxRulesGroup(Context $context = null)
@@ -1216,7 +1216,7 @@ class CarrierCore extends ObjectModel
      * @param int $id_carrier Carrier ID
      * @param Context|null $context Context
      *
-     * @return false|string|null TaxRulesGroup ID
+     * @return string|false|null TaxRulesGroup ID
      *                           false if not found
      */
     public static function getIdTaxRulesGroupByIdCarrier($id_carrier, Context $context = null)

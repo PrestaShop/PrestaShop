@@ -29,7 +29,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
 }
 include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
-/*
+/**
  * @deprecated 1.5.0
  * This file is deprecated, please use AdminPdfController instead
  */
