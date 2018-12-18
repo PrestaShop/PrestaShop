@@ -26,7 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\CoreException;
 
-/*
+/**
  * Class CustomerCore
  */
 class CustomerCore extends ObjectModel
