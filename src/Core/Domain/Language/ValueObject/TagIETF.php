@@ -24,38 +24,52 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Language\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Language\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 
 /**
- * Exception is thrown when language with already existing ISO code is detected
+ * Stores IETF tag value
  */
-class LanguageWithGivenIsoCodeAlreadyExistsException extends LanguageException
+class TagIETF
 {
     /**
-     * @var IsoCode
+     * @var string
      */
-    private $isoCode;
+    private $tagIETF;
 
     /**
-     * @param IsoCode $isoCode
-     * @param string $message
-     * @param int $code
-     * @param \Exception|null $previous
+     * @param string $tagIETF
+     *
+     * @throws LanguageConstraintException
      */
-    public function __construct(IsoCode $isoCode, $message = '', $code = 0, $previous = null)
+    public function __construct($tagIETF)
     {
-        parent::__construct($message, $code, $previous);
+        $this->assertIsTagIETF($tagIETF);
 
-        $this->isoCode = $isoCode;
+        $this->tagIETF = $tagIETF;
     }
 
     /**
-     * @return IsoCode
+     * @return string
      */
-    public function getIsoCode()
+    public function getValue()
     {
-        return $this->isoCode;
+        return $this->tagIETF;
+    }
+
+    /**
+     * @param string $tagIETF
+     *
+     * @throws LanguageConstraintException
+     */
+    private function assertIsTagIETF($tagIETF)
+    {
+        if (!is_string($tagIETF) || !preg_match('/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/', $tagIETF)) {
+            throw new LanguageConstraintException(
+                sprintf('Invalid IETF tag %s provided', var_export($tagIETF, true)),
+                LanguageConstraintException::INVALID_IETF_TAG
+            );
+        }
     }
 }
