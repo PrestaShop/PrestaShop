@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Language\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+
 /**
  * Adds new language with given data
  */
@@ -37,7 +39,7 @@ class AddLanguageCommand
     private $name;
 
     /**
-     * @var string Two-letter (639-1) language ISO code, e.g. FR, EN
+     * @var IsoCode Two-letter (639-1) language ISO code, e.g. FR, EN
      */
     private $isoCode;
 
@@ -91,7 +93,7 @@ class AddLanguageCommand
         array $shopAssociation = []
     ) {
         $this->name = $name;
-        $this->isoCode = $isoCode;
+        $this->isoCode = new IsoCode($isoCode);
         $this->tagIETF = $tagIETF;
         $this->shortDateFormat = $shortDateFormat;
         $this->fullDateFormat = $fullDateFormat;
@@ -109,7 +111,7 @@ class AddLanguageCommand
     }
 
     /**
-     * @return string
+     * @return IsoCode
      */
     public function getIsoCode()
     {
