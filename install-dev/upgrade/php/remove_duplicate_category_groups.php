@@ -36,8 +36,8 @@ function remove_duplicate_category_groups()
 		ORDER BY `count` DESC');
     
     foreach ($result as $row) {
-        if ((int)$row['count'] > 1) {
-            $limit = (int)$row['count'] - 1;
+        if ((int) $row['count'] > 1) {
+            $limit = (int) $row['count'] - 1;
             $result = Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'category_group`
 				WHERE `id_category` = '.$row['id_category'].' AND `id_group` = '.$row['id_group'].'

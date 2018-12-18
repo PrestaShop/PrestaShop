@@ -170,7 +170,7 @@ if (isset($_POST['submit'])) {
             'type' => Tools::safeOutput($_GET['type']),
             'lang' => Tools::safeOutput($lang),
             'popup' => $popup,
-            'field_id' => isset($_GET['field_id']) ? (int)$_GET['field_id'] : '',
+            'field_id' => isset($_GET['field_id']) ? (int) $_GET['field_id'] : '',
             'fldr' => '',
         )
     );
@@ -401,7 +401,7 @@ if (isset($_POST['submit'])) {
     ?>"/>
 								<input type="hidden" name="type" value="<?php echo Tools::safeOutput($_GET['type']);
     ?>"/>
-								<input type="hidden" name="field_id" value="<?php echo (int)$_GET['field_id'];
+								<input type="hidden" name="field_id" value="<?php echo (int) $_GET['field_id'];
     ?>"/>
 								<input type="hidden" name="popup" value="<?php echo Tools::safeOutput($popup);
     ?>"/>

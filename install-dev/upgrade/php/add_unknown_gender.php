@@ -32,7 +32,7 @@ function add_unknown_gender()
     $id_type = 2;
     $res &= Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'gender` (`type`)
-		VALUES ('.(int)$id_type.')');
+		VALUES ('.(int) $id_type.')');
 
     // retrieves its id
     $id_gender = Db::getInstance()->Insert_ID();
@@ -51,12 +51,12 @@ function add_unknown_gender()
         $name = (isset($lang_names[$lang['iso_code']]) ? $lang_names[$lang['iso_code']] : 'Unknown');
         $res &= Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'gender_lang` (`id_gender`, `id_lang`, `name`) VALUES
-				('.(int)$id_gender.', '.(int)$lang['id_lang'].', \''.pSQL($name).'\')');
+				('.(int) $id_gender.', '.(int) $lang['id_lang'].', \''.pSQL($name).'\')');
     }
 
     // for all clients where id gender is 0, sets the new id gender
     $res &= Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'customers`
-		SET `id_gender` = '.(int)$id_gender.'
+		SET `id_gender` = '.(int) $id_gender.'
 		WHERE `id_gender` = 0');
 }

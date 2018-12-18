@@ -36,7 +36,7 @@ function fix_unique_specific_price()
 
     $sql = '';
     foreach ($result as $row) {
-        $sql .= (int)$row['id_specific_price'].',';
+        $sql .= (int) $row['id_specific_price'].',';
     }
     $sql = rtrim($sql, ',');
 

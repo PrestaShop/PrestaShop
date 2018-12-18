@@ -72,18 +72,18 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         Shop::setContext(Shop::CONTEXT_SHOP, 1);
         Configuration::loadConfiguration();
         if (!isset(Context::getContext()->language) || !Validate::isLoadedObject(Context::getContext()->language)) {
-            if ($id_lang = (int)Configuration::get('PS_LANG_DEFAULT')) {
+            if ($id_lang = (int) Configuration::get('PS_LANG_DEFAULT')) {
                 Context::getContext()->language = new Language($id_lang);
             }
         }
         if (!isset(Context::getContext()->country) || !Validate::isLoadedObject(Context::getContext()->country)) {
-            if ($id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT')) {
-                Context::getContext()->country = new Country((int)$id_country);
+            if ($id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT')) {
+                Context::getContext()->country = new Country((int) $id_country);
             }
         }
         if (!isset(Context::getContext()->currency) || !Validate::isLoadedObject(Context::getContext()->currency)) {
-            if ($id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT')) {
-                Context::getContext()->currency = new Currency((int)$id_currency);
+            if ($id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT')) {
+                Context::getContext()->currency = new Currency((int) $id_currency);
             }
         }
 
@@ -204,7 +204,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     public function processInstallDefaultData()
     {
         $this->initializeContext();
-        if (!$res = $this->model_install->installDefaultData($this->datas->shop_name, $this->datas->shop_country, (int)$this->datas->all_languages, true)) {
+        if (!$res = $this->model_install->installDefaultData($this->datas->shop_name, $this->datas->shop_country, (int) $this->datas->all_languages, true)) {
             return false;
         }
 

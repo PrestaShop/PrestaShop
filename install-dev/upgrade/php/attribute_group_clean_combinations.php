@@ -33,8 +33,8 @@ function attribute_group_clean_combinations()
 			ON (pa.`id_product_attribute` = pac.`id_product_attribute`)');
     $toRemove = array();
     foreach ($attributeCombinations as $attributeCombination) {
-        if ((int)($attributeCombination['id_attribute']) == 0) {
-            $toRemove[] = (int)($attributeCombination['id_product_attribute']);
+        if ((int) ($attributeCombination['id_attribute']) == 0) {
+            $toRemove[] = (int) ($attributeCombination['id_product_attribute']);
         }
     }
 

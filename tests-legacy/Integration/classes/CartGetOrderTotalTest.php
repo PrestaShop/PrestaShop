@@ -98,7 +98,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
     private static function getLanguageId()
     {
-        return (int)Context::getContext()->language->id;
+        return (int) Context::getContext()->language->id;
     }
 
     private static function getDefaultLanguageId()
@@ -193,7 +193,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
             $tax->name = $name;
             $tax->rate = $rate;
             $tax->active = true;
-            Assert::assertTrue((bool)$tax->save()); // casting because actually returns 1, but not the point here.
+            Assert::assertTrue((bool) $tax->save()); // casting because actually returns 1, but not the point here.
             $taxes[$name] = $tax->id;
         }
 
@@ -213,7 +213,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
             $taxRulesGroup = new TaxRulesGroup(null, self::getDefaultLanguageId());
             $taxRulesGroup->name = $name;
             $taxRulesGroup->active = true;
-            Assert::assertTrue((bool)$taxRulesGroup->save());
+            Assert::assertTrue((bool) $taxRulesGroup->save());
 
             $taxRule = new TaxRule(null, self::getDefaultLanguageId());
             $taxRule->id_tax = self::getIdTax($rate);
@@ -297,7 +297,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
             if (null !== $shippingCost) {
                 // Populate one range
                 Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'range_price (id_carrier, delimiter1, delimiter2) VALUES (
-                    '.(int)$carrier->id.',
+                    '.(int) $carrier->id.',
                     0,1
                 )');
 
@@ -307,14 +307,14 @@ class CartGetOrderTotalTest extends IntegrationTestCase
                 // apply our shippingCost to all zones
                 Db::getInstance()->execute(
                     'INSERT INTO '._DB_PREFIX_.'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price)
-                     SELECT '.(int)$carrier->id.', '.(int)$id_range_price.', 0, id_zone, '.(float)$shippingCost.'
+                     SELECT '.(int) $carrier->id.', '.(int) $id_range_price.', 0, id_zone, '.(float) $shippingCost.'
                      FROM '._DB_PREFIX_.'zone'
                 );
 
                 // enable all zones
                 Db::getInstance()->execute(
                     'INSERT INTO '._DB_PREFIX_.'carrier_zone (id_carrier, id_zone)
-                     SELECT '.(int)$carrier->id.', id_zone FROM '._DB_PREFIX_.'zone'
+                     SELECT '.(int) $carrier->id.', id_zone FROM '._DB_PREFIX_.'zone'
                 );
             }
 

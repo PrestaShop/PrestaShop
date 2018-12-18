@@ -38,7 +38,7 @@ function update_carrier_url()
             Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'carrier`
 				SET `url` = \'\'
-				WHERE  `id_carrier`= '.(int)($carrier['id_carrier']));
+				WHERE  `id_carrier`= '.(int) ($carrier['id_carrier']));
         }
     }
 }

@@ -32,7 +32,7 @@ function migrate_block_info_to_cms_block()
     //get ids cms of block information
     $id_blockinfos = Db::getInstance()->getValue('SELECT id_module FROM  `'._DB_PREFIX_.'module` WHERE name = \'blockinfos\'');
     //get ids cms of block information
-    $ids_cms = Db::getInstance()->executeS('SELECT id_cms FROM  `'._DB_PREFIX_.'block_cms` WHERE `id_block` = '.(int)$id_blockinfos);
+    $ids_cms = Db::getInstance()->executeS('SELECT id_cms FROM  `'._DB_PREFIX_.'block_cms` WHERE `id_block` = '.(int) $id_blockinfos);
     //check if block info is installed and active
     if (is_array($ids_cms)) {
         //install module blockcms
@@ -80,7 +80,7 @@ function migrate_block_info_to_cms_block()
 
         $query_lang = 'INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`) VALUES';
         foreach ($languages as $language) {
-            $query_lang .= '(1, '.(int)($language['id_lang']).'),';
+            $query_lang .= '(1, '.(int) ($language['id_lang']).'),';
         }
         $query_lang = rtrim($query_lang, ',');
         $res &= Db::getInstance()->execute($query_lang);
@@ -122,12 +122,12 @@ function migrate_block_info_to_cms_block()
         $id_block = Db::getInstance()->Insert_ID();
 
         foreach ($languages as $language) {
-            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`, `name`) VALUES ('.(int)$id_block.', '.(int)$language['id_lang'].', \'Information\')');
+            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`, `name`) VALUES ('.(int) $id_block.', '.(int) $language['id_lang'].', \'Information\')');
         }
 
             //save ids cms of block information in new module cms bloc
             foreach ($ids_cms as $id_cms) {
-                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_page` (`id_cms_block`, `id_cms`, `is_category`) VALUES ('.(int)$id_block.', '.(int)$id_cms['id_cms'].', 0)');
+                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_page` (`id_cms_block`, `id_cms`, `is_category`) VALUES ('.(int) $id_block.', '.(int) $id_cms['id_cms'].', 0)');
             }
     } else {
         return true;

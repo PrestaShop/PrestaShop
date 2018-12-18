@@ -43,7 +43,7 @@ function ps16012_update_alias()
 					UPDATE `'._DB_PREFIX_.'alias`
 					SET alias = \''.pSQL(Tools::replaceAccentedChars($alias['alias'])).'\',
 					search = \''.pSQL(Tools::replaceAccentedChars($alias['search'])).'\'
-					WHERE id_alias = '.(int)$alias['id_alias']);
+					WHERE id_alias = '.(int) $alias['id_alias']);
                 }
             }
         }

@@ -66,7 +66,7 @@ function update_order_canada()
 
                 $products = Db::getInstance()->executeS('
 				SELECT * FROM `'._DB_PREFIX_.'order_detail` od
-				WHERE od.`id_order` = '.(int)$id_order);
+				WHERE od.`id_order` = '.(int) $id_order);
 
                 foreach ($products as $product) {
                     if (!array_key_exists($product['tax_name'], $amount)) {
@@ -86,7 +86,7 @@ function update_order_canada()
                 }
 
                 foreach ($amount as $tax_name => $tax_infos) {
-                    $values .= '('.(int)$id_order.', "'.$tax_name.'\', "'.$tax_infos['rate'].'", '.(float)$tax_infos['amount'].'),';
+                    $values .= '('.(int) $id_order.', "'.$tax_name.'\', "'.$tax_infos['rate'].'", '.(float) $tax_infos['amount'].'),';
                 }
                 unset($order);
             }

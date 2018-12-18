@@ -36,12 +36,12 @@ function ps_1730_add_quick_access_evaluation_catalog()
 
         Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'quick_access` SET link = "index.php?controller=AdminStats&module=statscheckup" ');
 
-        $idQuickAccess = (int)Db::getInstance()->Insert_ID();
+        $idQuickAccess = (int) Db::getInstance()->Insert_ID();
 
         foreach (Language::getLanguages() as $language) {
             Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'quick_access_lang` SET 
                 `id_quick_access` = ' . $idQuickAccess . ',
-                `id_lang` = ' . (int)$language['id_lang'] . ',
+                `id_lang` = ' . (int) $language['id_lang'] . ',
                 `name` = "' . pSQL($translator->trans('Catalog evaluation', array(), 'Admin.Navigation.Header')) . '" ');
         }
     }

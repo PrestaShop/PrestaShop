@@ -35,7 +35,7 @@ function add_group_attribute_position()
             Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'attribute_group`
 				SET `position` = '.$i++.'
-				WHERE `id_attribute_group` = '.(int)$group['id_attribute_group']);
+				WHERE `id_attribute_group` = '.(int) $group['id_attribute_group']);
         }
     }
 }

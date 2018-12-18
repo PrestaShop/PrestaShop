@@ -62,7 +62,7 @@ function includeDatepicker($id, $time = false)
     echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/jquery.ui.core.min.js"></script>';
     echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.theme.css" />';
     echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.datepicker.css" />';
-    $iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)Context::getContext()->language->id);
+    $iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int) Context::getContext()->language->id);
     if ($iso != 'en') {
         echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/i18n/jquery.ui.datepicker-'.Tools::htmlentitiesUTF8($iso).'.js"></script>';
     }
@@ -151,28 +151,28 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
         $category = Db::getInstance()->getRow('
 		SELECT id_category, level_depth, nleft, nright
 		FROM '._DB_PREFIX_.'category
-		WHERE id_category = '.(int)$id_category);
+		WHERE id_category = '.(int) $id_category);
         if (isset($category['id_category'])) {
             $sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
 					FROM '._DB_PREFIX_.'category c
 					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
-					WHERE c.nleft <= '.(int)$category['nleft'].'
-						AND c.nright >= '.(int)$category['nright'].'
-						AND cl.id_lang = '.(int)$context->language->id.
-                ($home ? ' AND c.id_category='.(int)$id_category : '').'
-						AND c.id_category != '.(int)Category::getTopCategory()->id.'
+					WHERE c.nleft <= '.(int) $category['nleft'].'
+						AND c.nright >= '.(int) $category['nright'].'
+						AND cl.id_lang = '.(int) $context->language->id.
+                ($home ? ' AND c.id_category='.(int) $id_category : '').'
+						AND c.id_category != '.(int) Category::getTopCategory()->id.'
 					GROUP BY c.id_category
 					ORDER BY c.level_depth ASC
-					LIMIT '.(!$home ? (int)$category['level_depth'] + 1 : 1);
+					LIMIT '.(!$home ? (int) $category['level_depth'] + 1 : 1);
             $categories = Db::getInstance()->executeS($sql);
             $full_path = '';
             $n = 1;
-            $n_categories = (int)count($categories);
+            $n_categories = (int) count($categories);
             foreach ($categories as $category) {
                 $link = Context::getContext()->link->getAdminLink('AdminCategories');
-                $edit = '<a href="'.Tools::safeOutput($link.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory')).'" title="'.($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify').'"><i class="icon-'.(($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil').'"></i></a> ';
+                $edit = '<a href="'.Tools::safeOutput($link.'&id_category='.(int) $category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory')).'" title="'.($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify').'"><i class="icon-'.(($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil').'"></i></a> ';
                 $full_path .= $edit.
-                    ($n < $n_categories ? '<a href="'.Tools::safeOutput($url_base.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCategories'.(int)Tab::getIdFromClassName('AdminCategories').(int)$context->employee->id)).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
+                    ($n < $n_categories ? '<a href="'.Tools::safeOutput($url_base.'&id_category='.(int) $category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCategories'.(int) Tab::getIdFromClassName('AdminCategories').(int) $context->employee->id)).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
                     (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">'.htmlentities($highlight, ENT_NOQUOTES, 'UTF-8').'</span>', $category['name']) : $category['name']).
                     ($n < $n_categories ? '</a>' : '').
                     (($n++ != $n_categories || !empty($path)) ? ' > ' : '');
@@ -187,13 +187,13 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
         }
 
         $name = ($highlight != null) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
-        $edit = '<a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&addcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
+        $edit = '<a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&addcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int) Tab::getIdFromClassName('AdminCmsContent').(int) $context->employee->id)).'">
 				<i class="icon-pencil"></i></a> ';
         if ($category->id == 1) {
-            $edit = '<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
+            $edit = '<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int) Tab::getIdFromClassName('AdminCmsContent').(int) $context->employee->id)).'">
 					<i class="icon-home"></i></a></li> ';
         }
-        $path = $edit.'<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
+        $path = $edit.'<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int) Tab::getIdFromClassName('AdminCmsContent').(int) $context->employee->id)).'">
 		'.$name.'</a></li> > '.$path;
         if ($category->id == 1) {
             return substr($path, 0, strlen($path) - 3);
@@ -296,8 +296,8 @@ function checkTabRights($id_tab)
         $tab_accesses = Profile::getProfileAccesses(Context::getContext()->employee->id_profile);
     }
 
-    if (isset($tab_accesses[(int)$id_tab]['view'])) {
-        return ($tab_accesses[(int)$id_tab]['view'] === '1');
+    if (isset($tab_accesses[(int) $id_tab]['view'])) {
+        return ($tab_accesses[(int) $id_tab]['view'] === '1');
     }
     return false;
 }
@@ -349,7 +349,7 @@ function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = tr
     }
 
     $name = $xml->getName();
-    $value = trim((string)$xml);
+    $value = trim((string) $xml);
     if (strlen($value) == 0) {
         $value = null;
     }
@@ -410,7 +410,7 @@ function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = tr
  */
 function runAdminTab($tab, $ajax_mode = false)
 {
-    $ajax_mode = (bool)$ajax_mode;
+    $ajax_mode = (bool) $ajax_mode;
 
     require_once _PS_ADMIN_DIR_.'/init.php';
     $cookie = Context::getContext()->cookie;
@@ -441,7 +441,7 @@ function runAdminTab($tab, $ajax_mode = false)
             foreach ($tabs as $key => $item) {
                 $bread .= ' <img src="../img/admin/separator_breadcrumb.png" style="margin-right:5px" alt="&gt;" />';
                 if (count($tabs) - 1 > $key) {
-                    $bread .= '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].(int)$item['id_tab'].(int)Context::getContext()->employee->id).'">';
+                    $bread .= '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].(int) $item['id_tab'].(int) Context::getContext()->employee->id).'">';
                 }
 
                 $bread .= $item['name'];
@@ -453,7 +453,7 @@ function runAdminTab($tab, $ajax_mode = false)
             if (!$ajax_mode && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && Context::getContext()->controller->multishop_context != Shop::CONTEXT_ALL) {
                 echo '<div class="multishop_info">';
                 if (Shop::getContext() == Shop::CONTEXT_GROUP) {
-                    $shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
+                    $shop_group = new ShopGroup((int) Shop::getContextShopGroupID());
                     printf(Translate::getAdminTranslation('You are configuring your store for group shop %s'), '<b>'.$shop_group->name.'</b>');
                 } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
                     printf(Translate::getAdminTranslation('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');

@@ -98,7 +98,7 @@ class RepositoryTest extends UnitTestCase
 
         $this->assertEquals($territory->code, 'FR');
 
-        $code = (string)$territory->currency;
+        $code = (string) $territory->currency;
 
         $this->assertEquals($code, 'EUR');
 

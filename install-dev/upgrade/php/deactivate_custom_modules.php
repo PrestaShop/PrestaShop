@@ -73,7 +73,7 @@ function deactivate_custom_modules()
     $uninstallMe = array("undefined-modules");
     if (is_array($arrNonNative)) {
         foreach ($arrNonNative as $k => $aModule) {
-            $uninstallMe[(int)$aModule['id_module']] = $aModule['name'];
+            $uninstallMe[(int) $aModule['id_module']] = $aModule['name'];
         }
     }
 
@@ -90,7 +90,7 @@ function deactivate_custom_modules()
 
     if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'module_shop\''))> 0) {
         foreach ($uninstallMe as $k => $uninstall) {
-            $return &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$k);
+            $return &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int) $k);
         }
     }
 

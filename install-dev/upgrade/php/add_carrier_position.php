@@ -36,7 +36,7 @@ function add_carrier_position()
             Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'carrier`
 			SET `position` = '.$i++.'
-			WHERE `id_carrier` = '.(int)$carrier['id_carrier']);
+			WHERE `id_carrier` = '.(int) $carrier['id_carrier']);
         }
     }
 }

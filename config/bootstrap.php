@@ -66,12 +66,12 @@ if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)
     }
 }
 
-$lastParametersModificationTime = (int)@filemtime($phpParametersFilepath);
+$lastParametersModificationTime = (int) @filemtime($phpParametersFilepath);
 
 if ($lastParametersModificationTime) {
     $cachedParameters = _PS_CACHE_DIR_. 'appParameters.php';
 
-    $lastParametersCacheModificationTime = (int)@filemtime($cachedParameters);
+    $lastParametersCacheModificationTime = (int) @filemtime($cachedParameters);
     if (!$lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
         // When parameters file is available, update its cache if it is stale.
         if (file_exists($phpParametersFilepath)) {

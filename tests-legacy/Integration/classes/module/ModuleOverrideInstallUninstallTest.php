@@ -81,7 +81,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
          * This test only checks that modules are installed properly.
          */
         foreach ($this->moduleNames as $name) {
-            $this->assertTrue((bool)$this->moduleManager->install($name), "Could not install $name");
+            $this->assertTrue((bool) $this->moduleManager->install($name), "Could not install $name");
         }
     }
 
@@ -129,7 +129,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
          *  uninstalled.
          */
         foreach ($this->moduleNames as $name) {
-            $this->assertTrue((bool)$this->moduleManager->uninstall($name), "Could not uninstall $name");
+            $this->assertTrue((bool) $this->moduleManager->uninstall($name), "Could not uninstall $name");
         }
 
         $this->assertFileNotExists($override_path_cart);

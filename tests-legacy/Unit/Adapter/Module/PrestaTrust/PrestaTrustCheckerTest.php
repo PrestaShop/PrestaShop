@@ -76,7 +76,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
             // Module with Pico from Addons
             'module-verified-from-addons-api' => new Module(array(
                 'name' => 'module-verified-from-addons-api',
-                'prestatrust' => (object)array(
+                'prestatrust' => (object) array(
                     'pico' => 'https://www.addons.prestashop.com/random-url.jpg',
                 ),
             )),
@@ -84,7 +84,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
             'module-prestatrust-checked' => new Module(array(
                 'name' => 'module-verified-from-addons-api',
                 'author_address' => '0x809A29F600000000000000000000000000000911',
-                'prestatrust' => (object)array(
+                'prestatrust' => (object) array(
                     'pico' => 'https://www.addons.prestashop.com/random-url.jpg',
                 ),
             ), array(
@@ -92,7 +92,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
             )),
         );
 
-        $this->prestatrustApiResults = (object)array(
+        $this->prestatrustApiResults = (object) array(
             'hash_trusted' => true,
             'property_trusted' => true,
         );
@@ -117,7 +117,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
             ->will($this->returnArgument(0));
 
         $cache = new ArrayCache();
-        $cache->save('module-verified-from-addons-api', (object)array('hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b'));
+        $cache->save('module-verified-from-addons-api', (object) array('hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b'));
 
         $this->prestatrustChecker = new PrestaTrustChecker(
             $cache,
@@ -197,7 +197,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $presentedModule = $this->modulePresenter->present($testedModule);
 
         $this->assertEquals(
-            (object)array(
+            (object) array(
                 'hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b',
                 'check_list' => array(
                     'integrity' => true,

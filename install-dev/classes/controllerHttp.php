@@ -445,7 +445,7 @@ class InstallControllerHttp
             $message = print_r(@error_get_last(), true);
         }
         die(json_encode(array(
-            'success' => (bool)$success,
+            'success' => (bool) $success,
             'message' => $message,
             // 'memory' => round(memory_get_peak_usage()/1024/1024, 2).' Mo',
         )));

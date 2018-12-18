@@ -44,12 +44,12 @@ function migrate_tabs_multi_shop()
     // ===== remove AdminParentShop from BO menu =====
     $admin_parent_shop_id = get_tab_id('AdminParentShop');
     $admin_shop_group_id = get_tab_id('AdminShopGroup');
-    Db::getInstance()->delete('tab', 'id_tab IN ('.(int)$admin_shop_group_id.', '.(int)$admin_parent_shop_id.')');
-    Db::getInstance()->delete('tab_lang', 'id_tab IN ('.(int)$admin_shop_group_id.', '.(int)$admin_parent_shop_id.')');
+    Db::getInstance()->delete('tab', 'id_tab IN ('.(int) $admin_shop_group_id.', '.(int) $admin_parent_shop_id.')');
+    Db::getInstance()->delete('tab_lang', 'id_tab IN ('.(int) $admin_shop_group_id.', '.(int) $admin_parent_shop_id.')');
 
     // ===== add AdminShopGroup to parent AdminTools =====
     $admin_shop_group_id = add_new_tab('AdminShopGroup', 'en:Multi-shop|fr:Multiboutique|es:Multi-tienda|de:Multi-shop|it:Multi-shop', get_tab_id('AdminTools'), true);
-    Db::getInstance()->update('tab', array('active' => $tab_shop_group_active), 'id_tab = '.(int)$admin_shop_group_id);
+    Db::getInstance()->update('tab', array('active' => $tab_shop_group_active), 'id_tab = '.(int) $admin_shop_group_id);
 
     // ===== hide AdminShopUrl and AdminShop =====
     Db::getInstance()->update('tab', array('id_parent' => '-1'), 'id_tab IN ('.get_tab_id('AdminShop').', '.get_tab_id('AdminShopUrl').')');

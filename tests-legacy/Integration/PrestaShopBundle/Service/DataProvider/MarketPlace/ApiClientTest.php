@@ -72,7 +72,7 @@ class ApiClientTest extends KernelTestCase
             ->getMock();
 
         $responseMock->method('getBody')
-            ->willReturn(json_encode((object)['modules' => []]));
+            ->willReturn(json_encode((object) ['modules' => []]));
 
         return $responseMock;
     }

@@ -69,7 +69,7 @@ function migrate_orders()
     }
 
     // this was done like that previously
-    $wrapping_tax_rate = 1 + ((float)Db::getInstance()->getValue('SELECT value
+    $wrapping_tax_rate = 1 + ((float) Db::getInstance()->getValue('SELECT value
 		FROM `'._DB_PREFIX_.'configuration`
 		WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100);
 
@@ -80,25 +80,25 @@ function migrate_orders()
         $nb_loop = ceil($count_orders / $step);
     }
     for ($i = 0; $i < $nb_loop; $i++) {
-        $order_res = Db::getInstance()->query('SELECT * FROM `'._DB_PREFIX_.'orders` LIMIT '.(int)$start.', '.(int)$step);
+        $order_res = Db::getInstance()->query('SELECT * FROM `'._DB_PREFIX_.'orders` LIMIT '.(int) $start.', '.(int) $step);
         $start = (int) (($i+1) * $step);
         $cpt = 0;
         $flush_limit = 200;
         while ($order = Db::getInstance()->nextRow($order_res)) {
             $sum_total_products = 0;
             $sum_tax_amount = 0;
-            $default_group_id = mo_getCustomerDefaultGroup((int)$order['id_customer']);
-            $price_display_method = mo_getPriceDisplayMethod((int)$default_group_id);
+            $default_group_id = mo_getCustomerDefaultGroup((int) $order['id_customer']);
+            $price_display_method = mo_getPriceDisplayMethod((int) $default_group_id);
             $order_details_list = Db::getInstance()->query('
 			SELECT od.*
 			FROM `'._DB_PREFIX_.'order_detail` od
-			WHERE od.`id_order` = '.(int)$order['id_order']);
+			WHERE od.`id_order` = '.(int) $order['id_order']);
 
             while ($order_details = Db::getInstance()->nextRow($order_details_list)) {
                 // we don't want to erase order_details data in order to create the insert query
                 $products = mo_setProductPrices($order_details, $price_display_method);
-                $tax_rate = 1 + ((float)$products['tax_rate'] / 100);
-                $reduction_amount_tax_incl = (float)$products['reduction_amount'];
+                $tax_rate = 1 + ((float) $products['tax_rate'] / 100);
+                $reduction_amount_tax_incl = (float) $products['reduction_amount'];
 
                 // cart::getTaxesAverageUsed equivalent
                 $sum_total_products += $products['total_price'];
@@ -106,18 +106,18 @@ function migrate_orders()
                 $sum_tax_amount += $products['total_wt'] - $products['total_price'];
 
                 $order_details['reduction_amount_tax_incl'] = $reduction_amount_tax_incl;
-                $order_details['reduction_amount_tax_excl'] = (float)mo_ps_round($reduction_amount_tax_incl / $tax_rate);
-                $order_details['total_price_tax_incl'] = (float)$products['total_wt'];
-                $order_details['total_price_tax_excl'] = (float)$products['total_price'];
-                $order_details['unit_price_tax_incl'] = (float)$products['product_price_wt'];
-                $order_details['unit_price_tax_excl'] = (float)$products['product_price'];
+                $order_details['reduction_amount_tax_excl'] = (float) mo_ps_round($reduction_amount_tax_incl / $tax_rate);
+                $order_details['total_price_tax_incl'] = (float) $products['total_wt'];
+                $order_details['total_price_tax_excl'] = (float) $products['total_price'];
+                $order_details['unit_price_tax_incl'] = (float) $products['product_price_wt'];
+                $order_details['unit_price_tax_excl'] = (float) $products['product_price'];
 
                 foreach (array_keys($order_details) as $k) {
                     if (!in_array($k, $col_order_detail)) {
                         unset($order_details[$k]);
                     } else {
                         if (in_array($order_details[$k], array('product_price', 'reduction_percent', 'reduction_amount', 'group_reduction', 'product_quantity_discount', 'tax_rate', 'ecotax', 'ecotax_tax_rate'))) {
-                            $order_details[$k] = (float)$order_details[$k];
+                            $order_details[$k] = (float) $order_details[$k];
                         } else {
                             $order_details[$k] = Db::getInstance()->escape($order_details[$k]);
                         }
@@ -136,24 +136,24 @@ function migrate_orders()
             $average_tax_used = round($average_tax_used, 4);
             $carrier_tax_rate = 1;
             if (isset($order['carrier_tax_rate'])) {
-                $carrier_tax_rate + ((float)$order['carrier_tax_rate'] / 100);
+                $carrier_tax_rate + ((float) $order['carrier_tax_rate'] / 100);
             }
 
             $total_discount_tax_excl = $order['total_discounts'] / $average_tax_used;
-            $order['total_discounts_tax_incl'] = (float)$order['total_discounts'];
-            $order['total_discounts_tax_excl'] = (float)$total_discount_tax_excl;
+            $order['total_discounts_tax_incl'] = (float) $order['total_discounts'];
+            $order['total_discounts_tax_excl'] = (float) $total_discount_tax_excl;
 
-            $order['total_shipping_tax_incl'] = (float)$order['total_shipping'];
-            $order['total_shipping_tax_excl'] = (float)($order['total_shipping'] / $carrier_tax_rate);
+            $order['total_shipping_tax_incl'] = (float) $order['total_shipping'];
+            $order['total_shipping_tax_excl'] = (float) ($order['total_shipping'] / $carrier_tax_rate);
             $shipping_taxes = $order['total_shipping_tax_incl'] - $order['total_shipping_tax_excl'];
 
-            $order['total_wrapping_tax_incl'] = (float)$order['total_wrapping'];
-            $order['total_wrapping_tax_excl'] = ((float)$order['total_wrapping'] / $wrapping_tax_rate);
+            $order['total_wrapping_tax_incl'] = (float) $order['total_wrapping'];
+            $order['total_wrapping_tax_excl'] = ((float) $order['total_wrapping'] / $wrapping_tax_rate);
             $wrapping_taxes = $order['total_wrapping_tax_incl'] - $order['total_wrapping_tax_excl'];
 
             $product_taxes = $order['total_products_wt'] - $order['total_products'];
-            $order['total_paid_tax_incl'] = (float)$order['total_paid'];
-            $order['total_paid_tax_excl'] = (float)$order['total_paid'] - $shipping_taxes - $wrapping_taxes - $product_taxes;
+            $order['total_paid_tax_incl'] = (float) $order['total_paid'];
+            $order['total_paid_tax_excl'] = (float) $order['total_paid'] - $shipping_taxes - $wrapping_taxes - $product_taxes;
             // protect text and varchar fields
             $order['gift_message'] = Db::getInstance()->escape($order['gift_message']);
             $order['payment'] = Db::getInstance()->escape($order['payment']);
@@ -261,7 +261,7 @@ function mo_getCustomerDefaultGroup($id_customer)
 {
     static $cache;
     if (!isset($cache[$id_customer])) {
-        $cache[$id_customer] = Db::getInstance()->getValue('SELECT `id_default_group` FROM `'._DB_PREFIX_.'customer` WHERE `id_customer` = '.(int)$id_customer);
+        $cache[$id_customer] = Db::getInstance()->getValue('SELECT `id_default_group` FROM `'._DB_PREFIX_.'customer` WHERE `id_customer` = '.(int) $id_customer);
     }
 
     return $cache[$id_customer];
@@ -275,7 +275,7 @@ function mo_getPriceDisplayMethod($id_group)
         $cache[$id_group] = Db::getInstance()->getValue('
 			SELECT `price_display_method`
 			FROM `'._DB_PREFIX_.'group`
-			WHERE `id_group` = '.(int)$id_group);
+			WHERE `id_group` = '.(int) $id_group);
     }
 
     return $cache[$id_group];
