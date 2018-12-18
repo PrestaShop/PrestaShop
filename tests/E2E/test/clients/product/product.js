@@ -99,7 +99,7 @@ class Product extends CommonClient {
       .waitForVisibleAndClick(AddProductPage.related_product_item);
   }
 
-  addFeature(type) {
+  addFeature(type, id = '0') {
     if (type === 'pack') {
       this.client
         .scrollTo(AddProductPage.product_add_feature_btn, 50);
@@ -107,7 +107,7 @@ class Product extends CommonClient {
     return this.client
       .scrollTo(AddProductPage.product_add_feature_btn, 150)
       .waitForExistAndClick(AddProductPage.product_add_feature_btn)
-      .waitForExistAndClick(AddProductPage.feature_select_button)
+      .waitForExistAndClick(AddProductPage.feature_select_button.replace("%ID", id))
       .waitForExistAndClick(AddProductPage.feature_select_option)
       .waitAndSetValue(AddProductPage.feature_custom_value_height, data.standard.features.feature1.custom_value);
   }
@@ -132,7 +132,7 @@ class Product extends CommonClient {
       .waitAndSetValue(addProductPage.select_feature_created, name)
       .waitForExistAndClick(addProductPage.result_feature_select.replace('%ID', 0))
       .pause(2000)
-      .selectByVisibleText(addProductPage.feature_value_select, value);
+      .selectByVisibleText(addProductPage.feature_value_select.replace('%ID', 0).replace('%V', 'not(@disabled)'), value);
   }
 
   clickNextOrPrevious(selector) {
@@ -251,7 +251,7 @@ class Product extends CommonClient {
   getProductName(selector, i) {
     return this.client
       .getText(selector).then(function (name) {
-        global.productInfo.push({'name':name, 'status':'false'})
+        global.productInfo.push({'name': name, 'status': 'false'})
       });
   }
 
@@ -269,8 +269,8 @@ class Product extends CommonClient {
   }
 
   checkFeatureValue(predefinedValueSelector, customValueSelector, featureData) {
-    if(global.isVisible) {
-      if(featureData.predefined_value !== '') {
+    if (global.isVisible) {
+      if (featureData.predefined_value !== '') {
         return this.client
           .isSelected(predefinedValueSelector)
           .then((value) => expect(value).to.be.equal(true));
@@ -284,31 +284,6 @@ class Product extends CommonClient {
           .then(() => expect(featureData.predefined_value !== '' && featureData.customized_value !== '', "You must choose a pre-defined value or set the customized value").to.be.equal(true));
       }
     }
-  }
-
-  checkProductCategory(i) {
-    return this.client
-      .scrollWaitForExistAndClick(ProductList.product_name_link.replace("%ID", global.positionTable[i - 1], 50000))
-      .waitForVisible(AddProductPage.product_name_input)
-      .scrollWaitForExistAndClick(AddProductPage.expand_categories_button)
-  }
-
-  getSubCategoryNumber(i) {
-    return this.client
-      .execute(function (i) {
-        let count;
-        try {
-          count = document.getElementById('choice_tree').getElementsByTagName("ul")[i + 1].children.length;
-          return count;
-        }
-        catch (err) {
-          count = 0;
-          return count;
-        }
-      }, i)
-      .then((count) => {
-        global.subCatNumber = count.value;
-      })
   }
 }
 

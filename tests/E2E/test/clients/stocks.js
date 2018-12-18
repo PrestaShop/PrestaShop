@@ -49,17 +49,24 @@ class ModifyQuantity extends CommonClient {
         document.querySelector('#id_order_state').style = "";
       })
       .selectByVisibleText(selector.order_state_select, state)
-      .waitForExistAndClick(selector.update_status_button)
+      .waitForExistAndClick(selector.update_status_button);
   }
 
   checkOrderMovement(Movement, client) {
-    if (global.tab['firstMovementDate'] === global.tab['secondMovementDate']) {
-      promise = client.checkMovement(Movement, 1, "15", "+", "Employee Edition", "firstProduct");
-      return promise.then(() => client.checkMovement(Movement, 2, "50", "+", "Employee Edition", 'secondProduct'));
-    } else {
-      promise = client.checkMovement(Movement, 1, "50", "+", "Employee Edition", 'secondProduct');
-      return promise.then(() => client.checkMovement(Movement, 2, "15", "+", "Employee Edition", "firstProduct"));
-    }
+    return promise
+      .then(() => client.pause(2000))
+      .then(() => client.getTextInVar(Movement.reference_value.replace('%P', 1), 'firstReference'))
+      .then(() => {
+        if (global.tab['firstReference'] === 'firstProduct') {
+          return promise
+            .then(() => client.checkMovement(Movement, 2, '50', '+', 'Employee Edition', 'secondProduct'))
+            .then(() => client.checkMovement(Movement, 1, '15', '+', 'Employee Edition', 'firstProduct'));
+        } else {
+          return promise
+            .then(() => client.checkMovement(Movement, 1, '50', '+', 'Employee Edition', 'secondProduct'))
+            .then(() => client.checkMovement(Movement, 2, '15', '+', 'Employee Edition', 'firstProduct'));
+        }
+      });
   }
 }
 
