@@ -5,12 +5,10 @@
  * Website: presta-shop.ir
  * License: MIT
  * Find it here: https://github.com/Danoosh/DM-Auto-RTL
-*/
-$(document).ready(function () {
-    var exceptionId = [
-        "step-1"
-    ];
-    $('[style]').each(function (index) {
+ */
+$(document).ready(function() {
+    var exceptionId = ['step-1'];
+    $('[style]').each(function(index) {
         if (exceptionId.indexOf($(this).attr('id')) === -1) {
             var styles_old = $(this).attr('style');
             styles_old = styles_old.split(';').filter(item => item);
@@ -24,7 +22,7 @@ $(document).ready(function () {
                     i = $.trim(s[0]);
                     styles[makeGeneralRTL(i)] = makeValueRTL(i, $.trim(s[1]));
                 }
-                $(this).removeAttr("style");
+                $(this).removeAttr('style');
                 $(this).css(styles);
             }
         }
@@ -32,9 +30,9 @@ $(document).ready(function () {
 });
 
 function makeGeneralRTL(index) {
-    var res = index.replace(/right/g, "rtemp");
-    res = res.replace(/left/g, "right");
-    res = res.replace(/rtemp/g, "left");
+    var res = index.replace(/right/g, 'rtemp');
+    res = res.replace(/left/g, 'right');
+    res = res.replace(/rtemp/g, 'left');
     return res;
 }
 function makeValueRTL(property, value) {
@@ -42,9 +40,15 @@ function makeValueRTL(property, value) {
         return makeGeneralRTL(value);
     }
     if (property.match(/^background(-position)?$/))
-        return value.replace(/^((?!#\((.*)\)).)*$/, ' ') + makeGeneralRTL(value.replace(/(\s)?url\((.*)\)(\s)?/, ''));
-    if (property.match(/margin|padding/) && value.match(/(\S*) (\S*) (\S*) (\S*)/))
-        return value.replace(/(\S*) (\S*) (\S*) (\S*)/, "$1 $4 $3 $2");
+        return (
+            value.replace(/^((?!#\((.*)\)).)*$/, ' ') +
+            makeGeneralRTL(value.replace(/(\s)?url\((.*)\)(\s)?/, ''))
+        );
+    if (
+        property.match(/margin|padding/) &&
+        value.match(/(\S*) (\S*) (\S*) (\S*)/)
+    )
+        return value.replace(/(\S*) (\S*) (\S*) (\S*)/, '$1 $4 $3 $2');
     return value;
 }
 /* end of file dmartl.js */

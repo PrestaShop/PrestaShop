@@ -26,7 +26,9 @@
 /* CLDR globals */
 var cldrLoadedCatalogs = [];
 var cldrLoaderError = false;
-var cldrCatalogsPath = (typeof baseDir !== 'undefined' ? baseDir : '') + 'translations/cldr/datas/';
+var cldrCatalogsPath =
+    (typeof baseDir !== 'undefined' ? baseDir : '') +
+    'translations/cldr/datas/';
 
 /* Variables avoiding several loading of the same file */
 var deferreds = [];
@@ -51,66 +53,84 @@ var deferredUrls = [];
  * @returns Globalize instance in SYNC behavior only.
  */
 function cldrLazyLoadCatalogs(catalogs, callback) {
-	if (typeof catalogs !== 'object' || catalogs.length < 1) {
-		throw Error('No catalog to load!');
-	}
-	var sync = (typeof callback === 'undefined' || !$.isFunction(callback));
-	var culture = full_cldr_language_code;
+    if (typeof catalogs !== 'object' || catalogs.length < 1) {
+        throw Error('No catalog to load!');
+    }
+    var sync = typeof callback === 'undefined' || !$.isFunction(callback);
+    var culture = full_cldr_language_code;
 
-	if (sync) {
-		// Warning, Sync behavior will slow down Browser performances!
-		catalogs.forEach(function(catalog) {
-			var url = cldrCatalogsPath + catalog.replace(/main\/[^\/]+/, 'main/'+culture) + '.json';
-			if ($.inArray(url, cldrLoadedCatalogs) === -1) {
-				$.ajax({
-					url: url,
-					dataType: 'json',
-					async: false, // deprecated for modern browser, but not really other choice...
-					success: function(data) {
-						Globalize.load(data);
-						cldrLoadedCatalogs.push(url);
-					},
-					error: function(xhr) {
-						cldrLoaderError = true;
-					}
-				});
-			}
-		});
+    if (sync) {
+        // Warning, Sync behavior will slow down Browser performances!
+        catalogs.forEach(function(catalog) {
+            var url =
+                cldrCatalogsPath +
+                catalog.replace(/main\/[^\/]+/, 'main/' + culture) +
+                '.json';
+            if ($.inArray(url, cldrLoadedCatalogs) === -1) {
+                $.ajax({
+                    url: url,
+                    dataType: 'json',
+                    async: false, // deprecated for modern browser, but not really other choice...
+                    success: function(data) {
+                        Globalize.load(data);
+                        cldrLoadedCatalogs.push(url);
+                    },
+                    error: function(xhr) {
+                        cldrLoaderError = true;
+                    },
+                });
+            }
+        });
 
-		if (!cldrLoaderError) {
-			return new Globalize(culture);
-		}
-	} else {
-		catalogs.forEach(function(catalog) {
-			var url = cldrCatalogsPath + catalog.replace(/main\/[^\/]+/, 'main/'+culture) + '.json';
-			if ($.inArray(url, cldrLoadedCatalogs) === -1 && $.inArray(url, deferredUrls) === -1) {
-				deferredUrls.push(url);
-				this.push($.get(url).done(function() {
-						cldrLoadedCatalogs.push(url);
-					}).fail(function() {
-						cldrLoaderError = true;
-					}).always(function() {
-						deferredUrls.splice(deferredUrls.indexOf(url), 1)
-					}));
-			}
-		}, deferreds);
+        if (!cldrLoaderError) {
+            return new Globalize(culture);
+        }
+    } else {
+        catalogs.forEach(function(catalog) {
+            var url =
+                cldrCatalogsPath +
+                catalog.replace(/main\/[^\/]+/, 'main/' + culture) +
+                '.json';
+            if (
+                $.inArray(url, cldrLoadedCatalogs) === -1 &&
+                $.inArray(url, deferredUrls) === -1
+            ) {
+                deferredUrls.push(url);
+                this.push(
+                    $.get(url)
+                        .done(function() {
+                            cldrLoadedCatalogs.push(url);
+                        })
+                        .fail(function() {
+                            cldrLoaderError = true;
+                        })
+                        .always(function() {
+                            deferredUrls.splice(deferredUrls.indexOf(url), 1);
+                        }),
+                );
+            }
+        }, deferreds);
 
-		if (deferreds.length > 0) {
-			$.when.apply($, deferreds).then(function() {
-				return [].slice.apply( arguments, [ 0 ] ).map(function( result ) {
-					return result[ 0 ];
-				});
-		    }).then( Globalize.load ).then(function() {
-		    	if (!cldrLoaderError) {
-		    		callback(new Globalize(culture));
-		    	} else {
-		    		throw Error('Cannot load given catalogs.');
-		    	}
-		    });
-		} else {
-			callback(new Globalize(culture));
-		}
-	}
+        if (deferreds.length > 0) {
+            $.when
+                .apply($, deferreds)
+                .then(function() {
+                    return [].slice.apply(arguments, [0]).map(function(result) {
+                        return result[0];
+                    });
+                })
+                .then(Globalize.load)
+                .then(function() {
+                    if (!cldrLoaderError) {
+                        callback(new Globalize(culture));
+                    } else {
+                        throw Error('Cannot load given catalogs.');
+                    }
+                });
+        } else {
+            callback(new Globalize(culture));
+        }
+    }
 }
 
 /**
@@ -129,8 +149,12 @@ function cldrLazyLoadCatalogs(catalogs, callback) {
  * @returns Globalize instance in SYNC behavior only.
  */
 function cldrForNumber(callback) {
-	var catalogs = ['main/en/numbers', 'supplemental/likelySubtags', 'supplemental/numberingSystems'];
-	return cldrLazyLoadCatalogs(catalogs, callback);
+    var catalogs = [
+        'main/en/numbers',
+        'supplemental/likelySubtags',
+        'supplemental/numberingSystems',
+    ];
+    return cldrLazyLoadCatalogs(catalogs, callback);
 }
 
 /**
@@ -149,9 +173,14 @@ function cldrForNumber(callback) {
  * @returns Globalize instance in SYNC behavior only.
  */
 function cldrForCurrencies(callback) {
-	var catalogs = ['main/en/numbers', 'main/en/currencies', 'supplemental/likelySubtags',
-	                'supplemental/currencyData', 'supplemental/plurals'];
-	return cldrLazyLoadCatalogs(catalogs, callback);
+    var catalogs = [
+        'main/en/numbers',
+        'main/en/currencies',
+        'supplemental/likelySubtags',
+        'supplemental/currencyData',
+        'supplemental/plurals',
+    ];
+    return cldrLazyLoadCatalogs(catalogs, callback);
 }
 
 /**
@@ -165,18 +194,18 @@ function cldrForCurrencies(callback) {
  * @returns currencyFormatter instance in SYNC behavior only.
  */
 function cldrForCurrencyFormatterWrapper(callback, options) {
-	var sync = (typeof callback === 'undefined' || !$.isFunction(callback));
-	var currencyIsoCode = currency.iso_code;
+    var sync = typeof callback === 'undefined' || !$.isFunction(callback);
+    var currencyIsoCode = currency.iso_code;
 
-	if (sync) {
-		var globalize = cldrForCurrencies();
-		return globalize.currencyFormatter(currencyIsoCode, options);
-	} else {
-		var callbackEncap = function(globalize) {
-			callback(globalize.currencyFormatter(currencyIsoCode, options));
-		};
-		cldrForCurrencies(callbackEncap);
-	}
+    if (sync) {
+        var globalize = cldrForCurrencies();
+        return globalize.currencyFormatter(currencyIsoCode, options);
+    } else {
+        var callbackEncap = function(globalize) {
+            callback(globalize.currencyFormatter(currencyIsoCode, options));
+        };
+        cldrForCurrencies(callbackEncap);
+    }
 }
 
 /**
@@ -195,7 +224,13 @@ function cldrForCurrencyFormatterWrapper(callback, options) {
  * @returns Globalize instance in SYNC behavior only.
  */
 function cldrForDate(callback) {
-	var catalogs = ['main/en/numbers', 'main/en/ca-gregorian', 'main/en/timeZoneNames', 'supplemental/timeData',
-	                'supplemental/weekData', 'supplemental/likelySubtags'];
-	return cldrLazyLoadCatalogs(catalogs, callback);
+    var catalogs = [
+        'main/en/numbers',
+        'main/en/ca-gregorian',
+        'main/en/timeZoneNames',
+        'supplemental/timeData',
+        'supplemental/weekData',
+        'supplemental/likelySubtags',
+    ];
+    return cldrLazyLoadCatalogs(catalogs, callback);
 }
