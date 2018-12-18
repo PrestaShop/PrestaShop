@@ -105,9 +105,9 @@ class SortOrderTest extends TestCase
     public function serialization_examples()
     {
         return [
-            [['entity'    => 'product',
-                'field'      => 'name',
-                'direction'  => 'asc', ]],
+            [['entity' => 'product',
+                'field' => 'name',
+                'direction' => 'asc', ]],
         ];
     }
 

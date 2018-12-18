@@ -55,7 +55,7 @@ class LocaleCacheDataLayerTest extends TestCase
 
     public function testReadWrite()
     {
-        $data      = new LocaleData();
+        $data = new LocaleData();
         $data->foo = ['bar', 'baz'];
 
         /** @noinspection PhpUnhandledExceptionInspection */

@@ -40,23 +40,23 @@ class RepositoryTest extends TestCase
 
     protected function setUp()
     {
-        $euroData  = [
-            'isActive'       => true,
+        $euroData = [
+            'isActive' => true,
             'conversionRate' => 1,
-            'isoCode'        => 'EUR',
+            'isoCode' => 'EUR',
             'numericIsoCode' => 978,
-            'symbols'        => ['fr-FR' => '€', 'en-US' => '€'],
-            'precision'      => 2,
-            'names'          => ['fr-FR' => 'euro', 'en-US' => 'euro'],
+            'symbols' => ['fr-FR' => '€', 'en-US' => '€'],
+            'precision' => 2,
+            'names' => ['fr-FR' => 'euro', 'en-US' => 'euro'],
         ];
         $peaceData = [
-            'isActive'       => true,
+            'isActive' => true,
             'conversionRate' => 1,
-            'isoCode'        => 'PCE',
+            'isoCode' => 'PCE',
             'numericIsoCode' => 999,
-            'symbols'        => ['fr-FR' => '☮', 'en-US' => '☮'],
-            'precision'      => 2,
-            'names'          => ['fr-FR' => 'paix', 'en-US' => 'peace'],
+            'symbols' => ['fr-FR' => '☮', 'en-US' => '☮'],
+            'precision' => 2,
+            'names' => ['fr-FR' => 'paix', 'en-US' => 'peace'],
         ];
 
         $getDataByCurrencyCode = function ($isoCode) use ($euroData, $peaceData) {

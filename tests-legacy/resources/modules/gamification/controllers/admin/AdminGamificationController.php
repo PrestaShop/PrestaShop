@@ -127,7 +127,7 @@ class AdminGamificationController extends ModuleAdminController
         $return['advices_to_display'] = $this->processGetAdvicesToDisplay();
         //get only one random advice by tab
         if (count($return['advices_to_display']['advices']) > 1) {
-            $rand = mt_rand(0, count($return['advices_to_display']['advices'])-1);
+            $rand = mt_rand(0, count($return['advices_to_display']['advices']) - 1);
             $return['advices_to_display']['advices'] = array($return['advices_to_display']['advices'][$rand]);
         }
         
@@ -146,9 +146,9 @@ class AdminGamificationController extends ModuleAdminController
                         $weighted_advices_array[] = $prem_advice;
                     }
                 }
-                $rand = mt_rand(0, count($weighted_advices_array)-1);
+                $rand = mt_rand(0, count($weighted_advices_array) - 1);
                 do {
-                    $rand2 = mt_rand(0, count($weighted_advices_array)-1);
+                    $rand2 = mt_rand(0, count($weighted_advices_array) - 1);
                 } while ($rand == $rand2);
     
                 $return['advices_premium_to_display']['advices'] = array($weighted_advices_array[$rand], $weighted_advices_array[$rand2]);

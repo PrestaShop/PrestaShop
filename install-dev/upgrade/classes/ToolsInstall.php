@@ -97,7 +97,7 @@ class ToolsInstall
                     $temp = $children[$elementName];
                     unset($children[$elementName]);
                     $children[$elementName][] = $temp;
-                    $first=false;
+                    $first = false;
                 }
                 $children[$elementName][] = $value;
             } else {

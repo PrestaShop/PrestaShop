@@ -81,7 +81,7 @@ function migrate_orders()
     }
     for ($i = 0; $i < $nb_loop; $i++) {
         $order_res = Db::getInstance()->query('SELECT * FROM `'._DB_PREFIX_.'orders` LIMIT '.(int)$start.', '.(int)$step);
-        $start = (int) (($i+1) * $step);
+        $start = (int) (($i + 1) * $step);
         $cpt = 0;
         $flush_limit = 200;
         while ($order = Db::getInstance()->nextRow($order_res)) {
@@ -131,7 +131,7 @@ function migrate_orders()
 
             $average_tax_used = 1;
             if ($sum_total_products > 0) {
-                $average_tax_used +=  $sum_tax_amount / $sum_total_products;
+                $average_tax_used += $sum_tax_amount / $sum_total_products;
             }
             $average_tax_used = round($average_tax_used, 4);
             $carrier_tax_rate = 1;
@@ -228,9 +228,9 @@ function mo_ps_round($val)
 
     switch ($ps_price_round_mode) {
         case 0:
-            return ceil($val * 100)/100;
+            return ceil($val * 100) / 100;
         case 1:
-            return floor($val * 100)/100;
+            return floor($val * 100) / 100;
         default:
             return round($val, 2);
     }
@@ -291,7 +291,7 @@ function mo_setProductPrices($row, $tax_calculation_method)
 
     $group_reduction = 1;
     if ($row['group_reduction'] > 0) {
-        $group_reduction =  1 - $row['group_reduction'] / 100;
+        $group_reduction = 1 - $row['group_reduction'] / 100;
     }
 
     if ($row['reduction_percent'] != 0) {

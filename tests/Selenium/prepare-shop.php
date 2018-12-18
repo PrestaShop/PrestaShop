@@ -29,9 +29,9 @@ require __DIR__.'/../../config/config.inc.php';
 
 // useful variables
 
-$language   = Context::getContext()->language;
-$shop       = Context::getContext()->shop;
-$dbPrefix   = _DB_PREFIX_;
+$language = Context::getContext()->language;
+$shop = Context::getContext()->shop;
+$dbPrefix = _DB_PREFIX_;
 
 // Enable URL rewriting
 
@@ -95,9 +95,9 @@ function disableModule($moduleName)
 
 function hookModule($moduleName, $hookName)
 {
-    $dbPrefix   = _DB_PREFIX_;
-    $module     = Module::getInstanceByName($moduleName);
-    $moduleId   = $module->id;
+    $dbPrefix = _DB_PREFIX_;
+    $module = Module::getInstanceByName($moduleName);
+    $moduleId = $module->id;
     Db::getInstance()->execute(
         "DELETE FROM {$dbPrefix}hook_module WHERE id_module=$moduleId"
     );

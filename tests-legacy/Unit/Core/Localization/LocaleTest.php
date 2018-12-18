@@ -223,7 +223,7 @@ class LocaleTest extends TestCase
     public function provideInvalidPriceData()
     {
         return [
-            'Invalid number'   => ['foobar', 'EUR'],
+            'Invalid number' => ['foobar', 'EUR'],
             'Unknown currency' => [123456.789, 'USD'],
             'Invalid currency' => [123456.789, 123],
         ];

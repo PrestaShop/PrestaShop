@@ -43,7 +43,7 @@ $id_employee = (int)(Tools::getValue('id_employee'));
 $id_lang = (int)(Tools::getValue('id_lang'));
 
 
-if (!isset($cookie->id_employee) || !$cookie->id_employee  || $cookie->id_employee != $id_employee) {
+if (!isset($cookie->id_employee) || !$cookie->id_employee || $cookie->id_employee != $id_employee) {
     die(Tools::displayError());
 }
 

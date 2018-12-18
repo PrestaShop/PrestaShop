@@ -95,28 +95,28 @@ class RoundingModeTest extends AbstractCartCalculationTest
     {
         return [
             // PS_ROUND_UP
-            'PS_ROUND_UP empty cart'                                    => [
-                'products'      => [],
+            'PS_ROUND_UP empty cart' => [
+                'products' => [],
                 'expectedTotal' => 0,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_UP,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_UP,
             ],
-            'PS_ROUND_UP one product in cart, quantity 1'               => [
-                'products'      => [1 => 1],
+            'PS_ROUND_UP one product in cart, quantity 1' => [
+                'products' => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_UP)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_UP,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_UP,
             ],
-            'PS_ROUND_UP one product in cart, quantity 3'               => [
-                'products'      => [1 => 3],
+            'PS_ROUND_UP one product in cart, quantity 3' => [
+                'products' => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_UP)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_UP,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_UP,
             ],
-            'PS_ROUND_UP 3 products in cart, several quantities'        => [
-                'products'      => [
+            'PS_ROUND_UP 3 products in cart, several quantities' => [
+                'products' => [
                     2 => 2,
                     1 => 3,
                     3 => 1,
@@ -125,32 +125,32 @@ class RoundingModeTest extends AbstractCartCalculationTest
                 + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_UP)
                 + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_UP)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_UP,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_UP,
             ],
             // PS_ROUND_DOWN
-            'PS_ROUND_DOWN empty cart'                                  => [
-                'products'      => [],
+            'PS_ROUND_DOWN empty cart' => [
+                'products' => [],
                 'expectedTotal' => 0,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_DOWN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_DOWN,
             ],
-            'PS_ROUND_DOWN one product in cart, quantity 1'             => [
-                'products'      => [1 => 1],
+            'PS_ROUND_DOWN one product in cart, quantity 1' => [
+                'products' => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_DOWN)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_DOWN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_DOWN,
             ],
-            'PS_ROUND_DOWN one product in cart, quantity 3'             => [
-                'products'      => [1 => 3],
+            'PS_ROUND_DOWN one product in cart, quantity 3' => [
+                'products' => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_DOWN)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_DOWN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_DOWN,
             ],
-            'PS_ROUND_DOWN 3 products in cart, several quantities'      => [
-                'products'      => [
+            'PS_ROUND_DOWN 3 products in cart, several quantities' => [
+                'products' => [
                     2 => 2,
                     1 => 3,
                     3 => 1,
@@ -159,32 +159,32 @@ class RoundingModeTest extends AbstractCartCalculationTest
                 + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_DOWN)
                 + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_DOWN)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_DOWN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_DOWN,
             ],
             // PS_ROUND_HALF_UP
-            'PS_ROUND_HALF_UP empty cart'                               => [
-                'products'      => [],
+            'PS_ROUND_HALF_UP empty cart' => [
+                'products' => [],
                 'expectedTotal' => 0,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_UP,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_UP,
             ],
-            'PS_ROUND_HALF_UP one product in cart, quantity 1'          => [
-                'products'      => [1 => 1],
+            'PS_ROUND_HALF_UP one product in cart, quantity 1' => [
+                'products' => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_UP)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_UP,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_UP,
             ],
-            'PS_ROUND_HALF_UP one product in cart, quantity 3'          => [
-                'products'      => [1 => 3],
+            'PS_ROUND_HALF_UP one product in cart, quantity 3' => [
+                'products' => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_UP)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_UP,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_UP,
             ],
-            'PS_ROUND_HALF_UP 3 products in cart, several quantities'   => [
-                'products'      => [
+            'PS_ROUND_HALF_UP 3 products in cart, several quantities' => [
+                'products' => [
                     2 => 2,
                     1 => 3,
                     3 => 1,
@@ -193,32 +193,32 @@ class RoundingModeTest extends AbstractCartCalculationTest
                 + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_UP)
                 + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_UP)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_UP,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_UP,
             ],
             // PS_ROUND_HALF_DOWN
-            'PS_ROUND_HALF_DOWN empty cart'                             => [
-                'products'      => [],
+            'PS_ROUND_HALF_DOWN empty cart' => [
+                'products' => [],
                 'expectedTotal' => 0,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_DOWN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_DOWN,
             ],
-            'PS_ROUND_HALF_DOWN one product in cart, quantity 1'        => [
-                'products'      => [1 => 1],
+            'PS_ROUND_HALF_DOWN one product in cart, quantity 1' => [
+                'products' => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_DOWN)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_DOWN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_DOWN,
             ],
-            'PS_ROUND_HALF_DOWN one product in cart, quantity 3'        => [
-                'products'      => [1 => 3],
+            'PS_ROUND_HALF_DOWN one product in cart, quantity 3' => [
+                'products' => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_DOWN)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_DOWN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_DOWN,
             ],
             'PS_ROUND_HALF_DOWN 3 products in cart, several quantities' => [
-                'products'      => [
+                'products' => [
                     2 => 2,
                     1 => 3,
                     3 => 1,
@@ -227,32 +227,32 @@ class RoundingModeTest extends AbstractCartCalculationTest
                 + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_DOWN)
                 + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_DOWN)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_DOWN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_DOWN,
             ],
             // PS_ROUND_HALF_ODD
-            'PS_ROUND_HALF_ODD empty cart'                              => [
-                'products'      => [],
+            'PS_ROUND_HALF_ODD empty cart' => [
+                'products' => [],
                 'expectedTotal' => 0,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_ODD,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_ODD,
             ],
-            'PS_ROUND_HALF_ODD one product in cart, quantity 1'         => [
-                'products'      => [1 => 1],
+            'PS_ROUND_HALF_ODD one product in cart, quantity 1' => [
+                'products' => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_ODD)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_ODD,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_ODD,
             ],
-            'PS_ROUND_HALF_ODD one product in cart, quantity 3'         => [
-                'products'      => [1 => 3],
+            'PS_ROUND_HALF_ODD one product in cart, quantity 3' => [
+                'products' => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_ODD)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_ODD,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_ODD,
             ],
-            'PS_ROUND_HALF_ODD 3 products in cart, several quantities'  => [
-                'products'      => [
+            'PS_ROUND_HALF_ODD 3 products in cart, several quantities' => [
+                'products' => [
                     2 => 2,
                     1 => 3,
                     3 => 1,
@@ -261,32 +261,32 @@ class RoundingModeTest extends AbstractCartCalculationTest
                 + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_ODD)
                 + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_ODD)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_ODD,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_ODD,
             ],
             // PS_ROUND_HALF_EVEN
-            'PS_ROUND_HALF_EVEN empty cart'                             => [
-                'products'      => [],
+            'PS_ROUND_HALF_EVEN empty cart' => [
+                'products' => [],
                 'expectedTotal' => 0,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_EVEN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_EVEN,
             ],
-            'PS_ROUND_HALF_EVEN one product in cart, quantity 1'        => [
-                'products'      => [1 => 1],
+            'PS_ROUND_HALF_EVEN one product in cart, quantity 1' => [
+                'products' => [1 => 1],
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_EVEN)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_EVEN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_EVEN,
             ],
-            'PS_ROUND_HALF_EVEN one product in cart, quantity 3'        => [
-                'products'      => [1 => 3],
+            'PS_ROUND_HALF_EVEN one product in cart, quantity 3' => [
+                'products' => [1 => 3],
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2, PS_ROUND_HALF_EVEN)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_EVEN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_EVEN,
             ],
             'PS_ROUND_HALF_EVEN 3 products in cart, several quantities' => [
-                'products'      => [
+                'products' => [
                     2 => 2,
                     1 => 3,
                     3 => 1,
@@ -295,8 +295,8 @@ class RoundingModeTest extends AbstractCartCalculationTest
                 + Tools::ps_round(2 * static::PRODUCT_FIXTURES[2]['price'], 2, PS_ROUND_HALF_EVEN)
                 + Tools::ps_round(static::PRODUCT_FIXTURES[3]['price'], 2, PS_ROUND_HALF_EVEN)
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [],
-                'roundingMode'  => PS_ROUND_HALF_EVEN,
+                'cartRules' => [],
+                'roundingMode' => PS_ROUND_HALF_EVEN,
             ],
         ];
     }

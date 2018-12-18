@@ -55,7 +55,7 @@ class CartRulesWithoutCodeTest extends AbstractCartCalculationTest
             $this->insertCartRule($k, $cartRuleData);
         }
         $cartRule = $this->getCartRuleFromFixtureId(1);
-        $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
+        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
         $this->assertTrue($result);
 
         $expectedTotal = (1 - $cartRulesData[14]['percent'] / 100)

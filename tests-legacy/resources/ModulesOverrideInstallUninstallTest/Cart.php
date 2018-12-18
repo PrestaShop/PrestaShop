@@ -99,14 +99,14 @@ class Cart extends CartCore
     {
         $products = parent::getProducts($refresh, $id_product, $id_country);
         if (_PS_VERSION_ >= 1.6) {
-            $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null, true);
+            $params = Hook::exec('ppbsGetProducts', array('products' => $products), null, true);
             if (isset($params['productpricebysize']['products'])) {
                 return $params['productpricebysize']['products'];
             } else {
                 return $products;
             }
         } else {
-            $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null);
+            $params = Hook::exec('ppbsGetProducts', array('products' => $products), null);
             $params = json_decode($params, true);
             if (isset($params['products'])) {
                 return $params['products'];

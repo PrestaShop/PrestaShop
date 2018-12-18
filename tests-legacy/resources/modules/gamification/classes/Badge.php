@@ -58,18 +58,18 @@ class Badge extends ObjectModel
         'primary' => 'id_badge',
         'multilang' => true,
         'fields' => array(
-            'id_ps_badge' =>        array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'type' =>                array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 32),
-            'id_group' =>            array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 32),
-            'group_position' =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'scoring' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'validated' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'awb' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'id_ps_badge' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'type' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 32),
+            'id_group' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 32),
+            'group_position' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'scoring' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'validated' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'awb' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             // Lang fields
-            'name' =>                array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'description' =>        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255),
-            'group_name' =>        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255),
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+            'description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255),
+            'group_name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255),
         ),
     );
     
