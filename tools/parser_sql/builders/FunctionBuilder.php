@@ -58,49 +58,58 @@ require_once dirname(__FILE__) . '/DirectionBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class FunctionBuilder {
-
-    protected function buildDirection($parsed) {
+class FunctionBuilder
+{
+    protected function buildDirection($parsed)
+    {
         $builder = new DirectionBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildAlias($parsed) {
+    protected function buildAlias($parsed)
+    {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildColRef($parsed) {
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function isReserved($parsed) {
+    protected function isReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->isReserved($parsed);
     }
     
-    protected function buildSelectExpression($parsed) {
+    protected function buildSelectExpression($parsed)
+    {
         $builder = new SelectExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSelectBracketExpression($parsed) {
+    protected function buildSelectBracketExpression($parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if (($parsed['expr_type'] !== ExpressionType::AGGREGATE_FUNCTION)
             && ($parsed['expr_type'] !== ExpressionType::SIMPLE_FUNCTION)) {
             return "";
@@ -128,5 +137,4 @@ class FunctionBuilder {
         }
         return $parsed['base_expr'] . "(" . substr($sql, 0, -1) . ")" . $this->buildAlias($parsed) . $this->buildDirection($parsed);
     }
-
 }

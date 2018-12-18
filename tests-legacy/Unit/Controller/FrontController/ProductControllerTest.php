@@ -132,7 +132,6 @@ class ProductControllerTest extends IntegrationTestCase
 
     public function specificPricesProvider()
     {
-
         $specificPrices = array(
             0 => array(
                 'id_specific_price'      => '9',

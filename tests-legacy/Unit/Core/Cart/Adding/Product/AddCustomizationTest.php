@@ -33,7 +33,6 @@ use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 
 class AddCustomizationTest extends AbstractCartTest
 {
-
     protected $customizations = [];
 
     public function tearDown()
@@ -46,7 +45,6 @@ class AddCustomizationTest extends AbstractCartTest
 
     protected function addCustomization(Product $product)
     {
-
         $customization                       = new Customization();
         $customization->id_product           = $product->id;
         $customization->id_product_attribute = 0;
@@ -116,5 +114,4 @@ class AddCustomizationTest extends AbstractCartTest
 
         Configuration::set('PS_ORDER_OUT_OF_STOCK', $oldOrderOutOfStock);
     }
-
 }

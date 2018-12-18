@@ -49,8 +49,8 @@ function add_default_restrictions_modules_groups()
                     $sql .= '("'.(int)$mod['id_module'].'", "'.(int)$s.'", "'.(int)$group['id_group'].'"),';
                 }
             }
-                // removing last comma to avoid SQL error
-                $sql = substr($sql, 0, strlen($sql) - 1);
+            // removing last comma to avoid SQL error
+            $sql = substr($sql, 0, strlen($sql) - 1);
             $res &= Db::getInstance()->execute($sql);
         }
     }

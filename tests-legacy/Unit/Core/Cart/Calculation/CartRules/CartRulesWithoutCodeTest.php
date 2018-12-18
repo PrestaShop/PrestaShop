@@ -66,5 +66,4 @@ class CartRulesWithoutCodeTest extends AbstractCartCalculationTest
                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE;
         $this->compareCartTotalTaxIncl($expectedTotal, true);
     }
-
 }

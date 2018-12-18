@@ -40,15 +40,17 @@ require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
  * @author arothe
  * 
  */
-class RecordProcessor extends AbstractProcessor {
-
+class RecordProcessor extends AbstractProcessor
+{
     private $expressionListProcessor;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->expressionListProcessor = new ExpressionListProcessor();
     }
 
-    public function process($unparsed) {
+    public function process($unparsed)
+    {
         $unparsed = $this->removeParenthesisFromStart($unparsed);
         $values = $this->splitSQLIntoTokens($unparsed);
 
@@ -59,5 +61,4 @@ class RecordProcessor extends AbstractProcessor {
         }
         return $this->expressionListProcessor->process($values);
     }
-
 }

@@ -51,8 +51,8 @@ require_once dirname(__FILE__) . '/../exceptions/InvalidParameterException.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class PHPSQLLexer {
-
+class PHPSQLLexer
+{
     protected $splitters;
 
     /**
@@ -60,7 +60,8 @@ class PHPSQLLexer {
      * 
      * It initializes some fields.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->splitters = new LexerSplitter();
     }
 
@@ -72,7 +73,8 @@ class PHPSQLLexer {
      * 
      * @return boolean true, if the parameter $haystack ends with the character sequences $needle, false otherwise
      */
-    protected function endsWith($haystack, $needle) {
+    protected function endsWith($haystack, $needle)
+    {
         $length = strlen($needle);
         if ($length == 0) {
             return true;
@@ -80,7 +82,8 @@ class PHPSQLLexer {
         return (substr($haystack, -$length) === $needle);
     }
 
-    public function split($sql) {
+    public function split($sql)
+    {
         if (!is_string($sql)) {
             throw new InvalidParameterException($sql);
         }
@@ -94,11 +97,9 @@ class PHPSQLLexer {
         $pos = 0;
 
         while ($pos < $len) {
-
             for ($i = $splitLen; $i > 0; $i--) {
                 $substr = substr($sql, $pos, $i);
                 if ($this->splitters->isSplitter($substr)) {
-
                     if ($token !== "") {
                         $tokens[] = $token;
                     }
@@ -128,13 +129,13 @@ class PHPSQLLexer {
         return $tokens;
     }
 
-    protected function concatUserDefinedVariables($tokens) {
+    protected function concatUserDefinedVariables($tokens)
+    {
         $i = 0;
         $cnt = count($tokens);
         $userdef = false;
 
         while ($i < $cnt) {
-
             if (!isset($tokens[$i])) {
                 $i++;
                 continue;
@@ -160,14 +161,13 @@ class PHPSQLLexer {
         return array_values($tokens);
     }
 
-    protected function concatComments($tokens) {
-
+    protected function concatComments($tokens)
+    {
         $i = 0;
         $cnt = count($tokens);
         $comment = false;
 
         while ($i < $cnt) {
-
             if (!isset($tokens[$i])) {
                 $i++;
                 continue;
@@ -203,15 +203,16 @@ class PHPSQLLexer {
         return array_values($tokens);
     }
 
-    protected function isBacktick($token) {
+    protected function isBacktick($token)
+    {
         return ($token === "'" || $token === "\"" || $token === "`");
     }
 
-    protected function balanceBackticks($tokens) {
+    protected function balanceBackticks($tokens)
+    {
         $i = 0;
         $cnt = count($tokens);
         while ($i < $cnt) {
-
             if (!isset($tokens[$i])) {
                 $i++;
                 continue;
@@ -231,12 +232,11 @@ class PHPSQLLexer {
 
     // backticks are not balanced within one token, so we have
     // to re-combine some tokens
-    protected function balanceCharacter($tokens, $idx, $char) {
-
+    protected function balanceCharacter($tokens, $idx, $char)
+    {
         $token_count = count($tokens);
         $i = $idx + 1;
         while ($i < $token_count) {
-
             if (!isset($tokens[$i])) {
                 $i++;
                 continue;
@@ -263,12 +263,11 @@ class PHPSQLLexer {
      * 2. If the next token starts with a dot, we will add it to the previous token 
      *
      */
-    protected function concatColReferences($tokens) {
-
+    protected function concatColReferences($tokens)
+    {
         $cnt = count($tokens);
         $i = 0;
         while ($i < $cnt) {
-
             if (!isset($tokens[$i])) {
                 $i++;
                 continue;
@@ -312,11 +311,11 @@ class PHPSQLLexer {
         return array_values($tokens);
     }
 
-    protected function concatEscapeSequences($tokens) {
+    protected function concatEscapeSequences($tokens)
+    {
         $tokenCount = count($tokens);
         $i = 0;
         while ($i < $tokenCount) {
-
             if ($this->endsWith($tokens[$i], "\\")) {
                 $i++;
                 if (isset($tokens[$i])) {
@@ -329,7 +328,8 @@ class PHPSQLLexer {
         return array_values($tokens);
     }
 
-    protected function balanceParenthesis($tokens) {
+    protected function balanceParenthesis($tokens)
+    {
         $token_count = count($tokens);
         $i = 0;
         while ($i < $token_count) {

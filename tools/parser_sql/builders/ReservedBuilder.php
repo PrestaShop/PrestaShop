@@ -49,13 +49,15 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ReservedBuilder {
-
-    public function isReserved($parsed) {
+class ReservedBuilder
+{
+    public function isReserved($parsed)
+    {
         return ($parsed['expr_type'] === ExpressionType::RESERVED);
     }
     
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if (!$this->isReserved($parsed)) {
             return "";
         }

@@ -40,14 +40,15 @@
  * @author arothe
  *
  */
-class UnableToCreateSQLException extends Exception {
-
+class UnableToCreateSQLException extends Exception
+{
     protected $part;
     protected $partkey;
     protected $entry;
     protected $entrykey;
 
-    public function __construct($part, $partkey, $entry, $entrykey) {
+    public function __construct($part, $partkey, $entry, $entrykey)
+    {
         $this->part = $part;
         $this->partkey = $partkey;
         $this->entry = $entry;
@@ -55,19 +56,23 @@ class UnableToCreateSQLException extends Exception {
         parent::__construct("unknown [" . $entrykey . "] = " .$entry[$entrykey] . " in \"" . $part . "\" [" . $partkey . "] ", 15);
     }
 
-    public function getEntry() {
+    public function getEntry()
+    {
         return $this->entry;
     }
 
-    public function getEntryKey() {
+    public function getEntryKey()
+    {
         return $this->entrykey;
     }
 
-    public function getSQLPart() {
+    public function getSQLPart()
+    {
         return $this->part;
     }
 
-    public function getSQLPartKey() {
+    public function getSQLPartKey()
+    {
         return $this->partkey;
     }
 }

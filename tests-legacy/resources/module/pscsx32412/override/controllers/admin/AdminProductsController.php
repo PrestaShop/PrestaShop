@@ -1518,7 +1518,6 @@ class AdminProductsController extends AdminProductsControllerCore
     protected function updateAssoShop($id_object)
     {
         //override AdminController::updateAssoShop() specifically for products because shop association is set with the context in ObjectModel
-
     }
 
     public function processAdd()

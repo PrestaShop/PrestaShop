@@ -190,5 +190,4 @@ class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
             ],
         ];
     }
-
 }

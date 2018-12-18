@@ -49,8 +49,8 @@ require_once dirname(__FILE__) . '/processors/DefaultProcessor.php';
  * @author  André Rothe <arothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
-class PHPSQLParser {
-
+class PHPSQLParser
+{
     public $parsed;
 
     /**
@@ -60,7 +60,8 @@ class PHPSQLParser {
      * @param String  $sql           The SQL statement.
      * @param boolean $calcPositions True, if the output should contain [position], false otherwise.
      */
-    public function __construct($sql = false, $calcPositions = false) {
+    public function __construct($sql = false, $calcPositions = false)
+    {
         if ($sql) {
             $this->parse($sql, $calcPositions);
         }
@@ -79,8 +80,8 @@ class PHPSQLParser {
      * 
      * @return array An associative array with all meta information about the SQL statement.
      */
-    public function parse($sql, $calcPositions = false) {
-
+    public function parse($sql, $calcPositions = false)
+    {
         $processor = new DefaultProcessor();
         $queries = $processor->process($sql);
 

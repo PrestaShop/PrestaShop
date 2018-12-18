@@ -41,15 +41,17 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
  * @author arothe
  * 
  */
-class ValuesProcessor extends AbstractProcessor {
-
+class ValuesProcessor extends AbstractProcessor
+{
     private $recordProcessor;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->recordProcessor = new RecordProcessor();
     }
 
-    public function process($tokens) {
+    public function process($tokens)
+    {
         $unparsed = "";
         foreach ($tokens['VALUES'] as $k => $v) {
             if ($this->isWhitespaceToken($v)) {
@@ -75,5 +77,4 @@ class ValuesProcessor extends AbstractProcessor {
         $tokens['VALUES'] = array_values($values);
         return $tokens;
     }
-
 }

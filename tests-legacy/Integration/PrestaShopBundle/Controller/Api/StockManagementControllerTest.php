@@ -147,8 +147,7 @@ class StockManagementControllerTest extends ApiTestCase
     public function itShouldReturnOkResponseWhenRequestingProductsCombinationsStock(
         $params,
         $expectedTotalPages
-    )
-    {
+    ) {
         $this->assertOkResponseOnList('api_stock_list_product_combinations', $params, $expectedTotalPages);
     }
 

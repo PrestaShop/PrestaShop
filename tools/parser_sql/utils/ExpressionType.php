@@ -48,8 +48,8 @@
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class ExpressionType {
-
+class ExpressionType
+{
     const USER_VARIABLE = "user_variable";
     const SESSION_VARIABLE = "session_variable";
     const GLOBAL_VARIABLE = "global_variable";

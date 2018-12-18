@@ -50,19 +50,20 @@ require_once dirname(__FILE__) . '/ConstantBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ConstraintBuilder {
-
-    protected function buildConstant($parsed) {
+class ConstraintBuilder
+{
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::CONSTRAINT) {
             return "";
         }
         $sql = $this->buildConstant($parsed['sub_tree']);
         return "CONSTRAINT" . (empty($sql) ? '' : (' ' . $sql));
     }
-
 }

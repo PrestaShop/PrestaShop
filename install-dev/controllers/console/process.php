@@ -28,7 +28,6 @@ use PrestaShopBundle\Install\Database;
 
 class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
 {
-
     public $process_steps = array();
     public $previous_button = false;
 
@@ -50,7 +49,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     public function display()
     {
-
     }
 
     /**
@@ -311,7 +309,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $cacheFiles = scandir($configXMLPath, SCANDIR_SORT_NONE);
         $excludes = ['.htaccess', 'index.php'];
 
-        foreach($cacheFiles as $file) {
+        foreach ($cacheFiles as $file) {
             $filepath = $configXMLPath.$file;
             if (is_file($filepath) && !in_array($file, $excludes)) {
                 unlink($filepath);
@@ -323,7 +321,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     {
         $themesPath = _PS_ROOT_DIR_.'/config/themes/';
         $cacheFiles = scandir($themesPath, SCANDIR_SORT_NONE);
-        foreach($cacheFiles as $file) {
+        foreach ($cacheFiles as $file) {
             $file = $themesPath.$file;
             if (is_file($file)) {
                 unlink($file);

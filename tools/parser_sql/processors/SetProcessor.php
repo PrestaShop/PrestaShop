@@ -41,11 +41,12 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class SetProcessor extends AbstractProcessor {
-
+class SetProcessor extends AbstractProcessor
+{
     private $expressionListProcessor;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->expressionListProcessor = new ExpressionListProcessor();
     }
 
@@ -53,14 +54,16 @@ class SetProcessor extends AbstractProcessor {
      * A SET list is simply a list of key = value expressions separated by comma (,).
      * This function produces a list of the key/value expressions.
      */
-    protected function getAssignment($base_expr) {
+    protected function getAssignment($base_expr)
+    {
         $assignment = $this->expressionListProcessor->process($this->splitSQLIntoTokens($base_expr));
         return array('expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($base_expr),
             'sub_tree' => $assignment,
         );
     }
 
-    public function process($tokens, $isUpdate = false) {
+    public function process($tokens, $isUpdate = false)
+    {
         $result = array();
         $baseExpr = "";
         $assignment = false;
@@ -105,5 +108,4 @@ class SetProcessor extends AbstractProcessor {
 
         return $result;
     }
-
 }

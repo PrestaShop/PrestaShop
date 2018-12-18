@@ -40,21 +40,21 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *
  * @author arothe
  */
-class ReferenceDefinitionProcessor extends AbstractProcessor {
-
-    protected function buildReferenceDef($expr, $base_expr, $key) {
+class ReferenceDefinitionProcessor extends AbstractProcessor
+{
+    protected function buildReferenceDef($expr, $base_expr, $key)
+    {
         $expr['till'] = $key;
         $expr['base_expr'] = $base_expr;
         return $expr;
     }
 
-    public function process($tokens) {
-
+    public function process($tokens)
+    {
         $expr = array('expr_type' => ExpressionType::REFERENCE, 'base_expr' => false, 'sub_tree' => array());
         $base_expr = '';
 
         foreach ($tokens as $key => $token) {
-
             $trim = trim($token);
             $base_expr .= $token;
 

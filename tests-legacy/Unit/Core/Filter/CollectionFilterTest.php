@@ -89,5 +89,4 @@ class CollectionFilterTest extends \PHPUnit\Framework\TestCase
             ],
         ];
     }
-
 }

@@ -54,15 +54,17 @@ require_once dirname(__FILE__) . '/builders/ShowStatementBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class PHPSQLCreator {
-
-    public function __construct($parsed = false) {
+class PHPSQLCreator
+{
+    public function __construct($parsed = false)
+    {
         if ($parsed) {
             $this->create($parsed);
         }
     }
 
-    public function create($parsed) {
+    public function create($parsed)
+    {
         $k = key($parsed);
         switch ($k) {
 
@@ -106,7 +108,8 @@ class PHPSQLCreator {
 
     // TODO: we should change that, there are multiple "rename objects" as
     // table, user, database
-    protected function processRenameTableStatement($parsed) {
+    protected function processRenameTableStatement($parsed)
+    {
         $rename = $parsed['RENAME'];
         $sql = "";
         foreach ($rename as $k => $v) {
@@ -123,7 +126,8 @@ class PHPSQLCreator {
         return "RENAME TABLE " . $sql;
     }
 
-    protected function processSourceAndDestTable($v) {
+    protected function processSourceAndDestTable($v)
+    {
         if (!isset($v['source']) || !isset($v['destination'])) {
             return "";
         }

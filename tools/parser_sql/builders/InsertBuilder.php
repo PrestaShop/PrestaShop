@@ -50,14 +50,16 @@ require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class InsertBuilder {
-
-    protected function buildColRef($parsed) {
+class InsertBuilder
+{
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         $sql = "INSERT INTO " . $parsed['table'];
 
         if ($parsed['columns'] === false) {
@@ -83,5 +85,4 @@ class InsertBuilder {
         $sql .= $columns;
         return $sql;
     }
-    
 }

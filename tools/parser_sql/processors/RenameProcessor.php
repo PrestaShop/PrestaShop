@@ -41,9 +41,10 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class RenameProcessor extends AbstractProcessor {
-
-    public function process($tokenList) {
+class RenameProcessor extends AbstractProcessor
+{
+    public function process($tokenList)
+    {
         $base_expr = "";
         $resultList = array();
         $tablePair = array();
@@ -92,5 +93,4 @@ class RenameProcessor extends AbstractProcessor {
 
         return $resultList;
     }
-
 }

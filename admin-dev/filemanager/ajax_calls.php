@@ -196,16 +196,11 @@ if (isset($_GET['action'])) {
 						$("#jquery_jplayer_1").jPlayer({
 							ready: function () {
 								$(this).jPlayer("setMedia", {
-									title: "<?php Tools::safeOutput($_GET['title']);
-                ?>",
-									mp3: "<?php echo Tools::safeOutput($preview_file);
-                ?>",
-									m4a: "<?php echo Tools::safeOutput($preview_file);
-                ?>",
-									oga: "<?php echo Tools::safeOutput($preview_file);
-                ?>",
-									wav: "<?php echo Tools::safeOutput($preview_file);
-                ?>"
+									title: "<?php Tools::safeOutput($_GET['title']); ?>",
+									mp3: "<?php echo Tools::safeOutput($preview_file); ?>",
+									m4a: "<?php echo Tools::safeOutput($preview_file); ?>",
+									oga: "<?php echo Tools::safeOutput($preview_file); ?>",
+									wav: "<?php echo Tools::safeOutput($preview_file); ?>"
 								});
 							},
 							swfPath: "js",
@@ -218,7 +213,6 @@ if (isset($_GET['action'])) {
 				</script>
 
 			<?php
-
             } elseif (in_array(strtolower($info['extension']), $ext_video)) {
                 ?>
 
@@ -228,12 +222,9 @@ if (isset($_GET['action'])) {
 						$("#jquery_jplayer_1").jPlayer({
 							ready: function () {
 								$(this).jPlayer("setMedia", {
-									title: "<?php Tools::safeOutput($_GET['title']);
-                ?>",
-									m4v: "<?php echo Tools::safeOutput($preview_file);
-                ?>",
-									ogv: "<?php echo Tools::safeOutput($preview_file);
-                ?>"
+									title: "<?php Tools::safeOutput($_GET['title']); ?>",
+									m4v: "<?php echo Tools::safeOutput($preview_file); ?>",
+									ogv: "<?php echo Tools::safeOutput($preview_file); ?>"
 								});
 							},
 							swfPath: "js",
@@ -247,7 +238,6 @@ if (isset($_GET['action'])) {
 				</script>
 
 			<?php
-
             }
             break;
     }

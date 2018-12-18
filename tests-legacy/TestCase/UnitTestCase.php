@@ -140,9 +140,9 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
 
     protected function setupContextualTemplateEngineMock()
     {
-       $this->context->smarty = Phake::mock('Smarty');
+        $this->context->smarty = Phake::mock('Smarty');
 
-       return $this->context->smarty;
+        return $this->context->smarty;
     }
 
     protected function setupContextualCurrencyMock()
@@ -173,7 +173,8 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
         return $this->context->link;
     }
 
-    protected function setupContextualCookieMock() {
+    protected function setupContextualCookieMock()
+    {
         $this->context->cookie = Phake::mock('Cookie');
 
         return $this->context->cookie;

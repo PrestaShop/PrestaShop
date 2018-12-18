@@ -186,7 +186,7 @@ class ModuleTabRegisterTest extends UnitTestCase
 
             // We test there is no unexpected tab to register
             // Be aware, it also include which can throw an exception later when being validated
-            foreach($tabs as $tab) {
+            foreach ($tabs as $tab) {
                 $this->assertTrue(
                         in_array($tab['class_name'], $this->expectedTabsToAdd[$moduleName]),
                         'Module '.$moduleName.' should not register '.$tab['class_name']

@@ -40,7 +40,6 @@ use Zone;
 
 abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 {
-
     const ZONE_FIXTURES = [
         1 => [
             'name' => 'zone #1',
@@ -174,7 +173,6 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             $this->cartRules[$k] = $cartRule;
         }
         Cache::clear();
-
     }
 
     public function tearDown()

@@ -112,8 +112,7 @@ class QueryParamsCollectionTest extends TestCase
         $pageIndex,
         $pageSize,
         $expectedSqlClauses
-    )
-    {
+    ) {
         $requestMock = $this->mockRequest(
             array(
                 'order' => $order,
@@ -152,8 +151,7 @@ class QueryParamsCollectionTest extends TestCase
         $pageIndex,
         $pageSize,
         $expectedSqlClauses
-    )
-    {
+    ) {
         $requestMock = $this->mockRequest(
             array(
                 'order' => $order,
@@ -242,8 +240,7 @@ class QueryParamsCollectionTest extends TestCase
         $params,
         $expectedSql,
         $message
-    )
-    {
+    ) {
         $requestMock = $this->mockRequest(array_merge(
             $params,
             array('_attributes' => $this->mockAttributes(array())->reveal())

@@ -58,8 +58,10 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     {
         $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
 
-        $this->container->bind('foo', function () {});
-        $this->container->bind('foo', function () {});
+        $this->container->bind('foo', function () {
+        });
+        $this->container->bind('foo', function () {
+        });
     }
 
     public function testBindByClosureInstanceNotSharedByDefault()

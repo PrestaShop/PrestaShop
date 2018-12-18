@@ -39,9 +39,10 @@ require_once dirname(__FILE__) . '/SelectExpressionProcessor.php';
  * @author arothe
  * 
  */
-class SelectProcessor extends SelectExpressionProcessor {
-
-    public function process($tokens) {
+class SelectProcessor extends SelectExpressionProcessor
+{
+    public function process($tokens)
+    {
         $expression = "";
         $expressionList = array();
         foreach ($tokens as $token) {

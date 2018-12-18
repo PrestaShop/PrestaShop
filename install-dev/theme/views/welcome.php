@@ -48,7 +48,9 @@
 	<h3><?php echo $this->translator->trans('Continue the installation in:', array(), 'Install') ?></h3>
 	<select id="langList" name="language">
 	<?php foreach ($this->language->getIsoList() as $iso): ?>
-		<option value="<?php echo $iso ?>" <?php if ($iso == $this->language->getLanguageIso()) echo 'selected="selected"' ?>>
+		<option value="<?php echo $iso ?>" <?php if ($iso == $this->language->getLanguageIso()) {
+     echo 'selected="selected"';
+ } ?>>
 			<?php echo $this->language->getLanguage($iso)->getName() ?>
 		</option>
 	<?php endforeach; ?>

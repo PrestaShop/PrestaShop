@@ -36,7 +36,6 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\Carrier;
  */
 class RuleWhenChangingCarrierTest extends AbstractCarrierTest
 {
-
     const CART_RULES_FIXTURES = [
         1 => ['code' => 'foo', 'priority' => 1, 'percent' => 55, 'amount' => 0, 'carrierRestrictionIds' => [2]],
         2 => ['code' => 'bar', 'priority' => 1, 'percent' => 55, 'amount' => 0, 'carrierRestrictionIds' => [1]],
@@ -169,5 +168,4 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
         $cartRules = $this->cart->getCartRules();
         $this->assertCount(0, $cartRules);
     }
-
 }

@@ -56,44 +56,52 @@ require_once dirname(__FILE__) . '/TableBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ShowBuilder {
-
-    protected function buildTable($parsed, $delim) {
+class ShowBuilder
+{
+    protected function buildTable($parsed, $delim)
+    {
         $builder = new TableBuilder();
         return $builder->build($parsed, $delim);
     }
     
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildProcedure($parsed) {
+    protected function buildProcedure($parsed)
+    {
         $builder = new ProcedureBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildDatabase($parsed) {
+    protected function buildDatabase($parsed)
+    {
         $builder = new DatabaseBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildEngine($parsed) {
+    protected function buildEngine($parsed)
+    {
         $builder = new EngineBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
     
-    public function build($parsed) {
+    public function build($parsed)
+    {
         $show = $parsed['SHOW'];
         $sql = "";
         foreach ($show as $k => $v) {
@@ -115,5 +123,5 @@ class ShowBuilder {
 
         $sql = substr($sql, 0, -1);
         return "SHOW " . $sql;
-    }    
+    }
 }

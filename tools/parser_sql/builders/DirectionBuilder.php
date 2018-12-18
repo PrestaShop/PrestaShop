@@ -47,9 +47,10 @@
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class DirectionBuilder {
-
-    public function build($parsed) {
+class DirectionBuilder
+{
+    public function build($parsed)
+    {
         if (!isset($parsed['direction']) || $parsed['direction'] === false) {
             return "";
         }

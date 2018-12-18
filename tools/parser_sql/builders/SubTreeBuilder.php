@@ -57,44 +57,52 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SubTreeBuilder {
-
-    protected function buildColRef($parsed) {
+class SubTreeBuilder
+{
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildOperator($parsed) {
+    protected function buildOperator($parsed)
+    {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSubQuery($parsed) {
+    protected function buildSubQuery($parsed)
+    {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSelectBracketExpression($parsed) {
+    protected function buildSelectBracketExpression($parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    public function build($parsed, $delim = " ") {
+    public function build($parsed, $delim = " ")
+    {
         if ($parsed['sub_tree'] === '') {
             return "";
         }

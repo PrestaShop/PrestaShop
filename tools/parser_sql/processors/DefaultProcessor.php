@@ -41,10 +41,10 @@ require_once dirname(__FILE__) . '/SQLProcessor.php';
  * @author arothe
  * 
  */
-class DefaultProcessor extends AbstractProcessor {
-
-    public function process($sql) {
-
+class DefaultProcessor extends AbstractProcessor
+{
+    public function process($sql)
+    {
         $inputArray = $this->splitSQLIntoTokens($sql);
 
         // this is the highest level lexical analysis. This is the part of the

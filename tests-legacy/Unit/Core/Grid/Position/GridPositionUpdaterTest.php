@@ -151,7 +151,6 @@ class GridPositionUpdaterTest extends TestCase
             ));
 
         return $updaterMock;
-
     }
 
     /**

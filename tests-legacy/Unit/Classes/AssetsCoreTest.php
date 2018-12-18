@@ -104,7 +104,6 @@ class AssetsCoreTest extends TestCase
         if ($toBeFound) {
             $this->assertSame($expectedAsset['path'], $this->testsPath.$expectedPath);
         }
-
     }
 
     // --- providers ---

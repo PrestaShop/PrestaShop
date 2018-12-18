@@ -51,19 +51,22 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SelectExpressionBuilder {
-
-    protected function buildSubTree($parsed, $delim) {
+class SelectExpressionBuilder
+{
+    protected function buildSubTree($parsed, $delim)
+    {
         $builder = new SubTreeBuilder();
         return $builder->build($parsed, $delim);
     }
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias($parsed)
+    {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
             return "";
         }

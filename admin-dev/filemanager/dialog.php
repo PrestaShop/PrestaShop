@@ -19,7 +19,7 @@ if (isset($_POST['submit'])) {
         $subdir = '';
     }
 
-//remember last position
+    //remember last position
     setcookie('last_position', $subdir, time() + (86400 * 7));
 
     if ($subdir == '') {
@@ -101,10 +101,10 @@ if (isset($_POST['submit'])) {
     } else {
         $popup = 0;
     }
-//Sanitize popup
+    //Sanitize popup
     $popup = (bool) $popup;
 
-//view type
+    //view type
     if (!isset($_SESSION['view_type'])) {
         $view = $default_view;
         $_SESSION['view_type'] = $view;
@@ -173,8 +173,7 @@ if (isset($_POST['submit'])) {
             'field_id' => isset($_GET['field_id']) ? (int)$_GET['field_id'] : '',
             'fldr' => '',
         )
-    );
-    ?>
+    ); ?>
 
 	<!DOCTYPE html>
 	<html xmlns="https://www.w3.org/1999/xhtml">
@@ -227,10 +226,8 @@ if (isset($_POST['submit'])) {
                 ?>
 				<script type="text/javascript" src="http://feather.aviary.com/js/feather.js "></script>
 			<?php
-
             }
-        }
-    ?>
+        } ?>
 
 		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
@@ -242,20 +239,15 @@ if (isset($_POST['submit'])) {
 		<script>
 			var ext_img = new Array('<?php echo implode("','", $ext_img)?>');
 			var allowed_ext = new Array('<?php echo implode("','", $ext)?>');
-			var loading_bar =<?php echo $loading_bar?"true":"false";
-    ?>;
-			var image_editor =<?php echo $aviary_active?"true":"false";
-    ?>;
+			var loading_bar =<?php echo $loading_bar?"true":"false"; ?>;
+			var image_editor =<?php echo $aviary_active?"true":"false"; ?>;
 			//dropzone config
 			Dropzone.options.myAwesomeDropzone = {
-				dictInvalidFileType: "<?php echo lang_Error_extension;
-    ?>",
-				dictFileTooBig: "<?php echo lang_Error_Upload;
-    ?>",
+				dictInvalidFileType: "<?php echo lang_Error_extension; ?>",
+				dictFileTooBig: "<?php echo lang_Error_Upload; ?>",
 				dictResponseError: "SERVER ERROR",
 				paramName: "file", // The name that will be used to transfer the file
-				maxFilesize: <?php echo $MaxSizeUpload;
-    ?>, // MB
+				maxFilesize: <?php echo $MaxSizeUpload; ?>, // MB
 				url: "upload.php",
 				accept: function (file, done) {
 					var extension = file.name.split('.').pop();
@@ -264,19 +256,15 @@ if (isset($_POST['submit'])) {
 						done();
 					}
 					else {
-						done("<?php echo lang_Error_extension;
-    ?>");
+						done("<?php echo lang_Error_extension; ?>");
 					}
 				}
 			};
 			if (image_editor) {
 				var featherEditor = new Aviary.Feather({
-					apiKey: "<?php echo $aviary_key;
-    ?>",
-					apiVersion: <?php echo $aviary_version;
-    ?>,
-					language: "<?php echo $aviary_language;
-    ?>",
+					apiKey: "<?php echo $aviary_key; ?>",
+					apiVersion: <?php echo $aviary_version; ?>,
+					language: "<?php echo $aviary_language; ?>",
 					theme: 'light',
 					tools: 'all',
 					onSave: function (imageID, newURL) {
@@ -310,59 +298,36 @@ if (isset($_POST['submit'])) {
 		<script type="text/javascript" src="js/include.min.js"></script>
 	</head>
 	<body>
-	<input type="hidden" id="popup" value="<?php echo Tools::safeOutput($popup);
-    ?>"/>
-	<input type="hidden" id="view" value="<?php echo Tools::safeOutput($view);
-    ?>"/>
-	<input type="hidden" id="cur_dir" value="<?php echo Tools::safeOutput($cur_dir);
-    ?>"/>
-	<input type="hidden" id="cur_dir_thumb" value="<?php echo Tools::safeOutput($subdir);
-    ?>"/>
-	<input type="hidden" id="insert_folder_name" value="<?php echo Tools::safeOutput(lang_Insert_Folder_Name);
-    ?>"/>
-	<input type="hidden" id="new_folder" value="<?php echo Tools::safeOutput(lang_New_Folder);
-    ?>"/>
-	<input type="hidden" id="ok" value="<?php echo Tools::safeOutput(lang_OK);
-    ?>"/>
-	<input type="hidden" id="cancel" value="<?php echo Tools::safeOutput(lang_Cancel);
-    ?>"/>
-	<input type="hidden" id="rename" value="<?php echo Tools::safeOutput(lang_Rename);
-    ?>"/>
-	<input type="hidden" id="lang_duplicate" value="<?php echo Tools::safeOutput(lang_Duplicate);
-    ?>"/>
+	<input type="hidden" id="popup" value="<?php echo Tools::safeOutput($popup); ?>"/>
+	<input type="hidden" id="view" value="<?php echo Tools::safeOutput($view); ?>"/>
+	<input type="hidden" id="cur_dir" value="<?php echo Tools::safeOutput($cur_dir); ?>"/>
+	<input type="hidden" id="cur_dir_thumb" value="<?php echo Tools::safeOutput($subdir); ?>"/>
+	<input type="hidden" id="insert_folder_name" value="<?php echo Tools::safeOutput(lang_Insert_Folder_Name); ?>"/>
+	<input type="hidden" id="new_folder" value="<?php echo Tools::safeOutput(lang_New_Folder); ?>"/>
+	<input type="hidden" id="ok" value="<?php echo Tools::safeOutput(lang_OK); ?>"/>
+	<input type="hidden" id="cancel" value="<?php echo Tools::safeOutput(lang_Cancel); ?>"/>
+	<input type="hidden" id="rename" value="<?php echo Tools::safeOutput(lang_Rename); ?>"/>
+	<input type="hidden" id="lang_duplicate" value="<?php echo Tools::safeOutput(lang_Duplicate); ?>"/>
 	<input type="hidden" id="duplicate" value="<?php if ($duplicate_files) {
-    echo 1;
-} else {
-    echo 0;
-}
-    ?>"/>
+            echo 1;
+        } else {
+            echo 0;
+        } ?>"/>
 	<input type="hidden" id="base_url" value="<?php echo Tools::safeOutput($base_url) ?>"/>
-	<input type="hidden" id="base_url_true" value="<?php echo base_url();
-    ?>"/>
-	<input type="hidden" id="fldr_value" value="<?php echo Tools::safeOutput($subdir);
-    ?>"/>
-	<input type="hidden" id="sub_folder" value="<?php echo Tools::safeOutput($subfolder);
-    ?>"/>
-	<input type="hidden" id="file_number_limit_js" value="<?php echo Tools::safeOutput($file_number_limit_js);
-    ?>"/>
-	<input type="hidden" id="descending" value="<?php echo $descending ? "true" : "false";
-    ?>"/>
-	<?php $protocol = Tools::getShopProtocol();
-    ?>
-	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter), array(''), $protocol.$_SERVER['HTTP_HOST'].Tools::safeOutput($_SERVER['REQUEST_URI']));
-    ?>"/>
-	<input type="hidden" id="lang_show_url" value="<?php echo Tools::safeOutput(lang_Show_url);
-    ?>"/>
-	<input type="hidden" id="lang_extract" value="<?php echo Tools::safeOutput(lang_Extract);
-    ?>"/>
-	<input type="hidden" id="lang_file_info" value="<?php echo fix_strtoupper(lang_File_info);
-    ?>"/>
-	<input type="hidden" id="lang_edit_image" value="<?php echo Tools::safeOutput(lang_Edit_image);
-    ?>"/>
-	<input type="hidden" id="transliteration" value="<?php echo $transliteration ? "true" : "false";
-    ?>"/>
+	<input type="hidden" id="base_url_true" value="<?php echo base_url(); ?>"/>
+	<input type="hidden" id="fldr_value" value="<?php echo Tools::safeOutput($subdir); ?>"/>
+	<input type="hidden" id="sub_folder" value="<?php echo Tools::safeOutput($subfolder); ?>"/>
+	<input type="hidden" id="file_number_limit_js" value="<?php echo Tools::safeOutput($file_number_limit_js); ?>"/>
+	<input type="hidden" id="descending" value="<?php echo $descending ? "true" : "false"; ?>"/>
+	<?php $protocol = Tools::getShopProtocol(); ?>
+	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter), array(''), $protocol.$_SERVER['HTTP_HOST'].Tools::safeOutput($_SERVER['REQUEST_URI'])); ?>"/>
+	<input type="hidden" id="lang_show_url" value="<?php echo Tools::safeOutput(lang_Show_url); ?>"/>
+	<input type="hidden" id="lang_extract" value="<?php echo Tools::safeOutput(lang_Extract); ?>"/>
+	<input type="hidden" id="lang_file_info" value="<?php echo fix_strtoupper(lang_File_info); ?>"/>
+	<input type="hidden" id="lang_edit_image" value="<?php echo Tools::safeOutput(lang_Edit_image); ?>"/>
+	<input type="hidden" id="transliteration" value="<?php echo $transliteration ? "true" : "false"; ?>"/>
 	<?php if ($upload_files) {
-    ?>
+            ?>
 		<!----- uploader div start ------->
 
 		<div class="uploader">
@@ -373,60 +338,45 @@ if (isset($_POST['submit'])) {
 			<div class="space10"></div>
 			<div class="space10"></div>
 			<?php if ($java_upload) {
-    ?>
+                ?>
 			<div class="tabbable upload-tabbable"> <!-- Only required for left/right tabs -->
 				<ul class="nav nav-tabs">
-					<li class="active"><a href="#tab1" data-toggle="tab"><?php echo Tools::safeOutput(lang_Upload_base);
-    ?></a></li>
-					<li><a href="#tab2" id="uploader-btn" data-toggle="tab"><?php echo Tools::safeOutput(lang_Upload_java);
-    ?></a></li>
+					<li class="active"><a href="#tab1" data-toggle="tab"><?php echo Tools::safeOutput(lang_Upload_base); ?></a></li>
+					<li><a href="#tab2" id="uploader-btn" data-toggle="tab"><?php echo Tools::safeOutput(lang_Upload_java); ?></a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab1">
 						<?php
-}
-    ?>
+            } ?>
 						<form action="dialog.php" method="post" enctype="multipart/form-data" id="myAwesomeDropzone" class="dropzone">
-							<input type="hidden" name="path" value="<?php echo Tools::safeOutput($subfolder.$subdir);
-    ?>"/>
-							<input type="hidden" name="path_thumb" value="<?php echo Tools::safeOutput($subfolder.$subdir);
-    ?>"/>
+							<input type="hidden" name="path" value="<?php echo Tools::safeOutput($subfolder.$subdir); ?>"/>
+							<input type="hidden" name="path_thumb" value="<?php echo Tools::safeOutput($subfolder.$subdir); ?>"/>
 
 							<div class="fallback">
 								<?php echo lang_Upload_file ?>:<br/>
 								<input name="file" type="file"/>
-								<input type="hidden" name="fldr" value="<?php echo Tools::safeOutput($subdir);
-    ?>"/>
-								<input type="hidden" name="view" value="<?php echo Tools::safeOutput($view);
-    ?>"/>
-								<input type="hidden" name="type" value="<?php echo Tools::safeOutput($_GET['type']);
-    ?>"/>
-								<input type="hidden" name="field_id" value="<?php echo (int)$_GET['field_id'];
-    ?>"/>
-								<input type="hidden" name="popup" value="<?php echo Tools::safeOutput($popup);
-    ?>"/>
-								<input type="hidden" name="lang" value="<?php echo Tools::safeOutput($lang);
-    ?>"/>
-								<input type="hidden" name="filter" value="<?php echo Tools::safeOutput($filter);
-    ?>"/>
+								<input type="hidden" name="fldr" value="<?php echo Tools::safeOutput($subdir); ?>"/>
+								<input type="hidden" name="view" value="<?php echo Tools::safeOutput($view); ?>"/>
+								<input type="hidden" name="type" value="<?php echo Tools::safeOutput($_GET['type']); ?>"/>
+								<input type="hidden" name="field_id" value="<?php echo (int)$_GET['field_id']; ?>"/>
+								<input type="hidden" name="popup" value="<?php echo Tools::safeOutput($popup); ?>"/>
+								<input type="hidden" name="lang" value="<?php echo Tools::safeOutput($lang); ?>"/>
+								<input type="hidden" name="filter" value="<?php echo Tools::safeOutput($filter); ?>"/>
 								<input type="submit" name="submit" value="<?php echo lang_OK ?>"/>
 							</div>
 						</form>
-						<div class="upload-help"><?php echo Tools::safeOutput(lang_Upload_base_help);
-    ?></div>
+						<div class="upload-help"><?php echo Tools::safeOutput(lang_Upload_base_help); ?></div>
 						<?php if ($java_upload) {
-    ?>
+                ?>
 					</div>
 					<div class="tab-pane" id="tab2">
 						<div id="iframe-container">
 
 						</div>
-						<div class="upload-help"><?php echo Tools::safeOutput(lang_Upload_java_help);
-    ?></div>
+						<div class="upload-help"><?php echo Tools::safeOutput(lang_Upload_java_help); ?></div>
 					</div>
 					<?php
-}
-    ?>
+            } ?>
 				</div>
 			</div>
 
@@ -434,8 +384,7 @@ if (isset($_POST['submit'])) {
 		<!----- uploader div start ------->
 
 	<?php
-}
-    ?>
+        } ?>
 	<div class="container-fluid">
 
 	<?php
@@ -530,8 +479,7 @@ if (isset($_POST['submit'])) {
     if (!empty($current_folder)) {
         $files = array_merge($files, array($current_folder));
     }
-    $files = array_merge($files, $sorted);
-    ?>
+    $files = array_merge($files, $sorted); ?>
 	<!----- header div start ------->
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
@@ -541,98 +489,71 @@ if (isset($_POST['submit'])) {
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<div class="brand"><?php echo Tools::safeOutput(lang_Toolbar);
-    ?> -></div>
+				<div class="brand"><?php echo Tools::safeOutput(lang_Toolbar); ?> -></div>
 				<div class="nav-collapse collapse">
 					<div class="filters">
 						<div class="row-fluid">
 							<div class="span3 half">
-								<span><?php echo Tools::safeOutput(lang_Actions);
-    ?>:</span>
+								<span><?php echo Tools::safeOutput(lang_Actions); ?>:</span>
 								<?php if ($upload_files) {
-    ?>
-									<button class="tip btn upload-btn" title="<?php echo Tools::safeOutput(lang_Upload_file);
-    ?>">
+        ?>
+									<button class="tip btn upload-btn" title="<?php echo Tools::safeOutput(lang_Upload_file); ?>">
 										<i class="icon-plus"></i><i class="icon-file"></i></button>
 								<?php
-}
-    ?>
+    } ?>
 								<?php if ($create_folders) {
-    ?>
+        ?>
 									<button class="tip btn new-folder" title="<?php echo Tools::safeOutput(lang_New_Folder) ?>">
 										<i class="icon-plus"></i><i class="icon-folder-open"></i></button>
 								<?php
-}
-    ?>
+    } ?>
 							</div>
 							<div class="span3 half view-controller">
-								<span><?php echo lang_View;
-    ?>:</span>
+								<span><?php echo lang_View; ?>:</span>
 								<button class="btn tip<?php if ($view == 0) {
-    echo " btn-inverse";
-}
-    ?>" id="view0" data-value="0" title="<?php echo Tools::safeOutput(lang_View_boxes);
-    ?>">
+        echo " btn-inverse";
+    } ?>" id="view0" data-value="0" title="<?php echo Tools::safeOutput(lang_View_boxes); ?>">
 									<i class="icon-th <?php if ($view == 0) {
-    echo "icon-white";
-}
-    ?>"></i></button>
+        echo "icon-white";
+    } ?>"></i></button>
 								<button class="btn tip<?php if ($view == 1) {
-    echo " btn-inverse";
-}
-    ?>" id="view1" data-value="1" title="<?php echo Tools::safeOutput(lang_View_list);
-    ?>">
+        echo " btn-inverse";
+    } ?>" id="view1" data-value="1" title="<?php echo Tools::safeOutput(lang_View_list); ?>">
 									<i class="icon-align-justify <?php if ($view == 1) {
-    echo "icon-white";
-}
-    ?>"></i>
+        echo "icon-white";
+    } ?>"></i>
 								</button>
 								<button class="btn tip<?php if ($view == 2) {
-    echo " btn-inverse";
-}
-    ?>" id="view2" data-value="2" title="<?php echo Tools::safeOutput(lang_View_columns_list);
-    ?>">
+        echo " btn-inverse";
+    } ?>" id="view2" data-value="2" title="<?php echo Tools::safeOutput(lang_View_columns_list); ?>">
 									<i class="icon-fire <?php if ($view == 2) {
-    echo "icon-white";
-}
-    ?>"></i></button>
+        echo "icon-white";
+    } ?>"></i></button>
 							</div>
 							<div class="span6 types">
-								<span><?php echo Tools::safeOutput(lang_Filters);
-    ?>:</span>
+								<span><?php echo Tools::safeOutput(lang_Filters); ?>:</span>
 								<?php if ($_GET['type'] != 1 && $_GET['type'] != 3) {
-    ?>
+        ?>
 									<input id="select-type-1" name="radio-sort" type="radio" data-item="ff-item-type-1" checked="checked" class="hide"/>
-									<label id="ff-item-type-1" title="<?php echo Tools::safeOutput(lang_Files);
-    ?>" for="select-type-1" class="tip btn ff-label-type-1"><i class="icon-file"></i></label>
+									<label id="ff-item-type-1" title="<?php echo Tools::safeOutput(lang_Files); ?>" for="select-type-1" class="tip btn ff-label-type-1"><i class="icon-file"></i></label>
 									<input id="select-type-2" name="radio-sort" type="radio" data-item="ff-item-type-2" class="hide"/>
-									<label id="ff-item-type-2" title="<?php echo Tools::safeOutput(lang_Images);
-    ?>" for="select-type-2" class="tip btn ff-label-type-2"><i class="icon-picture"></i></label>
+									<label id="ff-item-type-2" title="<?php echo Tools::safeOutput(lang_Images); ?>" for="select-type-2" class="tip btn ff-label-type-2"><i class="icon-picture"></i></label>
 									<input id="select-type-3" name="radio-sort" type="radio" data-item="ff-item-type-3" class="hide"/>
-									<label id="ff-item-type-3" title="<?php echo Tools::safeOutput(lang_Archives);
-    ?>" for="select-type-3" class="tip btn ff-label-type-3"><i class="icon-inbox"></i></label>
+									<label id="ff-item-type-3" title="<?php echo Tools::safeOutput(lang_Archives); ?>" for="select-type-3" class="tip btn ff-label-type-3"><i class="icon-inbox"></i></label>
 									<input id="select-type-4" name="radio-sort" type="radio" data-item="ff-item-type-4" class="hide"/>
-									<label id="ff-item-type-4" title="<?php echo Tools::safeOutput(lang_Videos);
-    ?>" for="select-type-4" class="tip btn ff-label-type-4"><i class="icon-film"></i></label>
+									<label id="ff-item-type-4" title="<?php echo Tools::safeOutput(lang_Videos); ?>" for="select-type-4" class="tip btn ff-label-type-4"><i class="icon-film"></i></label>
 									<input id="select-type-5" name="radio-sort" type="radio" data-item="ff-item-type-5" class="hide"/>
-									<label id="ff-item-type-5" title="<?php echo Tools::safeOutput(lang_Music);
-    ?>" for="select-type-5" class="tip btn ff-label-type-5"><i class="icon-music"></i></label>
+									<label id="ff-item-type-5" title="<?php echo Tools::safeOutput(lang_Music); ?>" for="select-type-5" class="tip btn ff-label-type-5"><i class="icon-music"></i></label>
 								<?php
-}
-    ?>
-								<input accesskey="f" type="text" class="filter-input" id="filter-input" name="filter" placeholder="<?php echo fix_strtolower(lang_Text_filter);
-    ?>..." value="<?php echo Tools::safeOutput($filter);
-    ?>"/><?php if ($n_files > $file_number_limit_js) {
-    ?><label id="filter" class="btn"><i class="icon-play"></i></label><?php
-}
-    ?>
+    } ?>
+								<input accesskey="f" type="text" class="filter-input" id="filter-input" name="filter" placeholder="<?php echo fix_strtolower(lang_Text_filter); ?>..." value="<?php echo Tools::safeOutput($filter); ?>"/><?php if ($n_files > $file_number_limit_js) {
+        ?><label id="filter" class="btn"><i class="icon-play"></i></label><?php
+    } ?>
 
 								<input id="select-type-all" name="radio-sort" type="radio" data-item="ff-item-type-all" class="hide"/>
-								<label id="ff-item-type-all" title="<?php echo Tools::safeOutput(lang_All);
-    ?>" <?php if (Tools::getValue('type') == 1 || Tools::getValue('type') == 3) {
-    ?>style="visibility: hidden;" <?php
-}
-    ?> data-item="ff-item-type-all" for="select-type-all" style="margin-rigth:0px;" class="tip btn btn-inverse ff-label-type-all"><i class="icon-align-justify icon-white"></i></label>
+								<label id="ff-item-type-all" title="<?php echo Tools::safeOutput(lang_All); ?>" <?php if (Tools::getValue('type') == 1 || Tools::getValue('type') == 3) {
+        ?>style="visibility: hidden;" <?php
+    } ?> data-item="ff-item-type-all" for="select-type-all" style="margin-rigth:0px;" class="tip btn btn-inverse ff-label-type-all"><i class="icon-align-justify icon-white"></i></label>
 
 							</div>
 						</div>
@@ -648,8 +569,7 @@ if (isset($_POST['submit'])) {
 
 	<div class="row-fluid">
 		<?php
-        $link = "dialog.php?".$get_params;
-    ?>
+        $link = "dialog.php?".$get_params; ?>
 		<ul class="breadcrumb">
 			<li class="pull-left"><a href="<?php echo Tools::safeOutput($link) ?>/"><i class="icon-home"></i></a></li>
 			<li><span class="divider">/</span></li>
@@ -662,18 +582,14 @@ if (isset($_POST['submit'])) {
             if ($k == count($bc) - 2) {
                 ?>
 						<li class="active"><?php echo Tools::safeOutput($b) ?></li><?php
-
             } elseif ($b != "") {
                 ?>
 						<li><a href="<?php echo Tools::safeOutput($link.$tmp_path)?>"><?php echo Tools::safeOutput($b) ?></a></li>
-						<li><span class="divider"><?php echo "/";
-                ?></span></li>
+						<li><span class="divider"><?php echo "/"; ?></span></li>
 					<?php
-
             }
         }
-    }
-    ?>
+    } ?>
 			<li class="pull-right">
 				<a class="btn-small" href="javascript:void('')" id="info"><i class="icon-question-sign"></i></a></li>
 			<li class="pull-right">
@@ -691,25 +607,17 @@ if (isset($_POST['submit'])) {
 							<center><strong><?php echo Tools::safeOutput(lang_Sorting) ?></strong></center>
 						</li>
 						<li><a class="sorter sort-name <?php if ($sort_by == "name") {
-    echo ($descending) ? "descending" : "ascending";
-}
-    ?>" href="javascript:void('')" data-sort="name"><?php echo Tools::safeOutput(lang_Filename);
-    ?></a></li>
+        echo ($descending) ? "descending" : "ascending";
+    } ?>" href="javascript:void('')" data-sort="name"><?php echo Tools::safeOutput(lang_Filename); ?></a></li>
 						<li><a class="sorter sort-date <?php if ($sort_by == "date") {
-    echo ($descending) ? "descending" : "ascending";
-}
-    ?>" href="javascript:void('')" data-sort="date"><?php echo Tools::safeOutput(lang_Date);
-    ?></a></li>
+        echo ($descending) ? "descending" : "ascending";
+    } ?>" href="javascript:void('')" data-sort="date"><?php echo Tools::safeOutput(lang_Date); ?></a></li>
 						<li><a class="sorter sort-size <?php if ($sort_by == "size") {
-    echo ($descending) ? "descending" : "ascending";
-}
-    ?>" href="javascript:void('')" data-sort="size"><?php echo Tools::safeOutput(lang_Size);
-    ?></a></li>
+        echo ($descending) ? "descending" : "ascending";
+    } ?>" href="javascript:void('')" data-sort="size"><?php echo Tools::safeOutput(lang_Size); ?></a></li>
 						<li><a class="sorter sort-extension <?php if ($sort_by == "extension") {
-    echo ($descending) ? "descending" : "ascending";
-}
-    ?>" href="javascript:void('')" data-sort="extension"><?php echo Tools::safeOutput(lang_Type);
-    ?></a></li>
+        echo ($descending) ? "descending" : "ascending";
+    } ?>" href="javascript:void('')" data-sort="extension"><?php echo Tools::safeOutput(lang_Type); ?></a></li>
 					</ul>
 				</div>
 			</li>
@@ -719,61 +627,44 @@ if (isset($_POST['submit'])) {
 	<div class="row-fluid ff-container">
 	<div class="span12">
 	<?php if (@opendir($current_path.$subfolder.$subdir) === false) {
-    ?>
+        ?>
 		<br/>
 		<div class="alert alert-error">There is an error! The upload folder there isn't. Check your config.php file.
 		</div>
 	<?php
-} else {
-    ?>
-	<h4 id="help"><?php echo Tools::safeOutput(lang_Swipe_help);
-    ?></h4>
+    } else {
+        ?>
+	<h4 id="help"><?php echo Tools::safeOutput(lang_Swipe_help); ?></h4>
 	<?php if (isset($folder_message)) {
-    ?>
-		<div class="alert alert-block"><?php echo Tools::safeOutput($folder_message);
-    ?></div>
+            ?>
+		<div class="alert alert-block"><?php echo Tools::safeOutput($folder_message); ?></div>
 	<?php
-}
-    ?>
+        } ?>
 	<?php if ($show_sorting_bar) {
-    ?>
+            ?>
 		<!-- sorter -->
-		<div class="sorter-container <?php echo "list-view".Tools::safeOutput($view);
-    ?>">
+		<div class="sorter-container <?php echo "list-view".Tools::safeOutput($view); ?>">
 			<div class="file-name"><a class="sorter sort-name <?php if ($sort_by == "name") {
-    echo ($descending) ? "descending" : "ascending";
-}
-    ?>" href="javascript:void('')" data-sort="name"><?php echo Tools::safeOutput(lang_Filename);
-    ?></a></div>
+                echo ($descending) ? "descending" : "ascending";
+            } ?>" href="javascript:void('')" data-sort="name"><?php echo Tools::safeOutput(lang_Filename); ?></a></div>
 			<div class="file-date"><a class="sorter sort-date <?php if ($sort_by == "date") {
-    echo ($descending) ? "descending" : "ascending";
-}
-    ?>" href="javascript:void('')" data-sort="date"><?php echo Tools::safeOutput(lang_Date);
-    ?></a></div>
+                echo ($descending) ? "descending" : "ascending";
+            } ?>" href="javascript:void('')" data-sort="date"><?php echo Tools::safeOutput(lang_Date); ?></a></div>
 			<div class="file-size"><a class="sorter sort-size <?php if ($sort_by == "size") {
-    echo ($descending) ? "descending" : "ascending";
-}
-    ?>" href="javascript:void('')" data-sort="size"><?php echo Tools::safeOutput(lang_Size);
-    ?></a></div>
-			<div class='img-dimension'><?php echo Tools::safeOutput(lang_Dimension);
-    ?></div>
+                echo ($descending) ? "descending" : "ascending";
+            } ?>" href="javascript:void('')" data-sort="size"><?php echo Tools::safeOutput(lang_Size); ?></a></div>
+			<div class='img-dimension'><?php echo Tools::safeOutput(lang_Dimension); ?></div>
 			<div class='file-extension'><a class="sorter sort-extension <?php if ($sort_by == "extension") {
-    echo ($descending) ? "descending" : "ascending";
-}
-    ?>" href="javascript:void('')" data-sort="extension"><?php echo Tools::safeOutput(lang_Type);
-    ?></a></div>
-			<div class='file-operations'><?php echo Tools::safeOutput(lang_Operations);
-    ?></div>
+                echo ($descending) ? "descending" : "ascending";
+            } ?>" href="javascript:void('')" data-sort="extension"><?php echo Tools::safeOutput(lang_Type); ?></a></div>
+			<div class='file-operations'><?php echo Tools::safeOutput(lang_Operations); ?></div>
 		</div>
 	<?php
-}
-    ?>
+        } ?>
 
-	<input type="hidden" id="file_number" value="<?php echo Tools::safeOutput($n_files);
-    ?>"/>
+	<input type="hidden" id="file_number" value="<?php echo Tools::safeOutput($n_files); ?>"/>
 	<!--ul class="thumbnails ff-items"-->
-	<ul class="grid cs-style-2 <?php echo "list-view".Tools::safeOutput($view);
-    ?>">
+	<ul class="grid cs-style-2 <?php echo "list-view".Tools::safeOutput($view); ?>">
 	<?php
 
     $jplayer_ext = array(
@@ -792,399 +683,327 @@ if (isset($_POST['submit'])) {
         "ogg",
         "wav",
     );
-    foreach ($files as $file_array) {
-        $file = $file_array['file'];
-        if ($file == '.' || (isset($file_array['extension']) && $file_array['extension'] != lang_Type_dir) || ($file == '..' && $subdir == '') || in_array($file, $hidden_folders) || ($filter != '' && $file != ".." && strpos($file, $filter) === false)) {
-            continue;
-        }
-        $new_name = fix_filename($file, $transliteration);
-        if ($file != '..' && $file != $new_name) {
-            //rename
-            rename_folder($current_path.$subdir.$new_name, $new_name, $transliteration);
-            $file = $new_name;
-        }
-        //add in thumbs folder if not exist
-        if (!file_exists($thumbs_path.$subdir.$file)) {
-            create_folder(false, $thumbs_path.$subdir.$file);
-        }
-        $class_ext = 3;
-        if ($file == '..' && trim($subdir) != '') {
-            $src = explode("/", $subdir);
-            unset($src[count($src) - 2]);
-            $src = implode("/", $src);
-            if ($src == '') {
-                $src = "/";
+        foreach ($files as $file_array) {
+            $file = $file_array['file'];
+            if ($file == '.' || (isset($file_array['extension']) && $file_array['extension'] != lang_Type_dir) || ($file == '..' && $subdir == '') || in_array($file, $hidden_folders) || ($filter != '' && $file != ".." && strpos($file, $filter) === false)) {
+                continue;
             }
-        } elseif ($file != '..') {
-            $src = $subdir.$file."/";
-        }
-
-        ?>
+            $new_name = fix_filename($file, $transliteration);
+            if ($file != '..' && $file != $new_name) {
+                //rename
+                rename_folder($current_path.$subdir.$new_name, $new_name, $transliteration);
+                $file = $new_name;
+            }
+            //add in thumbs folder if not exist
+            if (!file_exists($thumbs_path.$subdir.$file)) {
+                create_folder(false, $thumbs_path.$subdir.$file);
+            }
+            $class_ext = 3;
+            if ($file == '..' && trim($subdir) != '') {
+                $src = explode("/", $subdir);
+                unset($src[count($src) - 2]);
+                $src = implode("/", $src);
+                if ($src == '') {
+                    $src = "/";
+                }
+            } elseif ($file != '..') {
+                $src = $subdir.$file."/";
+            } ?>
 		<li data-name="<?php echo Tools::safeOutput($file) ?>" <?php if ($file == '..') {
-    echo 'class="back"';
-} else {
-    echo 'class="dir"';
-}
-        ?>>
+                echo 'class="back"';
+            } else {
+                echo 'class="dir"';
+            } ?>>
 			<figure data-name="<?php echo Tools::safeOutput($file) ?>" class="<?php if ($file == "..") {
-    echo "back-";
-}
-        ?>directory" data-type="<?php if ($file != "..") {
-    echo "dir";
-}
-        ?>">
+                echo "back-";
+            } ?>directory" data-type="<?php if ($file != "..") {
+                echo "dir";
+            } ?>">
 				<a class="folder-link" href="dialog.php?<?php echo $get_params.rawurlencode($src)."&".uniqid() ?>">
 					<div class="img-precontainer">
 						<div class="img-container directory"><span></span>
-							<img class="directory-img" src="img/<?php echo Tools::safeOutput($icon_theme);
-        ?>/folder<?php if ($file == "..") {
-    echo "_back";
-}
-        ?>.jpg" alt="folder"/>
+							<img class="directory-img" src="img/<?php echo Tools::safeOutput($icon_theme); ?>/folder<?php if ($file == "..") {
+                echo "_back";
+            } ?>.jpg" alt="folder"/>
 						</div>
 					</div>
 					<div class="img-precontainer-mini directory">
 						<div class="img-container-mini">
 							<span></span>
-							<img class="directory-img" src="img/<?php echo Tools::safeOutput($icon_theme);
-        ?>/folder<?php if ($file == "..") {
-    echo "_back";
-}
-        ?>.png" alt="folder"/>
+							<img class="directory-img" src="img/<?php echo Tools::safeOutput($icon_theme); ?>/folder<?php if ($file == "..") {
+                echo "_back";
+            } ?>.png" alt="folder"/>
 						</div>
 					</div>
 					<?php if ($file == "..") {
-    ?>
+                ?>
 					<div class="box no-effect">
 						<h4><?php echo Tools::safeOutput(lang_Back) ?></h4>
 					</div>
 				</a>
 
 				<?php
-
-} else {
-    ?>
+            } else {
+                ?>
 					</a>
 					<div class="box">
 						<h4 class="<?php if ($ellipsis_title_after_first_row) {
-    echo "ellipsis";
-}
-    ?>">
-							<a class="folder-link" data-file="<?php echo Tools::safeOutput($file) ?>" href="dialog.php?<?php echo Tools::safeOutput($get_params.rawurlencode($src)."&".uniqid()) ?>"><?php echo Tools::safeOutput($file);
-    ?></a>
+                    echo "ellipsis";
+                } ?>">
+							<a class="folder-link" data-file="<?php echo Tools::safeOutput($file) ?>" href="dialog.php?<?php echo Tools::safeOutput($get_params.rawurlencode($src)."&".uniqid()) ?>"><?php echo Tools::safeOutput($file); ?></a>
 						</h4>
 					</div>
 					<input type="hidden" class="name" value=""/>
-					<input type="hidden" class="date" value="<?php echo Tools::safeOutput($file_array['date']);
-    ?>"/>
-					<input type="hidden" class="size" value="<?php echo Tools::safeOutput($file_array['size']);
-    ?>"/>
-					<input type="hidden" class="extension" value="<?php echo lang_Type_dir;
-    ?>"/>
+					<input type="hidden" class="date" value="<?php echo Tools::safeOutput($file_array['date']); ?>"/>
+					<input type="hidden" class="size" value="<?php echo Tools::safeOutput($file_array['size']); ?>"/>
+					<input type="hidden" class="extension" value="<?php echo lang_Type_dir; ?>"/>
 					<div class="file-date"><?php echo date(lang_Date_type, $file_array['date']) ?></div>
 					<?php if ($show_folder_size) {
-    ?>
+                    ?>
 					<div class="file-size"><?php echo makeSize($file_array['size']) ?></div><?php
-}
-    ?>
-					<div class='file-extension'><?php echo lang_Type_dir;
-    ?></div>
+                } ?>
+					<div class='file-extension'><?php echo lang_Type_dir; ?></div>
 					<figcaption>
 						<a href="javascript:void('')" class="tip-left edit-button <?php if ($rename_folders) {
-    echo "rename-folder";
-}
-    ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file);
-    ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file);
-    ?>">
+                    echo "rename-folder";
+                } ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file); ?>">
 							<i class="icon-pencil <?php if (!$rename_folders) {
-    echo 'icon-white';
-}
-    ?>"></i></a>
+                    echo 'icon-white';
+                } ?>"></i></a>
 						<a href="javascript:void('')" class="tip-left erase-button <?php if ($delete_folders) {
-    echo "delete-folder";
-}
-    ?>" title="<?php echo lang_Erase ?>" data-confirm="<?php echo lang_Confirm_Folder_del;
-    ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file);
-    ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file);
-    ?>">
+                    echo "delete-folder";
+                } ?>" title="<?php echo lang_Erase ?>" data-confirm="<?php echo lang_Confirm_Folder_del; ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file); ?>">
 							<i class="icon-trash <?php if (!$delete_folders) {
-    echo 'icon-white';
-}
-    ?>"></i>
+                    echo 'icon-white';
+                } ?>"></i>
 						</a>
 					</figcaption>
 				<?php
-}
-        ?>
+            } ?>
 			</figure>
 		</li>
 	<?php
-
-    }
-
-    foreach ($files as $nu => $file_array) {
-        $file = $file_array['file'];
-
-        if ($file == '.' || $file == '..' || is_dir($current_path.$subfolder.$subdir.$file) || in_array($file, $hidden_files) || !in_array(fix_strtolower($file_array['extension']), $ext) || ($filter != '' && strpos($file, $filter) === false)) {
-            continue;
         }
 
-        $file_path = $current_path.$subfolder.$subdir.$file;
-    //check if file have illegal caracter
+        foreach ($files as $nu => $file_array) {
+            $file = $file_array['file'];
 
-    $filename = substr($file, 0, '-'.(strlen($file_array['extension']) + 1));
+            if ($file == '.' || $file == '..' || is_dir($current_path.$subfolder.$subdir.$file) || in_array($file, $hidden_files) || !in_array(fix_strtolower($file_array['extension']), $ext) || ($filter != '' && strpos($file, $filter) === false)) {
+                continue;
+            }
 
-        if ($file != fix_filename($file, $transliteration)) {
-            $file1 = fix_filename($file, $transliteration);
-            $file_path1 = ($current_path.$subfolder.$subdir.$file1);
-            if (file_exists($file_path1)) {
-                $i = 1;
-                $info = pathinfo($file1);
-                while (file_exists($current_path.$subfolder.$subdir.$info['filename'].".[".$i."].".$info['extension'])) {
-                    $i++;
-                }
-                $file1 = $info['filename'].".[".$i."].".$info['extension'];
+            $file_path = $current_path.$subfolder.$subdir.$file;
+            //check if file have illegal caracter
+
+            $filename = substr($file, 0, '-'.(strlen($file_array['extension']) + 1));
+
+            if ($file != fix_filename($file, $transliteration)) {
+                $file1 = fix_filename($file, $transliteration);
                 $file_path1 = ($current_path.$subfolder.$subdir.$file1);
+                if (file_exists($file_path1)) {
+                    $i = 1;
+                    $info = pathinfo($file1);
+                    while (file_exists($current_path.$subfolder.$subdir.$info['filename'].".[".$i."].".$info['extension'])) {
+                        $i++;
+                    }
+                    $file1 = $info['filename'].".[".$i."].".$info['extension'];
+                    $file_path1 = ($current_path.$subfolder.$subdir.$file1);
+                }
+
+                $filename = substr($file1, 0, '-'.(strlen($file_array['extension']) + 1));
+                rename_file($file_path, fix_filename($filename, $transliteration), $transliteration);
+                $file = $file1;
+                $file_array['extension'] = fix_filename($file_array['extension'], $transliteration);
+                $file_path = $file_path1;
             }
 
-            $filename = substr($file1, 0, '-'.(strlen($file_array['extension']) + 1));
-            rename_file($file_path, fix_filename($filename, $transliteration), $transliteration);
-            $file = $file1;
-            $file_array['extension'] = fix_filename($file_array['extension'], $transliteration);
-            $file_path = $file_path1;
-        }
+            $is_img = false;
+            $is_video = false;
+            $is_audio = false;
+            $show_original = false;
+            $show_original_mini = false;
+            $mini_src = "";
+            $src_thumb = "";
+            $extension_lower = fix_strtolower($file_array['extension']);
+            if (in_array($extension_lower, $ext_img)) {
+                $src = $base_url.$cur_dir.rawurlencode($file);
+                $mini_src = $src_thumb = $thumbs_path.$subdir.$file;
 
-        $is_img = false;
-        $is_video = false;
-        $is_audio = false;
-        $show_original = false;
-        $show_original_mini = false;
-        $mini_src = "";
-        $src_thumb = "";
-        $extension_lower = fix_strtolower($file_array['extension']);
-        if (in_array($extension_lower, $ext_img)) {
-            $src = $base_url.$cur_dir.rawurlencode($file);
-            $mini_src = $src_thumb = $thumbs_path.$subdir.$file;
+                //add in thumbs folder if not exist
+                if (!file_exists($src_thumb)) {
+                    try {
+                        create_img_gd($file_path, $src_thumb, 122, 91);
+                        new_thumbnails_creation($current_path.$subfolder.$subdir, $file_path, $file, $current_path, $relative_image_creation, $relative_path_from_current_pos, $relative_image_creation_name_to_prepend, $relative_image_creation_name_to_append, $relative_image_creation_width, $relative_image_creation_height, $fixed_image_creation, $fixed_path_from_filemanager, $fixed_image_creation_name_to_prepend, $fixed_image_creation_to_append, $fixed_image_creation_width, $fixed_image_creation_height);
+                    } catch (Exception $e) {
+                        $src_thumb = $mini_src = "";
+                    }
+                }
+                $is_img = true;
+                //check if is smaller than thumb
+                list($img_width, $img_height, $img_type, $attr) = getimagesize($file_path);
+                if ($img_width < 122 && $img_height < 91) {
+                    $src_thumb = $current_path.$subfolder.$subdir.$file;
+                    $show_original = true;
+                }
 
-        //add in thumbs folder if not exist
-        if (!file_exists($src_thumb)) {
-            try {
-                create_img_gd($file_path, $src_thumb, 122, 91);
-                new_thumbnails_creation($current_path.$subfolder.$subdir, $file_path, $file, $current_path, $relative_image_creation, $relative_path_from_current_pos, $relative_image_creation_name_to_prepend, $relative_image_creation_name_to_append, $relative_image_creation_width, $relative_image_creation_height, $fixed_image_creation, $fixed_path_from_filemanager, $fixed_image_creation_name_to_prepend, $fixed_image_creation_to_append, $fixed_image_creation_width, $fixed_image_creation_height);
-            } catch (Exception $e) {
-                $src_thumb = $mini_src = "";
-            }
-        }
-            $is_img = true;
-        //check if is smaller than thumb
-        list($img_width, $img_height, $img_type, $attr) = getimagesize($file_path);
-            if ($img_width < 122 && $img_height < 91) {
-                $src_thumb = $current_path.$subfolder.$subdir.$file;
-                $show_original = true;
+                if ($img_width < 45 && $img_height < 38) {
+                    $mini_src = $current_path.$subfolder.$subdir.$file;
+                    $show_original_mini = true;
+                }
             }
 
-            if ($img_width < 45 && $img_height < 38) {
-                $mini_src = $current_path.$subfolder.$subdir.$file;
-                $show_original_mini = true;
-            }
-        }
-
-        $is_icon_thumb = false;
-        $is_icon_thumb_mini = false;
-        $no_thumb = false;
-        if ($src_thumb == "") {
-            $no_thumb = true;
-            if (file_exists('img/'.$icon_theme.'/'.$extension_lower.".jpg")) {
-                $src_thumb = 'img/'.$icon_theme.'/'.$extension_lower.".jpg";
-            } else {
-                $src_thumb = "img/".$icon_theme."/default.jpg";
-            }
-            $is_icon_thumb = true;
-        }
-        if ($mini_src == "") {
+            $is_icon_thumb = false;
             $is_icon_thumb_mini = false;
-        }
-
-        $class_ext = 0;
-        if (in_array($extension_lower, $ext_video)) {
-            $class_ext = 4;
-            $is_video = true;
-        } elseif (in_array($extension_lower, $ext_img)) {
-            $class_ext = 2;
-        } elseif (in_array($extension_lower, $ext_music)) {
-            $class_ext = 5;
-            $is_audio = true;
-        } elseif (in_array($extension_lower, $ext_misc)) {
-            $class_ext = 3;
-        } else {
-            $class_ext = 1;
-        }
-
-    /* PrestaShop */
-    if (isset($src_thumb) && $src_thumb) {
-        if (($src_thumb = preg_replace('#('.addslashes($current_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $src_thumb)) == $src_thumb) {
-            $src_thumb = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $src_thumb);
-        }
-    }
-        if (isset($mini_src) && $mini_src) {
-            if (($mini_src = preg_replace('#('.addslashes($current_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $mini_src)) == $mini_src) {
-                $mini_src = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $mini_src);
+            $no_thumb = false;
+            if ($src_thumb == "") {
+                $no_thumb = true;
+                if (file_exists('img/'.$icon_theme.'/'.$extension_lower.".jpg")) {
+                    $src_thumb = 'img/'.$icon_theme.'/'.$extension_lower.".jpg";
+                } else {
+                    $src_thumb = "img/".$icon_theme."/default.jpg";
+                }
+                $is_icon_thumb = true;
             }
-        }
-    /* END PrestaShop */
+            if ($mini_src == "") {
+                $is_icon_thumb_mini = false;
+            }
 
-    if ((!(Tools::getValue('type') == 1 && !$is_img) && !((Tools::getValue('type') == 3 && !$is_video) && (Tools::getValue('type') == 3 && !$is_audio))) && $class_ext > 0) {
-        ?>
-	<li class="ff-item-type-<?php echo Tools::safeOutput($class_ext);
-        ?> file" data-name="<?php echo Tools::safeOutput($file);
-        ?>">
+            $class_ext = 0;
+            if (in_array($extension_lower, $ext_video)) {
+                $class_ext = 4;
+                $is_video = true;
+            } elseif (in_array($extension_lower, $ext_img)) {
+                $class_ext = 2;
+            } elseif (in_array($extension_lower, $ext_music)) {
+                $class_ext = 5;
+                $is_audio = true;
+            } elseif (in_array($extension_lower, $ext_misc)) {
+                $class_ext = 3;
+            } else {
+                $class_ext = 1;
+            }
+
+            /* PrestaShop */
+            if (isset($src_thumb) && $src_thumb) {
+                if (($src_thumb = preg_replace('#('.addslashes($current_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $src_thumb)) == $src_thumb) {
+                    $src_thumb = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $src_thumb);
+                }
+            }
+            if (isset($mini_src) && $mini_src) {
+                if (($mini_src = preg_replace('#('.addslashes($current_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $mini_src)) == $mini_src) {
+                    $mini_src = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $mini_src);
+                }
+            }
+            /* END PrestaShop */
+
+            if ((!(Tools::getValue('type') == 1 && !$is_img) && !((Tools::getValue('type') == 3 && !$is_video) && (Tools::getValue('type') == 3 && !$is_audio))) && $class_ext > 0) {
+                ?>
+	<li class="ff-item-type-<?php echo Tools::safeOutput($class_ext); ?> file" data-name="<?php echo Tools::safeOutput($file); ?>">
 		<figure data-name="<?php echo Tools::safeOutput($file) ?>" data-type="<?php if ($is_img) {
-    echo "img";
-} else {
-    echo "file";
-}
-        ?>">
-			<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file);
-        ?>" data-field_id="" data-function="<?php echo Tools::safeOutput($apply);
-        ?>">
+                    echo "img";
+                } else {
+                    echo "file";
+                } ?>">
+			<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="" data-function="<?php echo Tools::safeOutput($apply); ?>">
 				<div class="img-precontainer">
 					<?php if ($is_icon_thumb) {
-    ?>
+                    ?>
 						<div class="filetype"><?php echo $extension_lower ?></div><?php
-}
-        ?>
+                } ?>
 					<div class="img-container">
 						<span></span>
-						<img alt="<?php echo Tools::safeOutput($filename." thumbnails");
-        ?>" class="<?php echo $show_original ? "original" : "" ?> <?php echo $is_icon_thumb ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($src_thumb);
-        ?>">
+						<img alt="<?php echo Tools::safeOutput($filename." thumbnails"); ?>" class="<?php echo $show_original ? "original" : "" ?> <?php echo $is_icon_thumb ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($src_thumb); ?>">
 					</div>
 				</div>
 				<div class="img-precontainer-mini <?php if ($is_img) {
-    echo 'original-thumb';
-}
-        ?>">
+                    echo 'original-thumb';
+                } ?>">
 					<div class="filetype <?php echo $extension_lower ?> <?php if (!$is_icon_thumb) {
-    echo "hide";
-}
-        ?>"><?php echo $extension_lower ?></div>
+                    echo "hide";
+                } ?>"><?php echo $extension_lower ?></div>
 					<div class="img-container-mini">
 						<span></span>
 						<?php if ($mini_src != "") {
-    ?>
-							<img alt="<?php echo Tools::safeOutput($filename." thumbnails");
-    ?>" class="<?php echo $show_original_mini ? "original" : "" ?> <?php echo $is_icon_thumb_mini ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($mini_src);
-    ?>">
+                    ?>
+							<img alt="<?php echo Tools::safeOutput($filename." thumbnails"); ?>" class="<?php echo $show_original_mini ? "original" : "" ?> <?php echo $is_icon_thumb_mini ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($mini_src); ?>">
 						<?php
-}
-        ?>
+                } ?>
 					</div>
 				</div>
 				<?php if ($is_icon_thumb) {
-    ?>
+                    ?>
 					<div class="cover"></div>
 				<?php
-}
-        ?>
+                } ?>
 			</a>
 
 			<div class="box">
 				<h4 class="<?php if ($ellipsis_title_after_first_row) {
-    echo "ellipsis";
-}
-        ?>">
-					<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file);
-        ?>" data-field_id="" data-function="<?php echo Tools::safeOutput($apply);
-        ?>">
-						<?php echo Tools::safeOutput($filename);
-        ?></a></h4>
+                    echo "ellipsis";
+                } ?>">
+					<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="" data-function="<?php echo Tools::safeOutput($apply); ?>">
+						<?php echo Tools::safeOutput($filename); ?></a></h4>
 			</div>
-			<input type="hidden" class="date" value="<?php echo $file_array['date'];
-        ?>"/>
+			<input type="hidden" class="date" value="<?php echo $file_array['date']; ?>"/>
 			<input type="hidden" class="size" value="<?php echo $file_array['size'] ?>"/>
-			<input type="hidden" class="extension" value="<?php echo $extension_lower;
-        ?>"/>
+			<input type="hidden" class="extension" value="<?php echo $extension_lower; ?>"/>
 			<input type="hidden" class="name" value=""/>
 
 			<div class="file-date"><?php echo date(lang_Date_type, $file_array['date']) ?></div>
 			<div class="file-size"><?php echo makeSize($file_array['size']) ?></div>
 			<div class='img-dimension'><?php if ($is_img) {
-    echo $img_width."x".$img_height;
-}
-        ?></div>
-			<div class='file-extension'><?php echo Tools::safeOutput($extension_lower);
-        ?></div>
+                    echo $img_width."x".$img_height;
+                } ?></div>
+			<div class='file-extension'><?php echo Tools::safeOutput($extension_lower); ?></div>
 			<figcaption>
-				<form action="force_download.php" method="post" class="download-form" id="form<?php echo Tools::safeOutput($nu);
-        ?>">
+				<form action="force_download.php" method="post" class="download-form" id="form<?php echo Tools::safeOutput($nu); ?>">
 					<input type="hidden" name="path" value="<?php echo Tools::safeOutput($subfolder.$subdir) ?>"/>
 					<input type="hidden" class="name_download" name="name" value="<?php echo Tools::safeOutput($file) ?>"/>
 
-					<a title="<?php echo lang_Download ?>" class="tip-right" href="javascript:void('')" onclick="$('#form<?php echo Tools::safeOutput($nu);
-        ?>').submit();"><i class="icon-download"></i></a>
+					<a title="<?php echo lang_Download ?>" class="tip-right" href="javascript:void('')" onclick="$('#form<?php echo Tools::safeOutput($nu); ?>').submit();"><i class="icon-download"></i></a>
 					<?php if ($is_img && $src_thumb != "") {
-    ?>
-						<a class="tip-right preview" title="<?php echo lang_Preview ?>" data-url="<?php echo Tools::safeOutput($src);
-    ?>" data-toggle="lightbox" href="#previewLightbox"><i class=" icon-eye-open"></i></a>
+                    ?>
+						<a class="tip-right preview" title="<?php echo lang_Preview ?>" data-url="<?php echo Tools::safeOutput($src); ?>" data-toggle="lightbox" href="#previewLightbox"><i class=" icon-eye-open"></i></a>
 					<?php
-
-} elseif (($is_video || $is_audio) && in_array($extension_lower, $jplayer_ext)) {
-    ?>
+                } elseif (($is_video || $is_audio) && in_array($extension_lower, $jplayer_ext)) {
+                    ?>
 						<a class="tip-right modalAV <?php if ($is_audio) {
-    echo "audio";
-} else {
-    echo "video";
-}
-    ?>"
-						   title="<?php echo lang_Preview ?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo Tools::safeOutput($filename);
-    ?>&file=<?php echo Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'.$subfolder.$subdir.$file);
-    ?>"
+                        echo "audio";
+                    } else {
+                        echo "video";
+                    } ?>"
+						   title="<?php echo lang_Preview ?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo Tools::safeOutput($filename); ?>&file=<?php echo Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'.$subfolder.$subdir.$file); ?>"
 						   href="javascript:void('');"><i class=" icon-eye-open"></i></a>
 					<?php
-
-} else {
-    ?>
+                } else {
+                    ?>
 						<a class="preview disabled"><i class="icon-eye-open icon-white"></i></a>
 					<?php
-}
-        ?>
+                } ?>
 					<a href="javascript:void('')" class="tip-left edit-button <?php if ($rename_files) {
-    echo "rename-file";
-}
-        ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file);
-        ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file);
-        ?>">
+                    echo "rename-file";
+                } ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file); ?>">
 						<i class="icon-pencil <?php if (!$rename_files) {
-    echo 'icon-white';
-}
-        ?>"></i></a>
+                    echo 'icon-white';
+                } ?>"></i></a>
 
 					<a href="javascript:void('')" class="tip-left erase-button <?php if ($delete_files) {
-    echo "delete-file";
-}
-        ?>" title="<?php echo lang_Erase ?>" data-confirm="<?php echo lang_Confirm_del;
-        ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file);
-        ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file);
-        ?>">
+                    echo "delete-file";
+                } ?>" title="<?php echo lang_Erase ?>" data-confirm="<?php echo lang_Confirm_del; ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file); ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file); ?>">
 						<i class="icon-trash <?php if (!$delete_files) {
-    echo 'icon-white';
-}
-        ?>"></i>
+                    echo 'icon-white';
+                } ?>"></i>
 					</a>
 				</form>
 			</figcaption>
 		</figure>
 	</li>
 	<?php
-
-    }
-    }
-
-    ?></div>
+            }
+        } ?></div>
 	</ul>
 	<?php
-}
-    ?>
+    } ?>
 	</div>
 	</div>
 	</div>
@@ -1208,8 +1027,7 @@ if (isset($_POST['submit'])) {
 	<div class="modal hide fade" id="previewAV">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3><?php echo lang_Preview;
-    ?></h3>
+			<h3><?php echo lang_Preview; ?></h3>
 		</div>
 		<div class="modal-body">
 			<div class="row-fluid body-preview">

@@ -41,14 +41,15 @@ require_once dirname(__FILE__) . '/../exceptions/UnableToCalculatePositionExcept
  * @author arothe <andre.rothe@phosco.info>
  * 
  */
-class PositionCalculator {
-
+class PositionCalculator
+{
     private static $_allowedOnOperator = array("\t", "\n", "\r", " ", ",", "(", ")", "_", "'", "\"");
     private static $_allowedOnOther = array("\t", "\n", "\r", " ", ",", "(", ")", "<", ">", "*", "+", "-", "/", "|",
         "&", "=", "!", ";",
     );
 
-    private function _printPos($text, $sql, $charPos, $key, $parsed, $backtracking) {
+    private function _printPos($text, $sql, $charPos, $key, $parsed, $backtracking)
+    {
         if (!isset($_ENV['DEBUG'])) {
             return;
         }
@@ -65,19 +66,19 @@ class PositionCalculator {
             . $holdem . "\n";
     }
 
-    public function setPositionsWithinSQL($sql, $parsed) {
+    public function setPositionsWithinSQL($sql, $parsed)
+    {
         $charPos = 0;
         $backtracking = array();
         $this->lookForBaseExpression($sql, $charPos, $parsed, 0, $backtracking);
         return $parsed;
     }
 
-    private function findPositionWithinString($sql, $value, $expr_type) {
-
+    private function findPositionWithinString($sql, $value, $expr_type)
+    {
         $offset = 0;
         $ok = false;
         while (true) {
-
             $pos = strpos($sql, $value, $offset);
             if ($pos === false) {
                 break;
@@ -98,7 +99,6 @@ class PositionCalculator {
             // an operator should not be surrounded by another operator
 
             if ($expr_type === 'operator') {
-
                 $ok = ($before === "" || in_array($before, self::$_allowedOnOperator, true))
                     || (strtolower($before) >= 'a' && strtolower($before) <= 'z') || ($before >= '0' && $before <= '9');
                 $ok = $ok
@@ -130,7 +130,8 @@ class PositionCalculator {
         return $pos;
     }
 
-    private function lookForBaseExpression($sql, &$charPos, &$parsed, $key, &$backtracking) {
+    private function lookForBaseExpression($sql, &$charPos, &$parsed, $key, &$backtracking)
+    {
         if (!is_numeric($key)) {
             if (($key === 'UNION' || $key === 'UNION ALL')
                 || ($key === 'expr_type' && $parsed === ExpressionType::EXPRESSION)
@@ -156,7 +157,6 @@ class PositionCalculator {
                 // we do this, because the next base_expr contains the complete expression/subquery/record
                 // and we have to look into it too
                 $backtracking[] = $charPos;
-
             } elseif (($key === 'ref_clause' || $key === 'columns') && $parsed !== false) {
                 // we hold the current position and come back after n base_expr(s)
                 // there is an array of sub-elements before (!) the base_expr clause of the current element
@@ -214,7 +214,6 @@ class PositionCalculator {
                 }
 
                 //$this->_printPos("2", $sql, $charPos, $key, $value, $backtracking);
-
             } else {
                 $this->lookForBaseExpression($sql, $charPos, $parsed[$key], $key, $backtracking);
             }

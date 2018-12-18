@@ -471,7 +471,7 @@ class ReleaseCreator
         $iterator = new \RecursiveIteratorIterator($directory);
         $regex = new \RegexIterator($iterator, '/^.*\/.*license(\.txt)?$/i', \RecursiveRegexIterator::GET_MATCH);
 
-        foreach($regex as $file => $value) {
+        foreach ($regex as $file => $value) {
             $content .= file_get_contents($file) . "\r\n\r\n";
         }
 

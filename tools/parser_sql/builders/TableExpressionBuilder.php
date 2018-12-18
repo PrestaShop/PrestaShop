@@ -54,34 +54,40 @@ require_once dirname(__FILE__) . '/FromBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class TableExpressionBuilder {
-
-    protected function buildFROM($parsed) {
+class TableExpressionBuilder
+{
+    protected function buildFROM($parsed)
+    {
         $builder = new FromBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildAlias($parsed) {
+    protected function buildAlias($parsed)
+    {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildJoin($parsed) {
+    protected function buildJoin($parsed)
+    {
         $builder = new JoinBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildRefType($parsed) {
+    protected function buildRefType($parsed)
+    {
         $builder = new RefTypeBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildRefClause($parsed) {
+    protected function buildRefClause($parsed)
+    {
         $builder = new RefClauseBuilder();
         return $builder->build($parsed);
     }
 
-    public function build($parsed, $index) {
+    public function build($parsed, $index)
+    {
         if ($parsed['expr_type'] !== ExpressionType::TABLE_EXPRESSION) {
             return "";
         }

@@ -256,5 +256,4 @@ class CurrencyTest extends AbstractCartCalculationTest
             ],
         ];
     }
-
 }

@@ -27,8 +27,8 @@
 
 require_once dirname(__FILE__) . '/ExpressionType.php';
 
-class ExpressionToken {
-
+class ExpressionToken
+{
     private $subTree;
     private $expression;
     private $key;
@@ -38,7 +38,8 @@ class ExpressionToken {
     private $upper;
     private $noQuotes;
 
-    public function __construct($key = "", $token = "") {
+    public function __construct($key = "", $token = "")
+    {
         $this->subTree = false;
         $this->expression = "";
         $this->key = $key;
@@ -50,43 +51,53 @@ class ExpressionToken {
     }
 
     // TODO: we could replace it with a constructor new ExpressionToken(this, "*")
-    public function addToken($string) {
+    public function addToken($string)
+    {
         $this->token .= $string;
     }
 
-    public function isEnclosedWithinParenthesis() {
+    public function isEnclosedWithinParenthesis()
+    {
         return ($this->upper[0] === '(' && substr($this->upper, -1) === ')');
     }
 
-    public function setSubTree($tree) {
+    public function setSubTree($tree)
+    {
         $this->subTree = $tree;
     }
 
-    public function getSubTree() {
+    public function getSubTree()
+    {
         return $this->subTree;
     }
 
-    public function getUpper($idx = false) {
+    public function getUpper($idx = false)
+    {
         return $idx !== false ? $this->upper[$idx] : $this->upper;
     }
 
-    public function getTrim($idx = false) {
+    public function getTrim($idx = false)
+    {
         return $idx !== false ? $this->trim[$idx] : $this->trim;
     }
 
-    public function getToken($idx = false) {
+    public function getToken($idx = false)
+    {
         return $idx !== false ? $this->token[$idx] : $this->token;
     }
 
-    public function setNoQuotes($token, $qchars = '`') {
+    public function setNoQuotes($token, $qchars = '`')
+    {
         $this->noQuotes = ($token === null) ? null : $this->revokeQuotation($token, $qchars);
     }
     
-    public function setTokenType($type) {
+    public function setTokenType($type)
+    {
         $this->tokenType = $type;
     }
 
-    public function endsWith($needle) {
+    public function endsWith($needle)
+    {
         $length = strlen($needle);
         if ($length == 0) {
             return true;
@@ -96,71 +107,88 @@ class ExpressionToken {
         return (substr($this->token, $start) === $needle);
     }
 
-    public function isWhitespaceToken() {
+    public function isWhitespaceToken()
+    {
         return ($this->trim === "");
     }
 
-    public function isCommaToken() {
+    public function isCommaToken()
+    {
         return ($this->trim === ",");
     }
 
-    public function isVariableToken() {
+    public function isVariableToken()
+    {
         return $this->upper[0] === '@';
     }
 
-    public function isSubQueryToken() {
+    public function isSubQueryToken()
+    {
         return preg_match("/^\\(\\s*SELECT/i", $this->trim);
     }
 
-    public function isExpression() {
+    public function isExpression()
+    {
         return $this->tokenType === ExpressionType::EXPRESSION;
     }
 
-    public function isBracketExpression() {
+    public function isBracketExpression()
+    {
         return $this->tokenType === ExpressionType::BRACKET_EXPRESSION;
     }
 
-    public function isOperator() {
+    public function isOperator()
+    {
         return $this->tokenType === ExpressionType::OPERATOR;
     }
 
-    public function isInList() {
+    public function isInList()
+    {
         return $this->tokenType === ExpressionType::IN_LIST;
     }
 
-    public function isFunction() {
+    public function isFunction()
+    {
         return $this->tokenType === ExpressionType::SIMPLE_FUNCTION;
     }
 
-    public function isUnspecified() {
+    public function isUnspecified()
+    {
         return ($this->tokenType === false);
     }
 
-    public function isVariable() {
+    public function isVariable()
+    {
         return $this->tokenType === ExpressionType::GLOBAL_VARIABLE || $this->tokenType === ExpressionType::LOCAL_VARIABLE || $this->tokenType === ExpressionType::USER_VARIABLE;
     }
     
-    public function isAggregateFunction() {
+    public function isAggregateFunction()
+    {
         return $this->tokenType === ExpressionType::AGGREGATE_FUNCTION;
     }
 
-    public function isColumnReference() {
+    public function isColumnReference()
+    {
         return $this->tokenType === ExpressionType::COLREF;
     }
 
-    public function isConstant() {
+    public function isConstant()
+    {
         return $this->tokenType === ExpressionType::CONSTANT;
     }
 
-    public function isSign() {
+    public function isSign()
+    {
         return $this->tokenType === ExpressionType::SIGN;
     }
 
-    public function isSubQuery() {
+    public function isSubQuery()
+    {
         return $this->tokenType === ExpressionType::SUBQUERY;
     }
 
-    private function revokeQuotation($token, $qchars = '`') {
+    private function revokeQuotation($token, $qchars = '`')
+    {
         $result = trim($token);
         for ($i = 0; $i < strlen($qchars); $i++) {
             $quote = $qchars[$i];
@@ -172,12 +200,13 @@ class ExpressionToken {
         return $token;
     }
     
-    public function toArray() {
+    public function toArray()
+    {
         $result = array();
         $result['expr_type'] = $this->tokenType;
         $result['base_expr'] = $this->token;
         if (!empty($this->noQuotes)) {
-            $result['no_quotes'] = $this->noQuotes;   
+            $result['no_quotes'] = $this->noQuotes;
         }
         $result['sub_tree'] = $this->subTree;
         return $result;

@@ -49,8 +49,8 @@
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class LexerSplitter {
-
+class LexerSplitter
+{
     protected static $splitters = array("<=>", "\r\n", "!=", ">=", "<=", "<>", "<<", ">>", ":=", "\\", "&&", "||", ":=",
         "/*", "*/", "--", ">", "<", "|", "=", "^", "(", ")", "\t", "\n", "'", "\"", "`",
         ",", "@", " ", "+", "-", "*", "/", ";",
@@ -63,7 +63,8 @@ class LexerSplitter {
      * 
      * It initializes some fields.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->tokenSize = strlen(self::$splitters[0]); // should be the largest one
         $this->hashSet = array_flip(self::$splitters);
     }
@@ -76,7 +77,8 @@ class LexerSplitter {
      * 
      * @return int The number of characters for the largest split token.
      */
-    public function getMaxLengthOfSplitter() {
+    public function getMaxLengthOfSplitter()
+    {
         return $this->tokenSize;
     }
 
@@ -88,7 +90,8 @@ class LexerSplitter {
      * 
      * @return boolean true, if the given string will be a split token, false otherwise
      */
-    public function isSplitter($token) {
+    public function isSplitter($token)
+    {
         return isset($this->hashSet[$token]);
     }
 }

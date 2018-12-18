@@ -59,54 +59,64 @@ require_once dirname(__FILE__) . '/SubQueryBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class WhereBuilder {
-
-    protected function buildColRef($parsed) {
+class WhereBuilder
+{
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildOperator($parsed) {
+    protected function buildOperator($parsed)
+    {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSubQuery($parsed) {
+    protected function buildSubQuery($parsed)
+    {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildInList($parsed) {
+    protected function buildInList($parsed)
+    {
         $builder = new InListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildWhereExpression($parsed) {
+    protected function buildWhereExpression($parsed)
+    {
         $builder = new WhereExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildWhereBracketExpression($parsed) {
+    protected function buildWhereBracketExpression($parsed)
+    {
         $builder = new WhereBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildUserVariable($parsed) {
+    protected function buildUserVariable($parsed)
+    {
         $builder = new UserVariableBuilder();
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         $sql = "WHERE ";
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
@@ -129,5 +139,4 @@ class WhereBuilder {
         }
         return substr($sql, 0, -1);
     }
-
 }

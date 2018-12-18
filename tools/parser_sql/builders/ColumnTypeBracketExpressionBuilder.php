@@ -49,14 +49,16 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ColumnTypeBracketExpressionBuilder {
-
-    protected function buildSubTree($parsed, $delim) {
+class ColumnTypeBracketExpressionBuilder
+{
+    protected function buildSubTree($parsed, $delim)
+    {
         $builder = new SubTreeBuilder();
         return $builder->build($parsed, $delim);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
             return "";
         }

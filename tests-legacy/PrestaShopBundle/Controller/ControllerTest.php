@@ -292,7 +292,8 @@ class ControllerTest extends TestCase
         return new Tools($requestProphecy->reveal());
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass()
+    {
         Tools::resetRequest();
     }
 }

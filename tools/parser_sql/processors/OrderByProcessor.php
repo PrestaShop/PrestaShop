@@ -41,19 +41,22 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class OrderByProcessor extends AbstractProcessor {
-
+class OrderByProcessor extends AbstractProcessor
+{
     private $selectExpressionProcessor;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->selectExpressionProcessor = new SelectExpressionProcessor();
     }
 
-    protected function initParseInfo() {
+    protected function initParseInfo()
+    {
         return array('base_expr' => "", 'dir' => "ASC", 'expr_type' => ExpressionType::EXPRESSION);
     }
 
-    protected function processOrderExpression(&$parseInfo, $select) {
+    protected function processOrderExpression(&$parseInfo, $select)
+    {
         $parseInfo['base_expr'] = trim($parseInfo['base_expr']);
 
         if ($parseInfo['base_expr'] === "") {
@@ -94,7 +97,8 @@ class OrderByProcessor extends AbstractProcessor {
         return $result;
     }
 
-    public function process($tokens, $select = array()) {
+    public function process($tokens, $select = array())
+    {
         $out = array();
         $parseInfo = $this->initParseInfo();
 
