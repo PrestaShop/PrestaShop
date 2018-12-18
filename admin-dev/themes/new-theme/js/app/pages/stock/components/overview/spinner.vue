@@ -23,129 +23,138 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <form
-    class="qty"
-    :class="classObject"
-    @mouseover="focusIn"
-    @mouseleave="focusOut($event)"
-    @submit.prevent="sendQty"
-  >
-    <PSNumber
-      name="qty"
-      class="edit-qty"
-      placeholder="0"
-      pattern="\d*"
-      step="1"
-      buttons="true"
-      hoverButtons="true"
-      :value="qty"
-      @change="onChange"
-      @keyup="onKeyup($event)"
-      @focus="focusIn"
-      @blur="focusOut($event)"
-    />
-    <transition name="fade">
-      <button v-if="isActive" class="check-button"><i class="material-icons">check</i></button>
-    </transition>
-  </form>
+    <form
+        class="qty"
+        :class="classObject"
+        @mouseover="focusIn"
+        @mouseleave="focusOut($event)"
+        @submit.prevent="sendQty"
+    >
+        <PSNumber
+            name="qty"
+            class="edit-qty"
+            placeholder="0"
+            pattern="\d*"
+            step="1"
+            buttons="true"
+            hoverButtons="true"
+            :value="qty"
+            @change="onChange"
+            @keyup="onKeyup($event)"
+            @focus="focusIn"
+            @blur="focusOut($event)"
+        />
+        <transition name="fade">
+            <button v-if="isActive" class="check-button"
+                ><i class="material-icons">check</i></button
+            >
+        </transition>
+    </form>
 </template>
 
 <script>
-  import PSNumber from 'app/widgets/ps-number';
+import PSNumber from 'app/widgets/ps-number';
 
-  const $ = global.$;
+const $ = global.$;
 
-  export default {
+export default {
     props: ['product'],
     computed: {
-      qty() {
-        if (!this.product.qty) {
-          this.isEnabled = false;
-          this.value = '';
-        }
-        return this.product.qty;
-      },
-      id() {
-        return `qty-${this.product.product_id}-${this.product.combination_id}`;
-      },
-      classObject() {
-        return {
-          active: this.isActive,
-          disabled: !this.isEnabled,
-        };
-      },
+        qty() {
+            if (!this.product.qty) {
+                this.isEnabled = false;
+                this.value = '';
+            }
+            return this.product.qty;
+        },
+        id() {
+            return `qty-${this.product.product_id}-${
+                this.product.combination_id
+            }`;
+        },
+        classObject() {
+            return {
+                active: this.isActive,
+                disabled: !this.isEnabled,
+            };
+        },
     },
     methods: {
-      onChange(val) {
-        this.value = val;
-        this.isEnabled = !!val;
-      },
-      deActivate() {
-        this.isActive = false;
-        this.isEnabled = false;
-        this.value = null;
-        this.product.qty = null;
-      },
-      onKeyup(event) {
-        const val = event.target.value;
-        if (val === 0) {
-          this.deActivate();
-        } else {
-          this.isActive = true;
-          this.isEnabled = true;
-          this.value = val;
-        }
-      },
-      focusIn() {
-        this.isActive = true;
-      },
-      focusOut(event) {
-        const value = parseInt(this.value, 10);
-        if (!$(event.target).hasClass('ps-number') && (isNaN(value) || value === 0)) {
-          this.isActive = false;
-        }
-        this.isEnabled = !!this.value;
-      },
-      sendQty() {
-        const postUrl = this.product.edit_url;
-        if (parseInt(this.product.qty, 10) !== 0 && !isNaN(parseInt(this.value, 10))) {
-          this.$store.dispatch('updateQtyByProductId', {
-            url: postUrl,
-            delta: this.value,
-          });
-          this.deActivate();
-        }
-      },
+        onChange(val) {
+            this.value = val;
+            this.isEnabled = !!val;
+        },
+        deActivate() {
+            this.isActive = false;
+            this.isEnabled = false;
+            this.value = null;
+            this.product.qty = null;
+        },
+        onKeyup(event) {
+            const val = event.target.value;
+            if (val === 0) {
+                this.deActivate();
+            } else {
+                this.isActive = true;
+                this.isEnabled = true;
+                this.value = val;
+            }
+        },
+        focusIn() {
+            this.isActive = true;
+        },
+        focusOut(event) {
+            const value = parseInt(this.value, 10);
+            if (
+                !$(event.target).hasClass('ps-number') &&
+                (isNaN(value) || value === 0)
+            ) {
+                this.isActive = false;
+            }
+            this.isEnabled = !!this.value;
+        },
+        sendQty() {
+            const postUrl = this.product.edit_url;
+            if (
+                parseInt(this.product.qty, 10) !== 0 &&
+                !isNaN(parseInt(this.value, 10))
+            ) {
+                this.$store.dispatch('updateQtyByProductId', {
+                    url: postUrl,
+                    delta: this.value,
+                });
+                this.deActivate();
+            }
+        },
     },
     watch: {
-      value(val) {
-        this.$emit('updateProductQty', {
-          product: this.product,
-          delta: val,
-        });
-      },
+        value(val) {
+            this.$emit('updateProductQty', {
+                product: this.product,
+                delta: val,
+            });
+        },
     },
     components: {
-      PSNumber,
+        PSNumber,
     },
     data: () => ({
-      value: null,
-      isActive: false,
-      isEnabled: false,
+        value: null,
+        isActive: false,
+        isEnabled: false,
     }),
-  };
+};
 </script>
 
 <style lang="sass" type="text/scss" scoped>
-  @import "~jquery-ui-dist/jquery-ui.css";
-  *{
-    outline: none;
-  }
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity 0.2s ease;
-  }
-  .fade-enter, .fade-leave-to {
-    opacity: 0
-  }
-
+@import "~jquery-ui-dist/jquery-ui.css";
+*{
+  outline: none;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0
+}
 </style>

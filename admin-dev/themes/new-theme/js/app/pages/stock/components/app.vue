@@ -23,96 +23,105 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div v-if="isReady" id="app" class="stock-app container-fluid">
-    <StockHeader />
-    <Search @search="onSearch" @applyFilter="applyFilter" />
-    <LowFilter v-if="isOverview" :filters="filters" @lowStockChecked="onLowStockChecked" />
-    <div class="card container-fluid pa-2 clearfix">
-      <router-view class="view" @resetFilters="resetFilters" @fetch="fetch"></router-view>
-      <PSPagination
-        :currentIndex="currentPagination"
-        :pagesCount="pagesCount"
-        @pageChanged="onPageChanged"
-      />
+    <div v-if="isReady" id="app" class="stock-app container-fluid">
+        <StockHeader />
+        <Search @search="onSearch" @applyFilter="applyFilter" />
+        <LowFilter
+            v-if="isOverview"
+            :filters="filters"
+            @lowStockChecked="onLowStockChecked"
+        />
+        <div class="card container-fluid pa-2 clearfix">
+            <router-view
+                class="view"
+                @resetFilters="resetFilters"
+                @fetch="fetch"
+            ></router-view>
+            <PSPagination
+                :currentIndex="currentPagination"
+                :pagesCount="pagesCount"
+                @pageChanged="onPageChanged"
+            />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
-  import StockHeader from './header/stock-header';
-  import Search from './header/search';
-  import LowFilter from './header/filters/low-filter';
-  import PSPagination from 'app/widgets/ps-pagination';
+import StockHeader from './header/stock-header';
+import Search from './header/search';
+import LowFilter from './header/filters/low-filter';
+import PSPagination from 'app/widgets/ps-pagination';
 
-  export default {
+export default {
     name: 'app',
     computed: {
-      isReady() {
-        return this.$store.state.isReady;
-      },
-      pagesCount() {
-        return this.$store.state.totalPages;
-      },
-      currentPagination() {
-        return this.$store.state.pageIndex;
-      },
-      isOverview() {
-        return this.$route.name === 'overview';
-      },
+        isReady() {
+            return this.$store.state.isReady;
+        },
+        pagesCount() {
+            return this.$store.state.totalPages;
+        },
+        currentPagination() {
+            return this.$store.state.pageIndex;
+        },
+        isOverview() {
+            return this.$route.name === 'overview';
+        },
     },
     methods: {
-      onPageChanged(pageIndex) {
-        this.$store.dispatch('updatePageIndex', pageIndex);
-        this.fetch('asc');
-      },
-      fetch(sortDirection) {
-        const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
-        const sorting = (sortDirection === 'desc') ? ' desc' : '';
-        this.$store.dispatch('isLoading');
+        onPageChanged(pageIndex) {
+            this.$store.dispatch('updatePageIndex', pageIndex);
+            this.fetch('asc');
+        },
+        fetch(sortDirection) {
+            const action =
+                this.$route.name === 'overview' ? 'getStock' : 'getMovements';
+            const sorting = sortDirection === 'desc' ? ' desc' : '';
+            this.$store.dispatch('isLoading');
 
-        this.filters = Object.assign({}, this.filters, {
-          order: `${this.$store.state.order}${sorting}`,
-          page_size: this.$store.state.productsPerPage,
-          page_index: this.$store.state.pageIndex,
-          keywords: this.$store.state.keywords,
-        });
+            this.filters = Object.assign({}, this.filters, {
+                order: `${this.$store.state.order}${sorting}`,
+                page_size: this.$store.state.productsPerPage,
+                page_index: this.$store.state.pageIndex,
+                keywords: this.$store.state.keywords,
+            });
 
-        this.$store.dispatch(action, this.filters);
-      },
-      onSearch(keywords) {
-        this.$store.dispatch('updateKeywords', keywords);
-        this.fetch();
-      },
-      applyFilter(filters) {
-        this.filters = filters;
-        this.fetch();
-      },
-      resetFilters() {
-        this.filters = {};
-      },
-      onLowStockChecked(isChecked) {
-        this.filters = Object.assign({}, this.filters, {
-          low_stock: isChecked,
-        });
-        this.fetch();
-      },
+            this.$store.dispatch(action, this.filters);
+        },
+        onSearch(keywords) {
+            this.$store.dispatch('updateKeywords', keywords);
+            this.fetch();
+        },
+        applyFilter(filters) {
+            this.filters = filters;
+            this.fetch();
+        },
+        resetFilters() {
+            this.filters = {};
+        },
+        onLowStockChecked(isChecked) {
+            this.filters = Object.assign({}, this.filters, {
+                low_stock: isChecked,
+            });
+            this.fetch();
+        },
     },
     components: {
-      StockHeader,
-      Search,
-      PSPagination,
-      LowFilter,
+        StockHeader,
+        Search,
+        PSPagination,
+        LowFilter,
     },
     data: () => ({
-      filters: {},
+        filters: {},
     }),
-  };
+};
 </script>
 
 <style lang="sass" type="text/scss">
-  // hide the layout header
-  #main-div > .header-toolbar {
-    height: 0;
-    display: none;
-  }
+// hide the layout header
+#main-div > .header-toolbar {
+  height: 0;
+  display: none;
+}
 </style>

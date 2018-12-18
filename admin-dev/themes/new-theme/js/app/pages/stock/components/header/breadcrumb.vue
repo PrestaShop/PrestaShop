@@ -23,34 +23,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <nav aria-label="Breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a :href="catalogLink">{{trans('link_catalog')}}</a>
-      </li>
-      <li class="breadcrumb-item">
-        <a :href="stockLink">{{trans('link_stock')}}</a>
-      </li>
-      <li class="breadcrumb-item active">
-        <span v-if="isOverview">{{trans('link_overview')}}</span>
-        <span v-else>{{trans('link_movements')}}</span>
-      </li>
-    </ol>
-  </nav>
+    <nav aria-label="Breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a :href="catalogLink">{{ trans('link_catalog') }}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a :href="stockLink">{{ trans('link_stock') }}</a>
+            </li>
+            <li class="breadcrumb-item active">
+                <span v-if="isOverview">{{ trans('link_overview') }}</span>
+                <span v-else>{{ trans('link_movements') }}</span>
+            </li>
+        </ol>
+    </nav>
 </template>
 
 <script>
-  export default {
+export default {
     computed: {
-      isOverview() {
-        return this.$route.name === 'overview';
-      },
-      catalogLink() {
-        return window.data.catalogUrl;
-      },
-      stockLink() {
-        return window.data.stockUrl;
-      },
+        isOverview() {
+            return this.$route.name === 'overview';
+        },
+        catalogLink() {
+            return window.data.catalogUrl;
+        },
+        stockLink() {
+            return window.data.stockUrl;
+        },
     },
-  };
+};
 </script>

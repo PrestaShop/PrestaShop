@@ -23,51 +23,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="col-md-4">
-    <div class="movements">
-      <PSButton
-        type="button"
-        class="update-qty float-sm-right"
-        :class="classObject"
-        :disabled="disabled"
-        :primary="true"
-        @click="sendQty"
-      >
-        <i class="material-icons">edit</i>
-        {{trans('button_movement_type')}}
-      </PSButton>
+    <div class="col-md-4">
+        <div class="movements">
+            <PSButton
+                type="button"
+                class="update-qty float-sm-right"
+                :class="classObject"
+                :disabled="disabled"
+                :primary="true"
+                @click="sendQty"
+            >
+                <i class="material-icons">edit</i>
+                {{ trans('button_movement_type') }}
+            </PSButton>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
-  import PSButton from 'app/widgets/ps-button';
-  export default {
+import PSButton from 'app/widgets/ps-button';
+export default {
     computed: {
-      disabled() {
-        return !this.$store.state.hasQty;
-      },
-      classObject() {
-        return {
-          'btn-primary': !this.disabled,
-        };
-      },
+        disabled() {
+            return !this.$store.state.hasQty;
+        },
+        classObject() {
+            return {
+                'btn-primary': !this.disabled,
+            };
+        },
     },
     methods: {
-      sendQty() {
-        this.$store.dispatch('updateQtyByProductsId');
-      },
+        sendQty() {
+            this.$store.dispatch('updateQtyByProductsId');
+        },
     },
     components: {
-      PSButton,
+        PSButton,
     },
-  };
+};
 </script>
 
 <style lang="sass" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
-  .update-qty {
-    color: white;
-    transition: background-color 0.2s ease;
-  }
+@import "../../../../../../scss/config/_settings.scss";
+.update-qty {
+  color: white;
+  transition: background-color 0.2s ease;
+}
 </style>

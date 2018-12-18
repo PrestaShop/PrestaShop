@@ -23,107 +23,123 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <PSTable class="mt-1">
-    <thead>
-      <tr class="column-headers">
-        <th scope="col" width="27%" class="product-title">
-          <PSSort order="product" @sort="sort" :current-sort="currentSort">
-            {{trans('title_product')}}
-          </PSSort>
-        </th>
-        <th scope="col">
-          <PSSort order="reference" @sort="sort" :current-sort="currentSort">
-            {{trans('title_reference')}}
-          </PSSort>
-        </th>
-        <th>
-          <PSSort order="supplier" @sort="sort" :current-sort="currentSort">
-            {{trans('title_supplier')}}
-          </PSSort>
-        </th>
-        <th class="text-center">
-          {{trans('title_status')}}
-        </th>
-        <th class="text-center">
-          <PSSort order="physical_quantity" @sort="sort" :current-sort="currentSort">
-            {{trans('title_physical')}}
-          </PSSort>
-        </th>
-        <th class="text-center">
-          {{trans('title_reserved')}}
-        </th>
-        <th class="text-center">
-          <PSSort order="available_quantity" @sort="sort" :current-sort="currentSort">
-            {{trans('title_available')}}
-          </PSSort>
-        </th>
-        <th :title="trans('title_edit_quantity')">
-          <i class="material-icons">edit</i>
-          {{trans('title_edit_quantity')}}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-if="this.isLoading">
-        <td colspan="8">
-          <PSLoader v-for="(n, index) in 3" class="mt-1" :key="index">
-            <div class="background-masker header-top"></div>
-            <div class="background-masker header-left"></div>
-            <div class="background-masker header-bottom"></div>
-            <div class="background-masker subheader-left"></div>
-            <div class="background-masker subheader-bottom"></div>
-          </PSLoader>
-        </td>
-      </tr>
-      <tr v-else-if="emptyProducts">
-        <td colspan="8">
-          <PSAlert alertType="ALERT_TYPE_WARNING" :hasClose="false" >
-            {{trans('no_product')}}
-          </PSAlert>
-        </td>
-      </tr>
-      <ProductLine
-        v-else
-        v-for="(product, index) in products"
-        :key=index
-        :product="product"
-      />
-    </tbody>
-  </PSTable>
+    <PSTable class="mt-1">
+        <thead>
+            <tr class="column-headers">
+                <th scope="col" width="27%" class="product-title">
+                    <PSSort
+                        order="product"
+                        @sort="sort"
+                        :current-sort="currentSort"
+                    >
+                        {{ trans('title_product') }}
+                    </PSSort>
+                </th>
+                <th scope="col">
+                    <PSSort
+                        order="reference"
+                        @sort="sort"
+                        :current-sort="currentSort"
+                    >
+                        {{ trans('title_reference') }}
+                    </PSSort>
+                </th>
+                <th>
+                    <PSSort
+                        order="supplier"
+                        @sort="sort"
+                        :current-sort="currentSort"
+                    >
+                        {{ trans('title_supplier') }}
+                    </PSSort>
+                </th>
+                <th class="text-center"> {{ trans('title_status') }} </th>
+                <th class="text-center">
+                    <PSSort
+                        order="physical_quantity"
+                        @sort="sort"
+                        :current-sort="currentSort"
+                    >
+                        {{ trans('title_physical') }}
+                    </PSSort>
+                </th>
+                <th class="text-center"> {{ trans('title_reserved') }} </th>
+                <th class="text-center">
+                    <PSSort
+                        order="available_quantity"
+                        @sort="sort"
+                        :current-sort="currentSort"
+                    >
+                        {{ trans('title_available') }}
+                    </PSSort>
+                </th>
+                <th :title="trans('title_edit_quantity')">
+                    <i class="material-icons">edit</i>
+                    {{ trans('title_edit_quantity') }}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-if="this.isLoading">
+                <td colspan="8">
+                    <PSLoader v-for="(n, index) in 3" class="mt-1" :key="index">
+                        <div class="background-masker header-top"></div>
+                        <div class="background-masker header-left"></div>
+                        <div class="background-masker header-bottom"></div>
+                        <div class="background-masker subheader-left"></div>
+                        <div class="background-masker subheader-bottom"></div>
+                    </PSLoader>
+                </td>
+            </tr>
+            <tr v-else-if="emptyProducts">
+                <td colspan="8">
+                    <PSAlert alertType="ALERT_TYPE_WARNING" :hasClose="false">
+                        {{ trans('no_product') }}
+                    </PSAlert>
+                </td>
+            </tr>
+            <ProductLine
+                v-else
+                v-for="(product, index) in products"
+                :key="index"
+                :product="product"
+            />
+        </tbody>
+    </PSTable>
 </template>
 
 <script>
-  import ProductLine from './product-line';
-  import PSAlert from 'app/widgets/ps-alert';
-  import PSTable from 'app/widgets/ps-table/ps-table';
-  import PSSort from 'app/widgets/ps-table/ps-sort';
-  import PSLoader from 'app/widgets/ps-loader';
+import ProductLine from './product-line';
+import PSAlert from 'app/widgets/ps-alert';
+import PSTable from 'app/widgets/ps-table/ps-table';
+import PSSort from 'app/widgets/ps-table/ps-sort';
+import PSLoader from 'app/widgets/ps-loader';
 
-  export default {
+export default {
     props: ['isLoading'],
     components: {
-      ProductLine,
-      PSSort,
-      PSAlert,
-      PSTable,
-      PSLoader,
+        ProductLine,
+        PSSort,
+        PSAlert,
+        PSTable,
+        PSLoader,
     },
     methods: {
-      sort(order, sortDirection) {
-        this.$store.dispatch('updateOrder', order);
-        this.$emit('sort', sortDirection === 'desc' ? 'desc' : 'asc');
-      },
+        sort(order, sortDirection) {
+            this.$store.dispatch('updateOrder', order);
+            this.$emit('sort', sortDirection === 'desc' ? 'desc' : 'asc');
+        },
     },
     computed: {
-      products() {
-        return this.$store.state.products;
-      },
-      emptyProducts() {
-        return !this.$store.state.products.length;
-      },
-      currentSort() {
-        return this.$store.state.order;
-      },
+        products() {
+            return this.$store.state.products;
+        },
+        emptyProducts() {
+            return !this.$store.state.products.length;
+        },
+        currentSort() {
+            return this.$store.state.order;
+        },
     },
-  };
+};
 </script>

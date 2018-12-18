@@ -23,35 +23,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="ps-sortable-column" data-sort-col-name="id_product" :data-sort-is-current="isCurrent" :data-sort-direction="sortDirection" @click="sortToggle">
-    <span role="columnheader"><slot /></span>
-    <span role="button" class="ps-sort" aria-label="Tri"></span>
-  </div>
+    <div
+        class="ps-sortable-column"
+        data-sort-col-name="id_product"
+        :data-sort-is-current="isCurrent"
+        :data-sort-direction="sortDirection"
+        @click="sortToggle"
+    >
+        <span role="columnheader"><slot /></span>
+        <span role="button" class="ps-sort" aria-label="Tri"></span>
+    </div>
 </template>
 
 <script>
-  export default {
+export default {
     props: {
-      // column name
-      order: String,
-      // indicates the currently sorted column in the table
-      currentSort: String,
+        // column name
+        order: String,
+        // indicates the currently sorted column in the table
+        currentSort: String,
     },
     methods: {
-      sortToggle() {
-        // toggle direction
-        this.sortDirection = (this.sortDirection === 'asc') ? 'desc' : 'asc';
-        this.$emit('sort', this.order, this.sortDirection);
-      },
+        sortToggle() {
+            // toggle direction
+            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+            this.$emit('sort', this.order, this.sortDirection);
+        },
     },
     data: () => ({
-      sortDirection: 'asc',
+        sortDirection: 'asc',
     }),
     computed: {
-      isCurrent() {
-        return this.currentSort === this.order;
-      },
+        isCurrent() {
+            return this.currentSort === this.order;
+        },
     },
-  };
+};
 </script>
-

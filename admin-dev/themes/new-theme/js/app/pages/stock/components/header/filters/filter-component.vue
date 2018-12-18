@@ -23,166 +23,164 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="filter-container">
-    <PSTags
-      v-if="!hasChildren"
-      ref="tags"
-      class="form-control search search-input mb-2"
-      :tags="tags"
-      :placeholder="hasPlaceholder?placeholder:''"
-      :hasIcon="true"
-      @tagChange="onTagChanged"
-      @typing="onTyping"
-    />
-    <div v-if="hasChildren">
-      <PSTree
-        v-if="isOverview"
-        v-once
-        ref="tree"
-        :hasCheckbox="true"
-        :model="list"
-        @checked="onCheck"
-        :translations="PSTreeTranslations"
-      >
-      </PSTree>
-      <PSTree
-        v-else
-        ref="tree"
-        :hasCheckbox="true"
-        :model="list"
-        @checked="onCheck"
-        :translations="PSTreeTranslations"
-      >
-      </PSTree>
-    </div>
-    <ul
-      class="mt-1"
-      v-else
-    >
-      <li
-        v-for="(item, index) in items"
-        v-show="item.visible"
-        class="item"
-      >
-        <PSTreeItem
-          :label="item[label]"
-          :model="item"
-          @checked="onCheck"
-          :hasCheckbox="true"
+    <div class="filter-container">
+        <PSTags
+            v-if="!hasChildren"
+            ref="tags"
+            class="form-control search search-input mb-2"
+            :tags="tags"
+            :placeholder="hasPlaceholder ? placeholder : ''"
+            :hasIcon="true"
+            @tagChange="onTagChanged"
+            @typing="onTyping"
         />
-      </li>
-    </ul>
-  </div>
+        <div v-if="hasChildren">
+            <PSTree
+                v-if="isOverview"
+                v-once
+                ref="tree"
+                :hasCheckbox="true"
+                :model="list"
+                @checked="onCheck"
+                :translations="PSTreeTranslations"
+            >
+            </PSTree>
+            <PSTree
+                v-else
+                ref="tree"
+                :hasCheckbox="true"
+                :model="list"
+                @checked="onCheck"
+                :translations="PSTreeTranslations"
+            >
+            </PSTree>
+        </div>
+        <ul class="mt-1" v-else>
+            <li
+                v-for="(item, index) in items"
+                v-show="item.visible"
+                class="item"
+            >
+                <PSTreeItem
+                    :label="item[label]"
+                    :model="item"
+                    @checked="onCheck"
+                    :hasCheckbox="true"
+                />
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script>
-  import PSTags from 'app/widgets/ps-tags';
-  import PSTreeItem from 'app/widgets/ps-tree/ps-tree-item';
-  import PSTree from 'app/widgets/ps-tree/ps-tree';
-  import { EventBus } from 'app/utils/event-bus';
-  import _ from 'lodash';
+import PSTags from 'app/widgets/ps-tags';
+import PSTreeItem from 'app/widgets/ps-tree/ps-tree-item';
+import PSTree from 'app/widgets/ps-tree/ps-tree';
+import { EventBus } from 'app/utils/event-bus';
+import _ from 'lodash';
 
-  export default {
+export default {
     props: ['placeholder', 'itemID', 'label', 'list'],
     computed: {
-      isOverview() {
-        return this.$route.name === 'overview';
-      },
-      hasPlaceholder() {
-        return !this.tags.length;
-      },
-      items() {
-        const matchList = [];
-        this.list.filter((data) => {
-          const label = data[this.label].toLowerCase();
-          data.visible = false;
-          if (label.match(this.currentVal)) {
-            data.visible = true;
-            matchList.push(data);
-          }
-          if (data.children) {
-            this.hasChildren = true;
-          }
-          return data;
-        });
+        isOverview() {
+            return this.$route.name === 'overview';
+        },
+        hasPlaceholder() {
+            return !this.tags.length;
+        },
+        items() {
+            const matchList = [];
+            this.list.filter(data => {
+                const label = data[this.label].toLowerCase();
+                data.visible = false;
+                if (label.match(this.currentVal)) {
+                    data.visible = true;
+                    matchList.push(data);
+                }
+                if (data.children) {
+                    this.hasChildren = true;
+                }
+                return data;
+            });
 
-        if (matchList.length === 1) {
-          this.match = matchList[0];
-        } else {
-          this.match = null;
-        }
-        return this.list;
-      },
-      PSTreeTranslations() {
-        return {
-          expand: this.trans('tree_expand'),
-          reduce: this.trans('tree_reduce'),
-        };
-      },
+            if (matchList.length === 1) {
+                this.match = matchList[0];
+            } else {
+                this.match = null;
+            }
+            return this.list;
+        },
+        PSTreeTranslations() {
+            return {
+                expand: this.trans('tree_expand'),
+                reduce: this.trans('tree_reduce'),
+            };
+        },
     },
     methods: {
-      onCheck(obj) {
-        const itemLabel = obj.item[this.label];
-        const filterType = this.hasChildren ? 'category' : 'supplier';
+        onCheck(obj) {
+            const itemLabel = obj.item[this.label];
+            const filterType = this.hasChildren ? 'category' : 'supplier';
 
-        if (obj.checked) {
-          this.tags.push(itemLabel);
-        } else {
-          const index = this.tags.indexOf(itemLabel);
-          if (this.splice) {
-            this.tags.splice(index, 1);
-          }
-          this.splice = true;
-        }
-        if (this.tags.length) {
-          this.$emit('active', this.filterList(this.tags), filterType);
-        } else {
-          this.$emit('active', [], filterType);
-        }
-      },
-      onTyping(val) {
-        this.currentVal = val.toLowerCase();
-      },
-      onTagChanged(tag) {
-        let checkedTag = tag;
-        if (this.tags.indexOf(this.currentVal) !== -1) {
-          this.tags.pop();
-        }
-        this.splice = false;
-        if (this.match) {
-          checkedTag = this.match[this.label];
-        }
-        EventBus.$emit('toggleCheckbox', checkedTag);
-        this.currentVal = '';
-      },
-      filterList(tags) {
-        const idList = [];
-        const categoryList = this.$store.state.categoryList;
-        const list = this.hasChildren ? categoryList : this.list;
+            if (obj.checked) {
+                this.tags.push(itemLabel);
+            } else {
+                const index = this.tags.indexOf(itemLabel);
+                if (this.splice) {
+                    this.tags.splice(index, 1);
+                }
+                this.splice = true;
+            }
+            if (this.tags.length) {
+                this.$emit('active', this.filterList(this.tags), filterType);
+            } else {
+                this.$emit('active', [], filterType);
+            }
+        },
+        onTyping(val) {
+            this.currentVal = val.toLowerCase();
+        },
+        onTagChanged(tag) {
+            let checkedTag = tag;
+            if (this.tags.indexOf(this.currentVal) !== -1) {
+                this.tags.pop();
+            }
+            this.splice = false;
+            if (this.match) {
+                checkedTag = this.match[this.label];
+            }
+            EventBus.$emit('toggleCheckbox', checkedTag);
+            this.currentVal = '';
+        },
+        filterList(tags) {
+            const idList = [];
+            const categoryList = this.$store.state.categoryList;
+            const list = this.hasChildren ? categoryList : this.list;
 
-        list.map((data) => {
-          const isInIdList = idList.indexOf(Number(data[this.itemID])) === -1;
-          if (tags.indexOf(data[this.label]) !== -1 && isInIdList) {
-            idList.push(Number(data[this.itemID]));
-          }
-          return idList;
-        });
-        return idList;
-      },
+            list.map(data => {
+                const isInIdList =
+                    idList.indexOf(Number(data[this.itemID])) === -1;
+                if (tags.indexOf(data[this.label]) !== -1 && isInIdList) {
+                    idList.push(Number(data[this.itemID]));
+                }
+                return idList;
+            });
+            return idList;
+        },
     },
     data() {
-      return {
-        currentVal: '',
-        match: null,
-        tags: [],
-        splice: true,
-        hasChildren: false,
-      };
+        return {
+            currentVal: '',
+            match: null,
+            tags: [],
+            splice: true,
+            hasChildren: false,
+        };
     },
     components: {
-      PSTags,
-      PSTree,
-      PSTreeItem,
+        PSTags,
+        PSTree,
+        PSTreeItem,
     },
-  };
+};
 </script>

@@ -23,47 +23,45 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="media">
-    <img v-if="displayThumb" :src="thumbnail" class="thumbnail d-flex"  />
-    <div v-else class="no-img"></div>
-    <div class="ml-2 desc media-body">
-      <slot />
+    <div class="media">
+        <img v-if="displayThumb" :src="thumbnail" class="thumbnail d-flex" />
+        <div v-else class="no-img"></div>
+        <div class="ml-2 desc media-body"> <slot /> </div>
     </div>
-  </div>
 </template>
 <script>
-  export default {
+export default {
     props: ['thumbnail'],
     computed: {
-      displayThumb() {
-        return !!this.thumbnail;
-      },
+        displayThumb() {
+            return !!this.thumbnail;
+        },
     },
-  };
+};
 </script>
 
 <style lang="sass" scoped>
-  @import "../../../scss/config/_settings.scss";
-  .product-title {
-    .has-combination & {
-      font-weight: 600;
-    }
+@import "../../../scss/config/_settings.scss";
+.product-title {
+  .has-combination & {
+    font-weight: 600;
   }
-  .thumbnail, .no-img {
-      border: $gray-light 1px solid;
-      max-width: 47px;
-  }
-  .no-img {
-    background: white;
-    width: 47px;
-    height: 47px;
-    display: inline-block;
-    vertical-align: middle;
-  }
-  .desc {
-    white-space: normal;
-  }
-  small {
-    color: $gray-medium;
-  }
+}
+.thumbnail, .no-img {
+    border: $gray-light 1px solid;
+    max-width: 47px;
+}
+.no-img {
+  background: white;
+  width: 47px;
+  height: 47px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.desc {
+  white-space: normal;
+}
+small {
+  color: $gray-medium;
+}
 </style>

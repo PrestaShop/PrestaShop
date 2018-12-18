@@ -23,50 +23,59 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div id="search" class="col-md-8 mb-4">
-    <form class="search-form" @submit.prevent>
-      <label>{{trans('search_label')}}</label>
-      <div class="input-group">
-        <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" :placeholder="trans('search_placeholder')" />
-        <div class="input-group-append">
-          <PSButton @click="onClick" class="search-button" :primary="true">
-              <i class="material-icons">search</i>
-              {{trans('button_search')}}
-          </PSButton>
-        </div>
-      </div>
-    </form>
-  </div>
+    <div id="search" class="col-md-8 mb-4">
+        <form class="search-form" @submit.prevent>
+            <label>{{ trans('search_label') }}</label>
+            <div class="input-group">
+                <PSTags
+                    ref="psTags"
+                    :tags="tags"
+                    @tagChange="onSearch"
+                    :placeholder="trans('search_placeholder')"
+                />
+                <div class="input-group-append">
+                    <PSButton
+                        @click="onClick"
+                        class="search-button"
+                        :primary="true"
+                    >
+                        <i class="material-icons">search</i>
+                        {{ trans('button_search') }}
+                    </PSButton>
+                </div>
+            </div>
+        </form>
+    </div>
 </template>
 
 <script>
-  import PSTags from 'app/widgets/ps-tags';
-  import PSButton from 'app/widgets/ps-button';
+import PSTags from 'app/widgets/ps-tags';
+import PSButton from 'app/widgets/ps-button';
 
-  export default {
+export default {
     components: {
-      PSTags,
-      PSButton,
+        PSTags,
+        PSButton,
     },
     methods: {
-      onClick() {
-        const tag = this.$refs.psTags.tag;
-        this.$refs.psTags.add(tag);
-      },
-      onSearch() {
-        this.$store.dispatch('updateSearch', this.tags);
-        this.$emit('search', this.tags);
-      },
+        onClick() {
+            const tag = this.$refs.psTags.tag;
+            this.$refs.psTags.add(tag);
+        },
+        onSearch() {
+            this.$store.dispatch('updateSearch', this.tags);
+            this.$emit('search', this.tags);
+        },
     },
     watch: {
-      $route() {
-        this.tags = [];
-      },
+        $route() {
+            this.tags = [];
+        },
     },
     data() {
-      return {
-        tags: [],
-      };
+        return {
+            tags: [],
+        };
     },
-  };
+};
 </script>

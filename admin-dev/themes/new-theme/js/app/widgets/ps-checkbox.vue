@@ -23,41 +23,45 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="md-checkbox">
-    <label>
-      <input type="checkbox" :id="id" v-model="checked" :class="{'indeterminate' : isIndeterminate }">
-      <i class="md-checkbox-control"></i>
-      <slot name="label"></slot>
-    </label>
-  </div>
+    <div class="md-checkbox">
+        <label>
+            <input
+                type="checkbox"
+                :id="id"
+                v-model="checked"
+                :class="{ indeterminate: isIndeterminate }"
+            />
+            <i class="md-checkbox-control"></i> <slot name="label"></slot>
+        </label>
+    </div>
 </template>
 
 <script>
-  export default {
+export default {
     props: {
-      id: {
-        type: String,
-      },
-      model: {
-        type: Object,
-        required: false,
-      },
-      isIndeterminate: {
-        type: Boolean,
-        required: false,
-        default: false,
-      },
+        id: {
+            type: String,
+        },
+        model: {
+            type: Object,
+            required: false,
+        },
+        isIndeterminate: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
     },
     watch: {
-      checked(val) {
-        this.$emit('checked', {
-          checked: val,
-          item: this.model,
-        });
-      },
+        checked(val) {
+            this.$emit('checked', {
+                checked: val,
+                item: this.model,
+            });
+        },
     },
     data: () => ({
-      checked: false,
+        checked: false,
     }),
-  };
+};
 </script>
