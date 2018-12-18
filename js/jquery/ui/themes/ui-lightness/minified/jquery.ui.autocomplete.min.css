@@ -2,4 +2,9 @@
 * http://jqueryui.com
 * Copyright 2013 jQuery Foundation and other contributors; Licensed MIT */
 
-.ui-autocomplete{position:absolute;top:0;left:0;cursor:default}
+.ui-autocomplete {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: default;
+}

@@ -1,7 +1,7 @@
 .x-small-text {
-    font-family:"Open Sans", Helvetica,Arial,sans-serif;
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
     font-size: 10px;
-    color: #95A7AD;
+    color: #95a7ad;
 }
 
 .text-ellipsis {
@@ -23,23 +23,23 @@
     height: 30px;
     width: 70px;
     background: white;
-    border: 1px solid #25B9D7;
-    color: #25B9D7;
+    border: 1px solid #25b9d7;
+    color: #25b9d7;
     border-radius: 5px;
-    -webkit-transition: color .6s ease-in;
-    -moz-transition: color .6s ease-in;
-    -o-transition: color .6s ease-in;
-    transition: color .6s ease-in;
+    -webkit-transition: color 0.6s ease-in;
+    -moz-transition: color 0.6s ease-in;
+    -o-transition: color 0.6s ease-in;
+    transition: color 0.6s ease-in;
 }
 
 .light-button:hover {
-    border-color: #3ED2F0;
-    color: #3ED2F0;
+    border-color: #3ed2f0;
+    color: #3ed2f0;
 }
 
 .top-menu-separator {
     margin-top: 30px !important;
     margin-bottom: 30px !important;
     margin-left: 5px;
-    border-color: #E7E8E8 !important;
+    border-color: #e7e8e8 !important;
 }

@@ -25,17 +25,69 @@
 
 */
 
-	/* Layout Settings */
-	.jquerybubblepopup{width:auto;height:auto;margin:0px;padding:0px;position:absolute;border:0px;z-index:100;text-align:center;background-color:transparent;}
-	.jquerybubblepopup-ie{filter:progid:DXImageTransform.Microsoft.Shadow(color="#666666", Direction=135, Strength=3);} /* the plugin adds this class only if browser is IE; if IE9, it's added to main <DIV> else to <TABLE> */
-	.jquerybubblepopup table{width:auto;height:auto;margin:0px;padding:0px;display:table;border-collapse:collapse;border-spacing:0px;border:0px;empty-cells:show;background-color:transparent;}
-	.jquerybubblepopup tbody{display:table-row-group;vertical-align:middle;border:0px;background-color:transparent;}
-	.jquerybubblepopup td{margin:0px;padding:0px;background-color:transparent;}
-	.jquerybubblepopup-top-left,    .jquerybubblepopup-top-right,
-	.jquerybubblepopup-bottom-left, .jquerybubblepopup-bottom-right{width:21px;height:21px;overflow:hidden;background-repeat:no-repeat;}
-	.jquerybubblepopup-top-middle,  .jquerybubblepopup-bottom-middle{overflow:hidden;background-repeat:repeat-x;}
-	.jquerybubblepopup-middle-left, .jquerybubblepopup-middle-right{overflow:hidden;background-repeat:repeat-y;}
-	.jquerybubblepopup-tail{border:0px;margin:0px;padding:0px;display:inline;}
+/* Layout Settings */
+.jquerybubblepopup {
+    width: auto;
+    height: auto;
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    border: 0px;
+    z-index: 100;
+    text-align: center;
+    background-color: transparent;
+}
+.jquerybubblepopup-ie {
+    filter: progid:DXImageTransform.Microsoft.Shadow(color="#666666", Direction=135, Strength=3);
+} /* the plugin adds this class only if browser is IE; if IE9, it's added to main <DIV> else to <TABLE> */
+.jquerybubblepopup table {
+    width: auto;
+    height: auto;
+    margin: 0px;
+    padding: 0px;
+    display: table;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    border: 0px;
+    empty-cells: show;
+    background-color: transparent;
+}
+.jquerybubblepopup tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border: 0px;
+    background-color: transparent;
+}
+.jquerybubblepopup td {
+    margin: 0px;
+    padding: 0px;
+    background-color: transparent;
+}
+.jquerybubblepopup-top-left,
+.jquerybubblepopup-top-right,
+.jquerybubblepopup-bottom-left,
+.jquerybubblepopup-bottom-right {
+    width: 21px;
+    height: 21px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+.jquerybubblepopup-top-middle,
+.jquerybubblepopup-bottom-middle {
+    overflow: hidden;
+    background-repeat: repeat-x;
+}
+.jquerybubblepopup-middle-left,
+.jquerybubblepopup-middle-right {
+    overflow: hidden;
+    background-repeat: repeat-y;
+}
+.jquerybubblepopup-tail {
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    display: inline;
+}
 
 /*  
 	Themes:
@@ -46,40 +98,54 @@
 	
 	The following code defines fonts and backgrounds of the "innerHtml" for each theme:
 */
-	.jquerybubblepopup-azure  .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-black  .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-blue   .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-green  .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-grey   .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-orange .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-violet .jquerybubblepopup-innerHtml, 
-	.jquerybubblepopup-yellow .jquerybubblepopup-innerHtml
-	{
-		font-family:'Trebuchet MS',Arial;
-		font-size:11px;
-		font-weight:normal;
-		color:#000000;
-		background-color:#FFFFFF;
-	}
-	.jquerybubblepopup-all-azure  .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-all-black  .jquerybubblepopup-innerHtml, 
-	.jquerybubblepopup-all-blue   .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-all-green  .jquerybubblepopup-innerHtml, 
-	.jquerybubblepopup-all-grey   .jquerybubblepopup-innerHtml, 
-	.jquerybubblepopup-all-orange .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-all-violet .jquerybubblepopup-innerHtml, 
-	.jquerybubblepopup-all-yellow .jquerybubblepopup-innerHtml
-	{
-		font-family:'Trebuchet MS',Arial;
-		font-size:11px;
-		font-weight:normal;
-		color:#FFFFFF;
-	}
-	.jquerybubblepopup-all-azure  .jquerybubblepopup-innerHtml{background-color:#0099FF;}
-	.jquerybubblepopup-all-black  .jquerybubblepopup-innerHtml{background-color:#000000;} 
-	.jquerybubblepopup-all-blue   .jquerybubblepopup-innerHtml{background-color:#0066CC;}
-	.jquerybubblepopup-all-green  .jquerybubblepopup-innerHtml{background-color:#66FF00;} 
-	.jquerybubblepopup-all-grey   .jquerybubblepopup-innerHtml{background-color:#666666;}
-	.jquerybubblepopup-all-orange .jquerybubblepopup-innerHtml{background-color:#FF9933;}
-	.jquerybubblepopup-all-violet .jquerybubblepopup-innerHtml{background-color:#FF33FF;} 
-	.jquerybubblepopup-all-yellow .jquerybubblepopup-innerHtml{background-color:#FFCC00;}
+.jquerybubblepopup-azure .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-black .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-blue .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-green .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-grey .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-orange .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-violet .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-yellow .jquerybubblepopup-innerHtml {
+    font-family: "Trebuchet MS", Arial;
+    font-size: 11px;
+    font-weight: normal;
+    color: #000000;
+    background-color: #ffffff;
+}
+.jquerybubblepopup-all-azure .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-all-black .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-all-blue .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-all-green .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-all-grey .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-all-orange .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-all-violet .jquerybubblepopup-innerHtml,
+.jquerybubblepopup-all-yellow .jquerybubblepopup-innerHtml {
+    font-family: "Trebuchet MS", Arial;
+    font-size: 11px;
+    font-weight: normal;
+    color: #ffffff;
+}
+.jquerybubblepopup-all-azure .jquerybubblepopup-innerHtml {
+    background-color: #0099ff;
+}
+.jquerybubblepopup-all-black .jquerybubblepopup-innerHtml {
+    background-color: #000000;
+}
+.jquerybubblepopup-all-blue .jquerybubblepopup-innerHtml {
+    background-color: #0066cc;
+}
+.jquerybubblepopup-all-green .jquerybubblepopup-innerHtml {
+    background-color: #66ff00;
+}
+.jquerybubblepopup-all-grey .jquerybubblepopup-innerHtml {
+    background-color: #666666;
+}
+.jquerybubblepopup-all-orange .jquerybubblepopup-innerHtml {
+    background-color: #ff9933;
+}
+.jquerybubblepopup-all-violet .jquerybubblepopup-innerHtml {
+    background-color: #ff33ff;
+}
+.jquerybubblepopup-all-yellow .jquerybubblepopup-innerHtml {
+    background-color: #ffcc00;
+}
