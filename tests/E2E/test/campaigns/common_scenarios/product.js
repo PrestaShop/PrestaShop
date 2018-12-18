@@ -20,10 +20,15 @@ global.productVariations = [];
  *        variation_quantity: 'product_variation_quantity'
  *      }
  *  },
- *  feature: {
- *      name: 'feature_name',
- *      value: 'feature_value'
- *  },
+ *  feature: [
+ *   {
+ *     name: 'Feature',
+ *     value: 'Value 1'
+ *   }, {
+ *     name: 'Feature',
+ *     value: 'Value 2'
+ *   }
+ * ]
  *  pricing: {
  *      unitPrice: "product_unit_price",
  *      unity: "product_unity",
@@ -130,13 +135,15 @@ module.exports = {
       }
 
       if (productData.hasOwnProperty('feature')) {
-        scenario('Add Feature', client => {
-          test('should click on "Add feature" button', () => {
-            return promise
-              .then(() => client.scrollWaitForExistAndClick(AddProductPage.add_feature_to_product_button));
-          });
-          test('should select the created feature', () => client.selectFeature(AddProductPage, productData['feature']['name'] + date_time, productData['feature']['value']));
-        }, 'product/product');
+        for (let f = 0; f < productData['feature'].length; f++) {
+          scenario('Add Feature', client => {
+            test('should click on "Add feature" button', () => {
+              return promise
+                .then(() => client.scrollWaitForExistAndClick(AddProductPage.add_feature_to_product_button));
+            });
+            test('should select the created feature', () => client.selectFeature(AddProductPage, productData['feature'][f].name + date_time, productData['feature'][f].value, f));
+          }, 'product/product');
+        }
       }
 
       if (productData.hasOwnProperty('pricing')) {
@@ -528,6 +535,7 @@ module.exports = {
       test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     }, 'product/check_product');
   },
+
   clickOnPreviewLink(client, selector, productSelector) {
     test('should click on the "Preview" link', () => {
       return promise
@@ -538,7 +546,8 @@ module.exports = {
           } else {
             client.pause(0);
           }
-        });
+        })
+        .then(() => client.pause(5000));
     });
   },
 

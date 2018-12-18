@@ -126,13 +126,21 @@ class Product extends CommonClient {
       .waitForExistAndClick(addProductPage.save_quantitie_button);
   }
 
-  selectFeature(addProductPage, name, value) {
+  selectFeature(addProductPage, name, value, number) {
     return this.client
-      .scrollWaitForExistAndClick(addProductPage.feature_select)
+      .scrollWaitForExistAndClick(addProductPage.feature_select.replace('%NUMBER', number + 1))
       .waitAndSetValue(addProductPage.select_feature_created, name)
-      .waitForExistAndClick(addProductPage.result_feature_select.replace('%ID', 0))
-      .pause(2000)
-      .selectByVisibleText(addProductPage.feature_value_select.replace('%ID', 0).replace('%V', 'not(@disabled)'), value);
+      .waitForVisibleAndClick(addProductPage.result_feature_select.replace('%ID', number))
+      .pause(4000)
+      .selectByVisibleText(addProductPage.feature_value_select.replace('%ID', number).replace('%V', 'not(@disabled)'), value);
+  }
+
+  selectFeatureCustomizedValue(addProductPage, name, customizedValue, number) {
+    return this.client
+      .scrollWaitForExistAndClick(addProductPage.feature_select.replace('%NUMBER', number + 1))
+      .waitAndSetValue(addProductPage.select_feature_created, name)
+      .waitForVisibleAndClick(addProductPage.result_feature_select.replace('%ID', number))
+      .waitAndSetValue(addProductPage.customized_value_input.replace('%ID', number), customizedValue)
   }
 
   clickNextOrPrevious(selector) {
@@ -284,6 +292,41 @@ class Product extends CommonClient {
           .then(() => expect(featureData.predefined_value !== '' && featureData.customized_value !== '', "You must choose a pre-defined value or set the customized value").to.be.equal(true));
       }
     }
+  }
+
+  checkProductCategory(i) {
+    return this.client
+      .scrollWaitForExistAndClick(ProductList.product_name_link.replace("%ID", global.positionTable[i - 1], 50000))
+      .waitForVisible(AddProductPage.product_name_input)
+      .scrollWaitForExistAndClick(AddProductPage.expand_categories_button)
+  }
+
+  getSubCategoryNumber(i) {
+    return this.client
+      .execute(function (i) {
+        let count;
+        try {
+          count = document.getElementById('choice_tree').getElementsByTagName("ul")[i + 1].children.length;
+          return count;
+        }
+        catch (err) {
+          count = 0;
+          return count;
+        }
+      }, i)
+      .then((count) => {
+        global.subCatNumber = count.value;
+      })
+  }
+
+  checkValuesFeature(selector, value) {
+    return this.client
+      .execute(function (selector) {
+        return document.querySelector(selector).innerText;
+      }, selector)
+      .then((values) => {
+        expect(values.value).to.contains(value)
+      });
   }
 }
 
