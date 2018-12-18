@@ -59,7 +59,7 @@ class PHPSQLParser {
      * Use the public variable $parsed to get the output.
      * 
      * @param string  $sql           The SQL statement.
-     * @param boolean $calcPositions True, if the output should contain [position], false otherwise.
+     * @param bool $calcPositions True, if the output should contain [position], false otherwise.
      */
     public function __construct($sql = false, $calcPositions = false) {
         if ($sql) {
@@ -76,7 +76,7 @@ class PHPSQLParser {
      * your application, set the parameter to false.
      * 
      * @param string  $sql           The SQL statement.
-     * @param boolean $calcPositions True, if the output should contain [position], false otherwise.
+     * @param bool $calcPositions True, if the output should contain [position], false otherwise.
      * 
      * @return array An associative array with all meta information about the SQL statement.
      */

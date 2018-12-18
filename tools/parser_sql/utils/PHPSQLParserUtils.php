@@ -43,7 +43,7 @@ class PHPSQLParserUtils {
      * Prints an array only if debug mode is on.
      * 
      * @param array $s
-     * @param boolean $return, if true, the formatted array is returned via return parameter
+     * @param bool $return, if true, the formatted array is returned via return parameter
      * @param mixed $arr
      */
     protected function preprint($arr, $return = false) {

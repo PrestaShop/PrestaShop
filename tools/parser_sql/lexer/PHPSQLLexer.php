@@ -69,7 +69,7 @@ class PHPSQLLexer {
      * @param string $haystack
      * @param string $needle
      * 
-     * @return boolean true, if the parameter $haystack ends with the character sequences $needle, false otherwise
+     * @return bool true, if the parameter $haystack ends with the character sequences $needle, false otherwise
      */
     protected function endsWith($haystack, $needle) {
         $length = strlen($needle);
