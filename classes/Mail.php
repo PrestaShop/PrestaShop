@@ -583,11 +583,7 @@ class MailCore extends ObjectModel
                 'message' => &$message,
             ]);
 
-            if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-                $send = 1;
-            } else {
-                $send = $swift->send($message);
-            }
+            $send = $swift->send($message);
 
             ShopUrl::resetMainDomainCache();
 
