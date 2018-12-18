@@ -26,28 +26,32 @@
 const $ = window.$;
 
 class TermsAndConditionsOptionHandler {
-  constructor() {
-    this.handle();
+    constructor() {
+        this.handle();
 
-    $('input[name="form[general][enable_tos]"]').on('change', () => this.handle());
-  }
+        $('input[name="form[general][enable_tos]"]').on('change', () =>
+            this.handle(),
+        );
+    }
 
-  handle() {
-    const tosEnabledVal = $('input[name="form[general][enable_tos]"]:checked').val();
-    const isTosEnabled = parseInt(tosEnabledVal);
+    handle() {
+        const tosEnabledVal = $(
+            'input[name="form[general][enable_tos]"]:checked',
+        ).val();
+        const isTosEnabled = parseInt(tosEnabledVal);
 
-    this.handleTermsAndConditionsCmsSelect(isTosEnabled);
-  }
+        this.handleTermsAndConditionsCmsSelect(isTosEnabled);
+    }
 
-  /**
-   * If terms and conditions option is disabled, then terms and conditions
-   * cms select must be disabled.
-   *
-   * @param {int} isTosEnabled
-   */
-  handleTermsAndConditionsCmsSelect(isTosEnabled) {
-    $('#form_general_tos_cms_id').prop('disabled', !isTosEnabled);
-  }
+    /**
+     * If terms and conditions option is disabled, then terms and conditions
+     * cms select must be disabled.
+     *
+     * @param {int} isTosEnabled
+     */
+    handleTermsAndConditionsCmsSelect(isTosEnabled) {
+        $('#form_general_tos_cms_id').prop('disabled', !isTosEnabled);
+    }
 }
 
 export default TermsAndConditionsOptionHandler;

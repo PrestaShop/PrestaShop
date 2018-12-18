@@ -24,296 +24,309 @@
  */
 
 export default class ImportProgressModal {
-  /**
-   * Show the import progress modal window.
-   */
-  show() {
-    this.progressModal.modal('show');
-  }
-
-  /**
-   * Hide the import progress modal window.
-   */
-  hide() {
-    this.progressModal.modal('hide');
-  }
-
-  /**
-   * Updates the import progressbar.
-   *
-   * @param {number} completed number of completed items.
-   * @param {number} total number of items in total.
-   */
-  updateProgress(completed, total) {
-    completed = parseInt(completed);
-    total = parseInt(total);
-
-    let $progressBar = this.progressBar,
-        percentage = completed / total * 100;
-
-    $progressBar.css('width', `${percentage}%`);
-    $progressBar.find('> span').text(`${completed}/${total}`);
-  }
-
-  /**
-   * Updates the progress bar label.
-   *
-   * @param {String} label if not provided - will use the default label
-   */
-  updateProgressLabel(label) {
-    this.progressLabel.text(label);
-  }
-
-  /**
-   * Sets the progress label to "importing"
-   */
-  setImportingProgressLabel() {
-    this.updateProgressLabel(this.progressModal.find('.modal-body').data('importing-label'));
-  }
-
-  /**
-   * Sets the progress label to "imported"
-   */
-  setImportedProgressLabel() {
-    this.updateProgressLabel(this.progressModal.find('.modal-body').data('imported-label'));
-  }
-
-  /**
-   * Shows information messages in the import modal.
-   *
-   * @param {Array} messages
-   */
-  showInfoMessages(messages) {
-    this._showMessages(this.infoMessageBlock, messages);
-  }
-
-  /**
-   * Shows warning messages in the import modal.
-   *
-   * @param {Array} messages
-   */
-  showWarningMessages(messages) {
-    this._showMessages(this.warningMessageBlock, messages);
-  }
-
-  /**
-   * Shows error messages in the import modal.
-   *
-   * @param {Array} messages
-   */
-  showErrorMessages(messages) {
-    this._showMessages(this.errorMessageBlock, messages);
-  }
-
-  /**
-   * Shows the import success message.
-   */
-  showSuccessMessage() {
-    this.successMessageBlock.removeClass('d-none');
-  }
-
-  /**
-   * Shows the post size limit warning message.
-   *
-   * @param {number} postSizeValue to be shown in the warning
-   */
-  showPostLimitMessage(postSizeValue) {
-    this.postLimitMessage.find('#post_limit_value').text(postSizeValue);
-    this.postLimitMessage.removeClass('d-none');
-  }
-
-  /**
-   * Show messages in given message block.
-   *
-   * @param {jQuery} $messageBlock
-   * @param {Array} messages
-   * @private
-   */
-  _showMessages($messageBlock, messages) {
-    let showMessagesBlock = false;
-
-    for (let key in messages) {
-      // Indicate that the messages block should be displayed
-      showMessagesBlock = true;
-
-      let message = $('<div>');
-      message.text(messages[key]);
-      message.addClass('message');
-
-      $messageBlock.append(message);
+    /**
+     * Show the import progress modal window.
+     */
+    show() {
+        this.progressModal.modal('show');
     }
 
-    if (showMessagesBlock) {
-      $messageBlock.removeClass('d-none');
+    /**
+     * Hide the import progress modal window.
+     */
+    hide() {
+        this.progressModal.modal('hide');
     }
-  }
 
-  /**
-   * Show the "Ignore warnings and continue" button.
-   */
-  showContinueImportButton() {
-    this.continueImportButton.removeClass('d-none')
-  }
+    /**
+     * Updates the import progressbar.
+     *
+     * @param {number} completed number of completed items.
+     * @param {number} total number of items in total.
+     */
+    updateProgress(completed, total) {
+        completed = parseInt(completed);
+        total = parseInt(total);
 
-  /**
-   * Hide the "Ignore warnings and continue" button.
-   */
-  hideContinueImportButton() {
-    this.continueImportButton.addClass('d-none');
-  }
+        let $progressBar = this.progressBar,
+            percentage = (completed / total) * 100;
 
-  /**
-   * Show the "Abort import" button.
-   */
-  showAbortImportButton() {
-    this.abortImportButton.removeClass('d-none');
-  }
+        $progressBar.css('width', `${percentage}%`);
+        $progressBar.find('> span').text(`${completed}/${total}`);
+    }
 
-  /**
-   * Hide the "Abort import" button.
-   */
-  hideAbortImportButton() {
-    this.abortImportButton.addClass('d-none');
-  }
+    /**
+     * Updates the progress bar label.
+     *
+     * @param {String} label if not provided - will use the default label
+     */
+    updateProgressLabel(label) {
+        this.progressLabel.text(label);
+    }
 
-  /**
-   * Show the "Close" button of the modal.
-   */
-  showCloseModalButton() {
-    this.closeModalButton.removeClass('d-none');
-  }
+    /**
+     * Sets the progress label to "importing"
+     */
+    setImportingProgressLabel() {
+        this.updateProgressLabel(
+            this.progressModal.find('.modal-body').data('importing-label'),
+        );
+    }
 
-  /**
-   * Hide the "Close" button.
-   */
-  hideCloseModalButton() {
-    this.closeModalButton.addClass('d-none');
-  }
+    /**
+     * Sets the progress label to "imported"
+     */
+    setImportedProgressLabel() {
+        this.updateProgressLabel(
+            this.progressModal.find('.modal-body').data('imported-label'),
+        );
+    }
 
-  /**
-   * Clears all warning messages from the modal.
-   */
-  clearWarningMessages() {
-    this.warningMessageBlock.addClass('d-none').find('.message').remove();
-  }
+    /**
+     * Shows information messages in the import modal.
+     *
+     * @param {Array} messages
+     */
+    showInfoMessages(messages) {
+        this._showMessages(this.infoMessageBlock, messages);
+    }
 
-  /**
-   * Reset the modal - resets progress bar and removes messages.
-   */
-  reset() {
-    // Reset the progress bar
-    this.updateProgress(0, 0);
-    this.updateProgressLabel(this.progressLabel.attr('default-value'));
+    /**
+     * Shows warning messages in the import modal.
+     *
+     * @param {Array} messages
+     */
+    showWarningMessages(messages) {
+        this._showMessages(this.warningMessageBlock, messages);
+    }
 
-    // Hide action buttons
-    this.continueImportButton.addClass('d-none');
-    this.abortImportButton.addClass('d-none');
-    this.closeModalButton.addClass('d-none');
+    /**
+     * Shows error messages in the import modal.
+     *
+     * @param {Array} messages
+     */
+    showErrorMessages(messages) {
+        this._showMessages(this.errorMessageBlock, messages);
+    }
 
-    // Remove messages
-    this.successMessageBlock.addClass('d-none');
-    this.infoMessageBlock.addClass('d-none').find('.message').remove();
-    this.errorMessageBlock.addClass('d-none').find('.message').remove();
-    this.postLimitMessage.addClass('d-none');
-    this.clearWarningMessages();
-  }
+    /**
+     * Shows the import success message.
+     */
+    showSuccessMessage() {
+        this.successMessageBlock.removeClass('d-none');
+    }
 
-  /**
-   * Gets import progress modal.
-   *
-   * @returns {jQuery}
-   */
-  get progressModal() {
-    return $('#import_progress_modal');
-  }
+    /**
+     * Shows the post size limit warning message.
+     *
+     * @param {number} postSizeValue to be shown in the warning
+     */
+    showPostLimitMessage(postSizeValue) {
+        this.postLimitMessage.find('#post_limit_value').text(postSizeValue);
+        this.postLimitMessage.removeClass('d-none');
+    }
 
-  /**
-   * Gets import progress bar.
-   *
-   * @returns {jQuery}
-   */
-  get progressBar() {
-    return this.progressModal.find('.progress-bar');
-  }
+    /**
+     * Show messages in given message block.
+     *
+     * @param {jQuery} $messageBlock
+     * @param {Array} messages
+     * @private
+     */
+    _showMessages($messageBlock, messages) {
+        let showMessagesBlock = false;
 
-  /**
-   * Gets information messages block.
-   *
-   * @returns {jQuery|HTMLElement}
-   */
-  get infoMessageBlock() {
-    return $('.js-import-info');
-  }
+        for (let key in messages) {
+            // Indicate that the messages block should be displayed
+            showMessagesBlock = true;
 
-  /**
-   * Gets error messages block.
-   *
-   * @returns {jQuery|HTMLElement}
-   */
-  get errorMessageBlock() {
-    return $('.js-import-errors');
-  }
+            let message = $('<div>');
+            message.text(messages[key]);
+            message.addClass('message');
 
-  /**
-   * Gets warning messages block.
-   *
-   * @returns {jQuery|HTMLElement}
-   */
-  get warningMessageBlock() {
-    return $('.js-import-warnings');
-  }
+            $messageBlock.append(message);
+        }
 
-  /**
-   * Gets success messages block.
-   *
-   * @returns {jQuery|HTMLElement}
-   */
-  get successMessageBlock() {
-    return $('.js-import-success');
-  }
+        if (showMessagesBlock) {
+            $messageBlock.removeClass('d-none');
+        }
+    }
 
-  /**
-   * Gets post limit message.
-   *
-   * @returns {jQuery|HTMLElement}
-   */
-  get postLimitMessage() {
-    return $('.js-post-limit-warning');
-  }
+    /**
+     * Show the "Ignore warnings and continue" button.
+     */
+    showContinueImportButton() {
+        this.continueImportButton.removeClass('d-none');
+    }
 
-  /**
-   * Gets "Ignore warnings and continue" button.
-   *
-   * @returns {jQuery|HTMLElement}
-   */
-  get continueImportButton() {
-    return $('.js-continue-import');
-  }
+    /**
+     * Hide the "Ignore warnings and continue" button.
+     */
+    hideContinueImportButton() {
+        this.continueImportButton.addClass('d-none');
+    }
 
-  /**
-   * Gets "Abort import" button.
-   *
-   * @returns {jQuery|HTMLElement}
-   */
-  get abortImportButton() {
-    return $('.js-abort-import');
-  }
+    /**
+     * Show the "Abort import" button.
+     */
+    showAbortImportButton() {
+        this.abortImportButton.removeClass('d-none');
+    }
 
-  /**
-   * Gets "Close" button of the modal.
-   *
-   * @returns {jQuery|HTMLElement}
-   */
-  get closeModalButton() {
-    return $('.js-close-modal');
-  }
+    /**
+     * Hide the "Abort import" button.
+     */
+    hideAbortImportButton() {
+        this.abortImportButton.addClass('d-none');
+    }
 
-  /**
-   * Gets progress bar label.
-   *
-   * @returns {jQuery|HTMLElement}
-   */
-  get progressLabel() {
-    return $('#import_progress_bar').find('.progress-details-text');
-  }
+    /**
+     * Show the "Close" button of the modal.
+     */
+    showCloseModalButton() {
+        this.closeModalButton.removeClass('d-none');
+    }
+
+    /**
+     * Hide the "Close" button.
+     */
+    hideCloseModalButton() {
+        this.closeModalButton.addClass('d-none');
+    }
+
+    /**
+     * Clears all warning messages from the modal.
+     */
+    clearWarningMessages() {
+        this.warningMessageBlock
+            .addClass('d-none')
+            .find('.message')
+            .remove();
+    }
+
+    /**
+     * Reset the modal - resets progress bar and removes messages.
+     */
+    reset() {
+        // Reset the progress bar
+        this.updateProgress(0, 0);
+        this.updateProgressLabel(this.progressLabel.attr('default-value'));
+
+        // Hide action buttons
+        this.continueImportButton.addClass('d-none');
+        this.abortImportButton.addClass('d-none');
+        this.closeModalButton.addClass('d-none');
+
+        // Remove messages
+        this.successMessageBlock.addClass('d-none');
+        this.infoMessageBlock
+            .addClass('d-none')
+            .find('.message')
+            .remove();
+        this.errorMessageBlock
+            .addClass('d-none')
+            .find('.message')
+            .remove();
+        this.postLimitMessage.addClass('d-none');
+        this.clearWarningMessages();
+    }
+
+    /**
+     * Gets import progress modal.
+     *
+     * @returns {jQuery}
+     */
+    get progressModal() {
+        return $('#import_progress_modal');
+    }
+
+    /**
+     * Gets import progress bar.
+     *
+     * @returns {jQuery}
+     */
+    get progressBar() {
+        return this.progressModal.find('.progress-bar');
+    }
+
+    /**
+     * Gets information messages block.
+     *
+     * @returns {jQuery|HTMLElement}
+     */
+    get infoMessageBlock() {
+        return $('.js-import-info');
+    }
+
+    /**
+     * Gets error messages block.
+     *
+     * @returns {jQuery|HTMLElement}
+     */
+    get errorMessageBlock() {
+        return $('.js-import-errors');
+    }
+
+    /**
+     * Gets warning messages block.
+     *
+     * @returns {jQuery|HTMLElement}
+     */
+    get warningMessageBlock() {
+        return $('.js-import-warnings');
+    }
+
+    /**
+     * Gets success messages block.
+     *
+     * @returns {jQuery|HTMLElement}
+     */
+    get successMessageBlock() {
+        return $('.js-import-success');
+    }
+
+    /**
+     * Gets post limit message.
+     *
+     * @returns {jQuery|HTMLElement}
+     */
+    get postLimitMessage() {
+        return $('.js-post-limit-warning');
+    }
+
+    /**
+     * Gets "Ignore warnings and continue" button.
+     *
+     * @returns {jQuery|HTMLElement}
+     */
+    get continueImportButton() {
+        return $('.js-continue-import');
+    }
+
+    /**
+     * Gets "Abort import" button.
+     *
+     * @returns {jQuery|HTMLElement}
+     */
+    get abortImportButton() {
+        return $('.js-abort-import');
+    }
+
+    /**
+     * Gets "Close" button of the modal.
+     *
+     * @returns {jQuery|HTMLElement}
+     */
+    get closeModalButton() {
+        return $('.js-close-modal');
+    }
+
+    /**
+     * Gets progress bar label.
+     *
+     * @returns {jQuery|HTMLElement}
+     */
+    get progressLabel() {
+        return $('#import_progress_bar').find('.progress-details-text');
+    }
 }

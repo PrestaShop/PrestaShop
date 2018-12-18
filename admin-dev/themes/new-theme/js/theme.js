@@ -50,5 +50,5 @@ new NavBar();
 new Header();
 
 $(() => {
-  initDatePickers();
+    initDatePickers();
 });

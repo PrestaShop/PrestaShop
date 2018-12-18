@@ -25,45 +25,47 @@
 import * as types from './mutation-types';
 
 export default {
-  [types.SET_TRANSLATIONS](state, translations) {
-    translations.data.forEach((t) => {
-      state.translations[t.translation_id] = t.name;
-    });
-  },
-  [types.SET_CATALOG](state, catalog) {
-    state.catalog = catalog;
-  },
-  [types.SET_DOMAINS_TREE](state, domainsTree) {
-    state.totalMissingTranslations = domainsTree.data.tree.total_missing_translations;
-    state.totalTranslations = domainsTree.data.tree.total_translations;
-    state.domainsTree = domainsTree.data.tree.children;
-  },
-  [types.APP_IS_READY](state) {
-    state.isReady = true;
-  },
-  [types.SET_TOTAL_PAGES](state, totalPages) {
-    state.totalPages = Number(totalPages);
-  },
-  [types.SET_PAGE_INDEX](state, pageIndex) {
-    state.pageIndex = pageIndex;
-  },
-  [types.SET_CURRENT_DOMAIN](state, currentDomain) {
-    state.currentDomain = currentDomain.full_name;
-    state.currentDomainTotalTranslations = currentDomain.total_translations;
-    state.currentDomainTotalMissingTranslations = currentDomain.total_missing_translations;
-  },
-  [types.RESET_CURRENT_DOMAIN](state) {
-    state.currentDomain = '';
-    state.currentDomainTotalTranslations = 0;
-    state.currentDomainTotalMissingTranslations = 0;
-  },
-  [types.SIDEBAR_LOADING](state, isLoading) {
-    state.sidebarLoading = isLoading;
-  },
-  [types.PRINCIPAL_LOADING](state, isLoading) {
-    state.principalLoading = isLoading;
-  },
-  [types.SEARCH_TAGS](state, searchTags) {
-    state.searchTags = searchTags;
-  },
+    [types.SET_TRANSLATIONS](state, translations) {
+        translations.data.forEach(t => {
+            state.translations[t.translation_id] = t.name;
+        });
+    },
+    [types.SET_CATALOG](state, catalog) {
+        state.catalog = catalog;
+    },
+    [types.SET_DOMAINS_TREE](state, domainsTree) {
+        state.totalMissingTranslations =
+            domainsTree.data.tree.total_missing_translations;
+        state.totalTranslations = domainsTree.data.tree.total_translations;
+        state.domainsTree = domainsTree.data.tree.children;
+    },
+    [types.APP_IS_READY](state) {
+        state.isReady = true;
+    },
+    [types.SET_TOTAL_PAGES](state, totalPages) {
+        state.totalPages = Number(totalPages);
+    },
+    [types.SET_PAGE_INDEX](state, pageIndex) {
+        state.pageIndex = pageIndex;
+    },
+    [types.SET_CURRENT_DOMAIN](state, currentDomain) {
+        state.currentDomain = currentDomain.full_name;
+        state.currentDomainTotalTranslations = currentDomain.total_translations;
+        state.currentDomainTotalMissingTranslations =
+            currentDomain.total_missing_translations;
+    },
+    [types.RESET_CURRENT_DOMAIN](state) {
+        state.currentDomain = '';
+        state.currentDomainTotalTranslations = 0;
+        state.currentDomainTotalMissingTranslations = 0;
+    },
+    [types.SIDEBAR_LOADING](state, isLoading) {
+        state.sidebarLoading = isLoading;
+    },
+    [types.PRINCIPAL_LOADING](state, isLoading) {
+        state.principalLoading = isLoading;
+    },
+    [types.SEARCH_TAGS](state, searchTags) {
+        state.searchTags = searchTags;
+    },
 };

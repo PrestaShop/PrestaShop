@@ -29,114 +29,111 @@ const $ = window.$;
  * Handles UI interactions of choice tree
  */
 export default class ChoiceTree {
-  /**
-   * @param {String} treeSelector
-   */
-  constructor(treeSelector) {
-    this.$container = $(treeSelector);
+    /**
+     * @param {String} treeSelector
+     */
+    constructor(treeSelector) {
+        this.$container = $(treeSelector);
 
-    this.$container.on('click', '.js-input-wrapper', (event) => {
-      const $inputWrapper = $(event.currentTarget);
+        this.$container.on('click', '.js-input-wrapper', event => {
+            const $inputWrapper = $(event.currentTarget);
 
-      this._toggleChildTree($inputWrapper);
-    });
+            this._toggleChildTree($inputWrapper);
+        });
 
-    this.$container.on('click', '.js-toggle-choice-tree-action', (event) => {
-      const $action = $(event.currentTarget);
+        this.$container.on('click', '.js-toggle-choice-tree-action', event => {
+            const $action = $(event.currentTarget);
 
-      this._toggleTree($action);
-    });
+            this._toggleTree($action);
+        });
 
-    return {
-      enableAutoCheckChildren: () => this.enableAutoCheckChildren(),
-    };
-  }
-
-  /**
-   * Enable automatic check/uncheck of clicked item's children.
-   */
-  enableAutoCheckChildren() {
-    this.$container.on('change', 'input[type="checkbox"]', (event) => {
-      const $clickedCheckbox = $(event.currentTarget);
-      const $itemWithChildren = $clickedCheckbox.closest('li');
-
-      $itemWithChildren
-        .find('ul input[type="checkbox"]')
-        .prop('checked', $clickedCheckbox.is(':checked'));
-    });
-  }
-
-  /**
-   * Collapse or expand sub-tree for single parent
-   *
-   * @param {jQuery} $inputWrapper
-   *
-   * @private
-   */
-  _toggleChildTree($inputWrapper) {
-    const $parentWrapper = $inputWrapper.closest('li');
-
-    if ($parentWrapper.hasClass('expanded')) {
-      $parentWrapper
-        .removeClass('expanded')
-        .addClass('collapsed');
-
-      return;
+        return {
+            enableAutoCheckChildren: () => this.enableAutoCheckChildren(),
+        };
     }
 
-    if ($parentWrapper.hasClass('collapsed')) {
-      $parentWrapper
-        .removeClass('collapsed')
-        .addClass('expanded');
+    /**
+     * Enable automatic check/uncheck of clicked item's children.
+     */
+    enableAutoCheckChildren() {
+        this.$container.on('change', 'input[type="checkbox"]', event => {
+            const $clickedCheckbox = $(event.currentTarget);
+            const $itemWithChildren = $clickedCheckbox.closest('li');
+
+            $itemWithChildren
+                .find('ul input[type="checkbox"]')
+                .prop('checked', $clickedCheckbox.is(':checked'));
+        });
     }
-  }
 
-  /**
-   * Collapse or expand whole tree
-   *
-   * @param {jQuery} $action
-   *
-   * @private
-   */
-  _toggleTree($action) {
-    const $parentContainer = $action.closest('.js-choice-tree-container');
-    const action = $action.data('action');
+    /**
+     * Collapse or expand sub-tree for single parent
+     *
+     * @param {jQuery} $inputWrapper
+     *
+     * @private
+     */
+    _toggleChildTree($inputWrapper) {
+        const $parentWrapper = $inputWrapper.closest('li');
 
-    // toggle action configuration
-    const config = {
-      addClass: {
-        expand: 'expanded',
-        collapse: 'collapsed',
-      },
-      removeClass: {
-        expand: 'collapsed',
-        collapse: 'expanded',
-      },
-      nextAction: {
-        expand: 'collapse',
-        collapse: 'expand',
-      },
-      text: {
-        expand: 'collapsed-text',
-        collapse: 'expanded-text',
-      },
-      icon: {
-        expand: 'collapsed-icon',
-        collapse: 'expanded-icon',
-      }
-    };
+        if ($parentWrapper.hasClass('expanded')) {
+            $parentWrapper.removeClass('expanded').addClass('collapsed');
 
-    $parentContainer.find('li').each((index, item) => {
-      const $item = $(item);
+            return;
+        }
 
-      if ($item.hasClass(config.removeClass[action])) {
-          $item.removeClass(config.removeClass[action])
-            .addClass(config.addClass[action]);
-      }
-    });
+        if ($parentWrapper.hasClass('collapsed')) {
+            $parentWrapper.removeClass('collapsed').addClass('expanded');
+        }
+    }
 
-    $action.data('action', config.nextAction[action]);
-    $action.find('.material-icons').text($action.data(config.icon[action]));
-    $action.find('.js-toggle-text').text($action.data(config.text[action]));
-  }
+    /**
+     * Collapse or expand whole tree
+     *
+     * @param {jQuery} $action
+     *
+     * @private
+     */
+    _toggleTree($action) {
+        const $parentContainer = $action.closest('.js-choice-tree-container');
+        const action = $action.data('action');
+
+        // toggle action configuration
+        const config = {
+            addClass: {
+                expand: 'expanded',
+                collapse: 'collapsed',
+            },
+            removeClass: {
+                expand: 'collapsed',
+                collapse: 'expanded',
+            },
+            nextAction: {
+                expand: 'collapse',
+                collapse: 'expand',
+            },
+            text: {
+                expand: 'collapsed-text',
+                collapse: 'expanded-text',
+            },
+            icon: {
+                expand: 'collapsed-icon',
+                collapse: 'expanded-icon',
+            },
+        };
+
+        $parentContainer.find('li').each((index, item) => {
+            const $item = $(item);
+
+            if ($item.hasClass(config.removeClass[action])) {
+                $item
+                    .removeClass(config.removeClass[action])
+                    .addClass(config.addClass[action]);
+            }
+        });
+
+        $action.data('action', config.nextAction[action]);
+        $action.find('.material-icons').text($action.data(config.icon[action]));
+        $action.find('.js-toggle-text').text($action.data(config.text[action]));
+    }
 }

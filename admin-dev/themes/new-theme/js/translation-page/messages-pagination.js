@@ -24,11 +24,12 @@
  */
 import MultiPagination from './multi-pagination';
 
-export default function () {
-    let fixedOffset = $('.header-toolbar').height() + $('.main-header').height();
+export default function() {
+    let fixedOffset =
+        $('.header-toolbar').height() + $('.main-header').height();
     const MAX_PAGINATION = 20;
 
-    let addPageLinksToNavigationBar = (nav) => {
+    let addPageLinksToNavigationBar = nav => {
         let pageTemplate = $(nav).find('.tpl');
         pageTemplate.removeClass('tpl');
         let pageLinkTemplate = pageTemplate.clone();
@@ -38,13 +39,14 @@ export default function () {
         let pageIndex;
         let pageLink;
         let pageLinkAnchor;
-        let totalPages = $(nav).parents('.translation-domains').find('.page').length;
+        let totalPages = $(nav)
+            .parents('.translation-domains')
+            .find('.page').length;
 
         if (totalPages === 1) {
-          return $('.pagination').addClass('hide');
-        }
-        else {
-          $('.pagination').removeClass('hide');
+            return $('.pagination').addClass('hide');
+        } else {
+            $('.pagination').removeClass('hide');
         }
 
         let i;
@@ -55,7 +57,9 @@ export default function () {
             pageLinkAnchor = pageLink.find('a');
             pageLinkAnchor.html(pageIndex);
 
-            $(nav).find('.pagination').append(pageLink);
+            $(nav)
+                .find('.pagination')
+                .append(pageLink);
         }
     };
 
@@ -64,11 +68,16 @@ export default function () {
     // @See also http://stackoverflow.com/a/13067009/282073
     let scrollToPreviousPaginationBar = (paginationBar, link) => {
         let paginationBarTop = paginationBar.getBoundingClientRect().top;
-        window.scrollTo(window.pageXOffset, window.pageYOffset + paginationBarTop - fixedOffset);
+        window.scrollTo(
+            window.pageXOffset,
+            window.pageYOffset + paginationBarTop - fixedOffset,
+        );
     };
 
-    $('.translation-domain .go-to-pagination-bar').click((event) => {
-        let paginationBar = $(event.target).parents('.translation-domain').find('.pagination')[0];
+    $('.translation-domain .go-to-pagination-bar').click(event => {
+        let paginationBar = $(event.target)
+            .parents('.translation-domain')
+            .find('.pagination')[0];
         scrollToPreviousPaginationBar(paginationBar, event.target);
 
         return false;
@@ -77,48 +86,64 @@ export default function () {
     $('.translation-domains nav').each((navIndex, nav) => {
         addPageLinksToNavigationBar(nav);
 
-        let hideActivePageInDomain = (domain) => {
+        let hideActivePageInDomain = domain => {
             let page = domain.find('.page[data-status=active]');
             $(page).addClass('hide');
             $(page).attr('data-status', 'inactive');
         };
 
         let showPageInDomain = (pageIndex, domain) => {
-            let targetPage = domain.find('.page[data-page-index=' + pageIndex + ']');
+            let targetPage = domain.find(
+                '.page[data-page-index=' + pageIndex + ']',
+            );
             $(targetPage).removeClass('hide');
             $(targetPage).attr('data-status', 'active');
         };
 
-        $(nav).find('.page-link').click((event) => {
-            let paginationBar = $(event.target).parents('.pagination')[0];
-            scrollToPreviousPaginationBar(paginationBar, event.target);
-        });
+        $(nav)
+            .find('.page-link')
+            .click(event => {
+                let paginationBar = $(event.target).parents('.pagination')[0];
+                scrollToPreviousPaginationBar(paginationBar, event.target);
+            });
 
-        $(nav).find('.page-item').click((event) => {
-            let pageLink = $(event.target);
-            let domain = pageLink.parents('.translation-domains').find('.translation-forms');
-            let pageItem = pageLink.parent();
-            let pageIndex = pageItem.data('page-index');
+        $(nav)
+            .find('.page-item')
+            .click(event => {
+                let pageLink = $(event.target);
+                let domain = pageLink
+                    .parents('.translation-domains')
+                    .find('.translation-forms');
+                let pageItem = pageLink.parent();
+                let pageIndex = pageItem.data('page-index');
 
-            $(`[data-page-index=${pageIndex}]`).addClass('active');
-            $(`[data-page-index=${pageIndex}]`).siblings().removeClass('active');
+                $(`[data-page-index=${pageIndex}]`).addClass('active');
+                $(`[data-page-index=${pageIndex}]`)
+                    .siblings()
+                    .removeClass('active');
 
-            pageItem.parent().find('.active').removeClass('active');
-            pageItem.addClass('active');
+                pageItem
+                    .parent()
+                    .find('.active')
+                    .removeClass('active');
+                pageItem.addClass('active');
 
-            hideActivePageInDomain(domain);
-            showPageInDomain(pageIndex, domain);
+                hideActivePageInDomain(domain);
+                showPageInDomain(pageIndex, domain);
 
-            return false;
-        });
+                return false;
+            });
     });
 
-    if($('.translation-domains').find('.page').length > MAX_PAGINATION) {
-      $('.page-item.hide').removeClass('hide');
-      $('.pagination').each((index, pagination)=> {
-          let lastItem = $(pagination).find('.page-item:last-child');
-          $(pagination).find('.js-next-arrow').insertAfter(lastItem).removeClass('hide');
-          MultiPagination($(pagination));
-      });
+    if ($('.translation-domains').find('.page').length > MAX_PAGINATION) {
+        $('.page-item.hide').removeClass('hide');
+        $('.pagination').each((index, pagination) => {
+            let lastItem = $(pagination).find('.page-item:last-child');
+            $(pagination)
+                .find('.js-next-arrow')
+                .insertAfter(lastItem)
+                .removeClass('hide');
+            MultiPagination($(pagination));
+        });
     }
 }

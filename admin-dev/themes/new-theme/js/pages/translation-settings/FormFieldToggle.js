@@ -65,7 +65,10 @@ const emailContentBody = 'body';
 export default class FormFieldToggle {
     constructor() {
         $('.js-translation-type').on('change', this.toggleFields.bind(this));
-        $('.js-email-content-type').on('change', this.toggleEmailFields.bind(this));
+        $('.js-email-content-type').on(
+            'change',
+            this.toggleEmailFields.bind(this),
+        );
 
         this.toggleFields();
     }
@@ -80,12 +83,18 @@ export default class FormFieldToggle {
         let $themesFormGroup = $('.js-theme-form-group');
         let $themesSelect = $themesFormGroup.find('select');
         let $noThemeOption = $themesSelect.find('.js-no-theme');
-        let $firstThemeOption = $themesSelect.find('option:not(.js-no-theme):first');
+        let $firstThemeOption = $themesSelect.find(
+            'option:not(.js-no-theme):first',
+        );
 
         switch (selectedOption) {
             case back:
             case others:
-                this._hide($modulesFormGroup, $emailFormGroup, $themesFormGroup);
+                this._hide(
+                    $modulesFormGroup,
+                    $emailFormGroup,
+                    $themesFormGroup,
+                );
 
                 break;
             case themes:
@@ -120,7 +129,9 @@ export default class FormFieldToggle {
             return;
         }
 
-        let selectedEmailContentType = $('.js-email-form-group').find('select').val();
+        let selectedEmailContentType = $('.js-email-form-group')
+            .find('select')
+            .val();
         let $themesFormGroup = $('.js-theme-form-group');
         let $noThemeOption = $themesFormGroup.find('.js-no-theme');
 
@@ -131,7 +142,6 @@ export default class FormFieldToggle {
             this._hide($noThemeOption, $themesFormGroup);
         }
     }
-
 
     /**
      * Make all given selectors hidden

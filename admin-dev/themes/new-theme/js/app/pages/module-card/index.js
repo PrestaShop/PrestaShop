@@ -28,5 +28,5 @@ import ModuleCard from '../../../components/module-card';
 const $ = global.$;
 
 $(() => {
-  new ModuleCard().init();
+    new ModuleCard().init();
 });

@@ -30,10 +30,10 @@ const $ = global.$;
  * Enable all datepickers.
  */
 const init = function initDatePickers() {
-  $('.datepicker input[type="text"]').datetimepicker({
-    locale: global.full_language_code,
-    format: 'YYYY-MM-DD',
-  });
+    $('.datepicker input[type="text"]').datetimepicker({
+        locale: global.full_language_code,
+        format: 'YYYY-MM-DD',
+    });
 };
 
 export default init;

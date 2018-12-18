@@ -29,9 +29,9 @@ const $ = window.$;
  * Takes link from clicked item and redirects to it.
  */
 export default class LinkableItem {
-  constructor() {
-    $(document).on('click', '.js-linkable-item', (event) => {
-      window.location = $(event.currentTarget).data('linkable-href');
-    });
-  }
+    constructor() {
+        $(document).on('click', '.js-linkable-item', event => {
+            window.location = $(event.currentTarget).data('linkable-href');
+        });
+    }
 }

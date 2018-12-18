@@ -29,24 +29,27 @@ const $ = window.$;
  * ChoiceTable is responsible for managing common actions in choice table form type
  */
 export default class ChoiceTable {
-  /**
-   * Init constructor
-   */
-  constructor() {
-    $(document).on('change', '.js-choice-table-select-all', (e) => {
-      this.handleSelectAll(e);
-    });
-  }
+    /**
+     * Init constructor
+     */
+    constructor() {
+        $(document).on('change', '.js-choice-table-select-all', e => {
+            this.handleSelectAll(e);
+        });
+    }
 
-  /**
-   * Check/uncheck all boxes in table
-   *
-   * @param {Event} event
-   */
-  handleSelectAll(event) {
-    const $selectAllCheckboxes = $(event.target);
-    const isSelectAllChecked = $selectAllCheckboxes.is(':checked');
+    /**
+     * Check/uncheck all boxes in table
+     *
+     * @param {Event} event
+     */
+    handleSelectAll(event) {
+        const $selectAllCheckboxes = $(event.target);
+        const isSelectAllChecked = $selectAllCheckboxes.is(':checked');
 
-    $selectAllCheckboxes.closest('table').find('tbody input:checkbox').prop('checked', isSelectAllChecked);
-  }
+        $selectAllCheckboxes
+            .closest('table')
+            .find('tbody input:checkbox')
+            .prop('checked', isSelectAllChecked);
+    }
 }

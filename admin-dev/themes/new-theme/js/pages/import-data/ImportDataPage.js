@@ -29,38 +29,48 @@ import EntityFieldsValidator from './EntityFieldsValidator';
 import Importer from './Importer';
 
 export default class ImportDataPage {
-  constructor() {
-    new ImportMatchConfiguration();
-    new ImportDataTable();
-    this.importer = new Importer();
+    constructor() {
+        new ImportMatchConfiguration();
+        new ImportDataTable();
+        this.importer = new Importer();
 
-    $(document).on('click', '.js-process-import', (e) => this.importHandler(e));
-    $(document).on('click', '.js-abort-import', () => this.importer.requestCancelImport());
-    $(document).on('click', '.js-close-modal', () => this.importer.progressModal.hide());
-    $(document).on('click', '.js-continue-import', () => this.importer.continueImport());
-  }
-
-  /**
-   * Import process event handler
-   */
-  importHandler(e) {
-    e.preventDefault();
-
-    if (!EntityFieldsValidator.validate()) {
-      return;
+        $(document).on('click', '.js-process-import', e =>
+            this.importHandler(e),
+        );
+        $(document).on('click', '.js-abort-import', () =>
+            this.importer.requestCancelImport(),
+        );
+        $(document).on('click', '.js-close-modal', () =>
+            this.importer.progressModal.hide(),
+        );
+        $(document).on('click', '.js-continue-import', () =>
+            this.importer.continueImport(),
+        );
     }
 
-    let configuration = {};
+    /**
+     * Import process event handler
+     */
+    importHandler(e) {
+        e.preventDefault();
 
-    // Collect the configuration from the form into an array.
-    $('.import-data-configuration-form').find(
-      '#skip, select[name^=type_value], #csv, #iso_lang, #entity,' +
-      '#truncate, #match_ref, #regenerate, #forceIDs, #sendemail,' +
-      '#separator, #multiple_value_separator'
-    ).each((index, $input) => {
-      configuration[$($input).attr('name')] = $($input).val();
-    });
+        if (!EntityFieldsValidator.validate()) {
+            return;
+        }
 
-    this.importer.import(configuration);
-  }
+        let configuration = {};
+
+        // Collect the configuration from the form into an array.
+        $('.import-data-configuration-form')
+            .find(
+                '#skip, select[name^=type_value], #csv, #iso_lang, #entity,' +
+                    '#truncate, #match_ref, #regenerate, #forceIDs, #sendemail,' +
+                    '#separator, #multiple_value_separator',
+            )
+            .each((index, $input) => {
+                configuration[$($input).attr('name')] = $($input).val();
+            });
+
+        this.importer.import(configuration);
+    }
 }

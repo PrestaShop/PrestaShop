@@ -29,49 +29,64 @@ const $ = window.$;
  * Class DeleteCategoriesBulkActionExtension handles submitting of row action
  */
 export default class DeleteCategoriesBulkActionExtension {
+    constructor() {
+        return {
+            extend: grid => this.extend(grid),
+        };
+    }
 
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
-  }
+    /**
+     * Extend grid
+     *
+     * @param {Grid} grid
+     */
+    extend(grid) {
+        grid.getContainer().on(
+            'click',
+            '.js-delete-categories-bulk-action',
+            event => {
+                event.preventDefault();
 
-  /**
-   * Extend grid
-   *
-   * @param {Grid} grid
-   */
-  extend(grid) {
-    grid.getContainer().on('click', '.js-delete-categories-bulk-action', (event) => {
-      event.preventDefault();
+                const submitUrl = $(event.currentTarget).data(
+                    'categories-delete-url',
+                );
 
-      const submitUrl = $(event.currentTarget).data('categories-delete-url');
+                const $deleteCategoriesModal = $(
+                    `#${grid.getId()}_grid_delete_categories_modal`,
+                );
+                $deleteCategoriesModal.modal('show');
 
-      const $deleteCategoriesModal = $(`#${grid.getId()}_grid_delete_categories_modal`);
-      $deleteCategoriesModal.modal('show');
+                $deleteCategoriesModal.on(
+                    'click',
+                    '.js-submit-delete-categories',
+                    () => {
+                        const $checkboxes = grid
+                            .getContainer()
+                            .find('.js-bulk-action-checkbox');
+                        const $categoriesToDeleteInputBlock = $(
+                            '#delete_categories_categories_to_delete',
+                        );
 
-      $deleteCategoriesModal.on('click', '.js-submit-delete-categories', () => {
-        const $checkboxes = grid.getContainer().find('.js-bulk-action-checkbox');
-        const $categoriesToDeleteInputBlock = $('#delete_categories_categories_to_delete');
+                        $checkboxes.each((i, value) => {
+                            const $input = $(value);
 
-        $checkboxes.each((i, value) => {
-          const $input = $(value);
+                            const categoryInput = $categoriesToDeleteInputBlock
+                                .data('prototype')
+                                .replace(/__name__/g, $input.val());
 
-          const categoryInput = $categoriesToDeleteInputBlock
-            .data('prototype')
-            .replace(/__name__/g, $input.val());
+                            const $item = $($.parseHTML(categoryInput)[0]);
+                            $item.val($input.val());
 
-          const $item = $($.parseHTML(categoryInput)[0]);
-          $item.val($input.val());
+                            $categoriesToDeleteInputBlock.append($item);
+                        });
 
-          $categoriesToDeleteInputBlock.append($item);
-        });
+                        const $form = $deleteCategoriesModal.find('form');
 
-        const $form = $deleteCategoriesModal.find('form');
-
-        $form.attr('action', submitUrl);
-        $form.submit();
-      });
-    });
-  }
+                        $form.attr('action', submitUrl);
+                        $form.submit();
+                    },
+                );
+            },
+        );
+    }
 }

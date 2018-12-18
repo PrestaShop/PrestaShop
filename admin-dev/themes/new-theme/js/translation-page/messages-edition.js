@@ -23,54 +23,62 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-export default function (search) {
-  $('.reset-translation-value').each((buttonIndex, button) => {
-    let $editTranslationForm = $(button).parents('form');
-    let defaultTranslationValue = $editTranslationForm.find('*[name=default]').val();
+export default function(search) {
+    $('.reset-translation-value').each((buttonIndex, button) => {
+        let $editTranslationForm = $(button).parents('form');
+        let defaultTranslationValue = $editTranslationForm
+            .find('*[name=default]')
+            .val();
 
-    $(button).click(() => {
-      $editTranslationForm.find('*[name=translation_value]').val(defaultTranslationValue);
-      $editTranslationForm.submit();
+        $(button).click(() => {
+            $editTranslationForm
+                .find('*[name=translation_value]')
+                .val(defaultTranslationValue);
+            $editTranslationForm.submit();
+        });
     });
-  });
 
-  let showFlashMessageOnEdit = (form) => {
-    $(form).submit((event) => {
-      event.preventDefault();
+    let showFlashMessageOnEdit = form => {
+        $(form).submit(event => {
+            event.preventDefault();
 
-      let $editTranslationForm = $(event.target);
-      let url = $editTranslationForm.attr('action');
+            let $editTranslationForm = $(event.target);
+            let url = $editTranslationForm.attr('action');
 
-      $.post(url, $editTranslationForm.serialize(), (response) => {
-        let flashMessage;
-        if (response['successful_update']) {
-          flashMessage = $editTranslationForm.find('.alert-info');
+            $.post(url, $editTranslationForm.serialize(), response => {
+                let flashMessage;
+                if (response['successful_update']) {
+                    flashMessage = $editTranslationForm.find('.alert-info');
 
-          // Propagate edition
-          let hash = $editTranslationForm.data('hash');
-          let $editTranslationForms = $('[data-hash=' + hash + ']');
-          let $translationValueFields = $($editTranslationForms.find('textarea'));
-          $translationValueFields.val($editTranslationForm.find('textarea').val());
+                    // Propagate edition
+                    let hash = $editTranslationForm.data('hash');
+                    let $editTranslationForms = $('[data-hash=' + hash + ']');
+                    let $translationValueFields = $(
+                        $editTranslationForms.find('textarea'),
+                    );
+                    $translationValueFields.val(
+                        $editTranslationForm.find('textarea').val(),
+                    );
 
-          // Refresh search index
-          $editTranslationForms.removeAttr('data-jets');
-          search.update();
-        } else {
-          flashMessage = $editTranslationForm.find('.alert-danger');
-        }
+                    // Refresh search index
+                    $editTranslationForms.removeAttr('data-jets');
+                    search.update();
+                } else {
+                    flashMessage = $editTranslationForm.find('.alert-danger');
+                }
 
-        flashMessage.removeClass('hide');
+                flashMessage.removeClass('hide');
 
-        setTimeout(() => {
-          flashMessage.addClass('hide');
-        }, 4000);
-      });
+                setTimeout(() => {
+                    flashMessage.addClass('hide');
+                }, 4000);
+            });
 
-      return false;
+            return false;
+        });
+    };
+
+    $('#jetsContent form, .translation-domain form').each((formIndex, form) => {
+        showFlashMessageOnEdit(form);
     });
-  };
-
-  $('#jetsContent form, .translation-domain form').each((formIndex, form) => {
-    showFlashMessageOnEdit(form);
-  });
 }

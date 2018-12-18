@@ -29,25 +29,35 @@ const $ = window.$;
  * TextWithLengthCounter handles input with length counter UI.
  */
 export default class TextWithLengthCounter {
-  constructor() {
-    $(document).on('input', '.js-text-with-counter-input-group input[type="text"]', (e) => {
-      const $input = $(e.currentTarget);
-      const remainingLength = $input.data('max-length') - $input.val().length;
+    constructor() {
+        $(document).on(
+            'input',
+            '.js-text-with-counter-input-group input[type="text"]',
+            e => {
+                const $input = $(e.currentTarget);
+                const remainingLength =
+                    $input.data('max-length') - $input.val().length;
 
-      $input.closest('.js-text-with-counter-input-group').find('.js-counter-text').text(remainingLength);
-    });
-  }
+                $input
+                    .closest('.js-text-with-counter-input-group')
+                    .find('.js-counter-text')
+                    .text(remainingLength);
+            },
+        );
+    }
 
-  /**
-   * Check/uncheck all boxes in table
-   *
-   * @param {Event} event
-   */
-  handleSelectAll(event) {
-    const $selectAllCheckboxes = $(event.target);
-    const isSelectAllChecked = $selectAllCheckboxes.is(':checked');
+    /**
+     * Check/uncheck all boxes in table
+     *
+     * @param {Event} event
+     */
+    handleSelectAll(event) {
+        const $selectAllCheckboxes = $(event.target);
+        const isSelectAllChecked = $selectAllCheckboxes.is(':checked');
 
-    $selectAllCheckboxes.closest('table').find('tbody input:checkbox').prop('checked', isSelectAllChecked);
-  }
+        $selectAllCheckboxes
+            .closest('table')
+            .find('tbody input:checkbox')
+            .prop('checked', isSelectAllChecked);
+    }
 }
-

@@ -26,68 +26,73 @@
 const $ = window.$;
 
 export default function() {
-  const $defaultArrowWidth = 35;
-  const $arrow = $('.js-arrow');
-  const $tabs = $('.js-tabs');
-  const $navTabs = $('.js-nav-tabs');
+    const $defaultArrowWidth = 35;
+    const $arrow = $('.js-arrow');
+    const $tabs = $('.js-tabs');
+    const $navTabs = $('.js-nav-tabs');
 
-  let $positions;
-  let $moveTo = 0;
-  let $tabWidth = 0;
-  let $navWidth = $defaultArrowWidth;
-  let $widthWithTabs = 0;
+    let $positions;
+    let $moveTo = 0;
+    let $tabWidth = 0;
+    let $navWidth = $defaultArrowWidth;
+    let $widthWithTabs = 0;
 
-  $navTabs.find('li').each((index, item) => {
-    $navWidth += $(item).width();
-  });
+    $navTabs.find('li').each((index, item) => {
+        $navWidth += $(item).width();
+    });
 
-  $navTabs.width($navWidth);
+    $navTabs.width($navWidth);
 
-  $widthWithTabs = $navWidth + ($defaultArrowWidth * 2);
+    $widthWithTabs = $navWidth + $defaultArrowWidth * 2;
 
-  $navTabs.find('[data-toggle="tab"]').on('click', (e) => {
-    if (!$(e.target).hasClass('active')) {
-      $('#form_content > .form-contenttab').removeClass('active');
-    }
-    if ($(e.target).attr('href') === '#step1') {
-      setTimeout(() => {
-        $('#description_short, #tab_description_short .description-tab').addClass('active');
-      }, 100);
-    }
-  });
-
-  $arrow.on('click', (e) => {
-    if ($arrow.is(':visible')) {
-      $tabWidth = $navWidth > $navWidth ? $navWidth - $tabs.width() : $tabs.width();
-      $positions = $navTabs.position();
-
-      $moveTo = '-=0';
-      if ($(e.currentTarget).hasClass('right-arrow')) {
-        if (($tabWidth - $positions.left) < $navWidth) {
-          $moveTo = `-=${$tabWidth}`;
+    $navTabs.find('[data-toggle="tab"]').on('click', e => {
+        if (!$(e.target).hasClass('active')) {
+            $('#form_content > .form-contenttab').removeClass('active');
         }
-      } else {
-        if ($positions.left < $defaultArrowWidth) {
-          $moveTo = `+=${$tabWidth}`;
+        if ($(e.target).attr('href') === '#step1') {
+            setTimeout(() => {
+                $(
+                    '#description_short, #tab_description_short .description-tab',
+                ).addClass('active');
+            }, 100);
         }
-      }
+    });
 
-      $navTabs.animate(
-        {
-          left: $moveTo
-        },
-        400,
-        'easeOutQuad',
-        () => {
-          if ($(e.currentTarget).hasClass('right-arrow')) {
-            $('.left-arrow').addClass('visible');
-            $('.right-arrow').removeClass('visible');
-          } else {
-            $('.right-arrow').addClass('visible');
-            $('.left-arrow').removeClass('visible');
-          }
+    $arrow.on('click', e => {
+        if ($arrow.is(':visible')) {
+            $tabWidth =
+                $navWidth > $navWidth
+                    ? $navWidth - $tabs.width()
+                    : $tabs.width();
+            $positions = $navTabs.position();
+
+            $moveTo = '-=0';
+            if ($(e.currentTarget).hasClass('right-arrow')) {
+                if ($tabWidth - $positions.left < $navWidth) {
+                    $moveTo = `-=${$tabWidth}`;
+                }
+            } else {
+                if ($positions.left < $defaultArrowWidth) {
+                    $moveTo = `+=${$tabWidth}`;
+                }
+            }
+
+            $navTabs.animate(
+                {
+                    left: $moveTo,
+                },
+                400,
+                'easeOutQuad',
+                () => {
+                    if ($(e.currentTarget).hasClass('right-arrow')) {
+                        $('.left-arrow').addClass('visible');
+                        $('.right-arrow').removeClass('visible');
+                    } else {
+                        $('.right-arrow').addClass('visible');
+                        $('.left-arrow').removeClass('visible');
+                    }
+                },
+            );
         }
-      );
-    }
-  });
+    });
 }

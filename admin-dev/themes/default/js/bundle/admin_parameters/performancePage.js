@@ -39,81 +39,113 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
     };
 
     this.getFormValues = function() {
-        var serverIpInput = document.getElementById('form_add_memcache_server_memcache_ip');
-        var serverPortInput = document.getElementById('form_add_memcache_server_memcache_port');
-        var serverWeightInput = document.getElementById('form_add_memcache_server_memcache_weight');
+        var serverIpInput = document.getElementById(
+            'form_add_memcache_server_memcache_ip',
+        );
+        var serverPortInput = document.getElementById(
+            'form_add_memcache_server_memcache_port',
+        );
+        var serverWeightInput = document.getElementById(
+            'form_add_memcache_server_memcache_weight',
+        );
 
         return {
-            'server_ip': serverIpInput.value,
-            'server_port': serverPortInput.value,
-            'server_weight': serverWeightInput.value,
+            server_ip: serverIpInput.value,
+            server_port: serverPortInput.value,
+            server_weight: serverWeightInput.value,
         };
     };
 
     this.createRow = function(params) {
         var serversTable = document.getElementById('servers-table');
         var newRow = document.createElement('tr');
-        newRow.setAttribute('id', 'row_'+ params.id);
+        newRow.setAttribute('id', 'row_' + params.id);
         newRow.innerHTML =
-            '<td>'+ params.id +'</td>\n' +
-            '<td>'+ params.server_ip +'</td>\n' +
-            '<td>'+ params.server_port +'</td>\n' +
-            '<td>'+ params.server_weight +'</td>\n' +
+            '<td>' +
+            params.id +
+            '</td>\n' +
+            '<td>' +
+            params.server_ip +
+            '</td>\n' +
+            '<td>' +
+            params.server_port +
+            '</td>\n' +
+            '<td>' +
+            params.server_weight +
+            '</td>\n' +
             '<td>\n' +
-            '    <a class="btn btn-default" href="#" onclick="app.removeServer('+ params.id +');"><i class="material-icons">remove_circle</i> Remove</a>\n' +
+            '    <a class="btn btn-default" href="#" onclick="app.removeServer(' +
+            params.id +
+            ');"><i class="material-icons">remove_circle</i> Remove</a>\n' +
             '</td>\n';
         serversTable.appendChild(newRow);
     };
 
     this.addServer = function() {
         var app = this;
-        this.send(this.getAddServerUrl(), 'POST', this.getFormValues(), function(results) {
-            if (!results.hasOwnProperty('error')) {
-                app.createRow(results);
-            }
-        });
+        this.send(
+            this.getAddServerUrl(),
+            'POST',
+            this.getFormValues(),
+            function(results) {
+                if (!results.hasOwnProperty('error')) {
+                    app.createRow(results);
+                }
+            },
+        );
     };
 
     this.removeServer = function(serverId, removeMsg) {
         var removeOk = confirm(removeMsg);
 
         if (removeOk) {
-            this.send(this.getRemoveServerlUrl(), 'DELETE', {'server_id': serverId}, function(results) {
-                if (results === undefined) {
-                    var row = document.getElementById('row_'+serverId);
-                    row.parentNode.removeChild(row);
-                }
-            });
+            this.send(
+                this.getRemoveServerlUrl(),
+                'DELETE',
+                { server_id: serverId },
+                function(results) {
+                    if (results === undefined) {
+                        var row = document.getElementById('row_' + serverId);
+                        row.parentNode.removeChild(row);
+                    }
+                },
+            );
         }
-
     };
 
     this.testServer = function() {
         var app = this;
 
-        this.send(this.getTestServerUrl(), 'GET', this.getFormValues(), function(results) {
-            if (results.hasOwnProperty('error') || results.test === false) {
-                app.addClass('is-invalid');
-                return;
-            }
+        this.send(
+            this.getTestServerUrl(),
+            'GET',
+            this.getFormValues(),
+            function(results) {
+                if (results.hasOwnProperty('error') || results.test === false) {
+                    app.addClass('is-invalid');
+                    return;
+                }
 
-            app.addClass('is-valid');
-        });
+                app.addClass('is-valid');
+            },
+        );
     };
 
     this.addClass = function(className) {
-      var serverFormInputs = document.querySelectorAll('#server-form input[type=text]');
-      for (var i = 0; i < serverFormInputs.length; i++) {
-        serverFormInputs[i].className = 'form-control '+ className;
-      }
-    }
+        var serverFormInputs = document.querySelectorAll(
+            '#server-form input[type=text]',
+        );
+        for (var i = 0; i < serverFormInputs.length; i++) {
+            serverFormInputs[i].className = 'form-control ' + className;
+        }
+    };
 
     /* global $ */
     this.send = function(url, method, params, callback) {
         return $.ajax({
             url: url,
             method: method,
-            data: params
+            data: params,
         }).done(callback);
     };
 }

@@ -29,39 +29,41 @@ const $ = window.$;
  * Class SubmitRowActionExtension handles submitting of row action
  */
 export default class SubmitRowActionExtension {
-  /**
-   * Extend grid
-   *
-   * @param {Grid} grid
-   */
-  extend(grid) {
-    grid.getContainer().on('click', '.js-submit-row-action', (event) => {
-      event.preventDefault();
+    /**
+     * Extend grid
+     *
+     * @param {Grid} grid
+     */
+    extend(grid) {
+        grid.getContainer().on('click', '.js-submit-row-action', event => {
+            event.preventDefault();
 
-      const $button = $(event.currentTarget);
-      const confirmMessage = $button.data('confirm-message');
+            const $button = $(event.currentTarget);
+            const confirmMessage = $button.data('confirm-message');
 
-      if (confirmMessage.length && !confirm(confirmMessage)) {
-        return;
-      }
+            if (confirmMessage.length && !confirm(confirmMessage)) {
+                return;
+            }
 
-      const method = $button.data('method');
-      const isGetOrPostMethod = ['GET', 'POST'].includes(method);
+            const method = $button.data('method');
+            const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
-      const $form = $('<form>', {
-        'action': $button.data('url'),
-        'method': isGetOrPostMethod ? method : 'POST',
-      }).appendTo('body');
+            const $form = $('<form>', {
+                action: $button.data('url'),
+                method: isGetOrPostMethod ? method : 'POST',
+            }).appendTo('body');
 
-      if (!isGetOrPostMethod) {
-        $form.append($('<input>', {
-          'type': '_hidden',
-          'name': '_method',
-          'value': method
-        }));
-      }
+            if (!isGetOrPostMethod) {
+                $form.append(
+                    $('<input>', {
+                        type: '_hidden',
+                        name: '_method',
+                        value: method,
+                    }),
+                );
+            }
 
-      $form.submit();
-    });
-  }
+            $form.submit();
+        });
+    }
 }

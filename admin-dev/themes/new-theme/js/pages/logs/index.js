@@ -33,11 +33,11 @@ import SubmitGridActionExtension from '../../components/grid/extension/submit-gr
 const $ = global.$;
 
 $(() => {
-  const grid = new Grid('logs');
+    const grid = new Grid('logs');
 
-  grid.addExtension(new ReloadListActionExtension());
-  grid.addExtension(new ExportToSqlManagerExtension());
-  grid.addExtension(new FiltersResetExtension());
-  grid.addExtension(new SortingExtension());
-  grid.addExtension(new SubmitGridActionExtension());
+    grid.addExtension(new ReloadListActionExtension());
+    grid.addExtension(new ExportToSqlManagerExtension());
+    grid.addExtension(new FiltersResetExtension());
+    grid.addExtension(new SortingExtension());
+    grid.addExtension(new SubmitGridActionExtension());
 });

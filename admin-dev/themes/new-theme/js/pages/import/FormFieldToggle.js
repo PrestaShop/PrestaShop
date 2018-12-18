@@ -36,168 +36,170 @@ const entityAlias = 7;
 const entityStoreContacts = 8;
 
 export default class FormFieldToggle {
-  constructor() {
-    $('.js-entity-select').on('change', () => this.toggleForm());
+    constructor() {
+        $('.js-entity-select').on('change', () => this.toggleForm());
 
-    this.toggleForm();
-  }
-
-  toggleForm() {
-    let selectedOption = $('#entity').find('option:selected');
-    let selectedEntity = parseInt(selectedOption.val());
-    let entityName = selectedOption.text().toLowerCase();
-
-    this.toggleEntityAlert(selectedEntity);
-    this.toggleFields(selectedEntity, entityName);
-    this.loadAvailableFields(selectedEntity);
-  }
-
-  /**
-   * Toggle alert warning for selected import entity
-   *
-   * @param {int} selectedEntity
-   */
-  toggleEntityAlert(selectedEntity) {
-    let $alert = $('.js-entity-alert');
-
-    if ([entityCategories, entityProducts].includes(selectedEntity)) {
-      $alert.show();
-    } else {
-      $alert.hide();
-    }
-  }
-
-  /**
-   * Toggle available options for selected entity
-   *
-   * @param {int} selectedEntity
-   * @param {string} entityName
-   */
-  toggleFields(selectedEntity, entityName) {
-    const $truncateFormGroup = $('.js-truncate-form-group');
-    const $matchRefFormGroup = $('.js-match-ref-form-group');
-    const $regenerateFormGroup = $('.js-regenerate-form-group');
-    const $forceIdsFormGroup = $('.js-force-ids-form-group');
-    const $entityNamePlaceholder = $('.js-entity-name');
-
-    if (entityStoreContacts === selectedEntity) {
-      $truncateFormGroup.hide();
-    } else {
-      $truncateFormGroup.show();
+        this.toggleForm();
     }
 
-    if ([entityProducts, entityCombinations].includes(selectedEntity)) {
-      $matchRefFormGroup.show();
-    } else {
-      $matchRefFormGroup.hide();
+    toggleForm() {
+        let selectedOption = $('#entity').find('option:selected');
+        let selectedEntity = parseInt(selectedOption.val());
+        let entityName = selectedOption.text().toLowerCase();
+
+        this.toggleEntityAlert(selectedEntity);
+        this.toggleFields(selectedEntity, entityName);
+        this.loadAvailableFields(selectedEntity);
     }
 
-    if ([
-      entityCategories,
-      entityProducts,
-      entityBrands,
-      entitySuppliers,
-      entityStoreContacts
-    ].includes(selectedEntity)
-    ) {
-      $regenerateFormGroup.show();
-    } else {
-      $regenerateFormGroup.hide();
+    /**
+     * Toggle alert warning for selected import entity
+     *
+     * @param {int} selectedEntity
+     */
+    toggleEntityAlert(selectedEntity) {
+        let $alert = $('.js-entity-alert');
+
+        if ([entityCategories, entityProducts].includes(selectedEntity)) {
+            $alert.show();
+        } else {
+            $alert.hide();
+        }
     }
 
-    if ([
-      entityCategories,
-      entityProducts,
-      entityCustomers,
-      entityAddresses,
-      entityBrands,
-      entitySuppliers,
-      entityStoreContacts,
-      entityAlias
-    ].includes(selectedEntity)
-    ) {
-      $forceIdsFormGroup.show();
-    } else {
-      $forceIdsFormGroup.hide();
+    /**
+     * Toggle available options for selected entity
+     *
+     * @param {int} selectedEntity
+     * @param {string} entityName
+     */
+    toggleFields(selectedEntity, entityName) {
+        const $truncateFormGroup = $('.js-truncate-form-group');
+        const $matchRefFormGroup = $('.js-match-ref-form-group');
+        const $regenerateFormGroup = $('.js-regenerate-form-group');
+        const $forceIdsFormGroup = $('.js-force-ids-form-group');
+        const $entityNamePlaceholder = $('.js-entity-name');
+
+        if (entityStoreContacts === selectedEntity) {
+            $truncateFormGroup.hide();
+        } else {
+            $truncateFormGroup.show();
+        }
+
+        if ([entityProducts, entityCombinations].includes(selectedEntity)) {
+            $matchRefFormGroup.show();
+        } else {
+            $matchRefFormGroup.hide();
+        }
+
+        if (
+            [
+                entityCategories,
+                entityProducts,
+                entityBrands,
+                entitySuppliers,
+                entityStoreContacts,
+            ].includes(selectedEntity)
+        ) {
+            $regenerateFormGroup.show();
+        } else {
+            $regenerateFormGroup.hide();
+        }
+
+        if (
+            [
+                entityCategories,
+                entityProducts,
+                entityCustomers,
+                entityAddresses,
+                entityBrands,
+                entitySuppliers,
+                entityStoreContacts,
+                entityAlias,
+            ].includes(selectedEntity)
+        ) {
+            $forceIdsFormGroup.show();
+        } else {
+            $forceIdsFormGroup.hide();
+        }
+
+        $entityNamePlaceholder.html(entityName);
     }
 
-    $entityNamePlaceholder.html(entityName);
-  }
+    /**
+     * Load available fields for given entity
+     *
+     * @param {int} entity
+     */
+    loadAvailableFields(entity) {
+        const $availableFields = $('.js-available-fields');
 
-  /**
-   * Load available fields for given entity
-   *
-   * @param {int} entity
-   */
-  loadAvailableFields(entity) {
-    const $availableFields = $('.js-available-fields');
+        $.ajax({
+            url: $availableFields.data('url'),
+            data: {
+                entity: entity,
+            },
+            dataType: 'json',
+        }).then(response => {
+            this._removeAvailableFields($availableFields);
 
-    $.ajax({
-      url: $availableFields.data('url'),
-      data: {
-        entity: entity
-      },
-      dataType: 'json',
-    }).then(response => {
-      this._removeAvailableFields($availableFields);
+            for (let i = 0; i < response.length; i++) {
+                this._appendAvailableField(
+                    $availableFields,
+                    response[i].label + (response[i].required ? '*' : ''),
+                    response[i].description,
+                );
+            }
 
-      for (let i = 0; i < response.length; i++) {
-        this._appendAvailableField(
-          $availableFields,
-          response[i].label + (response[i].required ? '*' : ''),
-          response[i].description
-        );
-      }
-
-      $availableFields.find('[data-toggle="popover"]').popover();
-    });
-  }
-
-  /**
-   * Remove available fields content from given container.
-   *
-   * @param {jQuery} $container
-   * @private
-   */
-  _removeAvailableFields($container) {
-    $container.find('[data-toggle="popover"]').popover('hide');
-    $container.empty();
-  }
-
-  /**
-   * Append a help box to given field.
-   *
-   * @param {jQuery} $field
-   * @param {String} helpBoxContent
-   * @private
-   */
-  _appendHelpBox($field, helpBoxContent) {
-    let $helpBox = $('.js-available-field-popover-template').clone();
-
-    $helpBox.attr('data-content', helpBoxContent);
-    $helpBox.removeClass('js-available-field-popover-template d-none');
-    $field.append($helpBox);
-  }
-
-  /**
-   * Append available field to given container.
-   *
-   * @param {jQuery} $appendTo field will be appended to this container.
-   * @param {String} fieldText
-   * @param {String} helpBoxContent
-   * @private
-   */
-  _appendAvailableField($appendTo, fieldText, helpBoxContent) {
-    let $field = $('.js-available-field-template').clone();
-
-    $field.text(fieldText);
-
-    if (helpBoxContent) {
-      // Append help box next to the field
-      this._appendHelpBox($field, helpBoxContent);
+            $availableFields.find('[data-toggle="popover"]').popover();
+        });
     }
 
-    $field.removeClass('js-available-field-template d-none');
-    $field.appendTo($appendTo);
-  }
+    /**
+     * Remove available fields content from given container.
+     *
+     * @param {jQuery} $container
+     * @private
+     */
+    _removeAvailableFields($container) {
+        $container.find('[data-toggle="popover"]').popover('hide');
+        $container.empty();
+    }
+
+    /**
+     * Append a help box to given field.
+     *
+     * @param {jQuery} $field
+     * @param {String} helpBoxContent
+     * @private
+     */
+    _appendHelpBox($field, helpBoxContent) {
+        let $helpBox = $('.js-available-field-popover-template').clone();
+
+        $helpBox.attr('data-content', helpBoxContent);
+        $helpBox.removeClass('js-available-field-popover-template d-none');
+        $field.append($helpBox);
+    }
+
+    /**
+     * Append available field to given container.
+     *
+     * @param {jQuery} $appendTo field will be appended to this container.
+     * @param {String} fieldText
+     * @param {String} helpBoxContent
+     * @private
+     */
+    _appendAvailableField($appendTo, fieldText, helpBoxContent) {
+        let $field = $('.js-available-field-template').clone();
+
+        $field.text(fieldText);
+
+        if (helpBoxContent) {
+            // Append help box next to the field
+            this._appendHelpBox($field, helpBoxContent);
+        }
+
+        $field.removeClass('js-available-field-template d-none');
+        $field.appendTo($appendTo);
+    }
 }

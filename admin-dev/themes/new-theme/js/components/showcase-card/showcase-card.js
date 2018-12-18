@@ -29,32 +29,31 @@ const $ = window.$;
  * Class ShowcaseCard is responsible for handling events related with showcase card.
  */
 export default class ShowcaseCard {
+    /**
+     * Showcase card id.
+     *
+     * @param {string} id
+     */
+    constructor(id) {
+        this.id = id;
+        this.$container = $('#' + this.id);
+    }
 
-  /**
-   * Showcase card id.
-   *
-   * @param {string} id
-   */
-  constructor(id) {
-    this.id = id;
-    this.$container = $('#' + this.id);
-  }
+    /**
+     * Get showcase card container.
+     *
+     * @returns {jQuery}
+     */
+    getContainer() {
+        return this.$container;
+    }
 
-  /**
-   * Get showcase card container.
-   *
-   * @returns {jQuery}
-   */
-  getContainer() {
-    return this.$container;
-  }
-
-  /**
-   * Extend showcase card with external extensions.
-   *
-   * @param {object} extension
-   */
-  addExtension(extension) {
-    extension.extend(this);
-  }
+    /**
+     * Extend showcase card with external extensions.
+     *
+     * @param {object} extension
+     */
+    addExtension(extension) {
+        extension.extend(this);
+    }
 }

@@ -29,10 +29,12 @@ const $ = window.$;
  * Manages Helper cards on page.
  */
 export default class HelperCard {
-  constructor() {
-    $(document).on('click', '.js-close-helper-card', (event) => {
-      console.log($(event.target));
-      $(event.currentTarget).closest('.helper-card').remove();
-    });
-  }
+    constructor() {
+        $(document).on('click', '.js-close-helper-card', event => {
+            console.log($(event.target));
+            $(event.currentTarget)
+                .closest('.helper-card')
+                .remove();
+        });
+    }
 }

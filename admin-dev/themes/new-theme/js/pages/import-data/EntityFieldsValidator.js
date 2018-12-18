@@ -26,63 +26,75 @@
 const $ = window.$;
 
 export default class EntityFieldsValidator {
-  /**
-   * Validates entity fields
-   *
-   * @returns {boolean}
-   */
-  static validate() {
-    $('.js-validation-error').addClass('d-none');
+    /**
+     * Validates entity fields
+     *
+     * @returns {boolean}
+     */
+    static validate() {
+        $('.js-validation-error').addClass('d-none');
 
-    return this._checkDuplicateSelectedValues() && this._checkRequiredFields();
-  }
-
-  /**
-   * Checks if there are no duplicate selected values.
-   *
-   * @returns {boolean}
-   * @private
-   */
-  static _checkDuplicateSelectedValues() {
-    const uniqueFields = [];
-    let valid = true;
-
-    $('.js-entity-field select').each(function () {
-      let value = $(this).val();
-
-      if (value === 'no') {
-        return;
-      }
-
-      if ($.inArray(value, uniqueFields) !== -1) {
-        valid = false;
-        $('.js-duplicate-columns-warning').removeClass('d-none');
-        return;
-      }
-
-      uniqueFields.push(value);
-    });
-
-    return valid;
-  }
-
-  /**
-   * Checks if all required fields are selected.
-   *
-   * @returns {boolean}
-   * @private
-   */
-  static _checkRequiredFields() {
-    let requiredImportFields = $('.js-import-data-table').data('required-fields');
-
-    for (let key in requiredImportFields) {
-      if (0 === $(`option[value="${requiredImportFields[key]}"]:selected`).length) {
-        $('.js-missing-column-warning').removeClass('d-none');
-        $('.js-missing-column').text($(`option[value="${requiredImportFields[key]}"]:first`).text());
-
-        return false;
-      }
+        return (
+            this._checkDuplicateSelectedValues() && this._checkRequiredFields()
+        );
     }
-    return true;
-  }
+
+    /**
+     * Checks if there are no duplicate selected values.
+     *
+     * @returns {boolean}
+     * @private
+     */
+    static _checkDuplicateSelectedValues() {
+        const uniqueFields = [];
+        let valid = true;
+
+        $('.js-entity-field select').each(function() {
+            let value = $(this).val();
+
+            if (value === 'no') {
+                return;
+            }
+
+            if ($.inArray(value, uniqueFields) !== -1) {
+                valid = false;
+                $('.js-duplicate-columns-warning').removeClass('d-none');
+                return;
+            }
+
+            uniqueFields.push(value);
+        });
+
+        return valid;
+    }
+
+    /**
+     * Checks if all required fields are selected.
+     *
+     * @returns {boolean}
+     * @private
+     */
+    static _checkRequiredFields() {
+        let requiredImportFields = $('.js-import-data-table').data(
+            'required-fields',
+        );
+
+        for (let key in requiredImportFields) {
+            if (
+                0 ===
+                $(`option[value="${requiredImportFields[key]}"]:selected`)
+                    .length
+            ) {
+                $('.js-missing-column-warning').removeClass('d-none');
+                $('.js-missing-column').text(
+                    $(
+                        `option[value="${requiredImportFields[key]}"]:first`,
+                    ).text(),
+                );
+
+                return false;
+            }
+        }
+        return true;
+    }
 }

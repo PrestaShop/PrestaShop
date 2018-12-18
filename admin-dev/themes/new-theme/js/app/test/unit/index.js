@@ -7,5 +7,9 @@ Vue.config.productionTip = false;
 var testsContext = require.context('./specs', true, /\.spec$/);
 testsContext.keys().forEach(testsContext);
 
-const srcContext = require.context('../../pages/', true, /^\.\/(?!main(\.js)?$)/);
+const srcContext = require.context(
+    '../../pages/',
+    true,
+    /^\.\/(?!main(\.js)?$)/,
+);
 srcContext.keys().forEach(srcContext);

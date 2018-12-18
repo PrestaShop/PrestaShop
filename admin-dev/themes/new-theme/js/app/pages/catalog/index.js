@@ -29,5 +29,5 @@ import TableSorting from '../../utils/table-sorting';
 const $ = global.$;
 
 $(() => {
-  new TableSorting($('table.table')).attach();
+    new TableSorting($('table.table')).attach();
 });

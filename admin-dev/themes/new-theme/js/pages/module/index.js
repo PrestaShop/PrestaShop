@@ -30,7 +30,7 @@ import ModuleLoader from './loader';
 const $ = window.$;
 
 $(() => {
-  const moduleCardController = new ModuleCard();
-  new ModuleLoader();
-  new AdminModuleController(moduleCardController);
+    const moduleCardController = new ModuleCard();
+    new ModuleLoader();
+    new AdminModuleController(moduleCardController);
 });

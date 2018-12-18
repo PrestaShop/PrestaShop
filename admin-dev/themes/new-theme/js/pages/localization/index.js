@@ -26,8 +26,8 @@
 const $ = window.$;
 
 $(() => {
-  // show warning message when currency is changed
-  $('#form_configuration_default_currency').on('change', function () {
-    alert($(this).data('warning-message'));
-  });
+    // show warning message when currency is changed
+    $('#form_configuration_default_currency').on('change', function() {
+        alert($(this).data('warning-message'));
+    });
 });

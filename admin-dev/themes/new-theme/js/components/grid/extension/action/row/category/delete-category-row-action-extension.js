@@ -29,45 +29,62 @@ const $ = window.$;
  * Class CategoryDeleteRowActionExtension handles submitting of row action
  */
 export default class DeleteCategoryRowActionExtension {
+    constructor() {
+        return {
+            extend: grid => this.extend(grid),
+        };
+    }
 
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
-  }
+    /**
+     * Extend grid
+     *
+     * @param {Grid} grid
+     */
+    extend(grid) {
+        grid.getContainer().on(
+            'click',
+            '.js-delete-category-row-action',
+            event => {
+                event.preventDefault();
 
-  /**
-   * Extend grid
-   *
-   * @param {Grid} grid
-   */
-  extend(grid) {
-    grid.getContainer().on('click', '.js-delete-category-row-action', (event) => {
-      event.preventDefault();
+                const $deleteCategoriesModal = $(
+                    '#' + grid.getId() + '_grid_delete_categories_modal',
+                );
+                $deleteCategoriesModal.modal('show');
 
-      const $deleteCategoriesModal = $('#' + grid.getId() + '_grid_delete_categories_modal');
-      $deleteCategoriesModal.modal('show');
+                $deleteCategoriesModal.on(
+                    'click',
+                    '.js-submit-delete-categories',
+                    () => {
+                        const $button = $(event.currentTarget);
+                        const categoryId = $button.data('category-id');
 
-      $deleteCategoriesModal.on('click', '.js-submit-delete-categories', () => {
-        const $button = $(event.currentTarget);
-        const categoryId = $button.data('category-id');
+                        const $categoriesToDeleteInputBlock = $(
+                            '#delete_categories_categories_to_delete',
+                        );
 
-        const $categoriesToDeleteInputBlock = $('#delete_categories_categories_to_delete');
+                        const categoryInput = $categoriesToDeleteInputBlock
+                            .data('prototype')
+                            .replace(
+                                /__name__/g,
+                                $categoriesToDeleteInputBlock.children().length,
+                            );
 
-        const categoryInput = $categoriesToDeleteInputBlock
-          .data('prototype')
-          .replace(/__name__/g, $categoriesToDeleteInputBlock.children().length);
+                        const $item = $($.parseHTML(categoryInput)[0]);
+                        $item.val(categoryId);
 
-        const $item = $($.parseHTML(categoryInput)[0]);
-        $item.val(categoryId);
+                        $categoriesToDeleteInputBlock.append($item);
 
-        $categoriesToDeleteInputBlock.append($item);
+                        const $form = $deleteCategoriesModal.find('form');
 
-        const $form = $deleteCategoriesModal.find('form');
-
-        $form.attr('action', $button.data('category-delete-url'));
-        $form.submit();
-      });
-    });
-  }
+                        $form.attr(
+                            'action',
+                            $button.data('category-delete-url'),
+                        );
+                        $form.submit();
+                    },
+                );
+            },
+        );
+    }
 }

@@ -26,55 +26,63 @@
 const $ = window.$;
 
 class StockManagementOptionHandler {
-  constructor() {
-    this.handle();
+    constructor() {
+        this.handle();
 
-    $('input[name="form[stock][stock_management]"]').on('change', () => this.handle());
-  }
-
-  handle() {
-    const stockManagementVal = $('input[name="form[stock][stock_management]"]:checked').val();
-    const isStockManagementEnabled = parseInt(stockManagementVal);
-
-    this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
-    this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
-  }
-
-  /**
-   * If stock managament is disabled
-   * then 'Allow ordering of out-of-stock products' option must be Yes and disabled
-   * otherwise it should be enabled
-   *
-   * @param {int} isStockManagementEnabled
-   */
-  handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
-    const allowOrderingOosRadios = $('input[name="form[stock][allow_ordering_oos]"]');
-
-    if (isStockManagementEnabled) {
-        allowOrderingOosRadios.removeAttr('disabled');
-    } else {
-        allowOrderingOosRadios.val([1]);
-        allowOrderingOosRadios.attr('disabled', 'disabled');
+        $('input[name="form[stock][stock_management]"]').on('change', () =>
+            this.handle(),
+        );
     }
-  }
 
-  /**
-   * If stock managament is disabled
-   * then 'Display available quantities on the product page' option must be No and disabled
-   * otherwise it should be enabled
-   *
-   * @param {int} isStockManagementEnabled
-   */
-  handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
-    const displayQuantitiesRadio = $('input[name="form[page][display_quantities]"]');
+    handle() {
+        const stockManagementVal = $(
+            'input[name="form[stock][stock_management]"]:checked',
+        ).val();
+        const isStockManagementEnabled = parseInt(stockManagementVal);
 
-    if (isStockManagementEnabled) {
-        displayQuantitiesRadio.removeAttr('disabled');
-    } else {
-        displayQuantitiesRadio.val([0]);
-        displayQuantitiesRadio.attr('disabled', 'disabled');
+        this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
+        this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
     }
-  }
+
+    /**
+     * If stock managament is disabled
+     * then 'Allow ordering of out-of-stock products' option must be Yes and disabled
+     * otherwise it should be enabled
+     *
+     * @param {int} isStockManagementEnabled
+     */
+    handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
+        const allowOrderingOosRadios = $(
+            'input[name="form[stock][allow_ordering_oos]"]',
+        );
+
+        if (isStockManagementEnabled) {
+            allowOrderingOosRadios.removeAttr('disabled');
+        } else {
+            allowOrderingOosRadios.val([1]);
+            allowOrderingOosRadios.attr('disabled', 'disabled');
+        }
+    }
+
+    /**
+     * If stock managament is disabled
+     * then 'Display available quantities on the product page' option must be No and disabled
+     * otherwise it should be enabled
+     *
+     * @param {int} isStockManagementEnabled
+     */
+    handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
+        const displayQuantitiesRadio = $(
+            'input[name="form[page][display_quantities]"]',
+        );
+
+        if (isStockManagementEnabled) {
+            displayQuantitiesRadio.removeAttr('disabled');
+        } else {
+            displayQuantitiesRadio.val([0]);
+            displayQuantitiesRadio.attr('disabled', 'disabled');
+        }
+    }
 }
 
 export default StockManagementOptionHandler;

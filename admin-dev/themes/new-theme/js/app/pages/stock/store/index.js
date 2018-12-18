@@ -33,63 +33,63 @@ Vue.use(Vuex);
 // root state object.
 
 const state = {
-  order: '',
-  pageIndex: 1,
-  totalPages: 0,
-  productsPerPage: 30,
-  products: [],
-  hasQty: false,
-  keywords: [],
-  suppliers: {
-    data: [],
-  },
-  categories: [],
-  categoryList: [],
-  movements: [],
-  employees: [],
-  movementsTypes: [],
-  translations: {},
-  isLoading: false,
-  isReady: false,
-  editBulkUrl: '',
-  bulkEditQty: null,
-  productsToUpdate: [],
-  selectedProducts: [],
+    order: '',
+    pageIndex: 1,
+    totalPages: 0,
+    productsPerPage: 30,
+    products: [],
+    hasQty: false,
+    keywords: [],
+    suppliers: {
+        data: [],
+    },
+    categories: [],
+    categoryList: [],
+    movements: [],
+    employees: [],
+    movementsTypes: [],
+    translations: {},
+    isLoading: false,
+    isReady: false,
+    editBulkUrl: '',
+    bulkEditQty: null,
+    productsToUpdate: [],
+    selectedProducts: [],
 };
 
 // getters are functions
 const getters = {
-  suppliers(rootState) {
-    function convert(suppliers) {
-      suppliers.forEach((supplier) => {
-        supplier.id = supplier.supplier_id;
-      });
-      return suppliers;
-    }
-    return convert(rootState.suppliers.data);
-  },
-  categories(rootState) {
-    function convert(categories) {
-      categories.forEach((category) => {
-        category.children = _.values(category.children);
-        rootState.categoryList.push(category);
-        category.id = `${category.id_parent}-${category.id_category}`;
-        convert(category.children);
-      });
-      return categories;
-    }
-    return convert(rootState.categories);
-  },
-  selectedProductsLng(rootState) {
-    return rootState.selectedProducts.length;
-  },
+    suppliers(rootState) {
+        function convert(suppliers) {
+            suppliers.forEach(supplier => {
+                supplier.id = supplier.supplier_id;
+            });
+            return suppliers;
+        }
+        return convert(rootState.suppliers.data);
+    },
+    categories(rootState) {
+        function convert(categories) {
+            categories.forEach(category => {
+                category.children = _.values(category.children);
+                rootState.categoryList.push(category);
+                category.id = `${category.id_parent}-${category.id_category}`;
+                convert(category.children);
+            });
+            return categories;
+        }
+        return convert(rootState.categories);
+    },
+    selectedProductsLng(rootState) {
+        return rootState.selectedProducts.length;
+    },
 };
 
 // A Vuex instance is created by combining the state, mutations, actions,
 // and getters.
 export default new Vuex.Store({
-  state,
-  getters,
-  actions,
-  mutations,
+    state,
+    getters,
+    actions,
+    mutations,
 });

@@ -28,5 +28,5 @@ import SpecificPriceFormHandler from './specific-price-form-handler';
 const $ = window.$;
 
 $(() => {
-  new SpecificPriceFormHandler();
+    new SpecificPriceFormHandler();
 });

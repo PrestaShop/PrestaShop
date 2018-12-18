@@ -29,13 +29,13 @@ import Overview from 'app/pages/translations/components/app';
 Vue.use(VueRouter);
 
 export default new VueRouter({
-  mode: 'history',
-  base: `${window.data.baseUrl}/translations`,
-  routes: [
-    {
-      path: '/',
-      name: 'overview',
-      component: Overview,
-    },
-  ],
+    mode: 'history',
+    base: `${window.data.baseUrl}/translations`,
+    routes: [
+        {
+            path: '/',
+            name: 'overview',
+            component: Overview,
+        },
+    ],
 });

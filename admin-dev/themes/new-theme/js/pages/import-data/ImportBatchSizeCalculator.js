@@ -29,64 +29,71 @@
  * the import should handle in one batch.
  */
 export default class ImportBatchSizeCalculator {
-  constructor() {
-    // Target execution time in milliseconds.
-    this._targetExecutionTime = 5000;
+    constructor() {
+        // Target execution time in milliseconds.
+        this._targetExecutionTime = 5000;
 
-    // Maximum batch size increase multiplier.
-    this._maxAcceleration = 4;
+        // Maximum batch size increase multiplier.
+        this._maxAcceleration = 4;
 
-    // Minimum and maximum import batch sizes.
-    this._minBatchSize = 5;
-    this._maxBatchSize = 100;
-  }
-
-  /**
-   * Marks the start of the import operation.
-   * Must be executed before starting the import,
-   * to be able to calculate the import batch size later on.
-   */
-  markImportStart() {
-    this._importStartTime = new Date().getTime();
-  }
-
-  /**
-   * Marks the end of the import operation.
-   * Must be executed after the import operation finishes,
-   * to be able to calculate the import batch size later on.
-   */
-  markImportEnd() {
-    this._actualExecutionTime = new Date().getTime() - this._importStartTime;
-  }
-
-  /**
-   * Calculates how much the import execution time can be increased to still be acceptable.
-   *
-   * @returns {number}
-   * @private
-   */
-  _calculateAcceleration() {
-    return Math.min(this._maxAcceleration, this._targetExecutionTime / this._actualExecutionTime);
-  }
-
-  /**
-   * Calculates the recommended import batch size.
-   *
-   * @param {number} currentBatchSize current import batch size
-   * @returns {number} recommended import batch size
-   */
-  calculateBatchSize(currentBatchSize) {
-    if (!this._importStartTime) {
-      throw 'Import start is not marked.';
+        // Minimum and maximum import batch sizes.
+        this._minBatchSize = 5;
+        this._maxBatchSize = 100;
     }
 
-    if (!this._actualExecutionTime) {
-      throw 'Import end is not marked.';
+    /**
+     * Marks the start of the import operation.
+     * Must be executed before starting the import,
+     * to be able to calculate the import batch size later on.
+     */
+    markImportStart() {
+        this._importStartTime = new Date().getTime();
     }
 
-    return Math.min(
-      this._maxBatchSize,
-      Math.max(this._minBatchSize, Math.floor(currentBatchSize * this._calculateAcceleration()))
-    );
-  }
+    /**
+     * Marks the end of the import operation.
+     * Must be executed after the import operation finishes,
+     * to be able to calculate the import batch size later on.
+     */
+    markImportEnd() {
+        this._actualExecutionTime =
+            new Date().getTime() - this._importStartTime;
+    }
+
+    /**
+     * Calculates how much the import execution time can be increased to still be acceptable.
+     *
+     * @returns {number}
+     * @private
+     */
+    _calculateAcceleration() {
+        return Math.min(
+            this._maxAcceleration,
+            this._targetExecutionTime / this._actualExecutionTime,
+        );
+    }
+
+    /**
+     * Calculates the recommended import batch size.
+     *
+     * @param {number} currentBatchSize current import batch size
+     * @returns {number} recommended import batch size
+     */
+    calculateBatchSize(currentBatchSize) {
+        if (!this._importStartTime) {
+            throw 'Import start is not marked.';
+        }
+
+        if (!this._actualExecutionTime) {
+            throw 'Import end is not marked.';
+        }
+
+        return Math.min(
+            this._maxBatchSize,
+            Math.max(
+                this._minBatchSize,
+                Math.floor(currentBatchSize * this._calculateAcceleration()),
+            ),
+        );
+    }
 }

@@ -6,105 +6,109 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
++(function($) {
+    'use strict';
 
-+function ($) {
-  'use strict';
+    // POPOVER PUBLIC CLASS DEFINITION
+    // ===============================
 
-  // POPOVER PUBLIC CLASS DEFINITION
-  // ===============================
+    var Popover = function(element, options) {
+        this.init('popover', element, options);
+    };
 
-  var Popover = function (element, options) {
-    this.init('popover', element, options)
-  }
+    if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js');
 
-  if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js')
+    Popover.DEFAULTS = $.extend({}, $.fn.tooltip.Constructor.DEFAULTS, {
+        placement: 'right',
+        trigger: 'click',
+        content: '',
+        template:
+            '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+    });
 
-  Popover.DEFAULTS = $.extend({}, $.fn.tooltip.Constructor.DEFAULTS, {
-    placement: 'right',
-    trigger: 'click',
-    content: '',
-    template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-  })
+    // NOTE: POPOVER EXTENDS tooltip.js
+    // ================================
 
+    Popover.prototype = $.extend({}, $.fn.tooltip.Constructor.prototype);
 
-  // NOTE: POPOVER EXTENDS tooltip.js
-  // ================================
+    Popover.prototype.constructor = Popover;
 
-  Popover.prototype = $.extend({}, $.fn.tooltip.Constructor.prototype)
+    Popover.prototype.getDefaults = function() {
+        return Popover.DEFAULTS;
+    };
 
-  Popover.prototype.constructor = Popover
+    Popover.prototype.setContent = function() {
+        var $tip = this.tip();
+        var title = this.getTitle();
+        var content = this.getContent();
 
-  Popover.prototype.getDefaults = function () {
-    return Popover.DEFAULTS
-  }
+        $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title);
+        $tip.find('.popover-content')
+            .empty() // we use append for html objects to maintain js events
+            [
+                this.options.html
+                    ? typeof content == 'string'
+                        ? 'html'
+                        : 'append'
+                    : 'text'
+            ](content);
 
-  Popover.prototype.setContent = function () {
-    var $tip    = this.tip()
-    var title   = this.getTitle()
-    var content = this.getContent()
+        $tip.removeClass('fade top bottom left right in');
 
-    $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
-    $tip.find('.popover-content').empty()[ // we use append for html objects to maintain js events
-      this.options.html ? (typeof content == 'string' ? 'html' : 'append') : 'text'
-    ](content)
+        // IE8 doesn't accept hiding via the `:empty` pseudo selector, we have to do
+        // this manually by checking the contents.
+        if (!$tip.find('.popover-title').html())
+            $tip.find('.popover-title').hide();
+    };
 
-    $tip.removeClass('fade top bottom left right in')
+    Popover.prototype.hasContent = function() {
+        return this.getTitle() || this.getContent();
+    };
 
-    // IE8 doesn't accept hiding via the `:empty` pseudo selector, we have to do
-    // this manually by checking the contents.
-    if (!$tip.find('.popover-title').html()) $tip.find('.popover-title').hide()
-  }
+    Popover.prototype.getContent = function() {
+        var $e = this.$element;
+        var o = this.options;
 
-  Popover.prototype.hasContent = function () {
-    return this.getTitle() || this.getContent()
-  }
+        return (
+            $e.attr('data-content') ||
+            (typeof o.content == 'function' ? o.content.call($e[0]) : o.content)
+        );
+    };
 
-  Popover.prototype.getContent = function () {
-    var $e = this.$element
-    var o  = this.options
+    Popover.prototype.arrow = function() {
+        return (this.$arrow = this.$arrow || this.tip().find('.arrow'));
+    };
 
-    return $e.attr('data-content')
-      || (typeof o.content == 'function' ?
-            o.content.call($e[0]) :
-            o.content)
-  }
+    Popover.prototype.tip = function() {
+        if (!this.$tip) this.$tip = $(this.options.template);
+        return this.$tip;
+    };
 
-  Popover.prototype.arrow = function () {
-    return this.$arrow = this.$arrow || this.tip().find('.arrow')
-  }
+    // POPOVER PLUGIN DEFINITION
+    // =========================
 
-  Popover.prototype.tip = function () {
-    if (!this.$tip) this.$tip = $(this.options.template)
-    return this.$tip
-  }
+    var old = $.fn.popover;
 
+    $.fn.popover = function(option) {
+        return this.each(function() {
+            var $this = $(this);
+            var data = $this.data('bs.popover');
+            var options = typeof option == 'object' && option;
 
-  // POPOVER PLUGIN DEFINITION
-  // =========================
+            if (!data && option == 'destroy') return;
+            if (!data)
+                $this.data('bs.popover', (data = new Popover(this, options)));
+            if (typeof option == 'string') data[option]();
+        });
+    };
 
-  var old = $.fn.popover
+    $.fn.popover.Constructor = Popover;
 
-  $.fn.popover = function (option) {
-    return this.each(function () {
-      var $this   = $(this)
-      var data    = $this.data('bs.popover')
-      var options = typeof option == 'object' && option
+    // POPOVER NO CONFLICT
+    // ===================
 
-      if (!data && option == 'destroy') return
-      if (!data) $this.data('bs.popover', (data = new Popover(this, options)))
-      if (typeof option == 'string') data[option]()
-    })
-  }
-
-  $.fn.popover.Constructor = Popover
-
-
-  // POPOVER NO CONFLICT
-  // ===================
-
-  $.fn.popover.noConflict = function () {
-    $.fn.popover = old
-    return this
-  }
-
-}(jQuery);
+    $.fn.popover.noConflict = function() {
+        $.fn.popover = old;
+        return this;
+    };
+})(jQuery);

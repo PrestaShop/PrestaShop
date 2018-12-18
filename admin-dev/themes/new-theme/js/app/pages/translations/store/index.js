@@ -33,76 +33,76 @@ Vue.use(Vuex);
 // root state object.
 
 const state = {
-  pageIndex: 1,
-  totalPages: 0,
-  translationsPerPage: 20,
-  currentDomain: '',
-  translations: {
-    data: {},
-    info: {},
-  },
-  catalog: {
-    data: {},
-    info: {},
-  },
-  domainsTree: [],
-  totalMissingTranslations: 0,
-  totalTranslations: 0,
-  currentDomainTotalTranslations: 0,
-  currentDomainTotalMissingTranslations: 0,
-  isReady: false,
-  sidebarLoading: true,
-  principalLoading: true,
-  searchTags: [],
-  modifiedTranslations: [],
+    pageIndex: 1,
+    totalPages: 0,
+    translationsPerPage: 20,
+    currentDomain: '',
+    translations: {
+        data: {},
+        info: {},
+    },
+    catalog: {
+        data: {},
+        info: {},
+    },
+    domainsTree: [],
+    totalMissingTranslations: 0,
+    totalTranslations: 0,
+    currentDomainTotalTranslations: 0,
+    currentDomainTotalMissingTranslations: 0,
+    isReady: false,
+    sidebarLoading: true,
+    principalLoading: true,
+    searchTags: [],
+    modifiedTranslations: [],
 };
 
 // getters are functions
 const getters = {
-  totalPages(rootState) {
-    return rootState.totalPages;
-  },
-  pageIndex(rootState) {
-    return rootState.pageIndex;
-  },
-  currentDomain(rootState) {
-    return rootState.currentDomain;
-  },
-  translations(rootState) {
-    return rootState.translations;
-  },
-  catalog(rootState) {
-    return rootState.catalog;
-  },
-  domainsTree() {
-    function convert(domains) {
-      domains.forEach((domain) => {
-        domain.children = _.values(domain.children);
-        domain.extraLabel = domain.total_missing_translations;
-        domain.dataValue = domain.domain_catalog_link;
-        domain.warning = Boolean(domain.total_missing_translations);
-        domain.disable = !domain.total_translations;
-        domain.id = domain.full_name;
-        convert(domain.children);
-      });
-      return domains;
-    }
+    totalPages(rootState) {
+        return rootState.totalPages;
+    },
+    pageIndex(rootState) {
+        return rootState.pageIndex;
+    },
+    currentDomain(rootState) {
+        return rootState.currentDomain;
+    },
+    translations(rootState) {
+        return rootState.translations;
+    },
+    catalog(rootState) {
+        return rootState.catalog;
+    },
+    domainsTree() {
+        function convert(domains) {
+            domains.forEach(domain => {
+                domain.children = _.values(domain.children);
+                domain.extraLabel = domain.total_missing_translations;
+                domain.dataValue = domain.domain_catalog_link;
+                domain.warning = Boolean(domain.total_missing_translations);
+                domain.disable = !domain.total_translations;
+                domain.id = domain.full_name;
+                convert(domain.children);
+            });
+            return domains;
+        }
 
-    return convert(state.domainsTree);
-  },
-  isReady(rootState) {
-    return rootState.isReady;
-  },
-  searchTags(rootState) {
-    return rootState.searchTags;
-  },
+        return convert(state.domainsTree);
+    },
+    isReady(rootState) {
+        return rootState.isReady;
+    },
+    searchTags(rootState) {
+        return rootState.searchTags;
+    },
 };
 
 // A Vuex instance is created by combining the state, mutations, actions,
 // and getters.
 export default new Vuex.Store({
-  state,
-  getters,
-  actions,
-  mutations,
+    state,
+    getters,
+    actions,
+    mutations,
 });

@@ -32,40 +32,44 @@ import combination from './combination';
 import Serp from '../app/utils/serp/index';
 
 $(() => {
-  productHeader();
-  productSearchAutocomplete();
-  categoryTree();
-  attributes();
-  combination();
-  bulkCombination().init();
-  nestedCategory().init();
+    productHeader();
+    productSearchAutocomplete();
+    categoryTree();
+    attributes();
+    combination();
+    bulkCombination().init();
+    nestedCategory().init();
 
-  const serpComp = new Serp();
-  if (serpComp.isActive()) {
-    serpComp.vm.$refs.serp.setUrl($('#product_form_preview_btn').data('redirect'));
+    const serpComp = new Serp();
+    if (serpComp.isActive()) {
+        serpComp.vm.$refs.serp.setUrl(
+            $('#product_form_preview_btn').data('redirect'),
+        );
 
-    const watchedMetaUrl = $('.serp-watched-url:input');
-    const initialValue = watchedMetaUrl.val();
+        const watchedMetaUrl = $('.serp-watched-url:input');
+        const initialValue = watchedMetaUrl.val();
 
-    // Because the url is in a data attribute never updated, we need a custom update
-    watchedMetaUrl.on('keyup change', (e) => {
-      serpComp.vm.$refs.serp.setUrl(
-        $('#product_form_preview_btn').data('redirect').replace(
-          initialValue, watchedMetaUrl.val()
-        )
-      );
+        // Because the url is in a data attribute never updated, we need a custom update
+        watchedMetaUrl.on('keyup change', e => {
+            serpComp.vm.$refs.serp.setUrl(
+                $('#product_form_preview_btn')
+                    .data('redirect')
+                    .replace(initialValue, watchedMetaUrl.val()),
+            );
+        });
+    }
+
+    // This is the only script for the module page so there is no specific file for it.
+    $('.modules-list-select').on('change', e => {
+        $('.module-render-container').hide();
+        $(`.${e.target.value}`).show();
     });
-  }
-
-  // This is the only script for the module page so there is no specific file for it.
-  $('.modules-list-select').on("change", (e) => {
-    $('.module-render-container').hide();
-    $(`.${e.target.value}`).show();
-  });
-  $('.modules-list-button').on("click", (e) => {
-    let target = $(e.target).data('target');
-    $('.module-selection').show();
-    $('.modules-list-select').val(target).trigger('change');
-    return false;
-  });
+    $('.modules-list-button').on('click', e => {
+        let target = $(e.target).data('target');
+        $('.module-selection').show();
+        $('.modules-list-select')
+            .val(target)
+            .trigger('change');
+        return false;
+    });
 });

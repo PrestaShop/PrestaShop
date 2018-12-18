@@ -29,56 +29,61 @@ const $ = window.$;
  * Class AsyncToggleColumnExtension submits toggle action using AJAX
  */
 export default class AsyncToggleColumnExtension {
-
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
+    constructor() {
+        return {
+            extend: grid => this.extend(grid),
+        };
     }
-  }
 
-  /**
-   * Extend grid
-   *
-   * @param {Grid} grid
-   */
-  extend(grid) {
-    grid.getContainer().find('.js-grid-table').on('click', '.ps-togglable-row', (event) => {
-      event.preventDefault();
+    /**
+     * Extend grid
+     *
+     * @param {Grid} grid
+     */
+    extend(grid) {
+        grid.getContainer()
+            .find('.js-grid-table')
+            .on('click', '.ps-togglable-row', event => {
+                event.preventDefault();
 
-      const $button = $(event.currentTarget);
+                const $button = $(event.currentTarget);
 
-      $.post({
-        url: $button.data('toggle-url'),
-      }).then((response) => {
-        if (response.status) {
-          showSuccessMessage(response.message);
+                $.post({
+                    url: $button.data('toggle-url'),
+                }).then(response => {
+                    if (response.status) {
+                        showSuccessMessage(response.message);
 
-          this._toggleButtonDisplay($button);
+                        this._toggleButtonDisplay($button);
 
-          return;
-        }
+                        return;
+                    }
 
-        showErrorMessage(response.message);
-      });
-    });
-  }
+                    showErrorMessage(response.message);
+                });
+            });
+    }
 
-  /**
-   * Toggle button display from enabled to disabled and other way around
-   *
-   * @param {jQuery} $button
-   *
-   * @private
-   */
-  _toggleButtonDisplay($button) {
-    const isActive = $button.hasClass('grid-toggler-icon-valid');
+    /**
+     * Toggle button display from enabled to disabled and other way around
+     *
+     * @param {jQuery} $button
+     *
+     * @private
+     */
+    _toggleButtonDisplay($button) {
+        const isActive = $button.hasClass('grid-toggler-icon-valid');
 
-    const classToAdd = isActive ? 'grid-toggler-icon-not-valid' : 'grid-toggler-icon-valid';
-    const classToRemove = isActive ? 'grid-toggler-icon-valid' : 'grid-toggler-icon-not-valid';
-    const icon = isActive ? 'clear' : 'check';
+        const classToAdd = isActive
+            ? 'grid-toggler-icon-not-valid'
+            : 'grid-toggler-icon-valid';
+        const classToRemove = isActive
+            ? 'grid-toggler-icon-valid'
+            : 'grid-toggler-icon-not-valid';
+        const icon = isActive ? 'clear' : 'check';
 
-    $button.removeClass(classToRemove);
-    $button.addClass(classToAdd);
-    $button.text(icon);
-  }
+        $button.removeClass(classToRemove);
+        $button.addClass(classToAdd);
+        $button.text(icon);
+    }
 }

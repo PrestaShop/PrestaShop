@@ -28,290 +28,318 @@ import ImportBatchSizeCalculator from './ImportBatchSizeCalculator';
 import PostSizeChecker from './PostSizeChecker';
 
 export default class Importer {
-  constructor() {
-    this.progressModal = new ImportProgressModal;
-    this.batchSizeCalculator = new ImportBatchSizeCalculator;
-    this.postSizeChecker = new PostSizeChecker();
+    constructor() {
+        this.progressModal = new ImportProgressModal();
+        this.batchSizeCalculator = new ImportBatchSizeCalculator();
+        this.postSizeChecker = new PostSizeChecker();
 
-    // Default number of rows in one batch of the import.
-    this.defaultBatchSize = 5;
-  }
+        // Default number of rows in one batch of the import.
+        this.defaultBatchSize = 5;
+    }
 
-  /**
-   * Process the import.
-   *
-   * @param {Object} configuration import configuration.
-   */
-  import(configuration) {
-    this.configuration = {
-      ajax: 1,
-      action: 'import',
-      tab: 'AdminImport',
-      token: token
-    };
-    this._mergeConfiguration(configuration);
+    /**
+     * Process the import.
+     *
+     * @param {Object} configuration import configuration.
+     */
+    import(configuration) {
+        this.configuration = {
+            ajax: 1,
+            action: 'import',
+            tab: 'AdminImport',
+            token: token,
+        };
+        this._mergeConfiguration(configuration);
 
-    // Total number of rows to be imported.
-    this.totalRowsCount = 0;
+        // Total number of rows to be imported.
+        this.totalRowsCount = 0;
 
-    // Flags that mark that there were warnings or errors during import.
-    this.hasWarnings = false;
-    this.hasErrors = false;
+        // Flags that mark that there were warnings or errors during import.
+        this.hasWarnings = false;
+        this.hasErrors = false;
 
-    // Resetting the import progress modal and showing it.
-    this.progressModal.reset();
-    this.progressModal.show();
+        // Resetting the import progress modal and showing it.
+        this.progressModal.reset();
+        this.progressModal.show();
 
-    // Starting the import with 5 elements in batch.
-    this._ajaxImport(0, this.defaultBatchSize);
-  }
+        // Starting the import with 5 elements in batch.
+        this._ajaxImport(0, this.defaultBatchSize);
+    }
 
-  /**
-   * Process the ajax import request.
-   *
-   * @param {number} offset row number, from which the import job will start processing data.
-   * @param {number} batchSize batch size of this import job.
-   * @param {boolean} validateOnly whether the data should be only validated, if false - the data will be imported.
-   * @param {number} stepIndex current step index, retrieved from the ajax response
-   * @param {Object} recurringVariables variables which are recurring between import batch jobs.
-   * @private
-   */
-  _ajaxImport(offset, batchSize, validateOnly = true, stepIndex = 0, recurringVariables = {}) {
-    this._mergeConfiguration({
-      offset: offset,
-      limit: batchSize,
-      validateOnly: validateOnly ? 1 : 0,
-      moreStep: stepIndex,
-      crossStepsVars: JSON.stringify(recurringVariables)
-    });
+    /**
+     * Process the ajax import request.
+     *
+     * @param {number} offset row number, from which the import job will start processing data.
+     * @param {number} batchSize batch size of this import job.
+     * @param {boolean} validateOnly whether the data should be only validated, if false - the data will be imported.
+     * @param {number} stepIndex current step index, retrieved from the ajax response
+     * @param {Object} recurringVariables variables which are recurring between import batch jobs.
+     * @private
+     */
+    _ajaxImport(
+        offset,
+        batchSize,
+        validateOnly = true,
+        stepIndex = 0,
+        recurringVariables = {},
+    ) {
+        this._mergeConfiguration({
+            offset: offset,
+            limit: batchSize,
+            validateOnly: validateOnly ? 1 : 0,
+            moreStep: stepIndex,
+            crossStepsVars: JSON.stringify(recurringVariables),
+        });
 
-    this._onImportStart();
+        this._onImportStart();
 
-    $.post({
-      url: 'index.php',
-      dataType: 'json',
-      data: this.configuration,
-      success: (response) => {
-        if (this._importCancelRequested) {
-          this._cancelImport();
-          return false;
+        $.post({
+            url: 'index.php',
+            dataType: 'json',
+            data: this.configuration,
+            success: response => {
+                if (this._importCancelRequested) {
+                    this._cancelImport();
+                    return false;
+                }
+
+                let nextStepIndex =
+                    response.oneMoreStep !== undefined
+                        ? response.oneMoreStep
+                        : stepIndex;
+
+                if (response.totalCount !== undefined) {
+                    // The total rows count is retrieved only in the first batch response.
+                    this.totalRowsCount = response.totalCount;
+                }
+
+                // Update import progress.
+                this.progressModal.updateProgress(
+                    response.doneCount,
+                    this.totalRowsCount,
+                );
+
+                if (!validateOnly) {
+                    // Set the progress label to "Importing".
+                    this.progressModal.setImportingProgressLabel();
+                }
+
+                // Information messages are not shown during validation.
+                if (!validateOnly && response.informations) {
+                    this.progressModal.showInfoMessages(response.informations);
+                }
+
+                if (response.errors) {
+                    this.hasErrors = true;
+                    this.progressModal.showErrorMessages(response.errors);
+
+                    // If there are errors and it's not validation step - stop the import.
+                    // If it's validation step - we will show all errors once it finishes.
+                    if (!validateOnly) {
+                        this._onImportStop();
+                        return false;
+                    }
+                } else if (response.warnings) {
+                    this.hasWarnings = true;
+                    this.progressModal.showWarningMessages(response.warnings);
+                }
+
+                if (!response.isFinished) {
+                    // Marking the end of import operation.
+                    this.batchSizeCalculator.markImportEnd();
+
+                    // Calculate next import batch size and offset.
+                    let nextBatchSize = this.batchSizeCalculator.calculateBatchSize(
+                        batchSize,
+                    );
+                    let nextOffset = offset + batchSize;
+
+                    // Showing a warning if post size limit is about to be reached.
+                    if (
+                        this.postSizeChecker.isReachingPostSizeLimit(
+                            response.postSizeLimit,
+                            response.nextPostSize,
+                        )
+                    ) {
+                        this.progressModal.showPostLimitMessage(
+                            this.postSizeChecker.getRequiredPostSizeInMegabytes(
+                                response.nextPostSize,
+                            ),
+                        );
+                    }
+
+                    // Run the import again for the next batch.
+                    return this._ajaxImport(
+                        nextOffset,
+                        nextBatchSize,
+                        validateOnly,
+                        nextStepIndex,
+                        response.crossStepsVariables,
+                    );
+                }
+
+                // All import batches are finished successfully.
+                // If it was only validating the import data until this point,
+                // we have to run the data import now.
+                if (validateOnly) {
+                    // If errors occurred during validation - stop the import.
+                    if (this.hasErrors) {
+                        this._onImportStop();
+                        return false;
+                    }
+
+                    if (this.hasWarnings) {
+                        // Show the button to ignore warnings.
+                        this.progressModal.showContinueImportButton();
+                        this._onImportStop();
+                        return false;
+                    }
+
+                    // Update the progress bar to 100%.
+                    this.progressModal.updateProgress(
+                        this.totalRowsCount,
+                        this.totalRowsCount,
+                    );
+
+                    // Continue with the data import.
+                    return this._ajaxImport(0, this.defaultBatchSize, false);
+                }
+
+                if (stepIndex < nextStepIndex) {
+                    // If it's still not the last step of the import - continue with the next step.
+                    return this._ajaxImport(
+                        0,
+                        this.defaultBatchSize,
+                        false,
+                        nextStepIndex,
+                        response.crossStepsVariables,
+                    );
+                }
+
+                // Import is completely finished.
+                this._onImportFinish();
+            },
+            error: (XMLHttpRequest, textStatus, errorCode) => {
+                if (textStatus === 'parsererror') {
+                    textStatus =
+                        'Technical error: Unexpected response returned by server. Import stopped.';
+                }
+
+                this._onImportStop();
+                this.progressModal.showErrorMessages([textStatus]);
+            },
+        });
+    }
+
+    /**
+     * Continue the import when it was stopped.
+     */
+    continueImport() {
+        if (!this.configuration) {
+            throw 'Missing import configuration. Make sure the import had started before continuing.';
         }
 
-        let nextStepIndex = response.oneMoreStep !== undefined ? response.oneMoreStep : stepIndex;
+        this.progressModal.hideContinueImportButton();
+        this.progressModal.hideCloseModalButton();
+        this.progressModal.clearWarningMessages();
+        this._ajaxImport(0, this.defaultBatchSize, false);
+    }
 
-        if (response.totalCount !== undefined) {
-          // The total rows count is retrieved only in the first batch response.
-          this.totalRowsCount = response.totalCount;
+    /**
+     * Set the import configuration.
+     *
+     * @param importConfiguration
+     */
+    set configuration(importConfiguration) {
+        this._importConfiguration = importConfiguration;
+    }
+
+    /**
+     * Get the import configuration.
+     *
+     * @returns {*}
+     */
+    get configuration() {
+        return this._importConfiguration;
+    }
+
+    /**
+     * Set progress modal.
+     *
+     * @param {ImportProgressModal} modal
+     */
+    set progressModal(modal) {
+        this._modal = modal;
+    }
+
+    /**
+     * Get progress modal.
+     *
+     * @returns {ImportProgressModal}
+     */
+    get progressModal() {
+        return this._modal;
+    }
+
+    /**
+     * Request import cancellation.
+     * Import operation will be cancelled at next iteration when requested.
+     */
+    requestCancelImport() {
+        this._importCancelRequested = true;
+    }
+
+    /**
+     * Merge given configuration into current import configuration.
+     *
+     * @param {Object} configuration
+     * @private
+     */
+    _mergeConfiguration(configuration) {
+        for (let key in configuration) {
+            this._importConfiguration[key] = configuration[key];
         }
+    }
 
-        // Update import progress.
-        this.progressModal.updateProgress(response.doneCount, this.totalRowsCount);
+    /**
+     * Cancel the import process.
+     * @private
+     */
+    _cancelImport() {
+        this.progressModal.hide();
+        this._importCancelRequested = false;
+    }
 
-        if (!validateOnly) {
-          // Set the progress label to "Importing".
-          this.progressModal.setImportingProgressLabel();
-        }
+    /**
+     * Additional actions when import is stopped.
+     * @private
+     */
+    _onImportStop() {
+        this.progressModal.showCloseModalButton();
+        this.progressModal.hideAbortImportButton();
+    }
 
-        // Information messages are not shown during validation.
-        if (!validateOnly && response.informations) {
-          this.progressModal.showInfoMessages(response.informations);
-        }
-
-        if (response.errors) {
-          this.hasErrors = true;
-          this.progressModal.showErrorMessages(response.errors);
-
-          // If there are errors and it's not validation step - stop the import.
-          // If it's validation step - we will show all errors once it finishes.
-          if (!validateOnly) {
-            this._onImportStop();
-            return false;
-          }
-        } else if (response.warnings) {
-          this.hasWarnings = true;
-          this.progressModal.showWarningMessages(response.warnings);
-        }
-
-        if (!response.isFinished) {
-          // Marking the end of import operation.
-          this.batchSizeCalculator.markImportEnd();
-
-          // Calculate next import batch size and offset.
-          let nextBatchSize = this.batchSizeCalculator.calculateBatchSize(batchSize);
-          let nextOffset = offset + batchSize;
-
-          // Showing a warning if post size limit is about to be reached.
-          if (this.postSizeChecker.isReachingPostSizeLimit(response.postSizeLimit, response.nextPostSize)) {
-            this.progressModal.showPostLimitMessage(
-              this.postSizeChecker.getRequiredPostSizeInMegabytes(response.nextPostSize)
-            );
-          }
-
-          // Run the import again for the next batch.
-          return this._ajaxImport(
-            nextOffset,
-            nextBatchSize,
-            validateOnly,
-            nextStepIndex,
-            response.crossStepsVariables
-          );
-        }
-
-        // All import batches are finished successfully.
-        // If it was only validating the import data until this point,
-        // we have to run the data import now.
-        if (validateOnly) {
-          // If errors occurred during validation - stop the import.
-          if (this.hasErrors) {
-            this._onImportStop();
-            return false;
-          }
-
-          if (this.hasWarnings) {
-            // Show the button to ignore warnings.
-            this.progressModal.showContinueImportButton();
-            this._onImportStop();
-            return false;
-          }
-
-          // Update the progress bar to 100%.
-          this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
-
-          // Continue with the data import.
-          return this._ajaxImport(0, this.defaultBatchSize, false);
-        }
-
-        if (stepIndex < nextStepIndex) {
-          // If it's still not the last step of the import - continue with the next step.
-          return this._ajaxImport(
-            0,
-            this.defaultBatchSize,
-            false,
-            nextStepIndex,
-            response.crossStepsVariables
-          );
-        }
-
-        // Import is completely finished.
-        this._onImportFinish();
-      },
-      error: (XMLHttpRequest, textStatus, errorCode) => {
-        if (textStatus === 'parsererror') {
-          textStatus = 'Technical error: Unexpected response returned by server. Import stopped.';
-        }
-
+    /**
+     * Additional actions when import is finished.
+     * @private
+     */
+    _onImportFinish() {
         this._onImportStop();
-        this.progressModal.showErrorMessages([textStatus]);
-      }
-    });
-  }
-
-  /**
-   * Continue the import when it was stopped.
-   */
-  continueImport() {
-    if (!this.configuration) {
-      throw 'Missing import configuration. Make sure the import had started before continuing.';
+        this.progressModal.showSuccessMessage();
+        this.progressModal.setImportedProgressLabel();
+        this.progressModal.updateProgress(
+            this.totalRowsCount,
+            this.totalRowsCount,
+        );
     }
 
-    this.progressModal.hideContinueImportButton();
-    this.progressModal.hideCloseModalButton();
-    this.progressModal.clearWarningMessages();
-    this._ajaxImport(0, this.defaultBatchSize, false);
-  }
-
-  /**
-   * Set the import configuration.
-   *
-   * @param importConfiguration
-   */
-  set configuration(importConfiguration) {
-    this._importConfiguration = importConfiguration;
-  }
-
-  /**
-   * Get the import configuration.
-   *
-   * @returns {*}
-   */
-  get configuration() {
-    return this._importConfiguration;
-  }
-
-  /**
-   * Set progress modal.
-   *
-   * @param {ImportProgressModal} modal
-   */
-  set progressModal(modal) {
-    this._modal = modal;
-  }
-
-  /**
-   * Get progress modal.
-   *
-   * @returns {ImportProgressModal}
-   */
-  get progressModal() {
-    return this._modal;
-  }
-
-  /**
-   * Request import cancellation.
-   * Import operation will be cancelled at next iteration when requested.
-   */
-  requestCancelImport() {
-    this._importCancelRequested = true;
-  }
-
-  /**
-   * Merge given configuration into current import configuration.
-   *
-   * @param {Object} configuration
-   * @private
-   */
-  _mergeConfiguration(configuration) {
-    for (let key in configuration) {
-      this._importConfiguration[key] = configuration[key];
+    /**
+     * Additional actions when import is starting.
+     * @private
+     */
+    _onImportStart() {
+        // Marking the start of import operation.
+        this.batchSizeCalculator.markImportStart();
+        this.progressModal.showAbortImportButton();
     }
-  }
-
-  /**
-   * Cancel the import process.
-   * @private
-   */
-  _cancelImport() {
-    this.progressModal.hide();
-    this._importCancelRequested = false;
-  }
-
-  /**
-   * Additional actions when import is stopped.
-   * @private
-   */
-  _onImportStop() {
-    this.progressModal.showCloseModalButton();
-    this.progressModal.hideAbortImportButton();
-  }
-
-  /**
-   * Additional actions when import is finished.
-   * @private
-   */
-  _onImportFinish() {
-    this._onImportStop();
-    this.progressModal.showSuccessMessage();
-    this.progressModal.setImportedProgressLabel();
-    this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
-  }
-
-  /**
-   * Additional actions when import is starting.
-   * @private
-   */
-  _onImportStart() {
-    // Marking the start of import operation.
-    this.batchSizeCalculator.markImportStart();
-    this.progressModal.showAbortImportButton();
-  }
 }

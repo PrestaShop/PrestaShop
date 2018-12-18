@@ -23,27 +23,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from "../../components/grid/grid";
-import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
-import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
-import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
-import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
-import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
-import SortingExtension from "../../components/grid/extension/sorting-extension";
-import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
-import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import Grid from '../../components/grid/grid';
+import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
+import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
+import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkActionExtension from '../../components/grid/extension/submit-bulk-action-extension';
+import SortingExtension from '../../components/grid/extension/sorting-extension';
+import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
+import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
 
 const $ = window.$;
 
 $(() => {
-  const webserviceGrid = new Grid('webservice_key');
+    const webserviceGrid = new Grid('webservice_key');
 
-  webserviceGrid.addExtension(new ReloadListActionExtension());
-  webserviceGrid.addExtension(new ExportToSqlManagerExtension());
-  webserviceGrid.addExtension(new FiltersResetExtension());
-  webserviceGrid.addExtension(new ColumnTogglingExtension());
-  webserviceGrid.addExtension(new SortingExtension());
-  webserviceGrid.addExtension(new SubmitBulkActionExtension());
-  webserviceGrid.addExtension(new SubmitRowActionExtension());
-  webserviceGrid.addExtension(new BulkActionCheckboxExtension());
+    webserviceGrid.addExtension(new ReloadListActionExtension());
+    webserviceGrid.addExtension(new ExportToSqlManagerExtension());
+    webserviceGrid.addExtension(new FiltersResetExtension());
+    webserviceGrid.addExtension(new ColumnTogglingExtension());
+    webserviceGrid.addExtension(new SortingExtension());
+    webserviceGrid.addExtension(new SubmitBulkActionExtension());
+    webserviceGrid.addExtension(new SubmitRowActionExtension());
+    webserviceGrid.addExtension(new BulkActionCheckboxExtension());
 });

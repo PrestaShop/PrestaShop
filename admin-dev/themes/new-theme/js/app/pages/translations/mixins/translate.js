@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 export default {
-  methods: {
-    trans(key) {
-      return this.$store.getters.translations[key];
+    methods: {
+        trans(key) {
+            return this.$store.getters.translations[key];
+        },
     },
-  },
 };

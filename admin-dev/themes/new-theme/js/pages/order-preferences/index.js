@@ -28,5 +28,5 @@ import TermsAndConditionsOptionHandler from './terms-and-conditions-option-handl
 const $ = window.$;
 
 $(() => {
-  new TermsAndConditionsOptionHandler();
+    new TermsAndConditionsOptionHandler();
 });

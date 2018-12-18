@@ -23,246 +23,272 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import FormFieldToggle from "./FormFieldToggle";
+import FormFieldToggle from './FormFieldToggle';
 
 const $ = window.$;
 
 export default class ImportPage {
-  constructor() {
-    new FormFieldToggle();
+    constructor() {
+        new FormFieldToggle();
 
-    $('.js-from-files-history-btn').on('click', () => this.showFilesHistoryHandler());
-    $('.js-close-files-history-block-btn').on('click', () => this.closeFilesHistoryHandler());
-    $('#fileHistoryTable').on('click', '.js-use-file-btn', (event) => this.useFileFromFilesHistory(event));
-    $('.js-change-import-file-btn').on('click', () => this.changeImportFileHandler());
-    $('.js-import-file').on('change', () => this.uploadFile());
+        $('.js-from-files-history-btn').on('click', () =>
+            this.showFilesHistoryHandler(),
+        );
+        $('.js-close-files-history-block-btn').on('click', () =>
+            this.closeFilesHistoryHandler(),
+        );
+        $('#fileHistoryTable').on('click', '.js-use-file-btn', event =>
+            this.useFileFromFilesHistory(event),
+        );
+        $('.js-change-import-file-btn').on('click', () =>
+            this.changeImportFileHandler(),
+        );
+        $('.js-import-file').on('change', () => this.uploadFile());
 
-    this.toggleSelectedFile();
-    this.handleSubmit();
-  }
-
-  /**
-   * Handle submit and add confirm box in case the toggle button about
-   * deleting all entities before import is checked
-   */
-  handleSubmit() {
-    $('.js-import-form').on('submit', function() {
-      const $this = $(this);
-      if ($this.find('input[name="truncate"]:checked').val() === '1') {
-        return confirm(`${$this.data('delete-confirm-message')} ${$.trim($('#entity > option:selected').text().toLowerCase())}?`);
-      }
-    });
-  }
-
-  /**
-   * Check if selected file names exists and if so, then display it
-   */
-  toggleSelectedFile() {
-    let selectFilename = $('#csv').val();
-    if (selectFilename.length > 0) {
-      this.showImportFileAlert(selectFilename);
-      this.hideFileUploadBlock();
-    }
-  }
-
-  changeImportFileHandler() {
-    this.hideImportFileAlert();
-    this.showFileUploadBlock();
-  }
-
-  /**
-   * Show files history event handler
-   */
-  showFilesHistoryHandler() {
-    this.showFilesHistory();
-    this.hideFileUploadBlock();
-  }
-
-  /**
-   * Close files history event handler
-   */
-  closeFilesHistoryHandler() {
-    this.closeFilesHistory();
-    this.showFileUploadBlock();
-  }
-
-  /**
-   * Show files history block
-   */
-  showFilesHistory() {
-    $('.js-files-history-block').removeClass('d-none');
-  }
-
-  /**
-   * Hide files history block
-   */
-  closeFilesHistory() {
-    $('.js-files-history-block').addClass('d-none');
-  }
-
-  /**
-   *  Prefill hidden file input with selected file name from history
-   */
-  useFileFromFilesHistory(event) {
-    let filename = $(event.target).closest('.btn-group').data('file');
-
-    $('.js-import-file-input').val(filename);
-
-    this.showImportFileAlert(filename);
-    this.closeFilesHistory();
-  }
-
-  /**
-   * Show alert with imported file name
-   */
-  showImportFileAlert(filename) {
-    $('.js-import-file-alert').removeClass('d-none');
-    $('.js-import-file').text(filename);
-  }
-
-  /**
-   * Hides selected import file alert
-   */
-  hideImportFileAlert() {
-    $('.js-import-file-alert').addClass('d-none');
-  }
-
-  /**
-   * Hides import file upload block
-   */
-  hideFileUploadBlock() {
-    $('.js-file-upload-form-group').addClass('d-none');
-  }
-
-  /**
-   * Hides import file upload block
-   */
-  showFileUploadBlock() {
-    $('.js-file-upload-form-group').removeClass('d-none');
-  }
-
-  /**
-   * Make file history button clickable
-   */
-  enableFilesHistoryBtn() {
-    $('.js-from-files-history-btn').removeAttr('disabled');
-  }
-
-  /**
-   * Show error message if file uploading failed
-   *
-   * @param {string} fileName
-   * @param {integer} fileSize
-   * @param {string} message
-   */
-  showImportFileError(fileName, fileSize, message) {
-    const $alert = $('.js-import-file-error');
-
-    const fileData = fileName + ' (' + this.humanizeSize(fileSize) + ')';
-
-    $alert.find('.js-file-data').html(fileData);
-    $alert.find('.js-error-message').html(message);
-    $alert.removeClass('d-none');
-  }
-
-  /**
-   * Hide file uploading error
-   */
-  hideImportFileError() {
-    const $alert = $('.js-import-file-error');
-    $alert.addClass('d-none');
-  }
-
-  /**
-   * Show file size in human readable format
-   *
-   * @param {int} bytes
-   *
-   * @returns {string}
-   */
-  humanizeSize(bytes) {
-    if (typeof bytes !== 'number') {
-      return '';
+        this.toggleSelectedFile();
+        this.handleSubmit();
     }
 
-    if (bytes >= 1000000000) {
-      return (bytes / 1000000000).toFixed(2) + ' GB';
+    /**
+     * Handle submit and add confirm box in case the toggle button about
+     * deleting all entities before import is checked
+     */
+    handleSubmit() {
+        $('.js-import-form').on('submit', function() {
+            const $this = $(this);
+            if ($this.find('input[name="truncate"]:checked').val() === '1') {
+                return confirm(
+                    `${$this.data('delete-confirm-message')} ${$.trim(
+                        $('#entity > option:selected')
+                            .text()
+                            .toLowerCase(),
+                    )}?`,
+                );
+            }
+        });
     }
 
-    if (bytes >= 1000000) {
-      return (bytes / 1000000).toFixed(2) + ' MB';
+    /**
+     * Check if selected file names exists and if so, then display it
+     */
+    toggleSelectedFile() {
+        let selectFilename = $('#csv').val();
+        if (selectFilename.length > 0) {
+            this.showImportFileAlert(selectFilename);
+            this.hideFileUploadBlock();
+        }
     }
 
-    return (bytes / 1000).toFixed(2) + ' KB';
-  }
-
-  /**
-   * Upload selected import file
-   */
-  uploadFile() {
-    this.hideImportFileError();
-
-    const $input = $('#file');
-    const uploadedFile = $input.prop('files')[0];
-
-    const maxUploadSize = $input.data('max-file-upload-size');
-    if (maxUploadSize < uploadedFile.size) {
-      this.showImportFileError(uploadedFile.name, uploadedFile.size, 'File is too large');
-      return;
+    changeImportFileHandler() {
+        this.hideImportFileAlert();
+        this.showFileUploadBlock();
     }
 
-    const data = new FormData();
-    data.append('file', uploadedFile);
+    /**
+     * Show files history event handler
+     */
+    showFilesHistoryHandler() {
+        this.showFilesHistory();
+        this.hideFileUploadBlock();
+    }
 
-    $.ajax({
-      type: 'POST',
-      url: $('.js-import-form').data('file-upload-url'),
-      data: data,
-      cache: false,
-      contentType: false,
-      processData: false,
-    }).then(response => {
-      if (response.error) {
-        this.showImportFileError(uploadedFile.name, uploadedFile.size, response.error);
-        return;
-      }
+    /**
+     * Close files history event handler
+     */
+    closeFilesHistoryHandler() {
+        this.closeFilesHistory();
+        this.showFileUploadBlock();
+    }
 
-      let filename = response.file.name;
+    /**
+     * Show files history block
+     */
+    showFilesHistory() {
+        $('.js-files-history-block').removeClass('d-none');
+    }
 
-      $('.js-import-file-input').val(filename);
+    /**
+     * Hide files history block
+     */
+    closeFilesHistory() {
+        $('.js-files-history-block').addClass('d-none');
+    }
 
-      this.showImportFileAlert(filename);
-      this.hideFileUploadBlock();
-      this.addFileToHistoryTable(filename);
-      this.enableFilesHistoryBtn();
-    });
-  }
+    /**
+     *  Prefill hidden file input with selected file name from history
+     */
+    useFileFromFilesHistory(event) {
+        let filename = $(event.target)
+            .closest('.btn-group')
+            .data('file');
 
-  /**
-   * Renders new row in files history table
-   *
-   * @param {string} filename
-   */
-  addFileToHistoryTable(filename) {
-    const $table = $('#fileHistoryTable');
+        $('.js-import-file-input').val(filename);
 
-    let baseDeleteUrl = $table.data('delete-file-url');
-    let deleteUrl = baseDeleteUrl + '&filename=' + encodeURIComponent(filename);
+        this.showImportFileAlert(filename);
+        this.closeFilesHistory();
+    }
 
-    let baseDownloadUrl = $table.data('download-file-url');
-    let downloadUrl = baseDownloadUrl + '&filename=' + encodeURIComponent(filename);
+    /**
+     * Show alert with imported file name
+     */
+    showImportFileAlert(filename) {
+        $('.js-import-file-alert').removeClass('d-none');
+        $('.js-import-file').text(filename);
+    }
 
-    let $template = $table.find('tr:first').clone();
+    /**
+     * Hides selected import file alert
+     */
+    hideImportFileAlert() {
+        $('.js-import-file-alert').addClass('d-none');
+    }
 
-    $template.removeClass('d-none');
-    $template.find('td:first').text(filename);
-    $template.find('.btn-group').attr('data-file', filename);
-    $template.find('.js-delete-file-btn').attr('href', deleteUrl);
-    $template.find('.js-download-file-btn').attr('href', downloadUrl);
+    /**
+     * Hides import file upload block
+     */
+    hideFileUploadBlock() {
+        $('.js-file-upload-form-group').addClass('d-none');
+    }
 
-    $table.find('tbody').append($template);
+    /**
+     * Hides import file upload block
+     */
+    showFileUploadBlock() {
+        $('.js-file-upload-form-group').removeClass('d-none');
+    }
 
-    let filesNumber = $table.find('tr').length - 1;
-    $('.js-files-history-number').text(filesNumber);
-  }
+    /**
+     * Make file history button clickable
+     */
+    enableFilesHistoryBtn() {
+        $('.js-from-files-history-btn').removeAttr('disabled');
+    }
+
+    /**
+     * Show error message if file uploading failed
+     *
+     * @param {string} fileName
+     * @param {integer} fileSize
+     * @param {string} message
+     */
+    showImportFileError(fileName, fileSize, message) {
+        const $alert = $('.js-import-file-error');
+
+        const fileData = fileName + ' (' + this.humanizeSize(fileSize) + ')';
+
+        $alert.find('.js-file-data').html(fileData);
+        $alert.find('.js-error-message').html(message);
+        $alert.removeClass('d-none');
+    }
+
+    /**
+     * Hide file uploading error
+     */
+    hideImportFileError() {
+        const $alert = $('.js-import-file-error');
+        $alert.addClass('d-none');
+    }
+
+    /**
+     * Show file size in human readable format
+     *
+     * @param {int} bytes
+     *
+     * @returns {string}
+     */
+    humanizeSize(bytes) {
+        if (typeof bytes !== 'number') {
+            return '';
+        }
+
+        if (bytes >= 1000000000) {
+            return (bytes / 1000000000).toFixed(2) + ' GB';
+        }
+
+        if (bytes >= 1000000) {
+            return (bytes / 1000000).toFixed(2) + ' MB';
+        }
+
+        return (bytes / 1000).toFixed(2) + ' KB';
+    }
+
+    /**
+     * Upload selected import file
+     */
+    uploadFile() {
+        this.hideImportFileError();
+
+        const $input = $('#file');
+        const uploadedFile = $input.prop('files')[0];
+
+        const maxUploadSize = $input.data('max-file-upload-size');
+        if (maxUploadSize < uploadedFile.size) {
+            this.showImportFileError(
+                uploadedFile.name,
+                uploadedFile.size,
+                'File is too large',
+            );
+            return;
+        }
+
+        const data = new FormData();
+        data.append('file', uploadedFile);
+
+        $.ajax({
+            type: 'POST',
+            url: $('.js-import-form').data('file-upload-url'),
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+        }).then(response => {
+            if (response.error) {
+                this.showImportFileError(
+                    uploadedFile.name,
+                    uploadedFile.size,
+                    response.error,
+                );
+                return;
+            }
+
+            let filename = response.file.name;
+
+            $('.js-import-file-input').val(filename);
+
+            this.showImportFileAlert(filename);
+            this.hideFileUploadBlock();
+            this.addFileToHistoryTable(filename);
+            this.enableFilesHistoryBtn();
+        });
+    }
+
+    /**
+     * Renders new row in files history table
+     *
+     * @param {string} filename
+     */
+    addFileToHistoryTable(filename) {
+        const $table = $('#fileHistoryTable');
+
+        let baseDeleteUrl = $table.data('delete-file-url');
+        let deleteUrl =
+            baseDeleteUrl + '&filename=' + encodeURIComponent(filename);
+
+        let baseDownloadUrl = $table.data('download-file-url');
+        let downloadUrl =
+            baseDownloadUrl + '&filename=' + encodeURIComponent(filename);
+
+        let $template = $table.find('tr:first').clone();
+
+        $template.removeClass('d-none');
+        $template.find('td:first').text(filename);
+        $template.find('.btn-group').attr('data-file', filename);
+        $template.find('.js-delete-file-btn').attr('href', deleteUrl);
+        $template.find('.js-download-file-btn').attr('href', downloadUrl);
+
+        $table.find('tbody').append($template);
+
+        let filesNumber = $table.find('tr').length - 1;
+        $('.js-files-history-number').text(filesNumber);
+    }
 }

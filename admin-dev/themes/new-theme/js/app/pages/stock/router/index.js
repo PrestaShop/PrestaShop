@@ -30,21 +30,23 @@ import Movements from 'app/pages/stock/components/movements/index';
 Vue.use(VueRouter);
 
 export default new VueRouter({
-  mode: 'history',
-  base: (() => {
-    const hasIndex = /(index\.php)/.exec(window.location.href);
-    return `${window.data.baseUrl}${hasIndex ? '/index.php' : ''}/sell/stocks`;
-  })(),
-  routes: [
-    {
-      path: '/',
-      name: 'overview',
-      component: Overview,
-    },
-    {
-      path: '/movements',
-      name: 'movements',
-      component: Movements,
-    },
-  ],
+    mode: 'history',
+    base: (() => {
+        const hasIndex = /(index\.php)/.exec(window.location.href);
+        return `${window.data.baseUrl}${
+            hasIndex ? '/index.php' : ''
+        }/sell/stocks`;
+    })(),
+    routes: [
+        {
+            path: '/',
+            name: 'overview',
+            component: Overview,
+        },
+        {
+            path: '/movements',
+            name: 'movements',
+            component: Movements,
+        },
+    ],
 });

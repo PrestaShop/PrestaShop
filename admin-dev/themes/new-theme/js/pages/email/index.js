@@ -38,17 +38,17 @@ import LinkRowActionExtension from '../../components/grid/extension/link-row-act
 const $ = window.$;
 
 $(() => {
-  const emailLogsGrid = new Grid('email_logs');
+    const emailLogsGrid = new Grid('email_logs');
 
-  emailLogsGrid.addExtension(new ReloadListActionExtension());
-  emailLogsGrid.addExtension(new ExportToSqlManagerExtension());
-  emailLogsGrid.addExtension(new FiltersResetExtension());
-  emailLogsGrid.addExtension(new SortingExtension());
-  emailLogsGrid.addExtension(new BulkActionCheckboxExtension());
-  emailLogsGrid.addExtension(new SubmitBulkExtension());
-  emailLogsGrid.addExtension(new SubmitGridExtension());
-  emailLogsGrid.addExtension(new LinkRowActionExtension());
+    emailLogsGrid.addExtension(new ReloadListActionExtension());
+    emailLogsGrid.addExtension(new ExportToSqlManagerExtension());
+    emailLogsGrid.addExtension(new FiltersResetExtension());
+    emailLogsGrid.addExtension(new SortingExtension());
+    emailLogsGrid.addExtension(new BulkActionCheckboxExtension());
+    emailLogsGrid.addExtension(new SubmitBulkExtension());
+    emailLogsGrid.addExtension(new SubmitGridExtension());
+    emailLogsGrid.addExtension(new LinkRowActionExtension());
 
-  new EmailSendingTest();
-  new SmtpConfigurationToggler();
+    new EmailSendingTest();
+    new SmtpConfigurationToggler();
 });

@@ -28,5 +28,5 @@ import PositionsListHandler from './positions-list-handler';
 const $ = window.$;
 
 $(() => {
-  new PositionsListHandler();
+    new PositionsListHandler();
 });

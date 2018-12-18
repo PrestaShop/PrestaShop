@@ -28,5 +28,5 @@ import MultipleChoiceTable from '../../components/multiple-choice-table';
 const $ = window.$;
 
 $(() => {
-  new MultipleChoiceTable();
+    new MultipleChoiceTable();
 });

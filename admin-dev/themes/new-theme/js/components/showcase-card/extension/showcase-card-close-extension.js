@@ -27,15 +27,16 @@
  * Class ShowcaseCardCloseExtension is responsible for providing helper block closing behavior
  */
 export default class ShowcaseCardCloseExtension {
-
-  /**
-   * Extend helper block.
-   *
-   * @param {ShowcaseCard} helperBlock
-   */
-  extend(helperBlock) {
-    helperBlock.getContainer().on('click', '.js-remove-helper-block', () => {
-      helperBlock.getContainer().remove();
-    });
-  }
+    /**
+     * Extend helper block.
+     *
+     * @param {ShowcaseCard} helperBlock
+     */
+    extend(helperBlock) {
+        helperBlock
+            .getContainer()
+            .on('click', '.js-remove-helper-block', () => {
+                helperBlock.getContainer().remove();
+            });
+    }
 }

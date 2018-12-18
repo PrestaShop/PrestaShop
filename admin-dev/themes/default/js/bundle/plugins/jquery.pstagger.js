@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-(function ( $ ) {
+(function($) {
     var config = null;
     var validateKeyCode = 13;
     var tagsList = [];
@@ -74,12 +74,11 @@
             }
         });
         // If focusout of input, display tagsWrapper if not empty or leave input as is
-        pstaggerInput.focusout(function(event){
-
-         // Necessarry to avoid race condition when focusout input because we want to reset :-)
-          if ($('.' + immutableConfig.clearAllSpanClass + ':hover').length) {
-              return false;
-          }
+        pstaggerInput.focusout(function(event) {
+            // Necessarry to avoid race condition when focusout input because we want to reset :-)
+            if ($('.' + immutableConfig.clearAllSpanClass + ':hover').length) {
+                return false;
+            }
             // Only redisplay tags on focusOut if there's something in tagsList
             if (pstaggerInput.val().length) {
                 tagsList = [];
@@ -111,13 +110,21 @@
                 spanTagsHtml += formatSpanTag(tag);
             }
             //  Delete previous if any, then add recreated html content
-            $('.' + immutableConfig.tagsWrapperClass).empty().prepend(spanTagsHtml).css('display', 'block');
+            $('.' + immutableConfig.tagsWrapperClass)
+                .empty()
+                .prepend(spanTagsHtml)
+                .css('display', 'block');
             // Hide input until user click on tagify_tags_wrapper
-            $('.' + immutableConfig.tagInputWrapperClass).css('display', 'none');
-
+            $('.' + immutableConfig.tagInputWrapperClass).css(
+                'display',
+                'none',
+            );
         } else {
             $('.' + immutableConfig.tagsWrapperClass).css('display', 'none');
-            $('.' + immutableConfig.tagInputWrapperClass).css('display', 'block');
+            $('.' + immutableConfig.tagInputWrapperClass).css(
+                'display',
+                'block',
+            );
             pstaggerInput.focus();
         }
         // Call the callback ! (if one)
@@ -127,13 +134,25 @@
     };
 
     var formatSpanTag = function(tag) {
-        var spanTag =   '<span class="' + immutableConfig.tagClass + ' ' + config.tagClassAdditional+'">' +
-                            '<span>' +
-                                $('<div/>').text(tag).html() +
-                            '</span>';
+        var spanTag =
+            '<span class="' +
+            immutableConfig.tagClass +
+            ' ' +
+            config.tagClassAdditional +
+            '">' +
+            '<span>' +
+            $('<div/>')
+                .text(tag)
+                .html() +
+            '</span>';
         // Add closingCross if set to true
         if (config.closingCross === true) {
-            spanTag += '<a class="' + immutableConfig.closingCrossClass + ' ' + config.closingCrossClassAdditionnal+'" href="#">x</a>';
+            spanTag +=
+                '<a class="' +
+                immutableConfig.closingCrossClass +
+                ' ' +
+                config.closingCrossClassAdditionnal +
+                '" href="#">x</a>';
         }
         spanTag += '</span>';
         return spanTag;
@@ -145,26 +164,52 @@
         var addClearBtnHtml = '';
         // If reset button required add it following user decription
         if (config.clearAllBtn === true) {
-            addClearBtnHtml += '<span class="' + immutableConfig.clearAllSpanClass + ' ' + config.clearAllSpanClassAdditional +'">' +
-                                        '<i class="' + immutableConfig.clearAllIconClass + ' ' + config.clearAllIconClassAdditional +'">clear</i>' +
-                                    '</span>';
+            addClearBtnHtml +=
+                '<span class="' +
+                immutableConfig.clearAllSpanClass +
+                ' ' +
+                config.clearAllSpanClassAdditional +
+                '">' +
+                '<i class="' +
+                immutableConfig.clearAllIconClass +
+                ' ' +
+                config.clearAllIconClassAdditional +
+                '">clear</i>' +
+                '</span>';
             // Bind the click on the reset icon
             bindResetTagsEvent();
         }
         // Add Tagify form after it
-        var formHtml = '<div class="' + immutableConfig.wrapperClass + ' ' + config.wrapperClassAdditional +'">' +
-                        addClearBtnHtml +
-                        '<div class="' + immutableConfig.tagsWrapperClass + ' ' + config.tagsWrapperClassAdditional +'"></div>' +
-                        '<div class="' + immutableConfig.tagInputWrapperClass + ' ' + config.tagInputWrapperClassAdditional +'">' +
-                            '<input class="' + immutableConfig.tagInputClass + ' ' + config.tagInputClassAdditional +'">' +
-                        '</div>' +
-                        '</div>';
+        var formHtml =
+            '<div class="' +
+            immutableConfig.wrapperClass +
+            ' ' +
+            config.wrapperClassAdditional +
+            '">' +
+            addClearBtnHtml +
+            '<div class="' +
+            immutableConfig.tagsWrapperClass +
+            ' ' +
+            config.tagsWrapperClassAdditional +
+            '"></div>' +
+            '<div class="' +
+            immutableConfig.tagInputWrapperClass +
+            ' ' +
+            config.tagInputWrapperClassAdditional +
+            '">' +
+            '<input class="' +
+            immutableConfig.tagInputClass +
+            ' ' +
+            config.tagInputClassAdditional +
+            '">' +
+            '</div>' +
+            '</div>';
         // Insert form after the originalInput
         config.originalInput.after(formHtml);
         // Save tagify input in our object
         pstaggerInput = $('.' + immutableConfig.tagInputClass);
         // Add placeholder on tagify's input
-        pstaggerInput.attr('placeholder',  config.inputPlaceholder);
+        pstaggerInput.attr('placeholder', config.inputPlaceholder);
         return true;
     };
 
@@ -173,11 +218,25 @@
         $('.' + immutableConfig.tagsWrapperClass).on('click', function(event) {
             var clickedElementClasses = event.target.className;
             // Regexp to check if not clicked on closingCross to avoid focusing input if so
-            var checkClosingCrossRegex = new RegExp(immutableConfig.closingCrossClass, 'g');
-            var closingCrossClicked = clickedElementClasses.match(checkClosingCrossRegex);
-            if ($('.' + immutableConfig.tagInputWrapperClass).is(':hidden') &&  closingCrossClicked === null) {
-                $('.' + immutableConfig.tagsWrapperClass).css('display', 'none');
-                $('.' + immutableConfig.tagInputWrapperClass).css('display', 'block');
+            var checkClosingCrossRegex = new RegExp(
+                immutableConfig.closingCrossClass,
+                'g',
+            );
+            var closingCrossClicked = clickedElementClasses.match(
+                checkClosingCrossRegex,
+            );
+            if (
+                $('.' + immutableConfig.tagInputWrapperClass).is(':hidden') &&
+                closingCrossClicked === null
+            ) {
+                $('.' + immutableConfig.tagsWrapperClass).css(
+                    'display',
+                    'none',
+                );
+                $('.' + immutableConfig.tagInputWrapperClass).css(
+                    'display',
+                    'block',
+                );
                 pstaggerInput.focus();
             }
         });
@@ -186,9 +245,13 @@
     var bindResetTagsEvent = function() {
         // Use delegate since we bind it before we insert the html in the DOM
         var _this = this;
-        $(document).delegate('.' + immutableConfig.clearAllSpanClass, 'click', function(){
-            resetTags(true);
-        });
+        $(document).delegate(
+            '.' + immutableConfig.clearAllSpanClass,
+            'click',
+            function() {
+                resetTags(true);
+            },
+        );
     };
 
     var resetTags = function(withCallback) {
@@ -204,21 +267,26 @@
         if (config.onResetTags !== null && withCallback === true) {
             config.onResetTags.call(config.context);
         }
-    }
-
+    };
 
     var bindClosingCrossEvent = function() {
-        $(document).delegate('.' + immutableConfig.closingCrossClass, 'click', function(event){
-            var thisTagWrapper = $(this).parent();
-            var clickedTagIndex = thisTagWrapper.index();
-            // Iterate through tags to reconstruct new pstaggerInput value
-            var newInputValue = reconstructInputValFromRemovedTag(clickedTagIndex);
-            // Apply new input value
-            pstaggerInput.val(newInputValue);
-            thisTagWrapper.remove();
-            tagsList = [];
-            processInput();
-        });
+        $(document).delegate(
+            '.' + immutableConfig.closingCrossClass,
+            'click',
+            function(event) {
+                var thisTagWrapper = $(this).parent();
+                var clickedTagIndex = thisTagWrapper.index();
+                // Iterate through tags to reconstruct new pstaggerInput value
+                var newInputValue = reconstructInputValFromRemovedTag(
+                    clickedTagIndex,
+                );
+                // Apply new input value
+                pstaggerInput.val(newInputValue);
+                thisTagWrapper.remove();
+                tagsList = [];
+                processInput();
+            },
+        );
     };
 
     var reconstructInputValFromRemovedTag = function(clickedTagIndex) {
@@ -230,7 +298,12 @@
                 return true;
             }
             // Add to return value
-            finalStr += ' ' + $(this).children().first().text();
+            finalStr +=
+                ' ' +
+                $(this)
+                    .children()
+                    .first()
+                    .text();
         });
         return finalStr;
     };
@@ -238,7 +311,7 @@
     var getTagsListOccurencesCount = function() {
         var obj = {};
         for (var i = 0, j = tagsList.length; i < j; i++) {
-           obj[tagsList[i]] = (obj[tagsList[i]] || 0) + 1;
+            obj[tagsList[i]] = (obj[tagsList[i]] || 0) + 1;
         }
         return obj;
     };
@@ -266,7 +339,7 @@
         bindClosingCrossEvent();
 
         return {
-            'resetTags': resetTags,
+            resetTags: resetTags,
         };
     };
-}(jQuery));
+})(jQuery);

@@ -30,51 +30,45 @@ const $ = window.$;
  * @constructor
  */
 class ModuleLoader {
-  constructor() {
-    ModuleLoader.handleImport();
-    ModuleLoader.handleEvents();
-  }
-
-  static handleImport() {
-    const moduleImport = $('#module-import');
-    moduleImport.click(() => {
-      moduleImport.addClass('onclick', 250, validate);
-    });
-
-    function validate() {
-      setTimeout(
-        () => {
-          moduleImport.removeClass('onclick');
-          moduleImport.addClass('validate', 450, callback);
-        },
-        2250
-      );
+    constructor() {
+        ModuleLoader.handleImport();
+        ModuleLoader.handleEvents();
     }
-    function callback() {
-      setTimeout(
-        () => {
-          moduleImport.removeClass('validate');
-        },
-        1250
-      );
-    }
-  }
 
-  static handleEvents() {
-    $('body').on(
-      'click',
-      'a.module-read-more-grid-btn, a.module-read-more-list-btn',
-      (event) => {
-        event.preventDefault();
-        const modulePoppin = $(event.target).data('target');
-
-        $.get(event.target.href, (data) => {
-          $(modulePoppin).html(data);
-          $(modulePoppin).modal();
+    static handleImport() {
+        const moduleImport = $('#module-import');
+        moduleImport.click(() => {
+            moduleImport.addClass('onclick', 250, validate);
         });
-      }
-    );
-  }
+
+        function validate() {
+            setTimeout(() => {
+                moduleImport.removeClass('onclick');
+                moduleImport.addClass('validate', 450, callback);
+            }, 2250);
+        }
+        function callback() {
+            setTimeout(() => {
+                moduleImport.removeClass('validate');
+            }, 1250);
+        }
+    }
+
+    static handleEvents() {
+        $('body').on(
+            'click',
+            'a.module-read-more-grid-btn, a.module-read-more-list-btn',
+            event => {
+                event.preventDefault();
+                const modulePoppin = $(event.target).data('target');
+
+                $.get(event.target.href, data => {
+                    $(modulePoppin).html(data);
+                    $(modulePoppin).modal();
+                });
+            },
+        );
+    }
 }
 
 export default ModuleLoader;

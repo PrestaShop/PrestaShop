@@ -29,29 +29,35 @@ const $ = window.$;
  * MultipleChoiceTable is responsible for managing common actions in multiple choice table form type
  */
 export default class MultipleChoiceTable {
-  /**
-   * Init constructor
-   */
-  constructor() {
-    $(document).on('click', '.js-multiple-choice-table-select-column', (e) => this.handleSelectColumn(e));
-  }
+    /**
+     * Init constructor
+     */
+    constructor() {
+        $(document).on('click', '.js-multiple-choice-table-select-column', e =>
+            this.handleSelectColumn(e),
+        );
+    }
 
-  /**
-   * Check/uncheck all boxes in column
-   *
-   * @param {Event} event
-   */
-  handleSelectColumn(event) {
-    event.preventDefault();
+    /**
+     * Check/uncheck all boxes in column
+     *
+     * @param {Event} event
+     */
+    handleSelectColumn(event) {
+        event.preventDefault();
 
-    const $selectColumnBtn = $(event.target);
-    const checked = $selectColumnBtn.data('column-checked');
-    $selectColumnBtn.data('column-checked', !checked);
+        const $selectColumnBtn = $(event.target);
+        const checked = $selectColumnBtn.data('column-checked');
+        $selectColumnBtn.data('column-checked', !checked);
 
-    const $table = $selectColumnBtn.closest('table');
+        const $table = $selectColumnBtn.closest('table');
 
-    $table
-      .find('tbody tr td:nth-child(' + $selectColumnBtn.data('column-num') + ') input[type=checkbox]')
-      .prop('checked', !checked);
-  }
+        $table
+            .find(
+                'tbody tr td:nth-child(' +
+                    $selectColumnBtn.data('column-num') +
+                    ') input[type=checkbox]',
+            )
+            .prop('checked', !checked);
+    }
 }

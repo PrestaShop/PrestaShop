@@ -31,12 +31,12 @@ import Translation from './mixins/translate';
 Vue.mixin(Translation);
 
 new Vue({
-  router,
-  store,
-  el: '#translations-app',
-  template: '<app />',
-  components: { app },
-  beforeMount() {
-    this.$store.dispatch('getTranslations');
-  },
+    router,
+    store,
+    el: '#translations-app',
+    template: '<app />',
+    components: { app },
+    beforeMount() {
+        this.$store.dispatch('getTranslations');
+    },
 });

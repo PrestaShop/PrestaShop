@@ -29,42 +29,41 @@ const $ = global.$;
  * Class ReloadListExtension extends grid with "Column toggling" feature
  */
 export default class ColumnTogglingExtension {
+    /**
+     * Extend grid
+     *
+     * @param {Grid} grid
+     */
+    extend(grid) {
+        const $table = grid.getContainer().find('table.table');
+        $table.find('.ps-togglable-row').on('click', e => {
+            e.preventDefault();
+            this._toggleValue($(e.delegateTarget));
+        });
+    }
 
-  /**
-   * Extend grid
-   *
-   * @param {Grid} grid
-   */
-  extend(grid) {
-    const $table = grid.getContainer().find('table.table');
-    $table.find('.ps-togglable-row').on('click', (e) => {
-      e.preventDefault();
-      this._toggleValue($(e.delegateTarget));
-    });
-  }
+    /**
+     * @param {jQuery} row
+     * @private
+     */
+    _toggleValue(row) {
+        const toggleUrl = row.data('toggleUrl');
 
-  /**
-   * @param {jQuery} row
-   * @private
-   */
-  _toggleValue(row) {
-    const toggleUrl = row.data('toggleUrl');
+        this._submitAsForm(toggleUrl);
+    }
 
-    this._submitAsForm(toggleUrl);
-  }
+    /**
+     * Submits request url as form
+     *
+     * @param {string} toggleUrl
+     * @private
+     */
+    _submitAsForm(toggleUrl) {
+        const $form = $('<form>', {
+            action: toggleUrl,
+            method: 'POST',
+        }).appendTo('body');
 
-  /**
-   * Submits request url as form
-   *
-   * @param {string} toggleUrl
-   * @private
-   */
-  _submitAsForm(toggleUrl) {
-    const $form = $('<form>', {
-      action: toggleUrl,
-      method: 'POST',
-    }).appendTo('body');
-
-    $form.submit();
-  }
+        $form.submit();
+    }
 }

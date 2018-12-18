@@ -28,5 +28,5 @@ import ImportDataPage from './ImportDataPage';
 const $ = window.$;
 
 $(() => {
-  new ImportDataPage();
+    new ImportDataPage();
 });

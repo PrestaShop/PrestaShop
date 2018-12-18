@@ -36,14 +36,14 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 const $ = window.$;
 
 $(document).ready(() => {
-  const languageGrid = new Grid('language');
+    const languageGrid = new Grid('language');
 
-  languageGrid.addExtension(new ReloadListActionExtension());
-  languageGrid.addExtension(new ExportToSqlManagerExtension());
-  languageGrid.addExtension(new FiltersResetExtension());
-  languageGrid.addExtension(new SortingExtension());
-  languageGrid.addExtension(new LinkRowActionExtension());
-  languageGrid.addExtension(new SubmitBulkExtension());
-  languageGrid.addExtension(new SubmitRowActionExtension());
-  languageGrid.addExtension(new BulkActionCheckboxExtension());
+    languageGrid.addExtension(new ReloadListActionExtension());
+    languageGrid.addExtension(new ExportToSqlManagerExtension());
+    languageGrid.addExtension(new FiltersResetExtension());
+    languageGrid.addExtension(new SortingExtension());
+    languageGrid.addExtension(new LinkRowActionExtension());
+    languageGrid.addExtension(new SubmitBulkExtension());
+    languageGrid.addExtension(new SubmitRowActionExtension());
+    languageGrid.addExtension(new BulkActionCheckboxExtension());
 });

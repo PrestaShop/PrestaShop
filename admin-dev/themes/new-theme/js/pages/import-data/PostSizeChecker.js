@@ -24,31 +24,31 @@
  */
 
 export default class PostSizeChecker {
-  constructor() {
-    // How close can we get to the post size limit. 0.9 means 90%.
-    this.postSizeLimitThreshold = 0.9;
-  }
+    constructor() {
+        // How close can we get to the post size limit. 0.9 means 90%.
+        this.postSizeLimitThreshold = 0.9;
+    }
 
-  /**
-   * Check if given postSizeLimit is reaching the required post size
-   *
-   * @param {number} postSizeLimit
-   * @param {number} requiredPostSize
-   *
-   * @returns {boolean}
-   */
-  isReachingPostSizeLimit(postSizeLimit, requiredPostSize) {
-    return requiredPostSize >= postSizeLimit * this.postSizeLimitThreshold;
-  }
+    /**
+     * Check if given postSizeLimit is reaching the required post size
+     *
+     * @param {number} postSizeLimit
+     * @param {number} requiredPostSize
+     *
+     * @returns {boolean}
+     */
+    isReachingPostSizeLimit(postSizeLimit, requiredPostSize) {
+        return requiredPostSize >= postSizeLimit * this.postSizeLimitThreshold;
+    }
 
-  /**
-   * Get required post size in megabytes.
-   *
-   * @param {number} requiredPostSize
-   *
-   * @returns {number}
-   */
-  getRequiredPostSizeInMegabytes(requiredPostSize) {
-    return parseInt(requiredPostSize / (1024 * 1024));
-  }
+    /**
+     * Get required post size in megabytes.
+     *
+     * @param {number} requiredPostSize
+     *
+     * @returns {number}
+     */
+    getRequiredPostSizeInMegabytes(requiredPostSize) {
+        return parseInt(requiredPostSize / (1024 * 1024));
+    }
 }
