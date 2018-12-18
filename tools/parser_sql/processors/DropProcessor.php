@@ -61,7 +61,7 @@ class DropProcessor extends AbstractProcessor {
             }
 
             if ($skip > 0) {
-                $skip --;
+                $skip--;
                 continue;
             }
 
