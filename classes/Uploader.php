@@ -120,7 +120,7 @@ class UploaderCore
      */
     public function setMaxSize($value)
     {
-        $this->_max_size = intval($value);
+        $this->_max_size = (int) $value;
 
         return $this;
     }
@@ -274,7 +274,7 @@ class UploaderCore
                 move_uploaded_file($file['tmp_name'], $filePath);
             } else {
                 // Non-multipart uploads (PUT method support)
-                file_put_contents($filePath, fopen('php://input', 'r'));
+                file_put_contents($filePath, fopen('php://input', 'rb'));
             }
 
             $fileSize = $this->_getFileSize($filePath, true);

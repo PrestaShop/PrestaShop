@@ -1262,15 +1262,19 @@ class AdminOrdersControllerCore extends AdminController
         } elseif ((Tools::isSubmit('submitAddressShipping') || Tools::isSubmit('submitAddressInvoice')) && isset($order)) {
             if ($this->access('edit')) {
                 $address = new Address(Tools::getValue('id_address'));
+                $cart = Cart::getCartByOrderId($order->id);
                 if (Validate::isLoadedObject($address)) {
-                    // Update the address on order
+                    // Update the address on order and cart
                     if (Tools::isSubmit('submitAddressShipping')) {
                         $order->id_address_delivery = $address->id;
+                        $cart->id_address_delivery = $address->id;
                     } elseif (Tools::isSubmit('submitAddressInvoice')) {
                         $order->id_address_invoice = $address->id;
+                        $cart->id_address_invoice = $address->id;
                     }
                     $order->update();
                     $order->refreshShippingCost();
+                    $cart->update();
 
                     Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=4&token=' . $this->token);
                 } else {

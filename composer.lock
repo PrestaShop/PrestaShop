@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "60b4922d90de8e7bd6b9d0ef3a1ffd60",
@@ -6245,16 +6245,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v3.4.18",
+            "version": "v3.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "ee054aa62e535b7905c5b8e90cb49a1ad65dbfd8"
+                "reference": "f6b8ddc362b1cf3fb06548693c3adbb736092412"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/ee054aa62e535b7905c5b8e90cb49a1ad65dbfd8",
-                "reference": "ee054aa62e535b7905c5b8e90cb49a1ad65dbfd8",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/f6b8ddc362b1cf3fb06548693c3adbb736092412",
+                "reference": "f6b8ddc362b1cf3fb06548693c3adbb736092412",
                 "shasum": ""
             },
             "require": {
@@ -6396,7 +6396,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2018-11-03T10:03:29+00:00"
+            "time": "2018-12-06T15:24:36+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -8224,8 +8224,7 @@
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-intl": "*",
-        "ext-zip": "*",
-        "ext-fileinfo": "*"
+        "ext-zip": "*"
     },
     "platform-dev": [],
     "platform-overrides": {

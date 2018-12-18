@@ -581,7 +581,7 @@ class imageLib
   //               4 = Resize the image as much as possible, then crop the
   //         remainder.
   {
-      switch (strval($option)) {
+      switch ((string) $option) {
             case '0':
       case 'exact':
                 $optimalWidth = $newWidth;

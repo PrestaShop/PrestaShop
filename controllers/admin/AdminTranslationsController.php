@@ -346,7 +346,7 @@ class AdminTranslationsControllerCore extends AdminController
         $thm_name = str_replace('.', '', Tools::getValue('theme'));
         $kpi_key = substr(strtoupper($thm_name . '_' . Tools::getValue('lang')), 0, 16);
 
-        if ($fd = fopen($file_path, 'w')) {
+        if ($fd = fopen($file_path, 'wb')) {
             // Get value of button save and stay
             $save_and_stay = Tools::isSubmit('submitTranslations' . $type . 'AndStay');
 
@@ -2961,7 +2961,7 @@ class AdminTranslationsControllerCore extends AdminController
                 throw new PrestaShopException('Directory ' . dirname($path) . ' cannot be created.');
             }
         }
-        if ($fd = @fopen($path, 'w')) {
+        if ($fd = @fopen($path, 'wb')) {
             $tab = 'LANGMAIL';
             fwrite($fd, "<?php\n\nglobal \$_" . $tab . ";\n\$_" . $tab . " = array();\n");
 

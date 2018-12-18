@@ -554,7 +554,7 @@ class AdminProductsControllerCore extends AdminController
                 if (!Tools::getValue('noimage') && !Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                     $this->errors[] = $this->trans('An error occurred while copying the image.', array(), 'Admin.Notifications.Error');
                 } else {
-                    Hook::exec('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
+                    Hook::exec('actionProductAdd', array('id_product_old' => $id_product_old, 'id_product' => (int) $product->id, 'product' => $product));
                     if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $product->id);
                     }
@@ -655,7 +655,7 @@ class AdminProductsControllerCore extends AdminController
                     $products = Tools::getValue($this->table . 'Box');
                     if (is_array($products) && ($count = count($products))) {
                         // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
-                        if (intval(ini_get('max_execution_time')) < round($count * 1.5)) {
+                        if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
                             ini_set('max_execution_time', round($count * 1.5));
                         }
 
@@ -1748,7 +1748,7 @@ class AdminProductsControllerCore extends AdminController
                 } elseif (!$this->updateTags($languages, $this->object)) {
                     $this->errors[] = $this->trans('An error occurred while adding tags.', array(), 'Admin.Catalog.Notification');
                 } else {
-                    Hook::exec('actionProductAdd', array('id_product' => (int) $this->object->id, 'product' => $this->object));
+                    Hook::exec('actionProductAdd', array('id_product_old' => null, 'id_product' => (int) $this->object->id, 'product' => $this->object));
                     if (in_array($this->object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $this->object->id);
                     }
@@ -3153,7 +3153,7 @@ class AdminProductsControllerCore extends AdminController
                 foreach ($positions as $position => $value) {
                     $pos = explode('_', $value);
 
-                    if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int) $pos[2] === $id_product)) {
+                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category && (int) $pos[2] === $id_product)) {
                         if ($page > 1) {
                             $position = $position + (($page - 1) * $selected_pagination);
                         }

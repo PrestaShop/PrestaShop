@@ -771,7 +771,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $success = 1;
                     $products = Tools::getValue($this->table.'Box');
                     if (is_array($products) && ($count = count($products))) {
-                        if (intval(ini_get('max_execution_time')) < round($count * 1.5)) {
+                        if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
                             ini_set('max_execution_time', round($count * 1.5));
                         }
                         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
@@ -1540,7 +1540,7 @@ class AdminProductsController extends AdminProductsControllerCore
             Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int)$id_image.' AND ish.id_shop =  '.(int)$id_shop.' LIMIT 1');
         }
         if ($count_cover_image_shop > 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 0 WHERE ish.id_image <> '.(int)$id_image.' AND ish.cover = 1 AND ish.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image_shop - 1));
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 0 WHERE ish.id_image <> '.(int)$id_image.' AND ish.cover = 1 AND ish.id_shop = '.(int)$id_shop.' LIMIT '.(int) ($count_cover_image_shop - 1));
         }
         if ($res) {
             $this->jsonConfirmation($this->_conf[27]);
@@ -1767,7 +1767,7 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     protected function updateAssoShop($id_object)
     {
-        
+
     }
     /*
     * module: pscsx32412
@@ -3230,7 +3230,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $data->assign(array(
             'download_product_file_missing' => $msg,
             'download_dir_writable' => ProductDownload::checkWritableDir(),
-            'up_filename' => strval(Tools::getValue('virtual_product_filename')),
+            'up_filename' => (string) (Tools::getValue('virtual_product_filename')),
         ));
         $product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
         $product->productDownload->date_expiration = ($product->productDownload->id > 0) ? ((!empty($product->productDownload->date_expiration) && $product->productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product->productDownload->date_expiration)) : '') : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
@@ -3391,13 +3391,13 @@ class AdminProductsController extends AdminProductsControllerCore
 			var currencies = new Array();
 			currencies[0] = new Array();
 			currencies[0]["sign"] = "'.$defaultCurrency->sign.'";
-			currencies[0]["format"] = '.intval($defaultCurrency->format).';
+			currencies[0]["format"] = '.(int) ($defaultCurrency->format).';
 			';
         foreach ($currencies as $currency) {
             $content .= '
 				currencies['.$currency['id_currency'].'] = new Array();
 				currencies['.$currency['id_currency'].']["sign"] = "'.$currency['sign'].'";
-				currencies['.$currency['id_currency'].']["format"] = '.intval($currency['format']).';
+				currencies['.$currency['id_currency'].']["format"] = '.(int) ($currency['format']).';
 				';
         }
         $content .= '
@@ -4688,7 +4688,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if (is_array($positions)) {
                 foreach ($positions as $position => $value) {
                     $pos = explode('_', $value);
-                    if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product)) {
+                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product)) {
                         if ($product = new Product((int)$pos[2])) {
                             if (isset($position) && $product->updatePosition($way, $position)) {
                                 $category = new Category((int)$id_category);

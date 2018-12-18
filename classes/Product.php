@@ -1057,7 +1057,7 @@ class ProductCore extends ObjectModel
         $return = 1;
         if (is_array($products) && ($count = count($products))) {
             // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
-            if (intval(ini_get('max_execution_time')) < round($count * 1.5)) {
+            if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
                 ini_set('max_execution_time', round($count * 1.5));
             }
 
@@ -4763,6 +4763,8 @@ class ProductCore extends ObjectModel
         if (isset($row['quantity_wanted'])) {
             // 'quantity_wanted' may very well be zero even if set
             $quantity = max((int) $row['minimal_quantity'], (int) $row['quantity_wanted']);
+        } elseif (isset($row['cart_quantity'])) {
+            $quantity = max((int) $row['minimal_quantity'], (int) $row['cart_quantity']);
         } else {
             $quantity = (int) $row['minimal_quantity'];
         }
@@ -6767,6 +6769,31 @@ class ProductCore extends ObjectModel
         $query->select('p.id_product');
         $query->from('product', 'p');
         $query->where('p.ean13 = \'' . pSQL($ean13) . '\'');
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+    }
+
+    /**
+     * For a given reference, returns the corresponding id.
+     *
+     * @param string $reference
+     *
+     * @return int id
+     */
+    public static function getIdByReference($reference)
+    {
+        if (empty($reference)) {
+            return 0;
+        }
+
+        if (!Validate::isReference($reference)) {
+            return 0;
+        }
+
+        $query = new DbQuery();
+        $query->select('p.id_product');
+        $query->from('product', 'p');
+        $query->where('p.reference = \'' . pSQL($reference) . '\'');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }

@@ -36,7 +36,7 @@ class GetFileControllerCore extends FrontController
             if (!Validate::isSha1($filename)) {
                 die(Tools::displayError());
             }
-            $file = _PS_DOWNLOAD_DIR_ . strval(preg_replace('/\.{2,}/', '.', $filename));
+            $file = _PS_DOWNLOAD_DIR_ . (string) preg_replace('/\.{2,}/', '.', $filename);
             $filename = ProductDownload::getFilenameFromFilename(Tools::getValue('file'));
             if (empty($filename)) {
                 $newFileName = Tools::getValue('filename');
@@ -97,7 +97,7 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This file no longer exists.');
             }
 
-            if (isset($info['product_quantity_refunded']) && isset($info['product_quantity_return']) &&
+            if (isset($info['product_quantity_refunded'], $info['product_quantity_return']) &&
                 ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
                 $this->displayCustomError('This product has been refunded.');
             }

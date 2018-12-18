@@ -422,7 +422,7 @@ class CartRuleCore extends ObjectModel
         foreach ($result as &$cart_rule) {
             if ($cart_rule['quantity_per_user']) {
                 $quantity_used = Order::getDiscountsCustomer((int) $id_customer, (int) $cart_rule['id_cart_rule']);
-                if (isset($cart) && isset($cart->id)) {
+                if (isset($cart, $cart->id)) {
                     $quantity_used += $cart->getDiscountsCustomer((int) $cart_rule['id_cart_rule']);
                 }
                 $cart_rule['quantity_for_user'] = $cart_rule['quantity_per_user'] - $quantity_used;
@@ -444,7 +444,7 @@ class CartRuleCore extends ObjectModel
             }
         }
 
-        if (isset($cart) && isset($cart->id)) {
+        if (isset($cart, $cart->id)) {
             foreach ($result as $key => $cart_rule) {
                 if ($cart_rule['product_restriction']) {
                     $cr = new CartRule((int) $cart_rule['id_cart_rule']);

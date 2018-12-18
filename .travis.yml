@@ -42,7 +42,7 @@ matrix:
         - mkdir -p /tmp/ps-release
         - php tools/build/CreateRelease.php --destination-dir=/tmp/ps-release
         - cd /tmp/ps-release
-          && today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$i; done
+          && today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$TRAVIS_BRANCH-$i; done
           && cd -
       if: type = cron
       deploy:

@@ -101,12 +101,12 @@ abstract class HTMLTemplateCore
         $id_shop = (int) $this->shop->id;
 
         if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop))) {
-            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
+            $logo = _PS_IMG_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
         } elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $id_shop))) {
-            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $id_shop);
+            $logo = _PS_IMG_ . Configuration::get('PS_LOGO', null, null, $id_shop);
         }
 
-        return $logo;
+        return Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . $logo;
     }
 
     /**
