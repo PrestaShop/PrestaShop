@@ -58,41 +58,41 @@ class CartRulesGiftTest extends AbstractCartCalculationTest
     {
         return [
             '1 product in cart (out of stock), 1 cart rule give it as a gift, offering a gift (out of stock) and a global 10% discount' => [
-                'products'             => [
+                'products' => [
                     4 => 1,
                 ],
-                'expectedTotal'        => 0,
-                'cartRules'            => [13],
+                'expectedTotal' => 0,
+                'cartRules' => [13],
                 'expectedProductCount' => 0,
-                'knownToFailOnV1'      => false,
+                'knownToFailOnV1' => false,
             ],
-            '2 products in cart, one cart rule offering a gift (out of stock) and a global 10% discount'                                => [
-                'products'             => [
+            '2 products in cart, one cart rule offering a gift (out of stock) and a global 10% discount' => [
+                'products' => [
                     1 => 3,
                     4 => 1,
                 ],
-                'expectedTotal'        => (1 - static::CART_RULES_FIXTURES[13]['percent'] / 100)
+                'expectedTotal' => (1 - static::CART_RULES_FIXTURES[13]['percent'] / 100)
                 * 3 * static::PRODUCT_FIXTURES[1]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [13],
+                'cartRules' => [13],
                 'oductCount' => 3,
-                'knownToFailOnV1'      => true,
+                'knownToFailOnV1' => true,
             ],
-            '2 products in cart, one cart rule offering a gift (in stock) and a global 10% discount'                                    => [
-                'products'             => [
+            '2 products in cart, one cart rule offering a gift (in stock) and a global 10% discount' => [
+                'products' => [
                     1 => 2,
                     3 => 3,
                     4 => 1,
                 ],
-                'expectedTotal'        => (1 - static::CART_RULES_FIXTURES[13]['percent'] / 100)
+                'expectedTotal' => (1 - static::CART_RULES_FIXTURES[13]['percent'] / 100)
                 * (
                     2 * static::PRODUCT_FIXTURES[1]['price']
                    + 3 * static::PRODUCT_FIXTURES[3]['price']
                 )
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [12],
+                'cartRules' => [12],
                 'expectedProductCount' => 6,
-                'knownToFailOnV1'      => false,
+                'knownToFailOnV1' => false,
             ],
         ];
     }

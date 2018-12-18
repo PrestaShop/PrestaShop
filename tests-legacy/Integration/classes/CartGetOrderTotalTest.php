@@ -53,12 +53,12 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     private static $id_address;
     protected $previousConfig = array(
         'PS_CART_RULE_FEATURE_ACTIVE' => null,
-        'PS_GROUP_FEATURE_ACTIVE'     => null,
-        'PS_ATCP_SHIPWRAP'            => null,
-        'PS_PRICE_ROUND_MODE'         => null,
-        'PS_ROUND_TYPE'               => null,
-        'PS_PRICE_DISPLAY_PRECISION'  => null,
-        'PS_TAX'                      => null,
+        'PS_GROUP_FEATURE_ACTIVE' => null,
+        'PS_ATCP_SHIPWRAP' => null,
+        'PS_PRICE_ROUND_MODE' => null,
+        'PS_ROUND_TYPE' => null,
+        'PS_PRICE_DISPLAY_PRECISION' => null,
+        'PS_TAX' => null,
     );
 
     public static function setUpBeforeClass()

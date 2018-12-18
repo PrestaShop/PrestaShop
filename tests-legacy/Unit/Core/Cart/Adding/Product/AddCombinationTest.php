@@ -35,7 +35,7 @@ class AddCombinationTest extends AbstractCartTest
     public function testCombinationCanBeAddedInCartIfAvailable()
     {
         $combination = $this->getCombinationFromFixtureName('a');
-        $product     = new Product($combination->id_product);
+        $product = new Product($combination->id_product);
 
         $nbProduct = Product::getQuantity($product->id, $combination->id, null, $this->cart, null);
         $this->assertEquals(500, $nbProduct);
@@ -51,7 +51,7 @@ class AddCombinationTest extends AbstractCartTest
     public function testCombinationCannotBeAddedInCartIfMoreThanStock()
     {
         $combination = $this->getCombinationFromFixtureName('a');
-        $product     = new Product($combination->id_product);
+        $product = new Product($combination->id_product);
 
         $result = $this->cart->updateQty(600, $product->id, $combination->id);
         $this->assertFalse($result);
@@ -64,7 +64,7 @@ class AddCombinationTest extends AbstractCartTest
     public function testCombinationCanBeAddedInCartIfMoreThanStockButAvailableWhenOutOfStock()
     {
         $combination = $this->getCombinationFromFixtureName('a');
-        $product     = new Product($combination->id_product);
+        $product = new Product($combination->id_product);
 
         $oldOrderOutOfStock = Configuration::get('PS_ORDER_OUT_OF_STOCK');
         Configuration::set('PS_ORDER_OUT_OF_STOCK', 1);

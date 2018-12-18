@@ -55,59 +55,59 @@ class CartRulesSpecificAmountTest extends AbstractCartCalculationTest
     public function cartWithOneProductSpecificCartRulesAmountProvider()
     {
         return [
-            'empty cart'                                                                      => [
-                'products'        => [],
-                'expectedTotal'   => 0,
-                'cartRules'       => [8],
+            'empty cart' => [
+                'products' => [],
+                'expectedTotal' => 0,
+                'cartRules' => [8],
                 'knownToFailOnV1' => false,
             ],
-            'one product in cart, quantity 1, one specific 5€ voucher on product #2'          => [
-                'products'        => [
+            'one product in cart, quantity 1, one specific 5€ voucher on product #2' => [
+                'products' => [
                     1 => 1,
                 ],
-                'expectedTotal'   => static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 // specific discount not applied on product #1
-                'cartRules'       => [8],
+                'cartRules' => [8],
                 'knownToFailOnV1' => false,
             ],
-            'one product in cart, quantity 3, one specific 5€ voucher on product #2'          => [
-                'products'        => [
+            'one product in cart, quantity 3, one specific 5€ voucher on product #2' => [
+                'products' => [
                     1 => 3,
                 ],
-                'expectedTotal'   => 3 * static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 // specific discount not applied on product #1
-                'cartRules'       => [8],
+                'cartRules' => [8],
                 'knownToFailOnV1' => false,
             ],
-            '3 products in cart, several quantities, one specific 5€ voucher on product #2'   => [
-                'products'        => [
+            '3 products in cart, several quantities, one specific 5€ voucher on product #2' => [
+                'products' => [
                     2 => 2, // 64.776
                     1 => 3, // 59.43
                     3 => 1, // 31.188
                     // total without rule : 155.41
                 ],
-                'expectedTotal'   => 3 * static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                 + 2 * static::PRODUCT_FIXTURES[2]['price']
                 + static::PRODUCT_FIXTURES[3]['price']
                 - static::CART_RULES_FIXTURES[8]['amount']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [8],
+                'cartRules' => [8],
                 'knownToFailOnV1' => false,
             ],
             '3 products in cart, several quantities, one specific 500€ voucher on product #2' => [
-                'products'        => [
+                'products' => [
                     2 => 2, // 64.776
                     1 => 3, // 59.43
                     3 => 1, // 31.188
                     // total without rule : 155.41
                 ],
-                'expectedTotal'   => 3 * static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                 + static::PRODUCT_FIXTURES[3]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 // voucher exceeds #2 total
-                'cartRules'       => [9],
+                'cartRules' => [9],
                 'knownToFailOnV1' => true,
             ],
         ];

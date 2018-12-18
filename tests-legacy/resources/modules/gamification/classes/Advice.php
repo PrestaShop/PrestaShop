@@ -56,17 +56,17 @@ class Advice extends ObjectModel
         'primary' => 'id_advice',
         'multilang' => true,
         'fields' => array(
-            'id_ps_advice' =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'id_tab' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'selector' =>        array('type' => self::TYPE_STRING),
-            'location' =>        array('type' => self::TYPE_STRING),
-            'validated' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'start_day' =>        array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'stop_day' =>        array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'weight' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'id_ps_advice' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'id_tab' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'selector' => array('type' => self::TYPE_STRING),
+            'location' => array('type' => self::TYPE_STRING),
+            'validated' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'start_day' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'stop_day' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'weight' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
             // Lang fields
-            'html' =>            array('type' => self::TYPE_HTML, 'lang' => true, 'required' => true, 'validate' => 'isString'),
+            'html' => array('type' => self::TYPE_HTML, 'lang' => true, 'required' => true, 'validate' => 'isString'),
         ),
     );
     

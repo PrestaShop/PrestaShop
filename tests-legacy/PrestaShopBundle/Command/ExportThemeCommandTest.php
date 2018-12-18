@@ -46,7 +46,7 @@ class ExportThemeCommandTest extends TestCase
         $helperSetMock = $this->mockHelperSet();
         $command->setHelperSet($helperSetMock);
 
-        $this->assertEquals(0, $commandTester->execute(array('theme'  => 'classic')));
+        $this->assertEquals(0, $commandTester->execute(array('theme' => 'classic')));
     }
 
     /**
