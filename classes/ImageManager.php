@@ -131,7 +131,7 @@ class ImageManagerCore
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             // For perfs, avoid computing static maths formulas in the code. pow(2, 16) = 65536 ; 1024 * 1024 = 1048576
-            if (($infos[0] * $infos[1] * $bits * $channel + 65536) * 1.8 + $current_memory > $memoryLimit - 1048576) {
+            if (($infos[0] * $infos[1] * $bits * $channel + 65536) * 1.8 + $currentMemory > $memoryLimit - 1048576) {
                 return false;
             }
         }
