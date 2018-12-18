@@ -1,11 +1,12 @@
 .datepicker {
-  .prev span::before, .next span::before {
-    font-family: 'Material Icons';
-  }
-  .prev span::before {
-    content: "\E314";
-  }
-  .next span::before {
-    content: "\E315";
-  }
+    .prev span::before,
+    .next span::before {
+        font-family: 'Material Icons';
+    }
+    .prev span::before {
+        content: '\E314';
+    }
+    .next span::before {
+        content: '\E315';
+    }
 }

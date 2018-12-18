@@ -1,10 +1,10 @@
-@import "../config/settings";
+@import '../config/settings';
 
 .dropdown-toggle {
-  &.dropdown-toggle-dots {
-    &::after {
-      color: $medium-gray;
-      content: "more_vert";
+    &.dropdown-toggle-dots {
+        &::after {
+            color: $medium-gray;
+            content: 'more_vert';
+        }
     }
-  }
 }
