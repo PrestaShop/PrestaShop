@@ -480,7 +480,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             }
             $filename_exists = file_exists($filename);
 
-            return $this->manageDeclinatedImagesCRUD($filename_exists, $filename, $normal_image_sizes, $directory); // @todo : [feature] @see todo#1
+            return $this->manageDeclinatedImagesCRUD($filename_exists, $filename, $normal_image_sizes, $directory); // @todo [feature] @see todo#1
         }
     }
 

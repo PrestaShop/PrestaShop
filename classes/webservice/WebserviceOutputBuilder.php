@@ -25,7 +25,7 @@
  */
 
 /**
- * @todo : Create typed exception for more finer errors check
+ * @todo Create typed exception for more finer errors check
  */
 class WebserviceOutputBuilderCore
 {

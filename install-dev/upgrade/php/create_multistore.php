@@ -32,7 +32,7 @@ function create_multistore()
     if (!defined('_THEME_NAME_')) {
         define('_THEME_NAME_', 'default');
     }
-    // @todo : use _PS_ROOT_DIR_
+    // @todo use _PS_ROOT_DIR_
     if (defined('__PS_BASE_URI__')) {
         $INSTALLER__PS_BASE_URI = __PS_BASE_URI__;
     } else {

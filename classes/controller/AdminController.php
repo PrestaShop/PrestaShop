@@ -2588,7 +2588,7 @@ class AdminControllerCore extends Controller
             $helper->id = $this->object->id;
         }
 
-        // @todo : move that in Helper
+        // @todo move that in Helper
         $helper->title = is_array($this->toolbar_title) ? implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ', $this->toolbar_title) : $this->toolbar_title;
         $helper->toolbar_btn = $this->toolbar_btn;
         $helper->show_toolbar = $this->show_toolbar;

@@ -479,7 +479,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $image = new Image((int)$id_image);
         if (Validate::isLoadedObject($image)) {
             /* Update product image/legend */
-            // @todo : move in processEditProductImage
+            // @todo move in processEditProductImage
             if (Tools::getIsset('editImage')) {
                 if ($image->cover) {
                     $_POST['cover'] = 1;
@@ -1787,7 +1787,7 @@ class AdminProductsController extends AdminProductsControllerCore
     public function checkProduct()
     {
         $className = 'Product';
-        /** @todo : the call_user_func seems to contains only statics values (className = 'Product') */
+        /** @todo the call_user_func seems to contains only statics values (className = 'Product') */
         $rules = call_user_func(array($this->className, 'getValidationRules'), $this->className);
         $default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $languages = Language::getLanguages(false);

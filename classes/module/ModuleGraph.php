@@ -76,7 +76,7 @@ abstract class ModuleGraphCore extends Module
             }
         } elseif (strtotime($this->_employee->stats_date_to) - strtotime($this->_employee->stats_date_from) <= 2678400) {
             // If the granularity is inferior to 1 month
-            // @todo : change to manage 28 to 31 days
+            // @todo change to manage 28 to 31 days
 
             if ($legend) {
                 $days = array();

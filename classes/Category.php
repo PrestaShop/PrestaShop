@@ -1833,7 +1833,7 @@ class CategoryCore extends ObjectModel
      *
      * @return int Number of categories + 1 having $idCategoryParent as parent
      *
-     * @todo     rename that function to make it understandable (getNextPosition for example)
+     * @todo    rename that function to make it understandable (getNextPosition for example)
      */
     public static function getLastPosition($idCategoryParent, $idShop)
     {
