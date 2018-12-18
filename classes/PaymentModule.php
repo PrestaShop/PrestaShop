@@ -1010,7 +1010,7 @@ abstract class PaymentModuleCore extends Module
         $values = '';
         if (count($id_module_list) == 0) {
             // fetch all installed module ids
-            $modules = self::getInstalledPaymentModules();
+            $modules = static::getInstalledPaymentModules();
             foreach ($modules as $module) {
                 $id_module_list[] = $module['id_module'];
             }
