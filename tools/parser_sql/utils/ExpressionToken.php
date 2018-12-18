@@ -55,7 +55,7 @@ class ExpressionToken {
     }
 
     public function isEnclosedWithinParenthesis() {
-        return ($this->upper[0] === '(' && substr($this->upper, -1) === ')');
+        return $this->upper[0] === '(' && substr($this->upper, -1) === ')';
     }
 
     public function setSubTree($tree) {
@@ -93,15 +93,15 @@ class ExpressionToken {
         }
 
         $start = $length * -1;
-        return (substr($this->token, $start) === $needle);
+        return substr($this->token, $start) === $needle;
     }
 
     public function isWhitespaceToken() {
-        return ($this->trim === "");
+        return $this->trim === "";
     }
 
     public function isCommaToken() {
-        return ($this->trim === ",");
+        return $this->trim === ",";
     }
 
     public function isVariableToken() {
@@ -133,7 +133,7 @@ class ExpressionToken {
     }
 
     public function isUnspecified() {
-        return ($this->tokenType === false);
+        return $this->tokenType === false;
     }
 
     public function isVariable() {

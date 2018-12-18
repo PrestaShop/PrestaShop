@@ -94,7 +94,7 @@ class ContextMocker
         Tools::$round_mode = null;
 
         $this->contextBackup = Context::getContext();
-        $context             = clone($this->contextBackup);
+        $context             = clone $this->contextBackup;
         Context::setInstanceForTesting($context);
         $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);

@@ -149,11 +149,11 @@ abstract class AbstractProcessor {
     }
 
     protected function isCommaToken($token) {
-        return (trim($token) === ",");
+        return trim($token) === ",";
     }
 
     protected function isWhitespaceToken($token) {
-        return (trim($token) === "");
+        return trim($token) === "";
     }
 
     protected function isCommentToken($token) {
@@ -162,35 +162,35 @@ abstract class AbstractProcessor {
     }
 
     protected function isColumnReference($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::COLREF);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::COLREF;
     }
 
     protected function isReserved($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::RESERVED);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::RESERVED;
     }
 
     protected function isConstant($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::CONSTANT);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::CONSTANT;
     }
 
     protected function isAggregateFunction($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::AGGREGATE_FUNCTION);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::AGGREGATE_FUNCTION;
     }
 
     protected function isFunction($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SIMPLE_FUNCTION);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SIMPLE_FUNCTION;
     }
 
     protected function isExpression($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::EXPRESSION);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::EXPRESSION;
     }
 
     protected function isBracketExpression($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::BRACKET_EXPRESSION);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::BRACKET_EXPRESSION;
     }
 
     protected function isSubQuery($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SUBQUERY);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SUBQUERY;
     }
 
     /**
@@ -201,7 +201,7 @@ abstract class AbstractProcessor {
         foreach ($tokenList as $token) {
             $expr[] = $token->toArray();
         }
-        return (empty($expr) ? false : $expr);
+        return empty($expr) ? false : $expr;
     }
 
     protected function array_insert_after($array, $key, $entry) {

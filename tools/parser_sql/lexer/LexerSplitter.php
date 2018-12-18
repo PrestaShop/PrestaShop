@@ -86,7 +86,7 @@ class LexerSplitter {
      *  
      * @param String $token a string, which could be a split token. 
      * 
-     * @return boolean true, if the given string will be a split token, false otherwise
+     * @return bool true, if the given string will be a split token, false otherwise
      */
     public function isSplitter($token) {
         return isset($this->hashSet[$token]);
