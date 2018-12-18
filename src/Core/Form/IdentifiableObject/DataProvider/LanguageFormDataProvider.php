@@ -32,6 +32,19 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 final class LanguageFormDataProvider implements FormDataProviderInterface
 {
     /**
+     * @var int[]
+     */
+    private $defaultShopAssociation;
+
+    /**
+     * @param int[] $defaultShopAssociation
+     */
+    public function __construct(array $defaultShopAssociation = [])
+    {
+        $this->defaultShopAssociation = $defaultShopAssociation;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getData($id)
@@ -49,6 +62,7 @@ final class LanguageFormDataProvider implements FormDataProviderInterface
             'full_date_format' => 'Y-m-d H:i:s',
             'is_rtl' => false,
             'is_active' => true,
+            'shop_association' => $this->defaultShopAssociation,
         ];
     }
 }
