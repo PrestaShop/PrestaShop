@@ -1,6 +1,6 @@
 admin_common_pagination:
-    path:     /pagination/{offset}/{limit}/{total}/{view}
-    methods:  [GET]
+    path: /pagination/{offset}/{limit}/{total}/{view}
+    methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::paginationAction'
         offset: 0
@@ -14,8 +14,8 @@ admin_common_pagination:
         view: full|quicknav
 
 admin_common_recommended_modules:
-    path:     /recommended_modules/{domain}/{limit}/{randomize}
-    methods:  [GET]
+    path: /recommended_modules/{domain}/{limit}/{randomize}
+    methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::recommendedModulesAction'
         limit: 0

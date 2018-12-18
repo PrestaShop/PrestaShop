@@ -5,7 +5,7 @@ services:
     prestashop.adapter.admin.page_preference:
         class: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
         arguments:
-            - "@session"
+            - '@session'
         decorates: prestashop.core.admin.page_preference_interface
         public: false
 

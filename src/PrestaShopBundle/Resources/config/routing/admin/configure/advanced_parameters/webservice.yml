@@ -8,9 +8,9 @@ admin_webservice:
 #        _legacy_link: AdminWebservice
 
 admin_webservice_search:
-  path: /
-  methods: POST
-  defaults:
+    path: /
+    methods: POST
+    defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:search'
         _legacy_controller: AdminWebservice
 #        _legacy_link: AdminWebservice:search
@@ -37,9 +37,9 @@ admin_webservice_list_edit:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:edit'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:updatewebservice_account
-#        _legacy_parameters:
-#            id_webservice_account: webserviceAccountId
+    #        _legacy_link: AdminWebservice:updatewebservice_account
+    #        _legacy_parameters:
+    #            id_webservice_account: webserviceAccountId
     requirements:
         webserviceAccountId: \d+
 
@@ -49,9 +49,9 @@ admin_delete_single_webservice_log:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:deleteSingleWebservice'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:deletewebservice_account
-#        _legacy_parameters:
-#            id_webservice_account: webserviceAccountId
+    #        _legacy_link: AdminWebservice:deletewebservice_account
+    #        _legacy_parameters:
+    #            id_webservice_account: webserviceAccountId
     requirements:
         webserviceAccountId: \d+
 
@@ -69,9 +69,9 @@ admin_webservice_status_toggle:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:toggleStatus'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:status
-#        _legacy_parameters:
-#            id_webservice_account: webserviceAccountId
+    #        _legacy_link: AdminWebservice:status
+    #        _legacy_parameters:
+    #            id_webservice_account: webserviceAccountId
     requirements:
         webserviceAccountId: \d+
 

@@ -5,9 +5,14 @@ services:
     prestashop.user_locale.listener:
         class: PrestaShopBundle\EventListener\UserLocaleListener
         arguments:
-            - "@prestashop.adapter.legacy.context"
+            - '@prestashop.adapter.legacy.context'
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 15 }
+            - {
+                  name: kernel.event_listener,
+                  event: kernel.request,
+                  method: onKernelRequest,
+                  priority: 15,
+              }
 
     prestashop.dispatcher.legacy_hooks.subscriber:
         class: 'PrestaShopBundle\EventListener\ActionDispatcherLegacyHooksSubscriber'
@@ -18,62 +23,91 @@ services:
     prestashop.tokenized_url_listener:
         class: PrestaShopBundle\EventListener\TokenizedUrlsListener
         arguments:
-            - "@security.csrf.token_manager"
-            - "@router"
+            - '@security.csrf.token_manager'
+            - '@router'
             - "@=service('prestashop.user_provider').getUsername()"
-            - "@prestashop.adapter.legacy.context"
+            - '@prestashop.adapter.legacy.context'
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - {
+                  name: kernel.event_listener,
+                  event: kernel.request,
+                  method: onKernelRequest,
+              }
 
     prestashop.legacy_url_listener:
         class: PrestaShopBundle\EventListener\LegacyUrlListener
         arguments:
-        - "@prestashop.bundle.routing.converter.legacy_url_converter"
+            - '@prestashop.bundle.routing.converter.legacy_url_converter'
         tags:
-        - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 40 }
+            - {
+                  name: kernel.event_listener,
+                  event: kernel.request,
+                  method: onKernelRequest,
+                  priority: 40,
+              }
 
     prestashop.multishop_command_listener:
         class: PrestaShopBundle\EventListener\MultishopCommandListener
         arguments:
-            - "@prestashop.adapter.shop.context"
+            - '@prestashop.adapter.shop.context'
             - "@=service('kernel').getRootDir()"
         tags:
-            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
+            - {
+                  name: kernel.event_listener,
+                  event: console.command,
+                  method: onConsoleCommand,
+              }
 
     prestashop.access_denied.listener:
         class: PrestaShopBundle\EventListener\AccessDeniedListener
         arguments:
-            - "@router"
-            - "@translator"
-            - "@session"
+            - '@router'
+            - '@translator'
+            - '@session'
         tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+            - {
+                  name: kernel.event_listener,
+                  event: kernel.exception,
+                  method: onKernelException,
+              }
 
     prestashop.demo_mode_enabled.listener:
         class: PrestaShopBundle\EventListener\DemoModeEnabledListener
         arguments:
-            - "@router"
-            - "@translator"
-            - "@session"
-            - "@annotation_reader"
+            - '@router'
+            - '@translator'
+            - '@session'
+            - '@annotation_reader'
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('_PS_MODE_DEMO_')"
         tags:
-            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+            - {
+                  name: kernel.event_listener,
+                  event: kernel.controller,
+                  method: onKernelController,
+              }
 
     prestashop.module_activated.listener:
         class: PrestaShopBundle\EventListener\ModuleActivatedListener
         arguments:
-        - "@router"
-        - "@translator"
-        - "@session"
-        - "@annotation_reader"
-        - "@prestashop.core.admin.module.repository"
+            - '@router'
+            - '@translator'
+            - '@session'
+            - '@annotation_reader'
+            - '@prestashop.core.admin.module.repository'
         tags:
-        - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+            - {
+                  name: kernel.event_listener,
+                  event: kernel.controller,
+                  method: onKernelController,
+              }
 
     prestashop.bundle.event_listener.filter_category_search_criteria:
         class: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
         arguments:
             - '@prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id'
         tags:
-            - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
+            - {
+                  name: kernel.event_listener,
+                  event: prestashop.search_criteria.filter,
+                  method: onFilterSearchCriteria,
+              }

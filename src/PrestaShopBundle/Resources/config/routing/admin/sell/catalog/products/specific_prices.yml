@@ -1,6 +1,6 @@
 admin_specific_price_list:
-    path:     /list/{idProduct}
-    methods:  [GET]
+    path: /list/{idProduct}
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\SpecificPriceController::listAction
         _format: json
@@ -9,8 +9,8 @@ admin_specific_price_list:
         idProduct: \d+
 
 admin_get_specific_price_update_form:
-    path:     /form/{idSpecificPrice}/
-    methods:  [GET]
+    path: /form/{idSpecificPrice}/
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\SpecificPriceController::getUpdateFormAction
         idSpecificPrice: 0
@@ -18,14 +18,14 @@ admin_get_specific_price_update_form:
         idSpecificPrice: \d+
 
 admin_specific_price_add:
-    path:     /add
-    methods:  [POST]
+    path: /add
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\SpecificPriceController::addAction
 
 admin_specific_price_update:
-    path:     /update/{idSpecificPrice}/
-    methods:  [POST]
+    path: /update/{idSpecificPrice}/
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\SpecificPriceController::updateAction
         idSpecificPrice: 0
@@ -33,8 +33,8 @@ admin_specific_price_update:
         idSpecificPrice: \d+
 
 admin_delete_specific_price:
-    path:     /delete/{idSpecificPrice}
-    methods:  [GET]
+    path: /delete/{idSpecificPrice}
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/SpecificPrice:delete
         idSpecificPrice: 0

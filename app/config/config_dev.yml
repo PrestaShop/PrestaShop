@@ -3,7 +3,7 @@ imports:
 
 framework:
     router:
-        resource: "%kernel.root_dir%/config/routing_dev.yml"
+        resource: '%kernel.root_dir%/config/routing_dev.yml'
         strict_requirements: true
     profiler: { only_exceptions: false }
 
@@ -14,25 +14,25 @@ web_profiler:
 monolog:
     handlers:
         main:
-            type:   stream
-            path:   '%env(PS_LOG_OUTPUT)%'
-            level:  debug
-            channels: ["!event"]
+            type: stream
+            path: '%env(PS_LOG_OUTPUT)%'
+            level: debug
+            channels: ['!event']
         console:
-            type:   console
+            type: console
             bubble: false
             verbosity_levels:
                 VERBOSITY_VERBOSE: INFO
                 VERBOSITY_VERY_VERBOSE: DEBUG
-            channels: ["!doctrine"]
+            channels: ['!doctrine']
         console_very_verbose:
-            type:   console
+            type: console
             bubble: false
             verbosity_levels:
                 VERBOSITY_VERBOSE: NOTICE
                 VERBOSITY_VERY_VERBOSE: NOTICE
                 VERBOSITY_DEBUG: DEBUG
-            channels: ["doctrine"]
+            channels: ['doctrine']
         # uncomment to get logging in your browser
         # you may have to allow bigger header sizes in your Web server configuration
         #firephp:

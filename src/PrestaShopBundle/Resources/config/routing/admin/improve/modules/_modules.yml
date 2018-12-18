@@ -1,5 +1,5 @@
 _addons:
-    resource: "addons.yml"
+    resource: 'addons.yml'
     prefix: /addons/
 
 admin_module_cart:
@@ -11,16 +11,16 @@ admin_module_cart:
         moduleId: \d+
 
 admin_module_catalog:
-    path:     /catalog
-    methods:  [GET]
+    path: /catalog
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Module:catalog
         _legacy_controller: AdminModulesCatalog
         _legacy_link: AdminModulesCatalog
 
 admin_module_catalog_refresh:
-    path:     /catalog/refresh/{category}/{keyword}
-    methods:  [GET]
+    path: /catalog/refresh/{category}/{keyword}
+    methods: [GET]
     defaults:
         category:
         keyword:
@@ -29,16 +29,16 @@ admin_module_catalog_refresh:
         _legacy_link: AdminModulesCatalog:refresh
 
 admin_module_catalog_post:
-    path:     /catalog/recommended
-    methods:  [GET]
+    path: /catalog/recommended
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Module:getPreferredModules
         _legacy_controller: AdminModulesCatalog
         _legacy_link: AdminModulesCatalog:recommended
 
 admin_module_manage:
-    path:     /manage/{category}/{keyword}
-    methods:  [GET]
+    path: /manage/{category}/{keyword}
+    methods: [GET]
     defaults:
         category:
         keyword:
@@ -49,16 +49,16 @@ admin_module_manage:
             - AdminModulesSf
 
 admin_module_manage_action:
-    path:     /manage/action/{action}/{module_name}
-    methods:  [POST]
+    path: /manage/action/{action}/{module_name}
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Module:module
     requirements:
         action: install|uninstall|enable|disable|enable_mobile|disable_mobile|reset|upgrade
 
 admin_module_configure_action:
-    path:     /manage/action/configure/{module_name}
-    methods:  [GET, POST]
+    path: /manage/action/configure/{module_name}
+    methods: [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Module:configureModule
         _legacy_controller: AdminModules
@@ -69,53 +69,53 @@ admin_module_configure_action:
 #            configure: module_name
 
 admin_module_manage_action_bulk:
-    path:     /manage/bulk/{action}
-    methods:  [POST]
+    path: /manage/bulk/{action}
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Module:module
     requirements:
         action: install|uninstall|configure|enable|disable|reset|upgrade
 
 admin_module_manage_update_all:
-    path:     /manage/update/all
-    methods:  [POST]
+    path: /manage/update/all
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Module:module
 
 admin_module_import:
-    path:     /import
-    methods:  [POST]
+    path: /import
+    methods: [POST]
     defaults:
         module_name:
         _controller: PrestaShopBundle:Admin/Improve/Module:importModule
 
 admin_module_notification:
-    path:     /alerts
-    methods:  [GET]
+    path: /alerts
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Modules/Alerts:index
         _legacy_controller: AdminModulesNotifications
         _legacy_link: AdminModulesNotifications
 
 admin_module_notification_count:
-    path:     /alerts/count
-    methods:  [GET]
+    path: /alerts/count
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin\Improve\Modules\Alerts:notificationsCount
         _legacy_controller: AdminModulesNotifications
         _legacy_link: AdminModulesNotifications:count
 
 admin_module_updates:
-    path:     /updates
-    methods:  [GET]
+    path: /updates
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Modules/Updates:index
         _legacy_controller: AdminModulesUpdates
         _legacy_link: AdminModulesUpdates
 
 admin_module_addons_store:
-    path:     /addons-store
-    methods:  [GET]
+    path: /addons-store
+    methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Modules\AddonsStore:index'
         _legacy_controller: AdminAddonsCatalog

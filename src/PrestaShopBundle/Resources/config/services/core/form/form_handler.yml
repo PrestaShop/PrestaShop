@@ -1,16 +1,16 @@
 services:
-  _defaults:
-    public: true
+    _defaults:
+        public: true
 
-  prestashop.core.form.identifiable_object.handler.form_handler_factory:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerFactory'
-    arguments:
-      - '@prestashop.core.hook.dispatcher'
-      - '@translator'
-      - '@=service("prestashop.adapter.legacy.configuration").get("_PS_MODE_DEMO_")'
+    prestashop.core.form.identifiable_object.handler.form_handler_factory:
+        class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerFactory'
+        arguments:
+            - '@prestashop.core.hook.dispatcher'
+            - '@translator'
+            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_MODE_DEMO_")'
 
-  prestashop.core.form.identifiable_object.sql_request_form_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
-    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
-    arguments:
-      - '@prestashop.core.form.identifiable_object.sql_request_form_data_handler'
+    prestashop.core.form.identifiable_object.sql_request_form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+        factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+        arguments:
+            - '@prestashop.core.form.identifiable_object.sql_request_form_data_handler'

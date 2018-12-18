@@ -1,38 +1,38 @@
 _product:
-    resource: "product.yml"
+    resource: 'product.yml'
 
 _product_attributes:
-    resource: "attributes.yml"
+    resource: 'attributes.yml'
     prefix: /attributes/
 
 _product_categories:
-    resource: "categories.yml"
+    resource: 'categories.yml'
     prefix: /categories/
 
 _product_combinations:
-    resource: "combinations.yml"
+    resource: 'combinations.yml'
     prefix: /combinations/
 
 _product_features:
-    resource: "features.yml"
+    resource: 'features.yml'
     prefix: /features/
 
 _product_specific_prices:
-    resource: "specific_prices.yml"
+    resource: 'specific_prices.yml'
     prefix: /specific-prices/
 
 _product_suppliers:
-    resource: "suppliers.yml"
+    resource: 'suppliers.yml'
     prefix: /suppliers/
 
 _product_warehouses:
-    resource: "warehouses.yml"
+    resource: 'warehouses.yml'
     prefix: /warehouses/
 
 # Product List
 admin_product_catalog:
     path: /{offset}/{limit}/{orderBy}/{sortOrder}
-    methods:  [GET, POST]
+    methods: [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:catalog
         _legacy_controller: AdminProducts
@@ -48,7 +48,7 @@ admin_product_catalog:
 
 admin_product_catalog_filters:
     path: /filters/{quantity}/{active}
-    methods:  [GET]
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:catalogFilters
         _legacy_controller: AdminProducts
@@ -59,8 +59,8 @@ admin_product_catalog_filters:
         active: none|1|0
 
 admin_product_list:
-    path:     /list/{offset}/{limit}/{orderBy}/{sortOrder}/{view}
-    methods:  [GET]
+    path: /list/{offset}/{limit}/{orderBy}/{sortOrder}/{view}
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:list
         limit: last
@@ -76,16 +76,16 @@ admin_product_list:
         view: full|quicknav
 
 admin_product_bulk_action:
-    path:     /bulk/{action}
-    methods:  [POST]
+    path: /bulk/{action}
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:bulk
     requirements:
         action: activate_all|deactivate_all|delete_all|duplicate_all
 
 admin_product_unit_action:
-    path:     /unit/{action}/{id}
-    methods:  [POST|GET]
+    path: /unit/{action}/{id}
+    methods: [POST|GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:unit
     requirements:
@@ -93,16 +93,16 @@ admin_product_unit_action:
         id: \d+
 
 admin_product_mass_edit_action:
-    path:     /massedit/{action}
-    methods:  [POST]
+    path: /massedit/{action}
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:massEdit
     requirements:
         action: sort
 
 admin_product_export_action:
-    path:     /export.{_format}
-    methods:  [GET]
+    path: /export.{_format}
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:export
         _format: csv

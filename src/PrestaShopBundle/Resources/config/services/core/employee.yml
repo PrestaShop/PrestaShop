@@ -1,9 +1,9 @@
 services:
-  _defaults:
-    public: true
+    _defaults:
+        public: true
 
-  prestashop.core.team.employee.configuration.options_checker:
-    class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsChecker'
-    arguments:
-      - '@prestashop.adapter.multistore_feature'
-      - '@prestashop.adapter.shop.context'
+    prestashop.core.team.employee.configuration.options_checker:
+        class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsChecker'
+        arguments:
+            - '@prestashop.adapter.multistore_feature'
+            - '@prestashop.adapter.shop.context'

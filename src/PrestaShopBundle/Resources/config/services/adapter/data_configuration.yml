@@ -68,11 +68,11 @@ services:
     prestashop.adapter.caching.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Cache\CachingConfiguration'
         arguments:
-          - '@prestashop.adapter.memcache_server.manager'
-          - '@prestashop.adapter.php_parameters'
-          - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
-          - '%ps_cache_enable%'
-          - '%ps_caching%'
+            - '@prestashop.adapter.memcache_server.manager'
+            - '@prestashop.adapter.php_parameters'
+            - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+            - '%ps_cache_enable%'
+            - '%ps_caching%'
 
     prestashop.adapter.general.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'

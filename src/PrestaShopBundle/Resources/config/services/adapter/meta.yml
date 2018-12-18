@@ -8,10 +8,10 @@ services:
     prestashop.adapter.meta.data_provider:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider'
 
-    prestashop.adapter.meta.query_handler.get_pages_for_layout_customization_handler:
-        class: 'PrestaShop\PrestaShop\Adapter\Meta\QueryHandler\GetPagesForLayoutCustomizationHandler'
-        arguments:
-            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-        tags:
-            - name: 'tactician.handler'
-              command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization'
+    ? prestashop.adapter.meta.query_handler.get_pages_for_layout_customization_handler
+    : class: 'PrestaShop\PrestaShop\Adapter\Meta\QueryHandler\GetPagesForLayoutCustomizationHandler'
+      arguments:
+          - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      tags:
+          - name: 'tactician.handler'
+            command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization'

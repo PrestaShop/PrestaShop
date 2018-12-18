@@ -1,7 +1,7 @@
 _products:
-    resource: "products/products.yml"
+    resource: 'products/products.yml'
     prefix: /products/
 
 _categories:
-    resource: "categories.yml"
+    resource: 'categories.yml'
     prefix: /categories/

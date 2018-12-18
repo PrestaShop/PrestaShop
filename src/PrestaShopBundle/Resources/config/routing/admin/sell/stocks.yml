@@ -1,6 +1,6 @@
 admin_stock_overview:
-    path:     /
-    methods:  [GET]
+    path: /
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Stock:overview
         _legacy_link: AdminStockManagement

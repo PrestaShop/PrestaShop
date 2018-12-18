@@ -17,10 +17,10 @@ services:
     prestashop.core.kpi_row.factory.categories:
         class: PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactory
         arguments:
-          - '@prestashop.adapter.kpi.disabled_categories'
-          - '@prestashop.adapter.kpi.empty_categories'
-          - '@prestashop.adapter.kpi.top_category'
-          - '@prestashop.adapter.kpi.average_products_in_category'
+            - '@prestashop.adapter.kpi.disabled_categories'
+            - '@prestashop.adapter.kpi.empty_categories'
+            - '@prestashop.adapter.kpi.top_category'
+            - '@prestashop.adapter.kpi.average_products_in_category'
 
     prestashop.core.kpi_row.factory.customers:
         class: PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactory

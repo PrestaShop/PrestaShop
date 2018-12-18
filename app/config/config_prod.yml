@@ -16,17 +16,17 @@ imports:
 monolog:
     handlers:
         main:
-            type:         fingers_crossed
+            type: fingers_crossed
             action_level: error
-            handler:      nested
+            handler: nested
         nested:
-            type:  stream
-            path:  '%env(PS_LOG_OUTPUT)%'
+            type: stream
+            path: '%env(PS_LOG_OUTPUT)%'
             level: debug
         console:
-            type:  console
+            type: console
 
 doctrine:
     orm:
-        metadata_cache_driver: "%cache.driver%"
-        query_cache_driver:    "%cache.driver%"
+        metadata_cache_driver: '%cache.driver%'
+        query_cache_driver: '%cache.driver%'

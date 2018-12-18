@@ -14,10 +14,10 @@ services:
 
     # QUERY HANDLERS
 
-    prestashop.core.domain.sql_management.query_handler.get_sql_request_settings:
-        class: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestSettingsHandler'
-        arguments:
-            - '@prestashop.adapter.legacy.configuration'
-        tags:
-            - name: 'tactician.handler'
-              command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings'
+    ? prestashop.core.domain.sql_management.query_handler.get_sql_request_settings
+    : class: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestSettingsHandler'
+      arguments:
+          - '@prestashop.adapter.legacy.configuration'
+      tags:
+          - name: 'tactician.handler'
+            command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings'

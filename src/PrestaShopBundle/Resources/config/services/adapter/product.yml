@@ -6,9 +6,9 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
         decorates: prestashop.core.admin.data_provider.product_interface
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@prestashop.adapter.image_manager"
-            - "@prestashop.static_cache.adapter"
+            - '@doctrine.orm.entity_manager'
+            - '@prestashop.adapter.image_manager'
+            - '@prestashop.static_cache.adapter'
         public: false
 
     prestashop.adapter.admin.data_updater.product:
@@ -16,12 +16,12 @@ services:
         decorates: prestashop.core.admin.data_updater.product_interface
         public: false
         arguments:
-            - "@prestashop.core.hook.dispatcher"
-            - "@prestashop.static_cache.adapter"
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.static_cache.adapter'
 
     prestashop.adapter.admin.wrapper.product:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
-        arguments: ["@translator", "@prestashop.adapter.legacy.context"]
+        arguments: ['@translator', '@prestashop.adapter.legacy.context']
 
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper

@@ -1,28 +1,28 @@
 admin_languages_index:
-  path: /
-  methods: [GET]
-  defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:index'
-    _legacy_controller: AdminLanguages
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Language:index'
+        _legacy_controller: AdminLanguages
 
 admin_languages_search:
-  path: /
-  methods: [POST]
-  defaults:
-    _controller: PrestaShopBundle:Admin\Common:searchGrid
-    gridDefinitionFactoryService: prestashop.core.grid.definition.factory.language
-    redirectRoute: admin_languages_index
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        gridDefinitionFactoryService: prestashop.core.grid.definition.factory.language
+        redirectRoute: admin_languages_index
 
 admin_languages_create:
-  path: /new
-  methods: [GET, POST]
-  defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:create'
-    _legacy_controller: AdminLanguages
+    path: /new
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Language:create'
+        _legacy_controller: AdminLanguages
 
 admin_languages_edit:
-  path: /{languageId}/edit
-  methods: [GET, POST]
-  defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:edit'
-    _legacy_controller: AdminLanguages
+    path: /{languageId}/edit
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Language:edit'
+        _legacy_controller: AdminLanguages

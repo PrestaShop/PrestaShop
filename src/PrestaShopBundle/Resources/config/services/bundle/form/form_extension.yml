@@ -5,4 +5,7 @@ services:
     form.type.extension.money:
         class: 'PrestaShopBundle\Form\Admin\Type\CustomMoneyType'
         tags:
-            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\MoneyType }
+            - {
+                  name: form.type_extension,
+                  extended_type: Symfony\Component\Form\Extension\Core\Type\MoneyType,
+              }

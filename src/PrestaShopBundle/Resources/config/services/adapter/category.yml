@@ -1,97 +1,106 @@
 services:
-  _defaults:
-    public: true
+    _defaults:
+        public: true
 
-  prestashop.adapter.admin.controller.category:
-    class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper
+    prestashop.adapter.admin.controller.category:
+        class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper
 
-  prestashop.adapter.category.category_view_data_provider:
-    class: PrestaShop\PrestaShop\Adapter\Category\CategoryViewDataProvider
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.feature.multistore'
-      - '@prestashop.adapter.shop.context'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+    prestashop.adapter.category.category_view_data_provider:
+        class: PrestaShop\PrestaShop\Adapter\Category\CategoryViewDataProvider
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.feature.multistore'
+            - '@prestashop.adapter.shop.context'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
 
-  prestashop.adapter.category.command_handler.update_categories_status_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoriesStatusHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand
+    ? prestashop.adapter.category.command_handler.update_categories_status_handler
+    : class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoriesStatusHandler
+      tags:
+          - name: tactician.handler
+            command: PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand
 
-  prestashop.adapter.category.command_handler.enable_categories_status_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoriesStatusHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EnableCategoriesCommand
+    ? prestashop.adapter.category.command_handler.enable_categories_status_handler
+    : class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoriesStatusHandler
+      tags:
+          - name: tactician.handler
+            command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EnableCategoriesCommand
 
-  prestashop.adapter.category.command_handler.disable_categories_status_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoriesStatusHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DisableCategoriesCommand
+    ? prestashop.adapter.category.command_handler.disable_categories_status_handler
+    : class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoriesStatusHandler
+      tags:
+          - name: tactician.handler
+            command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DisableCategoriesCommand
 
-  prestashop.adapter.category.command_handler.toggle_category_status_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\ToggleCategoryStatusHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand
+    prestashop.adapter.category.command_handler.toggle_category_status_handler:
+        class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\ToggleCategoryStatusHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand
 
-  prestashop.adapter.category.command_handler.delete_category_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\DeleteCategoryHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand
+    prestashop.adapter.category.command_handler.delete_category_handler:
+        class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\DeleteCategoryHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand
 
-  prestashop.adapter.category.command_handler.bulk_delete_categories_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\BulkDeleteCategoriesHandler
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand
+    prestashop.adapter.category.command_handler.bulk_delete_categories_handler:
+        class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\BulkDeleteCategoriesHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand
 
-  prestashop.adapter.category.command_handler.abstract_category_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AbstractCategoryHandler
-    abstract: true
-    arguments:
-      - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
+    prestashop.adapter.category.command_handler.abstract_category_handler:
+        class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AbstractCategoryHandler
+        abstract: true
+        arguments:
+            - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
+            - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
+            - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
 
-  prestashop.adapter.category.command_handler.add_category_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddCategoryHandler
-    parent: prestashop.adapter.category.command_handler.abstract_category_handler
-    public: true
-    tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand }
+    prestashop.adapter.category.command_handler.add_category_handler:
+        class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddCategoryHandler
+        parent: prestashop.adapter.category.command_handler.abstract_category_handler
+        public: true
+        tags:
+            - {
+                  name: tactician.handler,
+                  command: PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand,
+              }
 
-  prestashop.adapter.category.command_handler.add_root_category_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddRootCategoryHandler
-    parent: prestashop.adapter.category.command_handler.abstract_category_handler
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-    public: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand
+    prestashop.adapter.category.command_handler.add_root_category_handler:
+        class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddRootCategoryHandler
+        parent: prestashop.adapter.category.command_handler.abstract_category_handler
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+        public: true
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand
 
-  prestashop.adapter.category.command_handler.edit_root_category_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\EditRootCategoryHandler
-    parent: prestashop.adapter.category.command_handler.abstract_category_handler
-    public: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand
+    prestashop.adapter.category.command_handler.edit_root_category_handler:
+        class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\EditRootCategoryHandler
+        parent: prestashop.adapter.category.command_handler.abstract_category_handler
+        public: true
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand
 
-  prestashop.adapter.category.command_handler.edit_category_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\EditCategoryHandler
-    parent: prestashop.adapter.category.command_handler.abstract_category_handler
-    public: true
-    tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand }
+    prestashop.adapter.category.command_handler.edit_category_handler:
+        class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\EditCategoryHandler
+        parent: prestashop.adapter.category.command_handler.abstract_category_handler
+        public: true
+        tags:
+            - {
+                  name: tactician.handler,
+                  command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand,
+              }
 
-  prestashop.adapter.category.query_handler.get_category_for_editing:
-    class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler
-    arguments:
-      - '@prestashop.core.image.parser.image_tag_source_parser'
-    tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing }
+    prestashop.adapter.category.query_handler.get_category_for_editing:
+        class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler
+        arguments:
+            - '@prestashop.core.image.parser.image_tag_source_parser'
+        tags:
+            - {
+                  name: tactician.handler,
+                  command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing,
+              }

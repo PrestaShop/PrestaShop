@@ -10,10 +10,10 @@ services:
     prestashop.search_parameters.resolver:
         class: 'PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver'
         arguments:
-          - '@prestashop.core.admin.search_parameters'
-          - '@security.token_storage'
-          - '@prestashop.core.admin.admin_filter.repository'
-          - '@event_dispatcher'
-          - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+            - '@prestashop.core.admin.search_parameters'
+            - '@security.token_storage'
+            - '@prestashop.core.admin.admin_filter.repository'
+            - '@event_dispatcher'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
         tags:
-          - { name: controller.argument_value_resolver, priority: 50 }
+            - { name: controller.argument_value_resolver, priority: 50 }

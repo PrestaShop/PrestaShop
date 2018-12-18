@@ -9,7 +9,7 @@ services:
     mysql:
         image: mysql:5
         ports:
-            - "3306"
+            - '3306'
         volumes:
             - db-data:/var/lib/mysql
         environment:
@@ -28,10 +28,9 @@ services:
             PS_FOLDER_INSTALL: install-dev
             PS_FOLDER_ADMIN: admin-dev
         ports:
-            - "8001:80"
+            - '8001:80'
         volumes:
             - ./:/var/www/html/:delegated
             - vendor:/var/www/html/vendor
             - var:/var/www/html/var
         restart: always
-

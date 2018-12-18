@@ -1,13 +1,13 @@
 # Product Form
 admin_product_new:
     path: /new
-    methods:  [GET]
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:new
 
 admin_product_form:
     path: /{id}
-    methods:  [GET, POST]
+    methods: [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:form
         _legacy_controller: AdminProducts
@@ -17,8 +17,8 @@ admin_product_form:
         id: \d+
 
 admin_product_virtual_save_action:
-    path:     /virtual/save/{idProduct}
-    methods:  [POST]
+    path: /virtual/save/{idProduct}
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/VirtualProduct:save
         idProduct: 0
@@ -26,7 +26,7 @@ admin_product_virtual_save_action:
         idProduct: \d+
 
 admin_product_virtual_remove_file_action:
-    path:     /virtual/remove-file/{idProduct}
+    path: /virtual/remove-file/{idProduct}
     defaults:
         _controller: PrestaShopBundle:Admin/VirtualProduct:removeFile
         idProduct: 0
@@ -34,7 +34,7 @@ admin_product_virtual_remove_file_action:
         idProduct: \d+
 
 admin_product_virtual_remove_action:
-    path:     /virtual/remove/{idProduct}
+    path: /virtual/remove/{idProduct}
     defaults:
         _controller: PrestaShopBundle:Admin/VirtualProduct:remove
         idProduct: 0
@@ -42,8 +42,8 @@ admin_product_virtual_remove_action:
         idProduct: \d+
 
 admin_product_attachement_add_action:
-    path:     /attachment/form/add/{idProduct}
-    methods:  [POST]
+    path: /attachment/form/add/{idProduct}
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/AttachementProduct:add
         idProduct: 0
@@ -51,8 +51,8 @@ admin_product_attachement_add_action:
         idProduct: \d+
 
 admin_product_image_upload:
-    path:     /image/upload/{idProduct}
-    methods:  [POST]
+    path: /image/upload/{idProduct}
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/ProductImage:uploadImage
         idProduct: 0
@@ -60,13 +60,13 @@ admin_product_image_upload:
         idProduct: \d+
 
 admin_product_image_positions:
-    path:     /image/positions
-    methods:  [POST]
+    path: /image/positions
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/ProductImage:updateImagePosition
 
 admin_product_image_form:
-    path:     image/form/{idImage}
+    path: image/form/{idImage}
     defaults:
         _controller: PrestaShopBundle:Admin/ProductImage:form
         idImage: 0
@@ -74,7 +74,7 @@ admin_product_image_form:
         idImage: \d+
 
 admin_product_image_delete:
-    path:     /image/delete/{idImage}
+    path: /image/delete/{idImage}
     defaults:
         _controller: PrestaShopBundle:Admin/ProductImage:delete
         idImage: 0

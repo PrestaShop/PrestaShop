@@ -70,14 +70,18 @@ services:
     prestashop.adapter.middleware.ssl:
         class: PrestaShop\PrestaShop\Adapter\Security\SslMiddleware
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - {
+                  name: kernel.event_listener,
+                  event: kernel.request,
+                  method: onKernelRequest,
+              }
 
     # Legacy Hooks registrator
     prestashop.adapter.legacy.hook.subscriber:
         class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
 
     prestashop.adapter.legacy.block.helper.subscriber:
-            class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
+        class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
 
     prestashop.adapter.stock_manager:
         class: PrestaShop\PrestaShop\Adapter\StockManager
@@ -96,27 +100,27 @@ services:
 
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager
-        arguments: ["@prestashop.adapter.legacy.context"]
+        arguments: ['@prestashop.adapter.legacy.context']
 
     prestashop.core.module.updater:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
         arguments:
-            - "@prestashop.core.admin.data_provider.addons_interface"
-            - "@prestashop.adapter.admin.data_provider.module"
+            - '@prestashop.core.admin.data_provider.addons_interface'
+            - '@prestashop.adapter.admin.data_provider.module'
 
     prestashop.adapter.admin.model.product:
         class: PrestaShopBundle\Model\Product\AdminModelAdapter
         arguments:
-            - "@prestashop.adapter.legacy.context"
-            - "@prestashop.adapter.admin.wrapper.product"
-            - "@prestashop.adapter.tools"
-            - "@prestashop.adapter.data_provider.product"
-            - "@prestashop.adapter.data_provider.supplier"
-            - "@prestashop.adapter.data_provider.warehouse"
-            - "@prestashop.adapter.data_provider.feature"
-            - "@prestashop.adapter.data_provider.pack"
-            - "@prestashop.adapter.shop.context"
-            - "@prestashop.adapter.data_provider.tax"
+            - '@prestashop.adapter.legacy.context'
+            - '@prestashop.adapter.admin.wrapper.product'
+            - '@prestashop.adapter.tools'
+            - '@prestashop.adapter.data_provider.product'
+            - '@prestashop.adapter.data_provider.supplier'
+            - '@prestashop.adapter.data_provider.warehouse'
+            - '@prestashop.adapter.data_provider.feature'
+            - '@prestashop.adapter.data_provider.pack'
+            - '@prestashop.adapter.shop.context'
+            - '@prestashop.adapter.data_provider.tax'
 
     prestashop.adapter.translation_route_finder:
         class: PrestaShop\PrestaShop\Adapter\Translations\TranslationRouteFinder

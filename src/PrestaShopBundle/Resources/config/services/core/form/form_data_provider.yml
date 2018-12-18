@@ -1,8 +1,8 @@
 services:
-  _defaults:
-    public: true
+    _defaults:
+        public: true
 
-  prestashop.core.form.identifiable_object.data_provider.sql_request_form_data_provider:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SqlRequestFormDataProvider'
-    arguments:
-      - '@prestashop.core.query_bus'
+    ? prestashop.core.form.identifiable_object.data_provider.sql_request_form_data_provider
+    : class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SqlRequestFormDataProvider'
+      arguments:
+          - '@prestashop.core.query_bus'

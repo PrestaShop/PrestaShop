@@ -1,13 +1,13 @@
 admin_international_translation_overview:
-    path:     /
-    methods:  [GET]
+    path: /
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Translations:overview
         _legacy_link: AdminTranslationSf
 
 admin_international_translations_export_theme:
     path: /export
-    methods:  [POST]
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Translations:exportThemeLanguage
         _legacy_controller: AdminTranslations

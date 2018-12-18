@@ -73,17 +73,17 @@ admin_import_get_import_match:
         _legacy_link: AdminImport:getImportMatch
 
 admin_import_delete_import_match:
-  path: /match
-  methods: [DELETE]
-  defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:deleteImportMatch'
-    _legacy_controller: AdminImport
-    _legacy_link: AdminImport:deleteImportMatch
+    path: /match
+    methods: [DELETE]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:deleteImportMatch'
+        _legacy_controller: AdminImport
+        _legacy_link: AdminImport:deleteImportMatch
 
 admin_import_get_available_fields:
-  path: /fields
-  methods: [GET]
-  defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:getAvailableEntityFields'
-    _legacy_controller: AdminImport
-    _legacy_link: AdminImport:getAvailableEntityFields
+    path: /fields
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:getAvailableEntityFields'
+        _legacy_controller: AdminImport
+        _legacy_link: AdminImport:getAvailableEntityFields

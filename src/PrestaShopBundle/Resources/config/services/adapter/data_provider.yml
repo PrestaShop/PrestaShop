@@ -9,21 +9,21 @@ services:
             - '@prestashop.addons.client_api'
             - '@prestashop.module.zip.manager'
         properties:
-            cacheDir: "%kernel.cache_dir%"
+            cacheDir: '%kernel.cache_dir%'
         public: false
 
     prestashop.adapter.admin.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
         arguments:
-             - "@translator"
-             - "@logger"
-             - "@prestashop.core.admin.data_provider.addons_interface"
-             - "@prestashop.categories_provider"
-             - "@prestashop.adapter.data_provider.module"
-             - "@doctrine.cache.provider"
-             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+            - '@translator'
+            - '@logger'
+            - '@prestashop.core.admin.data_provider.addons_interface'
+            - '@prestashop.categories_provider'
+            - '@prestashop.adapter.data_provider.module'
+            - '@doctrine.cache.provider'
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee"
         calls:
-            - [ setRouter, ['@router']]
+            - [setRouter, ['@router']]
         decorates: prestashop.core.admin.data_provider.module_interface
         public: false
 
@@ -43,8 +43,8 @@ services:
     prestashop.adapter.data_provider.currency:
         class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider
         arguments:
-          - "@prestashop.adapter.legacy.configuration"
-          - "@=service('prestashop.adapter.legacy.context').getContext().shop?service('prestashop.adapter.legacy.context').getContext().shop.id"
+            - '@prestashop.adapter.legacy.configuration'
+            - "@=service('prestashop.adapter.legacy.context').getContext().shop?service('prestashop.adapter.legacy.context').getContext().shop.id"
 
     prestashop.adapter.data_provider.group:
         class: PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider
@@ -91,16 +91,26 @@ services:
 
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
-        arguments: ["@prestashop.adapter.legacy.logger", "@translator", "@doctrine.orm.entity_manager"]
+        arguments:
+            [
+                '@prestashop.adapter.legacy.logger',
+                '@translator',
+                '@doctrine.orm.entity_manager',
+            ]
         calls:
-                - [ "setEmployeeId", ["@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0"]]
+            - [
+                  'setEmployeeId',
+                  [
+                      "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0",
+                  ],
+              ]
 
     prestashop.categories_provider:
         class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
         arguments:
             - '@prestashop.addons.client_api'
             - '@logger'
-            - "%prestashop.addons.categories%"
+            - '%prestashop.addons.categories%'
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.theme_name?service('prestashop.core.addon.theme.repository').getInstanceByName(service('prestashop.adapter.legacy.context').getContext().shop.theme_name).getModulesToEnable():[]"
 
     prestashop.adapter.data_provider.default_route:

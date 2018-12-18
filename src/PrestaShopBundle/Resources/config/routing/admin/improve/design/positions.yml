@@ -8,7 +8,7 @@ admin_modules_positions:
 
 admin_modules_positions_unhook:
     path: /unhook
-    methods: [POST,GET]
+    methods: [POST, GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:unhook'
         _legacy_controller: AdminModulesPositions

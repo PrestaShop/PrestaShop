@@ -54,8 +54,8 @@ admin_category_export:
     path: /export
     methods: [GET]
     defaults:
-      _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:export
-      _legacy_controller: AdminCategories
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:export
+        _legacy_controller: AdminCategories
 
 admin_category_add:
     path: /new

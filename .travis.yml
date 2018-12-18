@@ -1,108 +1,107 @@
 language: php
 
 addons:
-  chrome: stable
-  apt:
-    packages:
-      - apache2
-      - postfix
-      - libapache2-mod-fastcgi
-      - libappindicator1
-      - fonts-liberation
+    chrome: stable
+    apt:
+        packages:
+            - apache2
+            - postfix
+            - libapache2-mod-fastcgi
+            - libappindicator1
+            - fonts-liberation
 
 cache:
-  directories:
-    - $HOME/.composer/cache
+    directories:
+        - $HOME/.composer/cache
 
 sudo: required
 dist: trusty
 
 php:
-  - 5.6
-  - 7.2
+    - 5.6
+    - 7.2
 
 env:
-  global:
-    - SYMFONY_DEPRECATIONS_HELPER=disabled
-  matrix:
-    - PRESTASHOP_TEST_TYPE=lint
-    - PRESTASHOP_TEST_TYPE=unit
-    - PRESTASHOP_TEST_TYPE=e2e
+    global:
+        - SYMFONY_DEPRECATIONS_HELPER=disabled
+    matrix:
+        - PRESTASHOP_TEST_TYPE=lint
+        - PRESTASHOP_TEST_TYPE=unit
+        - PRESTASHOP_TEST_TYPE=e2e
 
 matrix:
-  include:
-    - php: 7.2
-      env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
-    - php: 7.2
-      env: PRESTASHOP_TEST_TYPE=e2e EXTRA_TESTS=functional
-    - stage: deploy
-      php: 7.2
-      before_install: skip
-      script:
-        - mkdir -p /tmp/ps-release
-        - php tools/build/CreateRelease.php --destination-dir=/tmp/ps-release
-        - cd /tmp/ps-release
-          && today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$TRAVIS_BRANCH-$i; done
-          && cd -
-      if: type = cron
-      deploy:
-        provider: gcs
-        access_key_id: $GCS_ACCESS_KEY
-        secret_access_key: $GCS_ACCESS_SECRET
-        bucket: prestashop-core-nightly
-        skip_cleanup: true
-        acl: public-read
-        local-dir: "/tmp/ps-release"
-        on:
-          all_branches: true
-  exclude:
-    - php: 7.2 # Replaced with additional tests
-      env: PRESTASHOP_TEST_TYPE=e2e
+    include:
+        - php: 7.2
+          env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
+        - php: 7.2
+          env: PRESTASHOP_TEST_TYPE=e2e EXTRA_TESTS=functional
+        - stage: deploy
+          php: 7.2
+          before_install: skip
+          script:
+              - mkdir -p /tmp/ps-release
+              - php tools/build/CreateRelease.php --destination-dir=/tmp/ps-release
+              - cd /tmp/ps-release
+                && today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$TRAVIS_BRANCH-$i; done
+                && cd -
+          if: type = cron
+          deploy:
+              provider: gcs
+              access_key_id: $GCS_ACCESS_KEY
+              secret_access_key: $GCS_ACCESS_SECRET
+              bucket: prestashop-core-nightly
+              skip_cleanup: true
+              acl: public-read
+              local-dir: '/tmp/ps-release'
+              on:
+                  all_branches: true
+    exclude:
+        - php: 7.2 # Replaced with additional tests
+          env: PRESTASHOP_TEST_TYPE=e2e
 
 before_install:
-  # Avoid Composer authentication issues
-  - if [[ $TRAVIS_REPO_SLUG = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
-  # Apache & php-fpm configuration
-  - bash travis-scripts/setup-php-fpm.sh
-  - bash travis-scripts/setup-apache.sh
+    # Avoid Composer authentication issues
+    - if [[ $TRAVIS_REPO_SLUG = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
+    # Apache & php-fpm configuration
+    - bash travis-scripts/setup-php-fpm.sh
+    - bash travis-scripts/setup-apache.sh
 
-  # PrestaShop configuration
-  - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
-
+    # PrestaShop configuration
+    - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
 notifications:
-  hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
+    hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 
 script:
-  - if [ $EXTRA_DEPS = "phpHigh" ]; then
-        composer update --ignore-platform-reqs;
-    else
-        composer install --prefer-dist --no-interaction --no-progress;
-    fi
+    - if [ $EXTRA_DEPS = "phpHigh" ]; then
+      composer update --ignore-platform-reqs;
+      else
+      composer install --prefer-dist --no-interaction --no-progress;
+      fi
 
-  - bash travis-scripts/install-prestashop
-  - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
-        bash tests-legacy/check_file_syntax.sh;
-    fi
+    - bash travis-scripts/install-prestashop
+    - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
+      bash tests-legacy/check_file_syntax.sh;
+      fi
 
-  - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
-        bash tests-legacy/check_phpunit.sh;
-        bash tests/check_unit.sh;
-    fi
+    - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
+      bash tests-legacy/check_phpunit.sh;
+      bash tests/check_unit.sh;
+      fi
 
-  - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
-        bash tests-legacy/check_e2e.sh;
-    fi
+    - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
+      bash tests-legacy/check_e2e.sh;
+      fi
 
 after_script:
-  - sudo cat /var/log/apache2/error.log
+    - sudo cat /var/log/apache2/error.log
 
 after_failure:
-  - curl -L http://localhost/
-  - cat /etc/apache2/envvars
-  - cat /etc/apache2/sites-available/000-default.conf
-  - sudo cat /var/log/php-fpm.log
-  - sudo ls -l /var/log/apache2
-  - sudo cat /var/log/apache2/other_vhosts_access.log
-  - if [ ! -z "$PRESTASTHOP_SCREENHOST" ]; then bash ./travis-scripts/base64-screenshots; fi # As we cannot upload file, we display the base64 encoded content of the screenshots
-  - cat $TRAVIS_BUILD_DIR/var/log/dev.log
+    - curl -L http://localhost/
+    - cat /etc/apache2/envvars
+    - cat /etc/apache2/sites-available/000-default.conf
+    - sudo cat /var/log/php-fpm.log
+    - sudo ls -l /var/log/apache2
+    - sudo cat /var/log/apache2/other_vhosts_access.log
+    - if [ ! -z "$PRESTASTHOP_SCREENHOST" ]; then bash ./travis-scripts/base64-screenshots; fi # As we cannot upload file, we display the base64 encoded content of the screenshots
+    - cat $TRAVIS_BUILD_DIR/var/log/dev.log

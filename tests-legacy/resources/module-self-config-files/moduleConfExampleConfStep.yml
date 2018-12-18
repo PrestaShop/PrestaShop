@@ -12,4 +12,4 @@ configuration:
             multilang: false
         # Question: how to handle multi lang values ?
     delete:
-        - "PAYPAL_ONBOARDING"
+        - 'PAYPAL_ONBOARDING'
