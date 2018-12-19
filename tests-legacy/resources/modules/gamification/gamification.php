@@ -558,7 +558,7 @@ class gamification extends Module
                 return false;
             }
 
-            return ((time() - @filemtime($file)) < $timeout);
+            return (time() - @filemtime($file)) < $timeout;
         } else {
             return false;
         }

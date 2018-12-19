@@ -68,7 +68,7 @@ class PHPSQLParserUtils {
             return true;
         }
 
-        return (substr($haystack, -$length) === $needle);
+        return substr($haystack, -$length) === $needle;
     }
 
     /**
@@ -149,6 +149,6 @@ class PHPSQLParserUtils {
             $expr[] = $token->toArray();
         }
 
-        return (empty($expr) ? false : $expr);
+        return empty($expr) ? false : $expr;
     }
 }

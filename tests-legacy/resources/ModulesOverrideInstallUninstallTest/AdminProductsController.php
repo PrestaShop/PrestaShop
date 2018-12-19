@@ -325,7 +325,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
 
-            return ((count($out) > 0) ? implode(',', $out) : '');
+            return (count($out) > 0) ? implode(',', $out) : '';
         } else {
             return '';
         }
@@ -387,7 +387,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $nb = count($this->_list);
         if ($this->_list) {
             $context = $this->context->cloneContext();
-            $context->shop = clone($context->shop);
+            $context->shop = clone $context->shop;
 
             for ($i = 0; $i < $nb; $i++) {
                 if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP) {
@@ -1762,7 +1762,7 @@ class AdminProductsController extends AdminProductsControllerCore
         @unlink(_PS_TMP_IMG_DIR_.'product_'.$product->id.'.jpg');
         @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'_'.$this->context->shop->id.'.jpg');
 
-        return ((isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false);
+        return (isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false;
     }
 
     /*
