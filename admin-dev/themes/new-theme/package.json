@@ -80,8 +80,6 @@
     "sprintf-js": "^1.0.3",
     "style-loader": "^0.23.0",
     "tablednd": "^1.0.3",
-    "tether": "^1.3.2",
-    "typeahead.js": "^0.11.1",
     "uglify-save-license": "^0.4.1",
     "vue-loader": "^15.4.2",
     "webpack": "^4.19.1",
