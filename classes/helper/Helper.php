@@ -379,7 +379,7 @@ class HelperCore
         Tools::displayAsDeprecated('Use HelperShop->getRenderedShopList instead');
 
         if (!Shop::isFeatureActive() || Shop::getTotalShops(false, null) < 2) {
-            return null;
+            return;
         }
 
         $tree = Shop::getTree();

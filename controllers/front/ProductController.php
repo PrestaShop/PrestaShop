@@ -1034,7 +1034,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $groups = Tools::getValue('group');
         if (empty($groups)) {
-            return null;
+            return;
         }
 
         return (int) Product::getIdProductAttributeByIdAttributes(

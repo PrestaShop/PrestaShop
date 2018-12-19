@@ -594,7 +594,7 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -2332,7 +2332,7 @@ abstract class ModuleCore implements ModuleInterface
             return false;
         }
 
-        return null;
+        return;
     }
 
     protected function _isTemplateOverloaded($template)
@@ -2467,7 +2467,7 @@ abstract class ModuleCore implements ModuleInterface
     {
         $overloaded = $this->_isTemplateOverloaded($template);
         if ($overloaded === null) {
-            return null;
+            return;
         }
 
         if ($overloaded) {
@@ -2479,7 +2479,7 @@ abstract class ModuleCore implements ModuleInterface
         } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_ . $this->name . '/' . $template)) {
             return _PS_MODULE_DIR_ . $this->name . '/' . $template;
         } else {
-            return null;
+            return;
         }
     }
 
@@ -3298,7 +3298,7 @@ abstract class ModuleCore implements ModuleInterface
     public function getOverrides()
     {
         if (!is_dir($this->getLocalPath() . 'override')) {
-            return null;
+            return;
         }
 
         $result = array();

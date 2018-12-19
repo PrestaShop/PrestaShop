@@ -49,7 +49,7 @@ class EmailLister
     public function getAvailableMails($dir)
     {
         if (!is_dir($dir)) {
-            return null;
+            return;
         }
 
         $mail_directory = $this->filesystem->listEntriesRecursively($dir);

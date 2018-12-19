@@ -95,7 +95,7 @@ abstract class AbstractDataLayer
 
             // If nothing was found deeper, there is nothing more to do
             if (null === $data) {
-                return null;
+                return;
             }
 
             // Save result for next Read requests
@@ -150,7 +150,7 @@ abstract class AbstractDataLayer
             return $this->lowerDataLayer->read($field);
         }
 
-        return null;
+        return;
     }
 
     /**

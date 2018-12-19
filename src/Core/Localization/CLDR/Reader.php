@@ -178,7 +178,7 @@ class Reader implements ReaderInterface
     {
         // root is the... root of all CLDR locales' data. Then no parent.
         if (self::CLDR_ROOT_LOCALE == $localeCode) {
-            return null;
+            return;
         }
 
         // The special case from supplemental data
@@ -493,7 +493,7 @@ class Reader implements ReaderInterface
     protected function extractParentLocale(SimpleXMLElement $parentLocaleXmlData, $localeTag)
     {
         if (self::CLDR_ROOT_LOCALE === $localeTag) {
-            return null;
+            return;
         }
         $parts = $this->getLocaleParts($localeTag);
         if (empty($parts['region'])) {

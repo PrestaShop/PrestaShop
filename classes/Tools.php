@@ -845,7 +845,7 @@ class ToolsCore
                 } else {
                     trigger_error(__FUNCTION__ . '(): Argument #' . ($i + 1) . ' is not an array', E_USER_WARNING);
 
-                    return null;
+                    return;
                 }
             }
 

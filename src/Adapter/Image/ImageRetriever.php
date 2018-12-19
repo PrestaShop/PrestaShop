@@ -122,7 +122,7 @@ class ImageRetriever
     public function getImage($object, $id_image)
     {
         if (!$id_image) {
-            return null;
+            return;
         }
 
         if (get_class($object) === 'Product') {

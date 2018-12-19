@@ -148,7 +148,7 @@ class ModuleSelfConfigurator
 
         // If we do not know in which module to search, we cannot go further
         if (!$this->module) {
-            return null;
+            return;
         }
 
         // Find and store the first config file we find
@@ -163,7 +163,7 @@ class ModuleSelfConfigurator
             return $this->configFile;
         }
 
-        return null;
+        return;
     }
 
     /**

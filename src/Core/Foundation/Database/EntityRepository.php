@@ -162,7 +162,7 @@ class EntityRepository
     protected function hydrateOne(array $rows)
     {
         if (count($rows) === 0) {
-            return null;
+            return;
         } elseif (count($rows) > 1) {
             throw new Exception('Too many rows returned.');
         } else {

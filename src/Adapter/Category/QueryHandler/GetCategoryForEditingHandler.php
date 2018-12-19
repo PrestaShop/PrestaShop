@@ -112,7 +112,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         $imageSize = file_exists($image) ? filesize($image) / 1000 : '';
 
         if (empty($imageTag) || empty($imageSize)) {
-            return null;
+            return;
         }
 
         return [
@@ -166,7 +166,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         $thumbSize = file_exists($thumb) ? filesize($thumb) / 1000 : false;
 
         if (empty($imageTag) || false === $thumbSize) {
-            return null;
+            return;
         }
 
         return [

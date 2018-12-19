@@ -1018,7 +1018,7 @@ class ShopCore extends ObjectModel
     public static function getContextShopID($null_value_without_multishop = false)
     {
         if ($null_value_without_multishop && !Shop::isFeatureActive()) {
-            return null;
+            return;
         }
 
         return self::$context_id_shop;
@@ -1044,7 +1044,7 @@ class ShopCore extends ObjectModel
     public static function getContextShopGroupID($null_value_without_multishop = false)
     {
         if ($null_value_without_multishop && !Shop::isFeatureActive()) {
-            return null;
+            return;
         }
 
         return self::$context_id_shop_group;

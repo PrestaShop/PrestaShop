@@ -220,7 +220,7 @@ class ThemeCollection implements ArrayAccess, Countable, IteratorAggregate
     public function removeByKey($key)
     {
         if (!isset($this->addons[$key]) && !array_key_exists($key, $this->addons)) {
-            return null;
+            return;
         }
 
         $removed = $this->addons[$key];

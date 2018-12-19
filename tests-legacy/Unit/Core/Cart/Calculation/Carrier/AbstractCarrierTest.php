@@ -265,7 +265,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             return $this->carriers[$id];
         }
 
-        return null;
+        return;
     }
 
     protected function insertAddresses()
@@ -339,7 +339,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             return $this->zones[$id];
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -369,7 +369,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             return $this->states[$id];
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -383,7 +383,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             return $this->addresses[$id];
         }
 
-        return null;
+        return;
     }
 
     protected function setCartCarrierFromFixtureId($carrierFixtureId)

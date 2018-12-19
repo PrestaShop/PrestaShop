@@ -85,7 +85,7 @@ class Facet
     public function getProperty($name)
     {
         if (!array_key_exists($name, $this->properties)) {
-            return null;
+            return;
         }
 
         return $this->properties[$name];

@@ -164,7 +164,7 @@ class DemoModeEnabledListener
         );
 
         if ($classAnnotation) {
-            return null;
+            return;
         }
 
         $controllerReflectionObject = new ReflectionObject($controllerObject);

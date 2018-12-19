@@ -4283,7 +4283,7 @@ class AdminImportControllerCore extends AdminController
         if (!$handle) {
             $this->errors[] = $this->trans('Cannot read the .CSV file', array(), 'Admin.Advparameters.Notification');
 
-            return null; // error case
+            return; // error case
         }
 
         AdminImportController::rewindBomAware($handle);

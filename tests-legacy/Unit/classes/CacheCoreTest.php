@@ -62,7 +62,7 @@ class CacheCoreTest extends TestCase
         if (isset($this->cacheArray[$args[0]])) {
             return $this->cacheArray[$args[0]];
         } else {
-            return null;
+            return;
         }
     }
 

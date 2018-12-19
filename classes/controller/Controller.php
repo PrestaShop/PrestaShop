@@ -594,7 +594,7 @@ abstract class ControllerCore
     {
         // This is implemented by some children classes (e.g. FrontController)
         // but not required for all controllers.
-        return null;
+        return;
     }
 
     /**

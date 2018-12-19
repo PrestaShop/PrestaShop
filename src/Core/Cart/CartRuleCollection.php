@@ -75,7 +75,7 @@ class CartRuleCollection implements \Iterator
     {
         $keys = array_keys($this->cartRules);
         if (!isset($keys[$iteratorPosition])) {
-            return null;
+            return;
         } else {
             return $keys[$iteratorPosition];
         }

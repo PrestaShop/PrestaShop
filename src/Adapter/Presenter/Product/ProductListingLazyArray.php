@@ -38,11 +38,11 @@ class ProductListingLazyArray extends ProductLazyArray
     public function getAddToCartUrl()
     {
         if ($this->product['id_product_attribute'] != 0 && !$this->settings->allow_add_variant_to_cart_from_listing) {
-            return null;
+            return;
         }
 
         if ($this->product['customizable'] == 2 || !empty($this->product['customization_required'])) {
-            return null;
+            return;
         }
 
         return parent::getAddToCartUrl();
