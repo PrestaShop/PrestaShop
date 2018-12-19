@@ -20,6 +20,7 @@ scenario('Create order in the Front Office', () => {
       test('should set the product "quantity"', () => client.waitAndSetValue(productPage.first_product_quantity, "4"));
       test('should click on "Add to cart" button  ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
       test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
+     /*** Related issue here https://github.com/PrestaShop/PrestaShop/issues/9841 ***/
       test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
       test('should click on confirm address button', () => client.waitForExistAndClick(CheckoutOrderPage.checkout_step2_continue_button));
       scenario('Choose "SHIPPING METHOD"', client => {

@@ -59,8 +59,7 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
             ->setParameters(array(
                 'idShop' => $idShop,
                 'idLang' => $idLang,
-            ))
-        ;
+            ));
 
         $result = $qb->getQuery()->getArrayResult();
 

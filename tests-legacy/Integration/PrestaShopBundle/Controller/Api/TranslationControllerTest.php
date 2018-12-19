@@ -133,14 +133,14 @@ class TranslationControllerTest extends ApiTestCase
                 array(
                     'lang' => 'en',
                     'type' => 'modules',
-                    'selected' => 'ps_baanner' // syntax error wanted
+                    'selected' => 'ps_baanner', // syntax error wanted
                 ),
             ),
             array(
                 array(
                     'lang' => 'en',
                     'type' => 'frront', // syntax error wanted
-                    'selected' => 'classic'
+                    'selected' => 'classic',
                 ),
             ),
         );
@@ -156,19 +156,18 @@ class TranslationControllerTest extends ApiTestCase
                 array(
                     'lang' => 'en',
                     'type' => 'modules',
-                    'selected' => 'ps_banner'
+                    'selected' => 'ps_banner',
                 ),
             ),
             array(
                 array(
                     'lang' => 'en',
                     'type' => 'front',
-                    'selected' => 'classic'
+                    'selected' => 'classic',
                 ),
             ),
         );
     }
-
 
     /**
      * @test
@@ -209,8 +208,6 @@ class TranslationControllerTest extends ApiTestCase
             ),
         );
     }
-
-
 
     /**
      * @test
@@ -263,7 +260,6 @@ class TranslationControllerTest extends ApiTestCase
         self::$client->request('POST', $editTranslationRoute);
         $this->assertResponseBodyValidJson(400);
 
-
         self::$client->request('POST', $editTranslationRoute, array(), array(), array(), '{}');
         $this->assertResponseBodyValidJson(400);
 
@@ -308,7 +304,6 @@ class TranslationControllerTest extends ApiTestCase
 
         self::$client->request('POST', $resetTranslationRoute);
         $this->assertResponseBodyValidJson(400);
-
 
         self::$client->request('POST', $resetTranslationRoute, array(), array(), array(), '{}');
         $this->assertResponseBodyValidJson(400);

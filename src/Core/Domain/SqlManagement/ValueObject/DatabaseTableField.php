@@ -53,8 +53,7 @@ class DatabaseTableField
     {
         $this
             ->setName($name)
-            ->setType($type)
-        ;
+            ->setType($type);
     }
 
     /**

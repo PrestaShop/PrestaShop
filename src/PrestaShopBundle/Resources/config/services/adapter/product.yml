@@ -3,13 +3,13 @@ services:
         public: true
 
     prestashop.adapter.admin.data_provider.product:
-            class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
-            decorates: prestashop.core.admin.data_provider.product_interface
-            arguments:
-                - "@doctrine.orm.entity_manager"
-                - "@prestashop.adapter.image_manager"
-                - "@prestashop.static_cache.adapter"
-            public: false
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+        decorates: prestashop.core.admin.data_provider.product_interface
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@prestashop.adapter.image_manager"
+            - "@prestashop.static_cache.adapter"
+        public: false
 
     prestashop.adapter.admin.data_updater.product:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
@@ -29,5 +29,5 @@ services:
     prestashop.adapter.product.filter_categories_request_purifier:
         class: 'PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier'
 
-    prestashop.adapter.product.filter_parameters_updater:
-        class: 'PrestaShop\PrestaShop\Adapter\Product\FilterParametersUpdater'
+    prestashop.adapter.product.list_parameters_updater:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater'

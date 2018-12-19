@@ -31,7 +31,6 @@ use Cache;
 use Carrier;
 use CartRule;
 use Configuration;
-use Context;
 use Country;
 use Db;
 use RangePrice;
@@ -41,7 +40,6 @@ use Zone;
 
 abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 {
-
     const ZONE_FIXTURES = [
         1 => [
             'name' => 'zone #1',
@@ -228,7 +226,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             $carrier->add();
             $carrierPrices = [];
             foreach ($carrierFixture['ranges'] as $rangeFixture) {
-                $range             = new RangePrice;
+                $range             = new RangePrice();
                 $range->id_carrier = $carrier->id;
                 $range->delimiter1 = $rangeFixture['from'];
                 $range->delimiter2 = $rangeFixture['to'];
@@ -273,7 +271,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
     protected function insertAddresses()
     {
         foreach (static::ZONE_FIXTURES as $k => $zoneFixture) {
-            $zone       = new Zone;
+            $zone       = new Zone();
             $zone->name = $zoneFixture['name'];
             $zone->add();
             $this->zones[$k] = $zone;
@@ -291,7 +289,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             $country->save();
         }
         foreach (static::STATE_FIXTURES as $k => $stateFixture) {
-            $state           = new State;
+            $state           = new State();
             $state->name     = $stateFixture['name'];
             $state->iso_code = $stateFixture['isoCode'];
             $zone            = $this->getZoneFromFixtureId($stateFixture['zoneId']);
@@ -308,7 +306,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             $this->states[$k] = $state;
         }
         foreach (static::ADDRESS_FIXTURES as $k => $addressFixture) {
-            $address = new Address;
+            $address = new Address();
             $country = $this->getCountryFromIsoCode($addressFixture['countryIsoCode']);
             if ($country === null) {
                 throw new \Exception('Country not found with fixture iso code = ' . $addressFixture['countryIsoCode']);

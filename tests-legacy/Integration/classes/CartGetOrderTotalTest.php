@@ -28,7 +28,7 @@
 namespace LegacyTests\Integration\classes;
 
 use LegacyTests\TestCase\IntegrationTestCase;
-use PHPUnit_Framework_Assert as Assert;
+use PHPUnit\Framework\Assert as Assert;
 use Exception;
 use Address;
 use Carrier;
@@ -90,7 +90,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      * Methods starting with get should cache their result for performance,
      * methods starting with make should create a new object each time.
      */
-
     private static function deactivateCurrentCartRules()
     {
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart_rule SET active = 0');
@@ -123,21 +122,27 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         switch ($modeStr) {
             case 'up':
                 $mode = PS_ROUND_UP;
+
                 break;
             case 'down':
                 $mode = PS_ROUND_DOWN;
+
                 break;
             case 'half_up':
                 $mode = PS_ROUND_HALF_UP;
+
                 break;
             case 'half_down':
                 $mode = PS_ROUND_HALF_DOWN;
+
                 break;
             case 'half_even':
                 $mode = PS_ROUND_HALF_DOWN;
+
                 break;
             case 'hald_odd':
                 $mode = PS_ROUND_HALF_ODD;
+
                 break;
             default:
                 throw new Exception(sprintf('Unknown rounding mode `%s`.', $modeStr));
@@ -155,12 +160,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         switch ($typeStr) {
             case 'item':
                 $type = Order::ROUND_ITEM;
+
                 break;
             case 'line':
                 $type = Order::ROUND_LINE;
+
                 break;
             case 'total':
                 $type = Order::ROUND_TOTAL;
+
                 break;
             default:
                 throw new Exception(sprintf('Unknown rounding type `%s`.', $typeStr));
@@ -239,6 +247,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $product->price = $price;
         $product->link_rewrite = Tools::link_rewrite($name);
         Assert::assertTrue($product->save());
+
         return $product;
     }
 
@@ -252,6 +261,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $address->alias = microtime().getmypid();
         $address->city = 'Levallois';
         Assert::assertTrue($address->save());
+
         return $address;
     }
 
@@ -262,6 +272,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cart->id_address_invoice = self::$id_address;
         Assert::assertTrue($cart->save());
         Context::getContext()->cart = $cart;
+
         return $cart;
     }
 
@@ -468,7 +479,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $product = self::makeProduct('Yo Product', 10, self::getIdTaxRulesGroup(20));
 
-
         self::makeCartRule(5, 'before tax')->id;
         $cart = self::makeCart();
 
@@ -520,18 +530,22 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS),
-            $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+            $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::BOTH),
-            $cart->getOrderTotal(true, Cart::BOTH));
+            $cart->getOrderTotal(true, Cart::BOTH)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
-            $cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
+            $cart->getOrderTotal(true, Cart::ONLY_SHIPPING)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
-            $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+            $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS)
+        );
     }
 }

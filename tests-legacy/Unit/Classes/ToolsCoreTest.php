@@ -74,7 +74,7 @@ class ToolsCoreTest extends TestCase
         $this->setPostAndGet(array(
             '' => true,
             ' ' => true,
-            null => true
+            null => true,
         ));
 
         $this->assertFalse(Tools::getValue('', true));
@@ -123,77 +123,77 @@ class ToolsCoreTest extends TestCase
                 array(array('a' => 2), array('a' => 1)), // expected result
                 1, 0,                                     // amount and precision
                 array(array('a' => 1), array('a' => 1)), // source rows
-                'a'                                         // sort column
+                'a',                                         // sort column
             ),
             array(
                 // check with 1 decimal
                 array(array('a' => 1.5), array('a' => 1.5)),
                 1, 1,
                 array(array('a' => 1), array('a' => 1)),
-                'a'
+                'a',
             ),
             array(
                 // 2 decimals, but only one really needed
                 array(array('a' => 1.5), array('a' => 1.5)),
                 1, 2,
                 array(array('a' => 1), array('a' => 1)),
-                'a'
+                'a',
             ),
             array(
                 // check that the biggest "a" gets the adjustment
                 array(array('a' => 3), array('a' => 1)),
                 1, 0,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // check it works with amount > count($rows)
                 array(array('a' => 4), array('a' => 2)),
                 3, 0,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // 2 decimals
                 array(array('a' => 2.01), array('a' => 1)),
                 0.01, 2,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // 2 decimals, equal level of adjustment
                 array(array('a' => 2.01), array('a' => 1.01)),
                 0.02, 2,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // 2 decimals, different levels of adjustmnt
                 array(array('a' => 2.02), array('a' => 1.01)),
                 0.03, 2,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // check associative arrays are OK too
                 array(array('a' => 2.01), array('a' => 1.01)),
                 0.02, 2,
                 array('z' => array('a' => 1), 'x' => array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // check amount is rounded if it needs more precision than asked for
                 array(array('a' => 2.02), array('a' => 1.01)),
                 0.025, 2,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 array(array('a' => 7.69), array('a' => 4.09), array('a' => 1.8)),
                 -0.32, 2,
                 array(array('a' => 7.8), array('a' => 4.2), array('a' => 1.9)),
-                'a'
-            )
+                'a',
+            ),
         );
     }
 

@@ -89,11 +89,11 @@ class QueryParamsCollectionTest extends TestCase
         return array(
             array(
                 $pageIndex = 0,
-                $pageSize = 100
+                $pageSize = 100,
             ),
             array(
                 $pageIndex = 1,
-                $pageSize = 100 + 1
+                $pageSize = 100 + 1,
             ),
         );
     }
@@ -119,7 +119,7 @@ class QueryParamsCollectionTest extends TestCase
                 'order' => $order,
                 'page_index' => $pageIndex,
                 'page_size' => $pageSize,
-                '_attributes' => $this->mockAttributes(array())->reveal()
+                '_attributes' => $this->mockAttributes(array())->reveal(),
             )
         );
 
@@ -159,7 +159,7 @@ class QueryParamsCollectionTest extends TestCase
                 'order' => $order,
                 'page_index' => $pageIndex,
                 'page_size' => $pageSize,
-                '_attributes' => $this->mockAttributes(array('productId' => 1))->reveal()
+                '_attributes' => $this->mockAttributes(array('productId' => 1))->reveal(),
             )
         );
 
@@ -189,43 +189,43 @@ class QueryParamsCollectionTest extends TestCase
                 'ORDER BY {product} ',
                 array(
                     'max_results' => 1,
-                    'first_result' => 0
-                )
+                    'first_result' => 0,
+                ),
             )),
             array('reference DESC', '3', null, array(
                 'ORDER BY {reference} DESC ',
                 array(
                     'max_results' => 100,
-                    'first_result' => 200
-                )
+                    'first_result' => 200,
+                ),
             )),
             array('supplier desc', null, null, array(
                 'ORDER BY {supplier} DESC ',
                 array(
                     'max_results' => 100,
-                    'first_result' => 0
-                )
+                    'first_result' => 0,
+                ),
             )),
             array('available_quantity DESC', null, null, array(
                 'ORDER BY {available_quantity} DESC ',
                 array(
                     'max_results' => 100,
-                    'first_result' => 0
-                )
+                    'first_result' => 0,
+                ),
             )),
             array('available_quantity DESC', '2', '4', array(
                 'ORDER BY {available_quantity} DESC ',
                 array(
                     'max_results' => 4,
-                    'first_result' => 4
-                )
+                    'first_result' => 4,
+                ),
             )),
             array('physical_quantity', '3', '3', array(
                 'ORDER BY {physical_quantity} ',
                 array(
                     'max_results' => 3,
-                    'first_result' => 6
-                )
+                    'first_result' => 6,
+                ),
             )),
         );
     }
@@ -264,8 +264,7 @@ class QueryParamsCollectionTest extends TestCase
         $supplierFilterMessage = 'It should provide with a SQL condition clause on supplier';
         $categoryFilterMessage = 'It should provide with a SQL condition clause on category';
         $keywordsFilterMessage =
-            'It should provide with SQL conditions clauses on product references, names and supplier names'
-        ;
+            'It should provide with SQL conditions clauses on product references, names and supplier names';
         $attributesFilterMessage = 'It should provide with SQL conditions clauses on product attributes';
         $featuresFilterMessage = 'It should provide with SQL conditions clauses on product features';
 
@@ -273,24 +272,24 @@ class QueryParamsCollectionTest extends TestCase
             array(
                 array('supplier_id' => 1),
                 array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {supplier_id} = :supplier_id'),
-                $supplierFilterMessage
+                $supplierFilterMessage,
             ),
             array(
                 array('supplier_id' => array(1, 2)),
                 array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {supplier_id} IN (:supplier_id_0,:supplier_id_1)'),
-                $supplierFilterMessage
+                $supplierFilterMessage,
             ),
             array(
                 array('category_id' => 1),
                 array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp 
         WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'),
-                $categoryFilterMessage
+                $categoryFilterMessage,
             ),
             array(
                 array('category_id' => array(1, 2)),
                 array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp 
         WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'),
-                $categoryFilterMessage
+                $categoryFilterMessage,
             ),
             array(
                 array('keywords' => 'Fashion'),
@@ -301,9 +300,9 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_reference} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
-                        ')'
+                        ')',
                 ),
-                $keywordsFilterMessage
+                $keywordsFilterMessage,
             ),
             array(
                 array('keywords' => 'Chiffon'),
@@ -316,7 +315,7 @@ class QueryParamsCollectionTest extends TestCase
                         '{combination_name} LIKE :keyword_0' .
                         ')',
                 ),
-                $keywordsFilterMessage
+                $keywordsFilterMessage,
             ),
             array(
                 array('keywords' => array('Chiffon', 'demo_7', 'Size - S')),
@@ -339,9 +338,9 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_reference} LIKE :keyword_2 OR ' .
                         '{product_name} LIKE :keyword_2 OR ' .
                         '{combination_name} LIKE :keyword_2' .
-                        ')'
+                        ')',
                 ),
-                $keywordsFilterMessage
+                $keywordsFilterMessage,
             ),
             array(
                 array('attributes' => '1:2'),
@@ -353,9 +352,9 @@ class QueryParamsCollectionTest extends TestCase
                         )                   
                     WHERE pac.id_product_attribute=pa.id_product_attribute 
                     AND a.id_attribute=:attribute_id_0
-                    AND a.id_attribute_group=:attribute_group_id_0)'
+                    AND a.id_attribute_group=:attribute_group_id_0)',
                 ),
-                $attributesFilterMessage
+                $attributesFilterMessage,
             ),
             array(
                 array('attributes' => array('1:2', '3:14')),
@@ -375,9 +374,9 @@ AND EXISTS(SELECT 1
                         )                   
                     WHERE pac.id_product_attribute=pa.id_product_attribute 
                     AND a.id_attribute=:attribute_id_1
-                    AND a.id_attribute_group=:attribute_group_id_1)'
+                    AND a.id_attribute_group=:attribute_group_id_1)',
                 ),
-                $attributesFilterMessage
+                $attributesFilterMessage,
             ),
             array(
                 array('features' => '5:1'),
@@ -397,9 +396,9 @@ AND EXISTS(SELECT 1
                         )
                     WHERE fv.custom = 0 AND fp.id_product=p.id_product
                     AND fp.id_feature=:feature_id_0 
-                    AND fp.id_feature_value=:feature_value_id_0)'
+                    AND fp.id_feature_value=:feature_value_id_0)',
                 ),
-                $featuresFilterMessage
+                $featuresFilterMessage,
             ),
             array(
                 array('features' => array('5:1', '6:11')),
@@ -435,10 +434,10 @@ AND EXISTS(SELECT 1
                         )
                     WHERE fv.custom = 0 AND fp.id_product=p.id_product
                     AND fp.id_feature=:feature_id_1 
-                    AND fp.id_feature_value=:feature_value_id_1)'
+                    AND fp.id_feature_value=:feature_value_id_1)',
                 ),
-                $featuresFilterMessage
-            )
+                $featuresFilterMessage,
+            ),
         );
     }
 

@@ -24,8 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShopBundle\Install\Install;
-
 /**
  * 2007-2017 PrestaShop
  *
@@ -53,9 +51,9 @@ use PrestaShopBundle\Install\Install;
 define('_PS_IN_TEST_', true);
 define('_PS_ROOT_DIR_', __DIR__ . '/..');
 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests-legacy/resources/modules/');
-require_once(dirname(__FILE__).'/../config/defines.inc.php');
-require_once(_PS_CONFIG_DIR_.'autoload.php');
-require_once(dirname(__FILE__).'/../config/bootstrap.php');
+require_once dirname(__FILE__).'/../config/defines.inc.php';
+require_once _PS_CONFIG_DIR_.'autoload.php';
+require_once dirname(__FILE__).'/../config/bootstrap.php';
 
 /**
  * Following code makes tests run under phpstorm

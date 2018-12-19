@@ -54,5 +54,6 @@ function add_default_restrictions_modules_groups()
             $res &= Db::getInstance()->execute($sql);
         }
     }
+
     return $res;
 }

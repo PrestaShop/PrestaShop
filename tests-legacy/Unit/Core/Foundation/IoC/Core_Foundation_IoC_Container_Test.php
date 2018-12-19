@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Unit\Core\Foundation\IoC;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
@@ -66,7 +65,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     public function testBindByClosureInstanceNotSharedByDefault()
     {
         $this->container->bind('different', function () {
-            return new Dummy;
+            return new Dummy();
         });
 
         $first = $this->container->make('different');
@@ -78,7 +77,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     public function testBindByClosureInstanceSharedIfExplicitelyRequired()
     {
         $this->container->bind('same', function () {
-            return new Dummy;
+            return new Dummy();
         }, true);
 
         $first = $this->container->make('same');
@@ -188,9 +187,9 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     public function valuesToBind()
     {
         return array(
-            array(new Dummy),
+            array(new Dummy()),
             array(42),
-            array(array(1, 2, 3))
+            array(array(1, 2, 3)),
         );
     }
 

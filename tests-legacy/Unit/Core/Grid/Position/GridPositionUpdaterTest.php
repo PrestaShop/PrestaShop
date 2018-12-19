@@ -56,6 +56,7 @@ class GridPositionUpdaterTest extends TestCase
         $gridUpdater = new GridPositionUpdater($updateHandler);
 
         $caughtException = null;
+
         try {
             $gridUpdater->update($positionUpdate);
         } catch (PositionException $e) {
@@ -148,8 +149,7 @@ class GridPositionUpdaterTest extends TestCase
                 'Could not update #%i',
                 'Admin.Catalog.Notification',
                 [5]
-            ))
-        ;
+            ));
 
         return $updaterMock;
 

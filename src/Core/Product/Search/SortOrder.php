@@ -40,8 +40,7 @@ class SortOrder
         $this
             ->setEntity($entity)
             ->setField($field)
-            ->setDirection($direction)
-        ;
+            ->setDirection($direction);
     }
 
     public static function random()

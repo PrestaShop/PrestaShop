@@ -176,7 +176,7 @@ module.exports = {
     if (typeof global.selenium_port !== 'undefined') {
       options.port = global.selenium_port;
     }
-    fs.readFile(_projectdir + '/../config/defines.inc.php', 'utf8', (err, content) => {
+    fs.readFile(debugFile, 'utf8', (err, content) => {
         global.ps_mode_dev = (content.substring(content.indexOf("define('_PS_MODE_DEV_', "), content.indexOf(");")).split(', ')[1]) === 'true' ? true : false;
     });
     client = webdriverio.remote(options);

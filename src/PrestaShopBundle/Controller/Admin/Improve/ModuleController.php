@@ -171,6 +171,7 @@ class ModuleController extends ModuleAbstractController
                 foreach ($modulesListUnsorted['installed'] as $moduleInstalled) {
                     if ($moduleInstalled['attributes']['name'] == $value) {
                         $installed[] = $moduleInstalled;
+
                         continue 2;
                     }
                 }
@@ -178,6 +179,7 @@ class ModuleController extends ModuleAbstractController
                 foreach ($modulesListUnsorted['not_installed'] as $moduleNotInstalled) {
                     if ($moduleNotInstalled['attributes']['name'] == $value) {
                         $uninstalled[] = $moduleNotInstalled;
+
                         continue 2;
                     }
                 }
@@ -214,7 +216,7 @@ class ModuleController extends ModuleAbstractController
      */
     public function configureModuleAction($module_name)
     {
-        /* @var UrlGeneratorInterface $legacyUrlGenerator */
+        /** @var UrlGeneratorInterface $legacyUrlGenerator */
         $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
         $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
         $legacyContext = $legacyContextProvider->getContext();
@@ -316,8 +318,7 @@ class ModuleController extends ModuleAbstractController
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setStatus(~AddonListFilterStatus::INSTALLED)
-        ;
+            ->setStatus(~AddonListFilterStatus::INSTALLED);
 
         try {
             $modulesFromRepository = AddonsCollection::createFrom($moduleRepository->getFilteredList($filters));
@@ -780,7 +781,7 @@ class ModuleController extends ModuleAbstractController
      */
     private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
     {
-        /* @var CategoriesProvider */
+        /** @var CategoriesProvider */
         $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
 
         foreach ($categories['categories']->subMenu as $category) {

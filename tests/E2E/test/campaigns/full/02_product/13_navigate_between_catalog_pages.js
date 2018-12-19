@@ -19,18 +19,8 @@ scenario('Navigate between the catalog pages in the back office', () => {
 
   scenario('Create products to have more than 20 product in the catalog', client => {
     test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
-    test('should create products if there\'s less than 20 product in the list', () => {
-      return promise
-        .then(() => client.getProductPageNumber('product_catalog_list'))
-        .then(() => {
-          let productNumber = 20 - global.productsNumber;
-          if (productNumber !== 0) {
-            for (let i = 0; i < productNumber + 1; i++) {
-              commonProduct.createProduct(AddProductPage, productData);
-            }
-          }
-        });
-    });
+    test('should create products if there\'s less than 20 product in the list', () => commonProduct.checkPaginationThenCreateProduct(client, productData));
+
   }, 'product/product');
   commonProduct.checkPaginationBO('Next', '1', 20, false, true);
   commonProduct.checkPaginationBO('Next', '1', 50);

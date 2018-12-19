@@ -1,28 +1,28 @@
 <?php
 /**
-* 2007-2016 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2016 PrestaShop SA
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-2016 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2016 PrestaShop SA
+ *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -32,7 +32,7 @@ if (defined('_PS_ADMIN_DIR_') === false) {
     define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
 }
 
-require_once(dirname(__FILE__).'/classes/CronJobsForms.php');
+require_once dirname(__FILE__).'/classes/CronJobsForms.php';
 
 class CronJobs extends Module
 {
@@ -108,11 +108,12 @@ class CronJobs extends Module
             Configuration::updateValue('CRONJOBS_MODULE_VERSION', $this->version);
             Configuration::updateValue('CRONJOBS_ADMIN_DIR', Tools::encrypt($this->getAdminDir()));
 
-
             if (Configuration::get('CRONJOBS_MODE') == 'webservice') {
                 $this->updateWebservice(true);
+
                 return $this->enableWebservice();
             }
+
             return $this->disableWebservice();
         }
     }
@@ -179,6 +180,7 @@ class CronJobs extends Module
 
         if ($id_tab) {
             $tab = new Tab($id_tab);
+
             return $tab->delete();
         }
 
@@ -297,6 +299,7 @@ class CronJobs extends Module
         }
 
         $query = 'SELECT `active` FROM '._DB_PREFIX_.'cronjobs WHERE `id_module` = \''.(int)$id_module.'\'';
+
         return (bool)Db::getInstance()->getValue($query);
     }
 
@@ -424,7 +427,7 @@ class CronJobs extends Module
             'href' => $this->context->link->getAdminLink('AdminModules', false)
             .'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name
             .'&newcronjobs=1&token='.Tools::getAdminTokenLite('AdminModules'),
-            'desc' => $this->l('Add new task')
+            'desc' => $this->l('Add new task'),
         );
 
         $helper->token = Tools::getAdminTokenLite('AdminModules');
@@ -440,6 +443,7 @@ class CronJobs extends Module
             if (Tools::getValue('cron_mode') == 'advanced') {
                 return $this->disableWebservice();
             }
+
             return $this->enableWebservice();
         }
     }
@@ -469,6 +473,7 @@ class CronJobs extends Module
                 if (($result = Db::getInstance()->execute($query)) != false) {
                     return $this->setSuccessMessage('The task has been successfully added.');
                 }
+
                 return $this->setErrorMessage('An error happened: the task could not be added.');
             }
 
@@ -507,6 +512,7 @@ class CronJobs extends Module
         if ((Db::getInstance()->execute($query)) != false) {
             return $this->setSuccessMessage('The task has been updated.');
         }
+
         return $this->setErrorMessage('The task has not been updated');
     }
 
@@ -527,6 +533,7 @@ class CronJobs extends Module
 
             if ($module == false) {
                 Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.bqSQL($this->name).' WHERE `id_cronjob` = \''.(int)$cron['id_cronjob'].'\'');
+
                 break;
             }
 
@@ -630,18 +637,21 @@ class CronJobs extends Module
     protected function setErrorMessage($message)
     {
         $this->_errors[] = $this->l($message);
+
         return false;
     }
 
     protected function setSuccessMessage($message)
     {
         $this->_successes[] = $this->l($message);
+
         return true;
     }
 
     protected function setWarningMessage($message)
     {
         $this->_warnings[] = $this->l($message);
+
         return false;
     }
 
@@ -679,13 +689,13 @@ class CronJobs extends Module
             'domain' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__,
             'cronjob' => $cron_url.'&token='.Configuration::getGlobalValue('CRONJOBS_EXECUTION_TOKEN'),
             'cron_token' => Configuration::getGlobalValue('CRONJOBS_EXECUTION_TOKEN'),
-            'active' => (bool)$use_webservice
+            'active' => (bool)$use_webservice,
         );
 
         $context_options = array('http' => array(
             'method' => (is_null($webservice_id) == true) ? 'POST' : 'PUT',
             'header'  => 'Content-type: application/x-www-form-urlencoded',
-            'content' => http_build_query($data)
+            'content' => http_build_query($data),
         ));
 
         $result = Tools::file_get_contents($this->webservice_url.$webservice_id, false, stream_context_create($context_options));
@@ -703,6 +713,7 @@ class CronJobs extends Module
         if ((bool)$use_webservice == true) {
             return $this->setSuccessMessage('Your cron tasks have been successfully added to PrestaShop\'s cron tasks webservice.');
         }
+
         return $this->setSuccessMessage('Your cron tasks have been successfully registered using the Advanced mode.');
     }
 

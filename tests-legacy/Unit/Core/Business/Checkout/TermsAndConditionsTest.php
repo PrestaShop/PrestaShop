@@ -35,7 +35,7 @@ class TermsAndConditionsTest extends UnitTestCase
 
     public function setUp()
     {
-        $this->terms = new TermsAndConditions;
+        $this->terms = new TermsAndConditions();
     }
 
     public function testSetTextInsertsLinks()

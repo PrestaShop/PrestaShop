@@ -42,7 +42,7 @@ class DatabaseCreator
         define('__PS_BASE_URI__', '/');
         define('_PS_ROOT_DIR_', __DIR__ . '/../../..');
         define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests-legacy/resources/modules/');
-        require_once(__DIR__ . '/../../../install-dev/init.php');
+        require_once __DIR__ . '/../../../install-dev/init.php';
 
         $install = new Install();
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);

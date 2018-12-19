@@ -1,10 +1,21 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Employee} = require('../../../selectors/BO/employee_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
+const welcomeScenarios = require('../../common_scenarios/welcome');
+const promise = Promise.resolve();
 
 scenario('Create employee', client => {
   test('should open the browser', () => client.open());
   test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+}, 'common_client');
+welcomeScenarios.findAndCloseWelcomeModal();
+scenario('Create employee', client => {
+  test('should stop the "On Boarding"', () => {
+    return promise
+      .then(() => client.isVisible(OnBoarding.stop_button))
+      .then(() => client.closeBoarding(OnBoarding.stop_button));
+  });
   test('should go to "Team" menu', () => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu));
   test('should click on "Add new employee" button', () => client.waitForExistAndClick(Employee.new_employee_button));
   test('should set "First name" input', () => client.waitAndSetValue(Employee.first_name_input, 'Demo'));

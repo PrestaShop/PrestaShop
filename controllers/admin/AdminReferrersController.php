@@ -36,7 +36,8 @@ if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers' . (int) Ta
         );
     } elseif (Tools::isSubmit('ajaxFillProducts')) {
         $json_array = array();
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
 			SELECT p.id_product, pl.name
 			FROM ' . _DB_PREFIX_ . 'product p
 			LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl
@@ -506,7 +507,8 @@ class AdminReferrersControllerCore extends AdminController
             'order_rate' => $this->trans('Order rate', array(), 'Admin.Shopparameters.Feature'),
             'click_fee' => $this->trans('Click fee', array(), 'Admin.Shopparameters.Feature'),
             'base_fee' => $this->trans('Base fee', array(), 'Admin.Shopparameters.Feature'),
-            'percent_fee' => $this->trans('Percent fee', array(), 'Admin.Shopparameters.Feature'), );
+            'percent_fee' => $this->trans('Percent fee', array(), 'Admin.Shopparameters.Feature'),
+        );
 
         $this->tpl_view_vars = array(
             'enable_calendar' => $this->enableCalendar(),

@@ -53,8 +53,7 @@ class AddSqlRequestCommand
     {
         $this
             ->setName($name)
-            ->setSql($sql)
-        ;
+            ->setSql($sql);
     }
 
     /**

@@ -185,7 +185,8 @@ class ProductPrice extends CommonAbstractType
                     'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'Admin.Catalog.Help')],
                 ]
             )
-            ->add('specific_price',
+            ->add(
+                'specific_price',
                 ProductSpecificPrice::class,
                 [
                     'id_product' => $options['id_product'],

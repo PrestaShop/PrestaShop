@@ -134,7 +134,7 @@ class HookExtension extends \Twig_Extension
             $render[] = [
                 'id' => $module,
                 'name' => $this->moduleDataProvider->getModuleName($module),
-                'content' => array_values($hookRender)[0],
+                'content' => $hookRender,
                 'attributes' => $moduleAttributes->all(),
             ];
         }
@@ -162,8 +162,7 @@ class HookExtension extends \Twig_Extension
 
         return $this->hookDispatcher
             ->dispatchRenderingWithParameters($hookName, $hookParameters)
-            ->outputContent()
-        ;
+            ->outputContent();
     }
 
     /**

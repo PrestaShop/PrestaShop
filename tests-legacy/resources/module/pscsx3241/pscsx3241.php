@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -48,6 +47,7 @@ class pscsx3241 extends Module
         if (parent::install() == false) {
             return false;
         }
+
         return true;
     }
 }

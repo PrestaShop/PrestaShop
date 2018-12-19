@@ -37,7 +37,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
  */
 class CartRulesAmountTest extends AbstractCartCalculationTest
 {
-
     /**
      * @dataProvider cartWithOneCartRuleAmountProvider
      */
@@ -80,8 +79,8 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
                     1 => 1,
                 ],
                 'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
-                                   - static::CART_RULES_FIXTURES[4]['amount']
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                - static::CART_RULES_FIXTURES[4]['amount']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [4],
                 'knownToFailOnV1'=>false,
             ],
@@ -98,8 +97,8 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
                     1 => 3,
                 ],
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                   - static::CART_RULES_FIXTURES[4]['amount']
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                - static::CART_RULES_FIXTURES[4]['amount']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [4],
                 'knownToFailOnV1'=>false,
             ],
@@ -111,10 +110,10 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
                     // total without rule : 155.41
                 ],
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                   + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                   + static::PRODUCT_FIXTURES[3]['price']
-                                   - static::CART_RULES_FIXTURES[4]['amount']
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + 2 * static::PRODUCT_FIXTURES[2]['price']
+                + static::PRODUCT_FIXTURES[3]['price']
+                - static::CART_RULES_FIXTURES[4]['amount']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [4],
                 'knownToFailOnV1'=>false,
             ],
@@ -126,10 +125,10 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
                     // total without rule : 155.41
                 ],
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                   + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                   + static::PRODUCT_FIXTURES[3]['price']
-                                   - static::CART_RULES_FIXTURES[4]['amount']
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + 2 * static::PRODUCT_FIXTURES[2]['price']
+                + static::PRODUCT_FIXTURES[3]['price']
+                - static::CART_RULES_FIXTURES[4]['amount']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [4],
                 'knownToFailOnV1'=>false,
             ],
@@ -161,9 +160,9 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
                     1 => 1,
                 ],
                 'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
-                                   - static::CART_RULES_FIXTURES[4]['amount']
-                                   - static::CART_RULES_FIXTURES[6]['amount']
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                - static::CART_RULES_FIXTURES[4]['amount']
+                - static::CART_RULES_FIXTURES[6]['amount']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [4, 6],
                 'knownToFailOnV1'=>false,
             ],
@@ -172,9 +171,9 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
                     1 => 3,
                 ],
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                   - static::CART_RULES_FIXTURES[4]['amount']
-                                   - static::CART_RULES_FIXTURES[6]['amount']
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                - static::CART_RULES_FIXTURES[4]['amount']
+                - static::CART_RULES_FIXTURES[6]['amount']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [4, 6],
                 'knownToFailOnV1'=>false,
             ],
@@ -186,11 +185,11 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
                     // total without rule : 155.41
                 ],
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
-                                   + 2 * static::PRODUCT_FIXTURES[2]['price']
-                                   + static::PRODUCT_FIXTURES[3]['price']
-                                   - static::CART_RULES_FIXTURES[4]['amount']
-                                   - static::CART_RULES_FIXTURES[6]['amount']
-                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + 2 * static::PRODUCT_FIXTURES[2]['price']
+                + static::PRODUCT_FIXTURES[3]['price']
+                - static::CART_RULES_FIXTURES[4]['amount']
+                - static::CART_RULES_FIXTURES[6]['amount']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => [4, 6],
                 'knownToFailOnV1'=>false,
             ],

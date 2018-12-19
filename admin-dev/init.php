@@ -42,18 +42,18 @@ try {
 
     $iso = $context->language->iso_code;
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/errors.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/fields.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/admin.php';
     }
 
     /* Server Params */
     $protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-    $protocol_content = (isset($useSSL) and $useSSL and Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+    $protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
     $link = new Link($protocol_link, $protocol_content);
     $context->link = $link;
     if (!defined('_PS_BASE_URL_')) {
@@ -77,6 +77,7 @@ try {
             foreach (scandir($path, SCANDIR_SORT_NONE) as $theme) {
                 if ($theme[0] != '.' && file_exists($path.$theme.'/template/layout.tpl')) {
                     $context->employee->bo_theme = $theme;
+
                     break;
                 }
             }
@@ -99,7 +100,6 @@ try {
     }
 
     $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-
 
     if ($context->employee->isLoggedBack()) {
         $shop_id = '';

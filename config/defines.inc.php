@@ -39,7 +39,9 @@ if (_PS_MODE_DEV_ === true) {
     define('_PS_DEBUG_SQL_', false);
 }
 
-define('_PS_DEBUG_PROFILING_', false);
+if (!defined('_PS_DEBUG_PROFILING_')) {
+    define('_PS_DEBUG_PROFILING_', false);
+}
 define('_PS_MODE_DEMO_', false);
 
 $currentDir = dirname(__FILE__);
@@ -68,7 +70,7 @@ if (defined('_PS_ADMIN_DIR_')) {
 }
 if (!defined('_PS_CACHE_DIR_')) {
     $prestashopCacheDir =  _PS_ROOT_DIR_.'/var/cache/'.(_PS_MODE_DEV_ ? 'dev': 'prod'). DIRECTORY_SEPARATOR;
-    define('_PS_CACHE_DIR_',$prestashopCacheDir);
+    define('_PS_CACHE_DIR_', $prestashopCacheDir);
 }
 define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');
 define('_PS_CUSTOM_CONFIG_FILE_', _PS_CONFIG_DIR_.'settings_custom.inc.php');

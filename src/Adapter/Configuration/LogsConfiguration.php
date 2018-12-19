@@ -73,8 +73,7 @@ class LogsConfiguration implements DataConfigurationInterface
         $resolver = new OptionsResolver();
         $resolver
             ->setRequired(array('logs_by_email'))
-            ->resolve($configuration)
-        ;
+            ->resolve($configuration);
 
         return true;
     }

@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace LegacyTests\Integration;
 
 use LegacyTests\TestCase\IntegrationTestCase;
@@ -62,7 +61,9 @@ class ProductURLsTest extends IntegrationTestCase
     {
         $url = $this->link->getProductLink(
             $id_product,
-            null, null, null,
+            null,
+            null,
+            null,
             $this->language->id,
             null,
             $id_product_attribute,

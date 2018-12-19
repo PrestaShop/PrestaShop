@@ -40,7 +40,6 @@
  *
  */
 class UnableToCalculatePositionException extends Exception {
-
     protected $needle;
     protected $haystack;
 
@@ -58,5 +57,3 @@ class UnableToCalculatePositionException extends Exception {
         return $this->haystack;
     }
 }
-
-?>

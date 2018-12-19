@@ -29,17 +29,20 @@
  */
 function select_current_payment_modules()
 {
-    $shops = Db::getInstance()->executeS('
+    $shops = Db::getInstance()->executeS(
+        '
 			SELECT `id_shop`
 			FROM `'._DB_PREFIX_.'shop`'
     );
-    $carriers = Db::getInstance()->executeS('
+    $carriers = Db::getInstance()->executeS(
+        '
 			SELECT DISTINCT `id_reference`
 			FROM `'._DB_PREFIX_.'carrier`
 			WHERE `active` = 1
 			AND `deleted` = 0'
     );
-    $modules = Db::getInstance()->executeS('
+    $modules = Db::getInstance()->executeS(
+        '
 			SELECT m.`id_module`
 			FROM `'._DB_PREFIX_.'module` m
 			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
@@ -55,7 +58,7 @@ function select_current_payment_modules()
                     array(
                         'id_reference' => (int)$carrier['id_reference'],
                         'id_module' => (int)$module['id_module'],
-                        'id_shop' => (int)$shop['id_shop']
+                        'id_shop' => (int)$shop['id_shop'],
                     ),
                     false,
                     false,

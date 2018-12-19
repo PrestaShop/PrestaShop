@@ -38,6 +38,7 @@ class InstallSession
         if (!static::$_instance) {
             static::$_instance = new static();
         }
+
         return static::$_instance;
     }
 
@@ -82,6 +83,7 @@ class InstallSession
                 $ref = &$null;
             }
         }
+
         return $ref;
     }
 

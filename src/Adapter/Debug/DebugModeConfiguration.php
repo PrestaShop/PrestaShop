@@ -92,6 +92,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
                         'domain' => 'Admin.Advparameters.Notification',
                         'parameters' => array($this->configDefinesPath),
                     );
+
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND:
                     $errors[] = array(
@@ -99,6 +100,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
                         'domain' => 'Admin.Advparameters.Notification',
                         'parameters' => array($this->configDefinesPath),
                     );
+
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
                     $errors[] = array(
@@ -106,6 +108,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
                         'domain' => 'Admin.Advparameters.Notification',
                         'parameters' => array($this->configDefinesPath),
                     );
+
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_READ_ACCESS:
                     $errors[] = array(
@@ -113,6 +116,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
                         'domain' => 'Admin.Advparameters.Notification',
                         'parameters' => array($this->configDefinesPath),
                     );
+
                     break;
                 default:
                     break;

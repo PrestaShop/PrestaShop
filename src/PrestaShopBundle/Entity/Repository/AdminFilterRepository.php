@@ -107,8 +107,7 @@ class AdminFilterRepository extends EntityRepository
             ->setController($controller)
             ->setEmployee($employeeId)
             ->setShop($shopId)
-            ->setFilter(json_encode($filters))
-        ;
+            ->setFilter(json_encode($filters));
 
         $this->getEntityManager()->persist($adminFilter);
 

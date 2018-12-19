@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Adapter\Module\Tab;
 
 use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
@@ -63,7 +64,7 @@ class ModuleTabRegisterTest extends UnitTestCase
         'doge' => array('Wololo', 'AdminMissing', 'AdminMy'),
     );
 
-    protected  $languages = array(
+    protected $languages = array(
         array(
             "id_lang" => 1,
             "name" => "Français (French)",
@@ -115,7 +116,7 @@ class ModuleTabRegisterTest extends UnitTestCase
             "is_rtl" => "0",
             "id_shop" => "1",
             "shops" => array(),
-        )
+        ),
     );
 
     /**
@@ -139,8 +140,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                 $this->sfKernel->getContainer()->get('filesystem'),
                 $this->languages,
             ))
-            ->getMock()
-        ;
+            ->getMock();
         $this->tabRegister
             ->method('getModuleAdminControllersFilename')
             ->will($this->returnValueMap($this->moduleAdminControllers));
@@ -169,10 +169,12 @@ class ModuleTabRegisterTest extends UnitTestCase
                     continue;
                 }
                 $data = new ParameterBag($tab);
+
                 try {
                     $this->invokeMethod($this->tabRegister, 'checkIsValid', array($moduleName, $data));
                 } catch (\Exception $e) {
                     $this->assertEquals($e->getMessage(), $tab['exception']);
+
                     continue;
                 }
                 $this->fail('Expected Exception "'.$tab['exception'].'" has not been raised.');
@@ -190,7 +192,8 @@ class ModuleTabRegisterTest extends UnitTestCase
             foreach($tabs as $tab) {
                 $this->assertTrue(
                         in_array($tab['class_name'], $this->expectedTabsToAdd[$moduleName]),
-                        'Module '.$moduleName.' should not register '.$tab['class_name']);
+                        'Module '.$moduleName.' should not register '.$tab['class_name']
+                );
             }
 
             // In the opposite, we check no tab is missing

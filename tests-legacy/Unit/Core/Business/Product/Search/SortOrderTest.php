@@ -106,8 +106,8 @@ class SortOrderTest extends TestCase
     {
         return [
             [['entity'    => 'product',
-            'field'      => 'name',
-            'direction'  => 'asc']]
+                'field'      => 'name',
+                'direction'  => 'asc', ]],
         ];
     }
 

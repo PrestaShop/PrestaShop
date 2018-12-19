@@ -26,6 +26,7 @@
 
 namespace LegacyTests\Core\Addon\Module;
 
+use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PHPUnit\Framework\TestCase;
@@ -44,6 +45,7 @@ class ModuleManagerTest extends TestCase
     private $translatorS;
     private $dispatcherS;
     private $employeeS;
+    private $cacheClearerS;
 
     public function setUp()
     {
@@ -56,7 +58,8 @@ class ModuleManagerTest extends TestCase
             $this->moduleRepositoryS,
             $this->moduleZipManagerS,
             $this->translatorS,
-            $this->dispatcherS
+            $this->dispatcherS,
+            $this->cacheClearerS
         );
     }
 
@@ -159,6 +162,7 @@ class ModuleManagerTest extends TestCase
         $this->mockTranslator();
         $this->mockDispatcher();
         $this->mockEmployee();
+        $this->mockCacheClearer();
     }
 
     private function mockAdminModuleProvider()
@@ -179,14 +183,14 @@ class ModuleManagerTest extends TestCase
                 'uninstall', self::INSTALLED_MODULE, true,
             ],
             [
-                'uninstall', self::UNINSTALLED_MODULE, false
+                'uninstall', self::UNINSTALLED_MODULE, false,
             ],
             [
                 'configure', self::INSTALLED_MODULE, true,
             ],
             [
-                'configure', self::UNINSTALLED_MODULE, false
-            ]
+                'configure', self::UNINSTALLED_MODULE, false,
+            ],
         ];
         $this->moduleProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
             ->disableOriginalConstructor()
@@ -198,11 +202,11 @@ class ModuleManagerTest extends TestCase
 
         $isInstalledValues = [
             [
-                self::INSTALLED_MODULE, true
+                self::INSTALLED_MODULE, true,
             ],
             [
-                self::UNINSTALLED_MODULE, false
-            ]
+                self::UNINSTALLED_MODULE, false,
+            ],
         ];
         $this->moduleProviderS
             ->method('isInstalled')
@@ -210,7 +214,7 @@ class ModuleManagerTest extends TestCase
 
         $isEnabledValues = [
             [self::INSTALLED_MODULE, true],
-            [self::UNINSTALLED_MODULE, false]
+            [self::UNINSTALLED_MODULE, false],
         ];
 
         $this->moduleProviderS
@@ -301,6 +305,12 @@ class ModuleManagerTest extends TestCase
     private function mockDispatcher()
     {
         $this->dispatcherS = new NullDispatcher();
+    }
+
+    private function mockCacheClearer()
+    {
+        $this->cacheClearerS = $this->getMockBuilder(CacheClearer::class)
+            ->getMock();
     }
 
     private function mockEmployee()

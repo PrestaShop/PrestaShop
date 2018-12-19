@@ -28,8 +28,6 @@ namespace LegacyTests\Unit\Core\Cart\Adding\CartRule;
 
 use Configuration;
 use Product;
-use Pack;
-use StockAvailable;
 use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 
 class AddCombinationTest extends AbstractCartTest
@@ -82,5 +80,4 @@ class AddCombinationTest extends AbstractCartTest
 
         Configuration::set('PS_ORDER_OUT_OF_STOCK', $oldOrderOutOfStock);
     }
-
 }

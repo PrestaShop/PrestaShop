@@ -150,8 +150,7 @@ class CheckoutProcessCore implements RenderableInterface
                 $step
                     ->setReachable($stepData['step_is_reachable'])
                     ->setComplete($stepData['step_is_complete'])
-                    ->restorePersistedData($stepData)
-                ;
+                    ->restorePersistedData($stepData);
             }
         }
 
@@ -163,6 +162,7 @@ class CheckoutProcessCore implements RenderableInterface
         foreach ($this->getSteps() as $step) {
             if (!$step->isReachable()) {
                 $step->setReachable(true);
+
                 break;
             }
             if (!$step->isComplete()) {

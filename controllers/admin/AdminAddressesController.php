@@ -115,7 +115,7 @@ class AdminAddressesControllerCore extends AdminController
 
         if (!$this->display && $this->can_import) {
             $this->toolbar_btn['import'] = array(
-                'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=addresses',
+                'href' => $this->context->link->getAdminLink('AdminImport', true, array(), array('import_type' => 'addresses')),
                 'desc' => $this->trans('Import', array(), 'Admin.Actions'),
             );
         }
@@ -125,7 +125,7 @@ class AdminAddressesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_address'] = array(
-                'href' => self::$currentIndex . '&addaddress&token=' . $this->token,
+                'href' => $this->context->link->getAdminLink('AdminAddresses', true, array(), array('addaddress' => 1)),
                 'desc' => $this->trans('Add new address', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -443,6 +443,18 @@ class AdminAddressesControllerCore extends AdminController
                 //update order shipping cost
                 $order = new Order($id_order);
                 $order->refreshShippingCost();
+
+                // update cart
+                $cart = Cart::getCartByOrderId($id_order);
+                if (Validate::isLoadedObject($cart)) {
+                    if ($address_type == 'invoice') {
+                        $cart->id_address_invoice = (int) $this->object->id;
+                    } else {
+                        $cart->id_address_delivery = (int) $this->object->id;
+                    }
+                    $cart->update();
+                }
+                // redirect
                 Tools::redirectAdmin(urldecode(Tools::getValue('back')) . '&conf=4');
             }
         }
@@ -540,6 +552,7 @@ class AdminAddressesControllerCore extends AdminController
                 $to_delete = new Address((int) $id);
                 if ($to_delete->isUsed()) {
                     $deleted = true;
+
                     break;
                 }
             }

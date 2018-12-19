@@ -73,8 +73,7 @@ final class SearchParameters implements SearchParametersInterface
     public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass)
     {
         $adminFilter = $this->adminFilterRepository
-            ->findByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action)
-        ;
+            ->findByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
 
         $savedFilters = [];
 

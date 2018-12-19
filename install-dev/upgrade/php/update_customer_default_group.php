@@ -34,7 +34,7 @@ function update_customer_default_group()
     $pattern = "/define\('_PS_DEFAULT_CUSTOMER_GROUP_', (\d)\);/";
     preg_match($pattern, $content, $matches);
     if (!defined('_PS_DEFAULT_CUSTOMER_GROUP_')) {
-        define('_PS_DEFAULT_CUSTOMER_GROUP_', ((isset($matches[1]) and is_numeric($matches[1]))? $matches[1] : 3));
+        define('_PS_DEFAULT_CUSTOMER_GROUP_', ((isset($matches[1]) && is_numeric($matches[1]))? $matches[1] : 3));
     }
     $ps_customer_group = Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name = "PS_CUSTOMER_GROUP"', false);
     if ($ps_customer_group) {
@@ -52,7 +52,6 @@ function update_customer_default_group()
 	SELECT `value` as id_group
 	FROM `'._DB_PREFIX_.'configuration`
 	WHERE `name` IN (\'PS_UNIDENTIFIED_GROUP\', \'PS_GUEST_GROUP\')');
-
 
     if (count($carriers) && is_array($carriers) && count($groups) && is_array($groups)) {
         foreach ($carriers as $carrier) {
@@ -72,5 +71,6 @@ function update_customer_default_group()
             @chmod($filename, 0664);
         }
     }
+
     return $result;
 }

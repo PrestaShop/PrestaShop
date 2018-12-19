@@ -37,7 +37,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
  */
 class CartRulesMixedTest extends AbstractCartCalculationTest
 {
-
     /**
      * @dataProvider cartWithMultipleCartRulesMixedProvider
      */
@@ -60,9 +59,9 @@ class CartRulesMixedTest extends AbstractCartCalculationTest
                     1 => 1,
                 ],
                 'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
-                                     * static::PRODUCT_FIXTURES[1]['price']
-                                     - static::CART_RULES_FIXTURES[4]['amount']
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * static::PRODUCT_FIXTURES[1]['price']
+                - static::CART_RULES_FIXTURES[4]['amount']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'       => [2, 4],
                 'knownToFailOnV1' => false,
             ],
@@ -80,9 +79,9 @@ class CartRulesMixedTest extends AbstractCartCalculationTest
                     1 => 3,
                 ],
                 'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[7]['percent'] / 100)
-                                     * (3 * static::PRODUCT_FIXTURES[1]['price']
-                                        - static::CART_RULES_FIXTURES[4]['amount'])
-                                     + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * (3 * static::PRODUCT_FIXTURES[1]['price']
+                   - static::CART_RULES_FIXTURES[4]['amount'])
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'       => [4, 7],
                 'knownToFailOnV1' => true,
             ],

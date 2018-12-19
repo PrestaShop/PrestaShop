@@ -61,7 +61,6 @@ final class CategoryPositionColumn extends AbstractColumn
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('id_field', 'string')
             ->setAllowedTypes('id_parent_field', 'string')
-            ->setAllowedTypes('update_route', 'string')
-        ;
+            ->setAllowedTypes('update_route', 'string');
     }
 }

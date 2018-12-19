@@ -59,8 +59,7 @@ class ProfileChoiceType extends AbstractType
                 'translation_domain' => false,
                 'expanded' => false,
                 'multiple' => false,
-            ])
-        ;
+            ]);
     }
 
     /**

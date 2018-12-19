@@ -66,8 +66,7 @@ class UrlSchemaType extends AbstractType
                 ->add('manufacturer_rule', TextType::class)
                 ->add('cms_rule', TextType::class)
                 ->add('cms_category_rule', TextType::class)
-                ->add('module', TextType::class)
-            ;
+                ->add('module', TextType::class);
         }
     }
 

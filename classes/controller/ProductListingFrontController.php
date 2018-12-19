@@ -51,8 +51,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     private function prepareProductForTemplate(array $rawProduct)
     {
         $product = (new ProductAssembler($this->context))
-            ->assembleProduct($rawProduct)
-        ;
+            ->assembleProduct($rawProduct);
 
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
@@ -94,8 +93,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 $this->context->customer ?
                     $this->context->customer->id :
                     null
-            )
-        ;
+            );
     }
 
     /**
@@ -242,8 +240,6 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 return $provider;
             }
         }
-
-        return;
     }
 
     /**
@@ -281,8 +277,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         // we need to set a few parameters from back-end preferences
         $query
             ->setResultsPerPage($resultsPerPage)
-            ->setPage(max((int) Tools::getValue('page'), 1))
-        ;
+            ->setPage(max((int) Tools::getValue('page'), 1));
 
         // set the sort order if provided in the URL
         if (($encodedSortOrder = Tools::getValue('order'))) {
@@ -364,6 +359,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             foreach ($sort_orders as $order) {
                 if (isset($order['current']) && true === $order['current']) {
                     $sort_selected = $order['label'];
+
                     break;
                 }
             }
@@ -411,8 +407,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             ->setPage($query->getPage())
             ->setPagesCount(
                 ceil($result->getTotalProductsCount() / $query->getResultsPerPage())
-            )
-        ;
+            );
 
         $totalItems = $result->getTotalProductsCount();
         $itemsShownFrom = ($query->getResultsPerPage() * ($query->getPage() - 1)) + 1;

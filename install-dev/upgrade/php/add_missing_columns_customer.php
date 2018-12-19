@@ -45,7 +45,7 @@ function add_missing_columns_customer()
         'show_public_prices' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
 			ADD `show_public_prices` tinyint(1) unsigned NOT NULL default "0"',
         'max_payment_days' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
-			ADD `max_payment_days` int(10) unsigned NOT NULL default "60"'
+			ADD `max_payment_days` int(10) unsigned NOT NULL default "60"',
     );
 
     foreach ($missing_fields as $field => $query) {

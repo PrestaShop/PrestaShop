@@ -152,7 +152,10 @@ class OrderConfirmationControllerCore extends FrontController
             Configuration::get('PS_OS_PAYMENT'),
             0,
             $this->trans('Free order', array(), 'Admin.Orderscustomers.Feature'),
-            null, array(), null, false,
+            null,
+            array(),
+            null,
+            false,
             $cart->secure_key
         );
     }

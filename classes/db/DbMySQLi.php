@@ -34,7 +34,7 @@ class DbMySQLiCore extends Db
     /** @var mysqli */
     protected $link;
 
-    /* @var mysqli_result */
+    /** @var mysqli_result */
     protected $result;
 
     /**
@@ -381,6 +381,7 @@ class DbMySQLiCore extends Db
                 if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
                     $value = 'InnoDB';
                 }
+
                 break;
             }
         }

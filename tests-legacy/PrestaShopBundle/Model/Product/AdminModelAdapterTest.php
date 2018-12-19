@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\PrestaShopBundle\Model\Product;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -35,13 +36,13 @@ use Product;
  */
 class AdminModelAdapterTest extends KernelTestCase
 {
-    /* @var $adminModelAdapter AdminModelAdapter */
+    /** @var $adminModelAdapter AdminModelAdapter */
     private $adminModelAdapter;
 
     private $container;
     protected static $kernel;
 
-    /* @var $product Product */
+    /** @var $product Product */
     private $product;
 
     private function fakeFormData()
@@ -78,7 +79,7 @@ class AdminModelAdapterTest extends KernelTestCase
                 "specificPricePriority_0" => '',
                 "specificPricePriority_1" => '',
                 "specificPricePriority_2" => '',
-                "specificPricePriority_3" => ''
+                "specificPricePriority_3" => '',
             ],
             "step3" => [
                 "advanced_stock_management" => '',
@@ -126,10 +127,11 @@ class AdminModelAdapterTest extends KernelTestCase
                 "default_supplier" => '',
                 "custom_fields" => [],
                 "attachments" => [],
-                "supplier_combination_1" => []
-            ]
+                "supplier_combination_1" => [],
+            ],
         ];
     }
+
     private function fakeCombination()
     {
         return array('0' => [
@@ -157,7 +159,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "is_color_group" => "0",
             "group_name" => "Taille",
             "attribute_name" => "L",
-            "id_attribute" => "3"
+            "id_attribute" => "3",
         ]);
     }
 

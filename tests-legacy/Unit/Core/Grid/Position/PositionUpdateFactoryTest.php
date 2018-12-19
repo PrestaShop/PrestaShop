@@ -42,7 +42,7 @@ class PositionUpdateFactoryTest extends TestCase
     {
         $definition = $this->getDefinition();
         $data = ['positions' => [
-            ['rowId' => 1, 'oldPosition' => 1, 'newPosition' => 2]
+            ['rowId' => 1, 'oldPosition' => 1, 'newPosition' => 2],
         ]];
 
         $positionUpdateFactory = $this->getPositionUpdateFactory();
@@ -96,17 +96,17 @@ class PositionUpdateFactoryTest extends TestCase
     public function testDataPositionValidation()
     {
         $data = ['positions' => [
-            ['row' => 1]
+            ['row' => 1],
         ]];
         $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, [0, 'rowId']);
 
         $data = ['positions' => [
-            ['rowId' => 1]
+            ['rowId' => 1],
         ]];
         $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, [0, 'oldPosition']);
 
         $data = ['positions' => [
-            ['rowId' => 1, 'oldPosition' => 1]
+            ['rowId' => 1, 'oldPosition' => 1],
         ]];
         $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, [0, 'newPosition']);
     }
@@ -115,7 +115,7 @@ class PositionUpdateFactoryTest extends TestCase
     {
         $definition = $this->getDefinitionWithParent();
         $data = ['positions' => [
-            ['rowId' => 1, 'oldPosition' => 1, 'newPosition' => 1]
+            ['rowId' => 1, 'oldPosition' => 1, 'newPosition' => 1],
         ]];
         $this->checkDataValidation($data, 'Missing parentId in your data.', null, $definition);
     }
@@ -135,6 +135,7 @@ class PositionUpdateFactoryTest extends TestCase
 
         /** @var PositionDataException $caughtException */
         $caughtException = null;
+
         try {
             $positionUpdateFactory->buildPositionUpdate($data, $definition);
         } catch (PositionDataException $e) {

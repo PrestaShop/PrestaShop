@@ -37,7 +37,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
  */
 class CartRulesGiftTest extends AbstractCartCalculationTest
 {
-
     /**
      * @dataProvider cartWithGiftProvider
      */
@@ -72,8 +71,8 @@ class CartRulesGiftTest extends AbstractCartCalculationTest
                     4 => 1,
                 ],
                 'expectedTotal'        => (1 - static::CART_RULES_FIXTURES[13]['percent'] / 100)
-                                          * 3 * static::PRODUCT_FIXTURES[1]['price']
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * 3 * static::PRODUCT_FIXTURES[1]['price']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [13],
                 'oductCount' => 3,
                 'knownToFailOnV1'      => true,
@@ -85,10 +84,11 @@ class CartRulesGiftTest extends AbstractCartCalculationTest
                     4 => 1,
                 ],
                 'expectedTotal'        => (1 - static::CART_RULES_FIXTURES[13]['percent'] / 100)
-                                          * (2 * static::PRODUCT_FIXTURES[1]['price']
-                                             + 3 * static::PRODUCT_FIXTURES[3]['price']
-                                          )
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * (
+                    2 * static::PRODUCT_FIXTURES[1]['price']
+                   + 3 * static::PRODUCT_FIXTURES[3]['price']
+                )
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [12],
                 'expectedProductCount' => 6,
                 'knownToFailOnV1'      => false,

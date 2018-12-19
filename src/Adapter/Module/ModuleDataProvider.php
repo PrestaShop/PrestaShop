@@ -205,6 +205,7 @@ class ModuleDataProvider
         }
 
         $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::PREFER_PHP7);
+
         try {
             $parser->parse(file_get_contents($file_path));
         } catch (PhpParser\Error $exception) {
@@ -212,7 +213,9 @@ class ModuleDataProvider
                 $this->translator->trans(
                     'Parse error detected in main class of module %module%!',
                     array('%module%' => $name),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
 
             return false;
         }
@@ -233,7 +236,9 @@ class ModuleDataProvider
                         array(
                             '%module%' => $name,
                             '%error_message%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                        'Admin.Modules.Notification'
+                    )
+                );
 
                 return false;
             }

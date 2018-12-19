@@ -54,8 +54,11 @@ class PageCore extends ObjectModel
         $controller = Dispatcher::getInstance()->getController();
         $pageTypeId = Page::getPageTypeByName($controller);
 
-        // Some pages must be distinguished in order to record exactly what is being seen
-        // @todo dispatcher module
+        /**
+         * Some pages must be distinguished in order to record exactly what is being seen
+         *
+         * @todo dispatcher module
+         */
         $specialArray = array(
             'product' => 'id_product',
             'category' => 'id_category',
@@ -94,7 +97,8 @@ class PageCore extends ObjectModel
      */
     public static function getPageTypeByName($name)
     {
-        if ($value = Db::getInstance()->getValue('
+        if ($value = Db::getInstance()->getValue(
+            '
 				SELECT id_page_type
 				FROM ' . _DB_PREFIX_ . 'page_type
 				WHERE name = \'' . pSQL($name) . '\''

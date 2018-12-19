@@ -34,18 +34,18 @@ class AdapterDatabaseTest extends IntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->db = new Database;
+        $this->db = new Database();
     }
 
     public function testValuesAreEscapedDataProvider()
     {
         return array(
-            array( 'hello'       , 'hello'    ),
-            array( '\\\'inject'  , '\'inject' ),
-            array( '\\"inject'   , '"inject'  ),
-            array( 42            , 42         ),
-            array( 4.2           , 4.2        ),
-            array( '4\\\'200'    , '4\'200'   ),
+            array('hello', 'hello'),
+            array('\\\'inject', '\'inject'),
+            array('\\"inject', '"inject'),
+            array(42, 42),
+            array(4.2, 4.2),
+            array('4\\\'200', '4\'200'),
         );
     }
 

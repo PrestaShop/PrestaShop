@@ -51,7 +51,7 @@ class AdminThemesControllerCore extends AdminController
     protected $authAccesses = array();
     protected $img_error;
 
-    /* @var LogoUploader $logo_uploader */
+    /** @var LogoUploader $logo_uploader */
     protected $logo_uploader;
 
     public function __construct()
@@ -269,28 +269,34 @@ class AdminThemesControllerCore extends AdminController
                 if (Tools::isSubmit('submitAddconfiguration')) {
                     $this->postProcessSubmitAddConfiguration();
                 }
+
                 break;
 
             case 'exporttheme':
                 if (false === $this->postProcessExportTheme()) {
                     return false;
                 }
+
                 break;
 
             case 'enableTheme':
                 $this->postProcessEnableTheme();
+
                 break;
 
             case 'deleteTheme':
                 $this->postProcessDeleteTheme();
+
                 break;
 
             case 'resetToDefaults':
                 $this->postProcessResetToDefaults();
+
                 break;
 
             case 'submitConfigureLayouts':
                 $this->postProcessSubmitConfigureLayouts();
+
                 break;
 
             // Main Theme page
@@ -408,16 +414,18 @@ class AdminThemesControllerCore extends AdminController
                     'logo' => $this->trans('Logo', array(), 'Admin.Global'),
                     'logo2' => $this->trans('Invoice & Email Logos', array(), 'Admin.Design.Feature'),
                     'icons' => $this->trans('Favicons', array(), 'Admin.Design.Feature'),
-                    ),
+                ),
                 'fields' => array(
                     'PS_LOGO' => array(
                         'title' => $this->trans('Header logo', array(), 'Admin.Design.Feature'),
-                        'hint' => $this->trans('Will appear on main page. Recommended size for the default theme: height %height% and width %width%.',
+                        'hint' => $this->trans(
+                            'Will appear on main page. Recommended size for the default theme: height %height% and width %width%.',
                             array(
                                 '%height%' => '40px',
                                 '%width%' => '200px',
                             ),
-                            'Admin.Design.Help'),
+                            'Admin.Design.Help'
+                        ),
                         'type' => 'file',
                         'name' => 'PS_LOGO',
                         'tab' => 'logo',
@@ -577,9 +585,9 @@ class AdminThemesControllerCore extends AdminController
                     'submit' => array(
                         'id' => 'zip',
                         'title' => $this->trans('Save', array(), 'Admin.Actions'),
-                        ),
                     ),
-                );
+                ),
+            );
 
             $fields_form[1] = array(
                 'form' => array(
@@ -598,9 +606,9 @@ class AdminThemesControllerCore extends AdminController
                     ),
                     'submit' => array(
                         'title' => $this->trans('Save', array(), 'Admin.Actions'),
-                        ),
                     ),
-                );
+                ),
+            );
 
             $theme_archive_server = array();
             $files = scandir(_PS_ALL_THEMES_DIR_, SCANDIR_SORT_NONE);
@@ -637,9 +645,9 @@ class AdminThemesControllerCore extends AdminController
                     ),
                     'submit' => array(
                         'title' => $this->trans('Save', array(), 'Admin.Actions'),
-                        ),
                     ),
-                );
+                ),
+            );
         }
 
         $this->context->smarty->assign(
@@ -647,7 +655,7 @@ class AdminThemesControllerCore extends AdminController
                 'import_theme' => true,
                 'logged_on_addons' => $this->logged_on_addons,
                 'iso_code' => $this->context->language->iso_code,
-                )
+            )
             );
 
         $helper = new HelperForm();
