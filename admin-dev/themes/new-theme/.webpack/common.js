@@ -45,7 +45,8 @@ module.exports = {
     contacts: './js/pages/contacts',
     employee: './js/pages/employee',
     customer: './js/pages/customer',
-    language: './js/pages/language'
+    language: './js/pages/language',
+    product_page: './js/product-page/index'
   },
   output: {
     path: path.resolve(__dirname, '../public'),
