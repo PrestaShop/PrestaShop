@@ -3,10 +3,10 @@ const common = require('./common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 /**
- * prodConfig function return the production webpack config,
+ * Returns the production webpack config,
  * by merging production specific configuration with the common one.
  *
- * @param {Boolean} analyze With analye to true, bundle analyze plugin will launch
+ * @param {Boolean} analyze If true, bundle analyze plugin will launch
  */
 function prodConfig(analyze) {
   const cssExtractedFileName = 'theme';
@@ -15,7 +15,7 @@ function prodConfig(analyze) {
     stats: 'minimal',
     optimization: {
       // With mini-css-extract-plugin, one file is created for each '.js' where css is imported.
-      // The use of this optimization merge them into one file.
+      // The use of this optimization merges them into one file.
       splitChunks: {
         cacheGroups: {
           styles: {
@@ -54,7 +54,7 @@ function prodConfig(analyze) {
        * When using mini-css-extract-plugin and merging all chunks to one file (see optimization configuration),
        * a [cssExtractedFileName].bundle.js is created. This file is required for the js entry point to be executed.
        * see: https://github.com/webpack-contrib/mini-css-extract-plugin/issues/147
-       * This hook merge the [cssExtractedFileName].bundle.js into the main.bundle.js file, so we avoid
+       * This hook merges the [cssExtractedFileName].bundle.js into the main.bundle.js file, so we avoid
        * to include the [cssExtractedFileName].bundle.js into the html
        */
       compiler.hooks.afterEmit.tap('AfterEmitTest', (compilation) => {
