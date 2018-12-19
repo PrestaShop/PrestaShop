@@ -182,7 +182,6 @@ abstract class AbstractFormCore implements FormInterface
             return $this->formFields[$field_name];
         }
 
-        
     }
 
     public function getValue($field_name)
@@ -191,7 +190,6 @@ abstract class AbstractFormCore implements FormInterface
             return $field->getValue();
         }
 
-        
     }
 
     public function setValue($field_name, $value)

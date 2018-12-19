@@ -224,7 +224,6 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
             return (int) Db::getInstance()->getValue('SELECT FOUND_ROWS()') + 1;
         }
 
-        
     }
 
     /**

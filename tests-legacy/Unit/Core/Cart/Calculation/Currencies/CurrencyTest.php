@@ -146,7 +146,6 @@ class CurrencyTest extends AbstractCartCalculationTest
             return $this->currencies[$id];
         }
 
-        
     }
 
     protected function setCurrentCurrency($currencyId)

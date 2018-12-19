@@ -594,7 +594,6 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        
     }
 
     /**
@@ -2332,7 +2331,6 @@ abstract class ModuleCore implements ModuleInterface
             return false;
         }
 
-        
     }
 
     protected function _isTemplateOverloaded($template)

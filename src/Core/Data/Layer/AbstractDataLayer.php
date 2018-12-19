@@ -150,7 +150,6 @@ abstract class AbstractDataLayer
             return $this->lowerDataLayer->read($field);
         }
 
-        
     }
 
     /**

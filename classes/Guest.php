@@ -146,7 +146,6 @@ class GuestCore extends ObjectModel
             }
         }
 
-        
     }
 
     /**
@@ -179,7 +178,6 @@ class GuestCore extends ObjectModel
             }
         }
 
-        
     }
 
     /**
