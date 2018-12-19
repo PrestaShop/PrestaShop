@@ -133,10 +133,9 @@ function executeQueries($arrayOfQueries)
         foreach ($queries as $query) {
             try {
                 Db::getInstance()->execute($query);
-            }catch (Exception $e) {
+            } catch (Exception $e) {
                 echo "Error:". $e->getMessage() . PHP_EOL;
             }
-
         }
     }
 }

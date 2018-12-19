@@ -39,8 +39,10 @@ require_once dirname(__FILE__) . '/ExplainProcessor.php';
  * @author arothe
  * 
  */
-class DescribeProcessor extends ExplainProcessor {
-    protected function isStatement($keys, $needle = "DESCRIBE") {
+class DescribeProcessor extends ExplainProcessor
+{
+    protected function isStatement($keys, $needle = "DESCRIBE")
+    {
         return parent::isStatement($keys, $needle);
     }
 }

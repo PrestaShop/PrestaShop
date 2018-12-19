@@ -42,20 +42,24 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  *
  */
-class ColumnDefinitionProcessor extends AbstractProcessor {
-    protected function processExpressionList($parsed) {
+class ColumnDefinitionProcessor extends AbstractProcessor
+{
+    protected function processExpressionList($parsed)
+    {
         $processor = new ExpressionListProcessor();
 
         return $processor->process($parsed);
     }
 
-    protected function processReferenceDefinition($parsed) {
+    protected function processReferenceDefinition($parsed)
+    {
         $processor = new ReferenceDefinitionProcessor();
 
         return $processor->process($parsed);
     }
 
-    protected function removeComma($tokens) {
+    protected function removeComma($tokens)
+    {
         $res = array();
         foreach ($tokens as $token) {
             if (trim($token) !== ',') {
@@ -66,7 +70,8 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
         return $res;
     }
 
-    protected function buildColDef($expr, $base_expr, $options, $refs, $key) {
+    protected function buildColDef($expr, $base_expr, $options, $refs, $key)
+    {
         $expr = array('expr_type' => ExpressionType::COLUMN_TYPE, 'base_expr' => $base_expr, 'sub_tree' => $expr);
 
         // add options first
@@ -84,8 +89,8 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
         return $expr;
     }
 
-    public function process($tokens) {
-
+    public function process($tokens)
+    {
         $trim = '';
         $base_expr = '';
         $currCategory = '';
@@ -97,7 +102,6 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
         $skip = 0;
 
         foreach ($tokens as $key => $token) {
-
             $trim = trim($token);
             $base_expr .= $token;
 

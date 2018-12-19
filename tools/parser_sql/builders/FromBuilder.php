@@ -52,26 +52,31 @@ require_once dirname(__FILE__) . '/SubQueryBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class FromBuilder {
-    protected function buildTable($parsed, $key) {
+class FromBuilder
+{
+    protected function buildTable($parsed, $key)
+    {
         $builder = new TableBuilder();
 
         return $builder->build($parsed, $key);
     }
 
-    protected function buildTableExpression($parsed, $key) {
+    protected function buildTableExpression($parsed, $key)
+    {
         $builder = new TableExpressionBuilder();
 
         return $builder->build($parsed, $key);
     }
 
-    protected function buildSubQuery($parsed, $key) {
+    protected function buildSubQuery($parsed, $key)
+    {
         $builder = new SubQueryBuilder();
 
         return $builder->build($parsed, $key);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);

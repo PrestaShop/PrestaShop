@@ -40,8 +40,10 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class CreateProcessor extends AbstractProcessor {
-    public function process($tokens) {
+class CreateProcessor extends AbstractProcessor
+{
+    public function process($tokens)
+    {
         $result = array();
         $base_expr = "";
 

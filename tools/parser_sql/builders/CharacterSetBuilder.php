@@ -54,26 +54,31 @@ require_once dirname(__FILE__) . '/IndexTypeBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CharacterSetBuilder {
-    protected function buildConstant($parsed) {
+class CharacterSetBuilder
+{
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildOperator($parsed) {
+    protected function buildOperator($parsed)
+    {
         $builder = new OperatorBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::CHARSET) {
             return "";
         }

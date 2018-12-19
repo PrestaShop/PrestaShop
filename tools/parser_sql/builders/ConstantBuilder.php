@@ -50,14 +50,17 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ConstantBuilder {
-    protected function buildAlias($parsed) {
+class ConstantBuilder
+{
+    protected function buildAlias($parsed)
+    {
         $builder = new AliasBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::CONSTANT) {
             return "";
         }

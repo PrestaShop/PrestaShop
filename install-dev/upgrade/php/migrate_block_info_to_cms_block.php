@@ -115,8 +115,8 @@ function migrate_block_info_to_cms_block()
             $res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("FOOTER_POWEREDBY", "1")');
         }
 
-            //add new block in new cms block
-            $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block`
+        //add new block in new cms block
+        $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block`
 				(`id_cms_category`, `name`, `location`, `position`)
 				VALUES( 1, "", 0, 0)');
         $id_block = Db::getInstance()->Insert_ID();
@@ -125,10 +125,10 @@ function migrate_block_info_to_cms_block()
             Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`, `name`) VALUES ('.(int)$id_block.', '.(int)$language['id_lang'].', \'Information\')');
         }
 
-            //save ids cms of block information in new module cms bloc
-            foreach ($ids_cms as $id_cms) {
-                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_page` (`id_cms_block`, `id_cms`, `is_category`) VALUES ('.(int)$id_block.', '.(int)$id_cms['id_cms'].', 0)');
-            }
+        //save ids cms of block information in new module cms bloc
+        foreach ($ids_cms as $id_cms) {
+            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_page` (`id_cms_block`, `id_cms`, `is_category`) VALUES ('.(int)$id_block.', '.(int)$id_cms['id_cms'].', 0)');
+        }
     } else {
         return true;
     }

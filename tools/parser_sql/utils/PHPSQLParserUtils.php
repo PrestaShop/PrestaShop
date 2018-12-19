@@ -36,14 +36,16 @@
  * @author arothe
  * @deprecated
  */
-class PHPSQLParserUtils {
+class PHPSQLParserUtils
+{
     /**
      * Prints an array only if debug mode is on.
      * 
      * @param array $s
      * @param boolean $return, if true, the formatted array is returned via return parameter
      */
-    protected function preprint($arr, $return = false) {
+    protected function preprint($arr, $return = false)
+    {
         $x = "<pre>";
         $x .= print_r($arr, 1);
         $x .= "</pre>";
@@ -62,7 +64,8 @@ class PHPSQLParserUtils {
      * @param string $haystack
      * @param string $needle
      */
-    protected function endsWith($haystack, $needle) {
+    protected function endsWith($haystack, $needle)
+    {
         $length = strlen($needle);
         if ($length == 0) {
             return true;
@@ -74,7 +77,8 @@ class PHPSQLParserUtils {
     /**
      * Revokes the quoting characters from an expression
      */
-    protected function revokeQuotation($sql) {
+    protected function revokeQuotation($sql)
+    {
         $result = trim($sql);
         if (($result[0] === '`') && ($result[strlen($result) - 1] === '`')) {
             $result = substr($result, 1, -1);
@@ -89,8 +93,8 @@ class PHPSQLParserUtils {
      * This method removes parenthesis from start of the given string.
      * It removes also the associated closing parenthesis.
      */
-    protected function removeParenthesisFromStart($token) {
-
+    protected function removeParenthesisFromStart($token)
+    {
         $parenthesisRemoved = 0;
 
         $trim = trim($token);
@@ -104,7 +108,6 @@ class PHPSQLParserUtils {
         $i = 0;
         $string = 0;
         while ($i < strlen($trim)) {
-
             if ($trim[$i] === "\\") {
                 $i += 2; // an escape character, the next character is irrelevant
                 continue;
@@ -131,7 +134,8 @@ class PHPSQLParserUtils {
         return trim($trim);
     }
 
-    public function getLastOf($array) {
+    public function getLastOf($array)
+    {
         // $array is a copy of the original array, so we can change it without sideeffects
         if (!is_array($array)) {
             return false;
@@ -143,7 +147,8 @@ class PHPSQLParserUtils {
     /**
      * translates an array of objects into an associative array
      */
-    public function toArray($tokenList) {
+    public function toArray($tokenList)
+    {
         $expr = array();
         foreach ($tokenList as $token) {
             $expr[] = $token->toArray();

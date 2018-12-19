@@ -51,26 +51,31 @@ require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class OrderByBuilder {
-    protected function buildFunction($parsed) {
+class OrderByBuilder
+{
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildColRef($parsed) {
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildOrderByAlias($parsed) {
+    protected function buildOrderByAlias($parsed)
+    {
         $builder = new OrderByAliasBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);

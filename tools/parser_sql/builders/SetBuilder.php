@@ -50,14 +50,17 @@ require_once dirname(__FILE__) . '/SetExpressionBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SetBuilder {
-    protected function buildSetExpression($parsed) {
+class SetBuilder
+{
+    protected function buildSetExpression($parsed)
+    {
         $builder = new SetExpressionBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);

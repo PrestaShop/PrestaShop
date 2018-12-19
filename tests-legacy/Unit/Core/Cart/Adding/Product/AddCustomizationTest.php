@@ -45,7 +45,6 @@ class AddCustomizationTest extends AbstractCartTest
 
     protected function addCustomization(Product $product)
     {
-
         $customization                       = new Customization();
         $customization->id_product           = $product->id;
         $customization->id_product_attribute = 0;

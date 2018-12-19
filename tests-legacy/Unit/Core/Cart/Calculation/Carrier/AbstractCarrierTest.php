@@ -173,7 +173,6 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             $this->cartRules[$k] = $cartRule;
         }
         Cache::clear();
-
     }
 
     public function tearDown()

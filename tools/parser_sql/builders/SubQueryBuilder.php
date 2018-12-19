@@ -54,38 +54,45 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SubQueryBuilder {
-    protected function buildRefClause($parsed) {
+class SubQueryBuilder
+{
+    protected function buildRefClause($parsed)
+    {
         $builder = new RefClauseBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildRefType($parsed) {
+    protected function buildRefType($parsed)
+    {
         $builder = new RefTypeBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildJoin($parsed) {
+    protected function buildJoin($parsed)
+    {
         $builder = new JoinBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias($parsed)
+    {
         $builder = new AliasBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildSelectStatement($parsed) {
+    protected function buildSelectStatement($parsed)
+    {
         $builder = new SelectStatementBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed, $index = 0) {
+    public function build($parsed, $index = 0)
+    {
         if ($parsed['expr_type'] !== ExpressionType::SUBQUERY) {
             return "";
         }

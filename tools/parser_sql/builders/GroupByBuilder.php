@@ -52,26 +52,31 @@ require_once dirname(__FILE__) . '/FunctionBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class GroupByBuilder {
-    protected function buildColRef($parsed) {
+class GroupByBuilder
+{
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildPosition($parsed) {
+    protected function buildPosition($parsed)
+    {
         $builder = new PositionBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);

@@ -39,5 +39,6 @@ require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
  * @author arothe
  * 
  */
-class WhereProcessor extends ExpressionListProcessor {
+class WhereProcessor extends ExpressionListProcessor
+{
 }

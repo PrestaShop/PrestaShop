@@ -50,16 +50,20 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class IndexColumnBuilder {
-    protected function buildLength($parsed) {
+class IndexColumnBuilder
+{
+    protected function buildLength($parsed)
+    {
         return ($parsed === false ? '' : ('(' . $parsed . ')'));
     }
 
-    protected function buildDirection($parsed) {
+    protected function buildDirection($parsed)
+    {
         return ($parsed === false ? '' : (' ' . $parsed));
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::INDEX_COLUMN) {
             return "";
         }

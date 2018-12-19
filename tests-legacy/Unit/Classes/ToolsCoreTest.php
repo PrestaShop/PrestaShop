@@ -31,7 +31,8 @@ use Tools;
 
 class ToolsCoreTest extends TestCase
 {
-    protected function setUp() {
+    protected function setUp()
+    {
         $_POST = array();
         $_GET = array();
         Tools::resetRequest();
@@ -327,7 +328,8 @@ class ToolsCoreTest extends TestCase
         $this->assertEquals($expected, $actual, "Expected $source to be $expected in camel case, got $actual instead.");
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass()
+    {
         $_POST = array();
         $_GET = array();
     }
@@ -335,7 +337,8 @@ class ToolsCoreTest extends TestCase
     /**
      * @dataProvider testStrReplaceFirstProvider
      */
-    public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected) {
+    public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected)
+    {
         $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));
     }
 
@@ -381,7 +384,8 @@ class ToolsCoreTest extends TestCase
         ];
     }
 
-    public function testStrReplaceFirstProvider() {
+    public function testStrReplaceFirstProvider()
+    {
         return [
             ['s', 'f', 'seed', 0, 'feed'],
             ['s', 'f', 'seed', 1, 'seed'],

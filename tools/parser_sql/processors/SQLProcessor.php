@@ -40,12 +40,14 @@ require_once dirname(__FILE__) . '/SQLChunkProcessor.php';
  * @author arothe
  * 
  */
-class SQLProcessor extends SQLChunkProcessor {
+class SQLProcessor extends SQLChunkProcessor
+{
     /*
      * This function breaks up the SQL statement into logical sections. 
      * Some sections are then further handled by specialized processors.
      */
-    public function process($tokens) {
+    public function process($tokens)
+    {
         $prev_category = "";
         $token_category = "";
         $skip_next = 0;
@@ -53,7 +55,6 @@ class SQLProcessor extends SQLChunkProcessor {
 
         $tokenCount = count($tokens);
         for ($tokenNumber = 0; $tokenNumber < $tokenCount; ++$tokenNumber) {
-
             $token = $tokens[$tokenNumber];
             $trim = trim($token); // this removes also \n and \t!
 

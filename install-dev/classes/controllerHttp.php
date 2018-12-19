@@ -237,7 +237,6 @@ class InstallControllerHttp
 
         // Submit form to go to next step
         if (Tools::getValue('submitNext')) {
-
             self::$steps->current()->getControllerInstance()->processNextStep();
 
             // If current step is validated, let's go to next step
@@ -269,7 +268,6 @@ class InstallControllerHttp
 
     public function init()
     {
-
     }
 
     public function process()

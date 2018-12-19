@@ -255,7 +255,6 @@ function base_url()
 function config_loading($current_path, $fld)
 {
     if (file_exists($current_path.$fld.".config")) {
-
         require_once $current_path.$fld.".config";
 
         return true;
@@ -272,7 +271,7 @@ function image_check_memory_usage($img, $max_breedte, $max_hoogte)
 {
     if (file_exists($img)) {
         $K64 = 65536;    // number of bytes in 64K
-    $memory_usage = memory_get_usage();
+        $memory_usage = memory_get_usage();
         $memory_limit = abs((int) (str_replace('M', '', ini_get('memory_limit'))*1024*1024));
         $image_properties = getimagesize($img);
         $image_width = $image_properties[0];

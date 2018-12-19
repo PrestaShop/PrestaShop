@@ -338,7 +338,9 @@ class ConnectionMock extends Connection
         return true;
     }
 
-    public function beginTransaction() { }
+    public function beginTransaction()
+    {
+    }
 
     public function commit()
     {
@@ -361,7 +363,11 @@ class ConnectionMock extends Connection
 
 class StatementMock extends Statement
 {
-    public function __construct($sql, Connection $conn) { }
+    public function __construct($sql, Connection $conn)
+    {
+    }
 
-    public function execute($params = null) { }
+    public function execute($params = null)
+    {
+    }
 }

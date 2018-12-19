@@ -54,44 +54,52 @@ require_once dirname(__FILE__) . '/OrderByBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SelectStatementBuilder {
-    protected function buildSELECT($parsed) {
+class SelectStatementBuilder
+{
+    protected function buildSELECT($parsed)
+    {
         $builder = new SelectBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildFROM($parsed) {
+    protected function buildFROM($parsed)
+    {
         $builder = new FromBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildWHERE($parsed) {
+    protected function buildWHERE($parsed)
+    {
         $builder = new WhereBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildGROUP($parsed) {
+    protected function buildGROUP($parsed)
+    {
         $builder = new GroupByBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildORDER($parsed) {
+    protected function buildORDER($parsed)
+    {
         $builder = new OrderByBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildLIMIT($parsed) {
+    protected function buildLIMIT($parsed)
+    {
         $builder = new LimitBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         $sql = $this->buildSELECT($parsed['SELECT']);
         if (isset($parsed['FROM'])) {
             $sql .= " " . $this->buildFROM($parsed['FROM']);

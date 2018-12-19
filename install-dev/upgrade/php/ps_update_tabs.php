@@ -45,13 +45,11 @@ function ps_update_tabs()
                     }
                 }
             }
-
         } else {
             return;
         }
 
         if (!empty($tab_class_name)) {
-
             $langs = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` != "en" ', true, false);
 
             if (!empty($langs)) {
@@ -91,13 +89,11 @@ function ps_update_tabs()
 
                                         // if data XML is not in DB => insert
                                         if (!array_key_exists($tmp_class_name, $tab_db_data)) {
-
                                             $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'tab_lang`
                                             (`id_tab`, `id_lang`, `name`)
                                             VALUES (' . (int)$tmp_class_id . ',' . (int)$lang['id_lang'] . ',"' . pSQL($tab) . '")';
 
                                             Db::getInstance()->execute($sql);
-
                                         } else {
                                             // if DB is != XML
                                             if ($tab_db_data[$tmp_class_name] != $tab) {

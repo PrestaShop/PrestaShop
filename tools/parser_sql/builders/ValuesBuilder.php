@@ -50,14 +50,17 @@ require_once dirname(__FILE__) . '/RecordBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ValuesBuilder {
-    protected function buildRecord($parsed) {
+class ValuesBuilder
+{
+    protected function buildRecord($parsed)
+    {
         $builder = new RecordBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);

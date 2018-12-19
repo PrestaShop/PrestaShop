@@ -53,38 +53,45 @@ require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SelectBuilder {
-    protected function buildConstant($parsed) {
+class SelectBuilder
+{
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildSelectExpression($parsed) {
+    protected function buildSelectExpression($parsed)
+    {
         $builder = new SelectExpressionBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildSelectBracketExpression($parsed) {
+    protected function buildSelectBracketExpression($parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildColRef($parsed) {
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
 
         return $builder->build($parsed);
@@ -97,11 +104,13 @@ class SelectBuilder {
      * @param array $parsed The part of the output array, which contains the current expression.
      * @return a string, which is added right after the expression
      */
-    protected function getDelimiter($parsed) {
+    protected function getDelimiter($parsed)
+    {
         return ($parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         $sql = "";
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);

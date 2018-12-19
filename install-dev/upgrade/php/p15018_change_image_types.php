@@ -68,16 +68,16 @@ function p15018_change_image_types()
 					SELECT NULL, "'.$new_type[0].'", "'.$new_type[1].'", "'.$new_type[2].'", products, categories, manufacturers, suppliers, scenes, stores
 					FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
                 }
-    // But if there is only the default one, we can update de names
-    else {
-        foreach ($replace_types as $type => $type_array) {
-            foreach ($type_array as $old_type => $new_type) {
-                if (is_array($new_type) && count($new_type)) {
-                    Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_type` SET name = "'.$new_type[0].'" WHERE name = "'.$old_type.'"');
+                // But if there is only the default one, we can update de names
+                else {
+                    foreach ($replace_types as $type => $type_array) {
+                        foreach ($type_array as $old_type => $new_type) {
+                            if (is_array($new_type) && count($new_type)) {
+                                Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_type` SET name = "'.$new_type[0].'" WHERE name = "'.$old_type.'"');
+                            }
+                        }
+                    }
                 }
-            }
-        }
-    }
             }
         }
     }

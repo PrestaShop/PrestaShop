@@ -49,8 +49,10 @@ require_once dirname(__FILE__) . '/../exceptions/UnsupportedFeatureException.php
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class JoinBuilder {
-    public function build($parsed) {
+class JoinBuilder
+{
+    public function build($parsed)
+    {
         if ($parsed === 'CROSS') {
             return ", ";
         }

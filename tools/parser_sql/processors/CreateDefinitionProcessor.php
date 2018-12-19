@@ -43,8 +43,10 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  *
  */
-class CreateDefinitionProcessor extends AbstractProcessor {
-    protected function correctExpressionType(&$expr) {
+class CreateDefinitionProcessor extends AbstractProcessor
+{
+    protected function correctExpressionType(&$expr)
+    {
         $type = ExpressionType::EXPRESSION;
         if (!isset($expr[0]) || !isset($expr[0]['expr_type'])) {
             return $type;
@@ -75,8 +77,8 @@ class CreateDefinitionProcessor extends AbstractProcessor {
         return $type;
     }
 
-    public function process($tokens) {
-
+    public function process($tokens)
+    {
         $base_expr = "";
         $prevCategory = "";
         $currCategory = "";
@@ -85,7 +87,6 @@ class CreateDefinitionProcessor extends AbstractProcessor {
         $skip = 0;
 
         foreach ($tokens as $k => $token) {
-
             $trim = trim($token);
             $base_expr .= $token;
 

@@ -42,8 +42,10 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class FromProcessor extends AbstractProcessor {
-    protected function initParseInfo($parseInfo = false) {
+class FromProcessor extends AbstractProcessor
+{
+    protected function initParseInfo($parseInfo = false)
+    {
         // first init
         if ($parseInfo === false) {
             $parseInfo = array('join_type' => "", 'saved_join_type' => "JOIN");
@@ -56,7 +58,8 @@ class FromProcessor extends AbstractProcessor {
         );
     }
 
-    protected function processFromExpression(&$parseInfo) {
+    protected function processFromExpression(&$parseInfo)
+    {
         $res = array();
 
         // exchange the join types (join_type is save now, saved_join_type holds the next one)
@@ -106,7 +109,8 @@ class FromProcessor extends AbstractProcessor {
         return $res;
     }
 
-    public function process($tokens) {
+    public function process($tokens)
+    {
         $parseInfo = $this->initParseInfo();
         $expr = array();
 

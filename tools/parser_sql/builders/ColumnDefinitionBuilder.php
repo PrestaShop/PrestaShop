@@ -51,20 +51,24 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ColumnDefinitionBuilder {
-    protected function buildColRef($parsed) {
+class ColumnDefinitionBuilder
+{
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildColumnType($parsed) {
+    protected function buildColumnType($parsed)
+    {
         $builder = new ColumnTypeBuilder();
 
         return $builder->build($parsed);
     }
 
-   public function build($parsed) {
+    public function build($parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::COLDEF) {
             return "";
         }

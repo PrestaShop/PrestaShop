@@ -50,20 +50,24 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ColumnReferenceBuilder {
-    protected function buildDirection($parsed) {
+class ColumnReferenceBuilder
+{
+    protected function buildDirection($parsed)
+    {
         $builder = new DirectionBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias($parsed)
+    {
         $builder = new AliasBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::COLREF) {
             return "";
         }

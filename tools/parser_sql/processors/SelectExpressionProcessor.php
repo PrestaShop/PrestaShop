@@ -41,10 +41,12 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class SelectExpressionProcessor extends AbstractProcessor {
+class SelectExpressionProcessor extends AbstractProcessor
+{
     private $expressionListProcessor;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->expressionListProcessor = new ExpressionListProcessor();
     }
 
@@ -53,7 +55,8 @@ class SelectExpressionProcessor extends AbstractProcessor {
      * We determine what (if any) alias
      * is provided, and we set the type of expression.
      */
-    public function process($expression) {
+    public function process($expression)
+    {
         $tokens = $this->splitSQLIntoTokens($expression);
         $token_count = count($tokens);
         if ($token_count === 0) {
@@ -120,7 +123,6 @@ class SelectExpressionProcessor extends AbstractProcessor {
             if ($this->isReserved($prev) || $this->isConstant($prev) || $this->isAggregateFunction($prev)
                     || $this->isFunction($prev) || $this->isExpression($prev) || $this->isSubQuery($prev)
                     || $this->isColumnReference($prev) || $this->isBracketExpression($prev)) {
-
                 $alias = array('as' => false, 'name' => trim($last['base_expr']),
                     'no_quotes' => $this->revokeQuotation($last['base_expr']),
                     'base_expr' => trim($last['base_expr']),

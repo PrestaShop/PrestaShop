@@ -50,20 +50,24 @@ require_once dirname(__FILE__) . '/ValuesBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class InsertStatementBuilder {
-    protected function buildVALUES($parsed) {
+class InsertStatementBuilder
+{
+    protected function buildVALUES($parsed)
+    {
         $builder = new ValuesBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildINSERT($parsed) {
+    protected function buildINSERT($parsed)
+    {
         $builder = new InsertBuilder($parsed);
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         // TODO: are there more than one tables possible (like [INSERT][1])
         return $this->buildINSERT($parsed['INSERT'][0]) . " " . $this->buildVALUES($parsed['VALUES']);
         // TODO: subquery?

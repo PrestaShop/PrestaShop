@@ -56,44 +56,52 @@ require_once dirname(__FILE__) . '/IndexParserBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class PrimaryKeyBuilder {
-    protected function buildColumnList($parsed) {
+class PrimaryKeyBuilder
+{
+    protected function buildColumnList($parsed)
+    {
         $builder = new ColumnListBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildConstraint($parsed) {
+    protected function buildConstraint($parsed)
+    {
         $builder = new ConstraintBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildIndexType($parsed) {
+    protected function buildIndexType($parsed)
+    {
         $builder = new IndexTypeBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildIndexSize($parsed) {
+    protected function buildIndexSize($parsed)
+    {
         $builder = new IndexSizeBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildIndexParser($parsed) {
+    protected function buildIndexParser($parsed)
+    {
         $builder = new IndexParserBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::PRIMARY_KEY) {
             return "";
         }

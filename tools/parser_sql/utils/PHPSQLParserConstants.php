@@ -30,7 +30,8 @@
  * DAMAGE.
  */
 
-class PHPSQLParserConstants {
+class PHPSQLParserConstants
+{
     protected static $reserved = array('ABS', 'ACOS', 'ADDDATE', 'ADDTIME', 'AES_ENCRYPT', 'AES_DECRYPT', 'AGAINST',
         'ASCII', 'ASIN', 'ATAN', 'AVG', 'BENCHMARK', 'BIN', 'BIT_AND', 'BIT_OR',
         'BITCOUNT', 'BITLENGTH', 'CAST', 'CEILING', 'CHAR', 'CHAR_LENGTH',
@@ -168,19 +169,23 @@ class PHPSQLParserConstants {
         'BIT_AND', 'BIT_OR', 'BIT_XOR',
     );
 
-    public static function isAggregateFunction($token) {
+    public static function isAggregateFunction($token)
+    {
         return in_array($token, PHPSQLParserConstants::$aggregateFunctions);
     }
 
-    public static function isReserved($token) {
+    public static function isReserved($token)
+    {
         return in_array($token, PHPSQLParserConstants::$reserved);
     }
 
-    public static function isFunction($token) {
+    public static function isFunction($token)
+    {
         return in_array($token, PHPSQLParserConstants::$functions);
     }
 
-    public static function isParameterizedFunction($token) {
+    public static function isParameterizedFunction($token)
+    {
         return in_array($token, PHPSQLParserConstants::$parameterizedFunctions);
     }
 }

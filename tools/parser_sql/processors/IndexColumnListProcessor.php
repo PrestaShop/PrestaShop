@@ -40,12 +40,15 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class IndexColumnListProcessor extends AbstractProcessor {
-    protected function initExpression() {
+class IndexColumnListProcessor extends AbstractProcessor
+{
+    protected function initExpression()
+    {
         return array('name' => false, 'no_quotes' => false, 'length' => false, 'dir' => false);
     }
 
-    public function process($sql) {
+    public function process($sql)
+    {
         $tokens = $this->splitSQLIntoTokens($sql);
 
         $expr = $this->initExpression();
@@ -53,7 +56,6 @@ class IndexColumnListProcessor extends AbstractProcessor {
         $base_expr = "";
 
         foreach ($tokens as $k => $token) {
-
             $trim = trim($token);
             $base_expr .= $token;
 

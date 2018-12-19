@@ -52,26 +52,31 @@ require_once dirname(__FILE__) . '/ConstantBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class RefClauseBuilder {
-    protected function buildColRef($parsed) {
+class RefClauseBuilder
+{
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildOperator($parsed) {
+    protected function buildOperator($parsed)
+    {
         $builder = new OperatorBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         if ($parsed === false) {
             return "";
         }

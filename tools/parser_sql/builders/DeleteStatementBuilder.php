@@ -51,26 +51,31 @@ require_once dirname(__FILE__) . '/DeleteBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class DeleteStatementBuilder {
-    protected function buildWHERE($parsed) {
+class DeleteStatementBuilder
+{
+    protected function buildWHERE($parsed)
+    {
         $builder = new WhereBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildFROM($parsed) {
+    protected function buildFROM($parsed)
+    {
         $builder = new FromBuilder();
 
         return $builder->build($parsed);
     }
 
-    protected function buildDELETE($parsed) {
+    protected function buildDELETE($parsed)
+    {
         $builder = new DeleteBuilder();
 
         return $builder->build($parsed);
     }
 
-    public function processDeleteStatement($parsed) {
+    public function processDeleteStatement($parsed)
+    {
         $sql = $this->buildDELETE($parsed['DELETE']) . " " . $this->processFROM($parsed['FROM']);
         if (isset($parsed['WHERE'])) {
             $sql .= " " . $this->processWHERE($parsed['WHERE']);

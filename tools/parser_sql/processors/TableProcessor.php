@@ -41,27 +41,32 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  *
  */
-class TableProcessor extends AbstractProcessor {
-    protected function getReservedType($token) {
+class TableProcessor extends AbstractProcessor
+{
+    protected function getReservedType($token)
+    {
         return array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $token);
     }
 
-    protected function getConstantType($token) {
+    protected function getConstantType($token)
+    {
         return array('expr_type' => ExpressionType::CONSTANT, 'base_expr' => $token);
     }
 
-    protected function getOperatorType($token) {
+    protected function getOperatorType($token)
+    {
         return array('expr_type' => ExpressionType::OPERATOR, 'base_expr' => $token);
     }
 
-    protected function clear(&$expr, &$base_expr, &$category) {
+    protected function clear(&$expr, &$base_expr, &$category)
+    {
         $expr = array();
         $base_expr = '';
         $category = 'CREATE_DEF';
     }
 
-    public function process($tokens) {
-
+    public function process($tokens)
+    {
         $currCategory = "TABLE_NAME";
         $result = array('base_expr' => false, 'name' => false, 'no_quotes' => false, 'create-def' => false,
             'options' => false, 'like' => false, 'select-option' => false,
