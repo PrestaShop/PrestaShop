@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Routing;
 
+use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
-use RuntimeException;
 
 /**
  * This class is responsible of loading routes of enabled modules.

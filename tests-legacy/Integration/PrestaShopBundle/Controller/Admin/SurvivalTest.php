@@ -26,10 +26,10 @@
 
 namespace LegacyTests\Integration\PrestaShopBundle\Controller\Admin;
 
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
-use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
 use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
+use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
  * @group demo

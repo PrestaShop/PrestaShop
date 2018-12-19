@@ -26,9 +26,9 @@
 
 namespace LegacyTests\PrestaShopBundle\Command;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Command\ExportThemeCommand;
 use Symfony\Component\Console\Tester\CommandTester;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @group sf

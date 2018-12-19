@@ -28,8 +28,8 @@ namespace LegacyTests\Unit\Core\Cart\Adding\CartRule;
 
 use Configuration;
 use Customization;
-use Product;
 use LegacyTests\Unit\Core\Cart\AbstractCartTest;
+use Product;
 
 class AddCustomizationTest extends AbstractCartTest
 {

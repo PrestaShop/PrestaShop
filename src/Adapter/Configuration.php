@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Combination;
+use Configuration as ConfigurationLegacy;
+use Feature;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Exception\NotImplementedException;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Shop;
-use Combination;
-use Feature;
-use Configuration as ConfigurationLegacy;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Adapter of Configuration ObjectModel.

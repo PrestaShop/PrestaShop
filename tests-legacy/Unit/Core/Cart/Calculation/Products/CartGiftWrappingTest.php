@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Core\Cart\Calculation\Products;
 
-use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use Configuration;
+use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 class CartGiftWrappingTest extends AbstractCartCalculationTest
 {

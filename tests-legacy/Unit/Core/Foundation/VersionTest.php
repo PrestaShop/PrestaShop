@@ -26,9 +26,9 @@
 
 namespace LegacyTests\Unit\Core\Foundation;
 
-use PrestaShop\PrestaShop\Core\Foundation\Version;
-use PrestaShop\PrestaShop\Core\Foundation\Exception\InvalidVersionException;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\InvalidVersionException;
+use PrestaShop\PrestaShop\Core\Foundation\Version;
 
 class VersionTest extends TestCase
 {

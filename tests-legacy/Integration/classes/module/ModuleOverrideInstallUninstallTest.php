@@ -26,11 +26,11 @@
 
 namespace LegacyTests\Integration;
 
-use Module;
-use PrestaShopAutoload;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use LegacyTests\TestCase\IntegrationTestCase;
 use LegacyTests\TestCase\Module as TestingModule;
+use Module;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShopAutoload;
 
 class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
 {

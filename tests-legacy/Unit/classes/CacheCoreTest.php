@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Classes;
 
-use PHPUnit\Framework\TestCase;
 use Cache;
+use PHPUnit\Framework\TestCase;
 
 class CacheCoreTest extends TestCase
 {

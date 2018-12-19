@@ -26,13 +26,13 @@
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
-use PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration;
-use PrestaShop\PrestaShop\Adapter\Cache\CombineCompressCacheConfiguration;
-use PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration;
-use PrestaShop\PrestaShop\Adapter\Media\MediaServerConfiguration;
-use PrestaShop\PrestaShop\Adapter\Debug\DebugModeConfiguration;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Cache\CachingConfiguration;
+use PrestaShop\PrestaShop\Adapter\Cache\CombineCompressCacheConfiguration;
+use PrestaShop\PrestaShop\Adapter\Debug\DebugModeConfiguration;
+use PrestaShop\PrestaShop\Adapter\Media\MediaServerConfiguration;
+use PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration;
+use PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
  * This class is responsible of managing the data manipulated using forms

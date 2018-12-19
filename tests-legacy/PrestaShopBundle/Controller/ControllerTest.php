@@ -28,9 +28,9 @@ namespace LegacyTests\PrestaShopBundle\Controller;
 
 use Context;
 use Controller;
-use Prophecy\Argument;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use Prophecy\Argument;
 use Tools;
 
 /**

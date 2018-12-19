@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Pack;
-use Product;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use Product;
 
 /**
  * Class responsible of getting information about Pack Items.

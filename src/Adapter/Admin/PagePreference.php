@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
+use AppKernel;
+use Db;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
-use AppKernel;
-use Db;
 
 /**
  * Adapter to know which page's version to display.

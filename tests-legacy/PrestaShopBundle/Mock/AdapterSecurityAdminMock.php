@@ -26,8 +26,8 @@
 
 namespace LegacyTests\PrestaShopBundle\Mock;
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**

@@ -27,9 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Hook;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

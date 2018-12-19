@@ -26,9 +26,9 @@
 
 namespace LegacyTests\Integration\PrestaShopBundle\Service\DataProvider\MarketPlace;
 
+use Phake;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Phake;
 
 /**
  * @group addons

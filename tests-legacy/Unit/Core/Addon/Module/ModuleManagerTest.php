@@ -26,10 +26,10 @@
 
 namespace LegacyTests\Core\Addon\Module;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
-use PHPUnit\Framework\TestCase;
 
 class ModuleManagerTest extends TestCase
 {

@@ -28,11 +28,11 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Configuration;
 use Exception;
+use PhpEncryption;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use PhpEncryption;
+use Symfony\Component\HttpFoundation\Request;
 
 class AddonsController extends FrameworkBundleAdminController
 {

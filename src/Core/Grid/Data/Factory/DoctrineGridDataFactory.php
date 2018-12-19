@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;

@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\Configuration;
 
-use Exception;
 use Doctrine\DBAL\Connection;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use Symfony\Component\Filesystem\Filesystem;

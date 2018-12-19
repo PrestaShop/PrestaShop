@@ -27,18 +27,18 @@
 namespace PrestaShopBundle\EventListener;
 
 use Doctrine\Common\Annotations\AnnotationException;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
-use PrestaShopBundle\Security\Annotation\ModuleActivated;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\RouterInterface;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
-use ReflectionObject;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use ReflectionClass;
+use ReflectionObject;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Allow a redirection to the right url when using ModuleActivated annotation

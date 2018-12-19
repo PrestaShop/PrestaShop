@@ -26,8 +26,8 @@
 
 namespace LegacyTests\PrestaShopBundle\Twig\Locator;
 
-use PrestaShopBundle\Twig\Locator\ModuleTemplateLoader;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Twig\Locator\ModuleTemplateLoader;
 
 /**
  * @group sf

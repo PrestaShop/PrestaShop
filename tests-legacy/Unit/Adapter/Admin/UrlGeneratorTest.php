@@ -26,9 +26,9 @@
 
 namespace LegacyTests\Unit\Adapter\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Admin\UrlGenerator;
 use LegacyTests\TestCase\UnitTestCase;
 use Phake;
+use PrestaShop\PrestaShop\Adapter\Admin\UrlGenerator;
 
 class UrlGeneratorTest extends UnitTestCase
 {

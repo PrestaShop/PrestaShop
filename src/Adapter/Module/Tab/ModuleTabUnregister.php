@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module;
-use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\Entity\Tab;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tab as TabClass;

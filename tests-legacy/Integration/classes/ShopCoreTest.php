@@ -26,9 +26,9 @@
 
 namespace LegacyTests\Unit\Classes;
 
-use LegacyTests\TestCase\IntegrationTestCase;
 use Configuration;
 use Context;
+use LegacyTests\TestCase\IntegrationTestCase;
 
 class ShopCoreTest extends IntegrationTestCase
 {

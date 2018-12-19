@@ -26,9 +26,9 @@
 
 namespace LegacyTests\Unit\Adapter\Module;
 
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use LegacyTests\TestCase\UnitTestCase;
 use Phake;
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 
 class AdminModuleDataProviderTest extends UnitTestCase
 {

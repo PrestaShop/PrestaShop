@@ -26,9 +26,9 @@
 
 namespace LegacyTests\PrestaShopBundle\Translation\Provider;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Component\Filesystem\Filesystem;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @group sf

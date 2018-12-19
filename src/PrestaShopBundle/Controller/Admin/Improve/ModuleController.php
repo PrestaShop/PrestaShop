@@ -29,10 +29,6 @@ namespace PrestaShopBundle\Controller\Admin\Improve;
 use DateTime;
 use Exception;
 use Module;
-use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
-use PrestaShopBundle\Entity\ModuleHistory;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
@@ -40,13 +36,17 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
+use PrestaShopBundle\Entity\ModuleHistory;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Profile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 
 /**
  * Responsible of "Improve > Modules > Modules & Services > Catalog / Manage" page display.

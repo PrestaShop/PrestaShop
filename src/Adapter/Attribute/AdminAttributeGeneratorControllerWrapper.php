@@ -26,16 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
-use Context;
-use Symfony\Component\Translation\TranslatorInterface;
-use Validate;
-use Product;
-use SpecificPriceRule;
 use AdminAttributeGeneratorController;
 use Combination;
-use StockAvailable;
-use Tools;
+use Context;
+use Product;
+use SpecificPriceRule;
 use Stock;
+use StockAvailable;
+use Symfony\Component\Translation\TranslatorInterface;
+use Tools;
+use Validate;
 
 /**
  * Admin controller wrapper for new Architecture, about Category admin controller.

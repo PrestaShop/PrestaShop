@@ -26,10 +26,10 @@
 
 namespace LegacyTests\Integration\PrestaShopBundle\Routing\Converter;
 
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use LegacyTests\Integration\PrestaShopBundle\Test\LightWebTestCase;
 use Link;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use ReflectionClass;
 
 /**

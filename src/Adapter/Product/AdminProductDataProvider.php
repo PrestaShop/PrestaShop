@@ -26,23 +26,23 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use AppKernel;
+use Configuration;
+use Context;
+use Currency;
+use Db;
+use DbQuery;
 use Doctrine\ORM\EntityManager;
+use Hook;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
-use Psr\Cache\CacheItemPoolInterface;
-use AppKernel;
-use Db;
-use Context;
-use Hook;
 use Product;
-use Tools;
-use Configuration;
-use Currency;
-use DbQuery;
+use Psr\Cache\CacheItemPoolInterface;
 use StockAvailable;
+use Tools;
 
 /**
  * Data provider for new Architecture, about Product object model.

@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Classes\Tax;
 
-use LegacyTests\TestCase\UnitTestCase;
 use AverageTaxOfProductsTaxCalculator;
+use LegacyTests\TestCase\UnitTestCase;
 use Phake;
 
 class AverageTaxOfProductsTaxCalculatorTest extends UnitTestCase

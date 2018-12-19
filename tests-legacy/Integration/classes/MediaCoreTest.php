@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Classes;
 
-use LegacyTests\TestCase\IntegrationTestCase;
 use Configuration;
+use LegacyTests\TestCase\IntegrationTestCase;
 use Media;
 
 class MediaCoreTest extends IntegrationTestCase

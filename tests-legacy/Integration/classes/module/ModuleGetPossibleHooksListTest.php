@@ -26,11 +26,11 @@
 
 namespace LegacyTests\Integration;
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Cache;
 use LegacyTests\TestCase\IntegrationTestCase;
 
 use Module;
-use Cache;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class ModuleGetPossibleHooksListTest extends IntegrationTestCase
 {

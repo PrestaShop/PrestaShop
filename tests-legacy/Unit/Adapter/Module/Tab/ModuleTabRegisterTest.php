@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Adapter\Module\Tab;
 
-use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
 use LegacyTests\TestCase\UnitTestCase;
+use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ModuleTabRegisterTest extends UnitTestCase

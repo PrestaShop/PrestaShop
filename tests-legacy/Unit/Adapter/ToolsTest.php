@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Adapter;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Tools;
 
 class ToolsTest extends TestCase
 {

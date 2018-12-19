@@ -28,10 +28,10 @@ namespace LegacyTests\Unit\Core\Grid\Position;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
-use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionModificationCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionModificationInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory;
 
 /**
  * Class PositionUpdateFactoryTest.

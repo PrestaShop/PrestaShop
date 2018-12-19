@@ -26,9 +26,9 @@
 
 namespace LegacyTests\Unit\Core\Hook;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Hook\HookInterface;
 use PrestaShop\PrestaShop\Core\Hook\RenderedHook;
-use PHPUnit\Framework\TestCase;
 
 class RenderedHookTest extends TestCase
 {

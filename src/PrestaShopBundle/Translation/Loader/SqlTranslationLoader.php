@@ -27,8 +27,8 @@
 
 namespace PrestaShopBundle\Translation\Loader;
 
-use Exception;
 use Db;
+use Exception;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;

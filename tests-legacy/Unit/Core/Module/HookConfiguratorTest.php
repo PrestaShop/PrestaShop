@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Core\Module;
 
-use Phake;
 use LegacyTests\TestCase\UnitTestCase;
+use Phake;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 
 class HookConfiguratorTest extends UnitTestCase

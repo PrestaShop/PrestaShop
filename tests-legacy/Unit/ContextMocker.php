@@ -35,6 +35,7 @@ use Context;
 use Currency;
 use Language;
 use Link;
+use Pack;
 use Phake;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Product;
@@ -42,7 +43,6 @@ use Shop;
 use Smarty;
 use SpecificPrice;
 use Tools;
-use Pack;
 
 /**
  * This helper class provides methods to initialize context for front controller tests

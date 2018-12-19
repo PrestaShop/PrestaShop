@@ -28,8 +28,8 @@ namespace LegacyTests\Integration;
 
 use LegacyTests\TestCase\IntegrationTestCase;
 
-use Module;
 use LegacyTests\TestCase\Module as HelperModule;
+use Module;
 
 class ModulesGetOverrideTest extends IntegrationTestCase
 {

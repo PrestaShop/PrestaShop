@@ -26,10 +26,10 @@
 
 namespace LegacyTests\Unit\Core\Grid\Query;
 
-use stdClass;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Exception\UnsupportedParameterException;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryParser;
+use stdClass;
 
 class DoctrineQueryParserTest extends TestCase
 {

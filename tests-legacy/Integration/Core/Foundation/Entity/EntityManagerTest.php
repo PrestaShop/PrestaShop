@@ -26,11 +26,11 @@
 
 namespace LegacyTests\Integration\Core\Foundation\Entity;
 
-use LegacyTests\TestCase\IntegrationTestCase;
-use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use CMSRole;
 use Db;
+use LegacyTests\TestCase\IntegrationTestCase;
 use LegacyTests\Unit\ContextMocker;
+use PrestaShop\PrestaShop\Core\ContainerBuilder;
 
 class EntityManagerTest extends IntegrationTestCase
 {

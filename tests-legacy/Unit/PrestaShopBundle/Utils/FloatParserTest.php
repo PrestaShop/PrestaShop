@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\PrestaShopBundle\Utils;
 
-use PrestaShopBundle\Utils\FloatParser;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Utils\FloatParser;
 
 class FloatParserTest extends TestCase
 {

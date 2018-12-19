@@ -27,9 +27,9 @@
 
 namespace PrestaShopBundle\Translation\Loader;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
-use Doctrine\ORM\EntityManagerInterface;
 
 class DatabaseTranslationLoader implements LoaderInterface
 {

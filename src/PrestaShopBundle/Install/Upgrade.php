@@ -52,34 +52,34 @@ namespace {
 }
 
 namespace PrestaShopBundle\Install {
-    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
-    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-    use Symfony\Component\Yaml\Yaml;
-    use Symfony\Component\Filesystem\Filesystem;
-    use Symfony\Component\Filesystem\Exception\IOException;
     use AppKernel;
-    use Context;
     use Cache;
-    use Shop;
-    use Validate;
-    use Country;
     use Cart;
-    use Employee;
-    use RandomLib;
-    use Language;
-    use Configuration;
     use Composer\Script\Event;
-    use PhpEncryption;
+    use Configuration;
+    use Context;
+    use Country;
     use Db;
-    use Tools;
+    use Employee;
+    use FileLogger;
+    use Language;
     use Module;
-    use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+    use PhpEncryption;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
+    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
+    use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
     use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
     use PrestaShop\PrestaShop\Core\Cldr\Update;
-    use FileLogger;
     use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
+    use RandomLib;
+    use Shop;
+    use Symfony\Component\Filesystem\Exception\IOException;
+    use Symfony\Component\Filesystem\Filesystem;
+    use Symfony\Component\Yaml\Yaml;
+    use Tools;
+    use Validate;
 
     class Upgrade
     {

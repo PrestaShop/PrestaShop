@@ -27,12 +27,12 @@
 namespace LegacyTests\Unit\Adapter\Module\Configuration;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Driver\PDOMySql\Driver;
+use Doctrine\DBAL\Statement;
+use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
-use LegacyTests\TestCase\UnitTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleSelfConfiguratorTest extends UnitTestCase

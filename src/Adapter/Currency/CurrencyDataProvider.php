@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use Currency;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
  * This class will provide data from DB / ORM about Currency.

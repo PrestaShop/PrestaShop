@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
+use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
-use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 
 /**
  * This class render Product Categories Form in Product List Page.

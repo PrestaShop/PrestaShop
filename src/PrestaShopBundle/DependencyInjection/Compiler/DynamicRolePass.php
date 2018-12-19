@@ -26,10 +26,10 @@
 
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
+use PrestaShopBundle\Exception\ServiceDefinitionException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use PrestaShopBundle\Exception\ServiceDefinitionException;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**

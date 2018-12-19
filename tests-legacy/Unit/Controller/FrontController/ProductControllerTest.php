@@ -26,9 +26,9 @@
 
 namespace LegacyTests\Unit\Controller\FrontController;
 
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use LegacyTests\TestCase\IntegrationTestCase;
 use LegacyTests\Unit\ContextMocker;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
 class ProductControllerTest extends IntegrationTestCase
 {

@@ -26,12 +26,12 @@
 
 namespace LegacyTests\Core\Addon;
 
+use LegacyTests\TestCase\FakeConfiguration;
+use Phake;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator;
-use LegacyTests\TestCase\FakeConfiguration;
 use Symfony\Component\Yaml\Parser;
-use PHPUnit\Framework\TestCase;
-use Phake;
 
 class ThemeValidatorTest extends TestCase
 {

@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Exception;
 use PrestaShopBundle\Event\ModuleZipManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
-use Exception;
 use Tools;
 use ZipArchive;
 
