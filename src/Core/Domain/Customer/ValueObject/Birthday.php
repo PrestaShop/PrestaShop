@@ -74,6 +74,14 @@ class Birthday
     }
 
     /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return self::EMPTY_BIRTHDAY === $this->birthday;
+    }
+
+    /**
      * Birthday cannot be date in a future
      *
      * @param string $birthday

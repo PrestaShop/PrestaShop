@@ -26,7 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 
 /**
  * Stores editable data for customer
@@ -59,7 +63,7 @@ class EditableCustomer
     private $email;
 
     /**
-     * @var string
+     * @var Birthday
      */
     private $birthday;
 
@@ -121,10 +125,10 @@ class EditableCustomer
     /**
      * @param CustomerId $customerId
      * @param int $genderId
-     * @param string $firstName
-     * @param string $lastName
-     * @param string $email
-     * @param string $birthday
+     * @param FirstName $firstName
+     * @param LastName $lastName
+     * @param Email $email
+     * @param Birthday $birthday
      * @param bool $isEnabled
      * @param bool $isPartnerOffersSubscribed
      * @param int[] $groupIds
@@ -140,10 +144,10 @@ class EditableCustomer
     public function __construct(
         CustomerId $customerId,
         $genderId,
-        $firstName,
-        $lastName,
-        $email,
-        $birthday,
+        FirstName $firstName,
+        LastName $lastName,
+        Email $email,
+        Birthday $birthday,
         $isEnabled,
         $isPartnerOffersSubscribed,
         array $groupIds,
@@ -192,7 +196,7 @@ class EditableCustomer
     }
 
     /**
-     * @return string
+     * @return FirstName
      */
     public function getFirstName()
     {
@@ -200,7 +204,7 @@ class EditableCustomer
     }
 
     /**
-     * @return string
+     * @return LastName
      */
     public function getLastName()
     {
@@ -208,7 +212,7 @@ class EditableCustomer
     }
 
     /**
-     * @return string
+     * @return Email
      */
     public function getEmail()
     {
@@ -216,7 +220,7 @@ class EditableCustomer
     }
 
     /**
-     * @return string
+     * @return Birthday
      */
     public function getBirthday()
     {
