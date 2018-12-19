@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\AddLanguageHandler
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CopyingNoPictureException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use Shop;
@@ -58,7 +59,7 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
 
         $language = $this->createLegacyLanguageObjectFromCommand($command);
 
-        $this->uploadImages($language, $command);
+        $this->uploadFlagImage($language, $command);
         $this->addShopAssociation($language, $command);
 
         return new LanguageId((int) $language->id);
@@ -229,58 +230,49 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
      * @param Language $language
      * @param AddLanguageCommand $command
      */
-    private function uploadImages(Language $language, AddLanguageCommand $command)
+    private function uploadFlagImage(Language $language, AddLanguageCommand $command)
     {
+        $language->deleteImage();
 
+        $this->uploadImage(
+            $language->id,
+            $command->getFlagImagePath(),
+            'l' . DIRECTORY_SEPARATOR
+        );
     }
 
-    private function uploadImage($languageId, $imagePath, $dir)
+    /**
+     * @param int $languageId
+     * @param string $newImagePath
+     * @param string $imageDir
+     */
+    private function uploadImage($languageId, $newImagePath, $imageDir)
     {
-        if (isset($_FILES[$name]['tmp_name']) && !empty($_FILES[$name]['tmp_name'])) {
-            // Delete old image
-            if (Validate::isLoadedObject($object = $this->loadObject())) {
-                $object->deleteImage();
-            } else {
-                return false;
-            }
-
-            // Check image validity
-            $max_size = isset($this->max_image_size) ? $this->max_image_size : 0;
-            if ($error = ImageManager::validateUpload($_FILES[$name], \Tools::getMaxUploadSize($max_size))) {
-                $this->errors[] = $error;
-            }
-
-            $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-            if (!$tmp_name) {
-                return false;
-            }
-
-            if (!move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name)) {
-                return false;
-            }
-
-            // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-            if (!ImageManager::checkImageMemoryLimit($tmp_name)) {
-                $this->errors[] = $this->trans('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ', array(), 'Admin.Notifications.Error');
-            }
-
-            // Copy new image
-            if (empty($this->errors) && !ImageManager::resize($tmp_name, _PS_IMG_DIR_ . $dir . $id . '.' . $this->imageType, (int) $width, (int) $height, ($ext ? $ext : $this->imageType))) {
-                $this->errors[] = $this->trans('An error occurred while uploading the image.', array(), 'Admin.Notifications.Error');
-            }
-
-            if (count($this->errors)) {
-                return false;
-            }
-            if ($this->afterImageUpload()) {
-                unlink($tmp_name);
-
-                return true;
-            }
-
-            return false;
+        $temporaryImage = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+        if (!$temporaryImage) {
+            return;
         }
 
-        return true;
+        if (!move_uploaded_file($newImagePath, $temporaryImage)) {
+            return;
+        }
+
+        // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
+        if (!ImageManager::checkImageMemoryLimit($temporaryImage)) {
+            throw new LanguageImageUploadingException(
+                'Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.',
+                LanguageImageUploadingException::MEMORY_LIMIT_RESTRICTION
+            );
+        }
+
+        // Copy new image
+        if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . $imageDir . $languageId . '.jpg')) {
+            throw new LanguageImageUploadingException(
+                'An error occurred while uploading the image. Check your directory permissions.',
+                LanguageImageUploadingException::UNEXPECTED_ERROR
+            );
+        }
+
+        unlink($temporaryImage);
     }
 }
