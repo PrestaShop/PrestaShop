@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use DateTime;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
@@ -84,18 +83,14 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
     {
         /** @var EditableCustomer $editableCustomer */
         $editableCustomer = $this->queryBus->handle(new GetCustomerForEditing(new CustomerId((int) $customerId)));
-
-        $birthday = '0000-00-00' !== $editableCustomer->getBirthday() ?
-            new DateTime($editableCustomer->getBirthday()) :
-            null
-        ;
+        $birthday = $editableCustomer->getBirthday();
 
         $data = [
             'gender_id' => $editableCustomer->getGenderId(),
-            'first_name' => $editableCustomer->getFirstName(),
-            'last_name' => $editableCustomer->getLastName(),
-            'email' => $editableCustomer->getEmail(),
-            'birthday' => $birthday,
+            'first_name' => $editableCustomer->getFirstName()->getValue(),
+            'last_name' => $editableCustomer->getLastName()->getValue(),
+            'email' => $editableCustomer->getEmail()->getValue(),
+            'birthday' => $birthday->isEmpty() ? null : $birthday->getValue(),
             'is_enabled' => $editableCustomer->isEnabled(),
             'is_partner_offers_subscribed' => $editableCustomer->isPartnerOffersSubscribed(),
             'group_ids' => $editableCustomer->getGroupIds(),

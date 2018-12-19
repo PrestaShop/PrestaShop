@@ -31,6 +31,10 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 
 /**
  * Handles command that gets customer for editing
@@ -54,13 +58,18 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
             );
         }
 
+        $birthday = null === $customer->birthday ?
+            Birthday::createEmpty() :
+            new Birthday($customer->birthday)
+        ;
+
         return new EditableCustomer(
             $customerId,
             $customer->id_gender,
-            $customer->firstname,
-            $customer->lastname,
-            $customer->email,
-            $customer->birthday,
+            new FirstName($customer->firstname),
+            new LastName($customer->lastname),
+            new Email($customer->email),
+            $birthday,
             (bool) $customer->active,
             (bool) $customer->optin,
             $customer->getGroups(),

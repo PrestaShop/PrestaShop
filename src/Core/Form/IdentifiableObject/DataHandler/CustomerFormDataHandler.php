@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use DateTime;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
@@ -116,7 +115,7 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             (int) $data['gender_id'],
             (bool) $data['is_enabled'],
             (bool) $data['is_partner_offers_subscribed'],
-            $data['birthday']
+            $data['birthday'] ?: Birthday::EMPTY_BIRTHDAY
         );
 
         if (!$this->isB2bFeatureEnabled) {
@@ -157,7 +156,7 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             ->setIsPartnerOffersSubscribed($data['is_partner_offers_subscribed'])
             ->setDefaultGroupId((int) $data['default_group_id'])
             ->setGroupIds($groupIds)
-            ->setBirthday($data['birthday'])
+            ->setBirthday($data['birthday'] ?: Birthday::EMPTY_BIRTHDAY)
         ;
 
         if (null !== $data['password']) {
