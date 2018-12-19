@@ -79,7 +79,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
 
     private function assertTemplateParametersInclude(array $what, array $requestParams = [])
     {
-        $this->assertArraySubset(
+        static::assertArraySubset(
             $what,
             $this->step->handleRequest($requestParams)->getTemplateParameters()
         );

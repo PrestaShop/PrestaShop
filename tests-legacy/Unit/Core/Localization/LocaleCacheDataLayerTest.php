@@ -67,12 +67,12 @@ class LocaleCacheDataLayerTest extends TestCase
         $cachedData = $this->layer->read('fooBar');
         /** @noinspection end */
 
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             LocaleData::class,
             $cachedData
         );
 
-        $this->assertSame(
+        static::assertSame(
             ['bar', 'baz'],
             $cachedData->foo
         );
@@ -82,6 +82,6 @@ class LocaleCacheDataLayerTest extends TestCase
         $cachedData = $this->layer->read('unknown');
         /** @noinspection end */
 
-        $this->assertNull($cachedData);
+        static::assertNull($cachedData);
     }
 }

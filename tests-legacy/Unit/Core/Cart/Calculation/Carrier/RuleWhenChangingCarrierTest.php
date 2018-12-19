@@ -96,24 +96,24 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
         // tests
         $cartRule = $this->getCartRuleFromFixtureId(2);
         $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
-        $this->assertFalse($result);
+        static::assertFalse($result);
 
         $cartRule = $this->getCartRuleFromFixtureId(1);
         $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
-        $this->assertTrue($result);
+        static::assertTrue($result);
         $this->cartRulesInCart[] = $cartRule;
         $result                  = $this->cart->addCartRule($cartRule->id);
-        $this->assertTrue($result);
+        static::assertTrue($result);
         $cartRules = $this->cart->getCartRules();
-        $this->assertCount(1, $cartRules);
+        static::assertCount(1, $cartRules);
 
         $result = $cartRule->checkValidity(\Context::getContext(), false, false);
-        $this->assertFalse($result);
+        static::assertFalse($result);
         $this->cartRulesInCart[] = $cartRule;
         $result                  = $this->cart->addCartRule($cartRule->id);
-        $this->assertFalse($result);
+        static::assertFalse($result);
         $cartRules = $this->cart->getCartRules();
-        $this->assertCount(1, $cartRules);
+        static::assertCount(1, $cartRules);
     }
 
     public function testCarrierSpecificCartRuleNotCorresponding()
@@ -126,7 +126,7 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
         // tests
         $cartRule = $this->getCartRuleFromFixtureId(2);
         $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
-        $this->assertFalse($result);
+        static::assertFalse($result);
     }
 
     public function testCarrierSpecificCartRuleRemovedWhenChangingCarrier()
@@ -140,14 +140,14 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
         $cartRule                = $this->getCartRuleFromFixtureId(1);
         $this->cartRulesInCart[] = $cartRule;
         $result                  = $this->cart->addCartRule($cartRule->id);
-        $this->assertTrue($result);
+        static::assertTrue($result);
         $cartRules = $this->cart->getCartRules();
-        $this->assertCount(1, $cartRules);
+        static::assertCount(1, $cartRules);
 
         $this->setCartCarrierFromFixtureId(1);
 
         $cartRules = $this->cart->getCartRules();
-        $this->assertCount(0, $cartRules);
+        static::assertCount(0, $cartRules);
     }
 
     public function testCarrierSpecificCartRuleWithoutCodeSetAndUnset()
@@ -159,12 +159,12 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
         // tests
         $this->setCartCarrierFromFixtureId(2);
         $cartRules = $this->cart->getCartRules();
-        $this->assertCount(0, $cartRules);
+        static::assertCount(0, $cartRules);
         $this->setCartCarrierFromFixtureId(3);
         $cartRules = $this->cart->getCartRules();
-        $this->assertCount(1, $cartRules);
+        static::assertCount(1, $cartRules);
         $this->setCartCarrierFromFixtureId(2);
         $cartRules = $this->cart->getCartRules();
-        $this->assertCount(0, $cartRules);
+        static::assertCount(0, $cartRules);
     }
 }

@@ -58,7 +58,7 @@ class ApiClientTest extends KernelTestCase
 
     public function testGetNativeModules()
     {
-        $this->assertCount(0, $this->apiClient->getNativesModules());
+        static::assertCount(0, $this->apiClient->getNativesModules());
     }
 
     /**
@@ -90,7 +90,7 @@ class ApiClientTest extends KernelTestCase
             ->getMock();
 
         $clientMock->method('get')
-            ->with($this->anything())
+            ->with(static::anything())
             ->willReturn($responseMock);
 
         return $clientMock;

@@ -60,7 +60,7 @@ class EntityManagerTest extends IntegrationTestCase
 
     public function testExplicitlyDefinedRepositoryIsFoundByEntitymanager()
     {
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             '\\PrestaShop\\PrestaShop\\Core\\CMS\\CMSRoleRepository',
             $this->entityManager->getRepository('CMSRole')
         );
@@ -70,8 +70,8 @@ class EntityManagerTest extends IntegrationTestCase
     {
         $repository = $this->entityManager->getRepository('Product');
         $product = $repository->findOne(1);
-        $this->assertInstanceOf('Product', $product);
-        $this->assertEquals(1, $product->id);
+        static::assertInstanceOf('Product', $product);
+        static::assertEquals(1, $product->id);
     }
 
     public function testSaveDataMapperStyle()
@@ -87,7 +87,7 @@ class EntityManagerTest extends IntegrationTestCase
 
         $this->entityManager->save($entity);
 
-        $this->assertGreaterThan(0, $repository->findOneByName($name)->id);
+        static::assertGreaterThan(0, $repository->findOneByName($name)->id);
 
         // Clean DB !
         $this->entityManager->delete($entity);

@@ -36,12 +36,12 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsIp2Long($expected, $input)
     {
-        $this->assertEquals($expected, Validate::isIp2Long($input));
+        static::assertEquals($expected, Validate::isIp2Long($input));
     }
 
     public function testIsAnything()
     {
-        $this->assertTrue(Validate::isAnything());
+        static::assertTrue(Validate::isAnything());
     }
 
     // TODO: Write test for testIsModuleUrl()
@@ -55,7 +55,7 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsEmail($expected, $input)
     {
-        $this->assertSame($expected, Validate::isEmail($input));
+        static::assertSame($expected, Validate::isEmail($input));
     }
 
     /**
@@ -63,7 +63,7 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsBirthDate($expected, $input)
     {
-        $this->assertSame($expected, Validate::isBirthDate($input));
+        static::assertSame($expected, Validate::isBirthDate($input));
     }
 
     /**
@@ -71,7 +71,7 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsDateOrNull($expected, $input)
     {
-        $this->assertSame($expected, Validate::isDateOrNull($input));
+        static::assertSame($expected, Validate::isDateOrNull($input));
     }
 
     /**
@@ -79,7 +79,7 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsMd5($expected, $input)
     {
-        $this->assertSame($expected, Validate::isMd5($input));
+        static::assertSame($expected, Validate::isMd5($input));
     }
 
     /**
@@ -87,7 +87,7 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsSha1($expected, $input)
     {
-        $this->assertSame($expected, Validate::isSha1($input));
+        static::assertSame($expected, Validate::isSha1($input));
     }
 
     /**
@@ -95,7 +95,7 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsFloat($expected, $input)
     {
-        $this->assertSame($expected, Validate::isFloat($input));
+        static::assertSame($expected, Validate::isFloat($input));
     }
 
     /**
@@ -103,7 +103,7 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsUnsignedFloat($expected, $input)
     {
-        $this->assertSame($expected, Validate::isUnsignedFloat($input));
+        static::assertSame($expected, Validate::isUnsignedFloat($input));
     }
 
     /**
@@ -112,7 +112,7 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsOptFloat($expected, $input)
     {
-        $this->assertSame($expected, Validate::isOptFloat($input));
+        static::assertSame($expected, Validate::isOptFloat($input));
     }
 
     // --- providers ---

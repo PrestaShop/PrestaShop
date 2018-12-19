@@ -99,10 +99,10 @@ class AssetsCoreTest extends TestCase
             }
         }
 
-        $this->assertSame($toBeFound, $found);
+        static::assertSame($toBeFound, $found);
 
         if ($toBeFound) {
-            $this->assertSame($expectedAsset['path'], $this->testsPath.$expectedPath);
+            static::assertSame($expectedAsset['path'], $this->testsPath.$expectedPath);
         }
 
     }

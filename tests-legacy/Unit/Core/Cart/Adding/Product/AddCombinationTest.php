@@ -38,14 +38,14 @@ class AddCombinationTest extends AbstractCartTest
         $product     = new Product($combination->id_product);
 
         $nbProduct = Product::getQuantity($product->id, $combination->id, null, $this->cart, null);
-        $this->assertEquals(500, $nbProduct);
+        static::assertEquals(500, $nbProduct);
 
         $result = $this->cart->updateQty(11, $product->id, $combination->id, null);
-        $this->assertTrue($result);
+        static::assertTrue($result);
         $qty = $this->cart->getProductQuantity($product->id, $combination->id, null);
-        $this->assertEquals(11, $qty['quantity']);
+        static::assertEquals(11, $qty['quantity']);
         $nbProduct = Product::getQuantity($product->id, $combination->id, null, $this->cart, null);
-        $this->assertEquals(489, $nbProduct);
+        static::assertEquals(489, $nbProduct);
     }
 
     public function testCombinationCannotBeAddedInCartIfMoreThanStock()
@@ -54,11 +54,11 @@ class AddCombinationTest extends AbstractCartTest
         $product     = new Product($combination->id_product);
 
         $result = $this->cart->updateQty(600, $product->id, $combination->id);
-        $this->assertFalse($result);
+        static::assertFalse($result);
         $qty = $this->cart->getProductQuantity($product->id, $combination->id, null);
-        $this->assertEquals(0, $qty['quantity']);
+        static::assertEquals(0, $qty['quantity']);
         $nbProduct = Product::getQuantity($product->id, $combination->id, null, $this->cart, null);
-        $this->assertEquals(500, $nbProduct);
+        static::assertEquals(500, $nbProduct);
     }
 
     public function testCombinationCanBeAddedInCartIfMoreThanStockButAvailableWhenOutOfStock()
@@ -72,11 +72,11 @@ class AddCombinationTest extends AbstractCartTest
         $product->save();
 
         $result = $this->cart->updateQty(600, $product->id, $combination->id);
-        $this->assertTrue($result);
+        static::assertTrue($result);
         $qty = $this->cart->getProductQuantity($product->id, $combination->id, null);
-        $this->assertEquals(600, $qty['quantity']);
+        static::assertEquals(600, $qty['quantity']);
         $nbProduct = Product::getQuantity($product->id, $combination->id, null, $this->cart, null);
-        $this->assertEquals(-100, $nbProduct);
+        static::assertEquals(-100, $nbProduct);
 
         Configuration::set('PS_ORDER_OUT_OF_STOCK', $oldOrderOutOfStock);
     }

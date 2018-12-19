@@ -72,21 +72,21 @@ class ModuleManagerTest extends TestCase
 
     public function testInstallSuccessful()
     {
-        $this->assertTrue($this->moduleManager->install(self::UNINSTALLED_MODULE));
-        $this->assertTrue($this->moduleManager->install(self::INSTALLED_MODULE));
+        static::assertTrue($this->moduleManager->install(self::UNINSTALLED_MODULE));
+        static::assertTrue($this->moduleManager->install(self::INSTALLED_MODULE));
     }
 
     public function testUninstallSuccessful()
     {
-        $this->assertTrue($this->moduleManager->uninstall(self::INSTALLED_MODULE));
+        static::assertTrue($this->moduleManager->uninstall(self::INSTALLED_MODULE));
         $this->expectException('Exception');
         $this->expectExceptionMessage('The module %module% must be installed first');
-        $this->assertFalse($this->moduleManager->uninstall(self::UNINSTALLED_MODULE));
+        static::assertFalse($this->moduleManager->uninstall(self::UNINSTALLED_MODULE));
     }
 
     public function testUpgradeSuccessful()
     {
-        $this->assertTrue($this->moduleManager->upgrade(self::INSTALLED_MODULE));
+        static::assertTrue($this->moduleManager->upgrade(self::INSTALLED_MODULE));
         $this->expectException('Exception');
         $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->upgrade(self::UNINSTALLED_MODULE);
@@ -94,61 +94,61 @@ class ModuleManagerTest extends TestCase
 
     public function testDisableSuccessful()
     {
-        $this->assertTrue($this->moduleManager->disable(self::INSTALLED_MODULE));
+        static::assertTrue($this->moduleManager->disable(self::INSTALLED_MODULE));
         $this->expectException('Exception');
         $this->expectExceptionMessage('The module %module% must be installed first');
-        $this->assertFalse($this->moduleManager->disable(self::UNINSTALLED_MODULE));
+        static::assertFalse($this->moduleManager->disable(self::UNINSTALLED_MODULE));
     }
 
     public function testEnableSuccessful()
     {
-        $this->assertTrue($this->moduleManager->enable(self::INSTALLED_MODULE));
+        static::assertTrue($this->moduleManager->enable(self::INSTALLED_MODULE));
         $this->expectException('Exception');
         $this->expectExceptionMessage('The module %module% must be installed first');
-        $this->assertFalse($this->moduleManager->enable(self::UNINSTALLED_MODULE));
+        static::assertFalse($this->moduleManager->enable(self::UNINSTALLED_MODULE));
     }
 
     public function testDisableOnMobileSuccessful()
     {
-        $this->assertTrue($this->moduleManager->disable_mobile(self::INSTALLED_MODULE));
+        static::assertTrue($this->moduleManager->disable_mobile(self::INSTALLED_MODULE));
         $this->expectException('Exception');
         $this->expectExceptionMessage('The module %module% must be installed first');
-        $this->assertFalse($this->moduleManager->disable_mobile(self::UNINSTALLED_MODULE));
+        static::assertFalse($this->moduleManager->disable_mobile(self::UNINSTALLED_MODULE));
     }
 
     public function testEnableOnMobileSuccessful()
     {
-        $this->assertTrue($this->moduleManager->enable_mobile(self::INSTALLED_MODULE));
+        static::assertTrue($this->moduleManager->enable_mobile(self::INSTALLED_MODULE));
         $this->expectException('Exception');
         $this->expectExceptionMessage('The module %module% must be installed first');
-        $this->assertFalse($this->moduleManager->enable_mobile(self::UNINSTALLED_MODULE));
+        static::assertFalse($this->moduleManager->enable_mobile(self::UNINSTALLED_MODULE));
     }
 
     public function testResetSuccessful()
     {
-        $this->assertTrue($this->moduleManager->reset(self::INSTALLED_MODULE));
+        static::assertTrue($this->moduleManager->reset(self::INSTALLED_MODULE));
         $this->expectException('Exception');
         $this->expectExceptionMessage('The module %module% must be installed first');
-        $this->assertFalse($this->moduleManager->reset(self::UNINSTALLED_MODULE));
+        static::assertFalse($this->moduleManager->reset(self::UNINSTALLED_MODULE));
     }
 
     public function testIsEnabled()
     {
-        $this->assertTrue($this->moduleManager->isEnabled(self::INSTALLED_MODULE));
-        $this->assertFalse($this->moduleManager->isEnabled(self::UNINSTALLED_MODULE));
+        static::assertTrue($this->moduleManager->isEnabled(self::INSTALLED_MODULE));
+        static::assertFalse($this->moduleManager->isEnabled(self::UNINSTALLED_MODULE));
     }
 
     public function testIsInstalled()
     {
-        $this->assertTrue($this->moduleManager->isInstalled(self::INSTALLED_MODULE));
-        $this->assertFalse($this->moduleManager->isInstalled(self::UNINSTALLED_MODULE));
+        static::assertTrue($this->moduleManager->isInstalled(self::INSTALLED_MODULE));
+        static::assertFalse($this->moduleManager->isInstalled(self::UNINSTALLED_MODULE));
     }
 
     public function testRemoveModuleFromDisk()
     {
         $modules = [self::INSTALLED_MODULE, self::UNINSTALLED_MODULE];
         foreach ($modules as $module) {
-            $this->assertSame($this->moduleManager->removeModuleFromDisk($module), $this->moduleUpdaterS->removeModuleFromDisk($module));
+            static::assertSame($this->moduleManager->removeModuleFromDisk($module), $this->moduleUpdaterS->removeModuleFromDisk($module));
         }
     }
 
@@ -198,7 +198,7 @@ class ModuleManagerTest extends TestCase
 
         $this->moduleProviderS
             ->method('can')
-            ->will($this->returnValueMap($providerAuthorizations));
+            ->will(static::returnValueMap($providerAuthorizations));
 
         $isInstalledValues = [
             [
@@ -210,7 +210,7 @@ class ModuleManagerTest extends TestCase
         ];
         $this->moduleProviderS
             ->method('isInstalled')
-            ->will($this->returnValueMap($isInstalledValues));
+            ->will(static::returnValueMap($isInstalledValues));
 
         $isEnabledValues = [
             [self::INSTALLED_MODULE, true],
@@ -219,7 +219,7 @@ class ModuleManagerTest extends TestCase
 
         $this->moduleProviderS
             ->method('isEnabled')
-            ->will($this->returnValueMap($isEnabledValues));
+            ->will(static::returnValueMap($isEnabledValues));
     }
 
     private function mockModuleUpdater()
@@ -285,7 +285,7 @@ class ModuleManagerTest extends TestCase
 
         $this->moduleZipManagerS
             ->method('getName')
-            ->will($this->returnArgument(0));
+            ->will(static::returnArgument(0));
 
         $this->moduleZipManagerS
             ->method('storeInModulesFolder');
@@ -299,7 +299,7 @@ class ModuleManagerTest extends TestCase
 
         $this->translatorS
             ->method('trans')
-            ->will($this->returnArgument(0));
+            ->will(static::returnArgument(0));
     }
 
     private function mockDispatcher()

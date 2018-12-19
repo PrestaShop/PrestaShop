@@ -77,9 +77,9 @@ class AdminTabsControllerTest extends UnitTestCase
             ->setMethods(array('getFamily'))
             ->getMock();
 
-        $cookieMock->expects($this->once())
+        $cookieMock->expects(static::once())
             ->method('getFamily')
-            ->with($this->anything())
+            ->with(static::anything())
             ->willReturn(array());
 
         $this->context->cookie = $cookieMock;
@@ -92,16 +92,16 @@ class AdminTabsControllerTest extends UnitTestCase
             ->setMethods(array('query', 'executeS', 'getMsgError'))
             ->getMock();
 
-        $dbMock->expects($this->any())
+        $dbMock->expects(static::any())
             ->method('query')
-            ->with($this->callback(function ($subject) {
+            ->with(static::callback(function ($subject) {
                 // It should check if multi-shop is active
                 return strpos($subject, 'PS_MULTISHOP_FEATURE_ACTIVE') !== false;
             }));
 
-        $dbMock->expects($this->any())
+        $dbMock->expects(static::any())
             ->method('executeS')
-            ->with($this->callback(function ($subject) {
+            ->with(static::callback(function ($subject) {
                 if ($subject instanceof DbQuery) {
                     $builtQuery = $subject->build();
 
@@ -120,7 +120,7 @@ class AdminTabsControllerTest extends UnitTestCase
                     strpos($subject, 'hook_alias') !== false;
 
             }))
-            ->will($this->returnCallback(function ($subject) {
+            ->will(static::returnCallback(function ($subject) {
                 if (strpos($subject, 'authorization') !== false) {
                     return array();
                 } else {

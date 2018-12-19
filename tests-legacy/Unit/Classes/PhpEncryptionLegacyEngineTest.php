@@ -37,7 +37,7 @@ class PhpEncryptionLegacyEngineTest extends TestCase
     public function setUp()
     {
         if (version_compare(PHP_VERSION, '7.1', '>=')) {
-            $this->markTestSkipped('Legacy encryption with mcrypt is deprecated from PHP 7.1.');
+            static::markTestSkipped('Legacy encryption with mcrypt is deprecated from PHP 7.1.');
         }
 
         $key = \Defuse\Crypto\Key::createNewRandomKey();
@@ -47,6 +47,6 @@ class PhpEncryptionLegacyEngineTest extends TestCase
     public function testEncryptAndDecrypt()
     {
         $encryptedValue = $this->engine->encrypt(self::FOO);
-        $this->assertSame(self::FOO, $this->engine->decrypt($encryptedValue));
+        static::assertSame(self::FOO, $this->engine->decrypt($encryptedValue));
     }
 }

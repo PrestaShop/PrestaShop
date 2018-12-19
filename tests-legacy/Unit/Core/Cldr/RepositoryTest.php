@@ -62,11 +62,11 @@ class RepositoryTest extends UnitTestCase
 
     public function testCacheFolderIsCreated()
     {
-        $this->assertFileNotExists($this->cldrCacheFolder);
+        static::assertFileNotExists($this->cldrCacheFolder);
 
         mkdir($this->cldrCacheFolder, 0777, true);
 
-        $this->assertFileExists($this->cldrCacheFolder);
+        static::assertFileExists($this->cldrCacheFolder);
     }
 
     public function testSetLocale()
@@ -74,14 +74,14 @@ class RepositoryTest extends UnitTestCase
         $this->locale = 'fr';
         $this->localeRepository = $this->repository->locales[$this->locale];
 
-        $this->assertEquals($this->locale, 'fr');
-        $this->assertEquals($this->localeRepository->__get('code'), 'fr');
+        static::assertEquals($this->locale, 'fr');
+        static::assertEquals($this->localeRepository->__get('code'), 'fr');
     }
 
     public function testSetRegion()
     {
         $this->region = 'FR';
-        $this->assertEquals($this->region, 'FR');
+        static::assertEquals($this->region, 'FR');
     }
 
     public function testGetCurrencyIsoCodeNum()
@@ -89,23 +89,23 @@ class RepositoryTest extends UnitTestCase
         $code = 'EUR';
         $currencies = $this->repository->supplemental['codeMappings'];
 
-        $this->assertEquals($currencies[$code]['_numeric'], '978');
+        static::assertEquals($currencies[$code]['_numeric'], '978');
     }
 
     public function testGetCurrencyWithoutCode()
     {
         $territory = $this->repository->territories[$this->region];
 
-        $this->assertEquals($territory->code, 'FR');
+        static::assertEquals($territory->code, 'FR');
 
         $code = (string)$territory->currency;
 
-        $this->assertEquals($code, 'EUR');
+        static::assertEquals($code, 'EUR');
 
         $currency = new Currency($this->repository, $code);
         $localized_currency = $currency->localize($this->locale);
 
-        $this->assertEquals($localized_currency->name, 'euro');
+        static::assertEquals($localized_currency->name, 'euro');
     }
 
     public function testGetCurrencyWithCode()
@@ -115,14 +115,14 @@ class RepositoryTest extends UnitTestCase
         $currency = new Currency($this->repository, $code);
         $localized_currency = $currency->localize($this->locale);
 
-        $this->assertEquals($localized_currency->name, 'euro');
+        static::assertEquals($localized_currency->name, 'euro');
     }
 
     public function testGetAllCurrencies()
     {
         $currencies = $this->repository->supplemental['codeMappings'];
 
-        $this->assertCount(486, $currencies);
+        static::assertCount(486, $currencies);
 
         $datas = array();
         foreach ($currencies as $k => $v) {
@@ -132,6 +132,6 @@ class RepositoryTest extends UnitTestCase
             $datas[] = $k;
         }
 
-        $this->assertCount(177, $datas);
+        static::assertCount(177, $datas);
     }
 }

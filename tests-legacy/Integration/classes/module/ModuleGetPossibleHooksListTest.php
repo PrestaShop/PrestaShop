@@ -47,10 +47,10 @@ class ModuleGetPossibleHooksListTest extends IntegrationTestCase
         Cache::clean('hook_alias');
         $possible_hooks_list = $module->getPossibleHooksList();
 
-        $this->assertCount(2, $possible_hooks_list);
+        static::assertCount(2, $possible_hooks_list);
 
-        $this->assertEquals('displayPaymentReturn', $possible_hooks_list[0]['name']);
-        $this->assertEquals('paymentOptions', $possible_hooks_list[1]['name']);
+        static::assertEquals('displayPaymentReturn', $possible_hooks_list[0]['name']);
+        static::assertEquals('paymentOptions', $possible_hooks_list[1]['name']);
     }
 
     public static function tearDownAfterClass()

@@ -59,9 +59,9 @@ class HookDispatcherTest extends TestCase
 
         // stub adapter expectations
         $this->hookDispatcherAdapter
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('dispatchForParameters')
-            ->with($this->equalTo('hookName'), $this->equalTo([]));
+            ->with(static::equalTo('hookName'), static::equalTo([]));
 
         $this->hookDispatcher->dispatchHook($hook);
     }
@@ -70,9 +70,9 @@ class HookDispatcherTest extends TestCase
     {
         // stub adapter expectations
         $this->hookDispatcherAdapter
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('dispatchForParameters')
-            ->with($this->equalTo('fooHook'), $this->equalTo(['bar' => 'Bar']));
+            ->with(static::equalTo('fooHook'), static::equalTo(['bar' => 'Bar']));
 
         $this->hookDispatcher->dispatchWithParameters('fooHook', ['bar' => 'Bar']);
     }
@@ -86,7 +86,7 @@ class HookDispatcherTest extends TestCase
 
         // stub adapter expectations
         $this->hookDispatcherAdapter
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('renderForParameters')
             ->with(
                 $hook->getName(),
@@ -96,9 +96,9 @@ class HookDispatcherTest extends TestCase
 
         $renderedHook = $this->hookDispatcher->dispatchRendering($hook);
 
-        $this->assertInstanceOf(RenderedHook::class, $renderedHook);
-        $this->assertEquals($hook, $renderedHook->getHook());
-        $this->assertEquals([], $renderedHook->getContent());
+        static::assertInstanceOf(RenderedHook::class, $renderedHook);
+        static::assertEquals($hook, $renderedHook->getHook());
+        static::assertEquals([], $renderedHook->getContent());
     }
 
     public function testDispatchRenderingWithParameters()
@@ -110,7 +110,7 @@ class HookDispatcherTest extends TestCase
 
         // stub adapter expectations
         $this->hookDispatcherAdapter
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('renderForParameters')
             ->with(
                 $hook->getName(),
@@ -120,9 +120,9 @@ class HookDispatcherTest extends TestCase
 
         $renderedHook = $this->hookDispatcher->dispatchRenderingWithParameters('Baz', ['hello' => 'World']);
 
-        $this->assertInstanceOf(RenderedHook::class, $renderedHook);
-        $this->assertEquals($hook, $renderedHook->getHook());
-        $this->assertEquals(['hello' => 'World'], $renderedHook->getContent());
+        static::assertInstanceOf(RenderedHook::class, $renderedHook);
+        static::assertEquals($hook, $renderedHook->getHook());
+        static::assertEquals(['hello' => 'World'], $renderedHook->getContent());
     }
 
     private function createHook($name = 'hookName', $parameters = [])

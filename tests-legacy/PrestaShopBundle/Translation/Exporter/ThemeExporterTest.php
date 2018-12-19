@@ -121,17 +121,17 @@ class ThemeExporterTest extends TestCase
 
         $messages = $catalogue->all();
         $domain = 'ShopActions.' . self::LOCALE;
-        $this->assertArrayHasKey($domain, $messages);
+        static::assertArrayHasKey($domain, $messages);
 
-        $this->assertArrayHasKey('Edit Product', $messages[$domain]);
-        $this->assertArrayHasKey('Add Product', $messages[$domain]);
-        $this->assertArrayHasKey('Delete Product', $messages[$domain]);
+        static::assertArrayHasKey('Edit Product', $messages[$domain]);
+        static::assertArrayHasKey('Add Product', $messages[$domain]);
+        static::assertArrayHasKey('Delete Product', $messages[$domain]);
 
-        $this->assertArrayHasKey('Override Me', $messages[$domain]);
-        $this->assertSame('Overridden', $messages[$domain]['Override Me']);
+        static::assertArrayHasKey('Override Me', $messages[$domain]);
+        static::assertSame('Overridden', $messages[$domain]['Override Me']);
 
-        $this->assertArrayHasKey('Override Me Twice', $messages[$domain]);
-        $this->assertSame('Overridden Twice', $messages[$domain]['Override Me Twice']);
+        static::assertArrayHasKey('Override Me Twice', $messages[$domain]);
+        static::assertSame('Overridden Twice', $messages[$domain]['Override Me Twice']);
     }
 
     protected function mockThemeExtractor()

@@ -121,10 +121,10 @@ class ProductControllerTest extends IntegrationTestCase
         $priceFormatter = new PriceFormatter();
 
         foreach ($expected as $expectedLevel => $expectedValues) {
-            $this->assertArrayHasKey($expectedLevel, $result);
+            static::assertArrayHasKey($expectedLevel, $result);
             foreach ($expectedValues as $expectedKey => $expectedValue) {
-                $this->assertArrayHasKey($expectedKey, $result[$expectedLevel]);
-                $this->assertEquals($priceFormatter->format($expectedValue), $result[$expectedLevel][$expectedKey]);
+                static::assertArrayHasKey($expectedKey, $result[$expectedLevel]);
+                static::assertEquals($priceFormatter->format($expectedValue), $result[$expectedLevel][$expectedKey]);
             }
         }
     }

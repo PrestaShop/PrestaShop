@@ -59,31 +59,31 @@ class ReaderTest extends TestCase
     {
         $localeData = $this->reader->readLocaleData($localeCode);
 
-        $this->assertInstanceOf(LocaleData::class, $localeData);
+        static::assertInstanceOf(LocaleData::class, $localeData);
 
         $dns = $localeData->defaultNumberingSystem;
 
-        $this->assertEquals(
+        static::assertEquals(
             $expectedData['defaultNumberingSystem'],
             $dns,
             'Wrong group separator'
         );
-        $this->assertEquals(
+        static::assertEquals(
             $expectedData['digitsGroupSeparator'],
             $localeData->numberSymbols[$dns]->group,
             'Wrong group separator'
         );
-        $this->assertEquals(
+        static::assertEquals(
             $expectedData['decimalSeparator'],
             $localeData->numberSymbols[$dns]->decimal,
             'Wrong decimal separator'
         );
-        $this->assertEquals(
+        static::assertEquals(
             $expectedData['decimalPattern'],
             $localeData->decimalPatterns[$dns],
             'Wrong decimal pattern'
         );
-        $this->assertEquals(
+        static::assertEquals(
             $expectedData['currencyPattern'],
             $localeData->currencyPatterns[$dns],
             'Wrong currency pattern'

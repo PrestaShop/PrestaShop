@@ -104,10 +104,10 @@ class PrestaTrustCheckerTest extends UnitTestCase
 
         $this->apiClientS
             ->method('setShopUrl')
-            ->will($this->returnValue($this->apiClientS));
+            ->will(static::returnValue($this->apiClientS));
         $this->apiClientS
             ->method('getPrestaTrustCheck')
-            ->will($this->returnValue($this->prestatrustApiResults));
+            ->will(static::returnValue($this->prestatrustApiResults));
 
         $this->translatorS = $this->getMockBuilder('Symfony\Component\Translation\Translator')
             ->disableOriginalConstructor()
@@ -115,7 +115,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
 
         $this->translatorS
             ->method('trans')
-            ->will($this->returnArgument(0));
+            ->will(static::returnArgument(0));
 
         $cache = new ArrayCache();
         $cache->save('module-verified-from-addons-api', (object)array('hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b'));
@@ -144,7 +144,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $testedModule = clone $this->modules['module-under-dev'];
         $this->prestatrustChecker->loadDetailsIntoModule($testedModule);
 
-        $this->assertFalse($testedModule->attributes->has('prestatrust'));
+        static::assertFalse($testedModule->attributes->has('prestatrust'));
     }
 
     /**
@@ -162,8 +162,8 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $testedModule = $this->modules['module-verified-from-addons-api'];
         $presentedModule = $this->modulePresenter->present($testedModule);
 
-        $this->assertArrayHasKey('picos', $presentedModule['attributes']);
-        $this->assertNotEmpty($presentedModule['attributes']['picos']);
+        static::assertArrayHasKey('picos', $presentedModule['attributes']);
+        static::assertNotEmpty($presentedModule['attributes']['picos']);
     }
 
     /**
@@ -178,8 +178,8 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $testedModule = $this->modules['module-under-dev'];
         $presentedModule = $this->modulePresenter->present($testedModule);
 
-        $this->assertArrayHasKey('picos', $presentedModule['attributes']);
-        $this->assertEmpty($presentedModule['attributes']['picos']);
+        static::assertArrayHasKey('picos', $presentedModule['attributes']);
+        static::assertEmpty($presentedModule['attributes']['picos']);
     }
 
     /**
@@ -197,7 +197,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
 
         $presentedModule = $this->modulePresenter->present($testedModule);
 
-        $this->assertEquals(
+        static::assertEquals(
             (object)array(
                 'hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b',
                 'check_list' => array(

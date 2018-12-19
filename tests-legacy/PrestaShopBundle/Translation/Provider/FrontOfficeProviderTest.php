@@ -51,23 +51,23 @@ class FrontOfficeProviderTest extends TestCase
     {
         // The xliff file contains 6 keys
         $expectedReturn = $this->provider->getMessageCatalogue();
-        $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
+        static::assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
 
         // Check integrity of translations
-        $this->assertArrayHasKey('ShopNotificationsWarning.en-US', $expectedReturn->all());
-        $this->assertArrayHasKey('ModulesShoppingCartShop.en-US', $expectedReturn->all());
+        static::assertArrayHasKey('ShopNotificationsWarning.en-US', $expectedReturn->all());
+        static::assertArrayHasKey('ModulesShoppingCartShop.en-US', $expectedReturn->all());
 
-        $this->assertCount(4, $expectedReturn->all());
+        static::assertCount(4, $expectedReturn->all());
 
         $frontTranslations = $expectedReturn->all('ShopNotificationsWarning.en-US');
-        $this->assertCount(6, $frontTranslations);
-        $this->assertArrayHasKey('You do not have any vouchers.', $frontTranslations);
-        $this->assertSame('You do not have any vouchers.', $frontTranslations['You do not have any vouchers.']);
+        static::assertCount(6, $frontTranslations);
+        static::assertArrayHasKey('You do not have any vouchers.', $frontTranslations);
+        static::assertSame('You do not have any vouchers.', $frontTranslations['You do not have any vouchers.']);
 
         $moduleTranslations = $expectedReturn->all('ModulesShoppingCartShop.en-US');
-        $this->assertCount(1, $moduleTranslations);
-        $this->assertArrayHasKey('Customers who bought this product also bought:', $moduleTranslations);
-        $this->assertSame(
+        static::assertCount(1, $moduleTranslations);
+        static::assertArrayHasKey('Customers who bought this product also bought:', $moduleTranslations);
+        static::assertSame(
             'Customers who bought this product also bought:',
             $moduleTranslations['Customers who bought this product also bought:']
         );

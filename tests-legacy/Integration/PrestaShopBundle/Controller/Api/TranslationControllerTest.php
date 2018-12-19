@@ -44,7 +44,7 @@ class TranslationControllerTest extends ApiTestCase
 
         $cacheMock
             ->method('execute')
-            ->will($this->returnValue(true));
+            ->will(static::returnValue(true));
 
         self::$container->set('prestashop.cache.refresh', $cacheMock);
     }

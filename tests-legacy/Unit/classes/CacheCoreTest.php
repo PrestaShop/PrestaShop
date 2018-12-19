@@ -105,17 +105,17 @@ class CacheCoreTest extends TestCase
             $queryHash = Cache::getInstance()->getQueryHash($query);
 
             // check the query is in the cache
-            $this->assertArrayHasKey($queryHash, $this->cacheArray);
+            static::assertArrayHasKey($queryHash, $this->cacheArray);
 
             $tableLists = Cache::getInstance()->getTables($query);
             foreach ($tableLists as $table) {
                 $tableCacheKey = Cache::getInstance()->getTableMapCacheKey($table);
 
                 // check the table cache key is in the cache
-                $this->assertArrayHasKey($tableCacheKey, $this->cacheArray);
+                static::assertArrayHasKey($tableCacheKey, $this->cacheArray);
 
                 // check the query hash is in the table map
-                $this->assertArrayHasKey($queryHash, $this->cacheArray[$tableCacheKey]);
+                static::assertArrayHasKey($queryHash, $this->cacheArray[$tableCacheKey]);
             }
         }
     }
@@ -136,7 +136,7 @@ class CacheCoreTest extends TestCase
             Cache::getInstance()->setQuery($query, array('queryResult '.$i));
         }
 
-        $this->assertCount(4, $this->cacheArray);
+        static::assertCount(4, $this->cacheArray);
 
         foreach ($queries as $query) {
             $tableLists = Cache::getInstance()->getTables($query);
@@ -144,17 +144,17 @@ class CacheCoreTest extends TestCase
                 $tableCacheKey = Cache::getInstance()->getTableMapCacheKey($table);
 
                 // check the table cache key is in the cache
-                $this->assertArrayHasKey($tableCacheKey, $this->cacheArray);
+                static::assertArrayHasKey($tableCacheKey, $this->cacheArray);
 
                 // check the query hash is in the table map
-                $this->assertCount(2, $this->cacheArray[$tableCacheKey]);
+                static::assertCount(2, $this->cacheArray[$tableCacheKey]);
             }
 
             break;
         }
 
         // check the cache only contains two keys (+ 2 table keys)
-        $this->assertCount(4, $this->cacheArray);
+        static::assertCount(4, $this->cacheArray);
     }
 
     /**
@@ -181,7 +181,7 @@ class CacheCoreTest extends TestCase
         Cache::getInstance()->incrementQueryCounter($queries[3]);
         Cache::getInstance()->incrementQueryCounter($queries[3]);
 
-        $this->assertCount(6, $this->cacheArray);
+        static::assertCount(6, $this->cacheArray);
 
         // inserting a new entry should update the query counter, and the LRU logic
         // should evict 0 and 2 query from the cache
@@ -189,19 +189,19 @@ class CacheCoreTest extends TestCase
 
         // check the cache only contains the query 1 3 and 4
         $queryHash = Cache::getInstance()->getQueryHash($queries[1]);
-        $this->assertArrayHasKey($queryHash, $this->cacheArray);
+        static::assertArrayHasKey($queryHash, $this->cacheArray);
 
         $queryHash = Cache::getInstance()->getQueryHash($queries[3]);
-        $this->assertArrayHasKey($queryHash, $this->cacheArray);
+        static::assertArrayHasKey($queryHash, $this->cacheArray);
 
         $queryHash = Cache::getInstance()->getQueryHash($queries[4]);
-        $this->assertArrayHasKey($queryHash, $this->cacheArray);
+        static::assertArrayHasKey($queryHash, $this->cacheArray);
 
         $queryHash = Cache::getInstance()->getQueryHash($queries[0]);
-        $this->assertArrayNotHasKey($queryHash, $this->cacheArray);
+        static::assertArrayNotHasKey($queryHash, $this->cacheArray);
 
         $queryHash = Cache::getInstance()->getQueryHash($queries[2]);
-        $this->assertArrayNotHasKey($queryHash, $this->cacheArray);
+        static::assertArrayNotHasKey($queryHash, $this->cacheArray);
 
         // 1 should have a counter set to 2
         $this->checkTableCacheMapCounter($queries[1], 2);
@@ -231,22 +231,22 @@ class CacheCoreTest extends TestCase
         $tableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_configuration');
         $invalidatedKeys = $this->cacheArray[$tableMapKey];
 
-        $this->assertArrayHasKey($tableMapKey, $this->cacheArray);
+        static::assertArrayHasKey($tableMapKey, $this->cacheArray);
 
         Cache::getInstance()->deleteQuery('SELECT name FROM ps_configuration WHERE id = 1');
 
-        $this->assertArrayNotHasKey($tableMapKey, $this->cacheArray);
+        static::assertArrayNotHasKey($tableMapKey, $this->cacheArray);
 
         foreach (array_keys($invalidatedKeys) as $invalidatedKey) {
-            $this->assertArrayNotHasKey($invalidatedKey, $this->cacheArray);
+            static::assertArrayNotHasKey($invalidatedKey, $this->cacheArray);
         }
 
         $validTableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_confiture');
-        $this->assertArrayHasKey($validTableMapKey, $this->cacheArray);
+        static::assertArrayHasKey($validTableMapKey, $this->cacheArray);
 
         Cache::getInstance()->deleteQuery('SELECT name FROM ps_confiture WHERE id = 1');
 
-        $this->assertArrayNotHasKey($validTableMapKey, $this->cacheArray);
+        static::assertArrayNotHasKey($validTableMapKey, $this->cacheArray);
 
         // now check invalidation why full deletion of entry from "other table"
         foreach ($queries as $query) {
@@ -256,14 +256,14 @@ class CacheCoreTest extends TestCase
         $tableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_configuration');
         $invalidatedKeys = $this->cacheArray[$tableMapKey];
 
-        $this->assertArrayHasKey($tableMapKey, $this->cacheArray);
+        static::assertArrayHasKey($tableMapKey, $this->cacheArray);
 
         // all entries from both ps_configuration AND ps_confiture will be deleted
         Cache::getInstance()->deleteQuery('SELECT name FROM ps_configuration WHERE id = 1');
 
-        $this->assertArrayNotHasKey($tableMapKey, $this->cacheArray);
+        static::assertArrayNotHasKey($tableMapKey, $this->cacheArray);
         $otherTableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_confiture');
-        $this->assertArrayNotHasKey($otherTableMapKey, $this->cacheArray);
+        static::assertArrayNotHasKey($otherTableMapKey, $this->cacheArray);
     }
 
     private function checkTableCacheMapCounter($query, $counter)
@@ -274,10 +274,10 @@ class CacheCoreTest extends TestCase
             $tableCacheKey = Cache::getInstance()->getTableMapCacheKey($table);
 
             // check the table cache key is in the cache
-            $this->assertArrayHasKey($tableCacheKey, $this->cacheArray);
+            static::assertArrayHasKey($tableCacheKey, $this->cacheArray);
 
             // check the query hash is in the table map
-            $this->assertEquals($counter, $this->cacheArray[$tableCacheKey][$queryHash]['count']);
+            static::assertEquals($counter, $this->cacheArray[$tableCacheKey][$queryHash]['count']);
         }
     }
 

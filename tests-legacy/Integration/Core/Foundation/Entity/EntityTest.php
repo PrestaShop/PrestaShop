@@ -56,6 +56,6 @@ class EntityTest extends IntegrationTestCase
         $product->name = 'A Product';
         $product->price = 42.42;
         $product->link_rewrite = 'a-product';
-        $this->assertTrue($product->save());
+        static::assertTrue($product->save());
     }
 }

@@ -117,7 +117,7 @@ class LocaleTest extends TestCase
     {
         $formattedNumber = $this->cldrLocale->formatNumber($number);
 
-        $this->assertSame($expected, $formattedNumber);
+        static::assertSame($expected, $formattedNumber);
     }
 
     /**
@@ -179,7 +179,7 @@ class LocaleTest extends TestCase
     {
         $price = $this->cldrLocale->formatPrice($number, $currencyCode);
 
-        $this->assertSame($expected, $price);
+        static::assertSame($expected, $price);
     }
 
     /**

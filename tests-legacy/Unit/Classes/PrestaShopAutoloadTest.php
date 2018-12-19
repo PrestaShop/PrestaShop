@@ -44,16 +44,16 @@ class PrestaShopAutoloadTest extends TestCase
 
     public function testGenerateIndex()
     {
-        $this->assertFileExists($this->file_index);
+        static::assertFileExists($this->file_index);
         $data = include $this->file_index;
-        $this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
+        static::assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
     }
 
     public function testLoad()
     {
         PrestaShopAutoload::getInstance()->load('RequestSql');
-        $this->assertTrue(class_exists('RequestSqlCore', false));
-        $this->assertTrue(class_exists('RequestSql', false));
+        static::assertTrue(class_exists('RequestSqlCore', false));
+        static::assertTrue(class_exists('RequestSql', false));
     }
 
     /**
@@ -73,21 +73,21 @@ class PrestaShopAutoloadTest extends TestCase
         }'
         );
         PrestaShopAutoload::getInstance()->generateIndex();
-        $this->assertFileExists($this->file_index);
+        static::assertFileExists($this->file_index);
         $data = include $this->file_index;
-        $this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
-        $this->assertEquals($data['Connection']['override'], false);
+        static::assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
+        static::assertEquals($data['Connection']['override'], false);
         Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', 0);
         PrestaShopAutoload::getInstance()->generateIndex();
         $data = include $this->file_index;
-        $this->assertEquals($data['Connection']['override'], true);
+        static::assertEquals($data['Connection']['override'], true);
     }
 
     public function testClassFromCoreDirShouldntBeLoaded()
     {
         PrestaShopAutoload::getInstance()->load('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption');
 
-        $this->assertFalse(class_exists('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption', false));
+        static::assertFalse(class_exists('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption', false));
     }
 
     public static function tearDownAfterClass()

@@ -47,25 +47,25 @@ class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestC
 
     public function testQuoteNumberNotQuoted()
     {
-        $this->assertEquals('escaped', $this->queryBuilder->quote(42));
-        $this->assertEquals('escaped', $this->queryBuilder->quote(4.2));
+        static::assertEquals('escaped', $this->queryBuilder->quote(42));
+        static::assertEquals('escaped', $this->queryBuilder->quote(4.2));
     }
 
     public function testQuoteStringQuoted()
     {
-        $this->assertEquals('\'escaped\'', $this->queryBuilder->quote('hello'));
+        static::assertEquals('\'escaped\'', $this->queryBuilder->quote('hello'));
     }
 
     public function testBuildWhereConditionsANDJustOneCondition()
     {
-        $this->assertEquals("name = 'escaped'", $this->queryBuilder->buildWhereConditions('AND', array(
+        static::assertEquals("name = 'escaped'", $this->queryBuilder->buildWhereConditions('AND', array(
             'name' => 'some string',
         )));
     }
 
     public function testBuildWhereConditionsANDTwoConditions()
     {
-        $this->assertEquals("name = 'escaped' AND num = escaped", $this->queryBuilder->buildWhereConditions('AND', array(
+        static::assertEquals("name = 'escaped' AND num = escaped", $this->queryBuilder->buildWhereConditions('AND', array(
             'name' => 'some string',
             'num' => 123456,
         )));
@@ -73,7 +73,7 @@ class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestC
 
     public function testBuildWhereConditionsArrayValue()
     {
-        $this->assertEquals("stuff IN ('escaped', escaped, escaped)", $this->queryBuilder->buildWhereConditions('AND', array(
+        static::assertEquals("stuff IN ('escaped', escaped, escaped)", $this->queryBuilder->buildWhereConditions('AND', array(
             'stuff' => array('a string', 123, 456452),
         )));
     }

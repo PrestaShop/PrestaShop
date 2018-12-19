@@ -129,13 +129,13 @@ class ProductPresenterTest extends UnitTestCase
     public function testPriceShouldBeShownInCatalogMode()
     {
         $this->settings->catalog_mode = true;
-        $this->assertTrue($this->getPresentedProduct('show_price'));
+        static::assertTrue($this->getPresentedProduct('show_price'));
     }
 
     public function testPriceShouldShownInRestrictedCountryMode()
     {
         $this->settings->restricted_country_mode = true;
-        $this->assertTrue($this->getPresentedProduct('show_price'));
+        static::assertTrue($this->getPresentedProduct('show_price'));
     }
 
     public function testPriceShouldNotBeShownIfProductNotAvailableForOrder()
@@ -143,19 +143,19 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['available_for_order'] = false;
         $this->product['show_price'] = false;
 
-        $this->assertFalse($this->getPresentedProduct('show_price'));
+        static::assertFalse($this->getPresentedProduct('show_price'));
 
         $this->product['available_for_order'] = false;
         $this->product['show_price'] = true;
 
-        $this->assertTrue($this->getPresentedProduct('show_price'));
+        static::assertTrue($this->getPresentedProduct('show_price'));
     }
 
     public function testPriceIsTaxExcluded()
     {
         $this->settings->include_taxes = false;
         $this->product['price_tax_exc'] = 8;
-        $this->assertStringStartsWith(
+        static::assertStringStartsWith(
             '#8',
             $this->getPresentedProduct('price')
         );
@@ -165,7 +165,7 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->settings->include_taxes = true;
         $this->product['price'] = 16;
-        $this->assertStringStartsWith(
+        static::assertStringStartsWith(
             '#16',
             $this->getPresentedProduct('price')
         );
@@ -174,7 +174,7 @@ class ProductPresenterTest extends UnitTestCase
     public function testCannotAddToCartIfNotCustomized()
     {
         $this->product['customization_required'] = true;
-        $this->assertNotEquals(
+        static::assertNotEquals(
             'http://add-to-cart.url',
             $this->getPresentedProduct('add_to_cart_url')
         );
@@ -188,7 +188,7 @@ class ProductPresenterTest extends UnitTestCase
                 ['is_customized' => true, 'required' => true],
             ],
         ];
-        $this->assertEquals(
+        static::assertEquals(
             'http://add-to-cart.url',
             $this->getPresentedProduct('add_to_cart_url')
         );
@@ -203,7 +203,7 @@ class ProductPresenterTest extends UnitTestCase
                 ['is_customized' => false, 'required' => false],
             ],
         ];
-        $this->assertEquals(
+        static::assertEquals(
             'http://add-to-cart.url',
             $this->getPresentedProduct('add_to_cart_url')
         );
@@ -213,7 +213,7 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['id_product_attribute'] = 42;
         $this->settings->allow_add_variant_to_cart_from_listing = false;
-        $this->assertNull(
+        static::assertNull(
             $this->getPresentedProductForListing('add_to_cart_url')
         );
     }
@@ -226,7 +226,7 @@ class ProductPresenterTest extends UnitTestCase
                 ['is_customized' => true, 'required' => true],
             ],
         ];
-        $this->assertNull(
+        static::assertNull(
             $this->getPresentedProductForListing('add_to_cart_url')
         );
     }
@@ -235,7 +235,7 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['id_product_attribute'] = 42;
         $this->settings->allow_add_variant_to_cart_from_listing = true;
-        $this->assertEquals(
+        static::assertEquals(
             'http://add-to-cart.url',
             $this->getPresentedProductForListing('add_to_cart_url')
         );
@@ -244,7 +244,7 @@ class ProductPresenterTest extends UnitTestCase
     public function testProductHasOnlineOnlyFlagIfItIsOnlineOnly()
     {
         $this->product['online_only'] = true;
-        $this->assertEquals(
+        static::assertEquals(
             ['online-only' => [
                 'type'  => 'online-only',
                 'label' => 'some label',
@@ -256,7 +256,7 @@ class ProductPresenterTest extends UnitTestCase
     public function testProductHasDiscountFlagIfItHasADiscount()
     {
         $this->product['reduction'] = true;
-        $this->assertEquals(
+        static::assertEquals(
             ['discount' => [
                 'type'  => 'discount',
                 'label' => 'some label',
@@ -269,7 +269,7 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['reduction'] = true;
         $this->product['on_sale'] = true;
-        $this->assertEquals(
+        static::assertEquals(
             ['on-sale' => [
                 'type'  => 'on-sale',
                 'label' => 'some label',
@@ -281,7 +281,7 @@ class ProductPresenterTest extends UnitTestCase
     public function testProductHasNewFlagIfItIsNew()
     {
         $this->product['new'] = true;
-        $this->assertEquals(
+        static::assertEquals(
             ['new' => [
                 'type'  => 'new',
                 'label' => 'some label',
@@ -294,7 +294,7 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['show_condition'] = true;
         $this->product['condition'] = 'new';
-        $this->assertEquals(
+        static::assertEquals(
             [
                 'type'  => 'new',
                 'label' => 'some label',
@@ -309,7 +309,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['online_only'] = true;
         $this->product['available_for_order'] = false;
         $this->product['show_price'] = false;
-        $this->assertEquals(
+        static::assertEquals(
             [],
             $this->getPresentedProduct('flags')
         );

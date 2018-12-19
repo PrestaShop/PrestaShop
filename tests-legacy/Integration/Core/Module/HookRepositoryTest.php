@@ -72,7 +72,7 @@ class HookRepositoryTest extends IntegrationTestCase
             'displayTestHookName' => $modules,
         ]);
 
-        $this->assertEquals(
+        static::assertEquals(
             $modules,
             $this->hookRepository->getHooksWithModules()['displayTestHookName']
         );
@@ -87,12 +87,12 @@ class HookRepositoryTest extends IntegrationTestCase
 
         $actual = $this->hookRepository->getDisplayHooksWithModules();
 
-        $this->assertEquals(
+        static::assertEquals(
             ['ps_emailsubscription', 'ps_featuredproducts'],
             $actual['displayTestHookName']
         );
 
-        $this->assertArrayNotHasKey(
+        static::assertArrayNotHasKey(
             'notADisplayTestHookName',
             $actual
         );
@@ -110,7 +110,7 @@ class HookRepositoryTest extends IntegrationTestCase
             ],
         ]);
 
-        $this->assertEquals(
+        static::assertEquals(
             [
                 'ps_emailsubscription' => [
                     'except_pages' => ['category', 'product'],

@@ -45,6 +45,6 @@ class GeolocationControllerTest extends WebTestCase
     {
         $this->client->request('GET', $this->router->generate('admin_geolocation_index'));
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 }

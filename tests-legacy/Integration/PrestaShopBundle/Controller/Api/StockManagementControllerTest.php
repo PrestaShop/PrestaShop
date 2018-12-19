@@ -84,7 +84,7 @@ class StockManagementControllerTest extends ApiTestCase
         foreach ($routes as $route) {
             self::$client->request('GET', $route, array('page_index' => 0));
             $response = self::$client->getResponse();
-            $this->assertSame(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+            static::assertSame(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
         }
     }
 
@@ -184,7 +184,7 @@ class StockManagementControllerTest extends ApiTestCase
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = self::$client->getResponse();
-        $this->assertSame(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+        static::assertSame(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
 
         if ($expectedTotalPages) {
             $this->assertResponseHasTotalPages($parameters, $expectedTotalPages);
@@ -211,8 +211,8 @@ class StockManagementControllerTest extends ApiTestCase
 
         /** @var \Symfony\Component\HttpFoundation\ResponseHeaderBag $headers */
         $headers = $response->headers;
-        $this->assertTrue($headers->has('Total-Pages'), 'The response headers should contain the total pages.');
-        $this->assertSame(
+        static::assertTrue($headers->has('Total-Pages'), 'The response headers should contain the total pages.');
+        static::assertSame(
             $expectedTotalPages,
             $headers->get('Total-Pages'),
             sprintf(
@@ -303,27 +303,27 @@ class StockManagementControllerTest extends ApiTestCase
 
         $content = $this->assertResponseBodyValidJson(200);
 
-        $this->assertArrayHasKey(
+        static::assertArrayHasKey(
             'product_available_quantity',
             $content,
             'The response body should contain a "product_available_quantity" property.'
         );
-        $this->assertArrayHasKey(
+        static::assertArrayHasKey(
             'product_physical_quantity',
             $content,
             'The response body should contain a "product_physical_quantity" property.'
         );
-        $this->assertArrayHasKey(
+        static::assertArrayHasKey(
             'product_reserved_quantity',
             $content,
             'The response body should contain a "product_reserved_quantity" property.'
         );
-        $this->assertArrayHasKey(
+        static::assertArrayHasKey(
             'product_thumbnail',
             $content,
             'The response body should contain an "image_thumbnail_path" property.'
         );
-        $this->assertArrayHasKey(
+        static::assertArrayHasKey(
             'combination_thumbnail',
             $content,
             'The response body should contain an "image_thumbnail_path" property.'
@@ -360,17 +360,17 @@ class StockManagementControllerTest extends ApiTestCase
      */
     private function assertProductQuantity($expectedQuantities, $content)
     {
-        $this->assertSame(
+        static::assertSame(
             $expectedQuantities['available_quantity'],
             $content['product_available_quantity'],
             'The response body should contain the newly updated physical quantity.'
         );
-        $this->assertSame(
+        static::assertSame(
             $expectedQuantities['physical_quantity'],
             $content['product_physical_quantity'],
             'The response body should contain the newly updated quantity.'
         );
-        $this->assertSame(
+        static::assertSame(
             $expectedQuantities['reserved_quantity'],
             $content['product_reserved_quantity'],
             'The response body should contain the newly updated physical quantity.'
@@ -419,7 +419,7 @@ class StockManagementControllerTest extends ApiTestCase
         );
         $content = $this->assertResponseBodyValidJson(200);
 
-        $this->assertArrayHasKey(0, $content, 'The response content should have one item with key #0');
+        static::assertArrayHasKey(0, $content, 'The response content should have one item with key #0');
 
         $this->assertProductQuantity(
             array(
@@ -441,7 +441,7 @@ class StockManagementControllerTest extends ApiTestCase
         );
         $content = $this->assertResponseBodyValidJson(200);
 
-        $this->assertArrayHasKey(0, $content, 'The response content should have one item with key #0');
+        static::assertArrayHasKey(0, $content, 'The response content should have one item with key #0');
 
         $this->assertProductQuantity(
             array(

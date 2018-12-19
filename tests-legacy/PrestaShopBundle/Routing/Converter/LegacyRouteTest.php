@@ -34,104 +34,104 @@ class LegacyRouteTest extends TestCase
     public function testConstructor()
     {
         $legacyRoute = new LegacyRoute('product_index', ['AdminProduct'], []);
-        $this->assertEquals('product_index', $legacyRoute->getRouteName());
-        $this->assertEmpty($legacyRoute->getRouteParameters());
+        static::assertEquals('product_index', $legacyRoute->getRouteName());
+        static::assertEmpty($legacyRoute->getRouteParameters());
 
         $legacyLinks = $legacyRoute->getLegacyLinks();
-        $this->assertCount(1, $legacyLinks);
+        static::assertCount(1, $legacyLinks);
         $legacyLink = $legacyLinks[0];
-        $this->assertEquals('AdminProduct', $legacyLink['controller']);
-        $this->assertNull($legacyLink['action']);
+        static::assertEquals('AdminProduct', $legacyLink['controller']);
+        static::assertNull($legacyLink['action']);
 
         $controllersActions = $legacyRoute->getControllersActions();
-        $this->assertCount(1, $controllersActions);
-        $this->assertNotEmpty($controllersActions['AdminProduct']);
+        static::assertCount(1, $controllersActions);
+        static::assertNotEmpty($controllersActions['AdminProduct']);
 
         $controllerActions = $controllersActions['AdminProduct'];
-        $this->assertCount(1, $controllerActions);
-        $this->assertNotEmpty($controllerActions['index']);
-        $this->assertEquals('product_index', $controllerActions['index']);
+        static::assertCount(1, $controllerActions);
+        static::assertNotEmpty($controllerActions['index']);
+        static::assertEquals('product_index', $controllerActions['index']);
     }
 
     public function testConstructorAction()
     {
         $legacyRoute = new LegacyRoute('product_create', ['AdminProduct:create'], []);
-        $this->assertEquals('product_create', $legacyRoute->getRouteName());
-        $this->assertEmpty($legacyRoute->getRouteParameters());
+        static::assertEquals('product_create', $legacyRoute->getRouteName());
+        static::assertEmpty($legacyRoute->getRouteParameters());
 
         $legacyLinks = $legacyRoute->getLegacyLinks();
-        $this->assertCount(1, $legacyLinks);
+        static::assertCount(1, $legacyLinks);
         $legacyLink = $legacyLinks[0];
-        $this->assertEquals('AdminProduct', $legacyLink['controller']);
-        $this->assertEquals('create', $legacyLink['action']);
+        static::assertEquals('AdminProduct', $legacyLink['controller']);
+        static::assertEquals('create', $legacyLink['action']);
 
         $controllersActions = $legacyRoute->getControllersActions();
-        $this->assertCount(1, $controllersActions);
-        $this->assertNotEmpty($controllersActions['AdminProduct']);
+        static::assertCount(1, $controllersActions);
+        static::assertNotEmpty($controllersActions['AdminProduct']);
 
         $controllerActions = $controllersActions['AdminProduct'];
-        $this->assertCount(1, $controllerActions);
-        $this->assertNotEmpty($controllerActions['create']);
-        $this->assertEquals('product_create', $controllerActions['create']);
+        static::assertCount(1, $controllerActions);
+        static::assertNotEmpty($controllerActions['create']);
+        static::assertEquals('product_create', $controllerActions['create']);
     }
 
     public function testConstructorParameters()
     {
         $legacyRoute = new LegacyRoute('product_create', ['AdminProduct:create'], ['id_product' => 'productId']);
-        $this->assertEquals('product_create', $legacyRoute->getRouteName());
+        static::assertEquals('product_create', $legacyRoute->getRouteName());
         $routeParameters = $legacyRoute->getRouteParameters();
-        $this->assertNotEmpty($routeParameters);
-        $this->assertEquals('productId', $routeParameters['id_product']);
+        static::assertNotEmpty($routeParameters);
+        static::assertEquals('productId', $routeParameters['id_product']);
 
         $legacyLinks = $legacyRoute->getLegacyLinks();
-        $this->assertCount(1, $legacyLinks);
+        static::assertCount(1, $legacyLinks);
         $legacyLink = $legacyLinks[0];
-        $this->assertEquals('AdminProduct', $legacyLink['controller']);
-        $this->assertEquals('create', $legacyLink['action']);
+        static::assertEquals('AdminProduct', $legacyLink['controller']);
+        static::assertEquals('create', $legacyLink['action']);
 
         $controllersActions = $legacyRoute->getControllersActions();
-        $this->assertCount(1, $controllersActions);
-        $this->assertNotEmpty($controllersActions['AdminProduct']);
+        static::assertCount(1, $controllersActions);
+        static::assertNotEmpty($controllersActions['AdminProduct']);
 
         $controllerActions = $controllersActions['AdminProduct'];
-        $this->assertCount(1, $controllerActions);
-        $this->assertNotEmpty($controllerActions['create']);
-        $this->assertEquals('product_create', $controllerActions['create']);
+        static::assertCount(1, $controllerActions);
+        static::assertNotEmpty($controllerActions['create']);
+        static::assertEquals('product_create', $controllerActions['create']);
     }
 
     public function testConstructorAliases()
     {
         $legacyRoute = new LegacyRoute('product_create', ['AdminProduct:create', 'AdminProduct:new', 'SFProduct:new'], ['id_product' => 'productId']);
-        $this->assertEquals('product_create', $legacyRoute->getRouteName());
+        static::assertEquals('product_create', $legacyRoute->getRouteName());
         $routeParameters = $legacyRoute->getRouteParameters();
-        $this->assertNotEmpty($routeParameters);
-        $this->assertEquals('productId', $routeParameters['id_product']);
+        static::assertNotEmpty($routeParameters);
+        static::assertEquals('productId', $routeParameters['id_product']);
 
         $legacyLinks = $legacyRoute->getLegacyLinks();
-        $this->assertCount(3, $legacyLinks);
+        static::assertCount(3, $legacyLinks);
         $legacyLink = $legacyLinks[0];
-        $this->assertEquals('AdminProduct', $legacyLink['controller']);
-        $this->assertEquals('create', $legacyLink['action']);
+        static::assertEquals('AdminProduct', $legacyLink['controller']);
+        static::assertEquals('create', $legacyLink['action']);
         $legacyLink = $legacyLinks[1];
-        $this->assertEquals('AdminProduct', $legacyLink['controller']);
-        $this->assertEquals('new', $legacyLink['action']);
+        static::assertEquals('AdminProduct', $legacyLink['controller']);
+        static::assertEquals('new', $legacyLink['action']);
 
         $controllersActions = $legacyRoute->getControllersActions();
-        $this->assertCount(2, $controllersActions);
-        $this->assertNotEmpty($controllersActions['AdminProduct']);
-        $this->assertNotEmpty($controllersActions['SFProduct']);
+        static::assertCount(2, $controllersActions);
+        static::assertNotEmpty($controllersActions['AdminProduct']);
+        static::assertNotEmpty($controllersActions['SFProduct']);
 
         $controllerActions = $controllersActions['AdminProduct'];
-        $this->assertCount(2, $controllerActions);
-        $this->assertNotEmpty($controllerActions['create']);
-        $this->assertEquals('product_create', $controllerActions['create']);
-        $this->assertNotEmpty($controllerActions['new']);
-        $this->assertEquals('product_create', $controllerActions['new']);
+        static::assertCount(2, $controllerActions);
+        static::assertNotEmpty($controllerActions['create']);
+        static::assertEquals('product_create', $controllerActions['create']);
+        static::assertNotEmpty($controllerActions['new']);
+        static::assertEquals('product_create', $controllerActions['new']);
 
         $controllerActions = $controllersActions['SFProduct'];
-        $this->assertCount(1, $controllerActions);
-        $this->assertNotEmpty($controllerActions['new']);
-        $this->assertEquals('product_create', $controllerActions['new']);
+        static::assertCount(1, $controllerActions);
+        static::assertNotEmpty($controllerActions['new']);
+        static::assertEquals('product_create', $controllerActions['new']);
     }
 
     public function testStaticConstructor()
@@ -139,23 +139,23 @@ class LegacyRouteTest extends TestCase
         $legacyRoute = LegacyRoute::buildLegacyRoute('product_index', [
             '_legacy_link' => 'AdminProduct',
         ]);
-        $this->assertEquals('product_index', $legacyRoute->getRouteName());
-        $this->assertEmpty($legacyRoute->getRouteParameters());
+        static::assertEquals('product_index', $legacyRoute->getRouteName());
+        static::assertEmpty($legacyRoute->getRouteParameters());
 
         $legacyLinks = $legacyRoute->getLegacyLinks();
-        $this->assertCount(1, $legacyLinks);
+        static::assertCount(1, $legacyLinks);
         $legacyLink = $legacyLinks[0];
-        $this->assertEquals('AdminProduct', $legacyLink['controller']);
-        $this->assertNull($legacyLink['action']);
+        static::assertEquals('AdminProduct', $legacyLink['controller']);
+        static::assertNull($legacyLink['action']);
 
         $controllersActions = $legacyRoute->getControllersActions();
-        $this->assertCount(1, $controllersActions);
-        $this->assertNotEmpty($controllersActions['AdminProduct']);
+        static::assertCount(1, $controllersActions);
+        static::assertNotEmpty($controllersActions['AdminProduct']);
 
         $controllerActions = $controllersActions['AdminProduct'];
-        $this->assertCount(1, $controllerActions);
-        $this->assertNotEmpty($controllerActions['index']);
-        $this->assertEquals('product_index', $controllerActions['index']);
+        static::assertCount(1, $controllerActions);
+        static::assertNotEmpty($controllerActions['index']);
+        static::assertEquals('product_index', $controllerActions['index']);
     }
 
     public function testStaticConstructorAction()
@@ -163,23 +163,23 @@ class LegacyRouteTest extends TestCase
         $legacyRoute = LegacyRoute::buildLegacyRoute('product_create', [
             '_legacy_link' => 'AdminProduct:create',
         ]);
-        $this->assertEquals('product_create', $legacyRoute->getRouteName());
-        $this->assertEmpty($legacyRoute->getRouteParameters());
+        static::assertEquals('product_create', $legacyRoute->getRouteName());
+        static::assertEmpty($legacyRoute->getRouteParameters());
 
         $legacyLinks = $legacyRoute->getLegacyLinks();
-        $this->assertCount(1, $legacyLinks);
+        static::assertCount(1, $legacyLinks);
         $legacyLink = $legacyLinks[0];
-        $this->assertEquals('AdminProduct', $legacyLink['controller']);
-        $this->assertEquals('create', $legacyLink['action']);
+        static::assertEquals('AdminProduct', $legacyLink['controller']);
+        static::assertEquals('create', $legacyLink['action']);
 
         $controllersActions = $legacyRoute->getControllersActions();
-        $this->assertCount(1, $controllersActions);
-        $this->assertNotEmpty($controllersActions['AdminProduct']);
+        static::assertCount(1, $controllersActions);
+        static::assertNotEmpty($controllersActions['AdminProduct']);
 
         $controllerActions = $controllersActions['AdminProduct'];
-        $this->assertCount(1, $controllerActions);
-        $this->assertNotEmpty($controllerActions['create']);
-        $this->assertEquals('product_create', $controllerActions['create']);
+        static::assertCount(1, $controllerActions);
+        static::assertNotEmpty($controllerActions['create']);
+        static::assertEquals('product_create', $controllerActions['create']);
     }
 
     public function testStaticParameters()
@@ -190,25 +190,25 @@ class LegacyRouteTest extends TestCase
                 'id_product' => 'productId',
             ],
         ]);
-        $this->assertEquals('product_create', $legacyRoute->getRouteName());
+        static::assertEquals('product_create', $legacyRoute->getRouteName());
         $routeParameters = $legacyRoute->getRouteParameters();
-        $this->assertNotEmpty($routeParameters);
-        $this->assertEquals('productId', $routeParameters['id_product']);
+        static::assertNotEmpty($routeParameters);
+        static::assertEquals('productId', $routeParameters['id_product']);
 
         $legacyLinks = $legacyRoute->getLegacyLinks();
-        $this->assertCount(1, $legacyLinks);
+        static::assertCount(1, $legacyLinks);
         $legacyLink = $legacyLinks[0];
-        $this->assertEquals('AdminProduct', $legacyLink['controller']);
-        $this->assertEquals('create', $legacyLink['action']);
+        static::assertEquals('AdminProduct', $legacyLink['controller']);
+        static::assertEquals('create', $legacyLink['action']);
 
         $controllersActions = $legacyRoute->getControllersActions();
-        $this->assertCount(1, $controllersActions);
-        $this->assertNotEmpty($controllersActions['AdminProduct']);
+        static::assertCount(1, $controllersActions);
+        static::assertNotEmpty($controllersActions['AdminProduct']);
 
         $controllerActions = $controllersActions['AdminProduct'];
-        $this->assertCount(1, $controllerActions);
-        $this->assertNotEmpty($controllerActions['create']);
-        $this->assertEquals('product_create', $controllerActions['create']);
+        static::assertCount(1, $controllerActions);
+        static::assertNotEmpty($controllerActions['create']);
+        static::assertEquals('product_create', $controllerActions['create']);
     }
 
     public function testStaticAliases()
@@ -219,35 +219,35 @@ class LegacyRouteTest extends TestCase
                 'id_product' => 'productId',
             ],
         ]);
-        $this->assertEquals('product_create', $legacyRoute->getRouteName());
+        static::assertEquals('product_create', $legacyRoute->getRouteName());
         $routeParameters = $legacyRoute->getRouteParameters();
-        $this->assertNotEmpty($routeParameters);
-        $this->assertEquals('productId', $routeParameters['id_product']);
+        static::assertNotEmpty($routeParameters);
+        static::assertEquals('productId', $routeParameters['id_product']);
 
         $legacyLinks = $legacyRoute->getLegacyLinks();
-        $this->assertCount(3, $legacyLinks);
+        static::assertCount(3, $legacyLinks);
         $legacyLink = $legacyLinks[0];
-        $this->assertEquals('AdminProduct', $legacyLink['controller']);
-        $this->assertEquals('create', $legacyLink['action']);
+        static::assertEquals('AdminProduct', $legacyLink['controller']);
+        static::assertEquals('create', $legacyLink['action']);
         $legacyLink = $legacyLinks[1];
-        $this->assertEquals('AdminProduct', $legacyLink['controller']);
-        $this->assertEquals('new', $legacyLink['action']);
+        static::assertEquals('AdminProduct', $legacyLink['controller']);
+        static::assertEquals('new', $legacyLink['action']);
 
         $controllersActions = $legacyRoute->getControllersActions();
-        $this->assertCount(2, $controllersActions);
-        $this->assertNotEmpty($controllersActions['AdminProduct']);
-        $this->assertNotEmpty($controllersActions['SFProduct']);
+        static::assertCount(2, $controllersActions);
+        static::assertNotEmpty($controllersActions['AdminProduct']);
+        static::assertNotEmpty($controllersActions['SFProduct']);
 
         $controllerActions = $controllersActions['AdminProduct'];
-        $this->assertCount(2, $controllerActions);
-        $this->assertNotEmpty($controllerActions['create']);
-        $this->assertEquals('product_create', $controllerActions['create']);
-        $this->assertNotEmpty($controllerActions['new']);
-        $this->assertEquals('product_create', $controllerActions['new']);
+        static::assertCount(2, $controllerActions);
+        static::assertNotEmpty($controllerActions['create']);
+        static::assertEquals('product_create', $controllerActions['create']);
+        static::assertNotEmpty($controllerActions['new']);
+        static::assertEquals('product_create', $controllerActions['new']);
 
         $controllerActions = $controllersActions['SFProduct'];
-        $this->assertCount(1, $controllerActions);
-        $this->assertNotEmpty($controllerActions['new']);
-        $this->assertEquals('product_create', $controllerActions['new']);
+        static::assertCount(1, $controllerActions);
+        static::assertNotEmpty($controllerActions['new']);
+        static::assertEquals('product_create', $controllerActions['new']);
     }
 }

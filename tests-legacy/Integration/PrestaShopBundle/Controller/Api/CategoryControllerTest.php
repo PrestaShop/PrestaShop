@@ -42,6 +42,6 @@ class CategoryControllerTest extends ApiTestCase
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = self::$client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+        static::assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
     }
 }

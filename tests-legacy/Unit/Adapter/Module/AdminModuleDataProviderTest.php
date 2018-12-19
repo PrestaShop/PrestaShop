@@ -127,7 +127,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
     {
         $modules = $this->adminModuleDataProvider->getCatalogModules();
 
-        $this->assertGreaterThan(0, count($modules), sprintf('%s expected a list of modules, received none.', self::NOTICE));
+        static::assertGreaterThan(0, count($modules), sprintf('%s expected a list of modules, received none.', self::NOTICE));
     }
 
     public function testSearchCanResultNoResultsOk()
@@ -135,7 +135,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $filters = array('search' => 'doge');
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
-        $this->assertCount(0, $modules, sprintf('%s expected 0 modules, received %s.', self::NOTICE, count($modules)));
+        static::assertCount(0, $modules, sprintf('%s expected 0 modules, received %s.', self::NOTICE, count($modules)));
     }
 
     public function testSearchWithUnknownFilterCriteriaReturnAllOk()
@@ -145,7 +145,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
         $modules = $this->adminModuleDataProvider->getCatalogModules();
 
-        $this->assertSame($modulesWithFilter, $modules, sprintf('%s expected undefined filter have no effect on search.', self::NOTICE));
+        static::assertSame($modulesWithFilter, $modules, sprintf('%s expected undefined filter have no effect on search.', self::NOTICE));
     }
 
     public function testSearchForASpecificModuleOk()
@@ -153,7 +153,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $filters = array('search' => 'advancedpack');
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
-        $this->assertCount(1, $modules);
+        static::assertCount(1, $modules);
     }
 
     public function testSearchForASpecificModuleHaveMultipleResultsOk()
@@ -161,7 +161,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $filters = array('search' => 'payment advanced');
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
-        $this->assertCount(3, $modules);
+        static::assertCount(3, $modules);
     }
 
     public function testCallToAddonsShouldReturnSameResultOk()
@@ -183,7 +183,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $modules = $mock->getCatalogModules();
         $modules2 = $mock->getCatalogModules();
 
-        $this->assertEquals($modules2, $modules);
+        static::assertEquals($modules2, $modules);
     }
 
     public function teardown()

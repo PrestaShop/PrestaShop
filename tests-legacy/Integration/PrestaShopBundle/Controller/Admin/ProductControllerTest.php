@@ -91,6 +91,6 @@ class ProductControllerTest extends WebTestCase
     protected function assertSessionFlagBagContainsFailureMessage()
     {
         $all = self::$kernel->getContainer()->get('session')->getFlashBag()->all();
-        $this->assertArrayHasKey('failure', $all);
+        static::assertArrayHasKey('failure', $all);
     }
 }

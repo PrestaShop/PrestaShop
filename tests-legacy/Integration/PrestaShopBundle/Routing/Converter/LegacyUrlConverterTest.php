@@ -206,7 +206,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
     public function testServiceExists()
     {
         $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
-        $this->assertInstanceOf(LegacyUrlConverter::class, $converter);
+        static::assertInstanceOf(LegacyUrlConverter::class, $converter);
     }
 
     public function testLegacyWithRoute()
@@ -282,7 +282,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
             $caughtExceptionMessage = sprintf('Unexpected exception %s: %s', get_class($e), $e->getMessage());
             $convertedUrl = null;
         }
-        $this->assertNull($caughtException, $caughtExceptionMessage);
+        static::assertNull($caughtException, $caughtExceptionMessage);
         $this->assertSameUrl($expectedUrl, $convertedUrl);
     }
 
@@ -385,7 +385,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl('AdminAdminPreferences');
         $this->client->request('GET', $legacyUrl);
         $response = $this->client->getResponse();
-        $this->assertTrue($response->isRedirection());
+        static::assertTrue($response->isRedirection());
         $location = $response->headers->get('location');
         $this->assertSameUrl('/configure/advanced/administration/', $location);
     }
@@ -395,7 +395,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl('AdminLogin');
         $this->client->request('GET', $legacyUrl);
         $response = $this->client->getResponse();
-        $this->assertFalse($response->isRedirection());
+        static::assertFalse($response->isRedirection());
     }
 
     public function testPostParameters()
@@ -403,8 +403,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl('AdminModulesPositions');
         $this->client->request('POST', $legacyUrl, ['submitAddToHook' => '']);
         $response = $this->client->getResponse();
-        $this->assertFalse($response->isRedirection());
-        $this->assertNull($response->headers->get('location'));
+        static::assertFalse($response->isRedirection());
+        static::assertNull($response->headers->get('location'));
     }
 
     /**
@@ -430,7 +430,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
      */
     private function assertSameUrl($expectedUrl, $url, array $ignoredParameters = null)
     {
-        $this->assertNotNull($url);
+        static::assertNotNull($url);
         $parsedUrl = parse_url($url);
         $parameters = [];
         if (isset($parsedUrl['query'])) {
@@ -453,8 +453,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
             'query' => http_build_query($parameters),
         ]);
 
-        $this->assertNotEmpty($parsedUrl['path']);
-        $this->assertTrue($expectedUrl == $cleanUrl, sprintf(
+        static::assertNotEmpty($parsedUrl['path']);
+        static::assertTrue($expectedUrl == $cleanUrl, sprintf(
             'Expected url %s is different with generated one: %s',
             $expectedUrl,
             $cleanUrl

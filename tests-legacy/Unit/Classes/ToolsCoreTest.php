@@ -48,25 +48,25 @@ class ToolsCoreTest extends TestCase
     public function testGetValueBaseCase()
     {
         $this->setPostAndGet(array('hello' => 'world'));
-        $this->assertEquals('world', Tools::getValue('hello'));
+        static::assertEquals('world', Tools::getValue('hello'));
     }
 
     public function testGetValueDefaultValueIsFalse()
     {
         $this->setPostAndGet();
-        $this->assertFalse(Tools::getValue('hello'));
+        static::assertFalse(Tools::getValue('hello'));
     }
 
     public function testGetValueUsesDefaultValue()
     {
         $this->setPostAndGet();
-        $this->assertEquals('I AM DEFAULT', Tools::getValue('hello', 'I AM DEFAULT'));
+        static::assertEquals('I AM DEFAULT', Tools::getValue('hello', 'I AM DEFAULT'));
     }
 
     public function testGetValuePrefersPost()
     {
         $this->setPostAndGet(array('hello' => 'world'), array('hello' => 'cruel world'));
-        $this->assertEquals('world', Tools::getValue('hello'));
+        static::assertEquals('world', Tools::getValue('hello'));
     }
 
     public function testGetValueAcceptsOnlyTruthyStringsAsKeys()
@@ -77,9 +77,9 @@ class ToolsCoreTest extends TestCase
             null => true,
         ));
 
-        $this->assertFalse(Tools::getValue('', true));
-        $this->assertTrue(Tools::getValue(' '));
-        $this->assertFalse(Tools::getValue(null, true));
+        static::assertFalse(Tools::getValue('', true));
+        static::assertTrue(Tools::getValue(' '));
+        static::assertFalse(Tools::getValue(null, true));
     }
 
     public function testGetValueStripsNullCharsFromReturnedStringsExamples()
@@ -100,19 +100,19 @@ class ToolsCoreTest extends TestCase
          * Check it cleans values stored in POST
          */
         $this->setPostAndGet(array('rawString' => $rawString));
-        $this->assertEquals($cleanedString, Tools::getValue('rawString'));
+        static::assertEquals($cleanedString, Tools::getValue('rawString'));
 
         /**
          * Check it cleans values stored in GET
          */
         $this->setPostAndGet(array(), array('rawString' => $rawString));
-        $this->assertEquals($cleanedString, Tools::getValue('rawString'));
+        static::assertEquals($cleanedString, Tools::getValue('rawString'));
 
         /**
          * Check it cleans default values too
          */
         $this->setPostAndGet();
-        $this->assertEquals($cleanedString, Tools::getValue('NON EXISTING KEY', $rawString));
+        static::assertEquals($cleanedString, Tools::getValue('NON EXISTING KEY', $rawString));
     }
 
     public function testSpreadAmountExamples()
@@ -207,7 +207,7 @@ class ToolsCoreTest extends TestCase
         $res2 = Tools::getDirectoriesWithReaddir($path);
         sort($res1);
         sort($res2);
-        $this->assertEquals(
+        static::assertEquals(
             $res1,
             $res2,
             'Results differ between getDirectoriesWithGlob and getDirectoriesWithReaddir for path '.$path
@@ -215,7 +215,7 @@ class ToolsCoreTest extends TestCase
 
         $haveFilesTest = ($res1 !== []);
 
-        $this->assertEquals($haveFiles, $haveFilesTest);
+        static::assertEquals($haveFiles, $haveFilesTest);
     }
 
     public function dirProvider()
@@ -229,7 +229,7 @@ class ToolsCoreTest extends TestCase
     public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column)
     {
         Tools::spreadAmount($amount, $precision, $rows, $column);
-        $this->assertEquals(array_values($expectedRows), array_values($rows));
+        static::assertEquals(array_values($expectedRows), array_values($rows));
     }
 
     /**
@@ -324,7 +324,7 @@ class ToolsCoreTest extends TestCase
     public function testToCamelCase($source, $expected, $firstCharUpperCase)
     {
         $actual = Tools::toCamelCase($source, $firstCharUpperCase);
-        $this->assertEquals($expected, $actual, "Expected $source to be $expected in camel case, got $actual instead.");
+        static::assertEquals($expected, $actual, "Expected $source to be $expected in camel case, got $actual instead.");
     }
 
     public static function tearDownAfterClass() {
@@ -336,7 +336,7 @@ class ToolsCoreTest extends TestCase
      * @dataProvider testStrReplaceFirstProvider
      */
     public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected) {
-        $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));
+        static::assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));
     }
 
     /**
@@ -347,7 +347,7 @@ class ToolsCoreTest extends TestCase
      */
     public function testExtractUrlDomain($url, $expectedDomain)
     {
-        $this->assertSame($expectedDomain, Tools::extractHost($url));
+        static::assertSame($expectedDomain, Tools::extractHost($url));
     }
 
     public function domainProvider()

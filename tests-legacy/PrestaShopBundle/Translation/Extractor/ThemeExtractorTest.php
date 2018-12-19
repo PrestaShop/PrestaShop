@@ -85,7 +85,7 @@ class ThemeExtractorTest extends KernelTestCase
             ->extract($this->getFakeTheme());
 
         $legacyTranslationFile = self::$legacyFolder.'/en-US.php';
-        $this->assertTrue($this->filesystem->exists($legacyTranslationFile));
+        static::assertTrue($this->filesystem->exists($legacyTranslationFile));
     }
 
     public function testExtractWithXliffFormat()
@@ -101,7 +101,7 @@ class ThemeExtractorTest extends KernelTestCase
             self::$xliffFolder.'/en-US/Shop/Foo/Bar.xlf',
         ));
 
-        $this->assertTrue($isFilesExists);
+        static::assertTrue($isFilesExists);
     }
 
     private function getFakeTheme()

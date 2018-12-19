@@ -51,21 +51,21 @@ class BackOfficeProviderTest extends TestCase
     {
         // The xliff file contains 38 keys
         $expectedReturn = $this->provider->getMessageCatalogue();
-        $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
+        static::assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
 
         // Check integrity of translations
-        $this->assertArrayHasKey('AdminActions.en-US', $expectedReturn->all());
-        $this->assertArrayHasKey('ModulesWirePaymentAdmin.en-US', $expectedReturn->all());
+        static::assertArrayHasKey('AdminActions.en-US', $expectedReturn->all());
+        static::assertArrayHasKey('ModulesWirePaymentAdmin.en-US', $expectedReturn->all());
 
         $adminTranslations = $expectedReturn->all('AdminActions.en-US');
-        $this->assertCount(38, $adminTranslations);
-        $this->assertArrayHasKey('Download file', $adminTranslations);
-        $this->assertSame('Download file', $adminTranslations['Download file']);
+        static::assertCount(38, $adminTranslations);
+        static::assertArrayHasKey('Download file', $adminTranslations);
+        static::assertSame('Download file', $adminTranslations['Download file']);
 
         $moduleTranslations = $expectedReturn->all('ModulesWirePaymentAdmin.en-US');
-        $this->assertCount(20, $moduleTranslations);
-        $this->assertArrayHasKey('No currency has been set for this module.', $moduleTranslations);
-        $this->assertSame(
+        static::assertCount(20, $moduleTranslations);
+        static::assertArrayHasKey('No currency has been set for this module.', $moduleTranslations);
+        static::assertSame(
             'No currency has been set for this module.',
             $moduleTranslations['No currency has been set for this module.']
         );

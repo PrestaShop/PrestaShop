@@ -43,10 +43,10 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
         $expectedTotal = round($expectedTotal, 1);
         $totalV1       = round($totalV1, 1);
         if (!$knownToFailOnV1) {
-            $this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax incl)');
+            static::assertEquals($expectedTotal, $totalV1, 'V1 fail (tax incl)');
         }
         $totalV2 = round($totalV2, 1);
-        $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax incl)');
+        static::assertEquals($expectedTotal, $totalV2, 'V2 fail (tax incl)');
     }
 
     protected function compareCartTotalTaxExcl($expectedTotal, $knownToFailOnV1 = false)
@@ -58,9 +58,9 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
         $expectedTotal = round($expectedTotal, 1);
         $totalV1       = round($totalV1, 1);
         if (!$knownToFailOnV1) {
-            $this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax excl)');
+            static::assertEquals($expectedTotal, $totalV1, 'V1 fail (tax excl)');
         }
         $totalV2 = round($totalV2, 1);
-        $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax excl)');
+        static::assertEquals($expectedTotal, $totalV2, 'V2 fail (tax excl)');
     }
 }

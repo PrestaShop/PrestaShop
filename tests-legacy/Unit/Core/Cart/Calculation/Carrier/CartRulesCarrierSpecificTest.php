@@ -58,7 +58,7 @@ class CartRulesCarrierSpecificTest extends AbstractCarrierTest
         $this->setCartCarrierFromFixtureId($carrierId);
         $this->setCartAddress($addressId);
         $result = $this->addCartRulesToCart($cartRuleData);
-        $this->assertTrue($result);
+        static::assertTrue($result);
 
         // assertions
         $this->compareCartTotalTaxIncl($expectedTotal);

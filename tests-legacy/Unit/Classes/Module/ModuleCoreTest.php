@@ -67,7 +67,7 @@ class ModuleCoreTest extends TestCase
 
         // then
         $crawler = new Crawler($htmlOutput);
-        $this->assertContains($error, $crawler->filter('.module_error')->text());
+        static::assertContains($error, $crawler->filter('.module_error')->text());
     }
 
     public function testDisplayErrorShouldReturnMultipleErrors()
@@ -86,6 +86,6 @@ class ModuleCoreTest extends TestCase
 
         // then
         $crawler = new Crawler($htmlOutput);
-        $this->assertCount(3, $crawler->filter('.module_error li'));
+        static::assertCount(3, $crawler->filter('.module_error li'));
     }
 }

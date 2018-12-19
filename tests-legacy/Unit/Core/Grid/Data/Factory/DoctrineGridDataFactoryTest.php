@@ -42,7 +42,7 @@ class DoctrineGridDataFactoryTest extends TestCase
     public function testItProvidesGridData()
     {
         $hookDispatcher = $this->createHookDispatcherMock();
-        $hookDispatcher->expects($this->once())
+        $hookDispatcher->expects(static::once())
             ->method('dispatchWithParameters');
 
         $queryParser = $this->createQueryParserMock();
@@ -58,12 +58,12 @@ class DoctrineGridDataFactoryTest extends TestCase
 
         $data = $doctrineGridDataFactory->getData($criteria);
 
-        $this->assertInstanceOf(GridDataInterface::class, $data);
-        $this->assertInstanceOf(RecordCollectionInterface::class, $data->getRecords());
+        static::assertInstanceOf(GridDataInterface::class, $data);
+        static::assertInstanceOf(RecordCollectionInterface::class, $data->getRecords());
 
-        $this->assertEquals(4, $data->getRecordsTotal());
-        $this->assertCount(2, $data->getRecords());
-        $this->assertEquals('SELECT * FROM ps_test WHERE id = 1', $data->getQuery());
+        static::assertEquals(4, $data->getRecordsTotal());
+        static::assertCount(2, $data->getRecords());
+        static::assertEquals('SELECT * FROM ps_test WHERE id = 1', $data->getQuery());
     }
 
     /**

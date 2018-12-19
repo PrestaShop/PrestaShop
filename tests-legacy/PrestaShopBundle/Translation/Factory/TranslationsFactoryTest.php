@@ -48,7 +48,7 @@ class TranslationsFactoryTest extends TestCase
             ->willReturn('mock');
 
         $this->providerMock->method('setLocale')
-            ->will($this->returnSelf());
+            ->will(static::returnSelf());
 
         $this->providerMock->method('getMessageCatalogue')
             ->willReturn(new MessageCatalogue('en-US'));
@@ -76,7 +76,7 @@ class TranslationsFactoryTest extends TestCase
         $expected = $this->factory
             ->createCatalogue($this->providerMock->getIdentifier());
 
-        $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expected);
+        static::assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expected);
     }
 
     public function testCreateTranslationsArrayWithoutProviderFails()

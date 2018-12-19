@@ -101,11 +101,11 @@ class RepositoryTest extends TestCase
     {
         $currency = $this->currencyRepository->getCurrency($currencyCode);
         foreach ($expectedNames as $localeCode => $name) {
-            $this->assertSame($name, $currency->getName($localeCode));
+            static::assertSame($name, $currency->getName($localeCode));
         }
 
         foreach ($expectedSymbols as $localeCode => $symbol) {
-            $this->assertSame($symbol, $currency->getSymbol($localeCode));
+            static::assertSame($symbol, $currency->getSymbol($localeCode));
         }
     }
 

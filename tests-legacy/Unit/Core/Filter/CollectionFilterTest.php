@@ -47,7 +47,7 @@ class CollectionFilterTest extends \PHPUnit\Framework\TestCase
 
         $result = $filter->filter($subject);
 
-        $this->assertSame($expectedResult, $result);
+        static::assertSame($expectedResult, $result);
     }
 
     public function provideTestCases()

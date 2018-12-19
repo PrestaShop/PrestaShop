@@ -36,7 +36,7 @@ class FilterCollectionTest extends TestCase
     {
         $filters = new FilterCollection();
 
-        $this->assertEmpty($filters->all());
+        static::assertEmpty($filters->all());
 
         return $filters;
     }
@@ -50,7 +50,7 @@ class FilterCollectionTest extends TestCase
         $filters->add($this->getFilterMock('second'));
         $filters->add($this->getFilterMock('third'));
 
-        $this->assertCount(3, $filters->all());
+        static::assertCount(3, $filters->all());
 
         return $filters;
     }
@@ -62,7 +62,7 @@ class FilterCollectionTest extends TestCase
     {
         $filters->remove('second');
 
-        $this->assertCount(2, $filters->all());
+        static::assertCount(2, $filters->all());
     }
 
     private function getFilterMock($name)

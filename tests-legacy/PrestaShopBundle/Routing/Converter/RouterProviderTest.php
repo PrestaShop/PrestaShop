@@ -55,19 +55,19 @@ class RouterProviderTest extends TestCase
         ]);
         $routerProvider = new RouterProvider($router);
         $legacyRoutes = $routerProvider->getLegacyRoutes();
-        $this->assertCount(2, $legacyRoutes);
-        $this->assertNotEmpty($legacyRoutes['admin_products']);
+        static::assertCount(2, $legacyRoutes);
+        static::assertNotEmpty($legacyRoutes['admin_products']);
 
         /** @var LegacyRoute $legacyRoute */
         $legacyRoute = $legacyRoutes['admin_products'];
-        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
-        $this->assertSame(['AdminProducts' => [
+        static::assertEquals('admin_products', $legacyRoute->getRouteName());
+        static::assertSame(['AdminProducts' => [
             'index' => 'admin_products',
         ]], $legacyRoute->getControllersActions());
 
         $legacyRoute = $legacyRoutes['admin_products_create'];
-        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
-        $this->assertSame(['AdminProducts' => [
+        static::assertEquals('admin_products_create', $legacyRoute->getRouteName());
+        static::assertSame(['AdminProducts' => [
             'add' => 'admin_products_create',
             'create' => 'admin_products_create',
         ]], $legacyRoute->getControllersActions());
@@ -100,8 +100,8 @@ class RouterProviderTest extends TestCase
         ]);
         $routerProvider = new RouterProvider($router);
         $controllersActions = $routerProvider->getControllersActions();
-        $this->assertCount(2, $controllersActions);
-        $this->assertSame([
+        static::assertCount(2, $controllersActions);
+        static::assertSame([
             'AdminProducts' => [
                 'index' => 'admin_products',
                 'add' => 'admin_products_create',
@@ -141,8 +141,8 @@ class RouterProviderTest extends TestCase
         ]);
         $routerProvider = new RouterProvider($router);
         $controllerActions = $routerProvider->getActionsByController('AdminProducts');
-        $this->assertCount(3, $controllerActions);
-        $this->assertSame(['index', 'add', 'create'], $controllerActions);
+        static::assertCount(3, $controllerActions);
+        static::assertSame(['index', 'add', 'create'], $controllerActions);
     }
 
     public function testGetLegacyRouteByAction()
@@ -172,28 +172,28 @@ class RouterProviderTest extends TestCase
         ]);
         $routerProvider = new RouterProvider($router);
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'index');
-        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+        static::assertEquals('admin_products', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'list');
-        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+        static::assertEquals('admin_products', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', '');
-        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+        static::assertEquals('admin_products', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', null);
-        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+        static::assertEquals('admin_products', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'add');
-        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
+        static::assertEquals('admin_products_create', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'create');
-        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
+        static::assertEquals('admin_products_create', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminCategories', 'create');
-        $this->assertEquals('admin_categories_create', $legacyRoute->getRouteName());
+        static::assertEquals('admin_categories_create', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminCategories', 'add');
-        $this->assertEquals('admin_categories_create', $legacyRoute->getRouteName());
+        static::assertEquals('admin_categories_create', $legacyRoute->getRouteName());
     }
 
     public function testControllerNotFound()
@@ -222,8 +222,8 @@ class RouterProviderTest extends TestCase
         } catch (RouteNotFoundException $e) {
             $caughtException = $e;
         }
-        $this->assertNotNull($caughtException);
-        $this->assertEquals('Could not find a route matching for legacy controller: AdminCategories', $caughtException->getMessage());
+        static::assertNotNull($caughtException);
+        static::assertEquals('Could not find a route matching for legacy controller: AdminCategories', $caughtException->getMessage());
 
         $caughtException = null;
 
@@ -232,8 +232,8 @@ class RouterProviderTest extends TestCase
         } catch (RouteNotFoundException $e) {
             $caughtException = $e;
         }
-        $this->assertNotNull($caughtException);
-        $this->assertEquals('Could not find a route matching for legacy action: AdminProducts:edit', $caughtException->getMessage());
+        static::assertNotNull($caughtException);
+        static::assertEquals('Could not find a route matching for legacy action: AdminProducts:edit', $caughtException->getMessage());
     }
 
     /**
@@ -250,13 +250,13 @@ class RouterProviderTest extends TestCase
             ->getMock();
 
         $mockRouter
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getRouteCollection')
             ->willReturn($routeCollection);
 
         $mockRouter
             ->method('generate')
-            ->will($this->returnCallback(
+            ->will(static::returnCallback(
                 function($routeName) use ($routeCollection) {
                     $route = $routeCollection->get($routeName);
 

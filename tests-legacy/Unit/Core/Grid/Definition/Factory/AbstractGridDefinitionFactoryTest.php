@@ -47,15 +47,15 @@ class AbstractGridDefinitionFactoryTest extends TestCase
         $definitionFactory = $this->getMockForAbstractClass(AbstractGridDefinitionFactory::class);
 
         $definitionFactory
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getName')
             ->willReturn('Test name');
         $definitionFactory
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getId')
             ->willReturn('test_id');
         $definitionFactory
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getColumns')
             ->willReturn($this->getColumns());
 
@@ -66,27 +66,27 @@ class AbstractGridDefinitionFactoryTest extends TestCase
     {
         $hookDispatcherMock = $this->createMock(HookDispatcherInterface::class);
         $hookDispatcherMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('dispatchWithParameters')
             ->withConsecutive(
-                [$this->equalTo('actionTestIdGridDefinitionModifier')],
-                [$this->isType('array'), $this->arrayHasKey('definition')]
+                [static::equalTo('actionTestIdGridDefinitionModifier')],
+                [static::isType('array'), static::arrayHasKey('definition')]
             );
 
         $this->definitionFactory->setHookDispatcher($hookDispatcherMock);
 
         $definition = $this->definitionFactory->getDefinition();
 
-        $this->assertInstanceOf(GridDefinitionInterface::class, $definition);
-        $this->assertInstanceOf(BulkActionCollectionInterface::class, $definition->getBulkActions());
-        $this->assertInstanceOf(GridActionCollectionInterface::class, $definition->getGridActions());
+        static::assertInstanceOf(GridDefinitionInterface::class, $definition);
+        static::assertInstanceOf(BulkActionCollectionInterface::class, $definition->getBulkActions());
+        static::assertInstanceOf(GridActionCollectionInterface::class, $definition->getGridActions());
 
-        $this->assertEquals($definition->getId(), 'test_id');
-        $this->assertEquals($definition->getName(), 'Test name');
-        $this->assertCount(3, $definition->getColumns());
-        $this->assertCount(0, $definition->getGridActions());
-        $this->assertCount(0, $definition->getBulkActions());
-        $this->assertCount(0, $definition->getFilters()->all());
+        static::assertEquals($definition->getId(), 'test_id');
+        static::assertEquals($definition->getName(), 'Test name');
+        static::assertCount(3, $definition->getColumns());
+        static::assertCount(0, $definition->getGridActions());
+        static::assertCount(0, $definition->getBulkActions());
+        static::assertCount(0, $definition->getFilters()->all());
     }
 
     private function getColumns()

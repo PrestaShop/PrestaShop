@@ -40,7 +40,7 @@ class ColumnCollectionTest extends TestCase
             ->add($this->createColumnMock('second'))
             ->add($this->createColumnMock('third'));
 
-        $this->assertEquals([
+        static::assertEquals([
             'first',
             'second',
             'third',
@@ -59,7 +59,7 @@ class ColumnCollectionTest extends TestCase
             ->addBefore('second', $this->createColumnMock('before_second'))
             ->addBefore('third', $this->createColumnMock('before_third'));
 
-        $this->assertEquals([
+        static::assertEquals([
             'before_first',
             'first',
             'before_second',
@@ -81,7 +81,7 @@ class ColumnCollectionTest extends TestCase
             ->addAfter('second', $this->createColumnMock('after_second'))
             ->addAfter('third', $this->createColumnMock('after_third'));
 
-        $this->assertEquals([
+        static::assertEquals([
             'before_first',
             'first',
             'after_first',
@@ -105,7 +105,7 @@ class ColumnCollectionTest extends TestCase
         $columns->remove('third');
         $columns->remove('non_existing');
 
-        $this->assertCount(7, $columns);
+        static::assertCount(7, $columns);
     }
 
     public function testMixingMethodsProducesCollectionWithCorrectColumnPositions()
@@ -124,7 +124,7 @@ class ColumnCollectionTest extends TestCase
             ->add($this->createColumnMock('third'))
             ->addAfter('second', $this->createColumnMock('after_second'));
 
-        $this->assertEquals([
+        static::assertEquals([
             'before_first',
             'before_first_2',
             'before_first_3',
@@ -148,7 +148,7 @@ class ColumnCollectionTest extends TestCase
             ->addBefore('second', $this->createColumnMock('7'))
             ->add($this->createColumnMock(5));
 
-        $this->assertEquals([
+        static::assertEquals([
             2,
             3,
             1,
@@ -182,8 +182,8 @@ class ColumnCollectionTest extends TestCase
 
         $columnsArray = $columns->toArray();
 
-        $this->assertInternalType('array', $columnsArray);
-        $this->assertCount(3, $columnsArray);
+        static::assertInternalType('array', $columnsArray);
+        static::assertCount(3, $columnsArray);
     }
 
     /**

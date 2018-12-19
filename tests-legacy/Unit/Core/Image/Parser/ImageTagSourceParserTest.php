@@ -48,7 +48,7 @@ class ImageTagSourceParserTest extends TestCase
     {
         $parsedSource = $this->parser->parse($imageTag);
 
-        $this->assertSame($expectedSource, $parsedSource);
+        static::assertSame($expectedSource, $parsedSource);
     }
 
     public function getTestCases()

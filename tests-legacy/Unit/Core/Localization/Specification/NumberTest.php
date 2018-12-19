@@ -78,7 +78,7 @@ class NumberTest extends TestCase
      */
     public function testGetAllSymbolsReturnsAListOfSymbols()
     {
-        $this->assertSame(
+        static::assertSame(
             [
                 'latin' => $this->latinSymbolList,
                 'arab'  => $this->arabSymbolList,
@@ -95,7 +95,7 @@ class NumberTest extends TestCase
     public function testGetSymbolsByNumberingSystem()
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->assertSame(
+        static::assertSame(
             $this->latinSymbolList,
             $this->latinNumberSpec->getSymbolsByNumberingSystem('latin')
         );

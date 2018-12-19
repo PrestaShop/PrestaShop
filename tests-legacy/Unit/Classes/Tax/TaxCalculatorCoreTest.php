@@ -45,7 +45,7 @@ class TaxCalculatorCoreTest extends TestCase
 
         $totalRate = $tax_calculator->getTotalRate();
 
-        $this->assertEquals(26.1, $totalRate);
+        static::assertEquals(26.1, $totalRate);
     }
 
     public function testGetTotalRateBug()
@@ -61,6 +61,6 @@ class TaxCalculatorCoreTest extends TestCase
 
         $totalRate = $tax_calculator->getTotalRate();
 
-        $this->assertEquals(27.233, $totalRate);
+        static::assertEquals(27.233, $totalRate);
     }
 }

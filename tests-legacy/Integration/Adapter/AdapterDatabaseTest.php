@@ -54,6 +54,6 @@ class AdapterDatabaseTest extends IntegrationTestCase
      */
     public function testValuesAreEscaped($expectedSanitizedValue, $unsafeInput)
     {
-        $this->assertEquals($expectedSanitizedValue, $this->db->escape($unsafeInput));
+        static::assertEquals($expectedSanitizedValue, $this->db->escape($unsafeInput));
     }
 }

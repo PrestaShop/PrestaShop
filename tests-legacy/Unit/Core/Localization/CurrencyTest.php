@@ -61,7 +61,7 @@ class CurrencyTest extends TestCase
      */
     public function testIsActive()
     {
-        $this->assertTrue(
+        static::assertTrue(
             $this->currency->isActive(),
             'Wrong result for isActive()'
         );
@@ -74,7 +74,7 @@ class CurrencyTest extends TestCase
      */
     public function testGetConversionRate()
     {
-        $this->assertSame(
+        static::assertSame(
             1,
             $this->currency->getConversionRate(),
             'Wrong result for getConversionRate()'
@@ -88,7 +88,7 @@ class CurrencyTest extends TestCase
      */
     public function testGetIsoCode()
     {
-        $this->assertSame(
+        static::assertSame(
             'EUR',
             $this->currency->getIsoCode(),
             'Wrong result for getIsoCode()'
@@ -102,7 +102,7 @@ class CurrencyTest extends TestCase
      */
     public function testGetNumericIsoCode()
     {
-        $this->assertSame(
+        static::assertSame(
             978,
             $this->currency->getNumericIsoCode(),
             'Wrong result for getNumericIsoCode()'
@@ -117,7 +117,7 @@ class CurrencyTest extends TestCase
     public function testGetSymbol()
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->assertSame(
+        static::assertSame(
             '€',
             $this->currency->getSymbol('fr-FR'),
             'Wrong result for getSymbol()'
@@ -145,7 +145,7 @@ class CurrencyTest extends TestCase
      */
     public function testGetDecimalPrecision()
     {
-        $this->assertSame(
+        static::assertSame(
             2,
             $this->currency->getDecimalPrecision(),
             'Wrong result for getDecimalPrecision()'
@@ -160,7 +160,7 @@ class CurrencyTest extends TestCase
     public function testGetName()
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->assertSame(
+        static::assertSame(
             'euro',
             $this->currency->getName('fr-FR'),
             'Wrong result for getName()'

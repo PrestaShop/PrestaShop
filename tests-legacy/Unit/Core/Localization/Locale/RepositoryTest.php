@@ -111,8 +111,8 @@ class RepositoryTest extends TestCase
     {
         $locale = $this->localeRepository->getLocale('fr-FR');
 
-        $this->assertInstanceOf(Locale::class, $locale);
-        $this->assertSame('fr-FR', $locale->getCode());
+        static::assertInstanceOf(Locale::class, $locale);
+        static::assertSame('fr-FR', $locale->getCode());
     }
 
     /**

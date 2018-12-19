@@ -43,7 +43,7 @@ class FloatParserTest extends TestCase
      */
     public function testItParsesNumbersFromString($string, $expected)
     {
-        $this->assertSame($expected, (new FloatParser())->fromString($string));
+        static::assertSame($expected, (new FloatParser())->fromString($string));
     }
 
     /**

@@ -44,7 +44,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
 
         $result = $filter->filter($subject);
 
-        $this->assertSame($expectedResult, $result);
+        static::assertSame($expectedResult, $result);
     }
 
     public function testKeysCanBeRemovedFromWhitelist()
@@ -65,7 +65,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
             'bar' => null,
         ];
 
-        $this->assertSame($expected, $filter->filter($subject));
+        static::assertSame($expected, $filter->filter($subject));
 
         // remove 'foo' from whitelist and filter again
         $filter->removeFromWhitelist('foo');
@@ -73,7 +73,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
             'bar' => null,
         ];
 
-        $this->assertSame($expected, $filter->filter($subject));
+        static::assertSame($expected, $filter->filter($subject));
     }
 
     public function testKeysCanBeAddedToWhitelist()
@@ -93,7 +93,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
             'foo' => 'something',
         ];
 
-        $this->assertSame($expected, $filter->filter($subject));
+        static::assertSame($expected, $filter->filter($subject));
 
         // add 'bar' to the whitelist and filter again
         $filter->whitelist(['bar']);
@@ -102,7 +102,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
             'bar' => null,
         ];
 
-        $this->assertSame($expected, $filter->filter($subject));
+        static::assertSame($expected, $filter->filter($subject));
     }
 
     public function provideTestCases()

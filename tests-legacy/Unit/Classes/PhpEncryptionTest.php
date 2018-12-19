@@ -43,6 +43,6 @@ class PhpEncryptionTest extends TestCase
     public function testEncryptAndDecrypt()
     {
         $encryptedValue = $this->engine->encrypt(self::FOO);
-        $this->assertSame(self::FOO, $this->engine->decrypt($encryptedValue));
+        static::assertSame(self::FOO, $this->engine->decrypt($encryptedValue));
     }
 }

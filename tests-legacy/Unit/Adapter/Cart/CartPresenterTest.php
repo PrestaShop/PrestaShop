@@ -65,7 +65,7 @@ class CartPresenterTest extends UnitTestCase
      */
     public function testProductAttributesAreProperlyConverted($asString, $asArray)
     {
-        $this->assertSame(
+        static::assertSame(
             $asArray,
             $this->invokeMethod(
                 $this->cartPresenter,

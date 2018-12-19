@@ -56,7 +56,7 @@ class DoctrineQueryParserTest extends TestCase
 
         $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation = 'OK' AND energy = 'none'";
 
-        $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
+        static::assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
     }
 
     /**
@@ -88,7 +88,7 @@ class DoctrineQueryParserTest extends TestCase
 
         $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation IN ('great', 'good', 'ok', 'nok', 'none')";
 
-        $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
+        static::assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
     }
 
     /**
@@ -122,7 +122,7 @@ class DoctrineQueryParserTest extends TestCase
 
         $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation IS NULL";
 
-        $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
+        static::assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
     }
 
     public function testParseWithBooleanNamedParameters()
@@ -134,7 +134,7 @@ class DoctrineQueryParserTest extends TestCase
 
         $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation = FALSE";
 
-        $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
+        static::assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
 
         $preparedQuery2 = 'SELECT tests FROM pierre_rambaud WHERE energy = :energy';
         $queryParameters2 = [
@@ -143,7 +143,7 @@ class DoctrineQueryParserTest extends TestCase
 
         $expectedQuery2 = "SELECT tests FROM pierre_rambaud WHERE energy = TRUE";
 
-        $this->assertSame($expectedQuery2, $this->queryParser->parse($preparedQuery2, $queryParameters2));
+        static::assertSame($expectedQuery2, $this->queryParser->parse($preparedQuery2, $queryParameters2));
     }
 
     public function testParseWithUnsupportedTypeMustThrowAnException()
@@ -168,7 +168,7 @@ class DoctrineQueryParserTest extends TestCase
 
         $expectedQuery = "SELECT * FROM product WHERE id_product = 2";
 
-        $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
+        static::assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
 
         $preparedQuery = 'SELECT * FROM product WHERE price = :price';
         $queryParameters = [
@@ -177,6 +177,6 @@ class DoctrineQueryParserTest extends TestCase
 
         $expectedQuery = "SELECT * FROM product WHERE price = 3.99";
 
-        $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
+        static::assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
     }
 }

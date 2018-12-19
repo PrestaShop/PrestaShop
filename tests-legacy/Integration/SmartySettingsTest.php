@@ -50,7 +50,7 @@ class SmartySettingsTest extends IntegrationTestCase
     public function testALinkIsEscapedAutomatically()
     {
         $str = '<a>hello</a>';
-        $this->assertEquals(
+        static::assertEquals(
             '&lt;a&gt;hello&lt;/a&gt;',
             $this->escapeTemplateLocationComments(
                 $this->render('{$str}', ['str' => $str])
@@ -61,7 +61,7 @@ class SmartySettingsTest extends IntegrationTestCase
     public function testNofilterPreventsEscape()
     {
         $str = '<a>hello</a>';
-        $this->assertEquals(
+        static::assertEquals(
             $str,
             $this->escapeTemplateLocationComments(
                 $this->render('{$str nofilter}', ['str' => $str])
@@ -72,7 +72,7 @@ class SmartySettingsTest extends IntegrationTestCase
     public function testHtmlIsNotEscapedTwice()
     {
         $str = '<a>hello</a>';
-        $this->assertEquals(
+        static::assertEquals(
             '&lt;a&gt;hello&lt;/a&gt;',
             $this->escapeTemplateLocationComments(
                 $this->render('{$str|escape:"html"}', ['str' => $str])

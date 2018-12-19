@@ -70,10 +70,10 @@ class QueryParamsCollectionTest extends TestCase
                 $pageSize,
                 array()
             );
-            $this->fail('Invalid pagination params should raise an exception');
+            static::fail('Invalid pagination params should raise an exception');
         } catch (Exception $exception) {
             $expectedInstanceOf = '\PrestaShopBundle\Exception\InvalidPaginationParamsException';
-            $this->assertInstanceOf(
+            static::assertInstanceOf(
                 $expectedInstanceOf,
                 $exception,
                 sprintf('It should raise an instance of %s', $expectedInstanceOf)
@@ -133,9 +133,9 @@ class QueryParamsCollectionTest extends TestCase
 
         $expectedSqlClauses[2] = array(QueryParamsCollection::SQL_CLAUSE_WHERE => '');
 
-        $this->assertInternalType('array', $sqlParts);
+        static::assertInternalType('array', $sqlParts);
 
-        $this->assertEquals($expectedSqlClauses, $sqlParts);
+        static::assertEquals($expectedSqlClauses, $sqlParts);
     }
 
     /**
@@ -174,9 +174,9 @@ class QueryParamsCollectionTest extends TestCase
         $expectedSqlClauses[1]['product_id'] = 1;
         $expectedSqlClauses[2] = array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {product_id} = :product_id');
 
-        $this->assertInternalType('array', $sqlParts);
+        static::assertInternalType('array', $sqlParts);
 
-        $this->assertEquals($expectedSqlClauses, $sqlParts);
+        static::assertEquals($expectedSqlClauses, $sqlParts);
     }
 
     /**
@@ -249,7 +249,7 @@ class QueryParamsCollectionTest extends TestCase
             array('_attributes' => $this->mockAttributes(array())->reveal())
         ));
         $this->queryParams = $this->queryParams->fromRequest($requestMock->reveal());
-        $this->assertEquals(
+        static::assertEquals(
             $expectedSql,
             $this->queryParams->getSqlFilters(),
             $message

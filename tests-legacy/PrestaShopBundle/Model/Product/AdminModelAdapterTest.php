@@ -206,16 +206,16 @@ class AdminModelAdapterTest extends KernelTestCase
      */
     public function testConstruct()
     {
-        $this->assertInstanceOf('PrestaShopBundle\Model\Product\AdminModelAdapter', $this->adminModelAdapter);
+        static::assertInstanceOf('PrestaShopBundle\Model\Product\AdminModelAdapter', $this->adminModelAdapter);
     }
 
     public function testGetFormData()
     {
-        $this->assertInternalType('array', $this->adminModelAdapter->getFormData($this->product));
+        static::assertInternalType('array', $this->adminModelAdapter->getFormData($this->product));
         $expectedArrayStructure = $this->fakeFormData();
 
         foreach ($expectedArrayStructure as $property => $value) {
-            $this->assertArrayHasKey(
+            static::assertArrayHasKey(
                 $property,
                 $this->adminModelAdapter->getFormData($this->product),
                 sprintf('The expected key %s was not found', $property)
@@ -225,7 +225,7 @@ class AdminModelAdapterTest extends KernelTestCase
 
     public function testGetModelData()
     {
-        $this->assertInternalType('array', $this->adminModelAdapter->getModelData($this->fakeFormData()));
+        static::assertInternalType('array', $this->adminModelAdapter->getModelData($this->fakeFormData()));
     }
 
     /**
@@ -261,8 +261,8 @@ class AdminModelAdapterTest extends KernelTestCase
         $actualReturn = $combinationDataProvider->completeCombination($this->fakeCombination(), $this->product);
 
         foreach ($expectedStructureReturn as $property => $value) {
-            $this->assertArrayHasKey($property, $actualReturn, sprintf('The expected key %s was not found', $property));
-            $this->assertEquals(
+            static::assertArrayHasKey($property, $actualReturn, sprintf('The expected key %s was not found', $property));
+            static::assertEquals(
                 $value,
                 $actualReturn[$property],
                 sprintf('The expected value for property %s is wrong', $property)

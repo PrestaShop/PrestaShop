@@ -76,7 +76,7 @@ class HookConfiguratorTest extends UnitTestCase
             ],
         ]);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     public function testSingleModuleAppendedToHookWithExceptions()
@@ -111,7 +111,7 @@ class HookConfiguratorTest extends UnitTestCase
             ],
         ]);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     public function testMultipleModulesAppendedToHook()
@@ -138,7 +138,7 @@ class HookConfiguratorTest extends UnitTestCase
             ],
         ]);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     public function testMultipleTildeInHookModuleList()
@@ -167,7 +167,7 @@ class HookConfiguratorTest extends UnitTestCase
             ],
         ]);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     public function testSingleModulePrependedToHook()
@@ -192,7 +192,7 @@ class HookConfiguratorTest extends UnitTestCase
             ],
         ]);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     public function testMultipleModulesPrependedToHook()
@@ -219,7 +219,7 @@ class HookConfiguratorTest extends UnitTestCase
             ],
         ]);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     public function testModulesHookedAreReplaced()
@@ -244,7 +244,7 @@ class HookConfiguratorTest extends UnitTestCase
             ],
         ]);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     public function testWhenAModuleIsHookedItIsUnhookedFromCurrentDisplayHooks()
@@ -272,7 +272,7 @@ class HookConfiguratorTest extends UnitTestCase
             ],
         ]);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     public function testNewHookIsCreated()
@@ -284,7 +284,7 @@ class HookConfiguratorTest extends UnitTestCase
         ];
         $this->setCurrentDisplayHooksConfiguration([]);
 
-        $this->assertEquals(
+        static::assertEquals(
             $config,
             $this
                 ->hookConfigurator

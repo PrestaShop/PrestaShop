@@ -46,7 +46,7 @@ class ToolsTest extends TestCase
     public function testBcAdd($leftOperand, $rightOperand, $scale, $expectedResult)
     {
         $result = (new Tools())->bcadd($leftOperand, $rightOperand, $scale);
-        $this->assertSame($expectedResult, $result);
+        static::assertSame($expectedResult, $result);
     }
 
     public function provideTestCasesForBcAdd()

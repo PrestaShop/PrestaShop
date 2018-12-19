@@ -37,14 +37,14 @@ class AddStandardProductTest extends AbstractCartTest
         $product = $this->getProductFromFixtureId(1);
 
         $nbProduct = Product::getQuantity($product->id, null, null, $this->cart, null);
-        $this->assertEquals(1000, $nbProduct);
+        static::assertEquals(1000, $nbProduct);
 
         $result = $this->cart->updateQty(11, $product->id);
-        $this->assertTrue($result);
+        static::assertTrue($result);
         $qty = $this->cart->getProductQuantity($product->id, null, null);
-        $this->assertEquals(11, $qty['quantity']);
+        static::assertEquals(11, $qty['quantity']);
         $nbProduct = Product::getQuantity($product->id, null, null, $this->cart, null);
-        $this->assertEquals(989, $nbProduct);
+        static::assertEquals(989, $nbProduct);
     }
 
     public function testProductCannotBeAddedInCartIfMoreThanStock()
@@ -52,11 +52,11 @@ class AddStandardProductTest extends AbstractCartTest
         $product = $this->getProductFromFixtureId(1);
 
         $result = $this->cart->updateQty(1100, $product->id);
-        $this->assertFalse($result);
+        static::assertFalse($result);
         $qty = $this->cart->getProductQuantity($product->id, null, null);
-        $this->assertEquals(0, $qty['quantity']);
+        static::assertEquals(0, $qty['quantity']);
         $nbProduct = Product::getQuantity($product->id, null, null, $this->cart, null);
-        $this->assertEquals(1000, $nbProduct);
+        static::assertEquals(1000, $nbProduct);
     }
 
     public function testProductCanBeAddedInCartIfMoreThanStockButAvailableWhenOutOfStock()
@@ -69,11 +69,11 @@ class AddStandardProductTest extends AbstractCartTest
         $product->save();
 
         $result = $this->cart->updateQty(1100, $product->id);
-        $this->assertTrue($result);
+        static::assertTrue($result);
         $qty = $this->cart->getProductQuantity($product->id, null, null);
-        $this->assertEquals(1100, $qty['quantity']);
+        static::assertEquals(1100, $qty['quantity']);
         $nbProduct = Product::getQuantity($product->id, null, null, $this->cart, null);
-        $this->assertEquals(-100, $nbProduct);
+        static::assertEquals(-100, $nbProduct);
 
         Configuration::set('PS_ORDER_OUT_OF_STOCK', $oldOrderOutOfStock);
     }
@@ -102,8 +102,8 @@ class AddStandardProductTest extends AbstractCartTest
             $id_address_delivery = 0
         );
 
-        $this->assertEquals($expected, $result);
-        $this->assertEquals($quantityExpected, $cartProductQuantity['quantity']);
+        static::assertEquals($expected, $result);
+        static::assertEquals($quantityExpected, $cartProductQuantity['quantity']);
     }
 
     public function updateQuantitiesProvider()

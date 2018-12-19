@@ -67,19 +67,19 @@ class ThemeTranslationsFactoryTest extends TestCase
     public function testCreateCatalogue($theme, $locale)
     {
         $this->themeProviderMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('setThemeName')
             ->with($theme)
             ->willReturn($this->themeProviderMock);
 
         $this->themeProviderMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('setLocale')
             ->with($locale)
             ->willReturn($this->themeProviderMock);
 
         $this->themeProviderMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getMessageCatalogue');
 
         $this->factory->createCatalogue($theme, $locale);
@@ -107,13 +107,13 @@ class ThemeTranslationsFactoryTest extends TestCase
     public function testCreateTranslationsArray($theme, $locale)
     {
         $this->themeProviderMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('setThemeName')
             ->with($theme)
             ->willReturn($this->themeProviderMock);
 
         $this->themeProviderMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('setLocale')
             ->with($locale)
             ->willReturn($this->themeProviderMock);
@@ -205,27 +205,27 @@ class ThemeTranslationsFactoryTest extends TestCase
             ->getMock();
 
         $providerMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getIdentifier')
             ->willReturn($providerIdentifier);
 
         $providerMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getLocale')
             ->willReturn($locale);
 
         $providerMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getXliffCatalogue')
             ->willReturn($this->getXliffCatalogue());
 
         $providerMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getDatabaseCatalogue')
             ->willReturn($this->getDatabaseCatalogue());
 
         $providerMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getMessageCatalogue')
             ->willReturn($this->getMessageCatalogue());
 
@@ -234,16 +234,16 @@ class ThemeTranslationsFactoryTest extends TestCase
 
     protected function assertPropertiesTranslations($locale)
     {
-        $this->assertInternalType('array', $this->translations);
+        static::assertInternalType('array', $this->translations);
 
         $domain = 'messages.' . $locale;
-        $this->assertArrayHasKey($domain, $this->translations);
+        static::assertArrayHasKey($domain, $this->translations);
 
         $domain = 'ShopFront.' . $locale;
-        $this->assertArrayHasKey($domain, $this->translations);
+        static::assertArrayHasKey($domain, $this->translations);
 
         $domain = 'DefaultDomain.' . $locale;
-        $this->assertArrayHasKey($domain, $this->translations);
+        static::assertArrayHasKey($domain, $this->translations);
     }
 
     /**
@@ -251,7 +251,7 @@ class ThemeTranslationsFactoryTest extends TestCase
      */
     protected function assertTranslationsContainThemeMessages($locale)
     {
-        $this->assertSame(
+        static::assertSame(
             array(
                 'xlf' => null,
                 'db' => null,
@@ -260,7 +260,7 @@ class ThemeTranslationsFactoryTest extends TestCase
             'It should provide with default translations.'
         );
 
-        $this->assertSame(
+        static::assertSame(
             array(
                 'xlf' => null,
                 'db' => null,
@@ -275,7 +275,7 @@ class ThemeTranslationsFactoryTest extends TestCase
      */
     protected function assertTranslationsContainCatalogueMessages($locale)
     {
-        $this->assertSame(
+        static::assertSame(
             array(
                 'xlf' => 'Add to Cart override xliff',
                 'db' => null,
@@ -284,7 +284,7 @@ class ThemeTranslationsFactoryTest extends TestCase
             'It should provide with translations from XLIFF catalogue overriding the defaults.'
         );
 
-        $this->assertSame(
+        static::assertSame(
             array(
                 'xlf' => 'Bar override xlif',
                 'db' => null,
@@ -299,7 +299,7 @@ class ThemeTranslationsFactoryTest extends TestCase
      */
     protected function assertTranslationsContainDefaultAndDatabaseMessages($locale)
     {
-        $this->assertSame(
+        static::assertSame(
             array(
                 'xlf' => 'Default MESSAGE override xliff',
                 'db' => 'Default override database',
@@ -308,7 +308,7 @@ class ThemeTranslationsFactoryTest extends TestCase
             'It should provide with translations from XLIFF catalogue overriding the defaults and database overrides.'
         );
 
-        $this->assertSame(
+        static::assertSame(
             array(
                 'xlf' => 'Baz override xliff',
                 'db' => 'Baz is updated from database!',

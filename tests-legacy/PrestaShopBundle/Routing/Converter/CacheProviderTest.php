@@ -109,24 +109,24 @@ class CacheProviderTest extends TestCase
         $cacheProvider = new CacheProvider($mockProvider, $this->buildSavingCache(), $this->buildCacheKeyGenerator());
 
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
-        $this->assertCount(2, $legacyRoutes);
-        $this->assertNotEmpty($legacyRoutes['admin_products']);
-        $this->assertNotEmpty($legacyRoutes['admin_products_create']);
+        static::assertCount(2, $legacyRoutes);
+        static::assertNotEmpty($legacyRoutes['admin_products']);
+        static::assertNotEmpty($legacyRoutes['admin_products_create']);
 
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
-        $this->assertCount(2, $legacyRoutes);
+        static::assertCount(2, $legacyRoutes);
     }
 
     public function testGetFromCache()
     {
         $cacheProvider = new CacheProvider($this->buildCachedRouterProvider(), $this->buildExistingCache(), $this->buildCacheKeyGenerator());
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
-        $this->assertCount(2, $legacyRoutes);
-        $this->assertNotEmpty($legacyRoutes['admin_products']);
-        $this->assertNotEmpty($legacyRoutes['admin_products_create']);
+        static::assertCount(2, $legacyRoutes);
+        static::assertNotEmpty($legacyRoutes['admin_products']);
+        static::assertNotEmpty($legacyRoutes['admin_products_create']);
 
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
-        $this->assertCount(2, $legacyRoutes);
+        static::assertCount(2, $legacyRoutes);
     }
 
     public function testWithRealCache()
@@ -135,16 +135,16 @@ class CacheProviderTest extends TestCase
         $mockProvider = $this->buildMockRouterProvider($this->legacyRoutes);
         $cacheProvider = new CacheProvider($mockProvider, $cache, $this->buildCacheKeyGenerator());
 
-        $this->assertFalse($cache->hasItem(self::CACHE_KEY));
+        static::assertFalse($cache->hasItem(self::CACHE_KEY));
         //Just perform the test twice to be sure the result and the cache are correct
         for ($i = 0; $i < 2; $i++) {
             $legacyRoutes = $cacheProvider->getLegacyRoutes();
-            $this->assertCount(2, $legacyRoutes);
-            $this->assertNotEmpty($legacyRoutes['admin_products']);
-            $this->assertNotEmpty($legacyRoutes['admin_products_create']);
-            $this->assertTrue($cache->hasItem(self::CACHE_KEY));
+            static::assertCount(2, $legacyRoutes);
+            static::assertNotEmpty($legacyRoutes['admin_products']);
+            static::assertNotEmpty($legacyRoutes['admin_products_create']);
+            static::assertTrue($cache->hasItem(self::CACHE_KEY));
             $cacheItem = $cache->getItem(self::CACHE_KEY);
-            $this->assertEquals($this->expectedCacheValue, $cacheItem->get());
+            static::assertEquals($this->expectedCacheValue, $cacheItem->get());
         }
 
         //Now empty the private field to force CacheProvider to call the cache
@@ -156,9 +156,9 @@ class CacheProviderTest extends TestCase
 
         //Retry to get the value, the cache will be used hence the mockRouterProvider won't be called
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
-        $this->assertCount(2, $legacyRoutes);
-        $this->assertNotEmpty($legacyRoutes['admin_products']);
-        $this->assertNotEmpty($legacyRoutes['admin_products_create']);
+        static::assertCount(2, $legacyRoutes);
+        static::assertNotEmpty($legacyRoutes['admin_products']);
+        static::assertNotEmpty($legacyRoutes['admin_products_create']);
     }
 
     public function testGetControllersActions()
@@ -167,16 +167,16 @@ class CacheProviderTest extends TestCase
         $mockProvider = $this->buildMockRouterProvider($this->legacyRoutes);
         $cacheProvider = new CacheProvider($mockProvider, $cache, $this->buildCacheKeyGenerator());
 
-        $this->assertFalse($cache->hasItem(self::CACHE_KEY));
+        static::assertFalse($cache->hasItem(self::CACHE_KEY));
         //Just perform the test twice to be sure the result and the cache are correct
         for ($i = 0; $i < 2; $i++) {
             $controllerActions = $cacheProvider->getControllersActions();
-            $this->assertCount(1, $controllerActions);
-            $this->assertNotEmpty($controllerActions['AdminProducts']);
-            $this->assertNotEmpty($controllerActions['AdminProducts']['index']);
-            $this->assertTrue($cache->hasItem(self::CACHE_KEY));
+            static::assertCount(1, $controllerActions);
+            static::assertNotEmpty($controllerActions['AdminProducts']);
+            static::assertNotEmpty($controllerActions['AdminProducts']['index']);
+            static::assertTrue($cache->hasItem(self::CACHE_KEY));
             $cacheItem = $cache->getItem(self::CACHE_KEY);
-            $this->assertEquals($this->expectedCacheValue, $cacheItem->get());
+            static::assertEquals($this->expectedCacheValue, $cacheItem->get());
         }
 
         //Now empty the private field to force CacheProvider to call the cache
@@ -188,9 +188,9 @@ class CacheProviderTest extends TestCase
 
         //Retry to get the value, the cache will be used hence the mockRouterProvider won't be called
         $controllerActions = $cacheProvider->getControllersActions();
-        $this->assertCount(1, $controllerActions);
-        $this->assertNotEmpty($controllerActions['AdminProducts']);
-        $this->assertNotEmpty($controllerActions['AdminProducts']['index']);
+        static::assertCount(1, $controllerActions);
+        static::assertNotEmpty($controllerActions['AdminProducts']);
+        static::assertNotEmpty($controllerActions['AdminProducts']['index']);
     }
 
     /**
@@ -205,16 +205,16 @@ class CacheProviderTest extends TestCase
             ->getMock();
 
         $itemMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('isHit')
             ->willReturn(true);
 
         $itemMock
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('set');
 
         $itemMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('get')
             ->willReturn($this->expectedCacheValue);
 
@@ -225,12 +225,12 @@ class CacheProviderTest extends TestCase
             ->getMock();
 
         $cacheMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getItem')
             ->willReturn($itemMock);
 
         $cacheMock
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('save');
 
         return $cacheMock;
@@ -248,17 +248,17 @@ class CacheProviderTest extends TestCase
             ->getMock();
 
         $itemMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('isHit')
             ->willReturn(false);
 
         $itemMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('set')
             ->with($this->expectedCacheValue);
 
         $itemMock
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('get');
 
         //AdapterInterface mock
@@ -268,12 +268,12 @@ class CacheProviderTest extends TestCase
             ->getMock();
 
         $cacheMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getItem')
             ->willReturn($itemMock);
 
         $cacheMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('save');
 
         return $cacheMock;
@@ -291,7 +291,7 @@ class CacheProviderTest extends TestCase
             ->getMock();
 
         $providerMock
-            ->expects($this->once()) //Very important to assert this method is only called once to create the cache
+            ->expects(static::once()) //Very important to assert this method is only called once to create the cache
             ->method('getLegacyRoutes')
             ->willReturn($legacyRoutes);
 
@@ -309,7 +309,7 @@ class CacheProviderTest extends TestCase
             ->getMock();
 
         $providerMock
-            ->expects($this->never()) //Very important to assert this method is only called once to create the cache
+            ->expects(static::never()) //Very important to assert this method is only called once to create the cache
             ->method('getLegacyRoutes');
 
         return $providerMock;

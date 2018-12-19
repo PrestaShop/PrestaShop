@@ -46,7 +46,7 @@ class ExportThemeCommandTest extends TestCase
         $helperSetMock = $this->mockHelperSet();
         $command->setHelperSet($helperSetMock);
 
-        $this->assertEquals(0, $commandTester->execute(array('theme'  => 'classic')));
+        static::assertEquals(0, $commandTester->execute(array('theme'  => 'classic')));
     }
 
     /**
@@ -106,7 +106,7 @@ class ExportThemeCommandTest extends TestCase
         $themeExporterMock = $this->mockThemeExporter();
 
         $containerMock->method('get')
-            ->will($this->returnCallback(function ($serviceId) use (
+            ->will(static::returnCallback(function ($serviceId) use (
                 $themeRepositoryMock,
                 $translatorMock,
                 $themeExporterMock

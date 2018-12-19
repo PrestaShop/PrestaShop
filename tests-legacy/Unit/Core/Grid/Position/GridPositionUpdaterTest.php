@@ -62,11 +62,11 @@ class GridPositionUpdaterTest extends TestCase
         } catch (PositionException $e) {
             $caughtException = $e;
         }
-        $this->assertNotNull($caughtException);
-        $this->assertInstanceOf(PositionUpdateException::class, $caughtException);
-        $this->assertEquals('Could not update #%i', $caughtException->getKey());
-        $this->assertEquals('Admin.Catalog.Notification', $caughtException->getDomain());
-        $this->assertSame([5], $caughtException->getParameters());
+        static::assertNotNull($caughtException);
+        static::assertInstanceOf(PositionUpdateException::class, $caughtException);
+        static::assertEquals('Could not update #%i', $caughtException->getKey());
+        static::assertEquals('Admin.Catalog.Notification', $caughtException->getDomain());
+        static::assertSame([5], $caughtException->getParameters());
     }
 
     /**
@@ -97,8 +97,8 @@ class GridPositionUpdaterTest extends TestCase
         $updaterMock
             ->method('getCurrentPositions')
             ->with(
-                $this->isInstanceOf(PositionDefinitionInterface::class),
-                $this->equalTo(42)
+                static::isInstanceOf(PositionDefinitionInterface::class),
+                static::equalTo(42)
             )
             ->willReturn([
                 1 => 0,
@@ -109,8 +109,8 @@ class GridPositionUpdaterTest extends TestCase
         $updaterMock
             ->method('updatePositions')
             ->with(
-                $this->isInstanceOf(PositionDefinitionInterface::class),
-                $this->equalTo([
+                static::isInstanceOf(PositionDefinitionInterface::class),
+                static::equalTo([
                     1 => 0,
                     5 => 2,
                     42 => 1,
@@ -126,8 +126,8 @@ class GridPositionUpdaterTest extends TestCase
         $updaterMock
             ->method('getCurrentPositions')
             ->with(
-                $this->isInstanceOf(PositionDefinitionInterface::class),
-                $this->equalTo(42)
+                static::isInstanceOf(PositionDefinitionInterface::class),
+                static::equalTo(42)
             )
             ->willReturn([
                 1 => 0,
@@ -138,8 +138,8 @@ class GridPositionUpdaterTest extends TestCase
         $updaterMock
             ->method('updatePositions')
             ->with(
-                $this->isInstanceOf(PositionDefinitionInterface::class),
-                $this->equalTo([
+                static::isInstanceOf(PositionDefinitionInterface::class),
+                static::equalTo([
                     1 => 0,
                     5 => 2,
                     42 => 1,

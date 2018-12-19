@@ -34,16 +34,16 @@ class HookTest extends UnitTestCase
 {
     public function testIsDisplayHookNameDisplayHooksStartWithDisplay()
     {
-        $this->assertTrue(Hook::isDisplayHookName('displaySomething'));
+        static::assertTrue(Hook::isDisplayHookName('displaySomething'));
     }
 
     public function testIsDisplayHookNameDisplayHooksCannotStartWithAction()
     {
-        $this->assertFalse(Hook::isDisplayHookName('actionDoWeirdStuff'));
+        static::assertFalse(Hook::isDisplayHookName('actionDoWeirdStuff'));
     }
 
     public function testIsDisplayHookNameHeaderIsNotADisplayHook()
     {
-        $this->assertFalse(Hook::isDisplayHookName('header'));
+        static::assertFalse(Hook::isDisplayHookName('header'));
     }
 }

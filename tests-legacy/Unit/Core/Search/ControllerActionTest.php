@@ -38,7 +38,7 @@ class ControllerActionTest extends TestCase
      */
     public function testGetFromString($fqcn, $result)
     {
-        self::assertEquals($result, ControllerAction::fromString($fqcn));
+        static::assertEquals($result, ControllerAction::fromString($fqcn));
     }
 
     /**

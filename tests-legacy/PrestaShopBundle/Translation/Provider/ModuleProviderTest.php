@@ -56,20 +56,20 @@ class ModuleProviderTest extends TestCase
     public function testGetMessageCatalogue()
     {
         $expectedReturn = $this->provider->getMessageCatalogue();
-        $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
+        static::assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
 
         // Check integrity of translations
-        $this->assertArrayHasKey('ModulesWirePaymentAdmin.en-US', $expectedReturn->all());
-        $this->assertArrayHasKey('ModulesWirePaymentShop.en-US', $expectedReturn->all());
+        static::assertArrayHasKey('ModulesWirePaymentAdmin.en-US', $expectedReturn->all());
+        static::assertArrayHasKey('ModulesWirePaymentShop.en-US', $expectedReturn->all());
 
         $moduleAdminTranslations = $expectedReturn->all('ModulesWirePaymentAdmin.en-US');
-        $this->assertCount(20, $moduleAdminTranslations);
-        $this->assertArrayHasKey('Wire payment', $moduleAdminTranslations);
-        $this->assertSame('Wire payment', $moduleAdminTranslations['Wire payment']);
+        static::assertCount(20, $moduleAdminTranslations);
+        static::assertArrayHasKey('Wire payment', $moduleAdminTranslations);
+        static::assertSame('Wire payment', $moduleAdminTranslations['Wire payment']);
 
         $moduleFrontTranslations = $expectedReturn->all('ModulesWirePaymentShop.en-US');
-        $this->assertCount(4, $moduleFrontTranslations);
-        $this->assertArrayHasKey('Pay by bank wire', $moduleFrontTranslations);
-        $this->assertSame('Pay by bank wire', $moduleFrontTranslations['Pay by bank wire']);
+        static::assertCount(4, $moduleFrontTranslations);
+        static::assertArrayHasKey('Pay by bank wire', $moduleFrontTranslations);
+        static::assertSame('Pay by bank wire', $moduleFrontTranslations['Pay by bank wire']);
     }
 }

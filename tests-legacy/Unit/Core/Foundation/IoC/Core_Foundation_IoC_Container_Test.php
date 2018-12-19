@@ -49,7 +49,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
             return 'FOO';
         });
 
-        $this->assertEquals('FOO', $this->container->make('foo'));
+        static::assertEquals('FOO', $this->container->make('foo'));
     }
 
     /**
@@ -71,7 +71,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         $first = $this->container->make('different');
         $second = $this->container->make('different');
 
-        $this->assertNotSame($first, $second);
+        static::assertNotSame($first, $second);
     }
 
     public function testBindByClosureInstanceSharedIfExplicitelyRequired()
@@ -83,21 +83,21 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         $first = $this->container->make('same');
         $second = $this->container->make('same');
 
-        $this->assertSame($first, $second);
+        static::assertSame($first, $second);
     }
 
     public function testBindClassName()
     {
         $this->container->bind('dummy', 'LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy');
 
-        $this->assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
+        static::assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
             $this->container->make('dummy')
         ));
     }
 
     public function testMakeWithoutBind()
     {
-        $this->assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
+        static::assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
             $this->container->make('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy')
         ));
     }
@@ -106,7 +106,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     {
         $this->container->aliasNamespace('Fixtures', 'LegacyTests\Unit\Core\Foundation\IoC\Fixtures');
 
-        $this->assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
+        static::assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
             $this->container->make('Fixtures:Dummy')
         ));
     }
@@ -123,14 +123,14 @@ class Core_Foundation_IoC_Container_Test extends TestCase
 
     public function testDepsAreFetchedAutomagically()
     {
-        $this->assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep', get_class(
+        static::assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep', get_class(
             $this->container->make('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep')
         ));
     }
 
     public function testDepsAreFetchedAutomagicallyWhenDependsOnThingWithADefaultValue()
     {
-        $this->assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDepAndDefault', get_class(
+        static::assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDepAndDefault', get_class(
             $this->container->make('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDepAndDefault')
         ));
     }
@@ -178,7 +178,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         $instance = $this->container->make(
             'LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassDependingOnClosureBuiltDep'
         );
-        $this->assertEquals(42, $instance->getDep()->getValue());
+        static::assertEquals(42, $instance->getDep()->getValue());
     }
 
     /**
@@ -199,7 +199,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     public function testContainerCanBindValuesDirectly($value)
     {
         $this->container->bind('value', $value);
-        $this->assertSame($value, $this->container->make('value'));
+        static::assertSame($value, $this->container->make('value'));
     }
 
     /**

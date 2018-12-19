@@ -63,16 +63,16 @@ class HookDispatcherTest extends KernelTestCase
 
         $hookDisptacher->addListener('test_test', array($this, 'listenerCallback'));
         $hookDisptacher->dispatch('unknown_hook_name');
-        $this->assertFalse($this->testedListenerCallbackCalled);
+        static::assertFalse($this->testedListenerCallbackCalled);
         $hookDisptacher->dispatch('test_test');
-        $this->assertTrue($this->testedListenerCallbackCalled);
+        static::assertTrue($this->testedListenerCallbackCalled);
     }
 
     private $testedListenerCallbackCalled = false;
 
     public function listenerCallback(Event $event, $eventName)
     {
-        $this->assertEquals('test_test', $eventName);
+        static::assertEquals('test_test', $eventName);
         $this->testedListenerCallbackCalled = true;
     }
 
@@ -89,7 +89,7 @@ class HookDispatcherTest extends KernelTestCase
         $hookDispatcher->addListener('test_test_2', array($this, 'listenerCallback2b'));
         $event = $hookDispatcher->dispatch('test_test_2', new RenderingHookEvent());
 
-        $this->assertArraySubset(array(
+        static::assertArraySubset(array(
             'listenerCallback2' => ['result_test_2'],
             'overriden_listener_name' => ['result_test_2b'],
         ), $event->getContent());
@@ -97,13 +97,13 @@ class HookDispatcherTest extends KernelTestCase
 
     public function listenerCallback2(RenderingHookEvent $event, $eventName)
     {
-        $this->assertEquals('test_test_2', $eventName);
+        static::assertEquals('test_test_2', $eventName);
         $event->setContent(['result_test_2']);
     }
 
     public function listenerCallback2b(RenderingHookEvent $event, $eventName)
     {
-        $this->assertEquals('test_test_2', $eventName);
+        static::assertEquals('test_test_2', $eventName);
         $event->setContent(['result_test_2b'], 'overriden_listener_name');
     }
 }

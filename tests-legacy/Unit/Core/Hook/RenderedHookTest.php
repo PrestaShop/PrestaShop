@@ -54,22 +54,22 @@ class RenderedHookTest extends TestCase
 
     public function testGetHook()
     {
-        $this->assertInstanceOf(HookInterface::class, $this->renderedHook->getHook());
-        $this->assertSame($this->hookStub, $this->renderedHook->getHook());
+        static::assertInstanceOf(HookInterface::class, $this->renderedHook->getHook());
+        static::assertSame($this->hookStub, $this->renderedHook->getHook());
     }
 
     public function testGetContent()
     {
-        $this->assertInternalType('array', $this->renderedHook->getContent());
-        $this->assertSame($this->content(), $this->renderedHook->getContent());
+        static::assertInternalType('array', $this->renderedHook->getContent());
+        static::assertSame($this->content(), $this->renderedHook->getContent());
     }
 
     public function testOutputContent()
     {
         /** @see RenderedHookTest::content() */
         $expected = '<h1>Hello World</h1><p>How are you?</p> '; // one extra space in the end is intended.
-        $this->assertInternalType('string', $this->renderedHook->outputContent());
-        $this->assertSame($expected, $this->renderedHook->outputContent());
+        static::assertInternalType('string', $this->renderedHook->outputContent());
+        static::assertSame($expected, $this->renderedHook->outputContent());
     }
 
     /**

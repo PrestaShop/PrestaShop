@@ -42,7 +42,7 @@ class PaginationTest extends Testcase
             ->setPagesCount(10)
             ->setPage(5);
 
-        $this->assertEquals([
+        static::assertEquals([
             ['type' => 'previous', 'clickable' => true, 'page' => 4,      'current' => false],
             ['type' => 'page', 'clickable' => true, 'page' => 1,      'current' => false],
             ['type' => 'spacer', 'clickable' => false, 'page' => null,   'current' => false],
@@ -61,7 +61,7 @@ class PaginationTest extends Testcase
             ->setPagesCount(10)
             ->setPage(1);
 
-        $this->assertEquals([
+        static::assertEquals([
             ['type' => 'previous', 'clickable' => false, 'page' => 1,      'current' => false],
             ['type' => 'page', 'clickable' => false, 'page' => 1,      'current' => true],
             ['type' => 'page', 'clickable' => true, 'page' => 2,      'current' => false],
@@ -78,7 +78,7 @@ class PaginationTest extends Testcase
             ->setPagesCount(10)
             ->setPage(10);
 
-        $this->assertEquals([
+        static::assertEquals([
             ['type' => 'previous', 'clickable' => true, 'page' => 9,     'current' => false],
             ['type' => 'page', 'clickable' => true, 'page' => 1,     'current' => false],
             ['type' => 'spacer', 'clickable' => false, 'page' => null,  'current' => false],
@@ -95,7 +95,7 @@ class PaginationTest extends Testcase
             ->setPagesCount(1)
             ->setPage(1);
 
-        $this->assertEquals([
+        static::assertEquals([
             ['type' => 'previous', 'clickable' => false, 'page' => 1,     'current' => false],
             ['type' => 'page', 'clickable' => false, 'page' => 1,     'current' => true],
             ['type' => 'next', 'clickable' => false, 'page' => 1,     'current' => false],

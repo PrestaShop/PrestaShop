@@ -49,14 +49,14 @@ class PositionUpdateFactoryTest extends TestCase
         $positionUpdate = $positionUpdateFactory->buildPositionUpdate($data, $definition);
         /** @var PositionModificationCollectionInterface $collection */
         $collection = $positionUpdate->getPositionModificationCollection();
-        $this->assertNotNull($collection);
-        $this->assertEquals(1, $collection->count());
+        static::assertNotNull($collection);
+        static::assertEquals(1, $collection->count());
         /** @var PositionModificationInterface $positionModification */
         $positionModification = $collection->current();
-        $this->assertEquals(1, $positionModification->getId());
-        $this->assertEquals(1, $positionModification->getOldPosition());
-        $this->assertEquals(2, $positionModification->getNewPosition());
-        $this->assertNull($positionUpdate->getParentId());
+        static::assertEquals(1, $positionModification->getId());
+        static::assertEquals(1, $positionModification->getOldPosition());
+        static::assertEquals(2, $positionModification->getNewPosition());
+        static::assertNull($positionUpdate->getParentId());
     }
 
     public function testHandleDataWithParent()
@@ -73,14 +73,14 @@ class PositionUpdateFactoryTest extends TestCase
         $positionUpdate = $positionUpdateFactory->buildPositionUpdate($data, $definition);
         /** @var PositionModificationCollectionInterface $collection */
         $collection = $positionUpdate->getPositionModificationCollection();
-        $this->assertNotNull($collection);
-        $this->assertEquals(1, $collection->count());
+        static::assertNotNull($collection);
+        static::assertEquals(1, $collection->count());
         /** @var PositionModificationInterface $positionModification */
         $positionModification = $collection->current();
-        $this->assertEquals(1, $positionModification->getId());
-        $this->assertEquals(1, $positionModification->getOldPosition());
-        $this->assertEquals(2, $positionModification->getNewPosition());
-        $this->assertEquals(42, $positionUpdate->getParentId());
+        static::assertEquals(1, $positionModification->getId());
+        static::assertEquals(1, $positionModification->getOldPosition());
+        static::assertEquals(2, $positionModification->getNewPosition());
+        static::assertEquals(42, $positionUpdate->getParentId());
     }
 
     public function testDataPositionsValidation()
@@ -143,14 +143,14 @@ class PositionUpdateFactoryTest extends TestCase
         }
 
         if (null === $expectedErrorKey) {
-            $this->assertNull($caughtException);
+            static::assertNull($caughtException);
         } else {
-            $this->assertNotNull($caughtException);
-            $this->assertInstanceOf(PositionDataException::class, $caughtException);
-            $this->assertEquals($expectedErrorKey, $caughtException->getKey());
-            $this->assertEquals('Admin.Notifications.Failure', $caughtException->getDomain());
+            static::assertNotNull($caughtException);
+            static::assertInstanceOf(PositionDataException::class, $caughtException);
+            static::assertEquals($expectedErrorKey, $caughtException->getKey());
+            static::assertEquals('Admin.Notifications.Failure', $caughtException->getDomain());
             if (null !== $expectedErrorParameters) {
-                $this->assertSame($expectedErrorParameters, $caughtException->getParameters());
+                static::assertSame($expectedErrorParameters, $caughtException->getParameters());
             }
         }
     }

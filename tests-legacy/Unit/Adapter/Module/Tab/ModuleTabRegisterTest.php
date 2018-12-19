@@ -143,7 +143,7 @@ class ModuleTabRegisterTest extends UnitTestCase
             ->getMock();
         $this->tabRegister
             ->method('getModuleAdminControllersFilename')
-            ->will($this->returnValueMap($this->moduleAdminControllers));
+            ->will(static::returnValueMap($this->moduleAdminControllers));
     }
 
     public function testWorkingTabsAreOk()
@@ -155,7 +155,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                     continue;
                 }
                 $data = new ParameterBag($tab);
-                $this->assertTrue($this->invokeMethod($this->tabRegister, 'checkIsValid', array($moduleName, $data)));
+                static::assertTrue($this->invokeMethod($this->tabRegister, 'checkIsValid', array($moduleName, $data)));
             }
         }
     }
@@ -173,11 +173,11 @@ class ModuleTabRegisterTest extends UnitTestCase
                 try {
                     $this->invokeMethod($this->tabRegister, 'checkIsValid', array($moduleName, $data));
                 } catch (\Exception $e) {
-                    $this->assertEquals($e->getMessage(), $tab['exception']);
+                    static::assertEquals($e->getMessage(), $tab['exception']);
 
                     continue;
                 }
-                $this->fail('Expected Exception "'.$tab['exception'].'" has not been raised.');
+                static::fail('Expected Exception "'.$tab['exception'].'" has not been raised.');
             }
         }
     }
@@ -190,7 +190,7 @@ class ModuleTabRegisterTest extends UnitTestCase
             // We test there is no unexpected tab to register
             // Be aware, it also include which can throw an exception later when being validated
             foreach($tabs as $tab) {
-                $this->assertTrue(
+                static::assertTrue(
                         in_array($tab['class_name'], $this->expectedTabsToAdd[$moduleName]),
                         'Module '.$moduleName.' should not register '.$tab['class_name']
                 );
@@ -203,7 +203,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                         continue 2;
                     }
                 }
-                $this->fail('ModuleAdminController '.$moduleAdminController.' is expected but not found in the list to register!');
+                static::fail('ModuleAdminController '.$moduleAdminController.' is expected but not found in the list to register!');
             }
         }
     }
@@ -212,7 +212,7 @@ class ModuleTabRegisterTest extends UnitTestCase
     {
         $names = 'doge';
         $expectedResult = array(1 => $names, 2 => $names, 3 => $names);
-        $this->assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
+        static::assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
     }
 
     public function testTabNames()
@@ -223,6 +223,6 @@ class ModuleTabRegisterTest extends UnitTestCase
             'de' => 'eine Name',
         );
         $expectedResult = array(1 => $names['fr'], 2 => $names['en'], 3 => $names['en']);
-        $this->assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
+        static::assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
     }
 }

@@ -82,25 +82,25 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        static::assertEquals(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );
 
         $messages = self::$kernel->getContainer()->get('session')->getFlashBag()->all();
-        $this->assertArrayHasKey(
+        static::assertArrayHasKey(
             'error',
             $messages
         );
-        $this->assertContains(
+        static::assertContains(
             'This module cannot be loaded.',
             $messages['error']
         );
-        $this->assertContains(
+        static::assertContains(
             'Hook cannot be loaded.',
             $messages['error']
         );
-        $this->assertArrayNotHasKey(
+        static::assertArrayNotHasKey(
             'success',
             $messages
         );
@@ -120,21 +120,21 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        static::assertEquals(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );
 
         $messages = self::$kernel->getContainer()->get('session')->getFlashBag()->all();
-        $this->assertArrayNotHasKey(
+        static::assertArrayNotHasKey(
             'error',
             $messages
         );
-        $this->assertArrayHasKey(
+        static::assertArrayHasKey(
             'success',
             $messages
         );
-        $this->assertContains(
+        static::assertContains(
             'The module was successfully removed from the hook.',
             $messages['success']
         );

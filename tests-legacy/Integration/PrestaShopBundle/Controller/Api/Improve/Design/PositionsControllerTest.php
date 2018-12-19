@@ -80,15 +80,15 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        static::assertEquals(
             Response::HTTP_OK,
             $response->getStatusCode()
         );
 
         $json = json_decode($response->getContent(), true);
-        $this->assertArrayHasKey('hasError', $json['data']);
-        $this->assertTrue($json['data']['hasError']);
-        $this->assertEquals(['This module cannot be loaded.'], $json['data']['errors']);
+        static::assertArrayHasKey('hasError', $json['data']);
+        static::assertTrue($json['data']['hasError']);
+        static::assertEquals(['This module cannot be loaded.'], $json['data']['errors']);
     }
 
     public function testMoveHookPositionToBottomWithUnavailablePositions()
@@ -107,15 +107,15 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        static::assertEquals(
             Response::HTTP_OK,
             $response->getStatusCode()
         );
 
         $json = json_decode($response->getContent(), true);
-        $this->assertArrayHasKey('hasError', $json['data']);
-        $this->assertTrue($json['data']['hasError']);
-        $this->assertEquals(['Cannot update module position.'], $json['data']['errors']);
+        static::assertArrayHasKey('hasError', $json['data']);
+        static::assertTrue($json['data']['hasError']);
+        static::assertEquals(['Cannot update module position.'], $json['data']['errors']);
     }
 
     public function testMoveHookPositionToBottom()
@@ -137,14 +137,14 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        static::assertEquals(
             Response::HTTP_OK,
             $response->getStatusCode()
         );
 
         $json = json_decode($response->getContent(), true);
-        $this->assertArrayNotHasKey('hasError', $json['data']);
-        $this->assertEquals([], $json['data']);
+        static::assertArrayNotHasKey('hasError', $json['data']);
+        static::assertEquals([], $json['data']);
     }
 
     public function testMoveHookPositionToTop()
@@ -166,13 +166,13 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        static::assertEquals(
             Response::HTTP_OK,
             $response->getStatusCode()
         );
 
         $json = json_decode($response->getContent(), true);
-        $this->assertArrayNotHasKey('hasError', $json['data']);
-        $this->assertEquals([], $json['data']);
+        static::assertArrayNotHasKey('hasError', $json['data']);
+        static::assertEquals([], $json['data']);
     }
 }

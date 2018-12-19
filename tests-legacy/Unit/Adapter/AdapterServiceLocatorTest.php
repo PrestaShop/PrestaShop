@@ -38,7 +38,7 @@ class AdapterServiceLocatorTest extends TestCase
             new Container()
         );
 
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             '\\PrestaShop\\PrestaShop\\Core\\Foundation\\IoC\\Container',
             ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\IoC\\Container')
         );

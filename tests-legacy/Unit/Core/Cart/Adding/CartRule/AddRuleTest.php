@@ -67,7 +67,7 @@ class AddRuleTest extends AbstractCartTest
         $expectedProductCountAfterRules
     ) {
         $this->addProductsToCart($productData);
-        $this->assertEquals($expectedProductCount, Cart::getNbProducts($this->cart->id));
+        static::assertEquals($expectedProductCount, Cart::getNbProducts($this->cart->id));
         $result = true;
         foreach ($cartRuleData as $cartRuleId) {
             $cartRule                = $this->getCartRuleFromFixtureId($cartRuleId);
@@ -75,9 +75,9 @@ class AddRuleTest extends AbstractCartTest
             $this->cartRulesInCart[] = $cartRule;
             $this->cart->addCartRule($cartRule->id);
         }
-        $this->assertEquals($shouldRulesBeApplied, $result);
-        $this->assertTrue(CartRule::haveCartRuleToday(0));
-        $this->assertEquals($expectedProductCountAfterRules, Cart::getNbProducts($this->cart->id));
+        static::assertEquals($shouldRulesBeApplied, $result);
+        static::assertTrue(CartRule::haveCartRuleToday(0));
+        static::assertEquals($expectedProductCountAfterRules, Cart::getNbProducts($this->cart->id));
     }
 
     public function cartRuleValidityProvider()

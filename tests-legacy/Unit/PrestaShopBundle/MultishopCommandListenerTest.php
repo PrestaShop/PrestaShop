@@ -77,9 +77,9 @@ class MultishopCommandListenerTest extends UnitTestCase
     public function testDefaultMultishopContext()
     {
         Shop::resetContext();
-        $this->assertFalse($this->multishopContext->isShopContext(), 'isShopContext');
-        $this->assertFalse($this->multishopContext->isShopGroupContext(), 'isShopGroupContext');
-        $this->assertFalse($this->multishopContext->isAllContext(), 'isAllContext');
+        static::assertFalse($this->multishopContext->isShopContext(), 'isShopContext');
+        static::assertFalse($this->multishopContext->isShopGroupContext(), 'isShopGroupContext');
+        static::assertFalse($this->multishopContext->isAllContext(), 'isAllContext');
     }
 
     public function testSetShopID()
@@ -94,7 +94,7 @@ class MultishopCommandListenerTest extends UnitTestCase
         $this->commandListener->onConsoleCommand($event);
 
         // Check!
-        $this->assertTrue($this->multishopContext->isShopContext(), 'isShopContext');
+        static::assertTrue($this->multishopContext->isShopContext(), 'isShopContext');
     }
 
     public function testSetShopGroupID()
@@ -109,7 +109,7 @@ class MultishopCommandListenerTest extends UnitTestCase
         $this->commandListener->onConsoleCommand($event);
 
         // Check!
-        $this->assertTrue($this->multishopContext->isShopGroupContext());
+        static::assertTrue($this->multishopContext->isShopGroupContext());
     }
 
     public function testExceptionWhenIdShopAndIdShopGroupSet()

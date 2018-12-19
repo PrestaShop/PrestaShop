@@ -71,13 +71,13 @@ class GridPresenterTest extends TestCase
             'filters' => [],
         ];
 
-        $this->assertInternalType('array', $presentedGrid);
+        static::assertInternalType('array', $presentedGrid);
 
         foreach ($expectedPresentedGrid as $itemName => $innerStruct) {
-            $this->assertArrayHasKey($itemName, $presentedGrid);
+            static::assertArrayHasKey($itemName, $presentedGrid);
 
             foreach ($innerStruct as $innerItemName) {
-                $this->assertArrayHasKey($innerItemName, $presentedGrid[$itemName]);
+                static::assertArrayHasKey($innerItemName, $presentedGrid[$itemName]);
             }
         }
     }

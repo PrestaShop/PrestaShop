@@ -55,14 +55,14 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 </div>";
 
         $act = $decorator->addHiddenSubmitButton($form, 'OPTION_ID');
-        $this->assertStringStartsWith('<div>', $act);
+        static::assertStringStartsWith('<div>', $act);
         $this->assertSameHTML($exp, $act);
     }
 
     public function testAddHiddenSubmitButtonReturnsFalseWhenMultipleForms()
     {
         $decorator = new PaymentOptionFormDecorator();
-        $this->assertFalse(
+        static::assertFalse(
             $decorator->addHiddenSubmitButton(
                 '<form></form><form></form>',
                 'OPTION_ID'
@@ -84,7 +84,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 
     private function assertSameHTML($exp, $act)
     {
-        $this->assertEquals(
+        static::assertEquals(
             $this->normalizeHTML($exp),
             $this->normalizeHTML($act)
         );

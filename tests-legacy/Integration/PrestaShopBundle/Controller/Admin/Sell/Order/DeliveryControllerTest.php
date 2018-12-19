@@ -49,7 +49,7 @@ class DeliveryControllerTest extends WebTestCase
             )
         );
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testSlipActionWithInvalidData()
@@ -70,11 +70,11 @@ class DeliveryControllerTest extends WebTestCase
             ]
         );
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        static::assertEquals(
             Response::HTTP_OK,
             $response->getStatusCode()
         );
-        $this->assertContains('This value is not valid.', $response->getContent());
+        static::assertContains('This value is not valid.', $response->getContent());
     }
 
     public function testSlipActionWithValidData()
@@ -95,12 +95,12 @@ class DeliveryControllerTest extends WebTestCase
             ]
         );
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        static::assertEquals(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );
 
-        $this->assertArrayHasKey(
+        static::assertArrayHasKey(
             'success',
             self::$kernel->getContainer()->get('session')->getFlashBag()->all()
         );
@@ -124,15 +124,15 @@ class DeliveryControllerTest extends WebTestCase
             ]
         );
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        static::assertEquals(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );
-        $this->assertArrayHasKey(
+        static::assertArrayHasKey(
             'error',
             self::$kernel->getContainer()->get('session')->getFlashBag()->all()
         );
-        $this->assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
+        static::assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }
 
     public function testPdfActionWithEmptyData()
@@ -151,15 +151,15 @@ class DeliveryControllerTest extends WebTestCase
             ]
         );
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        static::assertEquals(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );
 
-        $this->assertArrayHasKey(
+        static::assertArrayHasKey(
             'error',
             self::$kernel->getContainer()->get('session')->getFlashBag()->all()
         );
-        $this->assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
+        static::assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }
 }

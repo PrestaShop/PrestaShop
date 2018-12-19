@@ -59,19 +59,19 @@ class ThemeValidatorTest extends TestCase
     public function testIsValidWithValidTheme()
     {
         $isValid = $this->validator->isValid($this->getTheme());
-        $this->assertTrue($isValid, self::NOTICE.sprintf('expected isValid to return true when theme is valid, got %s', gettype($isValid)));
+        static::assertTrue($isValid, self::NOTICE.sprintf('expected isValid to return true when theme is valid, got %s', gettype($isValid)));
     }
 
     public function testIsValidWithInvalidThemeMissingFiles()
     {
         $isValid = $this->validator->isValid($this->getTheme('missfiles'));
-        $this->assertFalse($isValid, self::NOTICE.sprintf('expected isValid to return false when theme is invalid, got %s', gettype($isValid)));
+        static::assertFalse($isValid, self::NOTICE.sprintf('expected isValid to return false when theme is invalid, got %s', gettype($isValid)));
     }
 
     public function testIsValidWithInvalidThemeMissingProperties()
     {
         $isValid = $this->validator->isValid($this->getTheme('missconfig'));
-        $this->assertFalse($isValid, self::NOTICE.sprintf('expected isValid to return false when theme is invalid, got %s', gettype($isValid)));
+        static::assertFalse($isValid, self::NOTICE.sprintf('expected isValid to return false when theme is invalid, got %s', gettype($isValid)));
     }
 
     private function getTheme($name = 'valid')

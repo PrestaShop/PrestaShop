@@ -75,27 +75,27 @@ class VersionTest extends TestCase
 
     public function testGetVersion()
     {
-        $this->assertSame(self::VERSION, $this->version->getVersion());
+        static::assertSame(self::VERSION, $this->version->getVersion());
     }
 
     public function testGetMajorVersionString()
     {
-        $this->assertSame(self::MAJOR_VERSION_STRING, $this->version->getMajorVersionString());
+        static::assertSame(self::MAJOR_VERSION_STRING, $this->version->getMajorVersionString());
     }
 
     public function testGetMajorVersion()
     {
-        $this->assertSame(self::MAJOR_VERSION, $this->version->getMajorVersion());
+        static::assertSame(self::MAJOR_VERSION, $this->version->getMajorVersion());
     }
 
     public function testGetMinorVersion()
     {
-        $this->assertSame(self::MINOR_VERSION, $this->version->getMinorVersion());
+        static::assertSame(self::MINOR_VERSION, $this->version->getMinorVersion());
     }
 
     public function testGetReleaseVersion()
     {
-        $this->assertSame(self::RELEASE_VERSION, $this->version->getReleaseVersion());
+        static::assertSame(self::RELEASE_VERSION, $this->version->getReleaseVersion());
     }
 
     /**
@@ -106,7 +106,7 @@ class VersionTest extends TestCase
      */
     public function testCompareGreaterVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isGreaterThan($version));
+        static::assertEquals($result, $this->version->isGreaterThan($version));
     }
 
     public function getCompareGreater()
@@ -135,7 +135,7 @@ class VersionTest extends TestCase
      */
     public function testCompareGreaterEqualVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isGreaterThanOrEqualTo($version));
+        static::assertEquals($result, $this->version->isGreaterThanOrEqualTo($version));
     }
 
     public function getCompareGreaterEqual()
@@ -164,7 +164,7 @@ class VersionTest extends TestCase
      */
     public function testCompareLessVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isLessThan($version));
+        static::assertEquals($result, $this->version->isLessThan($version));
     }
 
     public function getCompareLess()
@@ -193,7 +193,7 @@ class VersionTest extends TestCase
      */
     public function testCompareGreaterAnotherVersion($version, $result)
     {
-        $this->assertEquals($result, $this->anotherVersion->isGreaterThan($version), self::ANOTHER_VERSION.' > '.$version . ' must be ' . ($result ? 'true' : 'false'));
+        static::assertEquals($result, $this->anotherVersion->isGreaterThan($version), self::ANOTHER_VERSION.' > '.$version . ' must be ' . ($result ? 'true' : 'false'));
     }
 
     public function getAnotherCompareGreater()
@@ -211,7 +211,7 @@ class VersionTest extends TestCase
      */
     public function testCompareLessEqualVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isLessThanOrEqualTo($version));
+        static::assertEquals($result, $this->version->isLessThanOrEqualTo($version));
     }
 
     public function getCompareLessEqual()
@@ -240,7 +240,7 @@ class VersionTest extends TestCase
      */
     public function testCompareEqualVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isEqualTo($version));
+        static::assertEquals($result, $this->version->isEqualTo($version));
     }
 
     public function getCompareEqual()
@@ -269,7 +269,7 @@ class VersionTest extends TestCase
      */
     public function testCompareNotEqualVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isNotEqualTo($version));
+        static::assertEquals($result, $this->version->isNotEqualTo($version));
     }
 
     public function getCompareNotEqual()

@@ -79,7 +79,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     public function testSuccessfulConfiguration()
     {
         $name = 'bankwire';
-        $this->assertTrue($this->getModuleSelfConfigurator()->module($name)->configure());
+        static::assertTrue($this->getModuleSelfConfigurator()->module($name)->configure());
     }
 
     public function testFileExists()
@@ -88,11 +88,11 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
         $name = 'ganalytics';
         // Default file - Non existing
-        $this->assertNotEmpty($moduleSelfConfigurator->module($name)->validate());
+        static::assertNotEmpty($moduleSelfConfigurator->module($name)->validate());
 
         // Specific file - Non existing
         $filepath = '/path/to/the/file.yml';
-        $this->assertNotEmpty($moduleSelfConfigurator->module($name)->file($filepath)->validate());
+        static::assertNotEmpty($moduleSelfConfigurator->module($name)->file($filepath)->validate());
     }
 
     public function testModuleInstallationRequirementPass()
@@ -101,29 +101,29 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $name = 'ganalytics';
         $filepath = $this->defaultDir.'/moduleConfExample.yml';
         $result = $this->getModuleSelfConfigurator()->module($name)->file($filepath)->validate();
-        $this->assertEmpty($result, 'Failed to pass the module for the following reasons: '.var_export($result, true));
+        static::assertEmpty($result, 'Failed to pass the module for the following reasons: '.var_export($result, true));
     }
 
     public function testModuleInstallationRequirementFail()
     {
         // Module installed
         $name = 'ganalytics';
-        $this->assertNotEmpty($this->getModuleSelfConfigurator()->module($name)->validate());
+        static::assertNotEmpty($this->getModuleSelfConfigurator()->module($name)->validate());
     }
 
     public function testFileToUse()
     {
-        $this->assertNull($this->getModuleSelfConfigurator()->getFile());
+        static::assertNull($this->getModuleSelfConfigurator()->getFile());
 
         $filepath = '/path/to/the/file.yml';
-        $this->assertEquals($filepath, $this->getModuleSelfConfigurator()->file($filepath)->getFile());
+        static::assertEquals($filepath, $this->getModuleSelfConfigurator()->file($filepath)->getFile());
     }
 
     public function testAllValid()
     {
         $filepath = $this->defaultDir.'/moduleConfExample.yml';
         $name = 'bankwire';
-        $this->assertEmpty($this->getModuleSelfConfigurator()->module($name)->file($filepath)->validate());
+        static::assertEmpty($this->getModuleSelfConfigurator()->module($name)->file($filepath)->validate());
     }
 
     public function testConfigurationUpdate()
@@ -131,9 +131,9 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $filepath = $this->defaultDir.'/moduleConfExampleConfStep.yml';
         $name = 'bankwire';
         // Test before
-        $this->assertNull($this->configuration->get('PAYPAL_SANDBOX'));
-        $this->assertTrue($this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure());
-        $this->assertEquals(1, $this->configuration->get('PAYPAL_SANDBOX'));
+        static::assertNull($this->configuration->get('PAYPAL_SANDBOX'));
+        static::assertTrue($this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure());
+        static::assertEquals(1, $this->configuration->get('PAYPAL_SANDBOX'));
     }
 
     public function testConfigurationDelete()
@@ -142,9 +142,9 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $name = 'bankwire';
         // Test before
         $this->configuration->set('PAYPAL_ONBOARDING', 1);
-        $this->assertEquals(1, $this->configuration->get('PAYPAL_ONBOARDING'));
-        $this->assertTrue($this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure());
-        $this->assertNull($this->configuration->get('PAYPAL_ONBOARDING'));
+        static::assertEquals(1, $this->configuration->get('PAYPAL_ONBOARDING'));
+        static::assertTrue($this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure());
+        static::assertNull($this->configuration->get('PAYPAL_ONBOARDING'));
     }
 
     public function testFilesExceptionMissingSource()
@@ -177,16 +177,16 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $mockFilesystem = $this->getMockBuilder('\Symfony\Component\Filesystem\Filesystem')
             ->getMock();
 
-        $mockFilesystem->expects($this->exactly(2))
+        $mockFilesystem->expects(static::exactly(2))
             ->method('copy')
             ->withConsecutive(
                 [
-                    $this->equalTo($basePath.'/modules/ganalytics/ganalytics.php'),
-                    $this->equalTo($basePath.'/modules/ganalytics/ganalytics_copy.php'),
+                    static::equalTo($basePath.'/modules/ganalytics/ganalytics.php'),
+                    static::equalTo($basePath.'/modules/ganalytics/ganalytics_copy.php'),
                 ],
                 [
-                    $this->equalTo('http://localhost/img/logo.png'),
-                    $this->equalTo($basePath.'/modules/ganalytics/another-logo.png'),
+                    static::equalTo('http://localhost/img/logo.png'),
+                    static::equalTo($basePath.'/modules/ganalytics/another-logo.png'),
                 ]
             );
 
@@ -212,12 +212,12 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $filepath = $this->defaultDir.'/moduleConfExampleSqlStep.yml';
         $name = 'ganalytics';
 
-        $this->assertTrue($this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure());
+        static::assertTrue($this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure());
         // Check files are equals
-        $this->assertTrue(in_array('TRUNCATE TABLE `ps_doge_army`', $this->connection->executedSql));
-        $this->assertTrue(in_array('UPDATE `ps_doge` SET `wow` = 1', $this->connection->executedSql));
-        $this->assertFalse(in_array('UPDATE `ps_doge` SET `wow` = 1;', $this->connection->executedSql));
-        $this->assertTrue(in_array('TRUNCATE TABLE `ps_lolcat_army`', $this->connection->executedSql));
+        static::assertTrue(in_array('TRUNCATE TABLE `ps_doge_army`', $this->connection->executedSql));
+        static::assertTrue(in_array('UPDATE `ps_doge` SET `wow` = 1', $this->connection->executedSql));
+        static::assertFalse(in_array('UPDATE `ps_doge` SET `wow` = 1;', $this->connection->executedSql));
+        static::assertTrue(in_array('TRUNCATE TABLE `ps_lolcat_army`', $this->connection->executedSql));
     }
 
     public function testSqlExceptionMissingFile()
@@ -241,7 +241,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $mock = $this->getMockBuilder('\MyComplexModuleConfiguration')
                      ->setMethods(array('run'))
                      ->getMock();
-        $mock->expects($this->exactly(2))
+        $mock->expects(static::exactly(2))
              ->method('run');
 
         // Redefine self configuratrion as mock
@@ -254,12 +254,12 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
             ->getMock();
 
         $moduleSelfConfigurator
-            ->expects($this->exactly(2))
+            ->expects(static::exactly(2))
             ->method('loadPhpFile')
             ->with($php_filepath)
-            ->will($this->returnValue($mock));
+            ->will(static::returnValue($mock));
 
-        $this->assertTrue($moduleSelfConfigurator->module($name)->file($filepath)->configure());
+        static::assertTrue($moduleSelfConfigurator->module($name)->file($filepath)->configure());
     }
 
     // MOCK

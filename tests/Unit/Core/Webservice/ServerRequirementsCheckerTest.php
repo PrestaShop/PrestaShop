@@ -60,7 +60,7 @@ class ServerRequirementsCheckerTest extends TestCase
         $this->mockedTranslator = $this->createMock(TranslatorInterface::class);
         $this->mockedTranslator
             ->method('trans')
-            ->will($this->returnArgument(0));
+            ->will(static::returnArgument(0));
 
         $this->mockedConfiguration = $this->createMock(Configuration::class);
         $this->mockedHostingInformation = $this->createMock(HostingInformation::class);
@@ -75,7 +75,7 @@ class ServerRequirementsCheckerTest extends TestCase
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 
-        $this->assertContains('To avoid operating problems, please use an Apache server.', $errors);
+        static::assertContains('To avoid operating problems, please use an Apache server.', $errors);
     }
 
     public function testNoErrorsAreReturnedWhenUsingApacheWebServer()
@@ -86,29 +86,29 @@ class ServerRequirementsCheckerTest extends TestCase
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 
-        $this->assertNotContains('To avoid operating problems, please use an Apache server.', $errors);
+        static::assertNotContains('To avoid operating problems, please use an Apache server.', $errors);
     }
 
     public function testNoErrorsAreReturnedWhenSslIsEnabled()
     {
         $this->mockedConfiguration
             ->method('getBoolean')
-            ->will($this->returnValue(true));
+            ->will(static::returnValue(true));
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 
-        $this->assertNotContains('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.', $errors);
+        static::assertNotContains('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.', $errors);
     }
 
     public function testThatErrorIsReturnedWhenSslIsNotEnabled()
     {
         $this->mockedConfiguration
             ->method('getBoolean')
-            ->will($this->returnValue(false));
+            ->will(static::returnValue(false));
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 
-        $this->assertContains('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.', $errors);
+        static::assertContains('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.', $errors);
     }
 
     /**

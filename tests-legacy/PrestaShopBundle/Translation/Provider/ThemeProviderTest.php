@@ -52,15 +52,15 @@ class ThemeProviderTest extends TestCase
     {
         // The xliff file contains 29 keys
         $expectedReturn = $this->provider->getMessageCatalogue();
-        $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
+        static::assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
 
         // Check integrity of translations
-        $this->assertArrayHasKey('ShopTheme.en-US', $expectedReturn->all());
-        $this->assertArrayHasKey('ShopThemeCustomerAccount.en-US', $expectedReturn->all());
+        static::assertArrayHasKey('ShopTheme.en-US', $expectedReturn->all());
+        static::assertArrayHasKey('ShopThemeCustomerAccount.en-US', $expectedReturn->all());
         $translations = $expectedReturn->all('ShopTheme.en-US');
 
-        $this->assertCount(29, $translations);
-        $this->assertArrayHasKey('Contact us', $translations);
-        $this->assertSame('Contact us', $translations['Contact us']);
+        static::assertCount(29, $translations);
+        static::assertArrayHasKey('Contact us', $translations);
+        static::assertSame('Contact us', $translations['Contact us']);
     }
 }

@@ -85,7 +85,7 @@ class FormatterTest extends TestCase
         $formatter       = $this->buildFormatter($localeParams);
         $formattedNumber = $formatter->format($number, $numberSpecification);
 
-        $this->assertSame($expectedResult, $formattedNumber);
+        static::assertSame($expectedResult, $formattedNumber);
     }
 
     protected function buildFormatter($localeParams)
