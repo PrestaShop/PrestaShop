@@ -133,4 +133,9 @@
       {{ self.form_widget_with_error(form, vars, extraVars) }}
     </div>
   </div>
+
+{% macro load_css(url) %}
+  <script type="text/javascript">
+    $('head').append('<link rel="stylesheet" href="{{ url|e('js') }}">');
+  </script>
 {% endmacro %}
