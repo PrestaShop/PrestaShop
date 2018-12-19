@@ -70,10 +70,11 @@ class AddLanguageCommand
      * @var string Full date format, e.g. Y-m-d H:i:s
      */
     private $fullDateFormat;
+
     /**
      * @var bool Is language read from right to left
      */
-    private $isRtlLanguage;
+    private $isRtl;
 
     /**
      * @var bool
@@ -93,7 +94,7 @@ class AddLanguageCommand
      * @param string $fullDateFormat
      * @param string $flagImagePath
      * @param string $noPictureImagePath
-     * @param bool $isRtlLanguage
+     * @param bool $isRtl
      * @param bool $isActive
      * @param int[] $shopAssociation
      */
@@ -105,7 +106,7 @@ class AddLanguageCommand
         $fullDateFormat,
         $flagImagePath,
         $noPictureImagePath,
-        $isRtlLanguage,
+        $isRtl,
         $isActive,
         array $shopAssociation
     ) {
@@ -116,7 +117,7 @@ class AddLanguageCommand
         $this->fullDateFormat = $fullDateFormat;
         $this->flagImagePath = $flagImagePath;
         $this->noPictureImagePath = $noPictureImagePath;
-        $this->isRtlLanguage = $isRtlLanguage;
+        $this->isRtl = $isRtl;
         $this->isActive = $isActive;
         $this->shopAssociation = $shopAssociation;
     }
@@ -180,9 +181,9 @@ class AddLanguageCommand
     /**
      * @return bool
      */
-    public function isRtlLanguage()
+    public function isRtl()
     {
-        return $this->isRtlLanguage;
+        return $this->isRtl;
     }
 
     /**
