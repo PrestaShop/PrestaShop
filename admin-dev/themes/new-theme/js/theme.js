@@ -31,14 +31,13 @@ import 'magnific-popup/dist/magnific-popup.css';
 import '../scss/theme.scss';
 
 // Theme Javascript
-Dropzone.autoDiscover = false;
+window.Dropzone.autoDiscover = false;
 import NavBar from './nav_bar.js';
 
 // this needs to be ported into the UI kit
 import './clickable-dropdown';
 
 import './maintenance-page';
-import './product-page/index';
 import './translation-page/index';
 
 import Header from './header.js';

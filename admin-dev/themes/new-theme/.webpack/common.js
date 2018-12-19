@@ -46,6 +46,7 @@ module.exports = {
     employee: './js/pages/employee',
     customer: './js/pages/customer',
     language: './js/pages/language',
+    product_page: './js/product-page/index',
     currency: './js/pages/currency',
     supplier: './js/pages/supplier',
     themes: './js/pages/themes',
