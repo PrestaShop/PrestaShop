@@ -105,3 +105,9 @@
     </div>
   {% endfor %}
 {% endmacro %}
+
+{% macro load_css(url) %}
+  <script type="text/javascript">
+    $('head').append('<link rel="stylesheet" href="{{ url|e('js') }}">');
+  </script>
+{% endmacro %}
