@@ -377,6 +377,7 @@ class AdminEmployeesControllerCore extends AdminController
                 foreach ($available_profiles as $i => $profile) {
                     if ($available_profiles[$i]['id_profile'] == _PS_ADMIN_PROFILE_) {
                         unset($available_profiles[$i]);
+
                         break;
                     }
                 }

@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\PrestaShopBundle\Model\Product;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -130,6 +131,7 @@ class AdminModelAdapterTest extends KernelTestCase
             ],
         ];
     }
+
     private function fakeCombination()
     {
         return array('0' => [

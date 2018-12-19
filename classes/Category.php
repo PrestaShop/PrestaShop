@@ -457,6 +457,7 @@ class CategoryCore extends ObjectModel
             } else {
                 $name = $this->name;
             }
+
             throw new PrestaShopException('Parent category ' . $this->id_parent .
                 ' does not exist. Current category: ' . $name);
         }

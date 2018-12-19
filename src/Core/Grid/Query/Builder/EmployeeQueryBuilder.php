@@ -152,18 +152,21 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('id_employee' === $filterName) {
                 $queryBuilder->andWhere('e.id_employee = :' . $filterName);
                 $queryBuilder->setParameter($filterName, $filterValue);
+
                 continue;
             }
 
             if ('profile' === $filterName) {
                 $queryBuilder->andWhere('pl.id_profile = :id_profile');
                 $queryBuilder->setParameter('id_profile', $filterValue);
+
                 continue;
             }
 
             if ('active' === $filterName) {
                 $queryBuilder->andWhere('e.active = :active');
                 $queryBuilder->setParameter('active', $filterValue);
+
                 continue;
             }
 

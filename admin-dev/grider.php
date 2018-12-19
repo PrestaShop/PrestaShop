@@ -42,7 +42,6 @@ $dir = Tools::getValue('dir', 0); // Should be a String : Either ASC or DESC
 $id_employee = (int)(Tools::getValue('id_employee'));
 $id_lang = (int)(Tools::getValue('id_lang'));
 
-
 if (!isset($cookie->id_employee) || !$cookie->id_employee  || $cookie->id_employee != $id_employee) {
     die(Tools::displayError());
 }
@@ -55,8 +54,7 @@ if (!Tools::file_exists_cache($module_path = _PS_ROOT_DIR_.'/modules/'.$module.'
     die(Tools::displayError());
 }
 
-    
-$shop_id = '';
+    $shop_id = '';
 Shop::setContext(Shop::CONTEXT_ALL);
 if (Context::getContext()->cookie->shopContext) {
     $split = explode('-', Context::getContext()->cookie->shopContext);
@@ -94,8 +92,7 @@ if (!$shop_id) {
 } elseif (Context::getContext()->shop->id != $shop_id) {
     Context::getContext()->shop = new Shop($shop_id);
 }
-    
-    
+
 require_once $module_path;
 
 $grid = new $module();
@@ -104,6 +101,6 @@ $grid->setLang($id_lang);
 if ($option) {
     $grid->setOption($option);
 }
-    
+
 $grid->create($render, $type, $width, $height, $start, $limit, $sort, $dir);
 $grid->render();

@@ -24,8 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 include '../config/config.inc.php';
+
 header('content-type: application/x-javascript');
 
 $jquery_folder = dirname(__FILE__).'/jquery/';
@@ -111,7 +111,6 @@ $plugins = array(
     'tinymce.inc.js' =>
     array('new_file' => 'admin/tinymce.inc.js', 'name' => 'tinymce'),
 );
-
 
 $file = $_GET['file'];
 if (!array_key_exists($file, $plugins)) {

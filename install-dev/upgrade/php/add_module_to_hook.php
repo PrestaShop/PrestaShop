@@ -59,5 +59,6 @@ function add_module_to_hook($module_name, $hook_name)
             }
         }
     }
+
     return $res;
 }
