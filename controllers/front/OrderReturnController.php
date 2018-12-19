@@ -141,10 +141,12 @@ class OrderReturnControllerCore extends FrontController
                                 $field['image'] = $imageRetriever->getCustomizationImage(
                                     $data['value']
                                 );
+
                                 break;
                             case Product::CUSTOMIZE_TEXTFIELD:
                                 $field['type'] = 'text';
                                 $field['text'] = $data['value'];
+
                                 break;
                             default:
                                 $field['type'] = null;

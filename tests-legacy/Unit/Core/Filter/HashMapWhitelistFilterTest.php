@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
 class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
      * @param array $subject
      * @param array $whitelist
@@ -190,5 +189,4 @@ class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
             ],
         ];
     }
-
 }

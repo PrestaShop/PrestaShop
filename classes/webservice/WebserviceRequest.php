@@ -270,10 +270,12 @@ class WebserviceRequestCore
             case 'JSON':
                 require_once dirname(__FILE__) . '/WebserviceOutputJSON.php';
                 $obj_render = new WebserviceOutputJSON();
+
                 break;
             case 'XML':
             default:
                 $obj_render = new WebserviceOutputXML();
+
                 break;
         }
 
@@ -576,19 +578,23 @@ class WebserviceRequestCore
                             if ($this->executeEntityGetAndHead()) {
                                 $success = true;
                             }
+
                             break;
                         case 'POST':
                             if ($this->executeEntityPost()) {
                                 $success = true;
                             }
+
                             break;
                         case 'PUT':
                             if ($this->executeEntityPut()) {
                                 $success = true;
                             }
+
                             break;
                         case 'DELETE':
                             $this->executeEntityDelete();
+
                             break;
                     }
                     // Need to set an object for the WebserviceOutputBuilder object in any case
@@ -682,6 +688,7 @@ class WebserviceRequestCore
             if ($lev == 0) {
                 $closest = $word;
                 $shortest = 0;
+
                 break;
             }
             if ($lev <= $shortest || $shortest < 0) {
@@ -731,42 +738,55 @@ class WebserviceRequestCore
         switch ($errno) {
             case E_ERROR:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 2);
+
                 break;
             case E_WARNING:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 3);
+
                 break;
             case E_PARSE:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Parse #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 4);
+
                 break;
             case E_NOTICE:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Notice #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 5);
+
                 break;
             case E_CORE_ERROR:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Core #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 6);
+
                 break;
             case E_CORE_WARNING:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Core warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 7);
+
                 break;
             case E_COMPILE_ERROR:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Compile #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 8);
+
                 break;
             case E_COMPILE_WARNING:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Compile warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 9);
+
                 break;
             case E_USER_ERROR:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 10);
+
                 break;
             case E_USER_WARNING:
                 WebserviceRequest::getInstance()->setError(500, '[PHP User warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 11);
+
                 break;
             case E_USER_NOTICE:
                 WebserviceRequest::getInstance()->setError(500, '[PHP User notice #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 12);
+
                 break;
             case E_STRICT:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Strict #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 13);
+
                 break;
             case E_RECOVERABLE_ERROR:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Recoverable error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 14);
+
                 break;
             default:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Unknown error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 15);
@@ -1049,6 +1069,7 @@ class WebserviceRequestCore
                             foreach ($part as $field) {
                                 if ($field != 'id' && !array_key_exists($field, $this->resourceConfiguration['associations'][$field_name]['fields'])) {
                                     $error = true;
+
                                     break;
                                 }
                             }

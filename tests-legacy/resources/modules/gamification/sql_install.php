@@ -97,7 +97,6 @@ $sql[_DB_PREFIX_.'condition_advice'] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX
 			  PRIMARY KEY (`id_condition`, `id_advice`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
-
 $sql[_DB_PREFIX_.'tab_advice'] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'tab_advice` (
 			  `id_tab` int(11) NOT NULL,
 			  `id_advice` int(11) NOT NULL,

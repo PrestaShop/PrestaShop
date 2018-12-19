@@ -2503,14 +2503,17 @@ class OrderCore extends ObjectModel
                     case Order::ROUND_ITEM:
                         $total_tax_base = $quantity * Tools::ps_round($discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
                         $total_amount = $quantity * Tools::ps_round($unit_amount, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+
                         break;
                     case Order::ROUND_LINE:
                         $total_tax_base = Tools::ps_round($quantity * $discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
                         $total_amount = Tools::ps_round($quantity * $unit_amount, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+
                         break;
                     case Order::ROUND_TOTAL:
                         $total_tax_base = $quantity * $discounted_price_tax_excl;
                         $total_amount = $quantity * $unit_amount;
+
                         break;
                 }
 

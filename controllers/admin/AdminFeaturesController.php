@@ -256,6 +256,7 @@ class AdminFeaturesControllerCore extends AdminController
                     'href' => $back,
                     'desc' => $this->trans('Back to the list', array(), 'Admin.Catalog.Help'),
                 );
+
                 break;
             case 'view':
                 $this->toolbar_btn['newAttributes'] = array(
@@ -266,6 +267,7 @@ class AdminFeaturesControllerCore extends AdminController
                     'href' => self::$currentIndex . '&token=' . $this->token,
                     'desc' => $this->trans('Back to the list', array(), 'Admin.Catalog.Help'),
                 );
+
                 break;
             default:
                 parent::initToolbar();
@@ -280,16 +282,19 @@ class AdminFeaturesControllerCore extends AdminController
             case 'edit':
                 $bread_extended[] = $this->trans('Edit New Feature', array(), 'Admin.Catalog.Feature');
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
+
                 break;
 
             case 'add':
                 $bread_extended[] = $this->trans('Add New Feature', array(), 'Admin.Catalog.Feature');
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
+
                 break;
 
             case 'view':
                 $bread_extended[] = $this->feature_name[$this->context->employee->id_lang];
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
+
                 break;
 
             case 'editFeatureValue':
@@ -312,6 +317,7 @@ class AdminFeaturesControllerCore extends AdminController
                 if (count($bread_extended) > 0) {
                     $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
                 }
+
                 break;
         }
 

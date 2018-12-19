@@ -265,7 +265,7 @@ class ReferrerCore extends ObjectModel
             }
 
             $sql .= ' FROM `' . _DB_PREFIX_ . 'orders`
-                WHERE `id_order` IN (' . implode($implode, ',') . ')
+                WHERE `id_order` IN (' . implode(',', $implode) . ')
                 ' . Shop::addSqlRestriction(Shop::SHARE_ORDER) . '
                 AND `valid` = 1';
 

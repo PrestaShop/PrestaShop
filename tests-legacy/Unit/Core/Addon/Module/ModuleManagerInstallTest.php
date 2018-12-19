@@ -35,7 +35,6 @@ class ModuleManagerInstallTest extends TestCase
         parent::setUp();
     }
 
-
     public function testDataInDatabaseAfterModuleInstall()
     {
     }
