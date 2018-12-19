@@ -239,6 +239,7 @@ abstract class PaymentModuleCore extends Module
         $order_status = new OrderState((int) $id_order_state, (int) $this->context->language->id);
         if (!Validate::isLoadedObject($order_status)) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status cannot be loaded', 3, null, 'Cart', (int) $id_cart, true);
+
             throw new PrestaShopException('Can\'t load Order status');
         }
 
@@ -264,6 +265,7 @@ abstract class PaymentModuleCore extends Module
                 if (!isset($cart_delivery_option[$id_address]) || !array_key_exists($cart_delivery_option[$id_address], $package)) {
                     foreach ($package as $key => $val) {
                         $cart_delivery_option[$id_address] = $key;
+
                         break;
                     }
                 }
@@ -296,7 +298,7 @@ abstract class PaymentModuleCore extends Module
                 if (($rule = new CartRule((int) $cart_rule['obj']->id)) && Validate::isLoadedObject($rule)) {
                     if ($error = $rule->checkValidity($this->context, true, true)) {
                         $this->context->cart->removeCartRule((int) $rule->id);
-                        if (isset($this->context->cookie) && isset($this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code)) {
+                        if (isset($this->context->cookie, $this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code)) {
                             Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name=' . urlencode($rule->code));
                         } else {
                             $rule_name = isset($rule->name[(int) $this->context->cart->id_lang]) ? $rule->name[(int) $this->context->cart->id_lang] : $rule->code;
@@ -390,6 +392,7 @@ abstract class PaymentModuleCore extends Module
 
                     if (!$result) {
                         PrestaShopLogger::addLog('PaymentModule::validateOrder - Order cannot be created', 3, null, 'Cart', (int) $id_cart, true);
+
                         throw new PrestaShopException('Can\'t save Order');
                     }
 
@@ -436,6 +439,7 @@ abstract class PaymentModuleCore extends Module
 
             if (!$this->context->country->active) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Country is not active', 3, null, 'Cart', (int) $id_cart, true);
+
                 throw new PrestaShopException('The order address country is not active.');
             }
 
@@ -456,6 +460,7 @@ abstract class PaymentModuleCore extends Module
 
                 if (!$order->addOrderPayment($amount_paid, null, $transaction_id)) {
                     PrestaShopLogger::addLog('PaymentModule::validateOrder - Cannot save Order Payment', 3, null, 'Cart', (int) $id_cart, true);
+
                     throw new PrestaShopException('Can\'t save Order Payment');
                 }
             }

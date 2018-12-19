@@ -43,5 +43,6 @@ function generic_add_missing_column($table, $column_to_add)
             }
         }
     }
+
     return $res;
 }

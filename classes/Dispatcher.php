@@ -294,9 +294,11 @@ class DispatcherCore
                         $defaultController = $tabClassName;
                     }
                 }
+
                 break;
             case self::FC_MODULE:
                 $defaultController = 'default';
+
                 break;
             default:
                 $defaultController = 'index';
@@ -376,6 +378,7 @@ class DispatcherCore
                     'controller_class' => $controller_class,
                     'is_module' => 0,
                 );
+
                 break;
 
             // Dispatch module controller for front office
@@ -402,6 +405,7 @@ class DispatcherCore
                     'controller_class' => $controller_class,
                     'is_module' => 1,
                 );
+
                 break;
 
             // Dispatch back office controller + module back office controller
@@ -807,8 +811,7 @@ class DispatcherCore
             $id_shop = (int) Context::getContext()->shop->id;
         }
 
-        return isset($this->routes[$id_shop]) && isset($this->routes[$id_shop][$id_lang])
-            && isset($this->routes[$id_shop][$id_lang][$route_id]);
+        return isset($this->routes[$id_shop][$id_lang][$route_id]);
     }
 
     /**
@@ -1063,6 +1066,7 @@ class DispatcherCore
                             if (isset($_GET['fc']) && $_GET['fc'] == 'module') {
                                 $this->front_controller = self::FC_MODULE;
                             }
+
                             break;
                         }
                     }

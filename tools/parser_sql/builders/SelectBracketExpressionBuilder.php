@@ -49,9 +49,9 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class SelectBracketExpressionBuilder {
-
     protected function buildSubTree($parsed, $delim) {
         $builder = new SubTreeBuilder();
+
         return $builder->build($parsed, $delim);
     }
 
@@ -61,6 +61,7 @@ class SelectBracketExpressionBuilder {
         }
         $sql = $this->buildSubTree($parsed, " ");
         $sql = "(" . $sql . ")";
+
         return $sql;
     }
 }

@@ -37,7 +37,6 @@ use Configuration;
  */
 class CartRulesCarrierSpecificTest extends AbstractCarrierTest
 {
-
     const CART_RULES_FIXTURES = [
         1  => array('code'=>'', 'priority' => 1, 'percent' => 55, 'amount' => 0, 'carrierRestrictionIds'=>[2]),
     ];

@@ -133,6 +133,7 @@ abstract class AbstractFormCore implements FormInterface
                 $field->addError(
                     $this->constraintTranslator->translate('required')
                 );
+
                 continue;
             } elseif (!$field->isRequired() && !$field->getValue()) {
                 continue;

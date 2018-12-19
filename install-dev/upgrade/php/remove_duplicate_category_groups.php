@@ -34,7 +34,7 @@ function remove_duplicate_category_groups()
 		FROM `'._DB_PREFIX_.'category_group`
 		GROUP BY `id_category`, `id_group`
 		ORDER BY `count` DESC');
-    
+
     foreach ($result as $row) {
         if ((int)$row['count'] > 1) {
             $limit = (int)$row['count'] - 1;

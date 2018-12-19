@@ -39,5 +39,6 @@ function p15010_drop_column_id_address_if_exists()
 				DROP `id_address`');
         }
     }
+
     return $res;
 }

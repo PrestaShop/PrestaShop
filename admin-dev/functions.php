@@ -116,11 +116,13 @@ function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
         $content .= 'define(\''.$k.'\', \''.addslashes($value).'\');'."\n";
     }
     copy(_PS_ADMIN_DIR_.'/../config/settings.inc.php', _PS_ADMIN_DIR_.'/../config/settings.old.php');
-    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w')) {
+    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'wb')) {
         fwrite($fd, $content);
         fclose($fd);
+
         return true;
     }
+
     return false;
 }
 
@@ -202,6 +204,7 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
         if ($category->id == 1) {
             return substr($path, 0, strlen($path) - 3);
         }
+
         return getPath($url_base, $category->id_parent, $path, '', 'cms');
     }
 }
@@ -218,6 +221,7 @@ function getDirContent($path)
         }
         $d->close();
     }
+
     return $content;
 }
 
@@ -226,6 +230,7 @@ function createDir($path, $rights)
     if (file_exists($path)) {
         return true;
     }
+
     return @mkdir($path, $rights);
 }
 
@@ -253,6 +258,7 @@ function translate($string)
     }
     $key = md5(str_replace('\'', '\\\'', $string));
     $str = (array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
+
     return str_replace('"', '&quot;', stripslashes($str));
 }
 
@@ -275,20 +281,24 @@ function checkingTab($tab)
             Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
         }
         echo sprintf(Tools::displayError('Page %s cannot be found.'), $tab);
+
         return false;
     }
 
     // Class file is included in Dispatcher::dispatch() function
     if (!class_exists($tab, false) || !$row['id_tab']) {
         echo sprintf(Tools::displayError('The class %s cannot be found.'), $tab);
+
         return false;
     }
     $admin_obj = new $tab();
     if (!$admin_obj->viewAccess() && ($admin_obj->table != 'employee' || Context::getContext()->employee->id != Tools::getValue('id_employee') || !Tools::isSubmit('updateemployee'))) {
         $admin_obj->_errors = array(Tools::displayError('Access denied.'));
         echo $admin_obj->displayErrors();
+
         return false;
     }
+
     return $admin_obj;
 }
 
@@ -308,9 +318,9 @@ function checkTabRights($id_tab)
     if (isset($tab_accesses[(int)$id_tab]['view'])) {
         return ($tab_accesses[(int)$id_tab]['view'] === '1');
     }
+
     return false;
 }
-
 
 /**
  * Converts a simpleXML element into an array. Preserves attributes and everything.

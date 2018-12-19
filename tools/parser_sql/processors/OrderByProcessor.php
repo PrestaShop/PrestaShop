@@ -40,7 +40,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  */
 class OrderByProcessor extends AbstractProcessor {
-
     private $selectExpressionProcessor;
 
     public function __construct() {
@@ -70,6 +69,7 @@ class OrderByProcessor extends AbstractProcessor {
 
                 if ($clause['alias']['no_quotes'] === $parseInfo['no_quotes']) {
                     $parseInfo['expr_type'] = ExpressionType::ALIAS;
+
                     break;
                 }
             }
@@ -79,6 +79,7 @@ class OrderByProcessor extends AbstractProcessor {
             $expr = $this->selectExpressionProcessor->process($parseInfo['base_expr']);
             $expr['direction'] = $parseInfo['dir'];
             unset($expr['alias']);
+
             return $expr;
         }
 
@@ -89,6 +90,7 @@ class OrderByProcessor extends AbstractProcessor {
             $result['no_quotes'] = $parseInfo['no_quotes'];
         }
         $result['direction'] = $parseInfo['dir'];
+
         return $result;
     }
 
@@ -106,14 +108,17 @@ class OrderByProcessor extends AbstractProcessor {
             case ',':
                 $out[] = $this->processOrderExpression($parseInfo, $select);
                 $parseInfo = $this->initParseInfo();
+
                 break;
 
             case 'DESC':
                 $parseInfo['dir'] = "DESC";
+
                 break;
 
             case 'ASC':
                 $parseInfo['dir'] = "ASC";
+
                 break;
 
             default:
@@ -122,6 +127,7 @@ class OrderByProcessor extends AbstractProcessor {
         }
 
         $out[] = $this->processOrderExpression($parseInfo, $select);
+
         return $out;
     }
 }

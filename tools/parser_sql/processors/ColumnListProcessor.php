@@ -39,7 +39,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  */
 class ColumnListProcessor extends AbstractProcessor {
-
     public function process($tokens) {
         $columns = explode(",", $tokens);
         $cols = array();
@@ -48,6 +47,7 @@ class ColumnListProcessor extends AbstractProcessor {
                 'no_quotes' => $this->revokeQuotation($v),
             );
         }
+
         return $cols;
     }
 }

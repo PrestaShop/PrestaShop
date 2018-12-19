@@ -73,6 +73,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
     private function setCustomerAddressesCount($n)
     {
         Phake::when($this->session)->getCustomerAddressesCount()->thenReturn($n);
+
         return $this;
     }
 

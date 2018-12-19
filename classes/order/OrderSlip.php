@@ -356,14 +356,17 @@ class OrderSlipCore extends ObjectModel
                 case Order::ROUND_ITEM:
                     $product_tax_incl = Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($price), _PS_PRICE_COMPUTE_PRECISION_) * $quantity;
                     $total_products[$id_tax_rules_group] += $product_tax_incl;
+
                     break;
                 case Order::ROUND_LINE:
                     $product_tax_incl = $product_tax_incl_line;
                     $total_products[$id_tax_rules_group] += $product_tax_incl;
+
                     break;
                 case Order::ROUND_TOTAL:
                     $product_tax_incl = $product_tax_incl_line;
                     $total_products[$id_tax_rules_group . '_' . $id_address] += $price * $quantity;
+
                     break;
             }
 

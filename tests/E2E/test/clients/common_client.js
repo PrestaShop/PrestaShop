@@ -422,6 +422,14 @@ class CommonClient {
     return this.client.alertDismiss();
   }
 
+  getText(selector) {
+    return this.client.getText(selector);
+  }
+
+  alertText() {
+    return this.client.alertText();
+  }
+
   showElement(className, order) {
     return this.client
       .execute(function (className, order) {
@@ -610,8 +618,8 @@ class CommonClient {
   /**
    * These functions are used to sort table then check the sorted table
    * elementsTable, elementsSortedTable are two global variables that must be initialized in the sort table function
+   * "normalize('NFKD').replace(/[\u0300-\u036F]/g, '')" is used to replace special characters example ô to o
    */
-
   getTableField(element_list, i, sorted = false) {
     return this.client
       .getText(element_list.replace("%ID", i + 1)).then(function (name) {
@@ -652,7 +660,6 @@ class CommonClient {
         }
       });
   }
-
 }
 
 module.exports = CommonClient;

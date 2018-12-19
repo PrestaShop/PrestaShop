@@ -297,7 +297,6 @@ function clean_tabs_15()
 
     //=====================================/
 
-
     //===== step 2 move all no native tabs in AdminTools  =====/
 
     $id_admin_tools = get_tab_id('AdminTools');
@@ -328,25 +327,24 @@ function clean_tabs_15()
     $id_AdminStockMvt = get_tab_id('AdminStockMvt');
     $id_AdminStock = get_tab_id('AdminStock');
     Db::getInstance()->update('tab', array('id_parent' => $id_AdminStock), 'id_tab ='.$id_AdminStockMvt);
-    
+
     //rename some tabs
     renameTab(get_tab_id('AdminCartRules'), array('fr' => 'Règles paniers', 'es' => 'Reglas de cesta', 'en' => 'Cart Rules', 'de' => 'Warenkorb Preisregein', 'it' => 'Regole Carrello'));
-    
+
     renameTab(get_tab_id('AdminPreferences'), array('fr' => 'Générales', 'es' => 'General', 'en' => 'General', 'de' => 'Allgemein', 'it' => 'Generale'));
-    
+
     renameTab(get_tab_id('AdminThemes'), array('fr' => 'Thèmes', 'es' => 'Temas', 'en' => 'Themes', 'de' => 'Themen', 'it' => 'Temi'));
-    
+
     renameTab(get_tab_id('AdminStores'), array('fr' => 'Coordonnées & magasins', 'es' => 'Contacto y tiendas', 'en' => 'Store Contacts', 'de' => 'Shopadressen', 'it' => 'Contatti e Negozi'));
-    
+
     renameTab(get_tab_id('AdminTools'), array('fr' => 'Paramètres avancés', 'es' => 'Parametros avanzados', 'en' => 'Advanced Parameters', 'de' => 'Erweiterte Parameter', 'it' => 'Parametri Avanzati'));
-        
+
     renameTab(get_tab_id('AdminTools'), array('fr' => 'Paramètres avancés', 'es' => 'Parametros avanzados', 'en' => 'Advanced Parameters', 'de' => 'Erweiterte Parameter', 'it' => 'Parametri Avanzati'));
-    
+
     renameTab(get_tab_id('AdminTabs'), array('fr' => 'Menus', 'es' => 'Pestañas', 'en' => 'Menus', 'de' => 'Tabs', 'it' => 'Tabs'));
 }
 
 //==== functions =====/
-
 
 function get_simple_clean_tab15($clean_tabs_15)
 {
@@ -357,6 +355,7 @@ function get_simple_clean_tab15($clean_tabs_15)
             $light_tab = array_merge($light_tab, get_simple_clean_tab15($tab['children']));
         }
     }
+
     return $light_tab;
 }
 

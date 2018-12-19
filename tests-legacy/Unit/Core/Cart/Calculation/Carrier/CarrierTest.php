@@ -30,7 +30,6 @@ use Configuration;
 
 class CarrierTest extends AbstractCarrierTest
 {
-
     /**
      * @dataProvider shippingFeesProviderCarrier1
      *

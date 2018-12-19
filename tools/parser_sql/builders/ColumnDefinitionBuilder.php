@@ -51,14 +51,15 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class ColumnDefinitionBuilder {
-
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildColumnType($parsed) {
         $builder = new ColumnTypeBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -78,6 +79,7 @@ class ColumnDefinitionBuilder {
 
             $sql .= " ";
         }
+
         return substr($sql, 0, -1);
     }
 }

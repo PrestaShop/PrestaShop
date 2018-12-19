@@ -253,12 +253,15 @@ abstract class ApiTestCase extends WebTestCase
         switch ($expectedStatusCode) {
             case 200:
                 $message = 'It should return a response with "OK" Status.';
+
                 break;
             case 400:
                 $message = 'It should return a response with "Bad Request" Status.';
+
                 break;
             case 404:
                 $message = 'It should return a response with "Not Found" Status.';
+
                 break;
 
             default:

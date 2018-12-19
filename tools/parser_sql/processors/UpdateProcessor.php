@@ -38,5 +38,4 @@ require_once dirname(__FILE__) . '/FromProcessor.php';
  * @author arothe
  */
 class UpdateProcessor extends FromProcessor {
-
 }

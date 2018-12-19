@@ -434,6 +434,7 @@ class DbPDOCore extends Db
                 if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
                     $value = 'InnoDB';
                 }
+
                 break;
             }
         }

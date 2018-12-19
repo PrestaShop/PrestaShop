@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\PrestaShopBundle\Service\Hook;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -65,7 +66,9 @@ class HookDispatcherTest extends KernelTestCase
         $hookDisptacher->dispatch('test_test');
         $this->assertTrue($this->testedListenerCallbackCalled);
     }
+
     private $testedListenerCallbackCalled = false;
+
     public function listenerCallback(Event $event, $eventName)
     {
         $this->assertEquals('test_test', $eventName);

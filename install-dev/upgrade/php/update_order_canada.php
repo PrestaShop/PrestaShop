@@ -38,7 +38,6 @@ function update_order_canada()
 		  `amount` decimal(20,6) NOT NULL
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 
-
         $address_field = Db::getInstance()->getValue('SELECT value
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE name="PS_TAX_ADDRESS_TYPE"');

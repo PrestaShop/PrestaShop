@@ -40,7 +40,6 @@
  * @author arothe
  */
 class UnsupportedFeatureException extends Exception {
-
     protected $key;
 
     public function __construct($key) {

@@ -33,7 +33,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 class CurrencyTest extends AbstractCartCalculationTest
 {
-
     /**
      * isoCode : [a-zA-Z]{2,3}  @see Validate::isLanguageIsoCode().
      */
@@ -227,7 +226,6 @@ class CurrencyTest extends AbstractCartCalculationTest
             $rate = static::CURRENCY_FIXTURES[$currencyId]['changeRate'];
         }
 
-
         return [
             'empty cart'                             => [
                 'products'      => [],
@@ -263,5 +261,4 @@ class CurrencyTest extends AbstractCartCalculationTest
             ],
         ];
     }
-
 }

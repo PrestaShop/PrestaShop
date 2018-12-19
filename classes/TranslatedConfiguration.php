@@ -99,6 +99,7 @@ class TranslatedConfigurationCore extends Configuration
         foreach ($this->value as $i18NValue) {
             if (Validate::isCleanHtml($i18NValue)) {
                 $ishtml = true;
+
                 break;
             }
         }

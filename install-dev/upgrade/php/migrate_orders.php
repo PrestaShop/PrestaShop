@@ -244,6 +244,7 @@ function mo_duplicateTables()
 		`'._DB_PREFIX_.'orders_2` LIKE `'._DB_PREFIX_.'orders`');
     $res &= Db::getInstance()->execute('CREATE TABLE
 		`'._DB_PREFIX_.'order_detail_2` LIKE `'._DB_PREFIX_.'order_detail`');
+
     return $res;
 }
 
@@ -255,6 +256,7 @@ function mo_renameTables()
 
     $res &= Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'orders_2` TO `'._DB_PREFIX_.'orders`');
     $res &= Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'order_detail_2` TO `'._DB_PREFIX_.'order_detail`');
+
     return $res;
 }
 

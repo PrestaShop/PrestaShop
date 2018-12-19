@@ -267,6 +267,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
         $caughtException = null;
         $caughtExceptionMessage = '';
+
         try {
             $parameters = [
                 'controller' => $controller,
@@ -442,7 +443,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
             $parameters['token'],
             $parameters['_token']
         );
-        
+
         if (null !== $ignoredParameters) {
             foreach ($ignoredParameters as $ignoredParameter) {
                 unset($parameters[$ignoredParameter]);

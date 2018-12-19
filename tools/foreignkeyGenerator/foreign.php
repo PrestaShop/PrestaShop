@@ -159,6 +159,7 @@ function forgeChangesQueries($changes)
             if (!isset($params['#type'])) {
                 echo 'Warning, change on ' . $table . '.' . $field .
                     ' ignored due to no type specified' . "\n";
+
                 continue;
             }
             $q .= $field . ' ' . (isset($params['#name']) ?

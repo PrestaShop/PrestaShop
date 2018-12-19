@@ -28,7 +28,6 @@ use PrestaShopBundle\Install\Database;
 
 class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
 {
-
     public $process_steps = array();
     public $previous_button = false;
 
@@ -283,6 +282,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
         $result = $this->model_install->installFixtures(null, array('shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country));
         $this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
+
         return $result;
     }
 
@@ -302,6 +302,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     public function processInstallTheme()
     {
         $this->initializeContext();
+
         return $this->model_install->installTheme($this->datas->theme);
     }
 

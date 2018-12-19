@@ -8,8 +8,6 @@ if (isset($_POST['submit'])) {
 } else {
     include 'include/utils.php';
 
-
-
     if (isset($_GET['fldr'])
         && !empty($_GET['fldr'])
         && preg_match('/\.{1,2}[\/|\\\]?/', urldecode($_GET['fldr'])) === 0
@@ -34,8 +32,7 @@ if (isset($_POST['submit'])) {
         $subdir = '';
     }
 
-
-    /*
+    /**
      *SUB-DIR CODE
      */
     if (!isset($_SESSION['subfolder'])) {
@@ -139,7 +136,6 @@ if (isset($_POST['submit'])) {
         $descending = $_SESSION['descending'];
     }
 
-
     $lang = $default_language;
     if (isset($_GET['lang']) && $_GET['lang'] != 'undefined' && $_GET['lang'] != '') {
         $lang = $_GET['lang'];
@@ -154,7 +150,6 @@ if (isset($_POST['submit'])) {
             $lang = $default_language;
         }
     }
-
 
     require_once $language_file;
 
@@ -504,15 +499,19 @@ if (isset($_POST['submit'])) {
     switch ($sort_by) {
         case 'name':
             usort($sorted, 'filenameSort');
+
             break;
         case 'date':
             usort($sorted, 'dateSort');
+
             break;
         case 'size':
             usort($sorted, 'sizeSort');
+
             break;
         case 'extension':
             usort($sorted, 'extensionSort');
+
             break;
         default:
             break;

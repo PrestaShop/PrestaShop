@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Integration;
 
-
 use Module;
 use PrestaShopAutoload;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
@@ -96,6 +95,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
     {
         $withoutDate        = preg_replace('#\* date: .*?\n#m', '', $str);
         $withoutBlankLines  = preg_replace('#\n?^(?:\s*)$#m', "", $withoutDate);
+
         return $withoutBlankLines;
     }
 

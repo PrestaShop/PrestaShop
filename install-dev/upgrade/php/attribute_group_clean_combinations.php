@@ -41,7 +41,9 @@ function attribute_group_clean_combinations()
     if (!empty($toRemove)) {
         $res = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_attribute`
 			WHERE `id_product_attribute` IN ('.implode(', ', $toRemove).')');
+
         return $res;
     }
+
     return true;
 }

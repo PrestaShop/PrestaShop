@@ -39,12 +39,12 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  */
 class ExplainProcessor extends AbstractProcessor {
-
     protected function isStatement($keys, $needle = "EXPLAIN") {
         $pos = array_search($needle, $keys);
         if (isset($keys[$pos + 1])) {
             return in_array($keys[$pos + 1], array('SELECT', 'DELETE', 'INSERT', 'REPLACE', 'UPDATE'), true);
         }
+
         return false;
     }
 
@@ -72,6 +72,7 @@ class ExplainProcessor extends AbstractProcessor {
                 case 'EXTENDED':
                 case 'PARTITIONS':
                     return array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $token);
+
                     break;
 
                 case 'FORMAT':
@@ -93,6 +94,7 @@ class ExplainProcessor extends AbstractProcessor {
                 case 'JSON':
                     if ($currCategory === 'FORMAT') {
                         $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
+
                         return array('expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($base_expr),
                             'sub_tree' => $expr,
                         );
@@ -105,6 +107,7 @@ class ExplainProcessor extends AbstractProcessor {
                     break;
                 }
             }
+
             return empty($expr) ? null : $expr;
         }
 
@@ -121,17 +124,20 @@ class ExplainProcessor extends AbstractProcessor {
             case 'TABLENAME':
                 $currCategory = 'WILD';
                 $expr[] = array('expr_type' => ExpressionType::COLREF, 'base_expr' => $trim);
+
                 break;
 
             case '':
                 $currCategory = 'TABLENAME';
                 $expr[] = array('expr_type' => ExpressionType::TABLE, 'base_expr' => $trim);
+
                 break;
 
             default:
                 break;
             }
         }
+
         return empty($expr) ? null : $expr;
     }
 }

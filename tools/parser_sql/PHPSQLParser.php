@@ -51,7 +51,6 @@ require_once dirname(__FILE__) . '/processors/DefaultProcessor.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class PHPSQLParser {
-
     public $parsed;
 
     /**
@@ -93,6 +92,7 @@ class PHPSQLParser {
 
         // store the parsed queries
         $this->parsed = $queries;
+
         return $this->parsed;
     }
 }

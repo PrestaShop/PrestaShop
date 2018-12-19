@@ -55,6 +55,7 @@ $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
     } catch (IOException $e) {
         return false;
     }
+
     return true;
 };
 
@@ -139,7 +140,7 @@ if ($lastParametersModificationTime) {
 
     define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);
 
-    if (isset($config['parameters']['_rijndael_key']) && isset($config['parameters']['_rijndael_iv'])) {
+    if (isset($config['parameters']['_rijndael_key'], $config['parameters']['_rijndael_iv'])) {
         define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
         define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
     }

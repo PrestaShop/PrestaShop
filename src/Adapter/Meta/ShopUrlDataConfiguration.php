@@ -87,6 +87,7 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         $errors = [];
+
         try {
             if ($this->validateConfiguration($configuration)) {
                 $this->mainShopUrl->domain = $configuration['domain'];

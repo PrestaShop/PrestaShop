@@ -988,8 +988,9 @@ class AdminCategoriesControllerCore extends AdminController
         if (is_array($positions)) {
             foreach ($positions as $key => $value) {
                 $pos = explode('_', $value);
-                if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move)) {
+                if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move)) {
                     $position = $key;
+
                     break;
                 }
             }

@@ -38,7 +38,6 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
  * @author arothe
  */
 class IntoProcessor extends AbstractProcessor {
-
     /**
      * TODO: This is a dummy function, we cannot parse INTO as part of SELECT
      * at the moment.
@@ -53,6 +52,7 @@ class IntoProcessor extends AbstractProcessor {
             }
         }
         $tokenList['INTO'] = array_values($unparsed);
+
         return $tokenList;
     }
 }

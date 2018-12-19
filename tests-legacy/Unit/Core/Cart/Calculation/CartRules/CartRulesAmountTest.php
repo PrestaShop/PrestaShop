@@ -37,7 +37,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
  */
 class CartRulesAmountTest extends AbstractCartCalculationTest
 {
-
     /**
      * @dataProvider cartWithOneCartRuleAmountProvider
      *

@@ -42,6 +42,7 @@ function p16012_pack_rework()
         foreach ($products as $product) {
             if ($product != 1) {
                 $work_with_stock = 0;
+
                 break;
             }
         }
@@ -70,6 +71,7 @@ function getDefaultAttribute($id_product)
     $combinations[$id_product]['default'] = $result ? $result : ($result = Db::getInstance()->getValue('SELECT id_product_attribute
 			FROM '._DB_PREFIX_.'product_attribute
 			WHERE id_product = '.(int)$id_product));
+
     return $result;
 }
 
@@ -81,5 +83,6 @@ function getItems($id_product)
         $p = Db::getInstance()->executeS('SELECT `advanced_stock_management` FROM '._DB_PREFIX_.'product WHERE `id_product` = '.(int)$row['id_product_item']);
         $array_result[] = $p[0]['advanced_stock_management'];
     }
+
     return $array_result;
 }

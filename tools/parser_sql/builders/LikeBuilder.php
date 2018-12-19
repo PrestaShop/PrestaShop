@@ -50,17 +50,18 @@ require_once dirname(__FILE__) . '/TableBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class LikeBuilder {
-
     protected function buildTable($parsed, $index) {
         $builder = new TableBuilder();
+
         return $builder->build($parsed, $index);
     }
-    
+
     public function build($parsed) {
         $sql = $this->buildTable($parsed, 0);
         if (strlen($sql) === 0) {
             throw new UnableToCreateSQLException('LIKE', "", $like, 'table');
         }
+
         return "LIKE " . $sql;
     }
 }

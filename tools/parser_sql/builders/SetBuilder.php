@@ -50,9 +50,9 @@ require_once dirname(__FILE__) . '/SetExpressionBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class SetBuilder {
-
     protected function buildSetExpression($parsed) {
         $builder = new SetExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -68,6 +68,7 @@ class SetBuilder {
 
             $sql .= ",";
         }
+
         return "SET " . substr($sql, 0, -1);
     }
 }

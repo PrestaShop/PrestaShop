@@ -38,9 +38,7 @@ require_once dirname(__FILE__) . '/SetProcessor.php';
  * @author arothe
  */
 class DuplicateProcessor extends SetProcessor {
-
     public function process($tokens) {
         return parent::process($tokens, false);
     }
-
 }

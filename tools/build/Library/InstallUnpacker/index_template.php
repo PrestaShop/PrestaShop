@@ -207,26 +207,32 @@ if (isset($_GET['element'])) {
         case 'font':
             header('Content-Type: application/font-sfnt');
             echo getFileContent('OpenSans-Regular.ttf', true);
+
             break;
         case 'css':
             header('Content-Type: text/css');
             echo getFileContent('style.css', true);
+
             break;
         case 'jquery':
             header('Content-Type: text/javascript');
             echo getFileContent('jquery-2.2.3.min.js', true);
+
             break;
         case 'gif':
             header('Content-Type: image/gif');
             echo getFileContent('installer.gif', true);
+
             break;
         case 'png-installer':
             header('Content-Type: image/png');
             echo getFileContent('installer-static.png', true);
+
             break;
         case 'js-runner':
             header('Content-Type: application/javascript');
             echo getFileContent('js-runner.js', true);
+
             break;
     }
     exit;

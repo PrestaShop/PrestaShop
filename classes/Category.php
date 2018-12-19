@@ -390,7 +390,7 @@ class CategoryCore extends ObjectModel
         foreach ($allCat as $cat) {
             /* @var Category $cat */
             $cat->deleteLite();
-            if (!$this->hasMultishopEntries()) {
+            if (!$cat->hasMultishopEntries()) {
                 $cat->deleteImage();
                 $cat->cleanGroups();
                 $cat->cleanAssoProducts();
@@ -457,6 +457,7 @@ class CategoryCore extends ObjectModel
             } else {
                 $name = $this->name;
             }
+
             throw new PrestaShopException('Parent category ' . $this->id_parent .
                 ' does not exist. Current category: ' . $name);
         }

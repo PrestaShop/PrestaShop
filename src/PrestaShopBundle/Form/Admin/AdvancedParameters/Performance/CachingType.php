@@ -63,6 +63,7 @@ class CachingType extends TranslatorAwareType
                     foreach ($this->extensionsList[$index] as $extensionName) {
                         if (extension_loaded($extensionName)) {
                             $disabled = false;
+
                             break;
                         }
                         $disabled = true;
@@ -75,6 +76,7 @@ class CachingType extends TranslatorAwareType
                     foreach ($this->extensionsList[$index] as $extensionName) {
                         if (extension_loaded($extensionName)) {
                             $disabled = false;
+
                             break;
                         }
                         $disabled = true;

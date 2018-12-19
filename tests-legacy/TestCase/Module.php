@@ -41,8 +41,10 @@ class Module
     {
         if (is_dir(_RESSOURCE_MODULE_DIR_.'/'.$module_dir_name)) {
             File::recurseCopy(_RESSOURCE_MODULE_DIR_.'/'.$module_dir_name, _PS_MODULE_DIR_.'/'.$module_dir_name);
+
             return true;
         }
+
         return false;
     }
 
@@ -57,8 +59,10 @@ class Module
     {
         if (is_dir(_PS_MODULE_DIR_.'/'.$module_dir_name)) {
             File::recurseDelete(_PS_MODULE_DIR_.'/'.$module_dir_name);
+
             return true;
         }
+
         return false;
     }
 }

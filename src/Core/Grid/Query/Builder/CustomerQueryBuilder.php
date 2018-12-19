@@ -185,12 +185,14 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             if (in_array($filterName, ['active', 'newsletter', 'optin', 'id_customer'])) {
                 $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
+
                 continue;
             }
 
             if ('social_title' === $filterName) {
                 $qb->andWhere('gl.id_gender = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
+
                 continue;
             }
 
@@ -198,6 +200,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
                 $qb->andWhere('c.date_add >= :date_from AND c.date_add <= :date_to');
                 $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
                 $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
+
                 continue;
             }
 
@@ -225,13 +228,16 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             case 'newsletter':
             case 'optin':
                 $orderBy = 'c.' . $searchCriteria->getOrderBy();
+
                 break;
             case 'social_title':
                 $orderBy = 'gl.name';
+
                 break;
             case 'connect':
             case 'total_spent':
                 $orderBy = $searchCriteria->getOrderBy();
+
                 break;
             default:
                 return;

@@ -405,6 +405,7 @@ class Module implements ModuleInterface
             if (file_exists($logo_path)) {
                 $this->attributes->set('img', __PS_BASE_URI__ . basename(_PS_MODULE_DIR_) . '/' . $this->get('name') . '/' . $logo);
                 $this->attributes->set('logo', $logo);
+
                 break;
             }
         }

@@ -295,6 +295,7 @@ class PrestaShopAutoload
                     foreach (token_get_all($content) as $token) {
                         if ($token[0] === T_NAMESPACE) {
                             $usesNamespace = true;
+
                             break;
                         }
                     }
@@ -328,7 +329,7 @@ class PrestaShopAutoload
      */
     public function getClassPath($classname)
     {
-        return (isset($this->index[$classname]) && isset($this->index[$classname]['path'])) ? $this->index[$classname]['path'] : null;
+        return (isset($this->index[$classname]['path'])) ? $this->index[$classname]['path'] : null;
     }
 
     /**

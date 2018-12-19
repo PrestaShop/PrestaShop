@@ -49,7 +49,6 @@
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class LexerSplitter {
-
     protected static $splitters = array("<=>", "\r\n", "!=", ">=", "<=", "<>", "<<", ">>", ":=", "\\", "&&", "||", ":=",
         "/*", "*/", "--", ">", "<", "|", "=", "^", "(", ")", "\t", "\n", "'", "\"", "`",
         ",", "@", " ", "+", "-", "*", "/", ";",

@@ -77,5 +77,6 @@ function set_stock_available()
             return array('error' => Db::getInstance()->getNumberError(), 'msg' => '(products)'.Db::getInstance()->getMsgError());
         }
     }
+
     return $res;
 }

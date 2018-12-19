@@ -41,27 +41,29 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  */
 class ColumnDefinitionProcessor extends AbstractProcessor {
-
     protected function processExpressionList($parsed) {
         $processor = new ExpressionListProcessor();
+
         return $processor->process($parsed);
     }
-    
+
     protected function processReferenceDefinition($parsed) {
         $processor = new ReferenceDefinitionProcessor();
+
         return $processor->process($parsed);
     }
-    
+
     protected function removeComma($tokens) {
-        $res = array();        
+        $res = array();
         foreach ($tokens as $token) {
             if (trim($token) !== ',') {
                 $res[] = $token;
             }
         }
+
         return $res;
     }
-    
+
     protected function buildColDef($expr, $base_expr, $options, $refs, $key) {
         $expr = array('expr_type' => ExpressionType::COLUMN_TYPE, 'base_expr' => $base_expr, 'sub_tree' => $expr);
 
@@ -76,6 +78,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
         }
 
         $expr['till'] = $key;
+
         return $expr;
     }
 
@@ -98,6 +101,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
 
             if ($skip > 0) {
                 $skip--;
+
                 continue;
             }
 
@@ -123,30 +127,35 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     $refs,
                     $key - 1
                 );
+
                 break 2;
 
             case 'VARCHAR':
                 $expr[] = array('expr_type' => ExpressionType::DATA_TYPE, 'base_expr' => $trim, 'length' => false);
                 $prevCategory = 'TEXT';
                 $currCategory = 'SINGLE_PARAM_PARENTHESIS';
+
                 continue 2;
 
             case 'VARBINARY':
                 $expr[] = array('expr_type' => ExpressionType::DATA_TYPE, 'base_expr' => $trim, 'length' => false);
                 $prevCategory = $upper;
                 $currCategory = 'SINGLE_PARAM_PARENTHESIS';
+
                 continue 2;
 
             case 'UNSIGNED':
                 $last = array_pop($expr);
                 $last['unsigned'] = true;
                 $expr[] = $last;
+
                 continue 2;
 
             case 'ZEROFILL':
                 $last = array_pop($expr);
                 $last['zerofill'] = true;
                 $expr[] = $last;
+
                 continue 2;
 
             case 'BIT':
@@ -161,6 +170,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                 );
                 $currCategory = 'SINGLE_PARAM_PARENTHESIS';
                 $prevCategory = $upper;
+
                 continue 2;
 
             case 'BINARY':
@@ -169,17 +179,20 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     $last['binary'] = true;
                     $last['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
                     $expr[] = $last;
+
                     continue 2;
                 }
                 $expr[] = array('expr_type' => ExpressionType::DATA_TYPE, 'base_expr' => $trim, 'length' => false);
                 $currCategory = 'SINGLE_PARAM_PARENTHESIS';
                 $prevCategory = $upper;
+
                 continue 2;
 
             case 'CHAR':
                 $expr[] = array('expr_type' => ExpressionType::DATA_TYPE, 'base_expr' => $trim, 'length' => false);
                 $currCategory = 'SINGLE_PARAM_PARENTHESIS';
                 $prevCategory = 'TEXT';
+
                 continue 2;
 
             case 'REAL':
@@ -190,6 +203,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                 );
                 $currCategory = 'TWO_PARAM_PARENTHESIS';
                 $prevCategory = $upper;
+
                 continue 2;
 
             case 'DECIMAL':
@@ -199,6 +213,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                 );
                 $currCategory = 'TWO_PARAM_PARENTHESIS';
                 $prevCategory = $upper;
+
                 continue 2;
 
             case 'DATE':
@@ -212,6 +227,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
             case 'LONGBLOB':
                 $expr[] = array('expr_type' => ExpressionType::DATA_TYPE, 'base_expr' => $trim);
                 $prevCategory = $currCategory = $upper;
+
                 continue 2;
 
             // the next token can be BINARY
@@ -221,6 +237,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
             case 'LONGTEXT':
                 $prevCategory = $currCategory = 'TEXT';
                 $expr[] = array('expr_type' => ExpressionType::DATA_TYPE, 'base_expr' => $trim, 'binary' => false);
+
                 continue 2;
 
             case 'ENUM':
@@ -228,6 +245,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                 $currCategory = 'MULTIPLE_PARAM_PARENTHESIS';
                 $prevCategory = 'TEXT';
                 $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim, 'sub_tree' => false);
+
                 continue 2;
 
             case 'GEOMETRY':
@@ -252,6 +270,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     );
                     $base_expr = $token;
                     $currCategory = 'CHARSET';
+
                     continue 2;
                 }
                 // else ?
@@ -264,6 +283,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     $last = array_pop($expr);
                     $last['sub_tree'][] = $parsed;
                     $expr[] = $last;
+
                     continue 2;
                 }
                 // else ?
@@ -277,6 +297,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     );
                     $base_expr = $token;
                     $currCategory = 'COLLATION';
+
                     continue 2;
                 }
                 // else ?
@@ -288,23 +309,27 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                 if ($options['nullable']) {
                     $options['nullable'] = ($upper === 'NOT' ? false : true);
                 }
+
                 continue 2;
 
             case 'DEFAULT':
             case 'COMMENT':
                 $currCategory = $upper;
                 $options['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
+
                 continue 2;
 
             case 'AUTO_INCREMENT':
                 $options['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
                 $options['auto_inc'] = true;
+
                 continue 2;
 
             case 'COLUMN_FORMAT':
             case 'STORAGE':
                 $currCategory = $upper;
                 $options['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
+
                 continue 2;
 
             case 'UNIQUE':
@@ -312,11 +337,13 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                 $currCategory = $upper;
                 $options['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
                 $options['unique'] = true;
+
                 continue 2;
 
             case 'PRIMARY':
             // it must follow a KEY word
                 $options['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
+
                 continue 2;
 
             case 'KEY':
@@ -324,6 +351,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                 if ($currCategory !== 'UNIQUE') {
                     $options['primary'] = true;
                 }
+
                 continue 2;
 
             case 'REFERENCES':
@@ -340,6 +368,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     if ($upper === 'DISK' || $upper === 'MEMORY' || $upper === 'DEFAULT') {
                         $options['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
                         $options['storage'] = $trim;
+
                         continue 3;
                     }
                     // else ?
@@ -349,6 +378,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     if ($upper === 'FIXED' || $upper === 'DYNAMIC' || $upper === 'DEFAULT') {
                         $options['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
                         $options['col_format'] = $trim;
+
                         continue 3;
                     }
                     // else ?
@@ -359,6 +389,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     $options['sub_tree'][] = array('expr_type' => ExpressionType::COMMENT, 'base_expr' => $trim);
                     $options['comment'] = $trim;
                     $currCategory = $prevCategory;
+
                     break;
 
                 case 'DEFAULT':
@@ -366,6 +397,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     $options['sub_tree'][] = array('expr_type' => ExpressionType::DEF_VALUE, 'base_expr' => $trim);
                     $options['default'] = $trim;
                     $currCategory = $prevCategory;
+
                     break;
 
                 case 'COLLATE':
@@ -377,6 +409,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     $base_expr = $last['base_expr'] . $base_expr;
                     $last['base_expr'] = $t;
                     $currCategory = $prevCategory;
+
                     break;
 
                 case 'CHARSET':
@@ -388,6 +421,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     $base_expr = $last['base_expr'] . $base_expr;
                     $last['base_expr'] = $t;
                     $currCategory = $prevCategory;
+
                     break;
 
                 case 'SINGLE_PARAM_PARENTHESIS':
@@ -395,12 +429,13 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     $parsed = array('expr_type' => ExpressionType::CONSTANT, 'base_expr' => trim($parsed));
                     $last = array_pop($expr);
                     $last['length'] = $parsed['base_expr'];
-                    
+
                     $expr[] = $last;
                     $expr[] = array('expr_type' => ExpressionType::BRACKET_EXPRESSION, 'base_expr' => $trim,
                         'sub_tree' => array($parsed),
                     );
                     $currCategory = $prevCategory;
+
                     break;
 
                 case 'TWO_PARAM_PARENTHESIS':
@@ -415,12 +450,13 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     $last = array_pop($expr);
                     $last['length'] = $parsed[0]['base_expr'];
                     $last['decimals'] = isset($parsed[1]) ? $parsed[1]['base_expr'] : false;
-                    
+
                     $expr[] = $last;
                     $expr[] = array('expr_type' => ExpressionType::BRACKET_EXPRESSION, 'base_expr' => $trim,
                         'sub_tree' => $parsed,
                     );
                     $currCategory = $prevCategory;
+
                     break;
 
                 case 'MULTIPLE_PARAM_PARENTHESIS':
@@ -436,6 +472,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                     );
                     $expr[] = $last;
                     $currCategory = $prevCategory;
+
                     break;
 
                 default:
@@ -451,6 +488,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
             // end of $tokens array
             $expr = $this->buildColDef($expr, trim($base_expr), $options, $refs, -1);
         }
+
         return $expr;
     }
 }

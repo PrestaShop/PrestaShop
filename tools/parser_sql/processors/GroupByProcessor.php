@@ -38,7 +38,6 @@ require_once dirname(__FILE__) . '/OrderByProcessor.php';
  * @author arothe
  */
 class GroupByProcessor extends OrderByProcessor {
-
     public function process($tokens, $select = array()) {
         $out = array();
         $parseInfo = $this->initParseInfo();
@@ -56,6 +55,7 @@ class GroupByProcessor extends OrderByProcessor {
 
                 $out[] = $parsed;
                 $parseInfo = $this->initParseInfo();
+
                 break;
             default:
                 $parseInfo['base_expr'] .= $token;

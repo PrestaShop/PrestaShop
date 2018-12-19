@@ -539,6 +539,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         foreach ($extensions as $key => $val) {
             if (substr(Tools::strtolower($filename), -4) == $key || substr(Tools::strtolower($filename), -5) == $key) {
                 $extension = $val;
+
                 break;
             }
         }
@@ -1091,7 +1092,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 preg_match('/\#ct([0-9]*)/', $subject, $matches1);
                 preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
                 $match_found = false;
-                if (isset($matches1[1]) && isset($matches2[1])) {
+                if (isset($matches1[1], $matches2[1])) {
                     $match_found = true;
                 }
 
@@ -1106,6 +1107,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                             || (!preg_match('/<(' . Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+') . ')>/', $overview->from, $from_parsed)
                             && !Validate::isEmail($overview->from))) {
                             $message_errors[] = $this->trans('Cannot create message in a new thread.', array(), 'Admin.Orderscustomers.Notification');
+
                             continue;
                         }
 
@@ -1162,9 +1164,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         switch ($structure->encoding) {
                             case 3:
                                 $message = imap_base64($message);
+
                                 break;
                             case 4:
                                 $message = imap_qprint($message);
+
                                 break;
                         }
                         $message = iconv($this->getEncoding($structure), 'utf-8', $message);
@@ -1172,6 +1176,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         if (!$message || strlen($message) == 0) {
                             $message_errors[] = $this->trans('The message body is empty, cannot import it.', array(), 'Admin.Orderscustomers.Notification');
                             $fetch_succeed = false;
+
                             continue;
                         }
                         $cm = new CustomerMessage();
@@ -1185,6 +1190,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                             } catch (PrestaShopException $pse) {
                                 $message_errors[] = $this->trans('The message content is not valid, cannot import it.', array(), 'Admin.Orderscustomers.Notification');
                                 $fetch_succeed = false;
+
                                 continue;
                             }
                         }

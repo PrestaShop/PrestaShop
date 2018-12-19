@@ -664,17 +664,21 @@ abstract class ControllerCore
             case E_USER_ERROR:
             case E_ERROR:
                 die('Fatal error: ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+
                 break;
             case E_USER_WARNING:
             case E_WARNING:
                 $type = 'Warning';
+
                 break;
             case E_USER_NOTICE:
             case E_NOTICE:
                 $type = 'Notice';
+
                 break;
             default:
                 $type = 'Unknown error';
+
                 break;
         }
 

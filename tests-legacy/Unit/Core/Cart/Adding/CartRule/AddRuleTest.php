@@ -33,7 +33,6 @@ use CartRule;
 
 class AddRuleTest extends AbstractCartTest
 {
-
     protected $cartRulesFeatureActive;
 
     public function setUp()

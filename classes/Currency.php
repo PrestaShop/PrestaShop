@@ -527,6 +527,7 @@ class CurrencyCore extends ObjectModel
             foreach ($data->currency as $currency) {
                 if ($currency['iso_code'] == $defaultCurrency->iso_code) {
                     $exchangeRate = round((float) $currency['rate'], 6);
+
                     break;
                 }
             }
@@ -541,6 +542,7 @@ class CurrencyCore extends ObjectModel
                 foreach ($data->currency as $obj) {
                     if ($this->iso_code == (string) ($obj['iso_code'])) {
                         $rate = (float) $obj['rate'];
+
                         break;
                     }
                 }

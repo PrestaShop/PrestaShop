@@ -40,7 +40,6 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
  * @author arothe
  */
 class ValuesProcessor extends AbstractProcessor {
-
     private $recordProcessor;
 
     public function __construct() {
@@ -71,7 +70,7 @@ class ValuesProcessor extends AbstractProcessor {
         }
 
         $tokens['VALUES'] = array_values($values);
+
         return $tokens;
     }
-
 }

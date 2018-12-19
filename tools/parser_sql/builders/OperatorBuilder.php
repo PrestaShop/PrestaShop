@@ -49,11 +49,11 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class OperatorBuilder {
-
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::OPERATOR) {
             return "";
         }
+
         return $parsed['base_expr'];
     }
 }

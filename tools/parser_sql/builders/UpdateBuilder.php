@@ -47,7 +47,6 @@
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class UpdateBuilder {
-
     public function build($parsed) {
         return "UPDATE " . $parsed[0]['table'];
     }

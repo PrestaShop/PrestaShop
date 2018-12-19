@@ -34,5 +34,6 @@ function module_blockwishlist_multishop()
 
         return $res;
     }
+
     return true;
 }

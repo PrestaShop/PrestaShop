@@ -40,7 +40,6 @@
  * @author arothe
  */
 class UnableToCreateSQLException extends Exception {
-
     protected $part;
     protected $partkey;
     protected $entry;

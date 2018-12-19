@@ -335,7 +335,7 @@ class AdminRequestSqlControllerCore extends AdminController
             die(Tools::displayError());
         }
         $file = 'request_sql_' . $id . '.csv';
-        if ($csv = fopen($export_dir . $file, 'w')) {
+        if ($csv = fopen($export_dir . $file, 'wb')) {
             $sql = RequestSql::getRequestSqlById($id);
 
             if ($sql) {
@@ -404,6 +404,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedForm'), 'Admin.Advparameters.Notification');
                     }
+
                     break;
 
                 case 'checkedSelect':
@@ -429,6 +430,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedSelect'), 'Admin.Advparameters.Notification');
                     }
+
                     break;
 
                 case 'checkedWhere':
@@ -452,6 +454,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedWhere'), 'Admin.Advparameters.Notification');
                     }
+
                     break;
 
                 case 'checkedHaving':
@@ -475,6 +478,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedHaving'), 'Admin.Advparameters.Notification');
                     }
+
                     break;
 
                 case 'checkedOrder':
@@ -490,6 +494,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedOrder'), 'Admin.Advparameters.Notification');
                     }
+
                     break;
 
                 case 'checkedGroupBy':
@@ -505,10 +510,12 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedGroupBy'), 'Admin.Advparameters.Notification');
                     }
+
                     break;
 
                 case 'checkedLimit':
                     $this->errors[] = $this->trans('The LIMIT clause must contain numeric arguments.', array(), 'Admin.Advparameters.Notification');
+
                     break;
 
                 case 'returnNameTable':
@@ -524,14 +531,17 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('When multiple tables are used, each attribute must refer back to a table.', array(), 'Admin.Advparameters.Notification');
                     }
+
                     break;
 
                 case 'testedRequired':
                     $this->errors[] = $this->trans('"%key%" does not exist.', array('%key%' => $e[$key]), 'Admin.Notifications.Error');
+
                     break;
 
                 case 'testedUnauthorized':
                     $this->errors[] = $this->trans('"%key%" is an unauthorized keyword.', array('%key%' => $e[$key]), 'Admin.Advparameters.Notification');
+
                     break;
             }
         }

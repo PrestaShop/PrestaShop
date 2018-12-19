@@ -40,7 +40,6 @@ require_once dirname(__FILE__) . '/SQLProcessor.php';
  * @author arothe
  */
 class DefaultProcessor extends AbstractProcessor {
-
     public function process($sql) {
 
         $inputArray = $this->splitSQLIntoTokens($sql);

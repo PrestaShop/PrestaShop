@@ -88,8 +88,6 @@ class StockManagementControllerTest extends ApiTestCase
         }
     }
 
-
-
     /**
      * @dataProvider getProductsStockParams
      * @test
@@ -134,8 +132,6 @@ class StockManagementControllerTest extends ApiTestCase
             ),
         );
     }
-
-
 
     /**
      * @dataProvider getProductsCombinationsParams
@@ -266,7 +262,6 @@ class StockManagementControllerTest extends ApiTestCase
         self::$client->request('POST', $editProductStockRoute);
         $this->assertResponseBodyValidJson(400);
 
-
         self::$client->request('POST', $editProductStockRoute, array(), array(), array(), '{}');
         $this->assertResponseBodyValidJson(400);
 
@@ -291,8 +286,6 @@ class StockManagementControllerTest extends ApiTestCase
 
         $this->assertResponseBodyValidJson(404);
     }
-
-
 
     private function assertOkResponseOnEditProductCombination()
     {
@@ -344,7 +337,6 @@ class StockManagementControllerTest extends ApiTestCase
             ),
             $content
         );
-
 
         self::$client->request('POST', $editProductStockRoute, array('delta' => -4));
         $content = $this->assertResponseBodyValidJson(200);

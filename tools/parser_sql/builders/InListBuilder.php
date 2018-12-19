@@ -50,9 +50,9 @@ require_once dirname(__FILE__) . '/SubTreeBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class InListBuilder {
-
     protected function buildSubTree($parsed, $delim) {
         $builder = new SubTreeBuilder();
+
         return $builder->build($parsed, $delim);
     }
 
@@ -61,6 +61,7 @@ class InListBuilder {
             return "";
         }
         $sql = $this->buildSubTree($parsed, ", ");
+
         return "(" . $sql . ")";
     }
 }

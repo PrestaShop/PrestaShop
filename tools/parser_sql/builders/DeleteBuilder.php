@@ -47,12 +47,12 @@
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class DeleteBuilder {
-
     public function build($parsed) {
         $sql = "DELETE";
         foreach ($parsed['TABLES'] as $k => $v) {
             $sql .= $v . ",";
         }
+
         return substr($sql, 0, -1);
     }
 }

@@ -32,7 +32,6 @@ use Tools;
 
 class RoundingModeTest extends AbstractCartCalculationTest
 {
-
     /**
      * PS_ROUND_UP
      * PS_ROUND_DOWN

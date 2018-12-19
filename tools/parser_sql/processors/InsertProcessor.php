@@ -40,7 +40,6 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  */
 class InsertProcessor extends AbstractProcessor {
-
     public function process($tokenList, $token_category = 'INSERT') {
         $table = "";
         $cols = array();
@@ -67,7 +66,7 @@ class InsertProcessor extends AbstractProcessor {
         $tokenList[$token_category][0] = array('table' => $table, 'columns' => $cols, 'base_expr' => $table,
             'no_quotes' => $this->revokeQuotation($table),
         );
+
         return $tokenList;
     }
-
 }

@@ -609,6 +609,7 @@ class AdminStatusesControllerCore extends AdminController
                 $order_state = new OrderState((int) $selection, $this->context->language->id);
                 if (!$order_state->isRemovable()) {
                     $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', array(), 'Admin.Shopparameters.Notification');
+
                     break;
                 }
             }

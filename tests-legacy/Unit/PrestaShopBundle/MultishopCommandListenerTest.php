@@ -73,7 +73,6 @@ class MultishopCommandListenerTest extends UnitTestCase
         $this->contextMocker->resetContext();
     }
 
-
     public function testDefaultMultishopContext()
     {
         Shop::resetContext();

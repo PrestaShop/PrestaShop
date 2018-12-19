@@ -55,32 +55,36 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class TableBracketExpressionBuilder {
-
     protected function buildColDef($parsed) {
         $builder = new ColumnDefinitionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildPrimaryKey($parsed) {
         $builder = new PrimaryKeyBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildForeignKey($parsed) {
         $builder = new ForeignKeyBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     protected function buildCheck($parsed) {
         $builder = new CheckBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     protected function buildLikeExpression($parsed) {
         $builder = new LikeExpressionBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
             return "";
@@ -93,7 +97,7 @@ class TableBracketExpressionBuilder {
             $sql .= $this->buildCheck($v);
             $sql .= $this->buildLikeExpression($v);
             $sql .= $this->buildForeignKey($v);
-            
+
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE create-def expression subtree', $k, $v, 'expr_type');
             }
@@ -102,7 +106,7 @@ class TableBracketExpressionBuilder {
         }
 
         $sql = " (" . substr($sql, 0, -2) . ")";
+
         return $sql;
     }
-    
 }

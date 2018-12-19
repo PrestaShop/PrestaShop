@@ -270,10 +270,12 @@ class WebserviceRequestCore
             case 'JSON':
                 require_once dirname(__FILE__) . '/WebserviceOutputJSON.php';
                 $obj_render = new WebserviceOutputJSON();
+
                 break;
             case 'XML':
             default:
                 $obj_render = new WebserviceOutputXML();
+
                 break;
         }
 
@@ -577,19 +579,23 @@ class WebserviceRequestCore
                             if ($this->executeEntityGetAndHead()) {
                                 $success = true;
                             }
+
                             break;
                         case 'POST':
                             if ($this->executeEntityPost()) {
                                 $success = true;
                             }
+
                             break;
                         case 'PUT':
                             if ($this->executeEntityPut()) {
                                 $success = true;
                             }
+
                             break;
                         case 'DELETE':
                             $this->executeEntityDelete();
+
                             break;
                     }
                     // Need to set an object for the WebserviceOutputBuilder object in any case
@@ -684,6 +690,7 @@ class WebserviceRequestCore
             if ($lev == 0) {
                 $closest = $word;
                 $shortest = 0;
+
                 break;
             }
             if ($lev <= $shortest || $shortest < 0) {
@@ -733,42 +740,55 @@ class WebserviceRequestCore
         switch ($errno) {
             case E_ERROR:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 2);
+
                 break;
             case E_WARNING:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 3);
+
                 break;
             case E_PARSE:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Parse #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 4);
+
                 break;
             case E_NOTICE:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Notice #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 5);
+
                 break;
             case E_CORE_ERROR:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Core #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 6);
+
                 break;
             case E_CORE_WARNING:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Core warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 7);
+
                 break;
             case E_COMPILE_ERROR:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Compile #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 8);
+
                 break;
             case E_COMPILE_WARNING:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Compile warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 9);
+
                 break;
             case E_USER_ERROR:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 10);
+
                 break;
             case E_USER_WARNING:
                 WebserviceRequest::getInstance()->setError(500, '[PHP User warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 11);
+
                 break;
             case E_USER_NOTICE:
                 WebserviceRequest::getInstance()->setError(500, '[PHP User notice #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 12);
+
                 break;
             case E_STRICT:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Strict #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 13);
+
                 break;
             case E_RECOVERABLE_ERROR:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Recoverable error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 14);
+
                 break;
             default:
                 WebserviceRequest::getInstance()->setError(500, '[PHP Unknown error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 15);
@@ -916,7 +936,7 @@ class WebserviceRequestCore
     {
         if (!in_array($this->method, array('GET', 'POST', 'PUT', 'DELETE', 'HEAD'))) {
             $this->setError(405, 'Method ' . $this->method . ' is not valid', 23);
-        } elseif (isset($this->urlSegment[0]) && isset($this->resourceList[$this->urlSegment[0]]['forbidden_method']) && in_array($this->method, $this->resourceList[$this->urlSegment[0]]['forbidden_method'])) {
+        } elseif (isset($this->urlSegment[0], $this->resourceList[$this->urlSegment[0]]['forbidden_method']) && in_array($this->method, $this->resourceList[$this->urlSegment[0]]['forbidden_method'])) {
             $this->setError(405, 'Method ' . $this->method . ' is not allowed for the resource ' . $this->urlSegment[0], 101);
         } elseif ($this->urlSegment[0] && !in_array($this->method, $this->keyPermissions[$this->urlSegment[0]])) {
             $this->setError(405, 'Method ' . $this->method . ' is not allowed for the resource ' . $this->urlSegment[0] . ' with this authentication key', 25);
@@ -1051,6 +1071,7 @@ class WebserviceRequestCore
                             foreach ($part as $field) {
                                 if ($field != 'id' && !array_key_exists($field, $this->resourceConfiguration['associations'][$field_name]['fields'])) {
                                     $error = true;
+
                                     break;
                                 }
                             }
@@ -1136,7 +1157,7 @@ class WebserviceRequestCore
                         if ($field != 'sort' && $field != 'limit') {
                             if (!in_array($field, $available_filters)) {
                                 // if there are linked tables
-                                if (isset($this->resourceConfiguration['linked_tables']) && isset($this->resourceConfiguration['linked_tables'][$field])) {
+                                if (isset($this->resourceConfiguration['linked_tables'][$field])) {
                                     // contruct SQL join for linked tables
                                     $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['linked_tables'][$field]['table']) . '` `' . bqSQL($field) . '` ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = `' . bqSQL($field) . '`.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
 
@@ -1325,7 +1346,7 @@ class WebserviceRequestCore
                     $sql .= '_' . $assoc['type'];
                 } else {
                     $def = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
-                    if (isset($def['fields']) && isset($def['fields']['id_shop_group'])) {
+                    if (isset($def['fields']['id_shop_group'])) {
                         $check_shop_group = true;
                     }
                 }
@@ -1442,7 +1463,7 @@ class WebserviceRequestCore
                 }
 
                 /* @var ObjectModel $object */
-                if (isset($this->resourceConfiguration['objectMethods']) && isset($this->resourceConfiguration['objectMethods']['delete'])) {
+                if (isset($this->resourceConfiguration['objectMethods']['delete'])) {
                     $result = $object->{$this->resourceConfiguration['objectMethods']['delete']}();
                 } else {
                     $result = $object->delete();
@@ -1543,7 +1564,7 @@ class WebserviceRequestCore
                 if ($fieldName == 'id') {
                     $sqlId = $fieldName;
                 }
-                if (isset($attributes->$fieldName) && isset($fieldProperties['sqlId']) && (!isset($fieldProperties['i18n']) || !$fieldProperties['i18n'])) {
+                if (isset($attributes->$fieldName, $fieldProperties['sqlId']) && (!isset($fieldProperties['i18n']) || !$fieldProperties['i18n'])) {
                     if (isset($fieldProperties['setter'])) {
                         // if we have to use a specific setter
                         if (!$fieldProperties['setter']) {
@@ -1581,7 +1602,7 @@ class WebserviceRequestCore
 
             // Apply the modifiers if they exist
             foreach ($this->resourceConfiguration['fields'] as $fieldName => $fieldProperties) {
-                if (isset($fieldProperties['modifier']) && isset($fieldProperties['modifier']['modifier']) && $fieldProperties['modifier']['http_method'] & constant('WebserviceRequest::HTTP_' . $this->method)) {
+                if (isset($fieldProperties['modifier']['modifier']) && $fieldProperties['modifier']['http_method'] & constant('WebserviceRequest::HTTP_' . $this->method)) {
                     $object->{$fieldProperties['modifier']['modifier']}();
                 }
             }

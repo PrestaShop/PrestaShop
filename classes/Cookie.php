@@ -124,6 +124,7 @@ class CookieCore
                 }
                 if (preg_match('/^(?:.*\.)?([^.]*(?:.{2,4})?\..{2,3})$/Ui', $shared_url, $res)) {
                     $domain = '.' . $res[1];
+
                     break;
                 }
             }

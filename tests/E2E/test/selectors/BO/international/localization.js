@@ -1,14 +1,30 @@
 module.exports = {
   Localization: {
     Localization: {
-      pack_select: '//*[@id="import_localization_pack_iso_localization_pack"]',
-      pack_search_input: '//*[@id="import_localization_pack_iso_localization_pack"]//div[@class="chosen-search"]//input',
-      pack_option: '//*[@id="import_localization_pack_iso_localization_pack"]//ul[@class="chosen-results"]//li',
-      import_button: '//*[@name="import_localization_pack"]//div[@class="card-footer"]//button',
+      pack_select: '//*[@id="select2-import_localization_pack_iso_localization_pack-container"]',
+      pack_search_input: '/html//input[@class="select2-search__field"]',
+      pack_option: '//*[@id="select2-import_localization_pack_iso_localization_pack-results"]//li[contains(text(),"%B")]',
+      import_button: '//*[@id="main-div"]//form[@name="import_localization_pack"]//button',
       advanced_language_identifier_input: '//*[@id="form_advanced_language_identifier"]',
       advanced_country_identifier_input: '//*[@id="form_advanced_country_identifier"]',
       advanced_save_button: '(//*[@id="main-div"]//div[@class="card"])[4]//button',
-      alert_panel: '//*[@id="main-div"]//div[contains(@class, "%B")]'
+      alert_panel: '//*[@id="main-div"]//div[contains(@class, "%B")]',
+      success_alert_panel: '//*[@id="main-div"]//div[contains(@class, "%B") and @role="alert"]/div[@class="alert-text"]',
+      configuration_selected_option: '//*[@id="%ID"]/option[@selected="selected"]',
+      download_pack_data_toggle_button: '//*[@id="main-div"]//form[@name="import_localization_pack"]//span[@class="ps-switch"]/label',
+      content_import_checkbox: '//*[@id="import_localization_pack_content_to_import_%B"]',
+      local_unit_input: '//*[@id="form_local_units_%D_unit"]',
+      save_local_units_button: '(//*[@id="main-div"]//button[text()="Save"])[2]',
+      default_language_list: '#form_configuration_default_language',
+      default_country_list: '#form_configuration_default_country',
+      default_currency_list: '#form_configuration_default_currency',
+      time_zone_list: '#form_configuration_timezone',
+      symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
+      save_configuration_btn: '(//*[@id="main-div"]//button[text()="Save"])[1]',
+      language_browser_no_label: '//label[@for="form_configuration_detect_language_from_browser_0"]',
+      country_browser_no_label: '//label[@for="form_configuration_detect_country_from_browser_0"]',
+      language_browser_yes_label: '//label[@for="form_configuration_detect_language_from_browser_1"]',
+      country_browser_yes_label: '//label[@for="form_configuration_detect_country_from_browser_1"]',
     },
     languages: {
       add_new_language_button: '//*[@id="page-header-desc-lang-new_language"]',
@@ -28,7 +44,9 @@ module.exports = {
       edit_button: '//*[@id="table-lang"]/tbody//a[@title="Edit"]',
       dropdown_button: '//*[@id="table-lang"]/tbody//button[@data-toggle="dropdown"]',
       delete_button: '//*[@id="table-lang"]/tbody//a[@title="Delete"]',
-      reset_button: '//*[@id="table-lang"]//button[contains(@name, "Reset")]'
+      reset_button: '//*[@id="table-lang"]//button[contains(@name, "Reset")]',
+      language_column: '//*[@id="table-lang"]//td[%ID]',
+
     },
     Currencies: {
       new_currency_button: '//*[@id="page-header-desc-currency-new_currency"]',

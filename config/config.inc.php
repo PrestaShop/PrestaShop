@@ -86,7 +86,7 @@ if (Tools::convertBytes(ini_get('upload_max_filesize')) < Tools::convertBytes('1
     ini_set('upload_max_filesize', '100M');
 }
 
-if (Tools::isPHPCLI() && isset($argc) && isset($argv)) {
+if (Tools::isPHPCLI() && isset($argc, $argv)) {
     Tools::argvToGET($argc, $argv);
 }
 

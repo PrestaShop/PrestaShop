@@ -38,7 +38,6 @@
  * @author arothe
  */
 class InvalidParameterException extends InvalidArgumentException {
-
     protected $argument;
 
     public function __construct($argument) {

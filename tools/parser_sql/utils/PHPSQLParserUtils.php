@@ -38,7 +38,6 @@
  * @deprecated
  */
 class PHPSQLParserUtils {
-
     /**
      * Prints an array only if debug mode is on.
      * 
@@ -70,6 +69,7 @@ class PHPSQLParserUtils {
         if ($length == 0) {
             return true;
         }
+
         return (substr($haystack, -$length) === $needle);
     }
 
@@ -82,8 +82,10 @@ class PHPSQLParserUtils {
         $result = trim($sql);
         if (($result[0] === '`') && ($result[strlen($result) - 1] === '`')) {
             $result = substr($result, 1, -1);
+
             return trim(str_replace('``', '`', $result));
         }
+
         return $sql;
     }
 
@@ -131,6 +133,7 @@ class PHPSQLParserUtils {
             }
             $i++;
         }
+
         return trim($trim);
     }
 
@@ -139,6 +142,7 @@ class PHPSQLParserUtils {
         if (!is_array($array)) {
             return false;
         }
+
         return array_pop($array);
     }
 
@@ -152,6 +156,7 @@ class PHPSQLParserUtils {
         foreach ($tokenList as $token) {
             $expr[] = $token->toArray();
         }
+
         return (empty($expr) ? false : $expr);
     }
 }

@@ -159,7 +159,7 @@ function smartyHook($params, &$smarty)
             $hook_params['h'],
             $hook_params['excl']
         );
-        
+
         return $result;
     }
     unset($hook_params['h']);

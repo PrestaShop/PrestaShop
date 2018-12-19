@@ -54,27 +54,30 @@ require_once dirname(__FILE__) . '/ForeignRefBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
 class ForeignKeyBuilder {
-
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildColumnList($parsed) {
         $builder = new ColumnListBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildForeignRef($parsed) {
         $builder = new ForeignRefBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::FOREIGN_KEY) {
             return "";
@@ -93,6 +96,7 @@ class ForeignKeyBuilder {
 
             $sql .= " ";
         }
+
         return substr($sql, 0, -1);
     }
 }

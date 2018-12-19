@@ -210,6 +210,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                 $timezones[] = (string)$timezone['name'];
             }
         }
+
         return $timezones;
     }
 
@@ -233,6 +234,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                 $timezones[(string)$relation['iso']] = (string)$relation['zone'];
             }
         }
+
         return isset($timezones[$iso]) ? $timezones[$iso] : '';
     }
 
