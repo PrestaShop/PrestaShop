@@ -981,6 +981,7 @@ class CartCore extends ObjectModel
             case Order::ROUND_TOTAL:
                 $row['total'] = $row['price_with_reduction_without_tax'] * $productQuantity;
                 $row['total_wt'] = $row['price_with_reduction'] * $productQuantity;
+
                 break;
             case Order::ROUND_LINE:
                 $row['total'] = Tools::ps_round(
@@ -991,6 +992,7 @@ class CartCore extends ObjectModel
                     $row['price_with_reduction'] * $productQuantity,
                     _PS_PRICE_COMPUTE_PRECISION_
                 );
+
                 break;
 
             case Order::ROUND_ITEM:
@@ -1003,6 +1005,7 @@ class CartCore extends ObjectModel
                         $row['price_with_reduction'],
                         _PS_PRICE_COMPUTE_PRECISION_
                     ) * $productQuantity;
+
                 break;
         }
 
@@ -1595,6 +1598,7 @@ class CartCore extends ObjectModel
                         @unlink(_PS_UPLOAD_DIR_ . $customization['value']);
                         @unlink(_PS_UPLOAD_DIR_ . $customization['value'] . '_small');
                     }
+
                     break;
                 }
             }
@@ -1964,24 +1968,29 @@ class CartCore extends ObjectModel
                 $calculator->calculateRows();
                 $calculator->calculateFees($computePrecision);
                 $amount = $calculator->getFees()->getInitialShippingFees();
+
                 break;
             case Cart::ONLY_WRAPPING:
                 $calculator->calculateRows();
                 $calculator->calculateFees($computePrecision);
                 $amount = $calculator->getFees()->getInitialWrappingFees();
+
                 break;
             case Cart::BOTH:
                 $calculator->processCalculation($computePrecision);
                 $amount = $calculator->getTotal();
+
                 break;
             case Cart::BOTH_WITHOUT_SHIPPING:
             case Cart::ONLY_PRODUCTS:
                 $calculator->calculateRows();
                 $amount = $calculator->getRowTotal();
+
                 break;
             case Cart::ONLY_DISCOUNTS:
                 $calculator->processCalculation($computePrecision);
                 $amount = $calculator->getDiscountTotal();
+
                 break;
             default:
                 throw new \Exception('unknown cart calculation type : ' . $type);
@@ -2253,6 +2262,7 @@ class CartCore extends ObjectModel
                     if ($id_address === null) {
                         $id_address = (int) $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
                     }
+
                     try {
                         $address[$this->id] = Address::initialize($id_address);
                     } catch (Exception $e) {
@@ -3114,6 +3124,7 @@ class CartCore extends ObjectModel
                 foreach ($options as $key => $option) {
                     if ($option['is_best_price']) {
                         $delivery_option[$id_address] = $key;
+
                         break;
                     }
                 }
@@ -3180,6 +3191,7 @@ class CartCore extends ObjectModel
                 foreach ($delivery_option as $id_address => $key) {
                     if (!isset($delivery_option_list[$id_address][$key])) {
                         $validated = false;
+
                         break;
                     }
                 }
@@ -3202,12 +3214,15 @@ class CartCore extends ObjectModel
             foreach ($options as $key => $option) {
                 if (Configuration::get('PS_CARRIER_DEFAULT') == -1 && $option['is_best_price']) {
                     $delivery_option[$id_address] = $key;
+
                     break;
                 } elseif (Configuration::get('PS_CARRIER_DEFAULT') == -2 && $option['is_best_grade']) {
                     $delivery_option[$id_address] = $key;
+
                     break;
                 } elseif ($option['unique_carrier'] && in_array(Configuration::get('PS_CARRIER_DEFAULT'), array_keys($option['carrier_list']))) {
                     $delivery_option[$id_address] = $key;
+
                     break;
                 }
             }
@@ -3431,6 +3446,7 @@ class CartCore extends ObjectModel
                 if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight((int) $id_zone) === false)
                     || ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice((int) $id_zone) === false)) {
                     unset($result[$k]);
+
                     continue;
                 }
 
@@ -3445,6 +3461,7 @@ class CartCore extends ObjectModel
                     if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !$check_delivery_price_by_weight)
                         || ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && !$check_delivery_price_by_price)) {
                         unset($result[$k]);
+
                         continue;
                     }
                 }

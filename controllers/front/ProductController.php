@@ -134,23 +134,27 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
+
                         break;
                         case ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
+
                         break;
                         case ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
+
                             break;
                         case ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
+
                             break;
                         case ProductInterface::REDIRECT_TYPE_NOT_FOUND:
                         default:
@@ -158,6 +162,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('Status: 404 Not Found');
                             $this->errors[] = $this->trans('This product is no longer available.', array(), 'Shop.Notifications.Error');
                             $this->setTemplate('errors/404');
+
                             break;
                     }
                 }
@@ -603,6 +608,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             foreach ($combination_images[$row['id_product_attribute']] as $tmp) {
                                 if ($tmp['id_image'] == $current_cover['id_image']) {
                                     $this->combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int) $tmp['id_image'];
+
                                     break;
                                 }
                             }
@@ -679,6 +685,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                     if ($attribute['selected']) {
                         $current_selected_attribute = $key;
+
                         break;
                     }
                 }
@@ -1204,11 +1211,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             $field['type'] = 'image';
                             $field['image'] = null;
                             $field['input_name'] = 'file' . $customization_field['id_customization_field'];
+
                             break;
                         case Product::CUSTOMIZE_TEXTFIELD:
                             $field['type'] = 'text';
                             $field['text'] = '';
                             $field['input_name'] = 'textField' . $customization_field['id_customization_field'];
+
                             break;
                         default:
                             $field['type'] = null;
@@ -1227,9 +1236,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                                     $product_full,
                                     $customization_field['id_customization_field']
                                 );
+
                                 break;
                             case Product::CUSTOMIZE_TEXTFIELD:
                                 $field['text'] = $data['value'];
+
                                 break;
                         }
                     } else {

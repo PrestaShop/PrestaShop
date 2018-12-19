@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
 class CollectionFilterTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
      * @param array $subject
      * @param array $queue
@@ -89,5 +88,4 @@ class CollectionFilterTest extends \PHPUnit\Framework\TestCase
             ],
         ];
     }
-
 }

@@ -27,29 +27,29 @@
 class Badge extends ObjectModel
 {
     public $id;
-    
+
     public $id_ps_badge;
-        
+
     public $type;
-    
+
     public $id_group;
-    
+
     public $group_position;
-    
+
     public $group_name;
 
     public $scoring;
-    
+
     public $validated;
-    
+
     public $name;
-    
+
     public $description;
 
     public $awb;
-    
+
     const BAGDE_IMG_URL = 'gamification.prestashop.com/api/getBadgeImg';
-    
+
     /**
      * @see ObjectModel::$definition
      */
@@ -72,29 +72,30 @@ class Badge extends ObjectModel
             'group_name' =>        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255),
         ),
     );
-    
+
     public function getBadgeImgUrl()
     {
         return Tools::getShopProtocol().self::BAGDE_IMG_URL.'/'.(int)$this->id_ps_badge.'/'.(int)$this->validated.'.png';
     }
-    
+
     public function validate()
     {
         $this->validated = 1;
         $this->save();
+
         return true;
     }
-    
+
     public static function getIdByIdPs($id_ps_badge)
     {
         $query = new DbQuery();
         $query->select('id_badge');
         $query->from('badge', 'b');
         $query->where('`id_ps_badge` = '.(int)$id_ps_badge);
-        
+
         return (int)Db::getInstance()->getValue($query);
     }
-    
+
     public static function getIdsBadgesToValidate()
     {
         $ids = array();
@@ -109,13 +110,14 @@ class Badge extends ObjectModel
         $query->having('count(*) = SUM(c.validated)');
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-        
+
         foreach ($result as $badge) {
             $ids[] = $badge['id_badge'];
         }
+
         return $ids;
     }
-    
+
     public function getNextBadgeId()
     {
         $query = new DbQuery();
@@ -123,6 +125,7 @@ class Badge extends ObjectModel
         $query->from('badge', 'b');
         $query->where('b.id_group = \''.pSQL($this->id_group).'\' AND b.validated = 0');
         $query->orderBy('b.group_position');
+
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 }

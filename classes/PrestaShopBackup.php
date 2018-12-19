@@ -298,6 +298,7 @@ class PrestaShopBackupCore
                                         } else {
                                             $s .= 'NULL,';
                                         }
+
                                         break;
                                     }
                                 }

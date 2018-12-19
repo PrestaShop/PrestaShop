@@ -40,5 +40,6 @@ function updatetabicon_from_11version()
             }
         }
     }
+
     return true;
 }

@@ -605,6 +605,7 @@ class ImageCore extends ObjectModel
             foreach (scandir($this->image_dir . $this->getImgFolder(), SCANDIR_SORT_NONE) as $file) {
                 if (($file != '.' && $file != '..')) {
                     $deleteFolder = false;
+
                     break;
                 }
             }
@@ -643,6 +644,7 @@ class ImageCore extends ObjectModel
             foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
                 if (($file != '.' && $file != '..' && $file != 'index.php')) {
                     $removeFolder = false;
+
                     break;
                 }
             }

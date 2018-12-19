@@ -4029,6 +4029,7 @@ class ProductCore extends ObjectModel
         foreach ($result as $k => &$row) {
             if (!Product::checkAccessStatic((int) $row['id_product'], false)) {
                 unset($result[$k]);
+
                 continue;
             } else {
                 $row['id_product_attribute'] = Product::getDefaultAttribute((int) $row['id_product']);
@@ -6967,11 +6968,13 @@ class ProductCore extends ObjectModel
             case ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY:
             case ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND:
                 return 'category';
+
                 break;
 
             case ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY:
             case ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND:
                 return 'product';
+
                 break;
         }
 

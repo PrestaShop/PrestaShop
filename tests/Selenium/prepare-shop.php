@@ -81,7 +81,6 @@ function enableGiftFeature()
 
 enableGiftFeature();
 
-
 echo "- Gift feature display enabled\n";
 
 // Setup modules
