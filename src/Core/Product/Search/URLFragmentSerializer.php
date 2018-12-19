@@ -30,7 +30,7 @@ class URLFragmentSerializer
 {
     private function serializeListOfStrings($separator, $escape, array $list)
     {
-        return implode($separator, array_map(function ($item) use ($separator, $escape) {
+        return implode($separator, array_map(static function ($item) use ($separator, $escape) {
             return str_replace($separator, $escape . $separator, $item);
         }, $list));
     }

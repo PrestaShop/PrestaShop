@@ -59,7 +59,7 @@ class RepositoryTest extends TestCase
             'names'          => ['fr-FR' => 'paix', 'en-US' => 'peace'],
         ];
 
-        $getDataByCurrencyCode = function ($isoCode) use ($euroData, $peaceData) {
+        $getDataByCurrencyCode = static function ($isoCode) use ($euroData, $peaceData) {
             if ($isoCode == 'EUR') {
                 return $euroData;
             }

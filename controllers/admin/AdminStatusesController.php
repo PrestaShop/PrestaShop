@@ -242,7 +242,7 @@ class AdminStatusesControllerCore extends AdminController
 
     protected function getUnremovableStatuses()
     {
-        return array_map(function ($row) {
+        return array_map(static function ($row) {
             return (int) $row['id_order_state'];
         }, Db::getInstance()->executeS('SELECT id_order_state FROM ' . _DB_PREFIX_ . 'order_state WHERE unremovable = 1'));
     }

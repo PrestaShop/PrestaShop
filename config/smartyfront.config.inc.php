@@ -78,7 +78,7 @@ function withWidget($params, callable $cb)
 
 function smartyWidget($params, &$smarty)
 {
-    return withWidget($params, function ($widget, $params) {
+    return withWidget($params, static function ($widget, $params) {
         return Hook::coreRenderWidget(
             $widget,
             isset($params['hook']) ? $params['hook'] : null,
@@ -125,7 +125,7 @@ function smartyWidgetBlock($params, $content, $smarty)
         // Function is called twice: at the opening of the block
         // and when it is closed.
         // This is the first call.
-        withWidget($params, function ($widget, $params) use (&$smarty, &$backedUpVariablesStack) {
+        withWidget($params, static function ($widget, $params) use (&$smarty, &$backedUpVariablesStack) {
             // Assign widget variables and backup all the variables they override
             $currentVariables = $smarty->getTemplateVars();
             $scopedVariables = $widget->getWidgetVariables(isset($params['hook']) ? $params['hook'] : null, $params);

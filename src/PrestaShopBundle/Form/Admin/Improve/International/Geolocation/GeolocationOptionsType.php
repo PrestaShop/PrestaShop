@@ -95,10 +95,10 @@ class GeolocationOptionsType extends TranslatorAwareType
             ]);
 
         $builder->get('geolocation_countries')->addModelTransformer(new CallbackTransformer(
-            function ($countriesAsString) {
+            static function ($countriesAsString) {
                 return explode(';', $countriesAsString);
             },
-            function ($countriesAsArray) {
+            static function ($countriesAsArray) {
                 return implode(';', $countriesAsArray);
             }
         ));

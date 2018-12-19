@@ -70,7 +70,7 @@ final class ProductCsvExporter implements ProductExporterInterface
         $sortOrder = $persistedFilterParameters['last_sortOrder'];
 
         // prepare callback to fetch data from DB
-        $dataCallback = function ($offset, $limit) use ($productProvider, $orderBy, $sortOrder) {
+        $dataCallback = static function ($offset, $limit) use ($productProvider, $orderBy, $sortOrder) {
             return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, array(), true, false);
         };
 

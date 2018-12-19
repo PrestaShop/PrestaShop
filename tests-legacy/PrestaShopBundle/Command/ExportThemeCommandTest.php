@@ -106,7 +106,7 @@ class ExportThemeCommandTest extends TestCase
         $themeExporterMock = $this->mockThemeExporter();
 
         $containerMock->method('get')
-            ->will($this->returnCallback(function ($serviceId) use (
+            ->will($this->returnCallback(static function ($serviceId) use (
                 $themeRepositoryMock,
                 $translatorMock,
                 $themeExporterMock

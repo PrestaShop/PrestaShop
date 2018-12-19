@@ -1086,7 +1086,7 @@ namespace PrestaShopBundle\Install {
             }
 
             $filesystem = new Filesystem();
-            $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
+            $exportPhpConfigFile = static function ($config, $destination) use ($filesystem) {
                 try {
                     $filesystem->dumpFile($destination, '<?php return ' . var_export($config, true) . ';' . "\n");
                 } catch (IOException $e) {

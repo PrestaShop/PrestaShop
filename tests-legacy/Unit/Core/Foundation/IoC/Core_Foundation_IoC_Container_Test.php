@@ -45,7 +45,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
 
     public function testBindByClosure()
     {
-        $this->container->bind('foo', function () {
+        $this->container->bind('foo', static function () {
             return 'FOO';
         });
 
@@ -58,13 +58,13 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     {
         $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
 
-        $this->container->bind('foo', function () {});
-        $this->container->bind('foo', function () {});
+        $this->container->bind('foo', static function () {});
+        $this->container->bind('foo', static function () {});
     }
 
     public function testBindByClosureInstanceNotSharedByDefault()
     {
-        $this->container->bind('different', function () {
+        $this->container->bind('different', static function () {
             return new Dummy();
         });
 
@@ -76,7 +76,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
 
     public function testBindByClosureInstanceSharedIfExplicitelyRequired()
     {
-        $this->container->bind('same', function () {
+        $this->container->bind('same', static function () {
             return new Dummy();
         }, true);
 
@@ -170,7 +170,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     {
         $this->container->bind(
             'LegacyTests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure',
-            function () {
+            static function () {
                 return new DepBuiltByClosure(42);
             }
         );

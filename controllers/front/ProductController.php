@@ -1003,14 +1003,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
             $availableProductAttributes = array_filter(
                 $this->product->getAttributeCombinations(),
-                function ($elem) {
+                static function ($elem) {
                     return $elem['quantity'] > 0;
                 }
             );
 
             $availableProductAttribute = array_filter(
                 $availableProductAttributes,
-                function ($elem) use ($checkedIdProductAttribute) {
+                static function ($elem) use ($checkedIdProductAttribute) {
                     return $elem['id_product_attribute'] == $checkedIdProductAttribute;
                 }
             );

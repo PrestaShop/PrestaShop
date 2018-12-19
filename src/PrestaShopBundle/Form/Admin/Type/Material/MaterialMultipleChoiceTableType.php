@@ -52,14 +52,14 @@ class MaterialMultipleChoiceTableType extends AbstractType
             ]);
 
             $builder->get($choices['name'])->addModelTransformer(new CallbackTransformer(
-                function ($value) use ($choices) {
+                static function ($value) use ($choices) {
                     if (is_array($value) && false === $choices['multiple']) {
                         return reset($value);
                     }
 
                     return $value;
                 },
-                function ($value) {
+                static function ($value) {
                     return $value;
                 }
             ));

@@ -94,7 +94,7 @@ class ProductAttachement extends CommonAbstractType
                 'attr' => ['class' => 'btn-outline-secondary pull-right mr-2', 'data-toggle' => 'collapse', 'data-target' => '#collapsedForm'],
             ]);
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, static function (FormEvent $event) {
             $form = $event->getForm();
 
             //if this partial form is submit from a parent form, disable it

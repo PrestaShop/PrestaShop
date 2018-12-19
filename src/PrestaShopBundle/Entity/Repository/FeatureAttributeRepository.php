@@ -209,7 +209,7 @@ class FeatureAttributeRepository
         return array_map(function ($row) {
             $row['values'] = explode(',', $row['values']);
 
-            $row['values'] = array_map(function ($value) {
+            $row['values'] = array_map(static function ($value) {
                 if (false === strpos($value, ':')) {
                     return $value;
                 }

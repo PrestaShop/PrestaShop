@@ -280,7 +280,7 @@ class CartPresenter implements PresenterInterface
                 }
             }
 
-            usort($customizations, function (array $a, array $b) {
+            usort($customizations, static function (array $a, array $b) {
                 if (
                     $a['quantity'] > $b['quantity']
                     || count($a['fields']) > count($b['fields'])
@@ -411,7 +411,7 @@ class CartPresenter implements PresenterInterface
             ),
         );
 
-        $products_count = array_reduce($products, function ($count, $product) {
+        $products_count = array_reduce($products, static function ($count, $product) {
             return $count + $product['quantity'];
         }, 0);
 
@@ -439,13 +439,13 @@ class CartPresenter implements PresenterInterface
         $vouchers = $this->getTemplateVarVouchers($cart);
 
         $cartRulesIds = array_flip(array_map(
-            function ($voucher) {
+            static function ($voucher) {
                 return $voucher['id_cart_rule'];
             },
             $vouchers['added']
         ));
 
-        $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds) {
+        $discounts = array_filter($discounts, static function ($discount) use ($cartRulesIds) {
             return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
         });
 

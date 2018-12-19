@@ -2832,7 +2832,7 @@ exit;
         $directoryList = glob($path . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
         array_walk(
             $directoryList,
-            function (&$absolutePath, $key) {
+            static function (&$absolutePath, $key) {
                 $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
             }
         );
@@ -3300,7 +3300,7 @@ exit;
 
         $dir = _PS_ROOT_DIR_ . '/var/cache/' . $env . '/';
 
-        register_shutdown_function(function () use ($dir) {
+        register_shutdown_function(static function () use ($dir) {
             $fs = new Filesystem();
             $fs->remove($dir);
             Hook::exec('actionClearSf2Cache');
@@ -4041,7 +4041,7 @@ exit;
             return;
         }
 
-        $sort_function = function ($a, $b) use ($column) { return $b[$column] > $a[$column] ? 1 : -1; };
+        $sort_function = static function ($a, $b) use ($column) { return $b[$column] > $a[$column] ? 1 : -1; };
 
         uasort($rows, $sort_function);
 

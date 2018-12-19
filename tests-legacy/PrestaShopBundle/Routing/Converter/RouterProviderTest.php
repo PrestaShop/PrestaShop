@@ -257,7 +257,7 @@ class RouterProviderTest extends TestCase
         $mockRouter
             ->method('generate')
             ->will($this->returnCallback(
-                function($routeName) use ($routeCollection) {
+                static function($routeName) use ($routeCollection) {
                     $route = $routeCollection->get($routeName);
 
                     return null !== $route ? $route->getPath() : null;

@@ -155,7 +155,7 @@ class HookCore extends ObjectModel
         );
 
         if ($only_display_hooks) {
-            return array_filter($hooks, function ($hook) {
+            return array_filter($hooks, static function ($hook) {
                 return self::isDisplayHookName($hook['name']);
             });
         } else {
@@ -297,7 +297,7 @@ class HookCore extends ObjectModel
                 return $aliasesList[$hookName];
             }
 
-            $retroName = array_keys(array_filter($aliasesList, function ($elem) use ($hookName) {
+            $retroName = array_keys(array_filter($aliasesList, static function ($elem) use ($hookName) {
                 return in_array($hookName, $elem);
             }));
 
@@ -330,7 +330,7 @@ class HookCore extends ObjectModel
         $aliases = Hook::getHookAliasesFor($hookName);
         $aliases[] = $hookName;
 
-        return array_reduce($aliases, function ($prev, $curr) use ($module) {
+        return array_reduce($aliases, static function ($prev, $curr) use ($module) {
             return $prev || is_callable(array($module, 'hook' . $curr));
         }, false);
     }

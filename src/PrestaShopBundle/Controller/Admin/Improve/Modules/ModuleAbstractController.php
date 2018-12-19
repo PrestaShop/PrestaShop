@@ -44,7 +44,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
     protected function getNotificationPageData($type)
     {
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
-        $modulesPresenterCallback = function (AddonsCollection &$modules) use ($modulePresenter) {
+        $modulesPresenterCallback = static function (AddonsCollection &$modules) use ($modulePresenter) {
             return $modulePresenter->presentCollection($modules);
         };
 

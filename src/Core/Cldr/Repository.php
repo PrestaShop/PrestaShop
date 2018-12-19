@@ -184,7 +184,7 @@ class Repository
         }
 
         //sort array naturally
-        uasort($datas, function ($x, $y) {
+        uasort($datas, static function ($x, $y) {
             return strnatcmp($x['name'], $y['name']);
         });
 

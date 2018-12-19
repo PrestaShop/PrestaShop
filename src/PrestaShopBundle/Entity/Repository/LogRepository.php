@@ -115,10 +115,10 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     {
         $employeeTable = $this->databasePrefix . 'employee';
         $queryBuilder = $this->connection->createQueryBuilder();
-        $wheres = array_filter($filters['filters'], function ($value) {
+        $wheres = array_filter($filters['filters'], static function ($value) {
             return !empty($value);
         });
-        $scalarFilters = array_filter($wheres, function ($key) {
+        $scalarFilters = array_filter($wheres, static function ($key) {
             return !in_array($key, array('date_from', 'date_to', 'employee'), true);
         }, ARRAY_FILTER_USE_KEY);
 

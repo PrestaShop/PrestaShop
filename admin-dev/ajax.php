@@ -45,7 +45,7 @@ if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.co
 if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $import = new AdminImportController();
 
-    $fields = array_map(function ($elem) {
+    $fields = array_map(static function ($elem) {
         return ['field' => $elem];
     }, $import->getAvailableFields(true));
     die(json_encode($fields));

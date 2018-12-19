@@ -476,7 +476,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'type_product' => $product->getType(),
             'inputPackItems' => [
                 'data' => array_map(
-                    function ($p) {
+                    static function ($p) {
                         return [
                             'id' => $p->id,
                             'id_product_attribute' => isset($p->id_pack_product_attribute)
@@ -501,7 +501,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'id_category_default' => $product->id_category_default,
             'related_products' => [
                 'data' => array_map(
-                    function ($p) {
+                    static function ($p) {
                         return $p['id_product'];
                     },
                     call_user_func_array(
@@ -644,7 +644,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'show_condition' => (bool) $product->show_condition,
             'condition' => $product->condition,
             'suppliers' => array_map(
-                function ($s) {
+                static function ($s) {
                     return $s->id_supplier;
                 },
                 $this->supplierAdapter->getProductSuppliers($product->id)
@@ -677,7 +677,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private function getProductAttachments(Product $product)
     {
         return array_map(
-            function ($attachment) {
+            static function ($attachment) {
                 return $attachment['id_attachment'];
             },
             Attachment::getAttachments($this->locales[0]['id_lang'], $product->id)

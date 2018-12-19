@@ -65,7 +65,7 @@ class AdminAttributeGeneratorControllerWrapper
 
         //add combination if not already exists
         $combinations = array_values(AdminAttributeGeneratorController::createCombinations(array_values($options)));
-        $combinationsValues = array_values(array_map(function () use ($product) {
+        $combinationsValues = array_values(array_map(static function () use ($product) {
             return array(
                 'id_product' => $product->id,
             );

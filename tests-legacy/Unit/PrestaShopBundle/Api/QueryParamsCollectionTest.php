@@ -459,7 +459,7 @@ AND EXISTS(SELECT 1
             'features',
         );
 
-        array_walk($validQueryParams, function ($name) use ($testedParams, &$params) {
+        array_walk($validQueryParams, static function ($name) use ($testedParams, &$params) {
             if (array_key_exists($name, $testedParams) && !is_null($testedParams[$name])) {
                 $params[$name] = $testedParams[$name];
             }

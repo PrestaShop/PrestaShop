@@ -131,7 +131,7 @@ class JavascriptManagerCore extends AbstractAssetManager
     {
         foreach ($this->valid_position as $position) {
             foreach ($this->list[$position] as $type => $items) {
-                Tools::uasort($items, function ($a, $b) {
+                Tools::uasort($items, static function ($a, $b) {
                     if ($a['priority'] === $b['priority']) {
                         return 0;
                     }

@@ -96,7 +96,7 @@ class ConditionsToApproveFinderCore
 
     public function getConditionsToApproveForTemplate()
     {
-        return array_map(function (TermsAndConditions $condition) {
+        return array_map(static function (TermsAndConditions $condition) {
             return $condition->format();
         }, $this->getConditionsToApprove());
     }

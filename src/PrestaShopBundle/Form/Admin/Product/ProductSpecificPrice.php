@@ -292,7 +292,7 @@ class ProductSpecificPrice extends CommonAbstractType
         // will reset the global form.
         //
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, static function (FormEvent $event) {
             $data = $event->getData();
 
             if (empty($data['sp_id_product_attribute'])) {

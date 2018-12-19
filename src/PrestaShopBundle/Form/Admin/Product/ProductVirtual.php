@@ -137,7 +137,7 @@ class ProductVirtual extends CommonAbstractType
                 ]
             );
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, static function (FormEvent $event) {
             $form = $event->getForm();
             $data = $event->getData();
 

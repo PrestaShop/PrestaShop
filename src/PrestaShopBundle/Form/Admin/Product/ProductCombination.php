@@ -210,7 +210,7 @@ class ProductCombination extends CommonAbstractType
                 'currency' => $this->currency->iso_code,
             ]);
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, static function (FormEvent $event) {
             $form = $event->getForm();
             $data = $event->getData();
 

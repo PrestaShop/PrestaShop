@@ -94,7 +94,7 @@ class CheckoutProcessCore implements RenderableInterface
         );
 
         $params = array(
-            'steps' => array_map(function (CheckoutStepInterface $step) {
+            'steps' => array_map(static function (CheckoutStepInterface $step) {
                 return array(
                     'identifier' => $step->getIdentifier(),
                     'ui' => new RenderableProxy($step),

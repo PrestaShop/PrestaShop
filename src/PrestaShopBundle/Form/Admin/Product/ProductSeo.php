@@ -147,7 +147,7 @@ class ProductSeo extends CommonAbstractType
                         $this->translator->trans('Temporary redirection to a product (302)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND,
                         $this->translator->trans('No redirection (404)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_NOT_FOUND,
                     ],
-                    'choice_attr' => function ($val, $key, $index) use ($remoteUrls) {
+                    'choice_attr' => static function ($val, $key, $index) use ($remoteUrls) {
                         if (array_key_exists($index, $remoteUrls)) {
                             return ['data-remoteurl' => $remoteUrls[$index]];
                         }

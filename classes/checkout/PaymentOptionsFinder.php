@@ -81,8 +81,8 @@ class PaymentOptionsFinderCore extends HookFinder
 
         $find = $free ? $this->findFree() : $this->find();
 
-        return array_map(function (array $options) use (&$id) {
-            return array_map(function (PaymentOption $option) use (&$id) {
+        return array_map(static function (array $options) use (&$id) {
+            return array_map(static function (PaymentOption $option) use (&$id) {
                 ++$id;
                 $formattedOption = $option->toArray();
                 $formattedOption['id'] = 'payment-option-' . $id;

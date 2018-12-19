@@ -184,7 +184,7 @@ class ModuleManager implements AddonManagerInterface
     {
         $modules = (array) $this->groupModulesByInstallationProgress();
 
-        return array_reduce($modules, function ($carry, $item) {
+        return array_reduce($modules, static function ($carry, $item) {
             return $carry + count($item);
         }, 0);
     }

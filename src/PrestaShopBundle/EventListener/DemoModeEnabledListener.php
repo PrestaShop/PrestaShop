@@ -124,7 +124,7 @@ class DemoModeEnabledListener
 
         $url = $this->router->generate($demoRestricted->getRedirectRoute(), $routeParametersToKeep);
 
-        $event->setController(function () use ($url) {
+        $event->setController(static function () use ($url) {
             return new RedirectResponse($url);
         });
     }

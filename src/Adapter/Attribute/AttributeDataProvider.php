@@ -77,7 +77,7 @@ class AttributeDataProvider
 			ORDER BY a.`position` ASC
 		');
 
-        return array_map(function ($a) {
+        return array_map(static function ($a) {
             return $a['id_attribute'];
         }, $result);
     }
@@ -100,7 +100,7 @@ class AttributeDataProvider
         }
 
         $allCombinations = $product->getAttributeCombinations(1, false);
-        $allCombinationsIds = array_map(function ($o) {
+        $allCombinationsIds = array_map(static function ($o) {
             return $o['id_product_attribute'];
         }, $allCombinations);
 
