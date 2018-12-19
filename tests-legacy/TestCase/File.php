@@ -42,7 +42,7 @@ class File
         while ($file !== false) {
             if ($file != '.' && $file != '..') {
                 if (is_dir($src.'/'.$file)) {
-                    self::recurseCopy($src.'/'.$file, $dst.'/'.$file);
+                    static::recurseCopy($src.'/'.$file, $dst.'/'.$file);
                 } else {
                     copy($src.'/'.$file, $dst.'/'.$file);
                 }
@@ -64,7 +64,7 @@ class File
         while ($file !== false) {
             if ($file != '.' && $file != '..') {
                 if (is_dir($dir.'/'.$file)) {
-                    self::recurseDelete($dir.'/'.$file);
+                    static::recurseDelete($dir.'/'.$file);
                 } else {
                     unlink($dir.'/'.$file);
                 }

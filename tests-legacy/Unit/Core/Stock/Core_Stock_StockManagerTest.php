@@ -49,7 +49,7 @@ class FakeProduct4759
     public $stock_available;
     public function __construct($stock_available, $pack_stock_type = false)
     {
-        $this->id = ++self::$LAST_ID;
+        $this->id = ++satic::$LAST_ID;
         $this->pack_stock_type = $pack_stock_type ? $pack_stock_type : 0;
         $this->stock_available = new FakeStockAvailable4759($stock_available);
     }

@@ -2481,7 +2481,7 @@ class AdminProductsController extends AdminProductsControllerCore
         if (isset($categories[$id_category])) {
             foreach ($categories[$id_category] as $key => $row) {
                 if ($key != 'infos') {
-                    $content .= self::recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $categories[$id_category][$key], $key, $id_category_default, $has_suite);
+                    $content .= static::recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $categories[$id_category][$key], $key, $id_category_default, $has_suite);
                 }
             }
         }

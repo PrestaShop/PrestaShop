@@ -101,7 +101,7 @@ class Tools extends ToolsCore
     {
         if (!is_object(Context::getContext()->controller)) {
             try {
-                $controller = Controller::getController(self::getDefaultControllerClass());
+                $controller = Controller::getController(static::getDefaultControllerClass());
                 $controller->setRedirectAfter($url);
                 $controller->run();
                 Context::getContext()->controller = $controller;

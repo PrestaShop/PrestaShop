@@ -86,7 +86,7 @@ class WhereExpressionBuilder {
     }
     
     protected function buildWhereExpression($parsed) {
-        $builder = new self();
+        $builder = new static();
         return $builder->build($parsed);
     }
     

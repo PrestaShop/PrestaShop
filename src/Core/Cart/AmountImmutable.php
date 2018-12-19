@@ -99,7 +99,7 @@ class AmountImmutable
      */
     public function add(AmountImmutable $amount)
     {
-        return new self(
+        return new static(
             $this->getTaxIncluded() + $amount->getTaxIncluded(),
             $this->getTaxExcluded() + $amount->getTaxExcluded()
         );
@@ -114,7 +114,7 @@ class AmountImmutable
      */
     public function sub(AmountImmutable $amount)
     {
-        return new self(
+        return new static(
             $this->getTaxIncluded() - $amount->getTaxIncluded(),
         $this->getTaxExcluded() - $amount->getTaxExcluded()
         );

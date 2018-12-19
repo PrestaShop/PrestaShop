@@ -91,7 +91,7 @@ class ToolsInstall
         $children = array();
         $first = true;
         foreach ($xml->children() as $elementName => $child) {
-            $value = self::simpleXMLToArray($child, $flattenValues, $flattenAttributes, $flattenChildren, $valueKey, $attributesKey, $childrenKey);
+            $value = static::simpleXMLToArray($child, $flattenValues, $flattenAttributes, $flattenChildren, $valueKey, $attributesKey, $childrenKey);
             if (isset($children[$elementName])) {
                 if ($first) {
                     $temp = $children[$elementName];

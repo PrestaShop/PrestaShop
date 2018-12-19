@@ -74,7 +74,7 @@ class SortOrder
     {
         list($entity, $field, $direction) = explode('.', $paramValue);
 
-        return new self($entity, $field, $direction);
+        return new static($entity, $field, $direction);
     }
 
     public function setLabel($label)

@@ -86,11 +86,11 @@ class Install extends AbstractInstall
     public function __construct($settingsFile = null, $bootstrapFile = null)
     {
         if ($bootstrapFile === null) {
-            $bootstrapFile = self::BOOTSTRAP_FILE;
+            $bootstrapFile = static::BOOTSTRAP_FILE;
         }
 
         if ($settingsFile === null) {
-            $settingsFile = self::SETTINGS_FILE;
+            $settingsFile = static::SETTINGS_FILE;
         }
 
         $this->settingsFile = $settingsFile;
@@ -690,14 +690,14 @@ class Install extends AbstractInstall
 
     public function getLocalizationPackContent($version, $country)
     {
-        if (self::$_cache_localization_pack_content === null || array_key_exists($country, self::$_cache_localization_pack_content)) {
+        if (static::$_cache_localization_pack_content === null || array_key_exists($country, static::$_cache_localization_pack_content)) {
             $localizationWarmer = new LocalizationWarmer($version, $country);
             $localization_file_content = $localizationWarmer->warmUp(_PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR);
 
-            self::$_cache_localization_pack_content[$country] = $localization_file_content;
+            static::$_cache_localization_pack_content[$country] = $localization_file_content;
         }
 
-        return isset(self::$_cache_localization_pack_content[$country]) ? self::$_cache_localization_pack_content[$country] : false;
+        return isset(static::$_cache_localization_pack_content[$country]) ? static::$_cache_localization_pack_content[$country] : false;
     }
 
     /**
