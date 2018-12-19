@@ -172,6 +172,9 @@
         "unit-tests": [
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
         ],
+        "integration-survival-tests": [
+            "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/bin/phpunit -c tests/Integration/Survival/phpunit-survival.xml"
+        ],
         "phpunit-admin": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
