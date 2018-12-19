@@ -33,7 +33,6 @@ use Tools;
 
 class RoundingTypeTest extends AbstractCartCalculationTest
 {
-
     /**
      * Order::ROUND_ITEM
      * Order::ROUND_LINE

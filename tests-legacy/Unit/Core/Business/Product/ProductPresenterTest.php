@@ -38,6 +38,7 @@ class PriceFormatter extends BasePricePresenter
     {
         return $price;
     }
+
     public function format($price, $currency = null)
     {
         return "#$price";
@@ -124,7 +125,6 @@ class ProductPresenterTest extends UnitTestCase
     {
         return $this->_presentProduct('PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter', $field);
     }
-
 
     public function testPriceShouldBeShownInCatalogMode()
     {

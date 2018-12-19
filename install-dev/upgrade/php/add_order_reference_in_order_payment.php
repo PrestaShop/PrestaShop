@@ -90,5 +90,6 @@ function add_order_reference_in_order_payment()
     if (!$res) {
         return array('errors' => true, 'msg' => Db::getInstance()->getMsgError());
     }
+
     return true;
 }

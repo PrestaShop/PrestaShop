@@ -75,6 +75,7 @@ class AdminProductDataUpdater implements ProductInterface
             $product = new Product($productId);
             if (!Validate::isLoadedObject($product)) {
                 $failedIdList[] = $productId;
+
                 continue;
             }
             $product->active = ($activate ? 1 : 0);
@@ -124,6 +125,7 @@ class AdminProductDataUpdater implements ProductInterface
                 $this->duplicateProduct($productId);
             } catch (\Exception $e) {
                 $failedIdList[] = $productId;
+
                 continue;
             }
         }
@@ -247,6 +249,7 @@ class AdminProductDataUpdater implements ProductInterface
             if ($k == 'filter_category') {
                 continue;
             }
+
             throw new \Exception('Cannot sort when filterParams contains other filter than \'filter_category\'.', 5010);
         }
 

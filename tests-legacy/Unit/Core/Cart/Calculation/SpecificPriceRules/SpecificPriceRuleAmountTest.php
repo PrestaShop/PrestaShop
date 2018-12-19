@@ -28,7 +28,6 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\SpecificPriceRules;
 
 class SpecificPriceRuleAmountTest extends AbstractSpecificPriceRuleTest
 {
-
     const SPECIFIC_PRICE_RULES_FIXTURES = [
         1 => ['reductionType' => 'amount', 'reduction' => 1, 'fromQuantity' => 1],
         2 => ['reductionType' => 'amount', 'reduction' => 3, 'fromQuantity' => 2],

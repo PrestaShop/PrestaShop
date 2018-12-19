@@ -86,6 +86,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                             'name' => $this->categoryAdapter->getBreadCrumb($category->id),
                             'image' => $category->image,
                         ];
+
                         break;
 
                     default:
@@ -95,6 +96,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                             'name' => reset($product->name) . ' (ref:' . $product->reference . ')',
                             'image' => $product->image,
                         ];
+
                         break;
                 }
                 ++$i;

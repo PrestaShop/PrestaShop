@@ -32,7 +32,6 @@ use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 
 class IntegrationTestCase extends TestCase
 {
-
     /**
      * @var ContextMocker
      */

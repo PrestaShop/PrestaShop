@@ -14,7 +14,7 @@ class AdminGamificationController extends ModuleAdminController
             Tools::redirectAdmin($this->context->link->getAdminLink('AdminHome'));
         }
     }
-    
+
     public function setMedia($isNewTheme = false)
     {
         $this->addJqueryUI('ui.progressbar');
@@ -28,22 +28,22 @@ class AdminGamificationController extends ModuleAdminController
 
         $this->addJs(_MODULE_DIR_.$this->module->name.'/views/js/jquery.isotope.js');
         $this->addCSS(array(_MODULE_DIR_.$this->module->name.'/views/css/bubble-popup.css', _MODULE_DIR_.$this->module->name.'/views/css/isotope.css'));
-        
+
         return parent::setMedia($isNewTheme);
     }
-    
+
     public function initToolBarTitle()
     {
         $this->toolbar_title[] = $this->l('Administration');
         $this->toolbar_title[] = $this->l('Merchant Expertise');
     }
-    
+
     public function initPageHeaderToolbar()
     {
         parent::initPageHeaderToolbar();
         unset($this->page_header_toolbar_btn['back']);
     }
-    
+
     public function renderView()
     {
         $badges_feature = new Collection('badge', $this->context->language->id);
@@ -56,12 +56,12 @@ class AdminGamificationController extends ModuleAdminController
         $badges_achievement->sqlWhere('type = \'achievement\' AND awb != 1');
         $badges_achievement->orderBy('id_group');
         $badges_achievement->orderBy('group_position');
-        
+
         $badges_international = new Collection('badge', $this->context->language->id);
         $badges_international->sqlWhere('type = \'international\' AND awb != 1');
         $badges_international->orderBy('id_group');
         $badges_international->orderBy('group_position');
-        
+
         $groups = array();
         $query = new DbQuery();
         $query->select('DISTINCT(b.`id_group`), bl.group_name, b.type');
@@ -80,7 +80,7 @@ class AdminGamificationController extends ModuleAdminController
             'badges_achievement' => array('name' => $this->l('Achievements'), 'badges' => $badges_achievement),
             'badges_international' => array('name' => $this->l('International'), 'badges' => $badges_international),
         );
-        
+
         $levels = array(
             1 => $this->l('1. Beginner'),
             2 => $this->l('2. Pro'),
@@ -89,7 +89,7 @@ class AdminGamificationController extends ModuleAdminController
             5 => $this->l('5. Guru'),
             6 => $this->l('6. Legend'),
         );
-        
+
         $this->tpl_view_vars = array(
             'badges_type' => $badges_type,
             'current_level_percent' => (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT'),
@@ -101,15 +101,15 @@ class AdminGamificationController extends ModuleAdminController
         if (version_compare(_PS_VERSION_, '1.5.6.0', '>')) {
             $this->base_tpl_view = 'view_bt.tpl';
         }
-        
+
         return parent::renderView();
     }
-    
+
     public function ajaxProcessDisableNotification()
     {
         Configuration::updateGlobalValue('GF_NOTIFICATION', 0);
     }
-    
+
     public function ajaxProcessGamificationTasks()
     {
         if (!Configuration::get('GF_INSTALL_CALC')) {
@@ -117,23 +117,23 @@ class AdminGamificationController extends ModuleAdminController
             $this->processInstallCalculation();
             Configuration::updateGlobalValue('GF_INSTALL_CALC', 1);
         }
-            
+
         $return = array(
             'refresh_data' => $this->processRefreshData(),
             'daily_calculation' => $this->processMakeDailyCalculation(),
             'advice_validation' => $this->processAdviceValidation(),
         );
-        
+
         $return['advices_to_display'] = $this->processGetAdvicesToDisplay();
         //get only one random advice by tab
         if (count($return['advices_to_display']['advices']) > 1) {
             $rand = mt_rand(0, count($return['advices_to_display']['advices']) - 1);
             $return['advices_to_display']['advices'] = array($return['advices_to_display']['advices'][$rand]);
         }
-        
+
         if (Tab::getIdFromClassName('AdminDashboard') == Tools::getValue('id_tab')) {
             $return['advices_premium_to_display'] = $this->processGetAdvicesToDisplay(true);
-            
+
             if (count($return['advices_premium_to_display']['advices']) >= 2) {
                 $weighted_advices_array = array();
                 foreach ($return['advices_premium_to_display']['advices'] as $prem_advice) {
@@ -150,40 +150,38 @@ class AdminGamificationController extends ModuleAdminController
                 do {
                     $rand2 = mt_rand(0, count($weighted_advices_array) - 1);
                 } while ($rand == $rand2);
-    
+
                 $return['advices_premium_to_display']['advices'] = array($weighted_advices_array[$rand], $weighted_advices_array[$rand2]);
             } elseif (count($return['advices_premium_to_display']['advices']) > 0) {
                 $addons = Advice::getAddonsAdviceByIdTab((int)Tools::getValue('id_tab'));
                 $return['advices_premium_to_display']['advices'][] = array_shift($addons);
             }
         }
-        
-        
+
         $return['level_badge_validation'] = $this->processLevelAndBadgeValidation(Badge::getIdsBadgesToValidate());
         $return['header_notification'] = $this->module->renderHeaderNotification();
-        
+
         die(Tools::jsonEncode($return));
     }
-    
+
     public function processRefreshData()
     {
         return $this->module->refreshDatas();
     }
-        
+
     public function processGetAdvicesToDisplay($only_premium = false)
     {
         $return = array('advices' => array());
 
-        
         $id_tab = (int)Tools::getValue('id_tab');
         $ids_ps_advice = Tools::getValue('ids_ps_advice');
-        
+
         if ($only_premium) {
             $advices = Advice::getValidatedPremiumByIdTab($id_tab);
         } else {
             $advices = Advice::getValidatedByIdTab($id_tab);
         }
-        
+
         if (is_array($ids_ps_advice)) {
             foreach ($advices as $advice) {
                 if (is_array($ids_ps_advice) && in_array($advice['id_ps_advice'], $ids_ps_advice)) {
@@ -196,9 +194,10 @@ class AdminGamificationController extends ModuleAdminController
                 }
             }
         }
+
         return $return;
     }
-    
+
     public function processMakeDailyCalculation()
     {
         $return = true;
@@ -207,35 +206,37 @@ class AdminGamificationController extends ModuleAdminController
             $cond = new Condition((int)$id);
             $return &= $cond->processCalculation();
         }
+
         return $return;
     }
-    
+
     public function processAdviceValidation()
     {
         $return = true;
         $advices_to_validate = Advice::getIdsAdviceToValidate();
         $advices_to_unvalidate = Advice::getIdsAdviceToUnvalidate();
-        
+
         foreach ($advices_to_validate as $id) {
             $advice = new Advice((int)$id);
             $advice->validated = 1;
             $return &= $advice->save();
         }
-        
+
         foreach ($advices_to_unvalidate as $id) {
             $advice = new Advice((int)$id);
             $advice->validated = 0;
             $return &= $advice->save();
         }
+
         return $return;
     }
-    
+
     public function processLevelAndBadgeValidation($ids_badge)
     {
         $return = true;
         $current_level = (int)Configuration::get('GF_CURRENT_LEVEL');
         $current_level_percent = (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT');
-        
+
         $not_viewed_badge = explode('|', ltrim(Configuration::get('GF_NOT_VIEWED_BADGE', ''), ''));
         $nbr_notif = Configuration::get('GF_NOTIFICATION', 0);
 
@@ -251,7 +252,7 @@ class AdminGamificationController extends ModuleAdminController
             } else {
                 $current_level_percent += $badge->scoring;
             }
-            
+
             $return &= $badge->validate();
             $condition_ids = Condition::getIdsByBadgeGroup($badge->id_group);
             if (is_array($condition_ids) && count($condition_ids)) {
@@ -263,18 +264,19 @@ class AdminGamificationController extends ModuleAdminController
                 $new_ids_badge = Badge::getIdsBadgesToValidate();
                 $this->processLevelAndBadgeValidation($new_ids_badge);
             }
-            
+
             $nbr_notif ++;
             $not_viewed_badge[] = $badge->id;
         }
-        
+
         Configuration::updateGlobalValue('GF_NOTIFICATION', (int)$nbr_notif);
         Configuration::updateGlobalValue('GF_NOT_VIEWED_BADGE', implode('|', array_unique($not_viewed_badge)));
         Configuration::updateGlobalValue('GF_CURRENT_LEVEL', (int)$current_level);
         Configuration::updateGlobalValue('GF_CURRENT_LEVEL_PERCENT', (int)$current_level_percent);
+
         return $return;
     }
-    
+
     public function processInstallCalculation()
     {
         $group_position = 1;
@@ -288,7 +290,7 @@ class AdminGamificationController extends ModuleAdminController
             $group_position ++;
         } while (count($condition_ids));
     }
-    
+
     public function ajaxProcessSavePreactivationRequest()
     {
         $isoUser = Context::getContext()->language->iso_code;

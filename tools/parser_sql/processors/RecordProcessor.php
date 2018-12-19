@@ -41,7 +41,6 @@ require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
  * 
  */
 class RecordProcessor extends AbstractProcessor {
-
     private $expressionListProcessor;
 
     public function __construct() {
@@ -57,7 +56,7 @@ class RecordProcessor extends AbstractProcessor {
                 $values[$k] = "";
             }
         }
+
         return $this->expressionListProcessor->process($values);
     }
-
 }

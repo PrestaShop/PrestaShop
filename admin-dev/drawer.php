@@ -42,7 +42,7 @@ $id_lang = Tools::getValue('id_lang');
 if (!isset($cookie->id_employee) || !$cookie->id_employee || $cookie->id_employee != $id_employee) {
     die(Tools::displayError());
 }
-    
+
 if (!Validate::isModuleName($module)) {
     die(Tools::displayError());
 }

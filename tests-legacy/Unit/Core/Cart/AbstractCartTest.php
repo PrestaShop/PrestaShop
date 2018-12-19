@@ -48,7 +48,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
  */
 abstract class AbstractCartTest extends IntegrationTestCase
 {
-
     const DEFAULT_SHIPPING_FEE = 7;
     const DEFAULT_WRAPPING_FEE = 0;
 

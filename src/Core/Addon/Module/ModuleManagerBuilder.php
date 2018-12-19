@@ -174,6 +174,7 @@ class ModuleManagerBuilder
                     $this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml'
                 )
             );
+
             try {
                 $filesystem = new Filesystem();
                 $filesystem->dumpFile($phpConfigFile, '<?php return ' . var_export($config, true) . ';' . "\n");

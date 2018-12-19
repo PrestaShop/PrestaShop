@@ -32,7 +32,6 @@ use LegacyTests\Unit\ContextMocker;
 
 class ProductControllerTest extends IntegrationTestCase
 {
-
     /**
      * @var ContextMocker
      */

@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 $path_to_16 = $argv[1];
 $path_to_17 = $argv[2];
 
@@ -155,6 +154,7 @@ function getFormattedHookList($hookList, $folder)
         $line = explode(':', $hook, 2);
         if (count($line) !== 2) {
             echo "Warning, could not parse hook in:\n$hook\n\n";
+
             continue;
         }
 
@@ -162,6 +162,7 @@ function getFormattedHookList($hookList, $folder)
 
         if (!preg_match('/^\w+$/', $hookName)) {
             echo "Warning, strange hook name found in {$line[0]}:\n$hookName\n\n";
+
             continue;
         }
 

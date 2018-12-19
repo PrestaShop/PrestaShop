@@ -64,7 +64,6 @@ use Pack;
  */
 class ContextMocker
 {
-
     /**
      * @var \Context
      */

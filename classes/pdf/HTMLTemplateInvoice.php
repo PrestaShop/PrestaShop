@@ -300,15 +300,19 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         switch ($this->order->round_type) {
             case Order::ROUND_TOTAL:
                 $round_type = 'total';
+
                 break;
             case Order::ROUND_LINE:
                 $round_type = 'line';
+
                 break;
             case Order::ROUND_ITEM:
                 $round_type = 'item';
+
                 break;
             default:
                 $round_type = 'line';
+
                 break;
         }
 
