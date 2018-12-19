@@ -146,7 +146,7 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
         $language->language_code = $command->getTagIETF()->getValue();
         $language->date_format_lite = $command->getShortDateFormat();
         $language->date_format_full = $command->getFullDateFormat();
-        $language->is_rtl = $command->isRtlLanguage();
+        $language->is_rtl = $command->isRtl();
         $language->active = $command->isActive();
 
         if (false === $language->add()) {
