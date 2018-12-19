@@ -1,6 +1,9 @@
 const fs = require('fs');
 const common = require('./common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const keepLicense = require('uglify-save-license');
 
 /**
  * Returns the production webpack config,
@@ -24,7 +27,21 @@ function prodConfig(analyze) {
             chunks: 'all'
           }
         }
-      }
+      },
+      minimizer: [
+        new UglifyJsPlugin({
+          sourceMap: false,
+          uglifyOptions: {
+            compress: {
+              drop_console: true
+            },
+            output: {
+              comments: keepLicense
+            }
+          },
+        }),
+        new OptimizeCSSAssetsPlugin()
+      ]
     }
   });
 
