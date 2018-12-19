@@ -63,6 +63,8 @@
             }
         </script>
 
+        {{ ps.load_css(asset('themes/new-theme/public/stock.css')) }}
+
         {% if webpack_server %}
             <script src="http://localhost:8080/stock.bundle.js"></script>
         {% else %}
