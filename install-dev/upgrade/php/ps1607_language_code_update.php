@@ -39,5 +39,6 @@ function ps1607_language_code_update()
             }
         }
     }
+
     return true;
 }

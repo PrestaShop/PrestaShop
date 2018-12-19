@@ -81,7 +81,7 @@ function migrate_orders()
     }
     for ($i = 0; $i < $nb_loop; $i++) {
         $order_res = Db::getInstance()->query('SELECT * FROM `'._DB_PREFIX_.'orders` LIMIT '.(int)$start.', '.(int)$step);
-        $start = intval(($i+1) * $step);
+        $start = (int) (($i+1) * $step);
         $cpt = 0;
         $flush_limit = 200;
         while ($order = Db::getInstance()->nextRow($order_res)) {
@@ -243,6 +243,7 @@ function mo_duplicateTables()
 		`'._DB_PREFIX_.'orders_2` LIKE `'._DB_PREFIX_.'orders`');
     $res &= Db::getInstance()->execute('CREATE TABLE
 		`'._DB_PREFIX_.'order_detail_2` LIKE `'._DB_PREFIX_.'order_detail`');
+
     return $res;
 }
 
@@ -254,6 +255,7 @@ function mo_renameTables()
 
     $res &= Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'orders_2` TO `'._DB_PREFIX_.'orders`');
     $res &= Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'order_detail_2` TO `'._DB_PREFIX_.'order_detail`');
+
     return $res;
 }
 

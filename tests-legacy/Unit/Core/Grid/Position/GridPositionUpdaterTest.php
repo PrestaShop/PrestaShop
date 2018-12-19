@@ -56,6 +56,7 @@ class GridPositionUpdaterTest extends TestCase
         $gridUpdater = new GridPositionUpdater($updateHandler);
 
         $caughtException = null;
+
         try {
             $gridUpdater->update($positionUpdate);
         } catch (PositionException $e) {

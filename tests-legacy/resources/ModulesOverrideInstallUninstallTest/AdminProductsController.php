@@ -72,6 +72,7 @@ class AdminProductsController extends AdminProductsControllerCore
     * version: 1
     */
     protected $id_current_category;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30
@@ -270,6 +271,7 @@ class AdminProductsController extends AdminProductsControllerCore
             );
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:31
@@ -283,6 +285,7 @@ class AdminProductsController extends AdminProductsControllerCore
             return $echo;
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:31
@@ -304,6 +307,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->addJs(__PS_BASE_URI__.'js/vendor/spin.js');
         $this->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:31
@@ -320,11 +324,13 @@ class AdminProductsController extends AdminProductsControllerCore
                     $out[] = $word_item;
                 }
             }
+
             return (count($out) > 0) ? implode(',', $out) : '';
         } else {
             return '';
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:31
@@ -362,6 +368,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $object->on_sale = (int)Tools::getValue('on_sale');
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:31
@@ -402,6 +409,7 @@ class AdminProductsController extends AdminProductsControllerCore
             unset($this->_list[$i]['price_tmp']);
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:31
@@ -426,8 +434,10 @@ class AdminProductsController extends AdminProductsControllerCore
             }
             $this->object->loadStockData();
         }
+
         return $result;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:31
@@ -448,6 +458,7 @@ class AdminProductsController extends AdminProductsControllerCore
         );
         $this->content = $tpl->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:31
@@ -468,6 +479,7 @@ class AdminProductsController extends AdminProductsControllerCore
         );
         $this->content = $tpl->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:31
@@ -488,6 +500,7 @@ class AdminProductsController extends AdminProductsControllerCore
         );
         $this->content = $tpl->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:31
@@ -508,6 +521,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->display = 'edit';
         $this->tab_display = 'VirtualProduct';
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:31
@@ -634,6 +648,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -686,6 +701,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -720,6 +736,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->errors[] = Tools::displayError('An error occurred while deleting the object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -754,6 +771,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->errors[] = Tools::displayError('The image could not be found. ');
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -771,7 +789,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $success = 1;
                     $products = Tools::getValue($this->table.'Box');
                     if (is_array($products) && ($count = count($products))) {
-                        if (intval(ini_get('max_execution_time')) < round($count * 1.5)) {
+                        if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
                             ini_set('max_execution_time', round($count * 1.5));
                         }
                         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
@@ -813,6 +831,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->errors[] = Tools::displayError('You do not have permission to delete this.');
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -949,6 +968,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1031,6 +1051,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&update'.$this->table.'&action=Prices&token='.$this->token;
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1089,6 +1110,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1122,6 +1144,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         die(json_encode($json));
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1144,6 +1167,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->errors[] = Tools::displayError('An error occurred while setting priorities.');
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1175,6 +1199,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->errors[] = Tools::displayError('An error occurred while updating the custom configuration.');
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1219,6 +1244,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&action=Customization&conf=5'.(($id_category = (Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1388,6 +1414,7 @@ class AdminProductsController extends AdminProductsControllerCore
             ));
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1444,6 +1471,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         die(json_encode($json));
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1471,6 +1499,7 @@ class AdminProductsController extends AdminProductsControllerCore
             die(json_encode($json));
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1490,6 +1519,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1502,6 +1532,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->action = Tools::getValue('action');
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1540,7 +1571,7 @@ class AdminProductsController extends AdminProductsControllerCore
             Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int)$id_image.' AND ish.id_shop =  '.(int)$id_shop.' LIMIT 1');
         }
         if ($count_cover_image_shop > 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 0 WHERE ish.id_image <> '.(int)$id_image.' AND ish.cover = 1 AND ish.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image_shop - 1));
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 0 WHERE ish.id_image <> '.(int)$id_image.' AND ish.cover = 1 AND ish.id_shop = '.(int)$id_shop.' LIMIT '.(int) ($count_cover_image_shop - 1));
         }
         if ($res) {
             $this->jsonConfirmation($this->_conf[27]);
@@ -1548,6 +1579,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->jsonError(Tools::displayError('An error occurred while attempting to associate this image with your shop. '));
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1572,6 +1604,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->jsonError(Tools::displayError('An error occurred while attempting to move this picture.'));
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1590,6 +1623,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->jsonError(Tools::displayError('An error occurred while attempting to move this picture.'));
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1630,6 +1664,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->jsonError(Tools::displayError('An error occurred while attempting to delete the product image.'));
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1652,6 +1687,7 @@ class AdminProductsController extends AdminProductsControllerCore
         } else {
             return true;
         }
+
         return false;
     }
 
@@ -1688,6 +1724,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
         }
+
         return 0;
     }
 
@@ -1724,6 +1761,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         @unlink(_PS_TMP_IMG_DIR_.'product_'.$product->id.'.jpg');
         @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'_'.$this->context->shop->id.'.jpg');
+
         return (isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false;
     }
 
@@ -1760,6 +1798,7 @@ class AdminProductsController extends AdminProductsControllerCore
             Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_product));
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1767,8 +1806,9 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     protected function updateAssoShop($id_object)
     {
-        
+
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1779,6 +1819,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->checkProduct();
         if (!empty($this->errors)) {
             $this->display = 'add';
+
             return false;
         }
         $this->object = new $this->className();
@@ -1835,8 +1876,10 @@ class AdminProductsController extends AdminProductsControllerCore
         } else {
             $this->errors[] = Tools::displayError('An error occurred while creating an object.').' <b>'.$this->table.'</b>';
         }
+
         return $this->object;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1850,8 +1893,10 @@ class AdminProductsController extends AdminProductsControllerCore
         if (is_array($this->submitted_tabs) && in_array($tab_name, $this->submitted_tabs)) {
             return true;
         }
+
         return false;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1873,8 +1918,10 @@ class AdminProductsController extends AdminProductsControllerCore
             return false;
         }
         $res = parent::processStatus();
+
         return $res;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -1886,6 +1933,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->checkProduct();
         if (!empty($this->errors)) {
             $this->display = 'edit';
+
             return false;
         }
         $id = (int)Tools::getValue('id_'.$this->table);
@@ -1999,6 +2047,7 @@ class AdminProductsController extends AdminProductsControllerCore
             } else {
                 $this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.'</b> ('.Tools::displayError('The object cannot be loaded. ').')';
             }
+
             return $object;
         }
     }
@@ -2151,6 +2200,7 @@ class AdminProductsController extends AdminProductsControllerCore
             return !empty($_POST['multishop_check'][$field][$id_lang]);
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -2162,6 +2212,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $_POST['ecotax'] = Tools::ps_round($ecotax / (1 + Tax::getProductEcotaxRate() / 100), 6);
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -2194,6 +2245,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date'))) {
                 if (!Tools::getValue('virtual_product_expiration_date')) {
                     $this->errors[] = Tools::displayError('The expiration-date attribute is required.');
+
                     return false;
                 }
             }
@@ -2236,9 +2288,11 @@ class AdminProductsController extends AdminProductsControllerCore
                 $product_download = new ProductDownload((int)$id_product_download);
                 $product_download->date_expiration = date('Y-m-d H:i:s', time() - 1);
                 $product_download->active = 0;
+
                 return $product_download->save();
             }
         }
+
         return false;
     }
 
@@ -2280,8 +2334,10 @@ class AdminProductsController extends AdminProductsControllerCore
         if (!$tag_success) {
             $this->errors[] = Tools::displayError('An error occurred while adding tags.');
         }
+
         return $tag_success;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -2347,6 +2403,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['vat_number'] = file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php');
         parent::initContent();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -2419,8 +2476,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $kpis[] = $helper->generate();
         $helper = new HelperKpiRow();
         $helper->kpis = $kpis;
+
         return $helper->generate();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -2431,8 +2490,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->addRowAction('edit');
         $this->addRowAction('duplicate');
         $this->addRowAction('delete');
+
         return parent::renderList();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -2495,8 +2556,10 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
         }
+
         return $content;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -2511,6 +2574,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	 		</div>';
         $this->tpl_form_vars['draft_warning'] = $content;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -2568,6 +2632,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         parent::initPageHeaderToolbar();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -2694,8 +2759,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $parent = parent::renderForm();
         $this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
+
         return $parent;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -2723,6 +2790,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
             $preview_url .= ((strpos($preview_url, '?') === false) ? '?' : '&').'adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
         }
+
         return $preview_url;
     }
 
@@ -2914,6 +2982,7 @@ class AdminProductsController extends AdminProductsControllerCore
             StockAvailable::synchronize((int)$id_product);
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:32
@@ -2976,6 +3045,7 @@ class AdminProductsController extends AdminProductsControllerCore
         ));
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3087,6 +3157,7 @@ class AdminProductsController extends AdminProductsControllerCore
         ));
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3158,8 +3229,10 @@ class AdminProductsController extends AdminProductsControllerCore
                 $i++;
             }
         }
+
         return $pack_items;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3190,6 +3263,7 @@ class AdminProductsController extends AdminProductsControllerCore
         ));
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3230,7 +3304,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $data->assign(array(
             'download_product_file_missing' => $msg,
             'download_dir_writable' => ProductDownload::checkWritableDir(),
-            'up_filename' => strval(Tools::getValue('virtual_product_filename')),
+            'up_filename' => (string) (Tools::getValue('virtual_product_filename')),
         ));
         $product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
         $product->productDownload->date_expiration = ($product->productDownload->id > 0) ? ((!empty($product->productDownload->date_expiration) && $product->productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product->productDownload->date_expiration)) : '') : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
@@ -3252,6 +3326,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['product'] = $product;
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3261,6 +3336,7 @@ class AdminProductsController extends AdminProductsControllerCore
     {
         return $this->object->getPrice(false, $specific_price['id_product_attribute'], 2);
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3391,13 +3467,13 @@ class AdminProductsController extends AdminProductsControllerCore
 			var currencies = new Array();
 			currencies[0] = new Array();
 			currencies[0]["sign"] = "'.$defaultCurrency->sign.'";
-			currencies[0]["format"] = '.intval($defaultCurrency->format).';
+			currencies[0]["format"] = '.(int) ($defaultCurrency->format).';
 			';
         foreach ($currencies as $currency) {
             $content .= '
 				currencies['.$currency['id_currency'].'] = new Array();
 				currencies['.$currency['id_currency'].']["sign"] = "'.$currency['sign'].'";
-				currencies['.$currency['id_currency'].']["format"] = '.intval($currency['format']).';
+				currencies['.$currency['id_currency'].']["format"] = '.(int) ($currency['format']).';
 				';
         }
         $content .= '
@@ -3459,8 +3535,10 @@ class AdminProductsController extends AdminProductsControllerCore
 			</div>
 		</div>
 		';
+
         return $content;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3487,8 +3565,10 @@ class AdminProductsController extends AdminProductsControllerCore
         for ($i = $alreadyGenerated[Product::CUSTOMIZE_TEXTFIELD]; $i < (int)($this->getFieldValue($obj, 'text_fields')); $i++) {
             $customizableFieldIds[] = 'newLabel_'.Product::CUSTOMIZE_TEXTFIELD.'_'.$j++;
         }
+
         return implode('¤', $customizableFieldIds);
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3504,6 +3584,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'controllers/products/input_text_lang.tpl',
             $this->context->smarty
         );
+
         return '<div class="form-group">'
             .'<div class="col-lg-6">'
             .$template->assign(array(
@@ -3522,6 +3603,7 @@ class AdminProductsController extends AdminProductsControllerCore
             .'</div>'
             .'</div>';
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3538,8 +3620,10 @@ class AdminProductsController extends AdminProductsControllerCore
                 $content .= $this->_displayLabelField($label, $languages, $default_language, $type, $fieldIds, (int)($id_customization_field));
             }
         }
+
         return $content;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3572,6 +3656,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3622,6 +3707,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3721,6 +3807,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['product'] = $product;
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3739,6 +3826,7 @@ class AdminProductsController extends AdminProductsControllerCore
         ));
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3753,13 +3841,16 @@ class AdminProductsController extends AdminProductsControllerCore
                 foreach ($carrier_selected_list as $carrier_selected) {
                     if ($carrier_selected['id_reference'] == $carrier['id_reference']) {
                         $carrier['selected'] = true;
+
                         continue;
                     }
                 }
             }
         }
+
         return $carrier_list;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3778,6 +3869,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $product->setCarriers($carriers);
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3823,6 +3915,7 @@ class AdminProductsController extends AdminProductsControllerCore
             } else {
                 if (!$new_path = $image->getPathForCreation()) {
                     $file['error'] = Tools::displayError('An error occurred during new folder creation');
+
                     continue;
                 }
                 $error = 0;
@@ -3830,23 +3923,29 @@ class AdminProductsController extends AdminProductsControllerCore
                     switch ($error) {
                         case ImageManager::ERROR_FILE_NOT_EXIST :
                             $file['error'] = Tools::displayError('An error occurred while copying image, the file does not exist anymore.');
+
                             break;
                         case ImageManager::ERROR_FILE_WIDTH :
                             $file['error'] = Tools::displayError('An error occurred while copying image, the file width is 0px.');
+
                             break;
                         case ImageManager::ERROR_MEMORY_LIMIT :
                             $file['error'] = Tools::displayError('An error occurred while copying image, check your memory limit.');
+
                             break;
                         default:
                             $file['error'] = Tools::displayError('An error occurred while copying image.');
+
                             break;
                     }
+
                     continue;
                 } else {
                     $imagesTypes = ImageType::getImagesTypes('products');
                     foreach ($imagesTypes as $imageType) {
                         if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
                             $file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
+
                             continue;
                         }
                     }
@@ -3856,6 +3955,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $product->id));
                 if (!$image->update()) {
                     $file['error'] = Tools::displayError('Error while updating status');
+
                     continue;
                 }
                 $shops = Shop::getContextListShopID();
@@ -3877,6 +3977,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         die(json_encode(array($image_uploader->getName() => $files)));
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3952,6 +4053,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -3961,6 +4063,7 @@ class AdminProductsController extends AdminProductsControllerCore
     {
         return $this->initFormAttributes($obj);
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4028,6 +4131,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4110,8 +4214,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $helper->list_skip_actions = $this->list_skip_actions;
         $helper->colorOnBackground = true;
         $helper->override_folder = $this->tpl_folder.'combination/';
+
         return $helper->generateList($comb_array, $this->fields_list);
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4235,6 +4341,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4299,6 +4406,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4343,6 +4451,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4396,6 +4505,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4439,6 +4549,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         $this->l('- you have chosen to decrement products quantities.'), )));
                 }
                 StockAvailable::setProductDependsOnStock($product->id, (int)Tools::getValue('value'));
+
                 break;
             case 'pack_stock_type':
                 $value = Tools::getValue('value');
@@ -4466,6 +4577,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         $this->l('- advanced stock management is enabled for the pack'), )));
                 }
                 Product::setPackStockType($product->id, $value);
+
                 break;
             case 'out_of_stock':
                 if (Tools::getValue('value') === false) {
@@ -4475,6 +4587,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     die(json_encode(array('error' =>  $this->l('Incorrect value'))));
                 }
                 StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));
+
                 break;
             case 'set_qty':
                 if (Tools::getValue('value') === false || (!is_numeric(trim(Tools::getValue('value'))))) {
@@ -4490,6 +4603,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     ob_end_clean();
                     die(json_encode(array('error' => $error)));
                 }
+
                 break;
             case 'advanced_stock_management' :
                 if (Tools::getValue('value') === false) {
@@ -4505,10 +4619,12 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0) {
                     StockAvailable::setProductDependsOnStock($product->id, 0);
                 }
+
                 break;
         }
         die(json_encode(array('error' => false)));
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4530,8 +4646,10 @@ class AdminProductsController extends AdminProductsControllerCore
                 $content .= 'combination_images['.(int)$id_product_attribute.']['.$i++.'] = '.(int)$combination_image['id_image'].';';
             }
         }
+
         return $content;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4544,8 +4662,10 @@ class AdminProductsController extends AdminProductsControllerCore
                 return true;
             }
         }
+
         return false;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4615,6 +4735,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4630,8 +4751,10 @@ class AdminProductsController extends AdminProductsControllerCore
             'Name' => $this->l('Name'),
             'Mark all checkbox(es) of categories in which product is to appear' => $this->l('Mark the checkbox of each categories in which this product will appear.'),
         );
+
         return $trad[$key];
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4646,6 +4769,7 @@ class AdminProductsController extends AdminProductsControllerCore
 			</div>';
         $this->tpl_form_vars['warning_unavailable_product'] = $content;
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4673,6 +4797,7 @@ class AdminProductsController extends AdminProductsControllerCore
             die(json_encode($result));
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4688,7 +4813,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if (is_array($positions)) {
                 foreach ($positions as $position => $value) {
                     $pos = explode('_', $value);
-                    if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product)) {
+                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product)) {
                         if ($product = new Product((int)$pos[2])) {
                             if (isset($position) && $product->updatePosition($way, $position)) {
                                 $category = new Category((int)$id_category);
@@ -4702,12 +4827,14 @@ class AdminProductsController extends AdminProductsControllerCore
                         } else {
                             echo '{"hasError" : true, "errors" : "This product ('.(int)$id_product.') can t be loaded"}';
                         }
+
                         break;
                     }
                 }
             }
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33
@@ -4734,6 +4861,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 16:05:33

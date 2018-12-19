@@ -1262,15 +1262,19 @@ class AdminOrdersControllerCore extends AdminController
         } elseif ((Tools::isSubmit('submitAddressShipping') || Tools::isSubmit('submitAddressInvoice')) && isset($order)) {
             if ($this->access('edit')) {
                 $address = new Address(Tools::getValue('id_address'));
+                $cart = Cart::getCartByOrderId($order->id);
                 if (Validate::isLoadedObject($address)) {
-                    // Update the address on order
+                    // Update the address on order and cart
                     if (Tools::isSubmit('submitAddressShipping')) {
                         $order->id_address_delivery = $address->id;
+                        $cart->id_address_delivery = $address->id;
                     } elseif (Tools::isSubmit('submitAddressInvoice')) {
                         $order->id_address_invoice = $address->id;
+                        $cart->id_address_invoice = $address->id;
                     }
                     $order->update();
                     $order->refreshShippingCost();
+                    $cart->update();
 
                     Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=4&token=' . $this->token);
                 } else {
@@ -1467,6 +1471,7 @@ class AdminOrdersControllerCore extends AdminController
                             } else {
                                 $this->errors[] = $this->trans('The discount value is invalid.', array(), 'Admin.Orderscustomers.Notification');
                             }
+
                             break;
                         // Amount type
                         case 2:
@@ -1502,6 +1507,7 @@ class AdminOrdersControllerCore extends AdminController
                                     $cart_rules[0]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
                                 }
                             }
+
                             break;
                         // Free shipping type
                         case 3:
@@ -1530,6 +1536,7 @@ class AdminOrdersControllerCore extends AdminController
                                 $cart_rules[0]['value_tax_incl'] = $order->total_shipping_tax_incl;
                                 $cart_rules[0]['value_tax_excl'] = $order->total_shipping_tax_excl;
                             }
+
                             break;
                         default:
                             $this->errors[] = $this->trans('The discount type is invalid.', array(), 'Admin.Orderscustomers.Notification');
@@ -2623,6 +2630,7 @@ class AdminOrdersControllerCore extends AdminController
         foreach ($products as $currentProduct) {
             if (!empty($currentProduct['location'])) {
                 $stockLocationIsAvailable = true;
+
                 break;
             }
         }

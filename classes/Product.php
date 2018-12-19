@@ -1057,7 +1057,7 @@ class ProductCore extends ObjectModel
         $return = 1;
         if (is_array($products) && ($count = count($products))) {
             // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
-            if (intval(ini_get('max_execution_time')) < round($count * 1.5)) {
+            if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
                 ini_set('max_execution_time', round($count * 1.5));
             }
 
@@ -3876,7 +3876,7 @@ class ProductCore extends ObjectModel
             JOIN `' . _DB_PREFIX_ . 'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
             JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $id_lang . ')
             JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON (a.id_attribute_group = ag.`id_attribute_group`)
-            WHERE pa.`id_product` IN (' . implode(array_map('intval', $products), ',') . ') AND ag.`is_color_group` = 1
+            WHERE pa.`id_product` IN (' . implode(',', array_map('intval', $products)) . ') AND ag.`is_color_group` = 1
             GROUP BY pa.`id_product`, a.`id_attribute`, `group_by`
             ' . ($check_stock ? 'HAVING qty > 0' : '') . '
             ORDER BY a.`position` ASC;'
@@ -4029,6 +4029,7 @@ class ProductCore extends ObjectModel
         foreach ($result as $k => &$row) {
             if (!Product::checkAccessStatic((int) $row['id_product'], false)) {
                 unset($result[$k]);
+
                 continue;
             } else {
                 $row['id_product_attribute'] = Product::getDefaultAttribute((int) $row['id_product']);
@@ -4152,7 +4153,7 @@ class ProductCore extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT id_feature, id_product, id_feature_value
         FROM `' . _DB_PREFIX_ . 'feature_product`
-        WHERE `id_product` IN (' . implode($product_implode, ',') . ')');
+        WHERE `id_product` IN (' . implode(',', $product_implode) . ')');
         foreach ($result as $row) {
             if (!array_key_exists($row['id_product'], self::$_cacheFeatures)) {
                 self::$_cacheFeatures[$row['id_product']] = array();
@@ -4184,7 +4185,7 @@ class ProductCore extends ObjectModel
         LEFT JOIN ' . _DB_PREFIX_ . 'feature_value_lang fvl ON (fvl.id_feature_value = pf.id_feature_value AND fvl.id_lang = ' . (int) $id_lang . ')
         LEFT JOIN ' . _DB_PREFIX_ . 'feature f ON (f.id_feature = pf.id_feature)
         ' . Shop::addSqlAssociation('feature', 'f') . '
-        WHERE `id_product` IN (' . implode($product_implode, ',') . ')
+        WHERE `id_product` IN (' . implode(',', $product_implode) . ')
         ORDER BY f.position ASC');
 
         foreach ($result as $row) {
@@ -4763,6 +4764,8 @@ class ProductCore extends ObjectModel
         if (isset($row['quantity_wanted'])) {
             // 'quantity_wanted' may very well be zero even if set
             $quantity = max((int) $row['minimal_quantity'], (int) $row['quantity_wanted']);
+        } elseif (isset($row['cart_quantity'])) {
+            $quantity = max((int) $row['minimal_quantity'], (int) $row['cart_quantity']);
         } else {
             $quantity = (int) $row['minimal_quantity'];
         }
@@ -6771,6 +6774,31 @@ class ProductCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
+    /**
+     * For a given reference, returns the corresponding id.
+     *
+     * @param string $reference
+     *
+     * @return int id
+     */
+    public static function getIdByReference($reference)
+    {
+        if (empty($reference)) {
+            return 0;
+        }
+
+        if (!Validate::isReference($reference)) {
+            return 0;
+        }
+
+        $query = new DbQuery();
+        $query->select('p.id_product');
+        $query->from('product', 'p');
+        $query->where('p.reference = \'' . pSQL($reference) . '\'');
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+    }
+
     public function getWsType()
     {
         $type_information = array(
@@ -6940,11 +6968,13 @@ class ProductCore extends ObjectModel
             case ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY:
             case ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND:
                 return 'category';
+
                 break;
 
             case ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY:
             case ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND:
                 return 'product';
+
                 break;
         }
 

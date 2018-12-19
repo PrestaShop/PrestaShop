@@ -547,15 +547,19 @@ class CarrierCore extends ObjectModel
         switch ($modules_filters) {
             case 1:
                 $sql .= ' AND c.is_module = 0 ';
+
                 break;
             case 2:
                 $sql .= ' AND c.is_module = 1 ';
+
                 break;
             case 3:
                 $sql .= ' AND c.is_module = 1 AND c.need_range = 1 ';
+
                 break;
             case 4:
                 $sql .= ' AND (c.is_module = 0 OR c.need_range = 1) ';
+
                 break;
         }
         $sql .= ' GROUP BY c.`id_carrier` ORDER BY c.`position` ASC';
@@ -714,11 +718,13 @@ class CarrierCore extends ObjectModel
                 if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight($id_zone) === false)) {
                     $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                     unset($result[$k]);
+
                     continue;
                 }
                 if (($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice($id_zone) === false)) {
                     $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
                     unset($result[$k]);
+
                     continue;
                 }
 
@@ -734,6 +740,7 @@ class CarrierCore extends ObjectModel
                         && (!Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone))) {
                         $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                         unset($result[$k]);
+
                         continue;
                     }
 
@@ -741,12 +748,13 @@ class CarrierCore extends ObjectModel
                         && (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency))) {
                         $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
                         unset($result[$k]);
+
                         continue;
                     }
                 }
             }
 
-            $row['name'] = (strval($row['name']) != '0' ? $row['name'] : Carrier::getCarrierNameFromShopName());
+            $row['name'] = ((string) ($row['name']) != '0' ? $row['name'] : Carrier::getCarrierNameFromShopName());
             $row['price'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], true, null, null, $id_zone));
             $row['price_tax_exc'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], false, null, null, $id_zone));
             $row['img'] = file_exists(_PS_SHIP_IMG_DIR_ . (int) $row['id_carrier'] . '.jpg') ? _THEME_SHIP_DIR_ . (int) $row['id_carrier'] . '.jpg' : '';
@@ -754,6 +762,7 @@ class CarrierCore extends ObjectModel
             // If price is false, then the carrier is unavailable (carrier module)
             if ($row['price'] === false) {
                 unset($result[$k]);
+
                 continue;
             }
             $results_array[] = $row;

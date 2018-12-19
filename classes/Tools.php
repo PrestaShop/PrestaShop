@@ -75,9 +75,11 @@ class ToolsCore
         switch ($flag) {
             case 'NUMERIC':
                 $str = '0123456789';
+
                 break;
             case 'NO_NUMERIC':
                 $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
                 break;
             case 'RANDOM':
                 $num_bytes = ceil($length * 0.75);
@@ -87,6 +89,7 @@ class ToolsCore
             case 'ALPHANUMERIC':
             default:
                 $str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
                 break;
         }
 
@@ -647,7 +650,7 @@ class ToolsCore
     public static function getCountry($address = null)
     {
         $id_country = (int) Tools::getValue('id_country');
-        if (!$id_country && isset($address) && isset($address->id_country) && $address->id_country) {
+        if (!$id_country && isset($address, $address->id_country) && $address->id_country) {
             $id_country = (int) $address->id_country;
         } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
@@ -1577,6 +1580,7 @@ class ToolsCore
                     }
 
                     $truncate .= Tools::substr($tag[3], 0, $left + $entities_length);
+
                     break;
                 } else {
                     $truncate .= $tag[3];
@@ -2174,11 +2178,11 @@ class ToolsCore
      */
     public static function createFileFromUrl($url)
     {
-        $remoteFile = fopen($url, 'r');
+        $remoteFile = fopen($url, 'rb');
         if (!$remoteFile) {
             return false;
         }
-        $localFile = fopen(basename($url), 'w');
+        $localFile = fopen(basename($url), 'wb');
         if (!$localFile) {
             return false;
         }
@@ -2364,7 +2368,7 @@ class ToolsCore
         }
 
         // Write .htaccess data
-        if (!$write_fd = @fopen($path, 'w')) {
+        if (!$write_fd = @fopen($path, 'wb')) {
             return false;
         }
         if ($specific_before) {
@@ -2610,7 +2614,7 @@ FileETag none
     {
         $robots_file = _PS_ROOT_DIR_ . '/robots.txt';
 
-        if (!$write_fd = @fopen($robots_file, 'w')) {
+        if (!$write_fd = @fopen($robots_file, 'wb')) {
             return false;
         }
 
@@ -3127,6 +3131,7 @@ exit;
                 }
 
                 return $order_by_prefix . $value;
+
             break;
 
             case 'way':
@@ -3134,6 +3139,7 @@ exit;
                 $list = array(0 => 'asc', 1 => 'desc');
 
                 return (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc');
+
             break;
         }
     }
@@ -3156,12 +3162,15 @@ exit;
             switch ($unit) {
                 case 'k':
                     $qty *= 1024;
+
                     break;
                 case 'm':
                     $qty *= 1048576;
+
                     break;
                 case 'g':
                     $qty *= 1073741824;
+
                     break;
             }
 
@@ -3687,51 +3696,64 @@ exit;
         switch ($request) {
             case 'native':
                 $post_data .= '&method=listing&action=native';
+
                 break;
             case 'partner':
                 $post_data .= '&method=listing&action=partner';
+
                 break;
             case 'service':
                 $post_data .= '&method=listing&action=service';
+
                 break;
             case 'native_all':
                 $post_data .= '&method=listing&action=native&iso_code=all';
+
                 break;
             case 'must-have':
                 $post_data .= '&method=listing&action=must-have';
+
                 break;
             case 'must-have-themes':
                 $post_data .= '&method=listing&action=must-have-themes';
+
                 break;
             case 'customer':
                 $post_data .= '&method=listing&action=customer&username=' . urlencode(trim(Context::getContext()->cookie->username_addons))
                     . '&password=' . urlencode(trim(Context::getContext()->cookie->password_addons));
+
                 break;
             case 'customer_themes':
                 $post_data .= '&method=listing&action=customer-themes&username=' . urlencode(trim(Context::getContext()->cookie->username_addons))
                     . '&password=' . urlencode(trim(Context::getContext()->cookie->password_addons));
+
                 break;
             case 'check_customer':
                 $post_data .= '&method=check_customer&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
+
                 break;
             case 'check_module':
                 $post_data .= '&method=check&module_name=' . urlencode($params['module_name']) . '&module_key=' . urlencode($params['module_key']);
+
                 break;
             case 'module':
                 $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
-                if (isset($params['username_addons']) && isset($params['password_addons'])) {
+                if (isset($params['username_addons'], $params['password_addons'])) {
                     $post_data .= '&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
                 }
+
                 break;
             case 'hosted_module':
                 $post_data .= '&method=module&id_module=' . urlencode((int) $params['id_module']) . '&username=' . urlencode($params['hosted_email'])
                     . '&password=' . urlencode($params['password_addons'])
                     . '&shop_url=' . urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
                     . '&mail=' . urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
+
                 break;
             case 'install-modules':
                 $post_data .= '&method=listing&action=install-modules';
                 $post_data .= defined('_PS_HOST_MODE_') ? '-od' : '';
+
                 break;
             default:
                 return false;

@@ -27,15 +27,15 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 /* Getting cookie or logout */
-require_once(_PS_ADMIN_DIR_.'/init.php');
+require_once _PS_ADMIN_DIR_.'/init.php';
 
 $context = Context::getContext();
 
 if (Tools::isSubmit('ajaxReferrers')) {
-    require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
+    require _PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php';
 }
 
 if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {

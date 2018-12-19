@@ -1313,7 +1313,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
-        if (isset($this->{$ws_params_attribute_name}['retrieveData']) && isset($this->{$ws_params_attribute_name}['retrieveData']['retrieveMethod'])) {
+        if (isset($this->{$ws_params_attribute_name}['retrieveData'], $this->{$ws_params_attribute_name}['retrieveData']['retrieveMethod'])) {
             unset($default_resource_parameters['retrieveData']['retrieveMethod']);
         }
 
@@ -1741,7 +1741,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public function isMultiShopField($field)
     {
-        return isset($this->def['fields'][$field]) && isset($this->def['fields'][$field]['shop']) && $this->def['fields'][$field]['shop'];
+        return !empty($this->def['fields'][$field]['shop']);
     }
 
     /**

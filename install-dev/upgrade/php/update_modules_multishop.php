@@ -56,5 +56,6 @@ function update_modules_multishop()
         Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'blocklink_shop` (id_blocklink, id_shop)
 			(SELECT id_blocklink, 1 FROM `'._DB_PREFIX_.'blocklink`)');
     }
+
     return true;
 }

@@ -569,6 +569,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                     'href' => $this->context->link->getAdminLink('AdminAttributesGroups'),
                     'desc' => $this->trans('Back to list', array(), 'Admin.Actions'),
                 );
+
                 break;
             case 'view':
                 $this->toolbar_btn['newAttributes'] = array(
@@ -581,6 +582,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                     'href' => $this->context->link->getAdminLink('AdminAttributesGroups'),
                     'desc' => $this->trans('Back to list', array(), 'Admin.Actions'),
                 );
+
                 break;
             default: // list
                 $this->toolbar_btn['new'] = array(
@@ -603,10 +605,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
         switch ($this->display) {
             case 'edit':
                 $bread_extended[] = $this->trans('Edit New Attribute', array(), 'Admin.Catalog.Feature');
+
                 break;
 
             case 'add':
                 $bread_extended[] = $this->trans('Add New Attribute', array(), 'Admin.Catalog.Feature');
+
                 break;
 
             case 'view':
@@ -619,6 +623,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 } else {
                     $bread_extended[] = $this->attribute_name[$this->context->employee->id_lang];
                 }
+
                 break;
 
             case 'editAttributes':
@@ -642,6 +647,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 } else {
                     $bread_extended[] = $this->trans('Add New Value', array(), 'Admin.Catalog.Feature');
                 }
+
                 break;
         }
 
@@ -953,7 +959,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             foreach ($positions as $position => $value) {
                 $pos = explode('_', $value);
 
-                if ((isset($pos[1]) && isset($pos[2])) && (int) $pos[2] === $id_attribute) {
+                if ((isset($pos[1], $pos[2])) && (int) $pos[2] === $id_attribute) {
                     if ($attribute = new Attribute((int) $pos[2])) {
                         if (isset($position) && $attribute->updatePosition($way, $position)) {
                             echo 'ok position ' . (int) $position . ' for attribute ' . (int) $pos[2] . '\r\n';

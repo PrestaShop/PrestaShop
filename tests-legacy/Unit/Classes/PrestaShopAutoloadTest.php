@@ -45,7 +45,7 @@ class PrestaShopAutoloadTest extends TestCase
     public function testGenerateIndex()
     {
         $this->assertFileExists($this->file_index);
-        $data = include($this->file_index);
+        $data = include $this->file_index;
         $this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
     }
 
@@ -74,12 +74,12 @@ class PrestaShopAutoloadTest extends TestCase
         );
         PrestaShopAutoload::getInstance()->generateIndex();
         $this->assertFileExists($this->file_index);
-        $data = include($this->file_index);
+        $data = include $this->file_index;
         $this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
         $this->assertEquals($data['Connection']['override'], false);
         Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', 0);
         PrestaShopAutoload::getInstance()->generateIndex();
-        $data = include($this->file_index);
+        $data = include $this->file_index;
         $this->assertEquals($data['Connection']['override'], true);
     }
 

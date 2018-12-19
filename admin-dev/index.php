@@ -39,7 +39,7 @@ if (!defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
-require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+require _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 //small test to clear cache after upgrade
 if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {

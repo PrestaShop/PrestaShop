@@ -119,6 +119,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     {
         /** @var AdminProductWrapper $adminProductWrapper */
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+
         try {
             $price = $adminProductWrapper->getSpecificPriceDataById($idSpecificPrice);
         } catch (EntityNotFoundException $e) {
@@ -261,6 +262,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         if ('0000-00-00 00:00:00' === $dateAsString) {
             return null;
         }
+
         try {
             $dateTime = new DateTime($dateAsString);
         } catch (Exception $e) {

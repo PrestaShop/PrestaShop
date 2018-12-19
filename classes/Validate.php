@@ -112,12 +112,12 @@ class ValidateCore
      */
     public static function isFloat($float)
     {
-        return strval((float) $float) == strval($float);
+        return (string) ((float) $float) == (string) $float;
     }
 
     public static function isUnsignedFloat($float)
     {
-        return strval((float) $float) == strval($float) && $float >= 0;
+        return (string) ((float) $float) == (string) $float && $float >= 0;
     }
 
     /**
@@ -1183,7 +1183,7 @@ class ValidateCore
         }
         $sum = 0;
         for ($i = 0; $i != 14; ++$i) {
-            $tmp = ((($i + 1) % 2) + 1) * intval($siret[$i]);
+            $tmp = ((($i + 1) % 2) + 1) * (int) ($siret[$i]);
             if ($tmp >= 10) {
                 $tmp -= 9;
             }

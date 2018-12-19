@@ -29,7 +29,7 @@
  */
 function migrate_tabs_15()
 {
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php');
+    include_once _PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php';
 
     // ===== Remove deleted tabs =====
     $remove_tabs = array(
@@ -167,7 +167,7 @@ function migrate_tabs_15()
     $sql = 'SELECT id_tab FROM '._DB_PREFIX_.'tab
 			WHERE id_tab NOT IN ('.implode(', ', $parent).')
 				AND id_parent = 0';
-    
+
     $id_tabs = Db::getInstance()->executeS($sql);
     if (is_array($id_tabs) && count($id_tabs)) {
         foreach (Db::getInstance()->executeS($sql) as $row) {
@@ -183,6 +183,7 @@ function get_tab_id($class_name)
     if (!isset($cache[$class_name])) {
         $cache[$class_name] = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = \''.pSQL($class_name).'\'');
     }
+
     return $cache[$class_name];
 }
 

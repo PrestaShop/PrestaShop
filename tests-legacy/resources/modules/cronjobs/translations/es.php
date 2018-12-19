@@ -51,5 +51,4 @@ $_MODULE['<{cronjobs}prestashop>configure_c22203a97c7dd88dd68d1e864d46ee0c'] = '
 $_MODULE['<{cronjobs}prestashop>configure_d24ca73e026491b9610193f36d5edec8'] = 'Este módulo le ofrece una herramienta  adaptada a cron: puede crear tareas que exigirán un determinado conjunto de direcciones URL seguras a su tienda PrestaShop, por lo tanto desencadenar actualizaciones y otras tareas automatizadas.';
 $_MODULE['<{cronjobs}prestashop>task_b43ff85c4fc17955aa3ba90827d65430'] = '¡No olvide utilizar una dirección URL absoluta en el enlace de destino para que sea válido! El enlace también tiene que estar en el mismo dominio que la tienda.';
 
-
 return $_MODULE;

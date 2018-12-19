@@ -175,7 +175,7 @@ class InstallControllerHttp
         $self = new self();
 
         if (Tools::getValue('compile_templates')) {
-            require_once(_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
+            require_once _PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php';
             exit;
         }
 
@@ -197,6 +197,7 @@ class InstallControllerHttp
                     foreach ($abbreviations as $abbreviation) {
                         if ($session->shop_timezone == $abbreviation['timezone_id']) {
                             @date_default_timezone_set($session->shop_timezone);
+
                             break 2;
                         }
                     }
@@ -229,6 +230,7 @@ class InstallControllerHttp
                 && !$check_step->getControllerInstance()->validate()) {
                 self::$steps->setOffset($key);
                 $session->step = $session->last_step = self::$steps->current()->getName();
+
                 break;
             }
         }
@@ -361,6 +363,7 @@ class InstallControllerHttp
             }
         }
         InstallSession::getInstance()->support_phone = $this->phone;
+
         return $this->phone;
     }
 
@@ -472,13 +475,14 @@ class InstallControllerHttp
             ob_start();
         }
 
-        include($path.$template.'.php');
+        include $path.$template.'.php';
 
         if ($get_output) {
             $content = ob_get_contents();
             if (ob_get_level() && ob_get_length() > 0) {
                 ob_end_clean();
             }
+
             return $content;
         }
     }
@@ -491,6 +495,7 @@ class InstallControllerHttp
             $null = null;
             $ref = &$null;
         }
+
         return $ref;
     }
 

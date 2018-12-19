@@ -30,9 +30,9 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
-require_once(dirname(__FILE__) . '/RecordProcessor.php');
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__) . '/RecordProcessor.php';
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
  * 
@@ -42,7 +42,6 @@ require_once(dirname(__FILE__) . '/AbstractProcessor.php');
  * 
  */
 class ValuesProcessor extends AbstractProcessor {
-
     private $recordProcessor;
 
     public function __construct() {
@@ -73,7 +72,7 @@ class ValuesProcessor extends AbstractProcessor {
         }
 
         $tokens['VALUES'] = array_values($values);
+
         return $tokens;
     }
-
 }

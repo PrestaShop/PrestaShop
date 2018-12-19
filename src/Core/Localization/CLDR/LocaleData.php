@@ -125,6 +125,7 @@ class LocaleData
             foreach ($localeData->numberSymbols as $numberingSystem => $symbolsData) {
                 if (!isset($this->numberSymbols[$numberingSystem])) {
                     $this->numberSymbols[$numberingSystem] = $symbolsData;
+
                     continue;
                 }
                 $this->numberSymbols[$numberingSystem]->overrideWith($symbolsData);

@@ -68,6 +68,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $out[] = $word_item;
                 }
             }
+
             return (count($out) > 0) ? implode(',', $out) : '';
         } else {
             return '';
@@ -170,6 +171,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
             $this->object->loadStockData();
         }
+
         return $result;
     }
 
@@ -369,7 +371,6 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
 
-
     /**
      * Attach an existing attachment to the product
      *
@@ -523,7 +524,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $products = Tools::getValue($this->table.'Box');
                     if (is_array($products) && ($count = count($products))) {
                         // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
-                        if (intval(ini_get('max_execution_time')) < round($count * 1.5)) {
+                        if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
                             ini_set('max_execution_time', round($count * 1.5));
                         }
 
@@ -1303,7 +1304,7 @@ class AdminProductsController extends AdminProductsControllerCore
             Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int)$id_image.' AND ish.id_shop =  '.(int)$id_shop.' LIMIT 1');
         }
         if ($count_cover_image_shop > 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 0 WHERE ish.id_image <> '.(int)$id_image.' AND ish.cover = 1 AND ish.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image_shop - 1));
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 0 WHERE ish.id_image <> '.(int)$id_image.' AND ish.cover = 1 AND ish.id_shop = '.(int)$id_shop.' LIMIT '.(int) ($count_cover_image_shop - 1));
         }
 
         if ($res) {
@@ -1405,6 +1406,7 @@ class AdminProductsController extends AdminProductsControllerCore
         } else {
             return true;
         }
+
         return false;
     }
 
@@ -1439,6 +1441,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
         }
+
         return 0;
     }
 
@@ -1476,8 +1479,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         @unlink(_PS_TMP_IMG_DIR_.'product_'.$product->id.'.jpg');
         @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'_'.$this->context->shop->id.'.jpg');
+
         return (isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false;
     }
+
     /**
      * Copy a product image
      *
@@ -1518,7 +1523,7 @@ class AdminProductsController extends AdminProductsControllerCore
     protected function updateAssoShop($id_object)
     {
         //override AdminController::updateAssoShop() specifically for products because shop association is set with the context in ObjectModel
-        
+
     }
 
     public function processAdd()
@@ -1527,6 +1532,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
         if (!empty($this->errors)) {
             $this->display = 'add';
+
             return false;
         }
 
@@ -1643,6 +1649,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
         if (!empty($this->errors)) {
             $this->display = 'edit';
+
             return false;
         }
 
@@ -1775,6 +1782,7 @@ class AdminProductsController extends AdminProductsControllerCore
             } else {
                 $this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.'</b> ('.Tools::displayError('The object cannot be loaded. ').')';
             }
+
             return $object;
         }
     }
@@ -1991,6 +1999,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date'))) {
                 if (!Tools::getValue('virtual_product_expiration_date')) {
                     $this->errors[] = Tools::displayError('The expiration-date attribute is required.');
+
                     return false;
                 }
             }
@@ -2040,9 +2049,11 @@ class AdminProductsController extends AdminProductsControllerCore
                 $product_download = new ProductDownload((int)$id_product_download);
                 $product_download->date_expiration = date('Y-m-d H:i:s', time() - 1);
                 $product_download->active = 0;
+
                 return $product_download->save();
             }
         }
+
         return false;
     }
 
@@ -2241,6 +2252,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
         $helper = new HelperKpiRow();
         $helper->kpis = $kpis;
+
         return $helper->generate();
     }
 
@@ -2249,6 +2261,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->addRowAction('edit');
         $this->addRowAction('duplicate');
         $this->addRowAction('delete');
+
         return parent::renderList();
     }
 
@@ -2318,6 +2331,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
         }
+
         return $content;
     }
 
@@ -2547,6 +2561,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
         $parent = parent::renderForm();
         $this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
+
         return $parent;
     }
 
@@ -3073,6 +3088,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $i++;
             }
         }
+
         return $pack_items;
     }
 
@@ -3152,7 +3168,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $data->assign(array(
             'download_product_file_missing' => $msg,
             'download_dir_writable' => ProductDownload::checkWritableDir(),
-            'up_filename' => strval(Tools::getValue('virtual_product_filename')),
+            'up_filename' => (string) (Tools::getValue('virtual_product_filename')),
         ));
 
         $product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
@@ -3321,13 +3337,13 @@ class AdminProductsController extends AdminProductsControllerCore
 			var currencies = new Array();
 			currencies[0] = new Array();
 			currencies[0]["sign"] = "'.$defaultCurrency->sign.'";
-			currencies[0]["format"] = '.intval($defaultCurrency->format).';
+			currencies[0]["format"] = '.(int) ($defaultCurrency->format).';
 			';
         foreach ($currencies as $currency) {
             $content .= '
 				currencies['.$currency['id_currency'].'] = new Array();
 				currencies['.$currency['id_currency'].']["sign"] = "'.$currency['sign'].'";
-				currencies['.$currency['id_currency'].']["format"] = '.intval($currency['format']).';
+				currencies['.$currency['id_currency'].']["format"] = '.(int) ($currency['format']).';
 				';
         }
         $content .= '
@@ -3394,6 +3410,7 @@ class AdminProductsController extends AdminProductsControllerCore
 			</div>
 		</div>
 		';
+
         return $content;
     }
 
@@ -3418,6 +3435,7 @@ class AdminProductsController extends AdminProductsControllerCore
         for ($i = $alreadyGenerated[Product::CUSTOMIZE_TEXTFIELD]; $i < (int)($this->getFieldValue($obj, 'text_fields')); $i++) {
             $customizableFieldIds[] = 'newLabel_'.Product::CUSTOMIZE_TEXTFIELD.'_'.$j++;
         }
+
         return implode('¤', $customizableFieldIds);
     }
 
@@ -3433,6 +3451,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'controllers/products/input_text_lang.tpl',
             $this->context->smarty
         );
+
         return '<div class="form-group">'
             .'<div class="col-lg-6">'
             .$template->assign(array(
@@ -3464,6 +3483,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $content .= $this->_displayLabelField($label, $languages, $default_language, $type, $fieldIds, (int)($id_customization_field));
             }
         }
+
         return $content;
     }
 
@@ -3693,11 +3713,13 @@ class AdminProductsController extends AdminProductsControllerCore
                 foreach ($carrier_selected_list as $carrier_selected) {
                     if ($carrier_selected['id_reference'] == $carrier['id_reference']) {
                         $carrier['selected'] = true;
+
                         continue;
                     }
                 }
             }
         }
+
         return $carrier_list;
     }
 
@@ -3767,6 +3789,7 @@ class AdminProductsController extends AdminProductsControllerCore
             } else {
                 if (!$new_path = $image->getPathForCreation()) {
                     $file['error'] = Tools::displayError('An error occurred during new folder creation');
+
                     continue;
                 }
 
@@ -3776,26 +3799,32 @@ class AdminProductsController extends AdminProductsControllerCore
                     switch ($error) {
                         case ImageManager::ERROR_FILE_NOT_EXIST :
                             $file['error'] = Tools::displayError('An error occurred while copying image, the file does not exist anymore.');
+
                             break;
 
                         case ImageManager::ERROR_FILE_WIDTH :
                             $file['error'] = Tools::displayError('An error occurred while copying image, the file width is 0px.');
+
                             break;
 
                         case ImageManager::ERROR_MEMORY_LIMIT :
                             $file['error'] = Tools::displayError('An error occurred while copying image, check your memory limit.');
+
                             break;
 
                         default:
                             $file['error'] = Tools::displayError('An error occurred while copying image.');
+
                             break;
                     }
+
                     continue;
                 } else {
                     $imagesTypes = ImageType::getImagesTypes('products');
                     foreach ($imagesTypes as $imageType) {
                         if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
                             $file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
+
                             continue;
                         }
                     }
@@ -3808,6 +3837,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
                 if (!$image->update()) {
                     $file['error'] = Tools::displayError('Error while updating status');
+
                     continue;
                 }
 
@@ -3870,7 +3900,6 @@ class AdminProductsController extends AdminProductsControllerCore
                 foreach ($images as $k => $image) {
                     $images[$k] = new Image($image['id_image']);
                 }
-
 
                 if ($this->context->shop->getContext() == Shop::CONTEXT_SHOP) {
                     $current_shop_id = (int)$this->context->shop->id;
@@ -4461,6 +4490,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
 
                 StockAvailable::setProductDependsOnStock($product->id, (int)Tools::getValue('value'));
+
                 break;
 
             case 'pack_stock_type':
@@ -4490,6 +4520,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
 
                 Product::setPackStockType($product->id, $value);
+
                 break;
 
             case 'out_of_stock':
@@ -4501,6 +4532,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
 
                 StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));
+
                 break;
 
             case 'set_qty':
@@ -4520,6 +4552,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     ob_end_clean();
                     die(json_encode(array('error' => $error)));
                 }
+
                 break;
             case 'advanced_stock_management' :
                 if (Tools::getValue('value') === false) {
@@ -4536,6 +4569,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0) {
                     StockAvailable::setProductDependsOnStock($product->id, 0);
                 }
+
                 break;
 
         }
@@ -4559,6 +4593,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $content .= 'combination_images['.(int)$id_product_attribute.']['.$i++.'] = '.(int)$combination_image['id_image'].';';
             }
         }
+
         return $content;
     }
 
@@ -4569,6 +4604,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 return true;
             }
         }
+
         return false;
     }
 
@@ -4597,7 +4633,6 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
     }
-
 
     /**
      *  AdminProducts display hook
@@ -4653,6 +4688,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'Name' => $this->l('Name'),
             'Mark all checkbox(es) of categories in which product is to appear' => $this->l('Mark the checkbox of each categories in which this product will appear.'),
         );
+
         return $trad[$key];
     }
 
@@ -4701,7 +4737,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 foreach ($positions as $position => $value) {
                     $pos = explode('_', $value);
 
-                    if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product)) {
+                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product)) {
                         if ($product = new Product((int)$pos[2])) {
                             if (isset($position) && $product->updatePosition($way, $position)) {
                                 $category = new Category((int)$id_category);

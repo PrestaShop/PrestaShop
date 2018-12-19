@@ -42,13 +42,13 @@ try {
 
     $iso = $context->language->iso_code;
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/errors.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/fields.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/admin.php';
     }
 
     /* Server Params */
@@ -77,6 +77,7 @@ try {
             foreach (scandir($path, SCANDIR_SORT_NONE) as $theme) {
                 if ($theme[0] != '.' && file_exists($path.$theme.'/template/layout.tpl')) {
                     $context->employee->bo_theme = $theme;
+
                     break;
                 }
             }
@@ -99,7 +100,6 @@ try {
     }
 
     $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-
 
     if ($context->employee->isLoggedBack()) {
         $shop_id = '';

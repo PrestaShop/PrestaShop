@@ -31,7 +31,6 @@ use Configuration;
 
 class CartGiftWrappingTest extends AbstractCartCalculationTest
 {
-
     const GIFT_WRAPPING_PRICE = 5.3;
     protected $previousGiftWrapping;
     protected $previousGiftWrappingPrice;

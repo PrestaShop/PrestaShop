@@ -583,15 +583,19 @@ class AdminModulesControllerCore extends AdminController
                     case UPLOAD_ERR_INI_SIZE:
                     case UPLOAD_ERR_FORM_SIZE:
                         $this->errors[] = $this->trans('File too large (limit of %s bytes).', array(Tools::getMaxUploadSize()), 'Admin.Notifications.Error');
+
                         break;
                     case UPLOAD_ERR_PARTIAL:
                         $this->errors[] = $this->trans('File upload was not completed.', array(), 'Admin.Notifications.Error');
+
                         break;
                     case UPLOAD_ERR_NO_FILE:
                         $this->errors[] = $this->trans('No file was uploaded.', array(), 'Admin.Notifications.Error');
+
                         break;
                     default:
                         $this->errors[] = $this->trans('Internal error #%s', array($_FILES['newfile']['error']), 'Admin.Notifications.Error');
+
                         break;
                 }
             } elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name'])) {
@@ -752,9 +756,7 @@ class AdminModulesControllerCore extends AdminController
             } elseif ($key == 'updateAll') {
                 $loggedOnAddons = false;
 
-                if (isset($this->context->cookie->username_addons)
-                    && isset($this->context->cookie->password_addons)
-                    && !empty($this->context->cookie->username_addons)
+                if (!empty($this->context->cookie->username_addons)
                     && !empty($this->context->cookie->password_addons)) {
                     $loggedOnAddons = true;
                 }
@@ -1348,7 +1350,7 @@ class AdminModulesControllerCore extends AdminController
         if ($show_country_modules && (isset($module->limited_countries) && !empty($module->limited_countries)
                 && ((is_array($module->limited_countries) && count($module->limited_countries)
                 && !in_array(strtolower($this->iso_default_country), $module->limited_countries))
-                || (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != strval($module->limited_countries))))) {
+                || (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != (string) ($module->limited_countries))))) {
             return true;
         }
 

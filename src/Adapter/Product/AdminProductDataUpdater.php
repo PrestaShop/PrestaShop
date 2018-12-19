@@ -75,6 +75,7 @@ class AdminProductDataUpdater implements ProductInterface
             $product = new Product($productId);
             if (!Validate::isLoadedObject($product)) {
                 $failedIdList[] = $productId;
+
                 continue;
             }
             $product->active = ($activate ? 1 : 0);
@@ -124,6 +125,7 @@ class AdminProductDataUpdater implements ProductInterface
                 $this->duplicateProduct($productId);
             } catch (\Exception $e) {
                 $failedIdList[] = $productId;
+
                 continue;
             }
         }
@@ -215,7 +217,7 @@ class AdminProductDataUpdater implements ProductInterface
             if (!Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
             } else {
-                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
+                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product_old' => $id_product_old, 'id_product' => (int) $product->id, 'product' => $product));
                 if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
                     Search::indexation(false, $product->id);
                 }
@@ -247,6 +249,7 @@ class AdminProductDataUpdater implements ProductInterface
             if ($k == 'filter_category') {
                 continue;
             }
+
             throw new \Exception('Cannot sort when filterParams contains other filter than \'filter_category\'.', 5010);
         }
 

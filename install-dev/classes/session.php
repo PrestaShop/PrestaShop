@@ -38,6 +38,7 @@ class InstallSession
         if (!self::$_instance) {
             self::$_instance = new self();
         }
+
         return self::$_instance;
     }
 
@@ -82,6 +83,7 @@ class InstallSession
                 $ref = &$null;
             }
         }
+
         return $ref;
     }
 

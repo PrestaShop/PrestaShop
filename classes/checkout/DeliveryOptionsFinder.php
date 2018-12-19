@@ -56,6 +56,7 @@ class DeliveryOptionsFinderCore
             foreach ($cart->getCartRules() as $rule) {
                 if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
                     $free_shipping = true;
+
                     break;
                 }
             }

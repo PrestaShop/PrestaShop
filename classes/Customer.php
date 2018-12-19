@@ -397,6 +397,7 @@ class CustomerCore extends ObjectModel
         $sql->where('c.`deleted` = 0');
 
         $passwordHash = Db::getInstance()->getValue($sql);
+
         try {
             /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
             $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
@@ -622,7 +623,7 @@ class CustomerCore extends ObjectModel
      */
     public function getSimpleAddress($idAddress, $idLang = null)
     {
-        if (!$this->id || !intval($idAddress) || !$idAddress) {
+        if (!$this->id || !(int) $idAddress || !$idAddress) {
             return array(
                 'id' => '',
                 'alias' => '',

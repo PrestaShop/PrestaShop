@@ -32,7 +32,7 @@ if (defined('_PS_ADMIN_DIR_') === false) {
     define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
 }
 
-require_once(dirname(__FILE__).'/classes/CronJobsForms.php');
+require_once dirname(__FILE__).'/classes/CronJobsForms.php';
 
 class CronJobs extends Module
 {
@@ -108,11 +108,12 @@ class CronJobs extends Module
             Configuration::updateValue('CRONJOBS_MODULE_VERSION', $this->version);
             Configuration::updateValue('CRONJOBS_ADMIN_DIR', Tools::encrypt($this->getAdminDir()));
 
-
             if (Configuration::get('CRONJOBS_MODE') == 'webservice') {
                 $this->updateWebservice(true);
+
                 return $this->enableWebservice();
             }
+
             return $this->disableWebservice();
         }
     }
@@ -179,6 +180,7 @@ class CronJobs extends Module
 
         if ($id_tab) {
             $tab = new Tab($id_tab);
+
             return $tab->delete();
         }
 
@@ -297,6 +299,7 @@ class CronJobs extends Module
         }
 
         $query = 'SELECT `active` FROM '._DB_PREFIX_.'cronjobs WHERE `id_module` = \''.(int)$id_module.'\'';
+
         return (bool)Db::getInstance()->getValue($query);
     }
 
@@ -440,6 +443,7 @@ class CronJobs extends Module
             if (Tools::getValue('cron_mode') == 'advanced') {
                 return $this->disableWebservice();
             }
+
             return $this->enableWebservice();
         }
     }
@@ -469,6 +473,7 @@ class CronJobs extends Module
                 if (($result = Db::getInstance()->execute($query)) != false) {
                     return $this->setSuccessMessage('The task has been successfully added.');
                 }
+
                 return $this->setErrorMessage('An error happened: the task could not be added.');
             }
 
@@ -507,6 +512,7 @@ class CronJobs extends Module
         if ((Db::getInstance()->execute($query)) != false) {
             return $this->setSuccessMessage('The task has been updated.');
         }
+
         return $this->setErrorMessage('The task has not been updated');
     }
 
@@ -527,6 +533,7 @@ class CronJobs extends Module
 
             if ($module == false) {
                 Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.bqSQL($this->name).' WHERE `id_cronjob` = \''.(int)$cron['id_cronjob'].'\'');
+
                 break;
             }
 
@@ -630,18 +637,21 @@ class CronJobs extends Module
     protected function setErrorMessage($message)
     {
         $this->_errors[] = $this->l($message);
+
         return false;
     }
 
     protected function setSuccessMessage($message)
     {
         $this->_successes[] = $this->l($message);
+
         return true;
     }
 
     protected function setWarningMessage($message)
     {
         $this->_warnings[] = $this->l($message);
+
         return false;
     }
 
@@ -703,6 +713,7 @@ class CronJobs extends Module
         if ((bool)$use_webservice == true) {
             return $this->setSuccessMessage('Your cron tasks have been successfully added to PrestaShop\'s cron tasks webservice.');
         }
+
         return $this->setSuccessMessage('Your cron tasks have been successfully registered using the Advanced mode.');
     }
 

@@ -192,6 +192,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
             '\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface',
             $fakeConfiguration
         );
+
         return $fakeConfiguration;
     }
 

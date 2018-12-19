@@ -294,7 +294,7 @@ class RequestSqlCore extends ObjectModel
     {
         if ($alias) {
             foreach ($tables as $table) {
-                if (isset($table['alias']) && isset($table['table']) && $table['alias']['no_quotes'] == $alias) {
+                if (isset($table['alias'], $table['table']) && $table['alias']['no_quotes'] == $alias) {
                     return array($table['table']);
                 }
             }

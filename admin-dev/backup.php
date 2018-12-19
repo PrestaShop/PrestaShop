@@ -27,7 +27,7 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 if (!Context::getContext()->employee->isLoggedBack()) {
     Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminLogin'));
@@ -78,7 +78,7 @@ if (substr($backupfile, -4) == '.bz2') {
 } else {
     $contentType = 'text/x-sql';
 }
-$fp = @fopen($backupfile, 'r');
+$fp = @fopen($backupfile, 'rb');
 
 if ($fp === false) {
     die(Context::getContext()->getTranslator()->trans(

@@ -183,16 +183,19 @@ class ContextCore
                             if ($this->isMobile() && !$this->isTablet()) {
                                 $this->mobile_device = true;
                             }
+
                             break;
                         case 2: // Only for touchpads
                             if ($this->isTablet() && !$this->isMobile()) {
                                 $this->mobile_device = true;
                             }
+
                             break;
                         case 3: // For touchpad or mobile devices
                             if ($this->isMobile() || $this->isTablet()) {
                                 $this->mobile_device = true;
                             }
+
                             break;
                     }
                 }
@@ -250,8 +253,7 @@ class ContextCore
             }
         }
 
-        return isset($_SERVER['HTTP_USER_AGENT'])
-            && isset(Context::getContext()->cookie)
+        return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
             && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
             && !Context::getContext()->cookie->no_mobile;

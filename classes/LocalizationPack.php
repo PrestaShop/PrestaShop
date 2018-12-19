@@ -150,16 +150,16 @@ class LocalizationPackCore
             foreach ($xml->states->state as $data) {
                 /** @var SimpleXMLElement $data */
                 $attributes = $data->attributes();
-                $id_country = ($attributes['country']) ? (int) Country::getByIso(strval($attributes['country'])) : false;
+                $id_country = ($attributes['country']) ? (int) Country::getByIso((string) ($attributes['country'])) : false;
                 $id_state = ($id_country) ? State::getIdByIso($attributes['iso_code'], $id_country) : State::getIdByName($attributes['name']);
 
                 if (!$id_state) {
                     $state = new State();
-                    $state->name = strval($attributes['name']);
-                    $state->iso_code = strval($attributes['iso_code']);
+                    $state->name = (string) ($attributes['name']);
+                    $state->iso_code = (string) ($attributes['iso_code']);
                     $state->id_country = $id_country;
 
-                    $id_zone = (int) Zone::getIdByName(strval($attributes['zone']));
+                    $id_zone = (int) Zone::getIdByName((string) ($attributes['zone']));
                     if (!$id_zone) {
                         $zone = new Zone();
                         $zone->name = (string) $attributes['zone'];
@@ -225,6 +225,7 @@ class LocalizationPackCore
                 $attributes = $taxData->attributes();
                 if (($id_tax = Tax::getTaxIdByName($attributes['name']))) {
                     $assoc_taxes[(int) $attributes['id']] = $id_tax;
+
                     continue;
                 }
                 $tax = new Tax();
@@ -282,7 +283,7 @@ class LocalizationPackCore
                         continue;
                     }
 
-                    if (!isset($rule_attributes['id_tax']) || !array_key_exists(strval($rule_attributes['id_tax']), $assoc_taxes)) {
+                    if (!isset($rule_attributes['id_tax']) || !array_key_exists((string) ($rule_attributes['id_tax']), $assoc_taxes)) {
                         continue;
                     }
 
@@ -310,7 +311,7 @@ class LocalizationPackCore
                     $tr->zipcode_to = $zipcode_to;
                     $tr->behavior = $behavior;
                     $tr->description = '';
-                    $tr->id_tax = $assoc_taxes[strval($rule_attributes['id_tax'])];
+                    $tr->id_tax = $assoc_taxes[(string) ($rule_attributes['id_tax'])];
                     $tr->save();
                 }
             }
@@ -353,7 +354,7 @@ class LocalizationPackCore
                 }
                 if (!Currency::exists($currency->iso_code)) {
                     if (!$currency->add()) {
-                        $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while importing the currency: %s', array(strval($attributes['name'])), 'Admin.International.Notification');
+                        $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while importing the currency: %s', array((string) ($attributes['name'])), 'Admin.International.Notification');
 
                         return false;
                     }
@@ -420,12 +421,12 @@ class LocalizationPackCore
             foreach ($xml->units->unit as $data) {
                 /** @var SimpleXMLElement $data */
                 $attributes = $data->attributes();
-                if (!isset($varNames[strval($attributes['type'])])) {
+                if (!isset($varNames[(string) ($attributes['type'])])) {
                     $this->_errors[] = Context::getContext()->getTranslator()->trans('Localization pack corrupted: wrong unit type.', array(), 'Admin.International.Notification');
 
                     return false;
                 }
-                if (!Configuration::updateValue($varNames[strval($attributes['type'])], strval($attributes['value']))) {
+                if (!Configuration::updateValue($varNames[(string) ($attributes['type'])], (string) ($attributes['value']))) {
                     $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while setting the units.', array(), 'Admin.International.Notification');
 
                     return false;
@@ -496,7 +497,7 @@ class LocalizationPackCore
                 $attributes = $data->attributes();
                 $name = (string) $attributes['name'];
 
-                if (isset($name) && isset($attributes['value']) && Configuration::get($name) !== false) {
+                if (isset($name, $attributes['value']) && Configuration::get($name) !== false) {
                     if (!Configuration::updateValue($name, (string) $attributes['value'])) {
                         $this->_errors[] = Context::getContext()->getTranslator()->trans(
                             'An error occurred during the configuration setup: %1$s',
