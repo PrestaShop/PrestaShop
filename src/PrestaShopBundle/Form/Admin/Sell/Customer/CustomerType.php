@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -38,12 +40,16 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Type is used to created form for customer add/edit actions
  */
 class CustomerType extends AbstractType
 {
+    use TranslatorAwareTrait;
+
     /**
      * @var array
      */
@@ -103,7 +109,21 @@ class CustomerType extends AbstractType
                 'required' => false,
                 'placeholder' => null,
             ])
-            ->add('first_name', TextType::class)
+            ->add('first_name', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                    new Length([
+                        'max' => FirstName::MAX_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => FirstName::MAX_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
             ->add('last_name', TextType::class)
             ->add('email', EmailType::class)
             ->add('password', PasswordType::class, [
