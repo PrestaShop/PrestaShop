@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Integration\PrestaShopBundle\Controller\Admin;
+namespace Tests\Integration\Survival;
 
-use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
+use LegacyTests\Integration\PrestaShopBundle\Test\LightWebTestCase;
 use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -34,9 +34,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 /**
  * @group demo
  *
- * To execute these tests: use "./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml --filter=SurvivalTest" command.
+ * To execute these tests: use "./vendor/bin/phpunit -c tests/Integration/Survival/phpunit-survival.xml" command.
+ * use LegacyTests\Integration\PrestaShopBundle\Test\LightWebTestCase;
+ * use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+ * use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+ * use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
+ *
+ * /**
+ * See README.md for how to run these tests
  */
-class SurvivalTest extends WebTestCase
+class SurvivalTest extends LightWebTestCase
 {
     /**
      * @var TokenStorage
