@@ -876,7 +876,8 @@ class FrontControllerCore extends Controller
                     }
 
                     return $defaultCountry;
-                } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_ && !FrontController::isInWhitelistForGeolocation()) {
+                }
+                if (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_ && !FrontController::isInWhitelistForGeolocation()) {
                     $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
                     $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;

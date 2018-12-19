@@ -3216,11 +3216,13 @@ class CartCore extends ObjectModel
                     $delivery_option[$id_address] = $key;
 
                     break;
-                } elseif (Configuration::get('PS_CARRIER_DEFAULT') == -2 && $option['is_best_grade']) {
+                }
+                if (Configuration::get('PS_CARRIER_DEFAULT') == -2 && $option['is_best_grade']) {
                     $delivery_option[$id_address] = $key;
 
                     break;
-                } elseif ($option['unique_carrier'] && in_array(Configuration::get('PS_CARRIER_DEFAULT'), array_keys($option['carrier_list']))) {
+                }
+                if ($option['unique_carrier'] && in_array(Configuration::get('PS_CARRIER_DEFAULT'), array_keys($option['carrier_list']))) {
                     $delivery_option[$id_address] = $key;
 
                     break;
@@ -4868,7 +4870,8 @@ class CartCore extends ObjectModel
                 && ($productQuantity < 0 && !$availableOutOfStock)
             ) {
                 return false;
-            } elseif ($exclusive) {
+            }
+            if ($exclusive) {
                 if ($productQuantity <= 0) {
                     ++$productOutOfStock;
                 } else {

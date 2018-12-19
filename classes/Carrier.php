@@ -1142,7 +1142,8 @@ class CarrierCore extends ObjectModel
         $shipping_method = $this->getShippingMethod();
         if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT) {
             return 'range_weight';
-        } elseif ($shipping_method == Carrier::SHIPPING_METHOD_PRICE) {
+        }
+        if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE) {
             return 'range_price';
         }
 
@@ -1165,7 +1166,8 @@ class CarrierCore extends ObjectModel
 
         if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT) {
             return new RangeWeight();
-        } elseif ($shipping_method == Carrier::SHIPPING_METHOD_PRICE) {
+        }
+        if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE) {
             return new RangePrice();
         }
 

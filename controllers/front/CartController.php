@@ -573,7 +573,8 @@ class CartControllerCore extends FrontController
         if (($this->id_product_attribute)) {
             return !Product::isAvailableWhenOutOfStock($product->out_of_stock)
                 && !Attribute::checkAttributeQty($this->id_product_attribute, $qtyToCheck);
-        } elseif (Product::isAvailableWhenOutOfStock($product->out_of_stock)) {
+        }
+        if (Product::isAvailableWhenOutOfStock($product->out_of_stock)) {
             return false;
         }
 

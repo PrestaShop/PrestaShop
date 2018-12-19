@@ -277,7 +277,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
             }
 
             return $sales;
-        } elseif ($granularity == 'month') {
+        }
+        if ($granularity == 'month') {
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
@@ -340,7 +341,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
             }
 
             return $orders;
-        } elseif ($granularity == 'month') {
+        }
+        if ($granularity == 'month') {
             $orders = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
@@ -405,9 +407,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
         if (!$row['total']) {
             return false;
-        } elseif ($row['male'] > $row['female'] && $row['male'] >= $row['neutral']) {
+        }
+        if ($row['male'] > $row['female'] && $row['male'] >= $row['neutral']) {
             return array('type' => 'male', 'value' => round(100 * $row['male'] / $row['total']));
-        } elseif ($row['female'] >= $row['male'] && $row['female'] >= $row['neutral']) {
+        }
+        if ($row['female'] >= $row['male'] && $row['female'] >= $row['neutral']) {
             return array('type' => 'female', 'value' => round(100 * $row['female'] / $row['total']));
         }
 

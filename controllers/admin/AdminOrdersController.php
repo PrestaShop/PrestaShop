@@ -2199,7 +2199,8 @@ class AdminOrdersControllerCore extends AdminController
             // If product has attribute, minimal quantity is set with minimal quantity of attribute
             $minimal_quantity = ($product_informations['product_attribute_id']) ? Attribute::getAttributeMinimalQty($product_informations['product_attribute_id']) : $product->minimal_quantity;
             die(json_encode(array('error' => $this->trans('You must add %d minimum quantity', array('%d' => $minimal_quantity), 'Admin.Orderscustomers.Notification'))));
-        } elseif (!$update_quantity) {
+        }
+        if (!$update_quantity) {
             die(json_encode(array('error' => $this->trans('You already have the maximum quantity available for this product.', array(), 'Admin.Orderscustomers.Notification'))));
         }
 
@@ -2819,7 +2820,8 @@ class AdminOrdersControllerCore extends AdminController
                 'result' => false,
                 'error' => $this->trans('Invalid quantity', array(), 'Admin.Orderscustomers.Notification'),
             )));
-        } elseif (is_array(Tools::getValue('product_quantity'))) {
+        }
+        if (is_array(Tools::getValue('product_quantity'))) {
             foreach (Tools::getValue('product_quantity') as $qty) {
                 if (!Validate::isUnsignedInt($qty)) {
                     die(json_encode(array(

@@ -133,7 +133,8 @@ class RequestSqlCore extends ObjectModel
     {
         if (!$tab) {
             return false;
-        } elseif (isset($tab['UNION'])) {
+        }
+        if (isset($tab['UNION'])) {
             $union = $tab['UNION'];
             foreach ($union as $tab) {
                 if (!$this->validateSql($tab, $in, $sql)) {
@@ -160,13 +161,17 @@ class RequestSqlCore extends ObjectModel
     {
         if (!$this->testedRequired($tab)) {
             return false;
-        } elseif (!$this->testedUnauthorized($tab)) {
+        }
+        if (!$this->testedUnauthorized($tab)) {
             return false;
-        } elseif (!$this->checkedFrom($tab['FROM'])) {
+        }
+        if (!$this->checkedFrom($tab['FROM'])) {
             return false;
-        } elseif (!$this->checkedSelect($tab['SELECT'], $tab['FROM'], $in)) {
+        }
+        if (!$this->checkedSelect($tab['SELECT'], $tab['FROM'], $in)) {
             return false;
-        } elseif (isset($tab['WHERE'])) {
+        }
+        if (isset($tab['WHERE'])) {
             if (!$this->checkedWhere($tab['WHERE'], $tab['FROM'], $sql)) {
                 return false;
             }

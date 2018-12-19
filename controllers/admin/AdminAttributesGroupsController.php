@@ -758,7 +758,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
 
                 return;
-            } elseif (!$object = new Attribute((int) Tools::getValue($this->identifier))) {
+            }
+            if (!$object = new Attribute((int) Tools::getValue($this->identifier))) {
                 $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . '</b> ' .
                     $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');

@@ -58,7 +58,8 @@ class GuestTrackingControllerCore extends FrontController
 
         if (!$email && !$order_reference) {
             return;
-        } elseif (!$email || !$order_reference) {
+        }
+        if (!$email || !$order_reference) {
             $this->errors[] = $this->getTranslator()->trans(
                 'Please provide the required information',
                 array(),

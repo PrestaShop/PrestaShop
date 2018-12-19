@@ -893,7 +893,8 @@ class WebserviceRequestCore
                 self::$shopIDs[] = (int) $params['id_shop'];
 
                 return true;
-            } elseif ($params['id_shop'] == 'all') {
+            }
+            if ($params['id_shop'] == 'all') {
                 Shop::setContext(Shop::CONTEXT_ALL);
                 self::$shopIDs = Shop::getShops(true, null, true);
 
@@ -1244,11 +1245,13 @@ class WebserviceRequestCore
                     $this->setError(400, 'The "sort" value has to be formed as this example: "field_ASC" or \'[field_1_DESC,field_2_ASC,field_3_ASC,...]\' ("field" has to be an available field)', 37);
 
                     return false;
-                } elseif (!in_array($fieldName, $available_filters) && !in_array($fieldName, $i18n_available_filters)) {
+                }
+                if (!in_array($fieldName, $available_filters) && !in_array($fieldName, $i18n_available_filters)) {
                     $this->setError(400, 'Unable to filter by this field. However, these are available: ' . implode(', ', $available_filters) . ', for i18n fields:' . implode(', ', $i18n_available_filters), 38);
 
                     return false;
-                } elseif (in_array($fieldName, $i18n_available_filters)) {
+                }
+                if (in_array($fieldName, $i18n_available_filters)) {
                     // for sort on i18n field
                     if (!preg_match('#main_i18n#', $sql_join)) {
                         $sql_join .= 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->resourceConfiguration['retrieveData']['table']) . '_lang` AS main_i18n ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = main_i18n.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
@@ -1610,7 +1613,8 @@ class WebserviceRequestCore
                     $this->setError(400, 'Validation error: "' . $retValidateFieldsLang . '"', 84);
 
                     return false;
-                } elseif (($retValidateFields = $object->validateFields(false, true)) !== true) {
+                }
+                if (($retValidateFields = $object->validateFields(false, true)) !== true) {
                     $this->setError(400, 'Validation error: "' . $retValidateFields . '"', 85);
 
                     return false;

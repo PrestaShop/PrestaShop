@@ -898,7 +898,8 @@ class AdminCustomersControllerCore extends AdminController
             $this->display = 'edit';
 
             return $customer;
-        } elseif (trim(Tools::getValue('passwd')) == '') {
+        }
+        if (trim(Tools::getValue('passwd')) == '') {
             $this->validateRules();
             $this->errors[] = $this->trans('Password cannot be empty.', array(), 'Admin.Orderscustomers.Notification');
             $this->display = 'edit';

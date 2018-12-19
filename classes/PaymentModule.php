@@ -991,7 +991,8 @@ abstract class PaymentModuleCore extends Module
             $currencies = Currency::getPaymentCurrencies($this->id);
 
             return $currencies;
-        } elseif ($this->currencies_mode == 'radio') {
+        }
+        if ($this->currencies_mode == 'radio') {
             $currencies = Currency::getPaymentCurrenciesSpecial($this->id);
             $currency = $currencies['id_currency'];
             if ($currency == -1) {

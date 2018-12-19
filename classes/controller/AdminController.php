@@ -945,7 +945,8 @@ class AdminControllerCore extends Controller
                     Hook::exec('action' . get_class($this) . ucfirst($this->action) . 'After', array('controller' => $this, 'return' => $return));
 
                     return $return;
-                } elseif (!empty($action) && $this->controller_name == 'AdminModules' && Tools::getIsset('configure')) {
+                }
+                if (!empty($action) && $this->controller_name == 'AdminModules' && Tools::getIsset('configure')) {
                     $module_obj = Module::getInstanceByName(Tools::getValue('configure'));
                     if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'ajaxProcess' . $action)) {
                         return $module_obj->{'ajaxProcess' . $action}();
@@ -1685,7 +1686,8 @@ class AdminControllerCore extends Controller
             $this->errors[] = $this->trans('The object cannot be loaded (or found)', array(), 'Admin.Notifications.Error');
 
             return false;
-        } elseif ($opt) {
+        }
+        if ($opt) {
             if (!$this->object) {
                 $this->object = new $this->className();
             }
@@ -3065,7 +3067,8 @@ class AdminControllerCore extends Controller
                         }
 
                         break;
-                    } elseif ($this->access('edit')) {
+                    }
+                    if ($this->access('edit')) {
                         $this->action = 'bulk' . $bulk_action;
                         $this->boxes = Tools::getValue($this->table . 'Box');
                     } else {
@@ -3073,7 +3076,8 @@ class AdminControllerCore extends Controller
                     }
 
                     break;
-                } elseif (Tools::isSubmit('submitBulk')) {
+                }
+                if (Tools::isSubmit('submitBulk')) {
                     if ($bulk_action === 'delete') {
                         if ($this->access('delete')) {
                             $this->action = 'bulk' . $bulk_action;
@@ -3083,7 +3087,8 @@ class AdminControllerCore extends Controller
                         }
 
                         break;
-                    } elseif ($this->access('edit')) {
+                    }
+                    if ($this->access('edit')) {
                         $this->action = 'bulk' . Tools::getValue('select_submitBulk');
                         $this->boxes = Tools::getValue($this->table . 'Box');
                     } else {
@@ -3948,7 +3953,8 @@ class AdminControllerCore extends Controller
     {
         if (isset($this->fieldImageSettings['name'], $this->fieldImageSettings['dir'])) {
             return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'] . '/');
-        } elseif (!empty($this->fieldImageSettings)) {
+        }
+        if (!empty($this->fieldImageSettings)) {
             foreach ($this->fieldImageSettings as $image) {
                 if (isset($image['name'], $image['dir'])) {
                     $this->uploadImage($id, $image['name'], $image['dir'] . '/');
@@ -4217,7 +4223,8 @@ class AdminControllerCore extends Controller
         if ($this->viewAccess() && $this->override_folder) {
             if (!Configuration::get('PS_DISABLE_OVERRIDES') && file_exists($this->context->smarty->getTemplateDir(1) . DIRECTORY_SEPARATOR . $this->override_folder . $tpl_name)) {
                 return $this->context->smarty->createTemplate($this->override_folder . $tpl_name, $this->context->smarty);
-            } elseif (file_exists($this->context->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . $this->override_folder . $tpl_name)) {
+            }
+            if (file_exists($this->context->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . $this->override_folder . $tpl_name)) {
                 return $this->context->smarty->createTemplate('controllers' . DIRECTORY_SEPARATOR . $this->override_folder . $tpl_name, $this->context->smarty);
             }
         }
@@ -4723,21 +4730,24 @@ class AdminControllerCore extends Controller
             )
         ) {
             return AdminController::LEVEL_DELETE;
-        } elseif (
+        }
+        if (
             Access::isGranted(
                 'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_CREATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_ADD;
-        } elseif (
+        }
+        if (
             Access::isGranted(
                 'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_UPDATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_EDIT;
-        } elseif (
+        }
+        if (
             Access::isGranted(
                 'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_READ',
                 $this->context->employee->id_profile

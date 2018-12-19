@@ -55,13 +55,15 @@ class ValidateConstraintTranslatorCore
                 array(),
                 'Shop.Forms.Errors'
             );
-        } elseif ($validator === 'isBirthDate') {
+        }
+        if ($validator === 'isBirthDate') {
             return $this->translator->trans(
                 'Format should be %s.',
                 array(Tools::formatDateStr('31 May 1970')),
                 'Shop.Forms.Errors'
             );
-        } elseif ($validator === 'required') {
+        }
+        if ($validator === 'required') {
             return $this->translator->trans(
                 'Required field',
                 array(),

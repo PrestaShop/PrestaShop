@@ -232,9 +232,11 @@ class ConfigurationCore extends ObjectModel
 
         if ($idShop && Configuration::hasKey($key, $idLang, null, $idShop)) {
             return self::$_new_cache_shop[$key][$idLang][$idShop];
-        } elseif ($idShopGroup && Configuration::hasKey($key, $idLang, $idShopGroup)) {
+        }
+        if ($idShopGroup && Configuration::hasKey($key, $idLang, $idShopGroup)) {
             return self::$_new_cache_group[$key][$idLang][$idShopGroup];
-        } elseif (Configuration::hasKey($key, $idLang)) {
+        }
+        if (Configuration::hasKey($key, $idLang)) {
             return self::$_new_cache_global[$key][$idLang];
         }
 
@@ -346,7 +348,8 @@ class ConfigurationCore extends ObjectModel
 
         if ($idShop) {
             return isset(self::$_new_cache_shop[$key][$idLang][$idShop]);
-        } elseif ($idShopGroup) {
+        }
+        if ($idShopGroup) {
             return isset(self::$_new_cache_group[$key][$idLang][$idShopGroup]);
         }
 
@@ -629,9 +632,11 @@ class ConfigurationCore extends ObjectModel
 
         if ($context == Shop::CONTEXT_SHOP && Configuration::hasKey($key, $idLang, null, $idShop)) {
             return true;
-        } elseif ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $idLang, $idShopGroup)) {
+        }
+        if ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $idLang, $idShopGroup)) {
             return true;
-        } elseif ($context == Shop::CONTEXT_ALL && Configuration::hasKey($key, $idLang)) {
+        }
+        if ($context == Shop::CONTEXT_ALL && Configuration::hasKey($key, $idLang)) {
             return true;
         }
 
@@ -712,7 +717,8 @@ class ConfigurationCore extends ObjectModel
     {
         if ($idShop) {
             return ' AND id_shop = ' . (int) $idShop;
-        } elseif ($idShopGroup) {
+        }
+        if ($idShopGroup) {
             return ' AND id_shop_group = ' . (int) $idShopGroup . ' AND (id_shop IS NULL OR id_shop = 0)';
         } else {
             return ' AND (id_shop_group IS NULL OR id_shop_group = 0) AND (id_shop IS NULL OR id_shop = 0)';

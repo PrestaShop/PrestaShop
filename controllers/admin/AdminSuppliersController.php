@@ -503,10 +503,12 @@ class AdminSuppliersControllerCore extends AdminController
             }
 
             return parent::postProcess();
-        } elseif (Tools::isSubmit('delete' . $this->table)) {
+        }
+        if (Tools::isSubmit('delete' . $this->table)) {
             if (!($obj = $this->loadObject(true))) {
                 return;
-            } elseif (SupplyOrder::supplierHasPendingOrders($obj->id)) {
+            }
+            if (SupplyOrder::supplierHasPendingOrders($obj->id)) {
                 $this->errors[] = $this->trans('It is not possible to delete a supplier if there are pending supplier orders.', array(), 'Admin.Catalog.Notification');
             } else {
                 //delete all product_supplier linked to this supplier

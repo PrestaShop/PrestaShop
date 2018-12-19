@@ -105,7 +105,8 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         $this->definition = ObjectModel::getDefinition($this->classname);
         if (!isset($this->definition['table'])) {
             throw new PrestaShopException('Miss table in definition for class ' . $this->classname);
-        } elseif (!isset($this->definition['primary'])) {
+        }
+        if (!isset($this->definition['primary'])) {
             throw new PrestaShopException('Miss primary in definition for class ' . $this->classname);
         }
 
@@ -713,7 +714,8 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 // Test field validity for language fields
                 if (empty($definition['is_lang']) && !empty($definition['fields'][$fieldname]['lang'])) {
                     throw new PrestaShopException('Field ' . $fieldname . ' is declared as lang field but is used in non multilang context');
-                } elseif (!empty($definition['is_lang']) && empty($definition['fields'][$fieldname]['lang'])) {
+                }
+                if (!empty($definition['is_lang']) && empty($definition['fields'][$fieldname]['lang'])) {
                     throw new PrestaShopException('Field ' . $fieldname . ' is not declared as lang field but is used in multilang context');
                 }
 

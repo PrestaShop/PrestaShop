@@ -268,7 +268,8 @@ class FeatureCore extends ObjectModel
             $feature->add();
 
             return $feature->id;
-        } elseif (isset($rq['id_feature']) && $rq['id_feature']) {
+        }
+        if (isset($rq['id_feature']) && $rq['id_feature']) {
             if (is_numeric($position) && $feature = new Feature((int) $rq['id_feature'])) {
                 $feature->position = (int) $position;
                 if (Validate::isLoadedObject($feature)) {

@@ -217,7 +217,8 @@ class PackCore extends Product
 
         if ($product->isAvailableWhenOutOfStock($product->out_of_stock)) {
             return true;
-        } elseif ($wantedQuantity > $packQuantity) {
+        }
+        if ($wantedQuantity > $packQuantity) {
             return false;
         }
 

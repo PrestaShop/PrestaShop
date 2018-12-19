@@ -444,7 +444,8 @@ class ShopCore extends ObjectModel
                 header('HTTP/1.0 ' . $redirect_code . ' ' . $redirect_header);
                 header('Location: ' . Tools::getShopProtocol() . $url);
                 exit;
-            } elseif (defined('_PS_ADMIN_DIR_') && empty($shop->physical_uri)) {
+            }
+            if (defined('_PS_ADMIN_DIR_') && empty($shop->physical_uri)) {
                 $shop_default = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
                 $shop->physical_uri = $shop_default->physical_uri;
                 $shop->virtual_uri = $shop_default->virtual_uri;

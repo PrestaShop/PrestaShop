@@ -45,9 +45,11 @@ abstract class Controller extends ControllerCore
         $n /= 1048576;
         if ($n > 3) {
             return '<span style="color:red">'.sprintf('%0.2f', $n).'</span>';
-        } elseif ($n > 1) {
+        }
+        if ($n > 1) {
             return '<span style="color:#EF8B00">'.sprintf('%0.2f', $n).'</span>';
-        } elseif (round($n, 2) > 0) {
+        }
+        if (round($n, 2) > 0) {
             return '<span style="color:green">'.sprintf('%0.2f', $n).'</span>';
         }
 
@@ -95,7 +97,8 @@ abstract class Controller extends ControllerCore
     {
         if (version_compare($version, '5.6') < 0) {
             return '<span style="color:red">'.$version.' (Upgrade strongly recommended)</span>';
-        } elseif (version_compare($version, '7.1') < 0) {
+        }
+        if (version_compare($version, '7.1') < 0) {
             return '<span style="color:#EF8B00">'.$version.' (Consider upgrading)</span>';
         }
 
@@ -106,7 +109,8 @@ abstract class Controller extends ControllerCore
     {
         if (version_compare($version, '5.5') < 0) {
             return '<span style="color:red">'.$version.' (Upgrade strongly recommended)</span>';
-        } elseif (version_compare($version, '5.6') < 0) {
+        }
+        if (version_compare($version, '5.6') < 0) {
             return '<span style="color:#EF8B00">'.$version.' (Consider upgrading)</span>';
         }
 
@@ -117,9 +121,11 @@ abstract class Controller extends ControllerCore
     {
         if ($n > 1.6) {
             return '<span style="color:red">'.round($n * 1000).'</span>'.($kikoo ? ' ms - You\'d better run your shop on a toaster' : '');
-        } elseif ($n > 0.8) {
+        }
+        if ($n > 0.8) {
             return '<span style="color:#EF8B00">'.round($n * 1000).'</span>'.($kikoo ? ' ms - OK... for a shared hosting' : '');
-        } elseif ($n > 0) {
+        }
+        if ($n > 0) {
             return '<span style="color:green">'.round($n * 1000).'</span>'.($kikoo ? ' ms - Unicorn powered webserver!' : '');
         }
 
@@ -130,7 +136,8 @@ abstract class Controller extends ControllerCore
     {
         if ($n >= 100) {
             return '<span style="color:red">'.$n.'</span>';
-        } elseif ($n >= 50) {
+        }
+        if ($n >= 50) {
             return '<span style="color:#EF8B00">'.$n.'</span>';
         }
 
@@ -141,7 +148,8 @@ abstract class Controller extends ControllerCore
     {
         if ($n >= 100) {
             return '<span style="color:red">'.$n.'</span>';
-        } elseif ($n >= 50) {
+        }
+        if ($n >= 50) {
             return '<span style="color:#EF8B00">'.$n.'</span>';
         }
 

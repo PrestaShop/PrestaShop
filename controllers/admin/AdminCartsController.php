@@ -425,7 +425,8 @@ class AdminCartsControllerCore extends AdminController
                         $file_name = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
                         if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name)) {
                             continue;
-                        } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name . '_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
+                        }
+                        if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name . '_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
                             $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
                         } elseif (!chmod(_PS_UPLOAD_DIR_ . $file_name, 0777) || !chmod(_PS_UPLOAD_DIR_ . $file_name . '_small', 0777)) {
                             $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');

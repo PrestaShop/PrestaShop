@@ -318,7 +318,8 @@ class AdminTabsControllerCore extends AdminController
                     }
 
                     break;
-                } elseif (Tools::isSubmit('submitBulk')) {
+                }
+                if (Tools::isSubmit('submitBulk')) {
                     if ($this->access('edit')) {
                         $this->action = 'bulk' . Tools::getValue('select_submitBulk');
                         $this->boxes = Tools::getValue($this->list_id . 'Box');

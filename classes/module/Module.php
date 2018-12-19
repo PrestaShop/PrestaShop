@@ -1611,7 +1611,8 @@ abstract class ModuleCore implements ModuleInterface
         foreach ($modules as $name) {
             if (is_file(_PS_MODULE_DIR_ . $name)) {
                 continue;
-            } elseif (is_dir(_PS_MODULE_DIR_ . $name . DIRECTORY_SEPARATOR) && Tools::file_exists_cache(_PS_MODULE_DIR_ . $name . '/' . $name . '.php')) {
+            }
+            if (is_dir(_PS_MODULE_DIR_ . $name . DIRECTORY_SEPARATOR) && Tools::file_exists_cache(_PS_MODULE_DIR_ . $name . '/' . $name . '.php')) {
                 if (!Validate::isModuleName($name)) {
                     throw new PrestaShopException(sprintf('Module %s is not a valid module name', $name));
                 }
@@ -1761,13 +1762,15 @@ abstract class ModuleCore implements ModuleInterface
             // If the module is not a partner, then return 1 (which means the module is "trusted")
             if (stripos($modules_list_content, '<module name="' . $module_name . '"/>') == false) {
                 return 1;
-            } elseif (stripos($default_country_modules_list_content, '<name><![CDATA[' . $module_name . ']]></name>') !== false) {
+            }
+            if (stripos($default_country_modules_list_content, '<name><![CDATA[' . $module_name . ']]></name>') !== false) {
                 // The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
                 return 1;
             }
             // The module seems to be trusted, but it does not seem to be dedicated to this country
             return 2;
-        } elseif (stripos($untrusted_modules_list_content, $module_name) !== false) {
+        }
+        if (stripos($untrusted_modules_list_content, $module_name) !== false) {
             // If the module is already in the untrusted list, then return 0 (untrusted)
             return 0;
         } else {
@@ -1887,7 +1890,8 @@ abstract class ModuleCore implements ModuleInterface
 
         if (!is_object($obj)) {
             return false;
-        } elseif ($obj->module_key === '') {
+        }
+        if ($obj->module_key === '') {
             return false;
         } else {
             $params = array(
@@ -2314,21 +2318,29 @@ abstract class ModuleCore implements ModuleInterface
     {
         if (Tools::file_exists_cache(_PS_THEME_DIR_ . 'modules/' . $module_name . '/' . $template)) {
             return _PS_THEME_DIR_ . 'modules/' . $module_name . '/' . $template;
-        } elseif (Tools::file_exists_cache(_PS_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/hook/' . $template)) {
+        }
+        if (Tools::file_exists_cache(_PS_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/hook/' . $template)) {
             return _PS_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/hook/' . $template;
-        } elseif (Tools::file_exists_cache(_PS_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/front/' . $template)) {
+        }
+        if (Tools::file_exists_cache(_PS_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/front/' . $template)) {
             return _PS_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/front/' . $template;
-        } elseif (Tools::file_exists_cache(_PS_PARENT_THEME_DIR_ . 'modules/' . $module_name . '/' . $template)) {
+        }
+        if (Tools::file_exists_cache(_PS_PARENT_THEME_DIR_ . 'modules/' . $module_name . '/' . $template)) {
             return _PS_PARENT_THEME_DIR_ . 'modules/' . $module_name . '/' . $template;
-        } elseif (Tools::file_exists_cache(_PS_PARENT_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/hook/' . $template)) {
+        }
+        if (Tools::file_exists_cache(_PS_PARENT_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/hook/' . $template)) {
             return _PS_PARENT_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/hook/' . $template;
-        } elseif (Tools::file_exists_cache(_PS_PARENT_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/front/' . $template)) {
+        }
+        if (Tools::file_exists_cache(_PS_PARENT_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/front/' . $template)) {
             return _PS_PARENT_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/front/' . $template;
-        } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_ . $module_name . '/views/templates/hook/' . $template)) {
+        }
+        if (Tools::file_exists_cache(_PS_MODULE_DIR_ . $module_name . '/views/templates/hook/' . $template)) {
             return false;
-        } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_ . $module_name . '/views/templates/front/' . $template)) {
+        }
+        if (Tools::file_exists_cache(_PS_MODULE_DIR_ . $module_name . '/views/templates/front/' . $template)) {
             return false;
-        } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_ . $module_name . '/' . $template)) {
+        }
+        if (Tools::file_exists_cache(_PS_MODULE_DIR_ . $module_name . '/' . $template)) {
             return false;
         }
 
@@ -2472,11 +2484,14 @@ abstract class ModuleCore implements ModuleInterface
 
         if ($overloaded) {
             return $overloaded;
-        } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_ . $this->name . '/views/templates/hook/' . $template)) {
+        }
+        if (Tools::file_exists_cache(_PS_MODULE_DIR_ . $this->name . '/views/templates/hook/' . $template)) {
             return _PS_MODULE_DIR_ . $this->name . '/views/templates/hook/' . $template;
-        } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_ . $this->name . '/views/templates/front/' . $template)) {
+        }
+        if (Tools::file_exists_cache(_PS_MODULE_DIR_ . $this->name . '/views/templates/front/' . $template)) {
             return _PS_MODULE_DIR_ . $this->name . '/views/templates/front/' . $template;
-        } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_ . $this->name . '/' . $template)) {
+        }
+        if (Tools::file_exists_cache(_PS_MODULE_DIR_ . $this->name . '/' . $template)) {
             return _PS_MODULE_DIR_ . $this->name . '/' . $template;
         } else {
             return null;
@@ -3110,7 +3125,8 @@ abstract class ModuleCore implements ModuleInterface
 
         if ($orig_path && !$file = PrestaShopAutoload::getInstance()->getClassPath($classname)) {
             return true;
-        } elseif (!$orig_path && Module::getModuleIdByName($classname)) {
+        }
+        if (!$orig_path && Module::getModuleIdByName($classname)) {
             $path = 'modules' . DIRECTORY_SEPARATOR . $classname . DIRECTORY_SEPARATOR . $classname . '.php';
         }
 

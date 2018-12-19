@@ -338,7 +338,8 @@ class AdminTranslationsControllerCore extends AdminController
         if ($file_path && !file_exists($file_path)) {
             if (!file_exists(dirname($file_path)) && !mkdir(dirname($file_path), 0777, true)) {
                 throw new PrestaShopException($this->trans('Directory "%folder%" cannot be created', array('%folder%' => dirname($file_path)), 'Admin.Notifications.Error'));
-            } elseif (!touch($file_path)) {
+            }
+            if (!touch($file_path)) {
                 throw new PrestaShopException($this->trans('File "%file%" cannot be created', array('%file%' => $file_path), 'Admin.Notifications.Error'));
             }
         }

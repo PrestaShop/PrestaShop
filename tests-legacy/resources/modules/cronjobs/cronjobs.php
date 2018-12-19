@@ -706,7 +706,8 @@ class CronJobs extends Module
 
         if (((Tools::isSubmit('install') == true) || (Tools::isSubmit('reset') == true)) && ((bool)$result == false)) {
             return true;
-        } elseif (((Tools::isSubmit('install') == false) || (Tools::isSubmit('reset') == false)) && ((bool)$result == false)) {
+        }
+        if (((Tools::isSubmit('install') == false) || (Tools::isSubmit('reset') == false)) && ((bool)$result == false)) {
             return $this->setErrorMessage('An error occurred while trying to contact PrestaShop\'s cron tasks webservice.');
         }
 

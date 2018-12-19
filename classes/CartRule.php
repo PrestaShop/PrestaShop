@@ -734,7 +734,8 @@ class CartRuleCore extends ObjectModel
             $r = $this->checkProductRestrictionsFromCart($context->cart, false, $display_error, $alreadyInCart);
             if ($r !== false && $display_error) {
                 return $r;
-            } elseif (!$r && !$display_error) {
+            }
+            if (!$r && !$display_error) {
                 return false;
             }
         }

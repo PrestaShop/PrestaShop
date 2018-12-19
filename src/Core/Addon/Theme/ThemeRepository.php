@@ -151,7 +151,8 @@ class ThemeRepository implements AddonRepositoryInterface
 
         if (preg_match('/.\.(yml|yaml)$/', $file)) {
             return (new Parser())->parse($content);
-        } elseif (preg_match('/.\.json$/', $file)) {
+        }
+        if (preg_match('/.\.json$/', $file)) {
             return json_decode($content, true);
         }
     }

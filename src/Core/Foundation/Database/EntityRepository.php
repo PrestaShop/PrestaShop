@@ -106,7 +106,8 @@ class EntityRepository
                     $this->entityMetaData->getEntityClassName()
                 )
             );
-        } elseif (count($primary) > 1) {
+        }
+        if (count($primary) > 1) {
             throw new Exception(
                 sprintf(
                     'Entity `%s` has a composite primary key, which is not supported by entity repositories.',
@@ -163,7 +164,8 @@ class EntityRepository
     {
         if (count($rows) === 0) {
             return null;
-        } elseif (count($rows) > 1) {
+        }
+        if (count($rows) > 1) {
             throw new Exception('Too many rows returned.');
         } else {
             $data = $rows[0];

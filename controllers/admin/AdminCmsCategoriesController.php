@@ -116,7 +116,8 @@ class AdminCmsCategoriesControllerCore extends AdminController
             }
 
             return $object;
-        } elseif (Tools::isSubmit('statuscms_category') && Tools::getValue($this->identifier)) {
+        }
+        if (Tools::isSubmit('statuscms_category') && Tools::getValue($this->identifier)) {
             // Change object statuts (active, inactive)
             if ($this->access('edit')) {
                 if (Validate::isLoadedObject($object = $this->loadObject())) {

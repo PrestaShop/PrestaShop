@@ -3891,7 +3891,8 @@ class ProductCore extends ObjectModel
 
             if (Tools::isEmpty($row['color']) && !@filemtime(_PS_COL_IMG_DIR_ . $row['id_attribute'] . '.jpg')) {
                 continue;
-            } elseif (Tools::isEmpty($row['color']) && @filemtime(_PS_COL_IMG_DIR_ . $row['id_attribute'] . '.jpg')) {
+            }
+            if (Tools::isEmpty($row['color']) && @filemtime(_PS_COL_IMG_DIR_ . $row['id_attribute'] . '.jpg')) {
                 $row['texture'] = _THEME_COL_DIR_ . $row['id_attribute'] . '.jpg';
             }
 

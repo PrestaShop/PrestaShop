@@ -344,7 +344,8 @@ class OrderCore extends ObjectModel
             $order_detail->product_quantity_return += (int) $quantity;
 
             return $order_detail->update();
-        } elseif ($this->hasBeenPaid()) {
+        }
+        if ($this->hasBeenPaid()) {
             $order_detail->product_quantity_refunded += (int) $quantity;
 
             return $order_detail->update();
@@ -479,7 +480,8 @@ class OrderCore extends ObjectModel
 
         if ($this->hasBeenDelivered()) {
             return Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_returned` = `quantity_returned` + ' . (int) $quantity . ' WHERE `id_customization` = ' . (int) $id_customization . ' AND `id_cart` = ' . (int) $this->id_cart . ' AND `id_product` = ' . (int) $order_detail->product_id);
-        } elseif ($this->hasBeenPaid()) {
+        }
+        if ($this->hasBeenPaid()) {
             return Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_refunded` = `quantity_refunded` + ' . (int) $quantity . ' WHERE `id_customization` = ' . (int) $id_customization . ' AND `id_cart` = ' . (int) $this->id_cart . ' AND `id_product` = ' . (int) $order_detail->product_id);
         }
         if (!Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity` = `quantity` - ' . (int) $quantity . ' WHERE `id_customization` = ' . (int) $id_customization . ' AND `id_cart` = ' . (int) $this->id_cart . ' AND `id_product` = ' . (int) $order_detail->product_id)) {

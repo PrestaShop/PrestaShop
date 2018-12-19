@@ -116,7 +116,8 @@ $file = $_GET['file'];
 if (!array_key_exists($file, $plugins)) {
     //check if file is a real prestashop native JS
     die('file_not_found');
-} elseif ($file == 'jquery-ui-1.8.10.custom.min.js') {
+}
+if ($file == 'jquery-ui-1.8.10.custom.min.js') {
     //jquery-ui cannot be call directly, now to include query UI, use Media::addJqueryUI('component_name');
     $html = '$(document).ready( function () {
 	'.(_PS_MODE_DEV_ ? 'if (!$.browser.msie)console.log(\'MODE DEV : This file : "jquery-ui-1.8.10.custom.min.js" cannot be call directly please use Media::addJqueryUI("component_name")  \')' : '').'

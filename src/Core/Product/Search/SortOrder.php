@@ -137,9 +137,11 @@ class SortOrder
         if ($this->entity === 'product') {
             if ($this->field === 'name') {
                 return 'pl.';
-            } elseif ($this->field === 'position') {
+            }
+            if ($this->field === 'position') {
                 return 'cp.';
-            } elseif ($this->field === 'manufacturer_name') {
+            }
+            if ($this->field === 'manufacturer_name') {
                 $this->setField('name');
 
                 return 'm.';
@@ -155,7 +157,8 @@ class SortOrder
     {
         if ($prefix) {
             return $this->getLegacyPrefix() . $this->field;
-        } elseif ($this->entity === 'manufacturer' && $this->field === 'name') {
+        }
+        if ($this->entity === 'manufacturer' && $this->field === 'name') {
             return 'manufacturer_name';
         } else {
             return $this->field;

@@ -282,7 +282,8 @@ class ProductSaleCore
 				SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
 				WHERE `id_product` = ' . (int) $idProduct
             );
-        } elseif ($totalSales == 1) {
+        }
+        if ($totalSales == 1) {
             return Db::getInstance()->delete('product_sale', 'id_product = ' . (int) $idProduct);
         }
 

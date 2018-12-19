@@ -1310,15 +1310,20 @@ class AdminModulesControllerCore extends AdminController
         $show_type_modules = $this->filter_configuration['PS_SHOW_TYPE_MODULES_' . (int) $this->id_employee];
         if ($show_type_modules == 'nativeModules' && !in_array($module->name, $this->list_natives_modules)) {
             return true;
-        } elseif ($show_type_modules == 'partnerModules' && !in_array($module->name, $this->list_partners_modules)) {
+        }
+        if ($show_type_modules == 'partnerModules' && !in_array($module->name, $this->list_partners_modules)) {
             return true;
-        } elseif ($show_type_modules == 'addonsModules' && (!isset($module->type) || $module->type != 'addonsBought')) {
+        }
+        if ($show_type_modules == 'addonsModules' && (!isset($module->type) || $module->type != 'addonsBought')) {
             return true;
-        } elseif ($show_type_modules == 'mustHaveModules' && (!isset($module->type) || $module->type != 'addonsMustHave')) {
+        }
+        if ($show_type_modules == 'mustHaveModules' && (!isset($module->type) || $module->type != 'addonsMustHave')) {
             return true;
-        } elseif ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) || in_array($module->name, $this->list_natives_modules))) {
+        }
+        if ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) || in_array($module->name, $this->list_natives_modules))) {
             return true;
-        } elseif (strpos($show_type_modules, 'authorModules[') !== false) {
+        }
+        if (strpos($show_type_modules, 'authorModules[') !== false) {
             // setting selected author in authors set
             $author_selected = substr(str_replace(array('authorModules[', "\'"), array('', "'"), $show_type_modules), 0, -1);
             $this->modules_authors[$author_selected] = 'selected';

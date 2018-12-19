@@ -223,7 +223,8 @@ class StockManager
             $combination = new Combination($id_product_attribute);
 
             return $this->isCombinationQuantityUnderAlertThreshold($combination, $newQuantity);
-        } elseif (!$productHasAttributes && !$id_product_attribute) {
+        }
+        if (!$productHasAttributes && !$id_product_attribute) {
             return $this->isProductQuantityUnderAlertThreshold($product, $newQuantity);
         }
 

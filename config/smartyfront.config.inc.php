@@ -235,7 +235,8 @@ function smartyTranslate($params, $smarty)
             ),
             $params
         );
-    } elseif ($params['pdf']) {
+    }
+    if ($params['pdf']) {
         return Translate::smartyPostProcessTranslation(
             Translate::getPdfTranslation(
                 $params['s'],

@@ -135,7 +135,8 @@ abstract class AbstractFormCore implements FormInterface
                 );
 
                 continue;
-            } elseif (!$field->isRequired() && !$field->getValue()) {
+            }
+            if (!$field->isRequired() && !$field->getValue()) {
                 continue;
             }
 

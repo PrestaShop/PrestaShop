@@ -110,7 +110,8 @@ class ModuleDataUpdater
                 LegacyModule::upgradeModuleVersion($name, $module->version);
 
                 return !count($legacy_instance->getErrors());
-            } elseif (LegacyModule::getUpgradeStatus($name)) {
+            }
+            if (LegacyModule::getUpgradeStatus($name)) {
                 return true;
             }
 

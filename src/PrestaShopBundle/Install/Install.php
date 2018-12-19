@@ -140,7 +140,8 @@ class Install extends AbstractInstall
             $this->setError($this->translator->trans('%file% file is not writable (check permissions)', array('%file%' => $this->settingsFile), 'Install'));
 
             return false;
-        } elseif (
+        }
+        if (
             !file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $this->settingsFile)
             && !is_writable(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . dirname($this->settingsFile))
         ) {
