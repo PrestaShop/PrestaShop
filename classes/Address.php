@@ -540,6 +540,7 @@ class AddressCore extends ObjectModel
      * @param int $id_customer Customer id
      *
      * @return string|false|null Amount of aliases found
+     *
      * @todo Find out if we shouldn't be returning an int instead? (breaking change)
      */
     public static function aliasExist($alias, $id_address, $id_customer)

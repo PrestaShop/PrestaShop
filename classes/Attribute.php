@@ -389,6 +389,7 @@ class AttributeCore extends ObjectModel
      * @param int $idAttributeGroup AttributeGroup ID
      *
      * @return int $position Position
+     *
      * @todo Shouldn't this be called getHighestPosition instead?
      */
     public static function getHigherPosition($idAttributeGroup)

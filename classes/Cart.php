@@ -574,6 +574,7 @@ class CartCore extends ObjectModel
      * @param int $id_cart_rule CartRule ID
      *
      * @return int Amount of Customer Discounts
+     *
      * @todo What are customer discounts? Isn't this just a PriceRule and shouldn't this method be renamed instead?
      */
     public function getDiscountsCustomer($id_cart_rule)
@@ -1801,6 +1802,7 @@ class CartCore extends ObjectModel
      * @param int|null $id_address_delivery Unused
      *
      * @return bool Indicates if the Customization was successfully deleted
+     *
      * @todo Remove unused parameters
      */
     protected function _deleteCustomization($id_customization, $id_product, $id_product_attribute, $id_address_delivery = 0)
@@ -1871,6 +1873,7 @@ class CartCore extends ObjectModel
      * @param int $id_cart Cart ID
      *
      * @return string Formatted total amount in Cart
+     *
      * @todo What is this?
      */
     public static function getOrderTotalUsingTaxCalculationMethod($id_cart)
@@ -4133,6 +4136,7 @@ class CartCore extends ObjectModel
      * @param string $text_value
      *
      * @return bool Always true
+     *
      * @todo Improve this PHPDoc comment
      */
     public function addTextFieldToProduct($id_product, $index, $type, $text_value)
@@ -4177,6 +4181,7 @@ class CartCore extends ObjectModel
      * @param int $index
      *
      * @return bool
+     *
      * @todo Improve this PHPDoc comment
      */
     public function deleteCustomizationToProduct($id_product, $index)
@@ -4261,6 +4266,7 @@ class CartCore extends ObjectModel
      * @param string $tr Unused parameter
      *
      * @return string
+     *
      * @todo Remove unused parameter
      */
     public static function replaceZeroByShopName($echo, $tr)
@@ -4431,6 +4437,7 @@ class CartCore extends ObjectModel
      * @param array $values Values from webservice
      *
      * @return bool Whether the values have been successfully inserted
+     *
      * @todo This function always returns true, make it depend on actual result of DB query
      */
     public function setWsCartRows($values)
