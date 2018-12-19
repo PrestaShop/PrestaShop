@@ -65,7 +65,7 @@ class ContainerBuilder
         $container->compile();
 
         $dumper = new PhpDumper($container);
-        file_put_contents($file, $dumper->dump(array('class' => $containerName)));
+        file_put_contents($file, $dumper->dump(['class' => $containerName]));
 
         return $container;
     }

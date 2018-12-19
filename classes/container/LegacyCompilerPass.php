@@ -25,8 +25,11 @@
  */
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use PrestaShop\PrestaShop\Adapter\DependencyInjection\FileLoader\YamlByTagFileLoader;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Finder\Finder;
 
 class LegacyCompilerPass implements CompilerPassInterface
 {
@@ -52,6 +55,8 @@ class LegacyCompilerPass implements CompilerPassInterface
         $container->set('db', Db::getInstance());
         $container->set('shop', $context->shop);
         $container->set('employee', $context->employee);
+
+        $this->loadServicesFromActiveModules($container);
     }
 
     private function buildSyntheticDefinitions(array $keys, ContainerBuilder $container)
@@ -61,5 +66,28 @@ class LegacyCompilerPass implements CompilerPassInterface
             $definition->setSynthetic(true);
             $container->setDefinition($key, $definition);
         }
+    }
+
+    private function loadServicesFromActiveModules(ContainerBuilder $container)
+    {
+        $queryResult = Db::getInstance()->executeS('SELECT name from ' . _DB_PREFIX_ . 'module WHERE active = 1');
+        $activeModules = array_map('current', $queryResult);
+
+        foreach ($this->getModulesPaths() as $modulePath) {
+            if (in_array($modulePath->getFilename(), $activeModules)
+                && file_exists($modulePath . '/config/services.yml')
+            ) {
+                $loader = new YamlByTagFileLoader($container, new FileLocator($modulePath . '/config/'));
+                $loader->load('services.yml');
+            }
+        }
+    }
+
+    /**
+     * @return \Iterator
+     */
+    private function getModulesPaths()
+    {
+        return Finder::create()->directories()->in(__DIR__ . '/../../modules')->depth(0);
     }
 }
