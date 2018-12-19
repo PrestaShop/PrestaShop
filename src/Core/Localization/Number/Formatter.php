@@ -206,7 +206,7 @@ class Formatter
             // Reverse back the digits and the groups
             $groups = array_reverse($groups);
             foreach ($groups as &$group) {
-                $group = implode(array_reverse($group));
+                $group = implode('', array_reverse($group));
             }
             // Reconstruct the major digits.
             $majorDigits = implode(self::GROUP_SEPARATOR_PLACEHOLDER, $groups);

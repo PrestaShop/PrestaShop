@@ -1,6 +1,6 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const commonFileScenarios = require('../../common_scenarios/file');
-
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let fileData = {
     filename: 'Ps Picture',
     description: 'Picture of prestashop',
@@ -17,6 +17,7 @@ scenario('Create, edit, view, delete and check "Files" in the Back Office', () =
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   commonFileScenarios.createFile(fileData.filename, fileData.description, fileData.file);
   commonFileScenarios.checkFile(fileData.filename, fileData.description);
   commonFileScenarios.editFile(fileData.filename, fileEditedData.filename, fileEditedData.description, fileEditedData.file);

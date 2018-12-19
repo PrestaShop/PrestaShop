@@ -282,7 +282,8 @@ class AttributeCore extends ObjectModel
      */
     public static function getAttributeMinimalQty($idProductAttribute)
     {
-        $minimalQuantity = Db::getInstance()->getValue('
+        $minimalQuantity = Db::getInstance()->getValue(
+            '
 			SELECT `minimal_quantity`
 			FROM `' . _DB_PREFIX_ . 'product_attribute_shop` pas
 			WHERE `id_shop` = ' . (int) Context::getContext()->shop->id . '
@@ -333,7 +334,8 @@ class AttributeCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
 
-        $res1 = Db::getInstance()->execute('
+        $res1 = Db::getInstance()->execute(
+            '
 			UPDATE `' . _DB_PREFIX_ . 'attribute`
 			SET `position`= `position` ' . ($direction ? '- 1' : '+ 1') . '
 			WHERE `position`
@@ -343,7 +345,8 @@ class AttributeCore extends ObjectModel
 			AND `id_attribute_group`=' . (int) $movedAttribute['id_attribute_group']
         );
 
-        $res2 = Db::getInstance()->execute('
+        $res2 = Db::getInstance()->execute(
+            '
 			UPDATE `' . _DB_PREFIX_ . 'attribute`
 			SET `position` = ' . (int) $position . '
 			WHERE `id_attribute` = ' . (int) $movedAttribute['id_attribute'] . '

@@ -40,6 +40,7 @@ use Configuration;
 use Language;
 use Link;
 use Tools;
+use Hook;
 
 class ProductLazyArray extends AbstractLazyArray
 {
@@ -231,6 +232,7 @@ class ProductLazyArray extends AbstractLazyArray
                     'label' => $this->translator->trans('Used', array(), 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/UsedCondition',
                 );
+
                 break;
             case 'refurbished':
                 return array(
@@ -238,6 +240,7 @@ class ProductLazyArray extends AbstractLazyArray
                     'label' => $this->translator->trans('Refurbished', array(), 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/RefurbishedCondition',
                 );
+
                 break;
             default:
                 return false;
@@ -465,6 +468,11 @@ class ProductLazyArray extends AbstractLazyArray
                 'label' => $this->translator->trans('Pack', array(), 'Shop.Theme.Catalog'),
             );
         }
+
+        Hook::exec('actionProductFlagsModifier', array(
+            'flags' => &$flags,
+            'product' => $this->product,
+        ));
 
         return $flags;
     }

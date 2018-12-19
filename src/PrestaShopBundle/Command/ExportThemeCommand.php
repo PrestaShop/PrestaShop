@@ -40,8 +40,7 @@ class ExportThemeCommand extends ContainerAwareCommand
         $this
             ->setName('prestashop:theme:export')
             ->setDescription('Create zip to distribute theme with its dependencies')
-            ->addArgument('theme', InputArgument::REQUIRED, 'Theme to export directory name.')
-        ;
+            ->addArgument('theme', InputArgument::REQUIRED, 'Theme to export directory name.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

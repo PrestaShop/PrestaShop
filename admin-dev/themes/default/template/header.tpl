@@ -72,7 +72,7 @@
 		var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
 		var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
-		var currentIndex = '{$currentIndex|@addcslashes:'\''}';
+		var currentIndex = '{$currentIndex|escape:'javascript':'UTF-8'|escape:'quotes'}';
 		var employee_token = '{getAdminToken tab='AdminEmployees'}';
 		var choose_language_translate = '{l s='Choose language:' js=1 d='Admin.Actions'}';
 		var default_language = '{$default_language|intval}';
@@ -176,7 +176,7 @@
 									type: 'POST',
 									headers: { "cache-control": "no-cache" },
 									async: false,
-									url: "{$link->getAdminLink('AdminQuickAccesses')}" + "&action=GetUrl" + "&rand={1|rand:200}" + "&ajax=1" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
+									url: "{$link->getAdminLink('AdminQuickAccesses', true, [], ['action' => 'GetUrl', 'rand' => (1|rand:200), 'ajax' => 1])}" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
 									data: {
 										"url": "{$link->getQuickLink($smarty.server['REQUEST_URI']|escape:'javascript')}",
 										"name": name,
@@ -345,7 +345,7 @@
 			{* Employee *}
 			<ul id="header_employee_box" class="component">
 				<li id="employee_infos" class="dropdown hidden-xs">
-					<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"
+					<a href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}"
 						 class="employee_name dropdown-toggle"
 						 data-toggle="dropdown"
 					>
@@ -359,11 +359,11 @@
 						</li>
 						<li class="text-center text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{$employee->firstname} {$employee->lastname}</li>
 						<li class="divider"></li>
-						<li><a class="admin-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="material-icons">settings_applications</i> {l s='Your profile' d='Admin.Navigation.Header'}</a></li>
+						<li><a class="admin-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}"><i class="material-icons">settings_applications</i> {l s='Your profile' d='Admin.Navigation.Header'}</a></li>
 						{if $host_mode}
 							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="material-icons">settings_applications</i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
 						{/if}
-						<li class="signout" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="material-icons">power_settings_new</i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
+						<li class="signout" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$logout_link|escape:'html':'UTF-8'}"><i class="material-icons">power_settings_new</i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
 					</ul>
 				</li>
 			</ul>

@@ -49,18 +49,15 @@ class AbstractGridDefinitionFactoryTest extends TestCase
         $definitionFactory
             ->expects($this->once())
             ->method('getName')
-            ->willReturn('Test name')
-        ;
+            ->willReturn('Test name');
         $definitionFactory
             ->expects($this->once())
             ->method('getId')
-            ->willReturn('test_id')
-        ;
+            ->willReturn('test_id');
         $definitionFactory
             ->expects($this->once())
             ->method('getColumns')
-            ->willReturn($this->getColumns())
-        ;
+            ->willReturn($this->getColumns());
 
         $this->definitionFactory = $definitionFactory;
     }
@@ -74,8 +71,7 @@ class AbstractGridDefinitionFactoryTest extends TestCase
             ->withConsecutive(
                 [$this->equalTo('actionTestIdGridDefinitionModifier')],
                 [$this->isType('array'), $this->arrayHasKey('definition')]
-            )
-        ;
+            );
 
         $this->definitionFactory->setHookDispatcher($hookDispatcherMock);
 
@@ -98,8 +94,7 @@ class AbstractGridDefinitionFactoryTest extends TestCase
         return (new ColumnCollection())
             ->add($this->createColumnMock('test_1'))
             ->add($this->createColumnMock('test_2'))
-            ->add($this->createColumnMock('test_3'))
-        ;
+            ->add($this->createColumnMock('test_3'));
     }
 
     private function createColumnMock($id)

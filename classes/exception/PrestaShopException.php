@@ -154,6 +154,7 @@ class PrestaShopExceptionCore extends Exception
             'server',
         ];
         $hiddenArgs = [];
+
         try {
             $class = new \ReflectionClass($trace['class']);
             /** @var \ReflectionMethod $method */

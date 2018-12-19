@@ -192,7 +192,6 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
 
     public function renderAssociationFooter($obj, $params, $assoc_name)
     {
-        return;
     }
 
     public function renderErrorsHeader()

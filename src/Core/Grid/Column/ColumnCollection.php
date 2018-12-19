@@ -120,7 +120,8 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     {
         if (!isset($this->items[$id])) {
             throw new ColumnNotFoundException(sprintf(
-                'Cannot insert new column into collection. Column with id "%s" was not found.', $id
+                'Cannot insert new column into collection. Column with id "%s" was not found.',
+                $id
             ));
         }
 

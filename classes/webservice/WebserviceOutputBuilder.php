@@ -222,39 +222,51 @@ class WebserviceOutputBuilderCore
         switch ($num) {
             case 200:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 200 OK';
+
                 break;
             case 201:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 201 Created';
+
                 break;
             case 204:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 204 No Content';
+
                 break;
             case 304:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified';
+
                 break;
             case 400:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request';
+
                 break;
             case 401:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized';
+
                 break;
             case 403:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden';
+
                 break;
             case 404:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found';
+
                 break;
             case 405:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed';
+
                 break;
             case 500:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error';
+
                 break;
             case 501:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 501 Not Implemented';
+
                 break;
             case 503:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 503 Service Unavailable';
+
                 break;
         }
     }
@@ -617,10 +629,10 @@ class WebserviceOutputBuilderCore
                 }
 
                 $parent_details = array(
-                        'object_id' => $object->id,
-                        'entity_name' => $ws_params['objectNodeName'],
-                        'entities_name' => $ws_params['objectsNodeName'],
-                    );
+                    'object_id' => $object->id,
+                    'entity_name' => $ws_params['objectNodeName'],
+                    'entities_name' => $ws_params['objectsNodeName'],
+                );
 
                 if (is_array($getter)) {
                     $association_resources = call_user_func($getter, $object);

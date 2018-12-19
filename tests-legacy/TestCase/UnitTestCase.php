@@ -35,8 +35,6 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Phake;
 use Symfony\Component\HttpKernel\Kernel;
-use LegacyTests\TestCase\FakeEntityMapper;
-use LegacyTests\TestCase\FakeConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 
 class UnitTestCase extends \PHPUnit\Framework\TestCase
@@ -122,7 +120,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
         Phake::when($this->context)->cloneContext()->thenReturn($this->context);
 
         $this->context->shop = Phake::mock('Shop');
-        $this->context->controller = new \stdClass;
+        $this->context->controller = new \stdClass();
         Context::setInstanceForTesting($this->context);
 
         $this->cache = Phake::mock('Cache');
@@ -194,6 +192,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
             '\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface',
             $fakeConfiguration
         );
+
         return $fakeConfiguration;
     }
 
@@ -226,15 +225,15 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-    * Call protected/private method of a class.
-    *
-    * @param object &$object    Instantiated object that we will run method on.
-    * @param string $methodName Method name to call
-    * @param array  $parameters Array of parameters to pass into method.
-    *
-    * @return mixed Method return.
-    * @link https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
-    */
+     * Call protected/private method of a class.
+     *
+     * @param object &$object    Instantiated object that we will run method on.
+     * @param string $methodName Method name to call
+     * @param array  $parameters Array of parameters to pass into method.
+     *
+     * @return mixed Method return.
+     * @link https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
+     */
     protected function invokeMethod(&$object, $methodName, array $parameters = array())
     {
         $reflection = new \ReflectionClass(get_class($object));

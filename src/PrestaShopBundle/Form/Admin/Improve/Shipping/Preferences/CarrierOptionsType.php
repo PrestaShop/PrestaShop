@@ -88,8 +88,7 @@ class CarrierOptionsType extends TranslatorAwareType
             ->add('carrier_default_order_way', ChoiceType::class, [
                 'choices' => $this->orderWayChoices,
                 'choice_translation_domain' => 'Admin.Global',
-            ])
-        ;
+            ]);
     }
 
     /**

@@ -31,7 +31,6 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\DependencyInjection\Container;
 use LegacyTests\TestCase\Module as HelperModule;
 
-
 class YamlRoutesInModuleTest extends KernelTestCase
 {
     /**
@@ -79,7 +78,7 @@ class YamlRoutesInModuleTest extends KernelTestCase
 
         self::assertEquals('/modules/demo/demo', $route->getPath());
         self::assertEquals([
-            '_controller' => 'PsTest\Controller\Admin\DemoController::demoAction'
+            '_controller' => 'PsTest\Controller\Admin\DemoController::demoAction',
         ], $route->getDefaults());
     }
 }

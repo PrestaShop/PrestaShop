@@ -390,7 +390,7 @@ class CategoryCore extends ObjectModel
         foreach ($allCat as $cat) {
             /* @var Category $cat */
             $cat->deleteLite();
-            if (!$this->hasMultishopEntries()) {
+            if (!$cat->hasMultishopEntries()) {
                 $cat->deleteImage();
                 $cat->cleanGroups();
                 $cat->cleanAssoProducts();
@@ -457,6 +457,7 @@ class CategoryCore extends ObjectModel
             } else {
                 $name = $this->name;
             }
+
             throw new PrestaShopException('Parent category ' . $this->id_parent .
                 ' does not exist. Current category: ' . $name);
         }
@@ -618,7 +619,8 @@ class CategoryCore extends ObjectModel
         if (!Validate::isBool($active)) {
             die(Tools::displayError());
         }
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'category` c
 			' . Shop::addSqlAssociation('category', 'c') . '
@@ -690,7 +692,8 @@ class CategoryCore extends ObjectModel
         );
 
         if (!Cache::isStored($cacheId)) {
-            $result = Db::getInstance()->executeS('
+            $result = Db::getInstance()->executeS(
+                '
 				SELECT c.`id_category`, cl.`name`
 				FROM `' . _DB_PREFIX_ . 'category` c
 				' . ($useShopRestriction ? Shop::addSqlAssociation('category', 'c') : '') . '
@@ -764,7 +767,8 @@ class CategoryCore extends ObjectModel
             );
 
         if (!Cache::isStored($cacheId)) {
-            $result = Db::getInstance()->executeS('
+            $result = Db::getInstance()->executeS(
+                '
 				SELECT c.*, cl.*
 				FROM `' . _DB_PREFIX_ . 'category` c
 				' . ($useShopRestriction ? Shop::addSqlAssociation('category', 'c') : '') . '
@@ -1289,7 +1293,8 @@ class CategoryCore extends ObjectModel
             }
         }
 
-        $flag = Db::getInstance()->execute('
+        $flag = Db::getInstance()->execute(
+            '
 			INSERT IGNORE INTO `' . _DB_PREFIX_ . 'category_product` (`id_product`, `id_category`, `position`)
 			VALUES ' . implode(',', $row)
         );

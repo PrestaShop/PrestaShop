@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Adapter\Module\Configuration;
 
 use Doctrine\DBAL\Connection;
@@ -33,7 +34,6 @@ use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use LegacyTests\TestCase\UnitTestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Yaml;
 
 class ModuleSelfConfiguratorTest extends UnitTestCase
 {
@@ -57,7 +57,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     public function setUp()
     {
         $this->configuration = new ConfigurationMock();
-        $this->connection = new ConnectionMock(array(), new Driver);
+        $this->connection = new ConnectionMock(array(), new Driver());
         $this->mockModuleRepository();
 
         $this->defaultDir = __DIR__.'/../../../../resources/module-self-config-files';
@@ -311,6 +311,7 @@ class ConfigurationMock extends Configuration
     public function set($key, $value, array $options = [])
     {
         $this->configurationData[$key] = $value;
+
         return $this;
     }
 
@@ -322,6 +323,7 @@ class ConfigurationMock extends Configuration
     public function remove($key)
     {
         unset($this->configurationData[$key]);
+
         return $this;
     }
 }
@@ -352,6 +354,7 @@ class ConnectionMock extends Connection
     public function prepare($statement)
     {
         $this->sql[] = $statement;
+
         return new StatementMock($statement, $this);
     }
 }
@@ -359,5 +362,6 @@ class ConnectionMock extends Connection
 class StatementMock extends Statement
 {
     public function __construct($sql, Connection $conn) { }
+
     public function execute($params = null) { }
 }

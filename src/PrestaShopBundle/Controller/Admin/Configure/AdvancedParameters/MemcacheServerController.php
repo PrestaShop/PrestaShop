@@ -113,8 +113,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
                     $postValues->get('server_ip'),
                     $postValues->getInt('server_port'),
                     $postValues->get('server_weight')
-                )
-            ;
+                );
 
             return new JsonResponse($server, 201);
         }

@@ -44,8 +44,7 @@ class GenerateByDateType extends CommonAbstractType
     {
         $builder
             ->add('date_from', DatePickerType::class)
-            ->add('date_to', DatePickerType::class)
-        ;
+            ->add('date_to', DatePickerType::class);
     }
 
     /**

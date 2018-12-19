@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
 use Db;
+use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerChain;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Doctrine\Common\Cache\FilesystemCache;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -109,7 +112,13 @@ class ModuleManagerBuilder
                     $this->buildRepository(),
                     self::$moduleZipManager,
                     self::$translator,
-                    new NullDispatcher()
+                    new NullDispatcher(),
+                    new CacheClearer(
+                        new CacheClearerChain(),
+                        new Clearer\SymfonyCacheClearer(),
+                        new Clearer\MediaCacheClearer(),
+                        new Clearer\SmartyCacheClearer()
+                    )
                 );
             }
         }
@@ -165,6 +174,7 @@ class ModuleManagerBuilder
                     $this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml'
                 )
             );
+
             try {
                 $filesystem = new Filesystem();
                 $filesystem->dumpFile($phpConfigFile, '<?php return ' . var_export($config, true) . ';' . "\n");

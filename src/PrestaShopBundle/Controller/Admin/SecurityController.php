@@ -43,8 +43,7 @@ class SecurityController extends FrameworkBundleAdminController
 
         $newToken = $this->get('security.csrf.token_manager')
             ->getToken($username)
-            ->getValue()
-        ;
+            ->getValue();
 
         $newUri = PrestaShopRouter::generateTokenizedUrl($requestUri, $newToken);
 

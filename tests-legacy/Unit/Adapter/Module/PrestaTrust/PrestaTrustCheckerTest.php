@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Adapter\Module\PrestaTrust;
 
 use Doctrine\Common\Cache\ArrayCache;
@@ -71,14 +72,14 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $this->modules = array(
             // Module under dev, not concerned by PrestaTrust checks
             'module-under-dev' => new Module(array(
-                'name' => 'module-under-dev'
+                'name' => 'module-under-dev',
             )),
             // Module with Pico from Addons
             'module-verified-from-addons-api' => new Module(array(
                 'name' => 'module-verified-from-addons-api',
                 'prestatrust' => (object)array(
                     'pico' => 'https://www.addons.prestashop.com/random-url.jpg',
-                )
+                ),
             )),
             // Module with PrestaTrust content
             'module-prestatrust-checked' => new Module(array(
@@ -88,7 +89,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
                     'pico' => 'https://www.addons.prestashop.com/random-url.jpg',
                 ),
             ), array(
-                'path' => __DIR__.'/../../../../resources/modules/ganalytics/'
+                'path' => __DIR__.'/../../../../resources/modules/ganalytics/',
             )),
         );
 
@@ -207,6 +208,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
                 'message' => 'Module is authenticated.',
                 'pico' => 'https://www.addons.prestashop.com/random-url.jpg',
             ),
-            $presentedModule['attributes']['prestatrust']);
+            $presentedModule['attributes']['prestatrust']
+        );
     }
 }

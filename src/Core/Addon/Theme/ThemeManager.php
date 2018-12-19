@@ -228,7 +228,6 @@ class ThemeManager implements AddonManagerInterface
      */
     public function getError($themeName)
     {
-        return;
     }
 
     /**
@@ -296,7 +295,8 @@ class ThemeManager implements AddonManagerInterface
                             '%module%' => $moduleName,
                             '%error_details%' => $moduleManager->getError($moduleName),
                         ),
-                        'Admin.Modules.Notification')
+                        'Admin.Modules.Notification'
+                    )
                 );
             }
             if (!$moduleManager->isEnabled($moduleName)) {
@@ -355,6 +355,7 @@ class ThemeManager implements AddonManagerInterface
         $theme = new Theme($theme_data);
         if (!$this->themeValidator->isValid($theme)) {
             $this->filesystem->remove($sandboxPath);
+
             throw new PrestaShopException(
                 $this->translator->trans('This theme is not valid for PrestaShop 1.7', [], 'Admin.Design.Notification')
             );
@@ -453,6 +454,7 @@ class ThemeManager implements AddonManagerInterface
                 $lang = $translationService->findLanguageByLocale($locale);
             } catch (Exception $exception) {
                 PrestaShopLogger::addLog('ThemeManager->importTranslationToDatabase() - Locale ' . $locale . ' does not exists');
+
                 continue;
             }
 
@@ -486,8 +488,7 @@ class ThemeManager implements AddonManagerInterface
 
         $defaultCatalogue = $themeProvider
             ->setLocale($locale)
-            ->getDefaultCatalogue()
-        ;
+            ->getDefaultCatalogue();
 
         if (empty($defaultCatalogue)) {
             return $allDomains;

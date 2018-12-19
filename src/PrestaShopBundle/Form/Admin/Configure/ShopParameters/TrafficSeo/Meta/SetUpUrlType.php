@@ -77,18 +77,19 @@ class SetUpUrlType extends AbstractType
         $builder
             ->add('friendly_url', SwitchType::class)
             ->add('accented_url', SwitchType::class)
-            ->add('canonical_url_redirection', ChoiceType::class, [
+            ->add(
+                'canonical_url_redirection',
+                ChoiceType::class,
+                [
                     'choices' => $this->canonicalUrlChoices,
                     'translation_domain' => false,
                 ]
-            )
-        ;
+            );
 
         if (!$this->isHostMode && $this->isHtaccessFileWritable) {
             $builder
                 ->add('disable_apache_multiview', SwitchType::class)
-                ->add('disable_apache_mod_security', SwitchType::class)
-            ;
+                ->add('disable_apache_mod_security', SwitchType::class);
         }
     }
 }

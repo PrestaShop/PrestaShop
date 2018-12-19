@@ -96,7 +96,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 'action' => 'catalogAction',
             ));
 
-            /* @var $filter AdminFilter */
+            /** @var $filter AdminFilter */
             if (is_null($filter)) {
                 $filters = AdminFilter::getProductCatalogEmptyFilter();
             } else {
@@ -367,9 +367,23 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         foreach ($products as &$product) {
             $product['total'] = $total; // total product count (filtered)
-            $product['price_final'] = Product::getPriceStatic($product['id_product'], true, null,
-                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
-                true, null, null, null, $nothing, true, true);
+            $product['price_final'] = Product::getPriceStatic(
+                $product['id_product'],
+                true,
+                null,
+                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
+                null,
+                false,
+                true,
+                1,
+                true,
+                null,
+                null,
+                null,
+                $nothing,
+                true,
+                true
+            );
             if ($formatCldr) {
                 $product['price'] = Tools::displayPrice($product['price'], $currency);
                 $product['price_final'] = Tools::displayPrice($product['price_final'], $currency);

@@ -132,7 +132,8 @@ class AdminTranslationsControllerCore extends AdminController
     public function initForm($method_name)
     {
         // Create a title for each translation page
-        $title = $this->trans('%1$s (Language: %2$s, Theme: %3$s)',
+        $title = $this->trans(
+            '%1$s (Language: %2$s, Theme: %3$s)',
                 array(
                     '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false : $this->translations_informations[$this->type_selected]['name']),
                     '%2$s' => $this->lang_selected->name,
@@ -345,7 +346,7 @@ class AdminTranslationsControllerCore extends AdminController
         $thm_name = str_replace('.', '', Tools::getValue('theme'));
         $kpi_key = substr(strtoupper($thm_name . '_' . Tools::getValue('lang')), 0, 16);
 
-        if ($fd = fopen($file_path, 'w')) {
+        if ($fd = fopen($file_path, 'wb')) {
             // Get value of button save and stay
             $save_and_stay = Tools::isSubmit('submitTranslations' . $type . 'AndStay');
 
@@ -731,6 +732,7 @@ class AdminTranslationsControllerCore extends AdminController
             // Global variable declaration
             if (!$global && preg_match('/^global\s+\$([a-z0-9-_]+)\s*;$/i', $line, $matches)) {
                 $global = $matches[1];
+
                 continue;
             }
             // Global variable initialization
@@ -741,6 +743,7 @@ class AdminTranslationsControllerCore extends AdminController
             // Global variable initialization without declaration
             if (!$global && preg_match('/^\$([a-z0-9-_]+)\s*=\s*array\(\s*\)\s*;$/i', $line, $matches)) {
                 $global = $matches[1];
+
                 continue;
             }
 
@@ -1183,10 +1186,12 @@ class AdminTranslationsControllerCore extends AdminController
                 // Get all files for folders classes/ and override/classes/ recursively
                 $directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_CLASS_DIR_, array(), 'php'));
                 $directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_OVERRIDE_DIR_ . 'classes/', array(), 'php'));
+
                 break;
 
             case 'fields':
                 $directories['php'] = $this->listFiles(_PS_CLASS_DIR_, array(), 'php');
+
                 break;
 
             case 'pdf':
@@ -1203,6 +1208,7 @@ class AdminTranslationsControllerCore extends AdminController
                 );
                 $directories['tpl'] = array_merge($directories['tpl'], $this->getModulesHasPDF());
                 $directories['php'] = array_merge($directories['php'], $this->getModulesHasPDF(true));
+
                 break;
 
             case 'mails':
@@ -1218,6 +1224,7 @@ class AdminTranslationsControllerCore extends AdminController
                 $directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_CLASS_DIR_, array(), 'php'));
                 $directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_OVERRIDE_DIR_ . 'classes/', array(), 'php'));
                 $directories['php'] = array_merge($directories['php'], $this->getModulesHasMails());
+
                 break;
         }
 
@@ -1244,6 +1251,7 @@ class AdminTranslationsControllerCore extends AdminController
                 } else {
                     $regex = '/\{l\s*s=([\'\"])' . _PS_TRANS_PATTERN_ . '\1(\s*sprintf=.*)?(\s*js=1)?\s*\}/U';
                 }
+
                 break;
 
             case 'back':
@@ -1255,11 +1263,13 @@ class AdminTranslationsControllerCore extends AdminController
                 } else {
                     $regex = '/\{l\s*s\s*=([\'\"])' . _PS_TRANS_PATTERN_ . '\1(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?.*\}/U';
                 }
+
                 break;
 
             case 'errors':
                 // Parsing file for all errors syntax
                 $regex = '/Tools::displayError\((\')' . _PS_TRANS_PATTERN_ . '\'(,\s*(.+))?\)/U';
+
                 break;
 
             case 'modules':
@@ -1270,6 +1280,7 @@ class AdminTranslationsControllerCore extends AdminController
                     // In tpl file look for something that should contain mod='module_name' according to the documentation
                     $regex = '/\{l\s*s=([\'\"])' . _PS_TRANS_PATTERN_ . '\1.*\s+mod=\'' . $module_name . '\'.*\}/U';
                 }
+
                 break;
 
             case 'pdf':
@@ -1282,6 +1293,7 @@ class AdminTranslationsControllerCore extends AdminController
                 } else {
                     $regex = '/\{l\s*s=([\'\"])' . _PS_TRANS_PATTERN_ . '\1(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
                 }
+
                 break;
         }
 
@@ -2086,7 +2098,8 @@ class AdminTranslationsControllerCore extends AdminController
 
                     // Adding list, form, option in Helper Translations
                     $list_prefix_key = array('AdminHelpers', 'AdminList', 'AdminView', 'AdminOptions', 'AdminForm',
-                        'AdminCalendar', 'AdminTree', 'AdminUploader', 'AdminDataviz', 'AdminKpi', 'AdminModule_list', 'AdminModulesList', );
+                        'AdminCalendar', 'AdminTree', 'AdminUploader', 'AdminDataviz', 'AdminKpi', 'AdminModule_list', 'AdminModulesList',
+                    );
                     if (in_array($prefix_key, $list_prefix_key)) {
                         $prefix_key = 'Helper';
                     }
@@ -2251,6 +2264,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         //adding sf2 form translations
         $sf2_loader = new Symfony\Component\Translation\Loader\XliffFileLoader();
+
         try {
             $sf2_trans = $sf2_loader->load(_PS_VENDOR_DIR_ . '/symfony/symfony/src/Symfony/Component/Validator/Resources/translations/validators.' . $this->lang_selected->iso_code . '.xlf', $this->lang_selected->iso_code);
         } catch (\Exception $e) {
@@ -2301,7 +2315,8 @@ class AdminTranslationsControllerCore extends AdminController
         foreach ($files_by_directory['php'] as $dir => $files) {
             foreach ($files as $file) {
                 $exclude_files = array('index.php', 'PrestaShopAutoload.php', 'StockManagerInterface.php',
-                    'TaxManagerInterface.php', 'WebserviceOutputInterface.php', 'WebserviceSpecificManagementInterface.php', );
+                    'TaxManagerInterface.php', 'WebserviceOutputInterface.php', 'WebserviceSpecificManagementInterface.php',
+                );
 
                 if (!preg_match('/\.php$/', $file) || in_array($file, $exclude_files)) {
                     continue;
@@ -2436,9 +2451,11 @@ class AdminTranslationsControllerCore extends AdminController
                 }
             }
         } else {
-            $this->warnings[] = $this->trans('A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%',
+            $this->warnings[] = $this->trans(
+                'A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%',
                 array('%iso_code%' => $this->lang_selected->iso_code, '%folder%' => str_replace(_PS_ROOT_DIR_, '', dirname($dir)), '%language%' => $default_language),
-                'Admin.International.Notification');
+                'Admin.International.Notification'
+            );
         }
 
         return $arr_return;
@@ -2575,8 +2592,8 @@ class AdminTranslationsControllerCore extends AdminController
             $str_return .= '<p class="error">
                 ' . $this->trans('There was a problem getting the mail files.', array(), 'Admin.International.Notification') . '<br>
                 ' . $this->trans('English language files must exist in %folder% folder', array(
-                    '%folder%' => '<em>' . preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']) . '</em>',
-                ), 'Admin.International.Notification') . '
+                '%folder%' => '<em>' . preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']) . '</em>',
+            ), 'Admin.International.Notification') . '
             </p>';
         }
 
@@ -2956,7 +2973,7 @@ class AdminTranslationsControllerCore extends AdminController
                 throw new PrestaShopException('Directory ' . dirname($path) . ' cannot be created.');
             }
         }
-        if ($fd = @fopen($path, 'w')) {
+        if ($fd = @fopen($path, 'wb')) {
             $tab = 'LANGMAIL';
             fwrite($fd, "<?php\n\nglobal \$_" . $tab . ";\n\$_" . $tab . " = array();\n");
 

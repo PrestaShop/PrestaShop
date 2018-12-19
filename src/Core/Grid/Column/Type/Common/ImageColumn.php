@@ -51,7 +51,6 @@ final class ImageColumn extends AbstractColumn
             ->setRequired([
                 'src_field',
             ])
-            ->setAllowedTypes('src_field', 'string')
-        ;
+            ->setAllowedTypes('src_field', 'string');
     }
 }

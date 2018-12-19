@@ -50,12 +50,11 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class DatabaseBuilder {
-
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::DATABASE) {
             return "";
         }
+
         return $parsed['base_expr'];
     }
 }
-?>

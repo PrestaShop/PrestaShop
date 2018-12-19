@@ -57,8 +57,7 @@ class UpdateCategoriesStatusCommand
     {
         $this
             ->setCategoryIds($categoryIds)
-            ->setNewStatus($newStatus)
-        ;
+            ->setNewStatus($newStatus);
     }
 
     /**

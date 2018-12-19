@@ -50,12 +50,11 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class UserVariableBuilder {
-
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::USER_VARIABLE) {
             return "";
         }
+
         return $parsed['base_expr'];
     }
 }
-?>

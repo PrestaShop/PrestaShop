@@ -41,7 +41,9 @@ class PrivateNoteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('note', TextareaType::class)
-        ;
+            ->add('note', TextareaType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ]);
     }
 }

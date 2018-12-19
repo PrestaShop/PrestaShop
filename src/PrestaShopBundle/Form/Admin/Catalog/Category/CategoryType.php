@@ -47,8 +47,7 @@ class CategoryType extends AbstractCategoryType
                 // when using CategoryType to edit category
                 // user should not be able to select that category as parent
                 'disabled_values' => null !== $options['id_category'] ? [$options['id_category']] : [],
-            ])
-        ;
+            ]);
     }
 
     /**
@@ -60,7 +59,6 @@ class CategoryType extends AbstractCategoryType
             ->setDefaults([
                 'id_category' => null,
             ])
-            ->setAllowedTypes('id_category', ['int', 'null'])
-        ;
+            ->setAllowedTypes('id_category', ['int', 'null']);
     }
 }

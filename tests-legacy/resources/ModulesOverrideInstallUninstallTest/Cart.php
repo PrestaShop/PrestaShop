@@ -1,4 +1,5 @@
 <?php
+
 class Cart extends CartCore
 {
     /*
@@ -68,6 +69,7 @@ class Cart extends CartCore
     * version: 1
     */
     protected static $_customer = null;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
@@ -75,17 +77,22 @@ class Cart extends CartCore
     */
     public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
     {
-        $result = Hook::exec('ppbsDeleteCartProduct', array(
+        $result = Hook::exec(
+            'ppbsDeleteCartProduct',
+            array(
                 'id_product' => $id_product,
                 'id_product_attribute' => $id_product_attribute,
                 'id_customization' => $id_customization,
                 'id_address_delivery' => $id_address_delivery,
             ),
-            null, false);
+            null,
+            false
+        );
         if ($result == false) {
             parent::deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0);
         }
     }
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
@@ -142,6 +149,7 @@ class Cart extends CartCore
 				AND `id_address_delivery` = '.(int)$id_address;
         Db::getInstance()->execute($sql);
     }
+
     /*
     * module: pscsx32412
     * date: 2015-07-13 15:56:35
@@ -152,7 +160,8 @@ class Cart extends CartCore
         if ($this->OrderExists()) { //NOT delete a cart which is associated with an order
             return false;
         }
-        $uploaded_files = Db::getInstance()->executeS('
+        $uploaded_files = Db::getInstance()->executeS(
+            '
 			SELECT cd.`value`
 			FROM `'._DB_PREFIX_.'customized_data` cd
 			INNER JOIN `'._DB_PREFIX_.'customization` c ON (cd.`id_customization`= c.`id_customization`)
@@ -162,7 +171,8 @@ class Cart extends CartCore
             unlink(_PS_UPLOAD_DIR_.$must_unlink['value'].'_small');
             unlink(_PS_UPLOAD_DIR_.$must_unlink['value']);
         }
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			DELETE FROM `'._DB_PREFIX_.'customized_data`
 			WHERE `id_customization` IN (
 				SELECT `id_customization`
@@ -170,7 +180,8 @@ class Cart extends CartCore
 				WHERE `id_cart`='.(int)$this->id.'
 			)'
         );
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			DELETE FROM `'._DB_PREFIX_.'customization`
 			WHERE `id_cart` = '.(int)$this->id
         );
@@ -178,6 +189,7 @@ class Cart extends CartCore
          || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id)) {
             return false;
         }
+
         return parent::delete();
     }
 }

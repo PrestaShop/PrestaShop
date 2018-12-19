@@ -342,7 +342,7 @@ class Module implements ModuleInterface
      */
     protected function instanciateLegacyModule()
     {
-        /*
+        /**
          * @TODO Temporary: This test prevents an error when switching branches with the cache.
          * Can be removed at the next release (when we will be sure that it is defined)
          */
@@ -405,6 +405,7 @@ class Module implements ModuleInterface
             if (file_exists($logo_path)) {
                 $this->attributes->set('img', __PS_BASE_URI__ . basename(_PS_MODULE_DIR_) . '/' . $this->get('name') . '/' . $logo);
                 $this->attributes->set('logo', $logo);
+
                 break;
             }
         }

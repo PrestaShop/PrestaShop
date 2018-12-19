@@ -32,7 +32,6 @@ use LegacyTests\Unit\ContextMocker;
 
 class ProductControllerTest extends IntegrationTestCase
 {
-
     /**
      * @var ContextMocker
      */
@@ -96,7 +95,7 @@ class ProductControllerTest extends IntegrationTestCase
         $property = $class->getProperty("context");
         $property->setAccessible(true);
 
-        $currency                  = new \Currency;
+        $currency                  = new \Currency();
         $currency->active          = true;
         $currency->conversion_rate = $currencyData['conversion_rate'];
         $currency->sign            = $currencyData['sign'];

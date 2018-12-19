@@ -215,10 +215,12 @@ class CartPresenter implements PresenterInterface
                                                 $field['image'] = $this->imageRetriever->getCustomizationImage(
                                                     $data['value']
                                                 );
+
                                                 break;
                                             case Product::CUSTOMIZE_TEXTFIELD:
                                                 $field['type'] = 'text';
                                                 $field['text'] = $data['value'];
+
                                                 break;
                                             default:
                                                 $field['type'] = null;
@@ -415,8 +417,7 @@ class CartPresenter implements PresenterInterface
 
         $summary_string = $products_count === 1 ?
             $this->translator->trans('1 item', array(), 'Shop.Theme.Checkout') :
-            $this->translator->trans('%count% items', array('%count%' => $products_count), 'Shop.Theme.Checkout')
-        ;
+            $this->translator->trans('%count% items', array('%count%' => $products_count), 'Shop.Theme.Checkout');
 
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
 

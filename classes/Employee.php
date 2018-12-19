@@ -420,7 +420,8 @@ class EmployeeCore extends ObjectModel
      */
     public static function countProfile($idProfile, $activeOnly = false)
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 		    SELECT COUNT(*)
 		    FROM `' . _DB_PREFIX_ . 'employee`
 		    WHERE `id_profile` = ' . (int) $idProfile . '
@@ -437,8 +438,7 @@ class EmployeeCore extends ObjectModel
     {
         return $this->isSuperAdmin()
             && Employee::countProfile($this->id_profile, true) == 1
-            && $this->active
-        ;
+            && $this->active;
     }
 
     /**
@@ -509,7 +509,8 @@ class EmployeeCore extends ObjectModel
      */
     public function favoriteModulesList()
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 		    SELECT `module`
 		    FROM `' . _DB_PREFIX_ . 'module_preference`
 		    WHERE `id_employee` = ' . (int) $this->id . ' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
@@ -580,7 +581,8 @@ class EmployeeCore extends ObjectModel
      */
     public static function getEmployeesByProfile($idProfile, $activeOnly = false)
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 		    SELECT *
 		    FROM `' . _DB_PREFIX_ . 'employee`
 		    WHERE `id_profile` = ' . (int) $idProfile . '

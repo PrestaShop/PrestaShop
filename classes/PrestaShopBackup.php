@@ -93,8 +93,11 @@ class PrestaShopBackupCore
     {
         $backupDir = PrestaShopBackup::getBackupPath($filename);
         if (!empty($this->customBackupDir)) {
-            $backupDir = str_replace((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . self::$backupDir,
-                (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . $this->customBackupDir, $backupDir);
+            $backupDir = str_replace(
+                (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . self::$backupDir,
+                (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . $this->customBackupDir,
+                $backupDir
+            );
 
             if (strrpos($backupDir, DIRECTORY_SEPARATOR)) {
                 $backupDir .= DIRECTORY_SEPARATOR;
@@ -206,7 +209,8 @@ class PrestaShopBackupCore
     {
         if (!$this->psBackupAll) {
             $ignoreInsertTable = array(_DB_PREFIX_ . 'connections', _DB_PREFIX_ . 'connections_page', _DB_PREFIX_
-                . 'connections_source', _DB_PREFIX_ . 'guest', _DB_PREFIX_ . 'statssearch', );
+                . 'connections_source', _DB_PREFIX_ . 'guest', _DB_PREFIX_ . 'statssearch',
+            );
         } else {
             $ignoreInsertTable = array();
         }
@@ -224,7 +228,7 @@ class PrestaShopBackupCore
             $backupfile .= '.gz';
             $fp = @gzopen($backupfile, 'w');
         } else {
-            $fp = @fopen($backupfile, 'w');
+            $fp = @fopen($backupfile, 'wb');
         }
 
         if ($fp === false) {
@@ -294,6 +298,7 @@ class PrestaShopBackupCore
                                         } else {
                                             $s .= 'NULL,';
                                         }
+
                                         break;
                                     }
                                 }

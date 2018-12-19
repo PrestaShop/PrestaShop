@@ -32,5 +32,6 @@ function upgrade_module_1_8_9($object)
 {
     Db::getInstance()->execute('ALTER TABLE  `'._DB_PREFIX_.'advice` ADD  `weight` INT NULL DEFAULT  \'1\'');
     Db::getInstance()->execute('ALTER TABLE  `'._DB_PREFIX_.'badge` ADD  `awb` INT NULL DEFAULT  \'0\'');
+
     return true;
 }

@@ -11,3 +11,29 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing'
+
+  prestashop.adapter.customer.command_handler.save_private_note_for_customer:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SavePrivateNoteForCustomerHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand'
+
+  prestashop.adapter.customer.command_handler.transform_guest_to_customer:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\TransformGuestToCustomerHandler'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand'
+
+  prestashop.adapter.customer.command_handler.set_required_fields_for_customer:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SetRequiredFieldsForCustomerHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand'
+
+  prestashop.adapter.customer.query_handler.get_required_fields_for_customer:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetRequiredFieldsForCustomerHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer'

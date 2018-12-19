@@ -153,7 +153,7 @@ class ThemeExporterTest extends TestCase
         $this->repositoryMock->method('getInstanceByName')
             ->willReturn(new Theme(array(
                 'directory' => '',
-                'name' => self::THEME_NAME
+                'name' => self::THEME_NAME,
             )));
     }
 
@@ -198,7 +198,7 @@ class ThemeExporterTest extends TestCase
                         'Add Product' => 'Add',
                         'Override Me' => '',
                         'Override Me Twice' => '',
-                    )
+                    ),
                 )
             ));
 
@@ -210,10 +210,9 @@ class ThemeExporterTest extends TestCase
                         'Edit Product' => 'Edit',
                         'Override Me' => 'Overridden',
                         'Override Me Twice' => 'Overridden Once',
-                    )
+                    ),
                 )
-            ))
-        ;
+            ));
 
         $this->providerMock->method('getDatabaseCatalogue')
             ->willReturn(new MessageCatalogue(
@@ -222,9 +221,8 @@ class ThemeExporterTest extends TestCase
                     'ShopActions' => array(
                         'Delete Product' => 'Delete',
                         'Override Me Twice' => 'Overridden Twice',
-                    )
+                    ),
                 )
-            ))
-        ;
+            ));
     }
 }

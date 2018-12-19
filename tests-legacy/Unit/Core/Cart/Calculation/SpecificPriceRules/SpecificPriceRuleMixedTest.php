@@ -28,7 +28,6 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\SpecificPriceRules;
 
 class SpecificPriceRuleMixedTest extends AbstractSpecificPriceRuleTest
 {
-
     const SPECIFIC_PRICE_RULES_FIXTURES = [
         1 => ['reductionType' => 'percentage', 'reduction' => 10, 'fromQuantity' => 1, 'price' => 2],
         2 => ['reductionType' => 'amount', 'reduction' => 3, 'fromQuantity' => 1, 'price' => 2],
@@ -72,12 +71,12 @@ class SpecificPriceRuleMixedTest extends AbstractSpecificPriceRuleTest
                     3 => 1,
                 ],
                 'expectedTotal'        => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
-                                          * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
-                                          + 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
-                                            * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
-                                          + static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
-                                            * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
+                + 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
+                * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
+                + static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
+                * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'specificCartRuleData' => [1],
             ],
@@ -96,7 +95,7 @@ class SpecificPriceRuleMixedTest extends AbstractSpecificPriceRuleTest
                                               + static::SPECIFIC_PRICE_RULES_FIXTURES[2]['price']
                                               - static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction']
                                           )
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'specificCartRuleData' => [2],
             ],
@@ -107,11 +106,11 @@ class SpecificPriceRuleMixedTest extends AbstractSpecificPriceRuleTest
                     3 => 1,
                 ],
                 'expectedTotal'        => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[3]['price']
-                                          * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[3]['reduction'] / 100)
-                                          + 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[3]['price']
-                                            * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[3]['reduction'] / 100)
-                                          + static::PRODUCT_FIXTURES[3]['price']
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[3]['reduction'] / 100)
+                + 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[3]['price']
+                * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[3]['reduction'] / 100)
+                + static::PRODUCT_FIXTURES[3]['price']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'specificCartRuleData' => [3],
             ],
@@ -128,8 +127,8 @@ class SpecificPriceRuleMixedTest extends AbstractSpecificPriceRuleTest
                                               + 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[4]['price']
                                               - 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[4]['reduction']
                                           )
-                                          + static::PRODUCT_FIXTURES[3]['price']
-                                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                + static::PRODUCT_FIXTURES[3]['price']
+                + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [],
                 'specificCartRuleData' => [4],
             ],

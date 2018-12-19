@@ -128,7 +128,7 @@ class StockMvtWSCore extends ObjectModelCore
      */
     public $management_type;
 
-    /*
+    /**
      * @var string : Name of the product (@see Product::getProductName)
      */
     public $product_name;

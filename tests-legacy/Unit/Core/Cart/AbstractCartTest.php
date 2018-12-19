@@ -35,7 +35,6 @@ use Context;
 use CustomizationField;
 use DateInterval;
 use DateTime;
-use Db;
 use LegacyTests\TestCase\IntegrationTestCase;
 use Product;
 use Pack;
@@ -49,7 +48,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
  */
 abstract class AbstractCartTest extends IntegrationTestCase
 {
-
     const DEFAULT_SHIPPING_FEE = 7;
     const DEFAULT_WRAPPING_FEE = 0;
 
@@ -190,7 +188,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     protected function insertProductsFromFixtures()
     {
         foreach (static::PRODUCT_FIXTURES as $k => $productFixture) {
-            $product           = new Product;
+            $product           = new Product();
             $product->price    = $productFixture['price'];
             $product->name     = 'product name';
             $product->quantity = !empty($productFixture['quantity']) ? $productFixture['quantity'] : 1000;
@@ -233,7 +231,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
             if (isset($productFixture['customizations'])) {
                 foreach ($productFixture['customizations'] as $customizationName) {
-                    $customizationField             = new CustomizationField;
+                    $customizationField             = new CustomizationField();
                     $customizationField->id_product = $product->id;
                     $customizationField->type       = 1; // text field
                     $customizationField->required   = 1;
@@ -337,7 +335,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
     protected function insertCartRule($cartRuleFixtureId, $cartRuleData)
     {
-        $cartRule                    = new CartRule;
+        $cartRule                    = new CartRule();
         $cartRule->reduction_percent = $cartRuleData['percent'];
         $cartRule->reduction_amount  = $cartRuleData['amount'];
         $cartRule->name              = [Configuration::get('PS_LANG_DEFAULT') => 'foo'];

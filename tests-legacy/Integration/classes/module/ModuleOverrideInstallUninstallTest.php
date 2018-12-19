@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Integration;
 
-
 use Module;
 use PrestaShopAutoload;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
@@ -59,7 +58,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         $this->moduleNames= [
             'pscsx3241',
             'pscsx32412',
-       ];
+        ];
     }
 
     public static function tearDownAfterClass()
@@ -94,6 +93,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
     {
         $withoutDate        = preg_replace('#\* date: .*?\n#m', '', $str);
         $withoutBlankLines  = preg_replace('#\n?^(?:\s*)$#m', "", $withoutDate);
+
         return $withoutBlankLines;
     }
 

@@ -49,7 +49,7 @@ class PositionsControllerTest extends WebTestCase
 
         parent::setUp();
 
-        /* @var ModuleManager */
+        /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
         if (!Module::isInstalled('bankwire')) {
             $moduleManager->install('bankwire');
@@ -75,7 +75,7 @@ class PositionsControllerTest extends WebTestCase
                 'moduleId' => 999999,
                 'hookId' => $this->hookId,
                 'way' => 1,
-                'positions' => []
+                'positions' => [],
             ]
         );
 
@@ -102,7 +102,7 @@ class PositionsControllerTest extends WebTestCase
                 'moduleId' => $this->moduleId,
                 'hookId' => $this->hookId,
                 'way' => 1,
-                'positions' => []
+                'positions' => [],
             ]
         );
 
@@ -132,7 +132,7 @@ class PositionsControllerTest extends WebTestCase
                 'positions' => [
                     sprintf('%d_%d', $this->otherModuleId, $this->hookId),
                     sprintf('%d_%d', $this->moduleId, $this->hookId),
-                ]
+                ],
             ]
         );
 
@@ -161,7 +161,7 @@ class PositionsControllerTest extends WebTestCase
                 'positions' => [
                     sprintf('%d_%d', $this->moduleId, $this->hookId),
                     sprintf('%d_%d', $this->otherModuleId, $this->hookId),
-                ]
+                ],
             ]
         );
 

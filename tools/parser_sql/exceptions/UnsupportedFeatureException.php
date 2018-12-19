@@ -41,7 +41,6 @@
  *
  */
 class UnsupportedFeatureException extends Exception {
-
     protected $key;
 
     public function __construct($key) {
@@ -53,5 +52,3 @@ class UnsupportedFeatureException extends Exception {
         return $this->key;
     }
 }
-
-?>

@@ -63,7 +63,6 @@ class PageLayoutsCustomizationType extends AbstractType
                     'translation_domain' => false,
                     'choices' => $this->pageLayoutsChoices,
                 ],
-            ])
-        ;
+            ]);
     }
 }

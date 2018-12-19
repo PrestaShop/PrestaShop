@@ -180,7 +180,7 @@ class StockManager implements StockInterface
      */
     public function newStockAvailable($stockAvailableId = null)
     {
-        if (is_integer($stockAvailableId)) {
+        if (is_int($stockAvailableId)) {
             return new StockAvailable($stockAvailableId);
         }
 

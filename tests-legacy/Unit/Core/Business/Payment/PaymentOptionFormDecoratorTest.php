@@ -35,7 +35,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 {
     public function testAddHiddenSubmitButtonInsertsSubmitButtonIntoForm()
     {
-        $decorator = new PaymentOptionFormDecorator;
+        $decorator = new PaymentOptionFormDecorator();
 
         $form =
 "<div>
@@ -61,7 +61,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 
     public function testAddHiddenSubmitButtonReturnsFalseWhenMultipleForms()
     {
-        $decorator = new PaymentOptionFormDecorator;
+        $decorator = new PaymentOptionFormDecorator();
         $this->assertFalse(
             $decorator->addHiddenSubmitButton(
                 '<form></form><form></form>',
@@ -72,12 +72,13 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 
     private function normalizeHTML($html)
     {
-        $doc = new DOMDocument;
+        $doc = new DOMDocument();
         if (!$doc->loadHTML($html)) {
             throw new Exception('Invalid HTML.');
         }
         $doc->preserveWhiteSpace = false;
         $doc->formatOutput = true;
+
         return $doc->saveHTML();
     }
 
@@ -87,6 +88,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
             $this->normalizeHTML($exp),
             $this->normalizeHTML($act)
         );
+
         return $this;
     }
 }

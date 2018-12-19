@@ -26,11 +26,10 @@
 
 namespace LegacyTests\Unit\Classes;
 
-use PrestaShop\PrestaShop\Adapter\Entity\CacheMemcache;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Cache;
 
-class CacheCoreTest extends PHPUnit_Framework_TestCase
+class CacheCoreTest extends TestCase
 {
     private $cacheArray = array();
 
@@ -129,7 +128,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     public function testSetQueryWithCacheFull()
     {
         Cache::getInstance()->setMaxCachedObjectsByTable(2);
-        
+
         $queries = $this->selectDataProvider();
         $i = 0;
         foreach ($queries as $query) {
@@ -150,6 +149,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
                 // check the query hash is in the table map
                 $this->assertCount(2, $this->cacheArray[$tableCacheKey]);
             }
+
             break;
         }
 
@@ -232,7 +232,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $invalidatedKeys = $this->cacheArray[$tableMapKey];
 
         $this->assertArrayHasKey($tableMapKey, $this->cacheArray);
-        
+
         Cache::getInstance()->deleteQuery('SELECT name FROM ps_configuration WHERE id = 1');
 
         $this->assertArrayNotHasKey($tableMapKey, $this->cacheArray);
@@ -280,7 +280,6 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
             $this->assertEquals($counter, $this->cacheArray[$tableCacheKey][$queryHash]['count']);
         }
     }
-
 
     // --- providers ---
 

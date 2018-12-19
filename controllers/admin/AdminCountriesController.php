@@ -390,7 +390,8 @@ class AdminCountriesControllerCore extends AdminController
                     $res = Db::getInstance()->execute(
                             'UPDATE `' . _DB_PREFIX_ . 'state`
 							SET `id_zone` = ' . (int) Tools::getValue('id_zone') . '
-							WHERE `id_state` IN (' . implode(',', $ids) . ')');
+							WHERE `id_state` IN (' . implode(',', $ids) . ')'
+                    );
                 }
             }
         }
@@ -474,8 +475,6 @@ class AdminCountriesControllerCore extends AdminController
         if (Tools::getIsset('submitBulkAffectZonecountry')) {
             $this->tpl_list_vars['assign_zone'] = true;
         }
-
-        return;
     }
 
     protected function displayValidFields()

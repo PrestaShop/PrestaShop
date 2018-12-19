@@ -51,18 +51,18 @@ require_once dirname(__FILE__) . '/TableBuilder.php';
  *  
  */
 class LikeBuilder {
-
     protected function buildTable($parsed, $index) {
         $builder = new TableBuilder();
+
         return $builder->build($parsed, $index);
     }
-    
+
     public function build($parsed) {
         $sql = $this->buildTable($parsed, 0);
         if (strlen($sql) === 0) {
             throw new UnableToCreateSQLException('LIKE', "", $like, 'table');
         }
+
         return "LIKE " . $sql;
     }
 }
-?>

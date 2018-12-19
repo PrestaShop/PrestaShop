@@ -123,8 +123,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ->add('group_association', MaterialChoiceTableType::class, [
                 'choices' => $this->customerGroupChoices,
                 'required' => false,
-            ])
-        ;
+            ]);
 
         if ($this->multistoreFeature->isUsed()) {
             $builder->add('shop_association', ShopChoiceTreeType::class);

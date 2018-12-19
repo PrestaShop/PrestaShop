@@ -163,23 +163,19 @@ class SurvivalTest extends WebTestCase
                 'getRoles',
                 'isAuthenticated',
             ])
-            ->getMockForAbstractClass()
-        ;
+            ->getMockForAbstractClass();
 
         $tokenMock->expects($this->any())
             ->method('getUser')
-            ->willReturn($loggedEmployeeMock)
-        ;
+            ->willReturn($loggedEmployeeMock);
 
         $tokenMock->expects($this->any())
             ->method('getRoles')
-            ->willReturn([])
-        ;
+            ->willReturn([]);
 
         $tokenMock->expects($this->any())
             ->method('isAuthenticated')
-            ->willReturn(true)
-        ;
+            ->willReturn(true);
 
         $tokenStorageMock = $this->getMockBuilder(TokenStorage::class)
             ->setMethods([
@@ -187,12 +183,10 @@ class SurvivalTest extends WebTestCase
             ])
             ->disableAutoload()
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
 
         $tokenStorageMock->method('getToken')
-            ->willReturn($tokenMock)
-        ;
+            ->willReturn($tokenMock);
 
         self::$kernel->getContainer()->set('security.token_storage', $tokenStorageMock);
     }

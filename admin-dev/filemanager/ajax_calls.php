@@ -1,12 +1,12 @@
 <?php
 
-include('config/config.php');
+include 'config/config.php';
 
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
     die('Forbidden');
 }
 
-include('include/utils.php');
+include 'include/utils.php';
 
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
@@ -16,6 +16,7 @@ if (isset($_GET['action'])) {
             } else {
                 die('view type number missing');
             }
+
             break;
         case 'sort':
             if (isset($_GET['sort_by'])) {
@@ -24,6 +25,7 @@ if (isset($_GET['action'])) {
             if (isset($_GET['descending'])) {
                 $_SESSION['descending'] = $_GET['descending'] === 'true';
             }
+
             break;
         case 'save_img':
             $info = pathinfo($_POST['name']);
@@ -84,7 +86,7 @@ if (isset($_GET['action'])) {
             $base_folder = $current_path.fix_dirname($_POST['path']).'/';
             switch ($info['extension']) {
                 case 'zip':
-                    $zip = new ZipArchive;
+                    $zip = new ZipArchive();
                     if ($zip->open($path) === true) {
                         //make all the folders
                         for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -110,6 +112,7 @@ if (isset($_GET['action'])) {
                     } else {
                         echo 'failed to open file';
                     }
+
                     break;
                 case 'gz':
                     $p = new PharData($path);
@@ -125,6 +128,7 @@ if (isset($_GET['action'])) {
 
                     break;
             }
+
             break;
         case 'media_preview':
 
@@ -249,6 +253,7 @@ if (isset($_GET['action'])) {
 			<?php
 
             }
+
             break;
     }
 } else {

@@ -114,7 +114,7 @@ class ExportThemeCommandTest extends TestCase
                 $services = array(
                     'prestashop.core.addon.theme.repository' => $themeRepositoryMock,
                     'translator' => $translatorMock,
-                    'prestashop.core.addon.theme.exporter' => $themeExporterMock
+                    'prestashop.core.addon.theme.exporter' => $themeExporterMock,
                 );
 
                 return $services[$serviceId];
@@ -139,6 +139,7 @@ class ExportThemeCommandTest extends TestCase
         $helperSetMock->method('get')
             ->with('formatter')
             ->willReturn($formatterHelperMock);
+
         return $helperSetMock;
     }
 }

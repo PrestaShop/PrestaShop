@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Adapter\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Admin\UrlGenerator;
@@ -37,7 +38,7 @@ class UrlGeneratorTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->context->language = new \Language;
+        $this->context->language = new \Language();
         $this->context->language->id = 42;
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');

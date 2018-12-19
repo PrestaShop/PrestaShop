@@ -15,8 +15,7 @@ class OnBoarding extends CommonClient {
       .then(() => this.client.isVisible(resumeButton))
       .then((visible) => {
         if (visible) {
-          global.startOnboarding = true;
-          this.client.click(resumeButton);
+          global.startOnboarding = false;
         }
       });
   }

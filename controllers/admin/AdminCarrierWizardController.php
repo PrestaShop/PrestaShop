@@ -138,8 +138,8 @@ class AdminCarrierWizardControllerCore extends AdminController
         }
 
         $this->context->smarty->assign(array(
-                'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_ . $carrier->id . '.jpg') ? _THEME_SHIP_DIR_ . $carrier->id . '.jpg' : false),
-            ));
+            'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_ . $carrier->id . '.jpg') ? _THEME_SHIP_DIR_ . $carrier->id . '.jpg' : false),
+        ));
 
         $this->context->smarty->assign(array(
             'logo_content' => $this->createTemplate('logo.tpl')->fetch(),
@@ -545,10 +545,10 @@ class AdminCarrierWizardControllerCore extends AdminController
         $helper->id = (int) Tools::getValue('id_carrier');
         $helper->identifier = $this->identifier;
         $helper->tpl_vars = array_merge(array(
-                'fields_value' => $fields_value,
-                'languages' => $this->getLanguages(),
-                'id_language' => $this->context->language->id,
-            ), $tpl_vars);
+            'fields_value' => $fields_value,
+            'languages' => $this->getLanguages(),
+            'id_language' => $this->context->language->id,
+        ), $tpl_vars);
         $helper->override_folder = 'carrier_wizard/';
 
         return $helper->generateForm($fields_form);
@@ -812,9 +812,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 
                     // Call of hooks
                     Hook::exec('actionCarrierUpdate', array(
-                            'id_carrier' => (int) $current_carrier->id,
-                            'carrier' => $new_carrier,
-                        ));
+                        'id_carrier' => (int) $current_carrier->id,
+                        'carrier' => $new_carrier,
+                    ));
                     $this->postImage($new_carrier->id);
                     $this->changeZones($new_carrier->id);
                     $new_carrier->setTaxRulesGroup((int) Tools::getValue('id_tax_rules_group'));

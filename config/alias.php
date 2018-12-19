@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 use Symfony\Component\VarDumper\VarDumper;
 
 if (!function_exists('dump')) {
@@ -59,7 +58,7 @@ function displayFatalError()
     if (function_exists('error_get_last')) {
         $error = error_get_last();
     }
-    if ($error !== null && in_array($error['type'], array(E_ERROR, E_PARSE, E_COMPILE_ERROR ))) {
+    if ($error !== null && in_array($error['type'], array(E_ERROR, E_PARSE, E_COMPILE_ERROR))) {
         echo '[PrestaShop] Fatal error in module file: '.$error['file'].':'.$error['line'].'<br />'.$error['message'];
     }
 }

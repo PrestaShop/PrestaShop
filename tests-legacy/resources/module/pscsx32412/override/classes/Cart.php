@@ -24,8 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
-
 class Cart extends CartCore
 {
     /**
@@ -68,7 +66,8 @@ class Cart extends CartCore
             return false;
         }
 
-        $uploaded_files = Db::getInstance()->executeS('
+        $uploaded_files = Db::getInstance()->executeS(
+            '
 			SELECT cd.`value`
 			FROM `'._DB_PREFIX_.'customized_data` cd
 			INNER JOIN `'._DB_PREFIX_.'customization` c ON (cd.`id_customization`= c.`id_customization`)
@@ -80,7 +79,8 @@ class Cart extends CartCore
             unlink(_PS_UPLOAD_DIR_.$must_unlink['value']);
         }
 
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			DELETE FROM `'._DB_PREFIX_.'customized_data`
 			WHERE `id_customization` IN (
 				SELECT `id_customization`
@@ -89,7 +89,8 @@ class Cart extends CartCore
 			)'
         );
 
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			DELETE FROM `'._DB_PREFIX_.'customization`
 			WHERE `id_cart` = '.(int)$this->id
         );

@@ -31,7 +31,6 @@ use CheckoutProcess;
 use Context;
 use Customer;
 use Language;
-use Link;
 use Phake;
 use LegacyTests\TestCase\UnitTestCase;
 
@@ -43,9 +42,9 @@ class CheckoutAddressesStepTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $context = new Context;
-        $context->language = new Language;
-        $context->customer = new Customer;
+        $context = new Context();
+        $context->language = new Language();
+        $context->customer = new Customer();
         $context->link = Phake::mock('Link');
         Phake::when($context->link)->getPageLink(Phake::anyParameters())->thenReturn('http://addresses-actions.url');
 
@@ -74,6 +73,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
     private function setCustomerAddressesCount($n)
     {
         Phake::when($this->session)->getCustomerAddressesCount()->thenReturn($n);
+
         return $this;
     }
 
@@ -89,7 +89,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
     {
         $this->setCustomerAddressesCount(0);
         $this->assertTemplateParametersInclude([
-            'show_delivery_address_form' => true
+            'show_delivery_address_form' => true,
         ]);
     }
 
@@ -97,7 +97,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
     {
         $this->setCustomerAddressesCount(1);
         $this->assertTemplateParametersInclude([
-            'show_delivery_address_form' => false
+            'show_delivery_address_form' => false,
         ]);
     }
 
@@ -105,9 +105,9 @@ class CheckoutAddressesStepTest extends UnitTestCase
     {
         $this->setCustomerAddressesCount(1);
         $this->assertTemplateParametersInclude([
-            'show_invoice_address_form' => true
+            'show_invoice_address_form' => true,
         ], [
-            'use_same_address' => false
+            'use_same_address' => false,
         ]);
     }
 
@@ -116,10 +116,10 @@ class CheckoutAddressesStepTest extends UnitTestCase
         $this->setCustomerAddressesCount(1);
         $this->assertTemplateParametersInclude([
             'show_delivery_address_form' => true,
-            'form_has_continue_button'   => true
+            'form_has_continue_button'   => true,
         ], [
             'editAddress'   => 'delivery',
-            'id_address'    => null
+            'id_address'    => null,
         ]);
     }
 }
