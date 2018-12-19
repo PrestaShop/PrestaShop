@@ -328,7 +328,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
     {
