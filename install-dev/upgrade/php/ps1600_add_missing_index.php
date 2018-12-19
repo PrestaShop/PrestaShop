@@ -27,9 +27,9 @@
 function ps1600_add_missing_index()
 {
     $key_exists = Db::getInstance()->executeS('
-	SHOW INDEX
-	FROM `'._DB_PREFIX_.'connections`
-	WHERE Key_name = "id_guest"');
+    SHOW INDEX
+    FROM `'._DB_PREFIX_.'connections`
+    WHERE Key_name = "id_guest"');
     if (!$key_exists) {
         Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'connections` ADD INDEX (`id_guest`)');
     }

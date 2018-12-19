@@ -99,7 +99,7 @@ class Database extends AbstractInstall
                     $error = $this->translator->trans('Connection to MySQL server succeeded, but database "%database%" not found', array('%database%' => $database), 'Install') . $dbtype;
                     if ($this->createDatabase($server, $database, $login, $password, true)) {
                         $error .= '<p>' . sprintf('<input type="button" value="%s" class="button" id="btCreateDB">', $this->translator->trans('Attempt to create the database automatically', array(), 'Install')) . '</p>
-						<script type="text/javascript">bindCreateDB();</script>';
+                        <script type="text/javascript">bindCreateDB();</script>';
                     }
                     $errors[] = $error;
 

@@ -30,8 +30,8 @@ function p16012_pack_rework()
     $all_product_in_pack = Db::getInstance()->executeS('SELECT `id_product_item` FROM '._DB_PREFIX_.'pack GROUP BY `id_product_item`');
     foreach ($all_product_in_pack as $value) {
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'pack
-		 	SET `id_product_attribute_item` = '.(getDefaultAttribute($value['id_product_item']) ? getDefaultAttribute($value['id_product_item']).' ' : '0 ').'
-		 	WHERE `id_product_item` = '.$value['id_product_item']);
+             SET `id_product_attribute_item` = '.(getDefaultAttribute($value['id_product_item']) ? getDefaultAttribute($value['id_product_item']).' ' : '0 ').'
+             WHERE `id_product_item` = '.$value['id_product_item']);
     }
 
     $all_product_pack = Db::getInstance()->executeS('SELECT `id_product_pack` FROM '._DB_PREFIX_.'pack GROUP BY `id_product_pack`');
@@ -64,13 +64,13 @@ function getDefaultAttribute($id_product)
     }
 
     $sql = 'SELECT id_product_attribute
-			FROM '._DB_PREFIX_.'product_attribute
-			WHERE default_on = 1 AND id_product = '.(int)$id_product;
+            FROM '._DB_PREFIX_.'product_attribute
+            WHERE default_on = 1 AND id_product = '.(int)$id_product;
     $result = Db::getInstance()->getValue($sql);
 
     $combinations[$id_product]['default'] = $result ? $result : ($result = Db::getInstance()->getValue('SELECT id_product_attribute
-			FROM '._DB_PREFIX_.'product_attribute
-			WHERE id_product = '.(int)$id_product));
+            FROM '._DB_PREFIX_.'product_attribute
+            WHERE id_product = '.(int)$id_product));
 
     return $result;
 }

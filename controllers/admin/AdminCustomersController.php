@@ -760,16 +760,16 @@ class AdminCustomersControllerCore extends AdminController
         $this->context->currency = Currency::getDefaultCurrency();
 
         $sql = 'SELECT DISTINCT cp.id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
-				FROM ' . _DB_PREFIX_ . 'cart_product cp
-				JOIN ' . _DB_PREFIX_ . 'cart c ON (c.id_cart = cp.id_cart)
-				JOIN ' . _DB_PREFIX_ . 'product p ON (cp.id_product = p.id_product)
-				WHERE c.id_customer = ' . (int) $customer->id . '
-					AND NOT EXISTS (
-							SELECT 1
-							FROM ' . _DB_PREFIX_ . 'orders o
-							JOIN ' . _DB_PREFIX_ . 'order_detail od ON (o.id_order = od.id_order)
-							WHERE product_id = cp.id_product AND o.valid = 1 AND o.id_customer = ' . (int) $customer->id . '
-						)';
+                FROM ' . _DB_PREFIX_ . 'cart_product cp
+                JOIN ' . _DB_PREFIX_ . 'cart c ON (c.id_cart = cp.id_cart)
+                JOIN ' . _DB_PREFIX_ . 'product p ON (cp.id_product = p.id_product)
+                WHERE c.id_customer = ' . (int) $customer->id . '
+                    AND NOT EXISTS (
+                            SELECT 1
+                            FROM ' . _DB_PREFIX_ . 'orders o
+                            JOIN ' . _DB_PREFIX_ . 'order_detail od ON (o.id_order = od.id_order)
+                            WHERE product_id = cp.id_product AND o.valid = 1 AND o.id_customer = ' . (int) $customer->id . '
+                        )';
         $interested = Db::getInstance()->executeS($sql);
         $total_interested = count($interested);
         for ($i = 0; $i < $total_interested; ++$i) {
@@ -930,7 +930,7 @@ class AdminCustomersControllerCore extends AdminController
             return parent::processUpdate();
         } else {
             $this->errors[] = $this->trans('An error occurred while loading the object.', array(), 'Admin.Orderscustomers.Notification') . '
-				<b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Orderscustomers.Notification');
+                <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Orderscustomers.Notification');
         }
     }
 
@@ -1019,7 +1019,7 @@ class AdminCustomersControllerCore extends AdminController
     {
         return '<a class="list-action-enable ' . ($value ? 'action-enabled' : 'action-disabled') . '" href="index.php?' . htmlspecialchars('tab=AdminCustomers&id_customer='
             . (int) $customer['id_customer'] . '&changeNewsletterVal&token=' . Tools::getAdminTokenLite('AdminCustomers')) . '">
-				' . ($value ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>') .
+                ' . ($value ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>') .
             '</a>';
     }
 
@@ -1027,7 +1027,7 @@ class AdminCustomersControllerCore extends AdminController
     {
         return '<a class="list-action-enable ' . ($value ? 'action-enabled' : 'action-disabled') . '" href="index.php?' . htmlspecialchars('tab=AdminCustomers&id_customer='
             . (int) $customer['id_customer'] . '&changeOptinVal&token=' . Tools::getAdminTokenLite('AdminCustomers')) . '">
-				' . ($value ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>') .
+                ' . ($value ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>') .
             '</a>';
     }
 

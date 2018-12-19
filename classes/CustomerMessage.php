@@ -103,24 +103,24 @@ class CustomerMessageCore extends ObjectModel
     public static function getMessagesByOrderId($idOrder, $private = true)
     {
         return Db::getInstance()->executeS('
-			SELECT cm.*,
-				c.`firstname` AS cfirstname,
-				c.`lastname` AS clastname,
-				e.`firstname` AS efirstname,
-				e.`lastname` AS elastname,
-				(COUNT(cm.id_customer_message) = 0 AND ct.id_customer != 0) AS is_new_for_me
-			FROM `' . _DB_PREFIX_ . 'customer_message` cm
-			LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct
-				ON ct.`id_customer_thread` = cm.`id_customer_thread`
-			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
-				ON ct.`id_customer` = c.`id_customer`
-			LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e
-				ON e.`id_employee` = cm.`id_employee`
-			WHERE ct.id_order = ' . (int) $idOrder . '
-			' . (!$private ? 'AND cm.`private` = 0' : '') . '
-			GROUP BY cm.id_customer_message
-			ORDER BY cm.date_add DESC
-		');
+            SELECT cm.*,
+                c.`firstname` AS cfirstname,
+                c.`lastname` AS clastname,
+                e.`firstname` AS efirstname,
+                e.`lastname` AS elastname,
+                (COUNT(cm.id_customer_message) = 0 AND ct.id_customer != 0) AS is_new_for_me
+            FROM `' . _DB_PREFIX_ . 'customer_message` cm
+            LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct
+                ON ct.`id_customer_thread` = cm.`id_customer_thread`
+            LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
+                ON ct.`id_customer` = c.`id_customer`
+            LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e
+                ON e.`id_employee` = cm.`id_employee`
+            WHERE ct.id_order = ' . (int) $idOrder . '
+            ' . (!$private ? 'AND cm.`private` = 0' : '') . '
+            GROUP BY cm.id_customer_message
+            ORDER BY cm.date_add DESC
+        ');
     }
 
     /**
@@ -135,18 +135,18 @@ class CustomerMessageCore extends ObjectModel
         if (is_null($where)) {
             return (int) Db::getInstance()->getValue(
                 '
-				SELECT COUNT(*)
-				FROM ' . _DB_PREFIX_ . 'customer_message
-				LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
-				WHERE 1' . Shop::addSqlRestriction()
+                SELECT COUNT(*)
+                FROM ' . _DB_PREFIX_ . 'customer_message
+                LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
+                WHERE 1' . Shop::addSqlRestriction()
             );
         } else {
             return (int) Db::getInstance()->getValue(
                 '
-				SELECT COUNT(*)
-				FROM ' . _DB_PREFIX_ . 'customer_message cm
-				LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
-				WHERE ' . $where . Shop::addSqlRestriction()
+                SELECT COUNT(*)
+                FROM ' . _DB_PREFIX_ . 'customer_message cm
+                LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
+                WHERE ' . $where . Shop::addSqlRestriction()
             );
         }
     }

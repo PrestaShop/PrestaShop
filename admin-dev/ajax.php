@@ -54,13 +54,13 @@ if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
 if (Tools::isSubmit('ajaxProductPackItems')) {
     $jsonArray = array();
     $products = Db::getInstance()->executeS('
-	SELECT p.`id_product`, pl.`name`
-	FROM `'._DB_PREFIX_.'product` p
-	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
-	WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
-	'.Shop::addSqlRestrictionOnLang('pl').'
-	AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = p.`id_product`)
-	AND p.`id_product` != '.(int)(Tools::getValue('id_product')));
+    SELECT p.`id_product`, pl.`name`
+    FROM `'._DB_PREFIX_.'product` p
+    NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+    WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
+    '.Shop::addSqlRestrictionOnLang('pl').'
+    AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = p.`id_product`)
+    AND p.`id_product` != '.(int)(Tools::getValue('id_product')));
 
     foreach ($products as $packItem) {
         $jsonArray[] = '{"value": "'.(int)($packItem['id_product']).'-'.addslashes($packItem['name']).'", "text":"'.(int)($packItem['id_product']).' - '.addslashes($packItem['name']).'"}';
@@ -88,13 +88,13 @@ if (Tools::isSubmit('searchCategory')) {
     $limit = Tools::getValue('limit');
     $results = Db::getInstance()->executeS(
         'SELECT c.`id_category`, cl.`name`
-		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
-		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
-		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
-		GROUP BY c.id_category
-		ORDER BY c.`position`
-		LIMIT '.(int)$limit
+        FROM `'._DB_PREFIX_.'category` c
+        LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
+        WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
+        AND cl.`name` LIKE \'%'.pSQL($q).'%\'
+        GROUP BY c.id_category
+        ORDER BY c.`position`
+        LIMIT '.(int)$limit
     );
     if ($results) {
         foreach ($results as $result) {

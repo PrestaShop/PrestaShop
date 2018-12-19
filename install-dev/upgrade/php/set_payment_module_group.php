@@ -40,8 +40,8 @@ function set_payment_module_group()
         $content = fread($fd, filesize($file));
         if (preg_match_all('/extends PaymentModule/U', $content, $matches)) {
             Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_group` (id_module, id_group)
-			SELECT '.(int)($module['id_module']).', id_group FROM `'._DB_PREFIX_.'group`');
+            INSERT INTO `'._DB_PREFIX_.'module_group` (id_module, id_group)
+            SELECT '.(int)($module['id_module']).', id_group FROM `'._DB_PREFIX_.'group`');
         }
         fclose($fd);
     }

@@ -557,8 +557,8 @@ class AdminStoresControllerCore extends AdminController
     {
         if (isset($_POST['PS_SHOP_STATE_ID']) && $_POST['PS_SHOP_STATE_ID'] != '0') {
             $sql = 'SELECT `active` FROM `' . _DB_PREFIX_ . 'state`
-					WHERE `id_country` = ' . (int) Tools::getValue('PS_SHOP_COUNTRY_ID') . '
-						AND `id_state` = ' . (int) Tools::getValue('PS_SHOP_STATE_ID');
+                    WHERE `id_country` = ' . (int) Tools::getValue('PS_SHOP_COUNTRY_ID') . '
+                        AND `id_state` = ' . (int) Tools::getValue('PS_SHOP_STATE_ID');
             $isStateOk = Db::getInstance()->getValue($sql);
             if ($isStateOk != 1) {
                 $this->errors[] = $this->trans('The specified state is not located in this country.', array(), 'Admin.Shopparameters.Notification');

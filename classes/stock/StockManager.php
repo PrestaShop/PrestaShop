@@ -367,14 +367,14 @@ class StockManagerCore implements StockManagerInterface
 
                         $resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                             '
-							SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
-								IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
-							FROM `' . _DB_PREFIX_ . 'stock_mvt` sm
-							LEFT JOIN `' . _DB_PREFIX_ . 'stock_mvt` sm2 ON sm2.`referer` = sm.`id_stock_mvt`
-							WHERE sm.`sign` = 1
-							AND sm.`id_stock` = ' . (int) $stock->id . '
-							GROUP BY sm.`id_stock_mvt`
-							ORDER BY sm.`date_add` DESC',
+                            SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
+                                IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
+                            FROM `' . _DB_PREFIX_ . 'stock_mvt` sm
+                            LEFT JOIN `' . _DB_PREFIX_ . 'stock_mvt` sm2 ON sm2.`referer` = sm.`id_stock_mvt`
+                            WHERE sm.`sign` = 1
+                            AND sm.`id_stock` = ' . (int) $stock->id . '
+                            GROUP BY sm.`id_stock_mvt`
+                            ORDER BY sm.`date_add` DESC',
                             false
                         );
 
@@ -579,8 +579,8 @@ class StockManagerCore implements StockManagerInterface
         // check if product is present in a pack
         if (!Pack::isPack($id_product) && $in_pack = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT id_product_pack, quantity FROM ' . _DB_PREFIX_ . 'pack
-			WHERE id_product_item = ' . (int) $id_product . '
-			AND id_product_attribute_item = ' . ($id_product_attribute ? (int) $id_product_attribute : '0')
+            WHERE id_product_item = ' . (int) $id_product . '
+            AND id_product_attribute_item = ' . ($id_product_attribute ? (int) $id_product_attribute : '0')
         )) {
             foreach ($in_pack as $value) {
                 if (Validate::isLoadedObject($product = new Product((int) $value['id_product_pack'])) &&
@@ -595,7 +595,7 @@ class StockManagerCore implements StockManagerInterface
                     $query->leftJoin('pack', 'pk', 'pk.id_product_item = ' . (int) $id_product . ' AND pk.id_product_attribute_item = ' . ($id_product_attribute ? (int) $id_product_attribute : '0') . ' AND id_product_pack = od.product_id');
                     $query->where('os.shipped != 1');
                     $query->where('o.valid = 1 OR (os.id_order_state != ' . (int) Configuration::get('PS_OS_ERROR') . '
-								   AND os.id_order_state != ' . (int) Configuration::get('PS_OS_CANCELED') . ')');
+                                   AND os.id_order_state != ' . (int) Configuration::get('PS_OS_CANCELED') . ')');
                     $query->groupBy('od.id_order_detail');
                     if (count($ids_warehouse)) {
                         $query->where('od.id_warehouse IN(' . implode(', ', $ids_warehouse) . ')');
@@ -627,7 +627,7 @@ class StockManagerCore implements StockManagerInterface
             $query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
             $query->where('os.shipped != 1');
             $query->where('o.valid = 1 OR (os.id_order_state != ' . (int) Configuration::get('PS_OS_ERROR') . '
-						   AND os.id_order_state != ' . (int) Configuration::get('PS_OS_CANCELED') . ')');
+                           AND os.id_order_state != ' . (int) Configuration::get('PS_OS_CANCELED') . ')');
             $query->groupBy('od.id_order_detail');
             if (count($ids_warehouse)) {
                 $query->where('od.id_warehouse IN(' . implode(', ', $ids_warehouse) . ')');
@@ -757,23 +757,23 @@ class StockManagerCore implements StockManagerInterface
 
         // gets all stock_mvt for the given coverage period
         $query = '
-			SELECT SUM(view.quantity) as quantity_out
-			FROM
-			(	SELECT sm.`physical_quantity` as quantity
-				FROM `' . _DB_PREFIX_ . 'stock_mvt` sm
-				LEFT JOIN `' . _DB_PREFIX_ . 'stock` s ON (sm.`id_stock` = s.`id_stock`)
-				LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (p.`id_product` = s.`id_product`)
-				' . Shop::addSqlAssociation('product', 'p') . '
-				LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
-				' . Shop::addSqlAssociation('product_attribute', 'pa', false) . '
-				WHERE sm.`sign` = -1
-				AND sm.`id_stock_mvt_reason` != ' . Configuration::get('PS_STOCK_MVT_TRANSFER_FROM') . '
-				AND TO_DAYS("' . date('Y-m-d') . ' 00:00:00") - TO_DAYS(sm.`date_add`) <= ' . (int) $coverage . '
-				AND s.`id_product` = ' . (int) $id_product . '
-				AND s.`id_product_attribute` = ' . (int) $id_product_attribute .
+            SELECT SUM(view.quantity) as quantity_out
+            FROM
+            (    SELECT sm.`physical_quantity` as quantity
+                FROM `' . _DB_PREFIX_ . 'stock_mvt` sm
+                LEFT JOIN `' . _DB_PREFIX_ . 'stock` s ON (sm.`id_stock` = s.`id_stock`)
+                LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (p.`id_product` = s.`id_product`)
+                ' . Shop::addSqlAssociation('product', 'p') . '
+                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
+                ' . Shop::addSqlAssociation('product_attribute', 'pa', false) . '
+                WHERE sm.`sign` = -1
+                AND sm.`id_stock_mvt_reason` != ' . Configuration::get('PS_STOCK_MVT_TRANSFER_FROM') . '
+                AND TO_DAYS("' . date('Y-m-d') . ' 00:00:00") - TO_DAYS(sm.`date_add`) <= ' . (int) $coverage . '
+                AND s.`id_product` = ' . (int) $id_product . '
+                AND s.`id_product_attribute` = ' . (int) $id_product_attribute .
                 ($id_warehouse ? ' AND s.`id_warehouse` = ' . (int) $id_warehouse : '') . '
-				GROUP BY sm.`id_stock_mvt`
-			) as view';
+                GROUP BY sm.`id_stock_mvt`
+            ) as view';
 
         $quantity_out = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
         if (!$quantity_out) {
@@ -857,14 +857,14 @@ class StockManagerCore implements StockManagerInterface
 
                 if (is_array($carriers) && !empty($carriers)) {
                     $stock_quantity += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.`usable_quantity`) as quantity
-						FROM ' . _DB_PREFIX_ . 'stock s
-						LEFT JOIN ' . _DB_PREFIX_ . 'warehouse_carrier wc ON wc.`id_warehouse` = s.`id_warehouse`
-						LEFT JOIN ' . _DB_PREFIX_ . 'carrier c ON wc.`id_carrier` = c.`id_reference`
-						WHERE s.`id_product` = ' . (int) $id_product . ' AND s.`id_product_attribute` = ' . (int) $id_product_attribute . ' AND s.`id_warehouse` = ' . $result['id_warehouse'] . ' AND c.`id_carrier` IN (' . rtrim($delivery_option[(int) Context::getContext()->cart->id_address_delivery], ',') . ') GROUP BY s.`id_product`');
+                        FROM ' . _DB_PREFIX_ . 'stock s
+                        LEFT JOIN ' . _DB_PREFIX_ . 'warehouse_carrier wc ON wc.`id_warehouse` = s.`id_warehouse`
+                        LEFT JOIN ' . _DB_PREFIX_ . 'carrier c ON wc.`id_carrier` = c.`id_reference`
+                        WHERE s.`id_product` = ' . (int) $id_product . ' AND s.`id_product_attribute` = ' . (int) $id_product_attribute . ' AND s.`id_warehouse` = ' . $result['id_warehouse'] . ' AND c.`id_carrier` IN (' . rtrim($delivery_option[(int) Context::getContext()->cart->id_address_delivery], ',') . ') GROUP BY s.`id_product`');
                 } else {
                     $stock_quantity += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.`usable_quantity`) as quantity
-						FROM ' . _DB_PREFIX_ . 'stock s
-						WHERE s.`id_product` = ' . (int) $id_product . ' AND s.`id_product_attribute` = ' . (int) $id_product_attribute . ' AND s.`id_warehouse` = ' . $result['id_warehouse'] . ' GROUP BY s.`id_product`');
+                        FROM ' . _DB_PREFIX_ . 'stock s
+                        WHERE s.`id_product` = ' . (int) $id_product . ' AND s.`id_product_attribute` = ' . (int) $id_product_attribute . ' AND s.`id_warehouse` = ' . $result['id_warehouse'] . ' GROUP BY s.`id_product`');
                 }
             }
         }

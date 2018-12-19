@@ -128,8 +128,8 @@ class ProductSupplierCore extends ObjectModel
         $query->from('product_supplier', 'ps');
         $query->where(
             'ps.id_product = ' . (int) $idProduct . '
-			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
-			AND ps.id_supplier = ' . (int) $idSupplier
+            AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
+            AND ps.id_supplier = ' . (int) $idSupplier
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -156,8 +156,8 @@ class ProductSupplierCore extends ObjectModel
         $query->from('product_supplier', 'ps');
         $query->where(
             'ps.id_product = ' . (int) $idProduct . '
-			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
-			AND ps.id_supplier = ' . (int) $idSupplier
+            AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
+            AND ps.id_supplier = ' . (int) $idSupplier
         );
 
         if (!$withCurrency) {
@@ -189,8 +189,8 @@ class ProductSupplierCore extends ObjectModel
         $query->from('product_supplier', 'ps');
         $query->where(
             'ps.id_product = ' . (int) $idProduct . '
-			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
-			AND ps.id_supplier = ' . (int) $idSupplier
+            AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
+            AND ps.id_supplier = ' . (int) $idSupplier
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -262,8 +262,8 @@ class ProductSupplierCore extends ObjectModel
         $query->from('product_supplier', 'ps');
         $query->where(
             'ps.id_product = ' . (int) $idProduct . '
-			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
-			AND ps.id_supplier = ' . (int) $idSupplier
+            AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
+            AND ps.id_supplier = ' . (int) $idSupplier
         );
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

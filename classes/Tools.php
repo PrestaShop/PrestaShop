@@ -2547,34 +2547,34 @@ class ToolsCore
         fwrite($write_fd, "AddType application/font-woff .woff\n");
         fwrite($write_fd, "AddType font/woff2 .woff2\n");
         fwrite($write_fd, "<IfModule mod_headers.c>
-	<FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
-		Header set Access-Control-Allow-Origin \"*\"
-	</FilesMatch>
+    <FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
+        Header set Access-Control-Allow-Origin \"*\"
+    </FilesMatch>
 </IfModule>\n\n");
 
         // Cache control
         if ($cache_control) {
             $cache_control = "<IfModule mod_expires.c>
-	ExpiresActive On
-	ExpiresByType image/gif \"access plus 1 month\"
-	ExpiresByType image/jpeg \"access plus 1 month\"
-	ExpiresByType image/png \"access plus 1 month\"
-	ExpiresByType text/css \"access plus 1 week\"
-	ExpiresByType text/javascript \"access plus 1 week\"
-	ExpiresByType application/javascript \"access plus 1 week\"
-	ExpiresByType application/x-javascript \"access plus 1 week\"
-	ExpiresByType image/x-icon \"access plus 1 year\"
-	ExpiresByType image/svg+xml \"access plus 1 year\"
-	ExpiresByType image/vnd.microsoft.icon \"access plus 1 year\"
-	ExpiresByType application/font-woff \"access plus 1 year\"
-	ExpiresByType application/x-font-woff \"access plus 1 year\"
-	ExpiresByType font/woff2 \"access plus 1 year\"
-	ExpiresByType application/vnd.ms-fontobject \"access plus 1 year\"
-	ExpiresByType font/opentype \"access plus 1 year\"
-	ExpiresByType font/ttf \"access plus 1 year\"
-	ExpiresByType font/otf \"access plus 1 year\"
-	ExpiresByType application/x-font-ttf \"access plus 1 year\"
-	ExpiresByType application/x-font-otf \"access plus 1 year\"
+    ExpiresActive On
+    ExpiresByType image/gif \"access plus 1 month\"
+    ExpiresByType image/jpeg \"access plus 1 month\"
+    ExpiresByType image/png \"access plus 1 month\"
+    ExpiresByType text/css \"access plus 1 week\"
+    ExpiresByType text/javascript \"access plus 1 week\"
+    ExpiresByType application/javascript \"access plus 1 week\"
+    ExpiresByType application/x-javascript \"access plus 1 week\"
+    ExpiresByType image/x-icon \"access plus 1 year\"
+    ExpiresByType image/svg+xml \"access plus 1 year\"
+    ExpiresByType image/vnd.microsoft.icon \"access plus 1 year\"
+    ExpiresByType application/font-woff \"access plus 1 year\"
+    ExpiresByType application/x-font-woff \"access plus 1 year\"
+    ExpiresByType font/woff2 \"access plus 1 year\"
+    ExpiresByType application/vnd.ms-fontobject \"access plus 1 year\"
+    ExpiresByType font/opentype \"access plus 1 year\"
+    ExpiresByType font/ttf \"access plus 1 year\"
+    ExpiresByType font/otf \"access plus 1 year\"
+    ExpiresByType application/x-font-ttf \"access plus 1 year\"
+    ExpiresByType application/x-font-otf \"access plus 1 year\"
 </IfModule>
 
 <IfModule mod_headers.c>
@@ -2736,10 +2736,10 @@ FileETag none
         $tab['Files'] = array();
         if (Configuration::get('PS_REWRITING_SETTINGS')) {
             $sql = 'SELECT DISTINCT ml.url_rewrite, l.iso_code
-					FROM ' . _DB_PREFIX_ . 'meta m
-					INNER JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON ml.id_meta = m.id_meta
-					INNER JOIN ' . _DB_PREFIX_ . 'lang l ON l.id_lang = ml.id_lang
-					WHERE l.active = 1 AND m.page IN (\'' . implode('\', \'', $disallow_controllers) . '\')';
+                    FROM ' . _DB_PREFIX_ . 'meta m
+                    INNER JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON ml.id_meta = m.id_meta
+                    INNER JOIN ' . _DB_PREFIX_ . 'lang l ON l.id_lang = ml.id_lang
+                    WHERE l.active = 1 AND m.page IN (\'' . implode('\', \'', $disallow_controllers) . '\')';
             if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
                 foreach ($results as $row) {
                     $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
@@ -4118,21 +4118,21 @@ exit;
         $context = Context::getContext();
         if ($category_type == 'catalog') {
             $category = Db::getInstance()->getRow('
-		SELECT id_category, level_depth, nleft, nright
-		FROM ' . _DB_PREFIX_ . 'category
-		WHERE id_category = ' . (int) $id_category);
+        SELECT id_category, level_depth, nleft, nright
+        FROM ' . _DB_PREFIX_ . 'category
+        WHERE id_category = ' . (int) $id_category);
             if (isset($category['id_category'])) {
                 $sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
-					FROM ' . _DB_PREFIX_ . 'category c
-					LEFT JOIN ' . _DB_PREFIX_ . 'category_lang cl ON (cl.id_category = c.id_category' . Shop::addSqlRestrictionOnLang('cl') . ')
-					WHERE c.nleft <= ' . (int) $category['nleft'] . '
-						AND c.nright >= ' . (int) $category['nright'] . '
-						AND cl.id_lang = ' . (int) $context->language->id .
+                    FROM ' . _DB_PREFIX_ . 'category c
+                    LEFT JOIN ' . _DB_PREFIX_ . 'category_lang cl ON (cl.id_category = c.id_category' . Shop::addSqlRestrictionOnLang('cl') . ')
+                    WHERE c.nleft <= ' . (int) $category['nleft'] . '
+                        AND c.nright >= ' . (int) $category['nright'] . '
+                        AND cl.id_lang = ' . (int) $context->language->id .
                        ($home ? ' AND c.id_category=' . (int) $id_category : '') . '
-						AND c.id_category != ' . (int) Category::getTopCategory()->id . '
-					GROUP BY c.id_category
-					ORDER BY c.level_depth ASC
-					LIMIT ' . (!$home ? (int) $category['level_depth'] + 1 : 1);
+                        AND c.id_category != ' . (int) Category::getTopCategory()->id . '
+                    GROUP BY c.id_category
+                    ORDER BY c.level_depth ASC
+                    LIMIT ' . (!$home ? (int) $category['level_depth'] + 1 : 1);
                 $categories = Db::getInstance()->executeS($sql);
                 $full_path = '';
                 $n = 1;
@@ -4156,13 +4156,13 @@ exit;
             }
             $name = ($highlight != null) ? str_ireplace($highlight, '<span class="highlight">' . $highlight . '</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
             $edit = '<a href="' . Tools::safeOutput($url_base . '&id_cms_category=' . $category->id . '&updatecms_category&token=' . Tools::getAdminToken('AdminCmsContent' . (int) Tab::getIdFromClassName('AdminCmsContent') . (int) $context->employee->id)) . '">
-				<i class="icon-pencil"></i></a> ';
+                <i class="icon-pencil"></i></a> ';
             if ($category->id == 1) {
                 $edit = '<li><a href="' . Tools::safeOutput($url_base . '&id_cms_category=' . $category->id . '&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent' . (int) Tab::getIdFromClassName('AdminCmsContent') . (int) $context->employee->id)) . '">
-					<i class="icon-home"></i></a></li> ';
+                    <i class="icon-home"></i></a></li> ';
             }
             $path = $edit . '<li><a href="' . Tools::safeOutput($url_base . '&id_cms_category=' . $category->id . '&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent' . (int) Tab::getIdFromClassName('AdminCmsContent') . (int) $context->employee->id)) . '">
-		' . $name . '</a></li> > ' . $path;
+        ' . $name . '</a></li> > ' . $path;
             if ($category->id == 1) {
                 return substr($path, 0, strlen($path) - 3);
             }

@@ -30,10 +30,10 @@ function add_stock_tab()
 {
     // Patch for the 1.0.1 sql update
     Db::getInstance()->query('
-		DELETE
-		FROM `'._DB_PREFIX_.'tab`
-		WHERE id_parent = 1
-		AND class_name = "AdminStocks"');
+        DELETE
+        FROM `'._DB_PREFIX_.'tab`
+        WHERE id_parent = 1
+        AND class_name = "AdminStocks"');
 
     // Create new tabs
     $id_parent = add_new_tab(

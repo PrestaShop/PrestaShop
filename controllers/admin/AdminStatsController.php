@@ -86,11 +86,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
             if ($granularity == 'day') {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                     '
-				SELECT date(`date_add`) as date, COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
-				FROM `' . _DB_PREFIX_ . 'connections`
-				WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
-				' . Shop::addSqlRestriction() . '
-				GROUP BY date(`date_add`)'
+                SELECT date(`date_add`) as date, COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
+                FROM `' . _DB_PREFIX_ . 'connections`
+                WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+                ' . Shop::addSqlRestriction() . '
+                GROUP BY date(`date_add`)'
                 );
                 foreach ($result as $row) {
                     $visits[strtotime($row['date'])] = $row['visits'];
@@ -98,11 +98,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
             } elseif ($granularity == 'month') {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                     '
-				SELECT LEFT(LAST_DAY(`date_add`), 7) as date, COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
-				FROM `' . _DB_PREFIX_ . 'connections`
-				WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
-				' . Shop::addSqlRestriction() . '
-				GROUP BY LAST_DAY(`date_add`)'
+                SELECT LEFT(LAST_DAY(`date_add`), 7) as date, COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
+                FROM `' . _DB_PREFIX_ . 'connections`
+                WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+                ' . Shop::addSqlRestriction() . '
+                GROUP BY LAST_DAY(`date_add`)'
                 );
                 foreach ($result as $row) {
                     $visits[strtotime($row['date'] . '-01')] = $row['visits'];
@@ -110,10 +110,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
             } else {
                 $visits = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                     '
-				SELECT COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
-				FROM `' . _DB_PREFIX_ . 'connections`
-				WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
-				' . Shop::addSqlRestriction()
+                SELECT COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
+                FROM `' . _DB_PREFIX_ . 'connections`
+                WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+                ' . Shop::addSqlRestriction()
                 );
             }
         }
@@ -125,11 +125,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT COUNT(DISTINCT id_guest)
-		FROM `' . _DB_PREFIX_ . 'cart`
-		WHERE `date_add` BETWEEN "' . pSQL($date_from) . '" AND "' . pSQL($date_to) . '"
-		AND NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'orders` WHERE `' . _DB_PREFIX_ . 'orders`.id_cart = `' . _DB_PREFIX_ . 'cart`.id_cart)
-		' . Shop::addSqlRestriction()
+        SELECT COUNT(DISTINCT id_guest)
+        FROM `' . _DB_PREFIX_ . 'cart`
+        WHERE `date_add` BETWEEN "' . pSQL($date_from) . '" AND "' . pSQL($date_to) . '"
+        AND NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'orders` WHERE `' . _DB_PREFIX_ . 'orders`.id_cart = `' . _DB_PREFIX_ . 'cart`.id_cart)
+        ' . Shop::addSqlRestriction()
         );
     }
 
@@ -137,9 +137,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT COUNT(DISTINCT m.`id_module`)
-		FROM `' . _DB_PREFIX_ . 'module` m
-		' . Shop::addSqlAssociation('module', 'm')
+        SELECT COUNT(DISTINCT m.`id_module`)
+        FROM `' . _DB_PREFIX_ . 'module` m
+        ' . Shop::addSqlAssociation('module', 'm')
         );
     }
 
@@ -147,10 +147,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT COUNT(*)
-		FROM `' . _DB_PREFIX_ . 'module` m
-		' . Shop::addSqlAssociation('module', 'm', false) . '
-		WHERE module_shop.id_module IS NULL OR m.active = 0'
+        SELECT COUNT(*)
+        FROM `' . _DB_PREFIX_ . 'module` m
+        ' . Shop::addSqlAssociation('module', 'm', false) . '
+        WHERE module_shop.id_module IS NULL OR m.active = 0'
         );
     }
 
@@ -178,12 +178,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
             '
-		SELECT SUM(IF(IFNULL(stock.quantity, 0) > 0, 1, 0)) AS with_stock, COUNT(*) AS products
-		FROM `' . _DB_PREFIX_ . 'product` p
-		' . Shop::addSqlAssociation('product', 'p') . '
-		LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON p.id_product = pa.id_product
-		' . Product::sqlStock('p', 'pa') . '
-		WHERE product_shop.active = 1'
+        SELECT SUM(IF(IFNULL(stock.quantity, 0) > 0, 1, 0)) AS with_stock, COUNT(*) AS products
+        FROM `' . _DB_PREFIX_ . 'product` p
+        ' . Shop::addSqlAssociation('product', 'p') . '
+        LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON p.id_product = pa.id_product
+        ' . Product::sqlStock('p', 'pa') . '
+        WHERE product_shop.active = 1'
         );
 
         return round($row['products'] ? 100 * $row['with_stock'] / $row['products'] : 0, 2) . '%';
@@ -193,12 +193,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
             '
-		SELECT SUM(IF(IFNULL(stock.quantity, 0) <= 0, 1, 0)) AS without_stock, COUNT(*) AS products
-		FROM `' . _DB_PREFIX_ . 'product` p
-		' . Shop::addSqlAssociation('product', 'p') . '
-		LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON p.id_product = pa.id_product
-		' . Product::sqlStock('p', 'pa') . '
-		WHERE product_shop.active = 1'
+        SELECT SUM(IF(IFNULL(stock.quantity, 0) <= 0, 1, 0)) AS without_stock, COUNT(*) AS products
+        FROM `' . _DB_PREFIX_ . 'product` p
+        ' . Shop::addSqlAssociation('product', 'p') . '
+        LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON p.id_product = pa.id_product
+        ' . Product::sqlStock('p', 'pa') . '
+        WHERE product_shop.active = 1'
         );
 
         return round($row['products'] ? 100 * $row['without_stock'] / $row['products'] : 0, 2) . '%';
@@ -207,11 +207,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public static function getProductAverageGrossMargin()
     {
         $sql = 'SELECT AVG(1 - (IF(IFNULL(product_attribute_shop.wholesale_price, 0) = 0, product_shop.wholesale_price,product_attribute_shop.wholesale_price) / (IFNULL(product_attribute_shop.price, 0) + product_shop.price)))
-		FROM `' . _DB_PREFIX_ . 'product` p
-		' . Shop::addSqlAssociation('product', 'p') . '
-		LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON p.id_product = pa.id_product
-		' . Shop::addSqlAssociation('product_attribute', 'pa', false) . '
-		WHERE product_shop.active = 1';
+        FROM `' . _DB_PREFIX_ . 'product` p
+        ' . Shop::addSqlAssociation('product', 'p') . '
+        LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON p.id_product = pa.id_product
+        ' . Shop::addSqlAssociation('product_attribute', 'pa', false) . '
+        WHERE product_shop.active = 1';
         $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 
         return round(100 * $value, 2) . '%';
@@ -221,10 +221,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT COUNT(*)
-		FROM `' . _DB_PREFIX_ . 'category` c
-		' . Shop::addSqlAssociation('category', 'c') . '
-		WHERE c.active = 0'
+        SELECT COUNT(*)
+        FROM `' . _DB_PREFIX_ . 'category` c
+        ' . Shop::addSqlAssociation('category', 'c') . '
+        WHERE c.active = 0'
         );
     }
 
@@ -232,9 +232,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT COUNT(*)
-		FROM `' . _DB_PREFIX_ . 'category` c
-		' . Shop::addSqlAssociation('category', 'c')
+        SELECT COUNT(*)
+        FROM `' . _DB_PREFIX_ . 'category` c
+        ' . Shop::addSqlAssociation('category', 'c')
         );
     }
 
@@ -242,10 +242,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT COUNT(*)
-		FROM `' . _DB_PREFIX_ . 'product` p
-		' . Shop::addSqlAssociation('product', 'p') . '
-		WHERE product_shop.active = 0'
+        SELECT COUNT(*)
+        FROM `' . _DB_PREFIX_ . 'product` p
+        ' . Shop::addSqlAssociation('product', 'p') . '
+        WHERE product_shop.active = 0'
         );
     }
 
@@ -253,9 +253,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT COUNT(*)
-		FROM `' . _DB_PREFIX_ . 'product` p
-		' . Shop::addSqlAssociation('product', 'p')
+        SELECT COUNT(*)
+        FROM `' . _DB_PREFIX_ . 'product` p
+        ' . Shop::addSqlAssociation('product', 'p')
         );
     }
 
@@ -265,12 +265,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 10) AS date, SUM(total_products / o.conversion_rate) AS sales
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 10)'
+            SELECT LEFT(`invoice_date`, 10) AS date, SUM(total_products / o.conversion_rate) AS sales
+            FROM `' . _DB_PREFIX_ . 'orders` o
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
+            WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+            ' . Shop::addSqlRestriction(false, 'o') . '
+            GROUP BY LEFT(`invoice_date`, 10)'
             );
             foreach ($result as $row) {
                 $sales[strtotime($row['date'])] = $row['sales'];
@@ -281,12 +281,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 7) AS date, SUM(total_products / o.conversion_rate) AS sales
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 7)'
+            SELECT LEFT(`invoice_date`, 7) AS date, SUM(total_products / o.conversion_rate) AS sales
+            FROM `' . _DB_PREFIX_ . 'orders` o
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
+            WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+            ' . Shop::addSqlRestriction(false, 'o') . '
+            GROUP BY LEFT(`invoice_date`, 7)'
             );
             foreach ($result as $row) {
                 $sales[strtotime($row['date'] . '-01')] = $row['sales'];
@@ -296,11 +296,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
         } else {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
-			SELECT SUM(total_products / o.conversion_rate)
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-			' . Shop::addSqlRestriction(false, 'o')
+            SELECT SUM(total_products / o.conversion_rate)
+            FROM `' . _DB_PREFIX_ . 'orders` o
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
+            WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+            ' . Shop::addSqlRestriction(false, 'o')
             );
         }
     }
@@ -309,11 +309,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $distinct_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT COUNT(DISTINCT od.product_id)
-		FROM `' . _DB_PREFIX_ . 'orders` o
-		LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
-		WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
-		' . Shop::addSqlRestriction(false, 'o')
+        SELECT COUNT(DISTINCT od.product_id)
+        FROM `' . _DB_PREFIX_ . 'orders` o
+        LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
+        WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+        ' . Shop::addSqlRestriction(false, 'o')
         );
         if (!$distinct_products) {
             return '0%';
@@ -328,12 +328,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $orders = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 10) AS date, COUNT(*) AS orders
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 10)'
+            SELECT LEFT(`invoice_date`, 10) AS date, COUNT(*) AS orders
+            FROM `' . _DB_PREFIX_ . 'orders` o
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
+            WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+            ' . Shop::addSqlRestriction(false, 'o') . '
+            GROUP BY LEFT(`invoice_date`, 10)'
             );
             foreach ($result as $row) {
                 $orders[strtotime($row['date'])] = $row['orders'];
@@ -344,12 +344,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $orders = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 7) AS date, COUNT(*) AS orders
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 7)'
+            SELECT LEFT(`invoice_date`, 7) AS date, COUNT(*) AS orders
+            FROM `' . _DB_PREFIX_ . 'orders` o
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
+            WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+            ' . Shop::addSqlRestriction(false, 'o') . '
+            GROUP BY LEFT(`invoice_date`, 7)'
             );
             foreach ($result as $row) {
                 $orders[strtotime($row['date'] . '-01')] = $row['orders'];
@@ -359,11 +359,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
         } else {
             $orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
-			SELECT COUNT(*) AS orders
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-			' . Shop::addSqlRestriction(false, 'o')
+            SELECT COUNT(*) AS orders
+            FROM `' . _DB_PREFIX_ . 'orders` o
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
+            WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+            ' . Shop::addSqlRestriction(false, 'o')
             );
         }
 
@@ -374,20 +374,20 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $total = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT COUNT(*)
-		FROM `' . _DB_PREFIX_ . 'category` c
-		' . Shop::addSqlAssociation('category', 'c') . '
-		AND c.active = 1
-		AND c.nright = c.nleft + 1'
+        SELECT COUNT(*)
+        FROM `' . _DB_PREFIX_ . 'category` c
+        ' . Shop::addSqlAssociation('category', 'c') . '
+        AND c.active = 1
+        AND c.nright = c.nleft + 1'
         );
         $used = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT COUNT(DISTINCT cp.id_category)
-		FROM `' . _DB_PREFIX_ . 'category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON c.id_category = cp.id_category
-		' . Shop::addSqlAssociation('category', 'c') . '
-		AND c.active = 1
-		AND c.nright = c.nleft + 1'
+        SELECT COUNT(DISTINCT cp.id_category)
+        FROM `' . _DB_PREFIX_ . 'category` c
+        LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON c.id_category = cp.id_category
+        ' . Shop::addSqlAssociation('category', 'c') . '
+        AND c.active = 1
+        AND c.nright = c.nleft + 1'
         );
 
         return (int) ($total - $used);
@@ -397,10 +397,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
             '
-		SELECT SUM(IF(g.id_gender IS NOT NULL, 1, 0)) AS total, SUM(IF(type = 0, 1, 0)) AS male, SUM(IF(type = 1, 1, 0)) AS female, SUM(IF(type = 2, 1, 0)) AS neutral
-		FROM `' . _DB_PREFIX_ . 'customer` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'gender` g ON c.id_gender = g.id_gender
-		WHERE c.active = 1 ' . Shop::addSqlRestriction()
+        SELECT SUM(IF(g.id_gender IS NOT NULL, 1, 0)) AS total, SUM(IF(type = 0, 1, 0)) AS male, SUM(IF(type = 1, 1, 0)) AS female, SUM(IF(type = 2, 1, 0)) AS neutral
+        FROM `' . _DB_PREFIX_ . 'customer` c
+        LEFT JOIN `' . _DB_PREFIX_ . 'gender` g ON c.id_gender = g.id_gender
+        WHERE c.active = 1 ' . Shop::addSqlRestriction()
         );
 
         if (!$row['total']) {
@@ -418,26 +418,26 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT ca.`id_category`
-		FROM `' . _DB_PREFIX_ . 'category` ca
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_product` capr ON ca.`id_category` = capr.`id_category`
-		LEFT JOIN (
-			SELECT pr.`id_product`, t.`totalPriceSold`
-			FROM `' . _DB_PREFIX_ . 'product` pr
-			LEFT JOIN (
-				SELECT pr.`id_product`,
-					IFNULL(SUM(cp.`product_quantity`), 0) AS totalQuantitySold,
-					IFNULL(SUM(cp.`product_price` * cp.`product_quantity`), 0) / o.conversion_rate AS totalPriceSold
-				FROM `' . _DB_PREFIX_ . 'product` pr
-				LEFT OUTER JOIN `' . _DB_PREFIX_ . 'order_detail` cp ON pr.`id_product` = cp.`product_id`
-				LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON o.`id_order` = cp.`id_order`
-				WHERE o.invoice_date BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
-				GROUP BY pr.`id_product`
-			) t ON t.`id_product` = pr.`id_product`
-		) t	ON t.`id_product` = capr.`id_product`
-		WHERE ca.`level_depth` > 1
-		GROUP BY ca.`id_category`
-		ORDER BY SUM(t.`totalPriceSold`) DESC'
+        SELECT ca.`id_category`
+        FROM `' . _DB_PREFIX_ . 'category` ca
+        LEFT JOIN `' . _DB_PREFIX_ . 'category_product` capr ON ca.`id_category` = capr.`id_category`
+        LEFT JOIN (
+            SELECT pr.`id_product`, t.`totalPriceSold`
+            FROM `' . _DB_PREFIX_ . 'product` pr
+            LEFT JOIN (
+                SELECT pr.`id_product`,
+                    IFNULL(SUM(cp.`product_quantity`), 0) AS totalQuantitySold,
+                    IFNULL(SUM(cp.`product_price` * cp.`product_quantity`), 0) / o.conversion_rate AS totalPriceSold
+                FROM `' . _DB_PREFIX_ . 'product` pr
+                LEFT OUTER JOIN `' . _DB_PREFIX_ . 'order_detail` cp ON pr.`id_product` = cp.`product_id`
+                LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON o.`id_order` = cp.`id_order`
+                WHERE o.invoice_date BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+                GROUP BY pr.`id_product`
+            ) t ON t.`id_product` = pr.`id_product`
+        ) t    ON t.`id_product` = capr.`id_product`
+        WHERE ca.`level_depth` > 1
+        GROUP BY ca.`id_category`
+        ORDER BY SUM(t.`totalPriceSold`) DESC'
         );
     }
 
@@ -449,11 +449,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
         }
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
             '
-		SELECT a.id_country, COUNT(*) AS orders
-		FROM `' . _DB_PREFIX_ . 'orders` o
-		LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON o.id_address_delivery = a.id_address
-		WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
-		' . Shop::addSqlRestriction()
+        SELECT a.id_country, COUNT(*) AS orders
+        FROM `' . _DB_PREFIX_ . 'orders` o
+        LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON o.id_address_delivery = a.id_address
+        WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+        ' . Shop::addSqlRestriction()
         );
         $row['orders'] = round(100 * $row['orders'] / $total_orders, 1);
 
@@ -464,10 +464,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-		SELECT AVG(DATEDIFF("' . date('Y-m-d') . ' 00:00:00", birthday))
-		FROM `' . _DB_PREFIX_ . 'customer` c
-		WHERE active = 1
-		AND birthday IS NOT NULL AND birthday != "0000-00-00" ' . Shop::addSqlRestriction()
+        SELECT AVG(DATEDIFF("' . date('Y-m-d') . ' 00:00:00", birthday))
+        FROM `' . _DB_PREFIX_ . 'customer` c
+        WHERE active = 1
+        AND birthday IS NOT NULL AND birthday != "0000-00-00" ' . Shop::addSqlRestriction()
         );
 
         return round($value / 365);
@@ -484,14 +484,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-		SELECT MIN(cm1.date_add) AS question, MIN(cm2.date_add) AS reply
-		FROM `' . _DB_PREFIX_ . 'customer_message` cm1
-		INNER JOIN `' . _DB_PREFIX_ . 'customer_message` cm2 ON (cm1.id_customer_thread = cm2.id_customer_thread AND cm1.date_add < cm2.date_add)
-		JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm1.id_customer_thread = ct.id_customer_thread)
-		WHERE cm1.`date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
-		AND cm1.id_employee = 0 AND cm2.id_employee != 0
-		' . Shop::addSqlRestriction() . '
-		GROUP BY cm1.id_customer_thread'
+        SELECT MIN(cm1.date_add) AS question, MIN(cm2.date_add) AS reply
+        FROM `' . _DB_PREFIX_ . 'customer_message` cm1
+        INNER JOIN `' . _DB_PREFIX_ . 'customer_message` cm2 ON (cm1.id_customer_thread = cm2.id_customer_thread AND cm1.date_add < cm2.date_add)
+        JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm1.id_customer_thread = ct.id_customer_thread)
+        WHERE cm1.`date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+        AND cm1.id_employee = 0 AND cm2.id_employee != 0
+        ' . Shop::addSqlRestriction() . '
+        GROUP BY cm1.id_customer_thread'
         );
         $total_questions = $total_replies = $threads = 0;
         foreach ($result as $row) {
@@ -510,13 +510,13 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-		SELECT COUNT(*) AS messages
-		FROM `' . _DB_PREFIX_ . 'customer_thread` ct
-		LEFT JOIN `' . _DB_PREFIX_ . 'customer_message` cm ON (ct.id_customer_thread = cm.id_customer_thread)
-		WHERE ct.`date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
-		' . Shop::addSqlRestriction() . '
-		AND STATUS = "closed"
-		GROUP BY ct.id_customer_thread'
+        SELECT COUNT(*) AS messages
+        FROM `' . _DB_PREFIX_ . 'customer_thread` ct
+        LEFT JOIN `' . _DB_PREFIX_ . 'customer_message` cm ON (ct.id_customer_thread = cm.id_customer_thread)
+        WHERE ct.`date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+        ' . Shop::addSqlRestriction() . '
+        AND STATUS = "closed"
+        GROUP BY ct.id_customer_thread'
         );
         $threads = $messages = 0;
         foreach ($result as $row) {
@@ -536,19 +536,19 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $purchases = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT
-				LEFT(`invoice_date`, 10) as date,
-				SUM(od.`product_quantity` * IF(
-					od.`purchase_supplier_price` > 0,
-					od.`purchase_supplier_price` / `conversion_rate`,
-					od.`original_product_price` * ' . (int) Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN') . ' / 100
-				)) as total_purchase_price
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 10)'
+            SELECT
+                LEFT(`invoice_date`, 10) as date,
+                SUM(od.`product_quantity` * IF(
+                    od.`purchase_supplier_price` > 0,
+                    od.`purchase_supplier_price` / `conversion_rate`,
+                    od.`original_product_price` * ' . (int) Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN') . ' / 100
+                )) as total_purchase_price
+            FROM `' . _DB_PREFIX_ . 'orders` o
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
+            WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+            ' . Shop::addSqlRestriction(false, 'o') . '
+            GROUP BY LEFT(`invoice_date`, 10)'
             );
             foreach ($result as $row) {
                 $purchases[strtotime($row['date'])] = $row['total_purchase_price'];
@@ -558,16 +558,16 @@ class AdminStatsControllerCore extends AdminStatsTabController
         } else {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
-			SELECT SUM(od.`product_quantity` * IF(
-				od.`purchase_supplier_price` > 0,
-				od.`purchase_supplier_price` / `conversion_rate`,
-				od.`original_product_price` * ' . (int) Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN') . ' / 100
-			)) as total_purchase_price
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-			' . Shop::addSqlRestriction(false, 'o')
+            SELECT SUM(od.`product_quantity` * IF(
+                od.`purchase_supplier_price` > 0,
+                od.`purchase_supplier_price` / `conversion_rate`,
+                od.`original_product_price` * ' . (int) Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN') . ' / 100
+            )) as total_purchase_price
+            FROM `' . _DB_PREFIX_ . 'orders` o
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
+            WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+            ' . Shop::addSqlRestriction(false, 'o')
             );
         }
     }
@@ -578,20 +578,20 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
         $orders = Db::getInstance()->executeS(
             '
-		SELECT
-			LEFT(`invoice_date`, 10) AS date,
-			total_paid_tax_incl / o.conversion_rate AS total_paid_tax_incl,
-			total_shipping_tax_excl / o.conversion_rate AS total_shipping_tax_excl,
-			o.module,
-			a.id_country,
-			o.id_currency,
-			c.id_reference AS carrier_reference
-		FROM `' . _DB_PREFIX_ . 'orders` o
-		LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON o.id_address_delivery = a.id_address
-		LEFT JOIN `' . _DB_PREFIX_ . 'carrier` c ON o.id_carrier = c.id_carrier
-		LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-		WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-		' . Shop::addSqlRestriction(false, 'o')
+        SELECT
+            LEFT(`invoice_date`, 10) AS date,
+            total_paid_tax_incl / o.conversion_rate AS total_paid_tax_incl,
+            total_shipping_tax_excl / o.conversion_rate AS total_shipping_tax_excl,
+            o.module,
+            a.id_country,
+            o.id_currency,
+            c.id_reference AS carrier_reference
+        FROM `' . _DB_PREFIX_ . 'orders` o
+        LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON o.id_address_delivery = a.id_address
+        LEFT JOIN `' . _DB_PREFIX_ . 'carrier` c ON o.id_carrier = c.id_carrier
+        LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
+        WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+        ' . Shop::addSqlRestriction(false, 'o')
         );
         foreach ($orders as $order) {
             // Add flat fees for this order
@@ -847,18 +847,18 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
                 $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                     '
-				SELECT COUNT(*)
-				FROM `' . _DB_PREFIX_ . 'customer`
-				WHERE newsletter = 1
-				' . Shop::addSqlRestriction(Shop::SHARE_ORDER)
+                SELECT COUNT(*)
+                FROM `' . _DB_PREFIX_ . 'customer`
+                WHERE newsletter = 1
+                ' . Shop::addSqlRestriction(Shop::SHARE_ORDER)
                 );
                 if ($moduleManager->isInstalled('ps_emailsubscription')) {
                     $value += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                         '
-					SELECT COUNT(*)
-					FROM `' . _DB_PREFIX_ . 'emailsubscription`
-					WHERE active = 1
-					' . Shop::addSqlRestriction(Shop::SHARE_ORDER)
+                    SELECT COUNT(*)
+                    FROM `' . _DB_PREFIX_ . 'emailsubscription`
+                    WHERE active = 1
+                    ' . Shop::addSqlRestriction(Shop::SHARE_ORDER)
                     );
                 }
 
@@ -925,18 +925,18 @@ class AdminStatsControllerCore extends AdminStatsTabController
             case 'orders_per_customer':
                 $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                     '
-				SELECT COUNT(*)
-				FROM `' . _DB_PREFIX_ . 'customer` c
-				WHERE c.active = 1
-				' . Shop::addSqlRestriction()
+                SELECT COUNT(*)
+                FROM `' . _DB_PREFIX_ . 'customer` c
+                WHERE c.active = 1
+                ' . Shop::addSqlRestriction()
                 );
                 if ($value) {
                     $orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                         '
-					SELECT COUNT(*)
-					FROM `' . _DB_PREFIX_ . 'orders` o
-					WHERE o.valid = 1
-					' . Shop::addSqlRestriction()
+                    SELECT COUNT(*)
+                    FROM `' . _DB_PREFIX_ . 'orders` o
+                    WHERE o.valid = 1
+                    ' . Shop::addSqlRestriction()
                     );
                     $value = round($orders / $value, 2);
                 }
@@ -949,14 +949,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
             case 'average_order_value':
                 $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
                     '
-				SELECT
-					COUNT(`id_order`) AS orders,
-					SUM(`total_paid_tax_excl` / `conversion_rate`) AS total_paid_tax_excl
-				FROM `' . _DB_PREFIX_ . 'orders`
-				WHERE `invoice_date` BETWEEN "' . pSQL(date('Y-m-d', strtotime('-31 day'))) . ' 00:00:00" AND "' . pSQL(
+                SELECT
+                    COUNT(`id_order`) AS orders,
+                    SUM(`total_paid_tax_excl` / `conversion_rate`) AS total_paid_tax_excl
+                FROM `' . _DB_PREFIX_ . 'orders`
+                WHERE `invoice_date` BETWEEN "' . pSQL(date('Y-m-d', strtotime('-31 day'))) . ' 00:00:00" AND "' . pSQL(
                         date('Y-m-d', strtotime('-1 day'))
                     ) . ' 23:59:59"
-				' . Shop::addSqlRestriction()
+                ' . Shop::addSqlRestriction()
                 );
                 $value = Tools::displayPrice(
                     $row['orders'] ? $row['total_paid_tax_excl'] / $row['orders'] : 0,

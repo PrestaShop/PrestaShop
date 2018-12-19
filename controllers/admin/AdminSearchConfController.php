@@ -75,28 +75,28 @@ class AdminSearchConfControllerCore extends AdminController
                 'title' => $this->trans('Indexing', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-cogs',
                 'info' => '<p>
-						' . $this->trans('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.', array(), 'Admin.Shopparameters.Feature') . '<br />
-						' . $this->trans('Indexed products', array(), 'Admin.Shopparameters.Feature') . ' <strong>' . (int) $indexed . ' / ' . (int) $total . '</strong>.
-					</p>
-					<p>
-						' . $this->trans('Building the product index may take a few minutes.', array(), 'Admin.Shopparameters.Feature') . '
-						' . $this->trans('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".', array(), 'Admin.Shopparameters.Feature') . '
-					</p>
-					<a href="searchcron.php?token=' . substr(_COOKIE_KEY_, 34, 8) . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
-						<i class="icon-external-link-sign"></i>
-						' . $this->trans('Add missing products to the index', array(), 'Admin.Shopparameters.Feature') . '
-					</a><br />
-					<a href="searchcron.php?full=1&amp;token=' . substr(_COOKIE_KEY_, 34, 8) . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
-						<i class="icon-external-link-sign"></i>
-						' . $this->trans('Re-build the entire index', array(), 'Admin.Shopparameters.Feature') . '
-					</a><br /><br />
-					<p>
-						' . $this->trans('You can set a cron job that will rebuild your index using the following URL:', array(), 'Admin.Shopparameters.Feature') . '<br />
-						<a href="' . Tools::safeOutput($cron_url) . '">
-							<i class="icon-external-link-sign"></i>
-							' . Tools::safeOutput($cron_url) . '
-						</a>
-					</p><br />',
+                        ' . $this->trans('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.', array(), 'Admin.Shopparameters.Feature') . '<br />
+                        ' . $this->trans('Indexed products', array(), 'Admin.Shopparameters.Feature') . ' <strong>' . (int) $indexed . ' / ' . (int) $total . '</strong>.
+                    </p>
+                    <p>
+                        ' . $this->trans('Building the product index may take a few minutes.', array(), 'Admin.Shopparameters.Feature') . '
+                        ' . $this->trans('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".', array(), 'Admin.Shopparameters.Feature') . '
+                    </p>
+                    <a href="searchcron.php?token=' . substr(_COOKIE_KEY_, 34, 8) . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
+                        <i class="icon-external-link-sign"></i>
+                        ' . $this->trans('Add missing products to the index', array(), 'Admin.Shopparameters.Feature') . '
+                    </a><br />
+                    <a href="searchcron.php?full=1&amp;token=' . substr(_COOKIE_KEY_, 34, 8) . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
+                        <i class="icon-external-link-sign"></i>
+                        ' . $this->trans('Re-build the entire index', array(), 'Admin.Shopparameters.Feature') . '
+                    </a><br /><br />
+                    <p>
+                        ' . $this->trans('You can set a cron job that will rebuild your index using the following URL:', array(), 'Admin.Shopparameters.Feature') . '<br />
+                        <a href="' . Tools::safeOutput($cron_url) . '">
+                            <i class="icon-external-link-sign"></i>
+                            ' . Tools::safeOutput($cron_url) . '
+                        </a>
+                    </p><br />',
                 'fields' => array(
                     'PS_SEARCH_INDEXATION' => array(
                         'title' => $this->trans('Indexing', array(), 'Admin.Shopparameters.Feature'),
@@ -204,17 +204,17 @@ class AdminSearchConfControllerCore extends AdminController
                         array(),
                         'Admin.Shopparameters.Feature'
                     ) . '<br />
-						' . $this->trans(
+                        ' . $this->trans(
                         'A word with a weight of eight will have four times more value than a word with a weight of two.',
                         array(),
                         'Admin.Shopparameters.Feature'
                     ) . '<br /><br />
-						' . $this->trans(
+                        ' . $this->trans(
                         'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.',
                         array(),
                         'Admin.Shopparameters.Feature'
                     ) . '<br /><br />
-						' . $this->trans(
+                        ' . $this->trans(
                         'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0',
                         array(),
                         'Admin.Shopparameters.Feature'

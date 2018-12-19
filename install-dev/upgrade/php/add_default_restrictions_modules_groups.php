@@ -31,14 +31,14 @@ function add_default_restrictions_modules_groups()
     $res &= Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'module_group`');
 
     $groups = Db::getInstance()->executeS('
-		SELECT `id_group`
-		FROM `'._DB_PREFIX_.'group`');
+        SELECT `id_group`
+        FROM `'._DB_PREFIX_.'group`');
     $modules = Db::getInstance()->executeS('
-		SELECT m.*
-		FROM `'._DB_PREFIX_.'module` m');
+        SELECT m.*
+        FROM `'._DB_PREFIX_.'module` m');
     $shops = Db::getInstance()->executeS('
-		SELECT `id_shop`
-		FROM `'._DB_PREFIX_.'shop`');
+        SELECT `id_shop`
+        FROM `'._DB_PREFIX_.'shop`');
     foreach ($groups as $group) {
         if (!is_array($modules) || !is_array($shops)) {
             return false;

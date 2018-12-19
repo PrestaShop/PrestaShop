@@ -44,21 +44,21 @@ function update_customer_default_group()
     }
 
     $carriers = Db::getInstance()->executeS('
-	SELECT `id_carrier`
-	FROM `'._DB_PREFIX_.'carrier`
-	WHERE `deleted` = 0');
+    SELECT `id_carrier`
+    FROM `'._DB_PREFIX_.'carrier`
+    WHERE `deleted` = 0');
 
     $groups = Db::getInstance()->executeS('
-	SELECT `value` as id_group
-	FROM `'._DB_PREFIX_.'configuration`
-	WHERE `name` IN (\'PS_UNIDENTIFIED_GROUP\', \'PS_GUEST_GROUP\')');
+    SELECT `value` as id_group
+    FROM `'._DB_PREFIX_.'configuration`
+    WHERE `name` IN (\'PS_UNIDENTIFIED_GROUP\', \'PS_GUEST_GROUP\')');
 
     if (count($carriers) && is_array($carriers) && count($groups) && is_array($groups)) {
         foreach ($carriers as $carrier) {
             foreach ($groups as $group) {
                 Db::getInstance()->execute('
-				INSERT IGNORE INTO `'._DB_PREFIX_.'carrier_group`
-				VALUES ('.(int)$carrier['id_carrier'].', '.(int)$group['id_group'].')');
+                INSERT IGNORE INTO `'._DB_PREFIX_.'carrier_group`
+                VALUES ('.(int)$carrier['id_carrier'].', '.(int)$group['id_group'].')');
             }
         }
     }

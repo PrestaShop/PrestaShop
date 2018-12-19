@@ -75,8 +75,8 @@ class EntityMapper
             if ($object_datas = Db::getInstance()->getRow($sql)) {
                 if (!$id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
                     $sql = 'SELECT *
-							FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
-							WHERE `' . bqSQL($entity_defs['primary']) . '` = ' . (int) $id
+                            FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
+                            WHERE `' . bqSQL($entity_defs['primary']) . '` = ' . (int) $id
                             . (($id_shop && $entity->isLangMultishop()) ? ' AND `id_shop` = ' . (int) $id_shop : '');
 
                     if ($object_datas_lang = Db::getInstance()->executeS($sql)) {

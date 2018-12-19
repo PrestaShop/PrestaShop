@@ -175,7 +175,7 @@ abstract class PaymentModuleCore extends Module
         foreach ($shops as $s) {
             foreach ($carrier_ids as $id_carrier) {
                 if (!Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'module_carrier` (`id_module`, `id_shop`, `id_reference`)
-				VALUES (' . (int) $this->id . ', "' . (int) $s . '", ' . (int) $id_carrier . ')')) {
+                VALUES (' . (int) $this->id . ', "' . (int) $s . '", ' . (int) $id_carrier . ')')) {
                     return false;
                 }
             }

@@ -195,7 +195,7 @@ class AdminCurrenciesControllerCore extends AdminController
             }
         } else {
             $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error') . '
-				<b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+                <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         }
 
         return false;

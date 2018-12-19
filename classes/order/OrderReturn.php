@@ -132,9 +132,9 @@ class OrderReturnCore extends ObjectModel
     public function countProduct()
     {
         if (!$data = Db::getInstance()->getRow('
-		SELECT COUNT(`id_order_return`) AS total
-		FROM `' . _DB_PREFIX_ . 'order_return_detail`
-		WHERE `id_order_return` = ' . (int) $this->id)) {
+        SELECT COUNT(`id_order_return`) AS total
+        FROM `' . _DB_PREFIX_ . 'order_return_detail`
+        WHERE `id_order_return` = ' . (int) $this->id)) {
             return false;
         }
 
@@ -147,12 +147,12 @@ class OrderReturnCore extends ObjectModel
             $context = Context::getContext();
         }
         $data = Db::getInstance()->executeS('
-		SELECT *
-		FROM `' . _DB_PREFIX_ . 'order_return`
-		WHERE `id_customer` = ' . (int) $customer_id .
+        SELECT *
+        FROM `' . _DB_PREFIX_ . 'order_return`
+        WHERE `id_customer` = ' . (int) $customer_id .
         ($order_id ? ' AND `id_order` = ' . (int) $order_id : '') .
         ($no_denied ? ' AND `state` != 4' : '') . '
-		ORDER BY `date_add` DESC');
+        ORDER BY `date_add` DESC');
         foreach ($data as $k => $or) {
             $state = new OrderReturnState($or['state']);
             $data[$k]['state_name'] = $state->name[$context->language->id];
@@ -168,9 +168,9 @@ class OrderReturnCore extends ObjectModel
     public static function getOrdersReturnDetail($id_order_return)
     {
         return Db::getInstance()->executeS('
-		SELECT *
-		FROM `' . _DB_PREFIX_ . 'order_return_detail`
-		WHERE `id_order_return` = ' . (int) $id_order_return);
+        SELECT *
+        FROM `' . _DB_PREFIX_ . 'order_return_detail`
+        WHERE `id_order_return` = ' . (int) $id_order_return);
     }
 
     /**
@@ -233,13 +233,13 @@ class OrderReturnCore extends ObjectModel
     public static function getProductReturnDetail($id_order_detail)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT product_quantity, date_add, orsl.name as state
-			FROM `' . _DB_PREFIX_ . 'order_return_detail` ord
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_return` o
-			ON o.id_order_return = ord.id_order_return
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_return_state_lang` orsl
-			ON orsl.id_order_return_state = o.state AND orsl.id_lang = ' . (int) Context::getContext()->language->id . '
-			WHERE ord.`id_order_detail` = ' . (int) $id_order_detail);
+            SELECT product_quantity, date_add, orsl.name as state
+            FROM `' . _DB_PREFIX_ . 'order_return_detail` ord
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_return` o
+            ON o.id_order_return = ord.id_order_return
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_return_state_lang` orsl
+            ON orsl.id_order_return_state = o.state AND orsl.id_lang = ' . (int) Context::getContext()->language->id . '
+            WHERE ord.`id_order_detail` = ' . (int) $id_order_detail);
     }
 
     /**
@@ -252,11 +252,11 @@ class OrderReturnCore extends ObjectModel
     {
         $details = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT od.id_order_detail, GREATEST(od.product_quantity_return, IFNULL(SUM(ord.product_quantity),0)) as qty_returned
-			FROM ' . _DB_PREFIX_ . 'order_detail od
-			LEFT JOIN ' . _DB_PREFIX_ . 'order_return_detail ord
-			ON ord.id_order_detail = od.id_order_detail
-			WHERE od.id_order = ' . (int) $id_order . '
-			GROUP BY od.id_order_detail'
+            FROM ' . _DB_PREFIX_ . 'order_detail od
+            LEFT JOIN ' . _DB_PREFIX_ . 'order_return_detail ord
+            ON ord.id_order_detail = od.id_order_detail
+            WHERE od.id_order = ' . (int) $id_order . '
+            GROUP BY od.id_order_detail'
         );
         if (!$details) {
             return;

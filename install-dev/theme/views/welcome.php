@@ -26,15 +26,15 @@
  $this->displayTemplate('header') ?>
 
 <?php if (Tools::getMemoryLimit() < Tools::getOctets('32M')): ?>
-	<div class="warnBlock"><?php echo $this->translator->trans('PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.', array(), 'Install'); ?></div>
+    <div class="warnBlock"><?php echo $this->translator->trans('PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.', array(), 'Install'); ?></div>
 <?php endif; ?>
 
 <?php if ($this->can_upgrade): ?>
-	<div class="warnBlock">
-		<img src="theme/img/pict_error.png" alt="" style="vertical-align: middle;" /> &nbsp;
-		<?php echo $this->translator->trans(
-			'<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %version% installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%doc%">%doc%</a>',
-			array('%version%' => $this->ps_version, '%doc%' => $this->getDocumentationUpgradeLink()),
+    <div class="warnBlock">
+        <img src="theme/img/pict_error.png" alt="" style="vertical-align: middle;" /> &nbsp;
+        <?php echo $this->translator->trans(
+            '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %version% installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%doc%">%doc%</a>',
+            array('%version%' => $this->ps_version, '%doc%' => $this->getDocumentationUpgradeLink()),
      'Install'
  ); ?></div>
 <?php endif; ?>
@@ -45,14 +45,14 @@
 
 <!-- List of languages -->
 <?php if (count($this->language->getIsoList()) > 1): ?>
-	<h3><?php echo $this->translator->trans('Continue the installation in:', array(), 'Install') ?></h3>
-	<select id="langList" name="language">
-	<?php foreach ($this->language->getIsoList() as $iso): ?>
-		<option value="<?php echo $iso ?>" <?php if ($iso == $this->language->getLanguageIso()) echo 'selected="selected"' ?>>
-			<?php echo $this->language->getLanguage($iso)->getName() ?>
-		</option>
-	<?php endforeach; ?>
-	</select>
+    <h3><?php echo $this->translator->trans('Continue the installation in:', array(), 'Install') ?></h3>
+    <select id="langList" name="language">
+    <?php foreach ($this->language->getIsoList() as $iso): ?>
+        <option value="<?php echo $iso ?>" <?php if ($iso == $this->language->getLanguageIso()) echo 'selected="selected"' ?>>
+            <?php echo $this->language->getLanguage($iso)->getName() ?>
+        </option>
+    <?php endforeach; ?>
+    </select>
 <?php endif; ?>
 
 <p><?php echo $this->translator->trans('The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d% translations, all for free!', array('%d%' => 60), 'Install'); ?> </p>

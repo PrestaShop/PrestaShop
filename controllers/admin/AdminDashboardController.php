@@ -228,13 +228,13 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         // $translations = array(
-        // 	'Calendar' => $this->trans('Calendar', array(),'Admin.Global'),
-        // 	'Day' => $this->trans('Day', array(), 'Admin.Global'),
-        // 	'Month' => $this->trans('Month', array(), 'Admin.Global'),
-        // 	'Year' => $this->trans('Year', array(), 'Admin.Global'),
-        // 	'From' => $this->trans('From:', array(), 'Admin.Global'),
-        // 	'To' => $this->trans('To:', array(), 'Admin.Global'),
-        // 	'Save' => $this->trans('Save', array(), 'Admin.Global')
+        //     'Calendar' => $this->trans('Calendar', array(),'Admin.Global'),
+        //     'Day' => $this->trans('Day', array(), 'Admin.Global'),
+        //     'Month' => $this->trans('Month', array(), 'Admin.Global'),
+        //     'Year' => $this->trans('Year', array(), 'Admin.Global'),
+        //     'From' => $this->trans('From:', array(), 'Admin.Global'),
+        //     'To' => $this->trans('To:', array(), 'Admin.Global'),
+        //     'Save' => $this->trans('Save', array(), 'Admin.Global')
         // );
 
         $testStatsDateUpdate = $this->context->cookie->__get('stats_date_update');
@@ -403,7 +403,7 @@ class AdminDashboardControllerCore extends AdminController
                 );
             } else {
                 $warning .= $this->trans('This is different from the domain name set in the "SEO & URLs" tab.', array(), 'Admin.Dashboard.Notification') . '
-				' . $this->trans(
+                ' . $this->trans(
                     'If this is your main domain, please {link}change it now{/link}.',
                     array(
                         '{link}' => '<a href="index.php?controller=AdminMeta&token=' . Tools::getAdminTokenLite('AdminMeta') . '#meta_fieldset_shop_url">',

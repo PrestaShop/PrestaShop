@@ -865,8 +865,8 @@ class WebserviceRequestCore
     protected function shopHasRight($key)
     {
         $sql = 'SELECT 1
-				FROM ' . _DB_PREFIX_ . 'webservice_account wsa LEFT JOIN ' . _DB_PREFIX_ . 'webservice_account_shop wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
-				WHERE wsa.key = \'' . pSQL($key) . '\'';
+                FROM ' . _DB_PREFIX_ . 'webservice_account wsa LEFT JOIN ' . _DB_PREFIX_ . 'webservice_account_shop wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
+                WHERE wsa.key = \'' . pSQL($key) . '\'';
 
         foreach (self::$shopIDs as $id_shop) {
             $OR[] = ' wsas.id_shop = ' . (int) $id_shop . ' ';
@@ -1339,7 +1339,7 @@ class WebserviceRequestCore
                 $check_shop_group = false;
 
                 $sql = 'SELECT 1
-	 						FROM `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']);
+                             FROM `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']);
                 if ($assoc['type'] != 'fk_shop') {
                     $sql .= '_' . $assoc['type'];
                 } else {

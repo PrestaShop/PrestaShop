@@ -189,14 +189,14 @@ class PrestaShopLoggerCore extends ObjectModel
     {
         if (!isset(self::$is_present[md5($this->message)])) {
             self::$is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)
-				FROM `' . _DB_PREFIX_ . 'log`
-				WHERE
-					`message` = \'' . $this->message . '\'
-					AND `severity` = \'' . $this->severity . '\'
-					AND `error_code` = \'' . $this->error_code . '\'
-					AND `object_type` = \'' . $this->object_type . '\'
-					AND `object_id` = \'' . $this->object_id . '\'
-				');
+                FROM `' . _DB_PREFIX_ . 'log`
+                WHERE
+                    `message` = \'' . $this->message . '\'
+                    AND `severity` = \'' . $this->severity . '\'
+                    AND `error_code` = \'' . $this->error_code . '\'
+                    AND `object_type` = \'' . $this->object_type . '\'
+                    AND `object_id` = \'' . $this->object_id . '\'
+                ');
         }
 
         return self::$is_present[$this->getHash()];

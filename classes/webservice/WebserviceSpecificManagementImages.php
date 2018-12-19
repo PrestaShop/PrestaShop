@@ -186,92 +186,92 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
          * available cases api/... :
          *
          *   images ("types_list") (N-1)
-         *   	GET    (xml)
+         *       GET    (xml)
          *   images/general ("general_list") (N-2)
-         *   	GET    (xml)
+         *       GET    (xml)
          *   images/general/[header,+] ("general") (N-3)
-         *   	GET    (bin)
-         *   	PUT    (bin)
+         *       GET    (bin)
+         *       PUT    (bin)
          *
          *
          *   images/[categories,+] ("normal_list") (N-2) ([categories,+] = categories, manufacturers, ...)
-         *   	GET    (xml)
+         *       GET    (xml)
          *   images/[categories,+]/[1,+] ("normal") (N-3)
-         *   	GET    (bin)
-         *   	PUT    (bin)
-         *   	DELETE
-         *   	POST   (bin) (if image does not exists)
+         *       GET    (bin)
+         *       PUT    (bin)
+         *       DELETE
+         *       POST   (bin) (if image does not exists)
          *   images/[categories,+]/[1,+]/[small,+] ("normal_resized") (N-4)
-         *   	GET    (bin)
+         *       GET    (bin)
          *   images/[categories,+]/default ("display_list_of_langs") (N-3)
-         *   	GET    (xml)
+         *       GET    (xml)
          *   images/[categories,+]/default/[en,+] ("normal_default_i18n")  (N-4)
-         *   	GET    (bin)
-         *   	POST   (bin) (if image does not exists)
+         *       GET    (bin)
+         *       POST   (bin) (if image does not exists)
          *      PUT    (bin)
          *      DELETE
          *   images/[categories,+]/default/[en,+]/[small,+] ("normal_default_i18n_resized")  (N-5)
-         *   	GET    (bin)
+         *       GET    (bin)
          *
          *   images/product ("product_list")  (N-2)
-         *   	GET    (xml) (list of image)
+         *       GET    (xml) (list of image)
          *   images/product/[1,+] ("product_description")  (N-3)
-         *   	GET    (xml) (legend, declinations, xlink to images/product/[1,+]/bin)
+         *       GET    (xml) (legend, declinations, xlink to images/product/[1,+]/bin)
          *   images/product/[1,+]/bin ("product_bin")  (N-4)
-         *   	GET    (bin)
+         *       GET    (bin)
          *      POST   (bin) (if image does not exists)
          *   images/product/[1,+]/[1,+] ("product_declination")  (N-4)
-         *   	GET    (bin)
-         *   	POST   (xml) (legend)
-         *   	PUT    (xml) (legend)
+         *       GET    (bin)
+         *       POST   (xml) (legend)
+         *       PUT    (xml) (legend)
          *      DELETE
          *   images/product/[1,+]/[1,+]/bin ("product_declination_bin") (N-5)
-         *   	POST   (bin) (if image does not exists)
-         *   	GET    (bin)
-         *   	PUT    (bin)
+         *       POST   (bin) (if image does not exists)
+         *       GET    (bin)
+         *       PUT    (bin)
          *   images/product/[1,+]/[1,+]/[small,+] ("product_declination_resized") (N-5)
-         *   	GET    (bin)
+         *       GET    (bin)
          *   images/product/default ("product_default") (N-3)
-         *   	GET    (bin)
+         *       GET    (bin)
          *   images/product/default/[en,+] ("product_default_i18n") (N-4)
-         *   	GET    (bin)
+         *       GET    (bin)
          *      POST   (bin)
          *      PUT   (bin)
          *      DELETE
          *   images/product/default/[en,+]/[small,+] ("product_default_i18n_resized") (N-5)
-         * 		GET    (bin)
+         *         GET    (bin)
          *
          */
 
         /* Declinated
          *ok    GET    (bin)
          *ok images/product ("product_list")  (N-2)
-         *ok	GET    (xml) (list of image)
+         *ok    GET    (xml) (list of image)
          *ok images/product/[1,+] ("product_description")  (N-3)
-         *   	GET    (xml) (legend, declinations, xlink to images/product/[1,+]/bin)
+         *       GET    (xml) (legend, declinations, xlink to images/product/[1,+]/bin)
          *ok images/product/[1,+]/bin ("product_bin")  (N-4)
-         *ok 	GET    (bin)
+         *ok     GET    (bin)
          *      POST   (bin) (if image does not exists)
          *ok images/product/[1,+]/[1,+] ("product_declination")  (N-4)
-         *ok 	GET    (bin)
-         *   	POST   (xml) (legend)
-         *   	PUT    (xml) (legend)
+         *ok     GET    (bin)
+         *       POST   (xml) (legend)
+         *       PUT    (xml) (legend)
          *      DELETE
          *ok images/product/[1,+]/[1,+]/bin ("product_declination_bin") (N-5)
-         *   	POST   (bin) (if image does not exists)
-         *ok 	GET    (bin)
-         *   	PUT    (bin)
+         *       POST   (bin) (if image does not exists)
+         *ok     GET    (bin)
+         *       PUT    (bin)
          *   images/product/[1,+]/[1,+]/[small,+] ("product_declination_resized") (N-5)
-         *ok 	GET    (bin)
+         *ok     GET    (bin)
          *ok images/product/default ("product_default") (N-3)
-         *ok 	GET    (bin)
+         *ok     GET    (bin)
          *ok images/product/default/[en,+] ("product_default_i18n") (N-4)
-         *ok 	GET    (bin)
+         *ok     GET    (bin)
          *      POST   (bin)
          *      PUT   (bin)
          *      DELETE
          *ok images/product/default/[en,+]/[small,+] ("product_default_i18n_resized") (N-5)
-         *ok	GET    (bin)
+         *ok    GET    (bin)
          *
          * */
 
@@ -686,11 +686,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     {
         $customizations = array();
         if (!$results = Db::getInstance()->executeS('
-			SELECT DISTINCT c.`id_customization`
-			FROM `' . _DB_PREFIX_ . 'customization` c
-			NATURAL JOIN `' . _DB_PREFIX_ . 'customization_field` cf
-			WHERE c.`id_cart` = ' . (int) $this->wsObject->urlSegment[2] . '
-			AND type = 0')) {
+            SELECT DISTINCT c.`id_customization`
+            FROM `' . _DB_PREFIX_ . 'customization` c
+            NATURAL JOIN `' . _DB_PREFIX_ . 'customization_field` cf
+            WHERE c.`id_cart` = ' . (int) $this->wsObject->urlSegment[2] . '
+            AND type = 0')) {
             return array();
         }
         foreach ($results as $result) {
@@ -730,8 +730,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             if ($this->wsObject->method == 'GET') {
                 $results = Db::getInstance()->executeS(
                     'SELECT *
-					FROM `' . _DB_PREFIX_ . 'customized_data`
-					WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . ' AND type = 0'
+                    FROM `' . _DB_PREFIX_ . 'customized_data`
+                    WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . ' AND type = 0'
                 );
 
                 $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('images', array());
@@ -746,9 +746,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             if ($this->wsObject->method == 'GET') {
                 $results = Db::getInstance()->executeS(
                     'SELECT *
-					FROM `' . _DB_PREFIX_ . 'customized_data`
-					WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
-					AND `index` = ' . (int) $this->wsObject->urlSegment[4]
+                    FROM `' . _DB_PREFIX_ . 'customized_data`
+                    WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
+                    AND `index` = ' . (int) $this->wsObject->urlSegment[4]
                 );
                 if (empty($results[0]) || empty($results[0]['value'])) {
                     throw new WebserviceException('This image does not exist on disk', array(61, 500));
@@ -764,19 +764,19 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 }
                 $results = Db::getInstance()->executeS(
                     'SELECT id_customization_field
-					FROM `' . _DB_PREFIX_ . 'customization_field`
-					WHERE id_customization_field = ' . (int) $this->wsObject->urlSegment[4] . '
-					AND type = 0'
+                    FROM `' . _DB_PREFIX_ . 'customization_field`
+                    WHERE id_customization_field = ' . (int) $this->wsObject->urlSegment[4] . '
+                    AND type = 0'
                 );
                 if (empty($results)) {
                     throw new WebserviceException('Customization field does not exist.', array(61, 500));
                 }
                 $results = Db::getInstance()->executeS(
                     'SELECT *
-					FROM `' . _DB_PREFIX_ . 'customized_data`
-					WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
-					AND `index` = ' . (int) $this->wsObject->urlSegment[4] . '
-					AND type = 0'
+                    FROM `' . _DB_PREFIX_ . 'customized_data`
+                    WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
+                    AND `index` = ' . (int) $this->wsObject->urlSegment[4] . '
+                    AND type = 0'
                 );
                 if (!empty($results)) { // customization field exists and has no value
                     throw new WebserviceException('Customization field already have a value, please use PUT method.', array(61, 500));
@@ -786,9 +786,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             }
             $results = Db::getInstance()->executeS(
                 'SELECT *
-				FROM `' . _DB_PREFIX_ . 'customized_data`
-				WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
-				AND `index` = ' . (int) $this->wsObject->urlSegment[4]
+                FROM `' . _DB_PREFIX_ . 'customized_data`
+                WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
+                AND `index` = ' . (int) $this->wsObject->urlSegment[4]
             );
             if (empty($results[0]) || empty($results[0]['value'])) {
                 throw new WebserviceException('This image does not exist on disk', array(61, 500));
@@ -1209,7 +1209,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);
 
                         $query = 'INSERT INTO `' . _DB_PREFIX_ . 'customized_data` (`id_customization`, `type`, `index`, `value`)
-							VALUES (' . (int) $this->wsObject->urlSegment[3] . ', 0, ' . (int) $this->wsObject->urlSegment[4] . ', \'' . $filename . '\')';
+                            VALUES (' . (int) $this->wsObject->urlSegment[3] . ', 0, ' . (int) $this->wsObject->urlSegment[4] . ', \'' . $filename . '\')';
 
                         if (!Db::getInstance()->execute($query)) {
                             return false;

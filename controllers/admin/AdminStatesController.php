@@ -53,8 +53,8 @@ class AdminStatesControllerCore extends AdminController
 
         $this->_select = 'z.`name` AS zone, cl.`name` AS country';
         $this->_join = '
-		LEFT JOIN `' . _DB_PREFIX_ . 'zone` z ON (z.`id_zone` = a.`id_zone`)
-		LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.id_lang = ' . (int) $this->context->language->id . ')';
+        LEFT JOIN `' . _DB_PREFIX_ . 'zone` z ON (z.`id_zone` = a.`id_zone`)
+        LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.id_lang = ' . (int) $this->context->language->id . ')';
         $this->_use_found_rows = false;
 
         $countries_array = $zones_array = array();
@@ -259,11 +259,11 @@ class AdminStatesControllerCore extends AdminController
     protected function displayAjaxStates()
     {
         $states = Db::getInstance()->executeS('
-		SELECT s.id_state, s.name
-		FROM ' . _DB_PREFIX_ . 'state s
-		LEFT JOIN ' . _DB_PREFIX_ . 'country c ON (s.`id_country` = c.`id_country`)
-		WHERE s.id_country = ' . (int) (Tools::getValue('id_country')) . ' AND s.active = 1 AND c.`contains_states` = 1
-		ORDER BY s.`name` ASC');
+        SELECT s.id_state, s.name
+        FROM ' . _DB_PREFIX_ . 'state s
+        LEFT JOIN ' . _DB_PREFIX_ . 'country c ON (s.`id_country` = c.`id_country`)
+        WHERE s.id_country = ' . (int) (Tools::getValue('id_country')) . ' AND s.active = 1 AND c.`contains_states` = 1
+        ORDER BY s.`name` ASC');
 
         if (is_array($states) && !empty($states)) {
             $list = '';

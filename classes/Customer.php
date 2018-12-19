@@ -832,10 +832,10 @@ class CustomerCore extends ObjectModel
         AND o.valid = 1');
 
         $result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT c.`date_add` AS last_visit
-		FROM `' . _DB_PREFIX_ . 'connections` c
-      	LEFT JOIN `' . _DB_PREFIX_ . 'guest` g USING (id_guest)
-		WHERE g.`id_customer` = ' . (int) $this->id . ' ORDER BY c.`date_add` DESC ');
+        SELECT c.`date_add` AS last_visit
+        FROM `' . _DB_PREFIX_ . 'connections` c
+          LEFT JOIN `' . _DB_PREFIX_ . 'guest` g USING (id_guest)
+        WHERE g.`id_customer` = ' . (int) $this->id . ' ORDER BY c.`date_add` DESC ');
 
         $result3 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
         SELECT (YEAR(CURRENT_DATE)-YEAR(c.`birthday`)) - (RIGHT(CURRENT_DATE, 5)<RIGHT(c.`birthday`, 5)) AS age
@@ -881,14 +881,14 @@ class CustomerCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-    		SELECT c.id_connections, c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
-    		FROM `' . _DB_PREFIX_ . 'guest` g
-    		LEFT JOIN `' . _DB_PREFIX_ . 'connections` c ON c.id_guest = g.id_guest
-    		LEFT JOIN `' . _DB_PREFIX_ . 'connections_page` cp ON c.id_connections = cp.id_connections
-    		WHERE g.`id_customer` = ' . (int) $this->id . '
-    		GROUP BY c.`id_connections`
-    		ORDER BY c.date_add DESC
-    		LIMIT 10'
+            SELECT c.id_connections, c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
+            FROM `' . _DB_PREFIX_ . 'guest` g
+            LEFT JOIN `' . _DB_PREFIX_ . 'connections` c ON c.id_guest = g.id_guest
+            LEFT JOIN `' . _DB_PREFIX_ . 'connections_page` cp ON c.id_connections = cp.id_connections
+            WHERE g.`id_customer` = ' . (int) $this->id . '
+            GROUP BY c.`id_connections`
+            ORDER BY c.date_add DESC
+            LIMIT 10'
         );
     }
 

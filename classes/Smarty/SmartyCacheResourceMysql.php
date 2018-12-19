@@ -82,13 +82,13 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
     protected function save($id, $name, $cache_id, $compile_id, $exp_time, $content)
     {
         Db::getInstance()->execute('
-		REPLACE INTO ' . _DB_PREFIX_ . 'smarty_cache (id_smarty_cache, name, cache_id, content)
-		VALUES (
-			"' . pSQL($id, true) . '",
-			"' . pSQL(sha1($name)) . '",
-			"' . pSQL($cache_id, true) . '",
-			"' . pSQL($content, true) . '"
-		)');
+        REPLACE INTO ' . _DB_PREFIX_ . 'smarty_cache (id_smarty_cache, name, cache_id, content)
+        VALUES (
+            "' . pSQL($id, true) . '",
+            "' . pSQL(sha1($name)) . '",
+            "' . pSQL($cache_id, true) . '",
+            "' . pSQL($content, true) . '"
+        )');
 
         return (bool) Db::getInstance()->Affected_Rows();
     }

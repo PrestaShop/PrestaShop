@@ -103,8 +103,8 @@ class Badge extends ObjectModel
         $query->select('b.`id_badge`');
         $query->from('badge', 'b');
         $query->join('
-			LEFT JOIN `'._DB_PREFIX_.'condition_badge` cb ON cb.`id_badge` = b.`id_badge` 
-			LEFT JOIN `'._DB_PREFIX_.'condition` c ON c.`id_condition` = cb.`id_condition` AND c.`validated` = 1');
+            LEFT JOIN `'._DB_PREFIX_.'condition_badge` cb ON cb.`id_badge` = b.`id_badge` 
+            LEFT JOIN `'._DB_PREFIX_.'condition` c ON c.`id_condition` = cb.`id_condition` AND c.`validated` = 1');
         $query->where('b.validated = 0');
         $query->groupBy('b.`id_badge`');
         $query->having('count(*) = SUM(c.validated)');

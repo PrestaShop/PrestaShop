@@ -289,9 +289,9 @@ class CartRow
                 || ($cartQuantity = $this->cacheAdapter->retrieve($cacheId)
                                     != (int) $quantity)) {
                 $sql = 'SELECT SUM(`quantity`)
-				FROM `' . _DB_PREFIX_ . 'cart_product`
-				WHERE `id_product` = ' . (int) $productId . '
-				AND `id_cart` = ' . (int) $cart->id;
+                FROM `' . _DB_PREFIX_ . 'cart_product`
+                WHERE `id_product` = ' . (int) $productId . '
+                AND `id_cart` = ' . (int) $cart->id;
                 $cartQuantity = (int) $this->databaseAdapter->getValue($sql, _PS_USE_SQL_SLAVE_);
                 $this->cacheAdapter->store($cacheId, $cartQuantity);
             } else {

@@ -73,13 +73,13 @@ class ReferrerCore extends ObjectModel
     );
 
     protected static $_join = '(r.http_referer_like IS NULL OR r.http_referer_like = \'\' OR cs.http_referer LIKE r.http_referer_like)
-			AND (r.request_uri_like IS NULL OR r.request_uri_like = \'\' OR cs.request_uri LIKE r.request_uri_like)
-			AND (r.http_referer_like_not IS NULL OR r.http_referer_like_not = \'\' OR cs.http_referer NOT LIKE r.http_referer_like_not)
-			AND (r.request_uri_like_not IS NULL OR r.request_uri_like_not = \'\' OR cs.request_uri NOT LIKE r.request_uri_like_not)
-			AND (r.http_referer_regexp IS NULL OR r.http_referer_regexp = \'\' OR cs.http_referer REGEXP r.http_referer_regexp)
-			AND (r.request_uri_regexp IS NULL OR r.request_uri_regexp = \'\' OR cs.request_uri REGEXP r.request_uri_regexp)
-			AND (r.http_referer_regexp_not IS NULL OR r.http_referer_regexp_not = \'\' OR cs.http_referer NOT REGEXP r.http_referer_regexp_not)
-			AND (r.request_uri_regexp_not IS NULL OR r.request_uri_regexp_not = \'\' OR cs.request_uri NOT REGEXP r.request_uri_regexp_not)';
+            AND (r.request_uri_like IS NULL OR r.request_uri_like = \'\' OR cs.request_uri LIKE r.request_uri_like)
+            AND (r.http_referer_like_not IS NULL OR r.http_referer_like_not = \'\' OR cs.http_referer NOT LIKE r.http_referer_like_not)
+            AND (r.request_uri_like_not IS NULL OR r.request_uri_like_not = \'\' OR cs.request_uri NOT LIKE r.request_uri_like_not)
+            AND (r.http_referer_regexp IS NULL OR r.http_referer_regexp = \'\' OR cs.http_referer REGEXP r.http_referer_regexp)
+            AND (r.request_uri_regexp IS NULL OR r.request_uri_regexp = \'\' OR cs.request_uri REGEXP r.request_uri_regexp)
+            AND (r.http_referer_regexp_not IS NULL OR r.http_referer_regexp_not = \'\' OR cs.http_referer NOT REGEXP r.http_referer_regexp_not)
+            AND (r.request_uri_regexp_not IS NULL OR r.request_uri_regexp_not = \'\' OR cs.request_uri NOT REGEXP r.request_uri_regexp_not)';
 
     public function add($autoDate = true, $nullValues = false)
     {
@@ -104,11 +104,11 @@ class ReferrerCore extends ObjectModel
         }
 
         $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'referrer_cache (id_referrer, id_connections_source) (
-					SELECT id_referrer, id_connections_source
-					FROM ' . _DB_PREFIX_ . 'referrer r
-					LEFT JOIN ' . _DB_PREFIX_ . 'connections_source cs ON (' . self::$_join . ')
-					WHERE id_connections_source = ' . (int) $idConnectionsSource . '
-				)';
+                    SELECT id_referrer, id_connections_source
+                    FROM ' . _DB_PREFIX_ . 'referrer r
+                    LEFT JOIN ' . _DB_PREFIX_ . 'connections_source cs ON (' . self::$_join . ')
+                    WHERE id_connections_source = ' . (int) $idConnectionsSource . '
+                )';
         Db::getInstance()->execute($sql);
     }
 
@@ -122,14 +122,14 @@ class ReferrerCore extends ObjectModel
     public static function getReferrers($idCustomer)
     {
         $sql = 'SELECT DISTINCT c.date_add, r.name, s.name AS shop_name
-				FROM ' . _DB_PREFIX_ . 'guest g
-				LEFT JOIN ' . _DB_PREFIX_ . 'connections c ON c.id_guest = g.id_guest
-				LEFT JOIN ' . _DB_PREFIX_ . 'connections_source cs ON c.id_connections = cs.id_connections
-				LEFT JOIN ' . _DB_PREFIX_ . 'referrer r ON (' . self::$_join . ')
-				LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON s.id_shop = c.id_shop
-				WHERE g.id_customer = ' . (int) $idCustomer . '
-					AND r.name IS NOT NULL
-				ORDER BY c.date_add DESC';
+                FROM ' . _DB_PREFIX_ . 'guest g
+                LEFT JOIN ' . _DB_PREFIX_ . 'connections c ON c.id_guest = g.id_guest
+                LEFT JOIN ' . _DB_PREFIX_ . 'connections_source cs ON c.id_connections = cs.id_connections
+                LEFT JOIN ' . _DB_PREFIX_ . 'referrer r ON (' . self::$_join . ')
+                LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON s.id_shop = c.id_shop
+                WHERE g.id_customer = ' . (int) $idCustomer . '
+                    AND r.name IS NOT NULL
+                ORDER BY c.date_add DESC';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
@@ -147,23 +147,23 @@ class ReferrerCore extends ObjectModel
         $join = $where = '';
         if ($idProduct) {
             $join = 'LEFT JOIN `' . _DB_PREFIX_ . 'page` p ON cp.`id_page` = p.`id_page`
-					 LEFT JOIN `' . _DB_PREFIX_ . 'page_type` pt ON pt.`id_page_type` = p.`id_page_type`';
+                     LEFT JOIN `' . _DB_PREFIX_ . 'page_type` pt ON pt.`id_page_type` = p.`id_page_type`';
             $where = ' AND pt.`name` = \'product\'
-					  AND p.`id_object` = ' . (int) $idProduct;
+                      AND p.`id_object` = ' . (int) $idProduct;
         }
 
         $sql = 'SELECT COUNT(DISTINCT cs.id_connections_source) AS visits,
-			COUNT(DISTINCT cs.id_connections) as visitors,
-			COUNT(DISTINCT c.id_guest) as uniqs,
-			COUNT(DISTINCT cp.time_start) as pages
-			FROM ' . _DB_PREFIX_ . 'referrer_cache rc
-			LEFT JOIN ' . _DB_PREFIX_ . 'referrer r ON rc.id_referrer = r.id_referrer
-			LEFT JOIN ' . _DB_PREFIX_ . 'referrer_shop rs ON r.id_referrer = rs.id_referrer
-			LEFT JOIN ' . _DB_PREFIX_ . 'connections_source cs ON rc.id_connections_source = cs.id_connections_source
-			LEFT JOIN ' . _DB_PREFIX_ . 'connections c ON cs.id_connections = c.id_connections
-			LEFT JOIN ' . _DB_PREFIX_ . 'connections_page cp ON cp.id_connections = c.id_connections
-			' . $join . '
-			WHERE 1' .
+            COUNT(DISTINCT cs.id_connections) as visitors,
+            COUNT(DISTINCT c.id_guest) as uniqs,
+            COUNT(DISTINCT cp.time_start) as pages
+            FROM ' . _DB_PREFIX_ . 'referrer_cache rc
+            LEFT JOIN ' . _DB_PREFIX_ . 'referrer r ON rc.id_referrer = r.id_referrer
+            LEFT JOIN ' . _DB_PREFIX_ . 'referrer_shop rs ON r.id_referrer = rs.id_referrer
+            LEFT JOIN ' . _DB_PREFIX_ . 'connections_source cs ON rc.id_connections_source = cs.id_connections_source
+            LEFT JOIN ' . _DB_PREFIX_ . 'connections c ON cs.id_connections = c.id_connections
+            LEFT JOIN ' . _DB_PREFIX_ . 'connections_page cp ON cp.id_connections = c.id_connections
+            ' . $join . '
+            WHERE 1' .
             ((isset($employee->stats_date_from, $employee->stats_date_to)) ? ' AND cs.date_add BETWEEN \'' . pSQL($employee->stats_date_from) . ' 00:00:00\' AND \'' . pSQL($employee->stats_date_to) . ' 23:59:59\'' : '') .
             Shop::addSqlRestriction(false, 'rs') .
             Shop::addSqlRestriction(false, 'c') .
@@ -184,26 +184,26 @@ class ReferrerCore extends ObjectModel
         $join = $where = '';
         if ($idProduct) {
             $join = 'LEFT JOIN ' . _DB_PREFIX_ . 'connections_page cp ON cp.id_connections = c.id_connections
-					 LEFT JOIN `' . _DB_PREFIX_ . 'page` p ON cp.`id_page` = p.`id_page`
-					 LEFT JOIN `' . _DB_PREFIX_ . 'page_type` pt ON pt.`id_page_type` = p.`id_page_type`';
+                     LEFT JOIN `' . _DB_PREFIX_ . 'page` p ON cp.`id_page` = p.`id_page`
+                     LEFT JOIN `' . _DB_PREFIX_ . 'page_type` pt ON pt.`id_page_type` = p.`id_page_type`';
             $where = ' AND pt.`name` = \'product\'
-					  AND p.`id_object` = ' . (int) $idProduct;
+                      AND p.`id_object` = ' . (int) $idProduct;
         }
 
         $sql = 'SELECT COUNT(DISTINCT cu.id_customer) AS registrations
-				FROM ' . _DB_PREFIX_ . 'referrer_cache rc
-				LEFT JOIN ' . _DB_PREFIX_ . 'referrer_shop rs ON rc.id_referrer = rs.id_referrer
-				LEFT JOIN ' . _DB_PREFIX_ . 'connections_source cs ON rc.id_connections_source = cs.id_connections_source
-				LEFT JOIN ' . _DB_PREFIX_ . 'connections c ON cs.id_connections = c.id_connections
-				LEFT JOIN ' . _DB_PREFIX_ . 'guest g ON g.id_guest = c.id_guest
-				LEFT JOIN ' . _DB_PREFIX_ . 'customer cu ON cu.id_customer = g.id_customer
-				' . $join . '
-				WHERE cu.date_add BETWEEN ' . ModuleGraph::getDateBetween($employee) . '
-					' . Shop::addSqlRestriction(false, 'rs') . '
-					' . Shop::addSqlRestriction(false, 'c') . '
-					' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'cu') . '
-					AND cu.date_add > cs.date_add
-					AND rc.id_referrer = ' . (int) $this->id
+                FROM ' . _DB_PREFIX_ . 'referrer_cache rc
+                LEFT JOIN ' . _DB_PREFIX_ . 'referrer_shop rs ON rc.id_referrer = rs.id_referrer
+                LEFT JOIN ' . _DB_PREFIX_ . 'connections_source cs ON rc.id_connections_source = cs.id_connections_source
+                LEFT JOIN ' . _DB_PREFIX_ . 'connections c ON cs.id_connections = c.id_connections
+                LEFT JOIN ' . _DB_PREFIX_ . 'guest g ON g.id_guest = c.id_guest
+                LEFT JOIN ' . _DB_PREFIX_ . 'customer cu ON cu.id_customer = g.id_customer
+                ' . $join . '
+                WHERE cu.date_add BETWEEN ' . ModuleGraph::getDateBetween($employee) . '
+                    ' . Shop::addSqlRestriction(false, 'rs') . '
+                    ' . Shop::addSqlRestriction(false, 'c') . '
+                    ' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'cu') . '
+                    AND cu.date_add > cs.date_add
+                    AND rc.id_referrer = ' . (int) $this->id
                     . $where;
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
@@ -227,20 +227,20 @@ class ReferrerCore extends ObjectModel
         }
 
         $sql = 'SELECT oo.id_order
-				FROM ' . _DB_PREFIX_ . 'referrer_cache rc
-				LEFT JOIN ' . _DB_PREFIX_ . 'referrer_shop rs ON rc.id_referrer = rs.id_referrer
-				INNER JOIN ' . _DB_PREFIX_ . 'connections_source cs ON rc.id_connections_source = cs.id_connections_source
-				INNER JOIN ' . _DB_PREFIX_ . 'connections c ON cs.id_connections = c.id_connections
-				INNER JOIN ' . _DB_PREFIX_ . 'guest g ON g.id_guest = c.id_guest
-				LEFT JOIN ' . _DB_PREFIX_ . 'orders oo ON oo.id_customer = g.id_customer
-				' . $join . '
-				WHERE oo.invoice_date BETWEEN ' . ModuleGraph::getDateBetween($employee) . '
-					' . Shop::addSqlRestriction(false, 'rs') . '
-					' . Shop::addSqlRestriction(false, 'c') . '
-					' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'oo') . '
-					AND oo.date_add > cs.date_add
-					AND rc.id_referrer = ' . (int) $this->id . '
-					AND oo.valid = 1'
+                FROM ' . _DB_PREFIX_ . 'referrer_cache rc
+                LEFT JOIN ' . _DB_PREFIX_ . 'referrer_shop rs ON rc.id_referrer = rs.id_referrer
+                INNER JOIN ' . _DB_PREFIX_ . 'connections_source cs ON rc.id_connections_source = cs.id_connections_source
+                INNER JOIN ' . _DB_PREFIX_ . 'connections c ON cs.id_connections = c.id_connections
+                INNER JOIN ' . _DB_PREFIX_ . 'guest g ON g.id_guest = c.id_guest
+                LEFT JOIN ' . _DB_PREFIX_ . 'orders oo ON oo.id_customer = g.id_customer
+                ' . $join . '
+                WHERE oo.invoice_date BETWEEN ' . ModuleGraph::getDateBetween($employee) . '
+                    ' . Shop::addSqlRestriction(false, 'rs') . '
+                    ' . Shop::addSqlRestriction(false, 'c') . '
+                    ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'oo') . '
+                    AND oo.date_add > cs.date_add
+                    AND rc.id_referrer = ' . (int) $this->id . '
+                    AND oo.valid = 1'
                     . $where;
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -328,22 +328,22 @@ class ReferrerCore extends ObjectModel
         if (!$referrers || !is_array($referrers)) {
             Db::getInstance()->execute('TRUNCATE ' . _DB_PREFIX_ . 'referrer_cache');
             Db::getInstance()->execute('
-			INSERT INTO `' . _DB_PREFIX_ . 'referrer_cache` (`id_referrer`, `id_connections_source`) (
-				SELECT `id_referrer`, `id_connections_source`
-				FROM `' . _DB_PREFIX_ . 'referrer` r
-				LEFT JOIN `' . _DB_PREFIX_ . 'connections_source` cs ON (' . self::$_join . ')
-			)');
+            INSERT INTO `' . _DB_PREFIX_ . 'referrer_cache` (`id_referrer`, `id_connections_source`) (
+                SELECT `id_referrer`, `id_connections_source`
+                FROM `' . _DB_PREFIX_ . 'referrer` r
+                LEFT JOIN `' . _DB_PREFIX_ . 'connections_source` cs ON (' . self::$_join . ')
+            )');
         } else {
             foreach ($referrers as $row) {
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'referrer_cache` WHERE `id_referrer` = ' . (int) $row['id_referrer']);
                 Db::getInstance()->execute('
-				INSERT INTO ' . _DB_PREFIX_ . 'referrer_cache (id_referrer, id_connections_source) (
-					SELECT id_referrer, id_connections_source
-					FROM ' . _DB_PREFIX_ . 'referrer r
-					LEFT JOIN ' . _DB_PREFIX_ . 'connections_source cs ON (' . self::$_join . ')
-					WHERE id_referrer = ' . (int) $row['id_referrer'] . '
-					AND id_connections_source IS NOT NULL
-				)');
+                INSERT INTO ' . _DB_PREFIX_ . 'referrer_cache (id_referrer, id_connections_source) (
+                    SELECT id_referrer, id_connections_source
+                    FROM ' . _DB_PREFIX_ . 'referrer r
+                    LEFT JOIN ' . _DB_PREFIX_ . 'connections_source cs ON (' . self::$_join . ')
+                    WHERE id_referrer = ' . (int) $row['id_referrer'] . '
+                    AND id_connections_source IS NOT NULL
+                )');
             }
         }
     }

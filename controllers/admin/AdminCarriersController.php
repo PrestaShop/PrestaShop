@@ -596,9 +596,9 @@ class AdminCarriersControllerCore extends AdminController
         foreach ($groups as $group) {
             if (Tools::getIsset('groupBox') && in_array($group['id_group'], Tools::getValue('groupBox'))) {
                 Db::getInstance()->execute('
-					INSERT INTO ' . _DB_PREFIX_ . 'carrier_group (id_group, id_carrier)
-					VALUES(' . (int) $group['id_group'] . ',' . (int) $id_carrier . ')
-				');
+                    INSERT INTO ' . _DB_PREFIX_ . 'carrier_group (id_group, id_carrier)
+                    VALUES(' . (int) $group['id_group'] . ',' . (int) $id_carrier . ')
+                ');
             }
         }
     }

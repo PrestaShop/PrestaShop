@@ -243,7 +243,7 @@ class StockMvtWSCore extends ObjectModelCore
 
         if ($full) {
             $query .= ', s.id_product, s.id_product_attribute, s.id_warehouse, w.id_currency, w.management_type,
-					   s.ean13, s.upc, s.reference ';
+                       s.ean13, s.upc, s.reference ';
         }
 
         $old_filter = $filter;

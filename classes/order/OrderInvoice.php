@@ -316,12 +316,12 @@ class OrderInvoiceCore extends ObjectModel
     {
         // if one of the order details use the tax computation method the display will be different
         return Db::getInstance()->getValue('
-    		SELECT od.`tax_computation_method`
-    		FROM `' . _DB_PREFIX_ . 'order_detail_tax` odt
-    		LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-    		WHERE od.`id_order` = ' . (int) $this->id_order . '
-    		AND od.`id_order_invoice` = ' . (int) $this->id . '
-    		AND od.`tax_computation_method` = ' . (int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
+            SELECT od.`tax_computation_method`
+            FROM `' . _DB_PREFIX_ . 'order_detail_tax` odt
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+            WHERE od.`id_order` = ' . (int) $this->id_order . '
+            AND od.`id_order_invoice` = ' . (int) $this->id . '
+            AND od.`tax_computation_method` = ' . (int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
             || Configuration::get(
                 'PS_INVOICE_TAXES_BREAKDOWN'
         );
@@ -350,8 +350,8 @@ class OrderInvoiceCore extends ObjectModel
         $sum_composite_taxes = !$this->useOneAfterAnotherTaxComputationMethod();
 
         // $breakdown will be an array with tax rates as keys and at least the columns:
-        // 	- 'total_price_tax_excl'
-        // 	- 'total_amount'
+        //     - 'total_price_tax_excl'
+        //     - 'total_amount'
         $breakdown = array();
 
         $details = $order->getProductTaxesDetails();

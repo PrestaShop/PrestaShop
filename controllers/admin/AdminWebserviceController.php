@@ -81,9 +81,9 @@ class AdminWebserviceControllerCore extends AdminController
                     'PS_WEBSERVICE' => array('title' => $this->trans('Enable PrestaShop\'s webservice', array(), 'Admin.Advparameters.Feature'),
                         'desc' => $this->trans('Before activating the webservice, you must be sure to: ', array(), 'Admin.Advparameters.Help') .
                                             '<ol>
-													<li>' . $this->trans('Check that URL rewriting is available on this server.', array(), 'Admin.Advparameters.Help') . '</li>
-													<li>' . $this->trans('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.', array(), 'Admin.Advparameters.Help') . '</li>
-												</ol>',
+                                                    <li>' . $this->trans('Check that URL rewriting is available on this server.', array(), 'Admin.Advparameters.Help') . '</li>
+                                                    <li>' . $this->trans('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.', array(), 'Admin.Advparameters.Help') . '</li>
+                                                </ol>',
                         'cast' => 'intval',
                         'type' => 'bool', ),
                 ),

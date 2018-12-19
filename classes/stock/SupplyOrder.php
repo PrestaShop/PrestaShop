@@ -263,8 +263,8 @@ class SupplyOrderCore extends ObjectModel
         $query = new DbQuery();
 
         $query->select('
-			s.*,
-			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name_displayed');
+            s.*,
+            IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name_displayed');
 
         $query->from('supply_order_detail', 's');
 
@@ -532,9 +532,9 @@ class SupplyOrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             '
-			SELECT SUM(`quantity_expected`)
-			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
-			WHERE `id_supply_order` = ' . (int) $this->id
+            SELECT SUM(`quantity_expected`)
+            FROM `' . _DB_PREFIX_ . 'supply_order_detail`
+            WHERE `id_supply_order` = ' . (int) $this->id
         );
     }
 
@@ -542,9 +542,9 @@ class SupplyOrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             '
-			SELECT SUM(`quantity_received`)
-			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
-			WHERE `id_supply_order` = ' . (int) $this->id
+            SELECT SUM(`quantity_received`)
+            FROM `' . _DB_PREFIX_ . 'supply_order_detail`
+            WHERE `id_supply_order` = ' . (int) $this->id
         );
     }
 
@@ -552,9 +552,9 @@ class SupplyOrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             '
-			SELECT (SUM(`quantity_expected`) - SUM(`quantity_received`))
-			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
-			WHERE `id_supply_order` = ' . (int) $this->id
+            SELECT (SUM(`quantity_expected`) - SUM(`quantity_received`))
+            FROM `' . _DB_PREFIX_ . 'supply_order_detail`
+            WHERE `id_supply_order` = ' . (int) $this->id
         );
     }
 
@@ -573,8 +573,8 @@ class SupplyOrderCore extends ObjectModel
     {
         $query = new DbQuery();
         $query->select('sod.id_supply_order_detail as id, sod.id_product,
-						sod.id_product_attribute,
-					    sod.name as product_name, supplier_reference');
+                        sod.id_product_attribute,
+                        sod.name as product_name, supplier_reference');
         $query->from('supply_order_detail', 'sod');
         $query->where('id_supply_order = ' . (int) $this->id);
 

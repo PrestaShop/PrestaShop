@@ -180,7 +180,7 @@ class StockCore extends ObjectModel
         }
 
         $result = Db::getInstance()->executeS('SELECT `id_stock` FROM ' . _DB_PREFIX_ . 'stock
-			WHERE `id_warehouse` = ' . (int) $id_warehouse . ' AND `id_product` = ' . (int) $id_product . ((int) $id_product_attribute ? ' AND `id_product_attribute` = ' . $id_product_attribute : ''));
+            WHERE `id_warehouse` = ' . (int) $id_warehouse . ' AND `id_product` = ' . (int) $id_product . ((int) $id_product_attribute ? ' AND `id_product_attribute` = ' . $id_product_attribute : ''));
 
         return is_array($result) && !empty($result) ? true : false;
     }

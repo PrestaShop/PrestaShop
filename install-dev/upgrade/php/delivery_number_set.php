@@ -31,9 +31,9 @@ function delivery_number_set()
 
     // Update each order with a number
     $result = Db::getInstance()->executeS('
-	SELECT id_order
-	FROM '._DB_PREFIX_.'orders
-	ORDER BY id_order');
+    SELECT id_order
+    FROM '._DB_PREFIX_.'orders
+    ORDER BY id_order');
     foreach ($result as $row) {
         $order = new Order((int)($row['id_order']));
         $history = $order->getHistory(false);

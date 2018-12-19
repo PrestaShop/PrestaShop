@@ -35,17 +35,17 @@ function add_missing_columns_customer()
 
     $missing_fields = array(
         'id_risk' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
-			ADD `id_risk` int(10) unsigned NOT NULL DEFAULT "1"',
+            ADD `id_risk` int(10) unsigned NOT NULL DEFAULT "1"',
         'company' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `company` varchar(64)',
         'siret' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `siret` varchar(14)',
         'ape' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `ape` varchar(5)',
         'website' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `website` varchar(128)',
         'outstanding_allow_amount' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
-			ADD `outstanding_allow_amount` DECIMAL( 10,6 ) NOT NULL default "0.00"',
+            ADD `outstanding_allow_amount` DECIMAL( 10,6 ) NOT NULL default "0.00"',
         'show_public_prices' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
-			ADD `show_public_prices` tinyint(1) unsigned NOT NULL default "0"',
+            ADD `show_public_prices` tinyint(1) unsigned NOT NULL default "0"',
         'max_payment_days' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
-			ADD `max_payment_days` int(10) unsigned NOT NULL default "60"',
+            ADD `max_payment_days` int(10) unsigned NOT NULL default "60"',
     );
 
     foreach ($missing_fields as $field => $query) {

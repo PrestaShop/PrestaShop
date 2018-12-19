@@ -1434,9 +1434,9 @@ class AdminProductsControllerCore extends AdminController
 
         // Clean covers in image table
         $count_cover_image = Db::getInstance()->getValue('
-			SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'image i
-			INNER JOIN ' . _DB_PREFIX_ . 'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = ' . (int) $id_shop . ')
-			WHERE i.cover = 1 AND i.`id_product` = ' . (int) $id_product);
+            SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'image i
+            INNER JOIN ' . _DB_PREFIX_ . 'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = ' . (int) $id_shop . ')
+            WHERE i.cover = 1 AND i.`id_product` = ' . (int) $id_product);
 
         if (!$id_image) {
             $id_image = Db::getInstance()->getValue('
@@ -1451,9 +1451,9 @@ class AdminProductsControllerCore extends AdminController
 
         // Clean covers in image_shop table
         $count_cover_image_shop = Db::getInstance()->getValue('
-			SELECT COUNT(*)
-			FROM ' . _DB_PREFIX_ . 'image_shop ish
-			WHERE ish.`id_product` = ' . (int) $id_product . ' AND ish.id_shop = ' . (int) $id_shop . ' AND ish.cover = 1');
+            SELECT COUNT(*)
+            FROM ' . _DB_PREFIX_ . 'image_shop ish
+            WHERE ish.`id_product` = ' . (int) $id_product . ' AND ish.id_shop = ' . (int) $id_shop . ' AND ish.cover = 1');
 
         if ($count_cover_image_shop < 1) {
             Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'image_shop ish SET ish.cover = 1 WHERE ish.id_image = ' . (int) $id_image . ' AND ish.`id_product` = ' . (int) $id_product . ' AND ish.id_shop =  ' . (int) $id_shop . ' LIMIT 1');
@@ -1521,17 +1521,17 @@ class AdminProductsControllerCore extends AdminController
         // if deleted image was the cover, change it to the first one
         if (!Image::getCover($image->id_product)) {
             $res &= Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'image_shop` image_shop
-			SET image_shop.`cover` = 1
-			WHERE image_shop.`id_product` = ' . (int) $image->id_product . '
-			AND id_shop=' . (int) $this->context->shop->id . ' LIMIT 1');
+            UPDATE `' . _DB_PREFIX_ . 'image_shop` image_shop
+            SET image_shop.`cover` = 1
+            WHERE image_shop.`id_product` = ' . (int) $image->id_product . '
+            AND id_shop=' . (int) $this->context->shop->id . ' LIMIT 1');
         }
 
         if (!Image::getGlobalCover($image->id_product)) {
             $res &= Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'image` i
-			SET i.`cover` = 1
-			WHERE i.`id_product` = ' . (int) $image->id_product . ' LIMIT 1');
+            UPDATE `' . _DB_PREFIX_ . 'image` i
+            SET i.`cover` = 1
+            WHERE i.`id_product` = ' . (int) $image->id_product . ' LIMIT 1');
         }
 
         if (file_exists(_PS_TMP_IMG_DIR_ . 'product_' . $image->id_product . '.jpg')) {
@@ -2528,8 +2528,8 @@ class AdminProductsControllerCore extends AdminController
                                         'wholesale_price' => (float) Tools::convertPrice($price, $id_currency),
                                     );
                                     $where = '
-										a.id_product = ' . (int) $product->id . '
-										AND a.id_product_attribute = ' . (int) $attribute['id_product_attribute'];
+                                        a.id_product = ' . (int) $product->id . '
+                                        AND a.id_product_attribute = ' . (int) $attribute['id_product_attribute'];
                                     ObjectModel::updateMultishopTable('Combination', $data, $where);
                                 } else {
                                     $product->wholesale_price = (float) Tools::convertPrice($price, $id_currency); //converted in the default currency
@@ -3141,14 +3141,14 @@ class AdminProductsControllerCore extends AdminController
                 $result = false;
             } else {
                 $result = Db::getInstance()->executeS('
-					SELECT DISTINCT pl.`name`, p.`id_product`, pl.`id_shop`
-					FROM `' . _DB_PREFIX_ . 'product` p
-					LEFT JOIN `' . _DB_PREFIX_ . 'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop =' . (int) Context::getContext()->shop->id . ')
-					LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
-						ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = ' . (int) $id_lang . ')
-					WHERE pl.`name` LIKE "%' . pSQL($search) . '%" AND ps.id_product IS NULL
-					GROUP BY pl.`id_product`
-					LIMIT ' . (int) $limit);
+                    SELECT DISTINCT pl.`name`, p.`id_product`, pl.`id_shop`
+                    FROM `' . _DB_PREFIX_ . 'product` p
+                    LEFT JOIN `' . _DB_PREFIX_ . 'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop =' . (int) Context::getContext()->shop->id . ')
+                    LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
+                        ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = ' . (int) $id_lang . ')
+                    WHERE pl.`name` LIKE "%' . pSQL($search) . '%" AND ps.id_product IS NULL
+                    GROUP BY pl.`id_product`
+                    LIMIT ' . (int) $limit);
             }
             die(json_encode($result));
         }

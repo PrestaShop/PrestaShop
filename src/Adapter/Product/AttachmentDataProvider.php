@@ -43,10 +43,10 @@ class AttachmentDataProvider
     public function getAllAttachments($id_lang)
     {
         return Db::getInstance()->executeS('
-			SELECT *
-			FROM ' . _DB_PREFIX_ . 'attachment a
-			LEFT JOIN ' . _DB_PREFIX_ . 'attachment_lang al
-				ON (a.id_attachment = al.id_attachment AND al.id_lang = ' . (int) $id_lang . ')
+            SELECT *
+            FROM ' . _DB_PREFIX_ . 'attachment a
+            LEFT JOIN ' . _DB_PREFIX_ . 'attachment_lang al
+                ON (a.id_attachment = al.id_attachment AND al.id_lang = ' . (int) $id_lang . ')
         ');
     }
 }

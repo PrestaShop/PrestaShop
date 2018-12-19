@@ -149,9 +149,9 @@ class HookCore extends ObjectModel
     {
         $hooks = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-			SELECT * FROM `' . _DB_PREFIX_ . 'hook` h
-			' . ($position ? 'WHERE h.`position` = 1' : '') . '
-			ORDER BY `name`'
+            SELECT * FROM `' . _DB_PREFIX_ . 'hook` h
+            ' . ($position ? 'WHERE h.`position` = 1' : '') . '
+            ORDER BY `name`'
         );
 
         if ($only_display_hooks) {
@@ -183,12 +183,12 @@ class HookCore extends ObjectModel
             $hook_ids = array();
             $db = Db::getInstance();
             $result = $db->executeS('
-			SELECT `id_hook`, `name`
-			FROM `' . _DB_PREFIX_ . 'hook`
-			UNION
-			SELECT `id_hook`, ha.`alias` as name
-			FROM `' . _DB_PREFIX_ . 'hook_alias` ha
-			INNER JOIN `' . _DB_PREFIX_ . 'hook` h ON ha.name = h.name', false);
+            SELECT `id_hook`, `name`
+            FROM `' . _DB_PREFIX_ . 'hook`
+            UNION
+            SELECT `id_hook`, ha.`alias` as name
+            FROM `' . _DB_PREFIX_ . 'hook_alias` ha
+            INNER JOIN `' . _DB_PREFIX_ . 'hook` h ON ha.name = h.name', false);
             while ($row = $db->nextRow($result)) {
                 $hook_ids[strtolower($row['name'])] = $row['id_hook'];
             }
@@ -208,9 +208,9 @@ class HookCore extends ObjectModel
         $cache_id = 'hook_namebyid_' . $hook_id;
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->getValue('
-							SELECT `name`
-							FROM `' . _DB_PREFIX_ . 'hook`
-							WHERE `id_hook` = ' . (int) $hook_id);
+                            SELECT `name`
+                            FROM `' . _DB_PREFIX_ . 'hook`
+                            WHERE `id_hook` = ' . (int) $hook_id);
             Cache::store($cache_id, $result);
 
             return $result;
@@ -398,11 +398,11 @@ class HookCore extends ObjectModel
         $cache_id = 'hook_module_list';
         if (!Cache::isStored($cache_id)) {
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, active
-			FROM `' . _DB_PREFIX_ . 'hook_module` hm
-			STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int) Context::getContext()->shop->id . ')
-			STRAIGHT_JOIN `' . _DB_PREFIX_ . 'module` as m ON (m.id_module = hm.id_module)
-			ORDER BY hm.position');
+            SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, active
+            FROM `' . _DB_PREFIX_ . 'hook_module` hm
+            STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int) Context::getContext()->shop->id . ')
+            STRAIGHT_JOIN `' . _DB_PREFIX_ . 'module` as m ON (m.id_module = hm.id_module)
+            ORDER BY hm.position');
             $list = array();
             foreach ($results as $result) {
                 if (!isset($list[$result['id_hook']])) {

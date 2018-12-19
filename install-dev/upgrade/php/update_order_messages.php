@@ -40,9 +40,9 @@ function update_order_messages()
             while ($message = Db::getInstance()->nextRow($messages)) {
                 if (is_array($message)) {
                     Db::getInstance()->execute('
-					UPDATE `'._DB_PREFIX_.'message`
-					SET message = \''.pSQL(preg_replace('/'.$pattern.'/', '', Tools::htmlentitiesDecodeUTF8(br2nl($message['message'])))).'\'
-					WHERE id_message = '.(int)$message['id_message']);
+                    UPDATE `'._DB_PREFIX_.'message`
+                    SET message = \''.pSQL(preg_replace('/'.$pattern.'/', '', Tools::htmlentitiesDecodeUTF8(br2nl($message['message'])))).'\'
+                    WHERE id_message = '.(int)$message['id_message']);
                 }
             }
         }
@@ -58,9 +58,9 @@ function update_order_messages()
             while ($message = Db::getInstance()->nextRow($messages)) {
                 if (is_array($message)) {
                     Db::getInstance()->execute('
-					UPDATE `'._DB_PREFIX_.'customer_message`
-					SET message = \''.pSQL(preg_replace('/'.$pattern.'/', '', Tools::htmlentitiesDecodeUTF8(str_replace('&amp;', '&', $message['message'])))).'\'
-					WHERE id_customer_message = '.(int)$message['id_customer_message']);
+                    UPDATE `'._DB_PREFIX_.'customer_message`
+                    SET message = \''.pSQL(preg_replace('/'.$pattern.'/', '', Tools::htmlentitiesDecodeUTF8(str_replace('&amp;', '&', $message['message'])))).'\'
+                    WHERE id_customer_message = '.(int)$message['id_customer_message']);
                 }
             }
         }

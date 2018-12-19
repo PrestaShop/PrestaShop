@@ -48,22 +48,22 @@ class AdminOrdersControllerCore extends AdminController
         parent::__construct();
 
         $this->_select = '
-		a.id_currency,
-		a.id_order AS id_pdf,
-		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
-		osl.`name` AS `osname`,
-		os.`color`,
-		IF((SELECT so.id_order FROM `' . _DB_PREFIX_ . 'orders` so WHERE so.id_customer = a.id_customer AND so.id_order < a.id_order LIMIT 1) > 0, 0, 1) as new,
-		country_lang.name as cname,
-		IF(a.valid, 1, 0) badge_success';
+        a.id_currency,
+        a.id_order AS id_pdf,
+        CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
+        osl.`name` AS `osname`,
+        os.`color`,
+        IF((SELECT so.id_order FROM `' . _DB_PREFIX_ . 'orders` so WHERE so.id_customer = a.id_customer AND so.id_order < a.id_order LIMIT 1) > 0, 0, 1) as new,
+        country_lang.name as cname,
+        IF(a.valid, 1, 0) badge_success';
 
         $this->_join = '
-		LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (c.`id_customer` = a.`id_customer`)
-		INNER JOIN `' . _DB_PREFIX_ . 'address` address ON address.id_address = a.id_address_delivery
-		INNER JOIN `' . _DB_PREFIX_ . 'country` country ON address.id_country = country.id_country
-		INNER JOIN `' . _DB_PREFIX_ . 'country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = ' . (int) $this->context->language->id . ')
-		LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON (os.`id_order_state` = a.`current_state`)
-		LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $this->context->language->id . ')';
+        LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (c.`id_customer` = a.`id_customer`)
+        INNER JOIN `' . _DB_PREFIX_ . 'address` address ON address.id_address = a.id_address_delivery
+        INNER JOIN `' . _DB_PREFIX_ . 'country` country ON address.id_country = country.id_country
+        INNER JOIN `' . _DB_PREFIX_ . 'country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = ' . (int) $this->context->language->id . ')
+        LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON (os.`id_order_state` = a.`current_state`)
+        LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $this->context->language->id . ')';
         $this->_orderBy = 'id_order';
         $this->_orderWay = 'DESC';
         $this->_use_found_rows = true;
@@ -143,13 +143,13 @@ class AdminOrdersControllerCore extends AdminController
 
         if (Country::isCurrentlyUsed('country', true)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT DISTINCT c.id_country, cl.`name`
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			' . Shop::addSqlAssociation('orders', 'o') . '
-			INNER JOIN `' . _DB_PREFIX_ . 'address` a ON a.id_address = o.id_address_delivery
-			INNER JOIN `' . _DB_PREFIX_ . 'country` c ON a.id_country = c.id_country
-			INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')
-			ORDER BY cl.name ASC');
+            SELECT DISTINCT c.id_country, cl.`name`
+            FROM `' . _DB_PREFIX_ . 'orders` o
+            ' . Shop::addSqlAssociation('orders', 'o') . '
+            INNER JOIN `' . _DB_PREFIX_ . 'address` a ON a.id_address = o.id_address_delivery
+            INNER JOIN `' . _DB_PREFIX_ . 'country` c ON a.id_country = c.id_country
+            INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')
+            ORDER BY cl.name ASC');
 
             $country_array = array();
             foreach ($result as $row) {

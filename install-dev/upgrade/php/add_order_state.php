@@ -42,12 +42,12 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
     }
 
     $res &= Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'order_state` (`invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`)
-		VALUES ('.(int)$invoice.', '.(int)$send_email.', "'.$color.'", '.(int)$unremovable.', '.(int)$logable.', '.(int)$delivery.')');
+        INSERT INTO `'._DB_PREFIX_.'order_state` (`invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`)
+        VALUES ('.(int)$invoice.', '.(int)$send_email.', "'.$color.'", '.(int)$unremovable.', '.(int)$logable.', '.(int)$delivery.')');
 
     $id_order_state = Db::getInstance()->getValue('
-		SELECT MAX(`id_order_state`)
-		FROM `'._DB_PREFIX_.'order_state`');
+        SELECT MAX(`id_order_state`)
+        FROM `'._DB_PREFIX_.'order_state`');
 
     $languages = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'lang`');
     foreach ($languages as $lang) {
@@ -58,9 +58,9 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
         $template = isset($template_lang[$iso_code]) ? $template_lang[$iso_code] : '';
 
         $res &= Db::getInstance()->execute('
-		INSERT IGNORE INTO `'._DB_PREFIX_.'order_state_lang` (`id_lang`, `id_order_state`, `name`, `template`)
-		VALUES ('.(int)$lang['id_lang'].', '.(int)$id_order_state.', "'. $name .'", "'. $template .'")
-		');
+        INSERT IGNORE INTO `'._DB_PREFIX_.'order_state_lang` (`id_lang`, `id_order_state`, `name`, `template`)
+        VALUES ('.(int)$lang['id_lang'].', '.(int)$id_order_state.', "'. $name .'", "'. $template .'")
+        ');
     }
 
     $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \''.pSQL($conf_name).'\'');

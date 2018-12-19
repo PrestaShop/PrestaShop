@@ -70,8 +70,8 @@ function migrate_orders()
 
     // this was done like that previously
     $wrapping_tax_rate = 1 + ((float)Db::getInstance()->getValue('SELECT value
-		FROM `'._DB_PREFIX_.'configuration`
-		WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100);
+        FROM `'._DB_PREFIX_.'configuration`
+        WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100);
 
     $step = 3000;
     $count_orders = Db::getInstance()->getValue('SELECT count(id_order) FROM '._DB_PREFIX_.'orders');
@@ -90,9 +90,9 @@ function migrate_orders()
             $default_group_id = mo_getCustomerDefaultGroup((int)$order['id_customer']);
             $price_display_method = mo_getPriceDisplayMethod((int)$default_group_id);
             $order_details_list = Db::getInstance()->query('
-			SELECT od.*
-			FROM `'._DB_PREFIX_.'order_detail` od
-			WHERE od.`id_order` = '.(int)$order['id_order']);
+            SELECT od.*
+            FROM `'._DB_PREFIX_.'order_detail` od
+            WHERE od.`id_order` = '.(int)$order['id_order']);
 
             while ($order_details = Db::getInstance()->nextRow($order_details_list)) {
                 // we don't want to erase order_details data in order to create the insert query
@@ -222,8 +222,8 @@ function mo_ps_round($val)
     static $ps_price_round_mode;
     if (empty($ps_price_round_mode)) {
         $ps_price_round_mode = Db::getInstance()->getValue('SELECT value
-			FROM `'._DB_PREFIX_.'configuration`
-			WHERE name = "PS_PRICE_ROUND_MODE"');
+            FROM `'._DB_PREFIX_.'configuration`
+            WHERE name = "PS_PRICE_ROUND_MODE"');
     }
 
     switch ($ps_price_round_mode) {
@@ -240,9 +240,9 @@ function mo_duplicateTables()
 {
     $res = true;
     $res &= Db::getInstance()->execute('CREATE TABLE
-		`'._DB_PREFIX_.'orders_2` LIKE `'._DB_PREFIX_.'orders`');
+        `'._DB_PREFIX_.'orders_2` LIKE `'._DB_PREFIX_.'orders`');
     $res &= Db::getInstance()->execute('CREATE TABLE
-		`'._DB_PREFIX_.'order_detail_2` LIKE `'._DB_PREFIX_.'order_detail`');
+        `'._DB_PREFIX_.'order_detail_2` LIKE `'._DB_PREFIX_.'order_detail`');
 
     return $res;
 }
@@ -275,9 +275,9 @@ function mo_getPriceDisplayMethod($id_group)
 
     if (!isset($cache[$id_group])) {
         $cache[$id_group] = Db::getInstance()->getValue('
-			SELECT `price_display_method`
-			FROM `'._DB_PREFIX_.'group`
-			WHERE `id_group` = '.(int)$id_group);
+            SELECT `price_display_method`
+            FROM `'._DB_PREFIX_.'group`
+            WHERE `id_group` = '.(int)$id_group);
     }
 
     return $cache[$id_group];

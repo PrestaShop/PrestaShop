@@ -38,13 +38,13 @@ function p15013_add_missing_columns()
 
         if (!in_array('id_group_shop', $list_fields)) {
             if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'statssearch`
-				ADD `id_group_shop` INT(10) NOT NULL default "1" AFTER id_statssearch')) {
+                ADD `id_group_shop` INT(10) NOT NULL default "1" AFTER id_statssearch')) {
                 $errors[] = $db->getMsgError();
             }
         }
         if (!in_array('id_shop', $list_fields)) {
             if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'statssearch`
-				ADD `id_shop` INT(10) NOT NULL default "1" AFTER id_statssearch')) {
+                ADD `id_shop` INT(10) NOT NULL default "1" AFTER id_statssearch')) {
                 $errors[] = $db->getMsgError();
             }
         }

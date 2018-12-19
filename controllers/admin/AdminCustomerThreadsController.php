@@ -245,26 +245,26 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = '
-			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages, cm.private,
-			(
-				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
-				FROM `' . _DB_PREFIX_ . 'customer_message` cm2
-				INNER JOIN ' . _DB_PREFIX_ . 'employee e
-					ON e.`id_employee` = cm2.`id_employee`
-				WHERE cm2.id_employee > 0
-					AND cm2.`id_customer_thread` = a.`id_customer_thread`
-				ORDER BY cm2.`date_add` DESC LIMIT 1
-			) as employee';
+            CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages, cm.private,
+            (
+                SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
+                FROM `' . _DB_PREFIX_ . 'customer_message` cm2
+                INNER JOIN ' . _DB_PREFIX_ . 'employee e
+                    ON e.`id_employee` = cm2.`id_employee`
+                WHERE cm2.id_employee > 0
+                    AND cm2.`id_customer_thread` = a.`id_customer_thread`
+                ORDER BY cm2.`date_add` DESC LIMIT 1
+            ) as employee';
 
         $this->_join = '
-			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
-				ON c.`id_customer` = a.`id_customer`
-			LEFT JOIN `' . _DB_PREFIX_ . 'customer_message` cm
-				ON cm.`id_customer_thread` = a.`id_customer_thread`
-			LEFT JOIN `' . _DB_PREFIX_ . 'lang` l
-				ON l.`id_lang` = a.`id_lang`
-			LEFT JOIN `' . _DB_PREFIX_ . 'contact_lang` cl
-				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')';
+            LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
+                ON c.`id_customer` = a.`id_customer`
+            LEFT JOIN `' . _DB_PREFIX_ . 'customer_message` cm
+                ON cm.`id_customer_thread` = a.`id_customer_thread`
+            LEFT JOIN `' . _DB_PREFIX_ . 'lang` l
+                ON l.`id_lang` = a.`id_lang`
+            LEFT JOIN `' . _DB_PREFIX_ . 'contact_lang` cl
+                ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')';
 
         if ($id_order = Tools::getValue('id_order')) {
             $this->_where .= ' AND id_order = ' . (int) $id_order;
@@ -313,9 +313,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
             if (($id_contact = (int) Tools::getValue('id_contact'))) {
                 $result = Db::getInstance()->execute(
                     '
-					UPDATE ' . _DB_PREFIX_ . 'customer_thread
-					SET id_contact = ' . $id_contact . '
-					WHERE id_customer_thread = ' . $id_customer_thread
+                    UPDATE ' . _DB_PREFIX_ . 'customer_thread
+                    SET id_contact = ' . $id_contact . '
+                    WHERE id_customer_thread = ' . $id_customer_thread
                 );
                 if ($result) {
                     $this->object->id_contact = $id_contact;
@@ -324,30 +324,30 @@ class AdminCustomerThreadsControllerCore extends AdminController
             if ($id_status = (int) Tools::getValue('setstatus')) {
                 $status_array = array(1 => 'open', 2 => 'closed', 3 => 'pending1', 4 => 'pending2');
                 $result = Db::getInstance()->execute('
-					UPDATE ' . _DB_PREFIX_ . 'customer_thread
-					SET status = "' . $status_array[$id_status] . '"
-					WHERE id_customer_thread = ' . $id_customer_thread . ' LIMIT 1
-				');
+                    UPDATE ' . _DB_PREFIX_ . 'customer_thread
+                    SET status = "' . $status_array[$id_status] . '"
+                    WHERE id_customer_thread = ' . $id_customer_thread . ' LIMIT 1
+                ');
                 if ($result) {
                     $this->object->status = $status_array[$id_status];
                 }
             }
             if (isset($_POST['id_employee_forward'])) {
                 $messages = Db::getInstance()->getRow('
-					SELECT ct.*, cm.*, cl.name subject, CONCAT(e.firstname, \' \', e.lastname) employee_name,
-						CONCAT(c.firstname, \' \', c.lastname) customer_name, c.firstname
-					FROM ' . _DB_PREFIX_ . 'customer_thread ct
-					LEFT JOIN ' . _DB_PREFIX_ . 'customer_message cm
-						ON (ct.id_customer_thread = cm.id_customer_thread)
-					LEFT JOIN ' . _DB_PREFIX_ . 'contact_lang cl
-						ON (cl.id_contact = ct.id_contact AND cl.id_lang = ' . (int) $this->context->language->id . ')
-					LEFT OUTER JOIN ' . _DB_PREFIX_ . 'employee e
-						ON e.id_employee = cm.id_employee
-					LEFT OUTER JOIN ' . _DB_PREFIX_ . 'customer c
-						ON (c.email = ct.email)
-					WHERE ct.id_customer_thread = ' . (int) Tools::getValue('id_customer_thread') . '
-					ORDER BY cm.date_add DESC
-				');
+                    SELECT ct.*, cm.*, cl.name subject, CONCAT(e.firstname, \' \', e.lastname) employee_name,
+                        CONCAT(c.firstname, \' \', c.lastname) customer_name, c.firstname
+                    FROM ' . _DB_PREFIX_ . 'customer_thread ct
+                    LEFT JOIN ' . _DB_PREFIX_ . 'customer_message cm
+                        ON (ct.id_customer_thread = cm.id_customer_thread)
+                    LEFT JOIN ' . _DB_PREFIX_ . 'contact_lang cl
+                        ON (cl.id_contact = ct.id_contact AND cl.id_lang = ' . (int) $this->context->language->id . ')
+                    LEFT OUTER JOIN ' . _DB_PREFIX_ . 'employee e
+                        ON e.id_employee = cm.id_employee
+                    LEFT OUTER JOIN ' . _DB_PREFIX_ . 'customer c
+                        ON (c.email = ct.email)
+                    WHERE ct.id_customer_thread = ' . (int) Tools::getValue('id_customer_thread') . '
+                    ORDER BY cm.date_add DESC
+                ');
                 $output = $this->displayMessage($messages, true, (int) Tools::getValue('id_employee_forward'));
                 $cm = new CustomerMessage();
                 $cm->id_employee = (int) $this->context->employee->id;
@@ -1078,8 +1078,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $md5 = md5($overview->date . $overview->from . $subject . $overview->msgno);
             $exist = Db::getInstance()->getValue(
                 'SELECT `md5_header`
-						 FROM `' . _DB_PREFIX_ . 'customer_message_sync_imap`
-						 WHERE `md5_header` = \'' . pSQL($md5) . '\''
+                         FROM `' . _DB_PREFIX_ . 'customer_message_sync_imap`
+                         WHERE `md5_header` = \'' . pSQL($md5) . '\''
             );
             if ($exist) {
                 if (Configuration::get('PS_SAV_IMAP_DELETE_MSG')) {

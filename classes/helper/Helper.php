@@ -205,14 +205,14 @@ class HelperCore
             var inputName = \'' . addcslashes($input_name, '\'') . '\';' . "\n";
         if (count($selected_cat) > 0) {
             if (isset($selected_cat[0])) {
-                $html .= '			var selectedCat = "' . implode(',', array_map('intval', $selected_cat)) . '";' . "\n";
+                $html .= '            var selectedCat = "' . implode(',', array_map('intval', $selected_cat)) . '";' . "\n";
             } else {
-                $html .= '			var selectedCat = "' . implode(',', array_map('intval', array_keys($selected_cat))) . '";' . "\n";
+                $html .= '            var selectedCat = "' . implode(',', array_map('intval', array_keys($selected_cat))) . '";' . "\n";
             }
         } else {
-            $html .= '			var selectedCat = \'\';' . "\n";
+            $html .= '            var selectedCat = \'\';' . "\n";
         }
-        $html .= '			var selectedLabel = \'' . $translations['selected'] . '\';
+        $html .= '            var selectedLabel = \'' . $translations['selected'] . '\';
             var home = \'' . addcslashes($root['name'], '\'') . '\';
             var use_radio = ' . (int) $use_radio . ';';
         $html .= '</script>';

@@ -38,11 +38,11 @@ if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers' . (int) Ta
         $json_array = array();
         $result = Db::getInstance()->executeS(
             '
-			SELECT p.id_product, pl.name
-			FROM ' . _DB_PREFIX_ . 'product p
-			LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl
-				ON (p.id_product = pl.id_product AND pl.id_lang = ' . (int) Tools::getValue('id_lang') . ')
-			' . (Tools::getValue('filter') != 'undefined' ? 'WHERE name LIKE "%' . pSQL(Tools::getValue('filter')) . '%"' : '')
+            SELECT p.id_product, pl.name
+            FROM ' . _DB_PREFIX_ . 'product p
+            LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl
+                ON (p.id_product = pl.id_product AND pl.id_lang = ' . (int) Tools::getValue('id_lang') . ')
+            ' . (Tools::getValue('filter') != 'undefined' ? 'WHERE name LIKE "%' . pSQL(Tools::getValue('filter')) . '%"' : '')
         );
 
         foreach ($result as $row) {
@@ -187,12 +187,12 @@ class AdminReferrersControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = 'SUM(sa.cache_visitors) AS cache_visitors, SUM(sa.cache_visits) AS cache_visits, SUM(sa.cache_pages) AS cache_pages,
-							SUM(sa.cache_registrations) AS cache_registrations, SUM(sa.cache_orders) AS cache_orders, SUM(sa.cache_sales) AS cache_sales,
-							IF(sa.cache_orders > 0, ROUND(sa.cache_sales/sa.cache_orders, 2), 0) as cart, (sa.cache_visits*click_fee) as fee0,
-							(sa.cache_orders*base_fee) as fee1, (sa.cache_sales*percent_fee/100) as fee2';
+                            SUM(sa.cache_registrations) AS cache_registrations, SUM(sa.cache_orders) AS cache_orders, SUM(sa.cache_sales) AS cache_sales,
+                            IF(sa.cache_orders > 0, ROUND(sa.cache_sales/sa.cache_orders, 2), 0) as cart, (sa.cache_visits*click_fee) as fee0,
+                            (sa.cache_orders*base_fee) as fee1, (sa.cache_sales*percent_fee/100) as fee2';
         $this->_join = '
-			LEFT JOIN `' . _DB_PREFIX_ . 'referrer_shop` sa
-				ON (sa.`' . bqSQL($this->identifier) . '` = a.`' . bqSQL($this->identifier) . '` AND sa.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . '))';
+            LEFT JOIN `' . _DB_PREFIX_ . 'referrer_shop` sa
+                ON (sa.`' . bqSQL($this->identifier) . '` = a.`' . bqSQL($this->identifier) . '` AND sa.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . '))';
 
         $this->_group = 'GROUP BY sa.id_referrer';
 

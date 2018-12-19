@@ -92,11 +92,11 @@ class AdminGroupsControllerCore extends AdminController
         $this->addRowActionSkipList('delete', $groups_to_keep);
 
         $this->_select .= '(SELECT COUNT(jcg.`id_customer`)
-		FROM `' . _DB_PREFIX_ . 'customer_group` jcg
-		LEFT JOIN `' . _DB_PREFIX_ . 'customer` jc ON (jc.`id_customer` = jcg.`id_customer`)
-		WHERE jc.`deleted` != 1
-		' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
-		AND jcg.`id_group` = a.`id_group`) AS nb';
+        FROM `' . _DB_PREFIX_ . 'customer_group` jcg
+        LEFT JOIN `' . _DB_PREFIX_ . 'customer` jc ON (jc.`id_customer` = jcg.`id_customer`)
+        WHERE jc.`deleted` != 1
+        ' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
+        AND jcg.`id_group` = a.`id_group`) AS nb';
         $this->_use_found_rows = false;
 
         $groups = Group::getGroups(Context::getContext()->language->id, true);
@@ -558,13 +558,13 @@ class AdminGroupsControllerCore extends AdminController
         $category_reduction = Tools::getValue('category_reduction');
         Db::getInstance()->execute(
             '
-			DELETE FROM `' . _DB_PREFIX_ . 'group_reduction`
-			WHERE `id_group` = ' . (int) Tools::getValue('id_group')
+            DELETE FROM `' . _DB_PREFIX_ . 'group_reduction`
+            WHERE `id_group` = ' . (int) Tools::getValue('id_group')
         );
         Db::getInstance()->execute(
             '
-			DELETE FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache`
-			WHERE `id_group` = ' . (int) Tools::getValue('id_group')
+            DELETE FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache`
+            WHERE `id_group` = ' . (int) Tools::getValue('id_group')
         );
         if (is_array($category_reduction) && count($category_reduction)) {
             if (!Configuration::getGlobalValue('PS_GROUP_FEATURE_ACTIVE')) {

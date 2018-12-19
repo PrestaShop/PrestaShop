@@ -102,7 +102,7 @@ class AdminCmsControllerCore extends AdminController
         $this->tpl_list_vars['icon'] = 'icon-folder-close';
         $this->tpl_list_vars['title'] = $this->trans('Pages in category "%name%"', array('%name%' => $this->_category->name[Context::getContext()->employee->id_lang]), 'Admin.Design.Feature');
         $this->_join = '
-		LEFT JOIN `' . _DB_PREFIX_ . 'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
+        LEFT JOIN `' . _DB_PREFIX_ . 'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
         $this->_select = 'a.position ';
         $this->_where = ' AND c.id_cms_category = ' . (int) $this->_category->id;
     }

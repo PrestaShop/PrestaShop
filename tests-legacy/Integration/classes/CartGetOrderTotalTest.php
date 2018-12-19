@@ -496,7 +496,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      * This test checks that if PS_ATCP_SHIPWRAP is set to true then:
      * - the shipping cost of the carrier is understood as tax included instead of tax excluded
      * - the tax excluded shipping cost is deduced from the tax included shipping cost
-     * 	 by removing the average tax rate of the cart
+     *      by removing the average tax rate of the cart
      */
     public function testAverageTaxOfCartProductsShippingTax()
     {

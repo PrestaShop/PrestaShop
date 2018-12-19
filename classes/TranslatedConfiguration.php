@@ -65,10 +65,10 @@ class TranslatedConfigurationCore extends Configuration
         // Check if the id configuration is set in the configuration_lang table.
         // Otherwise configuration is not set as translated configuration.
         if ($id !== null) {
-            $idTranslated = Db::getInstance()->executeS('				SELECT `' . bqSQL($this->def['primary']) . '`
-				FROM `' . bqSQL(_DB_PREFIX_ . $this->def['table']) . '_lang`
-				WHERE `' . bqSQL($this->def['primary']) . '`=' . (int) $id . ' LIMIT 0,1
-			');
+            $idTranslated = Db::getInstance()->executeS('                SELECT `' . bqSQL($this->def['primary']) . '`
+                FROM `' . bqSQL(_DB_PREFIX_ . $this->def['table']) . '_lang`
+                WHERE `' . bqSQL($this->def['primary']) . '`=' . (int) $id . ' LIMIT 0,1
+            ');
 
             if (empty($idTranslated)) {
                 $id = null;
@@ -106,9 +106,9 @@ class TranslatedConfigurationCore extends Configuration
         Configuration::updateValue($this->name, $this->value, $ishtml);
 
         $lastInsert = Db::getInstance()->getRow('
-			SELECT `id_configuration` AS id
-			FROM `' . _DB_PREFIX_ . 'configuration`
-			WHERE `name` = \'' . pSQL($this->name) . '\'');
+            SELECT `id_configuration` AS id
+            FROM `' . _DB_PREFIX_ . 'configuration`
+            WHERE `name` = \'' . pSQL($this->name) . '\'');
         if ($lastInsert) {
             $this->id = $lastInsert['id'];
         }
@@ -127,15 +127,15 @@ class TranslatedConfigurationCore extends Configuration
     public function getWebserviceObjectList($sqlJoin, $sqlFilter, $sqlSort, $sqlLimit)
     {
         $query = '
-		SELECT DISTINCT main.`' . $this->def['primary'] . '` FROM `' . _DB_PREFIX_ . $this->def['table'] . '` main
-		' . $sqlJoin . '
-		WHERE id_configuration IN
-		(	SELECT id_configuration
-			FROM ' . _DB_PREFIX_ . $this->def['table'] . '_lang
-		) ' . $sqlFilter . '
-		' . ($sqlSort != '' ? $sqlSort : '') . '
-		' . ($sqlLimit != '' ? $sqlLimit : '') . '
-		';
+        SELECT DISTINCT main.`' . $this->def['primary'] . '` FROM `' . _DB_PREFIX_ . $this->def['table'] . '` main
+        ' . $sqlJoin . '
+        WHERE id_configuration IN
+        (    SELECT id_configuration
+            FROM ' . _DB_PREFIX_ . $this->def['table'] . '_lang
+        ) ' . $sqlFilter . '
+        ' . ($sqlSort != '' ? $sqlSort : '') . '
+        ' . ($sqlLimit != '' ? $sqlLimit : '') . '
+        ';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }

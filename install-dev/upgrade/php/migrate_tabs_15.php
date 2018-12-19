@@ -92,11 +92,11 @@ function migrate_tabs_15()
         $id_parent = get_tab_id($from);
         if ($id_parent) {
             Db::getInstance()->execute('
-				UPDATE '._DB_PREFIX_.'tab
-				SET id_parent = '.$parent[$to].'
-				WHERE id_parent = '.$id_parent.'
-					OR id_tab = '.$id_parent.'
-			');
+                UPDATE '._DB_PREFIX_.'tab
+                SET id_parent = '.$parent[$to].'
+                WHERE id_parent = '.$id_parent.'
+                    OR id_tab = '.$id_parent.'
+            ');
         }
     }
 
@@ -133,19 +133,19 @@ function migrate_tabs_15()
         $id_tab = get_tab_id($from);
         if ($id_tab) {
             Db::getInstance()->execute('
-				UPDATE '._DB_PREFIX_.'tab
-				SET id_parent = '.$parent[$to].'
-				WHERE id_tab = '.$id_tab.'
-			');
+                UPDATE '._DB_PREFIX_.'tab
+                SET id_parent = '.$parent[$to].'
+                WHERE id_tab = '.$id_tab.'
+            ');
         }
     }
 
     // ===== Remove AdminThemes from Modules parent =====
     $id_tab_theme = Db::getInstance()->getValue(
         'SELECT id_tab FROM '._DB_PREFIX_.'tab
-		WHERE class_name = \'AdminThemes\'
-			AND id_parent = '.$parent['AdminParentModules'].'
-	'
+        WHERE class_name = \'AdminThemes\'
+            AND id_parent = '.$parent['AdminParentModules'].'
+    '
     );
 
     if ($id_tab_theme) {
@@ -165,8 +165,8 @@ function migrate_tabs_15()
     }
 
     $sql = 'SELECT id_tab FROM '._DB_PREFIX_.'tab
-			WHERE id_tab NOT IN ('.implode(', ', $parent).')
-				AND id_parent = 0';
+            WHERE id_tab NOT IN ('.implode(', ', $parent).')
+                AND id_parent = 0';
 
     $id_tabs = Db::getInstance()->executeS($sql);
     if (is_array($id_tabs) && count($id_tabs)) {

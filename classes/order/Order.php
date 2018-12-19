@@ -1777,11 +1777,11 @@ class OrderCore extends ObjectModel
         // if one of the order details use the tax computation method the display will be different
         return Db::getInstance()->getValue(
             '
-    		SELECT od.`tax_computation_method`
-    		FROM `' . _DB_PREFIX_ . 'order_detail_tax` odt
-    		LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-    		WHERE od.`id_order` = ' . (int) $this->id . '
-    		AND od.`tax_computation_method` = ' . (int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD
+            SELECT od.`tax_computation_method`
+            FROM `' . _DB_PREFIX_ . 'order_detail_tax` odt
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+            WHERE od.`id_order` = ' . (int) $this->id . '
+            AND od.`tax_computation_method` = ' . (int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD
         );
     }
 
@@ -2170,9 +2170,9 @@ class OrderCore extends ObjectModel
     {
         return Db::getInstance()->executeS(
             '
-    		SELECT `ecotax_tax_rate`, SUM(`ecotax`) as `ecotax_tax_excl`, SUM(`ecotax`) as `ecotax_tax_incl`
-    		FROM `' . _DB_PREFIX_ . 'order_detail`
-    		WHERE `id_order` = ' . (int) $this->id
+            SELECT `ecotax_tax_rate`, SUM(`ecotax`) as `ecotax_tax_excl`, SUM(`ecotax`) as `ecotax_tax_incl`
+            FROM `' . _DB_PREFIX_ . 'order_detail`
+            WHERE `id_order` = ' . (int) $this->id
         );
     }
 

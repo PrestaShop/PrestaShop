@@ -125,8 +125,8 @@ class gamification extends Module
             $tab->id_parent = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)
                                 ->getValue(
                                     'SELECT MIN(id_tab)
-											FROM `'._DB_PREFIX_.'tab`
-											WHERE `class_name` = "'.pSQL('ShopParameters').'"'
+                                            FROM `'._DB_PREFIX_.'tab`
+                                            WHERE `class_name` = "'.pSQL('ShopParameters').'"'
                                         );
         } else {
             // AdminAdmin
@@ -229,10 +229,10 @@ class gamification extends Module
             $this->context->controller->addJqueryPlugin('fancybox');
 
             return $css_str.'<script>
-				var ids_ps_advice = new Array('.rtrim($js_str, ',').');
-				var admin_gamification_ajax_url = \''.$this->context->link->getAdminLink('AdminGamification').'\';
-				var current_id_tab = '.(int)$this->context->controller->id.';
-			</script>';
+                var ids_ps_advice = new Array('.rtrim($js_str, ',').');
+                var admin_gamification_ajax_url = \''.$this->context->link->getAdminLink('AdminGamification').'\';
+                var current_id_tab = '.(int)$this->context->controller->id.';
+            </script>';
         }
     }
 

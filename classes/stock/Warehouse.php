@@ -179,8 +179,8 @@ class WarehouseCore extends ObjectModel
         }
 
         Db::getInstance()->execute('
-			DELETE FROM ' . _DB_PREFIX_ . 'warehouse_carrier
-			WHERE ' . $this->def['primary'] . ' = ' . (int) $this->id);
+            DELETE FROM ' . _DB_PREFIX_ . 'warehouse_carrier
+            WHERE ' . $this->def['primary'] . ' = ' . (int) $this->id);
 
         if ($row_to_insert) {
             Db::getInstance()->insert('warehouse_carrier', $row_to_insert);
@@ -197,8 +197,8 @@ class WarehouseCore extends ObjectModel
     public static function removeCarrier($id_carrier, $id_warehouse = null)
     {
         Db::getInstance()->execute('
-			DELETE FROM ' . _DB_PREFIX_ . 'warehouse_carrier
-			WHERE id_carrier = ' . (int) $id_carrier .
+            DELETE FROM ' . _DB_PREFIX_ . 'warehouse_carrier
+            WHERE id_carrier = ' . (int) $id_carrier .
             ($id_warehouse ? ' AND id_warehouse = ' . (int) $id_warehouse : ''));
     }
 
@@ -249,10 +249,10 @@ class WarehouseCore extends ObjectModel
     public static function setProductLocation($id_product, $id_product_attribute, $id_warehouse, $location)
     {
         Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'warehouse_product_location`
-			WHERE `id_product` = ' . (int) $id_product . '
-			AND `id_product_attribute` = ' . (int) $id_product_attribute . '
-			AND `id_warehouse` = ' . (int) $id_warehouse);
+            DELETE FROM `' . _DB_PREFIX_ . 'warehouse_product_location`
+            WHERE `id_product` = ' . (int) $id_product . '
+            AND `id_product_attribute` = ' . (int) $id_product_attribute . '
+            AND `id_warehouse` = ' . (int) $id_warehouse);
 
         $row_to_insert = array(
             'id_product' => (int) $id_product,
@@ -270,8 +270,8 @@ class WarehouseCore extends ObjectModel
     public function resetProductsLocations()
     {
         Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'warehouse_product_location`
-			WHERE `id_warehouse` = ' . (int) $this->id);
+            DELETE FROM `' . _DB_PREFIX_ . 'warehouse_product_location`
+            WHERE `id_warehouse` = ' . (int) $this->id);
     }
 
     /**
@@ -398,14 +398,14 @@ class WarehouseCore extends ObjectModel
     public function getNumberOfProducts()
     {
         $query = '
-			SELECT COUNT(t.id_stock)
-			FROM
-				(
-					SELECT s.id_stock
-				 	FROM ' . _DB_PREFIX_ . 'stock s
-				 	WHERE s.id_warehouse = ' . (int) $this->id . '
-				 	GROUP BY s.id_product, s.id_product_attribute
-				 ) as t';
+            SELECT COUNT(t.id_stock)
+            FROM
+                (
+                    SELECT s.id_stock
+                     FROM ' . _DB_PREFIX_ . 'stock s
+                     WHERE s.id_warehouse = ' . (int) $this->id . '
+                     GROUP BY s.id_product, s.id_product_attribute
+                 ) as t';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
@@ -418,9 +418,9 @@ class WarehouseCore extends ObjectModel
     public function getQuantitiesOfProducts()
     {
         $query = '
-			SELECT SUM(s.physical_quantity)
-			FROM ' . _DB_PREFIX_ . 'stock s
-			WHERE s.id_warehouse = ' . (int) $this->id;
+            SELECT SUM(s.physical_quantity)
+            FROM ' . _DB_PREFIX_ . 'stock s
+            WHERE s.id_warehouse = ' . (int) $this->id;
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 

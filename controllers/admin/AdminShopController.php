@@ -198,13 +198,13 @@ class AdminShopControllerCore extends AdminController
 
         $this->_select = 'gs.name shop_group_name, cl.name category_name, CONCAT(\'http://\', su.domain, su.physical_uri, su.virtual_uri) AS url';
         $this->_join = '
-			LEFT JOIN `' . _DB_PREFIX_ . 'shop_group` gs
-				ON (a.id_shop_group = gs.id_shop_group)
-			LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-				ON (a.id_category = cl.id_category AND cl.id_lang=' . (int) $this->context->language->id . ')
-			LEFT JOIN ' . _DB_PREFIX_ . 'shop_url su
-				ON a.id_shop = su.id_shop AND su.main = 1
-		';
+            LEFT JOIN `' . _DB_PREFIX_ . 'shop_group` gs
+                ON (a.id_shop_group = gs.id_shop_group)
+            LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
+                ON (a.id_category = cl.id_category AND cl.id_lang=' . (int) $this->context->language->id . ')
+            LEFT JOIN ' . _DB_PREFIX_ . 'shop_url su
+                ON a.id_shop = su.id_shop AND su.main = 1
+        ';
         $this->_group = 'GROUP BY a.id_shop';
 
         if ($id_shop_group = (int) Tools::getValue('id_shop_group')) {
@@ -292,11 +292,11 @@ class AdminShopControllerCore extends AdminController
         // copy default data
         if (!Tools::getValue('useImportData') || (is_array($import_data) && !isset($import_data['group']))) {
             $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'group_shop` (`id_shop`, `id_group`)
-					VALUES
-					(' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP') . '),
-					(' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_GUEST_GROUP') . '),
-					(' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_CUSTOMER_GROUP') . ')
-				';
+                    VALUES
+                    (' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP') . '),
+                    (' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_GUEST_GROUP') . '),
+                    (' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_CUSTOMER_GROUP') . ')
+                ';
             Db::getInstance()->execute($sql);
         }
 
@@ -757,10 +757,10 @@ class AdminShopControllerCore extends AdminController
     {
         $tree = array();
         $sql = 'SELECT g.id_shop_group, g.name as group_name, s.id_shop, s.name as shop_name, u.id_shop_url, u.domain, u.physical_uri, u.virtual_uri
-				FROM ' . _DB_PREFIX_ . 'shop_group g
-				LEFT JOIN  ' . _DB_PREFIX_ . 'shop s ON g.id_shop_group = s.id_shop_group
-				LEFT JOIN  ' . _DB_PREFIX_ . 'shop_url u ON u.id_shop = s.id_shop
-				ORDER BY g.name, s.name, u.domain';
+                FROM ' . _DB_PREFIX_ . 'shop_group g
+                LEFT JOIN  ' . _DB_PREFIX_ . 'shop s ON g.id_shop_group = s.id_shop_group
+                LEFT JOIN  ' . _DB_PREFIX_ . 'shop_url u ON u.id_shop = s.id_shop
+                ORDER BY g.name, s.name, u.domain';
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         foreach ($results as $row) {
             $id_shop_group = $row['id_shop_group'];

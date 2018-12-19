@@ -36,9 +36,9 @@ class CMSRoleRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\
     public function getCMSRolesAssociated()
     {
         $sql = '
-			SELECT *
-			FROM `' . $this->getTableNameWithPrefix() . '`
-			WHERE `id_cms` != 0';
+            SELECT *
+            FROM `' . $this->getTableNameWithPrefix() . '`
+            WHERE `id_cms` != 0';
 
         return $this->hydrateMany($this->db->select($sql));
     }

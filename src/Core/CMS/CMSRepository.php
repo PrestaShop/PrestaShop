@@ -39,13 +39,13 @@ class CMSRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\Enti
     public function i10nFindAll($id_lang, $id_shop)
     {
         $sql = '
-			SELECT *
-			FROM `' . $this->getTableNameWithPrefix() . '` c
-			JOIN `' . $this->getPrefix() . 'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
-			WHERE cl.`id_lang` = ' . (int) $id_lang . '
-			AND cl.`id_shop` = ' . (int) $id_shop . '
+            SELECT *
+            FROM `' . $this->getTableNameWithPrefix() . '` c
+            JOIN `' . $this->getPrefix() . 'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
+            WHERE cl.`id_lang` = ' . (int) $id_lang . '
+            AND cl.`id_shop` = ' . (int) $id_shop . '
 
-		';
+        ';
 
         return $this->hydrateMany($this->db->select($sql));
     }
@@ -64,14 +64,14 @@ class CMSRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\Enti
     public function i10nFindOneById($id_cms, $id_lang, $id_shop)
     {
         $sql = '
-			SELECT *
-			FROM `' . $this->getTableNameWithPrefix() . '` c
-			JOIN `' . $this->getPrefix() . 'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
-			WHERE c.`id_cms` = ' . (int) $id_cms . '
-			AND cl.`id_lang` = ' . (int) $id_lang . '
-			AND cl.`id_shop` = ' . (int) $id_shop . '
-			LIMIT 0 , 1
-		';
+            SELECT *
+            FROM `' . $this->getTableNameWithPrefix() . '` c
+            JOIN `' . $this->getPrefix() . 'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
+            WHERE c.`id_cms` = ' . (int) $id_cms . '
+            AND cl.`id_lang` = ' . (int) $id_lang . '
+            AND cl.`id_shop` = ' . (int) $id_shop . '
+            LIMIT 0 , 1
+        ';
 
         return $this->hydrateOne($this->db->select($sql));
     }

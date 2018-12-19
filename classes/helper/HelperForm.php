@@ -310,8 +310,8 @@ class HelperFormCore extends Helper
         $assos = array();
         if ((int) $this->id) {
             $sql = 'SELECT `id_shop`, `' . bqSQL($this->identifier) . '`
-					FROM `' . _DB_PREFIX_ . bqSQL($this->table) . '_shop`
-					WHERE `' . bqSQL($this->identifier) . '` = ' . (int) $this->id;
+                    FROM `' . _DB_PREFIX_ . bqSQL($this->table) . '_shop`
+                    WHERE `' . bqSQL($this->identifier) . '` = ' . (int) $this->id;
 
             foreach (Db::getInstance()->executeS($sql) as $row) {
                 $assos[$row['id_shop']] = $row['id_shop'];

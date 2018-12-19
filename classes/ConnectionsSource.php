@@ -136,12 +136,12 @@ class ConnectionsSourceCore extends ObjectModel
     public static function getOrderSources($idOrder)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT cos.http_referer, cos.request_uri, cos.keywords, cos.date_add
-		FROM ' . _DB_PREFIX_ . 'orders o
-		INNER JOIN ' . _DB_PREFIX_ . 'guest g ON g.id_customer = o.id_customer
-		INNER JOIN ' . _DB_PREFIX_ . 'connections co  ON co.id_guest = g.id_guest
-		INNER JOIN ' . _DB_PREFIX_ . 'connections_source cos ON cos.id_connections = co.id_connections
-		WHERE id_order = ' . (int) ($idOrder) . '
-		ORDER BY cos.date_add DESC');
+        SELECT cos.http_referer, cos.request_uri, cos.keywords, cos.date_add
+        FROM ' . _DB_PREFIX_ . 'orders o
+        INNER JOIN ' . _DB_PREFIX_ . 'guest g ON g.id_customer = o.id_customer
+        INNER JOIN ' . _DB_PREFIX_ . 'connections co  ON co.id_guest = g.id_guest
+        INNER JOIN ' . _DB_PREFIX_ . 'connections_source cos ON cos.id_connections = co.id_connections
+        WHERE id_order = ' . (int) ($idOrder) . '
+        ORDER BY cos.date_add DESC');
     }
 }

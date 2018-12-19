@@ -98,7 +98,7 @@ class AdminModulesControllerCore extends AdminController
         $this->list_modules_categories['payment_security']['name'] = $this->l('Site certification & Fraud prevention');
         $this->list_modules_categories['pricing_promotion']['name'] = $this->l('Pricing and Promotion');
         $this->list_modules_categories['quick_bulk_update']['name'] = $this->l('Quick / Bulk update');
-        /* 		$this->list_modules_categories['search_filter']['name'] = $this->l('Search and Filter'); */
+        /*         $this->list_modules_categories['search_filter']['name'] = $this->l('Search and Filter'); */
         $this->list_modules_categories['seo']['name'] = $this->l('SEO');
         $this->list_modules_categories['shipping_logistics']['name'] = $this->l('Shipping and Logistics');
         $this->list_modules_categories['slideshows']['name'] = $this->l('Slideshows');

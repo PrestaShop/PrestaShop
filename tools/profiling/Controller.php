@@ -346,83 +346,83 @@ abstract class Controller extends ControllerCore
     protected function displayProfilingLinks()
     {
         echo '
-		<div class="col-4">
-			<ol>
-				<li><a href="#stopwatch">Stopwatch SQL</a></li>
-				<li><a href="#doubles">Doubles</a></li>
-				<li><a href="#tables">Tables stress</a></li>
-				'.(isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">ObjectModel instances</a></li>' : '').'
-				<li><a href="#includedFiles">Included Files</a></li>
-			</ol>
-		</div>';
+        <div class="col-4">
+            <ol>
+                <li><a href="#stopwatch">Stopwatch SQL</a></li>
+                <li><a href="#doubles">Doubles</a></li>
+                <li><a href="#tables">Tables stress</a></li>
+                '.(isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">ObjectModel instances</a></li>' : '').'
+                <li><a href="#includedFiles">Included Files</a></li>
+            </ol>
+        </div>';
     }
 
     protected function displayProfilingStyle()
     {
         echo '
-		<style>
-			#prestashop_profiling {
-				padding: 20px;
-			}
+        <style>
+            #prestashop_profiling {
+                padding: 20px;
+            }
 
-			.ps_back-office.page-sidebar #prestashop_profiling {
-				margin-left: 210px;
-			}
-			.ps_back-office.page-sidebar-closed #prestashop_profiling {
-				margin-left: 50px;
-			}
-			.ps_back-office #prestashop_profiling {
-				clear: both;
-				padding: 10px;
-				margin-bottom: 50px;
-			}
+            .ps_back-office.page-sidebar #prestashop_profiling {
+                margin-left: 210px;
+            }
+            .ps_back-office.page-sidebar-closed #prestashop_profiling {
+                margin-left: 50px;
+            }
+            .ps_back-office #prestashop_profiling {
+                clear: both;
+                padding: 10px;
+                margin-bottom: 50px;
+            }
 
-			#prestashop_profiling * {
-				box-sizing:border-box;
-				-moz-box-sizing:border-box;
-				color: #888;
-			}
+            #prestashop_profiling * {
+                box-sizing:border-box;
+                -moz-box-sizing:border-box;
+                color: #888;
+            }
 
-			#prestashop_profiling td .pre {
-				padding: 6px;
-				margin-right: 10px;
-				overflow: auto;
-				display: block;
-				color: #777;
-				font-size: 12px;
-				line-height: 1.42857;
-				word-break: break-all;
-				word-wrap: break-word;
-				background-color: whitesmoke;
-				border: 1px solid #cccccc;
-				max-width: 960px;
-			}
-			.sortable thead th {
-				cursor:pointer;
-			}
+            #prestashop_profiling td .pre {
+                padding: 6px;
+                margin-right: 10px;
+                overflow: auto;
+                display: block;
+                color: #777;
+                font-size: 12px;
+                line-height: 1.42857;
+                word-break: break-all;
+                word-wrap: break-word;
+                background-color: whitesmoke;
+                border: 1px solid #cccccc;
+                max-width: 960px;
+            }
+            .sortable thead th {
+                cursor:pointer;
+            }
 
-			#prestashop_profiling .row {
-				clear: both;
-				margin-bottom: 20px;
-			}
+            #prestashop_profiling .row {
+                clear: both;
+                margin-bottom: 20px;
+            }
 
-			#prestashop_profiling .col-4 {
-				float: left;
-				padding: 0 10px;
-				width: 33%;
-			}
-			@media (max-width: 1200px) {
-				#prestashop_profiling .col-4 {
-					width: 50%;
-				}
-			}
-			@media (max-width: 600px) {
-				#prestashop_profiling .col-4 {
-					width: 100%;
-				}
-			}
-		</style>
-		<script type="text/javascript" src="https://cdn.rawgit.com/drvic10k/bootstrap-sortable/1.11.2/Scripts/bootstrap-sortable.js"></script>';
+            #prestashop_profiling .col-4 {
+                float: left;
+                padding: 0 10px;
+                width: 33%;
+            }
+            @media (max-width: 1200px) {
+                #prestashop_profiling .col-4 {
+                    width: 50%;
+                }
+            }
+            @media (max-width: 600px) {
+                #prestashop_profiling .col-4 {
+                    width: 100%;
+                }
+            }
+        </style>
+        <script type="text/javascript" src="https://cdn.rawgit.com/drvic10k/bootstrap-sortable/1.11.2/Scripts/bootstrap-sortable.js"></script>';
     }
 
     protected function displayProfilingSummary()
@@ -430,37 +430,37 @@ abstract class Controller extends ControllerCore
         global $start_time;
 
         echo '
-		<div class="col-4">
-			<table class="table table-condensed">
-				<tr><td>Load Time</td><td>'.$this->getLoadTimeColor($this->profiler[count($this->profiler) - 1]['time'] - $start_time, true).'</td></tr>
-				<tr><td>Querying Time</td><td>'.$this->getTotalQueriyingTimeColor(round(1000 * $this->total_query_time)).' ms</span>
-				<tr><td>Queries</td><td>'.$this->getNbQueriesColor(count($this->array_queries)).'</td></tr>
-				<tr><td>Memory Peak Usage</td><td>'.$this->getPeakMemoryColor($this->profiler[count($this->profiler) - 1]['peak_memory_usage']).' Mb</td></tr>
-				<tr><td>Included Files</td><td>'.count(get_included_files()).' files - '.$this->getMemoryColor($this->total_filesize).' Mb</td></tr>
-				<tr><td>PrestaShop Cache</td><td>'.$this->getMemoryColor($this->total_cache_size).' Mb</td></tr>
-				<tr><td><a href="javascript:void(0);" onclick="$(\'.global_vars_detail\').toggle();">Global vars</a></td><td>'.$this->getMemoryColor($this->total_global_var_size).' Mb</td></tr>';
+        <div class="col-4">
+            <table class="table table-condensed">
+                <tr><td>Load Time</td><td>'.$this->getLoadTimeColor($this->profiler[count($this->profiler) - 1]['time'] - $start_time, true).'</td></tr>
+                <tr><td>Querying Time</td><td>'.$this->getTotalQueriyingTimeColor(round(1000 * $this->total_query_time)).' ms</span>
+                <tr><td>Queries</td><td>'.$this->getNbQueriesColor(count($this->array_queries)).'</td></tr>
+                <tr><td>Memory Peak Usage</td><td>'.$this->getPeakMemoryColor($this->profiler[count($this->profiler) - 1]['peak_memory_usage']).' Mb</td></tr>
+                <tr><td>Included Files</td><td>'.count(get_included_files()).' files - '.$this->getMemoryColor($this->total_filesize).' Mb</td></tr>
+                <tr><td>PrestaShop Cache</td><td>'.$this->getMemoryColor($this->total_cache_size).' Mb</td></tr>
+                <tr><td><a href="javascript:void(0);" onclick="$(\'.global_vars_detail\').toggle();">Global vars</a></td><td>'.$this->getMemoryColor($this->total_global_var_size).' Mb</td></tr>';
         foreach ($this->global_var_size as $global => $size) {
             echo '<tr class="global_vars_detail" style="display:none"><td>- global $'.$global.'</td><td>'.$size.'k</td></tr>';
         }
         echo '
-			</table>
-		</div>';
+            </table>
+        </div>';
     }
 
     protected function displayProfilingConfiguration()
     {
         echo '
-		<div class="col-4">
-			<table class="table table-condensed">
-				<tr><td>PrestaShop Version</td><td>'._PS_VERSION_.'</td></tr>
-				<tr><td>PHP Version</td><td>'.$this->getPhpVersionColor(PHP_VERSION).'</td></tr>
-				<tr><td>MySQL Version</td><td>'.$this->getMySQLVersionColor(Db::getInstance()->getVersion()).'</td></tr>
-				<tr><td>Memory Limit</td><td>'.ini_get('memory_limit').'</td></tr>
-				<tr><td>Max Execution Time</td><td>'.ini_get('max_execution_time').'s</td></tr>
-				<tr><td>Smarty Cache</td><td><span style="color:'.(Configuration::get('PS_SMARTY_CACHE') ? 'green">enabled' : 'red">disabled').'</td></tr>
-				<tr><td>Smarty Compilation</td><td><span style="color:'.(Configuration::get('PS_SMARTY_FORCE_COMPILE') == 0 ? 'green">never recompile' : (Configuration::get('PS_SMARTY_FORCE_COMPILE') == 1 ? '#EF8B00">auto' : 'red">force compile')).'</td></tr>
-			</table>
-		</div>';
+        <div class="col-4">
+            <table class="table table-condensed">
+                <tr><td>PrestaShop Version</td><td>'._PS_VERSION_.'</td></tr>
+                <tr><td>PHP Version</td><td>'.$this->getPhpVersionColor(PHP_VERSION).'</td></tr>
+                <tr><td>MySQL Version</td><td>'.$this->getMySQLVersionColor(Db::getInstance()->getVersion()).'</td></tr>
+                <tr><td>Memory Limit</td><td>'.ini_get('memory_limit').'</td></tr>
+                <tr><td>Max Execution Time</td><td>'.ini_get('max_execution_time').'s</td></tr>
+                <tr><td>Smarty Cache</td><td><span style="color:'.(Configuration::get('PS_SMARTY_CACHE') ? 'green">enabled' : 'red">disabled').'</td></tr>
+                <tr><td>Smarty Compilation</td><td><span style="color:'.(Configuration::get('PS_SMARTY_FORCE_COMPILE') == 0 ? 'green">never recompile' : (Configuration::get('PS_SMARTY_FORCE_COMPILE') == 1 ? '#EF8B00">auto' : 'red">force compile')).'</td></tr>
+            </table>
+        </div>';
     }
 
     protected function displayProfilingRun()
@@ -468,26 +468,26 @@ abstract class Controller extends ControllerCore
         global $start_time;
 
         echo '
-		<div class="col-4">
-			<table class="table table-condensed">
-				<tr><th>&nbsp;</th><th>Time</th><th>Cumulated Time</th><th>Memory Usage</th><th>Memory Peak Usage</th></tr>';
+        <div class="col-4">
+            <table class="table table-condensed">
+                <tr><th>&nbsp;</th><th>Time</th><th>Cumulated Time</th><th>Memory Usage</th><th>Memory Peak Usage</th></tr>';
         $last = array('time' => $start_time, 'memory_usage' => 0);
         foreach ($this->profiler as $row) {
             if ($row['block'] == 'checkAccess' && $row['time'] == $last['time']) {
                 continue;
             }
             echo '<tr>
-				<td>'.$row['block'].'</td>
-				<td>'.$this->getLoadTimeColor($row['time'] - $last['time']).' ms</td>
-				<td>'.$this->getLoadTimeColor($row['time'] - $start_time).' ms</td>
-				<td>'.$this->getMemoryColor($row['memory_usage'] - $last['memory_usage']).' Mb</td>
-				<td>'.$this->getMemoryColor($row['peak_memory_usage']).' Mb</td>
-			</tr>';
+                <td>'.$row['block'].'</td>
+                <td>'.$this->getLoadTimeColor($row['time'] - $last['time']).' ms</td>
+                <td>'.$this->getLoadTimeColor($row['time'] - $start_time).' ms</td>
+                <td>'.$this->getMemoryColor($row['memory_usage'] - $last['memory_usage']).' Mb</td>
+                <td>'.$this->getMemoryColor($row['peak_memory_usage']).' Mb</td>
+            </tr>';
             $last = $row;
         }
         echo '
-			</table>
-		</div>';
+            </table>
+        </div>';
     }
 
     protected function displayProfilingHooks()
@@ -495,48 +495,48 @@ abstract class Controller extends ControllerCore
         $count_hooks = count($this->hooks_perfs);
 
         echo '
-		<div class="col-4">
-			<table class="table table-condensed">
-				<tr>
-					<th>Hook</th>
-					<th>Time</th>
-					<th>Memory Usage</th>
-				</tr>';
+        <div class="col-4">
+            <table class="table table-condensed">
+                <tr>
+                    <th>Hook</th>
+                    <th>Time</th>
+                    <th>Memory Usage</th>
+                </tr>';
         foreach ($this->hooks_perfs as $hook => $hooks_perfs) {
             echo '
-				<tr>
-					<td>
-						<a href="javascript:void(0);" onclick="$(\'.'.$hook.'_modules_details\').toggle();">'.$hook.'</a>
-					</td>
-					<td>
-						'.$this->getLoadTimeColor($hooks_perfs['time']).' ms
-					</td>
-					<td>
-						'.$this->getMemoryColor($hooks_perfs['memory']).' Mb
-					</td>
-				</tr>';
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" onclick="$(\'.'.$hook.'_modules_details\').toggle();">'.$hook.'</a>
+                    </td>
+                    <td>
+                        '.$this->getLoadTimeColor($hooks_perfs['time']).' ms
+                    </td>
+                    <td>
+                        '.$this->getMemoryColor($hooks_perfs['memory']).' Mb
+                    </td>
+                </tr>';
             foreach ($hooks_perfs['modules'] as $module => $perfs) {
                 echo '
-				<tr class="'.$hook.'_modules_details" style="background-color:#EFEFEF;display:none">
-					<td>
-						=&gt; '.$module.'
-					</td>
-					<td>
-						'.$this->getLoadTimeColor($perfs['time']).' ms
-					</td>
-					<td>
-						'.$this->getMemoryColor($perfs['memory']).' Mb
-					</td>
-				</tr>';
+                <tr class="'.$hook.'_modules_details" style="background-color:#EFEFEF;display:none">
+                    <td>
+                        =&gt; '.$module.'
+                    </td>
+                    <td>
+                        '.$this->getLoadTimeColor($perfs['time']).' ms
+                    </td>
+                    <td>
+                        '.$this->getMemoryColor($perfs['memory']).' Mb
+                    </td>
+                </tr>';
             }
         }
-        echo '	<tr>
-					<th><b>'.($count_hooks == 1 ? '1 hook' : (int)$count_hooks.' hooks').'</b></th>
-					<th>'.$this->getLoadTimeColor($this->total_modules_time).' ms</th>
-					<th>'.$this->getMemoryColor($this->total_modules_memory).' Mb</th>
-				</tr>
-			</table>
-		</div>';
+        echo '    <tr>
+                    <th><b>'.($count_hooks == 1 ? '1 hook' : (int)$count_hooks.' hooks').'</b></th>
+                    <th>'.$this->getLoadTimeColor($this->total_modules_time).' ms</th>
+                    <th>'.$this->getMemoryColor($this->total_modules_memory).' Mb</th>
+                </tr>
+            </table>
+        </div>';
     }
 
     protected function displayProfilingModules()
@@ -544,134 +544,134 @@ abstract class Controller extends ControllerCore
         $count_modules = count($this->modules_perfs);
 
         echo '
-		<div class="col-4">
-			<table class="table table-condensed">
-				<tr>
-					<th>Module</th>
-					<th>Time</th>
-					<th>Memory Usage</th>
-				</tr>';
+        <div class="col-4">
+            <table class="table table-condensed">
+                <tr>
+                    <th>Module</th>
+                    <th>Time</th>
+                    <th>Memory Usage</th>
+                </tr>';
         foreach ($this->modules_perfs as $module => $modules_perfs) {
             echo '
-				<tr>
-					<td>
-						<a href="javascript:void(0);" onclick="$(\'.'.$module.'_hooks_details\').toggle();">'.$module.'</a>
-					</td>
-					<td>
-						'.$this->getLoadTimeColor($modules_perfs['time']).' ms
-					</td>
-					<td>
-						'.$this->getMemoryColor($modules_perfs['memory']).' Mb
-					</td>
-				</tr>';
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" onclick="$(\'.'.$module.'_hooks_details\').toggle();">'.$module.'</a>
+                    </td>
+                    <td>
+                        '.$this->getLoadTimeColor($modules_perfs['time']).' ms
+                    </td>
+                    <td>
+                        '.$this->getMemoryColor($modules_perfs['memory']).' Mb
+                    </td>
+                </tr>';
             foreach ($modules_perfs['methods'] as $hook => $perfs) {
                 echo '
-				<tr class="'.$module.'_hooks_details" style="background-color:#EFEFEF;display:none">
-					<td>
-						=&gt; '.$hook.'
-					</td>
-					<td>
-						'.$this->getLoadTimeColor($perfs['time']).' ms
-					</td>
-					<td>
-						'.$this->getMemoryColor($perfs['memory']).' Mb
-					</td>
-				</tr>';
+                <tr class="'.$module.'_hooks_details" style="background-color:#EFEFEF;display:none">
+                    <td>
+                        =&gt; '.$hook.'
+                    </td>
+                    <td>
+                        '.$this->getLoadTimeColor($perfs['time']).' ms
+                    </td>
+                    <td>
+                        '.$this->getMemoryColor($perfs['memory']).' Mb
+                    </td>
+                </tr>';
             }
         }
-        echo '	<tr>
-					<th><b>'.($count_modules == 1 ? '1 module' : (int)$count_modules.' modules').'</b></th>
-					<th>'.$this->getLoadTimeColor($this->total_modules_time).' ms</th>
-					<th>'.$this->getMemoryColor($this->total_modules_memory).' Mb</th>
-				</tr>
-			</table>
-		</div>';
+        echo '    <tr>
+                    <th><b>'.($count_modules == 1 ? '1 module' : (int)$count_modules.' modules').'</b></th>
+                    <th>'.$this->getLoadTimeColor($this->total_modules_time).' ms</th>
+                    <th>'.$this->getMemoryColor($this->total_modules_memory).' Mb</th>
+                </tr>
+            </table>
+        </div>';
     }
 
     protected function displayProfilingStopwatch()
     {
         echo '
-		<div class="row">
-			<h2><a name="stopwatch">Stopwatch SQL - '.count($this->array_queries).' queries</a></h2>
-			<table class="table table-condensed table-bordered sortable">
-				<thead>
-					<tr>
-						<th>Query</th>
-						<th>Time (ms)</th>
-						<th>Rows</th>
-						<th>Filesort</th>
-						<th>Group By</th>
-						<th>Location</th>
-					</tr>
-				</thead>
-				<tbody>';
+        <div class="row">
+            <h2><a name="stopwatch">Stopwatch SQL - '.count($this->array_queries).' queries</a></h2>
+            <table class="table table-condensed table-bordered sortable">
+                <thead>
+                    <tr>
+                        <th>Query</th>
+                        <th>Time (ms)</th>
+                        <th>Rows</th>
+                        <th>Filesort</th>
+                        <th>Group By</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody>';
         foreach ($this->array_queries as $data) {
             $callstack = implode('<br>', $data['stack']);
             $callstack_md5 = md5($callstack);
 
             echo '
-				<tr>
-					<td class="pre"><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>
-					<td data-value="'.$data['time'].'"><span '.$this->getTimeColor($data['time'] * 1000).'>'.(round($data['time'] * 1000, 1) < 0.1 ? '< 1' : round($data['time'] * 1000, 1)).'</span></td>
-					<td>'.(int)$data['rows'].'</td>
-					<td data-value="'.$data['filesort'].'">'.($data['filesort'] ? '<span style="color:red">Yes</span>' : '').'</td>
-					<td data-value="'.$data['group_by'].'">'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>
-					<td data-value="'.$data['location'].'">
-						<a href="javascript:void(0);" onclick="$(\'#callstack_'.$callstack_md5.'\').toggle();">'.$data['location'].'</a>
-						<div id="callstack_'.$callstack_md5.'" style="display:none">'.implode('<br>', $data['stack']).'</div>
-					</td>
-				</tr>';
+                <tr>
+                    <td class="pre"><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>
+                    <td data-value="'.$data['time'].'"><span '.$this->getTimeColor($data['time'] * 1000).'>'.(round($data['time'] * 1000, 1) < 0.1 ? '< 1' : round($data['time'] * 1000, 1)).'</span></td>
+                    <td>'.(int)$data['rows'].'</td>
+                    <td data-value="'.$data['filesort'].'">'.($data['filesort'] ? '<span style="color:red">Yes</span>' : '').'</td>
+                    <td data-value="'.$data['group_by'].'">'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>
+                    <td data-value="'.$data['location'].'">
+                        <a href="javascript:void(0);" onclick="$(\'#callstack_'.$callstack_md5.'\').toggle();">'.$data['location'].'</a>
+                        <div id="callstack_'.$callstack_md5.'" style="display:none">'.implode('<br>', $data['stack']).'</div>
+                    </td>
+                </tr>';
         }
         echo '</table>
-		</div>';
+        </div>';
     }
 
     protected function displayProfilingDoubles()
     {
         echo '<div class="row">
-		<h2><a name="doubles">Doubles</a></h2>
-			<table class="table table-condensed">';
+        <h2><a name="doubles">Doubles</a></h2>
+            <table class="table table-condensed">';
         foreach (Db::getInstance()->uniqQueries as $q => $nb) {
             if ($nb > 1) {
                 echo '<tr><td><span '.$this->getQueryColor($nb).'>'.$nb.'</span></td><td class="pre"><pre>'.$q.'</pre></td></tr>';
             }
         }
         echo '</table>
-		</div>';
+        </div>';
     }
 
     protected function displayProfilingTableStress()
     {
         echo '<div class="row">
-		<h2><a name="tables">Tables stress</a></h2>
-		<table class="table table-condensed">';
+        <h2><a name="tables">Tables stress</a></h2>
+        <table class="table table-condensed">';
         foreach (Db::getInstance()->tables as $table => $nb) {
             echo '<tr><td><span '.$this->getTableColor($nb).'>'.$nb.'</span> '.$table.'</td></tr>';
         }
         echo '</table>
-		</div>';
+        </div>';
     }
 
     protected function displayProfilingObjectModel()
     {
         echo '
-		<div class="row">
-			<h2><a name="objectModels">ObjectModel instances</a></h2>
-			<table class="table table-condensed">
-				<tr><th>Name</th><th>Instances</th><th>Source</th></tr>';
+        <div class="row">
+            <h2><a name="objectModels">ObjectModel instances</a></h2>
+            <table class="table table-condensed">
+                <tr><th>Name</th><th>Instances</th><th>Source</th></tr>';
         foreach (ObjectModel::$debug_list as $class => $info) {
             echo '<tr>
-					<td>'.$class.'</td>
-					<td><span '.$this->getObjectModelColor(count($info)).'>'.count($info).'</span></td>
-					<td>';
+                    <td>'.$class.'</td>
+                    <td><span '.$this->getObjectModelColor(count($info)).'>'.count($info).'</span></td>
+                    <td>';
             foreach ($info as $trace) {
                 echo str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']).' ['.$trace['line'].']<br />';
             }
-            echo '	</td>
-				</tr>';
+            echo '    </td>
+                </tr>';
         }
         echo '</table>
-		</div>';
+        </div>';
     }
 
     protected function displayProfilingFiles()
@@ -679,9 +679,9 @@ abstract class Controller extends ControllerCore
         $i = 0;
 
         echo '<div class="row">
-		<h2><a name="includedFiles">Included Files</a></h2>
-		<table class="table table-condensed">
-			<tr><th>#</th><th>Filename</th></tr>';
+        <h2><a name="includedFiles">Included Files</a></h2>
+        <table class="table table-condensed">
+            <tr><th>#</th><th>Filename</th></tr>';
         foreach (get_included_files() as $file) {
             $file = str_replace('\\', '/', str_replace(_PS_ROOT_DIR_, '', $file));
             if (strpos($file, '/tools/profiling/') === 0) {
@@ -690,27 +690,27 @@ abstract class Controller extends ControllerCore
             echo '<tr><td>'.(++$i).'</td><td>'.$file.'</td></tr>';
         }
         echo '</table>
-		</div>';
+        </div>';
     }
 
     public function displayProfiling()
     {
         if (!empty($this->redirect_after)) {
             echo '
-			<html>
-				<head>
-					<meta charset="utf-8" />
-					<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-					<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-					<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-				</head>
-				<body>
-					<div class="container" style="width:100%">
-						<div class="row">
-							<div class="col-lg-12">
-								<h2>Caught redirection to <a href="'.htmlspecialchars($this->redirect_after).'"> '.htmlspecialchars($this->redirect_after).' </a></h2>
-							</div>
-						</div>';
+            <html>
+                <head>
+                    <meta charset="utf-8" />
+                    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+                    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+                    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+                </head>
+                <body>
+                    <div class="container" style="width:100%">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h2>Caught redirection to <a href="'.htmlspecialchars($this->redirect_after).'"> '.htmlspecialchars($this->redirect_after).' </a></h2>
+                            </div>
+                        </div>';
         } else {
             // Call original display method
             $this->display();

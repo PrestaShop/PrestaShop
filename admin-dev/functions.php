@@ -32,23 +32,23 @@ function bindDatepicker($id, $time)
 {
     if ($time) {
         echo '
-		var dateObj = new Date();
-		var hours = dateObj.getHours();
-		var mins = dateObj.getMinutes();
-		var secs = dateObj.getSeconds();
-		if (hours < 10) { hours = "0" + hours; }
-		if (mins < 10) { mins = "0" + mins; }
-		if (secs < 10) { secs = "0" + secs; }
-		var time = " "+hours+":"+mins+":"+secs;';
+        var dateObj = new Date();
+        var hours = dateObj.getHours();
+        var mins = dateObj.getMinutes();
+        var secs = dateObj.getSeconds();
+        if (hours < 10) { hours = "0" + hours; }
+        if (mins < 10) { mins = "0" + mins; }
+        if (secs < 10) { secs = "0" + secs; }
+        var time = " "+hours+":"+mins+":"+secs;';
     }
 
     echo '
-	$(function() {
-		$("#'.Tools::htmlentitiesUTF8($id).'").datepicker({
-			prevText:"",
-			nextText:"",
-			dateFormat:"yy-mm-dd"'.($time ? '+time' : '').'});
-	});';
+    $(function() {
+        $("#'.Tools::htmlentitiesUTF8($id).'").datepicker({
+            prevText:"",
+            nextText:"",
+            dateFormat:"yy-mm-dd"'.($time ? '+time' : '').'});
+    });';
 }
 
 /**
@@ -151,21 +151,21 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
     $context = Context::getContext();
     if ($category_type == 'catalog') {
         $category = Db::getInstance()->getRow('
-		SELECT id_category, level_depth, nleft, nright
-		FROM '._DB_PREFIX_.'category
-		WHERE id_category = '.(int)$id_category);
+        SELECT id_category, level_depth, nleft, nright
+        FROM '._DB_PREFIX_.'category
+        WHERE id_category = '.(int)$id_category);
         if (isset($category['id_category'])) {
             $sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
-					FROM '._DB_PREFIX_.'category c
-					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
-					WHERE c.nleft <= '.(int)$category['nleft'].'
-						AND c.nright >= '.(int)$category['nright'].'
-						AND cl.id_lang = '.(int)$context->language->id.
+                    FROM '._DB_PREFIX_.'category c
+                    LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
+                    WHERE c.nleft <= '.(int)$category['nleft'].'
+                        AND c.nright >= '.(int)$category['nright'].'
+                        AND cl.id_lang = '.(int)$context->language->id.
                 ($home ? ' AND c.id_category='.(int)$id_category : '').'
-						AND c.id_category != '.(int)Category::getTopCategory()->id.'
-					GROUP BY c.id_category
-					ORDER BY c.level_depth ASC
-					LIMIT '.(!$home ? (int)$category['level_depth'] + 1 : 1);
+                        AND c.id_category != '.(int)Category::getTopCategory()->id.'
+                    GROUP BY c.id_category
+                    ORDER BY c.level_depth ASC
+                    LIMIT '.(!$home ? (int)$category['level_depth'] + 1 : 1);
             $categories = Db::getInstance()->executeS($sql);
             $full_path = '';
             $n = 1;
@@ -190,13 +190,13 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
 
         $name = ($highlight != null) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
         $edit = '<a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&addcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
-				<i class="icon-pencil"></i></a> ';
+                <i class="icon-pencil"></i></a> ';
         if ($category->id == 1) {
             $edit = '<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
-					<i class="icon-home"></i></a></li> ';
+                    <i class="icon-home"></i></a></li> ';
         }
         $path = $edit.'<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
-		'.$name.'</a></li> > '.$path;
+        '.$name.'</a></li> > '.$path;
         if ($category->id == 1) {
             return substr($path, 0, strlen($path) - 3);
         }
@@ -556,17 +556,17 @@ function runAdminTab($tab, $ajax_mode = false)
 
                         $message = Translate::getAdminTranslation('Invalid security token');
                         echo '<html><head><title>'.$message.'</title></head><body style="font-family:Arial,Verdana,Helvetica,sans-serif;background-color:#EC8686">
-							<div style="background-color:#FAE2E3;border:1px solid #000000;color:#383838;font-weight:700;line-height:20px;margin:0 0 10px;padding:10px 15px;width:500px">
-								<img src="../img/admin/error2.png" style="margin:-4px 5px 0 0;vertical-align:middle">
-								'.$message.'
-							</div>';
+                            <div style="background-color:#FAE2E3;border:1px solid #000000;color:#383838;font-weight:700;line-height:20px;margin:0 0 10px;padding:10px 15px;width:500px">
+                                <img src="../img/admin/error2.png" style="margin:-4px 5px 0 0;vertical-align:middle">
+                                '.$message.'
+                            </div>';
                         echo '<a href="'.htmlentities($url).'" method="get" style="float:left;margin:10px">
-								<input type="button" value="'.Tools::htmlentitiesUTF8(Translate::getAdminTranslation('I understand the risks and I really want to display this page')).'" style="height:30px;margin-top:5px" />
-							</a>
-							<a href="index.php" method="get" style="float:left;margin:10px">
-								<input type="button" value="'.Tools::htmlentitiesUTF8(Translate::getAdminTranslation('Take me out of here!')).'" style="height:40px" />
-							</a>
-						</body></html>';
+                                <input type="button" value="'.Tools::htmlentitiesUTF8(Translate::getAdminTranslation('I understand the risks and I really want to display this page')).'" style="height:30px;margin-top:5px" />
+                            </a>
+                            <a href="index.php" method="get" style="float:left;margin:10px">
+                                <input type="button" value="'.Tools::htmlentitiesUTF8(Translate::getAdminTranslation('Take me out of here!')).'" style="height:40px" />
+                            </a>
+                        </body></html>';
                         die;
                     }
                 }

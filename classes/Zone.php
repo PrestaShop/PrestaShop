@@ -62,11 +62,11 @@ class ZoneCore extends ObjectModel
         $cacheId = 'Zone::getZones_' . (bool) $active;
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT *
-				FROM `' . _DB_PREFIX_ . 'zone`
-				' . ($active ? 'WHERE active = 1' : '') . '
-				ORDER BY ' . ($activeFirst ? '`active` DESC,' : '') . ' `name` ASC
-			');
+                SELECT *
+                FROM `' . _DB_PREFIX_ . 'zone`
+                ' . ($active ? 'WHERE active = 1' : '') . '
+                ORDER BY ' . ($activeFirst ? '`active` DESC,' : '') . ' `name` ASC
+            ');
             Cache::store($cacheId, $result);
 
             return $result;
@@ -85,10 +85,10 @@ class ZoneCore extends ObjectModel
     public static function getIdByName($name)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_zone`
-			FROM `' . _DB_PREFIX_ . 'zone`
-			WHERE `name` = \'' . pSQL($name) . '\'
-		');
+            SELECT `id_zone`
+            FROM `' . _DB_PREFIX_ . 'zone`
+            WHERE `name` = \'' . pSQL($name) . '\'
+        ');
     }
 
     /**

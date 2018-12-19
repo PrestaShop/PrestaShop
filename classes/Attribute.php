@@ -183,19 +183,19 @@ class AttributeCore extends ObjectModel
         }
 
         return Db::getInstance()->executeS('
-			SELECT DISTINCT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
-			FROM `' . _DB_PREFIX_ . 'attribute_group` ag
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl
-				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $idLang . ')
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a
-				ON a.`id_attribute_group` = ag.`id_attribute_group`
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al
-				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $idLang . ')
-			' . Shop::addSqlAssociation('attribute_group', 'ag') . '
-			' . Shop::addSqlAssociation('attribute', 'a') . '
-			' . ($notNull ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL AND agl.`id_attribute_group` IS NOT NULL' : '') . '
-			ORDER BY agl.`name` ASC, a.`position` ASC
-		');
+            SELECT DISTINCT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
+            FROM `' . _DB_PREFIX_ . 'attribute_group` ag
+            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl
+                ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $idLang . ')
+            LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a
+                ON a.`id_attribute_group` = ag.`id_attribute_group`
+            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al
+                ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $idLang . ')
+            ' . Shop::addSqlAssociation('attribute_group', 'ag') . '
+            ' . Shop::addSqlAssociation('attribute', 'a') . '
+            ' . ($notNull ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL AND agl.`id_attribute_group` IS NOT NULL' : '') . '
+            ORDER BY agl.`name` ASC, a.`position` ASC
+        ');
     }
 
     /**
@@ -214,19 +214,19 @@ class AttributeCore extends ObjectModel
         }
 
         $result = Db::getInstance()->getValue('
-			SELECT COUNT(*)
-			FROM `' . _DB_PREFIX_ . 'attribute_group` ag
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl
-				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $idLang . ')
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a
-				ON a.`id_attribute_group` = ag.`id_attribute_group`
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al
-				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $idLang . ')
-			' . Shop::addSqlAssociation('attribute_group', 'ag') . '
-			' . Shop::addSqlAssociation('attribute', 'a') . '
-			WHERE al.`name` = \'' . pSQL($name) . '\' AND ag.`id_attribute_group` = ' . (int) $idAttributeGroup . '
-			ORDER BY agl.`name` ASC, a.`position` ASC
-		');
+            SELECT COUNT(*)
+            FROM `' . _DB_PREFIX_ . 'attribute_group` ag
+            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl
+                ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $idLang . ')
+            LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a
+                ON a.`id_attribute_group` = ag.`id_attribute_group`
+            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al
+                ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $idLang . ')
+            ' . Shop::addSqlAssociation('attribute_group', 'ag') . '
+            ' . Shop::addSqlAssociation('attribute', 'a') . '
+            WHERE al.`name` = \'' . pSQL($name) . '\' AND ag.`id_attribute_group` = ' . (int) $idAttributeGroup . '
+            ORDER BY agl.`name` ASC, a.`position` ASC
+        ');
 
         return (int) $result > 0;
     }
@@ -260,13 +260,13 @@ class AttributeCore extends ObjectModel
     public function isColorAttribute()
     {
         if (!Db::getInstance()->getRow('
-			SELECT `group_type`
-			FROM `' . _DB_PREFIX_ . 'attribute_group`
-			WHERE `id_attribute_group` = (
-				SELECT `id_attribute_group`
-				FROM `' . _DB_PREFIX_ . 'attribute`
-				WHERE `id_attribute` = ' . (int) $this->id . ')
-			AND group_type = \'color\'')) {
+            SELECT `group_type`
+            FROM `' . _DB_PREFIX_ . 'attribute_group`
+            WHERE `id_attribute_group` = (
+                SELECT `id_attribute_group`
+                FROM `' . _DB_PREFIX_ . 'attribute`
+                WHERE `id_attribute` = ' . (int) $this->id . ')
+            AND group_type = \'color\'')) {
             return false;
         }
 
@@ -284,10 +284,10 @@ class AttributeCore extends ObjectModel
     {
         $minimalQuantity = Db::getInstance()->getValue(
             '
-			SELECT `minimal_quantity`
-			FROM `' . _DB_PREFIX_ . 'product_attribute_shop` pas
-			WHERE `id_shop` = ' . (int) Context::getContext()->shop->id . '
-			AND `id_product_attribute` = ' . (int) $idProductAttribute
+            SELECT `minimal_quantity`
+            FROM `' . _DB_PREFIX_ . 'product_attribute_shop` pas
+            WHERE `id_shop` = ' . (int) Context::getContext()->shop->id . '
+            AND `id_product_attribute` = ' . (int) $idProductAttribute
         );
 
         if ($minimalQuantity > 1) {
@@ -312,10 +312,10 @@ class AttributeCore extends ObjectModel
         }
 
         $sql = '
-			SELECT a.`id_attribute`, a.`position`, a.`id_attribute_group`
-			FROM `' . _DB_PREFIX_ . 'attribute` a
-			WHERE a.`id_attribute_group` = ' . (int) $idAttributeGroup . '
-			ORDER BY a.`position` ASC';
+            SELECT a.`id_attribute`, a.`position`, a.`id_attribute_group`
+            FROM `' . _DB_PREFIX_ . 'attribute` a
+            WHERE a.`id_attribute_group` = ' . (int) $idAttributeGroup . '
+            ORDER BY a.`position` ASC';
 
         if (!$res = Db::getInstance()->executeS($sql)) {
             return false;
@@ -336,21 +336,21 @@ class AttributeCore extends ObjectModel
 
         $res1 = Db::getInstance()->execute(
             '
-			UPDATE `' . _DB_PREFIX_ . 'attribute`
-			SET `position`= `position` ' . ($direction ? '- 1' : '+ 1') . '
-			WHERE `position`
-			' . ($direction
+            UPDATE `' . _DB_PREFIX_ . 'attribute`
+            SET `position`= `position` ' . ($direction ? '- 1' : '+ 1') . '
+            WHERE `position`
+            ' . ($direction
                 ? '> ' . (int) $movedAttribute['position'] . ' AND `position` <= ' . (int) $position
                 : '< ' . (int) $movedAttribute['position'] . ' AND `position` >= ' . (int) $position) . '
-			AND `id_attribute_group`=' . (int) $movedAttribute['id_attribute_group']
+            AND `id_attribute_group`=' . (int) $movedAttribute['id_attribute_group']
         );
 
         $res2 = Db::getInstance()->execute(
             '
-			UPDATE `' . _DB_PREFIX_ . 'attribute`
-			SET `position` = ' . (int) $position . '
-			WHERE `id_attribute` = ' . (int) $movedAttribute['id_attribute'] . '
-			AND `id_attribute_group`=' . (int) $movedAttribute['id_attribute_group']
+            UPDATE `' . _DB_PREFIX_ . 'attribute`
+            SET `position` = ' . (int) $position . '
+            WHERE `id_attribute` = ' . (int) $movedAttribute['id_attribute'] . '
+            AND `id_attribute_group`=' . (int) $movedAttribute['id_attribute_group']
         );
 
         return $res1 && $res2;
@@ -392,8 +392,8 @@ class AttributeCore extends ObjectModel
     public static function getHigherPosition($idAttributeGroup)
     {
         $sql = 'SELECT MAX(`position`)
-				FROM `' . _DB_PREFIX_ . 'attribute`
-				WHERE id_attribute_group = ' . (int) $idAttributeGroup;
+                FROM `' . _DB_PREFIX_ . 'attribute`
+                WHERE id_attribute_group = ' . (int) $idAttributeGroup;
 
         $position = Db::getInstance()->getValue($sql);
 

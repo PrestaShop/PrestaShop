@@ -39,8 +39,8 @@ function migrate_block_info_to_cms_block()
         // Module::getInstanceByName('blockcms')->install()
         // 1) from module
         $ps_lang_default = Db::getInstance()->getValue('SELECT value
-			FROM `'._DB_PREFIX_.'configuration`
-			WHERE name="PS_LANG_DEFAULT"');
+            FROM `'._DB_PREFIX_.'configuration`
+            WHERE name="PS_LANG_DEFAULT"');
         // 2) parent::install()
         $result = Db::getInstance()->insert(
             'module',
@@ -52,31 +52,31 @@ function migrate_block_info_to_cms_block()
         foreach ($hooks as $hook_name) {
             // do not pSql hook_name
             $row = Db::getInstance()->getRow('SELECT h.id_hook, '.$id_module.' as id_module, MAX(hm.position)+1 as position
-				FROM  `'._DB_PREFIX_.'hook_module` hm
-				LEFT JOIN `'._DB_PREFIX_.'hook` h on hm.id_hook=h.id_hook
-				WHERE h.name = "'.$hook_name.'" group by id_hook');
+                FROM  `'._DB_PREFIX_.'hook_module` hm
+                LEFT JOIN `'._DB_PREFIX_.'hook` h on hm.id_hook=h.id_hook
+                WHERE h.name = "'.$hook_name.'" group by id_hook');
             $res &= Db::getInstance()->insert('hook_module', $row);
         }
 
         // module install
         $res &= Db::getInstance()->execute('
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block`(
-		`id_cms_block` int(10) unsigned NOT NULL auto_increment,
-		`id_cms_category` int(10) unsigned NOT NULL,
-		`location` tinyint(1) unsigned NOT NULL,
-		`position` int(10) unsigned NOT NULL default \'0\',
-		`display_store` tinyint(1) unsigned NOT NULL default \'1\',
-		PRIMARY KEY (`id_cms_block`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
+        CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block`(
+        `id_cms_block` int(10) unsigned NOT NULL auto_increment,
+        `id_cms_category` int(10) unsigned NOT NULL,
+        `location` tinyint(1) unsigned NOT NULL,
+        `position` int(10) unsigned NOT NULL default \'0\',
+        `display_store` tinyint(1) unsigned NOT NULL default \'1\',
+        PRIMARY KEY (`id_cms_block`)
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
         $res &= Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'cms_block` (`id_cms_category`, `location`, `position`) VALUES(1, 0, 0)');
+        INSERT INTO `'._DB_PREFIX_.'cms_block` (`id_cms_category`, `location`, `position`) VALUES(1, 0, 0)');
         $res &= Db::getInstance()->execute('
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_lang`(
-		`id_cms_block` int(10) unsigned NOT NULL,
-		`id_lang` int(10) unsigned NOT NULL,
-		`name` varchar(40) NOT NULL default \'\',
-		PRIMARY KEY (`id_cms_block`, `id_lang`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
+        CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_lang`(
+        `id_cms_block` int(10) unsigned NOT NULL,
+        `id_lang` int(10) unsigned NOT NULL,
+        `name` varchar(40) NOT NULL default \'\',
+        PRIMARY KEY (`id_cms_block`, `id_lang`)
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 
         $query_lang = 'INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`) VALUES';
         foreach ($languages as $language) {
@@ -86,13 +86,13 @@ function migrate_block_info_to_cms_block()
         $res &= Db::getInstance()->execute($query_lang);
 
         $res &= Db::getInstance()->execute('
-			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_page`(
-		`id_cms_block_page` int(10) unsigned NOT NULL auto_increment,
-		`id_cms_block` int(10) unsigned NOT NULL,
-		`id_cms` int(10) unsigned NOT NULL,
-		`is_category` tinyint(1) unsigned NOT NULL,
-		PRIMARY KEY (`id_cms_block_page`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
+            CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_page`(
+        `id_cms_block_page` int(10) unsigned NOT NULL auto_increment,
+        `id_cms_block` int(10) unsigned NOT NULL,
+        `id_cms` int(10) unsigned NOT NULL,
+        `is_category` tinyint(1) unsigned NOT NULL,
+        PRIMARY KEY (`id_cms_block_page`)
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 
         $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'FOOTER_CMS\'');
         if ($exist) {
@@ -117,8 +117,8 @@ function migrate_block_info_to_cms_block()
 
             //add new block in new cms block
             $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block`
-				(`id_cms_category`, `name`, `location`, `position`)
-				VALUES( 1, "", 0, 0)');
+                (`id_cms_category`, `name`, `location`, `position`)
+                VALUES( 1, "", 0, 0)');
         $id_block = Db::getInstance()->Insert_ID();
 
         foreach ($languages as $language) {

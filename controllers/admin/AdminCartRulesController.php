@@ -253,9 +253,9 @@ class AdminCartRulesControllerCore extends AdminController
         }
 
         Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule_product_rule_group`
-			WHERE `' . _DB_PREFIX_ . 'cart_rule_product_rule`.`id_product_rule_group` = `' . _DB_PREFIX_ . 'cart_rule_product_rule_group`.`id_product_rule_group`)');
+            WHERE `' . _DB_PREFIX_ . 'cart_rule_product_rule`.`id_product_rule_group` = `' . _DB_PREFIX_ . 'cart_rule_product_rule_group`.`id_product_rule_group`)');
         Db::getInstance()->delete('cart_rule_product_rule_value', 'NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule_product_rule`
-			WHERE `' . _DB_PREFIX_ . 'cart_rule_product_rule_value`.`id_product_rule` = `' . _DB_PREFIX_ . 'cart_rule_product_rule`.`id_product_rule`)');
+            WHERE `' . _DB_PREFIX_ . 'cart_rule_product_rule_value`.`id_product_rule` = `' . _DB_PREFIX_ . 'cart_rule_product_rule`.`id_product_rule`)');
         Db::getInstance()->delete('cart_rule_combination', '`id_cart_rule_1` = ' . (int) $id_cart_rule . ' OR `id_cart_rule_2` = ' . (int) $id_cart_rule);
 
         $this->afterAdd($current_object);
@@ -304,13 +304,13 @@ class AdminCartRulesControllerCore extends AdminController
         if (Tools::getValue('product_restriction') && is_array($ruleGroupArray = Tools::getValue('product_rule_group')) && count($ruleGroupArray)) {
             foreach ($ruleGroupArray as $ruleGroupId) {
                 Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`)
-				VALUES (' . (int) $currentObject->id . ', ' . (int) Tools::getValue('product_rule_group_' . $ruleGroupId . '_quantity') . ')');
+                VALUES (' . (int) $currentObject->id . ', ' . (int) Tools::getValue('product_rule_group_' . $ruleGroupId . '_quantity') . ')');
                 $id_product_rule_group = Db::getInstance()->Insert_ID();
 
                 if (is_array($ruleArray = Tools::getValue('product_rule_' . $ruleGroupId)) && count($ruleArray)) {
                     foreach ($ruleArray as $ruleId) {
                         Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule` (`id_product_rule_group`, `type`)
-						VALUES (' . (int) $id_product_rule_group . ', "' . pSQL(Tools::getValue('product_rule_' . $ruleGroupId . '_' . $ruleId . '_type')) . '")');
+                        VALUES (' . (int) $id_product_rule_group . ', "' . pSQL(Tools::getValue('product_rule_' . $ruleGroupId . '_' . $ruleId . '_type')) . '")');
                         $id_product_rule = Db::getInstance()->Insert_ID();
 
                         $values = array();
@@ -329,36 +329,36 @@ class AdminCartRulesControllerCore extends AdminController
         // If the new rule has no cart rule restriction, then it must be added to the white list of the other cart rules that have restrictions
         if (!Tools::getValue('cart_rule_restriction')) {
             Db::getInstance()->execute('
-			INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
-				SELECT id_cart_rule, ' . (int) $currentObject->id . ' FROM `' . _DB_PREFIX_ . 'cart_rule` WHERE cart_rule_restriction = 1
-			)');
+            INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
+                SELECT id_cart_rule, ' . (int) $currentObject->id . ' FROM `' . _DB_PREFIX_ . 'cart_rule` WHERE cart_rule_restriction = 1
+            )');
         } else {
             // And if the new cart rule has restrictions, previously unrestricted cart rules may now be restricted (a mug of coffee is strongly advised to understand this sentence)
             $ruleCombinations = Db::getInstance()->executeS('
-			SELECT cr.id_cart_rule
-			FROM ' . _DB_PREFIX_ . 'cart_rule cr
-			WHERE cr.id_cart_rule != ' . (int) $currentObject->id . '
-			AND cr.cart_rule_restriction = 0
-			AND NOT EXISTS (
-				SELECT 1
-				FROM ' . _DB_PREFIX_ . 'cart_rule_combination
-				WHERE cr.id_cart_rule = ' . _DB_PREFIX_ . 'cart_rule_combination.id_cart_rule_2 AND ' . (int) $currentObject->id . ' = id_cart_rule_1
-			)
-			AND NOT EXISTS (
-				SELECT 1
-				FROM ' . _DB_PREFIX_ . 'cart_rule_combination
-				WHERE cr.id_cart_rule = ' . _DB_PREFIX_ . 'cart_rule_combination.id_cart_rule_1 AND ' . (int) $currentObject->id . ' = id_cart_rule_2
-			)
-			');
+            SELECT cr.id_cart_rule
+            FROM ' . _DB_PREFIX_ . 'cart_rule cr
+            WHERE cr.id_cart_rule != ' . (int) $currentObject->id . '
+            AND cr.cart_rule_restriction = 0
+            AND NOT EXISTS (
+                SELECT 1
+                FROM ' . _DB_PREFIX_ . 'cart_rule_combination
+                WHERE cr.id_cart_rule = ' . _DB_PREFIX_ . 'cart_rule_combination.id_cart_rule_2 AND ' . (int) $currentObject->id . ' = id_cart_rule_1
+            )
+            AND NOT EXISTS (
+                SELECT 1
+                FROM ' . _DB_PREFIX_ . 'cart_rule_combination
+                WHERE cr.id_cart_rule = ' . _DB_PREFIX_ . 'cart_rule_combination.id_cart_rule_1 AND ' . (int) $currentObject->id . ' = id_cart_rule_2
+            )
+            ');
             foreach ($ruleCombinations as $incompatibleRule) {
                 Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'cart_rule` SET cart_rule_restriction = 1 WHERE id_cart_rule = ' . (int) $incompatibleRule['id_cart_rule'] . ' LIMIT 1');
                 Db::getInstance()->execute('
-				INSERT IGNORE INTO `' . _DB_PREFIX_ . 'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
-					SELECT id_cart_rule, ' . (int) $incompatibleRule['id_cart_rule'] . ' FROM `' . _DB_PREFIX_ . 'cart_rule`
-					WHERE active = 1
-					AND id_cart_rule != ' . (int) $currentObject->id . '
-					AND id_cart_rule != ' . (int) $incompatibleRule['id_cart_rule'] . '
-				)');
+                INSERT IGNORE INTO `' . _DB_PREFIX_ . 'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
+                    SELECT id_cart_rule, ' . (int) $incompatibleRule['id_cart_rule'] . ' FROM `' . _DB_PREFIX_ . 'cart_rule`
+                    WHERE active = 1
+                    AND id_cart_rule != ' . (int) $currentObject->id . '
+                    AND id_cart_rule != ' . (int) $incompatibleRule['id_cart_rule'] . '
+                )');
             }
         }
     }
@@ -434,12 +434,12 @@ class AdminCartRulesControllerCore extends AdminController
             case 'attributes':
                 $attributes = array('selected' => array(), 'unselected' => array());
                 $results = Db::getInstance()->executeS('
-				SELECT CONCAT(agl.name, " - ", al.name) as name, a.id_attribute as id
-				FROM ' . _DB_PREFIX_ . 'attribute_group_lang agl
-				LEFT JOIN ' . _DB_PREFIX_ . 'attribute a ON a.id_attribute_group = agl.id_attribute_group
-				LEFT JOIN ' . _DB_PREFIX_ . 'attribute_lang al ON (a.id_attribute = al.id_attribute AND al.id_lang = ' . (int) Context::getContext()->language->id . ')
-				WHERE agl.id_lang = ' . (int) Context::getContext()->language->id . '
-				ORDER BY agl.name, al.name');
+                SELECT CONCAT(agl.name, " - ", al.name) as name, a.id_attribute as id
+                FROM ' . _DB_PREFIX_ . 'attribute_group_lang agl
+                LEFT JOIN ' . _DB_PREFIX_ . 'attribute a ON a.id_attribute_group = agl.id_attribute_group
+                LEFT JOIN ' . _DB_PREFIX_ . 'attribute_lang al ON (a.id_attribute = al.id_attribute AND al.id_lang = ' . (int) Context::getContext()->language->id . ')
+                WHERE agl.id_lang = ' . (int) Context::getContext()->language->id . '
+                ORDER BY agl.name, al.name');
                 foreach ($results as $row) {
                     $attributes[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
                 }
@@ -451,14 +451,14 @@ class AdminCartRulesControllerCore extends AdminController
             case 'products':
                 $products = array('selected' => array(), 'unselected' => array());
                 $results = Db::getInstance()->executeS('
-				SELECT DISTINCT name, p.id_product as id
-				FROM ' . _DB_PREFIX_ . 'product p
-				LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
-					ON (p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('pl') . ')
-				' . Shop::addSqlAssociation('product', 'p') . '
-				WHERE id_lang = ' . (int) Context::getContext()->language->id . '
-				ORDER BY name');
+                SELECT DISTINCT name, p.id_product as id
+                FROM ' . _DB_PREFIX_ . 'product p
+                LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
+                    ON (p.`id_product` = pl.`id_product`
+                    AND pl.`id_lang` = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('pl') . ')
+                ' . Shop::addSqlAssociation('product', 'p') . '
+                WHERE id_lang = ' . (int) Context::getContext()->language->id . '
+                ORDER BY name');
                 foreach ($results as $row) {
                     $products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
                 }
@@ -470,9 +470,9 @@ class AdminCartRulesControllerCore extends AdminController
             case 'manufacturers':
                 $products = array('selected' => array(), 'unselected' => array());
                 $results = Db::getInstance()->executeS('
-				SELECT name, id_manufacturer as id
-				FROM ' . _DB_PREFIX_ . 'manufacturer
-				ORDER BY name');
+                SELECT name, id_manufacturer as id
+                FROM ' . _DB_PREFIX_ . 'manufacturer
+                ORDER BY name');
                 foreach ($results as $row) {
                     $products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
                 }
@@ -484,9 +484,9 @@ class AdminCartRulesControllerCore extends AdminController
             case 'suppliers':
                 $products = array('selected' => array(), 'unselected' => array());
                 $results = Db::getInstance()->executeS('
-				SELECT name, id_supplier as id
-				FROM ' . _DB_PREFIX_ . 'supplier
-				ORDER BY name');
+                SELECT name, id_supplier as id
+                FROM ' . _DB_PREFIX_ . 'supplier
+                ORDER BY name');
                 foreach ($results as $row) {
                     $products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
                 }
@@ -498,14 +498,14 @@ class AdminCartRulesControllerCore extends AdminController
             case 'categories':
                 $categories = array('selected' => array(), 'unselected' => array());
                 $results = Db::getInstance()->executeS('
-				SELECT DISTINCT name, c.id_category as id
-				FROM ' . _DB_PREFIX_ . 'category c
-				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-					ON (c.`id_category` = cl.`id_category`
-					AND cl.`id_lang` = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('cl') . ')
-				' . Shop::addSqlAssociation('category', 'c') . '
-				WHERE id_lang = ' . (int) Context::getContext()->language->id . '
-				ORDER BY name');
+                SELECT DISTINCT name, c.id_category as id
+                FROM ' . _DB_PREFIX_ . 'category c
+                LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
+                    ON (c.`id_category` = cl.`id_category`
+                    AND cl.`id_lang` = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('cl') . ')
+                ' . Shop::addSqlAssociation('category', 'c') . '
+                WHERE id_lang = ' . (int) Context::getContext()->language->id . '
+                ORDER BY name');
                 foreach ($results as $row) {
                     $categories[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
                 }
@@ -534,18 +534,18 @@ class AdminCartRulesControllerCore extends AdminController
         if (Tools::isSubmit('customerFilter')) {
             $search_query = trim(Tools::getValue('q'));
             $customers = Db::getInstance()->executeS('
-			SELECT `id_customer`, `email`, CONCAT(`firstname`, \' \', `lastname`) as cname
-			FROM `' . _DB_PREFIX_ . 'customer`
-			WHERE `deleted` = 0 AND is_guest = 0 AND active = 1
-			AND (
-				`id_customer` = ' . (int) $search_query . '
-				OR `email` LIKE "%' . pSQL($search_query) . '%"
-				OR `firstname` LIKE "%' . pSQL($search_query) . '%"
-				OR `lastname` LIKE "%' . pSQL($search_query) . '%"
-			)
-			' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
-			ORDER BY `firstname`, `lastname` ASC
-			LIMIT 50');
+            SELECT `id_customer`, `email`, CONCAT(`firstname`, \' \', `lastname`) as cname
+            FROM `' . _DB_PREFIX_ . 'customer`
+            WHERE `deleted` = 0 AND is_guest = 0 AND active = 1
+            AND (
+                `id_customer` = ' . (int) $search_query . '
+                OR `email` LIKE "%' . pSQL($search_query) . '%"
+                OR `firstname` LIKE "%' . pSQL($search_query) . '%"
+                OR `lastname` LIKE "%' . pSQL($search_query) . '%"
+            )
+            ' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
+            ORDER BY `firstname`, `lastname` ASC
+            LIMIT 50');
             die(json_encode($customers));
         }
         // Both product filter (free product and product discount) search for products
@@ -658,17 +658,17 @@ class AdminCartRulesControllerCore extends AdminController
             if (isset($search_products['products']) && is_array($search_products['products'])) {
                 foreach ($search_products['products'] as $product) {
                     $gift_product_select .= '
-					<option value="' . $product['id_product'] . '" ' . ($product['id_product'] == $current_object->gift_product ? 'selected="selected"' : '') . '>
-						' . $product['name'] . (count($product['combinations']) == 0 ? ' - ' . $product['formatted_price'] : '') . '
-					</option>';
+                    <option value="' . $product['id_product'] . '" ' . ($product['id_product'] == $current_object->gift_product ? 'selected="selected"' : '') . '>
+                        ' . $product['name'] . (count($product['combinations']) == 0 ? ' - ' . $product['formatted_price'] : '') . '
+                    </option>';
 
                     if (count($product['combinations'])) {
                         $gift_product_attribute_select .= '<select class="control-form id_product_attribute" id="ipa_' . $product['id_product'] . '" name="ipa_' . $product['id_product'] . '">';
                         foreach ($product['combinations'] as $combination) {
                             $gift_product_attribute_select .= '
-							<option ' . ($combination['id_product_attribute'] == $current_object->gift_product_attribute ? 'selected="selected"' : '') . ' value="' . $combination['id_product_attribute'] . '">
-								' . $combination['attributes'] . ' - ' . $combination['formatted_price'] . '
-							</option>';
+                            <option ' . ($combination['id_product_attribute'] == $current_object->gift_product_attribute ? 'selected="selected"' : '') . ' value="' . $combination['id_product_attribute'] . '">
+                                ' . $combination['attributes'] . ' - ' . $combination['formatted_price'] . '
+                            </option>';
                         }
                         $gift_product_attribute_select .= '</select>';
                     }

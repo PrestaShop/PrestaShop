@@ -389,8 +389,8 @@ class AdminCountriesControllerCore extends AdminController
                 if (count($ids)) {
                     $res = Db::getInstance()->execute(
                             'UPDATE `' . _DB_PREFIX_ . 'state`
-							SET `id_zone` = ' . (int) Tools::getValue('id_zone') . '
-							WHERE `id_state` IN (' . implode(',', $ids) . ')'
+                            SET `id_zone` = ' . (int) Tools::getValue('id_zone') . '
+                            WHERE `id_state` IN (' . implode(',', $ids) . ')'
                     );
                 }
             }
@@ -502,15 +502,15 @@ class AdminCountriesControllerCore extends AdminController
             }
             $fields = array();
             $html_tabnav .= '<li' . ($class_tab_active ? ' class="' . $class_tab_active . '"' : '') . '>
-				<a href="#availableListFieldsFor_' . $class_name . '"><i class="icon-caret-down"></i>&nbsp;' . Translate::getAdminTranslation($class_name, 'AdminCountries') . '</a></li>';
+                <a href="#availableListFieldsFor_' . $class_name . '"><i class="icon-caret-down"></i>&nbsp;' . Translate::getAdminTranslation($class_name, 'AdminCountries') . '</a></li>';
 
             foreach (AddressFormat::getValidateFields($class_name) as $name) {
                 $fields[] = '<a href="javascript:void(0);" class="addPattern btn btn-default btn-xs" id="' . ($class_name == 'Address' ? $name : $class_name . ':' . $name) . '">
-					<i class="icon-plus-sign"></i>&nbsp;' . ObjectModel::displayFieldName($name, $class_name) . '</a>';
+                    <i class="icon-plus-sign"></i>&nbsp;' . ObjectModel::displayFieldName($name, $class_name) . '</a>';
             }
             $html_tabcontent .= '
-				<div class="tab-pane availableFieldsList panel ' . $class_tab_active . '" id="availableListFieldsFor_' . $class_name . '">
-				' . implode(' ', $fields) . '</div>';
+                <div class="tab-pane availableFieldsList panel ' . $class_tab_active . '" id="availableListFieldsFor_' . $class_name . '">
+                ' . implode(' ', $fields) . '</div>';
             unset($object);
             ++$i;
         }

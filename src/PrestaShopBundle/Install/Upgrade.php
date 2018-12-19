@@ -326,9 +326,9 @@ namespace PrestaShopBundle\Install {
             $full = version_compare('1.5.0.10', AppKernel::VERSION) < 0;
 
             $sql = 'SELECT IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value
-			FROM `' . _DB_PREFIX_ . 'configuration` c
-			LEFT JOIN `' . _DB_PREFIX_ . 'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
-			WHERE c.`name`=\'' . pSQL($name) . '\'';
+            FROM `' . _DB_PREFIX_ . 'configuration` c
+            LEFT JOIN `' . _DB_PREFIX_ . 'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
+            WHERE c.`name`=\'' . pSQL($name) . '\'';
 
             if ($full) {
                 $id_shop = Shop::getContextShopID(true);
@@ -485,8 +485,8 @@ namespace PrestaShopBundle\Install {
                             }
                             if ((is_array($phpRes) && !empty($phpRes['error'])) || $phpRes === false) {
                                 $this->logWarning('[ERROR] PHP ' . $version . ' ' . $query . "\n" . '
-								' . (empty($phpRes['error']) ? '' : $phpRes['error'] . "\n") . '
-								' . (empty($phpRes['msg']) ? '' : ' - ' . $phpRes['msg']), $version, array(), true);
+                                ' . (empty($phpRes['error']) ? '' : $phpRes['error'] . "\n") . '
+                                ' . (empty($phpRes['msg']) ? '' : ' - ' . $phpRes['msg']), $version, array(), true);
                             } else {
                                 $this->logInfo('[OK] PHP ' . $version . ' : ' . $query, $version, array(), true);
                             }
@@ -498,10 +498,10 @@ namespace PrestaShopBundle\Install {
                                 $duplicates = array('1050', '1054', '1060', '1061', '1062', '1091');
                                 if (!in_array($error_number, $duplicates)) {
                                     $this->logWarning('SQL ' . $version . '
-								' . $error_number . ' in ' . $query . ': ' . $error, $version, array(), true);
+                                ' . $error_number . ' in ' . $query . ': ' . $error, $version, array(), true);
                                 } else {
                                     $this->logInfo('SQL ' . $version . '
-								' . $error_number . ' in ' . $query . ': ' . $error, $version, array(), true);
+                                ' . $error_number . ' in ' . $query . ': ' . $error, $version, array(), true);
                                 }
                             } else {
                                 $this->logInfo('[OK] SQL ' . $version . ' : ' . $query, $version, array(), true);
