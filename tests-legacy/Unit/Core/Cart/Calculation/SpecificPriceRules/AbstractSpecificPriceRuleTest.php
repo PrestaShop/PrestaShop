@@ -43,7 +43,7 @@ abstract class AbstractSpecificPriceRuleTest extends AbstractCartCalculationTest
      */
     protected $specificPriceRules = [];
 
-    public function tearDown()
+    protected function tearDown()
     {
         foreach ($this->specificPriceRules as $rule) {
             $rule->resetApplication();

@@ -35,7 +35,7 @@ class AddCustomizationTest extends AbstractCartTest
 {
     protected $customizations = [];
 
-    public function tearDown()
+    protected function tearDown()
     {
         foreach ($this->customizations as $customization) {
             $customization->delete();

@@ -33,7 +33,7 @@ class CacheCoreTest extends TestCase
 {
     private $cacheArray = array();
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -50,7 +50,7 @@ class CacheCoreTest extends TestCase
         Cache::setInstanceForTesting($memcachedMock);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         $this->cacheArray = array();
     }

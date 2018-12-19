@@ -48,7 +48,7 @@ class GridPresenterTest extends TestCase
      */
     private $gridPresenter;
 
-    public function setUp()
+    protected function setUp()
     {
         $hookDispatcherMock = $this->createMock(HookDispatcherInterface::class);
         $this->gridPresenter = new GridPresenter($hookDispatcherMock);

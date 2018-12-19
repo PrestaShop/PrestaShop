@@ -60,7 +60,7 @@ class ConfigurationCoreTest extends IntegrationTestCase
         }
     }
 
-    public function teardown()
+    protected function teardown()
     {
     }
 

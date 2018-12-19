@@ -60,7 +60,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
      */
     protected $modulePresenter;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setup();
         if (!defined('__PS_BASE_URI__')) {

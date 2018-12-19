@@ -54,7 +54,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public $defaultDir;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->configuration = new ConfigurationMock();
         $this->connection = new ConnectionMock(array(), new Driver());

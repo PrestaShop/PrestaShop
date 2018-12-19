@@ -41,7 +41,7 @@ class DoctrineQueryParserTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->queryParser = new DoctrineQueryParser();
     }

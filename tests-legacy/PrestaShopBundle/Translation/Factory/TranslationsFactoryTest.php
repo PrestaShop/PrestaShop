@@ -38,7 +38,7 @@ class TranslationsFactoryTest extends TestCase
     private $factory;
     private $providerMock;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->providerMock = $this->getMockBuilder('PrestaShopBundle\Translation\Provider\AbstractProvider')
             ->disableOriginalConstructor()

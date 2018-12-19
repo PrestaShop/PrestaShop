@@ -54,7 +54,7 @@ class SurvivalTest extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->tokenStorage = self::$kernel->getContainer()->get('security.token_storage');
@@ -63,7 +63,7 @@ class SurvivalTest extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    protected function tearDown()
     {
         self::$kernel->getContainer()->set('security.token_storage', $this->tokenStorage);
         parent::tearDown();

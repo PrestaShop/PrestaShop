@@ -48,7 +48,7 @@ class ThemeTranslationsFactoryTest extends TestCase
 
     private $translations;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->themeProviderMock = $this->getMockBuilder('PrestaShopBundle\Translation\Provider\ThemeProvider')
             ->disableOriginalConstructor()

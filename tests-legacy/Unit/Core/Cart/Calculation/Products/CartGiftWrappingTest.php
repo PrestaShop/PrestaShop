@@ -35,7 +35,7 @@ class CartGiftWrappingTest extends AbstractCartCalculationTest
     protected $previousGiftWrapping;
     protected $previousGiftWrappingPrice;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->previousGiftWrapping      = Configuration::get('PS_GIFT_WRAPPING');
@@ -44,7 +44,7 @@ class CartGiftWrappingTest extends AbstractCartCalculationTest
         Configuration::set('PS_GIFT_WRAPPING_PRICE', static::GIFT_WRAPPING_PRICE);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
         Configuration::set('PS_GIFT_WRAPPING', $this->previousGiftWrapping);

@@ -64,7 +64,7 @@ class ThemeExporterTest extends TestCase
 
     private $finderMock;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->mockThemeExtractor();
 

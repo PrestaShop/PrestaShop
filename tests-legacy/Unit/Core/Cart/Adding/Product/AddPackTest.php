@@ -61,7 +61,7 @@ class AddPackTest extends AbstractCartTest
     /**
      * Populate pack and product in pack properties from the test database
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         // store previous config values
@@ -72,7 +72,7 @@ class AddPackTest extends AbstractCartTest
         $this->productInPack = $this->getProductFromFixtureId(self::ID_PRODUCT_IN_PACK_FIXTURE);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         // restore previous config values
         foreach (array_keys($this->oldConfig) as $k) {

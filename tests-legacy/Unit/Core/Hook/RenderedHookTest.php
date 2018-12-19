@@ -45,7 +45,7 @@ class RenderedHookTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->hookStub = $this->createMock(HookInterface::class);
 

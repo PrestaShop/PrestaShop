@@ -42,7 +42,7 @@ class ModuleProviderTest extends TestCase
     private $moduleName;
     private static $resourcesDir;
 
-    public function setUp()
+    protected function setUp()
     {
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
             ->getMock();

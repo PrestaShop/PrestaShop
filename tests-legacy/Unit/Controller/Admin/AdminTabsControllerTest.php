@@ -37,7 +37,7 @@ class AdminTabsControllerTest extends UnitTestCase
 {
     private $controller;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

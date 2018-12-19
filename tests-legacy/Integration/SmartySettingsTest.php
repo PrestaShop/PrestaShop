@@ -32,7 +32,7 @@ class SmartySettingsTest extends IntegrationTestCase
 {
     private $smarty;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         global $smarty;

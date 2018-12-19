@@ -39,7 +39,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
     private $step;
     private $session;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $context = new Context();

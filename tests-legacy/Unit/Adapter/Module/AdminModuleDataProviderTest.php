@@ -41,7 +41,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
     private $adminModuleDataProvider;
     private $moduleDataProviderS;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -186,7 +186,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->assertEquals($modules2, $modules);
     }
 
-    public function teardown()
+    protected function teardown()
     {
         parent::teardown();
 
