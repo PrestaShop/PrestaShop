@@ -42,12 +42,20 @@
               'label': 'Name'|trans({}, 'Admin.Global')
             }) }}
 
-            {{ ps.form_group_row(languageForm.iso_code, {}, {
+            {{ ps.form_group_row(languageForm.iso_code, {
+              'attr': {
+                'maxlength': 2
+              }
+            }, {
               'label': 'ISO code'|trans({}, 'Admin.International.Feature'),
               'help': 'Two-letter ISO code (e.g. FR, EN, DE).'|trans({}, 'Admin.International.Help')
             }) }}
 
-            {{ ps.form_group_row(languageForm.tag_ietf, {}, {
+            {{ ps.form_group_row(languageForm.tag_ietf, {
+              'attr': {
+                'maxlength': 4
+              }
+            }, {
               'label': 'Language code'|trans({}, 'Admin.International.Feature'),
               'help': 'IETF language tag (e.g. en-US, pt-BR).'|trans({}, 'Admin.International.Help')
             }) }}
