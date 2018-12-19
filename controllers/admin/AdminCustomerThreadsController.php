@@ -245,7 +245,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = '
-			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages, cm.private,
+			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(cm.`message`) as messages, cm.private,
 			(
 				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
 				FROM `' . _DB_PREFIX_ . 'customer_message` cm2
