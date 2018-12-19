@@ -39,9 +39,9 @@ foreach ($files as $file) {
             }
         }
         //if (!file_exists($match[1].'.jpg'))
-        {
+        
             //copy($file, $match[1].'.jpg');
             ImageManager::resize($file, $match[1].'.jpg', 800, 800, 'jpg', true);
-        }
+        
     }
 }
