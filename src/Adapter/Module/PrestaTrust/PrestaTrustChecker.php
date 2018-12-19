@@ -179,7 +179,7 @@ class PrestaTrustChecker
             }
         }
 
-        return;
+        
     }
 
     /**

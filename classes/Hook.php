@@ -982,6 +982,6 @@ class HookCore extends ObjectModel
             return $sfContainer->get('prestashop.hooks_registry');
         }
 
-        return;
+        
     }
 }

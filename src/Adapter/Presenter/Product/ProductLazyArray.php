@@ -203,7 +203,7 @@ class ProductLazyArray extends AbstractLazyArray
             );
         }
 
-        return;
+        
     }
 
     /**
@@ -260,7 +260,7 @@ class ProductLazyArray extends AbstractLazyArray
             return Configuration::get('PS_LABEL_DELIVERY_TIME_OOSBOA', $this->language->id);
         }
 
-        return;
+        
     }
 
     /**
@@ -295,7 +295,7 @@ class ProductLazyArray extends AbstractLazyArray
             return Tools::formatBytes($attachment['file_size'], 2);
         }
 
-        return;
+        
     }
 
     /**
@@ -345,7 +345,7 @@ class ProductLazyArray extends AbstractLazyArray
             return $this->product['reference'];
         }
 
-        return;
+        
     }
 
     /**
@@ -359,7 +359,7 @@ class ProductLazyArray extends AbstractLazyArray
             return $this->buildGroupedFeatures($this->product['features']);
         }
 
-        return;
+        
     }
 
     /**
@@ -415,7 +415,7 @@ class ProductLazyArray extends AbstractLazyArray
             );
         }
 
-        return;
+        
     }
 
     /**
@@ -540,7 +540,7 @@ class ProductLazyArray extends AbstractLazyArray
             return $specificReferences;
         }
 
-        return;
+        
     }
 
     /**

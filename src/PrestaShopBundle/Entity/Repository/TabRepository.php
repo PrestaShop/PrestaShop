@@ -73,7 +73,7 @@ class TabRepository extends EntityRepository
             return $tab->getId();
         }
 
-        return;
+        
     }
 
     /**

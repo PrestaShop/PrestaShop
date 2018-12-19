@@ -281,7 +281,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
             return $this->products[$productFixtureId];
         }
 
-        return;
+        
     }
 
     /**
@@ -295,7 +295,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
             return $this->combinations[$combinationFixtureName];
         }
 
-        return;
+        
     }
 
     /**
@@ -309,7 +309,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
             return $this->customizationFields[$customizationFixtureName];
         }
 
-        return;
+        
     }
 
     /**
@@ -323,7 +323,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
             return $this->cartRules[$id];
         }
 
-        return;
+        
     }
 
     protected function insertCartRulesFromFixtures()

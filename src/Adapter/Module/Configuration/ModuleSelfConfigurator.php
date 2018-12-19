@@ -163,7 +163,7 @@ class ModuleSelfConfigurator
             return $this->configFile;
         }
 
-        return;
+        
     }
 
     /**

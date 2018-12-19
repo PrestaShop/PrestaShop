@@ -182,7 +182,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
     public static function getRepositoryClassName()
     {
-        return;
+        
     }
 
     /**

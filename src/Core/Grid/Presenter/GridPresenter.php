@@ -132,7 +132,7 @@ final class GridPresenter implements GridPresenterInterface
             }
         }
 
-        return;
+        
     }
 
     /**

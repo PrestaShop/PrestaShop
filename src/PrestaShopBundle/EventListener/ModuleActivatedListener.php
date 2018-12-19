@@ -186,7 +186,7 @@ class ModuleActivatedListener
             return $annotation;
         }
 
-        return;
+        
     }
 
     /**
