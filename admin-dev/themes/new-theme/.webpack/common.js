@@ -134,4 +134,4 @@ module.exports = {
       moment: 'moment', // needed for bootstrap datetime picker
     })
   ],
-}
+};

@@ -2,17 +2,17 @@ const common = require('./common.js');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 
 /**
- * devConfig function return the development webpack config,
+ * Returns the development webpack config,
  * by merging development specific configuration with the common one.
  *
- * @param {String} hostname Represtent the hostname paramater. Default to localhost
+ * @param {String} hostname Development host name, sent as a parameter to webpack. Defaults to localhost
  */
 function devConfig(hostname) {
-  if (!hostname) console.log('Default host for livereload is set to `localhost`. If you want to use a custom one, just launch the command with hostname option. Ex: `npm run dev -- --hostname="yourUrl"`');
+  if (!hostname) console.log('Default host for live reload is set to `localhost`. If you want to use a custom one, just launch the command with hostname option. Ex: `npm run dev -- --hostname="yourUrl"`');
 
   hostname = hostname || 'localhost';
 
-  console.log('Livereload available on:', hostname);
+  console.log('Live reload available on:', hostname);
 
   let dev = Object.assign(common, { devtool: 'inline-source-map' });
 
