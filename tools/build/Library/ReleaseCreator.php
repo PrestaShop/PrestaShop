@@ -589,7 +589,7 @@ class ReleaseCreator
         if ($childrens > 0) {
             $children = $iterator->getChildren();
 
-            for ($index = 0; $index < $childrens; $index += 1) {
+            for ($index = 0; $index < $childrens; ++$index) {
                 $pathname = $children->getPathname();
 
                 if ($children->hasChildren() === true) {

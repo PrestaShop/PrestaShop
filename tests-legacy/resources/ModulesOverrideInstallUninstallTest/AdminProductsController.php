@@ -2527,7 +2527,7 @@ class AdminProductsController extends AdminProductsControllerCore
         if (!isset($done[$current['infos']['id_parent']])) {
             $done[$current['infos']['id_parent']] = 0;
         }
-        $done[$current['infos']['id_parent']] += 1;
+        ++$done[$current['infos']['id_parent']];
         $todo = count($categories[$current['infos']['id_parent']]);
         $doneC = $done[$current['infos']['id_parent']];
         $level = $current['infos']['level_depth'] + 1;
