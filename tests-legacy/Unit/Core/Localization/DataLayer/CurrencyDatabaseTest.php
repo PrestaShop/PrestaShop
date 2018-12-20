@@ -91,17 +91,17 @@ class CurrencyDatabaseTest extends TestCase
 
         $this->assertSame(
             $this->fakeFrEuro->iso_code,
-            $currencyData->isoCode
+            $currencyData->getIsoCode()
         );
 
         $this->assertSame(
             $this->fakeFrEuro->name,
-            $currencyData->names['fr-FR']
+            $currencyData->getNames()['fr-FR']
         );
 
         $this->assertSame(
             $this->fakeFrEuro->symbol,
-            $currencyData->symbols['fr-FR']
+            $currencyData->getSymbols()['fr-FR']
         );
 
         // FOO is unknown
