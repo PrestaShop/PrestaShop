@@ -26,9 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
+use Configuration;
+use Db;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\EditLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\EditLanguageHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLanguageException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -38,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
  *
  * @internal
  */
-final class EditLanguageHandler implements EditLanguageHandlerInterface
+final class EditLanguageHandler extends AbstractLanguageHandler implements EditLanguageHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -47,7 +51,16 @@ final class EditLanguageHandler implements EditLanguageHandlerInterface
     {
         $language = $this->getLegacyLanguageObject($command->getLanguageId());
 
+        $this->assertLanguageWithIsoCodeDoesNotExist($language, $command);
+        $this->assertDefaultLanguageIsNotDisabled($command);
+
+        $this->copyNoPictureIfChanged($command);
+        $this->updateEmployeeLanguage($command);
+        $this->moveTranslationsIfIsoChanged($language, $command);
+
         $this->updateLanguageWithCommandData($language, $command);
+        $this->updateShopAssociationIfChanged($command);
+        $this->uploadFlagImageIfChanged($language, $command);
     }
 
     /**
@@ -70,6 +83,8 @@ final class EditLanguageHandler implements EditLanguageHandlerInterface
     }
 
     /**
+     * Update legacy language only with data that is set
+     *
      * @param Language $language
      * @param EditLanguageCommand $command
      */
@@ -106,6 +121,133 @@ final class EditLanguageHandler implements EditLanguageHandlerInterface
         if (false === $language->update()) {
             throw new LanguageException(
                 sprintf('Cannot update language with id "%s"', $language->id)
+            );
+        }
+    }
+
+    /**
+     * Only copy new "No picture" if it's being updated
+     *
+     * @param EditLanguageCommand $command
+     */
+    private function copyNoPictureIfChanged(EditLanguageCommand $command)
+    {
+        if (null !== $command->getIsoCode() &&
+            null !== $command->getNoPictureImagePath()
+        ) {
+            $this->copyNoPictureImage(
+                $command->getIsoCode(),
+                $command->getNoPictureImagePath()
+            );
+        }
+    }
+
+    /**
+     * Default language cannot be disabled
+     *
+     * @param EditLanguageCommand $command
+     */
+    private function assertDefaultLanguageIsNotDisabled(EditLanguageCommand $command)
+    {
+        if (false === $command->isActive()
+            && $command->getLanguageId()->getValue() === (int) Configuration::get('PS_LANG_DEFAULT')
+        ) {
+            throw new CannotDisableDefaultLanguageException(
+                sprintf(
+                    'Language with id "%s" is default language and thus it cannot be disabled',
+                    $command->getLanguageId()->getValue()
+                )
+            );
+        }
+    }
+
+    /**
+     * If language that is being updated is disabled
+     * and there are employees that use this language
+     * then their language has to be updated to default
+     *
+     * @param EditLanguageCommand $command
+     */
+    private function updateEmployeeLanguage(EditLanguageCommand $command)
+    {
+        if (false === $command->isActive()) {
+            Db::getInstance()->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'employee`
+                 SET `id_lang`=' . (int) Configuration::get('PS_LANG_DEFAULT') . '
+                 WHERE `id_lang`=' . (int) $command->getLanguageId()->getValue()
+            );
+        }
+    }
+
+    /**
+     * Move translation files if language's ISO code has changed
+     *
+     * @param Language $language
+     * @param EditLanguageCommand $command
+     */
+    private function moveTranslationsIfIsoChanged(Language $language, EditLanguageCommand $command)
+    {
+        if (null !== $command->getIsoCode()
+            && $language->iso_code !== $command->getIsoCode()->getValue()
+        ) {
+            $language->moveToIso($command->getLanguageId()->getValue());
+        }
+    }
+
+    /**
+     * @param EditLanguageCommand $command
+     */
+    private function updateShopAssociationIfChanged(EditLanguageCommand $command)
+    {
+        if (null === $command->getShopAssociation()) {
+            return;
+        }
+
+        $this->associateWithShops(
+            $command->getLanguageId()->getValue(),
+            $command->getShopAssociation()
+        );
+    }
+
+    /**
+     * Update language's flag image if it has changed
+     *
+     * @param Language $language
+     * @param EditLanguageCommand $command
+     */
+    private function uploadFlagImageIfChanged(Language $language, EditLanguageCommand $command)
+    {
+        if (null === $command->getFlagImagePath()) {
+            return;
+        }
+
+        $language->deleteImage();
+
+        $this->uploadImage(
+            $command->getLanguageId()->getValue(),
+            $command->getFlagImagePath(),
+            'l' . DIRECTORY_SEPARATOR
+        );
+    }
+
+    /**
+     * Assert that language with updated ISO code does not exist
+     *
+     * @param Language $language
+     * @param EditLanguageCommand $command
+     */
+    private function assertLanguageWithIsoCodeDoesNotExist(Language $language, EditLanguageCommand $command)
+    {
+        if (null !== $command->getIsoCode()) {
+            return;
+        }
+
+        if ($language->iso_code === $command->getIsoCode()->getValue()
+            && Language::getIdByIso($command->getIsoCode()->getValue())
+        ) {
+            throw new LanguageConstraintException(
+                sprintf('Language with ISO code "%s" already exists', $command->getIsoCode()->getValue()),
+                LanguageConstraintException::INVALID_ISO_CODE
             );
         }
     }

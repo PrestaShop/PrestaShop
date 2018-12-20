@@ -232,8 +232,6 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
      */
     private function uploadFlagImage(Language $language, AddLanguageCommand $command)
     {
-        $language->deleteImage();
-
         $this->uploadImage(
             $language->id,
             $command->getFlagImagePath(),

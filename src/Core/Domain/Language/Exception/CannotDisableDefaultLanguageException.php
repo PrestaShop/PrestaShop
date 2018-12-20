@@ -24,46 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Language\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Language\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
-
-class IsoCode
+/**
+ * Exception is thrown when trying to disable default language
+ */
+class CannotDisableDefaultLanguageException extends LanguageException
 {
-    /**
-     * @var string
-     */
-    private $isoCode;
-
-    /**
-     * @param string $isoCode
-     */
-    public function __construct($isoCode)
-    {
-        $this->assertIsIsoCode($isoCode);
-
-        $this->isoCode = strtolower($isoCode);
-    }
-
-    /**
-     * @return string
-     */
-    public function getValue()
-    {
-        return $this->isoCode;
-    }
-
-    /**
-     * @param string $isoCode
-     *
-     * @throws LanguageException
-     */
-    private function assertIsIsoCode($isoCode)
-    {
-        if (!is_string($isoCode) || !preg_match('/^[a-zA-Z]{2,3}$/', $isoCode)) {
-            throw new LanguageException(
-                sprintf('Invalid language ISO code %s supplied', var_export($isoCode, true))
-            );
-        }
-    }
 }
