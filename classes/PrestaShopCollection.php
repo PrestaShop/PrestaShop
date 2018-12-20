@@ -375,7 +375,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 
         // Shall we display query for debug ?
         if ($display_query) {
-            echo $this->query . '<br />';
+            echo $this->query . '<br>';
         }
 
         $this->results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query);

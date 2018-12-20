@@ -817,8 +817,8 @@ Comment: If low memory or big fixtures, create subtasks for populateDatabase ste
         <note>Line: 29</note>
       </trans-unit>
       <trans-unit id="c8c27951cbaf7da257e6af50a6fc4116">
-        <source><![CDATA[<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %version% installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%doc%">%doc%</a>]]></source>
-        <target><![CDATA[<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %version% installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%doc%">%doc%</a>]]></target>
+        <source><![CDATA[<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br><br>You already have <b>PrestaShop version %version% installed</b>.<br><br>If you want to upgrade to the latest version, please read our documentation: <a href="%doc%">%doc%</a>]]></source>
+        <target><![CDATA[<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br><br>You already have <b>PrestaShop version %version% installed</b>.<br><br>If you want to upgrade to the latest version, please read our documentation: <a href="%doc%">%doc%</a>]]></target>
         <note>Line: 36</note>
       </trans-unit>
       <trans-unit id="bcc5d67b4832784ca5e4f09a40b28bb2">

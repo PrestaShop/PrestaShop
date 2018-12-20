@@ -98,7 +98,7 @@
 						<tr>
 							<td>{$product.image}</td>
 							<td><a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product.id_product, 'updateproduct' => 1])|escape:'html':'UTF-8'}">
-										<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
+										<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br>{$product.attributes}{/if}<br>
 									{if $product.reference}{l s='Ref:' d='Admin.Orderscustomers.Feature'} {$product.reference}{/if}
 									{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}
 								</a>
@@ -152,7 +152,7 @@
 							<td>{$product.image}</td>
 							<td>
 								<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product.id_product, 'updateproduct' => 1])|escape:'html':'UTF-8'}">
-									<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
+									<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br>{$product.attributes}{/if}<br>
 									{if $product.reference}{l s='Ref:' d='Admin.Orderscustomers.Feature'} {$product.reference}{/if}
 									{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}
 								</a>

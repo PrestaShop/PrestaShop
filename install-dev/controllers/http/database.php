@@ -111,7 +111,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
 
         $this->ajaxJsonAnswer(
             (count($errors)) ? false : true,
-            (count($errors)) ? implode('<br />', $errors) : $this->translator->trans('Database is connected', array(), 'Install')
+            (count($errors)) ? implode('<br>', $errors) : $this->translator->trans('Database is connected', array(), 'Install')
         );
     }
 

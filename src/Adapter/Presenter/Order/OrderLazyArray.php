@@ -355,11 +355,11 @@ class OrderLazyArray extends AbstractLazyArray
         if (!$order->isVirtual()) {
             $orderAddresses['delivery'] = $this->objectPresenter->present($addressDelivery);
             $orderAddresses['delivery']['formatted'] =
-                AddressFormat::generateAddress($addressDelivery, array(), '<br />');
+                AddressFormat::generateAddress($addressDelivery, array(), '<br>');
         }
 
         $orderAddresses['invoice'] = $this->objectPresenter->present($addressInvoice);
-        $orderAddresses['invoice']['formatted'] = AddressFormat::generateAddress($addressInvoice, array(), '<br />');
+        $orderAddresses['invoice']['formatted'] = AddressFormat::generateAddress($addressInvoice, array(), '<br>');
 
         return $orderAddresses;
     }

@@ -379,7 +379,7 @@ var AdminModuleController = function() {
     $(checkBoxesSelector).each(function() {
       if (alreadyDoneFlag != 10) {
         var currentElement = $(this).parents(moduleItemSelector);
-        htmlGenerated += '- ' + currentElement.attr('data-name') + '<br/>';
+        htmlGenerated += '- ' + currentElement.attr('data-name') + '<br>';
         alreadyDoneFlag += 1;
       } else {
         // Break each

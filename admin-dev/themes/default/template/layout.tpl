@@ -48,7 +48,7 @@
 			{reset($errors)|escape:'html':'UTF-8'}
 		{else }
 			{l s='%d errors' sprintf=[$errors|count]}
-			<br/>
+			<br>
 			<ol>
 				{foreach $errors as $error}
 					<li>{$error|escape:'html':'UTF-8'}</li>

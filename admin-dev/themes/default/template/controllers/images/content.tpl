@@ -64,8 +64,8 @@
             </h3>
 
 			<div class="alert alert-info">
-				{l s='Regenerates thumbnails for all existing images' d='Admin.Design.Help'}<br />
-				{l s='Please be patient. This can take several minutes.' d='Admin.Design.Help'}<br />
+				{l s='Regenerates thumbnails for all existing images' d='Admin.Design.Help'}<br>
+				{l s='Please be patient. This can take several minutes.' d='Admin.Design.Help'}<br>
 				{l s='Be careful! Manually uploaded thumbnails will be erased and replaced by automatically generated thumbnails.' d='Admin.Design.Help'}
 			</div>
 

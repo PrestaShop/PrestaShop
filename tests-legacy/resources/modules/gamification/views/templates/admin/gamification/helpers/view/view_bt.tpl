@@ -45,16 +45,16 @@
 <div class="panel">
 	<div id="intro_gamification">
 		<div id="left_intro">
-			<h4>{l s="Become an e-commerce expert in leaps and bounds!" mod='gamification'}</h4><br/>
+			<h4>{l s="Become an e-commerce expert in leaps and bounds!" mod='gamification'}</h4><br>
 			<p>
-				{l s="With all of the great features and benefits that PrestaShop offers, it's important to keep up!" mod='gamification'}<br/><br/>
-				{l s="The main goal of all of the features we offer is to make you succeed in the e-commerce world. In order to accomplish this, we have created a system of badges and points that make it easy to monitor your progress as a merchant. We have broken down the system into three levels, all of which are integral to success in the e-commerce world: (i) Your use of key e-commerce features on your store; (ii) Your sales performance; (iii) Your presence in international markets." mod='gamification'}<br/><br/>
-				{l s="The more progress your store makes, the more badges and points you earn. No need to submit any information or fill out any forms; we know how busy you are, everything is automatic!" mod='gamification'}<br/><br/>
+				{l s="With all of the great features and benefits that PrestaShop offers, it's important to keep up!" mod='gamification'}<br><br>
+				{l s="The main goal of all of the features we offer is to make you succeed in the e-commerce world. In order to accomplish this, we have created a system of badges and points that make it easy to monitor your progress as a merchant. We have broken down the system into three levels, all of which are integral to success in the e-commerce world: (i) Your use of key e-commerce features on your store; (ii) Your sales performance; (iii) Your presence in international markets." mod='gamification'}<br><br>
+				{l s="The more progress your store makes, the more badges and points you earn. No need to submit any information or fill out any forms; we know how busy you are, everything is automatic!" mod='gamification'}<br><br>
 				{l s="Now, with the click of a button, you will be able to see sales-enhancing features that you may be missing out on. Take advantage and check it out below!" mod='gamification'}
 			</p>
 		</div>
 		<div id="right_intro">
-			<h4>{l s="Our team is available to help. Contact us today!" mod='gamification'}</h4><br/>
+			<h4>{l s="Our team is available to help. Contact us today!" mod='gamification'}</h4><br>
 			<ul>
 				<li>
 					<img src="../modules/gamification/views/img/mail_icon.png" alt="{l s="Email" mod='gamification' mod='gamification'}" />
@@ -70,7 +70,7 @@
 	</div>
 	&nbsp;
 </div>
-<div class="clear"><br/></div>
+<div class="clear"><br></div>
 
 {foreach from=$badges_type key=key item=type}
 <div class="panel">
@@ -96,5 +96,5 @@
 		<p id="no_badge_{$key}" class="gamification_badges_name" style="display:none;text-align:center">{l s="No badge in this section" mod='gamification'}</p>
 	</div>
 </div>
-<div class="clear"><br/></div>
+<div class="clear"><br></div>
 {/foreach}

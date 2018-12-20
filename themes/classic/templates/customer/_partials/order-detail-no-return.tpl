@@ -40,9 +40,9 @@
               <a {if isset($product.download_link)}href="{$product.download_link}"{/if}>
                 {$product.name}
               </a>
-            </strong><br/>
+            </strong><br>
             {if $product.reference}
-              {l s='Reference' d='Shop.Theme.Catalog'}: {$product.reference}<br/>
+              {l s='Reference' d='Shop.Theme.Catalog'}: {$product.reference}<br>
             {/if}
             {if $product.customizations}
               {foreach from=$product.customizations item="customization"}

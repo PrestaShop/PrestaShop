@@ -67,8 +67,8 @@
 	{if ($input.name == 'groupBox')}
 		<div class="alert alert-info">
 			<h4>{$input.info_introduction}</h4>
-			<p>{$input.unidentified}<br />
-			{$input.guest}<br />
+			<p>{$input.unidentified}<br>
+			{$input.guest}<br>
 			{$input.customer}</p>
 		</div>
 	{/if}

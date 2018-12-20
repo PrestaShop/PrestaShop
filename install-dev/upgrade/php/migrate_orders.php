@@ -205,7 +205,7 @@ function migrate_orders()
     }
 
     if (!$res) {
-        return array('error' => 1, 'msg' => count($array_errors).' error(s) : <br/>'.implode('<br/>', $array_errors));
+        return array('error' => 1, 'msg' => count($array_errors).' error(s) : <br>'.implode('<br>', $array_errors));
     }
 }
 

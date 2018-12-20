@@ -433,7 +433,7 @@ class AdminThemesControllerCore extends AdminController
                     ),
                     'PS_LOGO_MAIL' => array(
                         'title' => $this->trans('Mail logo', array(), 'Admin.Design.Feature'),
-                        'desc' => ((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">' . $this->trans('Warning: if no email logo is available, the main logo will be used instead.', array(), 'Admin.Design.Notification') . '</span><br />' : ''),
+                        'desc' => ((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">' . $this->trans('Warning: if no email logo is available, the main logo will be used instead.', array(), 'Admin.Design.Notification') . '</span><br>' : ''),
                         'hint' => $this->trans('Will appear on email headers. If undefined, the header logo will be used.', array(), 'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_LOGO_MAIL',
@@ -442,7 +442,7 @@ class AdminThemesControllerCore extends AdminController
                     ),
                     'PS_LOGO_INVOICE' => array(
                         'title' => $this->trans('Invoice logo', array(), 'Admin.Design.Feature'),
-                        'desc' => ((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">' . $this->trans('Warning: if no invoice logo is available, the main logo will be used instead.', array(), 'Admin.Design.Help') . '</span><br />' : ''),
+                        'desc' => ((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">' . $this->trans('Warning: if no invoice logo is available, the main logo will be used instead.', array(), 'Admin.Design.Help') . '</span><br>' : ''),
                         'hint' => $this->trans('Will appear on invoice headers.', array(), 'Admin.Design.Help') . ' ' . $this->trans('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.', array(), 'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_LOGO_INVOICE',

@@ -63,14 +63,14 @@ function move_translations_module_file()
             }
 
             if (!@rename($old_file, $new_file)) {
-                $error_list[] = $module_name.' - '.$lang['iso_code']."<br/>\r\n";
+                $error_list[] = $module_name.' - '.$lang['iso_code']."<br>\r\n";
                 $res &= false;
             }
         }
     }
 
     if (!$res||(count($error_list)>0)) {
-        return array('error' => 1, 'msg' => implode("\r\n<br/>", $error_list));
+        return array('error' => 1, 'msg' => implode("\r\n<br>", $error_list));
     } else {
         return true;
     }

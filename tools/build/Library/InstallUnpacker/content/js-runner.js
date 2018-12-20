@@ -35,7 +35,7 @@ function extractFiles(startId) {
         || typeof msg.lastId === 'undefined'
         || typeof msg.numFiles === 'undefined'
     ) {
-      $('#error-install-in-progress').html('An error has occured: <br />' + msg.message);
+      $('#error-install-in-progress').html('An error has occured: <br>' + msg.message);
       $('#spinner').remove();
     } else {
       if (msg.lastId > msg.numFiles) {
@@ -192,7 +192,7 @@ function computeIssuesList(issues) {
  * @param string errorMessage
  */
 function displayErrorWhileDownloadingLatestVersion(errorMessage) {
-  $('#error-install-form').html('An error has occured: <br />' + errorMessage);
+  $('#error-install-form').html('An error has occured: <br>' + errorMessage);
   $('#waiting').remove();
   $('#fallback-after-error').show();
 }

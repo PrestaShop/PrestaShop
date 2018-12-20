@@ -264,7 +264,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $texts = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_TEXTFIELD, true);
 
                 foreach ($texts as $text_field) {
-                    $text_fields['textFields_' . $this->product->id . '_' . $text_field['index']] = str_replace('<br />', "\n", $text_field['value']);
+                    $text_fields['textFields_' . $this->product->id . '_' . $text_field['index']] = str_replace('<br>', "\n", $text_field['value']);
                 }
             }
 

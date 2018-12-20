@@ -69,5 +69,5 @@ function update_order_messages()
 
 function br2nl($str)
 {
-    return str_replace(array('<br>', '<br />', '<br/>'), "\n", $str);
+    return str_replace(array('<br>', '<br>', '<br>'), "\n", $str);
 }

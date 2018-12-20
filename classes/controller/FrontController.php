@@ -816,7 +816,7 @@ class FrontControllerCore extends Controller
             // Don't send any cookie
             Context::getContext()->cookie->disallowWriting();
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__) {
-                die('[Debug] This page has moved<br />Please use the following URL instead: <a href="' . $final_url . '">' . $final_url . '</a>');
+                die('[Debug] This page has moved<br>Please use the following URL instead: <a href="' . $final_url . '">' . $final_url . '</a>');
             }
 
             $redirect_type = Configuration::get('PS_CANONICAL_REDIRECT') == 2 ? '301' : '302';

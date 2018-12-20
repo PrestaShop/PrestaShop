@@ -234,7 +234,7 @@
 					 data-toggle="tooltip"
 					 data-placement="bottom"
 					 data-html="true"
-					 title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>"
+					 title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br>'] d='Admin.Navigation.Notification'}</p>"
 				>
 					<i class="material-icons">build</i>
 					<span>{l s='Maintenance mode' d='Admin.Navigation.Header'}</span>

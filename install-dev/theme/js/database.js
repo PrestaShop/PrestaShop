@@ -82,7 +82,7 @@ $(document).ready(function()
                     .addClass('errorBlock')
 					.removeClass('waitBlock')
                     .removeClass('okBlock')
-                    .html('An error occurred:<br /><br />' + (html ? 'Can you please reload the page' : xhr.responseText))
+                    .html('An error occurred:<br><br>' + (html ? 'Can you please reload the page' : xhr.responseText))
             }
 		});
 	});
@@ -118,7 +118,7 @@ function bindCreateDB()
                 $("#dbResultCheck")
                     .addClass('errorBlock')
                     .removeClass('okBlock')
-                    .html('An error occurred:<br /><br />' + xhr.responseText)
+                    .html('An error occurred:<br><br>' + xhr.responseText)
                     .slideDown('slow');
             }
 		});

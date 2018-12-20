@@ -60,7 +60,7 @@
 					+ '<div id="' + config.statusId + '"></div>'
 					+ '<div id="' + config.eventWindowId + '" style="padding:5px 5px 0 5px;background-color:#eee;border:1px dotted #000;">'
 						+ '<p style="margin:0 0 10px 0;"><strong>jPlayer events that have occurred over the past 1 second:</strong>'
-						+ '<br />(Backgrounds: <span style="padding:0 5px;background-color:#eee;border:1px dotted #000;">Never occurred</span> <span style="padding:0 5px;background-color:#fff;border:1px dotted #000;">Occurred before</span> <span style="padding:0 5px;background-color:#9f9;border:1px dotted #000;">Occurred</span> <span style="padding:0 5px;background-color:#ff9;border:1px dotted #000;">Multiple occurrences</span> <a href="#" id="' + config.eventResetId + '">reset</a>)</p>';
+						+ '<br>(Backgrounds: <span style="padding:0 5px;background-color:#eee;border:1px dotted #000;">Never occurred</span> <span style="padding:0 5px;background-color:#fff;border:1px dotted #000;">Occurred before</span> <span style="padding:0 5px;background-color:#9f9;border:1px dotted #000;">Occurred</span> <span style="padding:0 5px;background-color:#ff9;border:1px dotted #000;">Multiple occurrences</span> <a href="#" id="' + config.eventResetId + '">reset</a>)</p>';
 			
 			// MJP: Would use the next 3 lines for ease, but the events are just slapped on the page.
 			// $.each($.jPlayer.event, function(eventName,eventType) {
@@ -206,7 +206,7 @@
 		},
 		updateConfig: function() { // This displays information about jPlayer's configuration in inspector
 		
-			var jPlayerInfo = "<p>This jPlayer instance is running in your browser where:<br />"
+			var jPlayerInfo = "<p>This jPlayer instance is running in your browser where:<br>"
 
 			for(i = 0; i < $(this).data("jPlayerInspector").jPlayer.data("jPlayer").solutions.length; i++) {
 				var solution = $(this).data("jPlayerInspector").jPlayer.data("jPlayer").solutions[i];
@@ -218,9 +218,9 @@
 							jPlayerInfo += " " + format;
 						}
 					}
-					jPlayerInfo += "</strong><br />";
+					jPlayerInfo += "</strong><br>";
 				} else {
-					jPlayerInfo += " <strong>not required</strong><br />";
+					jPlayerInfo += " <strong>not required</strong><br>";
 				}
 			}
 			jPlayerInfo += "</p>";
@@ -241,7 +241,7 @@
 			jPlayerInfo += "</p>";
 
 			var formatType = $(this).data("jPlayerInspector").jPlayer.data("jPlayer").status.formatType;
-			jPlayerInfo += "<p><code>status.formatType = '" + formatType + "'</code><br />";
+			jPlayerInfo += "<p><code>status.formatType = '" + formatType + "'</code><br>";
 			if(formatType) {
 				jPlayerInfo += "<code>Browser canPlay('" + $.jPlayer.prototype.format[formatType].codec + "')</code>";
 			} else {
@@ -250,63 +250,63 @@
 			
 			jPlayerInfo += "<p><code>status.src = '" + $(this).data("jPlayerInspector").jPlayer.data("jPlayer").status.src + "'</code></p>";
 
-			jPlayerInfo += "<p><code>status.media = {<br />";
+			jPlayerInfo += "<p><code>status.media = {<br>";
 			for(prop in $(this).data("jPlayerInspector").jPlayer.data("jPlayer").status.media) {
-				jPlayerInfo += "&nbsp;" + prop + ": " + $(this).data("jPlayerInspector").jPlayer.data("jPlayer").status.media[prop] + "<br />"; // Some are strings
+				jPlayerInfo += "&nbsp;" + prop + ": " + $(this).data("jPlayerInspector").jPlayer.data("jPlayer").status.media[prop] + "<br>"; // Some are strings
 			}
 			jPlayerInfo += "};</code></p>"
 
 			jPlayerInfo += "<p>";
 			jPlayerInfo += "<code>status.videoWidth = '" + $(this).data("jPlayerInspector").jPlayer.data("jPlayer").status.videoWidth + "'</code>";
 			jPlayerInfo += " | <code>status.videoHeight = '" + $(this).data("jPlayerInspector").jPlayer.data("jPlayer").status.videoHeight + "'</code>";
-			jPlayerInfo += "<br /><code>status.width = '" + $(this).data("jPlayerInspector").jPlayer.data("jPlayer").status.width + "'</code>";
+			jPlayerInfo += "<br><code>status.width = '" + $(this).data("jPlayerInspector").jPlayer.data("jPlayer").status.width + "'</code>";
 			jPlayerInfo += " | <code>status.height = '" + $(this).data("jPlayerInspector").jPlayer.data("jPlayer").status.height + "'</code>";
 			jPlayerInfo += "</p>";
 
-			+ "<p>Raw browser test for HTML5 support. Should equal a function if HTML5 is available.<br />";
+			+ "<p>Raw browser test for HTML5 support. Should equal a function if HTML5 is available.<br>";
 			if($(this).data("jPlayerInspector").jPlayer.data("jPlayer").html.audio.available) {
-				jPlayerInfo += "<code>htmlElement.audio.canPlayType = " + (typeof $(this).data("jPlayerInspector").jPlayer.data("jPlayer").htmlElement.audio.canPlayType) +"</code><br />"
+				jPlayerInfo += "<code>htmlElement.audio.canPlayType = " + (typeof $(this).data("jPlayerInspector").jPlayer.data("jPlayer").htmlElement.audio.canPlayType) +"</code><br>"
 			}
 			if($(this).data("jPlayerInspector").jPlayer.data("jPlayer").html.video.available) {
 				jPlayerInfo += "<code>htmlElement.video.canPlayType = " + (typeof $(this).data("jPlayerInspector").jPlayer.data("jPlayer").htmlElement.video.canPlayType) +"</code>";
 			}
 			jPlayerInfo += "</p>";
 
-			jPlayerInfo += "<p>This instance is using the constructor options:<br />"
-			+ "<code>$('#" + $(this).data("jPlayerInspector").jPlayer.data("jPlayer").internal.self.id + "').jPlayer({<br />"
+			jPlayerInfo += "<p>This instance is using the constructor options:<br>"
+			+ "<code>$('#" + $(this).data("jPlayerInspector").jPlayer.data("jPlayer").internal.self.id + "').jPlayer({<br>"
 
-			+ "&nbsp;swfPath: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "swfPath") + "',<br />"
+			+ "&nbsp;swfPath: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "swfPath") + "',<br>"
 
-			+ "&nbsp;solution: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "solution") + "',<br />"
+			+ "&nbsp;solution: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "solution") + "',<br>"
 
-			+ "&nbsp;supplied: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "supplied") + "',<br />"
+			+ "&nbsp;supplied: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "supplied") + "',<br>"
 
-			+ "&nbsp;preload: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "preload") + "',<br />"
+			+ "&nbsp;preload: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "preload") + "',<br>"
 			
-			+ "&nbsp;volume: " + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "volume") + ",<br />"
+			+ "&nbsp;volume: " + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "volume") + ",<br>"
 			
-			+ "&nbsp;muted: " + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "muted") + ",<br />"
+			+ "&nbsp;muted: " + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "muted") + ",<br>"
 
-			+ "&nbsp;backgroundColor: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "backgroundColor") + "',<br />"
+			+ "&nbsp;backgroundColor: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "backgroundColor") + "',<br>"
 
-			+ "&nbsp;cssSelectorAncestor: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "cssSelectorAncestor") + "',<br />"
+			+ "&nbsp;cssSelectorAncestor: '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "cssSelectorAncestor") + "',<br>"
 
 			+ "&nbsp;cssSelector: {";
 
 			var cssSelector = $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "cssSelector");
 			for(prop in cssSelector) {
 				
-				// jPlayerInfo += "<br />&nbsp;&nbsp;" + prop + ": '" + cssSelector[prop] + "'," // This works too of course, but want to use option method for deep keys.
-				jPlayerInfo += "<br />&nbsp;&nbsp;" + prop + ": '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "cssSelector." + prop) + "',"
+				// jPlayerInfo += "<br>&nbsp;&nbsp;" + prop + ": '" + cssSelector[prop] + "'," // This works too of course, but want to use option method for deep keys.
+				jPlayerInfo += "<br>&nbsp;&nbsp;" + prop + ": '" + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "cssSelector." + prop) + "',"
 			}
 
 			jPlayerInfo = jPlayerInfo.slice(0, -1); // Because the sloppy comma was bugging me.
 
-			jPlayerInfo += "<br />&nbsp;},<br />"
+			jPlayerInfo += "<br>&nbsp;},<br>"
 
-			+ "&nbsp;errorAlerts: " + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "errorAlerts") + ",<br />"
+			+ "&nbsp;errorAlerts: " + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "errorAlerts") + ",<br>"
 			
-			+ "&nbsp;warningAlerts: " + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "warningAlerts") + "<br />"
+			+ "&nbsp;warningAlerts: " + $(this).data("jPlayerInspector").jPlayer.jPlayer("option", "warningAlerts") + "<br>"
 
 			+ "});</code></p>";
 			$(this).data("jPlayerInspector").configJq.html(jPlayerInfo);

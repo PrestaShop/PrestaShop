@@ -294,14 +294,14 @@ class CookieCore
         if (isset($_COOKIE[$this->_name])) {
             /* Decrypt cookie content */
             $content = $this->cipherTool->decrypt($_COOKIE[$this->_name]);
-            //printf("\$content = %s<br />", $content);
+            //printf("\$content = %s<br>", $content);
 
             /* Get cookie checksum */
             $tmpTab = explode('¤', $content);
             array_pop($tmpTab);
             $content_for_checksum = implode('¤', $tmpTab) . '¤';
             $checksum = crc32($this->_salt . $content_for_checksum);
-            //printf("\$checksum = %s<br />", $checksum);
+            //printf("\$checksum = %s<br>", $checksum);
 
             /* Unserialize cookie content */
             $tmpTab = explode('¤', $content);

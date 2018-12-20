@@ -796,9 +796,9 @@
 											{if is_array($input.desc)}
 												{foreach $input.desc as $p}
 													{if is_array($p)}
-														<span id="{$p.id}">{$p.text}</span><br />
+														<span id="{$p.id}">{$p.text}</span><br>
 													{else}
-														{$p}<br />
+														{$p}<br>
 													{/if}
 												{/foreach}
 											{else}
@@ -827,10 +827,10 @@
 						{if is_array($field)}
 							{foreach $field as $k => $p}
 								{if is_array($p)}
-									<span{if isset($p.id)} id="{$p.id}"{/if}>{$p.text}</span><br />
+									<span{if isset($p.id)} id="{$p.id}"{/if}>{$p.text}</span><br>
 								{else}
 									{$p}
-									{if isset($field[$k+1])}<br />{/if}
+									{if isset($field[$k+1])}<br>{/if}
 								{/if}
 							{/foreach}
 						{else}

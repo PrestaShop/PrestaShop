@@ -621,9 +621,9 @@
 								<td>
 									{if $address['phone']}
 										{$address['phone']}
-										{if $address['phone_mobile']}<br />{$address['phone_mobile']}{/if}
+										{if $address['phone_mobile']}<br>{$address['phone_mobile']}{/if}
 									{else}
-										{if $address['phone_mobile']}<br />{$address['phone_mobile']}{else}--{/if}
+										{if $address['phone_mobile']}<br>{$address['phone_mobile']}{else}--{/if}
 									{/if}
 								</td>
 								<td class="text-right">

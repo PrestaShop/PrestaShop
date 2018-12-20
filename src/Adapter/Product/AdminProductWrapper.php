@@ -441,7 +441,7 @@ class AdminProductWrapper
                 if ($specific_price['from'] == '0000-00-00 00:00:00' && $specific_price['to'] == '0000-00-00 00:00:00') {
                     $period = $this->translator->trans('Unlimited', array(), 'Admin.Global');
                 } else {
-                    $period = $this->translator->trans('From', array(), 'Admin.Global') . ' ' . ($specific_price['from'] != '0000-00-00 00:00:00' ? $specific_price['from'] : '0000-00-00 00:00:00') . '<br />' . $this->translator->trans('to', array(), 'Admin.Global') . ' ' . ($specific_price['to'] != '0000-00-00 00:00:00' ? $specific_price['to'] : '0000-00-00 00:00:00');
+                    $period = $this->translator->trans('From', array(), 'Admin.Global') . ' ' . ($specific_price['from'] != '0000-00-00 00:00:00' ? $specific_price['from'] : '0000-00-00 00:00:00') . '<br>' . $this->translator->trans('to', array(), 'Admin.Global') . ' ' . ($specific_price['to'] != '0000-00-00 00:00:00' ? $specific_price['to'] : '0000-00-00 00:00:00');
                 }
                 if ($specific_price['id_product_attribute']) {
                     $combination = new Combination((int) $specific_price['id_product_attribute']);

@@ -81,7 +81,7 @@ class StoresControllerCore extends FrontController
             }
         }
 
-        $out = implode('<br />', $out_datas);
+        $out = implode('<br>', $out_datas);
 
         return $out;
     }
@@ -137,7 +137,7 @@ class StoresControllerCore extends FrontController
             $address = $this->processStoreAddress($store);
 
             //$other .= $this->renderStoreWorkingHours($store);
-            $newnode->addAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
+            $newnode->addAttribute('addressNoHtml', strip_tags(str_replace('<br>', ' ', $address)));
             $newnode->addAttribute('address', $address);
             $newnode->addAttribute('other', $other);
             $newnode->addAttribute('phone', $store['phone']);
@@ -195,7 +195,7 @@ class StoresControllerCore extends FrontController
                 $store['address'][$a] = $store[$a];
                 unset($store[$a]);
             }
-            $store['address']['formatted'] = AddressFormat::generateAddress($address, array(), '<br />');
+            $store['address']['formatted'] = AddressFormat::generateAddress($address, array(), '<br>');
 
             // Prepare $store.business_hours
             // Required for trad

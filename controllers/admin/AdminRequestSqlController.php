@@ -117,7 +117,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
         $this->displayWarning($this->trans('When saving the query, only the "SELECT" SQL statement is allowed.', array(), 'Admin.Advparameters.Notification'));
         $this->displayInformation('
-		<strong>' . $this->trans('How do I create a new SQL query?', array(), 'Admin.Advparameters.Help') . '</strong><br />
+		<strong>' . $this->trans('How do I create a new SQL query?', array(), 'Admin.Advparameters.Help') . '</strong><br>
 		<ul>
 			<li>' . $this->trans('Click "Add New".', array(), 'Admin.Advparameters.Help') . '</li>
 			<li>' . $this->trans('Fill in the fields and click "Save".', array(), 'Admin.Advparameters.Help') . '</li>

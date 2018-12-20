@@ -371,7 +371,7 @@ class AdminStoresControllerCore extends AdminController
             $postcode = Tools::getValue('postcode');
             /* Check zip code format */
             if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
-                $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', array(), 'Admin.Notifications.Error') . '<br />' . $this->trans('It must be entered as follows:', array(), 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+                $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', array(), 'Admin.Notifications.Error') . '<br>' . $this->trans('It must be entered as follows:', array(), 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
             } elseif (empty($postcode) && $country->need_zip_code) {
                 $this->errors[] = $this->trans('A Zip/postal code is required.', array(), 'Admin.Notifications.Error');
             } elseif ($postcode && !Validate::isPostCode($postcode)) {

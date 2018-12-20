@@ -180,7 +180,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		</div>
 		<?php echo $this->displayError('admin_password_confirm') ?>
 	</div>
-	<br />
+	<br>
 	<span><small><?php echo sprintf($this->translator->trans('All information you give us is collected by us and is subject to data processing and statistics, it is necessary for the members of the PrestaShop company in order to respond to your requests. Your personal data may be communicated to service providers and partners as part of partner relationships. Under the current "Act on Data Processing, Data Files and Individual Liberties" you have the right to access, rectify and oppose to the processing of your personal data through this <a href="%s" onclick="return !window.open(this.href)">link</a>.', array(), 'Install'), 'mailto:legal@prestashop.com'); ?></small></span>
 </div>
 

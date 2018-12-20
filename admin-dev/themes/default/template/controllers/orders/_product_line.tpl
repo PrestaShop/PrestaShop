@@ -35,8 +35,8 @@
 	<td>{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>
 	<td>
 		<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product['product_id']|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
-			<span class="productName">{$product['product_name']}</span><br />
-			{if $product.product_reference}{l s='Reference number:' d='Admin.Orderscustomers.Feature'} {$product.product_reference}<br />{/if}
+			<span class="productName">{$product['product_name']}</span><br>
+			{if $product.product_reference}{l s='Reference number:' d='Admin.Orderscustomers.Feature'} {$product.product_reference}<br>{/if}
 			{if $product.product_supplier_reference}{l s='Supplier reference:' d='Admin.Orderscustomers.Feature'} {$product.product_supplier_reference}{/if}
 		</a>
         {if isset($product.pack_items) && $product.pack_items|@count > 0}<br>
@@ -61,7 +61,7 @@
 						{if !$currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
 					</div>
 				</div>
-				<br/>
+				<br>
 				<div class="fixed-width-xl">
 					<div class="input-group">
 						{if $currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}
@@ -102,7 +102,7 @@
 					<span class="tooltip_content">
 					<span class="title">{l s='Refund history' d='Admin.Orderscustomers.Feature'}</span>
 					{foreach $product['refund_history'] as $refund}
-						{l s='%refund_date% - %refund_amount%' sprintf=['%refund_date%' => {dateFormat date=$refund.date_add}, '%refund_amount%' => {displayPrice price=$refund.amount_tax_incl}] d='Admin.Orderscustomers.Feature'}<br />
+						{l s='%refund_date% - %refund_amount%' sprintf=['%refund_date%' => {dateFormat date=$refund.date_add}, '%refund_amount%' => {displayPrice price=$refund.amount_tax_incl}] d='Admin.Orderscustomers.Feature'}<br>
 					{/foreach}
 					</span>
 				</span>
@@ -118,7 +118,7 @@
 					<span class="tooltip_content">
 					<span class="title">{l s='Return history' d='Admin.Orderscustomers.Feature'}</span>
 					{foreach $product['return_history'] as $return}
-						{l s='%return_date% - %return_quantity% - %return_state%' sprintf=['%return_date%' =>{dateFormat date=$return.date_add}, '%return_quantity%' => $return.product_quantity, '3return_state%' => $return.state] d='Admin.Orderscustomers.Feature'}<br />
+						{l s='%return_date% - %return_quantity% - %return_state%' sprintf=['%return_date%' =>{dateFormat date=$return.date_add}, '%return_quantity%' => $return.product_quantity, '3return_state%' => $return.state] d='Admin.Orderscustomers.Feature'}<br>
 					{/foreach}
 					</span>
 				</span>
@@ -259,8 +259,8 @@
                         <td>{if isset($pack_item.image) && $pack_item.image->id}{$pack_item.image_tag}{/if}</td>
                         <td>
                             <a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $pack_item.id_product, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
-                                <span class="productName">{$pack_item.name}</span><br />
-                                {if $pack_item.reference}{l s='Ref:' d='Admin.Orderscustomers.Feature'} {$pack_item.reference}<br />{/if}
+                                <span class="productName">{$pack_item.name}</span><br>
+                                {if $pack_item.reference}{l s='Ref:' d='Admin.Orderscustomers.Feature'} {$pack_item.reference}<br>{/if}
                                 {if $pack_item.supplier_reference}{l s='Ref Supplier:' d='Admin.Orderscustomers.Feature'} {$pack_item.supplier_reference}{/if}
                             </a>
                         </td>

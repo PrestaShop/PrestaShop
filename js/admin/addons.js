@@ -121,7 +121,7 @@ $(document).ready(function() {
 								+ '<div class="media">'
 								+ '<div class="media-body">'
 								+ '<strong>' + value.cname + '</strong>'
-								+ '<br />(' + value.count + ' results)'
+								+ '<br>(' + value.count + ' results)'
 								+ '<p style="display:none;">' + value.link_rewrite + '?search_query=' + $("#addons-search-box").val() + '</p>'
 								+ '</div></div></li>';
 						}
@@ -132,7 +132,7 @@ $(document).ready(function() {
 								+ '<img class="media-object pull-left" width="28" src="https://medias2.prestastore.com/img/pico/' + value.id_product + '-mini.jpg" />'
 								+ '<div class="media-body">'
 								+ '<strong>' + value.name + '</strong>'
-								+ '<br />' + value.cname
+								+ '<br>' + value.cname
 								+ '<p style="display:none;">' + value.product_link + '</p>'
 								+ '</div></div></li>';
 						}

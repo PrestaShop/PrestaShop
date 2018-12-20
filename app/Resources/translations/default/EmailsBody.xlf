@@ -709,8 +709,8 @@ File: modules/ps_emailgenerator/templates/core/shipped.php:25</note>
 File: modules/ps_emailgenerator/templates/core/test.php:5</note>
       </trans-unit>
       <trans-unit id="0afa69e0eb948ce9fb81e14cc0c7cf0b">
-        <source><![CDATA[This is a <strong>test e-mail</strong> from your shop.<br /><br /> If you can read this, the test was successful!]]></source>
-        <target><![CDATA[This is a <strong>test e-mail</strong> from your shop.<br /><br /> If you can read this, the test was successful!]]></target>
+        <source><![CDATA[This is a <strong>test e-mail</strong> from your shop.<br><br> If you can read this, the test was successful!]]></source>
+        <target><![CDATA[This is a <strong>test e-mail</strong> from your shop.<br><br> If you can read this, the test was successful!]]></target>
         <note>Context:
 File: modules/ps_emailgenerator/templates/core/test.php:14</note>
       </trans-unit>

@@ -30,7 +30,7 @@
 	<h2><?php echo $this->translator->trans('Configure your database by filling out the following fields', array(), 'Install'); ?></h2>
 	<p>
 		<?php echo $this->translator->trans('To use PrestaShop, you must <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">create a database</a> to collect all of your store\'s data-related activities.', array(), 'Install'); ?>
-		<br />
+		<br>
 		<?php echo $this->translator->trans('Please complete the fields below in order for PrestaShop to connect to your database.', array(), 'Install'); ?>
 	</p>
 
@@ -77,7 +77,7 @@
 		<input class="text" type="hidden" id="rewrite_engine" name="rewrite_engine" value="0" />
 
 		<?php if ($this->errors): ?>
-			<p id="dbResultCheck" class="errorBlock"><?php echo implode('<br />', $this->errors) ?></p>
+			<p id="dbResultCheck" class="errorBlock"><?php echo implode('<br>', $this->errors) ?></p>
 		<?php else: ?>
 			<p id="dbResultCheck" style="display: none;"></p>
 		<?php endif; ?>

@@ -31,7 +31,7 @@
   <form name="updateFields" action="{$current|escape:'html':'UTF-8'}&amp;submitFields=1&amp;token={$token|escape:'html':'UTF-8'}" method="post">
     <div class="alert alert-info">
       {l s='Select the fields you would like to be required for this section.' d='Admin.Orderscustomers.Help'}
-      <br/>
+      <br>
       {l s='Please make sure you are complying with the opt-in legislation applicable in your country.' d='Admin.Orderscustomers.Help'}
     </div>
     <div class="row">

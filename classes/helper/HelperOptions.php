@@ -264,7 +264,7 @@ class HelperOptionsCore extends Helper
             echo '<td class="center" style="width: 180px; padding:0px 20px 20px 0px;">';
             echo '<input type="radio" name="' . $key . '" id="' . $key . '_' . $theme['name'] . '_on" style="vertical-align: text-bottom;" value="' . $theme['name'] . '"' . (_THEME_NAME_ == $theme['name'] ? 'checked="checked"' : '') . ' />';
             echo '<label class="t" for="' . $key . '_' . $theme['name'] . '_on"> ' . Tools::strtolower($theme['name']) . '</label>';
-            echo '<br />';
+            echo '<br>';
             echo '<label class="t" for="' . $key . '_' . $theme['name'] . '_on">';
             echo '<img src="' . $theme['preview'] . '" alt="' . Tools::strtolower($theme['name']) . '">';
             echo '</label>';

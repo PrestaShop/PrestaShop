@@ -766,7 +766,7 @@ abstract class DbCore
             WebserviceRequest::getInstance()->setError(500, '[SQL Error] ' . $this->getMsgError() . '. From ' . (isset($dbg[3]['class']) ? $dbg[3]['class'] : '') . '->' . $dbg[3]['function'] . '() Query was : ' . $sql, 97);
         } elseif (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS')) {
             if ($sql) {
-                throw new PrestaShopDatabaseException($this->getMsgError() . '<br /><br /><pre>' . $sql . '</pre>');
+                throw new PrestaShopDatabaseException($this->getMsgError() . '<br><br><pre>' . $sql . '</pre>');
             }
 
             throw new PrestaShopDatabaseException($this->getMsgError());

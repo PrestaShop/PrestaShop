@@ -572,7 +572,7 @@ class AdminProductsControllerCore extends AdminController
             /** @var Product $object */
             // check if request at least one object with noZeroObject
             if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1) {
-                $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b><br />' . $this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b><br>' . $this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
             } else {
                 /*
                  * @since 1.5.0
@@ -649,7 +649,7 @@ class AdminProductsControllerCore extends AdminController
                 if (isset($object->noZeroObject) &&
                     // Check if all object will be deleted
                     (count(call_user_func(array($this->className, $object->noZeroObject))) <= 1 || count($_POST[$this->table . 'Box']) == count(call_user_func(array($this->className, $object->noZeroObject))))) {
-                    $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b><br />' . $this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
+                    $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b><br>' . $this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
                 } else {
                     $success = 1;
                     $products = Tools::getValue($this->table . 'Box');
@@ -2944,8 +2944,8 @@ class AdminProductsControllerCore extends AdminController
                         )
                     )
                 ) {
-                    die(json_encode(array('error' => 'You cannot use advanced stock management for this pack because' . '<br />' .
-                        '- advanced stock management is not enabled for these products' . '<br />' .
+                    die(json_encode(array('error' => 'You cannot use advanced stock management for this pack because' . '<br>' .
+                        '- advanced stock management is not enabled for these products' . '<br>' .
                         '- you have chosen to decrement products quantities.', )));
                 }
 
@@ -2974,8 +2974,8 @@ class AdminProductsControllerCore extends AdminController
                         )
                     )
                 ) {
-                    die(json_encode(array('error' => 'You cannot use this stock management option because:' . '<br />' .
-                        '- advanced stock management is not enabled for these products' . '<br />' .
+                    die(json_encode(array('error' => 'You cannot use this stock management option because:' . '<br>' .
+                        '- advanced stock management is not enabled for these products' . '<br>' .
                         '- advanced stock management is enabled for the pack', )));
                 }
 

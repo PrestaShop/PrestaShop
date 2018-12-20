@@ -60,12 +60,12 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
     public function getContent()
     {
         $delivery_address = new Address((int) $this->order->id_address_delivery);
-        $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
+        $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br>', ' ');
         $formatted_invoice_address = '';
 
         if ($this->order->id_address_delivery != $this->order->id_address_invoice) {
             $invoice_address = new Address((int) $this->order->id_address_invoice);
-            $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
+            $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br>', ' ');
         }
 
         $this->smarty->assign(array(
@@ -74,7 +74,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
             'products' => OrderReturn::getOrdersReturnProducts((int) $this->order_return->id, $this->order),
             'delivery_address' => $formatted_delivery_address,
             'invoice_address' => $formatted_invoice_address,
-            'shop_address' => AddressFormat::generateAddress($this->shop->getAddress(), array(), '<br />', ' '),
+            'shop_address' => AddressFormat::generateAddress($this->shop->getAddress(), array(), '<br>', ' '),
         ));
 
         $tpls = array(

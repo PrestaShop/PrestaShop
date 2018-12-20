@@ -222,9 +222,9 @@ class PrestaShopExceptionCore extends Exception
      */
     protected function getExtendedMessage($html = true)
     {
-        $format = '<p><b>%s</b><br /><i>at line </i><b>%d</b><i> in file </i><b>%s</b></p>';
+        $format = '<p><b>%s</b><br><i>at line </i><b>%d</b><i> in file </i><b>%s</b></p>';
         if (!$html) {
-            $format = strip_tags(str_replace('<br />', ' ', $format));
+            $format = strip_tags(str_replace('<br>', ' ', $format));
         }
 
         return sprintf(

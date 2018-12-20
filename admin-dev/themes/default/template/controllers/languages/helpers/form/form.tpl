@@ -53,7 +53,7 @@
 
 {block name="other_fieldsets"}
 	{if isset($fields['new'])}
-		<br /><br />
+		<br><br>
 		<div class="panel" style="width:572px;">
 			{foreach $fields['new'] as $key => $field}
 				{if $key == 'legend'}
@@ -62,7 +62,7 @@
 						{$field.title}
 					</legend>
 					<p>{l s='This language pack is NOT complete and cannot be used in the front or back office because some files are missing.' d='Admin.International.Notification'}</p>
-					<br />
+					<br>
 				{elseif $key == 'list_files'}
 					{foreach $field as $list}
 						<label>{$list.label}</label>
@@ -75,14 +75,14 @@
 								{if !file_exists($key)}
 									</font>
 								{/if}
-								<br />
+								<br>
 							{/foreach}
 						</div>
 						<br style="clear:both;" />
 					{/foreach}
 				{/if}
 			{/foreach}
-			<br />
+			<br>
 			<div class="small">{l s='Missing files are marked in red' d='Admin.International.Help'}</div>
 		</div>
 	{/if}

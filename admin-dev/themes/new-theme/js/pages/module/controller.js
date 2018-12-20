@@ -547,7 +547,7 @@ class AdminModuleController {
       }
 
       currentElement = $(this).closest(moduleItemSelector);
-      htmlGenerated += `- ${currentElement.data('name')}<br/>`;
+      htmlGenerated += `- ${currentElement.data('name')}<br>`;
       alreadyDoneFlag += 1;
 
       return true;

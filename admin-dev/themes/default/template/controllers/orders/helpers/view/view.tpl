@@ -409,9 +409,9 @@
             {foreach $order->getBrother() as $brother_order}
               {if $brother_order@first}
                 {if count($order->getBrother()) == 1}
-                  <br />{l s='This warning also concerns order ' d='Admin.Orderscustomers.Notification'}
+                  <br>{l s='This warning also concerns order ' d='Admin.Orderscustomers.Notification'}
                 {else}
-                  <br />{l s='This warning also concerns the next orders:' d='Admin.Orderscustomers.Notification'}
+                  <br>{l s='This warning also concerns the next orders:' d='Admin.Orderscustomers.Notification'}
                 {/if}
               {/if}
               <a href="{$current_index}&amp;vieworder&amp;id_order={$brother_order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
@@ -711,9 +711,9 @@
                         <i class="icon-pencil"></i>
                         {l s='Edit' d='Admin.Actions'}
                       </a>
-                      {displayAddressDetail address=$addresses.delivery newLine='<br />'}
+                      {displayAddressDetail address=$addresses.delivery newLine='<br>'}
                       {if $addresses.delivery->other}
-                        <hr />{$addresses.delivery->other}<br />
+                        <hr />{$addresses.delivery->other}<br>
                       {/if}
                     </div>
                     <div class="col-sm-6 hidden-print">
@@ -761,9 +761,9 @@
                       <i class="icon-pencil"></i>
                       {l s='Edit' d='Admin.Actions'}
                     </a>
-                    {displayAddressDetail address=$addresses.invoice newLine='<br />'}
+                    {displayAddressDetail address=$addresses.invoice newLine='<br>'}
                     {if $addresses.invoice->other}
-                      <hr />{$addresses.invoice->other}<br />
+                      <hr />{$addresses.invoice->other}<br>
                     {/if}
                   </div>
                   <div class="col-sm-6 hidden-print">
@@ -1001,7 +1001,7 @@
                   d='Admin.Orderscustomers.Notification'
                 }
                 {if !Configuration::get('PS_ORDER_RETURN')}
-                  <br/><strong>{l s='Merchandise returns are disabled' d='Admin.Orderscustomers.Notification'}</strong>
+                  <br><strong>{l s='Merchandise returns are disabled' d='Admin.Orderscustomers.Notification'}</strong>
                 {/if}
               </div>
             </div>
@@ -1163,7 +1163,7 @@
                 </label>
               </p>
               {if $order->total_discounts_tax_excl > 0 || $order->total_discounts_tax_incl > 0}
-              <br/><p>{l s='This order has been partially paid by voucher. Choose the amount you want to refund:' d='Admin.Orderscustomers.Feature'}</p>
+              <br><p>{l s='This order has been partially paid by voucher. Choose the amount you want to refund:' d='Admin.Orderscustomers.Feature'}</p>
               <p class="radio">
                 <label id="lab_refund_total_1" for="refund_total_1">
                   <input type="radio" value="0" name="refund_total_voucher_off" id="refund_total_1" checked="checked" />
@@ -1237,7 +1237,7 @@
                 </div>
               </div>
             {/if}
-            <br/>
+            <br>
             <button type="submit" name="partialRefund" class="btn btn-default">
               <i class="icon-check"></i> {l s='Partial refund' d='Admin.Orderscustomers.Feature'}
             </button>
@@ -1259,10 +1259,10 @@
         <ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll;"{/if}>
         {foreach from=$sources item=source}
           <li>
-            {dateFormat date=$source['date_add'] full=true}<br />
-            <b>{l s='From' d='Admin.Orderscustomers.Feature'}</b>{if $source['http_referer'] != ''}<a href="{$source['http_referer']}">{parse_url($source['http_referer'], $smarty.const.PHP_URL_HOST)|regex_replace:'/^www./':''}</a>{else}-{/if}<br />
-            <b>{l s='To' d='Admin.Orderscustomers.Feature'}</b> <a href="http://{$source['request_uri']}">{$source['request_uri']|truncate:100:'...'}</a><br />
-            {if $source['keywords']}<b>{l s='Keywords'}</b> {$source['keywords']}<br />{/if}<br />
+            {dateFormat date=$source['date_add'] full=true}<br>
+            <b>{l s='From' d='Admin.Orderscustomers.Feature'}</b>{if $source['http_referer'] != ''}<a href="{$source['http_referer']}">{parse_url($source['http_referer'], $smarty.const.PHP_URL_HOST)|regex_replace:'/^www./':''}</a>{else}-{/if}<br>
+            <b>{l s='To' d='Admin.Orderscustomers.Feature'}</b> <a href="http://{$source['request_uri']}">{$source['request_uri']|truncate:100:'...'}</a><br>
+            {if $source['keywords']}<b>{l s='Keywords'}</b> {$source['keywords']}<br>{/if}<br>
           </li>
         {/foreach}
         </ul>

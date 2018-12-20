@@ -665,7 +665,7 @@ abstract class Controller extends ControllerCore
 					<td><span '.$this->getObjectModelColor(count($info)).'>'.count($info).'</span></td>
 					<td>';
             foreach ($info as $trace) {
-                echo str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']).' ['.$trace['line'].']<br />';
+                echo str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']).' ['.$trace['line'].']<br>';
             }
             echo '	</td>
 				</tr>';

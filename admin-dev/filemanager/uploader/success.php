@@ -8,7 +8,7 @@
     <meta http-equiv="refresh" content="3;url=index.php?path=<?php htmlentities($_GET['path']); ?>">
   </head>
   <body>
-    <center><br/><br/>
+    <center><br><br>
     <img src="success.jpg" alt="success">
 	</center>
   </body>

@@ -140,7 +140,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
                     // check if request at least one object with noZeroObject
                     if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1) {
                         $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error')
-                            . ' <b>' . $this->table . '</b><br />' . $this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
+                            . ' <b>' . $this->table . '</b><br>' . $this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
                     } else {
                         $identifier = ((int) $object->id_parent ? '&' . $this->identifier . '=' . (int) $object->id_parent : '');
                         if ($this->deleted) {

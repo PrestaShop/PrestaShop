@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <br/>
+    <br>
 
     {foreach from=$product.attributes key="attribute" item="value"}
       <div class="product-line-info">

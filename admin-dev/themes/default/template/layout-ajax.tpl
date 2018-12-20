@@ -47,7 +47,7 @@
 				{$errors[0]}
 			{else}
 				{l s='%d errors' sprintf=[$errors|count]}
-				<br/>
+				<br>
 				<ul>
 					{foreach $errors AS $error}
 						<li>{$error}</li>
@@ -61,7 +61,7 @@
 		<div class="alert alert-info" style="display:block;">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{foreach $informations as $info}
-				{$info}<br/>
+				{$info}<br>
 			{/foreach}
 		</div>
 	{/if}
@@ -70,7 +70,7 @@
 		<div class="alert alert-success" style="display:block;">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{foreach $confirmations as $confirm}
-				{$confirm}<br />
+				{$confirm}<br>
 			{/foreach}
 		</div>
 	{/if}

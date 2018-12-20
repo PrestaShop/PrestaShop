@@ -441,7 +441,7 @@ class AdminProductsController extends AdminProductsControllerCore
         if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings)) {
             // check if request at least one object with noZeroObject
             if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1) {
-                $this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
+                $this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br>'.Tools::displayError('You cannot delete all of the items.');
             } else {
                 /*
                  * @since 1.5.0
@@ -518,7 +518,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (isset($object->noZeroObject) &&
                     // Check if all object will be deleted
                     (count(call_user_func(array($this->className, $object->noZeroObject))) <= 1 || count($_POST[$this->table.'Box']) == count(call_user_func(array($this->className, $object->noZeroObject))))) {
-                    $this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
+                    $this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br>'.Tools::displayError('You cannot delete all of the items.');
                 } else {
                     $success = 1;
                     $products = Tools::getValue($this->table.'Box');
@@ -3257,7 +3257,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if ($specific_price['from'] == '0000-00-00 00:00:00' && $specific_price['to'] == '0000-00-00 00:00:00') {
                     $period = $this->l('Unlimited');
                 } else {
-                    $period = $this->l('From').' '.($specific_price['from'] != '0000-00-00 00:00:00' ? $specific_price['from'] : '0000-00-00 00:00:00').'<br />'.$this->l('To').' '.($specific_price['to'] != '0000-00-00 00:00:00' ? $specific_price['to'] : '0000-00-00 00:00:00');
+                    $period = $this->l('From').' '.($specific_price['from'] != '0000-00-00 00:00:00' ? $specific_price['from'] : '0000-00-00 00:00:00').'<br>'.$this->l('To').' '.($specific_price['to'] != '0000-00-00 00:00:00' ? $specific_price['to'] : '0000-00-00 00:00:00');
                 }
                 if ($specific_price['id_product_attribute']) {
                     $combination = new Combination((int)$specific_price['id_product_attribute']);

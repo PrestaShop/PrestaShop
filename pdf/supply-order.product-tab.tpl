@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-{l s='Products ordered:' d='Shop.Pdf' pdf='true'}<br/>
+{l s='Products ordered:' d='Shop.Pdf' pdf='true'}<br>
 
 <table class="product small" width="100%" cellpadding="4" cellspacing="0">
 
@@ -32,9 +32,9 @@
 		<th class="product header small" width="21%">{l s='Designation' d='Shop.Pdf' pdf='true'}</th>
 		<th class="product header small" width="5%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
 		<th class="product header small" width="10%">{l s='Unit Price TE' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header small" width="11%">{l s='Total TE' d='Shop.Pdf' pdf='true'} <br /> {l s='Before discount' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header small" width="11%">{l s='Total TE' d='Shop.Pdf' pdf='true'} <br> {l s='Before discount' d='Shop.Pdf' pdf='true'}</th>
 		<th class="product header small" width="9%">{l s='Discount Rate' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header small" width="11%">{l s='Total TE' d='Shop.Pdf' pdf='true'} <br /> {l s='After discount' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header small" width="11%">{l s='Total TE' d='Shop.Pdf' pdf='true'} <br> {l s='After discount' d='Shop.Pdf' pdf='true'}</th>
 		<th class="product header small" width="9%">{l s='Tax rate' d='Shop.Pdf' pdf='true'}</th>
 		<th class="product header small" width="10%">{l s='Total TI' d='Shop.Pdf' pdf='true'}</th>
 	</tr>

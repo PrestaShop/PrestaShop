@@ -46,7 +46,7 @@
                         <div class="col-md-12">
                             <form action="#" class="dropzone" id="importDropzone">
                                 <div class="module-import-start">
-                                    <i class="module-import-start-icon material-icons">cloud_upload</i><br/>
+                                    <i class="module-import-start-icon material-icons">cloud_upload</i><br>
                                     <p class=module-import-start-main-text>
                                         {{ 'Drop your module archive here or [1]select file[/1]'|trans({}, 'Admin.Modules.Feature')|replace({'[1]' : '<a href="#" class="module-import-start-select-manual">', '[/1]' : '</a>'})|raw }}
                                     </p>
@@ -64,13 +64,13 @@
                                     </p>
                                 </div>
                                 <div class='module-import-success'>
-                                    <i class="module-import-success-icon material-icons">done</i><br/>
+                                    <i class="module-import-success-icon material-icons">done</i><br>
                                     <p class='module-import-success-msg'>{{ 'Module installed!'|trans({}, 'Admin.Modules.Notification') }}</p>
                                     <p class="module-import-success-details"></p>
                                     <a class="module-import-success-configure btn btn-primary-reverse btn-outline-primary light-button" href='#'>{{ 'Configure'|trans({}, 'Admin.Actions') }}</a>
                                 </div>
                                 <div class='module-import-failure'>
-                                    <i class="module-import-failure-icon material-icons">error</i><br/>
+                                    <i class="module-import-failure-icon material-icons">error</i><br>
                                     <p class='module-import-failure-msg'>{{ 'Oops... Upload failed.'|trans({}, 'Admin.Modules.Notification') }}</p>
                                     <a href="#" class="module-import-failure-details-action">{{ 'What happened?'|trans({}, 'Admin.Modules.Help') }}</a>
                                     <div class='module-import-failure-details'></div>

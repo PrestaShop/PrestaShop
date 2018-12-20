@@ -53,9 +53,9 @@
               {/if}
             </td>
             <td>
-              <strong>{$product.name}</strong><br/>
+              <strong>{$product.name}</strong><br>
               {if $product.reference}
-                {l s='Reference' d='Shop.Theme.Catalog'}: {$product.reference}<br/>
+                {l s='Reference' d='Shop.Theme.Catalog'}: {$product.reference}<br>
               {/if}
               {if $product.customizations}
                 {foreach from=$product.customizations item="customization"}

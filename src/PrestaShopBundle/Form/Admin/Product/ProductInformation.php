@@ -194,7 +194,7 @@ class ProductInformation extends CommonAbstractType
                 'options' => [
                     'attr' => [
                         'class' => 'autoload_rte',
-                        'placeholder' => $this->translator->trans('The summary is a short sentence describing your product.<br />It will appears at the top of your shop\'s product page, in product lists, and in search engines\' results page (so it\'s important for SEO). To give more details about your product, use the "Description" tab.', [], 'Admin.Catalog.Help'),
+                        'placeholder' => $this->translator->trans('The summary is a short sentence describing your product.<br>It will appears at the top of your shop\'s product page, in product lists, and in search engines\' results page (so it\'s important for SEO). To give more details about your product, use the "Description" tab.', [], 'Admin.Catalog.Help'),
                         'counter' => (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <= 0 ? 800 : (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
                     ],
                     'constraints' => [

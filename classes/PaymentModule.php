@@ -477,7 +477,7 @@ abstract class PaymentModuleCore extends Module
                 $order = $order_list[$key];
                 if (isset($order->id)) {
                     if (!$secure_key) {
-                        $message .= '<br />' . $this->trans('Warning: the secure key is empty, check your payment account before validation', array(), 'Admin.Payment.Notification');
+                        $message .= '<br>' . $this->trans('Warning: the secure key is empty, check your payment account before validation', array(), 'Admin.Payment.Notification');
                     }
                     // Optional message to attach to this order
                     if (isset($message) & !empty($message)) {
@@ -535,12 +535,12 @@ abstract class PaymentModuleCore extends Module
                                 $customization_text = '';
                                 if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
                                     foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
-                                        $customization_text .= '<strong>' . $text['name'] . '</strong>: ' . $text['value'] . '<br />';
+                                        $customization_text .= '<strong>' . $text['name'] . '</strong>: ' . $text['value'] . '<br>';
                                     }
                                 }
 
                                 if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                                    $customization_text .= $this->trans('%d image(s)', array(count($customization['datas'][Product::CUSTOMIZE_FILE])), 'Admin.Payment.Notification') . '<br />';
+                                    $customization_text .= $this->trans('%d image(s)', array(count($customization['datas'][Product::CUSTOMIZE_FILE])), 'Admin.Payment.Notification') . '<br>';
                                 }
 
                                 $customization_quantity = (int) $customization['quantity'];
@@ -785,11 +785,11 @@ abstract class PaymentModuleCore extends Module
                             '{email}' => $this->context->customer->email,
                             '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, "\n"),
                             '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, "\n"),
-                            '{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', array(
+                            '{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br>', array(
                                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                                 'lastname' => '<span style="font-weight:bold;">%s</span>',
                             )),
-                            '{invoice_block_html}' => $this->_getFormatedAddress($invoice, '<br />', array(
+                            '{invoice_block_html}' => $this->_getFormatedAddress($invoice, '<br>', array(
                                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                                 'lastname' => '<span style="font-weight:bold;">%s</span>',
                             )),

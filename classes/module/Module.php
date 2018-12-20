@@ -352,9 +352,9 @@ abstract class ModuleCore implements ModuleInterface
         if (count($this->dependencies) > 0) {
             foreach ($this->dependencies as $dependency) {
                 if (!Db::getInstance()->getRow('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE LOWER(`name`) = \'' . pSQL(Tools::strtolower($dependency)) . '\'')) {
-                    $error = Context::getContext()->getTranslator()->trans('Before installing this module, you have to install this/these module(s) first:', array(), 'Admin.Modules.Notification') . '<br />';
+                    $error = Context::getContext()->getTranslator()->trans('Before installing this module, you have to install this/these module(s) first:', array(), 'Admin.Modules.Notification') . '<br>';
                     foreach ($this->dependencies as $d) {
-                        $error .= '- ' . $d . '<br />';
+                        $error .= '- ' . $d . '<br>';
                     }
                     $this->_errors[] = $error;
 
@@ -935,7 +935,7 @@ abstract class ModuleCore implements ModuleInterface
             <img src="../img/l/' . $default_language . '.jpg" class="pointer" id="language_current_' . $id . '" onclick="toggleLanguageFlags(this);" alt="" />
         </div>
         <div id="languages_' . $id . '" class="language_flags">
-            ' . $this->getTranslator()->trans('Choose language:', array(), 'Admin.Actions') . '<br /><br />';
+            ' . $this->getTranslator()->trans('Choose language:', array(), 'Admin.Actions') . '<br><br>';
         foreach ($languages as $language) {
             if ($use_vars_instead_of_ids) {
                 $output .= '<img src="../img/l/' . (int) $language['id_lang'] . '.jpg" class="pointer" alt="' . $language['name'] . '" title="' . $language['name'] . '" onclick="changeLanguage(\'' . $id . '\', ' . $ids . ', ' . $language['id_lang'] . ', \'' . $language['iso_code'] . '\');" /> ';

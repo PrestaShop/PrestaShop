@@ -391,8 +391,8 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="7f6c27a96363effdda77216cf1251400">
-        <source><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></source>
-        <target><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></target>
+        <source><![CDATA[The summary is a short sentence describing your product.<br>It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></source>
+        <target><![CDATA[The summary is a short sentence describing your product.<br>It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></target>
         <note>Line: 197</note>
       </trans-unit>
       <trans-unit id="1fbfcc9642d39544207c67f66ec3bc00">

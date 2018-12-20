@@ -35,28 +35,28 @@
 				<p>{l s='Definitions:' d='Admin.Shopparameters.Help'}</p>
 				<ul>
 					<li>
-						{l s='The "http_referer" field is the website from which your customers arrive.' d='Admin.Shopparameters.Help'}<br />
-						{l s='For example, visitors coming from Google will have an "http_referer" value like this one: "http://www.google.com/search?q=prestashop".' d='Admin.Shopparameters.Help'}<br />
-						{l s='If the visitor arrives directly (by typing the URL of your shop, or by using their bookmarks, for example), the http_referer will be empty.' d='Admin.Shopparameters.Help'}<br />
-						{l s='If you\'d like to view all the visitors coming from Google, you can type "%google%" in this field. Alternatively, you can type "%google.fr%" if you want to view visitors coming from Google France, only.' d='Admin.Shopparameters.Help'}<br />
+						{l s='The "http_referer" field is the website from which your customers arrive.' d='Admin.Shopparameters.Help'}<br>
+						{l s='For example, visitors coming from Google will have an "http_referer" value like this one: "http://www.google.com/search?q=prestashop".' d='Admin.Shopparameters.Help'}<br>
+						{l s='If the visitor arrives directly (by typing the URL of your shop, or by using their bookmarks, for example), the http_referer will be empty.' d='Admin.Shopparameters.Help'}<br>
+						{l s='If you\'d like to view all the visitors coming from Google, you can type "%google%" in this field. Alternatively, you can type "%google.fr%" if you want to view visitors coming from Google France, only.' d='Admin.Shopparameters.Help'}<br>
 					</li>
-					<br />
+					<br>
 					<li>
-						{l s='The "request_uri" field is the URL from which the customers come to your website.' d='Admin.Shopparameters.Help'}<br />
-						{l s='For example, if the visitor accesses a product page, the URL will be like this one: "%smusic-ipods/1-ipod-nano.html".' sprintf=[$uri] d='Admin.Shopparameters.Help'}<br />
+						{l s='The "request_uri" field is the URL from which the customers come to your website.' d='Admin.Shopparameters.Help'}<br>
+						{l s='For example, if the visitor accesses a product page, the URL will be like this one: "%smusic-ipods/1-ipod-nano.html".' sprintf=[$uri] d='Admin.Shopparameters.Help'}<br>
 						{l s='This is helpful because you can add tags or tokens in the links pointing to your website.' d='Admin.Shopparameters.Help'}
 						{l s='For example, you can post a link (such as "%sindex.php?myuniquekeyword" -- note that you added "?myuniquekeyword" at the end of the URL) in an online forum or as a blog comment, and get visitors statistics for that unique link by entering "%%myuniquekeyword" in the "request_uri" field.' sprintf=[$uri] d='Admin.Shopparameters.Help'}
 						{l s='This method is more reliable than the "http_referer" one, but there is one disadvantage: if a search engine references a page with your link, then it will be displayed in the search results and you will not only indicate visitors from the places where you posted the link, but also those from the search engines that picked up that link.' d='Admin.Shopparameters.Help'}
 					</li>
-					<br />
+					<br>
 					<li>
 						{l s='The "Include" fields indicate what has to be included in the URL.' d='Admin.Shopparameters.Help'}
 					</li>
-					<br />
+					<br>
 					<li>
 						{l s='The "Exclude" fields indicate what has to be excluded from the URL.' d='Admin.Shopparameters.Help'}
 					</li>
-					<br />
+					<br>
 					<li>
 						{l s='When using simple mode, you can use a wide variety of generic characters to replace other characters:' d='Admin.Shopparameters.Help'}
 						<ul>
@@ -64,7 +64,7 @@
 							<li>{l s='"%" will replace any number of characters. If you want to use the real "%", you should type this: "\\\\%".' d='Admin.Shopparameters.Help'}</li>
 						</ul>
 					</li>
-					<br />
+					<br>
 					<li>
 						{l s='The Simple mode uses the MySQL "LIKE" pattern matching, but for a higher potency you can use MySQL\'s regular expressions in the Expert mode.' d='Admin.Shopparameters.Help'}
 						<a class="btn btn-link _blank" href="http://dev.mysql.com/doc/refman/5.0/en/regexp.html" style="font-style: italic;"><i class="icon-external-link-sign"></i> {l s='Take a look at MySQL\'s documentation for more details.' d='Admin.Shopparameters.Help'}</a>

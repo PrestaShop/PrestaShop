@@ -46,14 +46,14 @@
 				<tbody>
 					<tr>
 						<td>
-							{$addresse.address1}<br />
-							{if $addresse.address2}{$addresse.address2}<br />{/if}
-							{$addresse.postcode} {$addresse.city}<br />
-							{if $addresse.state}{$addresse.state}<br />{/if}
-							<b>{$addresse.country}</b><br />
-							{if $addresse.phone}{$addresse.phone}<br />{/if}
-							{if $addresse.phone_mobile}{$addresse.phone_mobile}<br />{/if}
-							{if $addresse.other}<div ><br />
+							{$addresse.address1}<br>
+							{if $addresse.address2}{$addresse.address2}<br>{/if}
+							{$addresse.postcode} {$addresse.city}<br>
+							{if $addresse.state}{$addresse.state}<br>{/if}
+							<b>{$addresse.country}</b><br>
+							{if $addresse.phone}{$addresse.phone}<br>{/if}
+							{if $addresse.phone_mobile}{$addresse.phone_mobile}<br>{/if}
+							{if $addresse.other}<div ><br>
 								<i>{$addresse.other|nl2br}</i></div>
 							{/if}
 						</td>

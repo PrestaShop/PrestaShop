@@ -37,8 +37,8 @@
 		</td>
 		<td>
 			<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product['product_id']|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
-			<span class="productName">{$product['product_name']} - {l s='Customized' d='Admin.Orderscustomers.Feature'}</span><br />
-			{if ($product['product_reference'])}{l s='Reference number:' d='Admin.Orderscustomers.Feature'} {$product['product_reference']}<br />{/if}
+			<span class="productName">{$product['product_name']} - {l s='Customized' d='Admin.Orderscustomers.Feature'}</span><br>
+			{if ($product['product_reference'])}{l s='Reference number:' d='Admin.Orderscustomers.Feature'} {$product['product_reference']}<br>{/if}
 			{if ($product['product_supplier_reference'])}{l s='Supplier reference:' d='Admin.Orderscustomers.Feature'} {$product['product_supplier_reference']}{/if}
 			</a>
 		</td>
@@ -55,7 +55,7 @@
 							{if !$currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
 						</div>
 					</div>
-					<br/>
+					<br>
 					<div class="fixed-width-xl">
 						<div class="input-group">
 							{if $currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}

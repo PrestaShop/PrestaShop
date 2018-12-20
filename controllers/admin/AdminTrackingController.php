@@ -352,7 +352,7 @@ class AdminTrackingControllerCore extends AdminController
 
         // Empty list is ok
         if (!is_array($this->_list)) {
-            $this->displayWarning($this->trans('Bad SQL query', array(), 'Admin.Notifications.Error') . '<br />' . htmlspecialchars($this->_list_error));
+            $this->displayWarning($this->trans('Bad SQL query', array(), 'Admin.Notifications.Error') . '<br>' . htmlspecialchars($this->_list_error));
 
             return false;
         }

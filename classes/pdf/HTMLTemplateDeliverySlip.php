@@ -83,12 +83,12 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
     public function getContent()
     {
         $delivery_address = new Address((int) $this->order->id_address_delivery);
-        $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
+        $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br>', ' ');
         $formatted_invoice_address = '';
 
         if ($this->order->id_address_delivery != $this->order->id_address_invoice) {
             $invoice_address = new Address((int) $this->order->id_address_invoice);
-            $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
+            $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br>', ' ');
         }
 
         $carrier = new Carrier($this->order->id_carrier);

@@ -149,7 +149,7 @@ function data_table(widget_name, data) {
 		$('#'+data_id+' tbody').html('');
 
 		if(typeof data[data_id].body === 'string') {
-			$('#'+data_id+' tbody').html('<tr><td class="text-center" colspan="'+data[data_id].header.length+'"><br/>'+data[data_id].body+'</td></tr>');
+			$('#'+data_id+' tbody').html('<tr><td class="text-center" colspan="'+data[data_id].header.length+'"><br>'+data[data_id].body+'</td></tr>');
 		}
 		else if (data[data_id].body.length) {
 			for (var body_content_id in data[data_id].body) {
@@ -282,7 +282,7 @@ function saveDashConfig(widget_name) {
 				errors_str = '<div class="alert alert-danger" id="'+widget_name+'_errors">';
 				for (error in jsonData.errors)
 				{
-					errors_str += jsonData.errors[error]+'<br/>';
+					errors_str += jsonData.errors[error]+'<br>';
 					$('#'+error).closest('.form-group').addClass('has-error');
 				}
 				errors_str += '</div>';

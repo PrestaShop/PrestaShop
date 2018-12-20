@@ -46,7 +46,7 @@
               <td>
                 <strong>{$product.product_name}</strong>
                 {if $product.product_reference}
-                  <br />
+                  <br>
                   {l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}
                 {/if}
                 {if $product.customizations}

@@ -56,7 +56,7 @@
 				{if !$currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
 			</div>
 		</div>
-		<br/>
+		<br>
 		<div class="row">
 			<div class="input-group fixed-width-xl">
 				{if $currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}

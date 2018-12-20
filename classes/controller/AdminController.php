@@ -1086,7 +1086,7 @@ class AdminControllerCore extends Controller
             // check if request at least one object with noZeroObject
             if (isset($object->noZeroObject) && count(call_user_func(array($this->className, $object->noZeroObject))) <= 1) {
                 $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error') .
-                    ' <b>' . $this->table . '</b><br />' .
+                    ' <b>' . $this->table . '</b><br>' .
                     $this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
             } elseif (array_key_exists('delete', $this->list_skip_actions) && in_array($object->id, $this->list_skip_actions['delete'])) { //check if some ids are in list_skip_actions and forbid deletion
                 $this->errors[] = $this->trans('You cannot delete this item.', array(), 'Admin.Notifications.Error');
@@ -2419,7 +2419,7 @@ class AdminControllerCore extends Controller
 
         // Empty list is ok
         if (!is_array($this->_list)) {
-            $this->displayWarning($this->l('Bad SQL query', 'Helper') . '<br />' . htmlspecialchars($this->_list_error));
+            $this->displayWarning($this->l('Bad SQL query', 'Helper') . '<br>' . htmlspecialchars($this->_list_error));
 
             return false;
         }
@@ -4035,7 +4035,7 @@ class AdminControllerCore extends Controller
                 // Check if all object will be deleted
                 if ($objects_count <= 1 || count($this->boxes) == $objects_count) {
                     $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error') .
-                        ' <b>' . $this->table . '</b><br />' .
+                        ' <b>' . $this->table . '</b><br>' .
                         $this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
                 }
             } else {

@@ -779,10 +779,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
             $content = '';
             if (!$message['private']) {
-                $content .= $this->trans('Message to: ', array(), 'Admin.Catalog.Feature') . ' <span class="badge">' . (!$message['id_employee'] ? $message['subject'] : $message['customer_name']) . '</span><br/>';
+                $content .= $this->trans('Message to: ', array(), 'Admin.Catalog.Feature') . ' <span class="badge">' . (!$message['id_employee'] ? $message['subject'] : $message['customer_name']) . '</span><br>';
             }
             if (Validate::isLoadedObject($product)) {
-                $content .= '<br/>' . $this->trans('Product: ', array(), 'Admin.Catalog.Feature') . '<span class="label label-info">' . $product->name . '</span><br/><br/>';
+                $content .= '<br>' . $this->trans('Product: ', array(), 'Admin.Catalog.Feature') . '<span class="label label-info">' . $product->name . '</span><br><br>';
             }
             $content .= Tools::safeOutput($message['message']);
 
@@ -801,7 +801,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             foreach ($order_history as $history) {
                 $link_order = $this->context->link->getAdminLink('AdminOrders') . '&vieworder&id_order=' . (int) $order->id;
 
-                $content = '<a class="badge" target="_blank" href="' . Tools::safeOutput($link_order) . '">' . $this->trans('Order', array(), 'Admin.Global') . ' #' . (int) $order->id . '</a><br/><br/>';
+                $content = '<a class="badge" target="_blank" href="' . Tools::safeOutput($link_order) . '">' . $this->trans('Order', array(), 'Admin.Global') . ' #' . (int) $order->id . '</a><br><br>';
 
                 $content .= '<span>' . $this->trans('Status:', array(), 'Admin.Catalog.Feature') . ' ' . $history['ostate_name'] . '</span>';
 
@@ -1052,7 +1052,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
         //checks if imap connexion is active
         if (!$mbox) {
-            return array('hasError' => true, 'errors' => array('Cannot connect to the mailbox :<br />' . ($str_errors)));
+            return array('hasError' => true, 'errors' => array('Cannot connect to the mailbox :<br>' . ($str_errors)));
         }
 
         //Returns information about the current mailbox. Returns FALSE on failure.

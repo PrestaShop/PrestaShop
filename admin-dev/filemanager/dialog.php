@@ -388,7 +388,7 @@ if (isset($_POST['submit'])) {
     ?>"/>
 
 							<div class="fallback">
-								<?php echo lang_Upload_file ?>:<br/>
+								<?php echo lang_Upload_file ?>:<br>
 								<input name="file" type="file"/>
 								<input type="hidden" name="fldr" value="<?php echo Tools::safeOutput($subdir);
     ?>"/>
@@ -719,7 +719,7 @@ if (isset($_POST['submit'])) {
 	<div class="span12">
 	<?php if (@opendir($current_path.$subfolder.$subdir) === false) {
     ?>
-		<br/>
+		<br>
 		<div class="alert alert-error">There is an error! The upload folder there isn't. Check your config.php file.
 		</div>
 	<?php

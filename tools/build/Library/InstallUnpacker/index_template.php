@@ -284,7 +284,7 @@ if (isset($_GET['element'])) {
 
           <div id="waiting" class="error-container"></div>
           <div id="error-install-form" class="error-container"></div>
-          <div id="fallback-after-error" style="display:none;" class="error-container">Cannot download latest Prestashop version.<br/>
+          <div id="fallback-after-error" style="display:none;" class="error-container">Cannot download latest Prestashop version.<br>
             Please click on 'No thanks' to resume standard installation.
           </div>
         </div>

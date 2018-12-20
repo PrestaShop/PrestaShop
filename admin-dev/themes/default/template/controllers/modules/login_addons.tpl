@@ -29,9 +29,9 @@
 		{if $check_url_fopen eq 'ko'  OR $check_openssl eq 'ko'}
 			<div class="alert alert-warning">
 				{l s='If you want to be able to fully use the AdminModules panel and have free modules available, you should enable the following configuration on your server:'}
-				<br />
-				{if $check_url_fopen eq 'ko'}- {l s='Enable PHP\'s allow_url_fopen setting'}<br />{/if}
-				{if $check_openssl eq 'ko'}- {l s='Enable PHP\'s OpenSSL extension'}<br />{/if}
+				<br>
+				{if $check_url_fopen eq 'ko'}- {l s='Enable PHP\'s allow_url_fopen setting'}<br>{/if}
+				{if $check_openssl eq 'ko'}- {l s='Enable PHP\'s OpenSSL extension'}<br>{/if}
 			</div>
 		{else}
 			<!--start addons login-->

@@ -2909,7 +2909,7 @@ exit;
             $message = 'The function ' . $callee['function'] . ' (Line ' . $callee['line'] . ') is deprecated and will be removed in the next major version.';
         }
 
-        $error = 'Function <b>' . $callee['function'] . '()</b> is deprecated in <b>' . $callee['file'] . '</b> on line <b>' . $callee['line'] . '</b><br />';
+        $error = 'Function <b>' . $callee['function'] . '()</b> is deprecated in <b>' . $callee['file'] . '</b> on line <b>' . $callee['line'] . '</b><br>';
 
         Tools::throwDeprecated($error, $message, $class);
     }
@@ -2921,7 +2921,7 @@ exit;
     {
         $backtrace = debug_backtrace();
         $callee = next($backtrace);
-        $error = 'Parameter <b>' . $parameter . '</b> in function <b>' . (isset($callee['function']) ? $callee['function'] : '') . '()</b> is deprecated in <b>' . $callee['file'] . '</b> on line <b>' . (isset($callee['line']) ? $callee['line'] : '(undefined)') . '</b><br />';
+        $error = 'Parameter <b>' . $parameter . '</b> in function <b>' . (isset($callee['function']) ? $callee['function'] : '') . '()</b> is deprecated in <b>' . $callee['file'] . '</b> on line <b>' . (isset($callee['line']) ? $callee['line'] : '(undefined)') . '</b><br>';
         $message = 'The parameter ' . $parameter . ' in function ' . $callee['function'] . ' (Line ' . (isset($callee['line']) ? $callee['line'] : 'undefined') . ') is deprecated and will be removed in the next major version.';
         $class = isset($callee['class']) ? $callee['class'] : null;
 
@@ -2932,7 +2932,7 @@ exit;
     {
         $backtrace = debug_backtrace();
         $callee = current($backtrace);
-        $error = 'File <b>' . $callee['file'] . '</b> is deprecated<br />';
+        $error = 'File <b>' . $callee['file'] . '</b> is deprecated<br>';
         $message = 'The file ' . $callee['file'] . ' is deprecated and will be removed in the next major version.';
         $class = isset($callee['class']) ? $callee['class'] : null;
 
@@ -3222,7 +3222,7 @@ exit;
     }
 
     /**
-     * Convert \n and \r\n and \r to <br />.
+     * Convert \n and \r\n and \r to <br>.
      *
      * @param string $string String to transform
      *
@@ -3230,7 +3230,7 @@ exit;
      */
     public static function nl2br($str)
     {
-        return str_replace(array("\r\n", "\r", "\n"), '<br />', $str);
+        return str_replace(array("\r\n", "\r", "\n"), '<br>', $str);
     }
 
     /**

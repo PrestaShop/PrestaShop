@@ -29,8 +29,8 @@
 		<tr>
 			<th class="product header small" width="60%">{l s='Product / Reference' d='Shop.Pdf' pdf='true'}</th>
 			<th class="product header small" width="10%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
-			<th class="product header-right small" width="15%">{l s='Unit price' d='Shop.Pdf' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
-			<th class="product header-right small" width="15%">{l s='Price' d='Shop.Pdf' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
+			<th class="product header-right small" width="15%">{l s='Unit price' d='Shop.Pdf' pdf='true'}<br>{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
+			<th class="product header-right small" width="15%">{l s='Price' d='Shop.Pdf' pdf='true'}<br>{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
 		</tr>
 	</thead>
 
@@ -76,7 +76,7 @@
 										{if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
 											{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
 												{$customization_infos.name}: {$customization_infos.value}
-												{if !$smarty.foreach.custo_foreach.last}<br />{/if}
+												{if !$smarty.foreach.custo_foreach.last}<br>{/if}
 											{/foreach}
 										{/if}
 

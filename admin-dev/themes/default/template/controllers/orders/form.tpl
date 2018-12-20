@@ -325,7 +325,7 @@
 				if (res.errors.length > 0)
 				{
 					$.each(res.errors, function() {
-						errors += this+'<br/>';
+						errors += this+'<br>';
 					});
 					$('#vouchers_err').html(errors).show();
 				}
@@ -495,8 +495,8 @@
             html += '<div class="panel">';
             html += '<div class="panel-heading">' + this.firstname + ' ' + this.lastname;
             html += '<span class="pull-right">#' + this.id_customer + '</span></div>';
-            html += '<span>' + this.email + '</span><br/>';
-            html += '<span class="text-muted">' + ((this.birthday != '0000-00-00') ? this.birthday : '') + '</span><br/>';
+            html += '<span>' + this.email + '</span><br>';
+            html += '<span class="text-muted">' + ((this.birthday != '0000-00-00') ? this.birthday : '') + '</span><br>';
             html += '<div class="panel-footer">';
             html += '<a href="{$link->getAdminLink('AdminCustomers', true, [], ['viewcustomer' => 1, 'liteDisplaying' => 1])}&id_customer=' + this.id_customer + '" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details' d='Admin.Global' js=1}</a>';
             html += '<button type="button" data-customer="' + this.id_customer + '" class="setup-customer btn btn-default pull-right" id="choose_customer_btn"><i class="icon-arrow-right"></i> {l s='Choose' d='Admin.Actions' js=1}</button>';
@@ -731,7 +731,7 @@
 			var id_product = Number(this.id_product);
 			var id_product_attribute = Number(this.id_product_attribute);
 			cart_quantity[Number(this.id_product)+'_'+Number(this.id_product_attribute)+'_'+Number(this.id_customization)] = this.cart_quantity;
-			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="' + this.numeric_price + '" /></td><td>';
+			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br>'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="' + this.numeric_price + '" /></td><td>';
 			cart_content += (!this.id_customization ? '<div class="input-group fixed-width-md"><div class="input-group-btn"><a href="#" class="btn btn-default increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><i class="icon-caret-up"></i></a><a href="#" class="btn btn-default decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'"><i class="icon-caret-down"></i></a></div>' : '');
 			cart_content += (!this.id_customization ? '<input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" class="cart_quantity" value="'+this.cart_quantity+'" />' : '');
 			cart_content += (!this.id_customization ? '<div class="input-group-btn"><a href="#" class="delete_product btn btn-default" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><i class="icon-remove text-danger"></i></a></div></div>' : '');
@@ -744,14 +744,14 @@
 					if (typeof this.datas[1] !== 'undefined' && this.datas[1].length)
 					{
 						$.each(this.datas[1],function() {
-							customized_desc += this.name + ': ' + this.value + '<br />';
+							customized_desc += this.name + ': ' + this.value + '<br>';
 							id_customization = this.id_customization;
 						});
 					}
 					if (typeof this.datas[0] !== 'undefined' && this.datas[0].length)
 					{
 						$.each(this.datas[0],function() {
-							customized_desc += this.name + ': <img src="' + pic_dir + this.value + '_small" /><br />';
+							customized_desc += this.name + ': <img src="' + pic_dir + this.value + '_small" /><br>';
 							id_customization = this.id_customization;
 						});
 					}
@@ -765,7 +765,7 @@
 		});
 
 		$.each(gifts, function() {
-			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td>';
+			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br>'+this.attributes_small+'</td><td>'+this.reference+'</td>';
 			cart_content += '<td>{l s='Gift' js=1}</td><td>'+this.cart_quantity+'</td><td>{l s='Gift' d='Admin.Orderscustomers.Feature' js=1}</td></tr>';
 		});
 		$('#customer_cart tbody').html(cart_content);
@@ -885,7 +885,7 @@
 				if (res.errors.length)
 				{
 					$.each(res.errors, function() {
-						errors += this + '<br />';
+						errors += this + '<br>';
 					});
 					$('#products_err').removeClass('hide');
 				}
@@ -1483,37 +1483,37 @@
 			<div class="row">
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total products' d='Admin.Orderscustomers.Feature'}</span><br/>
+						<span>{l s='Total products' d='Admin.Orderscustomers.Feature'}</span><br>
 						<span id="total_products" class="size_l text-success"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total vouchers (Tax excl.)' d='Admin.Orderscustomers.Feature'}</span><br/>
+						<span>{l s='Total vouchers (Tax excl.)' d='Admin.Orderscustomers.Feature'}</span><br>
 						<span id="total_vouchers" class="size_l text-danger"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total shipping (Tax excl.)' d='Admin.Orderscustomers.Feature'}</span><br/>
+						<span>{l s='Total shipping (Tax excl.)' d='Admin.Orderscustomers.Feature'}</span><br>
 						<span id="total_shipping" class="size_l"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total taxes' d='Admin.Orderscustomers.Feature'}</span><br/>
+						<span>{l s='Total taxes' d='Admin.Orderscustomers.Feature'}</span><br>
 						<span id="total_taxes" class="size_l"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total (Tax excl.)' d='Admin.Orderscustomers.Feature'}</span><br/>
+						<span>{l s='Total (Tax excl.)' d='Admin.Orderscustomers.Feature'}</span><br>
 						<span id="total_without_taxes" class="size_l"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus data-focus-primary">
-						<span>{l s='Total (Tax incl.)' d='Admin.Orderscustomers.Feature'}</span><br/>
+						<span>{l s='Total (Tax incl.)' d='Admin.Orderscustomers.Feature'}</span><br>
 						<span id="total_with_taxes" class="size_l"></span>
 					</div>
 				</div>

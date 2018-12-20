@@ -93,7 +93,7 @@
 			$("#popup_title").text(title);
 			$("#popup_content").addClass(type);
 			$("#popup_message").text(msg);
-			$("#popup_message").html( $("#popup_message").text().replace(/\n/g, '<br />') );
+			$("#popup_message").html( $("#popup_message").text().replace(/\n/g, '<br>') );
 			
 			$("#popup_container").css({
 				minWidth: $("#popup_container").outerWidth(),
@@ -131,7 +131,7 @@
 					});
 				break;
 				case 'prompt':
-					$("#popup_message").append('<br /><input type="text" size="30" id="popup_prompt" />').after('<div id="popup_panel"><input type="button" value="' + $.alerts.okButton + '" id="popup_ok" /> <input type="button" value="' + $.alerts.cancelButton + '" id="popup_cancel" /></div>');
+					$("#popup_message").append('<br><input type="text" size="30" id="popup_prompt" />').after('<div id="popup_panel"><input type="button" value="' + $.alerts.okButton + '" id="popup_ok" /> <input type="button" value="' + $.alerts.cancelButton + '" id="popup_cancel" /></div>');
 					$("#popup_prompt").width( $("#popup_message").width() );
 					$("#popup_ok").click( function() {
 						var val = $("#popup_prompt").val();

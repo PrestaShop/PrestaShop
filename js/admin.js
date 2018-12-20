@@ -254,7 +254,7 @@ function displayFlags(languages, defaultLanguageID, employee_cookie)
 					);
 				var languagesFlags = $('<div></div>')
 					.addClass('language_flags')
-					.html(choose_language_translate+':<br /><br />');
+					.html(choose_language_translate+':<br><br>');
 				$.each(languages, function(key, language) {
 					var img = $('<img>')
 						.addClass('pointer')
@@ -1497,7 +1497,7 @@ function verifyMail(testMsg, testSubject)
 				else
 				{
 					mailIsOk = false;
-					$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(textSendError + '<br />' + ret);
+					$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(textSendError + '<br>' + ret);
 				}
 		   }
 		 }
@@ -1527,9 +1527,9 @@ function checkLangPack(token){
 				{
 					content = $.parseJSON(ret.content);
 					message = langPackOk + ' <b>'+content['name'] + '</b>) :'
-						+'<br />' + langPackVersion + ' ' + content['version']
+						+'<br>' + langPackVersion + ' ' + content['version']
 						+ ' <a href="http://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
-						+ ($('#iso_code').val()).toLowerCase()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
+						+ ($('#iso_code').val()).toLowerCase()+'.gzip" target="_blank" class="link">'+download+'</a><br>' + langPackInfo;
 					$('#lang_pack_msg').html(message);
 					$('#lang_pack_msg').show();
 				}

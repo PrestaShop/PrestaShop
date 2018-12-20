@@ -29,7 +29,7 @@
       {foreach from=$order.messages item=message}
         <div class="message row">
           <div class="col-sm-4">
-            {$message.name}<br/>
+            {$message.name}<br>
             {$message.message_date}
           </div>
           <div class="col-sm-8">

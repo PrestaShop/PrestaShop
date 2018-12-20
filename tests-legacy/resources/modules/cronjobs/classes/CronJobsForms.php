@@ -209,9 +209,9 @@ class CronJobsForms
                     <p>'
                     .self::$module->l('The Advanced mode enables you to use your own cron tasks manager instead of PrestaShop cron tasks webservice.', 'CronJobsForms').' '
                     .self::$module->l('First of all, make sure the \'curl\' library is installed on your server.', 'CronJobsForms')
-                    .'<br />'.self::$module->l('To execute your cron tasks, please insert the following line in your cron tasks manager:', 'CronJobsForms').'
+                    .'<br>'.self::$module->l('To execute your cron tasks, please insert the following line in your cron tasks manager:', 'CronJobsForms').'
                     </p>
-                    <br />
+                    <br>
                     <ul class="list-unstyled">
                         <li><code>0 * * * * curl '.(Configuration::get('PS_SSL_ENABLED') ? '-k ' : null).'"'.$curl_url.'"</code></li>
                     </ul>

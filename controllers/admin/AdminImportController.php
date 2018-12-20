@@ -772,7 +772,7 @@ class AdminImportControllerCore extends AdminController
                     break;
                 case UPLOAD_ERR_FORM_SIZE:
                     $_FILES['file']['error'] = $this->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', array(), 'Admin.Advparameters.Notification')
-                    . '<br/><a href="' . $this->context->link->getAdminLink('AdminMeta') . '" >
+                    . '<br><a href="' . $this->context->link->getAdminLink('AdminMeta') . '" >
 					<code>php_value post_max_size 20M</code> ' .
                     $this->trans('(click to open "Generators" page)', array(), 'Admin.Advparameters.Notification') . '</a>';
 
@@ -1056,7 +1056,7 @@ class AdminImportControllerCore extends AdminController
                 continue;
             }
             if ($k === 'price_tin') { // Special case for Product : either one or the other. Not both.
-                $fields[$i - 1] = '<div>' . $this->available_fields[$keys[$i - 1]]['label'] . '<br/>&nbsp;&nbsp;<i>' . $this->trans('or', array(), 'Admin.Advparameters.Help') . '</i>&nbsp;&nbsp; ' . $field['label'] . '</div>';
+                $fields[$i - 1] = '<div>' . $this->available_fields[$keys[$i - 1]]['label'] . '<br>&nbsp;&nbsp;<i>' . $this->trans('or', array(), 'Admin.Advparameters.Help') . '</i>&nbsp;&nbsp; ' . $field['label'] . '</div>';
             } else {
                 if (isset($field['help'])) {
                     $html = '&nbsp;<span class="help-box" data-toggle="popover" data-content="' . $field['help'] . '"></span>';

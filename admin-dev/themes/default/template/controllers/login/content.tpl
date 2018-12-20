@@ -115,7 +115,7 @@
 				</form>
 			</div>
 			<div class="back back_reset">
-				<h4 id="reset_confirm_name">{l s='Your password has been successfully changed.'}<br/><br/>{l s='You will be redirected to the login page in a few seconds.' d='Admin.Login.Notification'}</h4>
+				<h4 id="reset_confirm_name">{l s='Your password has been successfully changed.'}<br><br>{l s='You will be redirected to the login page in a few seconds.' d='Admin.Login.Notification'}</h4>
 			</div>
 			{/if}
 
@@ -142,7 +142,7 @@
 			</div>
 
 			<div class="front forgot_confirm" style="display: none">
-				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.' d='Admin.Login.Notification'}<br/><br/>{l s='A link to reset your password has been sent to you.' d='Admin.Login.Notification'}</h4>
+				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.' d='Admin.Login.Notification'}<br><br>{l s='A link to reset your password has been sent to you.' d='Admin.Login.Notification'}</h4>
 			</div>
 		</div>
 		{else}

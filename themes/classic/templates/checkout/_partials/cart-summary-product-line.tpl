@@ -39,6 +39,6 @@
             <span class="value">{$value}</span>
         </div>
     {/foreach}
-    <br/>
+    <br>
   </div>
 {/block}

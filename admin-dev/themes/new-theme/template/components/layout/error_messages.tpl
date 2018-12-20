@@ -30,7 +30,7 @@
         {reset($errors)}
       {else }
         {l s='%d errors' sprintf=[$errors|count]}
-        <br/>
+        <br>
         <ol>
           {foreach $errors as $error}
             <li>{$error}</li>

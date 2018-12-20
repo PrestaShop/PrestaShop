@@ -52,7 +52,7 @@ function add_order_reference_in_order_payment()
     }
 
     if (count($errors)) {
-        return array('error' => true, 'msg' => implode('<br/>', $errors));
+        return array('error' => true, 'msg' => implode('<br>', $errors));
     }
 
     // Get lines to merge (with multishipping on, durring the payment one line was added by order, only one is necessary by cart)

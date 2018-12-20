@@ -55,7 +55,7 @@
            data-toggle="pstooltip"
            data-placement="bottom"
            data-html="true"
-           title="<p class='text-left'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
+           title="<p class='text-left'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br>']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
         >
           <i class="material-icons">build</i>
           <span>{l s='Maintenance mode'}</span>

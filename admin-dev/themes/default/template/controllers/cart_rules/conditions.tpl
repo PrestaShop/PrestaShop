@@ -150,7 +150,7 @@
 			</p>
 			<span class="help-block">{l s='This restriction applies to the country of delivery.' d='Admin.Catalog.Help'}</span>
 			<div id="country_restriction_div">
-				<br />
+				<br>
 				<table class="table">
 					<tr>
 						<td>
@@ -184,7 +184,7 @@
 				</label>
 			</p>
 			<div id="carrier_restriction_div">
-				<br />
+				<br>
 				<table class="table">
 					<tr>
 						<td>
@@ -218,7 +218,7 @@
 				</label>
 			</p>
 			<div id="group_restriction_div">
-				<br />
+				<br>
 				<table class="table">
 					<tr>
 						<td>
@@ -252,7 +252,7 @@
 				</label>
 			</p>
 			<div id="cart_rule_restriction_div">
-				<br />
+				<br>
 				<table  class="table">
 					<tr>
 						<td>
@@ -283,7 +283,7 @@
 				</label>
 			</p>
 			<div id="product_restriction_div">
-				<br />
+				<br>
 				<table id="product_rule_group_table" class="table">
 					{foreach from=$product_rule_groups item='product_rule_group'}
 						{$product_rule_group}
@@ -302,7 +302,7 @@
 				</label>
 			</p>
 			<div id="shop_restriction_div">
-				<br/>
+				<br>
 				<table class="table">
 					<tr>
 						<td>

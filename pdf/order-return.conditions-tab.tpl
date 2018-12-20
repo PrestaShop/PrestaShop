@@ -38,5 +38,5 @@
 		</td>
 	</tr>
 </table>
-<br/>
+<br>
 {l s='Upon receiving your package, we will notify you by e-mail. We will then begin processing the refund, if applicable. Let us know if you have any questions' d='Shop.Pdf' pdf='true'}

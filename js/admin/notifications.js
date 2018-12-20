@@ -25,7 +25,7 @@
 $(document).ready(function() {
 	var hints = $('.translatable span.hint');
 	if (youEditFieldFor)
-		hints.html(hints.html() + '<br /><span class="red">' + youEditFieldFor + '</span>');
+		hints.html(hints.html() + '<br><span class="red">' + youEditFieldFor + '</span>');
 
 	var html = "";
 	var nb_notifs = 0;

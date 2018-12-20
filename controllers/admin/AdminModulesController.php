@@ -1199,7 +1199,7 @@ class AdminModulesControllerCore extends AdminController
                 $html_error_description = '';
                 if (count($module_error['message']) > 0) {
                     foreach ($module_error['message'] as $e) {
-                        $html_error_description .= '<br />&nbsp;&nbsp;&nbsp;&nbsp;' . $e;
+                        $html_error_description .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $e;
                     }
                 }
                 $html_error .= '<li><b>' . $module_error['name'] . '</b> : ' . $html_error_description . '</li>';

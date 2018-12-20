@@ -85,7 +85,7 @@
 				<div class="alert alert-info">
 				{if is_array($input.hint)}
 					{foreach from=$input.hint item=hint}
-						{$hint}<br/>
+						{$hint}<br>
 					{/foreach}
 				{else}
 					{$input.hint}

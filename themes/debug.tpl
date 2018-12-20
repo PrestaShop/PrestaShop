@@ -128,7 +128,7 @@
    (compile {$template['compile_time']|string_format:"%.5f"}) (render {$template['render_time']|string_format:"%.5f"}) (cache {$template['cache_time']|string_format:"%.5f"}
                     )
   </span>
-                <br/>
+                <br>
             {/foreach}
         </div>
     {/if}

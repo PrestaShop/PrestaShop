@@ -36,12 +36,12 @@
 		{if $limit_warning['error_type'] == 'suhosin'}
 			{l s='Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:' d='Admin.International.Notification'}
 
-			{l s='%limit% for suhosin.post.max_vars.' sprintf=['%limit%' => '<b>'|cat:$limit_warning['post.max_vars'|cat:'</b>'] d='Admin.International.Notification'}<br/>
-      {l s='%limit% for suhosin.request.max_vars.' sprintf=['%limit%' => '<b>'|cat:$limit_warning['request.max_vars'|cat:'</b>'] d='Admin.International.Notification'}<br/>
+			{l s='%limit% for suhosin.post.max_vars.' sprintf=['%limit%' => '<b>'|cat:$limit_warning['post.max_vars'|cat:'</b>'] d='Admin.International.Notification'}<br>
+      {l s='%limit% for suhosin.request.max_vars.' sprintf=['%limit%' => '<b>'|cat:$limit_warning['request.max_vars'|cat:'</b>'] d='Admin.International.Notification'}<br>
       {l s='Please ask your hosting provider to increase the Suhosin limit to' d='Admin.International.Notification'}
 		{else}
 			{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:' d='Admin.International.Notification'}
-			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.' d='Admin.International.Notification'}<br/>
+			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.' d='Admin.International.Notification'}<br>
 			{l s='Please ask your hosting provider to increase this limit to' d='Admin.International.Notification'}
 		{/if}
 		{l s='%s at least, or you will have to edit the translation files.' sprintf=[$limit_warning['needed_limit']] d='Admin.International.Notification'}
@@ -82,7 +82,7 @@
 					<div class="alert alert-warning">
 						<p>
 							{l s='Some of these expressions use this special syntax: %s.' sprintf=['%d'] d='Admin.International.Help'}
-							<br />
+							<br>
 							{l s='You MUST use this syntax in your translations. Here are several examples:'}
 						</p>
 						<ul>

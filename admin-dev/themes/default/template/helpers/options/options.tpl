@@ -77,8 +77,8 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<p class="help-block">
-								<strong>{l s='Check / Uncheck all'}</strong><br />
-								{l s='You are editing this page for a specific shop or group. Click "Yes" to check all fields, "No" to uncheck all.'}<br />
+								<strong>{l s='Check / Uncheck all'}</strong><br>
+								{l s='You are editing this page for a specific shop or group. Click "Yes" to check all fields, "No" to uncheck all.'}<br>
  								{l s='If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.'}
 							</p>
 						</div>
@@ -313,9 +313,9 @@
 											{if is_array($field['desc'])}
 												{foreach $field['desc'] as $p}
 													{if is_array($p)}
-														<span id="{$p.id}">{$p.text}</span><br />
+														<span id="{$p.id}">{$p.text}</span><br>
 													{else}
-														{$p}<br />
+														{$p}<br>
 													{/if}
 												{/foreach}
 											{else}

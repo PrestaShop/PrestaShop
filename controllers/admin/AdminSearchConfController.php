@@ -75,7 +75,7 @@ class AdminSearchConfControllerCore extends AdminController
                 'title' => $this->trans('Indexing', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-cogs',
                 'info' => '<p>
-						' . $this->trans('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.', array(), 'Admin.Shopparameters.Feature') . '<br />
+						' . $this->trans('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.', array(), 'Admin.Shopparameters.Feature') . '<br>
 						' . $this->trans('Indexed products', array(), 'Admin.Shopparameters.Feature') . ' <strong>' . (int) $indexed . ' / ' . (int) $total . '</strong>.
 					</p>
 					<p>
@@ -85,18 +85,18 @@ class AdminSearchConfControllerCore extends AdminController
 					<a href="searchcron.php?token=' . substr(_COOKIE_KEY_, 34, 8) . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
 						<i class="icon-external-link-sign"></i>
 						' . $this->trans('Add missing products to the index', array(), 'Admin.Shopparameters.Feature') . '
-					</a><br />
+					</a><br>
 					<a href="searchcron.php?full=1&amp;token=' . substr(_COOKIE_KEY_, 34, 8) . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
 						<i class="icon-external-link-sign"></i>
 						' . $this->trans('Re-build the entire index', array(), 'Admin.Shopparameters.Feature') . '
-					</a><br /><br />
+					</a><br><br>
 					<p>
-						' . $this->trans('You can set a cron job that will rebuild your index using the following URL:', array(), 'Admin.Shopparameters.Feature') . '<br />
+						' . $this->trans('You can set a cron job that will rebuild your index using the following URL:', array(), 'Admin.Shopparameters.Feature') . '<br>
 						<a href="' . Tools::safeOutput($cron_url) . '">
 							<i class="icon-external-link-sign"></i>
 							' . Tools::safeOutput($cron_url) . '
 						</a>
-					</p><br />',
+					</p><br>',
                 'fields' => array(
                     'PS_SEARCH_INDEXATION' => array(
                         'title' => $this->trans('Indexing', array(), 'Admin.Shopparameters.Feature'),
@@ -121,7 +121,7 @@ class AdminSearchConfControllerCore extends AdminController
                                 'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
                                 array(),
                                 'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            ) . '<br>' .
                             $this->trans(
                                 'With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.',
                                 array(),
@@ -149,7 +149,7 @@ class AdminSearchConfControllerCore extends AdminController
                                 'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
                                 array(),
                                 'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            ) . '<br>' .
                             $this->trans(
                                 'With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.',
                                 array(),
@@ -203,17 +203,17 @@ class AdminSearchConfControllerCore extends AdminController
                         'The "weight" represents its importance and relevance for the ranking of the products when completing a new search.',
                         array(),
                         'Admin.Shopparameters.Feature'
-                    ) . '<br />
+                    ) . '<br>
 						' . $this->trans(
                         'A word with a weight of eight will have four times more value than a word with a weight of two.',
                         array(),
                         'Admin.Shopparameters.Feature'
-                    ) . '<br /><br />
+                    ) . '<br><br>
 						' . $this->trans(
                         'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.',
                         array(),
                         'Admin.Shopparameters.Feature'
-                    ) . '<br /><br />
+                    ) . '<br><br>
 						' . $this->trans(
                         'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0',
                         array(),

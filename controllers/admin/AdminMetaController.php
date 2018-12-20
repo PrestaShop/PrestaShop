@@ -228,7 +228,7 @@ class AdminMetaControllerCore extends AdminController
                 $this->addAllRouteFields();
             }
             $this->fields_options['routes']['title'] = $this->trans('Schema of URLs', array(), 'Admin.Shopparameters.Feature');
-            $this->fields_options['routes']['description'] = $this->trans('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.', array(), 'Admin.Shopparameters.Notification') . '<br />' . $this->trans('There are several available keywords for each route listed below; note that keywords with * are required!', array(), 'Admin.Shopparameters.Notification') . '<br />' . $this->trans('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.', array(), 'Admin.Shopparameters.Notification');
+            $this->fields_options['routes']['description'] = $this->trans('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.', array(), 'Admin.Shopparameters.Notification') . '<br>' . $this->trans('There are several available keywords for each route listed below; note that keywords with * are required!', array(), 'Admin.Shopparameters.Notification') . '<br>' . $this->trans('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.', array(), 'Admin.Shopparameters.Notification');
             $this->fields_options['routes']['submit'] = array('title' => $this->trans('Save', array(), 'Admin.Actions'));
         }
 
@@ -521,8 +521,8 @@ class AdminMetaControllerCore extends AdminController
             Configuration::updateValue('PS_REWRITING_SETTINGS', 0);
             // Message copied/pasted from the information tip
             $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.Shopparameters.Notification');
-            $message .= '<br />- ' . $this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.Shopparameters.Notification');
-            $message .= '<br />- ' . $this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Shopparameters.Notification');
+            $message .= '<br>- ' . $this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.Shopparameters.Notification');
+            $message .= '<br>- ' . $this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Shopparameters.Notification');
             $this->errors[] = $message;
         }
     }

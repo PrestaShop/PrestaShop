@@ -58,7 +58,7 @@
 					<a href="#step-{$step_nbr + 1}">
 						<span class="stepNumber">{$step_nbr + 1}</span>
 						<span class="stepDesc">
-							{$step.title}<br />
+							{$step.title}<br>
 							{if isset($step.desc)}<small>{$step.desc}</small>{/if}
 						</span>
 						<span class="chevron"></span>

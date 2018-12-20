@@ -438,7 +438,7 @@ class AdminCartsControllerCore extends AdminController
             }
             $this->setMedia(false);
             $this->initFooter();
-            $this->context->smarty->assign(array('customization_errors' => implode('<br />', $errors),
+            $this->context->smarty->assign(array('customization_errors' => implode('<br>', $errors),
                 'css_files' => $this->css_files, ));
 
             return $this->smartyOutputContent('controllers/orders/form_customization_feedback.tpl');
@@ -811,7 +811,7 @@ class AdminCartsControllerCore extends AdminController
 
         foreach ($addresses as &$data) {
             $address = new Address((int) $data['id_address']);
-            $data['formated_address'] = AddressFormat::generateAddress($address, array(), '<br />');
+            $data['formated_address'] = AddressFormat::generateAddress($address, array(), '<br>');
         }
 
         return array(
@@ -906,7 +906,7 @@ class AdminCartsControllerCore extends AdminController
 
         // Empty list is ok
         if (!is_array($this->_list)) {
-            $this->displayWarning($this->trans('Bad SQL query', array(), 'Admin.Notifications.Error') . '<br />' . htmlspecialchars($this->_list_error));
+            $this->displayWarning($this->trans('Bad SQL query', array(), 'Admin.Notifications.Error') . '<br>' . htmlspecialchars($this->_list_error));
 
             return false;
         }

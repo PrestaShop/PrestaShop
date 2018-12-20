@@ -205,7 +205,7 @@ class AdminShopGroupControllerCore extends AdminController
                             'value' => 0,
                         ),
                     ),
-                    'desc' => $this->trans('Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.', array(), 'Admin.Advparameters.Help') . '<br/>' . $this->trans('Warning: you will not be able to disable this option once you have registered customers.', array(), 'Admin.Advparameters.Help'),
+                    'desc' => $this->trans('Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.', array(), 'Admin.Advparameters.Help') . '<br>' . $this->trans('Warning: you will not be able to disable this option once you have registered customers.', array(), 'Admin.Advparameters.Help'),
                 ),
                 array(
                     'type' => 'switch',
@@ -244,7 +244,7 @@ class AdminShopGroupControllerCore extends AdminController
                             'value' => 0,
                         ),
                     ),
-                    'desc' => $this->trans('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.', array(), 'Admin.Advparameters.Help') . '<br/>' . $this->trans('Warning: You will not be able to disable this option once you\'ve started to accept orders.', array(), 'Admin.Advparameters.Help'),
+                    'desc' => $this->trans('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.', array(), 'Admin.Advparameters.Help') . '<br>' . $this->trans('Warning: You will not be able to disable this option once you\'ve started to accept orders.', array(), 'Admin.Advparameters.Help'),
                 ),
                 array(
                     'type' => 'switch',
