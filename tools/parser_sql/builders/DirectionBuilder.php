@@ -53,6 +53,6 @@ class DirectionBuilder {
             return "";
         }
 
-        return (" " . $parsed['direction']);
+        return " " . $parsed['direction'];
     }
 }
