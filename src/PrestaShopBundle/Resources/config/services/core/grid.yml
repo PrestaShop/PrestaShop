@@ -232,7 +232,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'profiles', 'action': 'index'})"
-            - "@=service('router').generate('admin_profiles')"
+            - "@=service('router').generate('admin_profiles_index')"
         public: true
 
     # Grid factories
