@@ -643,8 +643,9 @@
 
 {% block translatable_widget -%}
   <div class="input-group locale-input-group js-locale-input-group d-flex">
+    {% set classes = attr.class|default('') %}
     {% for translateField in form %}
-      {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+      {% set classes = classes ~ translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
       {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
       {% if default_locale.id_lang != translateField.vars.name %}
         {% set classes = classes ~ ' d-none' %}
