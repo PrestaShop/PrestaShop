@@ -144,18 +144,31 @@ class CurrencyController extends FrameworkBundleAdminController
      * )
      *
      * @param int $currencyId
+     * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function editAction($currencyId)
+    public function editAction($currencyId, Request $request)
     {
-        //todo: drop legacy and after having post add @DemoRestricted
-        $legacyLink = $this->getAdminLink('AdminCurrencies', [
-            'id_currency' => $currencyId,
-            'updatecurrency' => 1,
-        ]);
+        $currencyForm = null;
+        try {
+            $currencyForm = $this->getCurrencyFormBuilder()->getFormFor($currencyId);
+            $currencyForm->handleRequest($request);
 
-        return $this->redirect($legacyLink);
+            $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_currencies_index');
+            }
+        } catch (CurrencyException $exception) {
+
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
+            'currency_form' => null !== $currencyForm ? $currencyForm->createView() : null,
+        ]);
     }
 
     /**

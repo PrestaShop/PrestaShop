@@ -53,6 +53,14 @@
             {{ ps.form_widget_with_error(currencyForm.exchange_rate, {'attr': {'maxLength': 11}}) }}
           </div>
         </div>
+        <div class="form-group row">
+          <label for="{{ currencyForm.active.vars.id }}" class="form-control-label">
+            {{ 'Status'|trans({}, 'Admin.Global') }}
+          </label>
+          <div class="col-sm">
+            {{ ps.form_widget_with_error(currencyForm.active) }}
+          </div>
+        </div>
       </div>
     </div>
 
