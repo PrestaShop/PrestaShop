@@ -77,7 +77,7 @@ class PHPSQLLexer {
             return true;
         }
 
-        return (substr($haystack, -$length) === $needle);
+        return substr($haystack, -$length) === $needle;
     }
 
     public function split($sql) {
@@ -207,7 +207,7 @@ class PHPSQLLexer {
     }
 
     protected function isBacktick($token) {
-        return ($token === "'" || $token === "\"" || $token === "`");
+        return $token === "'" || $token === "\"" || $token === "`";
     }
 
     protected function balanceBackticks($tokens) {

@@ -631,7 +631,7 @@ class CronJobs extends Module
         $shop_url = urlencode(Tools::getShopDomain(true, true).__PS_BASE_URI__);
         $shop_url_ssl = urlencode(Tools::getShopDomainSsl(true, true).__PS_BASE_URI__);
 
-        return ((strpos($task, $shop_url) === 0) || (strpos($task, $shop_url_ssl) === 0));
+        return (strpos($task, $shop_url) === 0) || (strpos($task, $shop_url_ssl) === 0);
     }
 
     protected function setErrorMessage($message)

@@ -32,13 +32,13 @@
         // parse and fix init value
         var value = sliderInput.attr('sql');
         if (value != '') {
-	        value = value.replace('BETWEEN ', '');
-	        value = value.replace(' AND ', ',');
-	        value = value.replace('<=', '{{ min|default('0') }},');
-	        value = value.replace('>=', '{{ max|default('1000000000') }},');
-	        value = value.split(',');
-	        value[0] = Number(value[0]);
-	        value[1] = Number(value[1]);
+            value = value.replace('BETWEEN ', '');
+            value = value.replace(' AND ', ',');
+            value = value.replace('<=', '{{ min|default('0') }},');
+            value = value.replace('>=', '{{ max|default('1000000000') }},');
+            value = value.split(',');
+            value[0] = Number(value[0]);
+            value[1] = Number(value[1]);
         } else {
             value = [{{ min|default('0') }}, {{ max|default('1000000000') }}];
         }
