@@ -278,7 +278,7 @@ class Locale
      * @param string $currencyCode
      *                             An ISO 4217 currency code
      *
-     * @return null|Currency
+     * @return null|CurrencyInterface
      *                       The wanted CLDR Currency. Null if this currency is not available for this locale.
      */
     public function getCurrency($currencyCode)
