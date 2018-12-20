@@ -26,27 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
-use Db;
-use ImageManager;
-use ImageType;
 use Language;
-use Context;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\AddLanguageHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CopyingNoPictureException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
-use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use Shop;
 
 /**
  * Handles command which adds new language using legacy object model
  *
  * @internal
  */
-final class AddLanguageHandler implements AddLanguageHandlerInterface
+final class AddLanguageHandler extends AbstractLanguageHandler implements AddLanguageHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -55,7 +48,10 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
     {
         $this->assertLanguageWithIsoCodeDoesNotExist($command->getIsoCode());
 
-        $this->copyNoPictureImage($command);
+        $this->copyNoPictureImage(
+            $command->getIsoCode(),
+            $command->getNoPictureImagePath()
+        );
 
         $language = $this->createLegacyLanguageObjectFromCommand($command);
 
@@ -88,48 +84,9 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
      */
     private function addShopAssociation(Language $language, AddLanguageCommand $command)
     {
-        if (!Shop::isFeatureActive()) {
-            return;
-        }
-
-        $languageTable = Language::$definition['table'];
-
-        if (!Shop::isTableAssociated($languageTable)) {
-            return;
-        }
-
-        // Get list of shop id we want to exclude from asso deletion
-        $excludeIds = $command->getShopAssociation();
-        foreach (Db::getInstance()->executeS('SELECT id_shop FROM ' . _DB_PREFIX_ . 'shop') as $row) {
-            if (!Context::getContext()->employee->hasAuthOnShop($row['id_shop'])) {
-                $excludeIds[] = $row['id_shop'];
-            }
-        }
-
-        $excludeShopsCondtion = $excludeIds ?
-            ' AND id_shop NOT IN (' . implode(', ', array_map('intval', $excludeIds)) . ')' :
-            ''
-        ;
-
-        Db::getInstance()->delete(
-            $languageTable . '_shop',
-            '`id_lang` = ' . (int) $language->id . $excludeShopsCondtion
-        );
-
-        $insert = [];
-        foreach ($command->getShopAssociation() as $shopId) {
-            $insert[] = [
-                'id_lang' => (int) $language->id,
-                'id_shop' => (int) $shopId,
-            ];
-        }
-
-        Db::getInstance()->insert(
-            $languageTable . '_shop',
-            $insert,
-            false,
-            true,
-            Db::INSERT_IGNORE
+        $this->associateWithShops(
+            (int) $language->id,
+            $command->getShopAssociation()
         );
     }
 
@@ -159,74 +116,6 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
     }
 
     /**
-     * Copies placeholder image for specific language
-     *
-     * @param AddLanguageCommand $command
-     */
-    private function copyNoPictureImage(AddLanguageCommand $command)
-    {
-        $isoCode = $command->getIsoCode()->getValue();
-
-        if (!($temporaryImage = tempnam(_PS_TMP_IMG_DIR_, 'PS'))
-            || !move_uploaded_file($command->getNoPictureImagePath(), $temporaryImage)
-        ) {
-            return;
-        }
-
-        if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'p/' . $isoCode . '.jpg')) {
-            throw new CopyingNoPictureException(
-                sprintf('An error occurred while copying "No Picture" image to product directory'),
-                CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR
-            );
-        }
-
-        if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'c/' . $isoCode . '.jpg')) {
-            throw new CopyingNoPictureException(
-                sprintf('An error occurred while copying "No Picture" image to category directory'),
-                CopyingNoPictureException::CATEGORY_IMAGE_COPY_ERROR
-            );
-        }
-
-        if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'm/' . $isoCode . '.jpg')) {
-            throw new CopyingNoPictureException(
-                sprintf('An error occurred while copying "No Picture" image to brand directory'),
-                CopyingNoPictureException::BRAND_IMAGE_COPY_ERROR
-            );
-        }
-
-        $imagesTypes = ImageType::getImagesTypes('products');
-
-        foreach ($imagesTypes as $imagesType) {
-            $imageName = $isoCode . '-default-' . stripslashes($imagesType['name']) . '.jpg';
-            $imageWidth = $imagesType['width'];
-            $imageHeight = $imagesType['height'];
-
-            if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'p/' . $imageName, $imageWidth, $imageHeight)) {
-                throw new CopyingNoPictureException(
-                    sprintf('An error occurred while copying "No Picture" image to product directory'),
-                    CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR
-                );
-            }
-
-            if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'c/' . $imageName, $imageWidth, $imageHeight)) {
-                throw new CopyingNoPictureException(
-                    sprintf('An error occurred while copying "No Picture" image to category directory'),
-                    CopyingNoPictureException::CATEGORY_IMAGE_COPY_ERROR
-                );
-            }
-
-            if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'm/' . $imageName, $imageWidth, $imageHeight)) {
-                throw new CopyingNoPictureException(
-                    sprintf('An error occurred while copying "No Picture" image to brand directory'),
-                    CopyingNoPictureException::BRAND_IMAGE_COPY_ERROR
-                );
-            }
-        }
-
-        unlink($temporaryImage);
-    }
-
-    /**
      * @param Language $language
      * @param AddLanguageCommand $command
      */
@@ -237,40 +126,5 @@ final class AddLanguageHandler implements AddLanguageHandlerInterface
             $command->getFlagImagePath(),
             'l' . DIRECTORY_SEPARATOR
         );
-    }
-
-    /**
-     * @param int $languageId
-     * @param string $newImagePath
-     * @param string $imageDir
-     */
-    private function uploadImage($languageId, $newImagePath, $imageDir)
-    {
-        $temporaryImage = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-        if (!$temporaryImage) {
-            return;
-        }
-
-        if (!move_uploaded_file($newImagePath, $temporaryImage)) {
-            return;
-        }
-
-        // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-        if (!ImageManager::checkImageMemoryLimit($temporaryImage)) {
-            throw new LanguageImageUploadingException(
-                'Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.',
-                LanguageImageUploadingException::MEMORY_LIMIT_RESTRICTION
-            );
-        }
-
-        // Copy new image
-        if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . $imageDir . $languageId . '.jpg')) {
-            throw new LanguageImageUploadingException(
-                'An error occurred while uploading the image. Check your directory permissions.',
-                LanguageImageUploadingException::UNEXPECTED_ERROR
-            );
-        }
-
-        unlink($temporaryImage);
     }
 }
