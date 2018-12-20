@@ -233,6 +233,7 @@ services:
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'profiles', 'action': 'index'})"
             - "@=service('router').generate('admin_profiles_index')"
+            - '@prestashop.adapter.grid.action.row.accessibility_checker.delete_profile'
         public: true
 
     # Grid factories

@@ -30,7 +30,7 @@
     <div class="btn-group">
       {% set skippedActions, isFirstRendered = 0, false %}
 
-      {# Render first item that is not in dropwdown #}
+      {# Render first item that is not in dropdown #}
       {% for action in actions %}
         {% if not isFirstRendered %}
           {% set skippedActions = skippedActions + 1 %}
@@ -51,24 +51,34 @@
 
       {# Render remaining items in dropdown #}
       {% if actions|length > skippedActions %}
-        <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split"
-           data-toggle="dropdown"
-           aria-haspopup="true"
-           aria-expanded="false"
-        >
-        </a>
+        {% set actionsDropdownRendered = false %}
 
-        <div class="dropdown-menu dropdown-menu-right">
-          {% for action in actions|slice(skippedActions) if action.isApplicable(record) %}
-            {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
-              'grid': grid,
-              'column': column,
-              'attributes': {'class': 'dropdown-item', 'tooltip_name': false},
-              'record': record,
-              'action': action
-            }) }}
-          {% endfor %}
-        </div>
+        {% for action in actions|slice(skippedActions) if action.isApplicable(record) %}
+          {# Only render the dropdown when there is at least one action to render #}
+          {% if not actionsDropdownRendered %}
+            <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split"
+               data-toggle="dropdown"
+               aria-haspopup="true"
+               aria-expanded="false"
+            >
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right">
+            {% set actionsDropdownRendered = true %}
+          {% endif %}
+
+          {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
+            'grid': grid,
+            'column': column,
+            'attributes': {'class': 'dropdown-item', 'tooltip_name': false},
+            'record': record,
+            'action': action
+          }) }}
+
+          {% if not actionsDropdownRendered %}
+            </div>
+          {% endif %}
+        {% endfor %}
       {% endif %}
     </div>
   </div>
