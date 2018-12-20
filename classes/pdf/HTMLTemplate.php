@@ -96,17 +96,19 @@ abstract class HTMLTemplateCore
      */
     protected function getLogo()
     {
-        $logo = '';
-
         $id_shop = (int) $this->shop->id;
 
-        if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop))) {
-            $logo = _PS_IMG_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
-        } elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $id_shop))) {
-            $logo = _PS_IMG_ . Configuration::get('PS_LOGO', null, null, $id_shop);
+        $invoiceLogo = Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
+        if ($invoiceLogo && file_exists(_PS_IMG_DIR_ . $invoiceLogo)) {
+            return $invoiceLogo;
         }
 
-        return Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . $logo;
+        $logo = Configuration::get('PS_LOGO', null, null, $id_shop);
+        if ($logo && file_exists(_PS_IMG_DIR_ . $logo)) {
+            return $logo;
+        }
+
+        return null;
     }
 
     /**
@@ -118,12 +120,12 @@ abstract class HTMLTemplateCore
         $id_shop = (int) $this->shop->id;
         $shop_name = Configuration::get('PS_SHOP_NAME', null, null, $id_shop);
 
-        $path_logo = $this->getLogo();
+        $logo = $this->getLogo();
 
         $width = 0;
         $height = 0;
-        if (!empty($path_logo)) {
-            list($width, $height) = getimagesize($path_logo);
+        if (!empty($logo)) {
+            list($width, $height) = getimagesize(_PS_IMG_DIR_ . $logo);
         }
 
         // Limit the height of the logo for the PDF render
@@ -135,7 +137,7 @@ abstract class HTMLTemplateCore
         }
 
         $this->smarty->assign(array(
-            'logo_path' => $path_logo,
+            'logo_path' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo,
             'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'date' => $this->date,
