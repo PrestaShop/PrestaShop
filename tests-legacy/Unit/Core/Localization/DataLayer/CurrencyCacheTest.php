@@ -24,11 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Localization\CLDR\DataLayer;
+namespace LegacyTests\Unit\Core\Localization\DataLayer;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData as CldrCurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\CurrencyCache as CldrCurrencyCacheDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyCache as CurrencyCacheDataLayer;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheAdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
@@ -37,38 +38,40 @@ class CurrencyCacheTest extends TestCase
     /**
      * The tested data layer
      *
-     * @var CldrCurrencyCacheDataLayer
+     * @var CurrencyCacheDataLayer
      */
     protected $layer;
 
-    /**
-     * @inheritDoc
-     */
     protected function setUp()
     {
         // Let's use a real cache adapter (easier to setup, and a php array is always available in any environment)
         $cacheAdapter = new ArrayAdapter();
 
         /** @var CacheAdapterInterface $cacheAdapter */
-        $this->layer = new CldrCurrencyCacheDataLayer($cacheAdapter);
+        $this->layer = new CurrencyCacheDataLayer($cacheAdapter);
     }
 
+    /**
+     * Given a valid CurrencyCache data layer object
+     * When asking it to write data and then read the same data
+     * Then the said data should be retrieved unchanged
+     */
     public function testReadWrite()
     {
-        $data      = new CldrCurrencyData();
+        $data      = new CurrencyData();
         $data->foo = ['bar', 'baz'];
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->layer->write('fooBar', $data);
+        $this->layer->write(new LocalizedCurrencyId('foo', 'bar'), $data);
         /** @noinspection end */
 
         // Get value back from cache
         /** @noinspection PhpUnhandledExceptionInspection */
-        $cachedData = $this->layer->read('fooBar');
+        $cachedData = $this->layer->read(new LocalizedCurrencyId('foo', 'bar'));
         /** @noinspection end */
 
         $this->assertInstanceOf(
-            CldrCurrencyData::class,
+            CurrencyData::class,
             $cachedData
         );
 
@@ -79,7 +82,7 @@ class CurrencyCacheTest extends TestCase
 
         // Same test with unknown cache key
         /** @noinspection PhpUnhandledExceptionInspection */
-        $cachedData = $this->layer->read('unknown');
+        $cachedData = $this->layer->read(new LocalizedCurrencyId('unknown', 'unknown'));
         /** @noinspection end */
 
         $this->assertNull($cachedData);
