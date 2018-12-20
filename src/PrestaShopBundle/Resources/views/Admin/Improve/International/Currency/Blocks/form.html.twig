@@ -35,11 +35,11 @@
     <div class="card-block row">
       <div class="card-text">
         <div class="form-group row">
-          <label for="{{ currencyForm.currency.vars.id }}" class="form-control-label">
+          <label for="{{ currencyForm.iso_code.vars.id }}" class="form-control-label">
             {{ ps.label_with_help('Currency'|trans({}, 'Admin.Global'), ('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).'|trans({}, 'Admin.International.Help'))) }}
           </label>
           <div class="col-sm">
-            {{ ps.form_widget_with_error(currencyForm.currency) }}
+            {{ ps.form_widget_with_error(currencyForm.iso_code) }}
           </div>
         </div>
         <div class="form-group row">
