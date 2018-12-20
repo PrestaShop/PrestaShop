@@ -39,7 +39,7 @@ final class CurrencyFromCldrChoiceProvider implements FormChoiceProviderInterfac
     private $cldrAllCurrencies;
 
     /**
-     * @param array $cldrCurrencies
+     * @param array $cldrAllCurrencies
      */
     public function __construct(array $cldrAllCurrencies)
     {
@@ -56,7 +56,7 @@ final class CurrencyFromCldrChoiceProvider implements FormChoiceProviderInterfac
             if (!isset($cldrCurrency['code'], $cldrCurrency['name'])) {
                 continue;
             }
-            
+
             $result[$cldrCurrency['name']] = $cldrCurrency['code'];
         }
 
