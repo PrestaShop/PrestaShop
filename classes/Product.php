@@ -360,7 +360,7 @@ class ProductCore extends ObjectModel
             'ecotax' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
             'minimal_quantity' => array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
             'low_stock_threshold' => array('type' => self::TYPE_INT, 'shop' => true, 'allow_null' => true, 'validate' => 'isInt'),
-            'low_stock_alert' => array('type' => self::TYPE_BOOL, 'shop' => true, 'allow_null' => true, 'validate' => 'isBool'),
+            'low_stock_alert' => array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'price' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'required' => true),
             'wholesale_price' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
             'unity' => array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
