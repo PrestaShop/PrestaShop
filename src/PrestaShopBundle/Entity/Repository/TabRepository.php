@@ -72,7 +72,6 @@ class TabRepository extends EntityRepository
         if ($tab) {
             return $tab->getId();
         }
-
     }
 
     /**

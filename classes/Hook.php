@@ -981,6 +981,5 @@ class HookCore extends ObjectModel
         if (!is_null($sfContainer) && 'dev' === $sfContainer->getParameter('kernel.environment')) {
             return $sfContainer->get('prestashop.hooks_registry');
         }
-
     }
 }

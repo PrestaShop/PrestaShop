@@ -145,7 +145,6 @@ class GuestCore extends ObjectModel
                 return $result['id_web_browser'];
             }
         }
-
     }
 
     /**
@@ -177,7 +176,6 @@ class GuestCore extends ObjectModel
                 return $result['id_operating_system'];
             }
         }
-
     }
 
     /**

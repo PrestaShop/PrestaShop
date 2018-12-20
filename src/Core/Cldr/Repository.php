@@ -205,7 +205,6 @@ class Repository
         if (!empty($currencies[$code]) && !empty($currencies[$code]['_numeric'])) {
             return $currencies[$code]['_numeric'];
         }
-
     }
 
     /**

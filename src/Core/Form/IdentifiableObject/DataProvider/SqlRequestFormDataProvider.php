@@ -70,6 +70,5 @@ final class SqlRequestFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        
     }
 }

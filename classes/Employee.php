@@ -732,6 +732,5 @@ class EmployeeCore extends ObjectModel
         if ($tabId = (int) $this->default_tab) {
             return Tab::getClassNameById($tabId) ?: null;
         }
-
     }
 }

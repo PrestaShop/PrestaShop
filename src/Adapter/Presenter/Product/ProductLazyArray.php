@@ -202,7 +202,6 @@ class ProductLazyArray extends AbstractLazyArray
                 $this->product['id_product_attribute']
             );
         }
-
     }
 
     /**
@@ -258,7 +257,6 @@ class ProductLazyArray extends AbstractLazyArray
         } elseif ($this->product['allow_oosp']) {
             return Configuration::get('PS_LABEL_DELIVERY_TIME_OOSBOA', $this->language->id);
         }
-
     }
 
     /**
@@ -292,7 +290,6 @@ class ProductLazyArray extends AbstractLazyArray
         foreach ($this->product['attachments'] as &$attachment) {
             return Tools::formatBytes($attachment['file_size'], 2);
         }
-
     }
 
     /**
@@ -341,7 +338,6 @@ class ProductLazyArray extends AbstractLazyArray
         if ('' !== $this->product['reference']) {
             return $this->product['reference'];
         }
-
     }
 
     /**
@@ -354,7 +350,6 @@ class ProductLazyArray extends AbstractLazyArray
         if ($this->product['features']) {
             return $this->buildGroupedFeatures($this->product['features']);
         }
-
     }
 
     /**
@@ -409,7 +404,6 @@ class ProductLazyArray extends AbstractLazyArray
                 'rate' => $this->product['ecotax_rate'],
             );
         }
-
     }
 
     /**
@@ -533,7 +527,6 @@ class ProductLazyArray extends AbstractLazyArray
 
             return $specificReferences;
         }
-
     }
 
     /**

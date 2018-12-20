@@ -2252,7 +2252,6 @@ class OrderCore extends ObjectModel
         if ($this->current_state) {
             return new OrderState($this->current_state);
         }
-
     }
 
     /**

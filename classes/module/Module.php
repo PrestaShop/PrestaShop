@@ -593,7 +593,6 @@ abstract class ModuleCore implements ModuleInterface
                 return $module->loadUpgradeVersionList($module->name, $module->version, $old_version);
             }
         }
-
     }
 
     /**
@@ -2330,7 +2329,6 @@ abstract class ModuleCore implements ModuleInterface
         } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_ . $module_name . '/' . $template)) {
             return false;
         }
-
     }
 
     protected function _isTemplateOverloaded($template)

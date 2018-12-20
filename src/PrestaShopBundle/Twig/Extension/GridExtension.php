@@ -222,6 +222,5 @@ class GridExtension extends AbstractExtension
         if (null !== $defaultTemplate) {
             return sprintf('%s/%s', $basePath, $defaultTemplate);
         }
-
     }
 }

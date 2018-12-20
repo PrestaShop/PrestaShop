@@ -149,7 +149,6 @@ abstract class AbstractDataLayer
         if (isset($this->lowerDataLayer)) {
             return $this->lowerDataLayer->read($field);
         }
-
     }
 
     /**
