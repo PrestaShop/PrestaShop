@@ -53,10 +53,11 @@ abstract class AbstractSaveMetaCommand
     /**
      * @param int $languageId
      * @param string $value
+     * @param int $constraintErrorCode
      *
      * @throws MetaConstraintException
      */
-    protected function validateName($languageId, $value)
+    protected function validateName($languageId, $value, $constraintErrorCode)
     {
         $regex = '/^[^<>={}]*$/u';
 
@@ -68,7 +69,7 @@ abstract class AbstractSaveMetaCommand
                     $languageId,
                     $regex
                 ),
-                MetaConstraintException::INVALID_META_NAME
+                $constraintErrorCode
             );
         }
     }

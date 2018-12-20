@@ -26,8 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -162,12 +165,16 @@ class MetaController extends FrameworkBundleAdminController
         $metaForm = $this->getMetaFormBuilder()->getForm($data);
         $metaForm->handleRequest($request);
 
-        $result = $this->getMetaFormHandler()->handle($metaForm);
+        try {
+            $result = $this->getMetaFormHandler()->handle($metaForm);
 
-        if (null !== $result->getIdentifiableObjectId()) {
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_meta_index');
+                return $this->redirectToRoute('admin_meta_index');
+            }
+        } catch (MetaException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/create.html.twig', [
@@ -366,5 +373,48 @@ class MetaController extends FrameworkBundleAdminController
     private function getMetaFormHandler()
     {
         return $this->get('prestashop.core.form.identifiable_object.meta_form_handler');
+    }
+
+    private function handleException(MetaException $exception)
+    {
+        if (0 !== $exception->getCode()) {
+            return $this->getExceptionByErrorCode($exception);
+        }
+
+        return $this->getExceptionByType($exception);
+    }
+
+    private function getExceptionByErrorCode(MetaException $exception)
+    {
+        //todo: finish exception handling
+        $exceptionDictionary = [
+            MetaConstraintException::class => [
+                MetaConstraintException::INVALID_URL_REWRITE =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Rewritten URL', [], 'Admin.Shopparameters.Feature')),
+                        ],
+                        'Admin.Notifications.Error'
+                    ),
+                MetaConstraintException::INVALID_PAGE_NAME =>
+                    $this->trans(
+                        'The %s field is required.',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Page name', [], 'Admin.Shopparameters.Feature')),
+                        ],
+                        'Admin.Notifications.Error'
+                    ),
+            ],
+        ];
+    }
+
+    private function getExceptionByType(MetaException $exception)
+    {
+
     }
 }

@@ -33,5 +33,7 @@ class MetaConstraintException extends MetaException
 {
     const INVALID_PAGE_NAME = 1;
     const INVALID_URL_REWRITE = 2;
-    const INVALID_META_NAME = 3;
+    const INVALID_PAGE_TITLE = 3;
+    const INVALID_META_DESCRIPTION = 4;
+    const INVALID_META_KEYWORDS = 5;
 }

@@ -52,7 +52,7 @@ class AddMetaCommandTest extends TestCase
     public function testItThrowsAnExceptionOnIncorrectPageTitle($incorrectNames)
     {
         $this->expectException(MetaConstraintException::class);
-        $this->expectExceptionCode(MetaConstraintException::INVALID_META_NAME);
+        $this->expectExceptionCode(MetaConstraintException::INVALID_PAGE_TITLE);
 
         $command = new AddMetaCommand('correct-page-name');
 
@@ -65,7 +65,7 @@ class AddMetaCommandTest extends TestCase
     public function testItThrowsAnExceptionOnIncorrectPageDescription($incorrectNames)
     {
         $this->expectException(MetaConstraintException::class);
-        $this->expectExceptionCode(MetaConstraintException::INVALID_META_NAME);
+        $this->expectExceptionCode(MetaConstraintException::INVALID_META_DESCRIPTION);
 
         $command = new AddMetaCommand('correct-page-name');
 
@@ -78,7 +78,7 @@ class AddMetaCommandTest extends TestCase
     public function testItThrowsAnExceptionOnIncorrectMetaKeywords($incorrectNames)
     {
         $this->expectException(MetaConstraintException::class);
-        $this->expectExceptionCode(MetaConstraintException::INVALID_META_NAME);
+        $this->expectExceptionCode(MetaConstraintException::INVALID_META_KEYWORDS);
 
         $command = new AddMetaCommand('correct-page-name');
 
