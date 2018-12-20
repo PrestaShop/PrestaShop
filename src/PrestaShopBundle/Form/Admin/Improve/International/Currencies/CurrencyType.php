@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -59,9 +60,8 @@ class CurrencyType extends AbstractType
                 'choices' => $this->allCurrencies,
                 'choice_translation_domain' => false,
             ])
-            ->add('exchange_rate', TextType::class, [
-
-            ])
+            ->add('exchange_rate', TextType::class)
+            ->add('active',  SwitchType::class)
         ;
     }
 }
