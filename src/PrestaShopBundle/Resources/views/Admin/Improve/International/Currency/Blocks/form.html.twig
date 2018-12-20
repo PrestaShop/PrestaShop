@@ -23,4 +23,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
+{% block form %}
+  {{ form_start(currencyForm) }}
+
+  <div class="card">
+    <div class="card-header">
+      {{ 'Currencies'|trans({}, 'Admin.Global') }}
+    </div>
+    <div class="card-block row">
+      <div class="card-text">
+        <div class="form-group row">
+          <label for="{{ currencyForm.currency.vars.id }}" class="form-control-label">
+            {{ ps.label_with_help('Currency'|trans({}, 'Admin.Global'), ('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).'|trans({}, 'Admin.International.Help'))) }}
+          </label>
+          <div class="col-sm">
+            {{ ps.form_widget_with_error(currencyForm.currency) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {% set exchangeRateLabel %}
+            {{ 'Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).'|trans({}, 'Admin.International.Help') }}
+          {% endset %}
+          <label for="{{ currencyForm.exchange_rate.vars.id }}" class="form-control-label">
+            {{ ps.label_with_help('Exchange rate'|trans({}, 'Admin.International.Feature'), (exchangeRateLabel)) }}
+          </label>
+          <div class="col-sm">
+            {{ ps.form_widget_with_error(currencyForm.exchange_rate) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{ form_end(currencyForm) }}
+{% endblock %}
