@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -105,11 +106,29 @@ class CurrencyController extends FrameworkBundleAdminController
      *     message="You do not have permission to add this."
      * )
      *
+     * @param Request $request
+     *
      * @return Response
      */
     public function createAction(Request $request)
     {
         $currencyForm = $this->getCurrencyFormBuilder()->getForm();
+        $currencyForm->handleRequest($request);
+
+        try {
+            $result = $this->getCurrencyFormHandler()->handle($currencyForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_currencies_index');
+            }
+        } catch (CurrencyException $exception) {
+
+        }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
             'currency_form' => $currencyForm->createView(),
@@ -214,6 +233,14 @@ class CurrencyController extends FrameworkBundleAdminController
     private function getCurrencyFormBuilder()
     {
         return $this->get('prestashop.core.form.builder.currency_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getCurrencyFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.currency_form_handler');
     }
 
     /**
