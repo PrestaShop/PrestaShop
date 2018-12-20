@@ -49,28 +49,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
-     * @var string
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectionUrl;
-
-    /**
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
-     */
-    public function __construct(
-        $resetActionUrl,
-        $redirectionUrl
-    ) {
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectionUrl = $redirectionUrl;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function getId()
@@ -183,10 +161,12 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
-                    'attr' => [
-                        'data-url' => $this->resetActionUrl,
-                        'data-redirect' => $this->redirectionUrl,
+                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route_params' => [
+                        'controller' => 'currency',
+                        'action' => 'index',
                     ],
+                    'redirect_route' => 'admin_currencies_index',
                 ])
                 ->setAssociatedColumn('actions')
             )
