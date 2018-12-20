@@ -22,3 +22,9 @@ services:
       - 'PrestaShopBundle\Form\Admin\Sell\Customer\CustomerType'
       - '@prestashop.core.form.identifiable_object.data_provider.customer_form_data_provider'
 
+  prestashop.core.form.builder.currency_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType'
+      - '@prestashop.core.form.identifiable_object.data_provider.currency_data_provider'
