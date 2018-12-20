@@ -27,8 +27,8 @@
 namespace LegacyTests\Unit\Core\Localization\CLDR;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataSource;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
@@ -131,8 +131,8 @@ class LocaleDataSourceTest extends TestCase
                     'other'   => 'paix',
                 ]);
                 $stubCurrencyData->setSymbols([
-                    Currency::SYMBOL_TYPE_DEFAULT => '☮PS',
-                    Currency::SYMBOL_TYPE_NARROW  => '☮',
+                    CurrencyInterface::SYMBOL_TYPE_DEFAULT => '☮PS',
+                    CurrencyInterface::SYMBOL_TYPE_NARROW => '☮',
                 ]);
                 break;
 
@@ -149,8 +149,8 @@ class LocaleDataSourceTest extends TestCase
                     'other'   => 'peaces',
                 ]);
                 $stubCurrencyData->setSymbols([
-                    Currency::SYMBOL_TYPE_DEFAULT => 'PS☮',
-                    Currency::SYMBOL_TYPE_NARROW  => '☮',
+                    CurrencyInterface::SYMBOL_TYPE_DEFAULT => 'PS☮',
+                    CurrencyInterface::SYMBOL_TYPE_NARROW => '☮',
                 ]);
                 break;
 

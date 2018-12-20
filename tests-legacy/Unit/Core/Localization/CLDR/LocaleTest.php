@@ -29,6 +29,7 @@ namespace LegacyTests\Unit\Core\Localization\CLDR;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
@@ -97,7 +98,7 @@ class LocaleTest extends TestCase
             'one'     => 'peace',
             'other'   => 'peaces',
         ]);
-        $this->stubCurrencyData->setSymbols([Currency::SYMBOL_TYPE_DEFAULT => 'PS☮', Currency::SYMBOL_TYPE_NARROW => '☮']);
+        $this->stubCurrencyData->setSymbols([CurrencyInterface::SYMBOL_TYPE_DEFAULT => 'PS☮', CurrencyInterface::SYMBOL_TYPE_NARROW => '☮']);
         $localeData->setCurrencies(['PCE' => $this->stubCurrencyData]);
 
         $this->cldrLocale = new Locale($localeData);

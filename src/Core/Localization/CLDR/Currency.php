@@ -37,34 +37,29 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
  * CLDR Locale objects aggregate multiple CLDR Currency instances (available currencies), and return this class when
  * asked for a given currency.
  */
-class Currency
+final class Currency implements CurrencyInterface
 {
-    const SYMBOL_TYPE_DEFAULT = 'default';
-    const SYMBOL_TYPE_NARROW = 'narrow';
-    const DISPLAY_NAME_COUNT_DEFAULT = 'default';
-    const DISPLAY_NAME_COUNT_ONE = 'one';
-    const DISPLAY_NAME_COUNT_OTHER = 'other';
 
     /**
      * Alphabetic ISO 4217 currency code.
      *
      * @var string
      */
-    protected $isoCode;
+    private $isoCode;
 
     /**
      * Numeric ISO 4217 currency code.
      *
      * @var string
      */
-    protected $numericIsoCode;
+    private $numericIsoCode;
 
     /**
      * Number of decimal digits to display for a price in this currency.
      *
      * @var int
      */
-    protected $decimalDigits;
+    private $decimalDigits;
 
     /**
      * Possible names depending on count context.
@@ -78,7 +73,7 @@ class Currency
      *
      * @var string[]
      */
-    protected $displayNames;
+    private $displayNames;
 
     /**
      * Possible symbols (PrestaShop is using narrow).
@@ -91,7 +86,7 @@ class Currency
      *
      * @var string[]
      */
-    protected $symbols;
+    private $symbols;
 
     public function __construct(CurrencyData $currencyData)
     {
@@ -147,9 +142,9 @@ class Currency
      * @return string
      *                The wanted display name
      */
-    public function getDisplayName($countContext = self::DISPLAY_NAME_COUNT_DEFAULT)
+    public function getDisplayName($countContext = CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT)
     {
-        if (!in_array($countContext, [self::DISPLAY_NAME_COUNT_DEFAULT, self::DISPLAY_NAME_COUNT_ONE, self::DISPLAY_NAME_COUNT_OTHER])) {
+        if (!in_array($countContext, [CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT, CurrencyInterface::DISPLAY_NAME_COUNT_ONE, CurrencyInterface::DISPLAY_NAME_COUNT_OTHER])) {
             throw new LocalizationException(
                 sprintf(
                     'Unknown display name: "%s"',
@@ -173,9 +168,9 @@ class Currency
      * @throws LocalizationException
      *                               When an invalid symbol type is passed
      */
-    public function getSymbol($type = self::SYMBOL_TYPE_NARROW)
+    public function getSymbol($type = CurrencyInterface::SYMBOL_TYPE_NARROW)
     {
-        if (!in_array($type, [self::SYMBOL_TYPE_NARROW, self::SYMBOL_TYPE_DEFAULT])) {
+        if (!in_array($type, [CurrencyInterface::SYMBOL_TYPE_NARROW, CurrencyInterface::SYMBOL_TYPE_DEFAULT])) {
             throw new LocalizationException(
                 sprintf(
                     'Unknown symbol type: "%s"',

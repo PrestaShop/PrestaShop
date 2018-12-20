@@ -29,6 +29,7 @@ namespace LegacyTests\Unit\Core\Localization\CLDR;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class CurrencyTest extends TestCase
@@ -38,7 +39,7 @@ class CurrencyTest extends TestCase
      *
      * This Currency instance has been populated with known data/dependencies.
      *
-     * @var Currency
+     * @var CurrencyInterface
      */
     protected $cldrCurrency;
 
@@ -52,7 +53,7 @@ class CurrencyTest extends TestCase
         $currencyData->setNumericIsoCode(333);
         $currencyData->setDecimalDigits(2);
         $currencyData->setDisplayNames(['default' => 'PrestaShop Peace', 'one' => 'peace', 'other' => 'peaces']);
-        $currencyData->setSymbols([Currency::SYMBOL_TYPE_DEFAULT => 'PS☮', Currency::SYMBOL_TYPE_NARROW => '☮']);
+        $currencyData->setSymbols([CurrencyInterface::SYMBOL_TYPE_DEFAULT => 'PS☮', CurrencyInterface::SYMBOL_TYPE_NARROW => '☮']);
 
         $this->cldrCurrency = new Currency($currencyData);
     }
