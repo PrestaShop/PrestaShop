@@ -92,11 +92,20 @@ class LanguageController extends AbstractAdminController
      */
     public function editAction($languageId, Request $request)
     {
-        return $this->redirect(
-            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
-                'addlang' => 1,
-                'id_lang' => $languageId,
-            ])
-        );
+        $languageFormHandler = $this->get('prestashop.core.form.identifiable_object.language_form_handler');
+        $languageFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.language_form_builder');
+
+        $languageForm = $languageFormBuilder->getFormFor((int) $languageId);
+        $languageForm->handleRequest($request);
+
+        $result = $languageFormHandler->handleFor((int) $languageId, $languageForm);
+
+        if (null !== $result->getIdentifiableObjectId()) {
+            return $this->redirectToRoute('admin_languages_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Language/edit.html.twig', [
+            'languageForm' => $languageForm->createView(),
+        ]);
     }
 }
