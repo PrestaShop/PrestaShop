@@ -38,10 +38,6 @@ foreach ($files as $file) {
                 ImageManager::resize($file, $match[1].'-'.$type['name'].'.jpg', $type['width'], $type['height'], 'jpg', true);
             }
         }
-        //if (!file_exists($match[1].'.jpg'))
-        {
-            //copy($file, $match[1].'.jpg');
             ImageManager::resize($file, $match[1].'.jpg', 800, 800, 'jpg', true);
-        }
     }
 }
