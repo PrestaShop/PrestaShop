@@ -54,23 +54,23 @@ class RepositoryTest extends TestCase
 
                     switch ($localizedCurrencyId->getCurrencyCode()) {
                         case 'EUR':
-                            $data->isActive       = true;
-                            $data->conversionRate = 1;
-                            $data->isoCode        = 'EUR';
-                            $data->numericIsoCode = 978;
-                            $data->symbols        = ['fr-FR' => '€', 'en-US' => '€'];
-                            $data->precision      = 2;
-                            $data->names          = ['fr-FR' => 'euro', 'en-US' => 'euro'];
+                            $data->setIsActive(true);
+                            $data->setConversionRate(1);
+                            $data->setIsoCode('EUR');
+                            $data->setNumericIsoCode(978);
+                            $data->setSymbols(['fr-FR' => '€', 'en-US' => '€']);
+                            $data->setPrecision(2);
+                            $data->setNames(['fr-FR' => 'euro', 'en-US' => 'euro']);
                             break;
 
                         case 'PCE':
-                            $data->isActive       = true;
-                            $data->conversionRate = 1;
-                            $data->isoCode        = 'PCE';
-                            $data->numericIsoCode = 999;
-                            $data->symbols        = ['fr-FR' => '☮', 'en-US' => '☮'];
-                            $data->precision      = 2;
-                            $data->names          = ['fr-FR' => 'paix', 'en-US' => 'peace'];
+                            $data->setIsActive(true);
+                            $data->setConversionRate(1);
+                            $data->setIsoCode('PCE');
+                            $data->setNumericIsoCode(999);
+                            $data->setSymbols(['fr-FR' => '☮', 'en-US' => '☮']);
+                            $data->setPrecision(2);
+                            $data->setNames(['fr-FR' => 'paix', 'en-US' => 'peace']);
                             break;
 
                         default:

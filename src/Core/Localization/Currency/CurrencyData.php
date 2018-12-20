@@ -40,7 +40,7 @@ class CurrencyData
      *
      * @var bool
      */
-    public $isActive;
+    protected $isActive;
 
     /**
      * Conversion rate of this currency against the default shop's currency.
@@ -54,7 +54,7 @@ class CurrencyData
      *
      * @var float
      */
-    public $conversionRate;
+    protected $conversionRate;
 
     /**
      * Currency's alphabetic ISO code (ISO 4217).
@@ -63,7 +63,7 @@ class CurrencyData
      *
      * @var string
      */
-    public $isoCode;
+    protected $isoCode;
 
     /**
      * Currency's numeric ISO code (ISO 4217).
@@ -72,7 +72,7 @@ class CurrencyData
      *
      * @var string
      */
-    public $numericIsoCode;
+    protected $numericIsoCode;
 
     /**
      * Currency's symbols, by locale code.
@@ -84,56 +84,168 @@ class CurrencyData
      *
      * @var string[]
      */
-    public $symbols;
+    protected $symbols;
 
     /**
      * Number of decimal digits to use with this currency.
      *
      * @var int
      */
-    public $precision;
+    protected $precision;
 
     /**
      * the currency's name, by locale code.
      *
      * @var string[]
      */
-    public $names;
+    protected $names;
 
     public function overrideWith(CurrencyData $currencyData)
     {
-        if (isset($currencyData->isActive)) {
-            $this->isActive = $currencyData->isActive;
+        if ($currencyData->isActive() !== null) {
+            $this->isActive = $currencyData->isActive();
         }
 
-        if (isset($currencyData->conversionRate)) {
-            $this->conversionRate = $currencyData->conversionRate;
+        if ($currencyData->getConversionRate() !== null) {
+            $this->conversionRate = $currencyData->getConversionRate();
         }
 
-        if (isset($currencyData->isoCode)) {
-            $this->isoCode = $currencyData->isoCode;
+        if ($currencyData->getIsoCode() !== null) {
+            $this->isoCode = $currencyData->getIsoCode();
         }
 
-        if (isset($currencyData->numericIsoCode)) {
-            $this->numericIsoCode = $currencyData->numericIsoCode;
+        if ($currencyData->getNumericIsoCode() !== null) {
+            $this->numericIsoCode = $currencyData->getNumericIsoCode();
         }
 
-        if (isset($currencyData->symbols)) {
-            foreach ($currencyData->symbols as $type => $symbol) {
+        if ($currencyData->getSymbols() !== null) {
+            foreach ($currencyData->getSymbols() as $type => $symbol) {
                 $this->symbols[$type] = $symbol;
             }
         }
 
-        if (isset($currencyData->precision)) {
-            $this->precision = $currencyData->precision;
+        if ($currencyData->getPrecision() !== null) {
+            $this->precision = $currencyData->getPrecision();
         }
 
-        if (isset($currencyData->names)) {
-            foreach ($currencyData->names as $localeCode => $name) {
+        if ($currencyData->getNames() !== null) {
+            foreach ($currencyData->getNames() as $localeCode => $name) {
                 $this->names[$localeCode] = $name;
             }
         }
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param bool $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+    }
+
+    /**
+     * @return float
+     */
+    public function getConversionRate()
+    {
+        return $this->conversionRate;
+    }
+
+    /**
+     * @param float $conversionRate
+     */
+    public function setConversionRate($conversionRate)
+    {
+        $this->conversionRate = $conversionRate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIsoCode()
+    {
+        return $this->isoCode;
+    }
+
+    /**
+     * @param string $isoCode
+     */
+    public function setIsoCode($isoCode)
+    {
+        $this->isoCode = $isoCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumericIsoCode()
+    {
+        return $this->numericIsoCode;
+    }
+
+    /**
+     * @param string $numericIsoCode
+     */
+    public function setNumericIsoCode($numericIsoCode)
+    {
+        $this->numericIsoCode = $numericIsoCode;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSymbols()
+    {
+        return $this->symbols;
+    }
+
+    /**
+     * @param string[] $symbols
+     */
+    public function setSymbols($symbols)
+    {
+        $this->symbols = $symbols;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrecision()
+    {
+        return $this->precision;
+    }
+
+    /**
+     * @param int $precision
+     */
+    public function setPrecision($precision)
+    {
+        $this->precision = $precision;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getNames()
+    {
+        return $this->names;
+    }
+
+    /**
+     * @param string[] $names
+     */
+    public function setNames($names)
+    {
+        $this->names = $names;
     }
 }
