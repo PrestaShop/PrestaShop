@@ -24,44 +24,42 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class CurrencyType
+ * Class CurrencyFromCldrChoiceProvider
  */
-class CurrencyType extends AbstractType
+final class CurrencyFromCldrChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var array
      */
-    private $allCurrencies;
+    private $cldrAllCurrencies;
 
     /**
-     * @param array $allCurrencies
+     * @param array $cldrCurrencies
      */
-    public function __construct(array $allCurrencies)
+    public function __construct(array $cldrAllCurrencies)
     {
-        $this->allCurrencies = $allCurrencies;
+        $this->cldrAllCurrencies = $cldrAllCurrencies;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function getChoices()
     {
-        $builder
-            ->add('currency', ChoiceType::class, [
-                'choices' => $this->allCurrencies,
-                'choice_translation_domain' => false,
-            ])
-            ->add('exchange_rate', TextType::class, [
+        $result = [];
+        foreach ($this->cldrAllCurrencies as $cldrCurrency) {
+            if (!isset($cldrCurrency['code'], $cldrCurrency['name'])) {
+                continue;
+            }
+            
+            $result[$cldrCurrency['name']] = $cldrCurrency['code'];
+        }
 
-            ])
-        ;
+        return $result;
     }
 }

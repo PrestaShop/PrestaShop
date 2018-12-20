@@ -118,3 +118,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerRequiredFieldsChoiceProvider'
     arguments:
       - '@translator'
+
+  prestashop.core.form.choice_provider.currency_from_cldr:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyFromCldrChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.cldr.repository").getAllCurrencies()'
