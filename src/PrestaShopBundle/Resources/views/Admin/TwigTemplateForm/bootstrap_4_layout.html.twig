@@ -355,7 +355,7 @@
 {% block search_and_reset_widget %}
     {% spaceless %}
         <button type="submit"
-                class="btn btn-primary d-block"
+                class="btn btn-primary d-block float-right"
                 title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
                 name="{{ full_name }}[search]"
         >
@@ -364,9 +364,10 @@
         </button>
 
         {% if show_reset_button %}
+          <div class="clearfix"></div>
             <button type="reset"
                     name="{{ full_name }}[reset]"
-                    class="btn btn-link js-reset-search btn d-block"
+                    class="btn btn-link js-reset-search btn d-block float-right"
                     data-url="{{ reset_url }}"
                     data-redirect="{{ redirect_url }}"
             >
