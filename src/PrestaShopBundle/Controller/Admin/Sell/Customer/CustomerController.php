@@ -107,9 +107,7 @@ class CustomerController extends AbstractAdminController
             if ($customerId = $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_customers_edit', [
-                    'customerId' => $customerId,
-                ]);
+                return $this->redirectToRoute('admin_customers_index');
             }
         } catch (CustomerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
