@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportEntityException;
 use PrestaShop\PrestaShop\Core\Import\Exception\UnavailableImportFileException;
 use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -71,7 +70,8 @@ class ImportController extends FrameworkBundleAdminController
         $iniConfiguration = $this->get('prestashop.core.configuration.ini_configuration');
         $importConfigFactory = $this->get('prestashop.core.import.config_factory');
 
-        $form = $formHandler->getForm();
+        $importConfig = $importConfigFactory->buildFromRequest($request);
+        $form = $formHandler->getForm($importConfig);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -156,27 +156,6 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete import file.
-     *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
-     * @DemoRestricted(redirectRoute="admin_import")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function deleteAction(Request $request)
-    {
-        $filename = $request->query->get('filename', $request->query->get('csvfilename'));
-        if ($filename) {
-            $fileRemoval = $this->get('prestashop.core.import.file_removal');
-            $fileRemoval->remove($filename);
-        }
-
-        return $this->redirectToRoute('admin_import');
-    }
-
-    /**
      * Download import file from history.
      *
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
@@ -198,28 +177,6 @@ class ImportController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_import');
-    }
-
-    /**
-     * Get available entity fields.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function getAvailableEntityFieldsAction(Request $request)
-    {
-        $fieldsProviderFinder = $this->get('prestashop.core.import.fields_provider_finder');
-
-        try {
-            $fieldsProvider = $fieldsProviderFinder->find($request->get('entity'));
-            $fieldsCollection = $fieldsProvider->getCollection();
-            $entityFields = $fieldsCollection->toArray();
-        } catch (NotSupportedImportEntityException $e) {
-            $entityFields = [];
-        }
-
-        return $this->json($entityFields);
     }
 
     /**
