@@ -50,7 +50,7 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
      *
      * @var AdapterInterface
      */
-    protected $cache;
+    private $cache;
 
     public function __construct(AdapterInterface $cache)
     {

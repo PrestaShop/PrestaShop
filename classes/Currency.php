@@ -130,7 +130,6 @@ class CurrencyCore extends ObjectModel
         'table' => 'currency',
         'primary' => 'id_currency',
         'multilang' => true,
-        // 'multilang_shop' => true,
         'fields' => array(
             'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
             'numeric_iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3),
