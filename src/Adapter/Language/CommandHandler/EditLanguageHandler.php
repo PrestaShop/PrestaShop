@@ -61,6 +61,8 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
         $this->updateLanguageWithCommandData($language, $command);
         $this->updateShopAssociationIfChanged($command);
         $this->uploadFlagImageIfChanged($language, $command);
+
+        return new LanguageId((int) $language->id);
     }
 
     /**
@@ -70,7 +72,7 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
      */
     private function getLegacyLanguageObject(LanguageId $languageId)
     {
-        $language = new Language($languageId);
+        $language = new Language($languageId->getValue());
 
         if ($languageId->getValue() !== $language->id) {
             throw new LanguageNotFoundException(
