@@ -21,3 +21,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand'
+
+  prestashop.adapter.language.query_handler.get_language_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\QueryHandler\GetLanguageForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing'
