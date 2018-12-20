@@ -50,7 +50,7 @@
             {{ ps.label_with_help('Exchange rate'|trans({}, 'Admin.International.Feature'), (exchangeRateLabel)) }}
           </label>
           <div class="col-sm">
-            {{ ps.form_widget_with_error(currencyForm.exchange_rate) }}
+            {{ ps.form_widget_with_error(currencyForm.exchange_rate, {'attr': {'maxLength': 11}}) }}
           </div>
         </div>
       </div>

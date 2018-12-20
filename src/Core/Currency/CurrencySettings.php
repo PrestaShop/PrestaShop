@@ -24,46 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
-
-use PrestaShop\PrestaShop\Core\Currency\CurrencySettings;
+namespace PrestaShop\PrestaShop\Core\Currency;
 
 /**
- * Class CurrencyFormDataProvider
+ * Class CurrencySettings
  */
-final class CurrencyFormDataProvider implements FormDataProviderInterface
+class CurrencySettings
 {
-
     /**
-     * @var array
+     * @var int
      */
-    private $defaultCldrCurrency;
-
-    /**
-     * @param array $defaultCldrCurrency
-     */
-    public function __construct(array $defaultCldrCurrency)
-    {
-
-        $this->defaultCldrCurrency = $defaultCldrCurrency;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getData($id)
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultData()
-    {
-        return [
-            'iso_code' => isset($this->defaultCldrCurrency['code']) ? $this->defaultCldrCurrency['code'] : null,
-            'exchange_rate' => CurrencySettings::DEFAULT_CONVERSION_RATE,
-        ];
-    }
+    const DEFAULT_CONVERSION_RATE = 1;
 }
