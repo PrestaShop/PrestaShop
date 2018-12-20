@@ -775,18 +775,25 @@ class ToolsCore
 
         $locale = $context->currentLocale;
         if (null === $locale) {
-            $container = $context->controller->getContainer();
-            if (null === $container) {
-                $container = SymfonyContainer::getInstance();
-            }
-
-            /** @var LocaleRepository $localeRepository */
-            $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
-            $locale = $localeRepository->getLocale((string) $context->language->locale);
+            $locale = static::getCurrencyLocale($context);
         }
         $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
 
         return $locale->formatPrice($price, $currencyCode);
+    }
+
+    protected static function getCurrencyLocale(Context $context)
+    {
+        $container = $context->controller->getContainer();
+        if (null === $container) {
+            $container = SymfonyContainer::getInstance();
+        }
+
+        /** @var LocaleRepository $localeRepository */
+        $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
+        $locale = $localeRepository->getLocale((string) $context->language->locale);
+
+        return $locale;
     }
 
     /**
@@ -817,14 +824,7 @@ class ToolsCore
         $context = Context::getContext();
         $locale = $context->currentLocale;
         if (null === $locale) {
-            $container = $context->controller->getContainer();
-            if (null === $container) {
-                $container = SymfonyContainer::getInstance();
-            }
-
-            /** @var LocaleRepository $localeRepo */
-            $localeRepo = $container->get(self::SERVICE_LOCALE_REPOSITORY);
-            $locale = $localeRepo->getLocale((string) $context->language->locale);
+            $locale = static::getCurrencyLocale($context);
         }
 
         return $locale->formatNumber($number);

@@ -66,13 +66,13 @@ class Repository implements CurrencyRepositoryInterface
             );
 
             $this->currencies[$currencyCode] = new Currency(
-                $data->isActive,
-                $data->conversionRate,
-                $data->isoCode,
-                $data->numericIsoCode,
-                $data->symbols,
-                $data->precision,
-                $data->names
+                $data->isActive(),
+                $data->getConversionRate(),
+                $data->getIsoCode(),
+                $data->getNumericIsoCode(),
+                $data->getSymbols(),
+                $data->getPrecision(),
+                $data->getNames()
             );
         }
 
@@ -95,13 +95,13 @@ class Repository implements CurrencyRepositoryInterface
 
         foreach ($currenciesData as $currencyDatum) {
             $currencies->add(new Currency(
-                $currencyDatum->isActive,
-                $currencyDatum->conversionRate,
-                $currencyDatum->isoCode,
-                $currencyDatum->numericIsoCode,
-                $currencyDatum->symbols,
-                $currencyDatum->precision,
-                $currencyDatum->names
+                $currencyDatum->isActive(),
+                $currencyDatum->getConversionRate(),
+                $currencyDatum->getIsoCode(),
+                $currencyDatum->getNumericIsoCode(),
+                $currencyDatum->getSymbols(),
+                $currencyDatum->getPrecision(),
+                $currencyDatum->getNames()
             ));
         }
 
