@@ -149,3 +149,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeChoiceProvider'
     arguments:
       - '@prestashop.core.addon.theme.theme_provider'
+
+  prestashop.core.form.choice_provider.currency_from_cldr:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyFromCldrChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.cldr.repository").getAllCurrencies()'
