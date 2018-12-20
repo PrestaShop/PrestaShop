@@ -53,8 +53,7 @@ ALTER TABLE `PREFIX_supply_order_history`
   CHANGE `employee_firstname` `employee_firstname` VARCHAR(255) DEFAULT '';
 
 ALTER TABLE `PREFIX_supply_order_receipt_history`
-  CHANGE `employee_firstname` `employee_firstname` VARCHAR(255) DEFAULT '',
-  CHANGE `employee_lastname` `employee_lastname` VARCHAR(255) DEFAULT '';
+  CHANGE `employee_firstname` `employee_firstname` VARCHAR(255) DEFAULT '';
 
 ALTER TABLE `PREFIX_supplier_lang`
   CHANGE `meta_description` `meta_description` VARCHAR(512) DEFAULT NULL,
@@ -64,7 +63,6 @@ ALTER TABLE `PREFIX_order_detail`
   CHANGE `product_reference` `product_reference` varchar(64) DEFAULT NULL;
 
 ALTER TABLE `PREFIX_product`
-  CHANGE `reference` `reference` varchar(64) DEFAULT NULL,
   CHANGE `supplier_reference` `supplier_reference` varchar(64) DEFAULT NULL;
 
 ALTER TABLE `PREFIX_product_attribute`
