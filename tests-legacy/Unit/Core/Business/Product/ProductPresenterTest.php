@@ -26,11 +26,11 @@
 
 namespace LegacyTests\Unit\Core\Product;
 
-use Phake;
-use LegacyTests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Language;
+use LegacyTests\TestCase\UnitTestCase;
+use Phake;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter as BasePricePresenter;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 
 class PriceFormatter extends BasePricePresenter
 {

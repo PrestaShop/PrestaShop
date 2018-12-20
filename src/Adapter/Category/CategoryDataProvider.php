@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
-use ObjectModel;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Category;
 use Context;
+use ObjectModel;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Shop;
 
 /**

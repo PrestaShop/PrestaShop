@@ -28,8 +28,8 @@ namespace LegacyTests\Unit\PrestaShopBundle;
 
 use LegacyTests\TestCase\UnitTestCase;
 use LegacyTests\Unit\ContextMocker;
-use PrestaShopBundle\EventListener\MultishopCommandListener;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShopBundle\EventListener\MultishopCommandListener;
 use Shop;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;

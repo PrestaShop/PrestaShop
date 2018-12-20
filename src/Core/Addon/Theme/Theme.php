@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
+use AbstractAssetManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use Shudrum\Component\ArrayFinder\ArrayFinder;
 use Symfony\Component\Yaml\Yaml;
-use AbstractAssetManager;
 
 class Theme implements AddonInterface
 {

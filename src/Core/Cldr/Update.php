@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Cldr;
 
-use Tools as ToolsLegacy;
 use Curl\Curl;
+use Tools as ToolsLegacy;
 use ZipArchive;
 
 /**

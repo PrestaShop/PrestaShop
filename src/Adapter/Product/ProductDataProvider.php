@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Context;
 use Image;
 use Product;
-use Context;
 use StockAvailable;
 
 /**

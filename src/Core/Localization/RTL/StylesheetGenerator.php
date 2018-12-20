@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\RTL;
 
-use PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException;
 use CSSJanus;
+use PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException;
 use Tools;
 
 /**

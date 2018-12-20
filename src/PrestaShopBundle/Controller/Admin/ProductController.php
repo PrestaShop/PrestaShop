@@ -26,41 +26,41 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Category;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
+use PrestaShopBundle\Exception\UpdateProductException;
+use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use PrestaShopBundle\Form\Admin\Product\ProductCombination;
 use PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk;
 use PrestaShopBundle\Form\Admin\Product\ProductInformation;
 use PrestaShopBundle\Form\Admin\Product\ProductOptions;
 use PrestaShopBundle\Form\Admin\Product\ProductPrice;
 use PrestaShopBundle\Form\Admin\Product\ProductQuantity;
-use PrestaShopBundle\Form\Admin\Product\ProductShipping;
 use PrestaShopBundle\Form\Admin\Product\ProductSeo;
+use PrestaShopBundle\Form\Admin\Product\ProductShipping;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
+use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
+use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
+use PrestaShopBundle\Service\Hook\HookFinder;
+use Product;
+use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShopBundle\Service\Hook\HookFinder;
-use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
-use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
 use Symfony\Component\HttpFoundation\Response;
-use Psr\Log\LoggerInterface;
-use PrestaShopBundle\Exception\UpdateProductException;
-use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use PrestaShopBundle\Form\Admin\Product\ProductCategories;
-use Product;
-use Category;
 use Tools;
 
 /**

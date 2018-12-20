@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
-use Symfony\Component\Translation\TranslatorInterface;
 use Supplier;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class responsible of retrieving products in Suppliers page of Front Office.

@@ -26,8 +26,8 @@
 
 namespace LegacyTests\PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Translation\Provider\SearchProvider;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Translation\Provider\SearchProvider;
 
 /**
  * @group sf

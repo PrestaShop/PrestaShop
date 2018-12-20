@@ -24,8 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShopBundle\Install\LanguageList;
 use PrestaShopBundle\Install\AbstractInstall;
+use PrestaShopBundle\Install\LanguageList;
 
 abstract class InstallControllerConsole
 {

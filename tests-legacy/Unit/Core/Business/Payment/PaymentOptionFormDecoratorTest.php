@@ -26,10 +26,10 @@
 
 namespace LegacyTests\Unit\Core\Payment;
 
-use LegacyTests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
 use DOMDocument;
 use Exception;
+use LegacyTests\TestCase\UnitTestCase;
+use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
 
 class PaymentOptionFormDecoratorTest extends UnitTestCase
 {

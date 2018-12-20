@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Install;
 
-use Symfony\Component\Finder\Finder;
 use PrestashopInstallerException;
+use Symfony\Component\Finder\Finder;
 
 class LanguageList
 {

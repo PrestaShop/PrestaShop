@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\Delivery;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Order\Invoice;
 use PrestaShop\PrestaShop\Adapter\Validate;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**

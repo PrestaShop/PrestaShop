@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Pack;
 
+use Context;
 use Pack;
 use Product;
-use Context;
 
 /**
  * This class will provide data from DB / ORM about product pack.

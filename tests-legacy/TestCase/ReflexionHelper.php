@@ -26,8 +26,8 @@
 
 namespace LegacyTests\TestCase;
 
-use ReflectionClass;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 /**
  * Class ReflexionHelper

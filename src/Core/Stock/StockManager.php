@@ -33,14 +33,14 @@ use Context;
 use DateTime;
 use Employee;
 use Mail;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use Pack;
+use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Entity\StockMvt;
 use Product;
 use StockAvailable;
-use Pack;
 
 /**
  * Class StockManager Refactored features about product stocks.

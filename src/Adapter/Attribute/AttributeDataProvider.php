@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
-use Product;
 use Attribute;
 use Combination;
-use Db;
-use Shop;
 use Context;
+use Db;
+use Product;
+use Shop;
 
 /**
  * This class will provide data from DB / ORM about Attributes.

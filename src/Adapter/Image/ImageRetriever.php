@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
-use Link;
-use Language;
-use Product;
-use ImageType;
 use Image;
 use ImageManager;
+use ImageType;
+use Language;
+use Link;
+use Product;
 
 /**
  * This class is mainly responsible of Product images.

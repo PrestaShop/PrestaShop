@@ -26,16 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Db;
 use Doctrine\ORM\EntityManager;
+use Module as LegacyModule;
 use PhpParser;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
-use Db;
 use Validate;
-use Module as LegacyModule;
 
 /**
  * This class will provide data from DB / ORM about Module.

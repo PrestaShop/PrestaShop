@@ -27,8 +27,8 @@
 namespace LegacyTests\Unit\Adapter\Cart;
 
 use Configuration;
-use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use LegacyTests\TestCase\UnitTestCase;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 
 class CartPresenterTest extends UnitTestCase
 {

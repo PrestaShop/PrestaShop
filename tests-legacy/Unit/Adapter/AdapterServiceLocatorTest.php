@@ -26,9 +26,9 @@
 
 namespace LegacyTests\Unit\Adapter;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
-use PHPUnit\Framework\TestCase;
 
 class AdapterServiceLocatorTest extends TestCase
 {

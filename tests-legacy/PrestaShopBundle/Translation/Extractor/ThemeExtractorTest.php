@@ -26,11 +26,11 @@
 
 namespace LegacyTests\PrestaShopBundle\Translation\Extractor;
 
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\PhpDumper;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @group sf

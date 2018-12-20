@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\DependencyInjection;
 
-use Tools;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Tools;
 
 class AddOnsConfiguration implements ConfigurationInterface
 {

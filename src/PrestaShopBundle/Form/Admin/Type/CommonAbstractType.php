@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Form\AbstractType;
 
 /**
  * This subclass contains common functions for specific Form types needs.

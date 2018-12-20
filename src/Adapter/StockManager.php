@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShopBundle\Service\DataProvider\StockInterface;
-use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopAdapter;
-use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
-use StockAvailable;
 use Db;
+use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopAdapter;
+use PrestaShopBundle\Service\DataProvider\StockInterface;
+use StockAvailable;
 
 /**
  * Data provider for new Architecture, about Product stocks.

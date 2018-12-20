@@ -27,9 +27,9 @@
 namespace LegacyTests\Unit\Adapter\Module\PrestaTrust;
 
 use Doctrine\Common\Cache\ArrayCache;
+use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
-use LegacyTests\TestCase\UnitTestCase;
 
 /**
  * @runInSeparateProcess

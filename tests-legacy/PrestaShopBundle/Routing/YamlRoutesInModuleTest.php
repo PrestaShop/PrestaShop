@@ -26,10 +26,10 @@
 
 namespace LegacyTests\PrestaShopBundle\Routing;
 
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\DependencyInjection\Container;
 use LegacyTests\TestCase\Module as HelperModule;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Routing\Route;
 
 class YamlRoutesInModuleTest extends KernelTestCase
 {

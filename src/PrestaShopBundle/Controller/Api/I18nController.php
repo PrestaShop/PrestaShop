@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class I18nController extends ApiController

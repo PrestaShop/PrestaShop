@@ -24,8 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use Symfony\Component\Yaml\Yaml;
 use PrestaShopBundle\Install\Database;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Step 3 : configure database

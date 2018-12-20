@@ -26,8 +26,8 @@
 
 namespace LegacyTests\PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Translation\Provider\BackOfficeProvider;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Translation\Provider\BackOfficeProvider;
 
 /**
  * @group sf

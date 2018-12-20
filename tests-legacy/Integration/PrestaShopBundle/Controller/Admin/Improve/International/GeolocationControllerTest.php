@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Integration\PrestaShopBundle\Controller\Admin\Improve\International;
 
-use Symfony\Component\HttpFoundation\Response;
 use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group demo

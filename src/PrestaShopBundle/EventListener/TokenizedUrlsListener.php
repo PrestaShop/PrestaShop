@@ -26,14 +26,14 @@
 
 namespace PrestaShopBundle\EventListener;
 
+use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use Symfony\Component\Routing\RouterInterface;
+use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
-use Employee;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\CS\Tokenizer\Token;
 use Tools;
 

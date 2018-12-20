@@ -26,20 +26,20 @@
 
 namespace LegacyTests\Integration\PrestaShopBundle\Test;
 
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\Translation\Translator;
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Component\Routing\Router;
-use Psr\Log\NullLogger;
-
+use Context;
 use Currency;
 use Employee;
 use Language;
-use Context;
-use Theme;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Psr\Log\NullLogger;
+
 use Shop;
+use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
+use Symfony\Component\Routing\Router;
+use Symfony\Component\Translation\Translator;
+use Theme;
 
 /**
  * Responsible of e2e and integration tests using Symfony.

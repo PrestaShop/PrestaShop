@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache;
 
+use Doctrine\DBAL\Connection;
 use Memcache;
 use Memcached;
-use Doctrine\DBAL\Connection;
 
 /**
  * This class manages Memcache(d) servers in "Configure > Advanced Parameters > Performance" page.

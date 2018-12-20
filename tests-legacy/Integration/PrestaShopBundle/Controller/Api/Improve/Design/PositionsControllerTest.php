@@ -27,11 +27,11 @@
 namespace LegacyTests\Integration\PrestaShopBundle\Controller\Api\Improve\Design;
 
 use Cache;
-use Module;
 use Hook;
-use Symfony\Component\HttpFoundation\Response;
 use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
+use Module;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group api

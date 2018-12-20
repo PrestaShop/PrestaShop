@@ -26,9 +26,9 @@
 
 namespace LegacyTests\Unit\Classes;
 
+use Configuration;
 use PHPUnit\Framework\TestCase;
 use PrestaShopAutoload;
-use Configuration;
 
 class PrestaShopAutoloadTest extends TestCase
 {

@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\classes\Smarty;
 
-use TemplateFinder;
 use PHPUnit\Framework\TestCase;
+use TemplateFinder;
 
 class TemplateFinderTest extends TestCase
 {

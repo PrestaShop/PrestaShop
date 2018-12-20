@@ -26,14 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Hook;
 
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Service\Hook\HookEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use PrestaShopBundle\Service\Hook\RenderingHookEvent;
-use PrestaShop\PrestaShop\Core\Hook\HookInterface;
-use Symfony\Component\EventDispatcher\Event;
-use PrestaShop\PrestaShop\Core\Hook\RenderedHook;
 use PrestaShop\PrestaShop\Core\Hook\Hook;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookInterface;
+use PrestaShop\PrestaShop\Core\Hook\RenderedHook;
+use PrestaShopBundle\Service\Hook\HookEvent;
+use PrestaShopBundle\Service\Hook\RenderingHookEvent;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * This dispatcher is used to trigger hook listeners.

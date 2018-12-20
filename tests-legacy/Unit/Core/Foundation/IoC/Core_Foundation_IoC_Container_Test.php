@@ -26,10 +26,10 @@
 
 namespace LegacyTests\Unit\Core\Foundation\IoC;
 
+use LegacyTests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure;
+use LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
-use LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
-use LegacyTests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure;
 
 class Core_Foundation_IoC_Container_Test extends TestCase
 {

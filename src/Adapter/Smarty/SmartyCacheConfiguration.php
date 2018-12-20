@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Smarty;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
  * This class will manage Smarty configuration for a Shop.

@@ -36,10 +36,10 @@ use CustomizationField;
 use DateInterval;
 use DateTime;
 use LegacyTests\TestCase\IntegrationTestCase;
-use Product;
-use Pack;
-use StockAvailable;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
+use Pack;
+use Product;
+use StockAvailable;
 
 /**
  * these tests aim to check cart using mocks

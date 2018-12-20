@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Hosting;
 
-use Tools;
 use Db;
+use Tools;
 
 /**
  * Provides hosting system information.

@@ -28,8 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Module;
 
 use Db;
 use Exception;
-use Shop;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
+use Shop;
 
 class HookRepository
 {

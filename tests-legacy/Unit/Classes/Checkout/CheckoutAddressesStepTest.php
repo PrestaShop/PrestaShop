@@ -31,8 +31,8 @@ use CheckoutProcess;
 use Context;
 use Customer;
 use Language;
-use Phake;
 use LegacyTests\TestCase\UnitTestCase;
+use Phake;
 
 class CheckoutAddressesStepTest extends UnitTestCase
 {

@@ -26,9 +26,9 @@
 
 namespace LegacyTests\PrestaShopBundle\Service\Hook;
 
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

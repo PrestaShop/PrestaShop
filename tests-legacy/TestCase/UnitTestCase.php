@@ -30,12 +30,12 @@ use Cache;
 use Configuration;
 use Context;
 use Db;
+use Phake;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use Phake;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Kernel;
 
 class UnitTestCase extends \PHPUnit\Framework\TestCase
 {

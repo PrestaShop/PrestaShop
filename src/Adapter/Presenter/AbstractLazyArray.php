@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter;
 
-use Doctrine\Common\Util\Inflector;
-use ArrayObject;
-use ArrayIterator;
-use Iterator;
 use ArrayAccess;
+use ArrayIterator;
+use ArrayObject;
 use Countable;
+use Doctrine\Common\Util\Inflector;
+use Iterator;
 use JsonSerializable;
-use ReflectionException;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use RuntimeException;
 

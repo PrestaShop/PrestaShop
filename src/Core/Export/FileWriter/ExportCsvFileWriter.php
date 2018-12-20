@@ -28,8 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Export\FileWriter;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Export\Data\ExportableDataInterface;
-use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
 use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
+use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
 use SplFileObject;
 
 /**

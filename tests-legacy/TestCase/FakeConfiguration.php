@@ -26,8 +26,8 @@
 
 namespace LegacyTests\TestCase;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Exception;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 class FakeConfiguration implements ConfigurationInterface
 {

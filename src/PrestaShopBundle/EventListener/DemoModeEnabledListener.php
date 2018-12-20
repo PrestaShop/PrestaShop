@@ -26,17 +26,17 @@
 
 namespace PrestaShopBundle\EventListener;
 
+use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Util\ClassUtils;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use ReflectionClass;
+use ReflectionObject;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
-use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Util\ClassUtils;
-use ReflectionObject;
-use ReflectionClass;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Allow a redirection to the right url when using BetterSecurity annotation.

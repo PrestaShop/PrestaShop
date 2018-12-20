@@ -33,9 +33,9 @@ use CartRule;
 use Configuration;
 use Country;
 use Db;
+use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use RangePrice;
 use State;
-use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use Zone;
 
 abstract class AbstractCarrierTest extends AbstractCartCalculationTest

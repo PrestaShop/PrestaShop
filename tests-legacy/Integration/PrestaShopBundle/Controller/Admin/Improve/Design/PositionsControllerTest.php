@@ -28,10 +28,10 @@ namespace LegacyTests\Integration\PrestaShopBundle\Controller\Admin\Improve\Desi
 
 use Cache;
 use Hook;
-use Module;
-use Symfony\Component\HttpFoundation\Response;
 use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
+use Module;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group demo

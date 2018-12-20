@@ -26,9 +26,9 @@
 
 namespace LegacyTests\PrestaShopBundle\Translation\Factory;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Factory\TranslationsFactory;
 use Symfony\Component\Translation\MessageCatalogue;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @group sf

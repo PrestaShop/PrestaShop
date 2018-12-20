@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Feature;
 
 use Combination;
-use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 
 /**
  * This class manages Combination feature.

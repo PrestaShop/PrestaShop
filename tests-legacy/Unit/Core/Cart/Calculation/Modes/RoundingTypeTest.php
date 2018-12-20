@@ -27,8 +27,8 @@
 namespace LegacyTests\Unit\Core\Cart\Calculation\Modes;
 
 use Configuration;
-use Order;
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
+use Order;
 use Tools;
 
 class RoundingTypeTest extends AbstractCartCalculationTest

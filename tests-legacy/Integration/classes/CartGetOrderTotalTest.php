@@ -27,9 +27,6 @@
 
 namespace LegacyTests\Integration\classes;
 
-use LegacyTests\TestCase\IntegrationTestCase;
-use PHPUnit\Framework\Assert as Assert;
-use Exception;
 use Address;
 use Carrier;
 use Cart;
@@ -38,14 +35,17 @@ use Configuration;
 use Context;
 use Currency;
 use Db;
+use Exception;
 use Group;
-use Order;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\TestCase\IntegrationTestCase;
+use Order;
+use PHPUnit\Framework\Assert as Assert;
 use Product;
-use Tools;
 use Tax;
-use TaxRulesGroup;
 use TaxRule;
+use TaxRulesGroup;
+use Tools;
 
 class CartGetOrderTotalTest extends IntegrationTestCase
 {

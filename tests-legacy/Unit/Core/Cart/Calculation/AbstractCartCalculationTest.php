@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Core\Cart\Calculation;
 
-use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 use Cart;
+use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 
 /**
  * these tests aim to check the correct calculation of cart total

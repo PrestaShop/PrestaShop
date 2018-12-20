@@ -26,21 +26,21 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
+use Cart;
+use CartRule;
+use Configuration;
+use Context;
+use Hook;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
-use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use Context;
-use Cart;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
-use Configuration;
 use Symfony\Component\Translation\TranslatorInterface;
 use TaxConfiguration;
-use CartRule;
 use Tools;
-use Hook;
 
 class CartPresenter implements PresenterInterface
 {

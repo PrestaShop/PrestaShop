@@ -26,20 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface;
-use PrestaShopBundle\Exception\UpdateProductException;
+use Category;
+use Configuration;
+use Db;
+use GroupReduction;
+use Image;
+use Pack;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Exception\UpdateProductException;
+use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface;
 use Product;
-use Validate;
+use Search;
 use Shop;
 use ShopGroup;
-use Category;
-use GroupReduction;
-use Pack;
-use Search;
-use Db;
-use Configuration;
-use Image;
+use Validate;
 
 /**
  * This class will update/insert/delete data from DB / ORM about Product, for both Front and Admin interfaces.

@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
-use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 
 class AdminControllerCore extends Controller
 {

@@ -27,10 +27,10 @@
 namespace LegacyTests\Unit\Core\Cart\Adding\CartRule;
 
 use Configuration;
-use Product;
-use Pack;
-use StockAvailable;
 use LegacyTests\Unit\Core\Cart\AbstractCartTest;
+use Pack;
+use Product;
+use StockAvailable;
 
 class AddPackTest extends AbstractCartTest
 {

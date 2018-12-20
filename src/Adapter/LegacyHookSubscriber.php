@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use PrestaShopBundle\Service\Hook\HookEvent;
-use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Context;
 use Hook;
+use PrestaShopBundle\Service\Hook\HookEvent;
+use PrestaShopBundle\Service\Hook\RenderingHookEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * The subscriber for HookDispatcher that triggers legacy Hooks.

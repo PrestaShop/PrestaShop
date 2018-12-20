@@ -26,14 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use Cart;
 use Configuration;
 use Context;
 use HistoryController;
-use PrestaShopException;
 use Order;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopException;
 use Tools;
 
 class OrderDetailLazyArray extends AbstractLazyArray

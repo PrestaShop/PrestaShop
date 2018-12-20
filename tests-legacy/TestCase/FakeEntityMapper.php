@@ -26,9 +26,9 @@
 
 namespace LegacyTests\TestCase;
 
-use PrestaShop\PrestaShop\Adapter\EntityMapper;
 use Exception;
 use ObjectModel;
+use PrestaShop\PrestaShop\Adapter\EntityMapper;
 
 class FakeEntityMapper extends EntityMapper
 {

@@ -27,11 +27,11 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use DateTime;
-use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
-use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
+use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
