@@ -26,30 +26,67 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Language\Dto\EditableLanguage;
+use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
+
 /**
  * Provides data for language's add/edit forms
  */
 final class LanguageFormDataProvider implements FormDataProviderInterface
 {
     /**
+     * @var CommandBusInterface
+     */
+    private $bus;
+
+    /**
+     * @var bool
+     */
+    private $isMultistoreFeatureActive;
+
+    /**
      * @var int[]
      */
     private $defaultShopAssociation;
 
     /**
+     * @param CommandBusInterface $bus
      * @param int[] $defaultShopAssociation
      */
-    public function __construct(array $defaultShopAssociation = [])
-    {
+    public function __construct(
+        CommandBusInterface $bus,
+        $isMultistoreFeatureActive,
+        array $defaultShopAssociation = []
+    ) {
+        $this->bus = $bus;
+        $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
         $this->defaultShopAssociation = $defaultShopAssociation;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData($id)
+    public function getData($languageId)
     {
-        return [];
+        /** @var EditableLanguage $editableLanguage */
+        $editableLanguage = $this->bus->handle(new GetLanguageForEditing($languageId));
+
+        $data = [
+            'name' => $editableLanguage->getName(),
+            'iso_code' => $editableLanguage->getIsoCode()->getValue(),
+            'tag_ietf' => $editableLanguage->getTagIETF()->getValue(),
+            'short_date_format' => $editableLanguage->getShortDateFormat(),
+            'full_date_format' => $editableLanguage->getFullDateFormat(),
+            'is_rtl' => $editableLanguage->isRtl(),
+            'is_active' => $editableLanguage->isActive(),
+        ];
+
+        if ($this->isMultistoreFeatureActive) {
+            $data['shop_association'] = $editableLanguage->getShopAssociation();
+        }
+
+        return $data;
     }
 
     /**
