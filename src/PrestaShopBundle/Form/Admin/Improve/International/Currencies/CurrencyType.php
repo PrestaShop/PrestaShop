@@ -55,7 +55,7 @@ class CurrencyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('currency', ChoiceType::class, [
+            ->add('iso_code', ChoiceType::class, [
                 'choices' => $this->allCurrencies,
                 'choice_translation_domain' => false,
             ])
