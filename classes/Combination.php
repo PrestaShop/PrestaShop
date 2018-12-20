@@ -93,7 +93,7 @@ class CombinationCore extends ObjectModel
             'unit_price_impact' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
             'minimal_quantity' => array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId', 'required' => true),
             'low_stock_threshold' => array('type' => self::TYPE_INT, 'shop' => true, 'allow_null' => true, 'validate' => 'isInt'),
-            'low_stock_alert' => array('type' => self::TYPE_BOOL, 'shop' => true, 'allow_null' => true, 'validate' => 'isBool'),
+            'low_stock_alert' => array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'default_on' => array('type' => self::TYPE_BOOL, 'allow_null' => true, 'shop' => true, 'validate' => 'isBool'),
             'available_date' => array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
         ),
