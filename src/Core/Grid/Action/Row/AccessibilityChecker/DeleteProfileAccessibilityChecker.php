@@ -24,9 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Grid\Action\Row\AccessibilityChecker;
-
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker;
 
 /**
  * Class DeleteProfileAccessibilityChecker.
