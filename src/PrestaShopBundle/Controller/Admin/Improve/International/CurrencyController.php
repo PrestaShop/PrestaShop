@@ -41,6 +41,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CurrencyController is responsible for handling "Improve -> International -> Localization -> Currencies" page.
@@ -50,8 +51,6 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Show currency page.
      *
-     * @Template("@PrestaShop/Admin/Improve/International/Currency/index.html.twig")
-     *
      * @AdminSecurity(
      *     "is_granted('read', request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index"
@@ -59,7 +58,7 @@ class CurrencyController extends FrameworkBundleAdminController
      *
      * @param CurrencyFilters $filters
      *
-     * @return array
+     * @return Response
      */
     public function indexAction(CurrencyFilters $filters)
     {
@@ -67,9 +66,9 @@ class CurrencyController extends FrameworkBundleAdminController
         $currencyGrid = $currencyGridFactory->getGrid($filters);
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
-        return [
+        return $this->render('@PrestaShop/Admin/Improve/International/Currency/index.html.twig', [
             'currencyGrid' => $gridPresenter->present($currencyGrid),
-        ];
+        ]);
     }
 
     /**
