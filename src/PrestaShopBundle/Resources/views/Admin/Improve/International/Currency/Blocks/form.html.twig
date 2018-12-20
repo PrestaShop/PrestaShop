@@ -55,6 +55,19 @@
         </div>
       </div>
     </div>
+
+    <div class="card-footer">
+      <div class="d-inline-flex">
+        <a href="{{ path('admin_currencies_index') }}" class="btn btn-outline-secondary">
+          <i class="material-icons">cancel</i>
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+      </div>
+      <div class="d-inline-flex float-right">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+
   </div>
 
   {{ form_end(currencyForm) }}
