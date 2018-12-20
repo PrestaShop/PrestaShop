@@ -642,7 +642,6 @@
 {% endblock material_multiple_choice_table_widget %}
 
 {% block translatable_widget -%}
-  {{ form_errors(form) }}
   <div class="input-group locale-input-group js-locale-input-group d-flex">
     {% for translateField in form %}
       {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
