@@ -328,10 +328,12 @@ class Reader implements ReaderInterface
         // Possible other systems are "native", "traditional" and "finance".
         // @see http://www.unicode.org/reports/tr35/tr35-numbers.html#otherNumberingSystems
         if (isset($numbersData->otherNumberingSystems)) {
+            $numberingSystems = [];
             foreach ($numbersData->otherNumberingSystems->children() as $system) {
                 /* @var $system SimplexmlElement */
-                $localeData->setNumberingSystems([$system->getName() => (string) $system]);
+                $numberingSystems[$system->getName()] = (string) $system;
             }
+            $localeData->setNumberingSystems($numberingSystems);
         }
         // Symbols (by numbering system)
         if (isset($numbersData->symbols)) {

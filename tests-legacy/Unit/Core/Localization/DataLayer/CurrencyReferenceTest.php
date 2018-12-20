@@ -89,7 +89,7 @@ class CurrencyReferenceTest extends TestCase
         /** @var CurrencyData $currencyData */
         $this->assertSame(
             'PCE',
-            $currencyData->isoCode
+            $currencyData->getIsoCode()
         );
 
         // Same test with unknown cache key

@@ -97,11 +97,11 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
 
         $currencyData = new CurrencyData();
 
-        $currencyData->isoCode = $currencyEntity->iso_code;
-        $currencyData->names[$localeCode] = $currencyEntity->name;
-        $currencyData->numericIsoCode = $currencyEntity->numeric_iso_code;
-        $currencyData->symbols[$localeCode] = $currencyEntity->symbol;
-        $currencyData->precision = $currencyEntity->precision;
+        $currencyData->setIsoCode($currencyEntity->iso_code);
+        $currencyData->setNames([$localeCode => $currencyEntity->name]);
+        $currencyData->setNumericIsoCode($currencyEntity->numeric_iso_code);
+        $currencyData->setSymbols([$localeCode => $currencyEntity->symbol]);
+        $currencyData->setPrecision($currencyEntity->precision);
 
         return $currencyData;
     }
@@ -143,11 +143,11 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
         $currencyCode = $currencyDataId->getCurrencyCode();
         $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeOrCreate($currencyCode, $currencyDataId->getLocaleCode());
 
-        $currencyEntity->iso_code = $currencyData->isoCode;
-        $currencyEntity->name = $currencyData->names[$currencyDataId->getLocaleCode()];
-        $currencyEntity->numeric_iso_code = $currencyData->numericIsoCode;
-        $currencyEntity->symbol = $currencyData->symbols[$currencyDataId->getLocaleCode()];
-        $currencyEntity->precision = $currencyData->precision;
+        $currencyEntity->iso_code = $currencyData->getIsoCode();
+        $currencyEntity->name = $currencyData->getNames()[$currencyDataId->getLocaleCode()];
+        $currencyEntity->numeric_iso_code = $currencyData->getNumericIsoCode();
+        $currencyEntity->symbol = $currencyData->getSymbols()[$currencyDataId->getLocaleCode()];
+        $currencyEntity->precision = $currencyData->getPrecision();
 
         try {
             $this->dataProvider->saveCurrency($currencyEntity);

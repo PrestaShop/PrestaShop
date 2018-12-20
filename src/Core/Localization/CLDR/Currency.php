@@ -149,8 +149,13 @@ class Currency
      */
     public function getDisplayName($countContext = self::DISPLAY_NAME_COUNT_DEFAULT)
     {
-        if (!isset($this->displayNames[$countContext])) {
-            $countContext = self::DISPLAY_NAME_COUNT_DEFAULT;
+        if (!in_array($countContext, [self::DISPLAY_NAME_COUNT_DEFAULT, self::DISPLAY_NAME_COUNT_ONE, self::DISPLAY_NAME_COUNT_OTHER])) {
+            throw new LocalizationException(
+                sprintf(
+                    'Unknown display name: "%s"',
+                    print_r($countContext, true)
+                )
+            );
         }
 
         return $this->displayNames[$countContext];
