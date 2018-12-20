@@ -6,3 +6,6 @@ ALTER TABLE `PREFIX_supply_order_receipt_history`
 
 ALTER TABLE `PREFIX_product`
   CHANGE `reference` `reference` varchar(64) DEFAULT NULL;
+
+ALTER TABLE `PREFIX_order_detail`
+  CHANGE `product_supplier_reference` `product_supplier_reference` varchar(64) DEFAULT NULL;
