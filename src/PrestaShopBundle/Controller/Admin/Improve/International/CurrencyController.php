@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyExc
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -96,7 +97,7 @@ class CurrencyController extends FrameworkBundleAdminController
     }
 
     /**
-     * Displays currency form.
+     * Displays and handles currency form.
      *
      * @AdminSecurity(
      *     "is_granted('create', request.get('_legacy_controller'))",
@@ -104,16 +105,15 @@ class CurrencyController extends FrameworkBundleAdminController
      *     message="You do not have permission to add this."
      * )
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        //todo: drop legacy and after having post add @DemoRestricted
-        $legacyLink = $this->getAdminLink('AdminCurrencies', [
-            'addcurrency' => 1,
-        ]);
+        $currencyForm = $this->getCurrencyFormBuilder()->getForm();
 
-        return $this->redirect($legacyLink);
+        return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
+            'currency_form' => $currencyForm->createView(),
+        ]);
     }
 
     /**
@@ -204,6 +204,16 @@ class CurrencyController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_currencies_index');
+    }
+
+    /**
+     * Gets form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getCurrencyFormBuilder()
+    {
+        return $this->get('prestashop.core.form.builder.currency_builder');
     }
 
     /**
