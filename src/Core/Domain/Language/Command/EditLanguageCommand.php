@@ -147,7 +147,7 @@ class EditLanguageCommand
     }
 
     /**
-     * @param IsoCode|null $isoCode
+     * @param string $isoCode
      *
      * @return self
      */
@@ -167,7 +167,7 @@ class EditLanguageCommand
     }
 
     /**
-     * @param TagIETF|null $tagIETF
+     * @param string $tagIETF
      *
      * @return self
      */
