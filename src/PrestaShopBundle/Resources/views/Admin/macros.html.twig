@@ -114,7 +114,7 @@
     {% endfor %}
   {% endif %}
 
-  {% set attr = attr|merge({'class': (attr.class is defined ? attr.class : '') ~ (errors|length > 0 ? ' is-invalid' : '')} ) %}
+  {% set attr = attr|merge({'class': (attr.class is defined ? attr.class : '')} ) %}
   {% set vars = vars|merge({'attr': attr}) %}
 
   {{ form_widget(form, vars) }}
