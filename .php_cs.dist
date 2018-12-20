@@ -13,6 +13,7 @@ return PhpCsFixer\Config::create()
         'concat_space' => [
             'spacing' => 'one',
         ],
+        'cast_spaces' => [
             'space' => 'single',
         ],
         'error_suppression' => [
