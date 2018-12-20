@@ -31,6 +31,21 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
  */
 final class CurrencyFormDataProvider implements FormDataProviderInterface
 {
+
+    /**
+     * @var array
+     */
+    private $defaultCldrCurrency;
+
+    /**
+     * @param array $defaultCldrCurrency
+     */
+    public function __construct(array $defaultCldrCurrency)
+    {
+
+        $this->defaultCldrCurrency = $defaultCldrCurrency;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -44,6 +59,8 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return null;
+        return [
+            'iso_code' => isset($this->defaultCldrCurrency['code']) ? $this->defaultCldrCurrency['code'] : null,
+        ];
     }
 }
