@@ -53,7 +53,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'Currency';
+        return 'currency';
     }
 
     /**
