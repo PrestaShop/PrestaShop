@@ -52,6 +52,7 @@ final class LanguageFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param CommandBusInterface $bus
+     * @param bool $isMultistoreFeatureActive
      * @param int[] $defaultShopAssociation
      */
     public function __construct(

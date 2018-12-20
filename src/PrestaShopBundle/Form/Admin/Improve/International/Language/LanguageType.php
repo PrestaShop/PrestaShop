@@ -33,6 +33,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -97,16 +99,18 @@ class LanguageType extends AbstractType
                 ],
             ])
             ->add('flag_image', FileType::class, [
+                'required' => !$options['is_for_editing'],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    new Image([
+                        'mimeTypesMessage' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
             ->add('no_picture_image', FileType::class, [
+                'required' => !$options['is_for_editing'],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    new Image([
+                        'mimeTypesMessage' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
@@ -123,5 +127,20 @@ class LanguageType extends AbstractType
                 'required' => false,
             ]);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                // if form is used for editing
+                // then some fields are optional
+                'is_for_editing' => false,
+            ])
+            ->setAllowedTypes('is_for_editing', 'bool')
+        ;
     }
 }

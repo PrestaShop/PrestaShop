@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\EditLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -83,8 +84,36 @@ final class LanguageFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function update($id, array $data)
+    public function update($languageId, array $data)
     {
-        // TODO: Implement update() method.
+        $command = (new EditLanguageCommand($languageId))
+            ->setName((string) $data['name'])
+            ->setIsoCode((string) $data['iso_code'])
+            ->setTagIETF((string) $data['tag_ietf'])
+            ->setShortDateFormat((string) $data['short_date_format'])
+            ->setFullDateFormat((string) $data['full_date_format'])
+            ->setIsRtl($data['is_rtl'])
+            ->setIsActive($data['is_active'])
+        ;
+
+        if ($data['flag_image'] instanceof UploadedFile) {
+            $command->setFlagImagePath($data['flag_image']->getPathname());
+        }
+
+        if ($data['no_picture_image'] instanceof UploadedFile) {
+            $command->setFlagImagePath($data['no_picture_image']->getPathname());
+        }
+
+        if (isset($data['shop_association'])) {
+            $shopAssociation = $data['shop_association'] ?: [];
+            $shopAssociation = array_map(function ($shopId) { return (int) $shopId; }, $shopAssociation);
+
+            $command->setShopAssociation($shopAssociation);
+        }
+
+        /** @var LanguageId $languageId */
+        $languageId = $this->bus->handle($command);
+
+        return $languageId->getValue();
     }
 }
