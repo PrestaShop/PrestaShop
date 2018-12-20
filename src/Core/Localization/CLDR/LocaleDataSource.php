@@ -39,7 +39,7 @@ class LocaleDataSource
     /**
      * @var CldrLocaleDataLayerInterface
      */
-    protected $topLayer;
+    private $topLayer;
 
     /**
      * LocaleDataSource constructor needs a CldrLocaleDataLayerInterface layer object.
