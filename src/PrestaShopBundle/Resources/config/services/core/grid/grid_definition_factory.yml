@@ -14,7 +14,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'logs', 'action': 'index'})"
-            - "@=service('router').generate('admin_logs')"
+            - "@=service('router').generate('admin_logs_index')"
         public: true
 
     prestashop.core.grid.definition.factory.email_logs:

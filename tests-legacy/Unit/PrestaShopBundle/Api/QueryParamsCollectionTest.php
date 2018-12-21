@@ -64,7 +64,7 @@ class QueryParamsCollectionTest extends TestCase
     public function itShouldRaiseAnExceptionOnInvalidPaginationParams($pageIndex, $pageSize)
     {
         try {
-            $this->it_should_make_query_params_from_a_request(
+            $this->itShouldMakeQueryParamsFromARequest(
                 'product',
                 $pageIndex,
                 $pageSize,
