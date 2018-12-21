@@ -42,11 +42,29 @@ use PrestaShopDatabaseException;
 final class GetCurrencyForFormEditingHandler implements GetCurrencyForFormEditingHandlerInterface
 {
     /**
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
+     * @param int $contextShopId
+     */
+    public function __construct($contextShopId)
+    {
+        $this->contextShopId = $contextShopId;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(GetCurrencyForFormEditing $query)
     {
-        $entity = new Currency($query->getCurrencyId()->getValue());
+        //todo: shop context when one currency is missing causes some issues
+        $entity = new Currency(
+            $query->getCurrencyId()->getValue(),
+            null,
+            $this->contextShopId
+        );
 
         if (0 >= $entity->id) {
             throw new CurrencyNotFoundException(
