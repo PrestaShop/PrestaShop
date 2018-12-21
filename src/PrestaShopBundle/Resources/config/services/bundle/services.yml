@@ -105,3 +105,9 @@ services:
     prestashop.core.product.csv_exporter:
         class: PrestaShop\PrestaShop\Core\Product\ProductCsvExporter
         arguments: ['@translator', '@prestashop.core.admin.data_provider.product_interface']
+
+    prestashop.core.mail.template.generator:
+        class: PrestaShopBundle\Service\Mail\MailTemplateGenerator
+        arguments:
+            - "@templating.engine.twig"
+            - "%mail_themes_dir%"
