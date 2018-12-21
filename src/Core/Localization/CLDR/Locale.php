@@ -279,7 +279,7 @@ class Locale
      *                             An ISO 4217 currency code
      *
      * @return null|CurrencyInterface
-     *                       The wanted CLDR Currency. Null if this currency is not available for this locale.
+     *                                The wanted CLDR Currency. Null if this currency is not available for this locale.
      */
     public function getCurrency($currencyCode)
     {
