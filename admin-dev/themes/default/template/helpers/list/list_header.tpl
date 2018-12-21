@@ -121,10 +121,21 @@
 	<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 	<input type="hidden" name="page" value="{$page|intval}"/>
 	<input type="hidden" name="selected_pagination" value="{$selected_pagination|intval}"/>
+
 	{block name="override_form_extra"}{/block}
+
 	<div class="panel col-lg-12">
 		<div class="panel-heading">
-			{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end|escape:'html':'UTF-8'}{else}{$title|escape:'html':'UTF-8'}{/if}
+			{if isset($icon)}
+				<i class="{$icon}"></i>
+			{/if}
+
+			{if is_array($title)}
+				{$title|end|escape:'html':'UTF-8'}
+			{else}
+				{$title|escape:'html':'UTF-8'}
+			{/if}
+
 			{if isset($toolbar_btn) && count($toolbar_btn) >0}
 				<span class="badge">{$list_total}</span>
 				<span class="panel-heading-action">
