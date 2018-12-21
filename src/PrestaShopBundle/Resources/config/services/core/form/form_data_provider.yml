@@ -26,3 +26,4 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CurrencyFormDataProvider'
     arguments:
       - '@=service("prestashop.core.cldr.repository").getCurrency()'
+      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'

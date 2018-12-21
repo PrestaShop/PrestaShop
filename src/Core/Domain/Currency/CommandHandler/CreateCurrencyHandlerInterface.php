@@ -24,41 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CreateCurrencyCommand;
 
 /**
- * Class CurrencyId is responsible for providing currency id data.
+ * Interface CreateCurrencyHandlerInterface
  */
-class CurrencyId
+interface CreateCurrencyHandlerInterface
 {
     /**
-     * @var int
-     */
-    private $currencyId;
-
-    /**
-     * @param int $currencyId
+     * @param CreateCurrencyCommand $command
      *
-     * @throws CurrencyException
+     * @return void
      */
-    public function __construct($currencyId)
-    {
-        if (!is_int($currencyId) || $currencyId <= 0) {
-            throw new CurrencyException(
-                sprintf('Invalid Currency id: %s', var_export($currencyId, true))
-            );
-        }
-
-        $this->currencyId = (int) $currencyId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->currencyId;
-    }
+    public function handle(CreateCurrencyCommand $command);
 }
