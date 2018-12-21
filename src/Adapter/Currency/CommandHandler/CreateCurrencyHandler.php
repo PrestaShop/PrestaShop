@@ -50,6 +50,7 @@ final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
     public function handle(CreateCurrencyCommand $command)
     {
         //todo: check if currency does not exist
+        //todo: try to enter 0.000000001
         try {
             $entity = new Currency();
 
