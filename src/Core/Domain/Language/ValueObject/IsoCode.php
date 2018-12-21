@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Language\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 
+/**
+ * Stores language's two-letter (639-1) ISO code
+ */
 class IsoCode
 {
     /**
