@@ -99,3 +99,11 @@ services:
         arguments:
             - '@prestashop.core.grid.data.factory.language'
             - '@prestashop.adapter.language.language_flag_thumbnail_provider'
+
+    prestashop.core.grid.data_factory.profiles:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.profiles'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'profiles'

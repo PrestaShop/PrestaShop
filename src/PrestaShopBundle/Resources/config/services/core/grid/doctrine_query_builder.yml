@@ -74,3 +74,11 @@ services:
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
         public: true
+
+    prestashop.core.grid.query_builder.profiles:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProfilesQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        public: true

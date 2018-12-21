@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.grid.action.row.accessibility_checker.delete_profile:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteProfileAccessibilityChecker'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
