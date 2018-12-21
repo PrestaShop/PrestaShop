@@ -53,5 +53,6 @@ module.exports = {
     currency_list_element: '//*[@id="_desktop_currency_selector"]//li/a[contains(text(),"%NAME")]',
     selected_currency_option: '//*[@id="_desktop_currency_selector"]//select/option[@selected="selected" and (text()="%D")]',
     selected_language_option: '//*[@id="_desktop_language_selector"]//select/option[@selected="selected" and (text()="%D")]',
+    account:'//*[@id="_desktop_user_info"]/div[@class="user-info"]/a[@class="account"]/span'
   }
 };
