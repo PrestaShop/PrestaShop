@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CreateCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
@@ -66,6 +67,17 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        // TODO: Implement update() method.
+        $command = new UpdateCurrencyCommand(new CurrencyId($id));
+
+        $command
+            ->setExchangeRate($data['exchange_rate'])
+            ->setIsEnabled($data['active'])
+            ->setIsoCode($data['iso_code'])
+        ;
+
+        /** @var CurrencyId $currencyId */
+        $currencyId = $this->commandBus->handle($command);
+
+        return $currencyId->getValue();
     }
 }
