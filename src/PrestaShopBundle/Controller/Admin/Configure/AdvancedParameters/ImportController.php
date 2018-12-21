@@ -173,6 +173,7 @@ class ImportController extends FrameworkBundleAdminController
             $fileRemoval = $this->get('prestashop.core.import.file_removal');
             $fileRemoval->remove($filename);
         }
+
         return $this->redirectToRoute('admin_import');
     }
 
@@ -239,6 +240,7 @@ class ImportController extends FrameworkBundleAdminController
         } catch (NotSupportedImportEntityException $e) {
             $entityFields = [];
         }
+
         return $this->json($entityFields);
     }
 
