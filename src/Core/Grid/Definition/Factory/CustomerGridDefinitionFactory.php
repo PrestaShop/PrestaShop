@@ -252,6 +252,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
         $filters = (new FilterCollection())
             ->add((new Filter('id_customer', NumberType::class))
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Catalog.Help'),
+                    ],
                     'required' => false,
                 ])
                 ->setAssociatedColumn('id_customer')
@@ -268,18 +271,27 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add((new Filter('firstname', TextType::class))
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search first name', [], 'Admin.Catalog.Help'),
+                    ],
                     'required' => false,
                 ])
                 ->setAssociatedColumn('firstname')
             )
             ->add((new Filter('lastname', TextType::class))
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search last name', [], 'Admin.Catalog.Help'),
+                    ],
                     'required' => false,
                 ])
                 ->setAssociatedColumn('lastname')
             )
             ->add((new Filter('email', TextType::class))
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search email', [], 'Admin.Catalog.Help'),
+                    ],
                     'required' => false,
                 ])
                 ->setAssociatedColumn('email')
@@ -315,6 +327,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
         if ($this->isB2bFeatureEnabled) {
             $filters->add((new Filter('company', TextType::class))
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search company', [], 'Admin.Catalog.Help'),
+                    ],
                     'required' => false,
                 ])
                 ->setAssociatedColumn('company')
