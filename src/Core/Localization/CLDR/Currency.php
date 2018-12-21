@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
  */
 final class Currency implements CurrencyInterface
 {
-
     /**
      * Alphabetic ISO 4217 currency code.
      *
