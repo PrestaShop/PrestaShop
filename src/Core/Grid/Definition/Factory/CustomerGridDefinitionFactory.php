@@ -189,6 +189,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add((new LinkRowAction('edit'))
