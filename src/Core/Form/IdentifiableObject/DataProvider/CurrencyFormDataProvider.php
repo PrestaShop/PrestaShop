@@ -26,7 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Currency\CurrencySettings;
+use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\CurrencyForFormEditing;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForFormEditing;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
  * Class CurrencyFormDataProvider
@@ -39,11 +43,18 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
     private $contextShopIds;
 
     /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
+    /**
+     * @param CommandBusInterface $queryBus
      * @param array $contextShopIds
      */
-    public function __construct(array $contextShopIds)
+    public function __construct(CommandBusInterface $queryBus, array $contextShopIds)
     {
         $this->contextShopIds = $contextShopIds;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -51,7 +62,15 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id)
     {
-        return [];
+        /** @var CurrencyForFormEditing $result */
+        $result = $this->queryBus->handle(new GetCurrencyForFormEditing(new CurrencyId((int) $id)));
+
+        return [
+            'iso_code' => $result->getIsoCode(),
+            'exchange_rate' => $result->getExchangeRate(),
+            'shop_association' => $result->getAssociatedShopIds(),
+            'active' => $result->isEnabled(),
+        ];
     }
 
     /**
