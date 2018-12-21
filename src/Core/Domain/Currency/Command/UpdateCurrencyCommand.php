@@ -54,6 +54,11 @@ class UpdateCurrencyCommand
     private $isEnabled;
 
     /**
+     * @var int[]
+     */
+    private $shopIds;
+
+    /**
      * @param CurrencyId $currencyId
      */
     public function __construct(CurrencyId $currencyId)
@@ -136,6 +141,26 @@ class UpdateCurrencyCommand
     public function setIsEnabled($isEnabled)
     {
         $this->isEnabled = $isEnabled;
+
+        return $this;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getShopIds()
+    {
+        return $this->shopIds;
+    }
+
+    /**
+     * @param int[] $shopIds
+     *
+     * @return self
+     */
+    public function setShopIds($shopIds)
+    {
+        $this->shopIds = $shopIds;
 
         return $this;
     }
