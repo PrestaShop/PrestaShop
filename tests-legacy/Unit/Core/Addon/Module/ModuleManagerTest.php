@@ -310,6 +310,7 @@ class ModuleManagerTest extends TestCase
     private function mockCacheClearer()
     {
         $this->cacheClearerS = $this->getMockBuilder(CacheClearer::class)
+            ->disableOriginalConstructor()
             ->getMock();
     }
 
