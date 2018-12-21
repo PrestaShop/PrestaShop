@@ -24,41 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CurrencyId is responsible for providing currency id data.
+ * Class CannotCreateCurrencyException
  */
-class CurrencyId
+class CannotCreateCurrencyException extends CurrencyException
 {
-    /**
-     * @var int
-     */
-    private $currencyId;
-
-    /**
-     * @param int $currencyId
-     *
-     * @throws CurrencyException
-     */
-    public function __construct($currencyId)
-    {
-        if (!is_int($currencyId) || $currencyId <= 0) {
-            throw new CurrencyException(
-                sprintf('Invalid Currency id: %s', var_export($currencyId, true))
-            );
-        }
-
-        $this->currencyId = (int) $currencyId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->currencyId;
-    }
 }

@@ -24,41 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
 /**
- * Class CurrencyId is responsible for providing currency id data.
+ * Class CreateCurrencyCommand
  */
-class CurrencyId
+class CreateCurrencyCommand
 {
     /**
-     * @var int
+     * @var string
      */
-    private $currencyId;
+    private $isoCode;
 
     /**
-     * @param int $currencyId
-     *
-     * @throws CurrencyException
+     * @var float
      */
-    public function __construct($currencyId)
-    {
-        if (!is_int($currencyId) || $currencyId <= 0) {
-            throw new CurrencyException(
-                sprintf('Invalid Currency id: %s', var_export($currencyId, true))
-            );
-        }
+    private $exchangeRate;
 
-        $this->currencyId = (int) $currencyId;
+    /**
+     * @var bool
+     */
+    private $isEnabled;
+
+    /**
+     * @param string $isoCode
+     * @param float $exchangeRate
+     * @param bool $isEnabled
+     */
+    public function __construct($isoCode, $exchangeRate, $isEnabled)
+    {
+        $this->isoCode = $isoCode;
+        $this->exchangeRate = $exchangeRate;
+        $this->isEnabled = $isEnabled;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getValue()
+    public function getIsoCode()
     {
-        return $this->currencyId;
+        return $this->isoCode;
+    }
+
+    /**
+     * @return float
+     */
+    public function getExchangeRate()
+    {
+        return $this->exchangeRate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->isEnabled;
     }
 }

@@ -676,5 +676,7 @@ services:
         arguments:
             - '@=service("prestashop.core.form.choice_provider.currency_from_cldr").getChoices()'
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
