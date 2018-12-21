@@ -33,19 +33,17 @@ use PrestaShop\PrestaShop\Core\Currency\CurrencySettings;
  */
 final class CurrencyFormDataProvider implements FormDataProviderInterface
 {
-
     /**
      * @var array
      */
-    private $defaultCldrCurrency;
+    private $contextShopIds;
 
     /**
-     * @param array $defaultCldrCurrency
+     * @param array $contextShopIds
      */
-    public function __construct(array $defaultCldrCurrency)
+    public function __construct(array $contextShopIds)
     {
-
-        $this->defaultCldrCurrency = $defaultCldrCurrency;
+        $this->contextShopIds = $contextShopIds;
     }
 
     /**
@@ -62,8 +60,8 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
-            'iso_code' => isset($this->defaultCldrCurrency['code']) ? $this->defaultCldrCurrency['code'] : null,
             'exchange_rate' => CurrencySettings::DEFAULT_CONVERSION_RATE,
+            'shop_association' => $this->contextShopIds,
         ];
     }
 }
