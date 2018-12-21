@@ -200,8 +200,8 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'connect',
                 ])
             )
-            ->add(
-                (new ActionColumn('actions'))
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add(
