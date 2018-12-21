@@ -8,7 +8,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
-
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
