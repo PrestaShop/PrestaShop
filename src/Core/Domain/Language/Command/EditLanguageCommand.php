@@ -187,7 +187,7 @@ class EditLanguageCommand
     }
 
     /**
-     * @param string|null $shortDateFormat
+     * @param string $shortDateFormat
      *
      * @return self
      */
@@ -207,7 +207,7 @@ class EditLanguageCommand
     }
 
     /**
-     * @param string|null $fullDateFormat
+     * @param string $fullDateFormat
      *
      * @return self
      */
@@ -227,7 +227,7 @@ class EditLanguageCommand
     }
 
     /**
-     * @param string|null $flagImagePath
+     * @param string $flagImagePath
      *
      * @return self
      */
@@ -247,7 +247,7 @@ class EditLanguageCommand
     }
 
     /**
-     * @param string|null $noPictureImagePath
+     * @param string $noPictureImagePath
      *
      * @return self
      */
@@ -267,7 +267,7 @@ class EditLanguageCommand
     }
 
     /**
-     * @param bool|null $isRtl
+     * @param bool $isRtl
      *
      * @return self
      */
@@ -287,7 +287,7 @@ class EditLanguageCommand
     }
 
     /**
-     * @param bool|null $isActive
+     * @param bool $isActive
      *
      * @return self
      */
@@ -307,7 +307,7 @@ class EditLanguageCommand
     }
 
     /**
-     * @param int[]|null $shopAssociation
+     * @param int[] $shopAssociation
      *
      * @return self
      */
