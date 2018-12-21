@@ -26,6 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfilesFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -130,8 +135,16 @@ class ProfilesController extends FrameworkBundleAdminController
      */
     public function deleteAction($profileId)
     {
-        //@todo implement
-        $this->flashErrors(['not implemented']);
+        try {
+            $deleteProfileCommand = new DeleteProfileCommand($profileId);
+
+            $this->getCommandBus()->handle($deleteProfileCommand);
+
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (ProfileException $e) {
+            $this->addFlash('error', $this->handleDeleteException($e));
+        }
+
         return $this->redirectToRoute('admin_profiles_index');
     }
 
@@ -155,5 +168,29 @@ class ProfilesController extends FrameworkBundleAdminController
         //@todo implement
         $this->flashErrors(['not implemented']);
         return $this->redirectToRoute('admin_profiles_index');
+    }
+
+    /**
+     * Get human readable error for exception.
+     *
+     * @param ProfileException $e
+     *
+     * @return string Error message
+     */
+    protected function handleDeleteException(ProfileException $e)
+    {
+        $type = get_class($e);
+
+        $exceptionMessages = [
+            ProfileNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CannotDeleteSuperAdminProfileException::class => $this->trans('For security reasons, you cannot delete the Administrator\'s profile.', 'Admin.Advparameters.Notification'),
+            ProfileException::class => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($exceptionMessages[$type])) {
+            return $exceptionMessages[$type];
+        }
+
+        return $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error');
     }
 }
