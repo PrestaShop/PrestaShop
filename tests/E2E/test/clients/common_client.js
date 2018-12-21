@@ -678,6 +678,12 @@ class CommonClient {
       .selectByVisibleText(selector.order_state_select, state)
       .waitForExistAndClick(selector.update_status_button)
   }
+
+  deleteFile(folderPath, fileName, pause = 0) {
+    fs.unlinkSync(folderPath+fileName);
+    return this.client
+      .pause(pause)
+  }
 }
 
 module.exports = CommonClient;
