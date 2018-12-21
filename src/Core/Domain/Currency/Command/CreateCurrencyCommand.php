@@ -24,44 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
-
-use PrestaShop\PrestaShop\Core\Currency\CurrencySettings;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
 /**
- * Class CurrencyFormDataProvider
+ * Class CreateCurrencyCommand
  */
-final class CurrencyFormDataProvider implements FormDataProviderInterface
+class CreateCurrencyCommand
 {
     /**
-     * @var array
+     * @var string
      */
-    private $contextShopIds;
+    private $isoCode;
 
     /**
-     * @param array $contextShopIds
+     * @var float
      */
-    public function __construct(array $contextShopIds)
+    private $exchangeRate;
+
+    /**
+     * @var bool
+     */
+    private $isEnabled;
+
+    /**
+     * @param string $isoCode
+     * @param float $exchangeRate
+     * @param bool $isEnabled
+     */
+    public function __construct($isoCode, $exchangeRate, $isEnabled)
     {
-        $this->contextShopIds = $contextShopIds;
+        $this->isoCode = $isoCode;
+        $this->exchangeRate = $exchangeRate;
+        $this->isEnabled = $isEnabled;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function getData($id)
+    public function getIsoCode()
     {
-        return [];
+        return $this->isoCode;
     }
 
     /**
-     * {@inheritdoc}
+     * @return float
      */
-    public function getDefaultData()
+    public function getExchangeRate()
     {
-        return [
-            'exchange_rate' => CurrencySettings::DEFAULT_CONVERSION_RATE,
-            'shop_association' => $this->contextShopIds,
-        ];
+        return $this->exchangeRate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->isEnabled;
     }
 }

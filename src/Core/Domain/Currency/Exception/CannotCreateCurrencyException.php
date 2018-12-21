@@ -24,44 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
-
-use PrestaShop\PrestaShop\Core\Currency\CurrencySettings;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CurrencyFormDataProvider
+ * Class CannotCreateCurrencyException
  */
-final class CurrencyFormDataProvider implements FormDataProviderInterface
+class CannotCreateCurrencyException extends CurrencyException
 {
-    /**
-     * @var array
-     */
-    private $contextShopIds;
-
-    /**
-     * @param array $contextShopIds
-     */
-    public function __construct(array $contextShopIds)
-    {
-        $this->contextShopIds = $contextShopIds;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getData($id)
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultData()
-    {
-        return [
-            'exchange_rate' => CurrencySettings::DEFAULT_CONVERSION_RATE,
-            'shop_association' => $this->contextShopIds,
-        ];
-    }
 }

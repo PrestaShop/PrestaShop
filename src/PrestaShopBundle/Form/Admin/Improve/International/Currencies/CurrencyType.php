@@ -28,9 +28,10 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -38,6 +39,8 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class CurrencyType extends AbstractType
 {
+    use TranslatorAwareTrait;
+
     /**
      * @var array
      */
@@ -68,7 +71,10 @@ class CurrencyType extends AbstractType
                 'choices' => $this->allCurrencies,
                 'choice_translation_domain' => false,
             ])
-            ->add('exchange_rate', TextType::class)
+            ->add('exchange_rate', NumberType::class, [
+                'scale' => 6,
+                'invalid_message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+            ])
             ->add('active',  SwitchType::class)
         ;
 

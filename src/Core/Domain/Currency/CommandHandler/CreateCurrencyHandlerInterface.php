@@ -24,44 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Currency\CurrencySettings;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CreateCurrencyCommand;
 
 /**
- * Class CurrencyFormDataProvider
+ * Interface CreateCurrencyHandlerInterface
  */
-final class CurrencyFormDataProvider implements FormDataProviderInterface
+interface CreateCurrencyHandlerInterface
 {
     /**
-     * @var array
+     * @param CreateCurrencyCommand $command
+     *
+     * @return void
      */
-    private $contextShopIds;
-
-    /**
-     * @param array $contextShopIds
-     */
-    public function __construct(array $contextShopIds)
-    {
-        $this->contextShopIds = $contextShopIds;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getData($id)
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultData()
-    {
-        return [
-            'exchange_rate' => CurrencySettings::DEFAULT_CONVERSION_RATE,
-            'shop_association' => $this->contextShopIds,
-        ];
-    }
+    public function handle(CreateCurrencyCommand $command);
 }
