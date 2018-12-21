@@ -96,22 +96,6 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @throws LocalizationException
-     */
-    public function write($id, $data)
-    {
-        if (!($data instanceof CurrencyData)) {
-            throw new LocalizationException(
-                '$data must be an instance of ' . CurrencyData::class
-            );
-        }
-
-        return parent::write($id, $data);
-    }
-
-    /**
      * Actually write a CurrencyData object into the current layer.
      *
      * Might be a file edit, cache update, DB insert/update...
