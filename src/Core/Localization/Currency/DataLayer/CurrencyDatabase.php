@@ -107,20 +107,6 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function write($id, $data)
-    {
-        if (!($data instanceof CurrencyData)) {
-            throw new LocalizationException(
-                '$data must be an instance of ' . CurrencyData::class
-            );
-        }
-
-        return parent::write($id, $data);
-    }
-
-    /**
      * Actually write a data object into the current layer
      * Here, this is a DB insert/update...
      *
