@@ -41,14 +41,15 @@
     </li>
   </ul>
   <div class="mx-3">
-    {{ "Viewing %from%-%to% on %total% (page %current_page% / %page_count%)"|trans({
-      '%from%': from+1,
-      '%to%': min(to+1, total),
-      '%total%': total,
-      '%current_page%': current_page,
-      '%page_count%': page_count
-    },
-    'Admin.Catalog.Feature') }}
+    <label class="col-form-label">
+      {{ "Viewing %from%-%to% on %total% (page %current_page% / %page_count%)"|trans({
+        '%from%': from+1,
+        '%to%': min(to+1, total),
+        '%total%': total,
+        '%current_page%': current_page,
+        '%page_count%': page_count
+      }, 'Admin.Catalog.Feature') }}
+    </label>
   </div>
   <div class="mx-3">
     <div class="form-group row mb-0">
