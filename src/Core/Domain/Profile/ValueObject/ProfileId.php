@@ -1,10 +1,6 @@
 <?php
 /**
-<<<<<<< HEAD
- * 2007-2018 PrestaShop.
-=======
  * 2007-2018 PrestaShop
->>>>>>> Implement single profile deletion
  *
  * NOTICE OF LICENSE
  *
@@ -28,13 +24,47 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 
 /**
- * Class ProfileException is a base exception for profiles context.
+ * Class ProfileId
  */
-class ProfileException extends DomainException
+class ProfileId
 {
+    /**
+     * @var int
+     */
+    private $profileId;
+
+    /**
+     * @param int $profileId
+     */
+    public function __construct($profileId)
+    {
+        $this->setProfileId($profileId);
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->profileId;
+    }
+
+    /**
+     * @param int $profileId
+     */
+    private function setProfileId($profileId)
+    {
+        if (!is_numeric($profileId) || 0 >= $profileId) {
+            throw new ProfileException(
+                sprintf('Invalid Profile id %s supplied', var_export($profileId, true))
+            );
+        }
+
+        $this->profileId = $profileId;
+    }
 }

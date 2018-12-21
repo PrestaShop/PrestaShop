@@ -1,10 +1,6 @@
 <?php
 /**
-<<<<<<< HEAD
- * 2007-2018 PrestaShop.
-=======
  * 2007-2018 PrestaShop
->>>>>>> Implement single profile deletion
  *
  * NOTICE OF LICENSE
  *
@@ -28,13 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
 
 /**
- * Class ProfileException is a base exception for profiles context.
+ * Interface DeleteProfileHandlerInterface defines profile deletion handler.
  */
-class ProfileException extends DomainException
+interface DeleteProfileHandlerInterface
 {
+    /**
+     * Delete profile.
+     *
+     * @param DeleteProfileCommand $command
+     */
+    public function handle(DeleteProfileCommand $command);
 }

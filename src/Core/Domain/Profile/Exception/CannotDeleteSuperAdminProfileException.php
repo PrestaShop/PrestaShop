@@ -1,10 +1,6 @@
 <?php
 /**
-<<<<<<< HEAD
- * 2007-2018 PrestaShop.
-=======
  * 2007-2018 PrestaShop
->>>>>>> Implement single profile deletion
  *
  * NOTICE OF LICENSE
  *
@@ -30,11 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-
 /**
- * Class ProfileException is a base exception for profiles context.
+ * Class CannotDeleteSuperAdminProfileException thrown on super admin profile deletion attempt.
  */
-class ProfileException extends DomainException
+class CannotDeleteSuperAdminProfileException extends ProfileException
 {
 }
