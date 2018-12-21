@@ -95,8 +95,15 @@ class Reader implements ReaderInterface
         $finalData = new LocaleData();
         $lookup = $this->getLookup($localeCode);
         foreach ($lookup as $thisLocaleCode) {
-            $partialData = $this->getLocaleData($thisLocaleCode);
-            $finalData = $finalData->overrideWith($partialData);
+            try {
+                $partialData = $this->getLocaleData($thisLocaleCode);
+                $finalData = $finalData->overrideWith($partialData);
+            } catch (LocalizationFileNotFoundException $e) {
+                // Sometimes a file can be missing.
+                // Example for Chinese : zh_CN.xml doesn't exist. There is only a zh.xml file.
+                // That's why we can't let this exception bubble up.
+                continue;
+            }
         }
 
         return $finalData;
