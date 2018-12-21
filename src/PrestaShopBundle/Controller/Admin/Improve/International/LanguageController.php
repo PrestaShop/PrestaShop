@@ -71,7 +71,7 @@ class LanguageController extends AbstractAdminController
      */
     public function createAction(Request $request)
     {
-        $languageFormHandler = $this->get('prestashop.core.form.identifiable_object.language_form_handler');
+        $languageFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.language_form_handler');
         $languageFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.language_form_builder');
 
         $languageForm = $languageFormBuilder->getForm();
@@ -104,7 +104,7 @@ class LanguageController extends AbstractAdminController
      */
     public function editAction($languageId, Request $request)
     {
-        $languageFormHandler = $this->get('prestashop.core.form.identifiable_object.language_form_handler');
+        $languageFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.language_form_handler');
         $languageFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.language_form_builder');
 
         try {
