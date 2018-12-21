@@ -101,6 +101,7 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
             $this->session->set('forceIDs', $data['forceIDs']);
             $this->session->set('sendemail', $data['sendemail']);
         }
+
         return $errors;
     }
 
@@ -118,6 +119,7 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
         if ($selectedFile && !in_array($selectedFile, $importFiles)) {
             $selectedFile = null;
         }
+
         return $selectedFile;
     }
 }
