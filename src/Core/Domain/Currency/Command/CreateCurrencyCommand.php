@@ -47,12 +47,18 @@ class CreateCurrencyCommand
     private $isEnabled;
 
     /**
+     * @var int[]
+     */
+    private $shopIds;
+
+    /**
      * @param string $isoCode
      * @param float $exchangeRate
      * @param bool $isEnabled
      */
     public function __construct($isoCode, $exchangeRate, $isEnabled)
     {
+        //todo: iso code as object and add validation inside
         $this->isoCode = $isoCode;
         $this->exchangeRate = $exchangeRate;
         $this->isEnabled = $isEnabled;
@@ -80,5 +86,25 @@ class CreateCurrencyCommand
     public function isEnabled()
     {
         return $this->isEnabled;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getShopIds()
+    {
+        return $this->shopIds;
+    }
+
+    /**
+     * @param int[] $shopIds
+     *
+     * @return self
+     */
+    public function setShopIds($shopIds)
+    {
+        $this->shopIds = $shopIds;
+
+        return $this;
     }
 }

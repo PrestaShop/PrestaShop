@@ -55,6 +55,7 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         $command = new CreateCurrencyCommand($data['iso_code'], $data['exchange_rate'], $data['active']);
+        $command->setShopIds($data['shop_association']);
 
         /** @var CurrencyId $currencyId */
         $currencyId = $this->commandBus->handle($command);
@@ -67,12 +68,13 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $command = new UpdateCurrencyCommand(new CurrencyId($id));
+        $command = new UpdateCurrencyCommand(new CurrencyId((int) $id));
 
         $command
             ->setExchangeRate($data['exchange_rate'])
             ->setIsEnabled($data['active'])
             ->setIsoCode($data['iso_code'])
+            ->setShopIds($data['shop_association'])
         ;
 
         /** @var CurrencyId $currencyId */

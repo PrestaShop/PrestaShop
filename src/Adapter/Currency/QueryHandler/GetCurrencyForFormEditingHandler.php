@@ -36,6 +36,8 @@ use PrestaShopDatabaseException;
 
 /**
  * Class GetCurrencyForFormEditingHandler
+ *
+ * @internal
  */
 final class GetCurrencyForFormEditingHandler implements GetCurrencyForFormEditingHandlerInterface
 {
