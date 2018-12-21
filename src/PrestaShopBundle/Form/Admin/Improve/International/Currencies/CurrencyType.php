@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
+use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -43,11 +44,18 @@ class CurrencyType extends AbstractType
     private $allCurrencies;
 
     /**
-     * @param array $allCurrencies
+     * @var bool
      */
-    public function __construct(array $allCurrencies)
+    private $isShopFeatureEnabled;
+
+    /**
+     * @param array $allCurrencies
+     * @param bool $isShopFeatureEnabled
+     */
+    public function __construct(array $allCurrencies, $isShopFeatureEnabled)
     {
         $this->allCurrencies = $allCurrencies;
+        $this->isShopFeatureEnabled = $isShopFeatureEnabled;
     }
 
     /**
@@ -63,5 +71,9 @@ class CurrencyType extends AbstractType
             ->add('exchange_rate', TextType::class)
             ->add('active',  SwitchType::class)
         ;
+
+        if ($this->isShopFeatureEnabled) {
+            $builder->add('shop_association', ShopChoiceTreeType::class);
+        }
     }
 }
