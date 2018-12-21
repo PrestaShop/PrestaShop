@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelLegacyHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CreateCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\CreateCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
@@ -36,11 +37,13 @@ use PrestaShopException;
 
 /**
  * Class CreateCurrencyHandler
+ *
+ * @internal
  */
-final class CreateCurrencyHandler implements CreateCurrencyHandlerInterface
+final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler implements CreateCurrencyHandlerInterface
 {
     /**
-     * [@inheritdoc}
+     * {@inheritdoc}
      *
      * @throws CurrencyException
      */
@@ -53,11 +56,12 @@ final class CreateCurrencyHandler implements CreateCurrencyHandlerInterface
             $entity->iso_code = $command->getIsoCode();
             $entity->active = $command->isEnabled();
             $entity->conversion_rate = $command->getExchangeRate();
-            //todo: shop assoc
 
             if (false === $entity->add()) {
                 throw new CannotCreateCurrencyException('Failed to create new currency');
             }
+
+            $this->associateWithShops($entity, $command->getShopIds());
         } catch (PrestaShopException $exception) {
             throw new CurrencyException('Failed to create new currency', 0, $exception);
         }
