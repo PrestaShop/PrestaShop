@@ -27,3 +27,10 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\UpdateCurrencyHandler'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateCurrencyCommand' }
+
+    # Query handlers
+
+    prestashop.adapter.currency.query_handler.get_currency_for_form_editing:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetCurrencyForFormEditingHandler'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForFormEditing' }

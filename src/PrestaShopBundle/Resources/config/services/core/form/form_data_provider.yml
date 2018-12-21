@@ -18,5 +18,5 @@ services:
   prestashop.core.form.identifiable_object.data_provider.currency_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CurrencyFormDataProvider'
     arguments:
-      - '@=service("prestashop.core.cldr.repository").getCurrency()'
+      - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
