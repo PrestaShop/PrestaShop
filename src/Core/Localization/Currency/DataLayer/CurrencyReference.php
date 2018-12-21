@@ -102,7 +102,7 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
         }
 
         $currencyData = new CurrencyData();
-        $currencyData->setIsoCode( $cldrCurrency->getIsoCode());
+        $currencyData->setIsoCode($cldrCurrency->getIsoCode());
         $currencyData->setNumericIsoCode($cldrCurrency->getNumericIsoCode());
         $currencyData->setSymbols([$localeCode => $cldrCurrency->getSymbol(CldrCurrency::SYMBOL_TYPE_NARROW)]);
         $currencyData->setPrecision($cldrCurrency->getDecimalDigits());
