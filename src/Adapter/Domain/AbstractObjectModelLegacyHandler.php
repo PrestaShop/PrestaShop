@@ -34,6 +34,8 @@ use Shop;
 
 /**
  * Class AbstractObjectModelLegacyHandler
+ *
+ * @internal
  */
 abstract class AbstractObjectModelLegacyHandler
 {
@@ -92,5 +94,42 @@ abstract class AbstractObjectModelLegacyHandler
             true,
             Db::INSERT_IGNORE
         );
+    }
+
+    /**
+     * @param ObjectModel $objectModel
+     * @param array $multiStoreColumnAssociation - an array key contains shop id while values contains the mapping of
+     *  column and its value. e.g
+     * [
+     *      1 => [
+     *          'my_column' => 'my_column_value',
+     *          'my_another_column' => 'my_another_column_value',
+     *          ]
+     * ]
+     */
+    protected function updateMultiStoreColumns(ObjectModel $objectModel, array $multiStoreColumnAssociation)
+    {
+        $tableName = (string) $objectModel::$definition['table'];
+        $primaryKey = (string) $objectModel::$definition['primary'];
+        $primaryKeyValue = (int) $objectModel->id;
+
+        foreach ($multiStoreColumnAssociation as $shopId => $items) {
+            $shop = new Shop($shopId);
+
+            if (0 >= $shop->id || !is_array($items)) {
+                continue;
+            }
+
+            $update = [];
+            foreach ($items as $columnName => $columnValue) {
+                $update[pSQL($columnName)] = pSQL($columnValue);
+            }
+
+            Db::getInstance()->update(
+                $tableName . '_shop',
+                $update,
+                $primaryKey . '=' . $primaryKeyValue
+            );
+        }
     }
 }
