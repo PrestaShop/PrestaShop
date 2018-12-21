@@ -58,7 +58,7 @@ final class LanguageFormDataProvider implements FormDataProviderInterface
     public function __construct(
         CommandBusInterface $bus,
         $isMultistoreFeatureActive,
-        array $defaultShopAssociation = []
+        array $defaultShopAssociation
     ) {
         $this->bus = $bus;
         $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
@@ -95,12 +95,17 @@ final class LanguageFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [
+        $data = [
             'short_date_format' => 'Y-m-d',
             'full_date_format' => 'Y-m-d H:i:s',
             'is_rtl' => false,
             'is_active' => true,
-            'shop_association' => $this->defaultShopAssociation,
         ];
+
+        if ($this->isMultistoreFeatureActive) {
+            $data['shop_association'] = $this->defaultShopAssociation;
+        }
+
+        return $data;
     }
 }
