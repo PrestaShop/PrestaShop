@@ -61,7 +61,12 @@ module.exports = {
     payment_method: '//*[@id="formAddPayment"]//tr[1]/td[2]',
     order_id: '(//*[@id="content"]//span[@class="badge"])[2]',
     credit_slip_document_name: '//*[@id="documents_table"]//tr[3]//a',
-    quantity_refund: '//*[@id="orderProducts"]//div[@class="input-group"]/input[@onchange="checkPartialRefundProductQuantity(this)"]'
+    quantity_refund: '//*[@id="orderProducts"]//div[@class="input-group"]/input[@onchange="checkPartialRefundProductQuantity(this)"]',
+    documents_tab: '//*[@id="tabOrder"]/li[2]/a',
+    generate_invoice_button: '//*[@id="documents_table"]/tbody/tr/td/a',
+    awaiting_bank_wire_payment_option: '//*[@id="form_generate_by_status_order_states"]//label/span[contains(text(),"Awaiting bank wire payment")]',
+    awaiting_check_payment: '//*[@id="form_generate_by_status_order_states"]//label/span[contains(text(),"Awaiting check payment")]',
+    cancelled_option: '//*[@id="form_generate_by_status_order_states"]//label/span[contains(text(),"Canceled")]'
   },
 
   CreateOrder: {
@@ -117,5 +122,13 @@ module.exports = {
     save_button: '//*[@id="order_slip_fieldset_general"]//button[@type="submit"]',
     green_validation: '//*[@id="content"]//div[@class="alert alert-success"]',
     first_credit_slip_download_btn: '//*[@id="table-order_slip"]/tbody/tr[1]/td[4]/a'
+  },
+
+  Invoices: {
+    generate_pdf_button: '//*[@id="main-div"]//button[contains(text(),"Generate PDF file by date")]',
+    generate_pdf_by_status_button: '//*[@id="main-div"]//button[contains(text(),"Generate PDF file by status")]',
+    from_input: '//*[@id="form_generate_by_date_date_from"]',
+    to_input: '//*[@id="form_generate_by_date_date_to"]',
+    no_invoice_alert: '//*[@id="main-div"]//div[@class="alert-text"]/p'
   }
 };
