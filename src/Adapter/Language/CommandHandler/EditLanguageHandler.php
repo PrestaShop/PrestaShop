@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLan
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 /**
@@ -54,7 +55,7 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
         $this->assertLanguageWithIsoCodeDoesNotExist($language, $command);
         $this->assertDefaultLanguageIsNotDisabled($command);
 
-        $this->copyNoPictureIfChanged($command);
+        $this->copyNoPictureIfChanged($language, $command);
         $this->updateEmployeeLanguage($command);
         $this->moveTranslationsIfIsoChanged($language, $command);
 
@@ -130,18 +131,25 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
     /**
      * Only copy new "No picture" if it's being updated
      *
+     * @param Language $language
      * @param EditLanguageCommand $command
      */
-    private function copyNoPictureIfChanged(EditLanguageCommand $command)
+    private function copyNoPictureIfChanged(Language $language, EditLanguageCommand $command)
     {
-        if (null !== $command->getIsoCode() &&
-            null !== $command->getNoPictureImagePath()
-        ) {
-            $this->copyNoPictureImage(
-                $command->getIsoCode(),
-                $command->getNoPictureImagePath()
-            );
+        if (null === $command->getNoPictureImagePath()) {
+            return;
         }
+
+        $isoCode = $command->getIsoCode();
+
+        if (!$isoCode instanceof IsoCode) {
+            $isoCode = new IsoCode($language->iso_code);
+        }
+
+        $this->copyNoPictureImage(
+            $isoCode,
+            $command->getNoPictureImagePath()
+        );
     }
 
     /**
