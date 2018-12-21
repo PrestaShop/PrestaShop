@@ -26,17 +26,39 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CreateCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+
 /**
  * Class CurrencyFormDataHandler
  */
 final class CurrencyFormDataHandler implements FormDataHandlerInterface
 {
     /**
+     * @var CommandBusInterface
+     */
+    private $commandBus;
+
+    /**
+     * @param CommandBusInterface $commandBus
+     */
+    public function __construct(CommandBusInterface $commandBus)
+    {
+        $this->commandBus = $commandBus;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function create(array $data)
     {
-        // TODO: Implement create() method.
+        $command = new CreateCurrencyCommand($data['iso_code'], $data['exchange_rate'], $data['active']);
+
+        /** @var CurrencyId $currencyId */
+        $currencyId = $this->commandBus->handle($command);
+
+        return $currencyId->getValue();
     }
 
     /**
