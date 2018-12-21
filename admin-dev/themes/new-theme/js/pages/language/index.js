@@ -32,6 +32,7 @@ import LinkRowActionExtension from '../../components/grid/extension/link-row-act
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
+import ChoiceTree from "../../components/form/choice-tree";
 
 const $ = window.$;
 
@@ -46,4 +47,7 @@ $(document).ready(() => {
   languageGrid.addExtension(new SubmitBulkExtension());
   languageGrid.addExtension(new SubmitRowActionExtension());
   languageGrid.addExtension(new BulkActionCheckboxExtension());
+
+  // needed for shop association input in form
+  new ChoiceTree('#language_shop_association').enableAutoCheckChildren();
 });
