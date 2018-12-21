@@ -66,6 +66,8 @@ class LanguageController extends AbstractAdminController
     /**
      * Show language creation form page and handle its submit.
      *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return Response
@@ -97,6 +99,8 @@ class LanguageController extends AbstractAdminController
 
     /**
      * Show language edit form page and handle its submit.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $languageId
      * @param Request $request
