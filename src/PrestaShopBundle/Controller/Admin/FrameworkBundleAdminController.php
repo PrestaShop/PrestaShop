@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
@@ -447,5 +448,36 @@ class FrameworkBundleAdminController extends Controller
     protected function getContextShopId()
     {
         return $this->getContext()->shop->id;
+    }
+
+    /**
+     * Get error by exception from given messages
+     *
+     * @param Exception $e
+     * @param array $messages
+     *
+     * @return string
+     */
+    protected function getErrorMessageForException(Exception $e, array $messages)
+    {
+        $exceptionType = get_class($e);
+        $exceptionCode = $e->getCode();
+
+        if (isset($messages[$exceptionType])) {
+            $message = $messages[$exceptionType];
+
+            if (is_string($message)) {
+                return $message;
+            }
+
+            if (is_array($message) && isset($message[$exceptionCode])) {
+                return $message[$exceptionCode];
+            }
+        }
+
+        return $this->getFallbackErrorMessage(
+            $exceptionType,
+            $exceptionCode
+        );
     }
 }
