@@ -76,6 +76,15 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
             }
 
             $this->associateWithShops($entity, $command->getShopIds());
+
+            $columnsToUpdate = [];
+            foreach ($command->getShopIds() as $shopId) {
+                $columnsToUpdate[$shopId] = [
+                    'conversion_rate' => $entity->conversion_rate,
+                ];
+            }
+            $this->updateMultiStoreColumns($entity, $columnsToUpdate);
+
         } catch (PrestaShopException $exception) {
             throw new CurrencyException(
                 sprintf(
