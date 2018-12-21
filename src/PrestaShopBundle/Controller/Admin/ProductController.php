@@ -383,7 +383,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
-        $languages = $this->get('prestashop.adapter.legacy.context')->getLanguages();
+        $languages = $this->get('prestashop.adapter.legacy.context')->getLanguages(false);
 
         /** @var $productProvider ProductInterfaceProvider */
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
@@ -595,7 +595,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         // languages for switch dropdown
-        $languages = $legacyContextService->getLanguages();
+        $languages = $legacyContextService->getLanguages(false);
 
         // generate url preview
         if ($product->active) {
