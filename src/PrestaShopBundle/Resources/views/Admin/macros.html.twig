@@ -90,7 +90,6 @@
 
 {# Show form widget with errors rendered below it #}
 {% macro form_widget_with_error(form, vars, extraVars) %}
-  {% set extraVars = extraVars|default({}) %}
   {% set vars = vars|default({}) %}
   {% set extraVars = extraVars|default({}) %}
 
@@ -107,17 +106,18 @@
   {% endfor %}
 {% endmacro %}
 
-{#
- Helper function to render most common structure for single input
-
- @param form - form view to render
- @param vars - custom vars that are passed to form_widget
- @param form - parameters that are not related to form_widget, but are needed for input (label, help text & etc.)
-#}
+ {#
+  Helper function to render most common structure for single input
+  @param form - form view to render
+  @param vars - custom vars that are passed to form_widget
+  @param form - parameters that are not related to form_widget, but are needed for input (label, help text & etc.)
+ #}
 {% macro form_group_row(form, vars, extraVars) %}
   {% import '@PrestaShop/Admin/macros.html.twig' as self %}
 
-  <div class="form-group row">
+  {% set class = extraVars.class|default('') %}
+
+  <div class="form-group row {{ class }}">
     {% set extraVars = extraVars|default({}) %}
 
     {% if extraVars.label is defined %}
