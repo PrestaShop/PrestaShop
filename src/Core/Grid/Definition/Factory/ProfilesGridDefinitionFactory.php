@@ -188,7 +188,6 @@ class ProfilesGridDefinitionFactory extends AbstractGridDefinitionFactory
         ;
     }
 
-
     /**
      * {@inheritdoc}
      */
