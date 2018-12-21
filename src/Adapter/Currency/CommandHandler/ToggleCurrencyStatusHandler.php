@@ -37,6 +37,8 @@ use PrestaShopException;
 
 /**
  * Class ToggleCurrencyStatusHandler is responsible for toggling currency status.
+ *
+ * @internal
  */
 final class ToggleCurrencyStatusHandler implements ToggleCurrencyStatusHandlerInterface
 {

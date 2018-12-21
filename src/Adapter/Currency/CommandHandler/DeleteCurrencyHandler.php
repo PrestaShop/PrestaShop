@@ -37,6 +37,8 @@ use PrestaShopException;
 
 /**
  * Class DeleteCurrencyHandler is responsible for handling the deletion of currency logic.
+ *
+ * @internal
  */
 final class DeleteCurrencyHandler implements DeleteCurrencyHandlerInterface
 {

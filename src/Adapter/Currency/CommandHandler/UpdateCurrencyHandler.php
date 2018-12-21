@@ -27,17 +27,21 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelLegacyHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\UpdateCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShopException;
 
 /**
  * Class UpdateCurrencyHandler
+ *
+ * @internal
  */
-final class UpdateCurrencyHandler implements UpdateCurrencyHandlerInterface
+final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler implements UpdateCurrencyHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -46,7 +50,6 @@ final class UpdateCurrencyHandler implements UpdateCurrencyHandlerInterface
      */
     public function handle(UpdateCurrencyCommand $command)
     {
-        //todo: shop assocs
         try {
             $entity = new Currency($command->getCurrencyId()->getValue());
 
@@ -71,6 +74,8 @@ final class UpdateCurrencyHandler implements UpdateCurrencyHandlerInterface
                     )
                 );
             }
+
+            $this->associateWithShops($entity, $command->getShopIds());
         } catch (PrestaShopException $exception) {
             throw new CurrencyException(
                 sprintf(
@@ -81,5 +86,7 @@ final class UpdateCurrencyHandler implements UpdateCurrencyHandlerInterface
                 $exception
             );
         }
+
+        return new CurrencyId((int) $entity->id);
     }
 }
