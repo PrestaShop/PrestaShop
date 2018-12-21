@@ -775,17 +775,19 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance($currency);
         }
 
-        $locale = $context->currentLocale;
-        if (null === $locale) {
-            $locale = static::getCurrencyLocale($context);
-        }
+        $locale = static::getContextLocale($context);
         $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
 
         return $locale->formatPrice($price, $currencyCode);
     }
 
-    protected static function getCurrencyLocale(Context $context)
+    protected static function getContextLocale(Context $context)
     {
+        $locale = $context->currentLocale;
+        if (null !== $locale) {
+            return $locale;
+        }
+
         $container = $context->controller->getContainer();
         if (null === $container) {
             $container = SymfonyContainer::getInstance();
@@ -824,10 +826,7 @@ class ToolsCore
         );
 
         $context = Context::getContext();
-        $locale = $context->currentLocale;
-        if (null === $locale) {
-            $locale = static::getCurrencyLocale($context);
-        }
+        $locale = static::getContextLocale($context);
 
         return $locale->formatNumber($number);
     }

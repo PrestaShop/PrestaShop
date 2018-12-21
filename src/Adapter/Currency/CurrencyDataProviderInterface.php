@@ -38,6 +38,10 @@ interface CurrencyDataProviderInterface
     /**
      * Return available currencies.
      *
+     * @param bool $object
+     * @param bool $active
+     * @param bool $group_by
+     *
      * @return array Currencies
      */
     public function getCurrencies($object = false, $active = true, $group_by = false);
