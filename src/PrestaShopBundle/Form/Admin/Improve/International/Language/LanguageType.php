@@ -125,6 +125,11 @@ class LanguageType extends AbstractType
         if ($this->isMultistoreFeatureActive) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
                 'required' => false,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ]);
         }
     }
