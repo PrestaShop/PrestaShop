@@ -675,6 +675,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.currency_from_cldr").getChoices()'
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         tags:
             - { name: form.type }
 
