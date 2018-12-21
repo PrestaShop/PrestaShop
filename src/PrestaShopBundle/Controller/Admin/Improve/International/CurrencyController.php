@@ -112,6 +112,8 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
+        $multiStoreFeature = $this->get('prestashop.adapter.multistore_feature');
+
         $currencyForm = $this->getCurrencyFormBuilder()->getForm();
         $currencyForm->handleRequest($request);
 
@@ -131,6 +133,7 @@ class CurrencyController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
+            'is_shop_feature_enabled' => $multiStoreFeature->isUsed(),
             'currency_form' => $currencyForm->createView(),
         ]);
     }
@@ -151,7 +154,9 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     public function editAction($currencyId, Request $request)
     {
+        $multiStoreFeature = $this->get('prestashop.adapter.multistore_feature');
         $currencyForm = null;
+
         try {
             $currencyForm = $this->getCurrencyFormBuilder()->getFormFor($currencyId);
             $currencyForm->handleRequest($request);
@@ -168,6 +173,7 @@ class CurrencyController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
+            'is_shop_feature_enabled' => $multiStoreFeature->isUsed(),
             'currency_form' => null !== $currencyForm ? $currencyForm->createView() : null,
         ]);
     }

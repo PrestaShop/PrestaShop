@@ -61,6 +61,17 @@
             {{ ps.form_widget_with_error(currencyForm.active) }}
           </div>
         </div>
+
+        {% if is_shop_feature_enabled %}
+          <div class="form-group row">
+            <label for="" class="form-control-label">
+              {{ 'Shop association'|trans({}, 'Admin.Global') }}
+            </label>
+            <div class="col-sm">
+              {{ ps.form_widget_with_error(currencyForm.shop_association) }}
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
 
