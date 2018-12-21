@@ -38,7 +38,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
     /**
      * Current association.
      */
-    protected $currentAssociatedEntity;
+    protected $currentAssociatedEntity = array();
 
     /**
      * Json content.
