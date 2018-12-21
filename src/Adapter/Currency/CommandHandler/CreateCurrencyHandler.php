@@ -53,6 +53,7 @@ final class CreateCurrencyHandler implements CreateCurrencyHandlerInterface
             $entity->iso_code = $command->getIsoCode();
             $entity->active = $command->isEnabled();
             $entity->conversion_rate = $command->getExchangeRate();
+            //todo: shop assoc
 
             if (false === $entity->add()) {
                 throw new CannotCreateCurrencyException('Failed to create new currency');
