@@ -24,20 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CreateCurrencyCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Interface CreateCurrencyHandlerInterface
+ * Class CannotUpdateCurrencyException
  */
-interface CreateCurrencyHandlerInterface
+class CannotUpdateCurrencyException extends CurrencyException
 {
-    /**
-     * @param CreateCurrencyCommand $command
-     *
-     * @return CurrencyId
-     */
-    public function handle(CreateCurrencyCommand $command);
 }
