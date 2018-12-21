@@ -98,7 +98,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'Categories';
+        return 'categories';
     }
 
     /**
