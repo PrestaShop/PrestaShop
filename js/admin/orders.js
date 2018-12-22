@@ -289,7 +289,7 @@ function updateAmounts(order)
 	$('.total_paid').fadeOut('slow', function() {
 		formatCurrencyCldr(parseFloat(order.total_paid_tax_incl), function(value) {
 			$('.total_paid').html(value);
-			$('#.total_paid').fadeIn('slow');
+			$('.total_paid').fadeIn('slow');
 		});
 	});
 	$('.alert').slideDown('slow');
