@@ -27,15 +27,15 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerFormatterCore implements FormFormatterInterface
 {
-    private $translator;
-    private $language;
+    protected $translator;
+    protected $language;
 
-    private $ask_for_birthdate = true;
-    private $ask_for_partner_optin = true;
-    private $partner_optin_is_required = true;
-    private $ask_for_password = true;
-    private $password_is_required = true;
-    private $ask_for_new_password = false;
+    protected $ask_for_birthdate = true;
+    protected $ask_for_partner_optin = true;
+    protected $partner_optin_is_required = true;
+    protected $ask_for_password = true;
+    protected $password_is_required = true;
+    protected $ask_for_new_password = false;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -247,7 +247,7 @@ class CustomerFormatterCore implements FormFormatterInterface
         return $this->addConstraints($format);
     }
 
-    private function addConstraints(array $format)
+    protected function addConstraints(array $format)
     {
         $constraints = Customer::$definition['fields'];
 
