@@ -28,6 +28,8 @@
       <h4>{$address.alias}</h4>
       <address>{$address.formatted nofilter}</address>
     </div>
+    {* To display the fields value extra added in a address from by using additionalCustomerAddressFields *}
+    {hook h='displayAdditionalCustomerAddressFields' address=$address}
 
     {block name='address_block_item_actions'}
       <div class="address-footer">
