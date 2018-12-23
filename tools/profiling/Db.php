@@ -46,14 +46,14 @@ abstract class Db extends DbCore
      * @var array
      */
     public $queries = array();
-    
+
     /**
      * List of uniq queries (replace numbers by XX)
      *
      * @var array
      */
     public $uniqQueries = array();
-    
+
     /**
      * List of tables
      *
@@ -72,7 +72,7 @@ abstract class Db extends DbCore
         if (preg_match('/^\s*explain\s+/i', $sql)) {
             $explain = true;
         }
-            
+
         if (!$explain) {
             $uniqSql = preg_replace('/[\'"][a-f0-9]{32}[\'"]/', '<span style="color:blue">XX</span>', $sql);
             $uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $uniqSql);
@@ -112,14 +112,14 @@ abstract class Db extends DbCore
             foreach ($stack as $call) {
                 $stack_light[] = array('file' => isset($call['file']) ? $call['file'] : 'undefined', 'line' => isset($call['line']) ? $call['line'] : 'undefined');
             }
-            
+
             $this->queries[] = array(
                 'query' => $sql,
                 'time' => $end - $start,
-                'stack' => $stack_light
+                'stack' => $stack_light,
             );
         }
-        
+
         return $result;
     }
 }

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Converter;
 
-use PHPExcel_IOFactory;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PrestaShop\PrestaShop\Core\File\Converter\FileConverterInterface;
 use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
@@ -81,10 +81,10 @@ final class ExcelToCsvFileConverter implements FileConverterInterface
         $destinationFilePath = $this->excelDirectory . $destinationFilename;
 
         if (!$this->filesystem->exists($destinationFilePath)) {
-            $excelReader = PHPExcel_IOFactory::createReaderForFile($sourceFile->getFilename());
+            $excelReader = IOFactory::createReaderForFile($sourceFile->getFilename());
             $excelReader->setReadDataOnly(true);
             $excelFile = $excelReader->load($sourceFile->getFilename() . $destinationFilename);
-            $csvWriter = PHPExcel_IOFactory::createWriter($excelFile, 'CSV');
+            $csvWriter = IOFactory::createWriter($excelFile, 'Csv');
             $csvWriter->setSheetIndex(0);
             $csvWriter->setDelimiter(';');
             $csvWriter->save($destinationFilePath);

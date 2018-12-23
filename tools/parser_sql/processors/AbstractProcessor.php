@@ -41,7 +41,6 @@ require_once dirname(__FILE__) . '/../lexer/PHPSQLLexer.php';
  * 
  */
 abstract class AbstractProcessor {
-
     /**
      * This function implements the main functionality of a processor class.
      * Always use default valuses for additional parameters within overridden functions.
@@ -54,6 +53,7 @@ abstract class AbstractProcessor {
      */
     public function splitSQLIntoTokens($sql) {
         $lexer = new PHPSQLLexer();
+
         return $lexer->split($sql);
     }
 
@@ -65,16 +65,19 @@ abstract class AbstractProcessor {
 
         if (($result[0] === '`') && ($result[strlen($result) - 1] === '`')) {
             $result = substr($result, 1, -1);
+
             return trim(str_replace('``', '`', $result));
         }
 
         if (($result[0] === "'") && ($result[strlen($result) - 1] === "'")) {
             $result = substr($result, 1, -1);
+
             return trim(str_replace("''", "'", $result));
         }
 
         if (($result[0] === "\"") && ($result[strlen($result) - 1] === "\"")) {
             $result = substr($result, 1, -1);
+
             return trim(str_replace("\"\"", "\"", $result));
         }
 
@@ -101,7 +104,7 @@ abstract class AbstractProcessor {
         while ($i < strlen($trim)) {
 
             if ($trim[$i] === "\\") {
-                $i += 2; # an escape character, the next character is irrelevant
+                $i += 2; // an escape character, the next character is irrelevant
                 continue;
             }
 
@@ -122,6 +125,7 @@ abstract class AbstractProcessor {
             }
             $i++;
         }
+
         return trim($trim);
     }
 
@@ -136,61 +140,65 @@ abstract class AbstractProcessor {
         switch ($type) {
         case 'GLOBAL':
             $type = ExpressionType::GLOBAL_VARIABLE;
+
             break;
         case 'LOCAL':
             $type = ExpressionType::LOCAL_VARIABLE;
+
             break;
         case 'SESSION':
         default:
             $type = ExpressionType::SESSION_VARIABLE;
+
             break;
         }
+
         return $type;
     }
 
     protected function isCommaToken($token) {
-        return (trim($token) === ",");
+        return trim($token) === ",";
     }
 
     protected function isWhitespaceToken($token) {
-        return (trim($token) === "");
+        return trim($token) === "";
     }
 
     protected function isCommentToken($token) {
-        return isset($token[0]) && isset($token[1])
+        return isset($token[0], $token[1])  
             && (($token[0] === '-' && $token[1] === '-') || ($token[0] === '/' && $token[1] === '*'));
     }
 
     protected function isColumnReference($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::COLREF);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::COLREF;
     }
 
     protected function isReserved($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::RESERVED);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::RESERVED;
     }
 
     protected function isConstant($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::CONSTANT);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::CONSTANT;
     }
 
     protected function isAggregateFunction($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::AGGREGATE_FUNCTION);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::AGGREGATE_FUNCTION;
     }
 
     protected function isFunction($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SIMPLE_FUNCTION);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SIMPLE_FUNCTION;
     }
 
     protected function isExpression($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::EXPRESSION);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::EXPRESSION;
     }
 
     protected function isBracketExpression($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::BRACKET_EXPRESSION);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::BRACKET_EXPRESSION;
     }
 
     protected function isSubQuery($out) {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SUBQUERY);
+        return isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SUBQUERY;
     }
 
     /**
@@ -201,14 +209,15 @@ abstract class AbstractProcessor {
         foreach ($tokenList as $token) {
             $expr[] = $token->toArray();
         }
-        return (empty($expr) ? false : $expr);
+
+        return empty($expr) ? false : $expr;
     }
 
     protected function array_insert_after($array, $key, $entry) {
         $idx = array_search($key, array_keys($array));
         $array = array_slice($array, 0, $idx + 1, true) + $entry
             + array_slice($array, $idx + 1, count($array) - 1, true);
+
         return $array;
     }
 }
-?>

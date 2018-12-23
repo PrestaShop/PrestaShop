@@ -23,12 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
-use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 
 /**
  * Class ProductPresenterFactoryCore.
@@ -44,7 +44,7 @@ class ProductPresenterFactoryCore
      * @param Context $context
      * @param \TaxConfiguration|null $taxConfiguration
      */
-    public function __construct(Context $context, \TaxConfiguration $taxConfiguration = null)
+    public function __construct(Context $context, TaxConfiguration $taxConfiguration = null)
     {
         $this->context = $context;
         $this->taxConfiguration = (is_null($taxConfiguration)) ? new TaxConfiguration() : $taxConfiguration;

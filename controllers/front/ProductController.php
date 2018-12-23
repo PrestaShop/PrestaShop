@@ -49,8 +49,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     protected $combinations;
 
-    private $quantity_discounts;
-    private $adminNotifications = array();
+    protected $quantity_discounts;
+    protected $adminNotifications = array();
 
     public function canonicalRedirection($canonical_url = '')
     {
@@ -134,23 +134,27 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
+
                         break;
                         case ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
+
                         break;
                         case ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
+
                             break;
                         case ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
+
                             break;
                         case ProductInterface::REDIRECT_TYPE_NOT_FOUND:
                         default:
@@ -158,6 +162,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('Status: 404 Not Found');
                             $this->errors[] = $this->trans('This product is no longer available.', array(), 'Shop.Notifications.Error');
                             $this->setTemplate('errors/404');
+
                             break;
                     }
                 }
@@ -200,7 +205,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                 $moduleManager = $moduleManagerBuilder->build();
 
-                if (isset($this->context->cookie) && isset($this->category->id_category) && !($moduleManager->isInstalled('ps_categorytree') && $moduleManager->isEnabled('ps_categorytree'))) {
+                if (isset($this->context->cookie, $this->category->id_category) && !($moduleManager->isInstalled('ps_categorytree') && $moduleManager->isEnabled('ps_categorytree'))) {
                     $this->context->cookie->last_visited_category = (int) $this->category->id_category;
                 }
             }
@@ -393,14 +398,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             ),
             'product' => $productForTemplate,
         )));
-
-        return;
     }
 
     public function displayAjaxRefresh()
     {
         $product = $this->getTemplateVarProduct();
-        $minimalProductQuantity = $this->getMinimalProductOrDeclinationQuantity($product);
+        $minimalProductQuantity = $this->getProductMinimalQuantity($product);
         $isPreview = ('1' === Tools::getValue('preview'));
 
         ob_end_clean();
@@ -437,12 +440,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
         )));
-
-        return;
     }
 
     /**
      * Get minimal product quantity or minimal product combination quantity.
+     *
+     * @deprecated This method is deprecated since 1.7.5 and will be dropped in 1.8.0, please use getProductMinimalQuantity instead.
      *
      * @param $product
      *
@@ -450,9 +453,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     protected function getMinimalProductOrDeclinationQuantity($product)
     {
+        @trigger_error('This method is deprecated since 1.7.5 and will be dropped in 1.8.0, please use getProductMinimalQuantity instead.', E_USER_DEPRECATED);
         $productAttributeId = $product['id_product_attribute'];
         $minimalProductQuantity = 1;
-
         if ($this->combinations) {
             $minimalCombinationProductQuantity = (int) ($this->combinations[$productAttributeId]['minimal_quantity']);
             if ($minimalCombinationProductQuantity) { // Ensure the minimal product combination quantity is not 0;
@@ -485,7 +488,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $id_currency = (int) $this->context->cookie->id_currency;
         $id_product = (int) $this->product->id;
-        $id_product_attribute = Tools::getValue('id_product_attribute', null);
+        $id_product_attribute = $this->getIdProductAttributeByRequestOrGroup();
         $id_shop = $this->context->shop->id;
 
         $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute, false, (int) $this->context->customer->id);
@@ -503,7 +506,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
         }
 
-        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
+        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute);
+
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
 
         $this->context->smarty->assign(array(
@@ -522,7 +526,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $groups = array();
         $this->combinations = array();
 
-        // @todo (RM) should only get groups and not all declination ?
+        /** @todo (RM) should only get groups and not all declination ? */
         $attributes_groups = $this->product->getAttributesGroups($this->context->language->id);
         if (is_array($attributes_groups) && $attributes_groups) {
             $combination_images = $this->product->getCombinationImages($this->context->language->id);
@@ -604,6 +608,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             foreach ($combination_images[$row['id_product_attribute']] as $tmp) {
                                 if ($tmp['id_image'] == $current_cover['id_image']) {
                                     $this->combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int) $tmp['id_image'];
+
                                     break;
                                 }
                             }
@@ -664,8 +669,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                     foreach ($group['attributes'] as $key => $attribute) {
                         if (!in_array((int) $key, $id_attributes)) {
-                            unset($group['attributes'][$key]);
-                            unset($group['attributes_quantity'][$key]);
+                            unset(
+                                $group['attributes'][$key],
+                                $group['attributes_quantity'][$key]
+                            );
                         }
                     }
                 }
@@ -678,6 +685,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                     if ($attribute['selected']) {
                         $current_selected_attribute = $key;
+
                         break;
                     }
                 }
@@ -801,7 +809,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $indexes = array_flip($authorized_file_fields);
         foreach ($_FILES as $field_name => $file) {
             if (in_array($field_name, $authorized_file_fields) && isset($file['tmp_name']) && !empty($file['tmp_name'])) {
-                $file_name = md5(uniqid(rand(), true));
+                $file_name = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
                 if ($error = ImageManager::validateUpload($file, (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
                     $this->errors[] = $error;
                 }
@@ -1203,11 +1211,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             $field['type'] = 'image';
                             $field['image'] = null;
                             $field['input_name'] = 'file' . $customization_field['id_customization_field'];
+
                             break;
                         case Product::CUSTOMIZE_TEXTFIELD:
                             $field['type'] = 'text';
                             $field['text'] = '';
                             $field['input_name'] = 'textField' . $customization_field['id_customization_field'];
+
                             break;
                         default:
                             $field['type'] = null;
@@ -1226,9 +1236,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                                     $product_full,
                                     $customization_field['id_customization_field']
                                 );
+
                                 break;
                             case Product::CUSTOMIZE_TEXTFIELD:
                                 $field['text'] = $data['value'];
+
                                 break;
                         }
                     } else {
@@ -1307,8 +1319,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             return
                 Validate::isLoadedObject($combination)
-                && $combination->id_product == $productId
-            ;
+                && $combination->id_product == $productId;
         }
 
         return false;

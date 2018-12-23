@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
 use GuzzleHttp\Exception\RequestException;
+use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Psr\Log\LoggerInterface;
 use stdClass;
@@ -41,21 +41,25 @@ class CategoriesProvider
     const CATEGORY_OTHER_NAME = 'Other';
 
     const CATEGORY_THEME = 'theme_modules';
-    const CATEGORY_THEME_NAME = 'Theme Modules';
+    const CATEGORY_THEME_NAME = 'Theme modules';
 
     const CATEGORY_MY_MODULES = 'my_modules';
     const CATEGORY_MY_MODULES_NAME = 'My Modules';
 
     private $apiClient;
     private $logger;
+    private $modulesTheme;
 
     public static $categories;
     public static $categoriesFromApi;
 
-    public function __construct(ApiClient $apiClient, LoggerInterface $logger)
+    public function __construct(ApiClient $apiClient, LoggerInterface $logger, array $addonsCategories, array $modulesTheme)
     {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
+        $this->modulesTheme = $modulesTheme;
+        // We now avoid calling the API. This data is loaded from a local YML file
+        self::$categoriesFromApi = empty($addonsCategories) ? null : $this->sortCategories($addonsCategories);
     }
 
     /**
@@ -93,12 +97,19 @@ class CategoriesProvider
             foreach ($modules as $module) {
                 if (empty($categoriesListing)) {
                     // No result from Addons, check module type
-                    $category = $this->findModuleType($module, $categories);
+                    $category = $this->findModuleType($module, $this->modulesTheme);
                 } else {
                     $category = $this->findModuleCategory($module, $categories);
                 }
 
                 $categories['categories']->subMenu[$category]->modules[] = $module;
+            }
+
+            // Clear custom categories if there is no module inside
+            foreach ([self::CATEGORY_THEME, self::CATEGORY_MY_MODULES] as $category) {
+                if (empty($categories['categories']->subMenu[$category]->modules)) {
+                    unset($categories['categories']->subMenu[$category]);
+                }
             }
 
             self::$categories = $categories;
@@ -230,19 +241,44 @@ class CategoriesProvider
         $moduleCategory = $installedProduct->attributes->get('categoryName');
         $moduleCategoryParent = $this->getParentCategory($moduleCategory);
         if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
-            if (in_array($installedProduct->attributes->get('name'), $categories)) {
+            if (in_array($installedProduct->attributes->get('name'), $this->modulesTheme)) {
                 $moduleCategoryParent = self::CATEGORY_THEME;
             } else {
                 $moduleCategoryParent = self::CATEGORY_OTHER;
             }
         }
 
-        foreach ($categories['categories']->subMenu as $category) {
-            if ($category->name === $moduleCategoryParent) {
-                return $category->name;
-            }
+        if (array_key_exists($moduleCategoryParent, $categories['categories']->subMenu)) {
+            return $moduleCategoryParent;
         }
 
         return CategoriesProvider::CATEGORY_OTHER;
+    }
+
+    /**
+     * Sort addons categories by order field.
+     *
+     * @param array $categories
+     */
+    private function sortCategories(array $categories)
+    {
+        uasort(
+            $categories,
+            function ($a, $b) {
+                $a = !isset($a['order']) ? 0 : $a['order'];
+                $b = !isset($b['order']) ? 0 : $b['order'];
+
+                if ($a === $b) {
+                    return 0;
+                }
+
+                return ($a < $b) ? -1 : 1;
+            }
+        );
+
+        // Convert array to object to be consistent with current API call
+        $categories = json_decode(json_encode($categories));
+
+        return $categories;
     }
 }

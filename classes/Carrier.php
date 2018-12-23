@@ -228,13 +228,15 @@ class CarrierCore extends ObjectModel
         }
 
         // Register reference
-        Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . $this->def['table'] . '` SET `id_reference` = ' .
+        Db::getInstance()->execute(
+            'UPDATE `' . _DB_PREFIX_ . $this->def['table'] . '` SET `id_reference` = ' .
             (int) $this->id . ' WHERE `id_carrier` = ' . (int) $this->id
         );
 
         foreach (Shop::getContextListShopID() as $shopId) {
             foreach (Module::getPaymentModules() as $module) {
-                Db::getInstance()->execute('
+                Db::getInstance()->execute(
+                    '
                     INSERT INTO `' . _DB_PREFIX_ . 'module_' . bqSQL('carrier') . '`
                     (`id_module`, `id_shop`, `id_' . bqSQL('reference') . '`)
                     VALUES (' . (int) $module['id_module'] . ',' . (int) $shopId . ',' . (int) $this->id . ')'
@@ -545,15 +547,19 @@ class CarrierCore extends ObjectModel
         switch ($modules_filters) {
             case 1:
                 $sql .= ' AND c.is_module = 0 ';
+
                 break;
             case 2:
                 $sql .= ' AND c.is_module = 1 ';
+
                 break;
             case 3:
                 $sql .= ' AND c.is_module = 1 AND c.need_range = 1 ';
+
                 break;
             case 4:
                 $sql .= ' AND (c.is_module = 0 OR c.need_range = 1) ';
+
                 break;
         }
         $sql .= ' GROUP BY c.`id_carrier` ORDER BY c.`position` ASC';
@@ -582,7 +588,8 @@ class CarrierCore extends ObjectModel
      */
     public static function getIdTaxRulesGroupMostUsed()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 					SELECT id_tax_rules_group
 					FROM (
 						SELECT COUNT(*) n, c.id_tax_rules_group
@@ -711,11 +718,13 @@ class CarrierCore extends ObjectModel
                 if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight($id_zone) === false)) {
                     $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                     unset($result[$k]);
+
                     continue;
                 }
                 if (($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice($id_zone) === false)) {
                     $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
                     unset($result[$k]);
+
                     continue;
                 }
 
@@ -731,6 +740,7 @@ class CarrierCore extends ObjectModel
                         && (!Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone))) {
                         $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                         unset($result[$k]);
+
                         continue;
                     }
 
@@ -738,12 +748,13 @@ class CarrierCore extends ObjectModel
                         && (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency))) {
                         $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
                         unset($result[$k]);
+
                         continue;
                     }
                 }
             }
 
-            $row['name'] = (strval($row['name']) != '0' ? $row['name'] : Carrier::getCarrierNameFromShopName());
+            $row['name'] = ((string) ($row['name']) != '0' ? $row['name'] : Carrier::getCarrierNameFromShopName());
             $row['price'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], true, null, null, $id_zone));
             $row['price_tax_exc'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], false, null, null, $id_zone));
             $row['img'] = file_exists(_PS_SHIP_IMG_DIR_ . (int) $row['id_carrier'] . '.jpg') ? _THEME_SHIP_DIR_ . (int) $row['id_carrier'] . '.jpg' : '';
@@ -751,6 +762,7 @@ class CarrierCore extends ObjectModel
             // If price is false, then the carrier is unavailable (carrier module)
             if ($row['price'] === false) {
                 unset($result[$k]);
+
                 continue;
             }
             $results_array[] = $row;
@@ -1070,7 +1082,7 @@ class CarrierCore extends ObjectModel
      */
     public static function getCarrierByReference($id_reference, $id_lang = null)
     {
-        // @todo class var $table must became static. here I have to use 'carrier' because this method is static
+        /** @todo class var $table must became static. here I have to use 'carrier' because this method is static */
         $id_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `' . _DB_PREFIX_ . 'carrier`
 			WHERE id_reference = ' . (int) $id_reference . ' AND deleted = 0 ORDER BY id_carrier DESC');
         if (!$id_carrier) {
@@ -1284,12 +1296,16 @@ class CarrierCore extends ObjectModel
      *
      * @since 1.5
      *
-     * @param Address $address Address
+     * @param Address $address Address optional
      *
      * @return float Total Tax rate for this Carrier
      */
-    public function getTaxesRate(Address $address)
+    public function getTaxesRate(Address $address = null)
     {
+        if (!$address || !$address->id_country) {
+            $address = Address::initialize();
+        }
+
         $tax_calculator = $this->getTaxCalculator($address);
 
         return $tax_calculator->getTotalRate();

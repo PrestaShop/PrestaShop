@@ -25,7 +25,7 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block test_email_sending %}
-  {{ form_start(testEmailSendingForm, {'action': path('admin_send_test_email')}) }}
+  {{ form_start(testEmailSendingForm, {'action': path('admin_emails_send_test')}) }}
   <div class="row justify-content-center">
     <div class="col">
       <div class="card">

@@ -1,6 +1,7 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {ProductList} = require('../../../selectors/BO/add_product_page');
+const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const common_scenarios = require('../../common_scenarios/product');
@@ -26,17 +27,16 @@ scenario('Check product page buttons', () => {
   scenario('Testing "Preview" button', client => {
     test('should click on "Preview" button', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
         .then(() => {
-          if (global.isVisible) {
+          if (global.ps_mode_dev) {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar)
           }
         })
         .then(() => client.waitForExistAndClick(AddProductPage.preview_buttons));
     });
     test('should switch to the Front Office', () => client.switchWindow(1));
-    test('should click on the "Preview" link', () => client.waitForExistAndClick(AddProductPage.preview_link));
-    test('should check that the product name is equal to "TEST PRODUCT' + date_time + '"', () => client.checkTextValue(productPage.product_name, firstProductData.name, "contain"));
+    common_scenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
+    test('should check that the product name is equal to "TEST PRODUCT' + date_time + '"', () => client.checkTextValue(productPage.product_name, firstProductData.name, "contain", 1000));
     test('should go to the Back Office', () => client.switchWindow(0));
   }, 'product/product');
 
@@ -62,7 +62,7 @@ scenario('Check product page buttons', () => {
     }, 'product/check_product');
   }, 'product/product');
 
-  scenario('Testing "Delete" button', client => {
+  scenario('Testing "Delete" button', () => {
     scenario('Check when clicking on "No" of the delete confirmation modal', client => {
       test('should click on "Delete" icon', () => client.waitForExistAndClick(AddProductPage.delete_button));
       test('should click on "No" of the confirmation modal', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'No')));
@@ -128,6 +128,11 @@ scenario('Check product page buttons', () => {
     test('should switch to the Preview page in the Front Office', () => client.switchWindow(3));
     test('should check the warning offline message does not appear', () => client.isNotExisting(productPage.offline_warning_message));
   }, 'product/product');
+  scenario('Back to the default product "search"', client => {
+    test('should go back to the Back office', () => client.switchWindow(0));
+    test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+    test('should click on "Reset" button', () => client.waitForExistAndClick(CatalogPage.reset_button));
+    }, 'product/product');
 
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from Back Office', () => client.signOutBO());

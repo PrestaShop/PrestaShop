@@ -3,7 +3,7 @@ const {AccessPageBO} = require('../../selectors/BO/access_page');
 const {Menu} = require('../../selectors/BO/menu.js');
 const {OnBoarding} = require('../../selectors/BO/onboarding');
 const common_scenarios = require('../common_scenarios/employee');
-const common_international_scenarios = require('../common_scenarios/international');
+const commonLocalizationScenarios = require('../common_scenarios/localization');
 let promise = Promise.resolve();
 
 let employeeData = [
@@ -30,7 +30,7 @@ scenario('BOOM-2533: Import a localization', () => {
     test('should open the browser', () => client.open());
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-  common_international_scenarios.importLocalization('Vietnam');
+  commonLocalizationScenarios.importLocalization('Vietnam', 'Vietnam');
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');

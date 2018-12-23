@@ -26,18 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use AdminController;
+use AdminLegacyLayoutControllerCore;
+use Context;
 use Employee;
+use Language;
 use RuntimeException;
 use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
-use Context;
-use Language;
-use AdminController;
-use Link;
 use Tab;
-use Tools as ToolsLegacy;
-use Dispatcher;
-use AdminLegacyLayoutControllerCore;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -102,21 +99,29 @@ class LegacyContext
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
     {
-        $id_lang = Context::getContext()->language->id;
-        $params = $extraParams;
-        if ($withToken) {
-            $params['token'] = ToolsLegacy::getAdminTokenLite($controller);
-        }
+        return $this->getContext()->link->getAdminLink($controller, $withToken, $extraParams, $extraParams);
+    }
 
-        $link = new Link();
-
-        return $link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+    /**
+     * Returns the controller link in its legacy form, without trying to convert it in symfony url.
+     *
+     * @param string $controller
+     * @param bool $withToken
+     * @param array $extraParams
+     *
+     * @return string
+     */
+    public function getLegacyAdminLink($controller, $withToken = true, $extraParams = array())
+    {
+        return $this->getContext()->link->getLegacyAdminLink($controller, $withToken, $extraParams);
     }
 
     /**
      * Adapter to get Front controller HTTP link.
      *
      * @param string $controller the controller name
+     *
+     * @return string
      */
     public function getFrontUrl($controller)
     {

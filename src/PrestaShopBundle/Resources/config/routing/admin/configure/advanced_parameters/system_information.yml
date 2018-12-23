@@ -4,6 +4,7 @@ admin_system_information:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SystemInformation:index'
         _legacy_controller: AdminInformation
+        _legacy_link: AdminInformation
 
 admin_system_information_check_files:
     path: /files
@@ -11,4 +12,5 @@ admin_system_information_check_files:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SystemInformation:displayCheckFiles'
         _legacy_controller: AdminInformation
+        _legacy_link: AdminInformation:checkFiles
     condition: 'request.isXmlHttpRequest()'

@@ -26,13 +26,13 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the product SEO form.
@@ -126,7 +126,11 @@ class ProductSeo extends CommonAbstractType
                 TranslateType::class,
                 [
                     'type' => FormType\TextType::class,
-                    'options' => [],
+                    'options' => [
+                        'attr' => [
+                            'class' => 'serp-watched-url',
+                        ],
+                    ],
                     'locales' => $this->locales,
                     'hideTabs' => true,
                     'label' => $this->translator->trans('Friendly URL', [], 'Admin.Catalog.Feature'),

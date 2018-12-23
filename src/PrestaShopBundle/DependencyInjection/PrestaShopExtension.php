@@ -26,10 +26,10 @@
 
 namespace PrestaShopBundle\DependencyInjection;
 
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\Config\FileLocator;
 
 /**
  * Adds main PrestaShop core services to the Symfony container.
@@ -47,6 +47,7 @@ class PrestaShopExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
         $loader->load('services.yml');
 
+        $container->setParameter('prestashop.addons.categories', $config['addons']['categories']);
         $container->setParameter('prestashop.addons.prestatrust.enabled', $config['addons']['prestatrust']['enabled']);
 
         $hasVerifySslParameter = $container->hasParameter('addons.api_client.verify_ssl');

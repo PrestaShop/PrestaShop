@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
-use Supplier;
 use ProductSupplier;
+use Supplier;
 
 /**
  * This class will provide data from DB / ORM about Supplier.

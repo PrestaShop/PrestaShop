@@ -70,7 +70,7 @@ services:
         arguments:
           - '@prestashop.adapter.memcache_server.manager'
           - '@prestashop.adapter.php_parameters'
-          - '@prestashop.adapter.cache_clearer'
+          - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
           - '%ps_cache_enable%'
           - '%ps_caching%'
 
@@ -204,14 +204,6 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-    prestashop.adapter.language.pack.importer:
-        class: 'PrestaShop\PrestaShop\Adapter\Language\Pack\LanguagePackImporter'
-        arguments:
-            - '@prestashop.adapter.language.language_pack_installer'
-            - '@prestashop.adapter.data_provider.language'
-            - '@prestashop.adapter.cache_clearer'
-            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_TRANSLATIONS_DIR_")'
-
     prestashop.adapter.meta.set_up_urls.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration'
         arguments:
@@ -224,6 +216,7 @@ services:
         arguments:
             - '@=service("prestashop.adapter.shop.shop_url").getMainShopUrl()'
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.file.htaccess_file_generator'
 
     prestashop.adapter.meta.url_schema.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration'
@@ -236,15 +229,3 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.team.employee.configuration.options_checker'
-
-    prestashop.adapter.import.import_data_match.configuration:
-        class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportDataMatchConfiguration'
-        arguments:
-            - '@translator'
-            - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
-            - '@=service("prestashop.core.import.dir")'
-            - '@prestashop.core.import.factory.data_row.collection_factory'
-            - '@doctrine.dbal.default_connection'
-            - '%database_prefix%'
-            - '@prestashop.core.admin.import_match.repository'
-            - '@session'

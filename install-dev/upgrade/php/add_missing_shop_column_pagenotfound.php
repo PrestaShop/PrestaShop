@@ -44,5 +44,6 @@ function add_missing_shop_column_pagenotfound()
 				ADD `id_shop` INT(10) AFTER `id_pagenotfound`');
         }
     }
+
     return $res;
 }

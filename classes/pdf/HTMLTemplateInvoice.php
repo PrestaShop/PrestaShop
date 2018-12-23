@@ -196,8 +196,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             $order_detail['order_detail_tax'] = $taxes;
             $order_detail['order_detail_tax_label'] = implode(', ', $tax_temp);
         }
-        unset($tax_temp);
-        unset($order_detail);
+        unset(
+            $tax_temp,
+            $order_detail
+        );
 
         if (Configuration::get('PS_PDF_IMG_INVOICE')) {
             foreach ($order_details as &$order_detail) {
@@ -298,15 +300,19 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         switch ($this->order->round_type) {
             case Order::ROUND_TOTAL:
                 $round_type = 'total';
+
                 break;
             case Order::ROUND_LINE:
                 $round_type = 'line';
+
                 break;
             case Order::ROUND_ITEM:
                 $round_type = 'item';
+
                 break;
             default:
                 $round_type = 'line';
+
                 break;
         }
 

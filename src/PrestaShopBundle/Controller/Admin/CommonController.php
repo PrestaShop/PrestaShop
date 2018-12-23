@@ -26,15 +26,15 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
+use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -147,7 +147,7 @@ class CommonController extends FrameworkBundleAdminController
             'limit_choices' => $limitChoices,
         );
         if ($view != 'full') {
-            return $this->render('PrestaShopBundle:Admin:Common/pagination_' . $view . '.html.twig', $vars);
+            return $this->render('@PrestaShop/Admin/Common/pagination_' . $view . '.html.twig', $vars);
         }
 
         return $vars;
@@ -167,11 +167,11 @@ class CommonController extends FrameworkBundleAdminController
     public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
     {
         $recommendedModules = $this->get('prestashop.data_provider.modules.recommended');
-        /* @var $recommendedModules RecommendedModules */
+        /** @var $recommendedModules RecommendedModules */
         $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
 
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        /* @var $modulesProvider AdminModuleDataProvider */
+        /** @var $modulesProvider AdminModuleDataProvider */
         $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
         $modules = array();
@@ -273,7 +273,7 @@ class CommonController extends FrameworkBundleAdminController
         $form = $this->createFormBuilder($formData);
         $form->add($formName, $formType);
 
-        return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
+        return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', [
             'form' => $form->getForm()->get($formName)->get($fieldName)->createView(),
             'formId' => $formName . '_' . $fieldName . '_rendered',
         ]);
@@ -293,7 +293,7 @@ class CommonController extends FrameworkBundleAdminController
         Request $request,
         $gridDefinitionFactoryService,
         $redirectRoute,
-        array $redirectQueryParamsToKeep
+        array $redirectQueryParamsToKeep = []
     ) {
         $definitionFactory = $this->get($gridDefinitionFactoryService);
         $definition = $definitionFactory->getDefinition();

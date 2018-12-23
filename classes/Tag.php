@@ -129,8 +129,8 @@ class TagCore extends ObjectModel
         foreach ($list as $tag) {
             $data[] = array(
                 'id_tag' => (int) $tag,
-                'id_product' => (int) $id_product,
-                'id_lang' => (int) $id_lang,
+                'id_product' => (int) $idProduct,
+                'id_lang' => (int) $idLang,
             );
         }
         $result = Db::getInstance()->insert('product_tag', $data);
@@ -245,7 +245,7 @@ class TagCore extends ObjectModel
      *
      * @return array|false|mysqli_result|null|PDOStatement|resource
      */
-    public function getProducts($associated = true, \Context $context = null)
+    public function getProducts($associated = true, Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();

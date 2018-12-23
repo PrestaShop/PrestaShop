@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 class Step
 {
     /**
@@ -136,7 +135,7 @@ class Step
 
             require_once _PS_INSTALL_CONTROLLERS_PATH_.'http/'.$this->name.'.php';
 
-            $this->instance = new $this->controllerName;
+            $this->instance = new $this->controllerName();
         }
 
         return $this->instance;

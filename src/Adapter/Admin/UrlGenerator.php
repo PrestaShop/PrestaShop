@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
-use Symfony\Component\Routing\Router;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use ReflectionClass;
+use Symfony\Component\Process\Exception\LogicException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\Process\Exception\LogicException;
-use ReflectionClass;
+use Symfony\Component\Routing\Router;
 
 /**
  * This UrlGeneratorInterface implementation (in a Sf service) will provides Legacy URLs.

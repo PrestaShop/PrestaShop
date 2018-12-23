@@ -95,12 +95,15 @@ class AdminCustomersControllerCore extends AdminController
             ),
             'firstname' => array(
                 'title' => $this->trans('First name', array(), 'Admin.Global'),
+                'maxlength' => 30,
             ),
             'lastname' => array(
                 'title' => $this->trans('Last name', array(), 'Admin.Global'),
+                'maxlength' => 30,
             ),
             'email' => array(
                 'title' => $this->trans('Email address', array(), 'Admin.Global'),
+                'maxlength' => 50,
             ),
         );
 
@@ -243,6 +246,7 @@ class AdminCustomersControllerCore extends AdminController
             case 'list':
                 array_pop($this->toolbar_title);
                 $this->toolbar_title[] = $this->trans('Manage your Customers', array(), 'Admin.Orderscustomers.Feature');
+
                 break;
             case 'view':
                 /** @var Customer $customer */
@@ -250,6 +254,7 @@ class AdminCustomersControllerCore extends AdminController
                     array_pop($this->toolbar_title);
                     $this->toolbar_title[] = $this->trans('Information about customer %name%', array('%name%' => Tools::substr($customer->firstname, 0, 1) . '. ' . $customer->lastname), 'Admin.Orderscustomers.Feature');
                 }
+
                 break;
             case 'add':
             case 'edit':
@@ -260,6 +265,7 @@ class AdminCustomersControllerCore extends AdminController
                 } else {
                     $this->toolbar_title[] = $this->trans('Creating a new Customer', array(), 'Admin.Orderscustomers.Feature');
                 }
+
                 break;
         }
 
@@ -882,7 +888,7 @@ class AdminCustomersControllerCore extends AdminController
             $this->redirect_after = false;
         }
         // Check that the new email is not already in use
-        $customer_email = strval(Tools::getValue('email'));
+        $customer_email = (string) (Tools::getValue('email'));
         $customer = new Customer();
         if (Validate::isEmail($customer_email)) {
             $customer->getByEmail($customer_email);
@@ -908,7 +914,7 @@ class AdminCustomersControllerCore extends AdminController
     public function processUpdate()
     {
         if (Validate::isLoadedObject($this->object)) {
-            $customer_email = strval(Tools::getValue('email'));
+            $customer_email = (string) (Tools::getValue('email'));
 
             // check if e-mail already used
             if ($customer_email != $this->object->email) {

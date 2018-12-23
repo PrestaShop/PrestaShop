@@ -35,7 +35,7 @@ if (!file_exists($parametersFilepath)) {
     }
 }
 
-$parameters = require($parametersFilepath);
+$parameters = require $parametersFilepath;
 
 if (!array_key_exists('parameters', $parameters)) {
     throw new \Exception('Missing "parameters" key in "parameters.php" configuration file');

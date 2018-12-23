@@ -62,7 +62,7 @@ module.exports = {
       test('should go to "Files" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.files_submenu));
       test('should click on "Reset" button', () => {
         return promise
-          .then(() => client.isVisible(Files.filter_reset_button))
+          .then(() => client.isVisible(Files.filter_reset_button, 3000))
           .then(() => client.resetButton(Files.filter_reset_button));
       });
       test('should search for the created files', () => {
@@ -111,7 +111,7 @@ module.exports = {
           .then(() => client.waitForExistAndClick(Files.action_button.replace('%B', 'View')))
           .then(() => client.pause(2000));
       });
-      test('should check that the file is well downloaded', () => client.checkFile(folderPath, file));
+      test('should check that the file is well downloaded', () => client.checkFile(folderPath, file, 4000));
       test('should click on "Reset" button', () => {
         return promise
           .then(() => client.isVisible(Files.filter_reset_button))
@@ -194,6 +194,7 @@ module.exports = {
           for (let j = 0; j < global.filesNumber; j++) {
             promise = client.getFileInformations(Files.files_table.replace('%R', j + 1).replace('%D', index), j, false);
           }
+          // BOOM: 9607
           return promise
             .then(() => client.checkFilterFile(searchValue));
         } else {

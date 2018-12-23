@@ -23,16 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerProductSearchProvider;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerProductSearchProvider;
 
 class ManufacturerControllerCore extends ProductListingFrontController
 {
     public $php_self = 'manufacturer';
 
     protected $manufacturer;
-    private $label;
+    protected $label;
 
     public function canonicalRedirection($canonicalURL = '')
     {
@@ -77,9 +77,10 @@ class ManufacturerControllerCore extends ProductListingFrontController
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
                 $this->assignManufacturer();
                 $this->label = $this->trans(
-                    'List of products by brand %brand_name%', array(
+                    'List of products by brand %brand_name%',
+                    array(
                         '%brand_name%' => $this->manufacturer->name,
-                        ),
+                    ),
                     'Shop.Theme.Catalog'
                 );
                 $this->doProductSearch(
@@ -89,7 +90,9 @@ class ManufacturerControllerCore extends ProductListingFrontController
             } else {
                 $this->assignAll();
                 $this->label = $this->trans(
-                    'List of all brands', array(), 'Shop.Theme.Catalog'
+                    'List of all brands',
+                    array(),
+                    'Shop.Theme.Catalog'
                 );
                 $this->setTemplate('catalog/manufacturers', array('entity' => 'manufacturers'));
             }

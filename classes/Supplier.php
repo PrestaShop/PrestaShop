@@ -76,8 +76,8 @@ class SupplierCore extends ObjectModel
 
             /* Lang fields */
             'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
             'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
         ),
     );
@@ -147,7 +147,8 @@ class SupplierCore extends ObjectModel
                 $sqlGroups = (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1');
             }
 
-            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                '
 					SELECT  ps.`id_supplier`, COUNT(DISTINCT ps.`id_product`) as nb_products
 					FROM `' . _DB_PREFIX_ . 'product_supplier` ps
 					JOIN `' . _DB_PREFIX_ . 'product` p ON (ps.`id_product`= p.`id_product`)

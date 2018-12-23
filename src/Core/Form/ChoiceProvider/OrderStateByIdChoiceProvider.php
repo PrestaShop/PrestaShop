@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
 
 /**
  * Class OrderStateByIdChoiceProvider provides order state choices with ID values.

@@ -75,8 +75,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->getModifiedOrderBy($searchCriteria->getOrderBy()),
                 $searchCriteria->getOrderWay()
             )
-            ->groupBy('wa.`id_webservice_account`')
-        ;
+            ->groupBy('wa.`id_webservice_account`');
 
         $this->searchCriteriaApplicator->applyPagination($searchCriteria, $qb);
 
@@ -89,8 +88,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT wa.`id_webservice_account`)')
-        ;
+            ->select('COUNT(DISTINCT wa.`id_webservice_account`)');
 
         return $qb;
     }
@@ -112,8 +110,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'webservice_account_shop',
                 'was',
                 'was.`id_webservice_account` = wa.`id_webservice_account`'
-            )
-        ;
+            );
 
         $qb->andWhere('was.`id_shop` IN (:shops)');
 
@@ -142,6 +139,6 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getModifiedOrderBy($orderBy)
     {
-        return $orderBy === 'key' ? 'wa.`key`' : $orderBy;
+        return 'wa.`' . $orderBy . '`';
     }
 }

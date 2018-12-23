@@ -26,17 +26,17 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShopBundle\Security\Voter\PageVoter;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
@@ -431,5 +431,21 @@ class FrameworkBundleAdminController extends Controller
         $response->setData($errors);
 
         return $response;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getContextLangId()
+    {
+        return $this->getContext()->language->id;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getContextShopId()
+    {
+        return $this->getContext()->shop->id;
     }
 }

@@ -7,8 +7,154 @@ const {Menu} = require('../../selectors/BO/menu.js');
 const {ThemeAndLogo} = require('../../selectors/BO/design/theme_and_logo');
 const Design = require('../../selectors/BO/design/index');
 const {languageFO} = require('../../selectors/FO/index');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
+const {AccessPageBO} = require('../../selectors/BO/access_page');
+let promise = Promise.resolve();
+
+/**** Example of advanced data ****
+ * let advancedData = {
+ *  languageIdentifier: 'language',
+ *  countryIdentifier: 'country',
+ * }
+ */
+
+/**** Example of local units data ****
+ * let localUnitsData = {
+ *  weight: 'weight unit',
+ *  distance: 'distance unit',
+ *  volume: 'volume unit',
+ *  dimension: 'dimension unit'
+ * };
+ */
 
 module.exports = {
+  importLocalization(language, localization, downloadPackData = false, contentImport = false) {
+    scenario('Import a localization pack', client => {
+      test('should go to "International > Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
+      test('should click on "Localization pack you want to import" select', () => client.waitForExistAndClick(Localization.Localization.pack_select));
+      test('should search for the localization from the select', () => client.waitAndSetValue(Localization.Localization.pack_search_input, language));
+      test('should click on "' + localization.toUpperCase() + '" option', () => client.waitForExistAndClick(Localization.Localization.pack_option.replace('%B', localization)));
+      if (contentImport === true) {
+        test('should uncheck "States"', () => client.waitForExistAndClick(Localization.Localization.content_import_checkbox.replace('%B', 0)));
+        test('should uncheck "Taxes"', () => client.waitForExistAndClick(Localization.Localization.content_import_checkbox.replace('%B', 1)));
+        test('should uncheck "Units"', () => client.waitForExistAndClick(Localization.Localization.content_import_checkbox.replace('%B', 4)));
+      }
+      if (downloadPackData === true) {
+        test('should put "Download pack data" toggle button on "No"', () => client.waitForExistAndClick(Localization.Localization.download_pack_data_toggle_button));
+      }
+      test('should click on "Import" button', () => client.waitForExistAndClick(Localization.Localization.import_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Localization.success_alert_panel.replace('%B', 'alert-success'), 'Localization pack imported successfully.'));
+    }, 'common_client');
+  },
+  getDefaultConfiguration() {
+    scenario('Get the default configuration values', client => {
+      test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
+      test('should get the default language', () => client.getAttributeInVar(Localization.Localization.configuration_selected_option.replace('%ID', 'form_configuration_default_language'), 'value', 'firstDefaultLanguageValue'));
+      test('should get the default country', () => client.getAttributeInVar(Localization.Localization.configuration_selected_option.replace('%ID', 'form_configuration_default_country'), 'value', 'firstDefaultCountryValue'));
+      test('should get the default currency', () => client.getAttributeInVar(Localization.Localization.configuration_selected_option.replace('%ID', 'form_configuration_default_currency'), 'value', 'firstDefaultCurrencyValue'));
+      test('should get the time zone', () => client.getAttributeInVar(Localization.Localization.configuration_selected_option.replace('%ID', 'form_configuration_timezone'), 'value', 'firstDefaultTimezoneValue'));
+    }, 'common_client');
+  },
+  checkUnchangedDefaultConfiguration() {
+    scenario('Check the unchanged default configuration', client => {
+      test('should Verify if the default language has not changed', () => {
+        return promise
+          .then(() => client.getAttributeInVar(Localization.Localization.configuration_selected_option.replace('%ID', 'form_configuration_default_language'), 'value', 'secondDefaultLanguageValue'))
+          .then(() => expect(tab['secondDefaultLanguageValue']).to.be.equal(tab['firstDefaultLanguageValue']));
+      });
+      test('should Verify if the default country has not changed', () => {
+        return promise
+          .then(() => client.getAttributeInVar(Localization.Localization.configuration_selected_option.replace('%ID', 'form_configuration_default_country'), 'value', 'secondDefaultCountryValue'))
+          .then(() => expect(tab['secondDefaultCountryValue']).to.be.equal(tab['firstDefaultCountryValue']));
+      });
+      test('should Verify if the default currency has not changed', () => {
+        return promise
+          .then(() => client.getAttributeInVar(Localization.Localization.configuration_selected_option.replace('%ID', 'form_configuration_default_currency'), 'value', 'secondDefaultCurrencyValue'))
+          .then(() => expect(tab['secondDefaultCurrencyValue']).to.be.equal(tab['firstDefaultCurrencyValue']));
+      });
+      test('should Verify if the time zone has not changed', () => {
+        return promise
+          .then(() => client.getAttributeInVar(Localization.Localization.configuration_selected_option.replace('%ID', 'form_configuration_timezone'), 'value', 'secondDefaultTimezoneValue'))
+          .then(() => expect(tab['secondDefaultTimezoneValue']).to.be.equal(tab['firstDefaultTimezoneValue']));
+      });
+    }, 'common_client');
+  },
+  configureLocalization(defaultConfiguration = false, toggleButton = false, currencyEuro = 'Euro') {
+    scenario('Configuration', client => {
+      if (defaultConfiguration === true) {
+        test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+      }
+      test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
+      test('should close symfony toolbar', () => {
+        return promise
+          .then(() => client.isVisible(Localization.Localization.symfony_toolbar, 3000))
+          .then(() => {
+            if (global.isVisible) {
+              client.waitForExistAndClick(Localization.Localization.symfony_toolbar);
+            }
+          });
+      });
+      if (defaultConfiguration === false) {
+        test('should choose "Italian" from default language list', () => client.showSelect('Italiano (Italian)', Localization.Localization.default_language_list));
+        test('should choose "Italy" from default language list', () => client.showSelect('Italy', Localization.Localization.default_country_list));
+        test('should choose "US Dollar (USD) " from default currency list', () => client.showSelect('US Dollar (USD)', Localization.Localization.default_currency_list));
+        test('should verify alert message then click on "Ok" button', () => {
+          return promise
+            .then(() => client.alertText())
+            .then((text) => expect(text).to.equal('Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.'))
+            .then(() => client.alertAccept());
+        });
+      } else {
+        test('should choose "English" from default language list', () => client.showSelect('English (English)', Localization.Localization.default_language_list));
+        test('should set language from browser: "Yes"', () => client.waitForExistAndClick(Localization.Localization.language_browser_yes_label));
+        test('should set default country from browser: "Yes"', () => client.waitForExistAndClick(Localization.Localization.country_browser_yes_label));
+        test('should choose "France" from default language list', () => client.showSelect('France', Localization.Localization.default_country_list));
+      }
+      if (currencyEuro === "Euro") {
+        test('should choose "Euro (EUR) " from default currency list', () => client.showSelect('Euro (EUR)', Localization.Localization.default_currency_list));
+        test('should verify alert message then click on "Ok" button', () => {
+          return promise
+            .then(() => client.alertText())
+            .then((text) => expect(text).to.equal('Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.'))
+            .then(() => client.alertAccept());
+        });
+      }
+      if (toggleButton === true) {
+        test('should set language from browser: "No"', () => client.waitForExistAndClick(Localization.Localization.language_browser_no_label));
+        test('should set default country from browser: "No"', () => client.waitForExistAndClick(Localization.Localization.country_browser_no_label));
+      }
+      test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Localization.save_configuration_btn));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Localization.success_alert_panel.replace('%B', 'alert-success'), 'Update successful'));
+    }, 'international');
+  },
+  checkExistenceLanguage(language) {
+    scenario('Check the existence language in the Back Office', client => {
+      test('should click on "Languages" subtab', () => client.waitForExistAndClick(Menu.Improve.International.languages_tab));
+      test('should search for "' + language.toUpperCase() + '" language', () => client.searchByValue(Localization.languages.filter_name_input, Localization.languages.filter_search_button, language));
+      test('should check  "' + language.toUpperCase() + '" language exists', () => client.checkTextValue(Localization.languages.language_column.replace("%ID", 4), language, 'contain'));
+      test('should click on "Reset" button', () => client.waitForExistAndClick(Localization.languages.reset_button));
+    }, 'common_client');
+  },
+  localUnits(localUnitsData, firstUnit, secondUnit, nb = 1) {
+    scenario('Change local units then go to products page', client => {
+      test('should go to "International > Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
+      test('should set the "Weight unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'weight'), localUnitsData.weight));
+      test('should set the "Distance unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'distance'), localUnitsData.distance));
+      test('should set the "Volume unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'volume'), localUnitsData.volume));
+      test('should set the "Dimension unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'dimension'), localUnitsData.dimension));
+      test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Localization.save_local_units_button));
+      if (nb === 1) {
+        test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Localization.success_alert_panel.replace("%B", "alert-success"), "Update successful"));
+        test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+        test('should click on "New product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
+        test('should click on "Shipping" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_shipping_tab, 50));
+        test('verify that it is "' + firstUnit.toUpperCase() + '" for width', () => client.checkTextValue(AddProductPage.shipping_width_unit, firstUnit));
+        test('verify that it is "' + firstUnit.toUpperCase() + '" for height', () => client.checkTextValue(AddProductPage.shipping_height_unit, firstUnit));
+        test('verify that it is "' + firstUnit.toUpperCase() + '" for depth', () => client.checkTextValue(AddProductPage.shipping_depth_unit, firstUnit));
+        test('verify that it is "' + secondUnit.toUpperCase() + '" for weight', () => client.checkTextValue(AddProductPage.shipping_weight_unit, secondUnit));
+      }
+    }, 'common_client');
+  },
   createLanguage: function (languageData) {
     scenario('Create a new "Language"', client => {
       test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
@@ -118,11 +264,15 @@ module.exports = {
       }
     }, 'common_client');
   },
-  deleteLanguage: function (name) {
+  deleteLanguage: function (name, dateTime = true) {
     scenario('Delete the created "Language"', client => {
       test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
       test('should click on "Languages" tab', () => client.waitForExistAndClick(Menu.Improve.International.languages_tab));
-      test('should search for the created language', () => client.searchByValue(Localization.languages.filter_name_input, Localization.languages.filter_search_button, name + date_time));
+      if (dateTime === false) {
+        test('should search for the created language', () => client.searchByValue(Localization.languages.filter_name_input, Localization.languages.filter_search_button, name));
+      } else {
+        test('should search for the created language', () => client.searchByValue(Localization.languages.filter_name_input, Localization.languages.filter_search_button, name + date_time));
+      }
       test('should click on "dropdown toggle" button', () => client.waitForExistAndClick(Localization.languages.dropdown_button));
       test('should click on "Delete" button', () => client.waitForExistAndClick(Localization.languages.delete_button));
       test('should accept the confirmation alert', () => client.alertAccept());
@@ -133,9 +283,26 @@ module.exports = {
   generateRtlStylesheet: function () {
     scenario('Generate RTL stylesheet', client => {
       test('should go to "Theme & logo" page', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.theme_logo_submenu));
-      test('should switch the "Generate RTL stylesheet" to "YES"', () => client.scrollWaitForExistAndClick(ThemeAndLogo.generate_rtl_stylesheet_button.replace('%S', 'on')));
+      test('should switch the "Generate RTL stylesheet" to "YES"', () => client.waitForExistAndClick(ThemeAndLogo.generate_rtl_stylesheet_button.replace('%S', 'on')));
       test('should click on "Save" button', () => client.waitForExistAndClick(ThemeAndLogo.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(Design.success_panel, 'Your RTL stylesheets has been generated successfully'));
+    }, 'common_client');
+  },
+  updateAdvancedData(advancedData) {
+    scenario('Update advanced data', client => {
+      test('should set "Language identifier" input', () => client.waitAndSetValue(Localization.Localization.advanced_language_identifier_input, advancedData.languageIdentifier));
+      test('should set "Country identifier" input', () => client.waitAndSetValue(Localization.Localization.advanced_country_identifier_input, advancedData.countryIdentifier));
+      test('should close symfony toolbar', () => {
+        return promise
+          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+          .then(() => {
+            if (global.isVisible) {
+              client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+            }
+          });
+      });
+      test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Localization.advanced_save_button, 1000));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Localization.alert_panel.replace("%B", "alert-text"), 'Update successful'));
     }, 'common_client');
   }
 };

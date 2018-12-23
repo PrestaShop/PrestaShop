@@ -85,7 +85,7 @@
       <ProductLine
         v-else
         v-for="(product, index) in products"
-        key=${index}
+        :key=index
         :product="product"
       />
     </tbody>

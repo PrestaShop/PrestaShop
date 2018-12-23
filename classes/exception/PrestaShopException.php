@@ -42,7 +42,7 @@ class PrestaShopExceptionCore extends Exception
         if (ToolsCore::isPHPCLI()) {
             echo get_class($this) . ' in ' . $this->getFile() . ' line ' . $this->getLine() . "\n";
             echo $this->getTraceAsString() . "\n";
-        } elseif (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_')) {
+        } elseif (_PS_MODE_DEV_) {
             // Display error message
             echo '<style>
                 #psException{font-family: Verdana; font-size: 14px}
@@ -81,7 +81,8 @@ class PrestaShopExceptionCore extends Exception
                     $this->displayFileDebug($trace['file'], $trace['line'], $id);
                 }
                 if (isset($trace['args']) && count($trace['args'])) {
-                    $this->displayArgsDebug($trace['args'], $id);
+                    $args = $this->hideCriticalArgs($trace);
+                    $this->displayArgsDebug($args, $id);
                 }
                 echo '</li>';
             }
@@ -127,6 +128,54 @@ class PrestaShopExceptionCore extends Exception
             }
         }
         echo '</pre></div>';
+    }
+
+    /**
+     * Prevent critical arguments to be displayed in the debug trace page (e.g. database password)
+     * Returns the array of args with critical arguments replaced by placeholders.
+     *
+     * @param array $trace
+     *
+     * @return array
+     */
+    protected function hideCriticalArgs(array $trace)
+    {
+        $args = $trace['args'];
+        if (empty($trace['class']) || empty($trace['function'])) {
+            return $args;
+        }
+
+        $criticalParameters = [
+            'pwd',
+            'pass',
+            'passwd',
+            'password',
+            'database',
+            'server',
+        ];
+        $hiddenArgs = [];
+
+        try {
+            $class = new \ReflectionClass($trace['class']);
+            /** @var \ReflectionMethod $method */
+            $method = $class->getMethod($trace['function']);
+            /** @var \ReflectionParameter $parameter */
+            foreach ($method->getParameters() as $argIndex => $parameter) {
+                if ($argIndex >= count($args)) {
+                    break;
+                }
+
+                if (in_array(strtolower($parameter->getName()), $criticalParameters)) {
+                    $hiddenArgs[] = '**hidden_' . $parameter->getName() . '**';
+                } else {
+                    $hiddenArgs[] = $args[$argIndex];
+                }
+            }
+        } catch (ReflectionException $e) {
+            //In worst case scenario there are some critical args we could't detect so we return an empty array
+        }
+
+        return $hiddenArgs;
     }
 
     /**

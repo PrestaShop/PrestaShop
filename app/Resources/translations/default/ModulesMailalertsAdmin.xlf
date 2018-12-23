@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_emailalerts/mailalerts-account.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ae0e822b6fad0de61c231ef188997e92">
+        <source>You must have a product to delete an alert.</source>
+        <target>You must have a product to delete an alert.</target>
+        <note>Context:
+File: modules/ps_emailalerts/mailalerts-account.php:43</note>
+      </trans-unit>
+      <trans-unit id="0d15d3afa8c174934ff0e43ce3b99bd3">
+        <source>You must be logged in to manage your alerts.</source>
+        <target>You must be logged in to manage your alerts.</target>
+        <note>Context:
+File: modules/ps_emailalerts/mailalerts-account.php:51</note>
+      </trans-unit>
+      <trans-unit id="a9839ad48cf107667f73bad1d651f2ca">
+        <source>No template found</source>
+        <target>No template found</target>
+        <note>Context:
+File: modules/ps_emailalerts/mailalerts-account.php:64</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_emailalerts/ps_emailalerts.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="fd30254803e8db32521d3390131a44da">
@@ -181,28 +203,6 @@ File: modules/ps_emailalerts/ps_emailalerts.php:1043</note>
         <target>Merchant notifications</target>
         <note>Context:
 File: modules/ps_emailalerts/ps_emailalerts.php:1049</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_emailalerts/mailalerts-account.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ae0e822b6fad0de61c231ef188997e92">
-        <source>You must have a product to delete an alert.</source>
-        <target>You must have a product to delete an alert.</target>
-        <note>Context:
-File: modules/ps_emailalerts/mailalerts-account.php:43</note>
-      </trans-unit>
-      <trans-unit id="0d15d3afa8c174934ff0e43ce3b99bd3">
-        <source>You must be logged in to manage your alerts.</source>
-        <target>You must be logged in to manage your alerts.</target>
-        <note>Context:
-File: modules/ps_emailalerts/mailalerts-account.php:51</note>
-      </trans-unit>
-      <trans-unit id="a9839ad48cf107667f73bad1d651f2ca">
-        <source>No template found</source>
-        <target>No template found</target>
-        <note>Context:
-File: modules/ps_emailalerts/mailalerts-account.php:64</note>
       </trans-unit>
     </body>
   </file>

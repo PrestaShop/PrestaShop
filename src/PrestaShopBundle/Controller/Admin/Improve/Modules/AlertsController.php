@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible of "Improve > Modules > Modules & Services > Alerts" page display.
@@ -40,7 +40,7 @@ class AlertsController extends ModuleAbstractController
     public function indexAction()
     {
         return $this->render(
-            'PrestaShopBundle:Admin/Module:alerts.html.twig',
+            '@PrestaShop/Admin/Module/alerts.html.twig',
             $this->getNotificationPageData('to_configure')
         );
     }

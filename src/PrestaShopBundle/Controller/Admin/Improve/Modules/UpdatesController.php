@@ -39,7 +39,7 @@ class UpdatesController extends ModuleAbstractController
     public function indexAction()
     {
         return $this->render(
-            'PrestaShopBundle:Admin/Module:updates.html.twig',
+            '@PrestaShop/Admin/Module/updates.html.twig',
             $this->getNotificationPageData('to_update')
         );
     }

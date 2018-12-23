@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Service\Routing\Router as PrestaShopRouter;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Admin controller to manage security pages.
@@ -43,12 +43,11 @@ class SecurityController extends FrameworkBundleAdminController
 
         $newToken = $this->get('security.csrf.token_manager')
             ->getToken($username)
-            ->getValue()
-        ;
+            ->getValue();
 
         $newUri = PrestaShopRouter::generateTokenizedUrl($requestUri, $newToken);
 
-        return $this->render('PrestaShopBundle:Admin/Security:compromised.html.twig', array(
+        return $this->render('@PrestaShop/Admin/Security/compromised.html.twig', array(
             'requestUri' => $newUri,
         ));
     }

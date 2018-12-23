@@ -53,7 +53,7 @@ class AdminTaxesControllerCore extends AdminController
             'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'width' => 'auto'),
             'rate' => array('title' => $this->trans('Rate', array(), 'Admin.International.Feature'), 'align' => 'center', 'suffix' => '%', 'class' => 'fixed-width-md'),
             'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm', 'remove_onclick' => true),
-            );
+        );
 
         $ecotax_desc = '';
         if (Configuration::get('PS_USE_ECOTAX')) {
@@ -81,20 +81,20 @@ class AdminTaxesControllerCore extends AdminController
                             array(
                                 'name' => $this->trans('Invoice address', array(), 'Admin.International.Feature'),
                                 'id' => 'id_address_invoice',
-                                ),
+                            ),
                             array(
                                 'name' => $this->trans('Delivery address', array(), 'Admin.International.Feature'),
                                 'id' => 'id_address_delivery', ),
-                                ),
-                        'identifier' => 'id',
                         ),
+                        'identifier' => 'id',
+                    ),
                     'PS_USE_ECOTAX' => array(
                         'title' => $this->trans('Use ecotax', array(), 'Admin.International.Feature'),
                         'desc' => $ecotax_desc,
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
-                        ),
+                    ),
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             ),
@@ -108,7 +108,7 @@ class AdminTaxesControllerCore extends AdminController
                 'type' => 'select',
                 'identifier' => 'id_tax_rules_group',
                 'list' => TaxRulesGroup::getTaxRulesGroupsForOptions(),
-                );
+            );
         }
 
         $this->_where .= ' AND a.deleted = 0';

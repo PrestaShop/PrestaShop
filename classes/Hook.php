@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 class HookCore extends ObjectModel
 {
@@ -147,7 +147,8 @@ class HookCore extends ObjectModel
      */
     public static function getHooks($position = false, $only_display_hooks = false)
     {
-        $hooks = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $hooks = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT * FROM `' . _DB_PREFIX_ . 'hook` h
 			' . ($position ? 'WHERE h.`position` = 1' : '') . '
 			ORDER BY `name`'

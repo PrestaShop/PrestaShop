@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module;
-use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\Entity\Tab;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tab as TabClass;
@@ -103,7 +103,9 @@ class ModuleTabUnregister
                     array(
                         '%name%' => $tab->getClassName(),
                     ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
     }
 
@@ -116,7 +118,9 @@ class ModuleTabUnregister
     private function removeDuplicatedParent(Tab $tab)
     {
         $remainingChildren = $this->tabRepository->findByParentId($tab->getIdParent());
-        if (count($remainingChildren) > 1) {
+        // Or more than one children, the parent tab is still used.
+        // If there is no children, the deletion is likely to be done manually by the module.
+        if (count($remainingChildren) !== 1) {
             return;
         }
 

@@ -129,7 +129,7 @@ class AttributeGroupLang
      *
      * @return AttributeGroupLang
      */
-    public function setAttributeGroup(\PrestaShopBundle\Entity\AttributeGroup $attributeGroup)
+    public function setAttributeGroup(AttributeGroup $attributeGroup)
     {
         $this->attributeGroup = $attributeGroup;
 
@@ -153,7 +153,7 @@ class AttributeGroupLang
      *
      * @return AttributeGroupLang
      */
-    public function setLang(\PrestaShopBundle\Entity\Lang $lang)
+    public function setLang(Lang $lang)
     {
         $this->lang = $lang;
 

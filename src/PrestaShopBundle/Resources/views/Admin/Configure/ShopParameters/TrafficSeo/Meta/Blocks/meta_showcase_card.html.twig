@@ -31,11 +31,11 @@
       <img src="{{ asset('themes/new-theme/scss/img/helper-card/seo@3x.png') }}" class="img-fluid">
     </div>
     <div class="showcase-card__right">
-      <h2>{{ 'Improve your Seo'|trans }}</h2>
-      <p>{{ 'Edit information about your pages to gain visibility and therefore reach more visitors. We advice you to start with the index page, it stand for your homepage.'|trans }}</p>
+      <h2>{{ 'Improve your SEO'|trans }}</h2>
+      <p>{{ 'Edit information about your pages to gain visibility and therefore reach more visitors. We advise you to start with the index page, it stands for your homepage.'|trans }}</p>
       <a class="btn btn-outline-secondary" href="{{ helperDocLink }}" target="_blank">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</a>
       {% if indexPageId and isGridDisplayed %}
-        <a class="btn btn-primary" href="{{ path('admin_meta_list_edit', {'metaId': indexPageId}) }}">{{ 'Configure index page'|trans }}</a>
+        <a class="btn btn-primary" href="{{ path('admin_metas_edit', {'metaId': indexPageId}) }}">{{ 'Configure index page'|trans }}</a>
       {% endif %}
     </div>
     <i class="showcase-card__close material-icons js-remove-helper-block">close</i>

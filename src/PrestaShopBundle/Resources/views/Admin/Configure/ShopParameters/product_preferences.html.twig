@@ -31,16 +31,16 @@
     {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
     <div class="row justify-content-center">
         {# Product preferences General block #}
-        {% include 'PrestaShopBundle:Admin/Configure/ShopParameters/Blocks:product_preferences_general.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig' %}
 
         {# Product preferences Page block #}
-        {% include 'PrestaShopBundle:Admin/Configure/ShopParameters/Blocks:product_preferences_page.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_page.html.twig' %}
 
         {# Product preferences Stock block #}
-        {% include 'PrestaShopBundle:Admin/Configure/ShopParameters/Blocks:product_preferences_stock.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_stock.html.twig' %}
 
         {# Product preferences Pagination block #}
-        {% include 'PrestaShopBundle:Admin/Configure/ShopParameters/Blocks:product_preferences_pagination.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_pagination.html.twig' %}
     </div>
     {{ form_end(form) }}
 {% endblock %}

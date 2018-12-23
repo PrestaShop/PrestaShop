@@ -66,8 +66,7 @@ final class InvoiceModelFinder implements FileFinderInterface
         $finder = new Finder();
         $finder->files()
             ->in($directories)
-            ->name('invoice-*.tpl')
-        ;
+            ->name('invoice-*.tpl');
 
         $fileNames = [];
 

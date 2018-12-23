@@ -28,7 +28,7 @@ module.exports = {
     }
   },
 
-  checkMovementHistory: function (client, Menu, Movement, movementIndex, itemNumber, option, type, reference) {
+  checkMovementHistory: function (client, Menu, Movement, movementIndex, itemNumber, option, type, reference= "") {
     test('should go to "Movements" tab', () => {
       return promise
         .then(() => client.goToStockMovements(Menu, Movement))

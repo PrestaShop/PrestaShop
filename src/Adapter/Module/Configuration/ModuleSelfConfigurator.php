@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\Configuration;
 
-use Exception;
 use Doctrine\DBAL\Connection;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use Symfony\Component\Filesystem\Filesystem;
@@ -424,6 +424,7 @@ class ModuleSelfConfigurator
 
         // Avoid unconsistant state with transactions
         $this->connection->beginTransaction();
+
         try {
             foreach ($config['sql'] as $data) {
                 $this->runSqlFile($data);
@@ -431,6 +432,7 @@ class ModuleSelfConfigurator
             $this->connection->commit();
         } catch (Exception $e) {
             $this->connection->rollBack();
+
             throw $e;
         }
     }

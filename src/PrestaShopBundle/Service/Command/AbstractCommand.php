@@ -29,8 +29,8 @@ namespace PrestaShopBundle\Service\Command;
 use AppKernel;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 abstract class AbstractCommand
 {

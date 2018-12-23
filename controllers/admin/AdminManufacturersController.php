@@ -143,12 +143,12 @@ class AdminManufacturersControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = '
-			COUNT(`id_product`) AS `products`, (
-				SELECT COUNT(ad.`id_manufacturer`) as `addresses`
-				FROM `' . _DB_PREFIX_ . 'address` ad
-				WHERE ad.`id_manufacturer` = a.`id_manufacturer`
-					AND ad.`deleted` = 0
-				GROUP BY ad.`id_manufacturer`) as `addresses`';
+            COUNT(`id_product`) AS `products`, (
+                SELECT COUNT(ad.`id_manufacturer`) as `addresses`
+                FROM `' . _DB_PREFIX_ . 'address` ad
+                WHERE ad.`id_manufacturer` = a.`id_manufacturer`
+                    AND ad.`deleted` = 0
+                GROUP BY ad.`id_manufacturer`) as `addresses`';
         $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (a.`id_manufacturer` = p.`id_manufacturer`)';
         $this->_group = 'GROUP BY a.`id_manufacturer`';
 
@@ -178,10 +178,12 @@ class AdminManufacturersControllerCore extends AdminController
             ),
             'firstname' => array(
                 'title' => $this->trans('First name', array(), 'Admin.Global'),
+                'maxlength' => 30,
             ),
             'lastname' => array(
                 'title' => $this->trans('Last name', array(), 'Admin.Global'),
                 'filter_key' => 'a!lastname',
+                'maxlength' => 30,
             ),
             'postcode' => array(
                 'title' => $this->trans('Zip/Postal code', array(), 'Admin.Global'),
@@ -302,8 +304,14 @@ class AdminManufacturersControllerCore extends AdminController
         }
 
         $image = _PS_MANU_IMG_DIR_ . $manufacturer->id . '.jpg';
-        $image_url = ImageManager::thumbnail($image, $this->table . '_' . (int) $manufacturer->id . '.' . $this->imageType, 350,
-            $this->imageType, true, true);
+        $image_url = ImageManager::thumbnail(
+            $image,
+            $this->table . '_' . (int) $manufacturer->id . '.' . $this->imageType,
+            350,
+            $this->imageType,
+            true,
+            true
+        );
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
         $this->fields_form = array(
@@ -668,6 +676,7 @@ class AdminManufacturersControllerCore extends AdminController
                         'desc' => $this->trans('Cancel', array(), 'Admin.Actions'),
                     );
                 }
+
                 break;
 
             default:
@@ -691,9 +700,9 @@ class AdminManufacturersControllerCore extends AdminController
         /* @var Manufacturer $manufacturer */
 
         $this->toolbar_btn['new'] = array(
-                    'href' => $this->context->link->getAdminLink('AdminManufacturers') . '&addaddress=1&id_manufacturer=' . (int) $manufacturer->id,
-                    'desc' => $this->trans('Add address', array(), 'Admin.Catalog.Feature'),
-                );
+            'href' => $this->context->link->getAdminLink('AdminManufacturers') . '&addaddress=1&id_manufacturer=' . (int) $manufacturer->id,
+            'desc' => $this->trans('Add address', array(), 'Admin.Catalog.Feature'),
+        );
 
         $this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
         $this->toolbar_title[] = $manufacturer->name;

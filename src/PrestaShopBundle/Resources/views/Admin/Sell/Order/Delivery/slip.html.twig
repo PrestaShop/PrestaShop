@@ -22,9 +22,9 @@
   * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
   * International Registered Trademark & Property of PrestaShop SA
   *#}
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
-{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block content %}
   {{ form_start(pdfForm, {'attr' : {'class': 'form', 'autocomplete': 'off'}, 'action': path('admin_order_delivery_slip_pdf') }) }}

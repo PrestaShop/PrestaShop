@@ -29,8 +29,8 @@ namespace PrestaShopBundle\Command;
 \Smarty_Autoloader::register();
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ExportThemeCommand extends ContainerAwareCommand
@@ -40,8 +40,7 @@ class ExportThemeCommand extends ContainerAwareCommand
         $this
             ->setName('prestashop:theme:export')
             ->setDescription('Create zip to distribute theme with its dependencies')
-            ->addArgument('theme', InputArgument::REQUIRED, 'Theme to export directory name.')
-        ;
+            ->addArgument('theme', InputArgument::REQUIRED, 'Theme to export directory name.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

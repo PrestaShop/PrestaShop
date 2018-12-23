@@ -26,13 +26,14 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Allow a redirection to the right url when using BetterSecurity annotation.
@@ -78,7 +79,7 @@ class AccessDeniedListener
                 $event->allowCustomResponseCode();
 
                 $this->showNotificationMessage($securityConfiguration);
-                $url = $this->computeRedirectionUrl($securityConfiguration);
+                $url = $this->computeRedirectionUrl($securityConfiguration, $event->getRequest());
 
                 $event->setResponse(new RedirectResponse($url));
 
@@ -91,14 +92,22 @@ class AccessDeniedListener
      * Compute the url for the redirection.
      *
      * @param AdminSecurity $adminSecurity
+     * @param Request $request
      *
      * @return string
      */
-    private function computeRedirectionUrl(AdminSecurity $adminSecurity)
+    private function computeRedirectionUrl(AdminSecurity $adminSecurity, Request $request)
     {
         $route = $adminSecurity->getRedirectRoute();
+
         if ($route !== null) {
-            return $this->router->generate($route);
+            $redirectQueryParameters = $adminSecurity->getRedirectQueryParamsToKeep();
+            $routeParamsToKeep = $this->getQueryParamsFromRequestQuery(
+                $redirectQueryParameters,
+                $request
+            );
+
+            return $this->router->generate($route, $routeParamsToKeep);
         }
 
         return $adminSecurity->getUrl();
@@ -119,5 +128,27 @@ class AccessDeniedListener
                 $adminSecurity->getDomain()
             )
         );
+    }
+
+    /**
+     * Gets query parameters by comparing them to the current request attributes.
+     *
+     * @param array $queryParametersToKeep
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getQueryParamsFromRequestQuery(array $queryParametersToKeep, Request $request)
+    {
+        $result = [];
+
+        foreach ($queryParametersToKeep as $queryParameterName) {
+            $value = $request->get($queryParameterName);
+            if (null !== $value) {
+                $result[$queryParameterName] = $value;
+            }
+        }
+
+        return $result;
     }
 }

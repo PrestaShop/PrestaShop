@@ -26,12 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,17 +41,13 @@ use Symfony\Component\HttpFoundation\Response;
 class MetaController extends FrameworkBundleAdminController
 {
     /**
-     * responsible for displaying page content.
+     * Shows index Meta page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @Template("@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/meta.html.twig")
-     *
      * @param MetaFilters $filters
      *
-     * @return array
-     *
-     * @throws \Exception
+     * @return Response
      */
     public function indexAction(MetaFilters $filters)
     {
@@ -68,8 +62,7 @@ class MetaController extends FrameworkBundleAdminController
         $tools = $this->get('prestashop.adapter.tools');
         $context = $this->get('prestashop.adapter.shop.context');
 
-        $htaccessFileChecker = $this->get('prestashop.core.util.url.htaccess_file_checker');
-        $robotsTextFileChecker = $this->get('prestashop.core.util.url.robots_text_file_checker');
+        $urlFileChecker = $this->get('prestashop.core.util.url.url_file_checker');
 
         $hostingInformation = $this->get('prestashop.adapter.hosting_information');
 
@@ -78,10 +71,10 @@ class MetaController extends FrameworkBundleAdminController
         $isShopContext = $context->isShopContext();
         $isShopFeatureActive = $this->get('prestashop.adapter.multistore_feature')->isActive();
 
-        $helperBlockLinkProvider = $this->get('prestashop.core.helper_doc.meta_page_link_provider');
+        $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
 
-        return [
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
                     'href' => $this->getAdminLink('AdminMeta', ['addmeta' => '']),
@@ -94,16 +87,16 @@ class MetaController extends FrameworkBundleAdminController
             'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
             'routeKeywords' => $defaultRoutesProvider->getKeywords(),
             'isModRewriteActive' => $tools->isModRewriteActive(),
-            'isHtaccessFileValid' => $htaccessFileChecker->isValidFile(),
-            'isRobotsTextFileValid' => $robotsTextFileChecker->isValidFile(),
+            'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
+            'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
             'isShopContext' => $isShopContext,
             'isShopFeatureActive' => $isShopFeatureActive,
             'isHostMode' => $hostingInformation->isHostMode(),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminMeta'),
-            'helperDocLink' => $helperBlockLinkProvider->getLink(),
+            'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),
             'indexPageId' => $metaDataProvider->getIdByPage('index'),
-        ];
+        ]);
     }
 
     /**
@@ -127,7 +120,7 @@ class MetaController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_meta', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_metas_index', ['filters' => $filters]);
     }
 
     /**
@@ -169,14 +162,13 @@ class MetaController extends FrameworkBundleAdminController
      * Removes single element from meta list.
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param int $metaId
      *
      * @return RedirectResponse
-     *
-     * @throws PrestaShopException
      */
-    public function deleteSingleListItemAction($metaId)
+    public function deleteAction($metaId)
     {
         $metaEraser = $this->get('prestashop.adapter.meta.meta_eraser');
         $errors = $metaEraser->erase([$metaId]);
@@ -190,21 +182,20 @@ class MetaController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_meta');
+        return $this->redirectToRoute('admin_metas_index');
     }
 
     /**
      * Removes multiple records from meta list.
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
-     *
-     * @throws PrestaShopException
      */
-    public function deleteMultipleListItemsAction(Request $request)
+    public function deleteBulkAction(Request $request)
     {
         $metaToDelete = $request->request->get('meta_bulk');
 
@@ -220,21 +211,20 @@ class MetaController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_meta');
+        return $this->redirectToRoute('admin_metas_index');
     }
 
     /**
      * Submits settings forms.
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
-     *
-     * @throws Exception
      */
-    public function processFormAction(Request $request)
+    public function saveOptionsAction(Request $request)
     {
         $formHandler = $this->get('prestashop.admin.meta_settings.form_handler');
         $configurationForm = $formHandler->getForm();
@@ -254,15 +244,18 @@ class MetaController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_meta');
+        return $this->redirectToRoute('admin_metas_index');
     }
 
     /**
-     * Generates robots.txt file.
+     * Generates robots.txt file for Front Office.
+     *
+     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @return RedirectResponse
      */
-    public function generateRobotsTextFileAction()
+    public function generateRobotsFileAction()
     {
         $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
 
@@ -280,7 +273,7 @@ class MetaController extends FrameworkBundleAdminController
                 )
             );
 
-            return $this->redirectToRoute('admin_meta');
+            return $this->redirectToRoute('admin_metas_index');
         }
 
         $this->addFlash(
@@ -288,6 +281,6 @@ class MetaController extends FrameworkBundleAdminController
             $this->trans('Successful update.', 'Admin.Notifications.Success')
         );
 
-        return $this->redirectToRoute('admin_meta');
+        return $this->redirectToRoute('admin_metas_index');
     }
 }

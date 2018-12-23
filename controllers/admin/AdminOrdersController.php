@@ -186,9 +186,14 @@ class AdminOrdersControllerCore extends AdminController
 
     public static function setOrderCurrency($echo, $tr)
     {
-        $order = new Order($tr['id_order']);
+        if (!empty($tr['id_currency'])) {
+            $idCurrency = (int) $tr['id_currency'];
+        } else {
+            $order = new Order($tr['id_order']);
+            $idCurrency = (int) $order->id_currency;
+        }
 
-        return Tools::displayPrice($echo, (int) $order->id_currency);
+        return Tools::displayPrice($echo, $idCurrency);
     }
 
     public function initPageHeaderToolbar()
@@ -236,9 +241,10 @@ class AdminOrdersControllerCore extends AdminController
         $this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch', 'highlight'));
 
         $defaults_order_state = array('cheque' => (int) Configuration::get('PS_OS_CHEQUE'),
-                                                'bankwire' => (int) Configuration::get('PS_OS_BANKWIRE'),
-                                                'cashondelivery' => Configuration::get('PS_OS_COD_VALIDATION') ? (int) Configuration::get('PS_OS_COD_VALIDATION') : (int) Configuration::get('PS_OS_PREPARATION'),
-                                                'other' => (int) Configuration::get('PS_OS_PAYMENT'), );
+            'bankwire' => (int) Configuration::get('PS_OS_BANKWIRE'),
+            'cashondelivery' => Configuration::get('PS_OS_COD_VALIDATION') ? (int) Configuration::get('PS_OS_COD_VALIDATION') : (int) Configuration::get('PS_OS_PREPARATION'),
+            'other' => (int) Configuration::get('PS_OS_PAYMENT'),
+        );
         $payment_modules = array();
         foreach (PaymentModule::getInstalledPaymentModules() as $p_module) {
             $payment_modules[] = Module::getInstanceById((int) $p_module['id_module']);
@@ -652,7 +658,8 @@ class AdminOrdersControllerCore extends AdminController
                                         'Emails.Subject',
                                         $orderLanguage->locale
                                     ),
-                                    $varsTpl, $customer->email,
+                                    $varsTpl,
+                                    $customer->email,
                                     $customer->firstname . ' ' . $customer->lastname,
                                     null,
                                     null,
@@ -660,7 +667,8 @@ class AdminOrdersControllerCore extends AdminController
                                     null,
                                     _PS_MAIL_DIR_,
                                     true,
-                                    (int) $order->id_shop)
+                                    (int) $order->id_shop
+                                )
                             ) {
                                 Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=11' . '&token=' . $this->token);
                             }
@@ -747,8 +755,14 @@ class AdminOrdersControllerCore extends AdminController
                     }
 
                     if ($amount >= 0) {
-                        if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen,
-                            (Tools::getValue('TaxMethod') ? false : true))) {
+                        if (!OrderSlip::create(
+                            $order,
+                            $order_detail_list,
+                            $shipping_cost_amount,
+                            $voucher,
+                            $choosen,
+                            (Tools::getValue('TaxMethod') ? false : true)
+                        )) {
                             $this->errors[] = $this->trans('You cannot generate a partial credit slip.', array(), 'Admin.Orderscustomers.Notification');
                         } else {
                             Hook::exec('actionOrderSlipAdd', array('order' => $order, 'productList' => $order_detail_list, 'qtyList' => $full_quantity_list), null, false, true, false, $order->id_shop);
@@ -1227,9 +1241,16 @@ class AdminOrdersControllerCore extends AdminController
                 } else {
                     $employee = new Employee((int) Context::getContext()->cookie->id_employee);
                     $payment_module->validateOrder(
-                        (int) $cart->id, (int) $id_order_state,
-                        $cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->trans('Manual order -- Employee:', array(), 'Admin.Orderscustomers.Feature') . ' ' .
-                        substr($employee->firstname, 0, 1) . '. ' . $employee->lastname, array(), null, false, $cart->secure_key
+                        (int) $cart->id,
+                        (int) $id_order_state,
+                        $cart->getOrderTotal(true, Cart::BOTH),
+                        $payment_module->displayName,
+                        $this->trans('Manual order -- Employee:', array(), 'Admin.Orderscustomers.Feature') . ' ' .
+                        substr($employee->firstname, 0, 1) . '. ' . $employee->lastname,
+                        array(),
+                        null,
+                        false,
+                        $cart->secure_key
                     );
                     if ($payment_module->currentOrder) {
                         Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $payment_module->currentOrder . '&vieworder' . '&token=' . $this->token);
@@ -1241,15 +1262,19 @@ class AdminOrdersControllerCore extends AdminController
         } elseif ((Tools::isSubmit('submitAddressShipping') || Tools::isSubmit('submitAddressInvoice')) && isset($order)) {
             if ($this->access('edit')) {
                 $address = new Address(Tools::getValue('id_address'));
+                $cart = Cart::getCartByOrderId($order->id);
                 if (Validate::isLoadedObject($address)) {
-                    // Update the address on order
+                    // Update the address on order and cart
                     if (Tools::isSubmit('submitAddressShipping')) {
                         $order->id_address_delivery = $address->id;
+                        $cart->id_address_delivery = $address->id;
                     } elseif (Tools::isSubmit('submitAddressInvoice')) {
                         $order->id_address_invoice = $address->id;
+                        $cart->id_address_invoice = $address->id;
                     }
                     $order->update();
                     $order->refreshShippingCost();
+                    $cart->update();
 
                     Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=4&token=' . $this->token);
                 } else {
@@ -1446,6 +1471,7 @@ class AdminOrdersControllerCore extends AdminController
                             } else {
                                 $this->errors[] = $this->trans('The discount value is invalid.', array(), 'Admin.Orderscustomers.Notification');
                             }
+
                             break;
                         // Amount type
                         case 2:
@@ -1481,6 +1507,7 @@ class AdminOrdersControllerCore extends AdminController
                                     $cart_rules[0]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
                                 }
                             }
+
                             break;
                         // Free shipping type
                         case 3:
@@ -1509,6 +1536,7 @@ class AdminOrdersControllerCore extends AdminController
                                 $cart_rules[0]['value_tax_incl'] = $order->total_shipping_tax_incl;
                                 $cart_rules[0]['value_tax_excl'] = $order->total_shipping_tax_excl;
                             }
+
                             break;
                         default:
                             $this->errors[] = $this->trans('The discount type is invalid.', array(), 'Admin.Orderscustomers.Notification');
@@ -1892,25 +1920,33 @@ class AdminOrdersControllerCore extends AdminController
             'carrier_list' => $this->getCarrierList($order),
             'recalculate_shipping_cost' => (int) Configuration::get('PS_ORDER_RECALCULATE_SHIPPING'),
             'stock_location_is_available' => $stockLocationIsAvailable,
-            'HOOK_CONTENT_ORDER' => Hook::exec('displayAdminOrderContentOrder', array(
-                'order' => $order,
-                'products' => $products,
-                'customer' => $customer, )
+            'HOOK_CONTENT_ORDER' => Hook::exec(
+                'displayAdminOrderContentOrder',
+                array(
+                    'order' => $order,
+                    'products' => $products,
+                    'customer' => $customer, )
             ),
-            'HOOK_CONTENT_SHIP' => Hook::exec('displayAdminOrderContentShip', array(
-                'order' => $order,
-                'products' => $products,
-                'customer' => $customer, )
+            'HOOK_CONTENT_SHIP' => Hook::exec(
+                'displayAdminOrderContentShip',
+                array(
+                    'order' => $order,
+                    'products' => $products,
+                    'customer' => $customer, )
             ),
-            'HOOK_TAB_ORDER' => Hook::exec('displayAdminOrderTabOrder', array(
-                'order' => $order,
-                'products' => $products,
-                'customer' => $customer, )
+            'HOOK_TAB_ORDER' => Hook::exec(
+                'displayAdminOrderTabOrder',
+                array(
+                    'order' => $order,
+                    'products' => $products,
+                    'customer' => $customer, )
             ),
-            'HOOK_TAB_SHIP' => Hook::exec('displayAdminOrderTabShip', array(
-                'order' => $order,
-                'products' => $products,
-                'customer' => $customer, )
+            'HOOK_TAB_SHIP' => Hook::exec(
+                'displayAdminOrderTabShip',
+                array(
+                    'order' => $order,
+                    'products' => $products,
+                    'customer' => $customer, )
             ),
         );
 
@@ -2028,7 +2064,8 @@ class AdminOrdersControllerCore extends AdminController
                             null,
                             _PS_MAIL_DIR_,
                             true,
-                            $cart->id_shop)
+                            $cart->id_shop
+                        )
                     ) {
                         die(json_encode(array('errors' => false, 'result' => $this->trans('The email was sent to your customer.', array(), 'Admin.Orderscustomers.Notification'))));
                     }
@@ -2107,8 +2144,20 @@ class AdminOrdersControllerCore extends AdminController
         // always add taxes even if there are not displayed to the customer
         $use_taxes = true;
 
-        $initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
-            false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+        $initial_product_price_tax_incl = Product::getPriceStatic(
+            $product->id,
+            $use_taxes,
+            isset($combination) ? $combination->id : null,
+            2,
+            null,
+            false,
+            true,
+            1,
+            false,
+            $order->id_customer,
+            $cart->id,
+            $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
+        );
 
         // Creating specific price if needed
         if ($product_informations['product_price_tax_incl'] != $initial_product_price_tax_incl) {
@@ -2136,8 +2185,15 @@ class AdminOrdersControllerCore extends AdminController
         }
 
         // Add product to cart
-        $update_quantity = $cart->updateQty($product_informations['product_quantity'], $product->id, isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null,
-            isset($combination) ? $combination->id : null, 'up', 0, new Shop($cart->id_shop));
+        $update_quantity = $cart->updateQty(
+            $product_informations['product_quantity'],
+            $product->id,
+            isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null,
+            isset($combination) ? $combination->id : null,
+            'up',
+            0,
+            new Shop($cart->id_shop)
+        );
 
         if ($update_quantity < 0) {
             // If product has attribute, minimal quantity is set with minimal quantity of attribute
@@ -2338,9 +2394,9 @@ class AdminOrdersControllerCore extends AdminController
             // Create OrderCartRule
             $rule = new CartRule($cart_rule['id_cart_rule']);
             $values = array(
-                    'tax_incl' => $rule->getContextualValue(true),
-                    'tax_excl' => $rule->getContextualValue(false),
-                    );
+                'tax_incl' => $rule->getContextualValue(true),
+                'tax_excl' => $rule->getContextualValue(false),
+            );
             $order_cart_rule = new OrderCartRule();
             $order_cart_rule->id_order = $order->id;
             $order_cart_rule->id_cart_rule = $cart_rule['id_cart_rule'];
@@ -2574,6 +2630,7 @@ class AdminOrdersControllerCore extends AdminController
         foreach ($products as $currentProduct) {
             if (!empty($currentProduct['location'])) {
                 $stockLocationIsAvailable = true;
+
                 break;
             }
         }
@@ -2843,7 +2900,7 @@ class AdminOrdersControllerCore extends AdminController
         // Reinject product
         $reinjectable_quantity = (int) $order_detail->product_quantity - (int) $order_detail->product_quantity_reinjected;
         $quantity_to_reinject = $qty_cancel_product > $reinjectable_quantity ? $reinjectable_quantity : $qty_cancel_product;
-        // @since 1.5.0 : Advanced Stock Management
+        /** @since 1.5.0 : Advanced Stock Management */
         $product_to_inject = new Product($order_detail->product_id, false, (int) $this->context->language->id, (int) $order_detail->id_shop);
 
         $product = new Product($order_detail->product_id, false, (int) $this->context->language->id, (int) $order_detail->id_shop);
@@ -2889,7 +2946,8 @@ class AdminOrdersControllerCore extends AdminController
 
                     if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
                         || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-                        || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                        || (
+                            $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
                             && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
                                 || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
                         )
@@ -3015,7 +3073,8 @@ class AdminOrdersControllerCore extends AdminController
         }
 
         if (!isset($id_image) || !$id_image) {
-            $id_image = Db::getInstance()->getValue('
+            $id_image = Db::getInstance()->getValue(
+                '
                 SELECT `image_shop`.id_image
                 FROM `' . _DB_PREFIX_ . 'image` i' .
                 Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
@@ -3041,8 +3100,9 @@ class AdminOrdersControllerCore extends AdminController
     protected function getCarrierList($order)
     {
         $cart = $this->context->cart;
+        $groups = Customer::getGroupsStatic((int) $cart->id_customer);
         $address = new Address((int) $cart->id_address_delivery);
 
-        return Carrier::getCarriersForOrder(Address::getZoneById((int) $address->id), null, $cart);
+        return Carrier::getCarriersForOrder(Address::getZoneById((int) $address->id), $groups, $cart);
     }
 }

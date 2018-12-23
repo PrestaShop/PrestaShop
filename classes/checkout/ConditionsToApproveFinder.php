@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ConditionsToApproveFinderCore
 {
@@ -50,8 +50,7 @@ class ConditionsToApproveFinderCore
                 $this->translator->trans('I agree to the [terms of service] and will adhere to them unconditionally.', array(), 'Shop.Theme.Checkout'),
                 $link
             )
-            ->setIdentifier('terms-and-conditions')
-        ;
+            ->setIdentifier('terms-and-conditions');
 
         return $termsAndConditions;
     }

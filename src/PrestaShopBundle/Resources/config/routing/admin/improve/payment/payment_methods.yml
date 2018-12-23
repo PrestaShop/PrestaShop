@@ -4,3 +4,4 @@ admin_payment_methods:
     defaults:
         _controller: PrestaShopBundle:Admin\Improve\Payment\PaymentMethods:index
         _legacy_controller: AdminPayment
+        _legacy_link: AdminPayment

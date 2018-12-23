@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Cache;
 
 use PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
@@ -45,9 +46,9 @@ class CachingConfiguration implements DataConfigurationInterface
     private $phpParameters;
 
     /**
-     * @var CacheClearer
+     * @var CacheClearerInterface
      */
-    private $cacheClearer;
+    private $symfonyCacheClearer;
 
     /**
      * @var bool check if the caching is enabled
@@ -59,16 +60,23 @@ class CachingConfiguration implements DataConfigurationInterface
      */
     private $cachingSystem;
 
+    /**
+     * @param MemcacheServerManager $memcacheServerManager
+     * @param PhpParameters $phpParameters
+     * @param CacheClearerInterface $symfonyCacheClearer
+     * @param $isCachingEnabled
+     * @param $cachingSystem
+     */
     public function __construct(
         MemcacheServerManager $memcacheServerManager,
         PhpParameters $phpParameters,
-        CacheClearer $cacheClearer,
+        CacheClearerInterface $symfonyCacheClearer,
         $isCachingEnabled,
         $cachingSystem
     ) {
         $this->memcacheServerManager = $memcacheServerManager;
         $this->phpParameters = $phpParameters;
-        $this->cacheClearer = $cacheClearer;
+        $this->symfonyCacheClearer = $symfonyCacheClearer;
         $this->isCachingEnabled = $isCachingEnabled;
         $this->cachingSystem = $cachingSystem;
     }
@@ -142,7 +150,7 @@ class CachingConfiguration implements DataConfigurationInterface
             );
         }
 
-        $this->cacheClearer->clearSymfonyCache();
+        $this->symfonyCacheClearer->clear();
 
         return $errors;
     }

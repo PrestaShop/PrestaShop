@@ -26,10 +26,10 @@
 
 namespace PrestaShopBundle\Service\Routing;
 
+use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use PrestaShopBundle\Service\DataProvider\UserProvider;
-use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 
 /**
  * We extends Symfony Router in order to add a token to each url.

@@ -1,12 +1,12 @@
 <?php
 
-include('config/config.php');
+include 'config/config.php';
 
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
     die('Forbidden');
 }
 
-include('include/utils.php');
+include 'include/utils.php';
 
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
@@ -16,6 +16,7 @@ if (isset($_GET['action'])) {
             } else {
                 die('view type number missing');
             }
+
             break;
         case 'sort':
             if (isset($_GET['sort_by'])) {
@@ -24,30 +25,35 @@ if (isset($_GET['action'])) {
             if (isset($_GET['descending'])) {
                 $_SESSION['descending'] = $_GET['descending'] === 'true';
             }
-            break;
-        case 'image_size':
-            if (realpath(dirname(_PS_ROOT_DIR_.$_POST['path'])) != realpath(_PS_ROOT_DIR_.$upload_dir)) {
-                die();
-            }
-            $pos = strpos($_POST['path'], $upload_dir);
-            if ($pos !== false) {
-                $info = getimagesize(substr_replace($_POST['path'], $current_path, $pos, strlen($upload_dir)));
-                echo json_encode($info);
-            }
 
             break;
         case 'save_img':
             $info = pathinfo($_POST['name']);
-            if (strpos($_POST['path'], '/') === 0
-                || strpos($_POST['path'], '../') !== false
-                || strpos($_POST['path'], './') === 0
-                || strpos($_POST['url'], 'http://featherfiles.aviary.com/') !== 0
-                || $_POST['name'] != fix_filename($_POST['name'], $transliteration)
+
+            $filename = $_POST['name'];
+            $path_pos = $_POST['path'];
+
+            if (preg_match('/\.{1,2}[\/|\\\]/', $path_pos) !== 0
+                || $filename !== fix_filename($filename, $transliteration)
                 || !in_array(strtolower($info['extension']), array('jpg', 'jpeg', 'png'))
+                || strpos($_POST['url'], 'http://featherfiles.aviary.com/') !== 0
+                || !isset($info['extension'])
+
             ) {
                 die('wrong data');
             }
+
             $image_data = get_file_by_url($_POST['url']);
+
+            $tmp = tempnam(sys_get_temp_dir(), 'img');
+            file_put_contents($tmp, $image_data);
+            $mime = mime_content_type($tmp);
+            unlink($tmp);
+
+            if (!in_array($mime, $mime_img)) {
+                die('wrong data');
+            }
+
             if ($image_data === false) {
                 die('file could not be loaded');
             }
@@ -80,7 +86,7 @@ if (isset($_GET['action'])) {
             $base_folder = $current_path.fix_dirname($_POST['path']).'/';
             switch ($info['extension']) {
                 case 'zip':
-                    $zip = new ZipArchive;
+                    $zip = new ZipArchive();
                     if ($zip->open($path) === true) {
                         //make all the folders
                         for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -106,6 +112,7 @@ if (isset($_GET['action'])) {
                     } else {
                         echo 'failed to open file';
                     }
+
                     break;
                 case 'gz':
                     $p = new PharData($path);
@@ -121,6 +128,7 @@ if (isset($_GET['action'])) {
 
                     break;
             }
+
             break;
         case 'media_preview':
 
@@ -245,6 +253,7 @@ if (isset($_GET['action'])) {
 			<?php
 
             }
+
             break;
     }
 } else {

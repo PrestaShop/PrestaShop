@@ -12,15 +12,16 @@ module.exports = {
     module_selection_input: '//input[contains(@class,"pstaggerAddTagInput ")]',
     modules_search_button: '//*[@id="main-div"]//button[contains(@class,"search-button")]',
     configure_module_button: '//form[contains(@action, "action/configure/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-configure"]',
-    configure_module_theme_button: '//button[contains(@class,"module_action_menu_configure")]',
+    configure_module_theme_button: '//*[@data-tech-name="%moduleTechName"]//a[contains(@href,"configure/%moduleTechName")]',
     success_install_message: '//*[@id="importDropzone"]/div[3]/i',
     action_dropdown: '//div[@data-tech-name="%moduleTechName"]//button[contains(@class,"dropdown-toggle")]',
     uninstall_button: '//form[contains(@action, "action/uninstall/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-uninstall"]',
     uninstall_confirmation: '//*[@id="module-modal-confirm-prestafraud-uninstall"]//a[contains(@class,"module_action_modal_uninstall")]',
     built_in_module_span: '//*[@id="built-in_modules"]',
     installed_module_span: '//*[@id="installed_modules"]',
-    selection_search_button: '//*[@id="main-div"]//button[contains(@class,"search-button")]',
-    install_button: '//*[@id="modules-list-container-all"]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-install"]',
+    theme_module_span: '//*[@id="theme_modules"]',
+    selection_search_button: '//*[@id="module-search-button"]',
+    install_button: '//*[@id="modules-list-container-all"]//div[@data-tech-name="%moduleTechName"]//button',
     config_legend_adwords: '//*[@id="content"]//h4[contains(@class,"page-subtitle")]',
     uninstall_adwords_module: '//*[@id="module-modal-confirm-gadwords-uninstall"]//a[contains(@class,"module_action_modal_uninstall")]',
     more_option_button: '//*[@id="upgradeButtonBlock"]//input',
@@ -32,7 +33,7 @@ module.exports = {
     upgrade_button: '//*[@id="upgradeNow"]',
     loader_tag: '//*[@id="pleaseWait" and contains(@style,"display: none;")]',
     upgrade_block: '//*[@id="upgradeButtonBlock"]',
-    refresh_button: '//*[@id="upgradeButtonBlock"]/div/p[2]/a',
+    refresh_button: '(//*[@id="upgradeButtonBlock"]//a)[2]',
     module_import_success: '//*[@id="importDropzone"]/div[3]/p[1]',
     config_legend: '//*[@id="content"]//ul[contains(@class, "breadcrumb")]/li[text()="%moduleTechName"]',
     uninstall_module_modal: '//a[contains(@class,"module_action_modal_uninstall")]',
@@ -52,6 +53,7 @@ module.exports = {
     reset_button_modal: '//*[@id="module-modal-confirm-%moduleTechName-reset"]//a[contains(@class, "module_action_modal_reset")]',
     backdrop_modale:'//div[contains(@class, "fade show")]',
     installed_module_div: '//div[@data-tech-name="%moduleTechName"]',
+    module_action_href: '(//div[@data-tech-name="%moduleTechName"]//div[contains(@class,"module-actions")]/a) |  (//div[@data-tech-name="%moduleTechName"]//form/button[@data-confirm_modal="module-modal-confirm-%moduleTechName-enable"])',
     //List of modules after search
     list_module: '//*[@id="modules-list-container-all"]/div[%I]',
     modules_number: '[class="module-sorting-search-wording"]',
@@ -89,6 +91,8 @@ module.exports = {
       send_confirmation_email_button: '//*[@id="fieldset_0"]//label[@for="CONTACTFORM_SEND_CONFIRMATION_EMAIL_%S"]',
       receive_customers_messages_label: '//*[@id="fieldset_0"]//label[@for="CONTACTFORM_SEND_NOTIFICATION_EMAIL_%S"]',
       save_button: '//*[@id="module_form_submit_btn"]'
-    }
+    },
+    see_more_link: '//*[@id="main-div"]//button[contains(@class,"see-more")]',
+    configure_link: '(//*[@id="main-div"]//div[@data-tech-name="%moduleTechName"]//a[contains(@href,"/action/configure")])',
   }
 };

@@ -165,7 +165,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
      */
     public function processInstallDefaultData()
     {
-        // @todo remove true in populateDatabase for 1.5.0 RC version
+        /** @todo remove true in populateDatabase for 1.5.0 RC version */
         $result = $this->model_install->installDefaultData($this->session->shop_name, $this->session->shop_country, false, true);
 
         $this->model_install->installCldrDatas();
@@ -352,7 +352,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             'iso_country' => $this->session->shop_country,
             'email' => $this->session->admin_email,
             'shop_url' => Tools::getHttpHost(),
-            'version' => _PS_INSTALL_VERSION_
+            'version' => _PS_INSTALL_VERSION_,
         );
 
         if ($lowMemory) {

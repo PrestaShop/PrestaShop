@@ -132,7 +132,6 @@
             line-height: 24px;
             text-align: left;
             visibility: visible;
-            white-space: nowrap;
         }
 
         .serp-description {

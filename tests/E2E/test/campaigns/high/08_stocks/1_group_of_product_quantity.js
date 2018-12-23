@@ -4,6 +4,7 @@ const {Movement} = require('../../../selectors/BO/catalogpage/stocksubmenu/movem
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const common_scenarios = require('../../common_scenarios/product');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 let productData = [{
@@ -25,7 +26,7 @@ scenario('Modify quantity and check the movement of a group of product', client 
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'stocks');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createProduct(AddProductPage, productData[0]);
   common_scenarios.createProduct(AddProductPage, productData[1]);
 
@@ -34,8 +35,9 @@ scenario('Modify quantity and check the movement of a group of product', client 
       return promise
 
         .then(() => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu))
-        .then(() => client.pause(3000))
+        .then(() => client.pause(5000))
         .then(() => client.isVisible(Stock.sort_product_icon, 2000))
+        .then(() => client.pause(5000))
         .then(() => {
           if (global.isVisible) {
             client.waitForVisibleAndClick(Stock.sort_product_icon);
@@ -50,8 +52,6 @@ scenario('Modify quantity and check the movement of a group of product', client 
     test('should verify the new "Quantity" and "Type" of the two changed products', () => {
       return promise
         .then(() => client.pause(2000))
-        .then(() => client.getTextInVar(Movement.time_movement.replace('%P', 2), 'firstMovementDate'))
-        .then(() => client.getTextInVar(Movement.time_movement.replace('%P', 1), 'secondMovementDate'))
         .then(() => client.checkOrderMovement(Movement, client));
     });
   }, 'stocks');

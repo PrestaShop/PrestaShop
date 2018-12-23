@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Class GridPresenter is responsible for presenting grid.
@@ -55,10 +57,10 @@ final class GridPresenter implements GridPresenterInterface
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
         $presentedGrid = [
-            'id' => strtolower($definition->getId()),
+            'id' => $definition->getId(),
             'name' => $definition->getName(),
             'filter_form' => $grid->getFilterForm()->createView(),
-            'columns' => $definition->getColumns()->toArray(),
+            'columns' => $this->getColumns($grid),
             'column_filters' => $this->getColumnFilters($definition),
             'actions' => [
                 'grid' => $definition->getGridActions()->toArray(),
@@ -85,6 +87,52 @@ final class GridPresenter implements GridPresenterInterface
         ]);
 
         return $presentedGrid;
+    }
+
+    /**
+     * Returns the columns formatted as array, adds an additional position handle
+     * column when needed.
+     *
+     * @param GridInterface $grid
+     *
+     * @return array
+     */
+    private function getColumns(GridInterface $grid)
+    {
+        $columns = $grid->getDefinition()->getColumns()->toArray();
+
+        $positionColumn = $this->getOrderingPosition($grid);
+        if (null !== $positionColumn) {
+            array_unshift($columns, [
+                'id' => $positionColumn->getId(),
+                'name' => $positionColumn->getName(),
+                'type' => 'position_handle',
+                'options' => $positionColumn->getOptions(),
+            ]);
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @param GridInterface $grid
+     *
+     * @return ColumnInterface|null
+     */
+    public function getOrderingPosition(GridInterface $grid)
+    {
+        $searchCriteria = $grid->getSearchCriteria();
+        /** @var ColumnInterface $column */
+        foreach ($grid->getDefinition()->getColumns() as $column) {
+            if ($column instanceof PositionColumn &&
+                strtolower($column->getId()) == strtolower($searchCriteria->getOrderBy()) &&
+                'asc' == strtolower($searchCriteria->getOrderWay())
+            ) {
+                return $column;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -1,0 +1,82 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Admin.Shopparameters.Feature" %}
+
+{% block content %}
+  {% set isGridDisplayed = not (isShopFeatureActive and not isShopContext) %}
+  <div class="row">
+    <div class="col-sm">
+      {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/meta_showcase_card.html.twig' %}
+    </div>
+  </div>
+  {% if not isGridDisplayed %}
+      <div class="row">
+        <div class="col-sm">
+          <div class="alert alert-info" role="alert">
+            <div class="alert-text">
+              {{ 'You can only display the page list in a shop context.'|trans({}, 'Admin.Shopparameters.Notification') }}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="row">
+        <div class="col">
+          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
+        </div>
+      </div>
+  {% endif %}
+
+  <div class="row justify-content-center">
+      <div class="col">
+        {{ form_start(metaForm, {'action': path('admin_metas_save_options')}) }}
+
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/shop_urls_configuration.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/domain_name_management.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/url_schema_configuration.html.twig' %}
+
+        {% block meta_form_rest %}
+          {{ form_rest(metaForm) }}
+        {% endblock %}
+
+        {{ form_end(metaForm) }}
+
+        {{ form_start(robotsForm, {'action': path('admin_metas_generate_robots_file')}) }}
+          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig' %}
+          {{ form_rest(metaForm) }}
+        {{ form_end(robotsForm) }}
+      </div>
+  </div>
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/meta.bundle.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+{% endblock %}

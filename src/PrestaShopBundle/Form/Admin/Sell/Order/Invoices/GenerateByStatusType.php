@@ -69,8 +69,7 @@ class GenerateByStatusType extends CommonAbstractType
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => $this->orderStateChoiceProvider->getChoices(),
-            ])
-        ;
+            ]);
     }
 
     /**

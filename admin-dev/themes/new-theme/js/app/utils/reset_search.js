@@ -30,8 +30,7 @@
 const $ = global.$;
 
 const init = function resetSearch(url, redirectUrl) {
-    $.post(url);
-    window.location.assign(redirectUrl);
+    $.post(url).then(() => window.location.assign(redirectUrl));
 };
 
 export default init;

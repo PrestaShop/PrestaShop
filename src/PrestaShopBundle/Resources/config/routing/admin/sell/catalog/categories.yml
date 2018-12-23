@@ -50,18 +50,41 @@ admin_category_process_delete:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processDelete
         _legacy_controller: AdminCategories
 
-admin_category_edit:
-    path: /edit/{categoryId}
-    methods: [GET]
-    defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:edit
-        _legacy_controller: AdminCategories
-    requirements:
-        categoryId: \d+
-
 admin_category_export:
     path: /export
     methods: [GET]
     defaults:
       _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:export
       _legacy_controller: AdminCategories
+
+admin_category_add:
+    path: /new
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:add
+        _legacy_controller: AdminCategories
+
+admin_category_add_root:
+    path: /new-root
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:addRoot
+        _legacy_controller: AdminCategories
+
+admin_category_edit:
+    path: /{categoryId}/edit
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:edit
+        _legacy_controller: AdminCategories
+    requirements:
+        categoryId: \d+
+
+admin_category_edit_root:
+    path: /{categoryId}/edit-root
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:editRoot
+        _legacy_controller: AdminCategories
+    requirements:
+        categoryId: \d+

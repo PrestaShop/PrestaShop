@@ -2,6 +2,9 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {ProductList} = require('../../../selectors/BO/add_product_page');
+const welcomeScenarios = require('../../common_scenarios/welcome');
+global.isPagination = false;
+
 let promise = Promise.resolve();
 
 scenario('Catalog bulk action', () => {
@@ -10,7 +13,7 @@ scenario('Catalog bulk action', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'catalogbulkaction');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Disable the product list', client => {
     test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "Select all" radio button', () => client.selectAllProducts(CatalogPage.select_all_product_button));
@@ -23,7 +26,7 @@ scenario('Catalog bulk action', () => {
     test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct(s) successfully deactivated.'));
     test('should get the products page number', () => client.getProductPageNumber('product_catalog_list'));
     test('should verify that all products statuses are disabled successfully', () => {
-      for (let j = 0; j < global.productsPageNumber; j++) {
+      for (let j = 0; j < global.productsNumber; j++) {
         promise = client.getProductStatus(CatalogPage.product_status_icon.replace('%S', j + 1), j);
         promise = client.pause(2000);
       }
@@ -43,12 +46,12 @@ scenario('Catalog bulk action', () => {
     test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct(s) successfully activated.'));
     test('should get the products page number', () => client.getProductPageNumber('product_catalog_list'));
     test('should verify that all products statuses are enabled successfully', () => {
-      for (let j = 0; j < global.productsPageNumber; j++) {
+      for (let j = 0; j < global.productsNumber; j++) {
         promise = client.getProductStatus(CatalogPage.product_status_icon.replace('%S', j + 1), j);
         promise = client.pause(2000);
       }
       return promise
-        .then(() => expect(global.productStatus).to.not.include("clear"));
+        .then(() => expect(global.productStatus).to.not.include('clear'));
     });
   }, 'catalogbulkaction');
 
@@ -56,6 +59,11 @@ scenario('Catalog bulk action', () => {
     test('should click on "Select all" radio button', () => {
       return promise
         .then(() => client.isVisible(ProductList.pagination_products))
+        .then(() => {
+          if (global.isVisible) {
+            global.isPagination = true;
+          }
+        })
         .then(() => client.getProductsNumber(ProductList.pagination_products))
         .then(() => client.selectAllProducts(CatalogPage.select_all_product_button));
     });
@@ -69,18 +77,23 @@ scenario('Catalog bulk action', () => {
     test('should check that the products were duplicated', () => {
       let number = typeof global.productsNumber !== 'undefined' ? parseInt(global.productsNumber) : 0;
       return promise
-        .then(() => client.getProductPageNumber('product_catalog_list'))
         .then(() => client.isVisible(ProductList.pagination_products))
-        .then(() =>{
-          if(global.isVisible){
-            return promise
-              .then(() => client.checkTextValue(ProductList.pagination_products, parseInt(global.productsNumber) + number, 'contain'));
+        .then(() => {
+          if (global.isVisible) {
+            if (global.isPagination) {
+              return promise
+                .then(() => client.checkTextValue(ProductList.pagination_products, parseInt(global.productsNumber) + 20, 'contain', 2000));
+
+            } else {
+              return promise
+                .then(() => client.checkTextValue(ProductList.pagination_products, parseInt(global.productsNumber) + number, 'contain', 2000));
+            }
           }
         });
     });
   }, 'catalogbulkaction');
 
-  scenario('Delete duplicated products list with bulk action', client => {
+  scenario('Delete duplicated products list with bulk action', () => {
     scenario('Abort the delete product action from the modal', client => {
       test('should set the search input to "copy" to search for the duplicated products', () => client.waitAndSetValue(CatalogPage.name_search_input, "copy"));
       test('should click on the "ENTER" key', () => client.keys('Enter'));
@@ -89,10 +102,10 @@ scenario('Catalog bulk action', () => {
       test('should click on the "Delete selection" button', () => client.waitForExistAndClick(CatalogPage.action_button.replace("%ID", 4)));
       test('should click on the "Close" button', () => client.waitForVisibleAndClick(CatalogPage.close_delete_modal));
       scenario('Check that duplicate products are not deleted', client => {
-        test('should set the search input to "copy" to search for the duplicated products', () => client.waitAndSetValue(CatalogPage.name_search_input, "copy"));
+        test('should set the search input to "copy" to search for the duplicated products', () => client.waitAndSetValue(CatalogPage.name_search_input, "copy", 2000));
         test('should click on the "ENTER" key', () => client.keys('Enter'));
-        test('should check the existence of the list of products', () => client.isNotExisting(CatalogPage.search_result_message));
-        test('should click on "Reset" button', () => client.waitForVisibleAndClick(CatalogPage.reset_button));
+        test('should check the existence of the list of products', () => client.isNotExisting(CatalogPage.search_result_message, 2000));
+        test('should click on "Reset" button', () => client.waitForVisibleAndClick(CatalogPage.reset_button, 2000));
       }, 'catalogbulkaction');
     }, 'catalogbulkaction');
 
@@ -117,7 +130,7 @@ scenario('Catalog bulk action', () => {
       scenario('Check that the duplicate product has been deleted', client => {
         test('should set the search input to "copy" to search for the duplicated products', () => client.waitAndSetValue(CatalogPage.name_search_input, "copy"));
         test('should click on the "ENTER" key', () => client.keys('Enter'));
-        test('should get a message indicates that no result found', () => client.checkTextValue(CatalogPage.search_result_message, 'There is no result for this search', "contain"));
+        test('should get a message indicates that no result found', () => client.checkTextValue(CatalogPage.search_result_message, 'There is no result for this search', "contain", 2000));
         test('should click on "Reset" button', () => client.waitForVisibleAndClick(CatalogPage.reset_button));
       }, 'catalogbulkaction');
     }, 'catalogbulkaction');

@@ -314,7 +314,7 @@ class HelperListCore extends Helper
                         $path_to_image = _PS_IMG_DIR_ . $params['image'] . '/' . Image::getImgFolderStatic($tr['id_image']) . (int) $tr['id_image'] . '.' . $this->imageType;
                     }
                     $this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table . '_mini_' . $item_id . '_' . $this->context->shop->id . '.' . $this->imageType, 45, $this->imageType);
-                } elseif (isset($params['icon']) && isset($tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default']))) {
+                } elseif (isset($params['icon'], $tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default']))) {
                     if (!$this->bootstrap) {
                         if (isset($params['icon'][$tr[$key]]) && is_array($params['icon'][$tr[$key]])) {
                             $this->_list[$index][$key] = array(
@@ -496,6 +496,7 @@ class HelperListCore extends Helper
                 if (!$redirectLegacy && $this->identifier == 'id_product') {
                     $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
                 }
+
                 break;
             default:
         }
@@ -543,6 +544,7 @@ class HelperListCore extends Helper
                 if (!$redirectLegacy && $this->identifier == 'id_product') {
                     $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
                 }
+
                 break;
             default:
         }
@@ -663,6 +665,7 @@ class HelperListCore extends Helper
                     if (isset($params['ajax']) && $params['ajax']) {
                         $ajax = true;
                     }
+
                     break;
 
                 case 'date':
@@ -680,6 +683,7 @@ class HelperListCore extends Helper
                     $params['name_date'] = $name;
 
                     $this->context->controller->addJqueryUI('ui.datepicker');
+
                     break;
 
                 case 'select':
@@ -690,6 +694,7 @@ class HelperListCore extends Helper
                             $this->fields_list[$key]['select'][$option_value]['selected'] = 'selected';
                         }
                     }
+
                     break;
 
                 case 'text':
@@ -712,6 +717,7 @@ class HelperListCore extends Helper
                 }
 
                 $has_value = true;
+
                 break;
             }
             if (!(isset($field['search']) && $field['search'] === false)) {

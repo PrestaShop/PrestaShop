@@ -88,8 +88,8 @@ class CMSCategoryCore extends ObjectModel
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
             'link_rewrite' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
             'description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
             'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
         ),
     );
@@ -636,7 +636,8 @@ class CMSCategoryCore extends ObjectModel
 
     public function updatePosition($way, $position)
     {
-        if (!$res = Db::getInstance()->executeS('
+        if (!$res = Db::getInstance()->executeS(
+            '
 			SELECT cp.`id_cms_category`, cp.`position`, cp.`id_parent`
 			FROM `' . _DB_PREFIX_ . 'cms_category` cp
 			WHERE cp.`id_parent` = ' . (int) $this->id_parent . '

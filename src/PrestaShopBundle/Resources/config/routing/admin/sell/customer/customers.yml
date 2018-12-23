@@ -1,0 +1,65 @@
+admin_customers_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:index
+    _legacy_controller: AdminCustomers
+
+admin_customers_index_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _legacy_controller: AdminCustomers
+    gridDefinitionFactoryService: prestashop.core.grid.definition.factory.customer
+    redirectRoute: admin_customers_index
+
+admin_customers_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:create
+    _legacy_controller: AdminCustomers
+
+admin_customers_edit:
+  path: /{customerId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:edit
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
+
+admin_customers_view:
+  path: /{customerId}/view
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:view
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
+
+admin_customers_save_private_note:
+  path: /{customerId}/save-private-note
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:savePrivateNote
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
+
+admin_customers_transform_guest_to_customer:
+  path: /{customerId}/transform-guest-to-customer
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:transformGuestToCustomer
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
+
+admin_customers_set_required_fields:
+  path: /set-required-fields
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:setRequiredFields
+    _legacy_controller: AdminCustomers

@@ -27,9 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Language\Pack;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
-use PrestaShop\PrestaShop\Adapter\Language\LanguagePackInstaller;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
 use PrestaShop\PrestaShop\Core\Language\Pack\Import\LanguagePackImporterInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
@@ -40,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
 final class LanguagePackImporter implements LanguagePackImporterInterface
 {
     /**
-     * @var LanguagePackInstaller
+     * @var LanguagePackInstallerInterface
      */
     private $languagePack;
 
@@ -50,9 +49,9 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     private $languageProvider;
 
     /**
-     * @var CacheClearer
+     * @var CacheClearerInterface
      */
-    private $cacheClearer;
+    private $entireCacheClearer;
 
     /**
      * @var string
@@ -62,18 +61,18 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     /**
      * @param LanguagePackInstallerInterface $languagePack
      * @param LanguageDataProvider $languageProvider
-     * @param CacheClearer $cacheClearer
+     * @param CacheClearerInterface $entireCacheClearer
      * @param string $translationsDir
      */
     public function __construct(
         LanguagePackInstallerInterface $languagePack,
         LanguageDataProvider $languageProvider,
-        CacheClearer $cacheClearer,
+        CacheClearerInterface $entireCacheClearer,
         $translationsDir
     ) {
         $this->languagePack = $languagePack;
         $this->languageProvider = $languageProvider;
-        $this->cacheClearer = $cacheClearer;
+        $this->entireCacheClearer = $entireCacheClearer;
         $this->translationsDir = $translationsDir;
     }
 
@@ -102,7 +101,7 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
      */
     private function updateCldr($isoCode)
     {
-        $this->cacheClearer->clearAllCaches();
+        $this->entireCacheClearer->clear();
 
         $languageCode = $this->languageProvider->getLanguageCodeByIso($isoCode);
         $languageCode = $this->getFormattedLanguageCode($languageCode);

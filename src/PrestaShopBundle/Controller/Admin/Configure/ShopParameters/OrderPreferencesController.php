@@ -84,7 +84,7 @@ class OrderPreferencesController extends FrameworkBundleAdminController
         )) {
             $this->addFlash(
                 'error',
-                $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error')
+                $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error')
             );
 
             return $this->redirectToRoute('admin_order_preferences');

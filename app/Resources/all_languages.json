@@ -62,6 +62,15 @@
     "language_code": "pt-br",
     "locale": "pt-BR"
   },
+  "bs": {
+    "name": "Bosanski (Bosnian)",
+    "iso_code": "bs",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "bs-ba",
+    "locale": "bs-BA"
+  },
   "bz": {
     "name": "Brezhoneg (Breton)",
     "iso_code": "bz",
@@ -197,6 +206,15 @@
     "language_code": "fi-fi",
     "locale": "fi-FI"
   },
+  "tl": {
+    "name": "Wikang Tagalog (Filipino)",
+    "iso_code": "tl",
+    "date_format_lite": "Y-d-m",
+    "date_format_full": "Y-d-m H:i:s",
+    "is_rtl": "0",
+    "language_code": "tl-ph",
+    "locale": "tl-PH"
+  },
   "fr": {
     "name": "Français (French)",
     "iso_code": "fr",
@@ -233,6 +251,15 @@
     "language_code": "gl-es",
     "locale": "gl-ES"
   },
+  "gu": {
+    "name": "ગુજરાતી (Gujarati)",
+    "iso_code": "gu",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "gu-in",
+    "locale": "gu-IN"
+  },
   "he": {
     "name": "עברית (Hebrew)",
     "iso_code": "he",
@@ -241,6 +268,15 @@
     "is_rtl": "1",
     "language_code": "he-il",
     "locale": "he-IL"
+  },
+  "hi": {
+    "name": "हिन्दी (Hindi)",
+    "iso_code": "hi",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "hi-in",
+    "locale": "hi-IN"
   },
   "hr": {
     "name": "Hrvatski (Croatian)",
@@ -592,6 +628,15 @@
     "is_rtl": "1",
     "language_code": "ur",
     "locale": "ur-PK"
+  },
+  "uz": {
+    "name": "Oʻzbek tili (Uzbek)",
+    "iso_code": "uz",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "uz-uz",
+    "locale": "uz-UZ"
   },
   "ve": {
     "name": "Español VE (Spanish)",

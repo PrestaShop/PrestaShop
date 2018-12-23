@@ -193,16 +193,14 @@
   }
   .module-actions {
     display: flex;
-    justify-content: center;
-    position: relative;
-    bottom: -25px;
+    justify-content: flex-end;
 
     .dropdown-menu {
       right: 10px;
       left: 10px;
     }
     .btn-group, .btn {
-        width: 100%;
+      width: 100%;
     }
   }
 }
@@ -649,7 +647,7 @@ form#importDropzone {
   display: none;
 }
 
-.form-action-button-container {
+.module-actions {
   // @toDo: move to ui kit
   .dropdown-toggle-split-text {
     color: #AEAEAE;

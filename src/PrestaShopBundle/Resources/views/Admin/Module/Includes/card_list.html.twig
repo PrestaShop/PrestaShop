@@ -102,10 +102,10 @@
               </label>
             </div>
           {% endif %}
-          {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module } %}
+          {% include '@PrestaShop/Admin/Module/Includes/action_menu.html.twig' with { 'module': module } %}
         </div>
-        {% include 'PrestaShopBundle:Admin/Module/Includes:modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
-        {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm.html.twig' with { 'module': module } %}
+        {% include '@PrestaShop/Admin/Module/Includes/modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
+        {% include '@PrestaShop/Admin/Module/Includes/modal_confirm.html.twig' with { 'module': module } %}
       </div>
     </div>
   </div>

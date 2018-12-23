@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Install;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 
 class Database extends AbstractInstall
 {
@@ -87,10 +87,12 @@ class Database extends AbstractInstall
                             $errors[] = $create_error;
                         }
                     }
+
                     break;
 
                 case 1:
                     $errors[] = $this->translator->trans('Database Server is not found. Please verify the login, password and server fields', array(), 'Install') . $dbtype;
+
                     break;
 
                 case 2:
@@ -100,6 +102,7 @@ class Database extends AbstractInstall
 						<script type="text/javascript">bindCreateDB();</script>';
                     }
                     $errors[] = $error;
+
                     break;
             }
         }

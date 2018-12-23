@@ -48,8 +48,7 @@ class IdentityControllerCore extends FrontController
             ->setAskForNewPassword(true)
             ->setAskForPassword($this->passwordRequired)
             ->setPasswordRequired($this->passwordRequired)
-            ->setPartnerOptinRequired($customer->isFieldRequired('optin'))
-        ;
+            ->setPartnerOptinRequired($customer->isFieldRequired('optin'));
 
         if (Tools::isSubmit('submitCreate')) {
             $customer_form->fillWith(Tools::getAllValues());

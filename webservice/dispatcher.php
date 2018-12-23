@@ -26,7 +26,7 @@
 
 ob_start();
 
-require_once(dirname(__FILE__).'/../config/config.inc.php');
+require_once dirname(__FILE__).'/../config/config.inc.php';
 
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();
@@ -56,12 +56,11 @@ if (isset($_SERVER['PHP_AUTH_USER'])) {
     die('401 Unauthorized');
 }
 
-
 $input_xml = null;
 
 // if a XML is in PUT or in POST
 if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POST')) {
-    $putresource = fopen("php://input", "r");
+    $putresource = fopen("php://input", "rb");
     while ($putData = fread($putresource, 1024)) {
         $input_xml .= $putData;
     }

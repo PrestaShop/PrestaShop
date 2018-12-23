@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
+use PrestaShop\PrestaShop\Core\Stock\StockManager;
 
 class OrderHistoryCore extends ObjectModel
 {
@@ -181,7 +181,7 @@ class OrderHistoryCore extends ObjectModel
                 }
             }
 
-            // @since 1.5.0 : gets the stock manager
+            /** @since 1.5.0 : gets the stock manager */
             $manager = null;
             if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                 $manager = StockManagerFactory::getManager();

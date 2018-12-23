@@ -32,17 +32,37 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
 class CategoryConstraintException extends CategoryException
 {
     /**
-     * Code is used when Category status is created with invalid value.
+     * Code is used when category does not have name.
      */
-    const INVALID_STATUS = 10;
+    const EMPTY_NAME = 1;
 
     /**
-     * Code is used when Category delete mode is created with invalid value.
+     * Code is used when category does not have link rewrite.
      */
-    const INVALID_DELETE_MODE = 20;
+    const EMPTY_LINK_REWRITE = 2;
 
     /**
-     * Code is used when bulk delete command is dispatched without any data.
+     * Code is used when invalid status is set to category.
      */
-    const EMPTY_BULK_DELETE_DATA = 30;
+    const INVALID_STATUS = 4;
+
+    /**
+     * Code is used when invalid parent id is supplied.
+     */
+    const INVALID_PARENT_ID = 6;
+
+    /**
+     * Code is used when too many menu thumbnails is being set for category.
+     */
+    const TOO_MANY_MENU_THUMBNAILS = 8;
+
+    /**
+     * Code is used when category's parent is same category itself.
+     */
+    const CANNOT_BE_PARENT_OF_ITSELF = 10;
+
+    /**
+     * Code is used when bulk delete data is empty
+     */
+    const EMPTY_BULK_DELETE_DATA = 12;
 }

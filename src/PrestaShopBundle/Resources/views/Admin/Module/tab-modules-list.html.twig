@@ -50,7 +50,7 @@
   <div class="tab-pane active" id="tab_modules_list_not_installed">
     <table id="tab_modules_list_not_installed" class="table">
       {% for module in modulesList.notInstalled %}
-        {{ include('PrestaShopBundle:Admin/Module/Includes:tab-module-line.html.twig',{'module': module}) }}
+        {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': module}) }}
       {% endfor %}
     </table>
   </div>
@@ -59,7 +59,7 @@
   <div class="tab-pane {% if modulesList.notInstalled|length == 0 %}active{% endif %}" id="tab_modules_list_installed">
     <table id="tab_modules_list_installed" class="table">
       {% for module in modulesList.installed %}
-        {{ include('PrestaShopBundle:Admin/Module/Includes:tab-module-line.html.twig',{'module': module}) }}
+        {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': module}) }}
       {% endfor %}
     </table>
   </div>
@@ -75,4 +75,3 @@
 {% if modulesListShouldBeDisplayed == true %}
   <script src="{{ asset('themes/new-theme/public/module_card.bundle.js') }}"></script>
 {% endif %}
-

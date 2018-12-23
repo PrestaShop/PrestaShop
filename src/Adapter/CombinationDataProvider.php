@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Combination;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Tools as ToolsLegacy;
 use Product;
-use Combination;
+use Tools as ToolsLegacy;
 
 /**
  * This class will provide data from DB / ORM about product combination.

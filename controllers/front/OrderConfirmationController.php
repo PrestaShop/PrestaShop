@@ -129,7 +129,7 @@ class OrderConfirmationControllerCore extends FrontController
     /**
      * Check if an order is free and create it.
      */
-    private function checkFreeOrder()
+    protected function checkFreeOrder()
     {
         $cart = $this->context->cart;
         if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0) {
@@ -152,7 +152,10 @@ class OrderConfirmationControllerCore extends FrontController
             Configuration::get('PS_OS_PAYMENT'),
             0,
             $this->trans('Free order', array(), 'Admin.Orderscustomers.Feature'),
-            null, array(), null, false,
+            null,
+            array(),
+            null,
+            false,
             $cart->secure_key
         );
     }

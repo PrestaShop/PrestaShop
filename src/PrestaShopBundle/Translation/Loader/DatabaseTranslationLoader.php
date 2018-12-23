@@ -27,9 +27,9 @@
 
 namespace PrestaShopBundle\Translation\Loader;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
-use Doctrine\ORM\EntityManagerInterface;
 
 class DatabaseTranslationLoader implements LoaderInterface
 {
@@ -53,38 +53,32 @@ class DatabaseTranslationLoader implements LoaderInterface
         if (!array_key_exists($locale, $langs)) {
             $langs[$locale] = $this->entityManager
                 ->getRepository('PrestaShopBundle:Lang')
-                ->findOneByLocale($locale)
-            ;
+                ->findOneByLocale($locale);
         }
 
         $translationRepository = $this->entityManager
-            ->getRepository('PrestaShopBundle:Translation')
-        ;
+            ->getRepository('PrestaShopBundle:Translation');
 
         $queryBuilder = $translationRepository
             ->createQueryBuilder('t')
             ->where('t.lang =:lang')
-            ->setParameter('lang', $langs[$locale])
-        ;
+            ->setParameter('lang', $langs[$locale]);
 
         if (!is_null($theme)) {
             $queryBuilder
                 ->andWhere('t.theme = :theme')
-                ->setParameter('theme', $theme)
-            ;
+                ->setParameter('theme', $theme);
         } else {
             $queryBuilder->andWhere('t.theme IS NULL');
         }
 
         if ($domain !== '*') {
             $queryBuilder->andWhere('REGEXP(t.domain, :domain) = true')
-                ->setParameter('domain', $domain)
-            ;
+                ->setParameter('domain', $domain);
         }
 
         $translations = $queryBuilder->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
 
         $catalogue = new MessageCatalogue($locale);
 

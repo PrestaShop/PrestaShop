@@ -42,6 +42,6 @@ class HookDispatcher extends HookDispatcherAdapter
 {
     public function __construct()
     {
-        trigger_error('Deprecated since 1.7.5, to be removed in 1.8. Use PrestaShop\PrestaShop\Core\Hook\HookDispatcher instead.', E_USER_DEPRECATED);
+        @trigger_error('Deprecated since 1.7.5, to be removed in 1.8. Use PrestaShop\PrestaShop\Core\Hook\HookDispatcher instead.', E_USER_DEPRECATED);
     }
 }

@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Country;
 
-use Country;
 use Configuration;
+use Country;
 
 /**
  * This class will provide data from DB / ORM about Country.

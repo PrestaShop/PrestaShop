@@ -99,7 +99,7 @@ class StoreCore extends ObjectModel
             'longitude' => array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
             'phone' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
             'fax' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
-            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
+            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 255),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -143,7 +143,8 @@ class StoreCore extends ObjectModel
      */
     public static function getStores($idLang)
     {
-        $stores = Db::getInstance()->executeS('
+        $stores = Db::getInstance()->executeS(
+            '
             SELECT s.id_store AS `id`, s.*, sl.*
             FROM ' . _DB_PREFIX_ . 'store s
             ' . Shop::addSqlAssociation('store', 's') . '
@@ -194,7 +195,8 @@ class StoreCore extends ObjectModel
      */
     public static function storeExists($idStore)
     {
-        $row = Db::getInstance()->getRow('
+        $row = Db::getInstance()->getRow(
+            '
             SELECT `id_store`
             FROM ' . _DB_PREFIX_ . 'store a
             WHERE a.`id_store` = ' . (int) $idStore

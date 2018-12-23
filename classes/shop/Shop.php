@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2018 PrestaShop SA
@@ -354,6 +354,7 @@ class ShopCore extends ObjectModel
                     if ($row['main']) {
                         $is_main_uri = true;
                     }
+
                     break;
                 }
             }
@@ -369,7 +370,7 @@ class ShopCore extends ObjectModel
                         $redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
                         header('HTTP/1.0 ' . $redirect_code . ' ' . $redirect_header);
                         header('Cache-Control: no-cache');
-                        header('Location: http://' . $url);
+                        header('Location: ' . Tools::getShopProtocol() . $url);
                         exit;
                     }
                 }
@@ -441,7 +442,7 @@ class ShopCore extends ObjectModel
                 $redirect_code = ($redirect_type == 1 ? '302' : '301');
                 $redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
                 header('HTTP/1.0 ' . $redirect_code . ' ' . $redirect_header);
-                header('Location: http://' . $url);
+                header('Location: ' . Tools::getShopProtocol() . $url);
                 exit;
             } elseif (defined('_PS_ADMIN_DIR_') && empty($shop->physical_uri)) {
                 $shop_default = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
@@ -964,14 +965,17 @@ class ShopCore extends ObjectModel
             case self::CONTEXT_ALL:
                 self::$context_id_shop = null;
                 self::$context_id_shop_group = null;
+
                 break;
             case self::CONTEXT_GROUP:
                 self::$context_id_shop = null;
                 self::$context_id_shop_group = (int) $id;
+
                 break;
             case self::CONTEXT_SHOP:
                 self::$context_id_shop = (int) $id;
                 self::$context_id_shop_group = Shop::getGroupFromShop($id);
+
                 break;
             default:
                 throw new PrestaShopException('Unknown context for shop');

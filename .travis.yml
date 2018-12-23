@@ -32,7 +32,32 @@ env:
 matrix:
   include:
     - php: 7.2
-      env: EXTRA_DEPS=phpHigh EXTRA_TESTS=functional PRESTASHOP_TEST_TYPE=unit
+      env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
+    - php: 7.2
+      env: PRESTASHOP_TEST_TYPE=e2e EXTRA_TESTS=functional
+    - stage: deploy
+      php: 7.2
+      before_install: skip
+      script:
+        - mkdir -p /tmp/ps-release
+        - php tools/build/CreateRelease.php --destination-dir=/tmp/ps-release
+        - cd /tmp/ps-release
+          && today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$TRAVIS_BRANCH-$i; done
+          && cd -
+      if: type = cron
+      deploy:
+        provider: gcs
+        access_key_id: $GCS_ACCESS_KEY
+        secret_access_key: $GCS_ACCESS_SECRET
+        bucket: prestashop-core-nightly
+        skip_cleanup: true
+        acl: public-read
+        local-dir: "/tmp/ps-release"
+        on:
+          all_branches: true
+  exclude:
+    - php: 7.2 # Replaced with additional tests
+      env: PRESTASHOP_TEST_TYPE=e2e
 
 before_install:
   # Avoid Composer authentication issues
@@ -42,7 +67,7 @@ before_install:
   - bash travis-scripts/setup-apache.sh
 
   # PrestaShop configuration
-  - cp tests/parameters.yml.travis app/config/parameters.yml
+  - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
 
 notifications:
@@ -57,15 +82,16 @@ script:
 
   - bash travis-scripts/install-prestashop
   - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
-        bash tests/check_file_syntax.sh;
+        bash tests-legacy/check_file_syntax.sh;
     fi
 
   - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
-        bash tests/check_phpunit.sh;
+        bash tests-legacy/check_phpunit.sh;
+        bash tests/check_unit.sh;
     fi
 
   - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
-        bash tests/check_e2e.sh;
+        bash tests-legacy/check_e2e.sh;
     fi
 
 after_script:

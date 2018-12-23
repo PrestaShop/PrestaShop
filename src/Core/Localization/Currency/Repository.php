@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 use PrestaShop\PrestaShop\Core\Localization\Currency;
-use PrestaShop\PrestaShop\Core\Localization\Currency\RepositoryInterface as CurrencyRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataRepositoryInterface as CurrencyDataRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Localization\Currency\RepositoryInterface as CurrencyRepositoryInterface;
 
 /**
  * Currency repository class.

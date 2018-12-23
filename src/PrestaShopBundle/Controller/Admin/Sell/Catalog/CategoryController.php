@@ -26,21 +26,32 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DisableCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EnableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Group\DefaultGroups;
+use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType;
+use PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -87,6 +98,359 @@ class CategoryController extends FrameworkBundleAdminController
             'currentCategoryView' => $categoryViewData,
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
         ]);
+    }
+
+    /**
+     * Show "Add new" form and handle form submit.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function addAction(Request $request)
+    {
+        /** @var DefaultGroups $defaultGroups */
+        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+
+        $emptyCategoryData = [
+            'group_association' => [
+                $defaultGroups->getVisitorsGroup()->getGroupId()->getValue(),
+                $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
+                $defaultGroups->getCustomersGroup()->getGroupId()->getValue(),
+            ],
+            'shop_association' => [
+                $this->getContextShopId(),
+            ],
+        ];
+
+        $categoryAddForm = $this->createForm(CategoryType::class, $emptyCategoryData);
+        $categoryAddForm->handleRequest($request);
+
+        if ($categoryAddForm->isSubmitted()) {
+            $data = $categoryAddForm->getData();
+
+            try {
+                $command = new AddCategoryCommand(
+                    $data['name'],
+                    $data['link_rewrite'],
+                    (bool) $data['active'],
+                    (int) $data['id_parent']
+                );
+                $this->populateCommandWithFormData($command, $data);
+
+                $this->getCommandBus()->handle($command);
+
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_category_add');
+            } catch (CategoryException $e) {
+                $this->addFlash('error', $this->handleAddException($e));
+            }
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
+            'categoryForm' => $categoryAddForm->createView(),
+            'defaultGroups' => $defaultGroups,
+        ]);
+    }
+
+    /**
+     * Show "Add new root category" page & process adding.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function addRootAction(Request $request)
+    {
+        /** @var DefaultGroups $defaultGroups */
+        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+
+        $emptyCategoryData = [
+            'group_association' => [
+                $defaultGroups->getVisitorsGroup()->getGroupId()->getValue(),
+                $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
+                $defaultGroups->getCustomersGroup()->getGroupId()->getValue(),
+            ],
+            'shop_association' => [
+                $this->getContextShopId(),
+            ],
+        ];
+
+        $rootCategoryForm = $this->createForm(RootCategoryType::class, $emptyCategoryData);
+        $rootCategoryForm->handleRequest($request);
+
+        if ($rootCategoryForm->isSubmitted()) {
+            $data = $rootCategoryForm->getData();
+
+            try {
+                $command = new AddRootCategoryCommand(
+                    $data['name'],
+                    $data['link_rewrite'],
+                    $data['active']
+                );
+                $this->populateCommandWithFormData($command, $data);
+
+                $this->getCommandBus()->handle($command);
+
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_category_add');
+            } catch (CategoryException $e) {
+                $this->addFlash('error', $this->handleAddException($e));
+            }
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
+            'rootCategoryForm' => $rootCategoryForm->createView(),
+            'defaultGroups' => $defaultGroups,
+        ]);
+    }
+
+    /**
+     * Show & process category editing.
+     *
+     * @param int $categoryId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction($categoryId, Request $request)
+    {
+        $categoryId = new CategoryId((int) $categoryId);
+
+        /** @var EditableCategory $editableCategory */
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+
+        if ($editableCategory->isRootCategory()) {
+            return $this->redirectToRoute('admin_category_edit_root', ['categoryId' => $categoryId->getValue()]);
+        }
+
+        $categoryFormOptions = [
+            'id_category' => $categoryId->getValue(),
+        ];
+
+        $categoryFormData = [
+            'name' => $editableCategory->getName(),
+            'active' => $editableCategory->isActive(),
+            'id_parent' => $editableCategory->getParentId(),
+            'description' => $editableCategory->getDescription(),
+            'meta_title' => $editableCategory->getMetaTitle(),
+            'meta_description' => $editableCategory->getMetaDescription(),
+            'meta_keyword' => $editableCategory->getMetaKeywords(),
+            'link_rewrite' => $editableCategory->getLinkRewrite(),
+            'group_association' => $editableCategory->getGroupAssociationIds(),
+            'shop_association' => $editableCategory->getShopAssociationIds(),
+        ];
+
+        $categoryForm = $this->createForm(CategoryType::class, $categoryFormData, $categoryFormOptions);
+        $categoryForm->handleRequest($request);
+
+        if ($categoryForm->isSubmitted()) {
+            $data = $categoryForm->getData();
+
+            try {
+                $command = new EditCategoryCommand($categoryId);
+
+                $this->populateCommandWithFormData($command, $data);
+
+                if (null !== $data['id_parent']) {
+                    $command->setParentCategoryId($data['id_parent']);
+                }
+
+                $this->getCommandBus()->handle($command);
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_category_add');
+            } catch (CategoryException $e) {
+                $this->addFlash('error', $this->handleEditException($e));
+            }
+        }
+
+        /** @var DefaultGroups $defaultGroups */
+        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
+            'contextLangId' => $this->getContextLangId(),
+            'editCategoryForm' => $categoryForm->createView(),
+            'editableCategory' => $editableCategory,
+            'defaultGroups' => $defaultGroups,
+        ]);
+    }
+
+    /**
+     * Show and process category editing.
+     *
+     * @param int $categoryId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editRootAction($categoryId, Request $request)
+    {
+        $categoryId = new CategoryId((int) $categoryId);
+
+        /** @var EditableCategory $editableCategory */
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+
+        if (!$editableCategory->isRootCategory()) {
+            return $this->redirectToRoute('admin_category_edit', ['categoryId' => $categoryId->getValue()]);
+        }
+
+        $rootCategoryForm = $this->createForm(RootCategoryType::class, [
+            'name' => $editableCategory->getName(),
+            'active' => $editableCategory->isActive(),
+            'description' => $editableCategory->getDescription(),
+            'meta_title' => $editableCategory->getMetaTitle(),
+            'meta_description' => $editableCategory->getMetaDescription(),
+            'meta_keyword' => $editableCategory->getMetaKeywords(),
+            'link_rewrite' => $editableCategory->getLinkRewrite(),
+            'group_association' => $editableCategory->getGroupAssociationIds(),
+            'shop_association' => $editableCategory->getShopAssociationIds(),
+        ]);
+        $rootCategoryForm->handleRequest($request);
+
+        if ($rootCategoryForm->isSubmitted()) {
+            $data = $rootCategoryForm->getData();
+
+            try {
+                $command = new EditRootCategoryCommand($categoryId);
+
+                $this->populateCommandWithFormData($command, $data);
+
+                $this->getCommandBus()->handle($command);
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_category_add');
+            } catch (CategoryException $e) {
+                $this->addFlash('error', $this->handleEditException($e));
+            }
+        }
+
+        /** @var DefaultGroups $defaultGroups */
+        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig', [
+            'contextLangId' => $this->getContextLangId(),
+            'editRootCategoryForm' => $rootCategoryForm->createView(),
+            'editableCategory' => $editableCategory,
+            'defaultGroups' => $defaultGroups,
+        ]);
+    }
+
+    /**
+     * @param AbstractCategoryCommand $command
+     * @param array $data
+     */
+    protected function populateCommandWithFormData(AbstractCategoryCommand $command, array $data)
+    {
+        if (null !== $data['description']) {
+            $command->setLocalizedDescriptions($data['description']);
+        }
+
+        if (null !== $data['meta_title']) {
+            $command->setLocalizedMetaTitles($data['meta_title']);
+        }
+
+        if (null !== $data['meta_description']) {
+            $command->setLocalizedMetaDescriptions($data['meta_description']);
+        }
+
+        if (null !== $data['meta_keyword']) {
+            $command->setLocalizedMetaKeywords($data['meta_keyword']);
+        }
+
+        if (null !== $data['group_association']) {
+            $command->setAssociatedGroupIds($data['group_association']);
+        }
+
+        if (null !== $data['shop_association']) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
+
+        if (null !== $data['cover_image']) {
+            $command->setCoverImage($data['cover_image']);
+        }
+
+        if (null !== $data['thumbnail_image']) {
+            $command->setThumbnailImage($data['thumbnail_image']);
+        }
+
+        if (null !== $data['menu_thumbnail_images']) {
+            $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
+        }
+    }
+
+    /**
+     * @param CategoryException $exception
+     *
+     * @return string User friendly error message for exception
+     */
+    protected function handleAddException(CategoryException $exception)
+    {
+        $type = get_class($exception);
+
+        if (CategoryConstraintException::class === $type) {
+            return $this->handleConstraintException($exception);
+        }
+
+        $errorMessagesForDisplay = [
+            CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($errorMessagesForDisplay[$type])) {
+            return $errorMessagesForDisplay[$type];
+        }
+
+        return $this->trans('An error occurred while creating an object.', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * @param CategoryException $exception
+     *
+     * @return string User friendly error message for exception
+     */
+    protected function handleEditException(CategoryException $exception)
+    {
+        $type = get_class($exception);
+
+        if (CategoryConstraintException::class === $type) {
+            return $this->handleConstraintException($exception);
+        }
+
+        $errorMessagesForDisplay = [
+            CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($errorMessagesForDisplay[$type])) {
+            return $errorMessagesForDisplay[$type];
+        }
+
+        return $this->trans('An error occurred while updating an object.', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * @param CategoryConstraintException $e
+     *
+     * @return string
+     */
+    protected function handleConstraintException(CategoryConstraintException $e)
+    {
+        $errorMessagesForDisplay = [
+            CategoryConstraintException::TOO_MANY_MENU_THUMBNAILS => sprintf(
+                '%s %s',
+                $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
+                $this->trans('You cannot upload more files', 'Admin.Notifications.Error')
+            ),
+        ];
+
+        if (isset($errorMessagesForDisplay[$e->getCode()])) {
+            return $errorMessagesForDisplay[$e->getCode()];
+        }
+
+        return $this->trans('Unexpected error occurred', 'Admin.Notifications.Error');
     }
 
     /**
@@ -284,23 +648,6 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show category for editing.
-     *
-     * @param int $categoryId
-     *
-     * @return Response
-     */
-    public function editAction($categoryId)
-    {
-        return $this->redirect(
-            $this->getAdminLink('AdminCategories', [
-                'id_category' => $categoryId,
-                'updatecategory' => 1,
-            ])
-        );
-    }
-
-    /**
      * Export filtered categories.
      *
      * @AdminSecurity(
@@ -342,8 +689,7 @@ class CategoryController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('category_' . date('Y-m-d_His') . '.csv')
-        ;
+            ->setFileName('category_' . date('Y-m-d_His') . '.csv');
     }
 
     /**

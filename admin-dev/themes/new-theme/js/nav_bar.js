@@ -75,6 +75,9 @@ export default class NavBar {
       $('.nav-bar').on('click', '.menu-collapse', function() {
         $('body').toggleClass('page-sidebar-closed');
 
+        $('.popover.show').remove();
+        $('.help-box[aria-describedby]').removeAttr('aria-describedby');
+
         if ($('body').hasClass('page-sidebar-closed')) {
           $('nav.nav-bar ul.main-menu > li')
               .removeClass('ul-open open')

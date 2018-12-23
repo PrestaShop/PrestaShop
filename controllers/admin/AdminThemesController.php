@@ -23,11 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
  * @property Theme $object
@@ -49,10 +49,10 @@ class AdminThemesControllerCore extends AdminController
     protected $theme_repository;
     protected $toolbar_scroll = false;
     protected $authAccesses = array();
-    private $img_error;
+    protected $img_error;
 
-    /* @var LogoUploader $logo_uploader */
-    private $logo_uploader;
+    /** @var LogoUploader $logo_uploader */
+    protected $logo_uploader;
 
     public function __construct()
     {
@@ -183,6 +183,7 @@ class AdminThemesControllerCore extends AdminController
         if ($this->display == 'list') {
             $this->display = '';
         }
+
         if (isset($this->display) && method_exists($this, 'render' . $this->display)) {
             $this->content .= $this->initPageHeaderToolbar();
 
@@ -268,28 +269,34 @@ class AdminThemesControllerCore extends AdminController
                 if (Tools::isSubmit('submitAddconfiguration')) {
                     $this->postProcessSubmitAddConfiguration();
                 }
+
                 break;
 
             case 'exporttheme':
                 if (false === $this->postProcessExportTheme()) {
                     return false;
                 }
+
                 break;
 
             case 'enableTheme':
                 $this->postProcessEnableTheme();
+
                 break;
 
             case 'deleteTheme':
                 $this->postProcessDeleteTheme();
+
                 break;
 
             case 'resetToDefaults':
                 $this->postProcessResetToDefaults();
+
                 break;
 
             case 'submitConfigureLayouts':
                 $this->postProcessSubmitConfigureLayouts();
+
                 break;
 
             // Main Theme page
@@ -407,16 +414,18 @@ class AdminThemesControllerCore extends AdminController
                     'logo' => $this->trans('Logo', array(), 'Admin.Global'),
                     'logo2' => $this->trans('Invoice & Email Logos', array(), 'Admin.Design.Feature'),
                     'icons' => $this->trans('Favicons', array(), 'Admin.Design.Feature'),
-                    ),
+                ),
                 'fields' => array(
                     'PS_LOGO' => array(
                         'title' => $this->trans('Header logo', array(), 'Admin.Design.Feature'),
-                        'hint' => $this->trans('Will appear on main page. Recommended size for the default theme: height %height% and width %width%.',
+                        'hint' => $this->trans(
+                            'Will appear on main page. Recommended size for the default theme: height %height% and width %width%.',
                             array(
                                 '%height%' => '40px',
                                 '%width%' => '200px',
                             ),
-                            'Admin.Design.Help'),
+                            'Admin.Design.Help'
+                        ),
                         'type' => 'file',
                         'name' => 'PS_LOGO',
                         'tab' => 'logo',
@@ -447,7 +456,7 @@ class AdminThemesControllerCore extends AdminController
                         'type' => 'file',
                         'name' => 'PS_FAVICON',
                         'tab' => 'icons',
-                        'thumb' => _PS_IMG_ . Configuration::get('PS_FAVICON') . (Tools::getValue('conf') ? sprintf('?%04d', rand(0, 9999)) : ''),
+                        'thumb' => _PS_IMG_ . Configuration::get('PS_FAVICON') . (Tools::getValue('conf') ? sprintf('?%04d', mt_rand(0, 9999)) : ''),
                     ),
                 ),
                 'after_tabs' => array(
@@ -511,6 +520,7 @@ class AdminThemesControllerCore extends AdminController
                         'type' => 'theme',
                         'themes' => $other_themes,
                         'can_display_themes' => $this->can_display_themes,
+                        'can_delete_themes' => $this->isDeleteGranted(),
                         'no_multishop_checkbox' => true,
                     ),
                 ),
@@ -575,9 +585,9 @@ class AdminThemesControllerCore extends AdminController
                     'submit' => array(
                         'id' => 'zip',
                         'title' => $this->trans('Save', array(), 'Admin.Actions'),
-                        ),
                     ),
-                );
+                ),
+            );
 
             $fields_form[1] = array(
                 'form' => array(
@@ -596,9 +606,9 @@ class AdminThemesControllerCore extends AdminController
                     ),
                     'submit' => array(
                         'title' => $this->trans('Save', array(), 'Admin.Actions'),
-                        ),
                     ),
-                );
+                ),
+            );
 
             $theme_archive_server = array();
             $files = scandir(_PS_ALL_THEMES_DIR_, SCANDIR_SORT_NONE);
@@ -635,9 +645,9 @@ class AdminThemesControllerCore extends AdminController
                     ),
                     'submit' => array(
                         'title' => $this->trans('Save', array(), 'Admin.Actions'),
-                        ),
                     ),
-                );
+                ),
+            );
         }
 
         $this->context->smarty->assign(
@@ -645,7 +655,7 @@ class AdminThemesControllerCore extends AdminController
                 'import_theme' => true,
                 'logged_on_addons' => $this->logged_on_addons,
                 'iso_code' => $this->context->language->iso_code,
-                )
+            )
             );
 
         $helper = new HelperForm();
@@ -695,7 +705,7 @@ class AdminThemesControllerCore extends AdminController
      *
      * @return mixed
      */
-    private function translateAttributes($attributes)
+    protected function translateAttributes($attributes)
     {
         if (!empty($attributes)) {
             foreach ($attributes as $key => &$layout) {

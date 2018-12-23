@@ -221,12 +221,30 @@ class AddressCore extends ObjectModel
         }
 
         if (!$this->isUsed()) {
+            $this->deleteCartAddress();
+
             return parent::delete();
         } else {
             $this->deleted = true;
 
             return $this->update();
         }
+    }
+
+    /**
+     * removes the address from carts using it, to avoid errors on not existing address
+     */
+    protected function deleteCartAddress()
+    {
+        // keep pending carts, but unlink it from current address
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
+                    SET id_address_delivery = 0
+                    WHERE id_address_delivery = ' . $this->id;
+        Db::getInstance()->execute($sql);
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
+                    SET id_address_invoice = 0
+                    WHERE id_address_invoice = ' . $this->id;
+        Db::getInstance()->execute($sql);
     }
 
     /**
@@ -406,7 +424,8 @@ class AddressCore extends ObjectModel
         }
         $cache_id = 'Address::getFirstCustomerAddressId_' . (int) $id_customer . '-' . (bool) $active;
         if (!Cache::isStored($cache_id)) {
-            $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
 				SELECT `id_address`
 				FROM `' . _DB_PREFIX_ . 'address`
 				WHERE `id_customer` = ' . (int) $id_customer . ' AND `deleted` = 0' . ($active ? ' AND `active` = 1' : '')

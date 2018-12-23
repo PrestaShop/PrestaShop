@@ -123,11 +123,15 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'title' => $this->trans('Beginning', array(), 'Admin.Catalog.Feature'),
                 'align' => 'right',
                 'type' => 'datetime',
+                'filter_key' => 'a!from',
+                'order_key' => 'a!from',
             ),
             'to' => array(
                 'title' => $this->trans('End', array(), 'Admin.Catalog.Feature'),
                 'align' => 'right',
                 'type' => 'datetime',
+                'filter_key' => 'a!to',
+                'order_key' => 'a!to',
             ),
         );
     }
@@ -282,9 +286,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'align' => 'center',
                     'options' => array(
                         'query' => array(
-                                        array('lab' => $this->trans('Tax included', array(), 'Admin.Global'), 'val' => 1),
-                                        array('lab' => $this->trans('Tax excluded', array(), 'Admin.Global'), 'val' => 0),
-                                    ),
+                            array('lab' => $this->trans('Tax included', array(), 'Admin.Global'), 'val' => 1),
+                            array('lab' => $this->trans('Tax excluded', array(), 'Admin.Global'), 'val' => 0),
+                        ),
                         'id' => 'val',
                         'name' => 'lab',
                     ),
@@ -341,7 +345,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
             'categories' => Category::getSimpleCategories((int) $this->context->language->id),
             'conditions' => $this->object->getConditions(),
             'is_multishop' => Shop::isFeatureActive(),
-            );
+        );
 
         return parent::renderForm();
     }

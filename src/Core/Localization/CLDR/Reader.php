@@ -410,6 +410,7 @@ class Reader implements ReaderInterface
                 ) {
                     $aliasNumSys = $matches[1];
                     $localeData->decimalPatterns[$numberSystem] = $localeData->decimalPatterns[$aliasNumSys];
+
                     continue;
                 }
             }
@@ -440,6 +441,7 @@ class Reader implements ReaderInterface
                 ) {
                     $aliasNumSys = $matches[1];
                     $localeData->percentPatterns[$numberSystem] = $localeData->percentPatterns[$aliasNumSys];
+
                     continue;
                 }
             }
@@ -471,6 +473,7 @@ class Reader implements ReaderInterface
                 ) {
                     $aliasNumSys = $matches[1];
                     $localeData->currencyPatterns[$numberSystem] = $localeData->currencyPatterns[$aliasNumSys];
+
                     continue;
                 }
             }

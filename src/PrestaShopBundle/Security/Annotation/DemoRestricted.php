@@ -57,6 +57,13 @@ class DemoRestricted extends ConfigurationAnnotation
     protected $redirectRoute;
 
     /**
+     * The route params which are used together to generate the redirect route.
+     *
+     * @var array
+     */
+    protected $redirectQueryParamsToKeep = [];
+
+    /**
      * @return string
      */
     public function getDomain()
@@ -122,5 +129,21 @@ class DemoRestricted extends ConfigurationAnnotation
     public function allowArray()
     {
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRedirectQueryParamsToKeep()
+    {
+        return $this->redirectQueryParamsToKeep;
+    }
+
+    /**
+     * @param array $redirectQueryParamsToKeep
+     */
+    public function setRedirectQueryParamsToKeep($redirectQueryParamsToKeep)
+    {
+        $this->redirectQueryParamsToKeep = $redirectQueryParamsToKeep;
     }
 }

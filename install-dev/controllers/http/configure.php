@@ -57,7 +57,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                     'method' => 'addMemberToNewsletter',
                     'language' => $this->language->getLanguageIso(),
                     'visitorType' => 1,
-                    'source' => 'installer'
+                    'source' => 'installer',
                 ));
                 Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
             }
@@ -210,6 +210,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                 $timezones[] = (string)$timezone['name'];
             }
         }
+
         return $timezones;
     }
 
@@ -232,6 +233,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                 $timezones[(string)$relation['iso']] = (string)$relation['zone'];
             }
         }
+
         return isset($timezones[$iso]) ? $timezones[$iso] : '';
     }
 

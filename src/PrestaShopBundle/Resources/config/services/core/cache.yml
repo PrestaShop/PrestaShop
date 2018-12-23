@@ -10,3 +10,12 @@ services:
           - { name: cache.pool, clearer: cache.default_clearer }
         calls:
           - ['setLogger', ['@logger']]
+
+    prestashop.core.cache.clearer.cache_clearer_chain:
+        class: 'PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerChain'
+        arguments:
+            - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+            - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
+            - '@prestashop.adapter.cache.clearer.xml_cache_clearer'
+            - '@prestashop.adapter.cache.clearer.media_cache_clearer'
+            - '@prestashop.adapter.cache.clearer.class_index_cache_clearer'

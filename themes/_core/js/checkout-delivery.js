@@ -24,6 +24,7 @@
  */
 import $ from 'jquery'
 import prestashop from 'prestashop'
+import { refreshCheckoutPage } from './common';
 
 export default function () {
   let $body = $('body');
@@ -40,6 +41,14 @@ export default function () {
 
     $.post($deliveryMethodForm.data('url-update'), requestData).then((resp) => {
       $(summarySelector).replaceWith(resp.preview);
+
+
+      if ($('.js-cart-payment-step-refresh').length) {
+        // we get the refresh flag : on payment step we need to refresh page to be sure
+        // amount is correctly updated on payment modules
+        refreshCheckoutPage();
+      }
+
       prestashop.emit('updatedDeliveryForm', {
         dataForm: $deliveryMethodForm.serializeArray(),
         deliveryOption: $newDeliveryOption,

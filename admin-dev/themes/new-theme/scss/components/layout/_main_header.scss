@@ -2,7 +2,7 @@ $header-text-color: #4e6167;
 
 .main-header {
   position: fixed;
-  z-index: 503;
+  z-index: 1040; // modal backdrop's z-index is 1050, so this must be just below that
   background: #ffffff;
   height: $size-header-height;
   width: 100%;

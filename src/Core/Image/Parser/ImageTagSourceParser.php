@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -59,7 +59,7 @@ final class ImageTagSourceParser implements ImageTagSourceParserInterface
             return null;
         }
 
-        preg_match('/src="([^"]+)"/', $imageTag, $path);
+        preg_match('/src="\/([^"]+)"/', $imageTag, $path);
 
         if (empty($path[1])) {
             return null;

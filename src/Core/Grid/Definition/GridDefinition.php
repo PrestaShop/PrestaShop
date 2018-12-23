@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidDataException;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
+use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidDataException;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 
 /**
  * Class Definition is responsible for storing grid definition (columns, row actions & etc.).

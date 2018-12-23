@@ -64,7 +64,7 @@
 					</div>
 					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$date_from|escape}" class="form-control">
 					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$date_to|escape}" class="form-control">
-					<input type="hidden" name="preselectDateRange" id="preselectDateRange" value="{if isset($preselect_date_range)}{$preselect_date_range}{/if}" class="form-control">
+					<input type="hidden" name="preselectDateRange" id="preselectDateRange" value="{if isset($preselect_date_range)}{$preselect_date_range|escape:'html'}{/if}" class="form-control">
 					<div class="form-group pull-right">
 						<button id="datepickerExpand" class="btn btn-default" type="button">
 							<i class="icon-calendar-empty"></i>
@@ -119,8 +119,8 @@
 						<dd>{l s="Enhance your store with templates & modules" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
-						<dt><a href="https://github.com/PrestaShop/PrestaShop/issues" class="_blank">{l s="Bug Tracker" d='Admin.Global'}</a></dt>
-						<dd>{l s="Report issues in the Bug Tracker" d='Admin.Dashboard.Feature'}</dd>
+						<dt><a href="https://github.com/PrestaShop/PrestaShop/issues" class="_blank">{l s="GitHub" d='Admin.Global'}</a></dt>
+						<dd>{l s="Report issues on GitHub" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
 						<dt><a href="http://www.prestashop.com/en/contact-us?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="Contact Us!" d='Admin.Dashboard.Feature'}</a></dt>

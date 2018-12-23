@@ -148,13 +148,20 @@ services:
             - 'LogsPage'
 
     prestashop.admin.import.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\ImportPageFormHandler'
         arguments:
             - '@prestashop.admin.import.form_builder'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.import.form_data_provider'
-            - []
             - 'ImportPage'
+
+    prestashop.admin.import_data_configuration.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormHandler'
+        arguments:
+            - '@prestashop.admin.import_data_configuration.form_builder'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.import_data_configuration.form_data_provider'
+            - 'ImportDataConfiguration'
 
     prestashop.adapter.order.delivery.slip.options.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
@@ -164,7 +171,7 @@ services:
             - '@prestashop.adapter.order.delivery.slip.options.form_provider'
             -
               'options': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsType'
-            - 'OrderDeliverySlipPage'
+            - 'OrderDeliverySlipOptions'
 
     prestashop.adapter.order.delivery.slip.pdf.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
@@ -174,7 +181,8 @@ services:
             - '@prestashop.adapter.order.delivery.slip.pdf.form_provider'
             -
               'pdf': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfType'
-            - 'OrderDeliverySlipPage'
+            - 'OrderDeliverySlipPdf'
+            - 'slip_pdf_form'
 
     prestashop.admin.geolocation.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
@@ -274,6 +282,7 @@ services:
               'shop_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
               'url_schema': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
             - 'MetaPage'
+            - 'meta_settings_form'
 
     prestashop.admin.employee_options.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
@@ -298,13 +307,3 @@ services:
         arguments:
             - '@prestashop.core.command_bus'
             - '@prestashop.core.query_bus'
-
-    prestashop.admin.import_data_configuration.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationFormHandler'
-        arguments:
-            - '@=service("form.factory").createBuilder()'
-            - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.import_data_configuration.data_provider'
-            -
-              'import_data_configuration': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationType'
-            - 'ImportDataConfiguration'

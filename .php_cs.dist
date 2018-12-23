@@ -24,6 +24,7 @@ return PhpCsFixer\Config::create()
         'function_to_constant' => false,
         'no_alias_functions' => false,
         'non_printable_character' => false,
+        'phpdoc_summary' => false,
         'phpdoc_align' => [
             'align' => 'left',
         ],
@@ -31,6 +32,7 @@ return PhpCsFixer\Config::create()
         'psr4' => false,
         'self_accessor' => false,
         'yoda_style' => null,
+        'non_printable_character' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache');

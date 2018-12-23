@@ -49,8 +49,7 @@ class GeolocationIpAddressWhitelistType extends AbstractType
                     'col' => 15,
                     'rows' => 30,
                 ],
-            ])
-        ;
+            ]);
 
         $builder->get('geolocation_whitelist')
             ->addModelTransformer(new CallbackTransformer(
@@ -60,7 +59,6 @@ class GeolocationIpAddressWhitelistType extends AbstractType
                 function ($ipWhitelistTextWithNewLines) {
                     return str_replace(["\r\n", "\r", "\n"], ';', $ipWhitelistTextWithNewLines);
                 }
-            ))
-        ;
+            ));
     }
 }

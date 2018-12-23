@@ -30,28 +30,30 @@
   module.attributes.urls,
   module.attributes.name
 %}
-<div class="module-actions">
+ <div class="btn-group module-actions"> 
   {% if url_active == 'buy' %}
     <a class="btn btn-primary btn-primary-reverse btn-block btn-outline-primary module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
       {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
     </a>
   {% elseif urls|length %}
-    {% include 'PrestaShopBundle:Admin/Module/Includes:action_button.html.twig' with {
+    {% include '@PrestaShop/Admin/Module/Includes/action_button.html.twig' with {
         'name': name,
-        'classes_form': 'btn-group',
+        'classes_form': 'btn-group form-action-button',
         'classes' : 'btn btn-primary-reverse btn-outline-primary',
         'url': urls[url_active],
         'action': url_active}
     %}
     {% if (urls|length > 1) %}
-        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {{ 'Other'|trans({}, 'Admin.Global') }}
+        <input type="hidden" class="btn" /> 
+        <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+          <span class="caret"></span> 
         </button>
+        <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span> 
         <div class="dropdown-menu">
           {% for module_action, module_url in urls %}
             {% if module_action != url_active %}
                 <li>
-                  {% include 'PrestaShopBundle:Admin/Module/Includes:action_button.html.twig' with {
+                  {% include '@PrestaShop/Admin/Module/Includes/action_button.html.twig' with {
                       'name': name,
                       'classes' : 'dropdown-item',
                       'url': module_url,

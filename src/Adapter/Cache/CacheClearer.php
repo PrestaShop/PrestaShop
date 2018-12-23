@@ -26,47 +26,110 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache;
 
-use Tools;
-use Media;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 
 /**
  * Class able to clear application caches.
+ *
+ * @internal
  */
 class CacheClearer
 {
     /**
+     * @var CacheClearerInterface
+     */
+    private $cacheClearerChain;
+
+    /**
+     * @var CacheClearerInterface
+     */
+    private $symfonyCacheClearer;
+
+    /**
+     * @var CacheClearerInterface
+     */
+    private $mediaCacheClearer;
+
+    /**
+     * @var CacheClearerInterface
+     */
+    private $smartyCacheClearer;
+
+    /**
+     * @param CacheClearerInterface $cacheClearerChain
+     * @param CacheClearerInterface $symfonyCacheClearer
+     * @param CacheClearerInterface $mediaCacheClearer
+     * @param CacheClearerInterface $smartyCacheClearer
+     */
+    public function __construct(
+        CacheClearerInterface $cacheClearerChain,
+        CacheClearerInterface $symfonyCacheClearer,
+        CacheClearerInterface $mediaCacheClearer,
+        CacheClearerInterface $smartyCacheClearer
+    ) {
+        $this->cacheClearerChain = $cacheClearerChain;
+        $this->symfonyCacheClearer = $symfonyCacheClearer;
+        $this->mediaCacheClearer = $mediaCacheClearer;
+        $this->smartyCacheClearer = $smartyCacheClearer;
+    }
+
+    /**
      * Clear all application caches.
+     *
+     * @deprecated since 1.7.6. Use CacheClearerChain instead.
      */
     public function clearAllCaches()
     {
-        $this->clearSymfonyCache();
-        $this->clearSmartyCache();
-        Tools::clearXMLCache();
-        $this->clearMediaCache();
-        Tools::generateIndex();
+        @trigger_error(
+            'Deprecated since 1.7.6, to be removed in 1.8. Use CacheClearerChain instead.',
+            E_USER_DEPRECATED
+        );
+
+        $this->cacheClearerChain->clear();
     }
 
     /**
      * Clear Symfony cache.
+     *
+     * @deprecated since 1.7.6. Use SymfonyCacheClearer instead.
      */
     public function clearSymfonyCache()
     {
-        Tools::clearSf2Cache();
+        @trigger_error(
+            'Deprecated since 1.7.6, to be removed in 1.8. Use SymfonyCacheClearer instead.',
+            E_USER_DEPRECATED
+        );
+
+        $this->symfonyCacheClearer->clear();
     }
 
     /**
      * Clear media cache only.
+     *
+     * @deprecated since 1.7.6. Use MediaCacheClearer instead.
      */
     public function clearMediaCache()
     {
-        Media::clearCache();
+        @trigger_error(
+            'Deprecated since 1.7.6, to be removed in 1.8. Use MediaCacheClearer instead.',
+            E_USER_DEPRECATED
+        );
+
+        $this->mediaCacheClearer->clear();
     }
 
     /**
      * Clear smarty cache only.
+     *
+     * @deprecated since 1.7.6. Use SmartyCacheClearer instead.
      */
     public function clearSmartyCache()
     {
-        Tools::clearSmartyCache();
+        @trigger_error(
+            'Deprecated since 1.7.6, to be removed in 1.8. Use SmartyCacheClearer instead.',
+            E_USER_DEPRECATED
+        );
+
+        $this->smartyCacheClearer->clear();
     }
 }

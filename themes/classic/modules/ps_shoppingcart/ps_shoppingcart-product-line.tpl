@@ -46,7 +46,7 @@
                                 <span>{$field.label}</span>
                                 {if $field.type == 'text'}
                                     <span>{$field.text nofilter}</span>
-                                {else if $field.type == 'image'}
+                                {elseif $field.type == 'image'}
                                     <img src="{$field.image.small.url}">
                                 {/if}
                             </li>

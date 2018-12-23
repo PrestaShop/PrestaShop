@@ -56,7 +56,7 @@ class ReferrerCore extends ObjectModel
         'primary' => 'id_referrer',
         'fields' => array(
             'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'size' => 32),
+            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'size' => 255),
             'http_referer_regexp' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
             'request_uri_regexp' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
             'http_referer_like' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
@@ -164,7 +164,7 @@ class ReferrerCore extends ObjectModel
 			LEFT JOIN ' . _DB_PREFIX_ . 'connections_page cp ON cp.id_connections = c.id_connections
 			' . $join . '
 			WHERE 1' .
-            ((isset($employee->stats_date_from) && isset($employee->stats_date_to)) ? ' AND cs.date_add BETWEEN \'' . pSQL($employee->stats_date_from) . ' 00:00:00\' AND \'' . pSQL($employee->stats_date_to) . ' 23:59:59\'' : '') .
+            ((isset($employee->stats_date_from, $employee->stats_date_to)) ? ' AND cs.date_add BETWEEN \'' . pSQL($employee->stats_date_from) . ' 00:00:00\' AND \'' . pSQL($employee->stats_date_to) . ' 23:59:59\'' : '') .
             Shop::addSqlRestriction(false, 'rs') .
             Shop::addSqlRestriction(false, 'c') .
             ' AND rc.id_referrer = ' . (int) $this->id .
@@ -265,7 +265,7 @@ class ReferrerCore extends ObjectModel
             }
 
             $sql .= ' FROM `' . _DB_PREFIX_ . 'orders`
-                WHERE `id_order` IN (' . implode($implode, ',') . ')
+                WHERE `id_order` IN (' . implode(',', $implode) . ')
                 ' . Shop::addSqlRestriction(Shop::SHARE_ORDER) . '
                 AND `valid` = 1';
 

@@ -24,16 +24,17 @@
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
+import { refreshCheckoutPage } from './common';
 
 $(document).ready(() => {
   prestashop.on('updateCart', (event) => {
     prestashop.cart = event.reason.cart;
     var getCartViewUrl = $('.js-cart').data('refresh-url');
-    
+
     if (!getCartViewUrl) {
       return;
     }
-    
+
     var requestData = {};
 
     if (event && event.reason) {
@@ -57,6 +58,12 @@ $(document).ready(() => {
         var $input = $(input);
         $input.attr('value', $input.val());
       });
+
+      if ($('.js-cart-payment-step-refresh').length) {
+        // we get the refresh flag : on payment step we need to refresh page to be sure
+        // amount is correctly updated on payment modules
+        refreshCheckoutPage();
+      }
 
       prestashop.emit('updatedCart', {eventType: 'updateCart', resp: resp});
     }).fail((resp) => {

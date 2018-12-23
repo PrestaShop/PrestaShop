@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Cldr;
 
-use Tools as ToolsLegacy;
 use Curl\Curl;
+use Tools as ToolsLegacy;
 use ZipArchive;
 
 /**
@@ -73,7 +73,7 @@ class Update extends Repository
     public function init()
     {
         if (!is_file($file = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'core.zip')) {
-            $fp = fopen($file, 'w');
+            $fp = fopen($file, 'wb');
 
             $curl = new Curl();
             $curl->setopt(CURLOPT_FILE, $fp);

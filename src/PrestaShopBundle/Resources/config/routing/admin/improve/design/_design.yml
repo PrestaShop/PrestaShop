@@ -5,3 +5,7 @@ _theme_catalog:
 _positions:
     resource: "positions.yml"
     prefix: /modules/positions
+
+_theme:
+    resource: "theme.yml"
+    prefix: /theme

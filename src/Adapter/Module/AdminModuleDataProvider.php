@@ -26,7 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Context;
 use Doctrine\Common\Cache\CacheProvider;
+use Employee;
+use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
@@ -35,9 +38,6 @@ use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
-use Module as LegacyModule;
-use Context;
-use Employee;
 use Tools;
 
 /**
@@ -167,7 +167,8 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     public function getAllModules()
     {
-        return LegacyModule::getModulesOnDisk(true,
+        return LegacyModule::getModulesOnDisk(
+            true,
             $this->addonsDataProvider->isAddonsAuthenticated(),
             (int) Context::getContext()->employee->id
         );
@@ -185,7 +186,8 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $this->applyModuleFilters(
-                $this->catalog_modules, $filters
+                $this->catalog_modules,
+            $filters
         );
     }
 
@@ -271,7 +273,7 @@ class AdminModuleDataProvider implements ModuleInterface
                         $urls['install'],
                         $urls['disable']
                     );
-                } elseif ($addon->attributes->getBoolean('is_configurable') && !empty($addon->attributes->get('warning'))) {
+                } elseif ($addon->attributes->getBoolean('is_configurable')) {
                     $url_active = 'configure';
                     unset(
                         $urls['enable'],
@@ -281,11 +283,9 @@ class AdminModuleDataProvider implements ModuleInterface
                     $url_active = 'disable';
                     unset(
                         $urls['install'],
-                        $urls['enable']
+                        $urls['enable'],
+                        $urls['configure']
                     );
-                    if (!$addon->attributes->getBoolean('is_configurable')) {
-                        unset($urls['configure']);
-                    }
                 }
 
                 if (!$addon->attributes->getBoolean('is_configurable')) {
@@ -392,10 +392,12 @@ class AdminModuleDataProvider implements ModuleInterface
                             }
                         }
                     }
+
                     break;
                 case 'name':
                     // exact given name (should return 0 or 1 result)
                     $search_result[] = $value;
+
                     break;
                 default:
                     // "the switch statement is considered a looping structure for the purposes of continue."
@@ -450,8 +452,7 @@ class AdminModuleDataProvider implements ModuleInterface
                         $addon->origin = $action;
                         $addon->origin_filter_value = $action_filter_value;
                         $addon->categoryParent = $this->categoriesProvider
-                            ->getParentCategory($addon->categoryName)
-                        ;
+                            ->getParentCategory($addon->categoryName);
                         if (isset($addon->version)) {
                             $addon->version_available = $addon->version;
                         }
@@ -464,14 +465,16 @@ class AdminModuleDataProvider implements ModuleInterface
                     }
                 }
 
-                $this->catalog_modules = $listAddons;
-                if ($this->cacheProvider) {
-                    $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                if (!empty($listAddons)) {
+                    $this->catalog_modules = $listAddons;
+                    if ($this->cacheProvider) {
+                        $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                    }
+                } else {
+                    $this->fallbackOnCatalogCache();
                 }
             } catch (\Exception $e) {
                 if (!$this->fallbackOnCatalogCache()) {
-                    $this->catalog_modules = array();
-                    $this->failed = true;
                     $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache. ', array('exception' => $e->getMessage()));
                 }
             }
@@ -481,7 +484,7 @@ class AdminModuleDataProvider implements ModuleInterface
     /**
      * If cache exists, get the Catalogue from the cache.
      *
-     * @return array|false|mixed
+     * @return array Module loaded from the cache
      */
     protected function fallbackOnCatalogCache()
     {
@@ -489,6 +492,12 @@ class AdminModuleDataProvider implements ModuleInterface
         if ($this->cacheProvider) {
             $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
         }
+
+        if (!$this->catalog_modules) {
+            $this->catalog_modules = array();
+        }
+
+        $this->failed = true;
 
         return $this->catalog_modules;
     }

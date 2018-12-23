@@ -94,19 +94,27 @@ class ConfigurationValidator
 
         list($fileCreationTestPath, $createFileResult) = $this->createFileTest($dirPath);
         if (false === $createFileResult) {
+            $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot write files'];
         }
 
         if (false === $this->downloadFileTest($dirPath)) {
+            $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot download files from network'];
         }
 
         list($fileMoveTestPath, $moveResult) = $this->moveFileTest($fileCreationTestPath);
         if (false === $moveResult) {
+            $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot move files into prestashop root directory'];
         }
 
         if (false === $this->deleteFileTest($fileMoveTestPath)) {
+            $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot delete files in prestashop root directory'];
         }
 
@@ -161,8 +169,7 @@ class ConfigurationValidator
     private function downloadFileTest($dirPath)
     {
         $downloadTestPath = $dirPath . DIRECTORY_SEPARATOR . 'test-download.txt';
-        // @todo: use another file from the network ?
-        $target = 'https://raw.githubusercontent.com/PrestaShop/PrestaShop/develop/robots.txt';
+        $target = 'https://www.google.com/robots.txt';
 
         return (bool) @file_put_contents($downloadTestPath, Download::fileGetContents($target));
     }

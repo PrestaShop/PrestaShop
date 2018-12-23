@@ -62,12 +62,12 @@ function smartyTranslate($params, $smarty)
     $htmlEntities = !isset($params['html']) && !isset($params['js']);
     $addSlashes = (isset($params['slashes']) || isset($params['js']));
     $isInPDF = isset($params['pdf']);
-    $isInModule = isset($params['mod']) && !empty($params['mod']);
+    $isInModule = !empty($params['mod']);
     $sprintf = array();
 
-    if (isset($params['sprintf']) && null !== $params['sprintf'] && !is_array($params['sprintf'])) {
+    if (isset($params['sprintf']) && !is_array($params['sprintf'])) {
         $sprintf = array($params['sprintf']);
-    } elseif ((isset($params['sprintf']) && null !== $params['sprintf'])) {
+    } elseif (isset($params['sprintf'])) {
         $sprintf = $params['sprintf'];
     }
 
@@ -75,7 +75,7 @@ function smartyTranslate($params, $smarty)
         $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
     }
 
-    if (isset($params['d']) && !empty($params['d'])) {
+    if (!empty($params['d'])) {
         if (isset($params['tags'])) {
             $backTrace = debug_backtrace();
 
@@ -114,14 +114,27 @@ function smartyTranslate($params, $smarty)
     }
 
     if ($isInPDF) {
-        return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s'], $sprintf), $params);
+        return Translate::smartyPostProcessTranslation(
+            Translate::getPdfTranslation(
+                $params['s'],
+                $sprintf
+            ),
+            $params
+        );
     }
-
-    $filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 
     // If the template is part of a module
     if ($isInModule) {
-        return Translate::smartyPostProcessTranslation(Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'), $sprintf, isset($params['js'])), $params);
+        return Translate::smartyPostProcessTranslation(
+            Translate::getModuleTranslation(
+                $params['mod'],
+                $params['s'],
+                basename($smarty->source->name, '.tpl'),
+                $sprintf,
+                isset($params['js'])
+            ),
+            $params
+        );
     }
 
     $translatedValue = $translator->trans($params['s'], $sprintf, null);

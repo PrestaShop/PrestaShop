@@ -42,21 +42,21 @@
     {% if topMenuData is defined %}
       <div class="col-md-4 module-top-menu-item">
         <h3>{{ 'Category' | trans({}, 'Admin.Catalog.Feature') }}</h3>
-        {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_categories.html.twig' with { 'topMenuData': topMenuData } %}
+        {% include '@PrestaShop/Admin/Module/Includes/dropdown_categories.html.twig' with { 'topMenuData': topMenuData } %}
       </div>
     {% endif %}
 
     {% if requireFilterStatus is defined and requireFilterStatus == true %}
       <div class="col-md-4 module-top-menu-item">
         <h3>{{ 'Status' | trans({}, 'Admin.Global') }}</h3>
-        {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_status.html.twig' %}
+        {% include '@PrestaShop/Admin/Module/Includes/dropdown_status.html.twig' %}
       </div>
     {% endif %}
 
     {% if level > constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') and bulkActions is defined %}
       <div class="col-md-4 module-top-menu-item disabled">
         <h3>{{ 'Bulk Actions'|trans({}, 'Admin.Global') }}</h3>
-        {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_bulk.html.twig' %}
+        {% include '@PrestaShop/Admin/Module/Includes/dropdown_bulk.html.twig' %}
       </div>
     {% endif %}
   </div>

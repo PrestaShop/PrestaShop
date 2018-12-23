@@ -4,7 +4,6 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "postinstall": "webpack --progress",
         "build": "webpack --bail --progress --mode production",
         "watch": "webpack --bail --progress --watch --mode development"
     },

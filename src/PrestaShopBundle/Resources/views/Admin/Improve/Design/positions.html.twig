@@ -154,7 +154,16 @@
 
                         <div class="module-column-actions">
                           <div class="btn-group">
-                            <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions') }}&amp;id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;editGraft{% if selectedModule %}&amp;show_modules={{ selectedModule }}{% endif %}">
+                            {% set linkParams = {
+                              'id_module': moduleInstance.id,
+                              'id_hook': hook['id_hook'],
+                              'editGraft': 1
+                            } %}
+                            {% if selectedModule %}
+                              {% set linkParams = linkParams|merge({'show_modules': selectedModule}) %}
+                            {% endif %}
+
+                            <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}">
                               <i class="material-icons">edit</i>
                               {{ 'Edit' | trans({}, 'Admin.Actions') }}
                             </a>
@@ -209,5 +218,6 @@
 {% endblock %}
 
 {% block javascripts %}
+  {{ parent() }}
   <script src="{{ asset('themes/new-theme/public/improve_design_positions.bundle.js') }}"></script>
 {% endblock %}

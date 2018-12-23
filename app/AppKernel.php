@@ -25,10 +25,10 @@
  */
 
 use Doctrine\DBAL\DriverManager;
-use Symfony\Component\HttpKernel\Kernel;
 use PrestaShopBundle\Kernel\ModuleRepository;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
@@ -168,7 +168,7 @@ class AppKernel extends Kernel
     private function getParameters()
     {
         if ($this->parametersFileExists()) {
-            $config = require($this->getParametersFile());
+            $config = require $this->getParametersFile();
 
             return $config['parameters'];
         }

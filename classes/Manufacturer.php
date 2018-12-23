@@ -80,8 +80,8 @@ class ManufacturerCore extends ObjectModel
             /* Lang fields */
             'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
             'short_description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
             'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
         ),
     );
@@ -216,7 +216,8 @@ class ManufacturerCore extends ObjectModel
                 $sqlGroups = (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1');
             }
 
-            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                '
 					SELECT  p.`id_manufacturer`, COUNT(DISTINCT p.`id_product`) as nb_products
 					FROM `' . _DB_PREFIX_ . 'product` p USE INDEX (product_manufacturer)
 					' . Shop::addSqlAssociation('product', 'p') . '
@@ -304,7 +305,8 @@ class ManufacturerCore extends ObjectModel
     public static function getNameById($idManufacturer)
     {
         if (!isset(self::$cacheName[$idManufacturer])) {
-            self::$cacheName[$idManufacturer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            self::$cacheName[$idManufacturer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
 				SELECT `name`
 				FROM `' . _DB_PREFIX_ . 'manufacturer`
 				WHERE `id_manufacturer` = ' . (int) $idManufacturer . '
@@ -324,7 +326,8 @@ class ManufacturerCore extends ObjectModel
      */
     public static function getIdByName($name)
     {
-        $result = Db::getInstance()->getRow('
+        $result = Db::getInstance()->getRow(
+            '
 			SELECT `id_manufacturer`
 			FROM `' . _DB_PREFIX_ . 'manufacturer`
 			WHERE `name` = \'' . pSQL($name) . '\''
@@ -535,7 +538,8 @@ class ManufacturerCore extends ObjectModel
      */
     public static function manufacturerExists($idManufacturer)
     {
-        $row = Db::getInstance()->getRow('
+        $row = Db::getInstance()->getRow(
+            '
 			SELECT `id_manufacturer`
 			FROM ' . _DB_PREFIX_ . 'manufacturer m
 			WHERE m.`id_manufacturer` = ' . (int) $idManufacturer
@@ -553,7 +557,8 @@ class ManufacturerCore extends ObjectModel
      */
     public function getAddresses($idLang)
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 			SELECT a.*, cl.name AS `country`, s.name AS `state`
 			FROM `' . _DB_PREFIX_ . 'address` AS a
 			LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` AS cl ON (
@@ -574,7 +579,8 @@ class ManufacturerCore extends ObjectModel
      */
     public function getWsAddresses()
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 			SELECT a.id_address as id
 			FROM `' . _DB_PREFIX_ . 'address` AS a
 			' . Shop::addSqlAssociation('manufacturer', 'a') . '
@@ -599,7 +605,8 @@ class ManufacturerCore extends ObjectModel
             $ids[] = (int) $id['id'];
         }
 
-        $result1 = (Db::getInstance()->execute('
+        $result1 = (
+            Db::getInstance()->execute('
 			UPDATE `' . _DB_PREFIX_ . 'address`
 			SET id_manufacturer = 0
 			WHERE id_manufacturer = ' . (int) $this->id . '
@@ -608,7 +615,8 @@ class ManufacturerCore extends ObjectModel
 
         $result2 = true;
         if (count($ids)) {
-            $result2 = (Db::getInstance()->execute('
+            $result2 = (
+                Db::getInstance()->execute('
 				UPDATE `' . _DB_PREFIX_ . 'address`
 				SET id_customer = 0, id_supplier = 0, id_manufacturer = ' . (int) $this->id . '
 				WHERE id_address IN(' . implode(',', $ids) . ')

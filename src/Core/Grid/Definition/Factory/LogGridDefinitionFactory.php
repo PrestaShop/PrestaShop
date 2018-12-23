@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Status\SeverityLevelColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -73,7 +73,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'Logs';
+        return 'logs';
     }
 
     /**
@@ -90,60 +90,68 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new DataColumn('id_log'))
-                ->setName($this->trans('ID', [], 'Global.Actions'))
+            ->add(
+                (new DataColumn('id_log'))
+                ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_log',
                 ])
             )
-            ->add((new EmployeeNameWithAvatarColumn('employee'))
+            ->add(
+                (new EmployeeNameWithAvatarColumn('employee'))
                 ->setName($this->trans('Employee', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'employee',
                 ])
             )
-            ->add((new SeverityLevelColumn('severity'))
+            ->add(
+                (new SeverityLevelColumn('severity'))
                 ->setName($this->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'with_message' => true,
                     'field' => 'severity',
                 ])
             )
-            ->add((new DataColumn('message'))
+            ->add(
+                (new DataColumn('message'))
                 ->setName($this->trans('Message', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'message',
                 ])
             )
-            ->add((new DataColumn('object_type'))
+            ->add(
+                (new DataColumn('object_type'))
                 ->setName($this->trans('Object type', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'field' => 'object_type',
                 ])
             )
-            ->add((new DataColumn('object_id'))
+            ->add(
+                (new DataColumn('object_id'))
                 ->setName($this->trans('Object ID', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'field' => 'object_id',
                 ])
             )
-            ->add((new DataColumn('error_code'))
+            ->add(
+                (new DataColumn('error_code'))
                 ->setName($this->trans('Error code', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'field' => 'error_code',
                 ])
             )
-            ->add((new DateTimeColumn('date_add'))
+            ->add(
+                (new DateTimeColumn('date_add'))
                 ->setName($this->trans('Date', [], 'Admin.Global'))
                 ->setOptions([
                     'format' => 'Y-m-d H:i',
                     'field' => 'date_add',
                 ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
-            )
-        ;
+            );
     }
 
     /**
@@ -152,55 +160,64 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     public function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_log', TextType::class))
+            ->add(
+                (new Filter('id_log', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('id_log')
             )
-            ->add((new Filter('employee', TextType::class))
+            ->add(
+                (new Filter('employee', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('employee')
             )
-            ->add((new Filter('severity', TextType::class))
+            ->add(
+                (new Filter('severity', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('severity')
             )
-            ->add((new Filter('message', TextType::class))
+            ->add(
+                (new Filter('message', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('message')
             )
-            ->add((new Filter('object_type', TextType::class))
+            ->add(
+                (new Filter('object_type', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('object_type')
             )
-            ->add((new Filter('object_id', TextType::class))
+            ->add(
+                (new Filter('object_id', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('object_id')
             )
-            ->add((new Filter('error_code', TextType::class))
+            ->add(
+                (new Filter('error_code', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('error_code')
             )
-            ->add((new Filter('date_add', DateRangeType::class))
+            ->add(
+                (new Filter('date_add', DateRangeType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('date_add')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
                     'attr' => [
                         'data-url' => $this->resetActionUrl,
@@ -208,8 +225,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ],
                 ])
                 ->setAssociatedColumn('actions')
-            )
-        ;
+            );
     }
 
     /**
@@ -218,26 +234,29 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SubmitGridAction('delete_all_email_logs'))
+            ->add(
+                (new SubmitGridAction('delete_all_email_logs'))
                 ->setName($this->trans('Erase all', [], 'Admin.Advparameters.Feature'))
                 ->setIcon('delete')
                 ->setOptions([
-                    'submit_route' => 'admin_logs_delete',
+                    'submit_route' => 'admin_logs_delete_all',
                     'confirm_message' => $this->trans('Are you sure?', [], 'Admin.Notifications.Warning'),
                 ])
             )
-            ->add((new SimpleGridAction('common_refresh_list'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
                 ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
                 ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
                 ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
                 ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
-            )
-        ;
+            );
     }
 }

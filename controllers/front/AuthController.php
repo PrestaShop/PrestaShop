@@ -47,8 +47,7 @@ class AuthControllerCore extends FrontController
             $register_form = $this
                 ->makeCustomerForm()
                 ->setGuestAllowed(false)
-                ->fillWith(Tools::getAllValues())
-            ;
+                ->fillWith(Tools::getAllValues());
 
             if (Tools::isSubmit('submitCreate')) {
                 $hookResult = array_reduce(

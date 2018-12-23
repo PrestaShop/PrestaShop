@@ -79,8 +79,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $searchQueryBuilder = $this->getEmployeeQueryBuilder($searchCriteria)
-            ->select('e.*, pl.name as profile_name')
-        ;
+            ->select('e.*, pl.name as profile_name');
 
         $this->searchCriteriaApplicator->applyPagination($searchCriteria, $searchQueryBuilder);
         $this->applySorting($searchCriteria, $searchQueryBuilder);
@@ -94,8 +93,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $countQueryBuilder = $this->getEmployeeQueryBuilder($searchCriteria)
-            ->select('COUNT(e.id_profile)')
-        ;
+            ->select('COUNT(e.id_profile)');
 
         return $countQueryBuilder;
     }
@@ -111,19 +109,18 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select(1)
             ->from($this->dbPrefix . 'employee_shop', 'es')
             ->where('e.id_employee = es.id_employee')
-            ->andWhere('es.id_shop IN (:context_shop_ids)')
-        ;
+            ->andWhere('es.id_shop IN (:context_shop_ids)');
 
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'employee', 'e')
             ->leftJoin(
                 'e',
                 $this->dbPrefix . 'profile_lang',
-                'pl', 'e.id_profile = pl.id_profile AND pl.id_lang = ' . (int) $this->contextIdLang
+                'pl',
+                'e.id_profile = pl.id_profile AND pl.id_lang = ' . (int) $this->contextIdLang
             )
             ->andWhere('EXISTS (' . $sub->getSQL() . ')')
-            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
-        ;
+            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 
         $this->applyFilters($qb, $searchCriteria->getFilters());
 
@@ -155,18 +152,21 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('id_employee' === $filterName) {
                 $queryBuilder->andWhere('e.id_employee = :' . $filterName);
                 $queryBuilder->setParameter($filterName, $filterValue);
+
                 continue;
             }
 
             if ('profile' === $filterName) {
                 $queryBuilder->andWhere('pl.id_profile = :id_profile');
                 $queryBuilder->setParameter('id_profile', $filterValue);
+
                 continue;
             }
 
             if ('active' === $filterName) {
                 $queryBuilder->andWhere('e.active = :active');
                 $queryBuilder->setParameter('active', $filterValue);
+
                 continue;
             }
 

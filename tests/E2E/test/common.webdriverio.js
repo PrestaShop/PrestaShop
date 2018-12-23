@@ -3,6 +3,7 @@
 let client;
 let webdriverio = require('webdriverio');
 let globals = require('./globals.webdriverio.js');
+let fs = require('fs');
 
 let options = {
   logLevel: 'silent',
@@ -175,8 +176,9 @@ module.exports = {
     if (typeof global.selenium_port !== 'undefined') {
       options.port = global.selenium_port;
     }
-
-
+    fs.readFile(debugFile, 'utf8', (err, content) => {
+        global.ps_mode_dev = (content.substring(content.indexOf("define('_PS_MODE_DEV_', "), content.indexOf(");")).split(', ')[1]) === 'true' ? true : false;
+    });
     client = webdriverio.remote(options);
     initCommands(client);
     return client;

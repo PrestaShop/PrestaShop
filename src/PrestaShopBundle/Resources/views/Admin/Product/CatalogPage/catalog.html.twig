@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% form_theme categories 'PrestaShopBundle:Admin/Product/Themes:categories_theme.html.twig' %}
+{% form_theme categories '@PrestaShop/Admin/Product/Themes/categories_theme.html.twig' %}
 
 {% block javascripts %}
   {{ parent() }}
@@ -101,7 +101,7 @@
   </div>
 
   {# Duplication product modal #}
-  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
     'id': "catalog_duplicate_all_modal",
     'title': "Duplicating products"|trans({}, 'Admin.Catalog.Notification'),
     'closable': true,
@@ -123,7 +123,7 @@
 
 
   {# Activation product modal #}
-  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
   'id': "catalog_activate_all_modal",
   'title': "Activating products"|trans({}, 'Admin.Catalog.Notification'),
   'closable': true,
@@ -145,7 +145,7 @@
 
 
   {# Desactivation product modal #}
-  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
   'id': "catalog_deactivate_all_modal",
   'title': "Deactivating products"|trans({}, 'Admin.Catalog.Notification'),
   'closable': true,
@@ -167,7 +167,7 @@
 
 
   {# Deletion product modal #}
-  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
   'id': "catalog_delete_all_modal",
   'title': "Deleting products"|trans({}, 'Admin.Catalog.Notification'),
   'closable': true,
@@ -189,7 +189,7 @@
 
 
   {# Confirmation deletion product modal #}
-  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
     'id': "catalog_deletion_modal",
     'title': "Delete products?"|trans({}, 'Admin.Catalog.Feature'),
     'closable': true,
@@ -207,7 +207,7 @@
     {% endblock %}
   {% endembed %}
 
-  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
     'id': "catalog_sql_query_modal",
     'title': "SQL query"|trans({}, 'Admin.Global'),
     'closable': true,

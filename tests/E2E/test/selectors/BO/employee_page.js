@@ -1,7 +1,5 @@
 module.exports = {
   Employee:{
-    advanced_menu: '//*[@id="subtab-AdminAdvancedParameters"]/a',
-    employee_menu: '//*[@id="subtab-AdminParentEmployees"]/a',
     new_employee_button: '#page-header-desc-employee-new_employee',
     first_name_input: '#firstname',
     last_name_input: '#lastname',

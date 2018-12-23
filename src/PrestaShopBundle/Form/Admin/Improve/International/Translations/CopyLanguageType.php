@@ -79,7 +79,6 @@ class CopyLanguageType extends TranslatorAwareType
             ->add('to_theme', ChoiceType::class, [
                 'choices' => $this->themeChoices,
                 'choice_translation_domain' => false,
-            ])
-        ;
+            ]);
     }
 }

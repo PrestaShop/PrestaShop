@@ -1,4 +1,5 @@
-var CommonClient = require('./common_client');
+let CommonClient = require('./common_client');
+let buttonText;
 
 global.moduleObject = {
   "data-name": '',
@@ -84,6 +85,44 @@ class Module extends CommonClient {
           }, 1000 * length)
       });
   }
+    getModuleButtonName(ModulePage, moduleTechName) {
+            return this.client.getText(ModulePage.module_action_href.split('%moduleTechName').join(moduleTechName)).then(function (text) {
+                buttonText = text.toUpperCase();
+            });
+    }
+    clickOnConfigureModuleButton(ModulePage, moduleTechName) {
+        if (buttonText === "CONFIGURE")
+            return this.client
+                .waitForExistAndClick(ModulePage.configure_link.replace('%moduleTechName', moduleTechName));
+        else return this.client
+            .waitForExistAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName))
+            .waitForExistAndClick(ModulePage.configure_link.replace('%moduleTechName', moduleTechName))
+    }
+    clickOnEnableModuleButton(ModulePage, moduleTechName) {
+        if (buttonText === "ENABLE") {
+            return this.client
+                .waitForExistAndClick(ModulePage.enable_module.split('%moduleTechName').join(moduleTechName),2000)
+        } else if (buttonText === "DISABLE" || buttonText === "CONFIGURE")
+            return this.client.pause(1000);
+        else {
+            return this.client
+                .waitForExistAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName),2000)
+                .waitForExistAndClick(ModulePage.enable_module.split('%moduleTechName').join(moduleTechName), 3000)
+        }
+    }
+    clickOnDisableModuleButton(ModulePage, moduleTechName) {
+        if (buttonText === "DISABLE") {
+            return this.client
+                .waitForExistAndClick(ModulePage.disable_module.split('%moduleTechName').join(moduleTechName))
+        }
+        else if (buttonText === "ENABLE")
+            return this.client.pause(1000);
+        else {
+            return this.client
+                .waitForExistAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName))
+                .waitForExistAndClick(ModulePage.disable_module.split('%moduleTechName').join(moduleTechName), 3000)
+        }
+    }
 }
 
 module.exports = Module;

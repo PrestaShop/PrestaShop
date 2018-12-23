@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.form.builder.form_builder_factory:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderFactory'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.form.builder.sql_request_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestType'
+      - '@prestashop.core.form.identifiable_object.data_provider.sql_request_form_data_provider'

@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Monolog\Logger;
-use Psr\Log\LoggerInterface;
 use PrestaShopLogger;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class that bridge the legacy implementation of Logger with Psr Logger interface.
@@ -142,17 +142,21 @@ class LegacyLogger implements LoggerInterface
             case Logger::ALERT:
             case Logger::CRITICAL:
                 $pslevel = 4;
+
                 break;
             case Logger::ERROR:
                 $pslevel = 3;
+
                 break;
             case Logger::WARNING:
                 $pslevel = 2;
+
                 break;
             case Logger::NOTICE:
             case Logger::INFO:
             case Logger::DEBUG:
                 $pslevel = 1;
+
                 break;
         }
 

@@ -49,10 +49,22 @@ class AdminContactsControllerCore extends AdminController
         );
 
         $this->fields_list = array(
-            'id_contact' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->trans('Title', array(), 'Admin.Global')),
-            'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global')),
-            'description' => array('title' => $this->trans('Description', array(), 'Admin.Global')),
+            'id_contact' => array(
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ),
+            'name' => array(
+                'title' => $this->trans('Title', array(), 'Admin.Global'),
+                'maxlength' => 30,
+            ),
+            'email' => array(
+                'title' => $this->trans('Email address', array(), 'Admin.Global'),
+                'maxlength' => 50,
+            ),
+            'description' => array(
+                'title' => $this->trans('Description', array(), 'Admin.Global'),
+            ),
         );
     }
 

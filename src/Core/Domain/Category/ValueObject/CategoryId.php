@@ -36,16 +36,14 @@ class CategoryId
     /**
      * @var int
      */
-    private $id;
+    private $categoryId;
 
     /**
-     * @param int $id
-     *
-     * @throws CategoryException
+     * @param int $categoryId
      */
-    public function __construct($id)
+    public function __construct($categoryId)
     {
-        $this->setId($id);
+        $this->setCategoryId($categoryId);
     }
 
     /**
@@ -53,22 +51,30 @@ class CategoryId
      */
     public function getValue()
     {
-        return $this->id;
+        return $this->categoryId;
     }
 
     /**
-     * @param int $id
+     * @param CategoryId $categoryId
      *
-     * @throws CategoryException
+     * @return bool
      */
-    private function setId($id)
+    public function isEqual(CategoryId $categoryId)
     {
-        if (!is_numeric($id) || 0 >= $id) {
+        return $this->getValue() === $categoryId->getValue();
+    }
+
+    /**
+     * @param int $categoryId
+     */
+    private function setCategoryId($categoryId)
+    {
+        if (!is_numeric($categoryId) || 0 >= $categoryId) {
             throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($id, true))
+                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
             );
         }
 
-        $this->id = (int) $id;
+        $this->categoryId = $categoryId;
     }
 }

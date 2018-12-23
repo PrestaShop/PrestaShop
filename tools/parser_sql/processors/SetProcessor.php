@@ -30,9 +30,9 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
  * 
@@ -42,7 +42,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  * 
  */
 class SetProcessor extends AbstractProcessor {
-
     private $expressionListProcessor;
 
     public function __construct() {
@@ -55,8 +54,10 @@ class SetProcessor extends AbstractProcessor {
      */
     protected function getAssignment($base_expr) {
         $assignment = $this->expressionListProcessor->process($this->splitSQLIntoTokens($base_expr));
+
         return array('expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($base_expr),
-                     'sub_tree' => $assignment);
+            'sub_tree' => $assignment,
+        );
     }
 
     public function process($tokens, $isUpdate = false) {
@@ -75,8 +76,10 @@ class SetProcessor extends AbstractProcessor {
                 if (!$isUpdate) {
                     $varType = $this->getVariableType("@@" . $upper . ".");
                     $baseExpr = "";
+
                     continue 2;
                 }
+
                 break;
 
             case ',':
@@ -87,6 +90,7 @@ class SetProcessor extends AbstractProcessor {
                 $result[] = $assignment;
                 $baseExpr = "";
                 $varType = false;
+
                 continue 2;
 
             default:
@@ -104,6 +108,4 @@ class SetProcessor extends AbstractProcessor {
 
         return $result;
     }
-
 }
-?>

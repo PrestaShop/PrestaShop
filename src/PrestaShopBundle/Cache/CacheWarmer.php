@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Cache;
 
-use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class CacheWarmer implements CacheWarmerInterface
 {
