@@ -223,8 +223,18 @@ class AdminCarrierWizardControllerCore extends AdminController
             ),
         );
 
-        $tpl_vars = array('max_image_size' => (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE') / 1024 / 1024);
         $fields_value = $this->getStepOneFieldsValues($carrier);
+
+        Hook::exec(
+            'actionAdminCarrierWizardRenderStepOne',
+            [
+                'carrier' => $carrier,
+                'fields_form' => &$this->fields_form,
+                'fields_value' => &$fields_value
+            ]
+        );
+
+        $tpl_vars = array('max_image_size' => (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE') / 1024 / 1024);
 
         return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
     }
@@ -244,7 +254,17 @@ class AdminCarrierWizardControllerCore extends AdminController
                 ),
             ),
         );
+
         $fields_value = $this->getStepTwoFieldsValues($carrier);
+
+        Hook::exec(
+            'actionAdminCarrierWizardRenderStepTwo',
+            [
+                'carrier' => $carrier,
+                'fields_form' => &$this->fields_form,
+                'fields_value' => &$fields_value
+            ]
+        );
 
         return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
     }
@@ -361,16 +381,25 @@ class AdminCarrierWizardControllerCore extends AdminController
             unset($this->fields_form['form']['input']['id_tax_rules_group']);
         }
 
+        $fields_value = $this->getStepThreeFieldsValues($carrier);
+
+        $this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);
+
+        Hook::exec(
+            'actionAdminCarrierWizardRenderStepThree',
+            [
+                'carrier' => $carrier,
+                'fields_form' => &$this->fields_form,
+                'fields_value' => &$fields_value
+            ]
+        );
+
         $tpl_vars = array();
         $tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');
 
         $currency = $this->getActualCurrency();
 
         $tpl_vars['currency_sign'] = $currency->sign;
-
-        $fields_value = $this->getStepThreeFieldsValues($carrier);
-
-        $this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);
 
         return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
     }
@@ -442,6 +471,15 @@ class AdminCarrierWizardControllerCore extends AdminController
             $fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$carrier->id));
         }
 
+        Hook::exec(
+            'actionAdminCarrierWizardRenderStepFour',
+            [
+                'carrier' => $carrier,
+                'fields_form' => &$this->fields_form,
+                'fields_value' => &$fields_value
+            ]
+        );
+
         return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
     }
 
@@ -473,10 +511,22 @@ class AdminCarrierWizardControllerCore extends AdminController
                 ),
             ),
         );
-        $template = $this->createTemplate('controllers/carrier_wizard/summary.tpl');
+
         $fields_value = $this->getStepFiveFieldsValues($carrier);
+
+        Hook::exec(
+            'actionAdminCarrierWizardRenderStepFive',
+            [
+                'carrier' => $carrier,
+                'fields_form' => &$this->fields_form,
+                'fields_value' => &$fields_value
+            ]
+        );
+
         $active_form = $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
         $active_form = str_replace(array('<fieldset id="fieldset_form">', '</fieldset>'), '', $active_form);
+
+        $template = $this->createTemplate('controllers/carrier_wizard/summary.tpl');
         $template->assign('active_form', $active_form);
 
         return $template->fetch();
