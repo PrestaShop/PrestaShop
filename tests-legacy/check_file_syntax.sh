@@ -25,5 +25,8 @@ if [[ "$php" == "0" && "$yaml_src" == "0" && "$yaml_app" == "0" && "$yaml_themes
   exit 0;
 else
   echo -e "\e[91mSYNTAX TESTS FAILED"
+  if [[ "$coding_styles" -ne "0" ]]; then
+   echo -e "\e[91mRun \"php ./vendor/bin/php-cs-fixer fix\" from your PrestaShop folder to fix the lint issues.";
+  fi
   exit 255;
 fi
