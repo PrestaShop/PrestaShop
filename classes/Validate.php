@@ -644,6 +644,7 @@ class ValidateCore
      * Check for barcode validity (EAN-8).
      *
      * @param string $ean8 Barcode to validate
+     *
      * @see Validate::isEan13
      *
      * @return bool Validity is ok or not
