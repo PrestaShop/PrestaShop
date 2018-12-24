@@ -230,7 +230,7 @@ class AdminCarrierWizardControllerCore extends AdminController
             [
                 'carrier' => $carrier,
                 'fields_form' => &$this->fields_form,
-                'fields_value' => &$fields_value
+                'fields_value' => &$fields_value,
             ]
         );
 
@@ -262,7 +262,7 @@ class AdminCarrierWizardControllerCore extends AdminController
             [
                 'carrier' => $carrier,
                 'fields_form' => &$this->fields_form,
-                'fields_value' => &$fields_value
+                'fields_value' => &$fields_value,
             ]
         );
 
@@ -383,23 +383,21 @@ class AdminCarrierWizardControllerCore extends AdminController
 
         $fields_value = $this->getStepThreeFieldsValues($carrier);
 
-        $this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);
-
         Hook::exec(
             'actionAdminCarrierWizardRenderStepThree',
             [
                 'carrier' => $carrier,
                 'fields_form' => &$this->fields_form,
-                'fields_value' => &$fields_value
+                'fields_value' => &$fields_value,
             ]
         );
 
         $tpl_vars = array();
         $tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');
 
-        $currency = $this->getActualCurrency();
+        $this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);
 
-        $tpl_vars['currency_sign'] = $currency->sign;
+        $tpl_vars['currency_sign'] = $this->getActualCurrency()->sign;
 
         return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
     }
@@ -476,7 +474,7 @@ class AdminCarrierWizardControllerCore extends AdminController
             [
                 'carrier' => $carrier,
                 'fields_form' => &$this->fields_form,
-                'fields_value' => &$fields_value
+                'fields_value' => &$fields_value,
             ]
         );
 
@@ -519,7 +517,7 @@ class AdminCarrierWizardControllerCore extends AdminController
             [
                 'carrier' => $carrier,
                 'fields_form' => &$this->fields_form,
-                'fields_value' => &$fields_value
+                'fields_value' => &$fields_value,
             ]
         );
 
