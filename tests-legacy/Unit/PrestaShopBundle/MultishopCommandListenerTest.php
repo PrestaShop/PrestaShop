@@ -54,7 +54,7 @@ class MultishopCommandListenerTest extends UnitTestCase
      */
     protected $contextMocker;
 
-    public function setUp()
+    protected function setUp()
     {
 
         $this->contextMocker = new ContextMocker();
@@ -68,7 +68,7 @@ class MultishopCommandListenerTest extends UnitTestCase
         $this->multishopContext = $this->sfKernel->getContainer()->get('prestashop.adapter.shop.context');
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
         $this->contextMocker->resetContext();

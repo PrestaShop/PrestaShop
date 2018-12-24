@@ -38,7 +38,7 @@ class DbTest extends IntegrationTestCase
 
     private $master;
 
-    public function tearDown()
+    protected function tearDown()
     {
         Db::$_slave_servers_loaded = false;
         Db::$_servers = null;

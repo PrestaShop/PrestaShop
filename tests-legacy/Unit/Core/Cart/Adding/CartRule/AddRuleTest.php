@@ -35,14 +35,14 @@ class AddRuleTest extends AbstractCartTest
 {
     protected $cartRulesFeatureActive;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->cartRulesFeatureActive = Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
         Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
         Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', $this->cartRulesFeatureActive);

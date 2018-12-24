@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
 
 class PaginationTest extends Testcase
 {
-    public function setUp()
+    protected function setUp()
     {
         $this->pagination = new Pagination();
     }

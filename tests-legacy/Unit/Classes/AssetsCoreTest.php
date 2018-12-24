@@ -39,7 +39,7 @@ class AssetsCoreTest extends TestCase
 
     private $testsPath;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

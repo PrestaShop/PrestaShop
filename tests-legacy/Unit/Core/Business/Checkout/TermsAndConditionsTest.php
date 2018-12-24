@@ -33,7 +33,7 @@ class TermsAndConditionsTest extends UnitTestCase
 {
     private $terms;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->terms = new TermsAndConditions();
     }

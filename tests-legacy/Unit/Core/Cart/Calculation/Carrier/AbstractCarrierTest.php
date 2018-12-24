@@ -147,7 +147,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
      */
     protected $addresses = [];
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -176,7 +176,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         $this->cart->id_carrier          = 0;
         $this->cart->id_address_delivery = 0;

@@ -40,7 +40,7 @@ class ApiClientTest extends KernelTestCase
      */
     protected $apiClient;
 
-    public function setUp()
+    protected function setUp()
     {
         $kernel = $this->createKernel();
         $kernel->boot();

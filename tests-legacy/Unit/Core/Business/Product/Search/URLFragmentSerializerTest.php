@@ -33,7 +33,7 @@ class URLFragmentSerializerTest extends Testcase
 {
     private $serializer;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->serializer = new URLFragmentSerializer();
     }

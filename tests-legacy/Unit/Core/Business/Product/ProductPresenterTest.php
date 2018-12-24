@@ -51,7 +51,7 @@ class ProductPresenterTest extends UnitTestCase
     private $product;
     private $language;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->settings = new ProductPresentationSettings();

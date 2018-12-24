@@ -53,7 +53,7 @@ abstract class ApiTestCase extends WebTestCase
      */
     protected static $container;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -72,7 +72,7 @@ abstract class ApiTestCase extends WebTestCase
         self::$client = $client;
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
 

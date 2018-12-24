@@ -47,7 +47,7 @@ class QueryParamsCollectionTest extends TestCase
      */
     private $queryParams;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->prophet = new Prophet();
         $this->queryParams = new QueryStockParamsCollection();

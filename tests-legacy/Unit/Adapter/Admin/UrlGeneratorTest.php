@@ -34,7 +34,7 @@ class UrlGeneratorTest extends UnitTestCase
 {
     private $legacyContext;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

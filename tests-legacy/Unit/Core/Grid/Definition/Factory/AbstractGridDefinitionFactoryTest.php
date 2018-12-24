@@ -42,7 +42,7 @@ class AbstractGridDefinitionFactoryTest extends TestCase
      */
     private $definitionFactory;
 
-    public function setUp()
+    protected function setUp()
     {
         $definitionFactory = $this->getMockForAbstractClass(AbstractGridDefinitionFactory::class);
 

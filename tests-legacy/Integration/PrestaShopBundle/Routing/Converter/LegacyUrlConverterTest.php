@@ -40,7 +40,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /** @var Link */
     private $link;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->initContainerInstance();

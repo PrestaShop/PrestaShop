@@ -40,7 +40,7 @@ class ControllerTest extends TestCase
 {
     private $context;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->declareRequiredConstants();
         $this->requireAliasesFunctions();
@@ -54,7 +54,7 @@ class ControllerTest extends TestCase
         ServiceLocator::setServiceContainerInstance($containerProphecy->reveal());
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         Context::setInstanceForTesting($this->context);
     }

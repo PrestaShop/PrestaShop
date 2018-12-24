@@ -46,7 +46,7 @@ class YamlRoutesInModuleTest extends KernelTestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $kernel = self::createKernel();
         $kernel->boot();
@@ -63,7 +63,7 @@ class YamlRoutesInModuleTest extends KernelTestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    protected function tearDown()
     {
         HelperModule::removeModule('demo');
         $this->module->onUninstall();

@@ -42,7 +42,7 @@ class PositionsControllerTest extends WebTestCase
     protected $otherModuleId;
     protected $hookId;
 
-    public function setUp()
+    protected function setUp()
     {
         Cache::clear();
         Module::clearStaticCache();

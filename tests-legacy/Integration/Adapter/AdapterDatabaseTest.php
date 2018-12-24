@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Database;
 
 class AdapterDatabaseTest extends IntegrationTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->db = new Database();

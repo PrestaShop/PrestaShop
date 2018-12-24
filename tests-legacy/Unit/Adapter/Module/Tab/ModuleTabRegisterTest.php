@@ -124,7 +124,7 @@ class ModuleTabRegisterTest extends UnitTestCase
      */
     protected $tabRegister;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

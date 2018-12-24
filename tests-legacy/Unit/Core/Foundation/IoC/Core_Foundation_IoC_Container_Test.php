@@ -38,7 +38,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
      */
     private $container;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->container = new Container();
     }
