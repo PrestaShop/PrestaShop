@@ -154,3 +154,4 @@ scenario('Check the sort of products in the Back Office', client => {
     }, 'product/product');
   }, 'product/product');
 }, 'product/product', true);
+
