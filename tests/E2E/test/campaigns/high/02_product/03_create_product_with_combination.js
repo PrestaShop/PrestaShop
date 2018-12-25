@@ -47,11 +47,7 @@ scenario('Create product with combination in the Back Office', client => {
     test('should set the "Reference" input', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
     test('should switch the product online', () => {
       return promise
-        .then(() => {
-          if (global.ps_mode_dev) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        })
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
         .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000));
     });
   }, 'product/product');

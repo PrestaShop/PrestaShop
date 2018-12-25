@@ -18,12 +18,7 @@ scenario('BOOM-4847: Check that the pagination works fine on the product page in
     test('should set the "Products per page" input', () => client.waitAndSetValue(ProductSettings.Pagination.products_per_page_input, 6));
     test('should close symfony Profiler', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        })
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should click on "Save" button', () => client.scrollWaitForExistAndClick(ProductSettings.save_button.replace("%POS", 4)));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_box, "Update successful"));
@@ -32,12 +27,7 @@ scenario('BOOM-4847: Check that the pagination works fine on the product page in
   scenario('Disable the Friendly URL', client => {
     test('should close symfony Profiler', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        })
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should go to "Traffic & SEO" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.traffic_seo_submenu));
     test('should disable the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', 'off')));

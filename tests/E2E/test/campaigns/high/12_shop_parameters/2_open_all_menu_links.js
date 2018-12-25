@@ -97,11 +97,7 @@ scenario('Open all menu links in the Back Office', () => {
     scenario('Check all the menu links of "Shop Parameters" in the Back Office', client => {
       test('should check then close the "Symfony" toolbar', () => {
         return promise
-          .then(() => {
-            if (global.ps_mode_dev) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-            }
-          })
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
           .then(() => client.pause(1000));
       });
       test('should stop the "On Boarding"', () => {

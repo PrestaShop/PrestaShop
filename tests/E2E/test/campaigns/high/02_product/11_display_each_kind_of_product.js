@@ -91,12 +91,7 @@ scenario('Display each kind of product', () => {
       return promise
         .then(() => client.isVisible(ProductList.pagination_products))
         .then(() => client.getProductsNumber(ProductList.pagination_products))
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        });
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should close "catalog" menu', () => client.waitForVisibleAndClick(Menu.Sell.Catalog.catalog_menu));
     test('should go to "Shop Parameters - Product Settings" page', () => {

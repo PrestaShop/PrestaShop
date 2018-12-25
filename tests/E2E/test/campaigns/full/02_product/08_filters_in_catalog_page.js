@@ -16,12 +16,7 @@ scenario('Check the sort of products in the Back Office', client => {
   scenario('Close symfony toolbar then change items per page number', client => {
     test('should close symfony toolbar', () => {
       return promise
-        .then(() => client.pause(2000))
-        .then(() => {
-          if (global.ps_mode_dev) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        });
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should change the paginator select to "100"', () => {
       return promise
@@ -154,3 +149,4 @@ scenario('Check the sort of products in the Back Office', client => {
     }, 'product/product');
   }, 'product/product');
 }, 'product/product', true);
+

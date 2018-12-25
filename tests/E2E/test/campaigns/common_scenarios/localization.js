@@ -87,12 +87,7 @@ module.exports = {
       test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
       test('should close symfony toolbar', () => {
         return promise
-          .then(() => client.isVisible(Localization.Localization.symfony_toolbar, 3000))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(Localization.Localization.symfony_toolbar);
-            }
-          });
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
       });
       if (defaultConfiguration === false) {
         test('should choose "Italian" from default language list', () => client.showSelect('Italiano (Italian)', Localization.Localization.default_language_list));
@@ -294,12 +289,7 @@ module.exports = {
       test('should set "Country identifier" input', () => client.waitAndSetValue(Localization.Localization.advanced_country_identifier_input, advancedData.countryIdentifier));
       test('should close symfony toolbar', () => {
         return promise
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-            }
-          });
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 3000))
       });
       test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Localization.advanced_save_button, 1000));
       test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Localization.alert_panel.replace("%B", "alert-text"), 'Update successful'));

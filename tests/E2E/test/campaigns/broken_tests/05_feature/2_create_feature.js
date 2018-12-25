@@ -116,12 +116,7 @@ scenario('Create, edit, delete, delete with bulk actions "Feature" in the Back O
       }
       test('should close the symfony toolbar if exists', () => {
         return promise
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-            }
-          });
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
       });
       test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 5000));
       /**
@@ -242,12 +237,7 @@ scenario('Create, edit, delete, delete with bulk actions "Feature" in the Back O
       });
       test('should close the symfony toolbar if exists', () => {
         return promise
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-            }
-          });
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
       });
       test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 5000));
       test('should go to "Catalog > Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));

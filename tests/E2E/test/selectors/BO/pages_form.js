@@ -3,9 +3,9 @@ module.exports = {
     calendar_form: '//*[@id="calendar_form"]',
     Orders: {
       order_form: '//*[@id="form-order"]',
-      invoice_form: '//*[@id="main-div"]//form[@name="generate_by_date"]',
+      status_block: '//*[@id="by-status-block"]',
       order_slip_form: '//*[@id="form-order_slip"]',
-      delivery_form: '//*[@id="delivery_pdf_fieldset"]',
+      delivery_pdf_fieldset: '//*[@id="delivery_pdf_fieldset"]',
       shopping_cart_form: '//*[@id="form-cart"]',
     },
     Catalog: {
