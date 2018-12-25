@@ -11,6 +11,7 @@ module.exports = Object.assign({},
   require('./international'),
   require('./employee_page'),
   require('./design'),
-  require('./Merchandise_returns')
+  require('./Merchandise_returns'),
+  require('./advancedParameters')
 );
 

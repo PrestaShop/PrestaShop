@@ -16,8 +16,9 @@ scenario('Configure shop in the Back Office', () => {
     test('should go to "Shop parameters" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.general_submenu));
     test('should close symfony Profiler', () => {
       return promise
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
         .then(() => {
-          if (global.ps_mode_dev) {
+          if (global.ps_mode_dev && global.isVisible) {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar);
           }
         });
@@ -25,7 +26,7 @@ scenario('Configure shop in the Back Office', () => {
     test('should click on "Enable multistore"', () => client.scrollWaitForExistAndClick(ShopParameters.enable_disable_multistore_toggle_button.replace("%ID",1), 50));
     test('should click on "Save" button', () => client.waitForExistAndClick(ShopParameters.general_save_button));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_box, "Successful update."));
-    test('should click on "Maintenance" tab', () => client.waitForExistAndClick(ShopParameters.maintenance_tab));
+    test('should click on "Maintenance" tab', () => client.waitForExistAndClick(Menu.Configure.ShopParameters.maintenance_tab));
     test('should set the "Enable shop" parameter to "NO"', () => client.waitForExistAndClick(ShopParameters.enable_shop.replace("%ID", '0')));
     test('should set the "Custom maintenance" textarea', () => client.setEditorText(ShopParameters.textarea_input.replace("%ID", 1), 'We are currently disabled our shop and will be back really soon.'));
     test('should switch to the "French" language', () => client.waitForExistAndClick(ShopParameters.language_option.replace("%LANG", 'Fr').replace("%ID", "1")));

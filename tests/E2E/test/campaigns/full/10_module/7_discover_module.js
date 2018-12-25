@@ -13,7 +13,7 @@ scenario('Discover "Advanced top menu" module in Back Office', () => {
     test('should go to "Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
     test('should search for the module "Advanced top menu"', () => {
       return promise
-        .then(() => client.waitAndSetValue(ModulePage.module_selection_input, 'pm_advancedtopmenu'))
+        .then(() => client.waitAndSetValue(ModulePage.module_selection_input, 'pm_advancedtopmenu', 2000))
         .then(() => client.waitForExistAndClick(ModulePage.selection_search_button));
     });
     test('should click on "Discover" button', () => client.waitForExistAndClick(ModulePage.discover_button));
