@@ -59,6 +59,10 @@ class PositionsControllerTest extends WebTestCase
             $moduleManager->install('ps_featuredproducts');
         }
 
+        // clean cache again in order for module installations to be acknowledged
+        Cache::clear();
+        Module::clearStaticCache();
+
         $this->moduleId = Module::getModuleIdByName('bankwire');
         $this->otherModuleId = Module::getModuleIdByName('ps_featuredproducts');
         $this->hookId = Hook::getIdByName('displayHome');

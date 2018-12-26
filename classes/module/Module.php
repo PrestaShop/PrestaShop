@@ -1982,28 +1982,46 @@ abstract class ModuleCore implements ModuleInterface
     public function updatePosition($id_hook, $way, $position = null)
     {
         foreach (Shop::getContextListShopID() as $shop_id) {
-            $sql = 'SELECT hm.`id_module`, hm.`position`, hm.`id_hook`
+
+            $sqlQueryToGetAvailableHookPositions = 'SELECT hm.`id_module`, hm.`position`, hm.`id_hook`
                     FROM `' . _DB_PREFIX_ . 'hook_module` hm
                     WHERE hm.`id_hook` = ' . (int) $id_hook . ' AND hm.`id_shop` = ' . $shop_id . '
                     ORDER BY hm.`position` ' . ($way ? 'ASC' : 'DESC');
-            if (!$res = Db::getInstance()->executeS($sql)) {
+
+            if (!$sqlResult = Db::getInstance()->executeS($sqlQueryToGetAvailableHookPositions)) {
+                // no hook positions available
                 continue;
             }
+            if (count($sqlResult) === 1) {
+                // if there is only 1 position available, it cannot be updated
+                return false;
+            }
 
-            foreach ($res as $key => $values) {
-                if ((int) $values[$this->identifier] == (int) $this->id) {
-                    $k = $key;
+            foreach ($sqlResult as $positionNumber => $positionSettings) {
+                $thisIsTheSettingsForThisModule = ((int) $positionSettings[$this->identifier] == (int) $this->id);
+
+                if ($thisIsTheSettingsForThisModule) {
+                    $thisModulePositionNumber = $positionNumber;
 
                     break;
                 }
             }
 
-            if (!isset($k) || !isset($res[$k]) || !isset($res[$k + 1])) {
+            if (!isset($thisModulePositionNumber)) {
+                // could not find hook positions for this module
+                return false;
+            }
+            if (!isset($sqlResult[$thisModulePositionNumber])) {
+                // ok this one is really weird
+                return false;
+            }
+            if (!isset($sqlResult[$thisModulePositionNumber + 1])) {
+                // no alternative position available following $way, so position cannot be updated
                 return false;
             }
 
-            $from = $res[$k];
-            $to = $res[$k + 1];
+            $from = $sqlResult[$thisModulePositionNumber];
+            $to = $sqlResult[$thisModulePositionNumber + 1];
 
             if (!empty($position)) {
                 $to['position'] = (int) $position;
@@ -2012,20 +2030,20 @@ abstract class ModuleCore implements ModuleInterface
             $minPosition = min((int) $from['position'], (int) $to['position']);
             $maxPosition = max((int) $from['position'], (int) $to['position']);
 
-            $sql = 'UPDATE `' . _DB_PREFIX_ . 'hook_module`
+            $sqlQueryToShiftHookPositions = 'UPDATE `' . _DB_PREFIX_ . 'hook_module`
                 SET position = position ' . ($way ? '- 1' : '+ 1') . '
                 WHERE position BETWEEN ' . $minPosition . ' AND ' . $maxPosition . '
                 AND `id_hook` = ' . (int) $from['id_hook'] . ' AND `id_shop` = ' . $shop_id;
 
-            if (!Db::getInstance()->execute($sql)) {
+            if (!Db::getInstance()->execute($sqlQueryToShiftHookPositions)) {
                 return false;
             }
 
-            $sql = 'UPDATE `' . _DB_PREFIX_ . 'hook_module`
+            $sqlQueryToCreateMissingPosition = 'UPDATE `' . _DB_PREFIX_ . 'hook_module`
                 SET `position`=' . (int) $to['position'] . '
                 WHERE `' . pSQL($this->identifier) . '` = ' . (int) $from[$this->identifier] . '
                 AND `id_hook` = ' . (int) $to['id_hook'] . ' AND `id_shop` = ' . $shop_id;
-            if (!Db::getInstance()->execute($sql)) {
+            if (!Db::getInstance()->execute($sqlQueryToCreateMissingPosition)) {
                 return false;
             }
         }
