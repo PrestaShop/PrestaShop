@@ -702,6 +702,17 @@ class CommonClient {
     return this.client
       .pause(pause)
   }
+
+  checkAutoUpgrade() {
+    fs.readFile(rcTarget + 'admin-dev/autoupgrade/tmp/log.txt', 'utf8', (err, content) => {
+      global.upgradeError = content.indexOf("upgradeDbError");
+    });
+    return this.client
+      .pause(2000)
+      .then(() => {
+        expect(global.upgradeError, "Upgrade process done, but some warnings/errors have been found").to.equal(-1)
+      });
+  }
 }
 
 module.exports = CommonClient;

@@ -47,11 +47,6 @@ scenario('The shop installation', () => {
   }, 'installation');
 
   welcomeScenarios.findAndCloseWelcomeModal('installation');
-
-  scenario('paaaaaaaaaaaause', client => {
-    test('paaaaaaaaaaaause', () => client.pause(25000));
-  }, 'installation');
-
   scenario('Install "Top-sellers block" and "New products block" modules From Cross selling', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_bestsellers");
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_newproducts");
@@ -69,17 +64,18 @@ scenario('The shop installation', () => {
       test('should copy the downloaded RC to the auto upgrade directory', () => client.copyFileToAutoUpgrade(downloadsFolderPath, filename, rcTarget + "admin-dev/autoupgrade/download"));
     }
     test('should select the "Channel" option', () => client.waitAndSelectByValue(ModulePage.channel_select, "archive"));
-    test('should select the "Archive to use" option', () => client.waitAndSelectByValue(ModulePage.archive_select, global.filename));
+    test('should select the "Archive to use" option', () => client.waitAndSelectByValue(ModulePage.archive_select, global.filename, 2000));
     test('should set the Number of the version you want to upgrade to', () => client.waitAndSetValue(ModulePage.version_number, global.filename.replace(".zip", "")));
     test('should click on "save" button', () => client.waitForExistAndClick(ModulePage.save_button));
     test('should verify the success message', () => client.waitForVisibleElement(ModulePage.save_message));
-    test('should click on "refresh the page" button', () => {
+    test('should click on "Upgrade PrestaShop now!" button', () => {
       return promise
-        .then(() => client.moveToObject(ModulePage.upgrade_block))
-        .then(() => client.waitForExistAndClick(ModulePage.refresh_button));
+        .then(() => client.scrollTo(ModulePage.upgrade_block))
+        .then(() => client.waitForExistAndClick(ModulePage.upgrade_button, 50, 7000));
+
     });
-    test('should click on "Upgrade PrestaShop now!" button', () => client.waitForExistAndClick(ModulePage.upgrade_button));
     test('should wait until the Upgrade is finished', () => client.waitForExist(ModulePage.loader_tag, 310000));
+    test('should check that the Upgrade is finished without Warnings nor errors', () => client.checkAutoUpgrade());
     test('should check the success message appear', () => client.checkTextValue(ModulePage.success_msg, 'Upgrade complete'));
   }, 'installation');
 
