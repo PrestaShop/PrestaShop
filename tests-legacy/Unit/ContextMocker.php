@@ -101,7 +101,7 @@ class ContextMocker
         Phake::when($context->customer)->getGroups()->thenReturn(array());
         $context->cookie   = Phake::mock('Cookie');
         $context->country  = Phake::mock('Country');
-        $context->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        $context->language = new Language((int) Configuration::get('PS_DETECT_LANG'));
         $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $protocol_link     = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
             ? 'https://' : 'http://';
