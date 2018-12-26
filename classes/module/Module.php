@@ -1982,7 +1982,6 @@ abstract class ModuleCore implements ModuleInterface
     public function updatePosition($id_hook, $way, $position = null)
     {
         foreach (Shop::getContextListShopID() as $shop_id) {
-
             $sqlQueryToGetAvailableHookPositions = 'SELECT hm.`id_module`, hm.`position`, hm.`id_hook`
                     FROM `' . _DB_PREFIX_ . 'hook_module` hm
                     WHERE hm.`id_hook` = ' . (int) $id_hook . ' AND hm.`id_shop` = ' . $shop_id . '
