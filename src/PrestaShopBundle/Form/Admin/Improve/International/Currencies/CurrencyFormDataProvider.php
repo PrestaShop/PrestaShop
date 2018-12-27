@@ -34,12 +34,27 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 final class CurrencyFormDataProvider implements FormDataProviderInterface
 {
     /**
+     * @var bool
+     */
+    private $cronExchangeRate;
+
+    /**
+     * @param int $cronExchangeRate
+     */
+    public function __construct($cronExchangeRate)
+    {
+        $this->cronExchangeRate = $cronExchangeRate;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getData()
     {
         return [
-            'exchange_rates' => [],
+            'exchange_rates' => [
+                'live_exchange_rate' => 0 !== (int) $this->cronExchangeRate,
+            ],
         ];
     }
 
