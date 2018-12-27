@@ -260,7 +260,7 @@ class OrderCore extends ObjectModel
             'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
                 'fields' => array(
                     'id' => array(),
-                    'product_id' => array('required' => true),
+                    'product_id' => array('required' => true, 'xlink_resource' => 'products'),
                     'product_attribute_id' => array('required' => true),
                     'product_quantity' => array('required' => true),
                     'product_name' => array('setter' => false),
