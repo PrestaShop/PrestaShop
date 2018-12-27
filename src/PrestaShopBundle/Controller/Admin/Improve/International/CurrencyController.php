@@ -68,8 +68,11 @@ class CurrencyController extends FrameworkBundleAdminController
         $currencyGrid = $currencyGridFactory->getGrid($filters);
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
+        $settingsForm = $this->getSettingsFormHandler()->getForm();
+
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/index.html.twig', [
             'currencyGrid' => $gridPresenter->present($currencyGrid),
+            'currencySettingsForm' => $settingsForm->createView(),
         ]);
     }
 
@@ -271,6 +274,14 @@ class CurrencyController extends FrameworkBundleAdminController
     private function getCurrencyFormHandler()
     {
         return $this->get('prestashop.core.form.identifiable_object.currency_form_handler');
+    }
+
+    /**
+     * @return \PrestaShop\PrestaShop\Core\Form\FormHandlerInterface
+     */
+    private function getSettingsFormHandler()
+    {
+        return $this->get('prestashop.admin.currency_settings.form_handler');
     }
 
     /**
