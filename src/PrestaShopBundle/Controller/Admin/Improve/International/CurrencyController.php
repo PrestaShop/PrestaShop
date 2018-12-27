@@ -118,15 +118,20 @@ class CurrencyController extends FrameworkBundleAdminController
         $currencyForm->handleRequest($request);
 
         try {
-            $result = $this->getCurrencyFormHandler()->handle($currencyForm);
+            if ($currencyForm->isSubmitted() && $this->isDemoModeEnabled()) {
+                $this->addFlash('error', $this->getDemoModeErrorMessage());
+            }
 
-            if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash(
-                    'success',
-                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
-                );
+            if ($currencyForm->isSubmitted() && !$this->isDemoModeEnabled()) {
+                $result = $this->getCurrencyFormHandler()->handle($currencyForm);
+                if (null !== $result->getIdentifiableObjectId()) {
+                    $this->addFlash(
+                        'success',
+                        $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                    );
 
-                return $this->redirectToRoute('admin_currencies_index');
+                    return $this->redirectToRoute('admin_currencies_index');
+                }
             }
         } catch (CurrencyException $exception) {
             $this->addFlash('error', $this->handleException($exception));
@@ -161,12 +166,18 @@ class CurrencyController extends FrameworkBundleAdminController
             $currencyForm = $this->getCurrencyFormBuilder()->getFormFor($currencyId);
             $currencyForm->handleRequest($request);
 
-            $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
+            if ($currencyForm->isSubmitted() && $this->isDemoModeEnabled()) {
+                $this->addFlash('error', $this->getDemoModeErrorMessage());
+            }
 
-            if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            if ($currencyForm->isSubmitted() && !$this->isDemoModeEnabled()) {
+                $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
 
-                return $this->redirectToRoute('admin_currencies_index');
+                if (null !== $result->getIdentifiableObjectId()) {
+                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                    return $this->redirectToRoute('admin_currencies_index');
+                }
             }
         } catch (CurrencyException $exception) {
             $this->addFlash('error', $this->handleException($exception));
