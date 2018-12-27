@@ -26,23 +26,27 @@
 
 namespace PrestaShopBundle\Service\Mail;
 
-use Symfony\Component\Templating\EngineInterface;
-
-class MailTemplateGenerator
+/**
+ * Interface MailTemplateCatalogInterface is used to list the available themes to generate
+ * mail templates. It also allows you to list the available templates for a specific theme.
+ * Templates are divided in two categories "core" and "modules" templates.
+ */
+interface MailTemplateCatalogInterface
 {
     /**
-     * @var EngineInterface
+     * Returns the list of existing themes (non empty folders, in the mail themes
+     * folder).
+     *
+     * @return string[]
      */
-    private $engine;
+    public function listThemes();
 
-    public function __construct(
-        MailTemplateCatalogInterface $templateCatalog,
-        EngineInterface $engine
-    ) {
-        $this->engine = $engine;
-    }
-
-    public function generateTemplates($theme, $language)
-    {
-    }
+    /**
+     * Returns a collection of templates via a MailTemplateCollectionInterface
+     *
+     * @param string $theme
+     *
+     * @return MailTemplateCollectionInterface
+     */
+    public function listTemplates($theme);
 }
