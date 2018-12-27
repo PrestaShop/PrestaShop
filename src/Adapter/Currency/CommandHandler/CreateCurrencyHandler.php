@@ -50,7 +50,7 @@ final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
      */
     public function handle(CreateCurrencyCommand $command)
     {
-        $this->assertSuchCurrencyDoesNotExist($command->getIsoCode()->getValue());
+        $this->assertCurrencyCodeAlreadyExist($command->getIsoCode()->getValue());
 
         try {
             $entity = new Currency();
@@ -86,7 +86,7 @@ final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
      *
      * @throws CurrencyConstraintException
      */
-    private function assertSuchCurrencyDoesNotExist($isoCode)
+    private function assertCurrencyCodeAlreadyExist($isoCode)
     {
         if (Currency::exists($isoCode)) {
             throw new CurrencyConstraintException(
