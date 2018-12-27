@@ -159,3 +159,6 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsFormDataProvider'
         arguments:
             - '@prestashop.core.team.employee.configuration.employee_options_configuration'
+
+    prestashop.admin.currency.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyFormDataProvider'
