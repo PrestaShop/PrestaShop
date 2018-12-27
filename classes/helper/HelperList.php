@@ -70,6 +70,9 @@ class HelperListCore extends Helper
 
     public $table_id;
 
+    /** @var string */
+    public $title_icon = null;
+
     /**
      * @var array Customize list display
      *
@@ -742,6 +745,10 @@ class HelperListCore extends Helper
             'has_bulk_actions' => $this->hasBulkActions($has_value),
             'filters_has_value' => (bool) $has_value,
         ));
+
+        if (null !== $this->title_icon) {
+            Context::getContext()->smarty->assign(['icon' => $this->title_icon]);
+        }
 
         $isMultiShopActive = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
 
