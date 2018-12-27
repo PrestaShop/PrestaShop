@@ -24,25 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Mail;
+namespace PrestaShop\PrestaShop\Core\Exception;
 
-use Symfony\Component\Templating\EngineInterface;
-
-class MailTemplateGenerator
+class InvalidException extends CoreException
 {
-    /**
-     * @var EngineInterface
-     */
-    private $engine;
-
-    public function __construct(
-        MailTemplateCatalogInterface $templateCatalog,
-        EngineInterface $engine
-    ) {
-        $this->engine = $engine;
-    }
-
-    public function generateTemplates($theme, $language)
-    {
-    }
 }
