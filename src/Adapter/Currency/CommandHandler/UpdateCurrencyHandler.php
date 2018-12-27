@@ -28,9 +28,12 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelLegacyHandler;
+use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\UpdateCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -61,6 +64,12 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
                     )
                 );
             }
+
+            $this->assertNewIsoCodeDoesNotExist(
+                $command->getCurrencyId()->getValue(),
+                $entity->iso_code,
+                $command->getIsoCode()->getValue()
+            );
 
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->active = $command->isEnabled();
@@ -97,5 +106,39 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
         }
 
         return new CurrencyId((int) $entity->id);
+    }
+
+    /**
+     * @param int $currencyId
+     * @param string $currentIsoCode
+     * @param string $newIsoCode
+     *
+     * @throws CurrencyConstraintException
+     */
+    private function assertNewIsoCodeDoesNotExist($currencyId, $currentIsoCode, $newIsoCode)
+    {
+        if ($currentIsoCode === $newIsoCode) {
+            return;
+        }
+
+        $qb = new DbQuery();
+        $qb
+            ->select('id_currency')
+            ->from('currency')
+            ->where('id_currency !=' . $currencyId)
+            ->where('iso_code = ' . pSQL($currentIsoCode))
+        ;
+
+        $result = Db::getInstance()->getValue($qb);
+
+        if (is_numeric($result)) {
+            throw new CurrencyConstraintException(
+                sprintf(
+                    'Currency with iso code "%s" already exist and cannot be created',
+                    $newIsoCode
+                ),
+                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
+            );
+        }
     }
 }
