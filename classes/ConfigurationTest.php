@@ -89,6 +89,7 @@ class ConfigurationTestCore
                 'simplexml' => false,
                 'zip' => false,
                 'fileinfo' => false,
+                'intl' => false,
             ));
         }
 
@@ -110,6 +111,7 @@ class ConfigurationTestCore
             'dom' => false,
             'pdo_mysql' => false,
             'fopen' => false,
+            'intl' => false,
         );
     }
 
@@ -162,6 +164,11 @@ class ConfigurationTestCore
     public static function test_mysql_support()
     {
         return extension_loaded('mysql') || extension_loaded('mysqli') || extension_loaded('pdo_mysql');
+    }
+
+    public static function test_intl()
+    {
+        return extension_loaded('intl');
     }
 
     public static function test_pdo_mysql()
