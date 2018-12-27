@@ -26,23 +26,33 @@
 
 namespace PrestaShopBundle\Service\Mail;
 
-use Symfony\Component\Templating\EngineInterface;
-
-class MailTemplateGenerator
+interface MailTemplateInterface
 {
+    const CORE_TEMPLATES = 'core';
+    const MODULES_TEMPLATES = 'modules';
+
     /**
-     * @var EngineInterface
+     * @return string
      */
-    private $engine;
+    public function getType();
 
-    public function __construct(
-        MailTemplateCatalogInterface $templateCatalog,
-        EngineInterface $engine
-    ) {
-        $this->engine = $engine;
-    }
+    /**
+     * @return string
+     */
+    public function getName();
 
-    public function generateTemplates($theme, $language)
-    {
-    }
+    /**
+     * @return string
+     */
+    public function getTheme();
+
+    /**
+     * @return string
+     */
+    public function getPath();
+
+    /**
+     * @return string|null
+     */
+    public function getModule();
 }
