@@ -162,3 +162,5 @@ services:
 
     prestashop.admin.currency.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyFormDataProvider'
+        arguments:
+          - '@=service("prestashop.adapter.legacy.configuration").get("PS_ACTIVE_CRONJOB_EXCHANGE_RATE")'
