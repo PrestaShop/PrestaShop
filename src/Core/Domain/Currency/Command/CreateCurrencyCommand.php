@@ -26,7 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyExchangeRate;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIsoCode;
 
 /**
  * Class CreateCurrencyCommand
@@ -34,12 +35,12 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\IsoCode;
 class CreateCurrencyCommand
 {
     /**
-     * @var string
+     * @var CurrencyIsoCode
      */
     private $isoCode;
 
     /**
-     * @var float
+     * @var CurrencyExchangeRate
      */
     private $exchangeRate;
 
@@ -54,11 +55,11 @@ class CreateCurrencyCommand
     private $shopIds;
 
     /**
-     * @param IsoCode $isoCode
-     * @param float $exchangeRate
+     * @param CurrencyIsoCode $isoCode
+     * @param CurrencyExchangeRate $exchangeRate
      * @param bool $isEnabled
      */
-    public function __construct(IsoCode $isoCode, $exchangeRate, $isEnabled)
+    public function __construct(CurrencyIsoCode $isoCode, CurrencyExchangeRate $exchangeRate, $isEnabled)
     {
         $this->isoCode = $isoCode;
         $this->exchangeRate = $exchangeRate;
@@ -66,7 +67,7 @@ class CreateCurrencyCommand
     }
 
     /**
-     * @return IsoCode
+     * @return CurrencyIsoCode
      */
     public function getIsoCode()
     {
@@ -74,7 +75,7 @@ class CreateCurrencyCommand
     }
 
     /**
-     * @return float
+     * @return CurrencyExchangeRate
      */
     public function getExchangeRate()
     {

@@ -55,7 +55,7 @@ final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
 
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->active = $command->isEnabled();
-            $entity->conversion_rate = $command->getExchangeRate();
+            $entity->conversion_rate = $command->getExchangeRate()->getValue();
 
             if (false === $entity->add()) {
                 throw new CannotCreateCurrencyException('Failed to create new currency');
