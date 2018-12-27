@@ -1,0 +1,23 @@
+{{ form_start(exchangeRatesForm, {'action': path('admin_sql_requests_process_settings') }) }}
+  <div class="card">
+    <h3 class="card-header">
+      {{ 'Exchange rate'|trans({}, 'Admin.International.Feature') }}
+    </h3>
+    <div class="card-block row">
+      <div class="card-text">
+        <div class="form-group row">
+          <label class="form-control-label" for="{{ exchangeRatesForm.live_exchange_rate.vars.id }}">
+            {{ 'Live exchange rates'|trans({}, 'Admin.International.Feature') }}
+          </label>
+          <div class="col-sm">
+            {{ form_widget(exchangeRatesForm.live_exchange_rate) }}
+          </div>
+        </div>
+
+        {% block currency_settings %}
+          {{ form_rest(exchangeRatesForm) }}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+{{ form_end(exchangeRatesForm) }}
