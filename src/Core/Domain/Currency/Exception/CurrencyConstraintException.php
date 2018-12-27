@@ -24,15 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Currency;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CurrencySettings
+ * Class CurrencyConstraintException
  */
-class CurrencySettings
+class CurrencyConstraintException extends CurrencyException
 {
-    /**
-     * @var int
-     */
-    const DEFAULT_CONVERSION_RATE = 1;
+    const INVALID_ISO_CODE = 1;
 }
