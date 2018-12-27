@@ -59,7 +59,6 @@ final class GetCurrencyForFormEditingHandler implements GetCurrencyForFormEditin
      */
     public function handle(GetCurrencyForFormEditing $query)
     {
-        //todo: shop context when one currency is missing causes some issues
         $entity = new Currency(
             $query->getCurrencyId()->getValue(),
             null,
