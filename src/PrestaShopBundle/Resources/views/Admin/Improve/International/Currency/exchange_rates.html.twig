@@ -1,4 +1,5 @@
-{{ form_start(exchangeRatesForm, {'action': path('admin_sql_requests_process_settings') }) }}
+{# todo: change path #}
+{{ form_start(exchangeRatesForm, {'action': path('admin_currencies_index') }) }}
   <div class="card">
     <h3 class="card-header">
       {{ 'Exchange rate'|trans({}, 'Admin.International.Feature') }}
@@ -11,12 +12,19 @@
           </label>
           <div class="col-sm">
             {{ form_widget(exchangeRatesForm.live_exchange_rate, {'attr': {'class': 'js-live-exchange-rate'}}) }}
-            <small class="form-text js-exchange-rate-text-when-disabled {{ (exchangeRatesForm.live_exchange_rate.vars.value == 0) ? '' : 'd-none' }}">
-              {{ 'The exchange rates are not automatically updated'|trans({}, 'Admin.International.Feature') }}
-            </small>
-            <small class="form-text js-exchange-rate-text-when-enabled {{ (exchangeRatesForm.live_exchange_rate.vars.value != 0) ? '' : 'd-none' }}">
-              {{ 'The exchange rates are automatically updated'|trans({}, 'Admin.International.Feature') }}
-            </small>
+
+            {% if exchangeRatesForm.live_exchange_rate.vars.disabled %}
+                <small class="form-text">
+                  {{ 'Please install the %module_name% module before using this feature.'|trans({'%module_name%': 'cronjobs'}, 'Admin.International.Notification') }}
+                </small>
+              {% else %}
+                <small class="form-text js-exchange-rate-text-when-disabled {{ (exchangeRatesForm.live_exchange_rate.vars.value == 0) ? '' : 'd-none' }}">
+                  {{ 'The exchange rates are not automatically updated'|trans({}, 'Admin.International.Feature') }}
+                </small>
+                <small class="form-text js-exchange-rate-text-when-enabled {{ (exchangeRatesForm.live_exchange_rate.vars.value != 0) ? '' : 'd-none' }}">
+                  {{ 'The exchange rates are automatically updated'|trans({}, 'Admin.International.Feature') }}
+                </small>
+            {% endif %}
           </div>
         </div>
 
