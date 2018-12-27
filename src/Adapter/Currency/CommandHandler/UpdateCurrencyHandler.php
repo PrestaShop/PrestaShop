@@ -62,14 +62,14 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
                 );
             }
 
-            $entity->iso_code = $command->getIsoCode();
+            $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->active = $command->isEnabled();
-            $entity->conversion_rate = $command->getExchangeRate();
+            $entity->conversion_rate = $command->getExchangeRate()->getValue();
 
             if (false === $entity->update()) {
                 throw new CannotUpdateCurrencyException(
                     sprintf(
-                        'An error occured when updating currency object with id "%s"',
+                        'An error occurred when updating currency object with id "%s"',
                         $command->getCurrencyId()->getValue()
                     )
                 );
@@ -88,7 +88,7 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
         } catch (PrestaShopException $exception) {
             throw new CurrencyException(
                 sprintf(
-                    'An error occured when updating currency object with id "%s"',
+                    'An error occurred when updating currency object with id "%s"',
                     $command->getCurrencyId()->getValue()
                 ),
                 0,
