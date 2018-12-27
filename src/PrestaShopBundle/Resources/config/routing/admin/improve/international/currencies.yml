@@ -45,3 +45,18 @@ admin_currencies_toggle_status:
         _legacy_controller: AdminCurrencies
     requirements:
         currencyId: \d+
+
+admin_currencies_toggle_live_exchange_rates_update:
+    path: /toggle-live-exchange-rates-update
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:toggleLiveExchangeRatesUpdate'
+        _legacy_controller: AdminCurrencies
+
+admin_currencies_update_exchange_rates:
+    path: /update-exchange_rates
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:updateExchangeRates'
+        _legacy_controller: AdminCurrencies
+
