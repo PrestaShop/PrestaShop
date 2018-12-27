@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIsoCode;
 
 /**
  * Class UpdateCurrencyCommand
@@ -39,12 +41,12 @@ class UpdateCurrencyCommand
     private $currencyId;
 
     /**
-     * @var string
+     * @var CurrencyIsoCode
      */
     private $isoCode;
 
     /**
-     * @var float
+     * @var CurrencyExchangeRate
      */
     private $exchangeRate;
 
@@ -75,18 +77,7 @@ class UpdateCurrencyCommand
     }
 
     /**
-     * @param CurrencyId $currencyId
-     *
-     * @return self
-     */
-    public function setCurrencyId($currencyId)
-    {
-        $this->currencyId = $currencyId;
-        return $this;
-    }
-
-    /**
-     * @return string
+     * @return CurrencyIsoCode
      */
     public function getIsoCode()
     {
@@ -94,11 +85,11 @@ class UpdateCurrencyCommand
     }
 
     /**
-     * @param string $isoCode
+     * @param CurrencyIsoCode $isoCode
      *
      * @return self
      */
-    public function setIsoCode($isoCode)
+    public function setIsoCode(CurrencyIsoCode $isoCode)
     {
         $this->isoCode = $isoCode;
 
@@ -106,7 +97,7 @@ class UpdateCurrencyCommand
     }
 
     /**
-     * @return float
+     * @return CurrencyExchangeRate
      */
     public function getExchangeRate()
     {
@@ -114,11 +105,11 @@ class UpdateCurrencyCommand
     }
 
     /**
-     * @param float $exchangeRate
+     * @param CurrencyExchangeRate $exchangeRate
      *
      * @return self
      */
-    public function setExchangeRate($exchangeRate)
+    public function setExchangeRate(CurrencyExchangeRate $exchangeRate)
     {
         $this->exchangeRate = $exchangeRate;
 
