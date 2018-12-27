@@ -264,6 +264,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
     }
 
+    //todo: its not a toggle -rename it
     public function toggleLiveExchangeRatesUpdateAction(Request $request)
     {
         if ($this->isDemoModeEnabled()) {
@@ -277,7 +278,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
         $authLevel = $this->authorizationLevel($request->attributes->get('_legacy_controller'));
 
-        if ($authLevel != PageVoter::LEVEL_UPDATE) {
+        if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
             return $this->json([
                     'status' => false,
                     'message' => $this->trans(
