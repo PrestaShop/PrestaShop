@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelLegacyHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CreateCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\CreateCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShopException;
@@ -49,7 +50,8 @@ final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
      */
     public function handle(CreateCurrencyCommand $command)
     {
-        //todo: check if currency does not exist
+        $this->assertSuchCurrencyDoesNotExist($command->getIsoCode()->getValue());
+
         try {
             $entity = new Currency();
 
@@ -77,5 +79,23 @@ final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
         }
 
         return new CurrencyId((int) $entity->id);
+    }
+
+    /**
+     * @param string $isoCode
+     *
+     * @throws CurrencyConstraintException
+     */
+    private function assertSuchCurrencyDoesNotExist($isoCode)
+    {
+        if (Currency::exists($isoCode)) {
+            throw new CurrencyConstraintException(
+                sprintf(
+                    'Currency with iso code "%s" already exist and cannot be created',
+                    $isoCode
+                ),
+                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
+            );
+        }
     }
 }
