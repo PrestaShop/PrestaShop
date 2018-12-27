@@ -10,7 +10,13 @@
             {{ 'Live exchange rates'|trans({}, 'Admin.International.Feature') }}
           </label>
           <div class="col-sm">
-            {{ form_widget(exchangeRatesForm.live_exchange_rate) }}
+            {{ form_widget(exchangeRatesForm.live_exchange_rate, {'attr': {'class': 'js-live-exchange-rate'}}) }}
+            <small class="form-text js-exchange-rate-text-when-disabled {{ (exchangeRatesForm.live_exchange_rate.vars.value == 0) ? '' : 'd-none' }}">
+              {{ 'The exchange rates are not automatically updated'|trans({}, 'Admin.International.Feature') }}
+            </small>
+            <small class="form-text js-exchange-rate-text-when-enabled {{ (exchangeRatesForm.live_exchange_rate.vars.value != 0) ? '' : 'd-none' }}">
+              {{ 'The exchange rates are automatically updated'|trans({}, 'Admin.International.Feature') }}
+            </small>
           </div>
         </div>
 
