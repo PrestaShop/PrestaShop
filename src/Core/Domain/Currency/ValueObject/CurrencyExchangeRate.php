@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 
 /**
- * Class CurrencyExchangeRate
+ * Class CurrencyLiveExchangeRate
  */
 class CurrencyExchangeRate
 {
