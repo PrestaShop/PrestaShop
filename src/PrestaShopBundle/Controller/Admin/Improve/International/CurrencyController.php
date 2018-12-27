@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -256,6 +257,45 @@ class CurrencyController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_currencies_index');
+    }
+
+    public function updateExchangeRatesAction(Request $request)
+    {
+
+    }
+
+    public function toggleLiveExchangeRatesUpdateAction(Request $request)
+    {
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                    'status' => false,
+                    'message' => $this->getDemoModeErrorMessage(),
+                ],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $authLevel = $this->authorizationLevel($request->attributes->get('_legacy_controller'));
+
+        if ($authLevel != PageVoter::LEVEL_UPDATE) {
+            return $this->json([
+                    'status' => false,
+                    'message' => $this->trans(
+                        'You do not have permission to update this.',
+                        'Admin.Notifications.Error'
+                    ),
+                ],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $response = [
+            'status' => true,
+            'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+        ];
+        $statusCode = 200;
+
+        return $this->json($response, $statusCode);
     }
 
     /**
