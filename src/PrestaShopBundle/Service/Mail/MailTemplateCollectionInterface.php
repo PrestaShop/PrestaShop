@@ -26,23 +26,38 @@
 
 namespace PrestaShopBundle\Service\Mail;
 
-use Symfony\Component\Templating\EngineInterface;
+use PrestaShop\PrestaShop\Core\Exception\InvalidException;
 
-class MailTemplateGenerator
+interface MailTemplateCollectionInterface extends \IteratorAggregate, \Countable
 {
     /**
-     * @var EngineInterface
+     * @param MailTemplateInterface $template
+     *
+     * @return bool
      */
-    private $engine;
+    public function has(MailTemplateInterface $template);
 
-    public function __construct(
-        MailTemplateCatalogInterface $templateCatalog,
-        EngineInterface $engine
-    ) {
-        $this->engine = $engine;
-    }
+    /**
+     * @param MailTemplateInterface $template
+     */
+    public function add(MailTemplateInterface $template);
 
-    public function generateTemplates($theme, $language)
-    {
-    }
+    /**
+     * @param MailTemplateInterface $template
+     *
+     * @throws InvalidException
+     */
+    public function remove(MailTemplateInterface $template);
+
+    /**
+     * @return MailTemplateInterface[]
+     */
+    public function getTemplates();
+
+    /**
+     * @param array $templates
+     *
+     * @throws InvalidException
+     */
+    public function setTemplates($templates = []);
 }
