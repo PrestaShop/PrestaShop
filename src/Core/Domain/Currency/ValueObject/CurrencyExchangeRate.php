@@ -74,7 +74,7 @@ class CurrencyExchangeRate
             );
         }
 
-        if (0 > $exchangeRate) {
+        if (0 >= $exchangeRate) {
             throw new CurrencyConstraintException(
                 sprintf(
                     'Given exchange rate "%s" is not valid. It must be more then 0',
