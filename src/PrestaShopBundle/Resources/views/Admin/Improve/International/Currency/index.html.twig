@@ -43,8 +43,8 @@
   </div>
 
   {% block exchange_rates_block %}
-    <div class="row justify-content-center">
-      <div class="col">
+    <div class="row">
+      <div class="col-lg-6 col-md-8">
         {{ include('@PrestaShop/Admin/Improve/International/Currency/exchange_rates.html.twig', {'exchangeRatesForm': currencySettingsForm.exchange_rates}) }}
       </div>
     </div>
