@@ -122,7 +122,7 @@ abstract class AbstractObjectModelLegacyHandler
 
             $update = [];
             foreach ($items as $columnName => $columnValue) {
-                $update[pSQL($columnName)] = pSQL($columnValue);
+                $update[$columnName] = pSQL($columnValue);
             }
 
             Db::getInstance()->update(
