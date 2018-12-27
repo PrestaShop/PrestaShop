@@ -78,9 +78,9 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
         $command = new UpdateCurrencyCommand(new CurrencyId((int) $id));
 
         $command
-            ->setExchangeRate($data['exchange_rate'])
+            ->setExchangeRate(new CurrencyExchangeRate($data['exchange_rate']))
             ->setIsEnabled($data['active'])
-            ->setIsoCode($data['iso_code'])
+            ->setIsoCode(new CurrencyIsoCode($data['iso_code']))
             ->setShopIds($data['shop_association'])
         ;
 
