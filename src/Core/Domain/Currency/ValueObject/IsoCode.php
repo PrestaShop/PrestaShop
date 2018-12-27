@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 
 /**
- * Class CreateCurrencyCommand
+ * Class IsoCode
  */
-class CreateCurrencyCommand
+class IsoCode
 {
     /**
      * @var string
@@ -39,73 +39,41 @@ class CreateCurrencyCommand
     private $isoCode;
 
     /**
-     * @var float
+     * @param string $isoCode
+     *
+     * @throws CurrencyConstraintException
      */
-    private $exchangeRate;
-
-    /**
-     * @var bool
-     */
-    private $isEnabled;
-
-    /**
-     * @var int[]
-     */
-    private $shopIds;
-
-    /**
-     * @param IsoCode $isoCode
-     * @param float $exchangeRate
-     * @param bool $isEnabled
-     */
-    public function __construct(IsoCode $isoCode, $exchangeRate, $isEnabled)
+    public function __construct($isoCode)
     {
+        $this->assertIsValidIsoCode($isoCode);
         $this->isoCode = $isoCode;
-        $this->exchangeRate = $exchangeRate;
-        $this->isEnabled = $isEnabled;
     }
 
     /**
-     * @return IsoCode
+     * @return string
      */
-    public function getIsoCode()
+    public function getValue()
     {
         return $this->isoCode;
     }
 
     /**
-     * @return float
-     */
-    public function getExchangeRate()
-    {
-        return $this->exchangeRate;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return $this->isEnabled;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getShopIds()
-    {
-        return $this->shopIds;
-    }
-
-    /**
-     * @param int[] $shopIds
+     * @param string $isoCode
      *
-     * @return self
+     * @throws CurrencyConstraintException
      */
-    public function setShopIds($shopIds)
+    private function assertIsValidIsoCode($isoCode)
     {
-        $this->shopIds = $shopIds;
-
-        return $this;
+        $regex = '/^[a-zA-Z]{2,3}$/';
+        if (!is_string($isoCode) || !preg_match($regex, $isoCode)) {
+            throw new CurrencyConstraintException(
+                sprintf(
+                    'Given iso code "%s" is not valid. Either it is not a string or it did not matched given regex "%s"',
+                    $isoCode,
+                    $regex
+                ),
+                CurrencyConstraintException::INVALID_ISO_CODE
+            );
+        }
     }
 }
