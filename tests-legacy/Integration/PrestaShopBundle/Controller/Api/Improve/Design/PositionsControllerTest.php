@@ -51,20 +51,16 @@ class PositionsControllerTest extends WebTestCase
 
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
-        if (!Module::isInstalled('bankwire')) {
+        if (!$moduleManager->isInstalled('bankwire')) {
             $moduleManager->install('bankwire');
         }
 
-        if (!Module::isInstalled('ps_featuredproducts')) {
+        if (!$moduleManager->isInstalled('ps_featuredproducts')) {
             $moduleManager->install('ps_featuredproducts');
         }
 
-        // clean cache again in order for module installations to be acknowledged
-        Cache::clear();
-        Module::clearStaticCache();
-
-        $this->moduleId = Module::getModuleIdByName('bankwire');
-        $this->otherModuleId = Module::getModuleIdByName('ps_featuredproducts');
+        $this->moduleId = $moduleManager->getModuleIdByName('bankwire');
+        $this->otherModuleId = $moduleManager->getModuleIdByName('ps_featuredproducts');
         $this->hookId = Hook::getIdByName('displayHome');
     }
 
