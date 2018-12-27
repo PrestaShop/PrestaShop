@@ -24,39 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
+namespace PrestaShop\PrestaShop\Adapter\Module;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 /**
- * Class CurrencyExchangeRateType
+ * Class ModuleValidator
+ *
+ * @internal
  */
-class CurrencyExchangeRateType extends AbstractType
+class ModuleValidator
 {
     /**
-     * @var bool
+     * @param string $moduleName
+     *
+     * @return bool
      */
-    private $isCronModuleInstalled;
-
-    /**
-     * @param bool $isCronModuleInstalled
-     */
-    public function __construct($isCronModuleInstalled)
+    public function isInstalled($moduleName)
     {
-        $this->isCronModuleInstalled = $isCronModuleInstalled;
-    }
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('live_exchange_rate', SwitchType::class, [
-                'disabled' => !$this->isCronModuleInstalled,
-            ])
-        ;
+        if (null !== $moduleManagerBuilder) {
+            $moduleManager = $moduleManagerBuilder->build();
+
+            return $moduleManager->isInstalled($moduleName);
+        }
+
+        return false;
     }
 }
