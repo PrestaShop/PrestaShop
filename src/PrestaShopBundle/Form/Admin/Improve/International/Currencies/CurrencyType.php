@@ -33,6 +33,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class CurrencyType
@@ -73,6 +75,21 @@ class CurrencyType extends AbstractType
             ])
             ->add('exchange_rate', NumberType::class, [
                 'scale' => 6,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            [
+                                sprintf('"%s"', $this->trans('Exchange rate', [], 'Admin.International.Feature')),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new GreaterThan([
+                        'value' => 0,
+                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error')
+                    ])
+                ],
                 'invalid_message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
             ])
             ->add('active',  SwitchType::class)
