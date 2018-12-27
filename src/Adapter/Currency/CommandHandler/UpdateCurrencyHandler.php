@@ -65,7 +65,7 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
                 );
             }
 
-            $this->assertNewIsoCodeDoesNotExist(
+            $this->assertNewIsoCodeAlreadyExists(
                 $command->getCurrencyId()->getValue(),
                 $entity->iso_code,
                 $command->getIsoCode()->getValue()
@@ -115,7 +115,7 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
      *
      * @throws CurrencyConstraintException
      */
-    private function assertNewIsoCodeDoesNotExist($currencyId, $currentIsoCode, $newIsoCode)
+    private function assertNewIsoCodeAlreadyExists($currencyId, $currentIsoCode, $newIsoCode)
     {
         if ($currentIsoCode === $newIsoCode) {
             return;
@@ -126,7 +126,7 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
             ->select('id_currency')
             ->from('currency')
             ->where('id_currency !=' . $currencyId)
-            ->where('iso_code = ' . pSQL($currentIsoCode))
+            ->where('iso_code = "' . pSQL($newIsoCode) . '"')
         ;
 
         $result = Db::getInstance()->getValue($qb);

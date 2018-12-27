@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusComma
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -129,7 +130,7 @@ class CurrencyController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_currencies_index');
             }
         } catch (CurrencyException $exception) {
-
+            $this->addFlash('error', $this->handleException($exception));
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
@@ -169,7 +170,7 @@ class CurrencyController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_currencies_index');
             }
         } catch (CurrencyException $exception) {
-
+            $this->addFlash('error', $this->handleException($exception));
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
@@ -195,10 +196,10 @@ class CurrencyController extends FrameworkBundleAdminController
     public function deleteAction($currencyId)
     {
         try {
-            $currencyId = new CurrencyId($currencyId);
+            $currencyId = new CurrencyId((int) $currencyId);
             $this->getCommandBus()->handle(new DeleteCurrencyCommand($currencyId));
         } catch (CurrencyException $exception) {
-            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+            $this->addFlash('error', $this->handleException($exception));
 
             return $this->redirectToRoute('admin_currencies_index');
         }
@@ -228,10 +229,10 @@ class CurrencyController extends FrameworkBundleAdminController
     public function toggleStatusAction($currencyId)
     {
         try {
-            $currencyId = new CurrencyId($currencyId);
+            $currencyId = new CurrencyId((int) $currencyId);
             $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand($currencyId));
         } catch (CurrencyException $exception) {
-            $this->addFlash('error', $this->getErrorByExceptionType($exception));
+            $this->addFlash('error', $this->handleException($exception));
 
             return $this->redirectToRoute('admin_currencies_index');
         }
@@ -260,6 +261,22 @@ class CurrencyController extends FrameworkBundleAdminController
     private function getCurrencyFormHandler()
     {
         return $this->get('prestashop.core.form.identifiable_object.currency_form_handler');
+    }
+
+    /**
+     * Gets error message by comparing exception code or by just comparing exception class.
+     *
+     * @param CurrencyException $exception
+     *
+     * @return string
+     */
+    private function handleException(CurrencyException $exception)
+    {
+        if (0 !== $exception->getCode()) {
+            return $this->getErrorByExceptionCode($exception);
+        }
+
+        return $this->getErrorByExceptionType($exception);
     }
 
     /**
@@ -294,6 +311,76 @@ class CurrencyController extends FrameworkBundleAdminController
 
         if (isset($exceptionTypeDictionary[$exceptionType])) {
             return $exceptionTypeDictionary[$exceptionType];
+        }
+
+        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * Gets an error by exception class and its code.
+     *
+     * @param CurrencyException $exception
+     *
+     * @return string
+     */
+    private function getErrorByExceptionCode(CurrencyException $exception)
+    {
+        $exceptionDictionary = [
+            CurrencyConstraintException::class => [
+                CurrencyConstraintException::INVALID_ISO_CODE =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Currency', 'Admin.Global')),
+                        ]
+                    ),
+                CurrencyConstraintException::INVALID_ISO_CODE_TYPE =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Currency', 'Admin.Global')),
+                        ]
+                    ),
+                CurrencyConstraintException::INVALID_EXCHANGE_RATE_TYPE =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Exchange rate', 'Admin.International.Feature')),
+                        ]
+                    ),
+                CurrencyConstraintException::INVALID_EXCHANGE_RATE =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Exchange rate', 'Admin.International.Feature')),
+                        ]
+                    ),
+                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS =>
+                    $this->trans(
+                        'This currency already exists.',
+                        'Admin.International.Notification'
+                    )
+            ],
+        ];
+
+        $exceptionClass = get_class($exception);
+        $exceptionCode = $exception->getCode();
+
+        if (isset($exceptionDictionary[$exceptionClass][$exceptionCode])) {
+
+            return $exceptionDictionary[$exceptionClass][$exceptionCode];
         }
 
         return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
