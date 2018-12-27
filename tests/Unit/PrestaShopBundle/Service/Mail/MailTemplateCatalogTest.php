@@ -73,7 +73,17 @@ class MailTemplateCatalogTest extends TestCase
 
     public function testListModuleTemplates()
     {
+        $expectedTemplates = [];
+        foreach ($this->moduleTemplates as $moduleName => $moduleFiles) {
+            if (count($moduleFiles) > 0) {
+                $expectedTemplates[$moduleName] = $this->convertToTemplatesList($moduleFiles);
+            }
+        }
 
+        $catalog = new MailTemplateCatalog($this->tempDir);
+        $listedTemplates = $catalog->listModuleTemplates('modern');
+
+        $this->assertEquals($expectedTemplates, $listedTemplates);
     }
 
     private function createThemesFiles()
@@ -83,25 +93,26 @@ class MailTemplateCatalogTest extends TestCase
             'modern',
         ];
         $this->coreTemplates = [
-            'account.yml',
-            'password.yml',
-            'order_conf.yml',
-            'bank_wire.yml',
+            'account.twig',
+            'password.twig',
+            'order_conf.twig',
+            'bank_wire.twig',
         ];
         $this->moduleTemplates = [
             'followup' => [
-                'followup_1.yml',
-                'followup_2.yml',
+                'followup_1.twig',
+                'followup_2.twig',
             ],
             'ps_emailalerts' => [
-                'return_slip.yml',
-                'productoutofstock.yml',
+                'return_slip.twig',
+                'productoutofstock.twig',
             ],
             'empty_module' => [
             ]
         ];
 
         foreach ($this->expectedThemes as $theme) {
+            //Insert core files
             $themeFolder = $this->tempDir . DIRECTORY_SEPARATOR . $theme;
             $coreFolder = $themeFolder . DIRECTORY_SEPARATOR . MailTemplateCatalog::CORE_TEMPLATES;
             $this->fs->mkdir($coreFolder);
@@ -109,6 +120,7 @@ class MailTemplateCatalogTest extends TestCase
                 $this->fs->touch($coreFolder . DIRECTORY_SEPARATOR . $template);
             }
 
+            //Insert modules files
             $modulesFolder = $themeFolder . DIRECTORY_SEPARATOR . MailTemplateCatalog::MODULES_TEMPLATES;
             foreach ($this->moduleTemplates as $moduleName => $moduleTemplates) {
                 $moduleFolder = $modulesFolder . DIRECTORY_SEPARATOR . $moduleName;
@@ -117,6 +129,12 @@ class MailTemplateCatalogTest extends TestCase
                     $this->fs->touch($moduleFolder . DIRECTORY_SEPARATOR . $moduleTemplate);
                 }
             }
+
+            //Insert components files used in templates
+            $componentsFolder = $themeFolder . DIRECTORY_SEPARATOR . 'components';
+            $this->fs->mkdir($componentsFolder);
+            $this->fs->touch($componentsFolder . DIRECTORY_SEPARATOR . 'title.twig');
+            $this->fs->touch($componentsFolder . DIRECTORY_SEPARATOR . 'image.twig');
         }
         $this->fs->mkdir($this->tempDir . DIRECTORY_SEPARATOR . 'empty_dir');
         $this->fs->touch($this->tempDir . DIRECTORY_SEPARATOR . 'useless_file');
