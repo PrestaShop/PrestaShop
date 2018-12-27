@@ -35,4 +35,5 @@ class CurrencyConstraintException extends CurrencyException
     const INVALID_ISO_CODE_TYPE = 2;
     const INVALID_EXCHANGE_RATE_TYPE = 3;
     const INVALID_EXCHANGE_RATE = 4;
+    const CURRENCY_ALREADY_EXISTS = 5;
 }
