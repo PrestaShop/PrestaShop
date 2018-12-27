@@ -708,5 +708,10 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
+
+    form.type.currency_exchange_rate:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
+        arguments:
+            - '@=service("prestashop.adapter.module.validator").isInstalled("cronjobs")'
         tags:
             - { name: form.type }
