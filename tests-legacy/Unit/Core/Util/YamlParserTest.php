@@ -31,6 +31,19 @@ use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 
 class YamlParserTest extends UnitTestCase
 {
+    /**
+     * @param $yamlFiles
+     * @return string
+     */
+    private function clearCacheFile($yamlFiles)
+    {
+        $yamlParser = new YamlParser(false);
+        $cacheFile = $yamlParser->getCacheFile($yamlFiles);
+        @unlink($cacheFile);
+
+        return $cacheFile;
+    }
+
     public function getConfigDir()
     {
         return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config';
@@ -39,16 +52,23 @@ class YamlParserTest extends UnitTestCase
     /**
      * @dataProvider getYamlFilesProvider
      */
-    public function testParser($yamlFiles)
+    public function testParserNoCache($yamlFiles)
     {
+        $cacheFile = $this->clearCacheFile($yamlFiles);
         $yamlParser = new YamlParser(false);
-        $cacheFile = $yamlParser->getCacheFile($yamlFiles);
-        @unlink($cacheFile);
 
         // no cache file
         $config = $yamlParser->parse($yamlFiles);
         $this->assertArrayHasKey('parameters', $config);
         $this->assertFileNotExists($cacheFile);
+    }
+
+    /**
+     * @dataProvider getYamlFilesProvider
+     */
+    public function testParserCache($yamlFiles)
+    {
+        $cacheFile = $this->clearCacheFile($yamlFiles);
 
         // create the cache file
         $yamlParser = new YamlParser(true);
@@ -70,6 +90,21 @@ class YamlParserTest extends UnitTestCase
         $this->assertArrayHasKey('parameters', $config);
         $this->assertFileExists($cacheFile);
         $this->assertNotEquals($cacheTime, filemtime($cacheFile));
+        $cacheTime = filemtime($cacheFile);
+    }
+
+    /**
+     * @dataProvider getYamlFilesProvider
+     */
+    public function testParserCacheRefresh($yamlFiles)
+    {
+        $cacheFile = $this->clearCacheFile($yamlFiles);
+
+        // create the cache file
+        $yamlParser = new YamlParser(true);
+        $config = $yamlParser->parse($yamlFiles);
+        $this->assertArrayHasKey('parameters', $config);
+        $this->assertFileExists($cacheFile);
         $cacheTime = filemtime($cacheFile);
 
         // if the forceRefresh flag is used, the cache should be refreshed
