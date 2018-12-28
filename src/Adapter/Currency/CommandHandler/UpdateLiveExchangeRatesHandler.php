@@ -226,6 +226,11 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
         return $isCronAdded;
     }
 
+    /**
+     * @param int $cronId
+     *
+     * @throws Exception
+     */
     private function validateCronJob($cronId)
     {
         $query = new DbQuery();
