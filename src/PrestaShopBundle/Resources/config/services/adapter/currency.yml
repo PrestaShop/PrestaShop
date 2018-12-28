@@ -35,8 +35,10 @@ services:
           - '@prestashop.adapter.tools'
           - '@=service("prestashop.adapter.legacy.context").getContext().shop'
           - '@prestashop.adapter.shop.shop_url'
+          - '@translator'
           - '@=service("prestashop.adapter.module.validator").isInstalled("cronjobs")'
           - '@=service("prestashop.adapter.legacy.context").getAdminBaseUrl()'
+          - '%database_prefix%'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateLiveExchangeRatesCommand' }
 

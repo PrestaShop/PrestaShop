@@ -36,40 +36,40 @@ class UpdateLiveExchangeRatesCommand
     /**
      * @var bool
      */
-    private $isEnabled;
+    private $isExchangeRateEnabled;
 
     /**
-     * @param bool $isEnabled
+     * @param bool $isExchangeRateEnabled
      *
      * @throws CurrencyConstraintException
      */
-    public function __construct($isEnabled)
+    public function __construct($isExchangeRateEnabled)
     {
-        $this->assertType($isEnabled);
+        $this->assertType($isExchangeRateEnabled);
 
-        $this->isEnabled = $isEnabled;
+        $this->isExchangeRateEnabled = $isExchangeRateEnabled;
     }
 
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isExchangeRateEnabled()
     {
-        return $this->isEnabled;
+        return $this->isExchangeRateEnabled;
     }
 
     /**
-     * @param bool $isEnabled
+     * @param bool $isExchangeRateEnabled
      *
      * @throws CurrencyConstraintException
      */
-    private function assertType($isEnabled)
+    private function assertType($isExchangeRateEnabled)
     {
-        if (!is_bool($isEnabled)) {
+        if (!is_bool($isExchangeRateEnabled)) {
             throw new CurrencyConstraintException(
                 sprintf(
                     'Unexpected type of live exchange rates. Expected bool, got "%s"',
-                    var_export($isEnabled, true)
+                    var_export($isExchangeRateEnabled, true)
                 ),
                 CurrencyConstraintException::INVALID_LIVE_EXCHANGE_RATES
             );
