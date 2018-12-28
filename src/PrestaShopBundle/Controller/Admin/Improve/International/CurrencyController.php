@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyExc
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DisabledLiveExchangeRatesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -390,6 +391,13 @@ class CurrencyController extends FrameworkBundleAdminController
                 'You cannot disable the default currency',
                 'Admin.International.Notification'
             ),
+            DisabledLiveExchangeRatesException::class => $this->trans(
+                'Please install the %module_name% module before using this feature.',
+                'Admin.International.Notification',
+                [
+                    '%module_name%' => 'cronjobs',
+                ]
+            )
         ];
 
         $exceptionType = get_class($exception);
