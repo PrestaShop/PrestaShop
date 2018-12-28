@@ -11,7 +11,7 @@
             {{ 'Live exchange rates'|trans({}, 'Admin.International.Feature') }}
           </label>
           <div class="col-sm">
-            {{ form_widget(exchangeRatesForm.live_exchange_rate, {'attr': {'class': 'js-live-exchange-rate', 'data-url': path('admin_currencies_toggle_live_exchange_rates_update')}}) }}
+            {{ form_widget(exchangeRatesForm.live_exchange_rate, {'attr': {'class': 'js-live-exchange-rate', 'data-url': path('admin_currencies_update_live_exchange_rates')}}) }}
 
             {% if exchangeRatesForm.live_exchange_rate.vars.disabled %}
                 <small class="form-text">

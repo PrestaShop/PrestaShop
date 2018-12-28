@@ -28,11 +28,22 @@ services:
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateCurrencyCommand' }
 
+    prestashop.adapter.currency.command_handler.update_live_exchange_rates:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\UpdateLiveExchangeRatesHandler'
+        arguments:
+          - '@prestashop.adapter.legacy.configuration'
+          - '@prestashop.adapter.tools'
+          - '@=service("prestashop.adapter.legacy.context").getContext().shop'
+          - '@=service("prestashop.adapter.module.validator").isInstalled("cronjobs")'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateLiveExchangeRatesCommand' }
+
+
     # Query handlers
 
     prestashop.adapter.currency.query_handler.get_currency_for_form_editing:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetCurrencyForFormEditingHandler'
         arguments:
-          - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForFormEditing' }
