@@ -28,6 +28,11 @@ services:
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateCurrencyCommand' }
 
+    prestashop.adapter.currency.command_handler.update_exchange_rates:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\UpdateExchangeRatesHandler'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateExchangeRatesCommand' }
+
     prestashop.adapter.currency.command_handler.update_live_exchange_rates:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\UpdateLiveExchangeRatesHandler'
         arguments:
