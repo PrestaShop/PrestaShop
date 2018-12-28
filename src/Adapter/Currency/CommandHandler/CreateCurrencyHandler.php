@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShopException;
 
 /**
- * Class CreateCurrencyHandler
+ * Class CreateCurrencyHandler is responsible for adding new currency.
  *
  * @internal
  */

@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRefreshExchangeRa
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 
 /**
- * Class UpdateExchangeRatesHandler
+ * Class UpdateExchangeRatesHandler is responsible for refreshing currency exchange rates.
  *
  * @internal
  */

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateExchangeRatesCommand;
 
 /**
- * Interface UpdateExchangeRatesHandlerInterface
+ * Interface UpdateExchangeRatesHandlerInterface defines contract for UpdateExchangeRatesHandler.
  */
 interface UpdateExchangeRatesHandlerInterface
 {
