@@ -29,6 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 /**
  * Class CannotCreateLiveExchangeUpdateCronTask
  */
-class CannotCreateLiveExchangeUpdateCronTask extends CurrencyException
+class CannotCreateLiveExchangeUpdateCronTaskException extends CurrencyException
 {
 }
