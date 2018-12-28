@@ -26,15 +26,22 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
+use CronJobs;
+use Db;
+use Exception;
+use Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateLiveExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\UpdateLiveExchangeRatesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateLiveExchangeUpdateCronTask;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DisabledLiveExchangeRatesException;
 use PrestaShopException;
 use Shop;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class UpdateLiveExchangeRatesHandler
@@ -74,20 +81,34 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
     private $adminBaseUrl;
 
     /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param Configuration $configuration
      * @param Tools $tools
      * @param Shop $contextShop
      * @param ShopUrlDataProvider $shopUrlDataProvider
+     * @param TranslatorInterface $translator
      * @param bool $isCronJobModuleInstalled
      * @param string $adminBaseUrl
+     * @param string $dbPrefix
      */
     public function __construct(
         Configuration $configuration,
         Tools $tools,
         Shop $contextShop,
         ShopUrlDataProvider $shopUrlDataProvider,
+        TranslatorInterface $translator,
         $isCronJobModuleInstalled,
-        $adminBaseUrl
+        $adminBaseUrl,
+        $dbPrefix
     ) {
         $this->configuration = $configuration;
         $this->tools = $tools;
@@ -95,6 +116,8 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
         $this->isCronJobModuleInstalled = $isCronJobModuleInstalled;
         $this->shopUrlDataProvider = $shopUrlDataProvider;
         $this->adminBaseUrl = $adminBaseUrl;
+        $this->dbPrefix = $dbPrefix;
+        $this->translator = $translator;
     }
 
     /**
@@ -112,9 +135,36 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
 
         $this->configuration->restrictUpdatesTo($this->contextShop);
 
-        $exchangeRateValue = $this->configuration->get('PS_ACTIVE_CRONJOB_EXCHANGE_RATE');
+        $cronId = $this->configuration->get('PS_ACTIVE_CRONJOB_EXCHANGE_RATE');
 
-        $cronUrl = $this->getCronUrl();
+        try {
+            $cronUrl = $this->getCronUrl();
+
+            if ($cronId && !$command->isExchangeRateEnabled()) {
+                $this->removeCronJob($cronId);
+
+                return;
+            }
+
+            if (!$cronId && $command->isExchangeRateEnabled() && false === $this->createCronJob($cronUrl)) {
+                throw new CannotCreateLiveExchangeUpdateCronTask(
+                    sprintf(
+                        'Failed to create a cron task for live exchange rate update with given link "%s"',
+                        $cronUrl
+                    )
+                );
+            }
+
+            if ($cronId) {
+                $this->validateCronJob($cronId);
+            }
+        } catch (Exception $exception) {
+            throw new CurrencyException(
+                'An unexpected error occurred when trying to update live exchange rates',
+                0,
+                $exception
+            );
+        }
     }
 
     /**
@@ -132,5 +182,64 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
         );
 
         return $protocol . $shopDomain . $this->adminBaseUrl . $cronFileLink;
+    }
+
+    /**
+     * @param int $cronId
+     *
+     * @throws Exception
+     */
+    private function removeCronJob($cronId)
+    {
+        $this->configuration->set('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', 0);
+
+        Db::getInstance()->execute(
+            'DELETE FROM ' . $this->dbPrefix . 'cronjobs WHERE `id_cronjob`=' . (int) $cronId
+        );
+    }
+
+    /**
+     * @param string $cronUrl
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    private function createCronJob($cronUrl)
+    {
+        /** @var CronJobs $cronJobsModule */
+        $cronJobsModule = Module::getInstanceByName('cronjobs');
+
+        $isCronAdded = $cronJobsModule->addOneShotTask(
+            $cronUrl,
+            $this->translator->trans(
+                'Live exchange Rate for %shop_name%',
+                [
+                    '%shop_name%' => $this->configuration->get('PS_SHOP_NAME'),
+                ],
+                'Admin.International.Feature'
+            )
+        );
+
+        $this->configuration->set('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', Db::getInstance()->Insert_ID());
+
+        return $isCronAdded;
+    }
+
+    private function validateCronJob($cronId)
+    {
+        $query = new DbQuery();
+        $query
+            ->select('*')
+            ->from('cronjobs')
+            ->where('`id_cronjob`=' . (int) $cronId)
+        ;
+
+        /** @var array $row */
+        $row = Db::getInstance()->getRow($query);
+
+        if (!is_array($row) || empty($row['active'])) {
+            $this->configuration->set('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', 0);
+        }
     }
 }
