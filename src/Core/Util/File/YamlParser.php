@@ -31,7 +31,7 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Yaml parser utility class
+ * This class adds a cache layer on top of the standard Yaml parser for improved performance
  */
 final class YamlParser
 {
@@ -53,7 +53,7 @@ final class YamlParser
      * @param string $sourceFile
      * @param bool $forceRefresh
      *
-     * @return mixed
+     * @return mixed The YAML converted to a PHP value
      *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
@@ -68,14 +68,15 @@ final class YamlParser
         $phpConfigFile = $this->getCacheFile($sourceFile);
         // we set the debug flag to true to force the cache freshness check
         $configCache = new ConfigCache($phpConfigFile, true);
-        if ($forceRefresh || !$configCache->isFresh()) {
-            $config = Yaml::parseFile($sourceFile);
-            $resources = array();
-            $resources[] = new FileResource($sourceFile);
-            $configCache->write('<?php return ' . var_export($config, true) . ';' . PHP_EOL, $resources);
-        } else {
-            $config = require $phpConfigFile;
+        if (!$forceRefresh && $configCache->isFresh()) {
+            return require $phpConfigFile;
         }
+
+        $config = Yaml::parseFile($sourceFile);
+        $resources = [
+            new FileResource($sourceFile)
+        ];
+        $configCache->write('<?php return ' . var_export($config, true) . ';' . PHP_EOL, $resources);
 
         return $config;
     }
