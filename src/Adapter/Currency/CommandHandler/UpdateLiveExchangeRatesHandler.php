@@ -27,15 +27,19 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateLiveExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\UpdateLiveExchangeRatesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DisabledLiveExchangeRatesException;
+use PrestaShopException;
 use Shop;
 
 /**
  * Class UpdateLiveExchangeRatesHandler
+ *
+ * @internal
  */
 final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHandlerInterface
 {
@@ -60,21 +64,37 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
     private $isCronJobModuleInstalled;
 
     /**
+     * @var ShopUrlDataProvider
+     */
+    private $shopUrlDataProvider;
+
+    /**
+     * @var string
+     */
+    private $adminBaseUrl;
+
+    /**
      * @param Configuration $configuration
      * @param Tools $tools
      * @param Shop $contextShop
+     * @param ShopUrlDataProvider $shopUrlDataProvider
      * @param bool $isCronJobModuleInstalled
+     * @param string $adminBaseUrl
      */
     public function __construct(
         Configuration $configuration,
         Tools $tools,
         Shop $contextShop,
-        $isCronJobModuleInstalled
+        ShopUrlDataProvider $shopUrlDataProvider,
+        $isCronJobModuleInstalled,
+        $adminBaseUrl
     ) {
         $this->configuration = $configuration;
         $this->tools = $tools;
         $this->contextShop = $contextShop;
         $this->isCronJobModuleInstalled = $isCronJobModuleInstalled;
+        $this->shopUrlDataProvider = $shopUrlDataProvider;
+        $this->adminBaseUrl = $adminBaseUrl;
     }
 
     /**
@@ -89,6 +109,28 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
                 'Live exchange rates feature cannot be modified due to cronjob module is uninstalled'
             );
         }
-        
+
+        $this->configuration->restrictUpdatesTo($this->contextShop);
+
+        $exchangeRateValue = $this->configuration->get('PS_ACTIVE_CRONJOB_EXCHANGE_RATE');
+
+        $cronUrl = $this->getCronUrl();
+    }
+
+    /**
+     * @return string
+     *
+     * @throws PrestaShopException
+     */
+    private function getCronUrl()
+    {
+        $protocol = $this->tools->getShopProtocol();
+        $shopDomain = $this->shopUrlDataProvider->getMainShopUrl()->domain;
+        $cronFileLink = sprintf(
+            'cron_currency_rates.php?secure_key=%s',
+            md5($this->configuration->get('_COOKIE_KEY_') . $this->configuration->get('PS_SHOP_NAME'))
+        );
+
+        return $protocol . $shopDomain . $this->adminBaseUrl . $cronFileLink;
     }
 }
