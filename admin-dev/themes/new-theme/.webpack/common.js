@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
@@ -114,16 +115,41 @@ module.exports = {
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
       },
       // FILES
       {
-        test: /.(jpg|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=.]+)?$/,
+        test: /.(jp(e?)g|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=.]+)?$/,
         use: 'file-loader?name=[hash].[ext]',
       },
+      {
+        test:/\.(s*)css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+          'sass-loader'
+        ]
+      }
     ],
   },
+  optimization: {
+    // With mini-css-extract-plugin, one file is created for each '.js' where css is imported.
+    // The use of this optimization merges them into one file.
+    splitChunks: {
+      cacheGroups: {
+        styles: {
+          name: 'theme',
+          test: /\.(s*)css$/,
+          chunks: 'all'
+        }
+      }
+    },
+  },
   plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+    }),
     new CleanWebpackPlugin(['public'], {
       root: path.resolve(__dirname, '../')
     }),

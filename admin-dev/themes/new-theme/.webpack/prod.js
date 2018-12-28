@@ -1,6 +1,5 @@
 const fs = require('fs');
 const common = require('./common.js');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const keepLicense = require('uglify-save-license');
@@ -44,20 +43,6 @@ function prodConfig(analyze) {
       ]
     }
   });
-
-  prod.module.rules.push({
-    test:/\.(s*)css$/,
-    use: [
-      MiniCssExtractPlugin.loader,
-      'css-loader',
-      'postcss-loader',
-      'sass-loader'
-    ]
-  });
-
-  prod.plugins.push(new MiniCssExtractPlugin({
-    filename: '[name].css'
-  }));
 
   if (analyze) {
     const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
