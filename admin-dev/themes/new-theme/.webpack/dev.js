@@ -1,5 +1,4 @@
 const common = require('./common.js');
-const LiveReloadPlugin = require('webpack-livereload-plugin');
 
 /**
  * Returns the development webpack config,

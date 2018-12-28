@@ -29,7 +29,7 @@ function prodConfig(analyze) {
       },
       minimizer: [
         new UglifyJsPlugin({
-          sourceMap: false,
+          sourceMap: true,
           uglifyOptions: {
             compress: {
               drop_console: true
