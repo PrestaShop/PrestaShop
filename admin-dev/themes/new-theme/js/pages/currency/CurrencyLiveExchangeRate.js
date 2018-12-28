@@ -22,3 +22,51 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+const $ = window.$;
+
+export default class CurrencyLiveExchangeRate {
+  initEvents() {
+    $(document).on('change', '.js-live-exchange-rate', (event) => this._initLiveExchangeRate(event))
+  }
+
+  /**
+   * @param {Object} event
+   *
+   * @private
+   */
+  _initLiveExchangeRate(event) {
+    const $switch = $(event.currentTarget);
+    const $form = $switch.closest('form');
+    const formItems = $form.serialize();
+
+    $.ajax({
+      type: 'POST',
+      url: $switch.attr('data-url'),
+      data: formItems,
+    })
+      .then((response) => {
+        if (!response.status) {
+          showErrorMessage(response.message);
+          this._changeTextByCurrentSwitchValue($switch.val());
+
+          return;
+        }
+
+        showSuccessMessage(response.message);
+        this._changeTextByCurrentSwitchValue($switch.val());
+      }
+    ).fail((response) => {
+      if (typeof response.responseJSON !== 'undefined') {
+        showErrorMessage(response.responseJSON.message);
+        this._changeTextByCurrentSwitchValue($switch.val());
+      }
+    });
+  }
+
+  _changeTextByCurrentSwitchValue(switchValue) {
+    const valueParsed = parseInt(switchValue);
+    $('.js-exchange-rate-text-when-disabled').toggleClass('d-none', 0 !== valueParsed);
+    $('.js-exchange-rate-text-when-enabled').toggleClass('d-none', 1 !== valueParsed);
+  }
+}
