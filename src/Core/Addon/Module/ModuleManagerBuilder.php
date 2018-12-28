@@ -50,11 +50,9 @@ use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Yaml\Yaml;
 
 class ModuleManagerBuilder
 {
