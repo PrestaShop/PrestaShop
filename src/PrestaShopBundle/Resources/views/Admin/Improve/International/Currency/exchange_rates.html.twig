@@ -1,4 +1,3 @@
-{# todo: change path #}
 {{ form_start(exchangeRatesForm, {'action': path('admin_currencies_update_exchange_rates') }) }}
   <div class="card">
     <h3 class="card-header">
@@ -27,7 +26,16 @@
             {% endif %}
           </div>
         </div>
-
+        <div class="form-group row">
+          <label for="" class="form-control-label">
+            {{ 'Update exchange rates'|trans({}, 'Admin.International.Feature') }}
+          </label>
+          <div class="col-sm">
+            <button class="btn btn-primary">
+              {{ 'Update'|trans({}, 'Admin.Global') }}
+            </button>
+          </div>
+        </div>
         {% block currency_settings %}
           {{ form_rest(exchangeRatesForm) }}
         {% endblock %}
