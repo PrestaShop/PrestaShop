@@ -264,7 +264,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
     }
 
-    public function toggleLiveExchangeRatesUpdateAction(Request $request)
+    public function updateLiveExchangeRatesAction(Request $request)
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json([
@@ -289,11 +289,19 @@ class CurrencyController extends FrameworkBundleAdminController
             );
         }
 
+        $settingsForm = $this->getSettingsFormHandler()->getForm();
+
+        $settingsForm->handleRequest($request);
+
         $response = [
-            'status' => true,
-            'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            'status' => false,
+            'message' => $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error'),
         ];
-        $statusCode = 200;
+        $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+
+        if ($settingsForm->isSubmitted()) {
+            $formData = $settingsForm->getData();
+        }
 
         return $this->json($response, $statusCode);
     }

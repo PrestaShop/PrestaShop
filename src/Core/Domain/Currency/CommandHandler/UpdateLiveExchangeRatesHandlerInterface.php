@@ -24,17 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateLiveExchangeRatesCommand;
 
 /**
- * Class CurrencyConstraintException
+ * Interface UpdateLiveExchangeRatesHandlerInterface
  */
-class CurrencyConstraintException extends CurrencyException
+interface UpdateLiveExchangeRatesHandlerInterface
 {
-    const INVALID_ISO_CODE = 1;
-    const INVALID_ISO_CODE_TYPE = 2;
-    const INVALID_EXCHANGE_RATE_TYPE = 3;
-    const INVALID_EXCHANGE_RATE = 4;
-    const CURRENCY_ALREADY_EXISTS = 5;
-    const INVALID_LIVE_EXCHANGE_RATES = 6;
+    /**
+     * @param UpdateLiveExchangeRatesCommand $command
+     *
+     * @return void
+     */
+    public function handle(UpdateLiveExchangeRatesCommand $command);
 }
