@@ -33,7 +33,7 @@ use PrestaShopDatabaseException;
 use Shop;
 
 /**
- * Class AbstractObjectModelLegacyHandler
+ * Class AbstractObjectModelLegacyHandler is responsible for executing legacy code which is common for legacy ObjectModel.
  *
  * @internal
  */
