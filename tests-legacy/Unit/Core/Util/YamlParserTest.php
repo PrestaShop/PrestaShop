@@ -77,6 +77,7 @@ class YamlParserTest extends UnitTestCase
         $this->assertFileExists($cacheFile);
         $cacheTime = filemtime($cacheFile);
 
+        sleep(1);
         // the source file hasn't changed, the cache file should be reused
         $config = $yamlParser->parse($yamlFiles);
         $this->assertArrayHasKey('parameters', $config);
@@ -84,8 +85,7 @@ class YamlParserTest extends UnitTestCase
         $this->assertEquals($cacheTime, filemtime($cacheFile));
 
         // if source yaml change, the cache should be refreshed
-        sleep(1);
-        touch($yamlFiles);
+        touch($yamlFiles, time()+1);
         $config = $yamlParser->parse($yamlFiles);
         $this->assertArrayHasKey('parameters', $config);
         $this->assertFileExists($cacheFile);
