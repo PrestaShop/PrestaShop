@@ -247,7 +247,9 @@ module.exports = {
     input_pack_item: '//*[@id="js_form_step1_inputPackItems"]',
     calendar_form: '//*[@id="calendar"]',
     right_sidebar: '//*[@id="right-sidebar"]',
-    tax_rule: '//*[@id="select2-step2_id_tax_rules_group_rendered-container"]'
+    tax_rule: '//*[@id="select2-step2_id_tax_rules_group_rendered-container"]',
+    category_checkbox:'(//*[@id="form_step1_categories"]//label[text()[contains(.,"%CATEGORY")]]/input[1])[1]',
+    category_label:'//*[@id="form_step1_categories"]//label[text()[contains(.,"%CATEGORY")]]',
   },
   ProductList: {
     product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',
@@ -289,5 +291,11 @@ module.exports = {
     catalogue_filter_by_status: '//*[contains (@id, "product_filter")]//option[@value="%id"]',
     change_product_status: '//*[@id="product_catalog_list"]//tbody/tr[%ID]/td[10]/a',
     product_status_icon: '//*[@id="product_catalog_list"]//table//tr[%TR]/td[10]//i[contains(@class, "%STATUS")]',
+    filter_by_category_button: '//*[@id="product_catalog_category_tree_filter"]/button',
+    expand_filter_link: '//*[@id="product_catalog_category_tree_filter_expand"]',
+    unselect_filter_link: '//*[@id="product_catalog_category_tree_filter_reset"]',
+    filter_list_category_label: '//*[@id="product_categories_categories"]/ul/li/ul/li[%ID]/div/label',
+    sub_category_label: '//*[@id="product_categories_categories"]/ul[@class="category-tree"]//ul/li[%I]/ul/li[%J]//label[@class="category-label"]',
+    category_radio:'(//*[@id="tree-categories"]//label[text()[contains(.,"%CATEGORY")]]/input[1])[1]',
   }
 };
