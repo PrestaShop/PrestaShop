@@ -158,6 +158,7 @@ class CartCore extends ObjectModel
                     'id_product' => array('required' => true, 'xlink_resource' => 'products'),
                     'id_product_attribute' => array('required' => true, 'xlink_resource' => 'combinations'),
                     'id_address_delivery' => array('required' => true, 'xlink_resource' => 'addresses'),
+                    'id_customization' => array('required' => false, 'xlink_resource' => 'customizations'),
                     'quantity' => array('required' => true),
                 ),
             ),
@@ -4397,7 +4398,7 @@ class CartCore extends ObjectModel
     public function getWsCartRows()
     {
         return Db::getInstance()->executeS(
-            'SELECT id_product, id_product_attribute, quantity, id_address_delivery
+            'SELECT id_product, id_product_attribute, quantity, id_address_delivery, id_customization
             FROM `' . _DB_PREFIX_ . 'cart_product`
             WHERE id_cart = ' . (int) $this->id . ' AND id_shop = ' . (int) Context::getContext()->shop->id
         );
