@@ -29,13 +29,15 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 /**
- * Class ModuleValidator
+ * Class ModuleValidator is responsible for checking modules under certain conditions.
  *
  * @internal
  */
 class ModuleValidator
 {
     /**
+     * Checks if module is installed.
+     *
      * @param string $moduleName
      *
      * @return bool

@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShopException;
 
 /**
- * Class UpdateCurrencyHandler
+ * Class UpdateCurrencyHandler is responsible for updating currencies.
  *
  * @internal
  */

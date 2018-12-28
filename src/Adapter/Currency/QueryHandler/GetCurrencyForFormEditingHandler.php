@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetCurrencyForFormEd
 use PrestaShopDatabaseException;
 
 /**
- * Class GetCurrencyForFormEditingHandler
+ * Class GetCurrencyForFormEditingHandler is responsible for retrieving required data used in currency form.
  *
  * @internal
  */
