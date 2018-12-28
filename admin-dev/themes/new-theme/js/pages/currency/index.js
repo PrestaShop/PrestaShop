@@ -29,6 +29,8 @@ import FiltersResetExtension from "../../components/grid/extension/filters-reset
 import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
 import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
+import ChoiceTree from "../../components/form/choice-tree";
+import CurrencyLiveExchangeRate from "./CurrencyLiveExchangeRate";
 
 const $ = window.$;
 
@@ -39,4 +41,10 @@ $(() => {
   currency.addExtension(new ReloadListActionExtension());
   currency.addExtension(new ColumnTogglingExtension());
   currency.addExtension(new SubmitRowActionExtension());
+
+  const choiceTree = new ChoiceTree('#currency_shop_association');
+  choiceTree.enableAutoCheckChildren();
+
+  const currencyLiveExchangeRate = new CurrencyLiveExchangeRate();
+  currencyLiveExchangeRate.initEvents();
 });
