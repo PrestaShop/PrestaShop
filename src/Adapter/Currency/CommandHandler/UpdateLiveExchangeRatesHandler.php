@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateLiveExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\UpdateLiveExchangeRatesHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateLiveExchangeUpdateCronTask;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateLiveExchangeUpdateCronTaskException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DisabledLiveExchangeRatesException;
 use PrestaShopException;
@@ -147,7 +147,7 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
             }
 
             if (!$cronId && $command->isExchangeRateEnabled() && false === $this->createCronJob($cronUrl)) {
-                throw new CannotCreateLiveExchangeUpdateCronTask(
+                throw new CannotCreateLiveExchangeUpdateCronTaskException(
                     sprintf(
                         'Failed to create a cron task for live exchange rate update with given link "%s"',
                         $cronUrl

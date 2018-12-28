@@ -28,9 +28,11 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateLiveExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRefreshExchangeRatesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
@@ -261,9 +263,17 @@ class CurrencyController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_currencies_index');
     }
 
-    public function updateExchangeRatesAction(Request $request)
+    public function updateExchangeRatesAction()
     {
+        try {
+            $this->getCommandBus()->handle(new UpdateExchangeRatesCommand());
 
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (CannotRefreshExchangeRatesException $exception) {
+            $this->addFlash('error', $exception->getMessage());
+        }
+
+        return $this->redirectToRoute('admin_currencies_index');
     }
 
     public function updateLiveExchangeRatesAction(Request $request)
