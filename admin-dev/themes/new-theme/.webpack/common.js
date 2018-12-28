@@ -156,6 +156,9 @@ module.exports = {
     new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
-    })
+    }),
+    new webpack.SourceMapDevToolPlugin({
+      filename: 'sourcemaps/[file].map',
+    }),
   ],
 };
