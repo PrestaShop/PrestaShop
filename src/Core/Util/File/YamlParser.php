@@ -74,7 +74,7 @@ final class YamlParser
 
         $config = Yaml::parseFile($sourceFile);
         $resources = [
-            new FileResource($sourceFile)
+            new FileResource($sourceFile),
         ];
         $configCache->write('<?php return ' . var_export($config, true) . ';' . PHP_EOL, $resources);
 
