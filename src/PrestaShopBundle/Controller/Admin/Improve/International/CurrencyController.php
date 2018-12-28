@@ -264,7 +264,6 @@ class CurrencyController extends FrameworkBundleAdminController
 
     }
 
-    //todo: its not a toggle -rename it
     public function toggleLiveExchangeRatesUpdateAction(Request $request)
     {
         if ($this->isDemoModeEnabled()) {
