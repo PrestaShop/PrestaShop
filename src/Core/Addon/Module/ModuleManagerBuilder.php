@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerChain;
+use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
@@ -164,30 +165,12 @@ class ModuleManagerBuilder
             return;
         }
 
-        $phpConfigFile = $this->getConfigDir() . '/config.php';
-        if (file_exists($phpConfigFile)
-            && filemtime($phpConfigFile) >= filemtime($this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml')) {
-            $config = require $phpConfigFile;
-        } else {
-            $config = Yaml::parse(
-                file_get_contents(
-                    $this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml'
-                )
-            );
+        $yamlParser = new YamlParser();
 
-            try {
-                $filesystem = new Filesystem();
-                $filesystem->dumpFile($phpConfigFile, '<?php return ' . var_export($config, true) . ';' . "\n");
-            } catch (IOException $e) {
-                return false;
-            }
-        }
+        $config = $yamlParser->parse($this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml');
+        $prestashopAddonsConfig =
+            $yamlParser->parse($this->getConfigDir() . DIRECTORY_SEPARATOR . 'addons/categories.yml');
 
-        $prestashopAddonsConfig = Yaml::parse(
-            file_get_contents(
-                $this->getConfigDir() . DIRECTORY_SEPARATOR . 'addons/categories.yml'
-            )
-        );
         $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
 
         self::$translator = Context::getContext()->getTranslator();
