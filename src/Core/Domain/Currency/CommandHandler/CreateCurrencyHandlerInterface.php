@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CreateCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
- * Interface CreateCurrencyHandlerInterface
+ * Interface CreateCurrencyHandlerInterface defines contract for CreateCurrencyHandler
  */
 interface CreateCurrencyHandlerInterface
 {

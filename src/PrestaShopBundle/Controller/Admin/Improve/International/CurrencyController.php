@@ -46,6 +46,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -263,6 +264,18 @@ class CurrencyController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_currencies_index');
     }
 
+    /**
+     * Updates exchange rates.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_currencies_index",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_currencies_index")
+     *
+     * @return RedirectResponse
+     */
     public function updateExchangeRatesAction()
     {
         try {
@@ -276,6 +289,13 @@ class CurrencyController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_currencies_index');
     }
 
+    /**
+     * Handles ajax request which updates live exchange rates.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function updateLiveExchangeRatesAction(Request $request)
     {
         if ($this->isDemoModeEnabled()) {
