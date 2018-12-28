@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateLiveExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
@@ -301,6 +302,21 @@ class CurrencyController extends FrameworkBundleAdminController
 
         if ($settingsForm->isSubmitted()) {
             $formData = $settingsForm->getData();
+            try {
+                $command = new UpdateLiveExchangeRatesCommand($formData['exchange_rates']['live_exchange_rate']);
+                $this->getCommandBus()->handle($command);
+
+                $response = [
+                    'status' => true,
+                    'message' => $this->trans(
+                        'The status has been successfully updated.',
+                        'Admin.Notifications.Success'
+                    ),
+                ];
+                $statusCode = 200;
+            } catch (CurrencyException $exception) {
+                $response['message'] = $this->handleException($exception);
+            }
         }
 
         return $this->json($response, $statusCode);
