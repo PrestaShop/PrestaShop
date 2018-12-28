@@ -27,14 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CurrencyConstraintException
+ * Class DisabledLiveExchangeRatesException
  */
-class CurrencyConstraintException extends CurrencyException
+class DisabledLiveExchangeRatesException extends CurrencyException
 {
-    const INVALID_ISO_CODE = 1;
-    const INVALID_ISO_CODE_TYPE = 2;
-    const INVALID_EXCHANGE_RATE_TYPE = 3;
-    const INVALID_EXCHANGE_RATE = 4;
-    const CURRENCY_ALREADY_EXISTS = 5;
-    const INVALID_LIVE_EXCHANGE_RATES = 6;
 }
