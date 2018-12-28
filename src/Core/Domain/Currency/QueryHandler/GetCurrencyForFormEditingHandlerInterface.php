@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\CurrencyForFormEditing;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForFormEditing;
 
 /**
- * Interface GetCurrencyForFormEditingHandlerInterface
+ * Interface GetCurrencyForFormEditingHandlerInterface defines contract for GetCurrencyForFormEditingHandler.
  */
 interface GetCurrencyForFormEditingHandlerInterface
 {
