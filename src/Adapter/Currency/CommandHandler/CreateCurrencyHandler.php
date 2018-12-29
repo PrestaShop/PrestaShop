@@ -73,7 +73,6 @@ final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
             }
 
             $this->updateMultiStoreColumns($entity, $columnsToUpdate);
-
         } catch (PrestaShopException $exception) {
             throw new CurrencyException('Failed to create new currency', 0, $exception);
         }

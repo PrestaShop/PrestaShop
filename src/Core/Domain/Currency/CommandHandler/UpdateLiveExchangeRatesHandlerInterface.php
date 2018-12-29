@@ -35,8 +35,6 @@ interface UpdateLiveExchangeRatesHandlerInterface
 {
     /**
      * @param UpdateLiveExchangeRatesCommand $command
-     *
-     * @return void
      */
     public function handle(UpdateLiveExchangeRatesCommand $command);
 }
