@@ -150,10 +150,7 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
 
             if (!$cronId && $command->isExchangeRateEnabled() && false === $this->createCronJob($cronUrl)) {
                 throw new CannotCreateLiveExchangeUpdateCronTaskException(
-                    sprintf(
-                        'Failed to create a cron task for live exchange rate update with given link "%s"',
-                        $cronUrl
-                    )
+                    'Failed to create a cron task for live exchange rate update'
                 );
             }
 
