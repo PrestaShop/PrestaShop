@@ -67,7 +67,7 @@ class CurrencyExchangeRate
         if (!is_numeric($exchangeRate)) {
             throw new CurrencyConstraintException(
                 sprintf(
-                    'Exchange rate is not valid. Excpected to be string but got "%s"',
+                    'Exchange rate is not valid. Expected to be numeric but got "%s"',
                     var_export($exchangeRate, true)
                 ),
                 CurrencyConstraintException::INVALID_EXCHANGE_RATE_TYPE
