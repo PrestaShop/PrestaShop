@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\UpdateCurrencyHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
@@ -46,6 +47,19 @@ use PrestaShopException;
  */
 final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler implements UpdateCurrencyHandlerInterface
 {
+    /**
+     * @var int
+     */
+    private $defaultCurrencyId;
+
+    /**
+     * @param int $defaultCurrencyId
+     */
+    public function __construct($defaultCurrencyId)
+    {
+        $this->defaultCurrencyId = (int) $defaultCurrencyId;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -70,6 +84,7 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
                 $entity->iso_code,
                 $command->getIsoCode()->getValue()
             );
+            $this->assertIsDefaultCurrencyEnabled($command->getCurrencyId()->getValue(), $command->isEnabled());
 
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->active = $command->isEnabled();
@@ -109,6 +124,9 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
     }
 
     /**
+     * When editing the currency it checks if new iso code does not exist
+     * so it will not create multiple currencies with same iso codes,
+     *
      * @param int $currencyId
      * @param string $currentIsoCode
      * @param string $newIsoCode
@@ -138,6 +156,26 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
                     $newIsoCode
                 ),
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
+            );
+        }
+    }
+
+    /**
+     * Prevents from default currency being disabled.
+     *
+     * @param int $currencyId
+     * @param bool $isEnabled
+     *
+     * @throws CannotDisableDefaultCurrencyException
+     */
+    private function assertIsDefaultCurrencyEnabled($currencyId, $isEnabled)
+    {
+        if ($currencyId === $this->defaultCurrencyId && !$isEnabled) {
+            throw new CannotDisableDefaultCurrencyException(
+                sprintf(
+                    'Currency with id "%s" is the default currency and cannot be disabled.',
+                    $currencyId
+                )
             );
         }
     }
