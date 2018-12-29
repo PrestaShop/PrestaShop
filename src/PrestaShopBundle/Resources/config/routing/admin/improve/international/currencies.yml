@@ -4,6 +4,7 @@ admin_currencies_index:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:index'
         _legacy_controller: AdminCurrencies
+        _legacy_link: AdminCurrencies
 
 admin_currencies_search:
     path: /
