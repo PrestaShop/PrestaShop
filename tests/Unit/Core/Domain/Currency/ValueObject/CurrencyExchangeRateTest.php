@@ -96,7 +96,7 @@ class CurrencyExchangeRateTest extends TestCase
         ];
     }
 
-    public function testItGetsExcpectedExchangeRate()
+    public function testItGetsExpectedExchangeRate()
     {
         $exchangeRate = new CurrencyExchangeRate(1.55);
 
