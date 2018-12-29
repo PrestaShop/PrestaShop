@@ -87,12 +87,12 @@ class CurrencyType extends AbstractType
                     ]),
                     new GreaterThan([
                         'value' => 0,
-                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error')
-                    ])
+                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                    ]),
                 ],
                 'invalid_message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
             ])
-            ->add('active',  SwitchType::class)
+            ->add('active', SwitchType::class)
         ;
 
         if ($this->isShopFeatureEnabled) {

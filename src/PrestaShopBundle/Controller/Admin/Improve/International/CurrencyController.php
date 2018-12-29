@@ -427,7 +427,7 @@ class CurrencyController extends FrameworkBundleAdminController
                 [
                     '%module_name%' => 'cronjobs',
                 ]
-            )
+            ),
         ];
 
         $exceptionType = get_class($exception);
@@ -450,8 +450,7 @@ class CurrencyController extends FrameworkBundleAdminController
     {
         $exceptionDictionary = [
             CurrencyConstraintException::class => [
-                CurrencyConstraintException::INVALID_ISO_CODE =>
-                    $this->trans(
+                CurrencyConstraintException::INVALID_ISO_CODE => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -460,8 +459,7 @@ class CurrencyController extends FrameworkBundleAdminController
                                 $this->trans('Currency', 'Admin.Global')),
                         ]
                     ),
-                CurrencyConstraintException::INVALID_ISO_CODE_TYPE =>
-                    $this->trans(
+                CurrencyConstraintException::INVALID_ISO_CODE_TYPE => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -470,8 +468,7 @@ class CurrencyController extends FrameworkBundleAdminController
                                 $this->trans('Currency', 'Admin.Global')),
                         ]
                     ),
-                CurrencyConstraintException::INVALID_EXCHANGE_RATE_TYPE =>
-                    $this->trans(
+                CurrencyConstraintException::INVALID_EXCHANGE_RATE_TYPE => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -480,8 +477,7 @@ class CurrencyController extends FrameworkBundleAdminController
                                 $this->trans('Exchange rate', 'Admin.International.Feature')),
                         ]
                     ),
-                CurrencyConstraintException::INVALID_EXCHANGE_RATE =>
-                    $this->trans(
+                CurrencyConstraintException::INVALID_EXCHANGE_RATE => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -490,11 +486,10 @@ class CurrencyController extends FrameworkBundleAdminController
                                 $this->trans('Exchange rate', 'Admin.International.Feature')),
                         ]
                     ),
-                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS =>
-                    $this->trans(
+                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS => $this->trans(
                         'This currency already exists.',
                         'Admin.International.Notification'
-                    )
+                    ),
             ],
         ];
 
@@ -502,7 +497,6 @@ class CurrencyController extends FrameworkBundleAdminController
         $exceptionCode = $exception->getCode();
 
         if (isset($exceptionDictionary[$exceptionClass][$exceptionCode])) {
-
             return $exceptionDictionary[$exceptionClass][$exceptionCode];
         }
 

@@ -99,13 +99,13 @@ abstract class AbstractObjectModelLegacyHandler
     /**
      * @param ObjectModel $objectModel
      * @param array $multiStoreColumnAssociation - an array key contains shop id while values contains the mapping of
-     *  column and its value. e.g
-     * [
-     *      1 => [
-     *          'my_column' => 'my_column_value',
-     *          'my_another_column' => 'my_another_column_value',
-     *          ]
-     * ]
+     *                                           column and its value. e.g
+     *                                           [
+     *                                           1 => [
+     *                                           'my_column' => 'my_column_value',
+     *                                           'my_another_column' => 'my_another_column_value',
+     *                                           ]
+     *                                           ]
      */
     protected function updateMultiStoreColumns(ObjectModel $objectModel, array $multiStoreColumnAssociation)
     {
