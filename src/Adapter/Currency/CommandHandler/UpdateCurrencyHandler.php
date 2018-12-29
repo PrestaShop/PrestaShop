@@ -108,7 +108,6 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
                 ];
             }
             $this->updateMultiStoreColumns($entity, $columnsToUpdate);
-
         } catch (PrestaShopException $exception) {
             throw new CurrencyException(
                 sprintf(
