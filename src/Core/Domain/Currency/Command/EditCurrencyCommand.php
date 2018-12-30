@@ -31,9 +31,9 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIsoCode;
 
 /**
- * Class UpdateCurrencyCommand
+ * Class EditCurrencyCommand
  */
-class UpdateCurrencyCommand
+class EditCurrencyCommand
 {
     /**
      * @var CurrencyId
