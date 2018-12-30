@@ -19,9 +19,9 @@ services:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand' }
 
     prestashop.adapter.currency.command_handler.create_currency:
-        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\CreateCurrencyHandler'
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddCurrencyHandler'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\CreateCurrencyCommand' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand' }
 
     prestashop.adapter.currency.command_handler.update_currency:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\UpdateCurrencyHandler'
