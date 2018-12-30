@@ -30,8 +30,8 @@ use Currency;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelLegacyHandler;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateCurrencyCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\UpdateCurrencyHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\EditCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
@@ -41,11 +41,11 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShopException;
 
 /**
- * Class UpdateCurrencyHandler is responsible for updating currencies.
+ * Class EditCurrencyHandler is responsible for updating currencies.
  *
  * @internal
  */
-final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler implements UpdateCurrencyHandlerInterface
+final class EditCurrencyHandler extends AbstractObjectModelLegacyHandler implements EditCurrencyHandlerInterface
 {
     /**
      * @var int
@@ -65,7 +65,7 @@ final class UpdateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
      *
      * @throws CurrencyException
      */
-    public function handle(UpdateCurrencyCommand $command)
+    public function handle(EditCurrencyCommand $command)
     {
         try {
             $entity = new Currency($command->getCurrencyId()->getValue());
