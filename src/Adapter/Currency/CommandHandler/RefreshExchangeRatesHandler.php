@@ -27,24 +27,24 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateExchangeRatesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\UpdateExchangeRatesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\RefreshExchangeRatesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRefreshExchangeRatesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 
 /**
- * Class UpdateExchangeRatesHandler is responsible for refreshing currency exchange rates.
+ * Class RefreshExchangeRatesHandler is responsible for refreshing currency exchange rates.
  *
  * @internal
  */
-final class UpdateExchangeRatesHandler implements UpdateExchangeRatesHandlerInterface
+final class RefreshExchangeRatesHandler implements RefreshExchangeRatesHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws CurrencyException
      */
-    public function handle(UpdateExchangeRatesCommand $command)
+    public function handle(RefreshExchangeRatesCommand $command)
     {
         $error = Currency::refreshCurrencies();
 
