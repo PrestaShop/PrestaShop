@@ -64,15 +64,7 @@ final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
             }
 
             $this->associateWithShops($entity, $command->getShopIds());
-
-            $columnsToUpdate = [];
-            foreach ($command->getShopIds() as $shopId) {
-                $columnsToUpdate[$shopId] = [
-                    'conversion_rate' => $entity->conversion_rate,
-                ];
-            }
-
-            $this->updateMultiStoreColumns($entity, $columnsToUpdate);
+            $this->associateConversionRateToShops($entity, $command->getShopIds());
         } catch (PrestaShopException $exception) {
             throw new CurrencyException('Failed to create new currency', 0, $exception);
         }
@@ -96,5 +88,23 @@ final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
             );
         }
+    }
+
+    /**
+     * Associations conversion rate to given shop ids.
+     *
+     * @param Currency $entity
+     * @param array $shopIds
+     */
+    private function associateConversionRateToShops(Currency $entity, array $shopIds)
+    {
+        $columnsToUpdate = [];
+        foreach ($shopIds as $shopId) {
+            $columnsToUpdate[$shopId] = [
+                'conversion_rate' => $entity->conversion_rate,
+            ];
+        }
+
+        $this->updateMultiStoreColumns($entity, $columnsToUpdate);
     }
 }
