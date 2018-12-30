@@ -28,8 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelLegacyHandler;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CreateCurrencyCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\CreateCurrencyHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
@@ -37,18 +37,18 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShopException;
 
 /**
- * Class CreateCurrencyHandler is responsible for creating new currency.
+ * Class AddCurrencyHandler is responsible for adding new currency.
  *
  * @internal
  */
-final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler implements CreateCurrencyHandlerInterface
+final class AddCurrencyHandler extends AbstractObjectModelLegacyHandler implements AddCurrencyHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws CurrencyException
      */
-    public function handle(CreateCurrencyCommand $command)
+    public function handle(AddCurrencyCommand $command)
     {
         $this->assertCurrencyWithIsoCodeDoesNotExist($command->getIsoCode()->getValue());
 
