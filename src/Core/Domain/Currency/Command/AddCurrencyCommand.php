@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIsoCode;
 
 /**
- * Class CreateCurrencyCommand
+ * Class AddCurrencyCommand
  */
-class CreateCurrencyCommand
+class AddCurrencyCommand
 {
     /**
      * @var CurrencyIsoCode
