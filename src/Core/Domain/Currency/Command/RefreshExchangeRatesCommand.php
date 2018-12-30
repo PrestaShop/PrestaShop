@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
 /**
- * Class UpdateExchangeRatesCommand
+ * Class RefreshExchangeRatesCommand
  */
-class UpdateExchangeRatesCommand
+class RefreshExchangeRatesCommand
 {
 }
