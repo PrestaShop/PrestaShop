@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateExchangeRatesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
 
 /**
- * Interface UpdateExchangeRatesHandlerInterface defines contract for UpdateExchangeRatesHandler.
+ * Interface RefreshExchangeRatesHandlerInterface defines contract for UpdateExchangeRatesHandler.
  */
-interface UpdateExchangeRatesHandlerInterface
+interface RefreshExchangeRatesHandlerInterface
 {
     /**
-     * @param UpdateExchangeRatesCommand $command
+     * @param RefreshExchangeRatesCommand $command
      */
-    public function handle(UpdateExchangeRatesCommand $command);
+    public function handle(RefreshExchangeRatesCommand $command);
 }
