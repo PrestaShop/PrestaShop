@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelLegacyHandler;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
@@ -45,7 +44,7 @@ use PrestaShopException;
  *
  * @internal
  */
-final class EditCurrencyHandler extends AbstractObjectModelLegacyHandler implements EditCurrencyHandlerInterface
+final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditCurrencyHandlerInterface
 {
     /**
      * @var int
@@ -79,12 +78,12 @@ final class EditCurrencyHandler extends AbstractObjectModelLegacyHandler impleme
                 );
             }
 
-            $this->assertNewIsoCodeAlreadyExists(
+            $this->assertCurrencyWithIsoCodeDoesNotExist(
                 $command->getCurrencyId()->getValue(),
                 $entity->iso_code,
                 $command->getIsoCode()->getValue()
             );
-            $this->assertIsDefaultCurrencyEnabled($command->getCurrencyId()->getValue(), $command->isEnabled());
+            $this->assertDefaultCurrencyIsNotBeingDisabled($command->getCurrencyId()->getValue(), $command->isEnabled());
 
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->active = $command->isEnabled();
@@ -100,14 +99,7 @@ final class EditCurrencyHandler extends AbstractObjectModelLegacyHandler impleme
             }
 
             $this->associateWithShops($entity, $command->getShopIds());
-
-            $columnsToUpdate = [];
-            foreach ($command->getShopIds() as $shopId) {
-                $columnsToUpdate[$shopId] = [
-                    'conversion_rate' => $entity->conversion_rate,
-                ];
-            }
-            $this->updateMultiStoreColumns($entity, $columnsToUpdate);
+            $this->associateConversionRateToShops($entity, $command->getShopIds());
         } catch (PrestaShopException $exception) {
             throw new CurrencyException(
                 sprintf(
@@ -132,7 +124,7 @@ final class EditCurrencyHandler extends AbstractObjectModelLegacyHandler impleme
      *
      * @throws CurrencyConstraintException
      */
-    private function assertNewIsoCodeAlreadyExists($currencyId, $currentIsoCode, $newIsoCode)
+    private function assertCurrencyWithIsoCodeDoesNotExist($currencyId, $currentIsoCode, $newIsoCode)
     {
         if ($currentIsoCode === $newIsoCode) {
             return;
@@ -167,7 +159,7 @@ final class EditCurrencyHandler extends AbstractObjectModelLegacyHandler impleme
      *
      * @throws CannotDisableDefaultCurrencyException
      */
-    private function assertIsDefaultCurrencyEnabled($currencyId, $isEnabled)
+    private function assertDefaultCurrencyIsNotBeingDisabled($currencyId, $isEnabled)
     {
         if ($currencyId === $this->defaultCurrencyId && !$isEnabled) {
             throw new CannotDisableDefaultCurrencyException(

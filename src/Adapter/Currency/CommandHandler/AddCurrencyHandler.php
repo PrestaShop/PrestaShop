@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelLegacyHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
@@ -41,7 +40,7 @@ use PrestaShopException;
  *
  * @internal
  */
-final class AddCurrencyHandler extends AbstractObjectModelLegacyHandler implements AddCurrencyHandlerInterface
+final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCurrencyHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -88,23 +87,5 @@ final class AddCurrencyHandler extends AbstractObjectModelLegacyHandler implemen
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
             );
         }
-    }
-
-    /**
-     * Associations conversion rate to given shop ids.
-     *
-     * @param Currency $entity
-     * @param array $shopIds
-     */
-    private function associateConversionRateToShops(Currency $entity, array $shopIds)
-    {
-        $columnsToUpdate = [];
-        foreach ($shopIds as $shopId) {
-            $columnsToUpdate[$shopId] = [
-                'conversion_rate' => $entity->conversion_rate,
-            ];
-        }
-
-        $this->updateMultiStoreColumns($entity, $columnsToUpdate);
     }
 }
