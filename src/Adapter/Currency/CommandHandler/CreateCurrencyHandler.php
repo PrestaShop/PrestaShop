@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShopException;
 
 /**
- * Class CreateCurrencyHandler is responsible for adding new currency.
+ * Class CreateCurrencyHandler is responsible for creating new currency.
  *
  * @internal
  */
@@ -50,7 +50,7 @@ final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
      */
     public function handle(CreateCurrencyCommand $command)
     {
-        $this->assertCurrencyCodeAlreadyExist($command->getIsoCode()->getValue());
+        $this->assertCurrencyWithIsoCodeDoesNotExist($command->getIsoCode()->getValue());
 
         try {
             $entity = new Currency();
@@ -85,7 +85,7 @@ final class CreateCurrencyHandler extends AbstractObjectModelLegacyHandler imple
      *
      * @throws CurrencyConstraintException
      */
-    private function assertCurrencyCodeAlreadyExist($isoCode)
+    private function assertCurrencyWithIsoCodeDoesNotExist($isoCode)
     {
         if (Currency::exists($isoCode)) {
             throw new CurrencyConstraintException(
