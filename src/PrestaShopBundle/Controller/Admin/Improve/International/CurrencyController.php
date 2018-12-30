@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateExchangeRatesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateLiveExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
@@ -279,7 +279,7 @@ class CurrencyController extends FrameworkBundleAdminController
     public function updateExchangeRatesAction()
     {
         try {
-            $this->getCommandBus()->handle(new UpdateExchangeRatesCommand());
+            $this->getCommandBus()->handle(new RefreshExchangeRatesCommand());
 
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch (CannotRefreshExchangeRatesException $exception) {
