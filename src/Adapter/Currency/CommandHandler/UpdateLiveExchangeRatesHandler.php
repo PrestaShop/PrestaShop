@@ -131,7 +131,7 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
     {
         if (!$this->isCronJobModuleInstalled) {
             throw new DisabledLiveExchangeRatesException(
-                'Live exchange rates feature cannot be modified due to cronjob module is uninstalled'
+                'Live exchange rates feature cannot be modified because "cronjob" module is not installed'
             );
         }
 
