@@ -202,7 +202,7 @@ class CustomerController extends AbstractAdminController
     {
         try {
             /** @var CustomerInformation $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing(new CustomerId((int) $customerId)));
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
         } catch (CustomerNotFoundException $e) {
             $this->addFlash(
                 'error',
