@@ -1982,12 +1982,12 @@ abstract class ModuleCore implements ModuleInterface
     public function updatePosition($id_hook, $way, $position = null)
     {
         foreach (Shop::getContextListShopID() as $shop_id) {
-            $sqlQueryToGetAvailableHookPositions = 'SELECT hm.`id_module`, hm.`position`, hm.`id_hook`
+            $getAvailableHookPositionsSql = 'SELECT hm.`id_module`, hm.`position`, hm.`id_hook`
                     FROM `' . _DB_PREFIX_ . 'hook_module` hm
                     WHERE hm.`id_hook` = ' . (int) $id_hook . ' AND hm.`id_shop` = ' . $shop_id . '
                     ORDER BY hm.`position` ' . ($way ? 'ASC' : 'DESC');
 
-            if (!$sqlResult = Db::getInstance()->executeS($sqlQueryToGetAvailableHookPositions)) {
+            if (!$sqlResult = Db::getInstance()->executeS($getAvailableHookPositionsSql)) {
                 // no hook positions available
                 continue;
             }
@@ -2029,20 +2029,20 @@ abstract class ModuleCore implements ModuleInterface
             $minPosition = min((int) $from['position'], (int) $to['position']);
             $maxPosition = max((int) $from['position'], (int) $to['position']);
 
-            $sqlQueryToShiftHookPositions = 'UPDATE `' . _DB_PREFIX_ . 'hook_module`
+            $shiftHookPositionsSql = 'UPDATE `' . _DB_PREFIX_ . 'hook_module`
                 SET position = position ' . ($way ? '- 1' : '+ 1') . '
                 WHERE position BETWEEN ' . $minPosition . ' AND ' . $maxPosition . '
                 AND `id_hook` = ' . (int) $from['id_hook'] . ' AND `id_shop` = ' . $shop_id;
 
-            if (!Db::getInstance()->execute($sqlQueryToShiftHookPositions)) {
+            if (!Db::getInstance()->execute($shiftHookPositionsSql)) {
                 return false;
             }
 
-            $sqlQueryToCreateMissingPosition = 'UPDATE `' . _DB_PREFIX_ . 'hook_module`
+            $createMissingPositionSql = 'UPDATE `' . _DB_PREFIX_ . 'hook_module`
                 SET `position`=' . (int) $to['position'] . '
                 WHERE `' . pSQL($this->identifier) . '` = ' . (int) $from[$this->identifier] . '
                 AND `id_hook` = ' . (int) $to['id_hook'] . ' AND `id_shop` = ' . $shop_id;
-            if (!Db::getInstance()->execute($sqlQueryToCreateMissingPosition)) {
+            if (!Db::getInstance()->execute($createMissingPositionSql)) {
                 return false;
             }
         }
