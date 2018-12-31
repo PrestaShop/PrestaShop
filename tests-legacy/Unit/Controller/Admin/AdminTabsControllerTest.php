@@ -107,7 +107,6 @@ class AdminTabsControllerTest extends UnitTestCase
 
                     // It should select modules
                     return strpos($builtQuery, 'module') !== false;
-
                 }
 
                 // It should select tabs
@@ -118,7 +117,6 @@ class AdminTabsControllerTest extends UnitTestCase
                     strpos($subject, 'ps_shop') !== false ||
                     // It should select hook alias
                     strpos($subject, 'hook_alias') !== false;
-
             }))
             ->will($this->returnCallback(function ($subject) {
                 if (strpos($subject, 'authorization') !== false) {

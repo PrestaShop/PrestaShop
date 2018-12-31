@@ -85,7 +85,6 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
     }
 
     public function process($tokens) {
-
         $trim = '';
         $base_expr = '';
         $currCategory = '';
@@ -97,7 +96,6 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
         $skip = 0;
 
         foreach ($tokens as $key => $token) {
-
             $trim = trim($token);
             $base_expr .= $token;
 
@@ -118,7 +116,6 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
             $upper = strtoupper($trim);
 
             switch ($upper) {
-
             case ',':
             // we stop on a single comma and return
             // the $expr entry and the index $key
@@ -365,7 +362,6 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
 
             default:
                 switch ($currCategory) {
-
                 case 'STORAGE':
                     if ($upper === 'DISK' || $upper === 'MEMORY' || $upper === 'DEFAULT') {
                         $options['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
@@ -480,7 +476,6 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                 default:
                     break;
                 }
-
             }
             $prevCategory = $currCategory;
             $currCategory = '';

@@ -27,7 +27,6 @@
 namespace LegacyTests\Integration;
 
 use LegacyTests\TestCase\IntegrationTestCase;
-
 use LegacyTests\TestCase\Module as HelperModule;
 use Module;
 

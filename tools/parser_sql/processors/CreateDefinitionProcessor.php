@@ -52,7 +52,6 @@ class CreateDefinitionProcessor extends AbstractProcessor {
 
         // replace the constraint type with a more descriptive one
         switch ($expr[0]['expr_type']) {
-
         case ExpressionType::CONSTRAINT:
             $type = $expr[1]['expr_type'];
             $expr[1]['expr_type'] = ExpressionType::RESERVED;
@@ -69,14 +68,12 @@ class CreateDefinitionProcessor extends AbstractProcessor {
             $expr[0]['expr_type'] = ExpressionType::RESERVED;
 
             break;
-
         }
 
         return $type;
     }
 
     public function process($tokens) {
-
         $base_expr = "";
         $prevCategory = "";
         $currCategory = "";
@@ -85,7 +82,6 @@ class CreateDefinitionProcessor extends AbstractProcessor {
         $skip = 0;
 
         foreach ($tokens as $k => $token) {
-
             $trim = trim($token);
             $base_expr .= $token;
 
@@ -102,7 +98,6 @@ class CreateDefinitionProcessor extends AbstractProcessor {
             $upper = strtoupper($trim);
 
             switch ($upper) {
-
             case 'CONSTRAINT':
                 $expr[] = array('expr_type' => ExpressionType::CONSTRAINT, 'base_expr' => $trim, 'sub_tree' => false);
                 $currCategory = $prevCategory = $upper;
@@ -302,7 +297,6 @@ class CreateDefinitionProcessor extends AbstractProcessor {
 
             default:
                 switch ($currCategory) {
-
                 case 'LIKE':
                 // this is the tablename after LIKE
                     $expr[] = array('expr_type' => ExpressionType::TABLE, 'table' => $trim, 'base_expr' => $trim,

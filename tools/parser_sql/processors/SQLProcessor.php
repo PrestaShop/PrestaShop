@@ -53,7 +53,6 @@ class SQLProcessor extends SQLChunkProcessor {
 
         $tokenCount = count($tokens);
         for ($tokenNumber = 0; $tokenNumber < $tokenCount; ++$tokenNumber) {
-
             $token = $tokens[$tokenNumber];
             $trim = trim($token); // this removes also \n and \t!
 
@@ -84,7 +83,6 @@ class SQLProcessor extends SQLChunkProcessor {
 
             $upper = strtoupper($trim);
             switch ($upper) {
-
             /* Tokens that get their own sections. These keywords have subclauses. */
             case 'SELECT':
             case 'ORDER':

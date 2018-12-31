@@ -255,7 +255,6 @@ function base_url()
 function config_loading($current_path, $fld)
 {
     if (file_exists($current_path.$fld.".config")) {
-
         require_once $current_path.$fld.".config";
 
         return true;

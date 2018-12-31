@@ -51,7 +51,6 @@ class SelectProcessor extends SelectExpressionProcessor {
                 $expression = "";
             } else {
                 switch (strtoupper($token)) {
-
                 // add more SELECT options here
                 case 'DISTINCT':
                 case 'DISTINCTROW':

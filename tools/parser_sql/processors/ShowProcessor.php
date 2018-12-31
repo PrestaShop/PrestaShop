@@ -62,7 +62,6 @@ class ShowProcessor extends AbstractProcessor {
             }
 
             switch ($upper) {
-
             case 'FROM':
                 $resultList[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => trim($token));
                 if ($prev === 'INDEX' || $prev === 'COLUMNS') {

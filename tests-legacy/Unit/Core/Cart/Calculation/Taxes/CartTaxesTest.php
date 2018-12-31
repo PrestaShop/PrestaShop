@@ -101,7 +101,6 @@ class CartTaxesTest extends AbstractCartCalculationTest
         $this->compareCartTotalTaxIncl($expectedTotalTaxExcl);
 
         Configuration::set('PS_TAX', $prevConfTax);
-
     }
 
     public function cartTaxesProvider()

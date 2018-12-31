@@ -61,7 +61,6 @@ class TableProcessor extends AbstractProcessor {
     }
 
     public function process($tokens) {
-
         $currCategory = "TABLE_NAME";
         $result = array('base_expr' => false, 'name' => false, 'no_quotes' => false, 'create-def' => false,
             'options' => false, 'like' => false, 'select-option' => false,
@@ -90,7 +89,6 @@ class TableProcessor extends AbstractProcessor {
 
             $upper = strtoupper($trim);
             switch ($upper) {
-
             case ',':
             // it is possible to separate the table options with comma!
                 if ($prevCategory === 'CREATE_DEF') {
@@ -278,7 +276,6 @@ class TableProcessor extends AbstractProcessor {
 
             default:
                 switch ($currCategory) {
-
                 case 'CHARSET':
                 // the charset name
                     $expr[] = $this->getConstantType($trim);

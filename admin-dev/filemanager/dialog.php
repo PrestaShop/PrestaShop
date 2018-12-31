@@ -515,7 +515,6 @@ if (isset($_POST['submit'])) {
             break;
         default:
             break;
-
     }
 
     if ($descending) {

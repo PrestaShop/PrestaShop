@@ -316,7 +316,6 @@ class imageLib
   #       forceStretch can be applied to options 1,2,3 and 4
     #
     {
-
     // *** We can pass in an array of options to change the crop position
     $cropPos = 'm';
         if (is_array($option) && fix_strtolower($option[0]) == 'crop') {
@@ -380,7 +379,6 @@ class imageLib
 
     // *** Sharpen image (if jpg and the user wishes to do so)
     if ($sharpen && in_array($this->fileExtension, $this->sharpenArray)) {
-
       // *** Sharpen
       $this->sharpen();
     }
@@ -403,7 +401,6 @@ class imageLib
     # Notes:
     #
   {
-
     // *** Make sure the file passed in is valid
     if (!$this->image) {
         if ($this->debug) {
@@ -454,7 +451,6 @@ class imageLib
     # Notes:
     #
     {
-
     // *** Get cropping co-ordinates
     $cropArray = $this->getCropPlacing($optimalWidth, $optimalHeight, $newWidth, $newHeight, $cropPos);
         $cropStartX = $cropArray['x'];
@@ -556,7 +552,6 @@ class imageLib
               $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
               $cropStartY = ($this->cropFromTopPercent /100) * $optimalHeight;
           } else {
-
             // *** Else crop from the center
             $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
               $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
@@ -646,7 +641,6 @@ class imageLib
     {
         // *** If forcing is off...
     if (!$this->forceStretch) {
-
       // *** ...check if actual height is less than target height
       if ($this->height < $newHeight) {
           return array('optimalWidth' => $this->width, 'optimalHeight' => $this->height);
@@ -667,7 +661,6 @@ class imageLib
     {
         // *** If forcing is off...
     if (!$this->forceStretch) {
-
       // *** ...check if actual width is less than target width
       if ($this->width < $newWidth) {
           return array('optimalWidth' => $this->width, 'optimalHeight' => $this->height);
@@ -694,7 +687,6 @@ class imageLib
     {
         // *** If forcing is off...
     if (!$this->forceStretch) {
-
       // *** ...check if actual size is less than target size
       if ($this->width < $newWidth && $this->height < $newHeight) {
           return array('optimalWidth' => $this->width, 'optimalHeight' => $this->height);
@@ -777,10 +769,8 @@ class imageLib
   #               * represent cropped area
   #
     {
-
     // *** If forcing is off...
     if (!$this->forceStretch) {
-
       // *** ...check if actual size is less than target size
       if ($this->width < $newWidth && $this->height < $newHeight) {
           return array('optimalWidth' => $this->width, 'optimalHeight' => $this->height);
@@ -815,10 +805,8 @@ class imageLib
     # Credit:   Incorporates Joe Lencioni (August 6, 2008) code
   {
       if (version_compare(PHP_VERSION, '5.1.0') >= 0) {
-
       // ***
       if ($this->aggresiveSharpening) { # A more aggressive sharpening solution
-
         $sharpenMatrix = array(array(-1, -1, -1),
             array(-1, 16, -1),
             array(-1, -1, -1),
@@ -921,7 +909,6 @@ class imageLib
   public function borderPreset($preset)
   {
       switch ($preset) {
-
       case 'simple':
         $this->addBorder(7, '#fff');
         $this->addBorder(6, '#f2f1f0');
@@ -1201,7 +1188,6 @@ class imageLib
 
   public function addReflection($reflectionHeight = 50, $startingTransparency = 30, $inside = false, $bgColor = '#fff', $stretch=false, $divider = 0)
   {
-
     // *** Convert color
     $rgbArray = $this->formatColor($bgColor);
       $r = $rgbArray['r'];
@@ -1257,14 +1243,12 @@ class imageLib
 
     // *** Determines if the reflection should be displayed inside or outside the image
     if ($inside) {
-
       // Create new blank image with sizes.
       $final = imagecreatetruecolor($this->width, $this->height);
 
         imagecopymerge($final, $this->imageResized, 0, 0, 0, $reflectionHeight, $this->width, $this->height - $reflectionHeight, 100);
         imagecopymerge($final, $im, 0, $this->height - $reflectionHeight, 0, 0, $x, $y, 100);
     } else {
-
       // Create new blank image with sizes.
       $final = imagecreatetruecolor($this->width, $this->height + $y);
 
@@ -1363,7 +1347,6 @@ class imageLib
     # Notes:
     #
   {
-
     // *** Check if the user wants transparency
     $isTransparent = false;
       if (!is_array($bgColor)) {
@@ -1533,7 +1516,6 @@ class imageLib
 
       for ($theX=0;$theX<imagesx($rgb);$theX++) {
           for ($theY=0;$theY<imagesy($rgb);$theY++) {
-
         // *** Get the RGB values for every pixel of the RGB image
         $colArray = imagecolorat($rgb, $theX, $theY);
               $r = ($colArray >> 16) & 0xFF;
@@ -1617,7 +1599,6 @@ class imageLib
   # Notes:
   #
   {
-
     // *** Get the caption box measurements
     if (count($this->captionBoxPositionArray) == 4) {
         $x1 = $this->captionBoxPositionArray['x1'];
@@ -2102,7 +2083,6 @@ class imageLib
 
   private function writeIPTC($dat, $value)
   {
-
     # LIMIT TO JPG
 
     $caption_block = $this->iptc_maketag(2, $dat, $value);
@@ -2162,7 +2142,6 @@ class imageLib
     # Notes:      Make sure you supply the font.
     #
   {
-
     // *** Convert color
     $rgbArray = $this->formatColor($fontColor);
       $r = $rgbArray['r'];
@@ -2200,13 +2179,11 @@ class imageLib
 
     // *** Check if the passed in font exsits...
     if ($font == null || !file_exists($font)) {
-
       // *** ...If not, default to this font.
       $font = $fontPath . '/arimo.ttf';
 
       // *** Check our default font exists...
       if (!file_exists($font)) {
-
         // *** If not, return false
         if ($this->debug) {
             throw new Exception('Font not found');
@@ -2223,7 +2200,6 @@ class imageLib
 
   private function getTextSize($fontSize, $angle, $font, $text)
   {
-
     // *** Define box (so we can get the width)
     $box = @imagettfbbox($fontSize, $angle, $font, $text);
 
@@ -2266,7 +2242,6 @@ class imageLib
   #
     #
   {
-
     // Load the stamp and the photo to apply the watermark to
     $stamp = $this->openImage($watermarkImage);    # stamp
     $im = $this->imageResized;            # photo
@@ -2548,7 +2523,6 @@ class imageLib
   #             * bmp files have no native support for bmp files. We use a
   #       third party class to save as bmp.
     {
-
     // *** Perform a check or two.
     if (!is_resource($this->imageResized)) {
         if ($this->debug) {
@@ -2934,7 +2908,6 @@ class imageLib
             'a' => 127,
         );
     } else {
-
       // *** ...Else it should be hex. Let's make it RGB
       $rgbArray = $this -> hex2dec($value);
     }
@@ -3207,7 +3180,6 @@ class imageLib
     # Notes:
   #
   {
-
     //Ouverture du fichier en mode binaire
     if (! $f1 = fopen($filename, "rb")) {
         return false;
@@ -3258,7 +3230,6 @@ class imageLib
               if ($BMP['bits_per_pixel'] == 24) {
                   $COLOR = unpack("V", substr($IMG, $P, 3).$VIDE);
               } elseif ($BMP['bits_per_pixel'] == 16) {
-
           /*
            * BMP 16bit fix
            * =================

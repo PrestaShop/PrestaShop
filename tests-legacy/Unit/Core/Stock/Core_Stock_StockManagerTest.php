@@ -81,7 +81,6 @@ class FakePackItemsManager4759
             'id' => $pack->id,
             'pack_item_quantity' => $quantity,
             'pack_stock_type' => $pack->pack_stock_type,
-
         );
         $this->items[$product->id][$product_attribute_id][$pack->id] = (object) $entry;
         $this->stockAvailables[$pack->id][0] = $pack->stock_available;

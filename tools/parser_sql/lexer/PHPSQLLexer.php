@@ -94,11 +94,9 @@ class PHPSQLLexer {
         $pos = 0;
 
         while ($pos < $len) {
-
             for ($i = $splitLen; $i > 0; $i--) {
                 $substr = substr($sql, $pos, $i);
                 if ($this->splitters->isSplitter($substr)) {
-
                     if ($token !== "") {
                         $tokens[] = $token;
                     }
@@ -135,7 +133,6 @@ class PHPSQLLexer {
         $userdef = false;
 
         while ($i < $cnt) {
-
             if (!isset($tokens[$i])) {
                 $i++;
 
@@ -163,13 +160,11 @@ class PHPSQLLexer {
     }
 
     protected function concatComments($tokens) {
-
         $i = 0;
         $cnt = count($tokens);
         $comment = false;
 
         while ($i < $cnt) {
-
             if (!isset($tokens[$i])) {
                 $i++;
 
@@ -214,7 +209,6 @@ class PHPSQLLexer {
         $i = 0;
         $cnt = count($tokens);
         while ($i < $cnt) {
-
             if (!isset($tokens[$i])) {
                 $i++;
 
@@ -236,11 +230,9 @@ class PHPSQLLexer {
     // backticks are not balanced within one token, so we have
     // to re-combine some tokens
     protected function balanceCharacter($tokens, $idx, $char) {
-
         $token_count = count($tokens);
         $i = $idx + 1;
         while ($i < $token_count) {
-
             if (!isset($tokens[$i])) {
                 $i++;
 
@@ -270,11 +262,9 @@ class PHPSQLLexer {
      *
      */
     protected function concatColReferences($tokens) {
-
         $cnt = count($tokens);
         $i = 0;
         while ($i < $cnt) {
-
             if (!isset($tokens[$i])) {
                 $i++;
 
@@ -282,7 +272,6 @@ class PHPSQLLexer {
             }
 
             if ($tokens[$i][0] === ".") {
-
                 // concat the previous tokens, till the token has been changed
                 $k = $i - 1;
                 $len = strlen($tokens[$i]);
@@ -299,7 +288,6 @@ class PHPSQLLexer {
             }
 
             if ($this->endsWith($tokens[$i], '.') && !is_numeric($tokens[$i])) {
-
                 // concat the next tokens, till the token has been changed
                 $k = $i + 1;
                 $len = strlen($tokens[$i]);
@@ -325,7 +313,6 @@ class PHPSQLLexer {
         $tokenCount = count($tokens);
         $i = 0;
         while ($i < $tokenCount) {
-
             if ($this->endsWith($tokens[$i], "\\")) {
                 $i++;
                 if (isset($tokens[$i])) {

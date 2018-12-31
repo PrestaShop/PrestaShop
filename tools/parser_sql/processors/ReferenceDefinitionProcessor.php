@@ -49,12 +49,10 @@ class ReferenceDefinitionProcessor extends AbstractProcessor {
     }
 
     public function process($tokens) {
-
         $expr = array('expr_type' => ExpressionType::REFERENCE, 'base_expr' => false, 'sub_tree' => array());
         $base_expr = '';
 
         foreach ($tokens as $key => $token) {
-
             $trim = trim($token);
             $base_expr .= $token;
 
@@ -65,7 +63,6 @@ class ReferenceDefinitionProcessor extends AbstractProcessor {
             $upper = strtoupper($trim);
 
             switch ($upper) {
-
             case ',':
             // we stop on a single comma
             // or at the end of the array $tokens
@@ -160,7 +157,6 @@ class ReferenceDefinitionProcessor extends AbstractProcessor {
 
             default:
                 switch ($currCategory) {
-
                 case 'REFERENCES':
                     if ($upper[0] === '(' && substr($upper, -1) === ')') {
                         // index_col_name list

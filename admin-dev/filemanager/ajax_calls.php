@@ -38,7 +38,6 @@ if (isset($_GET['action'])) {
                 || !in_array(strtolower($info['extension']), array('jpg', 'jpeg', 'png'))
                 || strpos($_POST['url'], 'http://featherfiles.aviary.com/') !== 0
                 || !isset($info['extension'])
-
             ) {
                 die('wrong data');
             }

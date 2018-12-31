@@ -52,14 +52,12 @@ class ExplainProcessor extends AbstractProcessor {
 
     // TODO: refactor that function
     public function process($tokens, $keys = array()) {
-
         $base_expr = "";
         $expr = array();
         $currCategory = "";
 
         if ($this->isStatement($keys)) {
             foreach ($tokens as $token) {
-
                 $trim = trim($token);
                 $base_expr .= $token;
 
@@ -70,7 +68,6 @@ class ExplainProcessor extends AbstractProcessor {
                 $upper = strtoupper($trim);
 
                 switch ($upper) {
-
                 case 'EXTENDED':
                 case 'PARTITIONS':
                     return array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $token);
@@ -114,7 +111,6 @@ class ExplainProcessor extends AbstractProcessor {
         }
 
         foreach ($tokens as $token) {
-
             $trim = trim($token);
 
             if ($trim === '') {
@@ -122,7 +118,6 @@ class ExplainProcessor extends AbstractProcessor {
             }
 
             switch ($currCategory) {
-
             case 'TABLENAME':
                 $currCategory = 'WILD';
                 $expr[] = array('expr_type' => ExpressionType::COLREF, 'base_expr' => $trim);

@@ -111,7 +111,6 @@ class SelectExpressionProcessor extends AbstractProcessor {
         // it can be an alias without an AS
         $last = array_pop($stripped);
         if (!$alias && $this->isColumnReference($last)) {
-
             // TODO: it can be a comment, don't use array_pop
 
             // check the token before the colref
@@ -120,7 +119,6 @@ class SelectExpressionProcessor extends AbstractProcessor {
             if ($this->isReserved($prev) || $this->isConstant($prev) || $this->isAggregateFunction($prev)
                     || $this->isFunction($prev) || $this->isExpression($prev) || $this->isSubQuery($prev)
                     || $this->isColumnReference($prev) || $this->isBracketExpression($prev)) {
-
                 $alias = array('as' => false, 'name' => trim($last['base_expr']),
                     'no_quotes' => $this->revokeQuotation($last['base_expr']),
                     'base_expr' => trim($last['base_expr']),

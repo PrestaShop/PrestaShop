@@ -56,7 +56,6 @@ class MultishopCommandListenerTest extends UnitTestCase
 
     protected function setUp()
     {
-
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
 

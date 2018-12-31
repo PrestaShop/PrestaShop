@@ -90,7 +90,6 @@ class PHPSQLParserUtils {
      * It removes also the associated closing parenthesis.
      */
     protected function removeParenthesisFromStart($token) {
-
         $parenthesisRemoved = 0;
 
         $trim = trim($token);
@@ -104,7 +103,6 @@ class PHPSQLParserUtils {
         $i = 0;
         $string = 0;
         while ($i < strlen($trim)) {
-
             if ($trim[$i] === "\\") {
                 $i += 2; // an escape character, the next character is irrelevant
                 continue;

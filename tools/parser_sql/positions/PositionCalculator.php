@@ -74,11 +74,9 @@ class PositionCalculator {
     }
 
     private function findPositionWithinString($sql, $value, $expr_type) {
-
         $offset = 0;
         $ok = false;
         while (true) {
-
             $pos = strpos($sql, $value, $offset);
             if ($pos === false) {
                 break;
@@ -99,7 +97,6 @@ class PositionCalculator {
             // an operator should not be surrounded by another operator
 
             if ($expr_type === 'operator') {
-
                 $ok = ($before === "" || in_array($before, self::$_allowedOnOperator, true))
                     || (strtolower($before) >= 'a' && strtolower($before) <= 'z') || ($before >= '0' && $before <= '9');
                 $ok = $ok
@@ -158,7 +155,6 @@ class PositionCalculator {
                 // we do this, because the next base_expr contains the complete expression/subquery/record
                 // and we have to look into it too
                 $backtracking[] = $charPos;
-
             } elseif (($key === 'ref_clause' || $key === 'columns') && $parsed !== false) {
                 // we hold the current position and come back after n base_expr(s)
                 // there is an array of sub-elements before (!) the base_expr clause of the current element
@@ -192,7 +188,6 @@ class PositionCalculator {
 
         foreach ($parsed as $key => $value) {
             if ($key === 'base_expr') {
-
                 //$this->_printPos("0", $sql, $charPos, $key, $value, $backtracking);
 
                 $subject = substr($sql, $charPos);
@@ -216,7 +211,6 @@ class PositionCalculator {
                 }
 
                 //$this->_printPos("2", $sql, $charPos, $key, $value, $backtracking);
-
             } else {
                 $this->lookForBaseExpression($sql, $charPos, $parsed[$key], $key, $backtracking);
             }

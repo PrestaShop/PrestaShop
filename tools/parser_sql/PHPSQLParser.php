@@ -79,7 +79,6 @@ class PHPSQLParser {
      * @return array An associative array with all meta information about the SQL statement.
      */
     public function parse($sql, $calcPositions = false) {
-
         $processor = new DefaultProcessor();
         $queries = $processor->process($sql);
 

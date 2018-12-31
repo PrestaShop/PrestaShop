@@ -39,7 +39,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     public function processNextStep()
     {
         if (Tools::isSubmit('shop_name')) {
-
             // Save shop configuration
             $this->session->shop_name = trim(Tools::getValue('shop_name'));
             $this->session->shop_activity = Tools::getValue('shop_activity');

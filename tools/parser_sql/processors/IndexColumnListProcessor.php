@@ -53,7 +53,6 @@ class IndexColumnListProcessor extends AbstractProcessor {
         $base_expr = "";
 
         foreach ($tokens as $k => $token) {
-
             $trim = trim($token);
             $base_expr .= $token;
 
@@ -64,7 +63,6 @@ class IndexColumnListProcessor extends AbstractProcessor {
             $upper = strtoupper($trim);
 
             switch ($upper) {
-
             case 'ASC':
             case 'DESC':
             // the optional order

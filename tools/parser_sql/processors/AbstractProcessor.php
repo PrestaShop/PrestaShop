@@ -102,7 +102,6 @@ abstract class AbstractProcessor {
         $i = 0;
         $string = 0;
         while ($i < strlen($trim)) {
-
             if ($trim[$i] === "\\") {
                 $i += 2; // an escape character, the next character is irrelevant
                 continue;

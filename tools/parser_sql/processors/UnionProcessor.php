@@ -67,7 +67,6 @@ class UnionProcessor extends AbstractProcessor {
     protected function processMySQLUnion($queries) {
         $unionTypes = array('UNION', 'UNION ALL');
         foreach ($unionTypes as $unionType) {
-
             if (empty($queries[$unionType])) {
                 continue;
             }

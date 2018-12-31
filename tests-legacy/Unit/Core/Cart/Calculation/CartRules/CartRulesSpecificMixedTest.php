@@ -127,7 +127,6 @@ class CartRulesSpecificMixedTest extends AbstractCartCalculationTest
     public function cartWithMultipleProductOutOfStockSpecificCartRulesMixedProvider()
     {
         return [
-
             'one product in cart, quantity 1, out of stock' => [
                 'products'        => [
                     4 => 1,

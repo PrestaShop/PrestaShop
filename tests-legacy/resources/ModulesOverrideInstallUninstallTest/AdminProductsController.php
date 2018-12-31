@@ -1814,7 +1814,6 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     protected function updateAssoShop($id_object)
     {
-
     }
 
     /*

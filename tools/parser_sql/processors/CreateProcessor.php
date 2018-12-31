@@ -54,7 +54,6 @@ class CreateProcessor extends AbstractProcessor {
             }
 
             switch ($trim) {
-
             case 'TEMPORARY':
                 $result['expr_type'] = ExpressionType::TEMPORARY_TABLE;
                 $result['not-exists'] = false;
