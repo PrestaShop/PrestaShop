@@ -28,11 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\QueryHandler;
 
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\EditableCurrency;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetCurrencyForEditingHandlerInterface;
-use PrestaShopDatabaseException;
 
 /**
  * Class GetCurrencyForEditingHandler is responsible for retrieving required data used in currency form.
