@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
  */
 class ExchangeRate
 {
+    const DEFAULT_RATE = 1;
+
     /**
      * @var float
      */

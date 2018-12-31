@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class CurrencyFromCldrChoiceProvider
+ * Class CurrencyNameByIsoCodeChoiceProvider is responsible for retrieving currency names from cldr library.
  */
-final class CurrencyFromCldrChoiceProvider implements FormChoiceProviderInterface
+final class CurrencyNameByIsoCodeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var array
