@@ -25,7 +25,7 @@
  */
 
 $con = new AdminController();
-$tab = new Tab((int)Tab::getIdFromClassName(Tools::getValue('controller')));
+$tab = new Tab((int) Tab::getIdFromClassName(Tools::getValue('controller')));
 $con->id = $tab->id;
 $con->init();
 $con->initToolbar();

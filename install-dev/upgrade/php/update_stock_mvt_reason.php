@@ -110,7 +110,7 @@ function update_stock_mvt_reason()
         foreach ($mvts as $mvt) {
             Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'stock_mvt_reason` (`sign`, `date_add`, `date_upd`)
-				VALUES ("'.(int)$mvt['sign'].'", "'.pSQL($mvt['date_add']).'", "'.pSQL($mvt['date_upd']).'")
+				VALUES ("'.(int) $mvt['sign'].'", "'.pSQL($mvt['date_add']).'", "'.pSQL($mvt['date_upd']).'")
 			');
 
             $row_id = Db::getInstance()->Insert_ID();
@@ -122,7 +122,7 @@ function update_stock_mvt_reason()
 
                 Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
-					VALUES ("'.(int)$row_id.'", "'.(int)$mvt_lang['id_lang'].'", "'.pSQL($mvt_lang['name']).'")
+					VALUES ("'.(int) $row_id.'", "'.(int) $mvt_lang['id_lang'].'", "'.pSQL($mvt_lang['name']).'")
 				');
             }
         }

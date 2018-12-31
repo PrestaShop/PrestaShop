@@ -38,8 +38,8 @@ function update_customer_default_group()
     }
     $ps_customer_group = Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name = "PS_CUSTOMER_GROUP"', false);
     if ($ps_customer_group) {
-        $str_old = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)_PS_DEFAULT_CUSTOMER_GROUP_.');';
-        $str_new = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)$ps_customer_group.');';
+        $str_old = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int) _PS_DEFAULT_CUSTOMER_GROUP_.');';
+        $str_new = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int) $ps_customer_group.');';
         $content = str_replace($str_old, $str_new, $content);
     }
 
@@ -58,14 +58,14 @@ function update_customer_default_group()
             foreach ($groups as $group) {
                 Db::getInstance()->execute('
 				INSERT IGNORE INTO `'._DB_PREFIX_.'carrier_group`
-				VALUES ('.(int)$carrier['id_carrier'].', '.(int)$group['id_group'].')');
+				VALUES ('.(int) $carrier['id_carrier'].', '.(int) $group['id_group'].')');
             }
         }
     }
 
     $result = false;
     if (file_exists($filename) && is_writable($filename)) {
-        $result = (bool)file_put_contents($filename, $content);
+        $result = (bool) file_put_contents($filename, $content);
         if ($result && file_exists($filename_old)) {
             unlink($filename_old);
             @chmod($filename, 0664);

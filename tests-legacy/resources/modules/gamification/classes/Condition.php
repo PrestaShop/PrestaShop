@@ -78,9 +78,9 @@ class Condition extends ObjectModel
         $query = new DbQuery();
         $query->select('id_condition');
         $query->from('condition', 'c');
-        $query->where('`id_ps_condition` = '.(int)$id_ps_condition);
+        $query->where('`id_ps_condition` = '.(int) $id_ps_condition);
 
-        return (int)Db::getInstance()->getValue($query);
+        return (int) Db::getInstance()->getValue($query);
     }
 
     public static function getIdsByHookCalculation($hook_name)
@@ -223,7 +223,7 @@ class Condition extends ObjectModel
         $sub_query = new DbQuery();
         $sub_query->select('id_badge');
         $sub_query->from('badge', 'b');
-        $sub_query->where('b.`group_position` = '.(int)$badge_group_position);
+        $sub_query->where('b.`group_position` = '.(int) $badge_group_position);
         $sub_query->where('b.`validated` = 0');
         $sub_query->groupBy('b.`id_group`');
 
@@ -250,7 +250,7 @@ class Condition extends ObjectModel
         $sub_query = new DbQuery();
         $sub_query->select('id_badge');
         $sub_query->from('badge', 'b');
-        $sub_query->where('b.`id_group` = '.(int)$badge_group);
+        $sub_query->where('b.`id_group` = '.(int) $badge_group);
         $sub_query->where('b.`validated` = 0');
         $sub_query->groupBy('b.`id_group`');
 
@@ -295,7 +295,7 @@ class Condition extends ObjectModel
         }
 
         try {
-            $this->result = (int)Db::getInstance()->getValue(GamificationTools::parseMetaData($this->request));
+            $this->result = (int) Db::getInstance()->getValue(GamificationTools::parseMetaData($this->request));
         } catch (Exception $e) {
             return false;
         }
@@ -318,7 +318,7 @@ class Condition extends ObjectModel
     protected function processInstall()
     {
         $install = strtotime(_PS_CREATION_DATE_.' 00:00:00');
-        $value = strtotime('+ '.(int)$this->value.' day', $install);
+        $value = strtotime('+ '.(int) $this->value.' day', $install);
         $this->result = $this->makeCalculation($this->operator, (time() - $install), $value - $install);
         if ($this->result) {
             $this->validated = 1;
@@ -359,6 +359,6 @@ class Condition extends ObjectModel
             break;
         }
 
-        return (bool)$result;
+        return (bool) $result;
     }
 }

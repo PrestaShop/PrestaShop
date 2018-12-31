@@ -153,7 +153,7 @@ setlocale(LC_TIME, $locale.'.UTF-8', $locale.'.utf8');
 setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.utf8');
 
 /* Instantiate cookie */
-$cookie_lifetime = defined('_PS_ADMIN_DIR_') ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : (int)Configuration::get('PS_COOKIE_LIFETIME_FO');
+$cookie_lifetime = defined('_PS_ADMIN_DIR_') ? (int) Configuration::get('PS_COOKIE_LIFETIME_BO') : (int) Configuration::get('PS_COOKIE_LIFETIME_FO');
 if ($cookie_lifetime > 0) {
     $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 }
@@ -186,7 +186,7 @@ if (defined('_PS_ADMIN_DIR_')) {
         Shop::cacheShops(true);
     }
 
-    $cookie->id_lang = (int)$employee->id_lang;
+    $cookie->id_lang = (int) $employee->id_lang;
 }
 
 /* if the language stored in the cookie is not available language, use default language */
@@ -203,7 +203,7 @@ require_once $currentDir.'/smarty.config.inc.php';
 $context->smarty = $smarty;
 
 if (!defined('_PS_ADMIN_DIR_')) {
-    if (isset($cookie->id_customer) && (int)$cookie->id_customer) {
+    if (isset($cookie->id_customer) && (int) $cookie->id_customer) {
         $customer = new Customer($cookie->id_customer);
         if (!Validate::isLoadedObject($customer)) {
             $context->cookie->logout();
@@ -221,7 +221,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
 
         /* Change the default group */
         if (Group::isFeatureActive()) {
-            $customer->id_default_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
+            $customer->id_default_group = (int) Configuration::get('PS_UNIDENTIFIED_GROUP');
         }
     }
     $customer->id_guest = $cookie->id_guest;

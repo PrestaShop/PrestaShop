@@ -118,9 +118,9 @@ function latin1_database_to_utf8()
                     $query .= ' `'.$field.'` = \''.pSQL($latin1Data[$field]).'\',';
                 }
                 $query = rtrim($query, ',');
-                $query .= ' WHERE `'.$table['id'].'` = '.(int)($latin1Data[$table['id']]);
+                $query .= ' WHERE `'.$table['id'].'` = '.(int) ($latin1Data[$table['id']]);
                 if (isset($table['lang']) && $table['lang']) {
-                    $query .= ' AND `id_lang` = '.(int)($latin1Data['id_lang']);
+                    $query .= ' AND `id_lang` = '.(int) ($latin1Data['id_lang']);
                 }
                 if (!Db::getInstance()->execute($query)) {
                     $warningExist = true;

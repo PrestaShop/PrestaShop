@@ -49,21 +49,21 @@ function generate_tax_rules()
 		SELECT * FROM `'._DB_PREFIX_.'country` c
 		LEFT JOIN `'._DB_PREFIX_.'zone` z ON (c.`id_zone` = z.`id_zone`)
 		LEFT JOIN `'._DB_PREFIX_.'tax_zone` tz ON (tz.`id_zone` = z.`id_zone`)
-		WHERE `id_tax` = '.(int)$id_tax
+		WHERE `id_tax` = '.(int) $id_tax
         );
         if ($countries) {
             foreach ($countries as $country) {
                 $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tax_rule`
 					(`id_tax_rules_group`, `id_country`, `id_state`, `state_behavior`, `id_tax`)
 					VALUES
-					('.$id_tax_rules_group.', '.(int)$country['id_country'].', 0, 0, '.(int)$id_tax. ')');
+					('.$id_tax_rules_group.', '.(int) $country['id_country'].', 0, 0, '.(int) $id_tax. ')');
             }
         }
 
         $states = Db::getInstance()->executeS('
 		SELECT * FROM `'._DB_PREFIX_.'states` s
 		LEFT JOIN `'._DB_PREFIX_.'tax_state` ts ON (ts.`id_state` = s.`id_state`)
-		WHERE `id_tax` = '.(int)$id_tax);
+		WHERE `id_tax` = '.(int) $id_tax);
 
         if ($states) {
             foreach ($states as $state) {
@@ -77,10 +77,10 @@ function generate_tax_rules()
 					(`id_tax_rules_group`, `id_country`, `id_state`, `state_behavior`, `id_tax`)
 					VALUES (
 					'.$id_tax_rules_group.',
-				 	'.(int)$state['id_country'].',
-	 					'.(int)$state['id_state'].',
-				 '.(int)$tax_behavior.',
-				 '.(int)$id_tax.
+				 	'.(int) $state['id_country'].',
+	 					'.(int) $state['id_state'].',
+				 '.(int) $tax_behavior.',
+				 '.(int) $id_tax.
                  ')');
             }
         }
@@ -89,14 +89,14 @@ function generate_tax_rules()
             '
 		UPDATE `'._DB_PREFIX_.'product`
 		SET `id_tax_rules_group` = '.$id_tax_rules_group.'
-		WHERE `id_tax` = '.(int)$id_tax
+		WHERE `id_tax` = '.(int) $id_tax
         );
 
         $res &= Db::getInstance()->execute(
             '
 		UPDATE `'._DB_PREFIX_.'carrier`
 		SET `id_tax_rules_group` = '.$id_tax_rules_group.'
-		WHERE `id_tax` = '.(int)$id_tax
+		WHERE `id_tax` = '.(int) $id_tax
         );
 
         $socolissimo_overcost_tax = Db::getInstance()->getValue('SELECT value

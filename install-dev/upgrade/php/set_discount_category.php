@@ -30,7 +30,7 @@ function set_discount_category()
     $categories = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category`');
     foreach ($discounts as $discount) {
         foreach ($categories as $category) {
-            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'discount_category` (`id_discount`,`id_category`) VALUES ('.(int)($discount['id_discount']).','.(int)($category['id_category']).')');
+            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'discount_category` (`id_discount`,`id_category`) VALUES ('.(int) ($discount['id_discount']).','.(int) ($category['id_category']).')');
         }
     }
 }

@@ -70,7 +70,7 @@ class Tools extends ToolsCore
     public static function getDefaultControllerClass()
     {
         if (isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee) && isset(Context::getContext()->employee->default_tab)) {
-            $default_controller = Tab::getClassNameById((int)Context::getContext()->employee->default_tab);
+            $default_controller = Tab::getClassNameById((int) Context::getContext()->employee->default_tab);
         }
         if (empty($default_controller)) {
             $default_controller = 'AdminDashboard';

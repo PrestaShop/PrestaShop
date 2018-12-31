@@ -161,7 +161,7 @@ function migrate_tabs_15()
     // ===== Sort parent tabs =====
     $position = 0;
     foreach ($parent as $id) {
-        Db::getInstance()->update('tab', array('position' => $position++), 'id_tab = '.(int)$id);
+        Db::getInstance()->update('tab', array('position' => $position++), 'id_tab = '.(int) $id);
     }
 
     $sql = 'SELECT id_tab FROM '._DB_PREFIX_.'tab

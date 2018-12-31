@@ -34,7 +34,7 @@ function add_module_to_hook($module_name, $hook_name)
 	WHERE `name` = "'.$module_name.'"'
     );
 
-    if ((int)$id_module > 0) {
+    if ((int) $id_module > 0) {
         $id_hook = Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = "'.$hook_name.'"');
         if (!$id_hook) {
             if (!Db::getInstance()->execute('
@@ -46,14 +46,14 @@ function add_module_to_hook($module_name, $hook_name)
             }
         }
 
-        if ((int)$id_hook > 0) {
+        if ((int) $id_hook > 0) {
             if (!Db::getInstance()->execute('
 			INSERT IGNORE INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_hook`, `position`)
 			VALUES (
-			'.(int)$id_module.',
-			'.(int)$id_hook.',
+			'.(int) $id_module.',
+			'.(int) $id_hook.',
 			(SELECT IFNULL(
-				(SELECT max_position from (SELECT MAX(position)+1 as max_position  FROM `'._DB_PREFIX_.'hook_module`  WHERE `id_hook` = '.(int)$id_hook.') AS max_position), 1))
+				(SELECT max_position from (SELECT MAX(position)+1 as max_position  FROM `'._DB_PREFIX_.'hook_module`  WHERE `id_hook` = '.(int) $id_hook.') AS max_position), 1))
 			)')) {
                 $res = false;
             }

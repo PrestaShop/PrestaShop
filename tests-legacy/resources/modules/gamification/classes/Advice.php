@@ -75,9 +75,9 @@ class Advice extends ObjectModel
         $query = new DbQuery();
         $query->select('id_advice');
         $query->from('advice', 'b');
-        $query->where('`id_ps_advice` = '.(int)$id_ps_advice);
+        $query->where('`id_ps_advice` = '.(int) $id_ps_advice);
 
-        return (int)Db::getInstance()->getValue($query);
+        return (int) Db::getInstance()->getValue($query);
     }
 
     public static function getValidatedByIdTab($id_tab, $premium = false, $addons = false)
@@ -92,8 +92,8 @@ class Advice extends ObjectModel
         $query->where('
 			a.`validated` = 1 AND 
 			a.`hide` = 0 AND 
-			al.`id_lang` = '.(int)Context::getContext()->language->id.' AND 
-			at.`id_tab` = '.(int)$id_tab.' AND 
+			al.`id_lang` = '.(int) Context::getContext()->language->id.' AND 
+			at.`id_tab` = '.(int) $id_tab.' AND 
 			((a.`start_day` = 0 AND a.`stop_day` = 0) OR ('.date('d').' >= a.`start_day` AND '.date('d').' <= a.`stop_day`))');
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

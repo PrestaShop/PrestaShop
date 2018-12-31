@@ -68,7 +68,7 @@ class AdminGamificationController extends ModuleAdminController
         $query->from('badge', 'b');
         $query->join('
 			LEFT JOIN `'._DB_PREFIX_.'badge_lang` bl ON bl.`id_badge` = b.`id_badge`');
-        $query->where('bl.id_lang = '.(int)$this->context->language->id);
+        $query->where('bl.id_lang = '.(int) $this->context->language->id);
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
         foreach ($result as $res) {
@@ -92,8 +92,8 @@ class AdminGamificationController extends ModuleAdminController
 
         $this->tpl_view_vars = array(
             'badges_type' => $badges_type,
-            'current_level_percent' => (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT'),
-            'current_level' => (int)Configuration::get('GF_CURRENT_LEVEL'),
+            'current_level_percent' => (int) Configuration::get('GF_CURRENT_LEVEL_PERCENT'),
+            'current_level' => (int) Configuration::get('GF_CURRENT_LEVEL'),
             'groups' => $groups,
             'levels' => $levels,
         );
@@ -137,7 +137,7 @@ class AdminGamificationController extends ModuleAdminController
             if (count($return['advices_premium_to_display']['advices']) >= 2) {
                 $weighted_advices_array = array();
                 foreach ($return['advices_premium_to_display']['advices'] as $prem_advice) {
-                    $loop_flag = (int)$prem_advice['weight'];
+                    $loop_flag = (int) $prem_advice['weight'];
                     if ($loop_flag) {
                         for ($i = 0; $i != $loop_flag; $i++) {
                             $weighted_advices_array[] = $prem_advice;
@@ -153,7 +153,7 @@ class AdminGamificationController extends ModuleAdminController
 
                 $return['advices_premium_to_display']['advices'] = array($weighted_advices_array[$rand], $weighted_advices_array[$rand2]);
             } elseif (count($return['advices_premium_to_display']['advices']) > 0) {
-                $addons = Advice::getAddonsAdviceByIdTab((int)Tools::getValue('id_tab'));
+                $addons = Advice::getAddonsAdviceByIdTab((int) Tools::getValue('id_tab'));
                 $return['advices_premium_to_display']['advices'][] = array_shift($addons);
             }
         }
@@ -173,7 +173,7 @@ class AdminGamificationController extends ModuleAdminController
     {
         $return = array('advices' => array());
 
-        $id_tab = (int)Tools::getValue('id_tab');
+        $id_tab = (int) Tools::getValue('id_tab');
         $ids_ps_advice = Tools::getValue('ids_ps_advice');
 
         if ($only_premium) {
@@ -189,7 +189,7 @@ class AdminGamificationController extends ModuleAdminController
                         'selector' => $advice['selector'],
                         'html' => GamificationTools::parseMetaData($advice['html']),
                         'location' => $advice['location'],
-                        'weight' => (int)$advice['weight'],
+                        'weight' => (int) $advice['weight'],
                     );
                 }
             }
@@ -203,7 +203,7 @@ class AdminGamificationController extends ModuleAdminController
         $return = true;
         $condition_ids = Condition::getIdsDailyCalculation();
         foreach ($condition_ids as $id) {
-            $cond = new Condition((int)$id);
+            $cond = new Condition((int) $id);
             $return &= $cond->processCalculation();
         }
 
@@ -217,13 +217,13 @@ class AdminGamificationController extends ModuleAdminController
         $advices_to_unvalidate = Advice::getIdsAdviceToUnvalidate();
 
         foreach ($advices_to_validate as $id) {
-            $advice = new Advice((int)$id);
+            $advice = new Advice((int) $id);
             $advice->validated = 1;
             $return &= $advice->save();
         }
 
         foreach ($advices_to_unvalidate as $id) {
-            $advice = new Advice((int)$id);
+            $advice = new Advice((int) $id);
             $advice->validated = 0;
             $return &= $advice->save();
         }
@@ -234,8 +234,8 @@ class AdminGamificationController extends ModuleAdminController
     public function processLevelAndBadgeValidation($ids_badge)
     {
         $return = true;
-        $current_level = (int)Configuration::get('GF_CURRENT_LEVEL');
-        $current_level_percent = (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT');
+        $current_level = (int) Configuration::get('GF_CURRENT_LEVEL');
+        $current_level_percent = (int) Configuration::get('GF_CURRENT_LEVEL_PERCENT');
 
         $not_viewed_badge = explode('|', ltrim(Configuration::get('GF_NOT_VIEWED_BADGE', ''), ''));
         $nbr_notif = Configuration::get('GF_NOTIFICATION', 0);
@@ -245,7 +245,7 @@ class AdminGamificationController extends ModuleAdminController
         } //reset the last badge only if there is new badge to validate
 
         foreach ($ids_badge as $id) {
-            $badge = new Badge((int)$id);
+            $badge = new Badge((int) $id);
             if (($badge->scoring + $current_level_percent) >= 100) {
                 $current_level ++;
                 $current_level_percent = $badge->scoring + $current_level_percent - 100;
@@ -257,7 +257,7 @@ class AdminGamificationController extends ModuleAdminController
             $condition_ids = Condition::getIdsByBadgeGroup($badge->id_group);
             if (is_array($condition_ids) && count($condition_ids)) {
                 foreach ($condition_ids as $id) {
-                    $cond = new Condition((int)$id);
+                    $cond = new Condition((int) $id);
                     $cond->processCalculation();
                     unset($cond);
                 }
@@ -269,10 +269,10 @@ class AdminGamificationController extends ModuleAdminController
             $not_viewed_badge[] = $badge->id;
         }
 
-        Configuration::updateGlobalValue('GF_NOTIFICATION', (int)$nbr_notif);
+        Configuration::updateGlobalValue('GF_NOTIFICATION', (int) $nbr_notif);
         Configuration::updateGlobalValue('GF_NOT_VIEWED_BADGE', implode('|', array_unique($not_viewed_badge)));
-        Configuration::updateGlobalValue('GF_CURRENT_LEVEL', (int)$current_level);
-        Configuration::updateGlobalValue('GF_CURRENT_LEVEL_PERCENT', (int)$current_level_percent);
+        Configuration::updateGlobalValue('GF_CURRENT_LEVEL', (int) $current_level);
+        Configuration::updateGlobalValue('GF_CURRENT_LEVEL_PERCENT', (int) $current_level_percent);
 
         return $return;
     }
@@ -283,7 +283,7 @@ class AdminGamificationController extends ModuleAdminController
         do {
             $condition_ids = Condition::getIdsByBadgeGroupPosition($group_position);
             foreach ($condition_ids as $id) {
-                $cond = new Condition((int)$id);
+                $cond = new Condition((int) $id);
                 $cond->processCalculation();
                 unset($cond);
             }
@@ -295,7 +295,7 @@ class AdminGamificationController extends ModuleAdminController
     {
         $isoUser = Context::getContext()->language->iso_code;
         $isoCountry = Context::getContext()->country->iso_code;
-        $employee = new Employee((int)Context::getContext()->cookie->id_employee);
+        $employee = new Employee((int) Context::getContext()->cookie->id_employee);
         $firstname = $employee->firstname;
         $lastname = $employee->lastname;
         $email = $employee->email;
@@ -305,8 +305,8 @@ class AdminGamificationController extends ModuleAdminController
 
     public function ajaxProcessCloseAdvice()
     {
-        $id_advice = Advice::getIdByIdPs((int)Tools::getValue('id_advice'));
-        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'advice` SET `hide` =  \'1\' WHERE  `id_advice` = '.(int)$id_advice.';');
+        $id_advice = Advice::getIdByIdPs((int) Tools::getValue('id_advice'));
+        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'advice` SET `hide` =  \'1\' WHERE  `id_advice` = '.(int) $id_advice.';');
         die();
     }
 }

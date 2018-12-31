@@ -46,7 +46,7 @@ function add_default_restrictions_modules_groups()
             $sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
             foreach ($modules as $mod) {
                 foreach ($shops as $s) {
-                    $sql .= '("'.(int)$mod['id_module'].'", "'.(int)$s.'", "'.(int)$group['id_group'].'"),';
+                    $sql .= '("'.(int) $mod['id_module'].'", "'.(int) $s.'", "'.(int) $group['id_group'].'"),';
                 }
             }
                 // removing last comma to avoid SQL error

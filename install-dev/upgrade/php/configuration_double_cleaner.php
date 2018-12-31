@@ -35,7 +35,7 @@ function configuration_double_cleaner()
         Db::getInstance()->execute('
 		DELETE FROM '._DB_PREFIX_.'configuration
 		WHERE name = \''.addslashes($row['name']).'\'
-		AND id_configuration != '.(int)($row['minid']));
+		AND id_configuration != '.(int) ($row['minid']));
     }
     Db::getInstance()->execute('
 	DELETE FROM '._DB_PREFIX_.'configuration_lang

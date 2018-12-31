@@ -275,7 +275,7 @@ abstract class Controller extends ControllerCore
             return $var;
         }
 
-        return (string)$var;
+        return (string) $var;
     }
 
     protected function processProfilingData()
@@ -531,7 +531,7 @@ abstract class Controller extends ControllerCore
             }
         }
         echo '	<tr>
-					<th><b>'.($count_hooks == 1 ? '1 hook' : (int)$count_hooks.' hooks').'</b></th>
+					<th><b>'.($count_hooks == 1 ? '1 hook' : (int) $count_hooks.' hooks').'</b></th>
 					<th>'.$this->getLoadTimeColor($this->total_modules_time).' ms</th>
 					<th>'.$this->getMemoryColor($this->total_modules_memory).' Mb</th>
 				</tr>
@@ -580,7 +580,7 @@ abstract class Controller extends ControllerCore
             }
         }
         echo '	<tr>
-					<th><b>'.($count_modules == 1 ? '1 module' : (int)$count_modules.' modules').'</b></th>
+					<th><b>'.($count_modules == 1 ? '1 module' : (int) $count_modules.' modules').'</b></th>
 					<th>'.$this->getLoadTimeColor($this->total_modules_time).' ms</th>
 					<th>'.$this->getMemoryColor($this->total_modules_memory).' Mb</th>
 				</tr>
@@ -613,7 +613,7 @@ abstract class Controller extends ControllerCore
 				<tr>
 					<td class="pre"><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>
 					<td data-value="'.$data['time'].'"><span '.$this->getTimeColor($data['time'] * 1000).'>'.(round($data['time'] * 1000, 1) < 0.1 ? '< 1' : round($data['time'] * 1000, 1)).'</span></td>
-					<td>'.(int)$data['rows'].'</td>
+					<td>'.(int) $data['rows'].'</td>
 					<td data-value="'.$data['filesort'].'">'.($data['filesort'] ? '<span style="color:red">Yes</span>' : '').'</td>
 					<td data-value="'.$data['group_by'].'">'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>
 					<td data-value="'.$data['location'].'">

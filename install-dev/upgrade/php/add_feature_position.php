@@ -35,7 +35,7 @@ function add_feature_position()
             Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'feature`
 			SET `position` = '.$i++.'
-			WHERE `id_feature` = '.(int)$feature['id_feature']);
+			WHERE `id_feature` = '.(int) $feature['id_feature']);
         }
     }
 }

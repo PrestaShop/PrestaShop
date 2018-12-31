@@ -51,7 +51,7 @@ function migrate_tabs_17()
         'DELETE t, tl FROM '._DB_PREFIX_.'tab t JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab=tl.id_tab) WHERE module IS NULL OR module = ""'
     );
 
-    $defaultLanguage = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+    $defaultLanguage = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
 
     $languageList = LanguageList::getInstance();
     $languageList->setLanguage($defaultLanguage->iso_code);
@@ -65,6 +65,6 @@ function migrate_tabs_17()
     /* update remaining idParent */
     foreach($moduleParents as $idParent => $className) {
         $idTab = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name='.pSQL($className));
-        Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'tab SET id_parent='.(int)$idTab.' WHERE id_parent='.(int)$idParent);
+        Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'tab SET id_parent='.(int) $idTab.' WHERE id_parent='.(int) $idParent);
     }
 }

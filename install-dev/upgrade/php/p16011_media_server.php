@@ -39,7 +39,7 @@ function p16011_media_server()
 
     if ($new_settings == $prev_settings || (
         copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
-        && (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
+        && (bool) file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
     )) {
         return true;
     }

@@ -57,7 +57,7 @@ function p15018_change_image_types()
         }
     }
 
-    $option = (bool)Db::getInstance()->getValue('SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE directory != "default" AND directory != "prestashop"');
+    $option = (bool) Db::getInstance()->getValue('SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE directory != "default" AND directory != "prestashop"');
 
     // If there is another theme than the default one, duplicate
     if ($option) {
@@ -100,7 +100,7 @@ function p15018_change_image_types()
                     }
                 }
             }
-            $folder = implode(DIRECTORY_SEPARATOR, str_split((string)$row['id_image'])).DIRECTORY_SEPARATOR;
+            $folder = implode(DIRECTORY_SEPARATOR, str_split((string) $row['id_image'])).DIRECTORY_SEPARATOR;
             if (file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'.jpg')) {
                 foreach ($replace_types['products'] as $old_type => $new_type) {
                     if (is_array($new_type) && count($new_type)) {

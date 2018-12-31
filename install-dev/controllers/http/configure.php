@@ -207,7 +207,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         $timezones = array();
         if ($xml) {
             foreach ($xml->entities->timezone as $timezone) {
-                $timezones[] = (string)$timezone['name'];
+                $timezones[] = (string) $timezone['name'];
             }
         }
 
@@ -230,7 +230,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         $timezones = array();
         if ($xml) {
             foreach ($xml->relation as $relation) {
-                $timezones[(string)$relation['iso']] = (string)$relation['zone'];
+                $timezones[(string) $relation['iso']] = (string) $relation['zone'];
             }
         }
 

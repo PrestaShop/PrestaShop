@@ -75,7 +75,7 @@ class Badge extends ObjectModel
 
     public function getBadgeImgUrl()
     {
-        return Tools::getShopProtocol().self::BAGDE_IMG_URL.'/'.(int)$this->id_ps_badge.'/'.(int)$this->validated.'.png';
+        return Tools::getShopProtocol().self::BAGDE_IMG_URL.'/'.(int) $this->id_ps_badge.'/'.(int) $this->validated.'.png';
     }
 
     public function validate()
@@ -91,9 +91,9 @@ class Badge extends ObjectModel
         $query = new DbQuery();
         $query->select('id_badge');
         $query->from('badge', 'b');
-        $query->where('`id_ps_badge` = '.(int)$id_ps_badge);
+        $query->where('`id_ps_badge` = '.(int) $id_ps_badge);
 
-        return (int)Db::getInstance()->getValue($query);
+        return (int) Db::getInstance()->getValue($query);
     }
 
     public static function getIdsBadgesToValidate()

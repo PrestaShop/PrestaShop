@@ -26,7 +26,7 @@ if (!in_array(fix_strtolower($info['extension']), $ext)) {
 header('Pragma: private');
 header('Cache-control: private, must-revalidate');
 header('Content-Type: application/octet-stream');
-header('Content-Length: '.(string)filesize($path.$name));
+header('Content-Length: '.(string) filesize($path.$name));
 header('Content-Disposition: attachment; filename="'.($name).'"');
 readfile($path.$name);
 

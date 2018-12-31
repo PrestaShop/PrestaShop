@@ -44,7 +44,7 @@ function add_order_reference_in_order_payment()
             $res = Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'order_payment`
 			SET order_reference = \''.pSQL($payment['reference']).'\'
-			WHERE id_order_payment = '.(int)$payment['id_order_payment']);
+			WHERE id_order_payment = '.(int) $payment['id_order_payment']);
             if (!$res) {
                 $errors[] = Db::getInstance()->getMsgError();
             }
@@ -77,7 +77,7 @@ function add_order_reference_in_order_payment()
 
         $res = Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'order_invoice_payment`
-		SET id_order_payement = '.(int)$id_order_payment_keep.'
+		SET id_order_payement = '.(int) $id_order_payment_keep.'
 		WHERE id_order_payment IN ('.implode(',', $order_payments_array).')');
 
         $order_payments_to_remove = array_merge($order_payments_to_remove, $order_payments_array);

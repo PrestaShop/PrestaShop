@@ -357,7 +357,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
         if ($lowMemory) {
             foreach ($this->model_install->getAddonsModulesList($params) as $module) {
-                $install_modules['subtasks'][] = array('module' => (string)$module['name'], 'id_module' => (string)$module['id_module']);
+                $install_modules['subtasks'][] = array('module' => (string) $module['name'], 'id_module' => (string) $module['id_module']);
             }
         }
 
