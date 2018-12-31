@@ -97,7 +97,7 @@ class SurvivalTest extends WebTestCase
          *    // then display 'error.html' in a web browser.
          * }
          */
-        self::assertTrue(
+        $this->assertTrue(
             $response->isSuccessful(),
             sprintf(
                 '%s page should be available, but status code is %s',

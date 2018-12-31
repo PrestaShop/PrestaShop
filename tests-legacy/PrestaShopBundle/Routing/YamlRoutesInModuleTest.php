@@ -74,10 +74,10 @@ class YamlRoutesInModuleTest extends KernelTestCase
         $router = $this->container->get('router');
         $route = $router->getRouteCollection()->get('demo_admin_demo');
 
-        self::assertInstanceOf(Route::class, $route);
+        $this->assertInstanceOf(Route::class, $route);
 
-        self::assertEquals('/modules/demo/demo', $route->getPath());
-        self::assertEquals([
+        $this->assertEquals('/modules/demo/demo', $route->getPath());
+        $this->assertEquals([
             '_controller' => 'PsTest\Controller\Admin\DemoController::demoAction',
         ], $route->getDefaults());
     }
