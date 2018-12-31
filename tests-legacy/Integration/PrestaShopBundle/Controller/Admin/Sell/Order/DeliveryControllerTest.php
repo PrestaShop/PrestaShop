@@ -49,7 +49,7 @@ class DeliveryControllerTest extends WebTestCase
             )
         );
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testSlipActionWithInvalidData()
@@ -70,7 +70,7 @@ class DeliveryControllerTest extends WebTestCase
             ]
         );
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        $this->assertSame(
             Response::HTTP_OK,
             $response->getStatusCode()
         );
@@ -95,7 +95,7 @@ class DeliveryControllerTest extends WebTestCase
             ]
         );
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        $this->assertSame(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );
@@ -124,7 +124,7 @@ class DeliveryControllerTest extends WebTestCase
             ]
         );
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        $this->assertSame(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );
@@ -151,7 +151,7 @@ class DeliveryControllerTest extends WebTestCase
             ]
         );
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        $this->assertSame(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );

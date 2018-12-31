@@ -277,7 +277,7 @@ class CacheCoreTest extends TestCase
             $this->assertArrayHasKey($tableCacheKey, $this->cacheArray);
 
             // check the query hash is in the table map
-            $this->assertEquals($counter, $this->cacheArray[$tableCacheKey][$queryHash]['count']);
+            $this->assertSame($counter, $this->cacheArray[$tableCacheKey][$queryHash]['count']);
         }
     }
 

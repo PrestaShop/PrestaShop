@@ -49,7 +49,7 @@ class GetSqlRequestSettingsHandlerTest extends TestCase
         $sqlRequestSettings = $getSqlRequestSettingsHandler->handle(new GetSqlRequestSettings());
 
         $this->assertInstanceOf(SqlRequestSettings::class, $sqlRequestSettings);
-        $this->assertEquals($expectedValue, $sqlRequestSettings->getFileEncoding());
+        $this->assertSame($expectedValue, $sqlRequestSettings->getFileEncoding());
     }
 
     public function getInvalidConfiguration()

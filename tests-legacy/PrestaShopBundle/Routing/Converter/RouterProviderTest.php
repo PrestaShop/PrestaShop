@@ -60,13 +60,13 @@ class RouterProviderTest extends TestCase
 
         /** @var LegacyRoute $legacyRoute */
         $legacyRoute = $legacyRoutes['admin_products'];
-        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+        $this->assertSame('admin_products', $legacyRoute->getRouteName());
         $this->assertSame(['AdminProducts' => [
             'index' => 'admin_products',
         ]], $legacyRoute->getControllersActions());
 
         $legacyRoute = $legacyRoutes['admin_products_create'];
-        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
+        $this->assertSame('admin_products_create', $legacyRoute->getRouteName());
         $this->assertSame(['AdminProducts' => [
             'add' => 'admin_products_create',
             'create' => 'admin_products_create',
@@ -172,28 +172,28 @@ class RouterProviderTest extends TestCase
         ]);
         $routerProvider = new RouterProvider($router);
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'index');
-        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+        $this->assertSame('admin_products', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'list');
-        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+        $this->assertSame('admin_products', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', '');
-        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+        $this->assertSame('admin_products', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', null);
-        $this->assertEquals('admin_products', $legacyRoute->getRouteName());
+        $this->assertSame('admin_products', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'add');
-        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
+        $this->assertSame('admin_products_create', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'create');
-        $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
+        $this->assertSame('admin_products_create', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminCategories', 'create');
-        $this->assertEquals('admin_categories_create', $legacyRoute->getRouteName());
+        $this->assertSame('admin_categories_create', $legacyRoute->getRouteName());
 
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminCategories', 'add');
-        $this->assertEquals('admin_categories_create', $legacyRoute->getRouteName());
+        $this->assertSame('admin_categories_create', $legacyRoute->getRouteName());
     }
 
     public function testControllerNotFound()
@@ -223,7 +223,7 @@ class RouterProviderTest extends TestCase
             $caughtException = $e;
         }
         $this->assertNotNull($caughtException);
-        $this->assertEquals('Could not find a route matching for legacy controller: AdminCategories', $caughtException->getMessage());
+        $this->assertSame('Could not find a route matching for legacy controller: AdminCategories', $caughtException->getMessage());
 
         $caughtException = null;
 
@@ -233,7 +233,7 @@ class RouterProviderTest extends TestCase
             $caughtException = $e;
         }
         $this->assertNotNull($caughtException);
-        $this->assertEquals('Could not find a route matching for legacy action: AdminProducts:edit', $caughtException->getMessage());
+        $this->assertSame('Could not find a route matching for legacy action: AdminProducts:edit', $caughtException->getMessage());
     }
 
     /**

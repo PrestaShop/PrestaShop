@@ -81,8 +81,8 @@ class AbstractGridDefinitionFactoryTest extends TestCase
         $this->assertInstanceOf(BulkActionCollectionInterface::class, $definition->getBulkActions());
         $this->assertInstanceOf(GridActionCollectionInterface::class, $definition->getGridActions());
 
-        $this->assertEquals($definition->getId(), 'test_id');
-        $this->assertEquals($definition->getName(), 'Test name');
+        $this->assertSame($definition->getId(), 'test_id');
+        $this->assertSame($definition->getName(), 'Test name');
         $this->assertCount(3, $definition->getColumns());
         $this->assertCount(0, $definition->getGridActions());
         $this->assertCount(0, $definition->getBulkActions());

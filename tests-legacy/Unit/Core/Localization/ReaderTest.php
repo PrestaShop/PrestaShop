@@ -63,27 +63,27 @@ class ReaderTest extends TestCase
 
         $dns = $localeData->defaultNumberingSystem;
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedData['defaultNumberingSystem'],
             $dns,
             'Wrong group separator'
         );
-        $this->assertEquals(
+        $this->assertSame(
             $expectedData['digitsGroupSeparator'],
             $localeData->numberSymbols[$dns]->group,
             'Wrong group separator'
         );
-        $this->assertEquals(
+        $this->assertSame(
             $expectedData['decimalSeparator'],
             $localeData->numberSymbols[$dns]->decimal,
             'Wrong decimal separator'
         );
-        $this->assertEquals(
+        $this->assertSame(
             $expectedData['decimalPattern'],
             $localeData->decimalPatterns[$dns],
             'Wrong decimal pattern'
         );
-        $this->assertEquals(
+        $this->assertSame(
             $expectedData['currencyPattern'],
             $localeData->currencyPatterns[$dns],
             'Wrong currency pattern'

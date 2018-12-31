@@ -35,8 +35,8 @@ class AmountTest extends TestCase
     {
         $amount = new AmountImmutable(2.3, 3.5);
 
-        $this->assertEquals(2.3, $amount->getTaxIncluded());
-        $this->assertEquals(3.5, $amount->getTaxExcluded());
+        $this->assertSame(2.3, $amount->getTaxIncluded());
+        $this->assertSame(3.5, $amount->getTaxExcluded());
     }
 
     public function testAdd()
@@ -45,14 +45,14 @@ class AmountTest extends TestCase
         $amount1 = new AmountImmutable(4.6, 7.2);
         $amount2 = $amount->add($amount1);
 
-        $this->assertEquals(2.3, $amount->getTaxIncluded());
-        $this->assertEquals(3.5, $amount->getTaxExcluded());
+        $this->assertSame(2.3, $amount->getTaxIncluded());
+        $this->assertSame(3.5, $amount->getTaxExcluded());
 
-        $this->assertEquals(4.6, $amount1->getTaxIncluded());
-        $this->assertEquals(7.2, $amount1->getTaxExcluded());
+        $this->assertSame(4.6, $amount1->getTaxIncluded());
+        $this->assertSame(7.2, $amount1->getTaxExcluded());
 
-        $this->assertEquals(6.9, $amount2->getTaxIncluded());
-        $this->assertEquals(10.7, $amount2->getTaxExcluded());
+        $this->assertSame(6.9, $amount2->getTaxIncluded());
+        $this->assertSame(10.7, $amount2->getTaxExcluded());
     }
 
     public function testSub()
@@ -61,13 +61,13 @@ class AmountTest extends TestCase
         $amount1 = new AmountImmutable(4.8, 7.2);
         $amount2 = $amount1->sub($amount);
 
-        $this->assertEquals(2.3, $amount->getTaxIncluded());
-        $this->assertEquals(3.5, $amount->getTaxExcluded());
+        $this->assertSame(2.3, $amount->getTaxIncluded());
+        $this->assertSame(3.5, $amount->getTaxExcluded());
 
-        $this->assertEquals(4.8, $amount1->getTaxIncluded());
-        $this->assertEquals(7.2, $amount1->getTaxExcluded());
+        $this->assertSame(4.8, $amount1->getTaxIncluded());
+        $this->assertSame(7.2, $amount1->getTaxExcluded());
 
-        $this->assertEquals(2.5, $amount2->getTaxIncluded());
-        $this->assertEquals(3.7, $amount2->getTaxExcluded());
+        $this->assertSame(2.5, $amount2->getTaxIncluded());
+        $this->assertSame(3.7, $amount2->getTaxExcluded());
     }
 }

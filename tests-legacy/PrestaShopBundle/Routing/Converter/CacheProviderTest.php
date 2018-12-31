@@ -144,7 +144,7 @@ class CacheProviderTest extends TestCase
             $this->assertNotEmpty($legacyRoutes['admin_products_create']);
             $this->assertTrue($cache->hasItem(self::CACHE_KEY));
             $cacheItem = $cache->getItem(self::CACHE_KEY);
-            $this->assertEquals($this->expectedCacheValue, $cacheItem->get());
+            $this->assertSame($this->expectedCacheValue, $cacheItem->get());
         }
 
         //Now empty the private field to force CacheProvider to call the cache
@@ -176,7 +176,7 @@ class CacheProviderTest extends TestCase
             $this->assertNotEmpty($controllerActions['AdminProducts']['index']);
             $this->assertTrue($cache->hasItem(self::CACHE_KEY));
             $cacheItem = $cache->getItem(self::CACHE_KEY);
-            $this->assertEquals($this->expectedCacheValue, $cacheItem->get());
+            $this->assertSame($this->expectedCacheValue, $cacheItem->get());
         }
 
         //Now empty the private field to force CacheProvider to call the cache

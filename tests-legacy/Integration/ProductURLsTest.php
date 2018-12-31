@@ -82,7 +82,7 @@ class ProductURLsTest extends IntegrationTestCase
         $this->enableURLRewriting();
         $filename = basename($this->getURL(1, 2)['path']);
 
-        $this->assertEquals(
+        $this->assertSame(
             '1-2-hummingbird-printed-t-shirt.html',
             $filename
         );
@@ -93,7 +93,7 @@ class ProductURLsTest extends IntegrationTestCase
         $this->enableURLRewriting();
         $filename = basename($this->getURL(1, null)['path']);
 
-        $this->assertEquals(
+        $this->assertSame(
             '1-hummingbird-printed-t-shirt.html',
             $filename
         );
@@ -105,8 +105,8 @@ class ProductURLsTest extends IntegrationTestCase
         $query = [];
         parse_str($this->getURL(1, 6)['query'], $query);
 
-        $this->assertEquals(1, $query['id_product']);
-        $this->assertEquals(6, $query['id_product_attribute']);
+        $this->assertSame(1, $query['id_product']);
+        $this->assertSame(6, $query['id_product_attribute']);
     }
 
     public function testUrlIgnoresVariantIfNotSpecifiedWithoutUrlRewriting()
@@ -115,7 +115,7 @@ class ProductURLsTest extends IntegrationTestCase
         $query = [];
         parse_str($this->getURL(1, null)['query'], $query);
 
-        $this->assertEquals(1, $query['id_product']);
+        $this->assertSame(1, $query['id_product']);
         $this->assertEmpty($query['id_product_attribute']);
     }
 }

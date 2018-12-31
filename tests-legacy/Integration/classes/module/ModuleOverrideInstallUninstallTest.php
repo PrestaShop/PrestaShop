@@ -113,13 +113,13 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         $expected_override_cart = file_get_contents($ressource_path.'/Cart.php');
         $expected_override_admin_product = file_get_contents($ressource_path.'/AdminProductsController.php');
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->cleanup($expected_override_cart),
             $this->cleanup($actual_override_cart),
             'Cart.php file different'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->cleanup($expected_override_admin_product),
             $this->cleanup($actual_override_admin_product),
             'AdminProductsController.php file different'

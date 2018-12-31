@@ -42,7 +42,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     public function testJoinPathsTwoPaths()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'a' . DIRECTORY_SEPARATOR . 'b',
             $this->fs->joinPaths('a', 'b')
         );
@@ -50,7 +50,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     public function testJoinPathsThreePaths()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'a' . DIRECTORY_SEPARATOR . 'b' . DIRECTORY_SEPARATOR . 'c',
             $this->fs->joinPaths('a', 'b', 'c')
         );
@@ -76,7 +76,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     public function testJoinPathsNormalizesDirectorySeparators()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'a' . DIRECTORY_SEPARATOR . 'b' . DIRECTORY_SEPARATOR . 'c' . DIRECTORY_SEPARATOR . 'd',
             $this->fs->joinPaths('a\\', 'b///', 'c\\', 'd/')
         );
@@ -92,7 +92,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
             $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt'),
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedPaths,
             array_keys($this->fs->listEntriesRecursively($this->fixturesPath))
         );
@@ -106,7 +106,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
             $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt'),
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedPaths,
             array_keys($this->fs->listFilesRecursively($this->fixturesPath))
         );

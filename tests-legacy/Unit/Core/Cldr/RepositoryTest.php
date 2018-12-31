@@ -74,14 +74,14 @@ class RepositoryTest extends UnitTestCase
         $this->locale = 'fr';
         $this->localeRepository = $this->repository->locales[$this->locale];
 
-        $this->assertEquals($this->locale, 'fr');
-        $this->assertEquals($this->localeRepository->__get('code'), 'fr');
+        $this->assertSame($this->locale, 'fr');
+        $this->assertSame($this->localeRepository->__get('code'), 'fr');
     }
 
     public function testSetRegion()
     {
         $this->region = 'FR';
-        $this->assertEquals($this->region, 'FR');
+        $this->assertSame($this->region, 'FR');
     }
 
     public function testGetCurrencyIsoCodeNum()
@@ -89,23 +89,23 @@ class RepositoryTest extends UnitTestCase
         $code = 'EUR';
         $currencies = $this->repository->supplemental['codeMappings'];
 
-        $this->assertEquals($currencies[$code]['_numeric'], '978');
+        $this->assertSame($currencies[$code]['_numeric'], '978');
     }
 
     public function testGetCurrencyWithoutCode()
     {
         $territory = $this->repository->territories[$this->region];
 
-        $this->assertEquals($territory->code, 'FR');
+        $this->assertSame($territory->code, 'FR');
 
         $code = (string)$territory->currency;
 
-        $this->assertEquals($code, 'EUR');
+        $this->assertSame($code, 'EUR');
 
         $currency = new Currency($this->repository, $code);
         $localized_currency = $currency->localize($this->locale);
 
-        $this->assertEquals($localized_currency->name, 'euro');
+        $this->assertSame($localized_currency->name, 'euro');
     }
 
     public function testGetCurrencyWithCode()
@@ -115,7 +115,7 @@ class RepositoryTest extends UnitTestCase
         $currency = new Currency($this->repository, $code);
         $localized_currency = $currency->localize($this->locale);
 
-        $this->assertEquals($localized_currency->name, 'euro');
+        $this->assertSame($localized_currency->name, 'euro');
     }
 
     public function testGetAllCurrencies()

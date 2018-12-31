@@ -40,7 +40,7 @@ class SearchCoreTest extends IntegrationTestCase
         Configuration::set('PS_SEARCH_START', $withStart);
         Configuration::set('PS_SEARCH_END', !$withEnd); // Opposite of the meaning of start equivalent :)
         $return = Search::getSearchParamFromWord($word);
-        $this->assertEquals($expectedKeyWord, $return, 'Search::getSearchParamFromWord() failed for data input : '.$word.'; Expected : '.$expectedKeyWord.'; Returns : '.$return);
+        $this->assertSame($expectedKeyWord, $return, 'Search::getSearchParamFromWord() failed for data input : '.$word.'; Expected : '.$expectedKeyWord.'; Returns : '.$return);
     }
 
     public function keywordsProvider()

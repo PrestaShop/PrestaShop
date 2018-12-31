@@ -38,14 +38,14 @@ class AddCombinationTest extends AbstractCartTest
         $product     = new Product($combination->id_product);
 
         $nbProduct = Product::getQuantity($product->id, $combination->id, null, $this->cart, null);
-        $this->assertEquals(500, $nbProduct);
+        $this->assertSame(500, $nbProduct);
 
         $result = $this->cart->updateQty(11, $product->id, $combination->id, null);
         $this->assertTrue($result);
         $qty = $this->cart->getProductQuantity($product->id, $combination->id, null);
-        $this->assertEquals(11, $qty['quantity']);
+        $this->assertSame(11, $qty['quantity']);
         $nbProduct = Product::getQuantity($product->id, $combination->id, null, $this->cart, null);
-        $this->assertEquals(489, $nbProduct);
+        $this->assertSame(489, $nbProduct);
     }
 
     public function testCombinationCannotBeAddedInCartIfMoreThanStock()
@@ -56,9 +56,9 @@ class AddCombinationTest extends AbstractCartTest
         $result = $this->cart->updateQty(600, $product->id, $combination->id);
         $this->assertFalse($result);
         $qty = $this->cart->getProductQuantity($product->id, $combination->id, null);
-        $this->assertEquals(0, $qty['quantity']);
+        $this->assertSame(0, $qty['quantity']);
         $nbProduct = Product::getQuantity($product->id, $combination->id, null, $this->cart, null);
-        $this->assertEquals(500, $nbProduct);
+        $this->assertSame(500, $nbProduct);
     }
 
     public function testCombinationCanBeAddedInCartIfMoreThanStockButAvailableWhenOutOfStock()
@@ -74,9 +74,9 @@ class AddCombinationTest extends AbstractCartTest
         $result = $this->cart->updateQty(600, $product->id, $combination->id);
         $this->assertTrue($result);
         $qty = $this->cart->getProductQuantity($product->id, $combination->id, null);
-        $this->assertEquals(600, $qty['quantity']);
+        $this->assertSame(600, $qty['quantity']);
         $nbProduct = Product::getQuantity($product->id, $combination->id, null, $this->cart, null);
-        $this->assertEquals(-100, $nbProduct);
+        $this->assertSame(-100, $nbProduct);
 
         Configuration::set('PS_ORDER_OUT_OF_STOCK', $oldOrderOutOfStock);
     }

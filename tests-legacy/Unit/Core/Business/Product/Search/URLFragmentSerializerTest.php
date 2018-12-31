@@ -40,8 +40,8 @@ class URLFragmentSerializerTest extends Testcase
 
     private function doTest($expected, array $fragment)
     {
-        $this->assertEquals($expected, $this->serializer->serialize($fragment));
-        $this->assertEquals($fragment, $this->serializer->unserialize($expected));
+        $this->assertSame($expected, $this->serializer->serialize($fragment));
+        $this->assertSame($fragment, $this->serializer->unserialize($expected));
     }
 
     public function testSerializeSingleMonovaluedFragment()

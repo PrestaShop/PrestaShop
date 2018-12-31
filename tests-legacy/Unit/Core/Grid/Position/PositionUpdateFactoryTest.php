@@ -50,12 +50,12 @@ class PositionUpdateFactoryTest extends TestCase
         /** @var PositionModificationCollectionInterface $collection */
         $collection = $positionUpdate->getPositionModificationCollection();
         $this->assertNotNull($collection);
-        $this->assertEquals(1, $collection->count());
+        $this->assertSame(1, $collection->count());
         /** @var PositionModificationInterface $positionModification */
         $positionModification = $collection->current();
-        $this->assertEquals(1, $positionModification->getId());
-        $this->assertEquals(1, $positionModification->getOldPosition());
-        $this->assertEquals(2, $positionModification->getNewPosition());
+        $this->assertSame(1, $positionModification->getId());
+        $this->assertSame(1, $positionModification->getOldPosition());
+        $this->assertSame(2, $positionModification->getNewPosition());
         $this->assertNull($positionUpdate->getParentId());
     }
 
@@ -74,13 +74,13 @@ class PositionUpdateFactoryTest extends TestCase
         /** @var PositionModificationCollectionInterface $collection */
         $collection = $positionUpdate->getPositionModificationCollection();
         $this->assertNotNull($collection);
-        $this->assertEquals(1, $collection->count());
+        $this->assertSame(1, $collection->count());
         /** @var PositionModificationInterface $positionModification */
         $positionModification = $collection->current();
-        $this->assertEquals(1, $positionModification->getId());
-        $this->assertEquals(1, $positionModification->getOldPosition());
-        $this->assertEquals(2, $positionModification->getNewPosition());
-        $this->assertEquals(42, $positionUpdate->getParentId());
+        $this->assertSame(1, $positionModification->getId());
+        $this->assertSame(1, $positionModification->getOldPosition());
+        $this->assertSame(2, $positionModification->getNewPosition());
+        $this->assertSame(42, $positionUpdate->getParentId());
     }
 
     public function testDataPositionsValidation()
@@ -147,8 +147,8 @@ class PositionUpdateFactoryTest extends TestCase
         } else {
             $this->assertNotNull($caughtException);
             $this->assertInstanceOf(PositionDataException::class, $caughtException);
-            $this->assertEquals($expectedErrorKey, $caughtException->getKey());
-            $this->assertEquals('Admin.Notifications.Failure', $caughtException->getDomain());
+            $this->assertSame($expectedErrorKey, $caughtException->getKey());
+            $this->assertSame('Admin.Notifications.Failure', $caughtException->getDomain());
             if (null !== $expectedErrorParameters) {
                 $this->assertSame($expectedErrorParameters, $caughtException->getParameters());
             }

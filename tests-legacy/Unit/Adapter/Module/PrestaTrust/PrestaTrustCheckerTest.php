@@ -197,7 +197,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
 
         $presentedModule = $this->modulePresenter->present($testedModule);
 
-        $this->assertEquals(
+        $this->assertSame(
             (object)array(
                 'hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b',
                 'check_list' => array(

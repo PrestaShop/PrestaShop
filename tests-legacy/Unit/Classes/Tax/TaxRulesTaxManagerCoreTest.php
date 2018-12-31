@@ -70,13 +70,13 @@ class TaxRulesTaxManagerCoreTest extends UnitTestCase
         $tax_calculator = $tax_rules_tax_manager->getTaxCalculator();
 
         // Then
-        $this->assertEquals(TaxCalculator::COMBINE_METHOD, $tax_calculator->computation_method);
+        $this->assertSame(TaxCalculator::COMBINE_METHOD, $tax_calculator->computation_method);
         $this->assertInternalType('array', $tax_calculator->taxes);
 
         foreach ($tax_calculator->taxes as $key => $tax) {
             $this->assertTrue($tax instanceof Tax);
-            $this->assertEquals($this->tax_rows[$key]['id_tax'], $tax->id);
-            $this->assertEquals($this->tax_rows[$key]['rate'], $tax->rate);
+            $this->assertSame($this->tax_rows[$key]['id_tax'], $tax->id);
+            $this->assertSame($this->tax_rows[$key]['rate'], $tax->rate);
         }
     }
 }

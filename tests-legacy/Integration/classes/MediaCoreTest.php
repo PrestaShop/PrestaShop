@@ -84,7 +84,7 @@ class MediaCoreTest extends IntegrationTestCase
     {
         $output = str_replace('//server/', '//'.$this->domain.'/', $output);
         $return = Media::minifyCSS($input, $fileuri, $import_url);
-        $this->assertEquals($output, $return, 'MinifyCSS failed for data input : '.$input.'; Expected : '.$output.'; Returns : '.$return);
+        $this->assertSame($output, $return, 'MinifyCSS failed for data input : '.$input.'; Expected : '.$output.'; Returns : '.$return);
     }
 
     /**
@@ -93,7 +93,7 @@ class MediaCoreTest extends IntegrationTestCase
     public function testReplaceByAbsoluteURLPattern($input, $fileuri, $output, $expected)
     {
         $return = preg_match(Media::$pattern_callback, $input, $matches);
-        $this->assertEquals((bool)$expected, (bool)$return, 'ReplaceByAbsoluteURLPattern failed for data input : '.$input.(isset($matches[2]) && $matches[2] ? '; Matches : '.$matches[2] : ''));
+        $this->assertSame((bool)$expected, (bool)$return, 'ReplaceByAbsoluteURLPattern failed for data input : '.$input.(isset($matches[2]) && $matches[2] ? '; Matches : '.$matches[2] : ''));
     }
 
     public function isJsInputsProvider()

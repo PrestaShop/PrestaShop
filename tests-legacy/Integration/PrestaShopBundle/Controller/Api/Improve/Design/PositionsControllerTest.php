@@ -80,7 +80,7 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        $this->assertSame(
             Response::HTTP_OK,
             $response->getStatusCode()
         );
@@ -88,7 +88,7 @@ class PositionsControllerTest extends WebTestCase
         $json = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('hasError', $json['data']);
         $this->assertTrue($json['data']['hasError']);
-        $this->assertEquals(['This module cannot be loaded.'], $json['data']['errors']);
+        $this->assertSame(['This module cannot be loaded.'], $json['data']['errors']);
     }
 
     public function testMoveHookPositionToBottomWithUnavailablePositions()
@@ -107,7 +107,7 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        $this->assertSame(
             Response::HTTP_OK,
             $response->getStatusCode()
         );
@@ -115,7 +115,7 @@ class PositionsControllerTest extends WebTestCase
         $json = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('hasError', $json['data']);
         $this->assertTrue($json['data']['hasError']);
-        $this->assertEquals(['Cannot update module position.'], $json['data']['errors']);
+        $this->assertSame(['Cannot update module position.'], $json['data']['errors']);
     }
 
     public function testMoveHookPositionToBottom()
@@ -137,14 +137,14 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        $this->assertSame(
             Response::HTTP_OK,
             $response->getStatusCode()
         );
 
         $json = json_decode($response->getContent(), true);
         $this->assertArrayNotHasKey('hasError', $json['data']);
-        $this->assertEquals([], $json['data']);
+        $this->assertSame([], $json['data']);
     }
 
     public function testMoveHookPositionToTop()
@@ -166,13 +166,13 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        $this->assertSame(
             Response::HTTP_OK,
             $response->getStatusCode()
         );
 
         $json = json_decode($response->getContent(), true);
         $this->assertArrayNotHasKey('hasError', $json['data']);
-        $this->assertEquals([], $json['data']);
+        $this->assertSame([], $json['data']);
     }
 }

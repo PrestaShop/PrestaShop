@@ -33,12 +33,12 @@ class SortOrderTest extends TestCase
 {
     public function testToLegacyOrderByProductName()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'name',
             (new SortOrder('product', 'name'))->toLegacyOrderBy(false)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'pl.name',
             (new SortOrder('product', 'name'))->toLegacyOrderBy(true)
         );
@@ -46,12 +46,12 @@ class SortOrderTest extends TestCase
 
     public function testToLegacyOrderByProductPrice()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'price',
             (new SortOrder('product', 'price'))->toLegacyOrderBy(false)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'p.price',
             (new SortOrder('product', 'price'))->toLegacyOrderBy(true)
         );
@@ -59,12 +59,12 @@ class SortOrderTest extends TestCase
 
     public function testToLegacyOrderByProductPosition()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'position',
             (new SortOrder('product', 'position'))->toLegacyOrderBy(false)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'cp.position',
             (new SortOrder('product', 'position'))->toLegacyOrderBy(true)
         );
@@ -72,12 +72,12 @@ class SortOrderTest extends TestCase
 
     public function testToLegacyOrderByManufacturerName()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'manufacturer_name',
             (new SortOrder('manufacturer', 'name'))->toLegacyOrderBy(false)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'm.name',
             (new SortOrder('manufacturer', 'name'))->toLegacyOrderBy(true)
         );
@@ -85,7 +85,7 @@ class SortOrderTest extends TestCase
 
     public function testToLegacyOrderWayAsc()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'asc',
             (new SortOrder('product', 'name', 'asc'))->toLegacyOrderWay()
         );
@@ -93,7 +93,7 @@ class SortOrderTest extends TestCase
 
     public function testToLegacyOrderWayDesc()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'desc',
             (new SortOrder('product', 'name', 'desc'))->toLegacyOrderWay()
         );
@@ -124,8 +124,8 @@ class SortOrderTest extends TestCase
         $unserialized = SortOrder::newFromString($encoded);
 
         $arr = $unserialized->toArray();
-        $this->assertEquals($data['entity'],    $arr['entity']);
-        $this->assertEquals($data['field'],     $arr['field']);
-        $this->assertEquals($data['direction'], $arr['direction']);
+        $this->assertSame($data['entity'],    $arr['entity']);
+        $this->assertSame($data['field'],     $arr['field']);
+        $this->assertSame($data['direction'], $arr['direction']);
     }
 }

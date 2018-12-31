@@ -116,7 +116,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->assertNull($this->getModuleSelfConfigurator()->getFile());
 
         $filepath = '/path/to/the/file.yml';
-        $this->assertEquals($filepath, $this->getModuleSelfConfigurator()->file($filepath)->getFile());
+        $this->assertSame($filepath, $this->getModuleSelfConfigurator()->file($filepath)->getFile());
     }
 
     public function testAllValid()
@@ -133,7 +133,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         // Test before
         $this->assertNull($this->configuration->get('PAYPAL_SANDBOX'));
         $this->assertTrue($this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure());
-        $this->assertEquals(1, $this->configuration->get('PAYPAL_SANDBOX'));
+        $this->assertSame(1, $this->configuration->get('PAYPAL_SANDBOX'));
     }
 
     public function testConfigurationDelete()
@@ -142,7 +142,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $name = 'bankwire';
         // Test before
         $this->configuration->set('PAYPAL_ONBOARDING', 1);
-        $this->assertEquals(1, $this->configuration->get('PAYPAL_ONBOARDING'));
+        $this->assertSame(1, $this->configuration->get('PAYPAL_ONBOARDING'));
         $this->assertTrue($this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure());
         $this->assertNull($this->configuration->get('PAYPAL_ONBOARDING'));
     }

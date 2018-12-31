@@ -43,6 +43,6 @@ class ShopCoreTest extends IntegrationTestCase
     public function testGetBaseURL()
     {
         $domain = Configuration::get('PS_SHOP_DOMAIN');
-        $this->assertEquals('http://'.$domain.__PS_BASE_URI__, $this->context->shop->getBaseURL(true));
+        $this->assertSame('http://'.$domain.__PS_BASE_URI__, $this->context->shop->getBaseURL(true));
     }
 }

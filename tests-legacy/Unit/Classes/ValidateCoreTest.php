@@ -36,7 +36,7 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsIp2Long($expected, $input)
     {
-        $this->assertEquals($expected, Validate::isIp2Long($input));
+        $this->assertSame($expected, Validate::isIp2Long($input));
     }
 
     public function testIsAnything()

@@ -49,7 +49,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
             return 'FOO';
         });
 
-        $this->assertEquals('FOO', $this->container->make('foo'));
+        $this->assertSame('FOO', $this->container->make('foo'));
     }
 
     /**
@@ -90,14 +90,14 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     {
         $this->container->bind('dummy', 'LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy');
 
-        $this->assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
+        $this->assertSame('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
             $this->container->make('dummy')
         ));
     }
 
     public function testMakeWithoutBind()
     {
-        $this->assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
+        $this->assertSame('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
             $this->container->make('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy')
         ));
     }
@@ -106,7 +106,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     {
         $this->container->aliasNamespace('Fixtures', 'LegacyTests\Unit\Core\Foundation\IoC\Fixtures');
 
-        $this->assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
+        $this->assertSame('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
             $this->container->make('Fixtures:Dummy')
         ));
     }
@@ -123,14 +123,14 @@ class Core_Foundation_IoC_Container_Test extends TestCase
 
     public function testDepsAreFetchedAutomagically()
     {
-        $this->assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep', get_class(
+        $this->assertSame('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep', get_class(
             $this->container->make('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep')
         ));
     }
 
     public function testDepsAreFetchedAutomagicallyWhenDependsOnThingWithADefaultValue()
     {
-        $this->assertEquals('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDepAndDefault', get_class(
+        $this->assertSame('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDepAndDefault', get_class(
             $this->container->make('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDepAndDefault')
         ));
     }
@@ -178,7 +178,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         $instance = $this->container->make(
             'LegacyTests\Unit\Core\Foundation\IoC\Fixtures\ClassDependingOnClosureBuiltDep'
         );
-        $this->assertEquals(42, $instance->getDep()->getValue());
+        $this->assertSame(42, $instance->getDep()->getValue());
     }
 
     /**

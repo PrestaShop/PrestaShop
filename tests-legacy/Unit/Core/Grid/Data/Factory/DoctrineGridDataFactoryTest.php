@@ -61,9 +61,9 @@ class DoctrineGridDataFactoryTest extends TestCase
         $this->assertInstanceOf(GridDataInterface::class, $data);
         $this->assertInstanceOf(RecordCollectionInterface::class, $data->getRecords());
 
-        $this->assertEquals(4, $data->getRecordsTotal());
+        $this->assertSame(4, $data->getRecordsTotal());
         $this->assertCount(2, $data->getRecords());
-        $this->assertEquals('SELECT * FROM ps_test WHERE id = 1', $data->getQuery());
+        $this->assertSame('SELECT * FROM ps_test WHERE id = 1', $data->getQuery());
     }
 
     /**

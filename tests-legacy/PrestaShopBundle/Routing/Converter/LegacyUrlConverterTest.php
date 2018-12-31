@@ -47,10 +47,10 @@ class LegacyUrlConverterTest extends TestCase
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
         ]);
-        $this->assertEquals('/products', $url);
+        $this->assertSame('/products', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts');
-        $this->assertEquals('/products', $url);
+        $this->assertSame('/products', $url);
     }
 
     public function testIndexAlias()
@@ -61,10 +61,10 @@ class LegacyUrlConverterTest extends TestCase
             'controller' => 'AdminProducts',
             'action' => 'index',
         ]);
-        $this->assertEquals('/products', $url);
+        $this->assertSame('/products', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&action=index');
-        $this->assertEquals('/products', $url);
+        $this->assertSame('/products', $url);
     }
 
     public function testInsensitiveListAlias()
@@ -75,10 +75,10 @@ class LegacyUrlConverterTest extends TestCase
             'controller' => 'AdminProducts',
             'action' => 'LIST',
         ]);
-        $this->assertEquals('/products', $url);
+        $this->assertSame('/products', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&action=LIST');
-        $this->assertEquals('/products', $url);
+        $this->assertSame('/products', $url);
     }
 
     public function testAction()
@@ -89,10 +89,10 @@ class LegacyUrlConverterTest extends TestCase
             'controller' => 'AdminProducts',
             'action' => 'create',
         ]);
-        $this->assertEquals('/products/create', $url);
+        $this->assertSame('/products/create', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&action=create');
-        $this->assertEquals('/products/create', $url);
+        $this->assertSame('/products/create', $url);
     }
 
     public function testActionWithTrue()
@@ -103,10 +103,10 @@ class LegacyUrlConverterTest extends TestCase
             'controller' => 'AdminProducts',
             'create' => true,
         ]);
-        $this->assertEquals('/products/create', $url);
+        $this->assertSame('/products/create', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&create=1');
-        $this->assertEquals('/products/create', $url);
+        $this->assertSame('/products/create', $url);
     }
 
     public function testActionWithEmptyString()
@@ -117,10 +117,10 @@ class LegacyUrlConverterTest extends TestCase
             'controller' => 'AdminProducts',
             'create' => '',
         ]);
-        $this->assertEquals('/products/create', $url);
+        $this->assertSame('/products/create', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&create');
-        $this->assertEquals('/products/create', $url);
+        $this->assertSame('/products/create', $url);
     }
 
     public function testMultipleLegacyLinks()
@@ -135,19 +135,19 @@ class LegacyUrlConverterTest extends TestCase
         $url = $converter->convertByParameters([
             'controller' => 'AdminModulesManage',
         ]);
-        $this->assertEquals('/manage/{category}/{keyword}', $url);
+        $this->assertSame('/manage/{category}/{keyword}', $url);
 
         $url = $converter->convertByUrl('?controller=AdminModulesManage');
-        $this->assertEquals('/manage/{category}/{keyword}', $url);
+        $this->assertSame('/manage/{category}/{keyword}', $url);
 
         //Second controller
         $url = $converter->convertByParameters([
             'controller' => 'AdminModulesSf',
         ]);
-        $this->assertEquals('/manage/{category}/{keyword}', $url);
+        $this->assertSame('/manage/{category}/{keyword}', $url);
 
         $url = $converter->convertByUrl('?controller=AdminModulesSf');
-        $this->assertEquals('/manage/{category}/{keyword}', $url);
+        $this->assertSame('/manage/{category}/{keyword}', $url);
     }
 
     /**
@@ -231,10 +231,10 @@ class LegacyUrlConverterTest extends TestCase
         $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $convertedUrl = $converter->convertByUrl('?controller=AdminProducts&id_product=1');
-        $this->assertEquals('/products', $convertedUrl);
+        $this->assertSame('/products', $convertedUrl);
 
         $convertedUrl = $converter->convertByUrl('?controller=AdminProducts&product_id=1');
-        $this->assertEquals('/products', $convertedUrl);
+        $this->assertSame('/products', $convertedUrl);
     }
 
     public function testActionWithArgument()
@@ -254,15 +254,15 @@ class LegacyUrlConverterTest extends TestCase
             'id_product' => 2,
         ]);
         //Mock returns the original path but the parameters are checked
-        $this->assertEquals('/products/edit/{id}', $url);
+        $this->assertSame('/products/edit/{id}', $url);
 
         //Mock returns the original path but the parameters are checked
         $url = $converter->convertByUrl('?controller=AdminProducts&action=edit&id_product=2');
-        $this->assertEquals('/products/edit/{id}', $url);
+        $this->assertSame('/products/edit/{id}', $url);
 
         //Try with id parameter like in route
         $url = $converter->convertByUrl('?controller=AdminProducts&action=edit&id=2');
-        $this->assertEquals('/products/edit/{id}', $url);
+        $this->assertSame('/products/edit/{id}', $url);
     }
 
     public function testActionWithArgumentWithoutMatching()
@@ -282,11 +282,11 @@ class LegacyUrlConverterTest extends TestCase
             'id' => '42',
         ]);
         //Mock returns the original path but the parameters are checked
-        $this->assertEquals('/products/edit/{id}', $url);
+        $this->assertSame('/products/edit/{id}', $url);
 
         //Mock returns the original path but the parameters are checked
         $url = $converter->convertByUrl('?controller=AdminProducts&action=edit&id=42');
-        $this->assertEquals('/products/edit/{id}', $url);
+        $this->assertSame('/products/edit/{id}', $url);
     }
 
     public function testConvertByRequest()
@@ -317,7 +317,7 @@ class LegacyUrlConverterTest extends TestCase
 
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $url = $converter->convertByRequest($request);
-        $this->assertEquals('/products/create', $url);
+        $this->assertSame('/products/create', $url);
     }
 
     public function testMissingController()
@@ -349,7 +349,7 @@ class LegacyUrlConverterTest extends TestCase
         }
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(RouteNotFoundException::class, $caughtException);
-        $this->assertEquals('Could not find a route matching for legacy controller: AdminModules', $caughtException->getMessage());
+        $this->assertSame('Could not find a route matching for legacy controller: AdminModules', $caughtException->getMessage());
     }
 
     public function testActionNotFound()
@@ -370,7 +370,7 @@ class LegacyUrlConverterTest extends TestCase
         }
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(RouteNotFoundException::class, $caughtException);
-        $this->assertEquals('Could not find a route matching for legacy action: AdminProducts:configure', $caughtException->getMessage());
+        $this->assertSame('Could not find a route matching for legacy action: AdminProducts:configure', $caughtException->getMessage());
     }
 
     /**
@@ -399,33 +399,33 @@ class LegacyUrlConverterTest extends TestCase
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
         ]);
-        $this->assertEquals('/products', $url);
+        $this->assertSame('/products', $url);
 
         //Test index by url
         $url = $converter->convertByUrl('?controller=AdminProducts');
-        $this->assertEquals('/products', $url);
+        $this->assertSame('/products', $url);
 
         //Test create by parameter action
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'action' => 'add',
         ]);
-        $this->assertEquals('/products/create', $url);
+        $this->assertSame('/products/create', $url);
 
         //Test create by boolean value
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'add' => true,
         ]);
-        $this->assertEquals('/products/create', $url);
+        $this->assertSame('/products/create', $url);
 
         //Test url create by parameter action
         $url = $converter->convertByUrl('?controller=AdminProducts&action=add');
-        $this->assertEquals('/products/create', $url);
+        $this->assertSame('/products/create', $url);
 
         //Test url create by boolean value
         $url = $converter->convertByUrl('?controller=AdminProducts&add');
-        $this->assertEquals('/products/create', $url);
+        $this->assertSame('/products/create', $url);
     }
 
     /**

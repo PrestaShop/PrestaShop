@@ -124,7 +124,7 @@ class ProductControllerTest extends IntegrationTestCase
             $this->assertArrayHasKey($expectedLevel, $result);
             foreach ($expectedValues as $expectedKey => $expectedValue) {
                 $this->assertArrayHasKey($expectedKey, $result[$expectedLevel]);
-                $this->assertEquals($priceFormatter->format($expectedValue), $result[$expectedLevel][$expectedKey]);
+                $this->assertSame($priceFormatter->format($expectedValue), $result[$expectedLevel][$expectedKey]);
             }
         }
     }

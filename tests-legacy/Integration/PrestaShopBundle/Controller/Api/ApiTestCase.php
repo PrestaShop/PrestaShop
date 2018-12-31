@@ -221,7 +221,7 @@ abstract class ApiTestCase extends WebTestCase
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = self::$client->getResponse();
-        $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+        $this->assertSame(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
     }
 
     /**
@@ -235,7 +235,7 @@ abstract class ApiTestCase extends WebTestCase
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = self::$client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+        $this->assertSame(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
     }
 
     /**
@@ -267,11 +267,11 @@ abstract class ApiTestCase extends WebTestCase
                 $this->fail($message);
         }
 
-        $this->assertEquals($expectedStatusCode, $response->getStatusCode(), $message);
+        $this->assertSame($expectedStatusCode, $response->getStatusCode(), $message);
 
         $content = json_decode($response->getContent(), true);
 
-        $this->assertEquals(
+        $this->assertSame(
             JSON_ERROR_NONE,
             json_last_error(),
             'The response body should be a valid json document.'

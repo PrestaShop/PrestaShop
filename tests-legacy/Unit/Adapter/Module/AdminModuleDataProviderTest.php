@@ -183,7 +183,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $modules = $mock->getCatalogModules();
         $modules2 = $mock->getCatalogModules();
 
-        $this->assertEquals($modules2, $modules);
+        $this->assertSame($modules2, $modules);
     }
 
     protected function teardown()

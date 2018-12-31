@@ -174,7 +174,7 @@ class ProductPresenterTest extends UnitTestCase
     public function testCannotAddToCartIfNotCustomized()
     {
         $this->product['customization_required'] = true;
-        $this->assertNotEquals(
+        $this->assertNotSame(
             'http://add-to-cart.url',
             $this->getPresentedProduct('add_to_cart_url')
         );
@@ -188,7 +188,7 @@ class ProductPresenterTest extends UnitTestCase
                 ['is_customized' => true, 'required' => true],
             ],
         ];
-        $this->assertEquals(
+        $this->assertSame(
             'http://add-to-cart.url',
             $this->getPresentedProduct('add_to_cart_url')
         );
@@ -203,7 +203,7 @@ class ProductPresenterTest extends UnitTestCase
                 ['is_customized' => false, 'required' => false],
             ],
         ];
-        $this->assertEquals(
+        $this->assertSame(
             'http://add-to-cart.url',
             $this->getPresentedProduct('add_to_cart_url')
         );
@@ -235,7 +235,7 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['id_product_attribute'] = 42;
         $this->settings->allow_add_variant_to_cart_from_listing = true;
-        $this->assertEquals(
+        $this->assertSame(
             'http://add-to-cart.url',
             $this->getPresentedProductForListing('add_to_cart_url')
         );
@@ -244,7 +244,7 @@ class ProductPresenterTest extends UnitTestCase
     public function testProductHasOnlineOnlyFlagIfItIsOnlineOnly()
     {
         $this->product['online_only'] = true;
-        $this->assertEquals(
+        $this->assertSame(
             ['online-only' => [
                 'type'  => 'online-only',
                 'label' => 'some label',
@@ -256,7 +256,7 @@ class ProductPresenterTest extends UnitTestCase
     public function testProductHasDiscountFlagIfItHasADiscount()
     {
         $this->product['reduction'] = true;
-        $this->assertEquals(
+        $this->assertSame(
             ['discount' => [
                 'type'  => 'discount',
                 'label' => 'some label',
@@ -269,7 +269,7 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['reduction'] = true;
         $this->product['on_sale'] = true;
-        $this->assertEquals(
+        $this->assertSame(
             ['on-sale' => [
                 'type'  => 'on-sale',
                 'label' => 'some label',
@@ -281,7 +281,7 @@ class ProductPresenterTest extends UnitTestCase
     public function testProductHasNewFlagIfItIsNew()
     {
         $this->product['new'] = true;
-        $this->assertEquals(
+        $this->assertSame(
             ['new' => [
                 'type'  => 'new',
                 'label' => 'some label',
@@ -294,7 +294,7 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['show_condition'] = true;
         $this->product['condition'] = 'new';
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'type'  => 'new',
                 'label' => 'some label',
@@ -309,7 +309,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['online_only'] = true;
         $this->product['available_for_order'] = false;
         $this->product['show_price'] = false;
-        $this->assertEquals(
+        $this->assertSame(
             [],
             $this->getPresentedProduct('flags')
         );

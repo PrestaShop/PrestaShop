@@ -200,9 +200,9 @@ class StockAvailableTest extends UnitTestCase
         $stockManager = new StockManager();
         $stockManager->updatePackQuantity($pack, $pack->stock_available, $delta);
 
-        $this->assertEquals($expected[0], $pack->stock_available->quantity);
+        $this->assertSame($expected[0], $pack->stock_available->quantity);
         foreach ($products as $k => $product) {
-            $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
+            $this->assertSame($expected[$k+1], $product[0]->stock_available->quantity);
         }
     }
 
@@ -292,9 +292,9 @@ class StockAvailableTest extends UnitTestCase
         $stockAvailable->update();
         $stockManager->updatePacksQuantityContainingProduct($products[0][0], $products[0][1], $stockAvailable);
 
-        $this->assertEquals($expected[0], $pack->stock_available->quantity);
+        $this->assertSame($expected[0], $pack->stock_available->quantity);
         foreach ($products as $k => $product) {
-            $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
+            $this->assertSame($expected[$k+1], $product[0]->stock_available->quantity);
         }
     }
 
@@ -400,9 +400,9 @@ class StockAvailableTest extends UnitTestCase
         $stockManager = new StockManager();
         $stockManager->updateQuantity($productToUpdate, $productAttributeToUpdate, $delta);
 
-        $this->assertEquals($expected[0], $pack->stock_available->quantity);
+        $this->assertSame($expected[0], $pack->stock_available->quantity);
         foreach ($products as $k => $product) {
-            $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
+            $this->assertSame($expected[$k+1], $product[0]->stock_available->quantity);
         }
     }
 }

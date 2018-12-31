@@ -82,7 +82,7 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        $this->assertSame(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );
@@ -120,7 +120,7 @@ class PositionsControllerTest extends WebTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertEquals(
+        $this->assertSame(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );

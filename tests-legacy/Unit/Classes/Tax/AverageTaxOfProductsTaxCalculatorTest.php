@@ -51,6 +51,6 @@ class AverageTaxOfProductsTaxCalculatorTest extends UnitTestCase
             2 => round(7 * 10  / (20 + 10) * 0.2, 2),
         );
 
-        $this->assertEquals($expected, $amounts);
+        $this->assertSame($expected, $amounts);
     }
 }

@@ -84,7 +84,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 
     private function assertSameHTML($exp, $act)
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->normalizeHTML($exp),
             $this->normalizeHTML($act)
         );

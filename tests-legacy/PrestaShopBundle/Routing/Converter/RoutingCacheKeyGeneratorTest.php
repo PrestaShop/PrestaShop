@@ -114,7 +114,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
         $this->generateFiles($testFiles, $originalTime);
 
         $generator = new RoutingCacheKeyGenerator([$this->filesTestDir . DIRECTORY_SEPARATOR . 'admin'], []);
-        $this->assertEquals($originalTime + 3200, $generator->getLatestModificationTime());
+        $this->assertSame($originalTime + 3200, $generator->getLatestModificationTime());
     }
 
     public function testCacheKeyCoreFile()
@@ -136,7 +136,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
 
         $generator = new RoutingCacheKeyGenerator([$this->filesTestDir . DIRECTORY_SEPARATOR . 'admin'], []);
         $cacheKey = $generator->getCacheKey();
-        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 3200), $cacheKey);
+        $this->assertSame('PrestaShopBundle_Routing_Converter_' . ($originalTime + 3200), $cacheKey);
     }
 
     public function testModuleFilesOrder()
@@ -195,7 +195,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
         ];
 
         $generator = new RoutingCacheKeyGenerator([], $modules);
-        $this->assertEquals($originalTime + 42, $generator->getLatestModificationTime());
+        $this->assertSame($originalTime + 42, $generator->getLatestModificationTime());
     }
 
     public function testCacheKeyModulesFile()
@@ -217,7 +217,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
 
         $generator = new RoutingCacheKeyGenerator([], $modules);
         $cacheKey = $generator->getCacheKey();
-        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 42), $cacheKey);
+        $this->assertSame('PrestaShopBundle_Routing_Converter_' . ($originalTime + 42), $cacheKey);
     }
 
     public function testCoreAndModules()
@@ -258,18 +258,18 @@ class RoutingCacheKeyGeneratorTest extends TestCase
             $this->filesTestDir . DIRECTORY_SEPARATOR . 'modules/ps_featuredproducts/config/routes.yaml',
         ], array_keys($lastModifications));
 
-        $this->assertEquals($originalTime + 3200, $generator->getLatestModificationTime());
-        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 3200), $generator->getCacheKey());
+        $this->assertSame($originalTime + 3200, $generator->getLatestModificationTime());
+        $this->assertSame('PrestaShopBundle_Routing_Converter_' . ($originalTime + 3200), $generator->getCacheKey());
 
         $this->fs->touch($this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/improve/international/translations.yml', $originalTime);
 
-        $this->assertEquals($originalTime + 42, $generator->getLatestModificationTime());
-        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 42), $generator->getCacheKey());
+        $this->assertSame($originalTime + 42, $generator->getLatestModificationTime());
+        $this->assertSame('PrestaShopBundle_Routing_Converter_' . ($originalTime + 42), $generator->getCacheKey());
 
         $now = time();
         $this->fs->touch($this->filesTestDir . DIRECTORY_SEPARATOR . 'modules/ps_featuredproducts/config/routes.yaml', $now);
-        $this->assertEquals($now, $generator->getLatestModificationTime());
-        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . $now, $generator->getCacheKey());
+        $this->assertSame($now, $generator->getLatestModificationTime());
+        $this->assertSame('PrestaShopBundle_Routing_Converter_' . $now, $generator->getCacheKey());
     }
 
     public function testNoRouteFiles()
@@ -282,7 +282,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
         $this->assertNull($generator->getLatestModificationTime());
 
         $cacheKey = $generator->getCacheKey();
-        $this->assertEquals('PrestaShopBundle_Routing_Converter', $cacheKey);
+        $this->assertSame('PrestaShopBundle_Routing_Converter', $cacheKey);
     }
 
     public function testProdEnvironment()
@@ -310,10 +310,10 @@ class RoutingCacheKeyGeneratorTest extends TestCase
         ];
 
         $generator = new RoutingCacheKeyGenerator([$this->filesTestDir . DIRECTORY_SEPARATOR . 'admin'], $modules);
-        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 3200), $generator->getCacheKey());
+        $this->assertSame('PrestaShopBundle_Routing_Converter_' . ($originalTime + 3200), $generator->getCacheKey());
 
         $generator = new RoutingCacheKeyGenerator([$this->filesTestDir . DIRECTORY_SEPARATOR . 'admin'], $modules, 'prod');
-        $this->assertEquals('PrestaShopBundle_Routing_Converter', $generator->getCacheKey());
+        $this->assertSame('PrestaShopBundle_Routing_Converter', $generator->getCacheKey());
     }
 
     /**

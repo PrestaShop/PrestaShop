@@ -135,7 +135,7 @@ class QueryParamsCollectionTest extends TestCase
 
         $this->assertInternalType('array', $sqlParts);
 
-        $this->assertEquals($expectedSqlClauses, $sqlParts);
+        $this->assertSame($expectedSqlClauses, $sqlParts);
     }
 
     /**
@@ -176,7 +176,7 @@ class QueryParamsCollectionTest extends TestCase
 
         $this->assertInternalType('array', $sqlParts);
 
-        $this->assertEquals($expectedSqlClauses, $sqlParts);
+        $this->assertSame($expectedSqlClauses, $sqlParts);
     }
 
     /**
@@ -249,7 +249,7 @@ class QueryParamsCollectionTest extends TestCase
             array('_attributes' => $this->mockAttributes(array())->reveal())
         ));
         $this->queryParams = $this->queryParams->fromRequest($requestMock->reveal());
-        $this->assertEquals(
+        $this->assertSame(
             $expectedSql,
             $this->queryParams->getSqlFilters(),
             $message

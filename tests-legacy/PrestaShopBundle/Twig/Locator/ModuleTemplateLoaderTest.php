@@ -89,7 +89,7 @@ class ModuleTemplateLoaderTest extends TestCase
      */
     public function testGetSourceContext($sourceContent, $twigPathAsked, $successMessage)
     {
-        self::assertEquals(
+        self::assertSame(
             $sourceContent . PHP_EOL,
             $this->loader->getSourceContext($twigPathAsked)->getCode(),
             $successMessage
@@ -113,7 +113,7 @@ class ModuleTemplateLoaderTest extends TestCase
     {
         $loader = new ModuleTemplateLoader([]);
 
-        self::assertEquals(array(), $loader->getPaths());
+        self::assertSame(array(), $loader->getPaths());
     }
 
     /**
@@ -123,10 +123,10 @@ class ModuleTemplateLoaderTest extends TestCase
     {
         $loader = new ModuleTemplateLoader([]);
 
-        self::assertEquals([], $loader->getNamespaces());
+        self::assertSame([], $loader->getNamespaces());
 
         $loader->addPath(sys_get_temp_dir(), 'named');
 
-        self::assertEquals(['named'], $loader->getNamespaces());
+        self::assertSame(['named'], $loader->getNamespaces());
     }
 }

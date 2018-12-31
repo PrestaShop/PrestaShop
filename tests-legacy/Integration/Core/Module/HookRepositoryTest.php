@@ -72,7 +72,7 @@ class HookRepositoryTest extends IntegrationTestCase
             'displayTestHookName' => $modules,
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             $modules,
             $this->hookRepository->getHooksWithModules()['displayTestHookName']
         );
@@ -87,7 +87,7 @@ class HookRepositoryTest extends IntegrationTestCase
 
         $actual = $this->hookRepository->getDisplayHooksWithModules();
 
-        $this->assertEquals(
+        $this->assertSame(
             ['ps_emailsubscription', 'ps_featuredproducts'],
             $actual['displayTestHookName']
         );
@@ -110,7 +110,7 @@ class HookRepositoryTest extends IntegrationTestCase
             ],
         ]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'ps_emailsubscription' => [
                     'except_pages' => ['category', 'product'],

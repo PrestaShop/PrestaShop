@@ -106,7 +106,7 @@ class VersionTest extends TestCase
      */
     public function testCompareGreaterVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isGreaterThan($version));
+        $this->assertSame($result, $this->version->isGreaterThan($version));
     }
 
     public function getCompareGreater()
@@ -135,7 +135,7 @@ class VersionTest extends TestCase
      */
     public function testCompareGreaterEqualVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isGreaterThanOrEqualTo($version));
+        $this->assertSame($result, $this->version->isGreaterThanOrEqualTo($version));
     }
 
     public function getCompareGreaterEqual()
@@ -164,7 +164,7 @@ class VersionTest extends TestCase
      */
     public function testCompareLessVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isLessThan($version));
+        $this->assertSame($result, $this->version->isLessThan($version));
     }
 
     public function getCompareLess()
@@ -193,7 +193,7 @@ class VersionTest extends TestCase
      */
     public function testCompareGreaterAnotherVersion($version, $result)
     {
-        $this->assertEquals($result, $this->anotherVersion->isGreaterThan($version), self::ANOTHER_VERSION.' > '.$version . ' must be ' . ($result ? 'true' : 'false'));
+        $this->assertSame($result, $this->anotherVersion->isGreaterThan($version), self::ANOTHER_VERSION.' > '.$version . ' must be ' . ($result ? 'true' : 'false'));
     }
 
     public function getAnotherCompareGreater()
@@ -211,7 +211,7 @@ class VersionTest extends TestCase
      */
     public function testCompareLessEqualVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isLessThanOrEqualTo($version));
+        $this->assertSame($result, $this->version->isLessThanOrEqualTo($version));
     }
 
     public function getCompareLessEqual()
@@ -240,7 +240,7 @@ class VersionTest extends TestCase
      */
     public function testCompareEqualVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isEqualTo($version));
+        $this->assertSame($result, $this->version->isEqualTo($version));
     }
 
     public function getCompareEqual()
@@ -269,7 +269,7 @@ class VersionTest extends TestCase
      */
     public function testCompareNotEqualVersion($version, $result)
     {
-        $this->assertEquals($result, $this->version->isNotEqualTo($version));
+        $this->assertSame($result, $this->version->isNotEqualTo($version));
     }
 
     public function getCompareNotEqual()

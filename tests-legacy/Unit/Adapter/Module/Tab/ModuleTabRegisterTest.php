@@ -173,7 +173,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                 try {
                     $this->invokeMethod($this->tabRegister, 'checkIsValid', array($moduleName, $data));
                 } catch (\Exception $e) {
-                    $this->assertEquals($e->getMessage(), $tab['exception']);
+                    $this->assertSame($e->getMessage(), $tab['exception']);
 
                     continue;
                 }
@@ -212,7 +212,7 @@ class ModuleTabRegisterTest extends UnitTestCase
     {
         $names = 'doge';
         $expectedResult = array(1 => $names, 2 => $names, 3 => $names);
-        $this->assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
+        $this->assertSame($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
     }
 
     public function testTabNames()
@@ -223,6 +223,6 @@ class ModuleTabRegisterTest extends UnitTestCase
             'de' => 'eine Name',
         );
         $expectedResult = array(1 => $names['fr'], 2 => $names['en'], 3 => $names['en']);
-        $this->assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
+        $this->assertSame($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
     }
 }

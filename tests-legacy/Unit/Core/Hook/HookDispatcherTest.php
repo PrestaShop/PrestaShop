@@ -97,8 +97,8 @@ class HookDispatcherTest extends TestCase
         $renderedHook = $this->hookDispatcher->dispatchRendering($hook);
 
         $this->assertInstanceOf(RenderedHook::class, $renderedHook);
-        $this->assertEquals($hook, $renderedHook->getHook());
-        $this->assertEquals([], $renderedHook->getContent());
+        $this->assertSame($hook, $renderedHook->getHook());
+        $this->assertSame([], $renderedHook->getContent());
     }
 
     public function testDispatchRenderingWithParameters()
@@ -121,8 +121,8 @@ class HookDispatcherTest extends TestCase
         $renderedHook = $this->hookDispatcher->dispatchRenderingWithParameters('Baz', ['hello' => 'World']);
 
         $this->assertInstanceOf(RenderedHook::class, $renderedHook);
-        $this->assertEquals($hook, $renderedHook->getHook());
-        $this->assertEquals(['hello' => 'World'], $renderedHook->getContent());
+        $this->assertSame($hook, $renderedHook->getHook());
+        $this->assertSame(['hello' => 'World'], $renderedHook->getContent());
     }
 
     private function createHook($name = 'hookName', $parameters = [])

@@ -49,7 +49,7 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
             'inputs'    => array('key' => 42),
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             array($newOption),
             PaymentOption::convertLegacyOption($legacyOption)
         );
@@ -75,7 +75,7 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
 
         $legacyOption = array($singleLegacyOption, $singleLegacyOption);
 
-        $this->assertEquals(
+        $this->assertSame(
             array($newOption, $newOption),
             PaymentOption::convertLegacyOption($legacyOption)
         );

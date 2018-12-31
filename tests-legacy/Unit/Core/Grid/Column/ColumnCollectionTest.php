@@ -40,7 +40,7 @@ class ColumnCollectionTest extends TestCase
             ->add($this->createColumnMock('second'))
             ->add($this->createColumnMock('third'));
 
-        $this->assertEquals([
+        $this->assertSame([
             'first',
             'second',
             'third',
@@ -59,7 +59,7 @@ class ColumnCollectionTest extends TestCase
             ->addBefore('second', $this->createColumnMock('before_second'))
             ->addBefore('third', $this->createColumnMock('before_third'));
 
-        $this->assertEquals([
+        $this->assertSame([
             'before_first',
             'first',
             'before_second',
@@ -81,7 +81,7 @@ class ColumnCollectionTest extends TestCase
             ->addAfter('second', $this->createColumnMock('after_second'))
             ->addAfter('third', $this->createColumnMock('after_third'));
 
-        $this->assertEquals([
+        $this->assertSame([
             'before_first',
             'first',
             'after_first',
@@ -124,7 +124,7 @@ class ColumnCollectionTest extends TestCase
             ->add($this->createColumnMock('third'))
             ->addAfter('second', $this->createColumnMock('after_second'));
 
-        $this->assertEquals([
+        $this->assertSame([
             'before_first',
             'before_first_2',
             'before_first_3',
@@ -148,7 +148,7 @@ class ColumnCollectionTest extends TestCase
             ->addBefore('second', $this->createColumnMock('7'))
             ->add($this->createColumnMock(5));
 
-        $this->assertEquals([
+        $this->assertSame([
             2,
             3,
             1,

@@ -62,7 +62,7 @@ class ModuleControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('msg', $decodedContent[$moduleName]);
 
-        $this->assertEquals($this->getExpectedErrorMessage(), $decodedContent[$moduleName]['msg']);
+        $this->assertSame($this->getExpectedErrorMessage(), $decodedContent[$moduleName]['msg']);
     }
 
     public function testImportModuleAction()
@@ -76,7 +76,7 @@ class ModuleControllerTest extends WebTestCase
         $decodedContent = json_decode($responseContent, true);
 
         $this->assertArrayHasKey('msg', $decodedContent);
-        $this->assertEquals($this->getExpectedErrorMessage(), $decodedContent['msg']);
+        $this->assertSame($this->getExpectedErrorMessage(), $decodedContent['msg']);
     }
 
     public function testRecommendedModules()
@@ -89,7 +89,7 @@ class ModuleControllerTest extends WebTestCase
         $this->client->request('GET', $recommendedModuleRoute);
 
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
         Context::setInstanceForTesting($oldContext);
     }
 

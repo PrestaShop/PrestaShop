@@ -262,7 +262,7 @@ class AdminModelAdapterTest extends KernelTestCase
 
         foreach ($expectedStructureReturn as $property => $value) {
             $this->assertArrayHasKey($property, $actualReturn, sprintf('The expected key %s was not found', $property));
-            $this->assertEquals(
+            $this->assertSame(
                 $value,
                 $actualReturn[$property],
                 sprintf('The expected value for property %s is wrong', $property)

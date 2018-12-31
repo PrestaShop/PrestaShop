@@ -43,7 +43,7 @@ class SearchTest extends Testcase
     {
         $result = Search::extractKeyWords($input, $langId);
         // array_values used to prevent issues with indexes keeped from array_unique
-        $this->assertEquals($expected, array_values($result));
+        $this->assertSame($expected, array_values($result));
     }
 
     public function searchStringProvider()

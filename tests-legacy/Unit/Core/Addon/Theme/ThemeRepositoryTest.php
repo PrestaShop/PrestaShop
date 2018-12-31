@@ -86,7 +86,7 @@ class ThemeRepositoryTest extends TestCase
     {
         $themeListWithoutRestrictions = $this->repository->GetListExcluding([]);
         $themeListWithoutClassic = $this->repository->GetListExcluding(['classic']);
-        $this->assertEquals(
+        $this->assertSame(
             $themeListWithoutRestrictions,
             $this->repository->getList(),
             self::NOTICE.sprintf('expected list excluding without args to return complete list of themes `see ThemeRepository::getListExcluding`')

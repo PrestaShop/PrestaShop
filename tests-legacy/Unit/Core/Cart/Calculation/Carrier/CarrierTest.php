@@ -49,7 +49,7 @@ class CarrierTest extends AbstractCarrierTest
         $this->setCartAddress($addressId);
 
         // assertions
-        $this->assertEquals($expectedShippingFees, $this->cart->getPackageShippingCost($this->cart->id_carrier));
+        $this->assertSame($expectedShippingFees, $this->cart->getPackageShippingCost($this->cart->id_carrier));
         $this->compareCartTotalTaxIncl($expectedTotal);
     }
 
@@ -72,7 +72,7 @@ class CarrierTest extends AbstractCarrierTest
         $this->setCartAddress($addressId);
 
         // assertions
-        $this->assertEquals(
+        $this->assertSame(
             round($expectedShippingFees, 1),
             round($this->cart->getPackageShippingCost($this->cart->id_carrier), 1)
         );

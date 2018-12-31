@@ -64,8 +64,8 @@ class GridPositionUpdaterTest extends TestCase
         }
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(PositionUpdateException::class, $caughtException);
-        $this->assertEquals('Could not update #%i', $caughtException->getKey());
-        $this->assertEquals('Admin.Catalog.Notification', $caughtException->getDomain());
+        $this->assertSame('Could not update #%i', $caughtException->getKey());
+        $this->assertSame('Admin.Catalog.Notification', $caughtException->getDomain());
         $this->assertSame([5], $caughtException->getParameters());
     }
 

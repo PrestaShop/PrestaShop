@@ -71,7 +71,7 @@ class EntityManagerTest extends IntegrationTestCase
         $repository = $this->entityManager->getRepository('Product');
         $product = $repository->findOne(1);
         $this->assertInstanceOf('Product', $product);
-        $this->assertEquals(1, $product->id);
+        $this->assertSame(1, $product->id);
     }
 
     public function testSaveDataMapperStyle()

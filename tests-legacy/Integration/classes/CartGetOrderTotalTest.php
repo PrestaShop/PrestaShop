@@ -413,8 +413,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $cart->updateQty(1, $product->id);
 
-        $this->assertEquals(10, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
-        $this->assertEquals(12, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+        $this->assertSame(10, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertSame(12, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
     }
 
     public function testCartBothWithFreeCarrier()
@@ -425,8 +425,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $id_carrier = self::getIdCarrier('free');
 
         $cart->updateQty(1, $product->id);
-        $this->assertEquals(10, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
-        $this->assertEquals(12, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
+        $this->assertSame(10, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
+        $this->assertSame(12, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
     }
 
     public function testCartBothWithPaidCarrier()
@@ -437,8 +437,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $id_carrier = self::getIdCarrier('costs 2', 2, self::getIdTaxRulesGroup(10));
 
         $cart->updateQty(1, $product->id);
-        $this->assertEquals(12, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
-        $this->assertEquals(13.2, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
+        $this->assertSame(12, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
+        $this->assertSame(13.2, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
     }
 
     public function testBasicRoundTypeLine()
@@ -453,8 +453,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cart->updateQty(1, $product_a->id);
         $cart->updateQty(1, $product_b->id);
 
-        $this->assertEquals(3.59, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
-        $this->assertEquals(4.29, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+        $this->assertSame(3.59, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertSame(4.29, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
     }
 
     public function testBasicRoundTypeTotal()
@@ -469,8 +469,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cart->updateQty(1, $product_a->id);
         $cart->updateQty(1, $product_b->id);
 
-        $this->assertEquals(3.58, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
-        $this->assertEquals(4.30, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+        $this->assertSame(3.58, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertSame(4.30, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
     }
 
     public function testBasicCartRuleAmountBeforeTax()
@@ -485,11 +485,11 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cart->updateQty(1, $product->id);
 
         // Control the result without the CartRule
-        $this->assertEquals(10, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertSame(10, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
 
         // Check that the CartRule is applied
-        $this->assertEquals(5, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
-        $this->assertEquals(6, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
+        $this->assertSame(5, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
+        $this->assertSame(6, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
     }
 
     /**
@@ -513,8 +513,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $preTax = round(5 / (1 + (3 * 10 + 1 * 20) / (4 * 100)), 2);
 
-        $this->assertEquals($preTax, $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, null, $id_carrier));
-        $this->assertEquals(5, $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, null, $id_carrier));
+        $this->assertSame($preTax, $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, null, $id_carrier));
+        $this->assertSame(5, $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, null, $id_carrier));
     }
 
     /**
@@ -528,22 +528,22 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $cart->updateQty(1, $product->id);
 
-        $this->assertEquals(
+        $this->assertSame(
             $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS),
             $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $cart->getOrderTotal(false, Cart::BOTH),
             $cart->getOrderTotal(true, Cart::BOTH)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
             $cart->getOrderTotal(true, Cart::ONLY_SHIPPING)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
             $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS)
         );

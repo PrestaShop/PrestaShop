@@ -49,25 +49,25 @@ class TemplateFinderTest extends TestCase
     public function testTheTemplateFoundForACategoryPageWithId()
     {
         $template = $this->templateFinder->getTemplate('catalog/listing/product-list', 'category', 9, 'fr-FR');
-        $this->assertEquals($template, 'catalog/listing/category-9.tpl');
+        $this->assertSame($template, 'catalog/listing/category-9.tpl');
     }
 
     public function testTheTemplateFoundForACategoryPageWithNoneExistingId()
     {
         $template = $this->templateFinder->getTemplate('catalog/listing/product-list', 'category', 8, 'fr-FR');
-        $this->assertEquals($template, 'catalog/listing/category.tpl');
+        $this->assertSame($template, 'catalog/listing/category.tpl');
     }
 
     public function testTheTemplateFoundForANoneExistingCategory()
     {
         $template = $this->templateFinder->getTemplate('catalog/listing/product-list', 'category-test', 8, 'fr-FR');
-        $this->assertEquals($template, 'catalog/listing/product-list.tpl');
+        $this->assertSame($template, 'catalog/listing/product-list.tpl');
     }
 
     public function testWrongTemplateFallback()
     {
         $template = $this->templateFinder->getTemplate('catalog/listing/srg-list', 'category', false, 'fr-FR');
-        $this->assertEquals($template, 'catalog/listing/category.tpl');
+        $this->assertSame($template, 'catalog/listing/category.tpl');
     }
 
     public function testNoFoundTemplateThrowException()

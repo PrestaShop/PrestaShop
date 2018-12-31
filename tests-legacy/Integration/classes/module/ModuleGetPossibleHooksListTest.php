@@ -49,8 +49,8 @@ class ModuleGetPossibleHooksListTest extends IntegrationTestCase
 
         $this->assertCount(2, $possible_hooks_list);
 
-        $this->assertEquals('displayPaymentReturn', $possible_hooks_list[0]['name']);
-        $this->assertEquals('paymentOptions', $possible_hooks_list[1]['name']);
+        $this->assertSame('displayPaymentReturn', $possible_hooks_list[0]['name']);
+        $this->assertSame('paymentOptions', $possible_hooks_list[1]['name']);
     }
 
     public static function tearDownAfterClass()
