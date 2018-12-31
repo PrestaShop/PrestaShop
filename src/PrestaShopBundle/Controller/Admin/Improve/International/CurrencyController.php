@@ -128,11 +128,7 @@ class CurrencyController extends FrameworkBundleAdminController
         $currencyForm->handleRequest($request);
 
         try {
-            if ($currencyForm->isSubmitted() && $this->isDemoModeEnabled()) {
-                $this->addFlash('error', $this->getDemoModeErrorMessage());
-            }
-
-            if ($currencyForm->isSubmitted() && !$this->isDemoModeEnabled()) {
+            if ($currencyForm->isSubmitted()) {
                 $result = $this->getCurrencyFormHandler()->handle($currencyForm);
                 if (null !== $result->getIdentifiableObjectId()) {
                     $this->addFlash(
@@ -176,11 +172,7 @@ class CurrencyController extends FrameworkBundleAdminController
             $currencyForm = $this->getCurrencyFormBuilder()->getFormFor($currencyId);
             $currencyForm->handleRequest($request);
 
-            if ($currencyForm->isSubmitted() && $this->isDemoModeEnabled()) {
-                $this->addFlash('error', $this->getDemoModeErrorMessage());
-            }
-
-            if ($currencyForm->isSubmitted() && !$this->isDemoModeEnabled()) {
+            if ($currencyForm->isSubmitted()) {
                 $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
 
                 if (null !== $result->getIdentifiableObjectId()) {
