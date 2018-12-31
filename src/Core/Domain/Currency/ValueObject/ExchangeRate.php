@@ -48,7 +48,7 @@ class ExchangeRate
     public function __construct($exchangeRate)
     {
         $this->assertIsFloatOrZero($exchangeRate);
-        $this->exchangeRate = (float) $exchangeRate;
+        $this->exchangeRate = $exchangeRate;
     }
 
     /**
@@ -66,21 +66,11 @@ class ExchangeRate
      */
     private function assertIsFloatOrZero($exchangeRate)
     {
-        if (!is_numeric($exchangeRate)) {
-            throw new CurrencyConstraintException(
-                sprintf(
-                    'Exchange rate is not valid. Expected to be numeric but got %s',
-                    var_export($exchangeRate, true)
-                ),
-                CurrencyConstraintException::INVALID_EXCHANGE_RATE_TYPE
-            );
-        }
-
-        if (0 >= $exchangeRate) {
+        if (!is_float($exchangeRate) || 0 >= $exchangeRate) {
             throw new CurrencyConstraintException(
                 sprintf(
                     'Given exchange rate %s is not valid. It must be more then 0',
-                    $exchangeRate
+                    var_export($exchangeRate, true)
                 ),
                 CurrencyConstraintException::INVALID_EXCHANGE_RATE
             );
