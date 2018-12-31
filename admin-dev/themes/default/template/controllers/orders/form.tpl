@@ -661,7 +661,7 @@
 								customization_html += this.name+'</label><div class="col-lg-9">';
 								if (this.type == 0)
 									customization_html += '<input class="form-control customization_field" type="file" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
-								else if (this.type == 1)
+								elseif (this.type == 1)
 									customization_html += '<input class="form-control customization_field" type="text" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
 								customization_html += '</div></div>';
 							});

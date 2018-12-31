@@ -110,7 +110,7 @@
 
 			if ($(this).find('i').hasClass('icon-chevron-sign-down'))
 				$(this).find('i').removeClass('icon-chevron-sign-down').addClass('icon-chevron-sign-up');
-			else if ($(this).find('i').hasClass('icon-chevron-sign-up'))
+			elseif ($(this).find('i').hasClass('icon-chevron-sign-up'))
 				$(this).find('i').removeClass('icon-chevron-sign-up').addClass('icon-chevron-sign-down');
 		});
 	});

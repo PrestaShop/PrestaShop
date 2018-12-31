@@ -202,7 +202,7 @@
             $(table+' .ajax-ma-'+perm).each(function(key, value) {
                $(this).attr("checked", enabled_attr);
             });
-         else if (!enabled)
+         elseif (!enabled)
             $(table+' #ajax-ma-'+perm+'-master').each(function(key, value) {
                $(this).attr("checked", enabled_attr);
             });

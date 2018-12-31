@@ -196,7 +196,7 @@
 												if (typeof data[index] == 'string')
 													$.growl.error({ title: "", message: data[index]});
 											});
-										else if (quicklink_list)
+										elseif (quicklink_list)
 										{
 											$("#header_quick ul.dropdown-menu").html(quicklink_list);
 											showSuccessMessage(update_success_msg);
