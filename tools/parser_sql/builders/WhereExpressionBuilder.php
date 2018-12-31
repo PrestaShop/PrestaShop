@@ -58,7 +58,8 @@ require_once dirname(__FILE__) . '/UserVariableBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class WhereExpressionBuilder {
+class WhereExpressionBuilder
+{
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
 

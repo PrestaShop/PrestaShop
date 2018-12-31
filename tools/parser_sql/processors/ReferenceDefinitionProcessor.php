@@ -40,7 +40,8 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *
  * @author arothe
  */
-class ReferenceDefinitionProcessor extends AbstractProcessor {
+class ReferenceDefinitionProcessor extends AbstractProcessor
+{
     protected function buildReferenceDef($expr, $base_expr, $key) {
         $expr['till'] = $key;
         $expr['base_expr'] = $base_expr;

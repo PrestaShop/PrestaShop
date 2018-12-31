@@ -55,7 +55,8 @@ require_once dirname(__FILE__) . '/IndexTypeBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class IndexParserBuilder {
+class IndexParserBuilder
+{
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
 

@@ -39,7 +39,8 @@
  * @author arothe
  *
  */
-class UnableToCalculatePositionException extends Exception {
+class UnableToCalculatePositionException extends Exception
+{
     protected $needle;
     protected $haystack;
 

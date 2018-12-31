@@ -54,7 +54,8 @@ require_once dirname(__FILE__) . '/FunctionBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SetExpressionBuilder {
+class SetExpressionBuilder
+{
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
 

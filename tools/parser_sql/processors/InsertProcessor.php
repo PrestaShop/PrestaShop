@@ -41,7 +41,8 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class InsertProcessor extends AbstractProcessor {
+class InsertProcessor extends AbstractProcessor
+{
     public function process($tokenList, $token_category = 'INSERT') {
         $table = "";
         $cols = array();

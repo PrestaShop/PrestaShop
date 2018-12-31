@@ -42,7 +42,8 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
  * @author arothe
  * 
  */
-class ShowProcessor extends AbstractProcessor {
+class ShowProcessor extends AbstractProcessor
+{
     private $limitProcessor;
 
     public function __construct() {

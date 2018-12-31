@@ -54,7 +54,8 @@ require_once dirname(__FILE__) . '/ForeignRefBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ForeignKeyBuilder {
+class ForeignKeyBuilder
+{
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
 

@@ -49,7 +49,8 @@ require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php'
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class LimitBuilder {
+class LimitBuilder
+{
     public function build($parsed) {
         $sql = ($parsed['offset'] ? $parsed['offset'] . ", " : "") . $parsed['rowcount'];
         if ($sql === "") {

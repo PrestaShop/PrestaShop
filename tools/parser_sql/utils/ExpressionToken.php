@@ -26,7 +26,8 @@
 
 require_once dirname(__FILE__) . '/ExpressionType.php';
 
-class ExpressionToken {
+class ExpressionToken
+{
     private $subTree;
     private $expression;
     private $key;

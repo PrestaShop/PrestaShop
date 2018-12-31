@@ -51,7 +51,8 @@ require_once dirname(__FILE__) . '/CreateBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateStatementBuilder {
+class CreateStatementBuilder
+{
     protected function buildLIKE($parsed) {
         $builder = new LikeBuilder();
 

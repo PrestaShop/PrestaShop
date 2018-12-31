@@ -39,7 +39,8 @@ require_once dirname(__FILE__) . '/InsertProcessor.php';
  * @author arothe
  * 
  */
-class ReplaceProcessor extends InsertProcessor {
+class ReplaceProcessor extends InsertProcessor
+{
     public function process($tokenList) {
         return parent::process($tokenList, 'REPLACE');
     }

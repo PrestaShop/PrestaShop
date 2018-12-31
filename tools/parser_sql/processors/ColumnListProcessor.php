@@ -40,7 +40,8 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class ColumnListProcessor extends AbstractProcessor {
+class ColumnListProcessor extends AbstractProcessor
+{
     public function process($tokens) {
         $columns = explode(",", $tokens);
         $cols = array();

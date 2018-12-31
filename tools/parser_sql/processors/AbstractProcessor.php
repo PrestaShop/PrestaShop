@@ -40,7 +40,8 @@ require_once dirname(__FILE__) . '/../lexer/PHPSQLLexer.php';
  * @author arothe
  * 
  */
-abstract class AbstractProcessor {
+abstract class AbstractProcessor
+{
     /**
      * This function implements the main functionality of a processor class.
      * Always use default valuses for additional parameters within overridden functions.

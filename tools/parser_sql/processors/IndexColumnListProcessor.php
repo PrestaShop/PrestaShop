@@ -40,7 +40,8 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  * @author arothe
  * 
  */
-class IndexColumnListProcessor extends AbstractProcessor {
+class IndexColumnListProcessor extends AbstractProcessor
+{
     protected function initExpression() {
         return array('name' => false, 'no_quotes' => false, 'length' => false, 'dir' => false);
     }

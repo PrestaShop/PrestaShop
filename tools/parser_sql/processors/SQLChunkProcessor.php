@@ -66,7 +66,8 @@ require_once dirname(__FILE__) . '/TableProcessor.php';
  * @author arothe
  * 
  */
-class SQLChunkProcessor extends AbstractProcessor {
+class SQLChunkProcessor extends AbstractProcessor
+{
     protected function moveLIKE(&$out) {
         if (!isset($out['TABLE']['like'])) {
             return;

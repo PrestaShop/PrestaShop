@@ -54,7 +54,8 @@ require_once dirname(__FILE__) . '/OrderByBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class SelectStatementBuilder {
+class SelectStatementBuilder
+{
     protected function buildSELECT($parsed) {
         $builder = new SelectBuilder();
 

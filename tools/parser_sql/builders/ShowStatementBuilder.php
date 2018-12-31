@@ -50,7 +50,8 @@ require_once dirname(__FILE__) . '/WhereBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class ShowStatementBuilder {
+class ShowStatementBuilder
+{
     protected function buildWHERE($parsed) {
         $builder = new WhereBuilder();
 

@@ -59,7 +59,8 @@ require_once dirname(__FILE__) . '/SubQueryBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class WhereBuilder {
+class WhereBuilder
+{
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
 

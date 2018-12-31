@@ -51,7 +51,8 @@ require_once dirname(__FILE__) . '/SubTreeBuilder.php';
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *  
  */
-class CreateBuilder {
+class CreateBuilder
+{
     protected function buildCreateTable($parsed) {
         $builder = new CreateTableBuilder();
 
