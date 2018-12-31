@@ -51,16 +51,17 @@ class PositionsControllerTest extends WebTestCase
 
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
+
+        if (!$moduleManager->isInstalled('ps_banner')) {
+            $moduleManager->install('ps_banner');
+        }
+
         if (!$moduleManager->isInstalled('bankwire')) {
             $moduleManager->install('bankwire');
         }
 
-        if (!$moduleManager->isInstalled('ps_featuredproducts')) {
-            $moduleManager->install('ps_featuredproducts');
-        }
-
         $this->moduleId = $moduleManager->getModuleIdByName('bankwire');
-        $this->otherModuleId = $moduleManager->getModuleIdByName('ps_featuredproducts');
+        $this->otherModuleId = $moduleManager->getModuleIdByName('ps_banner');
         $this->hookId = Hook::getIdByName('displayHome');
     }
 
