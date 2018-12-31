@@ -319,7 +319,7 @@ class CronJobsForms
     {
         $data = array(array('id' => '-1', 'name' => self::$module->l('Every hour', 'CronJobsForms')));
 
-        for ($hour = 0; $hour < 24; $hour += 1) {
+        for ($hour = 0; $hour < 24; ++$hour) {
             $data[] = array('id' => $hour, 'name' => date('H:i', mktime($hour, 0, 0, 0, 1)));
         }
 
@@ -330,7 +330,7 @@ class CronJobsForms
     {
         $data = array(array('id' => '-1', 'name' => self::$module->l('Every day of the month', 'CronJobsForms')));
 
-        for ($day = 1; $day <= 31; $day += 1) {
+        for ($day = 1; $day <= 31; ++$day) {
             $data[] = array('id' => $day, 'name' => $day);
         }
 
@@ -341,7 +341,7 @@ class CronJobsForms
     {
         $data = array(array('id' => '-1', 'name' => self::$module->l('Every month', 'CronJobsForms')));
 
-        for ($month = 1; $month <= 12; $month += 1) {
+        for ($month = 1; $month <= 12; ++$month) {
             $data[] = array('id' => $month, 'name' => self::$module->l(date('F', mktime(0, 0, 0, $month, 1))));
         }
 
@@ -352,7 +352,7 @@ class CronJobsForms
     {
         $data = array(array('id' => '-1', 'name' => self::$module->l('Every day of the week', 'CronJobsForms')));
 
-        for ($day = 1; $day <= 7; $day += 1) {
+        for ($day = 1; $day <= 7; ++$day) {
             $data[] = array('id' => $day, 'name' => self::$module->l(date('l', strtotime('Sunday +' . $day . ' days'))));
         }
 
