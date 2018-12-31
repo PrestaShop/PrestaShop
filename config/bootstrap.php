@@ -49,7 +49,7 @@ $yamlParametersFilepath = $configDirectory . '/parameters.yml';
 
 $filesystem = new Filesystem();
 
-$exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
+$exportPhpConfigFile = static function ($config, $destination) use ($filesystem) {
     try {
         $filesystem->dumpFile($destination, '<?php return '.var_export($config, true).';'."\n");
     } catch (IOException $e) {
@@ -85,7 +85,7 @@ if ($lastParametersModificationTime) {
     }
 
     $config = require_once _PS_CACHE_DIR_ . 'appParameters.php';
-    array_walk($config['parameters'], function (&$param) {
+    array_walk($config['parameters'], static function (&$param) {
         $param = str_replace('%%', '%', $param);
     });
 

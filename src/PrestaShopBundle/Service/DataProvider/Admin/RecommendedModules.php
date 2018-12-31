@@ -91,7 +91,7 @@ class RecommendedModules
     public function filterInstalledAndBadModules(array $moduleFullList)
     {
         $installed_modules = [];
-        array_map(function ($module) use (&$installed_modules) {
+        array_map(static function ($module) use (&$installed_modules) {
             $installed_modules[$module['name']] = $module;
         }, Module::getModulesInstalled());
 

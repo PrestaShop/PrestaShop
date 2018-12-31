@@ -282,8 +282,8 @@ class AdminFilter
      */
     public static function sanitizeFilterParameters(array $filter)
     {
-        $filterMinMax = function ($filter) {
-            return function ($subject) use ($filter) {
+        $filterMinMax = static function ($filter) {
+            return static function ($subject) use ($filter) {
                 $operator = null;
 
                 if (false !== strpos($subject, '<=')) {

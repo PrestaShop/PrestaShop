@@ -78,7 +78,7 @@ final class HookDispatcher implements HookDispatcherInterface
         );
 
         $content = $event->getContent();
-        array_walk($content, function (&$partialContent) {
+        array_walk($content, static function (&$partialContent) {
             $partialContent = empty($partialContent) ? '' : current($partialContent);
         });
 

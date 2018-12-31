@@ -210,7 +210,7 @@ class HelperListCore extends Helper
                 $position_group_identifier = Category::getRootCategory()->id;
             }
 
-            $positions = array_map(function ($elem) { return (int) ($elem['position']); }, $this->_list);
+            $positions = array_map(static function ($elem) { return (int) ($elem['position']); }, $this->_list);
             sort($positions);
         }
 

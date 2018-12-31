@@ -53,10 +53,10 @@ class GeolocationIpAddressWhitelistType extends AbstractType
 
         $builder->get('geolocation_whitelist')
             ->addModelTransformer(new CallbackTransformer(
-                function ($ipWhitelistTextWithSemiColons) {
+                static function ($ipWhitelistTextWithSemiColons) {
                     return str_replace(';', "\n", $ipWhitelistTextWithSemiColons);
                 },
-                function ($ipWhitelistTextWithNewLines) {
+                static function ($ipWhitelistTextWithNewLines) {
                     return str_replace(["\r\n", "\r", "\n"], ';', $ipWhitelistTextWithNewLines);
                 }
             ));

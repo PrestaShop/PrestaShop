@@ -209,7 +209,7 @@ class HookRepository
             ORDER BY file_name ASC
         ");
 
-        return array_map(function ($row) {
+        return array_map(static function ($row) {
             return $row['file_name'];
         }, $rows);
     }

@@ -78,14 +78,14 @@ class ImportType extends TranslatorAwareType
 
         $builder->get('entity')
             ->addModelTransformer(new CallbackTransformer(
-                function ($entity) {
+                static function ($entity) {
                     if (null === $entity) {
                         return $entity;
                     }
 
                     return is_numeric($entity) ? $entity : Entity::getFromName($entity);
                 },
-                function ($entity) {
+                static function ($entity) {
                     return $entity;
                 }
             ));

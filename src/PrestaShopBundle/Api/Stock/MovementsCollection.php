@@ -41,7 +41,7 @@ class MovementsCollection
     {
         $movements = array();
 
-        array_walk($stockMovementsParams, function ($item) use (&$movements) {
+        array_walk($stockMovementsParams, static function ($item) use (&$movements) {
             $combinationId = 0;
 
             if ($item['delta'] != 0) {

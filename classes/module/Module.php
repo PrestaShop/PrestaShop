@@ -1565,7 +1565,7 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        usort($module_list, function ($a, $b) {
+        usort($module_list, static function ($a, $b) {
             return strnatcasecmp($a->displayName, $b->displayName);
         });
         if ($errors) {

@@ -1767,7 +1767,7 @@ class CartCore extends ObjectModel
     {
         $id_product_attribute = (int) $id_product_attribute;
 
-        $gifts = array_filter($this->getProductsWithSeparatedGifts(), function ($product) {
+        $gifts = array_filter($this->getProductsWithSeparatedGifts(), static function ($product) {
             return array_key_exists('is_gift', $product) && $product['is_gift'];
         });
 
@@ -2083,7 +2083,7 @@ class CartCore extends ObjectModel
     protected function countProductLines($products)
     {
         $productsLines = array();
-        array_map(function ($product) use (&$productsLines) {
+        array_map(static function ($product) use (&$productsLines) {
             $productIndex = $product['id_product'] . '-' . $product['id_product_attribute'];
 
             if (!array_key_exists($productIndex, $productsLines)) {

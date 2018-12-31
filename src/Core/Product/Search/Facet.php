@@ -43,7 +43,7 @@ class Facet
             'displayed' => $this->displayed,
             'type' => $this->type,
             'properties' => $this->properties,
-            'filters' => array_map(function (Filter $filter) {
+            'filters' => array_map(static function (Filter $filter) {
                 return $filter->toArray();
             }, $this->filters),
             'multipleSelectionAllowed' => $this->multipleSelectionAllowed,

@@ -490,7 +490,7 @@ class CategoryCore extends ObjectModel
             // update by batch of 5000 categories
             $chunks = array_chunk($queries, 5000);
             foreach ($chunks as $chunk) {
-                $sqlChunk = array_map(function ($value) { return '(' . rtrim(implode(',', $value)) . ')'; }, $chunk);
+                $sqlChunk = array_map(static function ($value) { return '(' . rtrim(implode(',', $value)) . ')'; }, $chunk);
                 Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'category` (id_category, nleft, nright) 
                 VALUES ' . rtrim(implode(',', $sqlChunk), ',') . ' 
                 ON DUPLICATE KEY UPDATE nleft=VALUES(nleft), nright=VALUES(nright)');

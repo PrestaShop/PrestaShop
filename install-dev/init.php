@@ -96,7 +96,7 @@ if (!defined('_THEME_NAME_')) {
          * Rely on "PS_THEME_NAME" environment variable value
          */
         $themes = glob(dirname(__DIR__).'/themes/*/config/theme.yml', GLOB_NOSORT);
-        usort($themes, function ($a, $b) {
+        usort($themes, static function ($a, $b) {
             return strcmp($b, $a);
         });
 

@@ -134,7 +134,7 @@ class ModuleTabRegister
     protected function addUndeclaredTabs($moduleName, array $tabs)
     {
         // Function to get only class name from tabs already declared
-        $tabsNames = array_map(function ($tab) {
+        $tabsNames = array_map(static function ($tab) {
             if (array_key_exists('class_name', $tab)) {
                 return $tab['class_name'];
             }
@@ -228,7 +228,7 @@ class ModuleTabRegister
      */
     protected function getModuleAdminControllersFilename($moduleName)
     {
-        return array_map(function (SplFileInfo $file) {
+        return array_map(static function (SplFileInfo $file) {
             return $file->getFilename();
         }, $this->getModuleAdminControllers($moduleName));
     }

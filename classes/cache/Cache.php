@@ -490,7 +490,7 @@ abstract class CacheCore
             }
 
             // sort the array with the query with the lowest count first
-            uasort($this->sql_tables_cached[$table], function ($a, $b) {
+            uasort($this->sql_tables_cached[$table], static function ($a, $b) {
                 if ($a['count'] == $b['count']) {
                     return 0;
                 }

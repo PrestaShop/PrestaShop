@@ -127,7 +127,7 @@ class ModuleActivatedListener
             $this->showNotificationMessage($moduleActivated);
             $url = $this->router->generate($moduleActivated->getRedirectRoute());
 
-            $event->setController(function () use ($url) {
+            $event->setController(static function () use ($url) {
                 return new RedirectResponse($url);
             });
         }

@@ -94,14 +94,14 @@ class AdminTabsControllerTest extends UnitTestCase
 
         $dbMock->expects($this->any())
             ->method('query')
-            ->with($this->callback(function ($subject) {
+            ->with($this->callback(static function ($subject) {
                 // It should check if multi-shop is active
                 return strpos($subject, 'PS_MULTISHOP_FEATURE_ACTIVE') !== false;
             }));
 
         $dbMock->expects($this->any())
             ->method('executeS')
-            ->with($this->callback(function ($subject) {
+            ->with($this->callback(static function ($subject) {
                 if ($subject instanceof DbQuery) {
                     $builtQuery = $subject->build();
 
@@ -120,7 +120,7 @@ class AdminTabsControllerTest extends UnitTestCase
                     strpos($subject, 'hook_alias') !== false;
 
             }))
-            ->will($this->returnCallback(function ($subject) {
+            ->will($this->returnCallback(static function ($subject) {
                 if (strpos($subject, 'authorization') !== false) {
                     return array();
                 } else {

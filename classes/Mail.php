@@ -174,7 +174,7 @@ class MailCore extends ObjectModel
                 null,
                 true
             ),
-            function ($carry, $item) {
+            static function ($carry, $item) {
                 return ($item === false) ? false : $carry;
             },
             true

@@ -101,7 +101,7 @@ class AttributeController extends FrameworkBundleAdminController
         }
 
         //store exisiting product combinations
-        $existingCombinationsIds = array_map(function ($o) {
+        $existingCombinationsIds = array_map(static function ($o) {
             return $o['id_product_attribute'];
         }, $product->getAttributeCombinations(1, false));
 
@@ -127,7 +127,7 @@ class AttributeController extends FrameworkBundleAdminController
         //get all product combinations
         $allCombinations = $product->getAttributeCombinations(1, false);
 
-        $allCombinationsIds = array_map(function ($o) {
+        $allCombinationsIds = array_map(static function ($o) {
             return $o['id_product_attribute'];
         }, $allCombinations);
 
@@ -284,7 +284,7 @@ class AttributeController extends FrameworkBundleAdminController
         $combinations = $attributeAdapter->getProductCombinations($idProduct);
         foreach ($combinations as $combination) {
             //get combination images
-            $combinationImages = array_map(function ($o) {
+            $combinationImages = array_map(static function ($o) {
                 return $o['id'];
             }, $attributeAdapter->getImages($combination['id_product_attribute']));
 

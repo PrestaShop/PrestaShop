@@ -260,7 +260,7 @@ class TranslationController extends ApiController
             'a "locale", a "domain", a "default" and a "edited" values. ' .
             'The item of index #%d is invalid.';
 
-        array_walk($content, function ($item, $index) use ($message) {
+        array_walk($content, static function ($item, $index) use ($message) {
             if (!array_key_exists('locale', $item) ||
                 !array_key_exists('domain', $item) ||
                 !array_key_exists('default', $item) ||
@@ -280,7 +280,7 @@ class TranslationController extends ApiController
             'a "locale", a "domain" and a "default" values. ' .
             'The item of index #%d is invalid.';
 
-        array_walk($content, function ($item, $index) use ($message) {
+        array_walk($content, static function ($item, $index) use ($message) {
             if (!array_key_exists('locale', $item) ||
                 !array_key_exists('domain', $item) ||
                 !array_key_exists('default', $item)

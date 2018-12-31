@@ -264,7 +264,7 @@ class CategoriesProvider
     {
         uasort(
             $categories,
-            function ($a, $b) {
+            static function ($a, $b) {
                 $a = !isset($a['order']) ? 0 : $a['order'];
                 $b = !isset($b['order']) ? 0 : $b['order'];
 

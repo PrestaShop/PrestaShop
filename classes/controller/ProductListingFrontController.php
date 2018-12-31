@@ -422,7 +422,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         }, $pagination->buildLinks());
 
         //Filter next/previous link on first/last page
-        $pages = array_filter($pages, function ($page) use ($pagination) {
+        $pages = array_filter($pages, static function ($page) use ($pagination) {
             if ('previous' === $page['type'] && 1 === $pagination->getPage()) {
                 return false;
             }

@@ -155,9 +155,9 @@ abstract class QueryParamsCollection
         });
 
         $filterParams = array();
-        array_walk($filters, function ($filter) use ($allParameters, &$filterParams) {
+        array_walk($filters, static function ($filter) use ($allParameters, &$filterParams) {
             if (is_array($allParameters[$filter])) {
-                $allParameters[$filter] = array_filter($allParameters[$filter], function ($value) {
+                $allParameters[$filter] = array_filter($allParameters[$filter], static function ($value) {
                     return is_int($value) || (is_string($value) && strlen(trim($value)) > 0);
                 });
             }
@@ -374,7 +374,7 @@ abstract class QueryParamsCollection
             return $filters;
         }
 
-        $placeholders = array_map(function ($index) use ($column) {
+        $placeholders = array_map(static function ($index) use ($column) {
             return ':' . $column . '_' . $index;
         }, array_keys($value));
 
@@ -468,7 +468,7 @@ abstract class QueryParamsCollection
             return $sqlParams;
         }
 
-        array_map(function ($index, $value) use (&$sqlParams, $column) {
+        array_map(static function ($index, $value) use (&$sqlParams, $column) {
             $sqlParams[$column . '_' . $index] = (int) $value;
         }, array_keys($value), $value);
 
@@ -595,7 +595,7 @@ abstract class QueryParamsCollection
         }
 
         $attributesKeys = array_keys($attributes);
-        array_walk($attributesKeys, function ($key) use (&$filters) {
+        array_walk($attributesKeys, static function ($key) use (&$filters) {
             $filters[] = sprintf('AND EXISTS(SELECT 1
                     FROM {table_prefix}product_attribute_combination pac
                         LEFT JOIN {table_prefix}attribute a ON (
@@ -621,7 +621,7 @@ abstract class QueryParamsCollection
             $value = array($value);
         }
 
-        array_map(function ($index, $value) use (&$sqlParams) {
+        array_map(static function ($index, $value) use (&$sqlParams) {
             list($idAttributeGroup, $idAttribute) = explode(':', $value);
             $sqlParams['attribute_id_' . $index] = (string) $idAttribute;
             $sqlParams['attribute_group_id_' . $index] = (string) $idAttributeGroup;
@@ -643,7 +643,7 @@ abstract class QueryParamsCollection
         }
 
         $attributesKeys = array_keys($attributes);
-        array_walk($attributesKeys, function ($key) use (&$filters) {
+        array_walk($attributesKeys, static function ($key) use (&$filters) {
             $filters[] = sprintf('AND EXISTS(SELECT 1
                     FROM {table_prefix}feature_product fp
                         LEFT JOIN  {table_prefix}feature f ON (
@@ -677,7 +677,7 @@ abstract class QueryParamsCollection
             $value = array($value);
         }
 
-        array_map(function ($index, $value) use (&$sqlParams) {
+        array_map(static function ($index, $value) use (&$sqlParams) {
             list($idFeature, $idFeatureValue) = explode(':', $value);
             $sqlParams['feature_id_' . $index] = (string) $idFeature;
             $sqlParams['feature_value_id_' . $index] = (string) $idFeatureValue;
@@ -701,7 +701,7 @@ abstract class QueryParamsCollection
             $this->queryParams['filter']['keywords'] = (array) $this->queryParams['filter']['keywords'];
         }
 
-        $parts = array_map(function ($index) {
+        $parts = array_map(static function ($index) {
             return sprintf(
                 'AND (' .
                 '{supplier_name} LIKE :keyword_%d OR ' .
@@ -727,7 +727,7 @@ abstract class QueryParamsCollection
             $value = array($value);
         }
 
-        array_map(function ($index, $value) use (&$sqlParams) {
+        array_map(static function ($index, $value) use (&$sqlParams) {
             $sqlParams['keyword_' . $index] = (string) ('%' . $value . '%');
         }, range(0, count($value) - 1), $value);
 

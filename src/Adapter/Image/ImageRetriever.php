@@ -184,7 +184,7 @@ class ImageRetriever
             ];
         }
 
-        uasort($urls, function (array $a, array $b) {
+        uasort($urls, static function (array $a, array $b) {
             return $a['width'] * $a['height'] > $b['width'] * $b['height'] ? 1 : -1;
         });
 
@@ -263,7 +263,7 @@ class ImageRetriever
             ];
         }
 
-        uasort($urls, function (array $a, array $b) {
+        uasort($urls, static function (array $a, array $b) {
             return $a['width'] * $a['height'] > $b['width'] * $b['height'] ? 1 : -1;
         });
 

@@ -239,7 +239,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         if ($price->id_customer !== '0') {
             $formattedFormData['sp_id_customer'] = ['data' => [$price->id_customer]];
         }
-        $cleanedFormData = array_map(function ($item) {
+        $cleanedFormData = array_map(static function ($item) {
             if (!$item) {
                 return null;
             }

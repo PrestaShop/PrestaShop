@@ -93,7 +93,7 @@ class CustomerLoginFormCore extends AbstractForm
             'action' => $this->action,
             'urls' => $this->urls,
             'formFields' => array_map(
-                function (FormField $field) {
+                static function (FormField $field) {
                     return $field->toArray();
                 },
                 $this->formFields
