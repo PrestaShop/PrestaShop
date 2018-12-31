@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 
 /**
- * Class UpdateLiveExchangeRatesCommand
+ * Class ScheduleExchangeRatesUpdateCommand
  */
-class UpdateLiveExchangeRatesCommand
+class ScheduleExchangeRatesUpdateCommand
 {
     /**
      * @var bool

@@ -24,11 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ScheduleExchangeRatesUpdateCommand;
 
 /**
- * Class DisabledLiveExchangeRatesException
+ * Interface ScheduleExchangeRatesUpdateHandlerInterface defines contract for UpdateLiveExchangeRatesHandler.
  */
-class DisabledLiveExchangeRatesException extends CurrencyException
+interface ScheduleExchangeRatesUpdateHandlerInterface
 {
+    /**
+     * @param ScheduleExchangeRatesUpdateCommand $command
+     */
+    public function handle(ScheduleExchangeRatesUpdateCommand $command);
 }

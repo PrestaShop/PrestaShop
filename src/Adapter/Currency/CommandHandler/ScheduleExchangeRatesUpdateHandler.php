@@ -34,8 +34,8 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateLiveExchangeRatesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\UpdateLiveExchangeRatesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ScheduleExchangeRatesUpdateCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\ScheduleExchangeRatesUpdateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ScheduleExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DisabledLiveExchangeRatesException;
@@ -44,13 +44,13 @@ use Shop;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class UpdateLiveExchangeRatesHandler is responsible for turning on or off the setting - if its on then
+ * Class ScheduleExchangeRatesUpdateHandler is responsible for turning on or off the setting - if its on then
  * in CronJobs module it creates new record with url which points to the script which is being executed at certain time
  * of period. If the setting is off then it removes that record.
  *
  * @internal
  */
-final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHandlerInterface
+final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesUpdateHandlerInterface
 {
     /**
      * @var Configuration
@@ -127,11 +127,12 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
      *
      * @throws CurrencyException
      */
-    public function handle(UpdateLiveExchangeRatesCommand $command)
+    public function handle(ScheduleExchangeRatesUpdateCommand $command)
     {
         if (!$this->isCronJobModuleInstalled) {
-            throw new DisabledLiveExchangeRatesException(
-                'Live exchange rates feature cannot be modified because "cronjob" module is not installed'
+            throw new ScheduleExchangeRatesUpdateException(
+                'Live exchange rates feature cannot be modified because "cronjob" module is not installed',
+                ScheduleExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED
             );
         }
 
@@ -140,13 +141,13 @@ final class UpdateLiveExchangeRatesHandler implements UpdateLiveExchangeRatesHan
         $cronId = $this->configuration->get('PS_ACTIVE_CRONJOB_EXCHANGE_RATE');
 
         try {
-            $cronUrl = $this->getCronUrl();
-
             if ($cronId && !$command->isExchangeRateEnabled()) {
                 $this->removeCronJob($cronId);
 
                 return;
             }
+
+            $cronUrl = $this->getCronUrl();
 
             if (!$cronId && $command->isExchangeRateEnabled() && false === $this->createCronJob($cronUrl)) {
                 throw new ScheduleExchangeRatesUpdateException(
