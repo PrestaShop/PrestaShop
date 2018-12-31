@@ -219,7 +219,7 @@ class CustomerController extends AbstractAdminController
     public function transformGuestToCustomerAction($customerId)
     {
         try {
-            $this->getCommandBus()->handle(new TransformGuestToCustomerCommand(new CustomerId((int) $customerId)));
+            $this->getCommandBus()->handle(new TransformGuestToCustomerCommand((int) $customerId));
 
             $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
         } catch (CustomerNotFoundException $e) {
