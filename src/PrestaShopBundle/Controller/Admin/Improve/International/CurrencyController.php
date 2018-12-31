@@ -422,7 +422,7 @@ class CurrencyController extends FrameworkBundleAdminController
             return $exceptionTypeDictionary[$exceptionType];
         }
 
-        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
+        return $this->getFallbackErrorMessage($exceptionType, $exception->getCode());
     }
 
     /**
@@ -495,6 +495,6 @@ class CurrencyController extends FrameworkBundleAdminController
             return $exceptionDictionary[$exceptionClass][$exceptionCode];
         }
 
-        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
+        return $this->getFallbackErrorMessage($exceptionClass, $exceptionCode);
     }
 }
