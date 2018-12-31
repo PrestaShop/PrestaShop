@@ -119,7 +119,7 @@ services:
     arguments:
       - '@translator'
 
-  prestashop.core.form.choice_provider.currency_from_cldr:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyFromCldrChoiceProvider'
+  prestashop.core.form.choice_provider.currency_name_by_iso_code:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyNameByIsoCodeChoiceProvider'
     arguments:
       - '@=service("prestashop.core.cldr.repository").getAllCurrencies()'
