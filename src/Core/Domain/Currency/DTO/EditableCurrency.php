@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\DTO;
 
 /**
- * Class CurrencyForFormEditing
+ * Class EditableCurrency
  */
-class CurrencyForFormEditing
+class EditableCurrency
 {
     /**
      * @var string
