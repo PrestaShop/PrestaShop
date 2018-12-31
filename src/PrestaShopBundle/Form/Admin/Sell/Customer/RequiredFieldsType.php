@@ -57,7 +57,6 @@ class RequiredFieldsType extends AbstractType
             ->add('required_fields', MaterialChoiceTableType::class, [
                 'label' => false,
                 'choices' => $this->customerRequiredFieldsChoices,
-            ])
-        ;
+            ]);
     }
 }
