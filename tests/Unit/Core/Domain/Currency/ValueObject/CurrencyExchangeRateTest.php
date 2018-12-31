@@ -36,38 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 class CurrencyExchangeRateTest extends TestCase
 {
     /**
-     * @dataProvider getIncorrectTypes
-     */
-    public function testItThrowsAnExceptionOnIncorrectExchangeRateType($incorrectType)
-    {
-        $this->expectException(CurrencyConstraintException::class);
-        $this->expectExceptionCode(CurrencyConstraintException::INVALID_EXCHANGE_RATE_TYPE);
-
-        $exchangeRate = new ExchangeRate($incorrectType);
-    }
-
-    public function getIncorrectTypes()
-    {
-        return [
-            [
-                [],
-            ],
-            [
-                'string',
-            ],
-            [
-                null,
-            ],
-            [
-                false,
-            ],
-            [
-                '4.294.967.295,000',
-            ]
-        ];
-    }
-
-    /**
      * @dataProvider getIncorrectExchangeRates
      */
     public function testItThrowsAnExceptionOnIncorrectExchangeRate($incorrectExchangeRate)
@@ -92,7 +60,16 @@ class CurrencyExchangeRateTest extends TestCase
             ],
             [
                 '-1',
-            ]
+            ],
+            [
+                '4.294.967.295,000',
+            ],
+            [
+                null,
+            ],
+            [
+                [],
+            ],
         ];
     }
 
