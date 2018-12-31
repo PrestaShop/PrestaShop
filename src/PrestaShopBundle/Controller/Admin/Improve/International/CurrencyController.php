@@ -322,7 +322,7 @@ class CurrencyController extends FrameworkBundleAdminController
             'status' => false,
             'message' => $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error'),
         ];
-        $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+        $statusCode = Response::HTTP_BAD_REQUEST;
 
         if ($settingsForm->isSubmitted()) {
             $formData = $settingsForm->getData();
@@ -337,7 +337,7 @@ class CurrencyController extends FrameworkBundleAdminController
                         'Admin.Notifications.Success'
                     ),
                 ];
-                $statusCode = 200;
+                $statusCode = Response::HTTP_OK;
             } catch (CurrencyException $exception) {
                 $response['message'] = $this->handleException($exception);
             }
