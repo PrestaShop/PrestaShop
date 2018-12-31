@@ -51,7 +51,7 @@ class CurrencyId
             );
         }
 
-        $this->currencyId = (int) $currencyId;
+        $this->currencyId = $currencyId;
     }
 
     /**
