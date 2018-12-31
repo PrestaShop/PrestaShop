@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\CurrencyForFormEditing;
+use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\EditableCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
@@ -61,7 +61,7 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id)
     {
-        /** @var CurrencyForFormEditing $result */
+        /** @var EditableCurrency $result */
         $result = $this->queryBus->handle(new GetCurrencyForEditing(new CurrencyId((int) $id)));
 
         return [

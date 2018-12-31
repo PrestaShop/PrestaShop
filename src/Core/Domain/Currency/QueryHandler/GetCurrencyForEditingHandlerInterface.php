@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\CurrencyForFormEditing;
+use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\EditableCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 
 /**
@@ -37,7 +37,7 @@ interface GetCurrencyForEditingHandlerInterface
     /**
      * @param GetCurrencyForEditing $query
      *
-     * @return CurrencyForFormEditing
+     * @return EditableCurrency
      */
     public function handle(GetCurrencyForEditing $query);
 }
