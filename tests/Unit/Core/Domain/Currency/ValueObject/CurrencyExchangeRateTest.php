@@ -28,7 +28,7 @@ namespace Tests\Unit\Core\Domain\Currency\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyExchangeRate;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 
 /**
  * Class CurrencyExchangeRateTest
@@ -43,7 +43,7 @@ class CurrencyExchangeRateTest extends TestCase
         $this->expectException(CurrencyConstraintException::class);
         $this->expectExceptionCode(CurrencyConstraintException::INVALID_EXCHANGE_RATE_TYPE);
 
-        $exchangeRate = new CurrencyExchangeRate($incorrectType);
+        $exchangeRate = new ExchangeRate($incorrectType);
     }
 
     public function getIncorrectTypes()
@@ -75,7 +75,7 @@ class CurrencyExchangeRateTest extends TestCase
         $this->expectException(CurrencyConstraintException::class);
         $this->expectExceptionCode(CurrencyConstraintException::INVALID_EXCHANGE_RATE);
 
-        $exchangeRate = new CurrencyExchangeRate($incorrectExchangeRate);
+        $exchangeRate = new ExchangeRate($incorrectExchangeRate);
     }
 
     public function getIncorrectExchangeRates()
@@ -98,7 +98,7 @@ class CurrencyExchangeRateTest extends TestCase
 
     public function testItGetsExpectedExchangeRate()
     {
-        $exchangeRate = new CurrencyExchangeRate(1.55);
+        $exchangeRate = new ExchangeRate(1.55);
 
         $this->assertEquals(1.55, $exchangeRate->getValue());
     }

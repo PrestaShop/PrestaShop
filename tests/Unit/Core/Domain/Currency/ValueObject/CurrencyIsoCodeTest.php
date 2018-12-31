@@ -28,7 +28,7 @@ namespace Tests\Unit\Core\Domain\Currency\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\IsoCode;
 
 /**
  * Class CurrencyIsoCodeTest
@@ -43,7 +43,7 @@ class CurrencyIsoCodeTest extends TestCase
         $this->expectException(CurrencyConstraintException::class);
         $this->expectExceptionCode(CurrencyConstraintException::INVALID_ISO_CODE_TYPE);
 
-        $currencyIsoCode = new CurrencyIsoCode($incorrectIsoCodeTypes);
+        $currencyIsoCode = new IsoCode($incorrectIsoCodeTypes);
     }
 
     public function getIncorrectIsoCodeTypes()
@@ -69,7 +69,7 @@ class CurrencyIsoCodeTest extends TestCase
         $this->expectException(CurrencyConstraintException::class);
         $this->expectExceptionCode(CurrencyConstraintException::INVALID_ISO_CODE);
 
-        $currencyIsoCode = new CurrencyIsoCode($incorrectIsoCode);
+        $currencyIsoCode = new IsoCode($incorrectIsoCode);
     }
 
     public function getIncorrectIsoCodes()
@@ -92,7 +92,7 @@ class CurrencyIsoCodeTest extends TestCase
 
     public function testItReturnsRightIsoCode()
     {
-        $currencyIsoCode = new CurrencyIsoCode('LTU');
+        $currencyIsoCode = new IsoCode('LTU');
 
         $this->assertEquals('LTU', $currencyIsoCode->getValue());
     }
