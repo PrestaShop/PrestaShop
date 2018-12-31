@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
@@ -39,11 +40,13 @@ class DeleteCurrencyCommand
     private $currencyId;
 
     /**
-     * @param CurrencyId $currencyId
+     * @param int $currencyId
+     *
+     * @throws CurrencyException
      */
-    public function __construct(CurrencyId $currencyId)
+    public function __construct($currencyId)
     {
-        $this->currencyId = $currencyId;
+        $this->currencyId = new CurrencyId($currencyId);
     }
 
     /**
