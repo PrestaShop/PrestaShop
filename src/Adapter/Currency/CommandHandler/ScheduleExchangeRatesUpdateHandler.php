@@ -33,15 +33,14 @@ use Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider;
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ScheduleExchangeRatesUpdateCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\ScheduleExchangeRatesUpdateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ScheduleExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DisabledLiveExchangeRatesException;
 use PrestaShopException;
 use Shop;
 use Symfony\Component\Translation\TranslatorInterface;
+use Tools;
 
 /**
  * Class ScheduleExchangeRatesUpdateHandler is responsible for turning on or off the setting - if its on then
@@ -56,11 +55,6 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
      * @var Configuration
      */
     private $configuration;
-
-    /**
-     * @var Tools
-     */
-    private $tools;
 
     /**
      * @var Shop
@@ -94,7 +88,6 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
 
     /**
      * @param Configuration $configuration
-     * @param Tools $tools
      * @param Shop $contextShop
      * @param ShopUrlDataProvider $shopUrlDataProvider
      * @param TranslatorInterface $translator
@@ -104,7 +97,6 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
      */
     public function __construct(
         Configuration $configuration,
-        Tools $tools,
         Shop $contextShop,
         ShopUrlDataProvider $shopUrlDataProvider,
         TranslatorInterface $translator,
@@ -113,7 +105,6 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
         $dbPrefix
     ) {
         $this->configuration = $configuration;
-        $this->tools = $tools;
         $this->contextShop = $contextShop;
         $this->isCronJobModuleInstalled = $isCronJobModuleInstalled;
         $this->shopUrlDataProvider = $shopUrlDataProvider;
@@ -175,7 +166,7 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
      */
     private function getCronUrl()
     {
-        $protocol = $this->tools->getShopProtocol();
+        $protocol = Tools::getShopProtocol();
         $shopDomain = $this->shopUrlDataProvider->getMainShopUrl()->domain;
         $cronFileLink = sprintf(
             'cron_currency_rates.php?secure_key=%s',

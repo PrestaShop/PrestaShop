@@ -39,7 +39,6 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\ScheduleExchangeRatesUpdateHandler'
         arguments:
           - '@prestashop.adapter.legacy.configuration'
-          - '@prestashop.adapter.tools'
           - '@=service("prestashop.adapter.legacy.context").getContext().shop'
           - '@prestashop.adapter.shop.shop_url'
           - '@translator'
