@@ -501,7 +501,7 @@ class LegacyUrlConverterTest extends TestCase
         $mockRouter
             ->method('generate')
             ->will($this->returnCallback(
-                function($routeName) use ($routeCollection) {
+                function ($routeName) use ($routeCollection) {
                     $route = $routeCollection->get($routeName);
 
                     return null !== $route ? $route->getPath() : null;
