@@ -74,24 +74,11 @@ final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandler
             );
         }
 
-        try {
-            $result = new CurrencyForFormEditing(
-                $entity->iso_code,
-                $entity->conversion_rate,
-                $entity->active,
-                $entity->getAssociatedShops()
-            );
-        } catch (PrestaShopDatabaseException $exception) {
-            throw new CurrencyException(
-                sprintf(
-                    'An error occurred while trying to get currency with id "%s"',
-                    $query->getCurrencyId()->getValue()
-                ),
-                0,
-                $exception
-            );
-        }
-
-        return $result;
+        return new CurrencyForFormEditing(
+            $entity->iso_code,
+            $entity->conversion_rate,
+            $entity->active,
+            $entity->getAssociatedShops()
+        );
     }
 }
