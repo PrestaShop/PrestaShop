@@ -154,4 +154,4 @@ services:
   prestashop.core.form.choice_provider.currency_name_by_iso_code:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyNameByIsoCodeChoiceProvider'
     arguments:
-      - '@=service("prestashop.core.cldr.repository").getAllCurrencies()'
+      - '@=service("prestashop.core.localization.cldr.repository").getAllCurrencies()'

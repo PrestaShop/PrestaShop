@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ScheduleExchangeRatesUpdateCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRefreshExchangeRatesException;
@@ -37,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyExc
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DisabledLiveExchangeRatesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ScheduleExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
