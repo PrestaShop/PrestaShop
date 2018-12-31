@@ -238,8 +238,7 @@ class CurrencyController extends FrameworkBundleAdminController
     public function toggleStatusAction($currencyId)
     {
         try {
-            $currencyId = new CurrencyId((int) $currencyId);
-            $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand($currencyId));
+            $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand((int) $currencyId));
         } catch (CurrencyException $exception) {
             $this->addFlash('error', $this->handleException($exception));
 
@@ -438,24 +437,6 @@ class CurrencyController extends FrameworkBundleAdminController
                             sprintf(
                                 '"%s"',
                                 $this->trans('Currency', 'Admin.Global')),
-                        ]
-                    ),
-                CurrencyConstraintException::INVALID_ISO_CODE_TYPE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Currency', 'Admin.Global')),
-                        ]
-                    ),
-                CurrencyConstraintException::INVALID_EXCHANGE_RATE_TYPE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf(
-                                '"%s"',
-                                $this->trans('Exchange rate', 'Admin.International.Feature')),
                         ]
                     ),
                 CurrencyConstraintException::INVALID_EXCHANGE_RATE => $this->trans(
