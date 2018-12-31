@@ -87,7 +87,13 @@ class CurrencyType extends AbstractType
                     ]),
                     new GreaterThan([
                         'value' => 0,
-                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                        'message' => $this->trans(
+                            'This value should be greater than %value%',
+                            [
+                                '%value%' => 0,
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
                     ]),
                 ],
                 'invalid_message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
