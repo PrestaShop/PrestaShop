@@ -2241,7 +2241,7 @@ class AdminProductsController extends AdminProductsControllerCore
             } else {
                 $virtual_product_filename = Tools::getValue('virtual_product_filename', ProductDownload::getNewFilename());
             }
-            $product->setDefaultAttribute(0);//reset cache_default_attribute
+            $product->setDefaultAttribute(0); //reset cache_default_attribute
             if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date'))) {
                 if (!Tools::getValue('virtual_product_expiration_date')) {
                     $this->errors[] = Tools::displayError('The expiration-date attribute is required.');
@@ -4715,7 +4715,7 @@ class AdminProductsController extends AdminProductsControllerCore
     {
         Pack::deleteItems($product->id);
         if (Tools::getValue('type_product') == Product::PTYPE_PACK) {
-            $product->setDefaultAttribute(0);//reset cache_default_attribute
+            $product->setDefaultAttribute(0); //reset cache_default_attribute
             $items = Tools::getValue('inputPackItems');
             $lines = array_unique(explode('-', $items));
             if (count($lines)) {

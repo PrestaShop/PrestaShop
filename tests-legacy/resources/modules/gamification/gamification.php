@@ -246,7 +246,7 @@ class gamification extends Module
         $current_level = (int)Configuration::get('GF_CURRENT_LEVEL');
         $current_level_percent = (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT');
 
-        $badges_to_display = array();//retro compat
+        $badges_to_display = array(); //retro compat
         $unlock_badges = array();
         $next_badges = array();
         $not_viewed_badge = explode('|', Configuration::get('GF_NOT_VIEWED_BADGE', ''));
