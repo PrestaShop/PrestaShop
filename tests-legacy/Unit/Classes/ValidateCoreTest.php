@@ -213,7 +213,7 @@ class ValidateCoreTest extends TestCase
             $this->trueFloatDataProvider(),
             array(
                 array(false, -12.2151),
-                array(false, -12,2151),
+                array(false, -12, 2151),
                 array(false, '-12.2151'),
                 array(false, ''),
                 array(false, 'A'),
@@ -227,7 +227,7 @@ class ValidateCoreTest extends TestCase
         return array(
             array(true, 12),
             array(true, 12.2151),
-            array(true, 12,2151),
+            array(true, 12, 2151),
             array(true, '12.2151'),
         );
     }
@@ -238,7 +238,7 @@ class ValidateCoreTest extends TestCase
             $this->trueFloatDataProvider(),
             array(
                 array(true, -12.2151),
-                array(true, -12,2151),
+                array(true, -12, 2151),
                 array(true, '-12.2151'),
                 array(false, ''),
                 array(false, 'A'),
