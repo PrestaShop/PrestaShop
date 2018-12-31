@@ -30,8 +30,7 @@ use Currency;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelLegacyHandler;
 
 /**
- * Class AbstractCurrencyHandler is responsible for adding shared functionality
- * for AddCurrencyHandler and EditCurrencyHandler.
+ * Class AbstractCurrencyHandler is responsible for encapsulating common behavior for legacy object models.
  *
  * @internal
  */
