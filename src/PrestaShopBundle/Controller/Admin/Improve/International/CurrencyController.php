@@ -314,7 +314,8 @@ class CurrencyController extends FrameworkBundleAdminController
             );
         }
 
-        $settingsForm = $this->getSettingsFormHandler()->getForm();
+        $settingsFormHandler = $this->getSettingsFormHandler();
+        $settingsForm = $settingsFormHandler->getForm();
 
         $settingsForm->handleRequest($request);
 
@@ -325,11 +326,8 @@ class CurrencyController extends FrameworkBundleAdminController
         $statusCode = Response::HTTP_BAD_REQUEST;
 
         if ($settingsForm->isSubmitted()) {
-            $formData = $settingsForm->getData();
             try {
-                $command = new ScheduleExchangeRatesUpdateCommand($formData['exchange_rates']['live_exchange_rate']);
-                $this->getCommandBus()->handle($command);
-
+                $settingsFormHandler->save($settingsForm->getData());
                 $response = [
                     'status' => true,
                     'message' => $this->trans(
