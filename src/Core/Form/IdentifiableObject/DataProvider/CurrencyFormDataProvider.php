@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\EditableCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 
 /**
  * Class CurrencyFormDataProvider
@@ -78,7 +79,7 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
-            'exchange_rate' => 1,
+            'exchange_rate' => ExchangeRate::DEFAULT_RATE,
             'shop_association' => $this->contextShopIds,
         ];
     }
