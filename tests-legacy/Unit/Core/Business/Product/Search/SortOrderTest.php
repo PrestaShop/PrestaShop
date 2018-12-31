@@ -124,8 +124,8 @@ class SortOrderTest extends TestCase
         $unserialized = SortOrder::newFromString($encoded);
 
         $arr = $unserialized->toArray();
-        $this->assertEquals($data['entity'],    $arr['entity']);
-        $this->assertEquals($data['field'],     $arr['field']);
+        $this->assertEquals($data['entity'], $arr['entity']);
+        $this->assertEquals($data['field'], $arr['field']);
         $this->assertEquals($data['direction'], $arr['direction']);
     }
 }

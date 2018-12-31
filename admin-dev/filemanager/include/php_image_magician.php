@@ -1339,7 +1339,7 @@ class imageLib
   Round corners
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-  public function roundCorners($radius = 5,  $bgColor = 'transparent')
+  public function roundCorners($radius = 5, $bgColor = 'transparent')
     # Author:     Jarrod Oberto
     # Date:       19-05-2011
     # Purpose:    Create rounded corners on your image
