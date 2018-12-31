@@ -95,7 +95,7 @@ class FakePackItemsManager4759
 
     public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
     {
-        $id_product_attribute = $id_product_attribute?$id_product_attribute:0;
+        $id_product_attribute = $id_product_attribute ? $id_product_attribute : 0;
 
         return $this->stockAvailables[$product->id][$id_product_attribute];
     }
@@ -394,8 +394,8 @@ class StockAvailableTest extends UnitTestCase
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $this->packItemsManager);
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
 
-        $productToUpdate = ($product_to_update === 0)? $pack : $products[$product_to_update-1][0];
-        $productAttributeToUpdate = ($product_to_update === 0)? null : $products[$product_to_update-1][1];
+        $productToUpdate = ($product_to_update === 0) ? $pack : $products[$product_to_update-1][0];
+        $productAttributeToUpdate = ($product_to_update === 0) ? null : $products[$product_to_update-1][1];
 
         $stockManager = new StockManager();
         $stockManager->updateQuantity($productToUpdate, $productAttributeToUpdate, $delta);

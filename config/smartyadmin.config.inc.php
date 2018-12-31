@@ -72,7 +72,7 @@ function smartyTranslate($params, $smarty)
     }
 
     if (($htmlEntities || $addSlashes)) {
-        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
+        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars' : 'addslashes';
     }
 
     if (!empty($params['d'])) {

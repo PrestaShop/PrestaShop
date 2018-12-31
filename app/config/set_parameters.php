@@ -57,4 +57,4 @@ foreach ($parameters['parameters'] as $key => $value) {
     $container->setParameter($key, $value);
 }
 
-$container->setParameter('cache.driver', extension_loaded('apc') ? 'apc': 'array');
+$container->setParameter('cache.driver', extension_loaded('apc') ? 'apc' : 'array');

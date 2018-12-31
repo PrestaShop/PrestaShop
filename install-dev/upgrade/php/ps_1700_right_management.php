@@ -58,7 +58,7 @@ function ps_1700_right_management()
                     || $currOldAccess['id_profile'] == _PS_ADMIN_PROFILE_
                     || empty($currOldAccess['id_profile']))) {
                 $accessObject->updateLgcAccess(
-                    !empty($currOldAccess['id_profile'])?$currOldAccess['id_profile']:_PS_ADMIN_PROFILE_,
+                    !empty($currOldAccess['id_profile']) ? $currOldAccess['id_profile'] : _PS_ADMIN_PROFILE_,
                     $currOldAccess['id_tab'],
                     $action,
                     true
@@ -79,7 +79,7 @@ function ps_1700_right_management()
                     || $currOldAccess['id_profile'] == _PS_ADMIN_PROFILE_
                     || empty($currOldAccess['id_profile']))) {
                 $accessObject->updateLgcModuleAccess(
-                    !empty($currOldAccess['id_profile'])?$currOldAccess['id_profile']:_PS_ADMIN_PROFILE_,
+                    !empty($currOldAccess['id_profile']) ? $currOldAccess['id_profile'] : _PS_ADMIN_PROFILE_,
                     $currOldAccess['id_module'],
                     $action,
                     true

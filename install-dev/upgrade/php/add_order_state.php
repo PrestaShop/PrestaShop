@@ -52,8 +52,8 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
     $languages = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'lang`');
     foreach ($languages as $lang) {
         $iso_code = $lang['iso_code'];
-        $iso_code_name = isset($name_lang[$iso_code])?$iso_code:'en';
-        $iso_code_template = isset($template_lang[$iso_code])?$iso_code:'en';
+        $iso_code_name = isset($name_lang[$iso_code]) ? $iso_code : 'en';
+        $iso_code_template = isset($template_lang[$iso_code]) ? $iso_code : 'en';
         $name = isset($name_lang[$iso_code]) ? $name_lang[$iso_code] : $name_lang['en'];
         $template = isset($template_lang[$iso_code]) ? $template_lang[$iso_code] : '';
 

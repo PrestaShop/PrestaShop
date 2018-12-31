@@ -46,7 +46,7 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
 $_REQUEST['ajaxMode'] = $_POST['ajaxMode'] = $_GET['ajaxMode'] = $_REQUEST['ajax'] = $_POST['ajax'] = $_GET['ajax'] = 1;
 
 require_once __DIR__.'/../app/AppKernel.php';
-$kernel = new AppKernel(_PS_MODE_DEV_?'dev':'prod', _PS_MODE_DEV_);
+$kernel = new AppKernel(_PS_MODE_DEV_ ? 'dev' : 'prod', _PS_MODE_DEV_);
 $kernel->loadClassCache();
 $kernel->boot();
 

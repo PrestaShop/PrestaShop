@@ -317,7 +317,7 @@ class ConfigurationMock extends Configuration
 
     public function get($key, $default = null)
     {
-        return isset($this->configurationData[$key])?$this->configurationData[$key]:$default;
+        return isset($this->configurationData[$key]) ? $this->configurationData[$key] : $default;
     }
 
     public function remove($key)
