@@ -712,6 +712,6 @@ services:
     form.type.currency_exchange_rate:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
         arguments:
-            - '@=service("prestashop.adapter.module.validator").isInstalled("cronjobs")'
+            - '@=service("prestashop.adapter.data_provider.module").isInstalled("cronjobs")'
         tags:
             - { name: form.type }
