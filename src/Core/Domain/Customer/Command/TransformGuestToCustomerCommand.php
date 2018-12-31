@@ -39,11 +39,11 @@ class TransformGuestToCustomerCommand
     private $customerId;
 
     /**
-     * @param CustomerId $customerId
+     * @param int $customerId
      */
-    public function __construct(CustomerId $customerId)
+    public function __construct($customerId)
     {
-        $this->customerId = $customerId;
+        $this->customerId = new CustomerId($customerId);
     }
 
     /**
