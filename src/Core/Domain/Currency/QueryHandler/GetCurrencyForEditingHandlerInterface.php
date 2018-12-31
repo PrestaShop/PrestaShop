@@ -27,17 +27,17 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\CurrencyForFormEditing;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForFormEditing;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 
 /**
- * Interface GetCurrencyForFormEditingHandlerInterface defines contract for GetCurrencyForFormEditingHandler.
+ * Interface GetCurrencyForEditingHandlerInterface defines contract for GetCurrencyForFormEditingHandler.
  */
-interface GetCurrencyForFormEditingHandlerInterface
+interface GetCurrencyForEditingHandlerInterface
 {
     /**
-     * @param GetCurrencyForFormEditing $query
+     * @param GetCurrencyForEditing $query
      *
      * @return CurrencyForFormEditing
      */
-    public function handle(GetCurrencyForFormEditing $query);
+    public function handle(GetCurrencyForEditing $query);
 }

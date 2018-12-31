@@ -157,7 +157,7 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
             }
 
             if ($cronId) {
-                $this->validateCronJob($cronId);
+                $this->resetCronConfiguration($cronId);
             }
         } catch (Exception $exception) {
             throw new CurrencyException(
@@ -235,7 +235,7 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
      *
      * @throws Exception
      */
-    private function validateCronJob($cronId)
+    private function resetCronConfiguration($cronId)
     {
         $query = new DbQuery();
         $query

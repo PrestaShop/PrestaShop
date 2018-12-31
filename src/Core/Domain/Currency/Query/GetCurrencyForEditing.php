@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Query;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
- * Class GetCurrencyForFormEditing
+ * Class GetCurrencyForEditing
  */
-class GetCurrencyForFormEditing
+class GetCurrencyForEditing
 {
     /**
      * @var CurrencyId
