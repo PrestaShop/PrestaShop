@@ -43,10 +43,10 @@ abstract class ModuleGridCore extends Module
     protected $_limit;
 
     /** @var string column name on which to sort */
-    protected $_sort = null;
+    protected $_sort;
 
     /** @var string sort direction DESC/ASC */
-    protected $_direction = null;
+    protected $_direction;
 
     /** @var ModuleGridEngine grid engine */
     protected $_render;

@@ -45,7 +45,7 @@ abstract class AbstractAdminQueryBuilder
     /**
      * @var string|null
      */
-    private $lastCompiledSql = null;
+    private $lastCompiledSql;
 
     /**
      * @param array $whereArray

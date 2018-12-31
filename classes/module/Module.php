@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 abstract class ModuleCore implements ModuleInterface
 {
     /** @var int Module ID */
-    public $id = null;
+    public $id;
 
     /** @var float Version */
     public $version;
@@ -86,7 +86,7 @@ abstract class ModuleCore implements ModuleInterface
     public $need_instance = 1;
 
     /** @var string Admin tab corresponding to the module */
-    public $tab = null;
+    public $tab;
 
     /** @var bool Status */
     public $active = false;
@@ -112,13 +112,13 @@ abstract class ModuleCore implements ModuleInterface
     protected $_lang = array();
 
     /** @var string Module web path (eg. '/shop/modules/modulename/') */
-    protected $_path = null;
+    protected $_path;
     /**
      * @since 1.5.0.1
      *
      * @var string Module local path (eg. '/home/prestashop/modules/modulename/')
      */
-    protected $local_path = null;
+    protected $local_path;
 
     /** @var array Array filled with module errors */
     protected $_errors = array();
@@ -157,7 +157,7 @@ abstract class ModuleCore implements ModuleInterface
     protected $smarty;
 
     /** @var Smarty_Internal_Template|null */
-    protected $current_subtemplate = null;
+    protected $current_subtemplate;
 
     protected static $update_translations_after_install = true;
 

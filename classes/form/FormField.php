@@ -29,9 +29,9 @@ class FormFieldCore
     private $type = 'text';
     private $required = false;
     private $label = '';
-    private $value = null;
+    private $value;
     private $availableValues = [];
-    private $maxLength = null;
+    private $maxLength;
     private $errors = [];
     private $constraints = [];
 

@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class Module implements ModuleInterface
 {
     /** @var legacyInstance Module The instance of the legacy module */
-    public $instance = null;
+    public $instance;
 
     /**
      * Module attributes (name, displayName etc.).

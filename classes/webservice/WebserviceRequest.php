@@ -29,7 +29,7 @@ class WebserviceRequestCore
     const HTTP_POST = 2;
     const HTTP_PUT = 4;
 
-    protected $_available_languages = null;
+    protected $_available_languages;
     /**
      * Errors triggered at execution.
      *

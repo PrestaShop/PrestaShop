@@ -58,7 +58,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /**
      * @var string The image type (product, category, general,...)
      */
-    protected $imageType = null;
+    protected $imageType;
 
     /**
      * @var int The maximum size supported when uploading images, in bytes
@@ -73,7 +73,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /**
      * @var string The product image declination id
      */
-    protected $productImageDeclinationId = null;
+    protected $productImageDeclinationId;
 
     /**
      * @var bool If the current image management has to manage a "default" image (i.e. "No product available")
@@ -83,8 +83,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /**
      * @var string The file path of the image to display. If not null, the image will be displayed, even if the XML output was not empty
      */
-    public $imgToDisplay = null;
-    public $imageResource = null;
+    public $imgToDisplay;
+    public $imageResource;
 
     /* ------------------------------------------------
      * GETTERS & SETTERS

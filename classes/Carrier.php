@@ -88,7 +88,7 @@ class CarrierCore extends ObjectModel
     public $shipping_external = 0;
 
     /** @var string Shipping external */
-    public $external_module_name = null;
+    public $external_module_name;
 
     /** @var bool Need Range */
     public $need_range = 0;

@@ -71,7 +71,7 @@ class HelperListCore extends Helper
     public $table_id;
 
     /** @var string */
-    public $title_icon = null;
+    public $title_icon;
 
     /**
      * @var array Customize list display
@@ -105,14 +105,14 @@ class HelperListCore extends Helper
 
     public $bulk_actions = false;
     public $force_show_bulk_actions = false;
-    public $specificConfirmDelete = null;
+    public $specificConfirmDelete;
     public $colorOnBackground;
 
     /** @var bool If true, activates color on hover */
     public $row_hover = true;
 
     /** @var string|null If not null, a title will be added on that list */
-    public $title = null;
+    public $title;
 
     /** @var bool ask for simple header : no filters, no paginations and no sorting */
     public $simple_header = false;

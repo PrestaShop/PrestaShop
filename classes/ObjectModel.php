@@ -56,10 +56,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public $id;
 
     /** @var int Language ID */
-    protected $id_lang = null;
+    protected $id_lang;
 
     /** @var int Shop ID */
-    protected $id_shop = null;
+    protected $id_shop;
 
     /** @var array List of shop IDs */
     public $id_shop_list = array();
@@ -137,7 +137,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     protected $webserviceParameters = array();
 
     /** @var string Path to image directory. Used for image deletion. */
-    protected $image_dir = null;
+    protected $image_dir;
 
     /** @var string file type of image files. */
     protected $image_format = 'jpg';
@@ -164,7 +164,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     protected $def;
 
     /** @var array|null List of specific fields to update (all fields if null). */
-    protected $update_fields = null;
+    protected $update_fields;
 
     /** @var Db An instance of the db in order to avoid calling Db::getInstance() thousands of times. */
     protected static $db = false;

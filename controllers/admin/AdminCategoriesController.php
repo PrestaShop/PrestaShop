@@ -32,7 +32,7 @@ class AdminCategoriesControllerCore extends AdminController
     /**
      *  @var object Category() instance for navigation
      */
-    protected $_category = null;
+    protected $_category;
     protected $position_identifier = 'id_category_to_move';
 
     /** @var bool does the product have to be removed during the delete process */

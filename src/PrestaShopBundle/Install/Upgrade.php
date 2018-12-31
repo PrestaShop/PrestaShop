@@ -95,7 +95,7 @@ namespace PrestaShopBundle\Install {
         private $inAutoUpgrade = false;
         private $translator;
         private $installDir;
-        private $adminDir = null;
+        private $adminDir;
         private $oldVersion;
         private $db;
         private $idEmployee = 0;

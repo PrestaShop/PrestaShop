@@ -32,8 +32,8 @@ use PrestaShopAutoload;
 
 class PrestaShopAutoloadTest extends TestCase
 {
-    private $file_index_content = null;
-    private $file_index = null;
+    private $file_index_content;
+    private $file_index;
 
     protected function setUp()
     {

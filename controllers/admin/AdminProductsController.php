@@ -33,8 +33,8 @@ class AdminProductsControllerCore extends AdminController
     /** @var int Max image size for upload
      * As of 1.5 it is recommended to not set a limit to max image size
      */
-    protected $max_file_size = null;
-    protected $max_image_size = null;
+    protected $max_file_size;
+    protected $max_image_size;
 
     protected $_category;
     /**

@@ -77,7 +77,7 @@ class StockMvtCore extends ObjectModel
     /**
      * @var int Used when the movement is due to a customer order
      */
-    public $id_order = null;
+    public $id_order;
 
     /**
      * @since 1.5.0
@@ -91,21 +91,21 @@ class StockMvtCore extends ObjectModel
      *
      * @var int Used when the movement is due to a supplier order
      */
-    public $id_supply_order = null;
+    public $id_supply_order;
 
     /**
      * @since 1.5.0
      *
      * @var float Last value of the weighted-average method
      */
-    public $last_wa = null;
+    public $last_wa;
 
     /**
      * @since 1.5.0
      *
      * @var float Current value of the weighted-average method
      */
-    public $current_wa = null;
+    public $current_wa;
 
     /**
      * @since 1.5.0

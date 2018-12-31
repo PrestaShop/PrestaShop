@@ -34,7 +34,7 @@ class FakeEntityMapper extends EntityMapper
 {
     private $fake_db = array();
 
-    private $entity_being_built = null;
+    private $entity_being_built;
 
     /**
      * Stores the given entity in the fake database, so load call with the same id will fill the entity with it.

@@ -60,7 +60,7 @@ class CsvResponse extends StreamedResponse
     /**
      * @var null|int
      */
-    private $start = null;
+    private $start;
 
     /**
      * @var int Default limit

@@ -9,13 +9,13 @@ class AdminProductsController extends AdminProductsControllerCore
     * date: 2015-07-13 16:05:30
     * version: 1
     */
-    protected $max_file_size = null;
+    protected $max_file_size;
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30
     * version: 1
     */
-    protected $max_image_size = null;
+    protected $max_image_size;
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30

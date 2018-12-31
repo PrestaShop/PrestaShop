@@ -41,15 +41,15 @@ class HelperFormCore extends Helper
     public $name_controller = '';
 
     /** @var string if not null, a title will be added on that list */
-    public $title = null;
+    public $title;
 
     /** @var string Used to override default 'submitAdd' parameter in form action attribute */
     public $submit_action;
 
     public $token;
-    public $languages = null;
-    public $default_form_language = null;
-    public $allow_employee_form_lang = null;
+    public $languages;
+    public $default_form_language;
+    public $allow_employee_form_lang;
     public $show_cancel_button = false;
     public $back_url = '#';
 

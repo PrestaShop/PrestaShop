@@ -40,7 +40,7 @@ class LinkCore
     public $protocol_content;
 
     protected $ssl_enable;
-    protected $urlShopId = null;
+    protected $urlShopId;
 
     protected static $category_disable_rewrite = null;
 

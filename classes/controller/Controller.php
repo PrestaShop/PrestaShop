@@ -121,7 +121,7 @@ abstract class ControllerCore
      *
      * @var string|null
      */
-    protected $redirect_after = null;
+    protected $redirect_after;
 
     /**
      * Controller type. Possible values: 'front', 'modulefront', 'admin', 'moduleadmin'.

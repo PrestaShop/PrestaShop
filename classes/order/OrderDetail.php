@@ -241,19 +241,19 @@ class OrderDetailCore extends ObjectModel
     protected $outOfStock = false;
 
     /** @var TaxCalculator object */
-    protected $tax_calculator = null;
+    protected $tax_calculator;
 
     /** @var Address object */
-    protected $vat_address = null;
+    protected $vat_address;
 
     /** @var Address object */
-    protected $specificPrice = null;
+    protected $specificPrice;
 
     /** @var Customer object */
-    protected $customer = null;
+    protected $customer;
 
     /** @var Context object */
-    protected $context = null;
+    protected $context;
 
     public function __construct($id = null, $id_lang = null, $context = null)
     {

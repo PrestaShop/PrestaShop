@@ -62,7 +62,7 @@ class CustomerCore extends ObjectModel
     public $firstname;
 
     /** @var string Birthday (yyyy-mm-dd) */
-    public $birthday = null;
+    public $birthday;
 
     /** @var string e-mail */
     public $email;

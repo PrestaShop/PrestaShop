@@ -126,10 +126,10 @@ class AdminControllerCore extends Controller
     public $tpl_required_fields_vars = array();
 
     /** @var string|null */
-    public $base_tpl_view = null;
+    public $base_tpl_view;
 
     /** @var string|null */
-    public $base_tpl_form = null;
+    public $base_tpl_form;
 
     /** @var bool If you want more fieldsets in the form */
     public $multiple_fieldsets = false;
@@ -147,7 +147,7 @@ class AdminControllerCore extends Controller
     protected $fields_list;
 
     /** @var array Modules list filters */
-    protected $filter_modules_list = null;
+    protected $filter_modules_list;
 
     /** @var array Modules list filters */
     protected $modules_list = array();
@@ -180,7 +180,7 @@ class AdminControllerCore extends Controller
     protected $toolbar_title;
 
     /** @var array List of toolbar buttons */
-    protected $toolbar_btn = null;
+    protected $toolbar_btn;
 
     /** @var bool Scrolling toolbar */
     protected $toolbar_scroll = true;
@@ -318,7 +318,7 @@ class AdminControllerCore extends Controller
     protected $noLink;
 
     /** @var bool|null */
-    protected $specificConfirmDelete = null;
+    protected $specificConfirmDelete;
 
     /** @var bool */
     protected $colorOnBackground;

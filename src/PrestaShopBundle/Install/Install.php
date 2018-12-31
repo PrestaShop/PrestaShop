@@ -74,14 +74,14 @@ class Install extends AbstractInstall
      *
      * @var string
      */
-    protected $bootstrapFile = null;
+    protected $bootstrapFile;
 
     /**
      * The path of the settings file we want to use for the installation.
      *
      * @var string
      */
-    protected $settingsFile = null;
+    protected $settingsFile;
 
     public function __construct($settingsFile = null, $bootstrapFile = null)
     {

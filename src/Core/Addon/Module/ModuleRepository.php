@@ -95,7 +95,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * @var PrestaTrustChecker
      */
-    private $prestaTrustChecker = null;
+    private $prestaTrustChecker;
 
     //### CACHE PROPERTIES ####
 

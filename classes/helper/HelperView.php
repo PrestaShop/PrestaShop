@@ -31,7 +31,7 @@ class HelperViewCore extends Helper
     public $token;
 
     /** @var string|null If not null, a title will be added on that list */
-    public $title = null;
+    public $title;
 
     public function __construct()
     {

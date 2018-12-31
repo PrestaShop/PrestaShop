@@ -70,7 +70,7 @@ class AdminModuleDataProvider implements ModuleInterface
     /**
      * @var Router|null
      */
-    private $router = null;
+    private $router;
 
     /**
      * @var AddonsInterface

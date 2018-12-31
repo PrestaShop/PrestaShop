@@ -42,7 +42,7 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * @var int
      */
-    protected $selectedModule = null;
+    protected $selectedModule;
 
     /**
      * Display hooks positions.

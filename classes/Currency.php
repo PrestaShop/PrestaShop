@@ -81,13 +81,13 @@ class CurrencyCore extends ObjectModel
      *
      * @var string
      */
-    public $prefix = null;
+    public $prefix;
     /**
      * contains the sign to display after price, according to its format.
      *
      * @var string
      */
-    public $suffix = null;
+    public $suffix;
 
     /**
      * CurrencyCore constructor.

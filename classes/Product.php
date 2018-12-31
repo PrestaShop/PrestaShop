@@ -78,7 +78,7 @@ class ProductCore extends ObjectModel
     public $minimal_quantity = 1;
 
     /** @var int|null Low stock for mail alert */
-    public $low_stock_threshold = null;
+    public $low_stock_threshold;
 
     /** @var bool Low stock mail alert activated */
     public $low_stock_alert = false;
@@ -107,7 +107,7 @@ class ProductCore extends ObjectModel
     public $online_only = false;
 
     /** @var string unity */
-    public $unity = null;
+    public $unity;
 
     /** @var float price for product's unity */
     public $unit_price;
@@ -167,7 +167,7 @@ class ProductCore extends ObjectModel
     public $customizable;
 
     /** @var bool Product is new */
-    public $new = null;
+    public $new;
 
     /** @var int Number of uploadable files (concerning customizable products) */
     public $uploadable_files;

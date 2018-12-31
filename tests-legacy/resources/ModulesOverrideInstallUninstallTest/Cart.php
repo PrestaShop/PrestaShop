@@ -32,7 +32,7 @@ class Cart extends CartCore
     * date: 2015-07-13 15:56:34
     * version: 1
     */
-    protected $_products = null;
+    protected $_products;
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34

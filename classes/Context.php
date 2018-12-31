@@ -85,20 +85,20 @@ class ContextCore
     public $mode;
 
     /** @var Translator */
-    protected $translator = null;
+    protected $translator;
 
     /**
      * Mobile device of the customer.
      *
      * @var bool|null
      */
-    protected $mobile_device = null;
+    protected $mobile_device;
 
     /** @var bool|null */
-    protected $is_mobile = null;
+    protected $is_mobile;
 
     /** @var bool|null */
-    protected $is_tablet = null;
+    protected $is_tablet;
 
     /** @var int */
     const DEVICE_COMPUTER = 1;

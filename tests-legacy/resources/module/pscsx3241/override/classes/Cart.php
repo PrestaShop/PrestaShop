@@ -34,7 +34,7 @@ class Cart extends CartCore
     protected static $_nbProducts = array();
     protected static $_isVirtualCart = array();
 
-    protected $_products = null;
+    protected $_products;
     protected static $_totalWeight = array();
     protected $_taxCalculationMethod = PS_TAX_EXC;
     protected static $_carriers = null;

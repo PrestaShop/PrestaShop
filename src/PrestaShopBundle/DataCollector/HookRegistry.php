@@ -39,7 +39,7 @@ final class HookRegistry
     /**
      * @var array the current selected hook during the request
      */
-    private $currentHook = null;
+    private $currentHook;
 
     /**
      * @var array the list of hooks data
