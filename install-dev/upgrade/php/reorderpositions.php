@@ -41,7 +41,7 @@ function reorderpositions()
 				WHERE `id_category` = '.$id_category.'
 				ORDER BY `position`');
             $sizeof = count($result);
-            for ($i = 0; $i < $sizeof; $i++) {
+            for ($i = 0; $i < $sizeof; ++$i) {
                 $res &= Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'category_product`
 					SET `position` = '.$i.'

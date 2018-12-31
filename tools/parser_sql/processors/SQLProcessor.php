@@ -76,7 +76,7 @@ class SQLProcessor extends SQLChunkProcessor {
                 //to skip the token we replace it with whitespace
                 $trim = "";
                 $token = "";
-                $skip_next--;
+                --$skip_next;
                 if ($skip_next > 0) {
                     continue;
                 }

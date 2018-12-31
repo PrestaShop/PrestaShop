@@ -89,7 +89,7 @@ if (isset($_GET['action'])) {
                     $zip = new ZipArchive();
                     if ($zip->open($path) === true) {
                         //make all the folders
-                        for ($i = 0; $i < $zip->numFiles; $i++) {
+                        for ($i = 0; $i < $zip->numFiles; ++$i) {
                             $OnlyFileName = $zip->getNameIndex($i);
                             $FullFileName = $zip->statIndex($i);
                             if ($FullFileName['name'][strlen($FullFileName['name']) - 1] == '/') {
@@ -97,7 +97,7 @@ if (isset($_GET['action'])) {
                             }
                         }
                         //unzip into the folders
-                        for ($i = 0; $i < $zip->numFiles; $i++) {
+                        for ($i = 0; $i < $zip->numFiles; ++$i) {
                             $OnlyFileName = $zip->getNameIndex($i);
                             $FullFileName = $zip->statIndex($i);
 

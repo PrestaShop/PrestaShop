@@ -79,7 +79,7 @@ function migrate_orders()
     if ($count_orders > 0) {
         $nb_loop = ceil($count_orders / $step);
     }
-    for ($i = 0; $i < $nb_loop; $i++) {
+    for ($i = 0; $i < $nb_loop; ++$i) {
         $order_res = Db::getInstance()->query('SELECT * FROM `'._DB_PREFIX_.'orders` LIMIT '.(int)$start.', '.(int)$step);
         $start = (int) (($i+1) * $step);
         $cpt = 0;
@@ -162,7 +162,7 @@ function migrate_orders()
             $values_order[] = '(\''.implode('\', \'', $order).'\')';
 
             unset($order);
-            $cpt++;
+            ++$cpt;
 
             // limit to $cpt
             if ($cpt >= $flush_limit) {

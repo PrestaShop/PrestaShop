@@ -27,7 +27,7 @@ $cycle = true;
 $max_cycles = 50;
 $i = 0;
 while ($cycle && $i < $max_cycles) {
-    $i++;
+    ++$i;
     if ($path == $current_path) {
         $cycle = false;
     }
@@ -58,7 +58,7 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
             $i = 1;
             $info = pathinfo($_FILES['file']['name']);
             while (file_exists($targetPath.$info['filename'].'_'.$i.'.'.$info['extension'])) {
-                $i++;
+                ++$i;
             }
             $_FILES['file']['name'] = $info['filename'].'_'.$i.'.'.$info['extension'];
         }

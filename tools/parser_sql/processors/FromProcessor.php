@@ -117,7 +117,7 @@ class FromProcessor extends AbstractProcessor {
             $upper = strtoupper(trim($token));
 
             if ($skip_next && $token !== "") {
-                $parseInfo['token_count']++;
+                ++$parseInfo['token_count'];
                 $skip_next = false;
 
                 continue;
@@ -150,7 +150,7 @@ class FromProcessor extends AbstractProcessor {
             switch ($upper) {
             case 'AS':
                 $parseInfo['alias'] = array('as' => true, 'name' => "", 'base_expr' => $token);
-                $parseInfo['token_count']++;
+                ++$parseInfo['token_count'];
                 $n = 1;
                 $str = "";
                 while ($str == "") {
@@ -235,7 +235,7 @@ class FromProcessor extends AbstractProcessor {
                         'base_expr' => trim($token),
                     );
                 }
-                $parseInfo['token_count']++;
+                ++$parseInfo['token_count'];
 
                 break;
             }

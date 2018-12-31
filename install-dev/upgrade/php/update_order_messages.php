@@ -33,7 +33,7 @@ function update_order_messages()
     if ($count_messages > 0) {
         $nb_loop = ceil($count_messages / $step);
     }
-    for ($i = 0; $i < $nb_loop; $i++) {
+    for ($i = 0; $i < $nb_loop; ++$i) {
         $sql = 'SELECT id_message, message FROM `'._DB_PREFIX_.'message` WHERE message REGEXP \''.pSQL($pattern, true).'\' LIMIT '.(int)$start.', '.(int)$step;
         $start = (int) (($i+1) * $step);
         if ($messages = Db::getInstance()->query($sql)) {
@@ -51,7 +51,7 @@ function update_order_messages()
     if ($count_messages > 0) {
         $nb_loop = ceil($count_messages / $step);
     }
-    for ($i = 0; $i < $nb_loop; $i++) {
+    for ($i = 0; $i < $nb_loop; ++$i) {
         $sql = 'SELECT id_customer_message, message FROM `'._DB_PREFIX_.'customer_message` WHERE message REGEXP \''.pSQL($pattern, true).'\' LIMIT '.(int)$start.', '.(int)$step;
         $start = (int) (($i+1) * $step);
         if ($messages = Db::getInstance()->query($sql)) {

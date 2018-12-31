@@ -128,7 +128,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $context = $this->context->cloneContext();
             $context->shop = clone $context->shop;
             /* update product final price */
-            for ($i = 0; $i < $nb; $i++) {
+            for ($i = 0; $i < $nb; ++$i) {
                 if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP) {
                     $context->shop = new Shop((int)$this->_list[$i]['id_shop_default']);
                 }
@@ -146,7 +146,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 uasort($this->_list, 'cmpPriceAsc');
             }
         }
-        for ($i = 0; $this->_list && $i < $nb; $i++) {
+        for ($i = 0; $this->_list && $i < $nb; ++$i) {
             $this->_list[$i]['price_final'] = $this->_list[$i]['price_tmp'];
             unset($this->_list[$i]['price_tmp']);
         }
@@ -915,9 +915,9 @@ class AdminProductsController extends AdminProductsControllerCore
         if (is_array($current_customization)) {
             foreach ($current_customization as $field) {
                 if ($field['type'] == 1) {
-                    $text_count++;
+                    ++$text_count;
                 } else {
-                    $files_count++;
+                    ++$files_count;
                 }
             }
         }
@@ -2314,7 +2314,7 @@ class AdminProductsController extends AdminProductsControllerCore
 				'.$id_category.'
 			</td>
 			<td>';
-        for ($i = 2; $i < $level; $i++) {
+        for ($i = 2; $i < $level; ++$i) {
             $content .= '<img src="../img/admin/lvl_'.$has_suite[$i - 2].'.gif" alt="" />';
         }
         $content .= '<img src="../img/admin/'.($level == 1 ? 'lv1.gif' : 'lv2_'.($todo == $doneC ? 'f' : 'b').'.gif').'" alt="" /> &nbsp;
@@ -3064,7 +3064,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
             if (!empty($ids)) {
                 $length = count($ids);
-                for ($i = 0; $i < $length; $i++) {
+                for ($i = 0; $i < $length; ++$i) {
                     if (!empty($ids[$i]) && !empty($names[$i])) {
                         list($pack_items[$i]['pack_quantity'], $pack_items[$i]['id']) = explode('x', $ids[$i]);
                         $exploded_name = explode('x', $names[$i]);
@@ -3085,7 +3085,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 // @todo: don't rely on 'home_default'
                 //$path_to_image = _PS_IMG_DIR_.'p/'.Image::getImgFolderStatic($cover['id_image']).(int)$cover['id_image'].'.jpg';
                 //$pack_items[$i]['image'] = ImageManager::thumbnail($path_to_image, 'pack_mini_'.$pack_item->id.'_'.$this->context->shop->id.'.jpg', 120);
-                $i++;
+                ++$i;
             }
         }
 
@@ -3308,7 +3308,7 @@ class AdminProductsController extends AdminProductsControllerCore
 						<td>'.$specific_price['from_quantity'].'</th>
 						<td>'.((!$rule->id && $can_delete_specific_prices) ? '<a class="btn btn-default" name="delete_link" href="'.self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&action=deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><i class="icon-trash"></i></a>': '').'</td>
 					</tr>';
-                    $i++;
+                    ++$i;
                     unset($customer_full_name);
                 }
             }
@@ -3428,11 +3428,11 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
         $j = 0;
-        for ($i = $alreadyGenerated[Product::CUSTOMIZE_FILE]; $i < (int)($this->getFieldValue($obj, 'uploadable_files')); $i++) {
+        for ($i = $alreadyGenerated[Product::CUSTOMIZE_FILE]; $i < (int)($this->getFieldValue($obj, 'uploadable_files')); ++$i) {
             $customizableFieldIds[] = 'newLabel_'.Product::CUSTOMIZE_FILE.'_'.$j++;
         }
         $j = 0;
-        for ($i = $alreadyGenerated[Product::CUSTOMIZE_TEXTFIELD]; $i < (int)($this->getFieldValue($obj, 'text_fields')); $i++) {
+        for ($i = $alreadyGenerated[Product::CUSTOMIZE_TEXTFIELD]; $i < (int)($this->getFieldValue($obj, 'text_fields')); ++$i) {
             $customizableFieldIds[] = 'newLabel_'.Product::CUSTOMIZE_TEXTFIELD.'_'.$j++;
         }
 

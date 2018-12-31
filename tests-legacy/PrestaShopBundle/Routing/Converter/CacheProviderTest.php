@@ -137,7 +137,7 @@ class CacheProviderTest extends TestCase
 
         $this->assertFalse($cache->hasItem(self::CACHE_KEY));
         //Just perform the test twice to be sure the result and the cache are correct
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 2; ++$i) {
             $legacyRoutes = $cacheProvider->getLegacyRoutes();
             $this->assertCount(2, $legacyRoutes);
             $this->assertNotEmpty($legacyRoutes['admin_products']);
@@ -169,7 +169,7 @@ class CacheProviderTest extends TestCase
 
         $this->assertFalse($cache->hasItem(self::CACHE_KEY));
         //Just perform the test twice to be sure the result and the cache are correct
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 2; ++$i) {
             $controllerActions = $cacheProvider->getControllersActions();
             $this->assertCount(1, $controllerActions);
             $this->assertNotEmpty($controllerActions['AdminProducts']);

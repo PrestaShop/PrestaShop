@@ -98,7 +98,7 @@ function makeSize($size)
     $u = 0;
     while ((round($size / 1024) > 0) && ($u < 4)) {
         $size = $size / 1024;
-        $u++;
+        ++$u;
     }
 
     return number_format($size, 0) . " " . $units[$u];
@@ -227,7 +227,7 @@ function fix_path($path, $transliteration)
 {
     $info=pathinfo($path);
     if (($s = strrpos($path, '/')) !== false) {
-        $s++;
+        ++$s;
     }
     if (($e = strrpos($path, '.') - $s) !== strlen($info['filename'])) {
         $info['filename'] = substr($path, $s, $e);

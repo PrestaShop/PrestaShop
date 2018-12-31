@@ -73,7 +73,7 @@ if (isset($_POST['submit'])) {
     $max_cycles = 50;
     $i = 0;
     while ($cycle && $i < $max_cycles) {
-        $i++;
+        ++$i;
         if ($parent == './') {
             $parent = '';
         }
@@ -940,7 +940,7 @@ if (isset($_POST['submit'])) {
                 $i = 1;
                 $info = pathinfo($file1);
                 while (file_exists($current_path.$subfolder.$subdir.$info['filename'].".[".$i."].".$info['extension'])) {
-                    $i++;
+                    ++$i;
                 }
                 $file1 = $info['filename'].".[".$i."].".$info['extension'];
                 $file_path1 = ($current_path.$subfolder.$subdir.$file1);

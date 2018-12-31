@@ -93,7 +93,7 @@ abstract class AbstractProcessor {
 
         $trim = trim($token);
         if ($trim !== "" && $trim[0] === "(") { // remove only one parenthesis pair now!
-            $parenthesisRemoved++;
+            ++$parenthesisRemoved;
             $trim[0] = " ";
             $trim = trim($trim);
         }
@@ -109,21 +109,21 @@ abstract class AbstractProcessor {
             }
 
             if ($trim[$i] === "'" || $trim[$i] === '"') {
-                $string++;
+                ++$string;
             }
 
             if (($string % 2 === 0) && ($trim[$i] === "(")) {
-                $parenthesis++;
+                ++$parenthesis;
             }
 
             if (($string % 2 === 0) && ($trim[$i] === ")")) {
                 if ($parenthesis == $parenthesisRemoved) {
                     $trim[$i] = " ";
-                    $parenthesisRemoved--;
+                    --$parenthesisRemoved;
                 }
-                $parenthesis--;
+                --$parenthesis;
             }
-            $i++;
+            ++$i;
         }
 
         return trim($trim);

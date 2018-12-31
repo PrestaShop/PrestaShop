@@ -132,7 +132,7 @@ class CacheCoreTest extends TestCase
         $queries = $this->selectDataProvider();
         $i = 0;
         foreach ($queries as $query) {
-            $i++;
+            ++$i;
             Cache::getInstance()->setQuery($query, array('queryResult '.$i));
         }
 
@@ -173,7 +173,7 @@ class CacheCoreTest extends TestCase
             if ($i == 3) {
                 break;
             }
-            $i++;
+            ++$i;
         }
 
         // increment the counter for query 1 and 3
@@ -287,7 +287,7 @@ class CacheCoreTest extends TestCase
     {
         $selectArray = array();
 
-        for ($i = 0; $i <= 9; $i++) {
+        for ($i = 0; $i <= 9; ++$i) {
             $selectArray[] = 'SELECT name FROM ps_configuration LEFT JOIN ps_confiture WHERE id = '.$i;
         }
 

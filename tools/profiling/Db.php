@@ -79,7 +79,7 @@ abstract class Db extends DbCore
             if (!isset($this->uniqQueries[$uniqSql])) {
                 $this->uniqQueries[$uniqSql] = 0;
             }
-            $this->uniqQueries[$uniqSql]++;
+            ++$this->uniqQueries[$uniqSql];
 
             // No cache for query
             if ($this->disableCache && !stripos($sql, 'SQL_NO_CACHE')) {
@@ -92,7 +92,7 @@ abstract class Db extends DbCore
                 if (!isset($this->tables[$table])) {
                     $this->tables[$table] = 0;
                 }
-                $this->tables[$table]++;
+                ++$this->tables[$table];
             }
 
             $start = microtime(true);

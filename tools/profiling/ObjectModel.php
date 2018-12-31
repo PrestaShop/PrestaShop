@@ -44,7 +44,7 @@ abstract class ObjectModel extends ObjectModelCore
                 break;
             }
         }
-        $trace_id--;
+        --$trace_id;
 
         self::$debug_list[$classname][] = array(
             'file' => @$backtrace[$trace_id]['file'],

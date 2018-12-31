@@ -127,7 +127,7 @@ class StepList implements IteratorAggregate
     public function next()
     {
         if (array_key_exists($this->offset+1, $this->steps)) {
-            $this->offset++;
+            ++$this->offset;
         }
 
         return $this;
@@ -140,7 +140,7 @@ class StepList implements IteratorAggregate
     public function previous()
     {
         if (array_key_exists($this->offset-1, $this->steps)) {
-            $this->offset--;
+            --$this->offset;
         }
 
         return $this;

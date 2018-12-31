@@ -43,7 +43,7 @@
 			<li class="required <?php if ($i == 0): ?>first<?php endif;?> <?php echo isset($this->tests[$type]['checks'][$id]) ? $this->tests[$type]['checks'][$id] : 'fail' ?>">
 				<?php echo $lang ?>
 			</li>
-		<?php $i++; endforeach; ?>
+		<?php ++$i; endforeach; ?>
 	<?php endforeach; ?>
 	</ul>
 <?php endforeach; ?>

@@ -90,7 +90,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
             $base_expr .= $token;
 
             if ($skip !== 0) {
-                $skip--;
+                --$skip;
 
                 continue;
             }

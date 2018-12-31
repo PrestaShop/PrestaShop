@@ -161,7 +161,7 @@ class ExpressionToken {
 
     private function revokeQuotation($token, $qchars = '`') {
         $result = trim($token);
-        for ($i = 0; $i < strlen($qchars); $i++) {
+        for ($i = 0; $i < strlen($qchars); ++$i) {
             $quote = $qchars[$i];
             if (($result[0] === $quote) && ($result[strlen($result) - 1] === $quote)) {
                 $result = substr($result, 1, -1);

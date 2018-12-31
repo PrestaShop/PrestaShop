@@ -95,7 +95,7 @@ class PHPSQLLexer {
 
         while ($pos < $len) {
 
-            for ($i = $splitLen; $i > 0; $i--) {
+            for ($i = $splitLen; $i > 0; --$i) {
                 $substr = substr($sql, $pos, $i);
                 if ($this->splitters->isSplitter($substr)) {
 
@@ -112,7 +112,7 @@ class PHPSQLLexer {
             }
 
             $token .= $sql[$pos];
-            $pos++;
+            ++$pos;
         }
 
         if ($token !== "") {
@@ -137,7 +137,7 @@ class PHPSQLLexer {
         while ($i < $cnt) {
 
             if (!isset($tokens[$i])) {
-                $i++;
+                ++$i;
 
                 continue;
             }
@@ -156,7 +156,7 @@ class PHPSQLLexer {
                 $userdef = $i;
             }
 
-            $i++;
+            ++$i;
         }
 
         return array_values($tokens);
@@ -171,7 +171,7 @@ class PHPSQLLexer {
         while ($i < $cnt) {
 
             if (!isset($tokens[$i])) {
-                $i++;
+                ++$i;
 
                 continue;
             }
@@ -200,7 +200,7 @@ class PHPSQLLexer {
                 $inline = false;
             }
 
-            $i++;
+            ++$i;
         }
 
         return array_values($tokens);
@@ -216,7 +216,7 @@ class PHPSQLLexer {
         while ($i < $cnt) {
 
             if (!isset($tokens[$i])) {
-                $i++;
+                ++$i;
 
                 continue;
             }
@@ -227,7 +227,7 @@ class PHPSQLLexer {
                 $tokens = $this->balanceCharacter($tokens, $i, $token);
             }
 
-            $i++;
+            ++$i;
         }
 
         return $tokens;
@@ -242,7 +242,7 @@ class PHPSQLLexer {
         while ($i < $token_count) {
 
             if (!isset($tokens[$i])) {
-                $i++;
+                ++$i;
 
                 continue;
             }
@@ -255,7 +255,7 @@ class PHPSQLLexer {
                 break;
             }
 
-            $i++;
+            ++$i;
         }
 
         return array_values($tokens);
@@ -276,7 +276,7 @@ class PHPSQLLexer {
         while ($i < $cnt) {
 
             if (!isset($tokens[$i])) {
-                $i++;
+                ++$i;
 
                 continue;
             }
@@ -288,13 +288,13 @@ class PHPSQLLexer {
                 $len = strlen($tokens[$i]);
                 while (($k >= 0) && ($len == strlen($tokens[$i]))) {
                     if (!isset($tokens[$k])) { // FIXME: this can be wrong if we have schema . table . column
-                        $k--;
+                        --$k;
 
                         continue;
                     }
                     $tokens[$i] = $tokens[$k] . $tokens[$i];
                     unset($tokens[$k]);
-                    $k--;
+                    --$k;
                 }
             }
 
@@ -305,17 +305,17 @@ class PHPSQLLexer {
                 $len = strlen($tokens[$i]);
                 while (($k < $cnt) && ($len == strlen($tokens[$i]))) {
                     if (!isset($tokens[$k])) {
-                        $k++;
+                        ++$k;
 
                         continue;
                     }
                     $tokens[$i] .= $tokens[$k];
                     unset($tokens[$k]);
-                    $k++;
+                    ++$k;
                 }
             }
 
-            $i++;
+            ++$i;
         }
 
         return array_values($tokens);
@@ -327,13 +327,13 @@ class PHPSQLLexer {
         while ($i < $tokenCount) {
 
             if ($this->endsWith($tokens[$i], "\\")) {
-                $i++;
+                ++$i;
                 if (isset($tokens[$i])) {
                     $tokens[$i - 1] .= $tokens[$i];
                     unset($tokens[$i]);
                 }
             }
-            $i++;
+            ++$i;
         }
 
         return array_values($tokens);
@@ -344,23 +344,23 @@ class PHPSQLLexer {
         $i = 0;
         while ($i < $token_count) {
             if ($tokens[$i] !== '(') {
-                $i++;
+                ++$i;
 
                 continue;
             }
             $count = 1;
-            for ($n = $i + 1; $n < $token_count; $n++) {
+            for ($n = $i + 1; $n < $token_count; ++$n) {
                 $token = $tokens[$n];
                 if ($token === '(') {
-                    $count++;
+                    ++$count;
                 }
                 if ($token === ')') {
-                    $count--;
+                    --$count;
                 }
                 $tokens[$i] .= $token;
                 unset($tokens[$n]);
                 if ($count === 0) {
-                    $n++;
+                    ++$n;
 
                     break;
                 }

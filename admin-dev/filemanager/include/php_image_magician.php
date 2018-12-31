@@ -948,7 +948,7 @@ class imageLib
 
           $rgbArray = imagecolorallocate($this->imageResized, $r, $g, $b);
 
-          for ($i = 0; $i < $thickness; $i++) {
+          for ($i = 0; $i < $thickness; ++$i) {
               imagerectangle($this->imageResized, $x1++, $y1++, $x2--, $y2--, $rgbArray);
           }
       }
@@ -1068,7 +1068,7 @@ class imageLib
   {
       if ($this->imageResized) {
           $total = imagecolorstotal($this->imageResized);
-          for ($i = 0; $i < $total; $i++) {
+          for ($i = 0; $i < $total; ++$i) {
               $index = imagecolorsforindex($this->imageResized, $i);
               $red = ($index["red"] * 0.393 + $index["green"] * 0.769 + $index["blue"] * 0.189) / 1.351;
               $green = ($index["red"] * 0.349 + $index["green"] * 0.686 + $index["blue"] * 0.168) / 1.203;
@@ -1164,7 +1164,7 @@ class imageLib
       imagetruecolortopalette($this->imageResized, true, 256);
       $numColors = imagecolorstotal($this->imageResized);
 
-      for ($x = 0; $x < $numColors; $x++) {
+      for ($x = 0; $x < $numColors; ++$x) {
           list($r, $g, $b) = array_values(imagecolorsforindex($this->imageResized, $x));
 
     // calculate grayscale in percent
@@ -1211,7 +1211,7 @@ class imageLib
 
       $bg = imagecreatetruecolor($this->width, $reflectionHeight);
 
-      for ($x = 0; $x < $this->width; $x++) {
+      for ($x = 0; $x < $this->width; ++$x) {
           imagecopy($bg, $im, $x, 0, $this->width-$x -1, 0, 1, $reflectionHeight);
       }
       $im = $bg;
@@ -1224,7 +1224,7 @@ class imageLib
     } else {
         $step = 100/$reflectionHeight;
     }
-      for ($i=0; $i<=$reflectionHeight; $i++) {
+      for ($i=0; $i<=$reflectionHeight; ++$i) {
           if ($startingTransparency>100) {
               $startingTransparency = 100;
           }
@@ -1482,7 +1482,7 @@ class imageLib
       $colour = imagecolorallocate($shadow, 0, 0, 0);
       imagefilledrectangle($shadow, 0, 0, $width+$blurWidth, $height+$blurHeight, $colour);
 
-      for ($i=0;$i<=STEPS;$i++) {
+      for ($i=0;$i<=STEPS;++$i) {
           $t = ((1.0*$i)/STEPS);
           $intensity = 255*$t*$t;
 
@@ -1500,7 +1500,7 @@ class imageLib
           imagepolygon($shadow, $points, 8, $colour);
       }
 
-      for ($i=0;$i<=STEPS;$i++) {
+      for ($i=0;$i<=STEPS;++$i) {
           $t = ((1.0*$i)/STEPS);
           $intensity = 255*$t*$t;
 
@@ -1518,8 +1518,8 @@ class imageLib
     // *** The magic
         imagealphablending($rgb, false);
 
-      for ($theX=0;$theX<imagesx($rgb);$theX++) {
-          for ($theY=0;$theY<imagesy($rgb);$theY++) {
+      for ($theX=0;$theX<imagesx($rgb);++$theX) {
+          for ($theY=0;$theY<imagesy($rgb);++$theY) {
 
         // *** Get the RGB values for every pixel of the RGB image
         $colArray = imagecolorat($rgb, $theX, $theY);
@@ -2413,8 +2413,8 @@ class imageLib
 
     //find the most opaque pixel in the image (the one with the smallest alpha value)
     $minalpha = 127;
-      for ($x = 0; $x < $w; $x++) {
-          for ($y = 0; $y < $h; $y++) {
+      for ($x = 0; $x < $w; ++$x) {
+          for ($y = 0; $y < $h; ++$y) {
               $alpha = (imagecolorat($img, $x, $y) >> 24) & 0xFF;
               if ($alpha < $minalpha) {
                   $minalpha = $alpha;
@@ -2423,8 +2423,8 @@ class imageLib
       }
 
     //loop through image pixels and modify alpha for each
-    for ($x = 0; $x < $w; $x++) {
-        for ($y = 0; $y < $h; $y++) {
+    for ($x = 0; $x < $w; ++$x) {
+        for ($y = 0; $y < $h; ++$y) {
             //get current alpha value (represents the TANSPARENCY!)
         $colorxy = imagecolorat($img, $x, $y);
             $alpha = ($colorxy >> 24) & 0xFF;
@@ -2988,7 +2988,7 @@ class imageLib
           $greenChroma = array(0, $green, 0);
           $colorArray = $this->formatColor($greenChroma);
           $match = $this->testColorExists($colorArray);
-          $green--;
+          --$green;
       } while ($match == false && $green > 0);
 
     // *** If no match, just bite the bullet and use green value of 255
@@ -3011,7 +3011,7 @@ class imageLib
           $blueChroma = array(0, 0, $blue);
           $colorArray = $this->formatColor($blueChroma);
           $match = $this->testColorExists($colorArray);
-          $blue--;
+          --$blue;
       } while ($match == false && $blue > 0);
 
     // *** If no match, just bite the bullet and use blue value of 255
@@ -3061,7 +3061,7 @@ class imageLib
               $r = ($color >> 16) & 0xFF;
               $g = ($color >> 8) & 0xFF;
               $b = $color & 0xFF;
-              for ($i = 0; $i < 270; $i++) {
+              for ($i = 0; $i < 270; ++$i) {
                   //if ($r . $g . $b == ($r1 + $i) . ($g1 + $i) . ($b1 + $i)) {
           if ($r == 0 && $g == 255 && $b == 0) {
               //if ($g == 255) {
@@ -3102,9 +3102,9 @@ class imageLib
       $imageY = imagesy($gd_image);
 
       $BMP = '';
-      for ($y = ($imageY - 1); $y >= 0; $y--) {
+      for ($y = ($imageY - 1); $y >= 0; --$y) {
           $thisline = '';
-          for ($x = 0; $x < $imageX; $x++) {
+          for ($x = 0; $x < $imageX; ++$x) {
               $argb = $this->GetPixelColor($gd_image, $x, $y);
               $thisline .= chr($argb['blue']).chr($argb['green']).chr($argb['red']);
           }
@@ -3303,11 +3303,11 @@ class imageLib
               }
 
               imagesetpixel($res, $X, $Y, $COLOR[1]);
-              $X++;
+              ++$X;
               $P += $BMP['bytes_per_pixel'];
           }
 
-          $Y--;
+          --$Y;
           $P+=$BMP['decal'];
       }
     //Fermeture du fichier
