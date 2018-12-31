@@ -206,8 +206,7 @@ class CurrencyController extends FrameworkBundleAdminController
     public function deleteAction($currencyId)
     {
         try {
-            $currencyId = new CurrencyId((int) $currencyId);
-            $this->getCommandBus()->handle(new DeleteCurrencyCommand($currencyId));
+            $this->getCommandBus()->handle(new DeleteCurrencyCommand((int) $currencyId));
         } catch (CurrencyException $exception) {
             $this->addFlash('error', $this->handleException($exception));
 
