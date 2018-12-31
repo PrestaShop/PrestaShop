@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
- $this->displayTemplate('header') ?>
+ $this->displayTemplate('header'); ?>
 
 <!-- License agreement -->
 <h2 id="licenses-agreement"><?php echo $this->translator->trans('License Agreements', array(), 'Install'); ?></h2>
@@ -42,4 +42,4 @@
 	-->
 </div>
 
-<?php $this->displayTemplate('footer') ?>
+<?php $this->displayTemplate('footer'); ?>
