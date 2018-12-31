@@ -88,6 +88,7 @@ class ToolsCoreTest extends TestCase
             array("\0", ''),
             array("haxx\0r", 'haxxr'),
             array("haxx\0\0\0r", 'haxxr'),
+            array('1234\5678', '1234\5678'),
         );
     }
 

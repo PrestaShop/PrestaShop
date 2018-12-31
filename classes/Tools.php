@@ -521,7 +521,7 @@ class ToolsCore
      */
     public static function getValue($key, $default_value = false)
     {
-        if (!isset($key) || empty($key) || !is_string($key)) {
+        if (empty($key) || !is_string($key)) {
             return false;
         }
 
@@ -532,7 +532,7 @@ class ToolsCore
         }
 
         if (is_string($value)) {
-            return stripslashes(urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($value))));
+            return urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($value)));
         }
 
         return $value;
