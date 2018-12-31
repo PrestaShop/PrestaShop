@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\UpdateLiveExchangeRatesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ScheduleExchangeRatesUpdateCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRefreshExchangeRatesException;
@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DisabledLiveExchangeRatesException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ScheduleExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -334,7 +335,7 @@ class CurrencyController extends FrameworkBundleAdminController
         if ($settingsForm->isSubmitted()) {
             $formData = $settingsForm->getData();
             try {
-                $command = new UpdateLiveExchangeRatesCommand($formData['exchange_rates']['live_exchange_rate']);
+                $command = new ScheduleExchangeRatesUpdateCommand($formData['exchange_rates']['live_exchange_rate']);
                 $this->getCommandBus()->handle($command);
 
                 $response = [
@@ -421,13 +422,6 @@ class CurrencyController extends FrameworkBundleAdminController
                 'You cannot disable the default currency',
                 'Admin.International.Notification'
             ),
-            DisabledLiveExchangeRatesException::class => $this->trans(
-                'Please install the %module_name% module before using this feature.',
-                'Admin.International.Notification',
-                [
-                    '%module_name%' => 'cronjobs',
-                ]
-            ),
         ];
 
         $exceptionType = get_class($exception);
@@ -490,6 +484,15 @@ class CurrencyController extends FrameworkBundleAdminController
                         'This currency already exists.',
                         'Admin.International.Notification'
                     ),
+            ],
+            ScheduleExchangeRatesUpdateException::class => [
+                ScheduleExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
+                    'Please install the %module_name% module before using this feature.',
+                    'Admin.International.Notification',
+                    [
+                        '%module_name%' => 'cronjobs',
+                    ]
+                ),
             ],
         ];
 
