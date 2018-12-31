@@ -33,5 +33,5 @@
 module.exports = (env, argvs) => {
   return  (argvs.mode === 'production')
           ? require('./.webpack/prod.js')(argvs.analyze)
-          : require('./.webpack/dev.js')(argvs.hostname);
+          : require('./.webpack/dev.js')();
 };
