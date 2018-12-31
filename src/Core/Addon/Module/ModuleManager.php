@@ -705,7 +705,7 @@ class ModuleManager implements AddonManagerInterface
      *
      * @param string $name The technical module name
      *
-     * @return int The Module Id, or 0 if not found.
+     * @return int the Module Id, or 0 if not found
      */
     public function getModuleIdByName($name)
     {
