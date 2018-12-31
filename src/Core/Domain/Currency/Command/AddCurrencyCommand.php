@@ -65,7 +65,7 @@ class AddCurrencyCommand
     public function __construct($isoCode, $exchangeRate, $isEnabled)
     {
         $this->isoCode = new IsoCode($isoCode);
-        $this->exchangeRate = new ExchangeRate((float) $exchangeRate);
+        $this->exchangeRate = new ExchangeRate($exchangeRate);
         $this->isEnabled = $isEnabled;
     }
 
