@@ -30,16 +30,16 @@ use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\CurrencyForFormEditing;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForFormEditing;
-use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetCurrencyForFormEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetCurrencyForEditingHandlerInterface;
 use PrestaShopDatabaseException;
 
 /**
- * Class GetCurrencyForFormEditingHandler is responsible for retrieving required data used in currency form.
+ * Class GetCurrencyForEditingHandler is responsible for retrieving required data used in currency form.
  *
  * @internal
  */
-final class GetCurrencyForFormEditingHandler implements GetCurrencyForFormEditingHandlerInterface
+final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandlerInterface
 {
     /**
      * @var int
@@ -57,7 +57,7 @@ final class GetCurrencyForFormEditingHandler implements GetCurrencyForFormEditin
     /**
      * {@inheritdoc}
      */
-    public function handle(GetCurrencyForFormEditing $query)
+    public function handle(GetCurrencyForEditing $query)
     {
         $entity = new Currency(
             $query->getCurrencyId()->getValue(),
