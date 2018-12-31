@@ -143,7 +143,7 @@ function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
   </body>
 </html>';
 
-    file_put_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'diff-hooks.html', $html);
+    file_put_contents(__DIR__.DIRECTORY_SEPARATOR.'diff-hooks.html', $html);
 }
 
 function getFormattedHookList($hookList, $folder)

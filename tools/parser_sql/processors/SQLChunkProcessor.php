@@ -30,34 +30,34 @@
  * DAMAGE.
  */
 
-require_once dirname(__FILE__) . '/AbstractProcessor.php';
-require_once dirname(__FILE__) . '/FromProcessor.php';
-require_once dirname(__FILE__) . '/RecordProcessor.php';
-require_once dirname(__FILE__) . '/UpdateProcessor.php';
-require_once dirname(__FILE__) . '/DeleteProcessor.php';
-require_once dirname(__FILE__) . '/GroupByProcessor.php';
-require_once dirname(__FILE__) . '/RenameProcessor.php';
-require_once dirname(__FILE__) . '/UsingProcessor.php';
-require_once dirname(__FILE__) . '/DescribeProcessor.php';
-require_once dirname(__FILE__) . '/DescProcessor.php';
-require_once dirname(__FILE__) . '/HavingProcessor.php';
-require_once dirname(__FILE__) . '/ReplaceProcessor.php';
-require_once dirname(__FILE__) . '/ValuesProcessor.php';
-require_once dirname(__FILE__) . '/DropProcessor.php';
-require_once dirname(__FILE__) . '/InsertProcessor.php';
-require_once dirname(__FILE__) . '/SelectExpressionProcessor.php';
-require_once dirname(__FILE__) . '/WhereProcessor.php';
-require_once dirname(__FILE__) . '/DuplicateProcessor.php';
-require_once dirname(__FILE__) . '/IntoProcessor.php';
-require_once dirname(__FILE__) . '/SelectProcessor.php';
-require_once dirname(__FILE__) . '/ExplainProcessor.php';
-require_once dirname(__FILE__) . '/LimitProcessor.php';
-require_once dirname(__FILE__) . '/SetProcessor.php';
-require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
-require_once dirname(__FILE__) . '/OrderByProcessor.php';
-require_once dirname(__FILE__) . '/ShowProcessor.php';
-require_once dirname(__FILE__) . '/CreateProcessor.php';
-require_once dirname(__FILE__) . '/TableProcessor.php';
+require_once __DIR__ . '/AbstractProcessor.php';
+require_once __DIR__ . '/FromProcessor.php';
+require_once __DIR__ . '/RecordProcessor.php';
+require_once __DIR__ . '/UpdateProcessor.php';
+require_once __DIR__ . '/DeleteProcessor.php';
+require_once __DIR__ . '/GroupByProcessor.php';
+require_once __DIR__ . '/RenameProcessor.php';
+require_once __DIR__ . '/UsingProcessor.php';
+require_once __DIR__ . '/DescribeProcessor.php';
+require_once __DIR__ . '/DescProcessor.php';
+require_once __DIR__ . '/HavingProcessor.php';
+require_once __DIR__ . '/ReplaceProcessor.php';
+require_once __DIR__ . '/ValuesProcessor.php';
+require_once __DIR__ . '/DropProcessor.php';
+require_once __DIR__ . '/InsertProcessor.php';
+require_once __DIR__ . '/SelectExpressionProcessor.php';
+require_once __DIR__ . '/WhereProcessor.php';
+require_once __DIR__ . '/DuplicateProcessor.php';
+require_once __DIR__ . '/IntoProcessor.php';
+require_once __DIR__ . '/SelectProcessor.php';
+require_once __DIR__ . '/ExplainProcessor.php';
+require_once __DIR__ . '/LimitProcessor.php';
+require_once __DIR__ . '/SetProcessor.php';
+require_once __DIR__ . '/ExpressionListProcessor.php';
+require_once __DIR__ . '/OrderByProcessor.php';
+require_once __DIR__ . '/ShowProcessor.php';
+require_once __DIR__ . '/CreateProcessor.php';
+require_once __DIR__ . '/TableProcessor.php';
 
 /**
  * 

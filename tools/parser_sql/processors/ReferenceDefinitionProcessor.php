@@ -30,9 +30,9 @@
  * DAMAGE.
  */
 
-require_once dirname(__FILE__) . '/AbstractProcessor.php';
-require_once dirname(__FILE__) . '/IndexColumnListProcessor.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/AbstractProcessor.php';
+require_once __DIR__ . '/IndexColumnListProcessor.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
 
 /**
  *

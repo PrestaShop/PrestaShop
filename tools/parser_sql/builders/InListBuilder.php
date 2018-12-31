@@ -39,8 +39,8 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/SubTreeBuilder.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/SubTreeBuilder.php';
 
 /**
  * This class implements the builder list of values for the IN statement. 

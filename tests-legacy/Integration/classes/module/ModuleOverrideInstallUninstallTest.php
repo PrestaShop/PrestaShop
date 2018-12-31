@@ -104,7 +104,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
          * resulted in the expected merged files.
          */
 
-        $ressource_path = realpath(dirname(__FILE__).'/../../../resources/ModulesOverrideInstallUninstallTest/');
+        $ressource_path = realpath(__DIR__.'/../../../resources/ModulesOverrideInstallUninstallTest/');
         $override_path_cart = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('Cart');
         $override_path_admin_product_controller = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('AdminProductsController');
 

@@ -253,8 +253,8 @@ class imageLib
 
   private function initialise()
   {
-      $this->psdReaderPath = dirname(__FILE__) . '/classPhpPsdReader.php';
-      $this->filterOverlayPath = dirname(__FILE__) . '/filters';
+      $this->psdReaderPath = __DIR__ . '/classPhpPsdReader.php';
+      $this->filterOverlayPath = __DIR__ . '/filters';
 
     // *** Set if image should be interlaced or not.
     $this->isInterlace = false;
@@ -2180,7 +2180,7 @@ class imageLib
   private function getTextFont($font)
   {
       // *** Font path (shou
-    $fontPath =  dirname(__FILE__) . '/' . $this->fontDir;
+    $fontPath =  __DIR__ . '/' . $this->fontDir;
 
     // *** The below is/may be needed depending on your version (see ref)
     putenv('GDFONTPATH=' . realpath('.'));

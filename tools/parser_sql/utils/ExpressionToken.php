@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once dirname(__FILE__) . '/ExpressionType.php';
+require_once __DIR__ . '/ExpressionType.php';
 
 class ExpressionToken {
     private $subTree;

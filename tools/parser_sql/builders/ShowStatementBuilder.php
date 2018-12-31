@@ -39,8 +39,8 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/ShowBuilder.php';
-require_once dirname(__FILE__) . '/WhereBuilder.php';
+require_once __DIR__ . '/ShowBuilder.php';
+require_once __DIR__ . '/WhereBuilder.php';
 
 /**
  * This class implements the builder for the SHOW statement. 

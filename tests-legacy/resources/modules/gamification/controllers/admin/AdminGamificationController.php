@@ -1,6 +1,6 @@
 <?php
 
-include_once dirname(__FILE__).'/../../classes/Condition.php';
+include_once __DIR__.'/../../classes/Condition.php';
 
 class AdminGamificationController extends ModuleAdminController
 {

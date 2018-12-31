@@ -39,14 +39,14 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ReservedBuilder.php';
-require_once dirname(__FILE__) . '/ConstantBuilder.php';
-require_once dirname(__FILE__) . '/EngineBuilder.php';
-require_once dirname(__FILE__) . '/FunctionBuilder.php';
-require_once dirname(__FILE__) . '/ProcedureBuilder.php';
-require_once dirname(__FILE__) . '/DatabaseBuilder.php';
-require_once dirname(__FILE__) . '/TableBuilder.php';
+require_once __DIR__ . '/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__ . '/ReservedBuilder.php';
+require_once __DIR__ . '/ConstantBuilder.php';
+require_once __DIR__ . '/EngineBuilder.php';
+require_once __DIR__ . '/FunctionBuilder.php';
+require_once __DIR__ . '/ProcedureBuilder.php';
+require_once __DIR__ . '/DatabaseBuilder.php';
+require_once __DIR__ . '/TableBuilder.php';
 
 /**
  * This class implements the builder for the SHOW statement. 

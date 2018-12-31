@@ -39,13 +39,13 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/exceptions/UnsupportedFeatureException.php';
-require_once dirname(__FILE__) . '/builders/SelectStatementBuilder.php';
-require_once dirname(__FILE__) . '/builders/DeleteStatementBuilder.php';
-require_once dirname(__FILE__) . '/builders/UpdateStatementBuilder.php';
-require_once dirname(__FILE__) . '/builders/InsertStatementBuilder.php';
-require_once dirname(__FILE__) . '/builders/CreateStatementBuilder.php';
-require_once dirname(__FILE__) . '/builders/ShowStatementBuilder.php';
+require_once __DIR__ . '/exceptions/UnsupportedFeatureException.php';
+require_once __DIR__ . '/builders/SelectStatementBuilder.php';
+require_once __DIR__ . '/builders/DeleteStatementBuilder.php';
+require_once __DIR__ . '/builders/UpdateStatementBuilder.php';
+require_once __DIR__ . '/builders/InsertStatementBuilder.php';
+require_once __DIR__ . '/builders/CreateStatementBuilder.php';
+require_once __DIR__ . '/builders/ShowStatementBuilder.php';
 
 /**
  * This class generates SQL from the output of the PHPSQLParser. 

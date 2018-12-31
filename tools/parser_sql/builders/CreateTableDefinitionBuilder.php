@@ -39,7 +39,7 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/TableBracketExpressionBuilder.php';
+require_once __DIR__ . '/TableBracketExpressionBuilder.php';
 
 /**
  * This class implements the builder for the create definitions of CREATE TABLE. 

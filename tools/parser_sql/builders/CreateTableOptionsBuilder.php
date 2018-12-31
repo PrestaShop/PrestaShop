@@ -39,10 +39,10 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/SelectExpressionBuilder.php';
-require_once dirname(__FILE__) . '/CharacterSetBuilder.php';
-require_once dirname(__FILE__) . '/CollationBuilder.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/SelectExpressionBuilder.php';
+require_once __DIR__ . '/CharacterSetBuilder.php';
+require_once __DIR__ . '/CollationBuilder.php';
 
 /**
  * This class implements the builder for the table-options statement part of CREATE TABLE. 

@@ -39,9 +39,9 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/CreateTableBuilder.php';
-require_once dirname(__FILE__) . '/SubTreeBuilder.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/CreateTableBuilder.php';
+require_once __DIR__ . '/SubTreeBuilder.php';
 
 /**
  * This class implements the builder for the [CREATE] part. You can overwrite

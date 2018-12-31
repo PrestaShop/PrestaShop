@@ -35,7 +35,7 @@ function gridextjs_deprecated()
     } elseif (defined('_PS_ROOT_DIR_')) {
         $gridextjs_path = _PS_ROOT_DIR_ . '/modules/gridextjs';
     } else {
-        $gridextjs_path = dirname(__FILE__).'/../../../modules/gridextjs';
+        $gridextjs_path = __DIR__.'/../../../modules/gridextjs';
     }
 
     if (file_exists($gridextjs_path)) {

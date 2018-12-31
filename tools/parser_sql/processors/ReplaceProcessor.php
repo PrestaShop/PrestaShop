@@ -30,7 +30,7 @@
  * DAMAGE.
  */
 
-require_once dirname(__FILE__) . '/InsertProcessor.php';
+require_once __DIR__ . '/InsertProcessor.php';
 
 /**
  * 

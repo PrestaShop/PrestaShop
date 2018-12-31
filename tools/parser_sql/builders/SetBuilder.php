@@ -39,8 +39,8 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/SetExpressionBuilder.php';
+require_once __DIR__ . '/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__ . '/SetExpressionBuilder.php';
 
 /**
  * This class implements the builder for the SET part of INSERT statement. 

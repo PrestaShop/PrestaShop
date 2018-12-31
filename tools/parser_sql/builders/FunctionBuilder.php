@@ -39,16 +39,16 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/AliasBuilder.php';
-require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
-require_once dirname(__FILE__) . '/ConstantBuilder.php';
-require_once dirname(__FILE__) . '/FunctionBuilder.php';
-require_once dirname(__FILE__) . '/ReservedBuilder.php';
-require_once dirname(__FILE__) . '/SelectExpressionBuilder.php';
-require_once dirname(__FILE__) . '/SelectBracketExpressionBuilder.php';
-require_once dirname(__FILE__) . '/DirectionBuilder.php';
+require_once __DIR__ . '/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/AliasBuilder.php';
+require_once __DIR__ . '/ColumnReferenceBuilder.php';
+require_once __DIR__ . '/ConstantBuilder.php';
+require_once __DIR__ . '/FunctionBuilder.php';
+require_once __DIR__ . '/ReservedBuilder.php';
+require_once __DIR__ . '/SelectExpressionBuilder.php';
+require_once __DIR__ . '/SelectBracketExpressionBuilder.php';
+require_once __DIR__ . '/DirectionBuilder.php';
 
 /**
  * This class implements the builder for function calls. 

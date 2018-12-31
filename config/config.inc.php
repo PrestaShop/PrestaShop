@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-$currentDir = dirname(__FILE__);
+$currentDir = __DIR__;
 
 /* Custom defines made by users */
 if (is_file($currentDir.'/defines_custom.inc.php')) {

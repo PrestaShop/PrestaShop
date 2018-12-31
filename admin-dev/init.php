@@ -63,7 +63,7 @@ try {
         define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
     }
 
-    $path = dirname(__FILE__).'/themes/';
+    $path = __DIR__.'/themes/';
     // if the current employee theme is not valid (check layout.tpl presence),
     // reset to default theme
     if (empty($context->employee->bo_theme) ||

@@ -39,16 +39,16 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
-require_once dirname(__FILE__) . '/ConstantBuilder.php';
-require_once dirname(__FILE__) . '/OperatorBuilder.php';
-require_once dirname(__FILE__) . '/FunctionBuilder.php';
-require_once dirname(__FILE__) . '/InListBuilder.php';
-require_once dirname(__FILE__) . '/WhereExpressionBuilder.php';
-require_once dirname(__FILE__) . '/WhereBracketExpressionBuilder.php';
-require_once dirname(__FILE__) . '/UserVariableBuilder.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__ . '/ColumnReferenceBuilder.php';
+require_once __DIR__ . '/ConstantBuilder.php';
+require_once __DIR__ . '/OperatorBuilder.php';
+require_once __DIR__ . '/FunctionBuilder.php';
+require_once __DIR__ . '/InListBuilder.php';
+require_once __DIR__ . '/WhereExpressionBuilder.php';
+require_once __DIR__ . '/WhereBracketExpressionBuilder.php';
+require_once __DIR__ . '/UserVariableBuilder.php';
 
 /**
  * This class implements the builder for bracket expressions within the WHERE part. 

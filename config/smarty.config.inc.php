@@ -54,9 +54,9 @@ if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_) {
 }
 
 if (defined('_PS_ADMIN_DIR_')) {
-    require_once dirname(__FILE__).'/smartyadmin.config.inc.php';
+    require_once __DIR__.'/smartyadmin.config.inc.php';
 } else {
-    require_once dirname(__FILE__).'/smartyfront.config.inc.php';
+    require_once __DIR__.'/smartyfront.config.inc.php';
 }
 
 require_once SMARTY_PLUGINS_DIR.'modifier.truncate.php';

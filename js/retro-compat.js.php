@@ -28,7 +28,7 @@ include '../config/config.inc.php';
 
 header('content-type: application/x-javascript');
 
-$jquery_folder = dirname(__FILE__).'/jquery/';
+$jquery_folder = __DIR__.'/jquery/';
 $plugins_folder = $jquery_folder.'plugins/';
 
 $plugins = array(

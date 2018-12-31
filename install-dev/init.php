@@ -61,7 +61,7 @@ if (!defined('__PS_BASE_URI__')) {
 }
 
 if (!defined('_PS_CORE_DIR_')) {
-    define('_PS_CORE_DIR_', realpath(dirname(__FILE__).'/..'));
+    define('_PS_CORE_DIR_', realpath(__DIR__.'/..'));
 }
 
 /* in dev mode - check if composer was executed */
@@ -108,7 +108,7 @@ require_once _PS_CORE_DIR_.'/config/defines_uri.inc.php';
 
 // Generate common constants
 define('PS_INSTALLATION_IN_PROGRESS', true);
-define('_PS_INSTALL_PATH_', dirname(__FILE__).'/');
+define('_PS_INSTALL_PATH_', __DIR__.'/');
 define('_PS_INSTALL_DATA_PATH_', _PS_INSTALL_PATH_.'data/');
 define('_PS_INSTALL_CONTROLLERS_PATH_', _PS_INSTALL_PATH_.'controllers/');
 define('_PS_INSTALL_MODELS_PATH_', _PS_INSTALL_PATH_.'models/');

@@ -28,10 +28,10 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-include_once dirname(__FILE__).'/classes/Badge.php';
-include_once dirname(__FILE__).'/classes/Advice.php';
-include_once dirname(__FILE__).'/classes/Condition.php';
-include_once dirname(__FILE__).'/classes/GamificationTools.php';
+include_once __DIR__.'/classes/Badge.php';
+include_once __DIR__.'/classes/Advice.php';
+include_once __DIR__.'/classes/Condition.php';
+include_once __DIR__.'/classes/GamificationTools.php';
 
 class gamification extends Module
 {
@@ -52,7 +52,7 @@ class gamification extends Module
 
         $this->displayName = $this->l('Merchant Expertise');
         $this->description = $this->l('Become an e-commerce expert within the blink of an eye!');
-        $this->cache_data = dirname(__FILE__).'/data/';
+        $this->cache_data = __DIR__.'/data/';
         $this->url_data = 'http://gamification.prestashop.com/json/';
         if (self::TEST_MODE === true) {
             $this->url_data .= 'test/';
@@ -92,7 +92,7 @@ class gamification extends Module
     public function installDb()
     {
         $return = true;
-        include dirname(__FILE__).'/sql_install.php';
+        include __DIR__.'/sql_install.php';
         foreach ($sql as $s) {
             $return &= Db::getInstance()->execute($s);
         }
@@ -102,7 +102,7 @@ class gamification extends Module
 
     public function uninstallDb()
     {
-        include dirname(__FILE__).'/sql_install.php';
+        include __DIR__.'/sql_install.php';
         foreach ($sql as $name => $v) {
             Db::getInstance()->execute('DROP TABLE '.$name);
         }
@@ -201,7 +201,7 @@ class gamification extends Module
             $css_str = $js_str = '';
             foreach ($advices as $advice) {
                 $is_css_file_cached = false;
-                $advice_css_path = dirname(__FILE__).'/views/css/advice-'._PS_VERSION_.'_'.(int)$advice['id_ps_advice'].'.css';
+                $advice_css_path = __DIR__.'/views/css/advice-'._PS_VERSION_.'_'.(int)$advice['id_ps_advice'].'.css';
 
                 // 24h cache
                 if (!$this->isFresh($advice_css_path, 86400)) {
@@ -301,7 +301,7 @@ class gamification extends Module
                 $this->processCleanAdvices(array_merge($data->advices, $data->advices_16));
 
                 if (function_exists('openssl_verify') && self::TEST_MODE === false) {
-                    if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang)), base64_decode($data->signature), file_get_contents(dirname(__FILE__).'/prestashop.pub'))) {
+                    if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang)), base64_decode($data->signature), file_get_contents(__DIR__.'/prestashop.pub'))) {
                         return false;
                     }
                 }
@@ -320,7 +320,7 @@ class gamification extends Module
                 }
 
                 if (function_exists('openssl_verify') && self::TEST_MODE === false) {
-                    if (!openssl_verify(Tools::jsonencode(array($data->advices_lang_16)), base64_decode($data->signature_16), file_get_contents(dirname(__FILE__).'/prestashop.pub'))) {
+                    if (!openssl_verify(Tools::jsonencode(array($data->advices_lang_16)), base64_decode($data->signature_16), file_get_contents(__DIR__.'/prestashop.pub'))) {
                         return false;
                     }
                 }

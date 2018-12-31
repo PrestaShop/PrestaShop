@@ -30,10 +30,10 @@
  * DAMAGE.
  */
 
-require_once dirname(__FILE__) . '/../utils/PHPSQLParserConstants.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/LimitProcessor.php';
-require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once __DIR__ . '/../utils/PHPSQLParserConstants.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/LimitProcessor.php';
+require_once __DIR__ . '/AbstractProcessor.php';
 
 /**
  * 

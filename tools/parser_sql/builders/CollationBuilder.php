@@ -39,11 +39,11 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ConstantBuilder.php';
-require_once dirname(__FILE__) . '/OperatorBuilder.php';
-require_once dirname(__FILE__) . '/ReservedBuilder.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__ . '/ConstantBuilder.php';
+require_once __DIR__ . '/OperatorBuilder.php';
+require_once __DIR__ . '/ReservedBuilder.php';
 
 /**
  * This class implements the builder for the collation statement part of CREATE TABLE. 

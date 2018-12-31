@@ -30,7 +30,7 @@
  * DAMAGE.
  */
 
-require_once dirname(__FILE__) . '/SelectExpressionProcessor.php';
+require_once __DIR__ . '/SelectExpressionProcessor.php';
 
 /**
  * 
