@@ -45,7 +45,7 @@ class ScheduleExchangeRatesUpdateCommand
      */
     public function __construct($isExchangeRateEnabled)
     {
-        $this->assertType($isExchangeRateEnabled);
+        $this->assertIsBool($isExchangeRateEnabled);
 
         $this->isExchangeRateEnabled = $isExchangeRateEnabled;
     }
@@ -63,7 +63,7 @@ class ScheduleExchangeRatesUpdateCommand
      *
      * @throws CurrencyConstraintException
      */
-    private function assertType($isExchangeRateEnabled)
+    private function assertIsBool($isExchangeRateEnabled)
     {
         if (!is_bool($isExchangeRateEnabled)) {
             throw new CurrencyConstraintException(
