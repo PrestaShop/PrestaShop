@@ -435,6 +435,7 @@ class SQLProcessor extends SQLChunkProcessor {
                 if ($token_category === 'RENAME') {
                     break;
                 }
+                // no break
             case 'BY':
             case 'ALL':
             case 'SHARE':

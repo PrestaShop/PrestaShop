@@ -178,6 +178,7 @@ class FromProcessor extends AbstractProcessor {
                 $parseInfo['ref_type'] = $upper;
                 $parseInfo['ref_expr'] = "";
 
+                // no break
             case 'CROSS':
             case 'USE':
             case 'FORCE':
@@ -208,6 +209,7 @@ class FromProcessor extends AbstractProcessor {
             case ',':
                 $parseInfo['next_join_type'] = 'CROSS';
 
+                // no break
             case 'JOIN':
                 if ($parseInfo['subquery']) {
                     $parseInfo['sub_tree'] = $this->parse($this->removeParenthesisFromStart($parseInfo['subquery']));
