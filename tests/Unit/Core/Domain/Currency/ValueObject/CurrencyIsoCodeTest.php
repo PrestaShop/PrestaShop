@@ -36,32 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\IsoCode;
 class CurrencyIsoCodeTest extends TestCase
 {
     /**
-     * @dataProvider getIncorrectIsoCodeTypes
-     */
-    public function testItThrowsAnExceptionOnIncorrectIsoCodeTypePassed($incorrectIsoCodeTypes)
-    {
-        $this->expectException(CurrencyConstraintException::class);
-        $this->expectExceptionCode(CurrencyConstraintException::INVALID_ISO_CODE_TYPE);
-
-        $currencyIsoCode = new IsoCode($incorrectIsoCodeTypes);
-    }
-
-    public function getIncorrectIsoCodeTypes()
-    {
-        return [
-            [
-                [],
-            ],
-            [
-                null,
-            ],
-            [
-                false,
-            ]
-        ];
-    }
-
-    /**
      * @dataProvider getIncorrectIsoCodes
      */
     public function testItThrowsAnExceptionOnIncorrectIsoCodeRegex($incorrectIsoCode)
@@ -86,7 +60,16 @@ class CurrencyIsoCodeTest extends TestCase
             ],
             [
                 'L',
-            ]
+            ],
+            [
+                null,
+            ],
+            [
+                false,
+            ],
+            [
+                [],
+            ],
         ];
     }
 

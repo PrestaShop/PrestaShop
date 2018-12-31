@@ -64,22 +64,12 @@ class IsoCode
      */
     private function assertIsValidIsoCode($isoCode)
     {
-        if (!is_string($isoCode)) {
-            throw new CurrencyConstraintException(
-                sprintf(
-                    'Iso code is not valid. Excpected to be string but got %s',
-                    var_export($isoCode, true)
-                ),
-                CurrencyConstraintException::INVALID_ISO_CODE_TYPE
-            );
-        }
-
         $regex = '/^[a-zA-Z]{2,3}$/';
-        if (!preg_match($regex, $isoCode)) {
+        if (!is_string($isoCode) || !preg_match($regex, $isoCode)) {
             throw new CurrencyConstraintException(
                 sprintf(
                     'Given iso code "%s" is not valid. It did not matched given regex %s',
-                    $isoCode,
+                    var_export($isoCode, true),
                     $regex
                 ),
                 CurrencyConstraintException::INVALID_ISO_CODE
