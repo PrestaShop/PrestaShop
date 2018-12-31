@@ -148,8 +148,8 @@ class CurrencyController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
-            'is_shop_feature_enabled' => $multiStoreFeature->isUsed(),
-            'currency_form' => $currencyForm->createView(),
+            'isShopFeatureEnabled' => $multiStoreFeature->isUsed(),
+            'currencyForm' => $currencyForm->createView(),
         ]);
     }
 
@@ -194,8 +194,8 @@ class CurrencyController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
-            'is_shop_feature_enabled' => $multiStoreFeature->isUsed(),
-            'currency_form' => null !== $currencyForm ? $currencyForm->createView() : null,
+            'isShopFeatureEnabled' => $multiStoreFeature->isUsed(),
+            'currencyForm' => null !== $currencyForm ? $currencyForm->createView() : null,
         ]);
     }
 
