@@ -45,7 +45,7 @@ class UnsupportedFeatureException extends Exception {
 
     public function __construct($key) {
         $this->key = $key;
-        parent::__construct($key . " not implemented.", 20);
+        parent::__construct($key . ' not implemented.', 20);
     }
 
     public function getKey() {

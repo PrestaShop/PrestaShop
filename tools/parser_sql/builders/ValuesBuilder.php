@@ -58,7 +58,7 @@ class ValuesBuilder {
     }
 
     public function build($parsed) {
-        $sql = "";
+        $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildRecord($v);
@@ -67,10 +67,10 @@ class ValuesBuilder {
                 throw new UnableToCreateSQLException('VALUES', $k, $v, 'expr_type');
             }
 
-            $sql .= ",";
+            $sql .= ',';
         }
         $sql = substr($sql, 0, -1);
 
-        return "VALUES " . $sql;
+        return 'VALUES ' . $sql;
     }
 }

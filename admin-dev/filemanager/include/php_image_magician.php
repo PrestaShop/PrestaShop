@@ -1070,9 +1070,9 @@ class imageLib
           $total = imagecolorstotal($this->imageResized);
           for ($i = 0; $i < $total; $i++) {
               $index = imagecolorsforindex($this->imageResized, $i);
-              $red = ($index["red"] * 0.393 + $index["green"] * 0.769 + $index["blue"] * 0.189) / 1.351;
-              $green = ($index["red"] * 0.349 + $index["green"] * 0.686 + $index["blue"] * 0.168) / 1.203;
-              $blue = ($index["red"] * 0.272 + $index["green"] * 0.534 + $index["blue"] * 0.131) / 2.140;
+              $red = ($index['red'] * 0.393 + $index['green'] * 0.769 + $index['blue'] * 0.189) / 1.351;
+              $green = ($index['red'] * 0.349 + $index['green'] * 0.686 + $index['blue'] * 0.168) / 1.203;
+              $blue = ($index['red'] * 0.272 + $index['green'] * 0.534 + $index['blue'] * 0.131) / 2.140;
               imagecolorset($this->imageResized, $i, $red, $green, $blue);
           }
       }
@@ -2520,7 +2520,7 @@ class imageLib
 
 ## --------------------------------------------------------
 
-    public function saveImage($savePath, $imageQuality="100")
+    public function saveImage($savePath, $imageQuality='100')
     # Author:     Jarrod Oberto
     # Date:       27-02-08
     # Purpose:    Saves the image
@@ -2622,7 +2622,7 @@ class imageLib
 
 ## --------------------------------------------------------
 
-  public function displayImage($fileType = 'jpg', $imageQuality="100")
+  public function displayImage($fileType = 'jpg', $imageQuality='100')
     # Author:     Jarrod Oberto
     # Date:       18-11-09
     # Purpose:    Display images directly to the browser
@@ -3196,12 +3196,12 @@ class imageLib
   {
 
     //Ouverture du fichier en mode binaire
-    if (! $f1 = fopen($filename, "rb")) {
+    if (! $f1 = fopen($filename, 'rb')) {
         return false;
     }
 
     //1 : Chargement des ent�tes FICHIER
-    $FILE = unpack("vfile_type/Vfile_size/Vreserved/Vbitmap_offset", fread($f1, 14));
+    $FILE = unpack('vfile_type/Vfile_size/Vreserved/Vbitmap_offset', fread($f1, 14));
       if ($FILE['file_type'] != 19778) {
           return false;
       }
@@ -3243,7 +3243,7 @@ class imageLib
           $X=0;
           while ($X < $BMP['width']) {
               if ($BMP['bits_per_pixel'] == 24) {
-                  $COLOR = unpack("V", substr($IMG, $P, 3).$VIDE);
+                  $COLOR = unpack('V', substr($IMG, $P, 3).$VIDE);
               } elseif ($BMP['bits_per_pixel'] == 16) {
 
           /*
@@ -3262,16 +3262,16 @@ class imageLib
           //$COLOR = unpack("n",substr($IMG,$P,2));
           //$COLOR[1] = $PALETTE[$COLOR[1]+1];
 
-          $COLOR = unpack("v", substr($IMG, $P, 2));
+          $COLOR = unpack('v', substr($IMG, $P, 2));
                   $blue = ($COLOR[1] & 0x001f) << 3;
                   $green = ($COLOR[1] & 0x07e0) >> 3;
                   $red = ($COLOR[1] & 0xf800) >> 8;
                   $COLOR[1] = $red * 65536 + $green * 256 + $blue;
               } elseif ($BMP['bits_per_pixel'] == 8) {
-                  $COLOR = unpack("n", $VIDE.substr($IMG, $P, 1));
+                  $COLOR = unpack('n', $VIDE.substr($IMG, $P, 1));
                   $COLOR[1] = $PALETTE[$COLOR[1]+1];
               } elseif ($BMP['bits_per_pixel'] == 4) {
-                  $COLOR = unpack("n", $VIDE.substr($IMG, floor($P), 1));
+                  $COLOR = unpack('n', $VIDE.substr($IMG, floor($P), 1));
                   if (($P*2)%2 == 0) {
                       $COLOR[1] = ($COLOR[1] >> 4) ;
                   } else {
@@ -3279,7 +3279,7 @@ class imageLib
                   }
                   $COLOR[1] = $PALETTE[$COLOR[1]+1];
               } elseif ($BMP['bits_per_pixel'] == 1) {
-                  $COLOR = unpack("n", $VIDE.substr($IMG, floor($P), 1));
+                  $COLOR = unpack('n', $VIDE.substr($IMG, floor($P), 1));
                   if (($P*8)%8 == 0) {
                       $COLOR[1] =  $COLOR[1]        >>7;
                   } elseif (($P*8)%8 == 1) {

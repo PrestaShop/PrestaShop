@@ -65,41 +65,41 @@ class PHPSQLCreator {
         $k = key($parsed);
         switch ($k) {
 
-        case "UNION":
-        case "UNION ALL":
+        case 'UNION':
+        case 'UNION ALL':
             throw new UnsupportedFeatureException($k);
 
             break;
-        case "SELECT":
+        case 'SELECT':
             $builder = new SelectStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
 
             break;
-        case "INSERT":
+        case 'INSERT':
             $builder = new InsertStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
 
             break;
-        case "DELETE":
+        case 'DELETE':
             $builder = new DeleteStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
 
             break;
-        case "UPDATE":
+        case 'UPDATE':
             $builder = new UpdateStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
 
             break;
-        case "RENAME":
+        case 'RENAME':
             $this->created = $this->processRenameTableStatement($parsed);
 
             break;
-        case "SHOW":
+        case 'SHOW':
             $builder = new ShowStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
 
             break;
-        case "CREATE":
+        case 'CREATE':
             $builder = new CreateStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
 
@@ -117,7 +117,7 @@ class PHPSQLCreator {
     // table, user, database
     protected function processRenameTableStatement($parsed) {
         $rename = $parsed['RENAME'];
-        $sql = "";
+        $sql = '';
         foreach ($rename as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->processSourceAndDestTable($v);
@@ -126,18 +126,18 @@ class PHPSQLCreator {
                 throw new UnableToCreateSQLException('RENAME', $k, $v, 'expr_type');
             }
 
-            $sql .= ",";
+            $sql .= ',';
         }
         $sql = substr($sql, 0, -1);
 
-        return "RENAME TABLE " . $sql;
+        return 'RENAME TABLE ' . $sql;
     }
 
     protected function processSourceAndDestTable($v) {
         if (!isset($v['source']) || !isset($v['destination'])) {
-            return "";
+            return '';
         }
 
-        return $v['source']['base_expr'] . " TO " . $v['destination']['base_expr'];
+        return $v['source']['base_expr'] . ' TO ' . $v['destination']['base_expr'];
     }
 }

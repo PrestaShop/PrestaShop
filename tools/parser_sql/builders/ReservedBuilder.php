@@ -56,7 +56,7 @@ class ReservedBuilder {
 
     public function build($parsed) {
         if (!$this->isReserved($parsed)) {
-            return "";
+            return '';
         }
 
         return $parsed['base_expr'];

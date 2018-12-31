@@ -46,13 +46,13 @@ class FromProcessor extends AbstractProcessor {
     protected function initParseInfo($parseInfo = false) {
         // first init
         if ($parseInfo === false) {
-            $parseInfo = array('join_type' => "", 'saved_join_type' => "JOIN");
+            $parseInfo = array('join_type' => '', 'saved_join_type' => 'JOIN');
         }
         // loop init
-        return array('expression' => "", 'token_count' => 0, 'table' => "", 'no_quotes' => "", 'alias' => false,
-            'join_type' => "", 'next_join_type' => "", 'saved_join_type' => $parseInfo['saved_join_type'],
+        return array('expression' => '', 'token_count' => 0, 'table' => '', 'no_quotes' => '', 'alias' => false,
+            'join_type' => '', 'next_join_type' => '', 'saved_join_type' => $parseInfo['saved_join_type'],
             'ref_type' => false, 'ref_expr' => false, 'base_expr' => false, 'sub_tree' => false,
-            'subquery' => "",
+            'subquery' => '',
         );
     }
 
@@ -70,7 +70,7 @@ class FromProcessor extends AbstractProcessor {
             // here we can get a comma separated list
             foreach ($unparsed as $k => $v) {
                 if ($this->isCommaToken($v)) {
-                    $unparsed[$k] = "";
+                    $unparsed[$k] = '';
                 }
             }
             $processor = new ExpressionListProcessor();
@@ -81,7 +81,7 @@ class FromProcessor extends AbstractProcessor {
         if (substr(trim($parseInfo['table']), 0, 1) == '(') {
             $parseInfo['expression'] = $this->removeParenthesisFromStart($parseInfo['table']);
 
-            if (preg_match("/^\\s*select/i", $parseInfo['expression'])) {
+            if (preg_match('/^\\s*select/i', $parseInfo['expression'])) {
                 $processor = new DefaultProcessor();
                 $parseInfo['sub_tree'] = $processor->process($parseInfo['expression']);
                 $res['expr_type'] = ExpressionType::SUBQUERY;
@@ -116,7 +116,7 @@ class FromProcessor extends AbstractProcessor {
         foreach ($tokens as $token) {
             $upper = strtoupper(trim($token));
 
-            if ($skip_next && $token !== "") {
+            if ($skip_next && $token !== '') {
                 $parseInfo['token_count']++;
                 $skip_next = false;
 
@@ -149,12 +149,12 @@ class FromProcessor extends AbstractProcessor {
 
             switch ($upper) {
             case 'AS':
-                $parseInfo['alias'] = array('as' => true, 'name' => "", 'base_expr' => $token);
+                $parseInfo['alias'] = array('as' => true, 'name' => '', 'base_expr' => $token);
                 $parseInfo['token_count']++;
                 $n = 1;
-                $str = "";
-                while ($str == "") {
-                    $parseInfo['alias']['base_expr'] .= ($tokens[$i + $n] === "" ? " " : $tokens[$i + $n]);
+                $str = '';
+                while ($str == '') {
+                    $parseInfo['alias']['base_expr'] .= ($tokens[$i + $n] === '' ? ' ' : $tokens[$i + $n]);
                     $str = trim($tokens[$i + $n]);
                     ++$n;
                 }
@@ -176,7 +176,7 @@ class FromProcessor extends AbstractProcessor {
             case 'USING':
             case 'ON':
                 $parseInfo['ref_type'] = $upper;
-                $parseInfo['ref_expr'] = "";
+                $parseInfo['ref_expr'] = '';
 
             case 'CROSS':
             case 'USE':
@@ -220,12 +220,12 @@ class FromProcessor extends AbstractProcessor {
                 break;
 
             default:
-                if ($upper === "") {
+                if ($upper === '') {
                     continue; // ends the switch statement!
                 }
 
                 if ($parseInfo['token_count'] === 0) {
-                    if ($parseInfo['table'] === "") {
+                    if ($parseInfo['table'] === '') {
                         $parseInfo['table'] = $token;
                         $parseInfo['no_quotes'] = $this->revokeQuotation($token);
                     }

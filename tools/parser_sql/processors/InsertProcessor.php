@@ -43,14 +43,14 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  */
 class InsertProcessor extends AbstractProcessor {
     public function process($tokenList, $token_category = 'INSERT') {
-        $table = "";
+        $table = '';
         $cols = array();
 
         $into = $tokenList['INTO'];
         foreach ($into as $token) {
             if ($this->isWhitespaceToken($token))
                 continue;
-            if ($table === "") {
+            if ($table === '') {
                 $table = $token;
             } elseif (empty($cols)) {
                 $cols[] = $token;

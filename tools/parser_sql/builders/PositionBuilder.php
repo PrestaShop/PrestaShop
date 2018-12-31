@@ -52,7 +52,7 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 class PositionBuilder {
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::POSITION) {
-            return "";
+            return '';
         }
 
         return $parsed['base_expr'];

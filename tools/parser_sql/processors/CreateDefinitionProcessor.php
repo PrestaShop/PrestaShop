@@ -77,9 +77,9 @@ class CreateDefinitionProcessor extends AbstractProcessor {
 
     public function process($tokens) {
 
-        $base_expr = "";
-        $prevCategory = "";
-        $currCategory = "";
+        $base_expr = '';
+        $prevCategory = '';
+        $currCategory = '';
         $expr = array();
         $result = array();
         $skip = 0;
@@ -95,7 +95,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                 continue;
             }
 
-            if ($trim === "") {
+            if ($trim === '') {
                 continue;
             }
 
@@ -116,7 +116,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                 continue 2;
 
             case 'FOREIGN':
-                if ($prevCategory === "" || $prevCategory === "CONSTRAINT") {
+                if ($prevCategory === '' || $prevCategory === 'CONSTRAINT') {
                     $expr[] = array('expr_type' => ExpressionType::FOREIGN_KEY, 'base_expr' => $trim);
                     $currCategory = $upper;
 
@@ -126,7 +126,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                 break;
 
             case 'PRIMARY':
-                if ($prevCategory === "" || $prevCategory === "CONSTRAINT") {
+                if ($prevCategory === '' || $prevCategory === 'CONSTRAINT') {
                     // next one is KEY
                     $expr[] = array('expr_type' => ExpressionType::PRIMARY_KEY, 'base_expr' => $trim);
                     $currCategory = $upper;
@@ -137,7 +137,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                 break;
 
             case 'UNIQUE':
-                if ($prevCategory === "" || $prevCategory === "CONSTRAINT") {
+                if ($prevCategory === '' || $prevCategory === 'CONSTRAINT') {
                     // next one is KEY
                     $expr[] = array('expr_type' => ExpressionType::UNIQUE_IDX, 'base_expr' => $trim);
                     $currCategory = $upper;
@@ -295,7 +295,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                     'base_expr' => trim(substr($base_expr, 0, -strlen($token))),
                     'sub_tree' => $expr,
                 );
-                $base_expr = "";
+                $base_expr = '';
                 $expr = array();
 
                 break;
@@ -320,7 +320,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                             'sub_tree' => $cols,
                         );
                         $prevCategory = $currCategory;
-                        $currCategory = "INDEX_COL_LIST";
+                        $currCategory = 'INDEX_COL_LIST';
 
                         continue 3;
                     }
@@ -335,7 +335,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                             'sub_tree' => $cols,
                         );
                         $prevCategory = $currCategory;
-                        $currCategory = "INDEX_COL_LIST";
+                        $currCategory = 'INDEX_COL_LIST';
 
                         continue 3;
                     }
@@ -354,7 +354,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                             'sub_tree' => $cols,
                         );
                         $prevCategory = $currCategory;
-                        $currCategory = "INDEX_COL_LIST";
+                        $currCategory = 'INDEX_COL_LIST';
 
                         continue 3;
                     }

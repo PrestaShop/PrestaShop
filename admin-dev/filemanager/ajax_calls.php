@@ -61,11 +61,11 @@ if (isset($_GET['action'])) {
             $put_contents_path = $current_path;
 
             if (isset($_POST['path'])) {
-                $put_contents_path .= str_replace("\0", "", $_POST['path']);
+                $put_contents_path .= str_replace("\0", '', $_POST['path']);
             }
 
             if (isset($_POST['name'])) {
-                $put_contents_path .= str_replace("\0", "", $_POST['name']);
+                $put_contents_path .= str_replace("\0", '', $_POST['name']);
             }
 
             file_put_contents($put_contents_path, $image_data);

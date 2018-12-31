@@ -211,31 +211,31 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
     public function testLegacyWithRoute()
     {
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, ['route' => "admin_module_catalog_post"]);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, ['route' => 'admin_module_catalog_post']);
         $this->assertSameUrl('/improve/modules/catalog/recommended', $routeUrl, ['route']);
     }
 
     public function testDifferentLinkArguments()
     {
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog");
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog');
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", false);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', false);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, []);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, []);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, null);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, null);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, [], []);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, [], []);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, [], null);
+        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, [], null);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
     }
 

@@ -70,9 +70,9 @@ class IndexSizeBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::INDEX_SIZE) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildReserved($v);
@@ -82,7 +82,7 @@ class IndexSizeBuilder {
                 throw new UnableToCreateSQLException('CREATE TABLE primary key index size subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
 
         return substr($sql, 0, -1);

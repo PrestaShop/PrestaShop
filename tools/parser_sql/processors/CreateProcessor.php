@@ -43,13 +43,13 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 class CreateProcessor extends AbstractProcessor {
     public function process($tokens) {
         $result = array();
-        $base_expr = "";
+        $base_expr = '';
 
         foreach ($tokens as $token) {
             $trim = strtoupper(trim($token));
             $base_expr .= $token;
 
-            if ($trim === "") {
+            if ($trim === '') {
                 continue;
             }
 

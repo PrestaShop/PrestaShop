@@ -51,7 +51,7 @@ class UnableToCreateSQLException extends Exception {
         $this->partkey = $partkey;
         $this->entry = $entry;
         $this->entrykey = $entrykey;
-        parent::__construct("unknown [" . $entrykey . "] = " .$entry[$entrykey] . " in \"" . $part . "\" [" . $partkey . "] ", 15);
+        parent::__construct('unknown [' . $entrykey . '] = ' .$entry[$entrykey] . ' in "' . $part . '" [' . $partkey . '] ', 15);
     }
 
     public function getEntry() {

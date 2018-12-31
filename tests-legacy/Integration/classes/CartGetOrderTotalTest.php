@@ -362,7 +362,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         } elseif ($type === '%') {
             $cartRule->reduction_percent = $amount;
         } else {
-            throw new Exception(sprintf("Invalid CartRule type `%s`.", $type));
+            throw new Exception(sprintf('Invalid CartRule type `%s`.', $type));
         }
 
         Assert::assertTrue($cartRule->save());

@@ -43,7 +43,7 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  */
 class RenameProcessor extends AbstractProcessor {
     public function process($tokenList) {
-        $base_expr = "";
+        $base_expr = '';
         $resultList = array();
         $tablePair = array();
 
@@ -61,7 +61,7 @@ class RenameProcessor extends AbstractProcessor {
                     'no_quotes' => $this->revokeQuotation($base_expr),
                     'base_expr' => $base_expr,
                 );
-                $base_expr = "";
+                $base_expr = '';
 
                 break;
 
@@ -73,7 +73,7 @@ class RenameProcessor extends AbstractProcessor {
                 );
                 $resultList[] = $tablePair;
                 $tablePair = array();
-                $base_expr = "";
+                $base_expr = '';
 
                 break;
 
@@ -84,7 +84,7 @@ class RenameProcessor extends AbstractProcessor {
             }
         }
 
-        if ($base_expr !== "") {
+        if ($base_expr !== '') {
             $tablePair['destination'] = array('expr_type' => ExpressionType::TABLE, 'table' => trim($base_expr),
                 'no_quotes' => $this->revokeQuotation($base_expr),
                 'base_expr' => $base_expr,

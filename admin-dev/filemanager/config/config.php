@@ -50,8 +50,8 @@ $thumbs_base_path = _PS_ROOT_DIR_.'/img/tmp/cms/'; // relative path from fileman
 
 $MaxSizeUpload=100; //Mb
 
-$default_language="en"; //default language file name
-$icon_theme="ico"; //ico or ico_dark you can cusatomize just putting a folder inside filemanager/img
+$default_language='en'; //default language file name
+$icon_theme='ico'; //ico or ico_dark you can cusatomize just putting a folder inside filemanager/img
 $show_folder_size=true; //Show or not show folder size in list view feature in filemanager (is possible, if there is a large folder, to greatly increase the calculations)
 $show_sorting_bar=true; //Show or not show sorting feature in filemanager
 $loading_bar=true; //Show or not show loading bar
@@ -124,8 +124,8 @@ $mime = array_merge($mime_img, $mime_file, $mime_video);
  * AVIARY config
 *******************/
 $aviary_active=false;
-$aviary_key="dvh8qudbp6yx2bnp";
-$aviary_secret="m6xaym5q42rpw433";
+$aviary_key='dvh8qudbp6yx2bnp';
+$aviary_secret='m6xaym5q42rpw433';
 $aviary_version=3;
 $aviary_language='en';
 

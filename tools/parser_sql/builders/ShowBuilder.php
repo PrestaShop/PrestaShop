@@ -101,7 +101,7 @@ class ShowBuilder {
 
     public function build($parsed) {
         $show = $parsed['SHOW'];
-        $sql = "";
+        $sql = '';
         foreach ($show as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildReserved($v);
@@ -116,11 +116,11 @@ class ShowBuilder {
                 throw new UnableToCreateSQLException('SHOW', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
 
         $sql = substr($sql, 0, -1);
 
-        return "SHOW " . $sql;
+        return 'SHOW ' . $sql;
     }
 }

@@ -60,9 +60,9 @@ class LikeBuilder {
     public function build($parsed) {
         $sql = $this->buildTable($parsed, 0);
         if (strlen($sql) === 0) {
-            throw new UnableToCreateSQLException('LIKE', "", $like, 'table');
+            throw new UnableToCreateSQLException('LIKE', '', $like, 'table');
         }
 
-        return "LIKE " . $sql;
+        return 'LIKE ' . $sql;
     }
 }

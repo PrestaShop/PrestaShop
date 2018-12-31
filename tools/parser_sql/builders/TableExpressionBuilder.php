@@ -87,10 +87,10 @@ class TableExpressionBuilder {
 
     public function build($parsed, $index) {
         if ($parsed['expr_type'] !== ExpressionType::TABLE_EXPRESSION) {
-            return "";
+            return '';
         }
         $sql = substr($this->buildFROM($parsed['sub_tree']), 5); // remove FROM keyword
-        $sql = "(" . $sql . ")";
+        $sql = '(' . $sql . ')';
         $sql .= $this->buildAlias($parsed);
 
         if ($index !== 0) {

@@ -87,11 +87,11 @@ class SubQueryBuilder {
 
     public function build($parsed, $index = 0) {
         if ($parsed['expr_type'] !== ExpressionType::SUBQUERY) {
-            return "";
+            return '';
         }
 
         $sql = $this->buildSelectStatement($parsed['sub_tree']);
-        $sql = "(" . $sql . ")";
+        $sql = '(' . $sql . ')';
         $sql .= $this->buildAlias($parsed);
 
         if ($index !== 0) {

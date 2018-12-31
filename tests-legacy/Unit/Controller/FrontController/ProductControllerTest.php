@@ -92,7 +92,7 @@ class ProductControllerTest extends IntegrationTestCase
         $expected
     ) {
         $class    = new \ReflectionClass(get_class($this->controller));
-        $property = $class->getProperty("context");
+        $property = $class->getProperty('context');
         $property->setAccessible(true);
 
         $currency                  = new \Currency();

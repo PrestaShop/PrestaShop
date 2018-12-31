@@ -75,12 +75,12 @@ class UnionProcessor extends AbstractProcessor {
             foreach ($queries[$unionType] as $key => $tokenList) {
                 foreach ($tokenList as $z => $token) {
                     $token = trim($token);
-                    if ($token === "") {
+                    if ($token === '') {
                         continue;
                     }
 
                     // starts with "(select"
-                    if (preg_match("/^\\(\\s*select\\s*/i", $token)) {
+                    if (preg_match('/^\\(\\s*select\\s*/i', $token)) {
                         $processor = new DefaultProcessor();
                         $queries[$unionType][$key] = $processor->process($this->removeParenthesisFromStart($token));
 
@@ -119,7 +119,7 @@ class UnionProcessor extends AbstractProcessor {
 
             // overread all tokens till that given token
             if ($skipUntilToken) {
-                if ($trim === "") {
+                if ($trim === '') {
                     continue; // read the next token
                 }
                 if (strtoupper($trim) === $skipUntilToken) {
@@ -129,24 +129,24 @@ class UnionProcessor extends AbstractProcessor {
                 }
             }
 
-            if (strtoupper($trim) !== "UNION") {
+            if (strtoupper($trim) !== 'UNION') {
                 $outputArray[] = $token; // here we get empty tokens, if we remove these, we get problems in parse_sql()
                 continue;
             }
 
-            $unionType = "UNION";
+            $unionType = 'UNION';
 
             // we are looking for an ALL token right after UNION
             for ($i = $key + 1; $i < count($inputArray); ++$i) {
-                if (trim($inputArray[$i]) === "") {
+                if (trim($inputArray[$i]) === '') {
                     continue;
                 }
-                if (strtoupper($inputArray[$i]) !== "ALL") {
+                if (strtoupper($inputArray[$i]) !== 'ALL') {
                     break;
                 }
                 // the other for-loop should overread till "ALL"
-                $skipUntilToken = "ALL";
-                $unionType = "UNION ALL";
+                $skipUntilToken = 'ALL';
+                $unionType = 'UNION ALL';
             }
 
             // store the tokens related to the unionType

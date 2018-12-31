@@ -42,9 +42,9 @@ require_once dirname(__FILE__) . '/../exceptions/UnableToCalculatePositionExcept
  * 
  */
 class PositionCalculator {
-    private static $_allowedOnOperator = array("\t", "\n", "\r", " ", ",", "(", ")", "_", "'", "\"");
-    private static $_allowedOnOther = array("\t", "\n", "\r", " ", ",", "(", ")", "<", ">", "*", "+", "-", "/", "|",
-        "&", "=", "!", ";",
+    private static $_allowedOnOperator = array("\t", "\n", "\r", ' ', ',', '(', ')', '_', "'", '"');
+    private static $_allowedOnOther = array("\t", "\n", "\r", ' ', ',', '(', ')', '<', '>', '*', '+', '-', '/', '|',
+        '&', '=', '!', ';',
     );
 
     private function _printPos($text, $sql, $charPos, $key, $parsed, $backtracking) {
@@ -52,15 +52,15 @@ class PositionCalculator {
             return;
         }
 
-        $spaces = "";
+        $spaces = '';
         $caller = debug_backtrace();
         $i = 1;
         while ($caller[$i]['function'] === 'lookForBaseExpression') {
-            $spaces .= "   ";
+            $spaces .= '   ';
             $i++;
         }
-        $holdem = substr($sql, 0, $charPos) . "^" . substr($sql, $charPos);
-        echo $spaces . $text . " key:" . $key . "  parsed:" . $parsed . " back:" . serialize($backtracking) . " "
+        $holdem = substr($sql, 0, $charPos) . '^' . substr($sql, $charPos);
+        echo $spaces . $text . ' key:' . $key . '  parsed:' . $parsed . ' back:' . serialize($backtracking) . ' '
             . $holdem . "\n";
     }
 
@@ -83,12 +83,12 @@ class PositionCalculator {
                 break;
             }
 
-            $before = "";
+            $before = '';
             if ($pos > 0) {
                 $before = $sql[$pos - 1];
             }
 
-            $after = "";
+            $after = '';
             if (isset($sql[$pos + strlen($value)])) {
                 $after = $sql[$pos + strlen($value)];
             }
@@ -99,10 +99,10 @@ class PositionCalculator {
 
             if ($expr_type === 'operator') {
 
-                $ok = ($before === "" || in_array($before, self::$_allowedOnOperator, true))
+                $ok = ($before === '' || in_array($before, self::$_allowedOnOperator, true))
                     || (strtolower($before) >= 'a' && strtolower($before) <= 'z') || ($before >= '0' && $before <= '9');
                 $ok = $ok
-                    && ($after === "" || in_array($after, self::$_allowedOnOperator, true)
+                    && ($after === '' || in_array($after, self::$_allowedOnOperator, true)
                         || (strtolower($after) >= 'a' && strtolower($after) <= 'z') || ($after >= '0' && $after <= '9')
                         || ($after === '?') || ($after === '@'));
 
@@ -118,8 +118,8 @@ class PositionCalculator {
             // in all other cases we accept
             // whitespace, comma, operators, parenthesis and end_of_string
 
-            $ok = ($before === "" || in_array($before, self::$_allowedOnOther, true));
-            $ok = $ok && ($after === "" || in_array($after, self::$_allowedOnOther, true));
+            $ok = ($before === '' || in_array($before, self::$_allowedOnOther, true));
+            $ok = $ok && ($after === '' || in_array($after, self::$_allowedOnOther, true));
 
             if ($ok) {
                 break;

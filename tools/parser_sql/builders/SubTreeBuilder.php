@@ -100,11 +100,11 @@ class SubTreeBuilder {
         return $builder->build($parsed);
     }
 
-    public function build($parsed, $delim = " ") {
+    public function build($parsed, $delim = ' ') {
         if ($parsed['sub_tree'] === '') {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildColRef($v);

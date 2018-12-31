@@ -70,9 +70,9 @@ class CreateBuilder {
 
         if (($create['expr_type'] === ExpressionType::TABLE)
             || ($create['expr_type'] === ExpressionType::TEMPORARY_TABLE)) {
-            $sql .= " " . $this->buildCreateTable($parsed['TABLE']);
+            $sql .= ' ' . $this->buildCreateTable($parsed['TABLE']);
         }
         // TODO: add more expr_types here (like VIEW), if available
-        return "CREATE " . $sql;
+        return 'CREATE ' . $sql;
     }
 }

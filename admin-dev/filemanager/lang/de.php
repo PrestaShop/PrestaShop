@@ -39,7 +39,7 @@ define('lang_Swipe_help', 'Swipe the name of file/folder to show options');
 define('lang_Upload_base', 'Base upload');
 define('lang_Upload_java', 'JAVA upload (gro&szlig;e Dateien)');
 define('lang_Upload_java_help', "Sollte das Java Applet nicht laden, stellen Sie sicher, dass 1. Java installiert ist <a href='http://java.com/en/download/'>[download link]</a> und 2. stellen Sie sicher, dass nichts von Ihrer Firewall geblockt wird");
-define('lang_Upload_base_help', "Drag & Drop file/s inside above area or click in it (for modern browsers) otherwise select the file and click on button. When the upload end, click on upper return button.");
+define('lang_Upload_base_help', 'Drag & Drop file/s inside above area or click in it (for modern browsers) otherwise select the file and click on button. When the upload end, click on upper return button.');
 define('lang_Type_dir', 'Ordner');
 define('lang_Type', 'Art');
 define('lang_Dimension', 'Dimensionen');

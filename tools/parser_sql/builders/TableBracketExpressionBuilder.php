@@ -88,9 +88,9 @@ class TableBracketExpressionBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildColDef($v);
@@ -103,10 +103,10 @@ class TableBracketExpressionBuilder {
                 throw new UnableToCreateSQLException('CREATE TABLE create-def expression subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= ", ";
+            $sql .= ', ';
         }
 
-        $sql = " (" . substr($sql, 0, -2) . ")";
+        $sql = ' (' . substr($sql, 0, -2) . ')';
 
         return $sql;
     }

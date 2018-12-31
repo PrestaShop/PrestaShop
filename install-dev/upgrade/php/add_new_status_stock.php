@@ -55,10 +55,10 @@ function add_new_status_stock()
                 )
             );
             Db::getInstance()->execute(
-                "INSERT INTO `" . _DB_PREFIX_ . "tab_lang` (`id_tab`, `id_lang`, `name`) 
+                'INSERT INTO `' . _DB_PREFIX_ . 'tab_lang` (`id_tab`, `id_lang`, `name`) 
                 VALUES (
-                  " . $lastIdTab . ", 
-                  " . $idLang . ", 
+                  ' . $lastIdTab . ', 
+                  ' . $idLang . ", 
                   '" . $stockName . "'
                 )"
             );

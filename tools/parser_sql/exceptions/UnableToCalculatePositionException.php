@@ -46,7 +46,7 @@ class UnableToCalculatePositionException extends Exception {
     public function __construct($needle, $haystack) {
         $this->needle = $needle;
         $this->haystack = $haystack;
-        parent::__construct("cannot calculate position of " . $needle . " within " . $haystack, 5);
+        parent::__construct('cannot calculate position of ' . $needle . ' within ' . $haystack, 5);
     }
 
     public function getNeedle() {

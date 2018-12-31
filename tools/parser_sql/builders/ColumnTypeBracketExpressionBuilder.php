@@ -58,10 +58,10 @@ class ColumnTypeBracketExpressionBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
-            return "";
+            return '';
         }
-        $sql = $this->buildSubTree($parsed, ",");
-        $sql = "(" . $sql . ")";
+        $sql = $this->buildSubTree($parsed, ',');
+        $sql = '(' . $sql . ')';
 
         return $sql;
     }

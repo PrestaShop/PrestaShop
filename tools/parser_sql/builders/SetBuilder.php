@@ -58,7 +58,7 @@ class SetBuilder {
     }
 
     public function build($parsed) {
-        $sql = "";
+        $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildSetExpression($v);
@@ -67,9 +67,9 @@ class SetBuilder {
                 throw new UnableToCreateSQLException('SET', $k, $v, 'expr_type');
             }
 
-            $sql .= ",";
+            $sql .= ',';
         }
 
-        return "SET " . substr($sql, 0, -1);
+        return 'SET ' . substr($sql, 0, -1);
     }
 }

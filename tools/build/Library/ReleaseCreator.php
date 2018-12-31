@@ -216,7 +216,7 @@ class ReleaseCreator
 
         if (empty($destinationDir)) {
             $releasesDir = self::RELEASES_DIR_RELATIVE_PATH;
-            $reference = $this->version . "_" . date("Ymd_His");
+            $reference = $this->version . '_' . date('Ymd_His');
             $destinationDir = "{$this->projectPath}/$releasesDir/$reference";
         }
         $this->destinationDir = $destinationDir;
@@ -319,7 +319,7 @@ class ReleaseCreator
      */
     protected function setFilesConstants()
     {
-        $this->consoleWriter->displayText("Setting files constants...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('Setting files constants...', ConsoleWriter::COLOR_YELLOW);
         $this->setConfigDefinesConstants()
             ->setInstallDevConfigurationConstants()
             ->setInstallDevInstallVersionConstants();
@@ -392,17 +392,17 @@ class ReleaseCreator
         );
         $kernelFileContent = preg_replace(
             '~const MAJOR_VERSION = (.*);~',
-            "const MAJOR_VERSION = ".$version->getMajorVersion().";",
+            'const MAJOR_VERSION = '.$version->getMajorVersion().';',
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const MINOR_VERSION = (.*);~',
-            "const MINOR_VERSION = ".$version->getMinorVersion().";",
+            'const MINOR_VERSION = '.$version->getMinorVersion().';',
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const RELEASE_VERSION = (.*);~',
-            "const RELEASE_VERSION = ".$version->getReleaseVersion().";",
+            'const RELEASE_VERSION = '.$version->getReleaseVersion().';',
             $kernelFileContent
         );
 
@@ -464,7 +464,7 @@ class ReleaseCreator
      */
     protected function generateLicensesFile()
     {
-        $this->consoleWriter->displayText("Generating licences file...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('Generating licences file...', ConsoleWriter::COLOR_YELLOW);
         $content = null;
         $directory = new \RecursiveDirectoryIterator($this->tempProjectPath);
         $iterator = new \RecursiveIteratorIterator($directory);
@@ -490,7 +490,7 @@ class ReleaseCreator
      */
     protected function runComposerInstall()
     {
-        $this->consoleWriter->displayText("Running composer install...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('Running composer install...', ConsoleWriter::COLOR_YELLOW);
         $argProjectPath = escapeshellarg($this->tempProjectPath);
         $command = "cd {$argProjectPath} && export SYMFONY_ENV=prod && composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction 2>&1";
         exec($command, $output, $returnCode);
@@ -558,7 +558,7 @@ class ReleaseCreator
      */
     protected function cleanTmpProject()
     {
-        $this->consoleWriter->displayText("--- Cleaning project...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('--- Cleaning project...', ConsoleWriter::COLOR_YELLOW);
         $this->createAndRenameFolders();
         $this->filesList = $this->getDirectoryStructure($this->tempProjectPath);
         $this->removeUnnecessaryFiles(
@@ -708,7 +708,7 @@ class ReleaseCreator
         if (!$this->useZip) {
             return $this;
         }
-        $this->consoleWriter->displayText("--- Creating zip archive...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('--- Creating zip archive...', ConsoleWriter::COLOR_YELLOW);
         $installerZipFilename = self::INSTALLER_ZIP_FILENAME;
         $argTempProjectPath = escapeshellarg($this->tempProjectPath);
         $argInstallerZipFilename = escapeshellarg($installerZipFilename);
@@ -752,7 +752,7 @@ class ReleaseCreator
      */
     protected function movePackage()
     {
-        $this->consoleWriter->displayText("--- Move package...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('--- Move package...', ConsoleWriter::COLOR_YELLOW);
         $tmpDir = sys_get_temp_dir();
         $argTempProjectPath = escapeshellarg($this->tempProjectPath);
 
@@ -781,7 +781,7 @@ class ReleaseCreator
      */
     protected function generateXMLChecksum()
     {
-        $this->consoleWriter->displayText("--- Generating XML checksum...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('--- Generating XML checksum...', ConsoleWriter::COLOR_YELLOW);
         $tmpDir = sys_get_temp_dir();
         $xmlPath = "{$tmpDir}/prestashop_$this->version.xml";
         $content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>{$this->lineSeparator}"
@@ -823,7 +823,7 @@ class ReleaseCreator
                 $dir_name = pathinfo($dir_name, PATHINFO_BASENAME);
                 $content .= str_repeat("\t", $count) . "<dir name=\"$dir_name\">" . PHP_EOL;
                 $content .= $this->generateXMLDirectoryChecksum($value);
-                $content .= str_repeat("\t", $count) . "</dir>" . PHP_EOL;
+                $content .= str_repeat("\t", $count) . '</dir>' . PHP_EOL;
             }
         }
 

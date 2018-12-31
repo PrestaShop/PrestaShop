@@ -92,7 +92,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
     private function cleanup($str)
     {
         $withoutDate        = preg_replace('#\* date: .*?\n#m', '', $str);
-        $withoutBlankLines  = preg_replace('#\n?^(?:\s*)$#m', "", $withoutDate);
+        $withoutBlankLines  = preg_replace('#\n?^(?:\s*)$#m', '', $withoutDate);
 
         return $withoutBlankLines;
     }

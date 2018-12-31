@@ -74,9 +74,9 @@ class RecordBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::RECORD) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['data'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildConstant($v);
@@ -87,10 +87,10 @@ class RecordBuilder {
                 throw new UnableToCreateSQLException(ExpressionType::RECORD, $k, $v, 'expr_type');
             }
 
-            $sql .= ",";
+            $sql .= ',';
         }
         $sql = substr($sql, 0, -1);
 
-        return "(" . $sql . ")";
+        return '(' . $sql . ')';
     }
 }

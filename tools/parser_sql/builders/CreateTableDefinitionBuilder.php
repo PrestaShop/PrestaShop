@@ -58,7 +58,7 @@ class CreateTableDefinitionBuilder {
 
     public function build($parsed) {
         if (!isset($parsed) || $parsed['create-def'] === false) {
-            return "";
+            return '';
         }
 
         return $this->buildTableBracketExpression($parsed['create-def']);

@@ -110,14 +110,14 @@ class FunctionBuilder {
     public function build($parsed) {
         if (($parsed['expr_type'] !== ExpressionType::AGGREGATE_FUNCTION)
             && ($parsed['expr_type'] !== ExpressionType::SIMPLE_FUNCTION)) {
-            return "";
+            return '';
         }
 
         if ($parsed['sub_tree'] === false) {
-            return $parsed['base_expr'] . "()";
+            return $parsed['base_expr'] . '()';
         }
 
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->build($v);
@@ -131,9 +131,9 @@ class FunctionBuilder {
                 throw new UnableToCreateSQLException('function subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= ($this->isReserved($v) ? " " : ",");
+            $sql .= ($this->isReserved($v) ? ' ' : ',');
         }
 
-        return $parsed['base_expr'] . "(" . substr($sql, 0, -1) . ")" . $this->buildAlias($parsed) . $this->buildDirection($parsed);
+        return $parsed['base_expr'] . '(' . substr($sql, 0, -1) . ')' . $this->buildAlias($parsed) . $this->buildDirection($parsed);
     }
 }

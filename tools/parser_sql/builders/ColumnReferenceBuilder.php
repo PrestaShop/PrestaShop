@@ -65,7 +65,7 @@ class ColumnReferenceBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::COLREF) {
-            return "";
+            return '';
         }
         $sql = $parsed['base_expr'];
         $sql .= $this->buildAlias($parsed);

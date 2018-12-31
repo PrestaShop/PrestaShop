@@ -59,10 +59,10 @@ class ConstraintBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::CONSTRAINT) {
-            return "";
+            return '';
         }
         $sql = $this->buildConstant($parsed['sub_tree']);
 
-        return "CONSTRAINT" . (empty($sql) ? '' : (' ' . $sql));
+        return 'CONSTRAINT' . (empty($sql) ? '' : (' ' . $sql));
     }
 }

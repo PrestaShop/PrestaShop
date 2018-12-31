@@ -46,7 +46,7 @@ function regenerate_children_categories($id_category, $level_depth)
         return;
     }
     $new_depth = (int)$level_depth + 1;
-    $cat_ids = "";
+    $cat_ids = '';
     foreach ($categories as $category) {
         $cat_ids .= (string)$category['id_category'].',';
         regenerate_children_categories($category['id_category'], $new_depth);

@@ -80,7 +80,7 @@ class TableBuilder {
 
     public function build($parsed, $index) {
         if ($parsed['expr_type'] !== ExpressionType::TABLE) {
-            return "";
+            return '';
         }
 
         $sql = $parsed['table'];

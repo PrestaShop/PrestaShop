@@ -162,8 +162,8 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
                 foreach ($cartRuleData['carrierRestrictionIds'] as $carrierId) {
                     $carrier = $this->getCarrierFromFixtureId($carrierId);
                     Db::getInstance()->execute(
-                        "
-                      INSERT INTO " . _DB_PREFIX_ . "cart_rule_carrier(`id_cart_rule`, `id_carrier`)
+                        '
+                      INSERT INTO ' . _DB_PREFIX_ . "cart_rule_carrier(`id_cart_rule`, `id_carrier`)
                       VALUES('" . (int) $cartRule->id . "',
                       '" . (int) $carrier->id . "')
                     "

@@ -41,14 +41,14 @@ require_once dirname(__FILE__) . '/SelectExpressionProcessor.php';
  */
 class SelectProcessor extends SelectExpressionProcessor {
     public function process($tokens) {
-        $expression = "";
+        $expression = '';
         $expressionList = array();
         foreach ($tokens as $token) {
             if ($this->isCommaToken($token)) {
                 $expression = parent::process(trim($expression));
                 $expression['delim'] = ',';
                 $expressionList[] = $expression;
-                $expression = "";
+                $expression = '';
             } else {
                 switch (strtoupper($token)) {
 
@@ -66,7 +66,7 @@ class SelectProcessor extends SelectExpressionProcessor {
                     $expression = parent::process(trim($token));
                     $expression['delim'] = ' ';
                     $expressionList[] = $expression;
-                    $expression = "";
+                    $expression = '';
 
                     break;
 

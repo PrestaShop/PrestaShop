@@ -59,9 +59,9 @@ class ColumnListBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::COLUMN_LIST) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildIndexColumn($v);
@@ -70,9 +70,9 @@ class ColumnListBuilder {
                 throw new UnableToCreateSQLException('CREATE TABLE column-list subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
 
-        return "(" . substr($sql, 0, -1) . ")";
+        return '(' . substr($sql, 0, -1) . ')';
     }
 }

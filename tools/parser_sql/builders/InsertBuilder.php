@@ -58,13 +58,13 @@ class InsertBuilder {
     }
 
     public function build($parsed) {
-        $sql = "INSERT INTO " . $parsed['table'];
+        $sql = 'INSERT INTO ' . $parsed['table'];
 
         if ($parsed['columns'] === false) {
             return $sql;
         }
 
-        $columns = "";
+        $columns = '';
         foreach ($parsed['columns'] as $k => $v) {
             $len = strlen($columns);
             $columns .= $this->buildColRef($v);
@@ -73,11 +73,11 @@ class InsertBuilder {
                 throw new UnableToCreateSQLException('INSERT[columns]', $k, $v, 'expr_type');
             }
 
-            $columns .= ",";
+            $columns .= ',';
         }
 
-        if ($columns !== "") {
-            $columns = " (" . substr($columns, 0, -1) . ")";
+        if ($columns !== '') {
+            $columns = ' (' . substr($columns, 0, -1) . ')';
         }
 
         $sql .= $columns;

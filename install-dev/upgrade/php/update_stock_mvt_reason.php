@@ -60,8 +60,8 @@ function update_stock_mvt_reason()
 			(8, 1, NOW(), NOW())
 	');
 
-    Db::getInstance()->execute("
-		INSERT INTO `"._DB_PREFIX_."stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
+    Db::getInstance()->execute('
+		INSERT INTO `'._DB_PREFIX_."stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
 		VALUES
 			(1, 1, 'Increase'),
 			(1, 2, 'Augmenter'),

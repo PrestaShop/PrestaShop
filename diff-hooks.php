@@ -27,10 +27,10 @@
 $path_to_16 = $argv[1];
 $path_to_17 = $argv[2];
 
-$grep = "grep -ri --exclude-dir=.git --exclude-dir=bin --exclude-dir=cache --exclude-dir=modules --exclude-dir=tests --exclude-dir=vendor --exclude=diff-hooks.php --exclude=diff-hooks.html";
+$grep = 'grep -ri --exclude-dir=.git --exclude-dir=bin --exclude-dir=cache --exclude-dir=modules --exclude-dir=tests --exclude-dir=vendor --exclude=diff-hooks.php --exclude=diff-hooks.html';
 
-exec("$grep 'hook h=' ".$path_to_16."/themes", $hookHIn16);
-exec("$grep 'hook h=' ".$path_to_17."/themes", $hookHIn17);
+exec("$grep 'hook h=' ".$path_to_16.'/themes', $hookHIn16);
+exec("$grep 'hook h=' ".$path_to_17.'/themes', $hookHIn17);
 
 exec("$grep 'Hook::exec' ".$path_to_16, $hookExecIn16);
 exec("$grep 'Hook::exec' ".$path_to_17, $hookExecIn17);

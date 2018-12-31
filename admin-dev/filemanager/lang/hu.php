@@ -39,7 +39,7 @@ define('lang_Swipe_help', 'Húzd az egered a fájl/mappa nevére, hogy lásd az 
 define('lang_Upload_base', 'Alapértelmezett feltöltő');
 define('lang_Upload_java', 'JAVA feltöltő (nagyméretű fájlokhoz)');
 define('lang_Upload_java_help', "Ha a Java Applet nem töltődik be: 1. ellenőrizze, hogy a JAVA telepítve van-e, ha nincs: <a href='http://java.com/en/download/'>[letöltés]</a> 2. ellenőrizze, hogy a tűzfal nem blokkolja-e");
-define('lang_Upload_base_help', "Fogd meg és húzd az ablakba a fájlt vagy kattints bele és válaszd ki majd nyomd meg a megnyitás gombot (modern böngészők). Amikor a feltöltés befejeződött kattints a fenti gombra a visszatéréshez.");
+define('lang_Upload_base_help', 'Fogd meg és húzd az ablakba a fájlt vagy kattints bele és válaszd ki majd nyomd meg a megnyitás gombot (modern böngészők). Amikor a feltöltés befejeződött kattints a fenti gombra a visszatéréshez.');
 define('lang_Type_dir', 'Mappa');
 define('lang_Type', 'Típus');
 define('lang_Dimension', 'Felbontás');

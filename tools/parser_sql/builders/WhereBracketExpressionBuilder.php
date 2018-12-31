@@ -103,9 +103,9 @@ class WhereBracketExpressionBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildColRef($v);
@@ -121,10 +121,10 @@ class WhereBracketExpressionBuilder {
                 throw new UnableToCreateSQLException('WHERE expression subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
 
-        $sql = "(" . substr($sql, 0, -1) . ")";
+        $sql = '(' . substr($sql, 0, -1) . ')';
 
         return $sql;
     }

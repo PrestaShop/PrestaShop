@@ -102,7 +102,7 @@ class SelectBuilder {
     }
 
     public function build($parsed) {
-        $sql = "";
+        $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildColRef($v);
@@ -119,6 +119,6 @@ class SelectBuilder {
             $sql .= $this->getDelimiter($v);
         }
 
-        return "SELECT " . $sql;
+        return 'SELECT ' . $sql;
     }
 }

@@ -66,9 +66,9 @@ class SelectExpressionBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
-            return "";
+            return '';
         }
-        $sql = $this->buildSubTree($parsed, " ");
+        $sql = $this->buildSubTree($parsed, ' ');
         $sql .= $this->buildAlias($parsed);
 
         return $sql;

@@ -41,20 +41,20 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
  */
 class LimitProcessor extends AbstractProcessor {
     public function process($tokens) {
-        $rowcount = "";
-        $offset = "";
+        $rowcount = '';
+        $offset = '';
 
         $comma = -1;
         $exchange = false;
 
         for ($i = 0; $i < count($tokens); ++$i) {
             $trim = trim($tokens[$i]);
-            if ($trim === ",") {
+            if ($trim === ',') {
                 $comma = $i;
 
                 break;
             }
-            if ($trim === "OFFSET") {
+            if ($trim === 'OFFSET') {
                 $comma = $i;
                 $exchange = true;
 

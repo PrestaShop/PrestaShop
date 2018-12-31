@@ -84,10 +84,10 @@ class CreateTableOptionsBuilder {
 
     public function build($parsed) {
         if (!isset($parsed['options']) || $parsed['options'] === false) {
-            return "";
+            return '';
         }
         $options = $parsed['options'];
-        $sql = "";
+        $sql = '';
         foreach ($options as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildExpression($v);
@@ -101,6 +101,6 @@ class CreateTableOptionsBuilder {
             $sql .= $this->getDelimiter($v);
         }
 
-        return " " . substr($sql, 0, -1);
+        return ' ' . substr($sql, 0, -1);
     }
 }

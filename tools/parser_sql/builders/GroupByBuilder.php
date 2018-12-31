@@ -72,7 +72,7 @@ class GroupByBuilder {
     }
 
     public function build($parsed) {
-        $sql = "";
+        $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildColRef($v);
@@ -83,10 +83,10 @@ class GroupByBuilder {
                 throw new UnableToCreateSQLException('GROUP', $k, $v, 'expr_type');
             }
 
-            $sql .= ", ";
+            $sql .= ', ';
         }
         $sql = substr($sql, 0, -2);
 
-        return "GROUP BY " . $sql;
+        return 'GROUP BY ' . $sql;
     }
 }

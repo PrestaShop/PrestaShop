@@ -236,7 +236,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                         break;
                     }
 
-                    if ($prev->isColumnReference() && $prev->endsWith(".")) {
+                    if ($prev->isColumnReference() && $prev->endsWith('.')) {
                         $prev->addToken('*'); // tablealias dot *
                         continue 2; // skip the current token
                     }

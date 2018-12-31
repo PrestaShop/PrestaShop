@@ -44,9 +44,9 @@ class PHPSQLParserUtils {
      * @param boolean $return, if true, the formatted array is returned via return parameter
      */
     protected function preprint($arr, $return = false) {
-        $x = "<pre>";
+        $x = '<pre>';
         $x .= print_r($arr, 1);
-        $x .= "</pre>";
+        $x .= '</pre>';
         if ($return) {
             return $x;
         } else {
@@ -94,9 +94,9 @@ class PHPSQLParserUtils {
         $parenthesisRemoved = 0;
 
         $trim = trim($token);
-        if ($trim !== "" && $trim[0] === "(") { // remove only one parenthesis pair now!
+        if ($trim !== '' && $trim[0] === '(') { // remove only one parenthesis pair now!
             $parenthesisRemoved++;
-            $trim[0] = " ";
+            $trim[0] = ' ';
             $trim = trim($trim);
         }
 
@@ -105,7 +105,7 @@ class PHPSQLParserUtils {
         $string = 0;
         while ($i < strlen($trim)) {
 
-            if ($trim[$i] === "\\") {
+            if ($trim[$i] === '\\') {
                 $i += 2; // an escape character, the next character is irrelevant
                 continue;
             }
@@ -114,13 +114,13 @@ class PHPSQLParserUtils {
                 $string++;
             }
 
-            if (($string % 2 === 0) && ($trim[$i] === "(")) {
+            if (($string % 2 === 0) && ($trim[$i] === '(')) {
                 $parenthesis++;
             }
 
-            if (($string % 2 === 0) && ($trim[$i] === ")")) {
+            if (($string % 2 === 0) && ($trim[$i] === ')')) {
                 if ($parenthesis == $parenthesisRemoved) {
-                    $trim[$i] = " ";
+                    $trim[$i] = ' ';
                     $parenthesisRemoved--;
                 }
                 $parenthesis--;

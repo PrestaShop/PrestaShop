@@ -45,7 +45,7 @@ class DeleteProcessor extends AbstractProcessor {
         $del = $tokens['DELETE'];
 
         foreach ($tokens['DELETE'] as $expression) {
-            if ($expression !== 'DELETE' && trim($expression, ' .*') !== "" && !$this->isCommaToken($expression)) {
+            if ($expression !== 'DELETE' && trim($expression, ' .*') !== '' && !$this->isCommaToken($expression)) {
                 $tables[] = trim($expression, '.* ');
             }
         }

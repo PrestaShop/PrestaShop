@@ -65,7 +65,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
          * If AS is found, then the next non-whitespace token is captured as the alias. 
          * The tokens after (and including) the AS are removed.
          */
-        $base_expr = "";
+        $base_expr = '';
         $stripped = array();
         $capture = false;
         $alias = false;
@@ -76,8 +76,8 @@ class SelectExpressionProcessor extends AbstractProcessor {
             $upper = strtoupper($token);
 
             if ($upper === 'AS') {
-                $alias = array('as' => true, "name" => "", "base_expr" => $token);
-                $tokens[$i] = "";
+                $alias = array('as' => true, 'name' => '', 'base_expr' => $token);
+                $tokens[$i] = '';
                 $capture = true;
 
                 continue;
@@ -95,7 +95,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
                     array_pop($stripped);
                 }
                 $alias['base_expr'] .= $token;
-                $tokens[$i] = "";
+                $tokens[$i] = '';
 
                 continue;
             }
@@ -127,12 +127,12 @@ class SelectExpressionProcessor extends AbstractProcessor {
                 );
                 // remove the last token
                 array_pop($tokens);
-                $base_expr = implode("", $tokens);
+                $base_expr = implode('', $tokens);
             }
         }
 
         if (!$alias) {
-            $base_expr = implode("", $tokens);
+            $base_expr = implode('', $tokens);
         } else {
             /* remove escape from the alias */
             $alias['no_quotes'] = $this->revokeQuotation($alias['name']);

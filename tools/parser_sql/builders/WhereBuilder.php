@@ -115,7 +115,7 @@ class WhereBuilder {
     }
 
     public function build($parsed) {
-        $sql = "WHERE ";
+        $sql = 'WHERE ';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
 
@@ -133,7 +133,7 @@ class WhereBuilder {
                 throw new UnableToCreateSQLException('WHERE', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
 
         return substr($sql, 0, -1);

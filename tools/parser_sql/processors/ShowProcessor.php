@@ -51,8 +51,8 @@ class ShowProcessor extends AbstractProcessor {
 
     public function process($tokens) {
         $resultList = array();
-        $category = "";
-        $prev = "";
+        $category = '';
+        $prev = '';
 
         foreach ($tokens as $k => $token) {
             $upper = strtoupper(trim($token));
@@ -141,7 +141,7 @@ class ShowProcessor extends AbstractProcessor {
                     $resultList[] = array('expr_type' => ExpressionType::TABLE, 'table' => $token,
                         'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
                     );
-                    $category = "TABLENAME";
+                    $category = 'TABLENAME';
 
                     break;
                 case 'FUNCTION':

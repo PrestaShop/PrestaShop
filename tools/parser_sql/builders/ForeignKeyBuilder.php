@@ -81,9 +81,9 @@ class ForeignKeyBuilder {
 
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::FOREIGN_KEY) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildConstant($v);
@@ -95,7 +95,7 @@ class ForeignKeyBuilder {
                 throw new UnableToCreateSQLException('CREATE TABLE foreign key subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
 
         return substr($sql, 0, -1);
