@@ -179,7 +179,7 @@ class CustomerController extends AbstractAdminController
 
             try {
                 $this->getCommandBus()->handle(new SavePrivateNoteForCustomerCommand(
-                    new CustomerId((int) $customerId),
+                    (int) $customerId,
                     $data['note']
                 ));
 
