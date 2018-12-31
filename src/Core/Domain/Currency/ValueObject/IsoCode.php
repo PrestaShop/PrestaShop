@@ -29,58 +29,60 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 
 /**
- * Class ExchangeRatesUpdateScheduler
+ * Class IsoCode
  */
-class CurrencyExchangeRate
+class IsoCode
 {
     /**
-     * @var float
+     * @var string
      */
-    private $exchangeRate;
+    private $isoCode;
 
     /**
-     * @param float $exchangeRate
+     * @param string $isoCode
      *
      * @throws CurrencyConstraintException
      */
-    public function __construct($exchangeRate)
+    public function __construct($isoCode)
     {
-        $this->assertExchangeRate($exchangeRate);
-        $this->exchangeRate = (float) $exchangeRate;
+        $this->assertIsValidIsoCode($isoCode);
+        $this->isoCode = $isoCode;
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getValue()
     {
-        return $this->exchangeRate;
+        return $this->isoCode;
     }
 
     /**
-     * @param float $exchangeRate
+     * @param string $isoCode
      *
      * @throws CurrencyConstraintException
      */
-    private function assertExchangeRate($exchangeRate)
+    private function assertIsValidIsoCode($isoCode)
     {
-        if (!is_numeric($exchangeRate)) {
+        if (!is_string($isoCode)) {
             throw new CurrencyConstraintException(
                 sprintf(
-                    'Exchange rate is not valid. Expected to be numeric but got "%s"',
-                    var_export($exchangeRate, true)
+                    'Iso code is not valid. Excpected to be string but got %s',
+                    var_export($isoCode, true)
                 ),
-                CurrencyConstraintException::INVALID_EXCHANGE_RATE_TYPE
+                CurrencyConstraintException::INVALID_ISO_CODE_TYPE
             );
         }
 
-        if (0 >= $exchangeRate) {
+        $regex = '/^[a-zA-Z]{2,3}$/';
+        if (!preg_match($regex, $isoCode)) {
             throw new CurrencyConstraintException(
                 sprintf(
-                    'Given exchange rate "%s" is not valid. It must be more then 0',
-                    $exchangeRate
+                    'Given iso code "%s" is not valid. It did not matched given regex %s',
+                    $isoCode,
+                    $regex
                 ),
-                CurrencyConstraintException::INVALID_EXCHANGE_RATE
+                CurrencyConstraintException::INVALID_ISO_CODE
             );
         }
     }

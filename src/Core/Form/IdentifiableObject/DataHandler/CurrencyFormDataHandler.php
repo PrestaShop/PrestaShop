@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyExchangeRate;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\IsoCode;
 
 /**
  * Class CurrencyFormDataHandler
@@ -57,8 +57,8 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         $command = new AddCurrencyCommand(
-            new CurrencyIsoCode($data['iso_code']),
-            new CurrencyExchangeRate($data['exchange_rate']),
+            new IsoCode($data['iso_code']),
+            new ExchangeRate($data['exchange_rate']),
             $data['active']
         );
 
@@ -78,9 +78,9 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
         $command = new EditCurrencyCommand(new CurrencyId((int) $id));
 
         $command
-            ->setExchangeRate(new CurrencyExchangeRate($data['exchange_rate']))
+            ->setExchangeRate(new ExchangeRate($data['exchange_rate']))
             ->setIsEnabled($data['active'])
-            ->setIsoCode(new CurrencyIsoCode($data['iso_code']))
+            ->setIsoCode(new IsoCode($data['iso_code']))
             ->setShopIds($data['shop_association'])
         ;
 
