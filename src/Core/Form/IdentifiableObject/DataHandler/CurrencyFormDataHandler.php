@@ -57,8 +57,8 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         $command = new AddCurrencyCommand(
-            new IsoCode($data['iso_code']),
-            new ExchangeRate($data['exchange_rate']),
+            $data['iso_code'],
+            $data['exchange_rate'],
             $data['active']
         );
 
@@ -78,9 +78,9 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
         $command = new EditCurrencyCommand(new CurrencyId((int) $id));
 
         $command
-            ->setExchangeRate(new ExchangeRate($data['exchange_rate']))
+            ->setExchangeRate($data['exchange_rate'])
             ->setIsEnabled($data['active'])
-            ->setIsoCode(new IsoCode($data['iso_code']))
+            ->setIsoCode($data['iso_code'])
             ->setShopIds($data['shop_association'])
         ;
 
