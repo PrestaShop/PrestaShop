@@ -40,23 +40,23 @@ use Group;
 use Language;
 use Link;
 use Order;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\AddressInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\BoughtProductInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\DiscountInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\GeneralInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\GroupInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\LastConnectionInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\MessageInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\OrderInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\OrdersInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\PersonalInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ProductsInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ReferrerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\SentEmailInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Subscriptions;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ViewedProductInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\AddressInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\BoughtProductInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\DiscountInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\GeneralInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\GroupInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\LastConnectionInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\MessageInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\OrderInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\OrdersInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\PersonalInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\ProductsInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\ReferrerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\SentEmailInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\Subscriptions;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\ViewedProductInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForViewingHandlerInterface;
@@ -117,7 +117,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
 
         Context::getContext()->customer = $customer;
 
-        return new CustomerInformation(
+        return new ViewableCustomer(
             $customerId,
             $this->getGeneralInformation($customer),
             $this->getPersonalInformation($customer),

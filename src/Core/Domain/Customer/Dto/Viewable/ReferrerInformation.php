@@ -24,46 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
 
 /**
- * Class GeneralInformation.
+ * Class ReferrerInformation holds information about customer referrer.
  */
-class GeneralInformation
+class ReferrerInformation
 {
     /**
      * @var string
      */
-    private $privateNote;
+    private $date;
 
     /**
      * @var string
      */
-    private $customerBySameEmailExists;
+    private $name;
 
     /**
-     * @param string $privateNote
-     * @param bool $customerBySameEmailExists
+     * @var string
      */
-    public function __construct($privateNote, $customerBySameEmailExists)
+    private $shop;
+
+    /**
+     * @param string $date
+     * @param string $name
+     * @param string $shop
+     */
+    public function __construct($date, $name, $shop)
     {
-        $this->privateNote = $privateNote;
-        $this->customerBySameEmailExists = $customerBySameEmailExists;
+        $this->date = $date;
+        $this->name = $name;
+        $this->shop = $shop;
     }
 
     /**
      * @return string
      */
-    public function getPrivateNote()
+    public function getDate()
     {
-        return $this->privateNote;
+        return $this->date;
     }
 
     /**
      * @return string
      */
-    public function getCustomerBySameEmailExists()
+    public function getName()
     {
-        return $this->customerBySameEmailExists;
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShop()
+    {
+        return $this->shop;
     }
 }

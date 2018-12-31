@@ -24,80 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
 
 /**
- * Class CustomerCartInformation.
+ * Class CustomerOrders.
  */
-class CartInformation
+class OrdersInformation
 {
     /**
-     * @var string
+     * @var array|OrderInformation[]
      */
-    private $cartId;
+    private $validOrders;
+
+    /**
+     * @var array|OrderInformation[]
+     */
+    private $invalidOrders;
 
     /**
      * @var string
      */
-    private $cartCreationDate;
+    private $totalSpent;
 
     /**
-     * @var string
+     * @param string $totalSpent
+     * @param OrderInformation[] $validOrders
+     * @param OrderInformation[] $invalidOrders
      */
-    private $cartTotal;
+    public function __construct($totalSpent, array $validOrders, array $invalidOrders)
+    {
+        $this->validOrders = $validOrders;
+        $this->invalidOrders = $invalidOrders;
+        $this->totalSpent = $totalSpent;
+    }
 
     /**
-     * @var string
+     * @return OrderInformation[]
      */
-    private $carrierName;
+    public function getValidOrders()
+    {
+        return $this->validOrders;
+    }
 
     /**
-     * @param string $cartId
-     * @param string $cartCreationDate
-     * @param string $cartTotal
-     * @param string $carrierName
+     * @return OrderInformation[]
      */
-    public function __construct(
-        $cartId,
-        $cartCreationDate,
-        $cartTotal,
-        $carrierName
-    ) {
-        $this->cartId = $cartId;
-        $this->cartCreationDate = $cartCreationDate;
-        $this->cartTotal = $cartTotal;
-        $this->carrierName = $carrierName;
+    public function getInvalidOrders()
+    {
+        return $this->invalidOrders;
     }
 
     /**
      * @return string
      */
-    public function getCartId()
+    public function getTotalSpent()
     {
-        return $this->cartId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCartCreationDate()
-    {
-        return $this->cartCreationDate;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCartTotal()
-    {
-        return $this->cartTotal;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCarrierName()
-    {
-        return $this->carrierName;
+        return $this->totalSpent;
     }
 }

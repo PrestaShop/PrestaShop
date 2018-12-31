@@ -24,96 +24,76 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
 
 /**
- * Class DiscountInformation.
+ * Class SentEmailInformation holds information about email sent to customer.
  */
-class DiscountInformation
+class SentEmailInformation
 {
     /**
-     * @var int
+     * @var string
      */
-    private $discountId;
+    private $date;
 
     /**
      * @var string
      */
-    private $code;
+    private $language;
 
     /**
      * @var string
      */
-    private $name;
+    private $subject;
 
     /**
-     * @var bool
+     * @var string
      */
-    private $isActive;
+    private $template;
 
     /**
-     * @var int
+     * @param string $date
+     * @param string $language
+     * @param string $subject
+     * @param string $template
      */
-    private $availableQuantity;
-
-    /**
-     * @param int $discountId
-     * @param string $code
-     * @param string $name
-     * @param bool $isActive
-     * @param int $availableQuantity
-     */
-    public function __construct(
-        $discountId,
-        $code,
-        $name,
-        $isActive,
-        $availableQuantity
-    ) {
-        $this->discountId = $discountId;
-        $this->code = $code;
-        $this->name = $name;
-        $this->isActive = $isActive;
-        $this->availableQuantity = $availableQuantity;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDiscountId()
+    public function __construct($date, $language, $subject, $template)
     {
-        return $this->discountId;
+        $this->date = $date;
+        $this->language = $language;
+        $this->subject = $subject;
+        $this->template = $template;
     }
 
     /**
      * @return string
      */
-    public function getCode()
+    public function getDate()
     {
-        return $this->code;
+        return $this->date;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getLanguage()
     {
-        return $this->name;
+        return $this->language;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isActive()
+    public function getSubject()
     {
-        return $this->isActive;
+        return $this->subject;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getAvailableQuantity()
+    public function getTemplate()
     {
-        return $this->availableQuantity;
+        return $this->template;
     }
 }
