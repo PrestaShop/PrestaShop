@@ -39,6 +39,7 @@ class CronJobs extends Module
     const EACH = -1;
 
     protected $_successes;
+
     protected $_warnings;
 
     public $webservice_url = 'http://webcron.prestashop.com/crons';

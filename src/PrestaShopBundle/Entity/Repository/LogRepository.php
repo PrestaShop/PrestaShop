@@ -39,7 +39,9 @@ use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
 {
     private $connection;
+
     private $databasePrefix;
+
     private $logTable;
 
     /**

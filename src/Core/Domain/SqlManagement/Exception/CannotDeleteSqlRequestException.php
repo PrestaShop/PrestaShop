@@ -29,5 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 class CannotDeleteSqlRequestException extends SqlRequestException
 {
     const CANNOT_SINGLE_DELETE = 10;
+
     const CANNOT_BULK_DELETE = 20;
 }

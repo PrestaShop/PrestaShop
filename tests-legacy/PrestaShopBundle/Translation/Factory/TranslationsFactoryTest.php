@@ -36,6 +36,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 class TranslationsFactoryTest extends TestCase
 {
     private $factory;
+
     private $providerMock;
 
     protected function setUp()

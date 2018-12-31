@@ -26,21 +26,37 @@
 class SpecificPriceCore extends ObjectModel
 {
     public $id_product;
+
     public $id_specific_price_rule = 0;
+
     public $id_cart = 0;
+
     public $id_product_attribute;
+
     public $id_shop;
+
     public $id_shop_group;
+
     public $id_currency;
+
     public $id_country;
+
     public $id_group;
+
     public $id_customer;
+
     public $price;
+
     public $from_quantity;
+
     public $reduction;
+
     public $reduction_tax = 1;
+
     public $reduction_type;
+
     public $from;
+
     public $to;
 
     /**

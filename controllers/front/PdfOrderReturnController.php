@@ -26,7 +26,9 @@
 class PdfOrderReturnControllerCore extends FrontController
 {
     public $php_self = 'pdf-order-return';
+
     protected $display_header = false;
+
     protected $display_footer = false;
 
     public function postProcess()

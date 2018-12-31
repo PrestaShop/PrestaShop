@@ -30,6 +30,7 @@
 class InstallControllerHttpConfigure extends InstallControllerHttp implements HttpConfigureInterface
 {
     public $list_countries = array();
+
     public $install_type;
 
     /**

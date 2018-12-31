@@ -28,12 +28,19 @@ require_once dirname(__FILE__) . '/ExpressionType.php';
 
 class ExpressionToken {
     private $subTree;
+
     private $expression;
+
     private $key;
+
     private $token;
+
     private $tokenType;
+
     private $trim;
+
     private $upper;
+
     private $noQuotes;
 
     public function __construct($key = "", $token = "") {

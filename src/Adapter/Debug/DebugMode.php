@@ -34,10 +34,15 @@ use Tools;
 class DebugMode
 {
     const DEBUG_MODE_SUCCEEDED = 0;
+
     const DEBUG_MODE_ERROR_NO_READ_ACCESS = 1;
+
     const DEBUG_MODE_ERROR_NO_READ_ACCESS_CUSTOM = 2;
+
     const DEBUG_MODE_ERROR_NO_WRITE_ACCESS = 3;
+
     const DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM = 4;
+
     const DEBUG_MODE_ERROR_NO_DEFINITION_FOUND = 5;
 
     /**

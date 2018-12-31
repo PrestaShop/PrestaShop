@@ -33,6 +33,7 @@
 class Download
 {
     const PRESTASHOP_API_RELEASES_XML_FEED = 'https://api.prestashop.com/xml/channel.xml';
+
     const CACHED_FEED_FILENAME = 'XMLFeed';
 
     /**

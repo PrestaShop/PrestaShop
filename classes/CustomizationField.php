@@ -31,14 +31,19 @@ class CustomizationFieldCore extends ObjectModel
 {
     /** @var int */
     public $id_product;
+
     /** @var int Customization type (0 File, 1 Textfield) (See Product class) */
     public $type;
+
     /** @var bool Field is required */
     public $required;
+
     /** @var bool Field was added by a module */
     public $is_module;
+
     /** @var string Label for customized field */
     public $name;
+
     /** @var bool Soft delete */
     public $is_deleted;
 

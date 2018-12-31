@@ -33,10 +33,15 @@ class ToolsCore
     const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
 
     protected static $file_exists_cache = array();
+
     protected static $_forceCompile;
+
     protected static $_caching;
+
     protected static $_user_plateform;
+
     protected static $_user_browser;
+
     protected static $request;
 
     public static $round_mode = null;

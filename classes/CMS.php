@@ -31,16 +31,27 @@ class CMSCore extends ObjectModel
 {
     /** @var string Name */
     public $id;
+
     public $id_cms;
+
     public $head_seo_title;
+
     public $meta_title;
+
     public $meta_description;
+
     public $meta_keywords;
+
     public $content;
+
     public $link_rewrite;
+
     public $id_cms_category;
+
     public $position;
+
     public $indexation;
+
     public $active;
 
     /**

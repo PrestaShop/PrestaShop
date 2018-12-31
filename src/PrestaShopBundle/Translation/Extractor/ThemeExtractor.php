@@ -42,10 +42,15 @@ use Symfony\Component\Translation\MessageCatalogue;
 class ThemeExtractor
 {
     private $catalog;
+
     private $dumpers = array();
+
     private $format = 'xlf';
+
     private $outputPath;
+
     private $smartyExtractor;
+
     private $themeProvider;
 
     private $overrideFromDatabase = false;

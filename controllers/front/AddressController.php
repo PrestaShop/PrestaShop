@@ -26,12 +26,17 @@
 class AddressControllerCore extends FrontController
 {
     public $auth = false;
+
     public $guestAllowed = true;
+
     public $php_self = 'address';
+
     public $authRedirection = 'addresses';
+
     public $ssl = true;
 
     protected $address_form;
+
     protected $should_redirect = false;
 
     /**

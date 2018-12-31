@@ -26,8 +26,11 @@
 class WebserviceOutputXMLCore implements WebserviceOutputInterface
 {
     public $docUrl = '';
+
     public $languages = array();
+
     protected $wsUrl;
+
     protected $schemaToDisplay;
 
     public function setSchemaToDisplay($schema)

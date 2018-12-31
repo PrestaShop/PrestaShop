@@ -26,19 +26,31 @@
 class HelperTreeCategoriesCore extends TreeCore
 {
     const DEFAULT_TEMPLATE = 'tree_categories.tpl';
+
     const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder_radio.tpl';
+
     const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item_radio.tpl';
 
     private $_disabled_categories;
+
     private $_input_name;
+
     private $_lang;
+
     private $_root_category;
+
     private $_selected_categories;
+
     private $_full_tree = false;
+
     private $_shop;
+
     private $_use_checkbox;
+
     private $_use_search;
+
     private $_use_shop_restriction;
+
     private $_children_only = false;
 
     public function __construct(

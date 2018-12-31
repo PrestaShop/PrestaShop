@@ -28,6 +28,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CustomerLoginFormCore extends AbstractForm
 {
     private $context;
+
     private $urls;
 
     protected $template = 'customer/_partials/login-form.tpl';

@@ -52,36 +52,52 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 {
     /** @var LegacyContext */
     private $context;
+
     /** @var \Context */
     private $contextShop;
+
     /** @var AdminProductWrapper */
     private $adminProductWrapper;
+
     /** @var \PrestaShop\PrestaShop\Core\Cldr\Repository */
     private $cldrRepository;
+
     /** @var array */
     private $locales;
+
     /** @var string */
     private $defaultLocale;
+
     /** @var Tools */
     private $tools;
+
     /** @var ProductDataProvider */
     private $productAdapter;
+
     /** @var SupplierDataProvider */
     private $supplierAdapter;
+
     /** @var FeatureDataProvider */
     private $featureAdapter;
+
     /** @var PackDataProvider */
     private $packAdapter;
+
     /** @var Configuration */
     private $configuration;
+
     /** @var ShopContext */
     private $shopContext;
+
     /** @var TaxRuleDataProvider */
     private $taxRuleDataProvider;
+
     /** @var array */
     private $productPricePriority;
+
     /** @var WarehouseDataProvider */
     private $warehouseAdapter;
+
     /** @var array */
     private $multiShopKeys = array(
         'category_box',

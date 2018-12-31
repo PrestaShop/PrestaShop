@@ -31,6 +31,7 @@ class CMSRoleCore extends ObjectModel
 {
     /** @var string name */
     public $name;
+
     /** @var int id_cms */
     public $id_cms;
 

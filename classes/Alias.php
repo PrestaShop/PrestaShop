@@ -30,7 +30,9 @@
 class AliasCore extends ObjectModel
 {
     public $alias;
+
     public $search;
+
     public $active = true;
 
     /**

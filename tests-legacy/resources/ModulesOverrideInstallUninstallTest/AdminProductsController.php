@@ -10,12 +10,14 @@ class AdminProductsController extends AdminProductsControllerCore
     * version: 1
     */
     protected $max_file_size = null;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30
     * version: 1
     */
     protected $max_image_size = null;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30
@@ -29,6 +31,7 @@ class AdminProductsController extends AdminProductsControllerCore
     * version: 1
     */
     protected $tab_display;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30
@@ -42,30 +45,35 @@ class AdminProductsController extends AdminProductsControllerCore
     * version: 1
     */
     protected $available_tabs = array();
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30
     * version: 1
     */
     protected $default_tab = 'Informations';
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30
     * version: 1
     */
     protected $available_tabs_lang = array();
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30
     * version: 1
     */
     protected $position_identifier = 'id_product';
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30
     * version: 1
     */
     protected $submitted_tabs;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30

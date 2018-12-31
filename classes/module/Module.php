@@ -37,6 +37,7 @@ abstract class ModuleCore implements ModuleInterface
 
     /** @var float Version */
     public $version;
+
     public $database_version;
 
     /**
@@ -113,6 +114,7 @@ abstract class ModuleCore implements ModuleInterface
 
     /** @var string Module web path (eg. '/shop/modules/modulename/') */
     protected $_path = null;
+
     /**
      * @since 1.5.0.1
      *
@@ -162,7 +164,9 @@ abstract class ModuleCore implements ModuleInterface
     protected static $update_translations_after_install = true;
 
     protected static $_batch_mode = false;
+
     protected static $_defered_clearCache = array();
+
     protected static $_defered_func_call = array();
 
     /**
@@ -179,6 +183,7 @@ abstract class ModuleCore implements ModuleInterface
 
     /** @var bool Define if we will log modules performances for this session */
     public static $_log_modules_perfs = null;
+
     /** @var bool Random session for modules perfs logs */
     public static $_log_modules_perfs_session = null;
 
@@ -193,6 +198,7 @@ abstract class ModuleCore implements ModuleInterface
     const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
 
     const CACHE_FILE_ALL_COUNTRY_MODULES_LIST = '/config/xml/modules_native_addons.xml';
+
     const CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST = '/config/xml/default_country_modules_list.xml';
 
     const CACHE_FILE_CUSTOMER_MODULES_LIST = '/config/xml/customer_modules_list.xml';
@@ -200,6 +206,7 @@ abstract class ModuleCore implements ModuleInterface
     const CACHE_FILE_MUST_HAVE_MODULES_LIST = '/config/xml/must_have_modules_list.xml';
 
     const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
+
     const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
 
     public static $hosted_modules_blacklist = array('autoupgrade');

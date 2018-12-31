@@ -29,6 +29,7 @@
 class SmartyLazyRegister
 {
     protected $registry = array();
+
     protected static $instances = array();
 
     /**

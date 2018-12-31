@@ -39,7 +39,9 @@ use Symfony\Component\HttpFoundation\Response;
 class PositionsControllerTest extends WebTestCase
 {
     protected $moduleId;
+
     protected $otherModuleId;
+
     protected $hookId;
 
     protected function setUp()

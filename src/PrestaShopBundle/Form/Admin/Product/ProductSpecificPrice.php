@@ -42,11 +42,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductSpecificPrice extends CommonAbstractType
 {
     private $translator;
+
     private $locales;
+
     private $shops;
+
     private $countries;
+
     private $currencies;
+
     private $groups;
+
     private $customerDataprovider;
 
     /**

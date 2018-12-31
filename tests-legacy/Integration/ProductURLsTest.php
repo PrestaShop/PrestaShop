@@ -34,6 +34,7 @@ use ReflectionClass;
 class ProductURLsTest extends IntegrationTestCase
 {
     private $link;
+
     private $language;
 
     protected function setUp()

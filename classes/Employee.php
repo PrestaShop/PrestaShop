@@ -56,10 +56,13 @@ class EmployeeCore extends ObjectModel
     public $last_passwd_gen;
 
     public $stats_date_from;
+
     public $stats_date_to;
 
     public $stats_compare_from;
+
     public $stats_compare_to;
+
     public $stats_compare_option = 1;
 
     public $preselect_date_range;
@@ -94,7 +97,9 @@ class EmployeeCore extends ObjectModel
 
     /* employee notifications */
     public $id_last_order;
+
     public $id_last_customer_message;
+
     public $id_last_customer;
 
     /** @var string Unique token for forgot passsword feature */

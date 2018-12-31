@@ -36,8 +36,11 @@ use ZipArchive;
 class ThemeExporter
 {
     protected $configuration;
+
     protected $fileSystem;
+
     protected $langRepository;
+
     protected $translationsExporter;
 
     public function __construct(

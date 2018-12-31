@@ -32,9 +32,13 @@
 class RiskCore extends ObjectModel
 {
     public $id;
+
     public $id_risk;
+
     public $name;
+
     public $color;
+
     public $percent;
 
     public static $definition = array(

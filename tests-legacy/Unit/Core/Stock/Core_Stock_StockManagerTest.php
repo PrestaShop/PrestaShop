@@ -45,8 +45,11 @@ class FakeStockAvailable4759
 class FakeProduct4759
 {
     private static $LAST_ID = 0;
+
     public $id;
+
     public $pack_stock_type;
+
     public $stock_available;
 
     public function __construct($stock_available, $pack_stock_type = false)
@@ -59,7 +62,9 @@ class FakeProduct4759
 class FakePackItemsManager4759
 {
     private $packs = array();
+
     private $items = array();
+
     private $stockAvailables = array();
 
     public function addProduct(FakeProduct4759 $pack, FakeProduct4759 $product, $product_attribute_id, $quantity)

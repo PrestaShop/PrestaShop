@@ -30,11 +30,17 @@ class AddonListFilterOrigin
 {
     /* Bitwise operators */
     const DISK = 1;
+
     const ADDONS_MUST_HAVE = 2;
+
     const ADDONS_SERVICE = 4;
+
     const ADDONS_NATIVE = 8;
+
     const ADDONS_NATIVE_ALL = 16;
+
     const ADDONS_CUSTOMER = 32;
+
     const ADDONS_ALL = 62;
 
     const ALL = 63;

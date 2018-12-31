@@ -32,14 +32,21 @@ class Cart extends CartCore
     public $allow_seperated_package = false;
 
     protected static $_nbProducts = array();
+
     protected static $_isVirtualCart = array();
 
     protected $_products = null;
+
     protected static $_totalWeight = array();
+
     protected $_taxCalculationMethod = PS_TAX_EXC;
+
     protected static $_carriers = null;
+
     protected static $_taxes_rate = null;
+
     protected static $_attributesLists = array();
+
     protected static $_customer = null;
 
     public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)

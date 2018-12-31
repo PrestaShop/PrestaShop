@@ -42,10 +42,15 @@ class ProductPrice extends CommonAbstractType
     const DEFAULT_PRODUCT_ID_FOR_FORM_CREATION = 1;
 
     private $translator;
+
     private $tax_rules;
+
     private $tax_rules_rates;
+
     private $configuration;
+
     private $eco_tax_rate;
+
     private $customerDataprovider;
 
     /**

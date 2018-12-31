@@ -39,6 +39,7 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
      * @var ModuleTabRegister
      */
     private $moduleTabRegister;
+
     /**
      * @var ModuleTabUnregister
      */

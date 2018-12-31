@@ -26,7 +26,9 @@
 class GroupReductionCore extends ObjectModel
 {
     public $id_group;
+
     public $id_category;
+
     public $reduction;
 
     /**

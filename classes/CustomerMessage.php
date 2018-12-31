@@ -30,6 +30,7 @@
 class CustomerMessageCore extends ObjectModel
 {
     public $id;
+
     /** @var int CustomerThread ID */
     public $id_customer_thread;
 

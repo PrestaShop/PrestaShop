@@ -30,15 +30,23 @@
 class PDFCore
 {
     public $filename;
+
     public $pdf_renderer;
+
     public $objects;
+
     public $template;
+
     public $send_bulk_flag = false;
 
     const TEMPLATE_INVOICE = 'Invoice';
+
     const TEMPLATE_ORDER_RETURN = 'OrderReturn';
+
     const TEMPLATE_ORDER_SLIP = 'OrderSlip';
+
     const TEMPLATE_DELIVERY_SLIP = 'DeliverySlip';
+
     const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
 
     /**

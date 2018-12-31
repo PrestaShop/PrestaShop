@@ -35,6 +35,7 @@ class ConfigurationCore extends ObjectModel
     public $name;
 
     public $id_shop_group;
+
     public $id_shop;
 
     /** @var string Value */
@@ -68,8 +69,11 @@ class ConfigurationCore extends ObjectModel
 
     /** @var array Configuration cache with optimised key order */
     protected static $_new_cache_shop = null;
+
     protected static $_new_cache_group = null;
+
     protected static $_new_cache_global = null;
+
     protected static $_initialized = false;
 
     /** @var array Vars types */

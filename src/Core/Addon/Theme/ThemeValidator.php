@@ -37,6 +37,7 @@ class ThemeValidator
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
+
     private $appConfiguration;
 
     private $errors = array();

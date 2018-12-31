@@ -34,11 +34,15 @@
 class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
 {
     protected $key;
+
     protected $hmacIv;
+
     protected $iv;
+
     protected $ivSize;
 
     protected $mode = MCRYPT_MODE_CBC;
+
     protected $cipher = MCRYPT_RIJNDAEL_128;
 
     /**

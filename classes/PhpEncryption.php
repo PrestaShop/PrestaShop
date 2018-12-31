@@ -31,6 +31,7 @@ use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
 class PhpEncryptionCore
 {
     const ENGINE = 'PhpEncryptionEngine';
+
     const LEGACY_ENGINE = 'PhpEncryptionLegacyEngine';
 
     private static $engine;

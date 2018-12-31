@@ -32,6 +32,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     public $php_self = 'manufacturer';
 
     protected $manufacturer;
+
     protected $label;
 
     public function canonicalRedirection($canonicalURL = '')

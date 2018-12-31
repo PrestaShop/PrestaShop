@@ -29,7 +29,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 class SqlManagementConstraintException extends SqlManagementException
 {
     const INVALID_DATABASE_TABLE_NAME = 10;
+
     const INVALID_DATABASE_TABLE_FIELD = 20;
+
     const INVALID_DATABASE_TABLE_FIELD_NAME = 30;
+
     const INVALID_DATABASE_TABLE_FIELD_TYPE = 40;
 }

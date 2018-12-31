@@ -31,7 +31,9 @@ use ReflectionClass;
 class Container
 {
     private $bindings = array();
+
     private $instances = array();
+
     private $namespaceAliases = array();
 
     public function knows($serviceName)

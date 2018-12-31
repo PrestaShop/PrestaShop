@@ -34,17 +34,27 @@ use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 class ModuleManagerTest extends TestCase
 {
     const UNINSTALLED_MODULE = "uninstalled-module";
+
     const INSTALLED_MODULE = "installed-module";
 
     private $moduleManager;
+
     private $adminModuleProviderS;
+
     private $moduleProviderS; // S means "Stub"
+
     private $moduleUpdaterS;
+
     private $moduleRepositoryS;
+
     private $moduleZipManagerS;
+
     private $translatorS;
+
     private $dispatcherS;
+
     private $employeeS;
+
     private $cacheClearerS;
 
     protected function setUp()

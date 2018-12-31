@@ -27,6 +27,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 {
     /** @var WebserviceOutputBuilder */
     protected $objOutput;
+
     protected $output;
 
     /** @var WebserviceRequest */
@@ -84,6 +85,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      * @var string The file path of the image to display. If not null, the image will be displayed, even if the XML output was not empty
      */
     public $imgToDisplay = null;
+
     public $imageResource = null;
 
     /* ------------------------------------------------

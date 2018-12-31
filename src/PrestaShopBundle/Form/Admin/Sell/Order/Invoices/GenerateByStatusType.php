@@ -44,6 +44,7 @@ class GenerateByStatusType extends CommonAbstractType
      * @var array
      */
     private $orderCountsByState;
+
     /**
      * @var FormChoiceProviderInterface
      */

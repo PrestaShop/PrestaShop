@@ -45,7 +45,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductCombination extends CommonAbstractType
 {
     private $translator;
+
     private $contextLegacy;
+
     private $configuration;
 
     /**

@@ -39,6 +39,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TypeaheadProductCollectionType extends CommonAbstractType
 {
     protected $productAdapter;
+
     protected $categoryAdapter;
 
     /**

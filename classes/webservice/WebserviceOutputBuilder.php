@@ -33,20 +33,30 @@ class WebserviceOutputBuilderCore
      * @var int constant
      */
     const VIEW_LIST = 1;
+
     const VIEW_DETAILS = 2;
 
     protected $wsUrl;
+
     protected $output;
 
     /** @var WebserviceOutputInterface|WebserviceOutputXML|WebserviceOutputJSON */
     public $objectRender;
+
     protected $wsResource;
+
     protected $depth = 0;
+
     protected $schemaToDisplay;
+
     protected $fieldsToDisplay;
+
     protected $specificFields = array();
+
     protected $virtualFields = array();
+
     protected $statusInt;
+
     protected $wsParamOverrides;
 
     protected static $_cache_ws_parameters = array();

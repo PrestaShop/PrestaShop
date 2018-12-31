@@ -32,5 +32,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 class SqlRequestSettingsConstraintException extends SqlRequestException
 {
     const INVALID_FILE_ENCODING = 10;
+
     const NOT_SUPPORTED_FILE_ENCODING = 20;
 }

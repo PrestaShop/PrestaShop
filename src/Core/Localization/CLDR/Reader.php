@@ -33,14 +33,19 @@ use SimpleXMLElement;
 class Reader implements ReaderInterface
 {
     const CLDR_ROOT = 'localization/CLDR/';
+
     const CLDR_MAIN = 'localization/CLDR/core/common/main/';
+
     const CLDR_SUPPLEMENTAL = 'localization/CLDR/core/common/supplemental/';
 
     const CLDR_ROOT_LOCALE = 'root';
 
     const SUPPL_DATA_CURRENCY = 'currencyData';
+
     const SUPPL_DATA_LANGUAGE = 'languageData';
+
     const SUPPL_DATA_NUMBERING = 'numberingSystems';
+
     const SUPPL_DATA_PARENT_LOCALES = 'parentLocales'; // For specific locales hierarchy
 
     const DEFAULT_CURRENCY_DIGITS = 2;
@@ -54,6 +59,7 @@ class Reader implements ReaderInterface
      * @var SimplexmlElement
      */
     protected $supplementalXml;
+
     protected $numberingSystemsXml;
 
     /**

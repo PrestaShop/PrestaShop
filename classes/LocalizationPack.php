@@ -29,10 +29,13 @@ use PrestaShop\PrestaShop\Core\Cldr\Update;
 class LocalizationPackCore
 {
     public $name;
+
     public $version;
 
     protected $iso_code_lang;
+
     protected $iso_currency;
+
     protected $_errors = array();
 
     /**

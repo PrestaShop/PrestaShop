@@ -26,6 +26,7 @@
 class CheckoutSessionCore
 {
     protected $context;
+
     protected $deliveryOptionsFinder;
 
     public function __construct(Context $context, DeliveryOptionsFinder $deliveryOptionsFinder)

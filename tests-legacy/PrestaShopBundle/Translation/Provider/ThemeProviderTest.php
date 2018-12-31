@@ -36,6 +36,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class ThemeProviderTest extends TestCase
 {
     private $provider;
+
     private static $resourcesDir;
 
     protected function setUp()

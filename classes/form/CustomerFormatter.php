@@ -28,13 +28,19 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CustomerFormatterCore implements FormFormatterInterface
 {
     private $translator;
+
     private $language;
 
     private $ask_for_birthdate = true;
+
     private $ask_for_partner_optin = true;
+
     private $partner_optin_is_required = true;
+
     private $ask_for_password = true;
+
     private $password_is_required = true;
+
     private $ask_for_new_password = false;
 
     public function __construct(

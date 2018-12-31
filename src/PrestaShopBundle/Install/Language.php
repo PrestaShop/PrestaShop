@@ -29,13 +29,21 @@ namespace PrestaShopBundle\Install;
 class Language
 {
     public $id;
+
     public $name;
+
     public $locale;
+
     public $iso_code;
+
     public $language_code;
+
     public $is_rtl;
+
     public $date_format_lite;
+
     public $date_format_full;
+
     public $countries;
 
     public function __construct($iso)

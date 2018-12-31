@@ -43,15 +43,23 @@ class VersionTest extends TestCase
     protected $anotherVersion;
 
     const VERSION = '1.2.3.4';
+
     const MAJOR_VERSION_STRING = '1.2';
+
     const MAJOR_VERSION = 12;
+
     const MINOR_VERSION = 3;
+
     const RELEASE_VERSION = 4;
 
     const ANOTHER_VERSION = '1.2.0.0';
+
     const ANOTHER_MAJOR_VERSION_STRING = '1.2';
+
     const ANOTHER_MAJOR_VERSION = 12;
+
     const ANOTHER_MINOR_VERSION = 3;
+
     const ANOTHER_RELEASE_VERSION = 4;
 
     protected function setUp()

@@ -40,6 +40,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SimpleCategory extends CommonAbstractType
 {
     private $translator;
+
     private $categories;
 
     /**

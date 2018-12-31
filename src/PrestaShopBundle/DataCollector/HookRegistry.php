@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 final class HookRegistry
 {
     const HOOK_NOT_CALLED = 'notCalled';
+
     const HOOK_CALLED = 'called';
 
     /**

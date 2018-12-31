@@ -26,25 +26,40 @@
 class TreeCore
 {
     const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
+
     const DEFAULT_TEMPLATE = 'tree.tpl';
+
     const DEFAULT_HEADER_TEMPLATE = 'tree_header.tpl';
+
     const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder.tpl';
+
     const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item.tpl';
 
     protected $_attributes;
+
     private $_context;
+
     protected $_data;
+
     protected $_data_search;
+
     protected $_headerTemplate;
+
     protected $_id_tree;
+
     private $_id;
+
     protected $_node_folder_template;
+
     protected $_node_item_template;
+
     protected $_template;
 
     /** @var string */
     private $_template_directory;
+
     private $_title;
+
     private $_no_js;
 
     /** @var TreeToolbar|ITreeToolbar */

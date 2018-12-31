@@ -30,10 +30,15 @@
 class ConnectionsSourceCore extends ObjectModel
 {
     public $id_connections;
+
     public $http_referer;
+
     public $request_uri;
+
     public $keywords;
+
     public $date_add;
+
     public static $uri_max_size = 255;
 
     /**

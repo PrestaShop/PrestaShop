@@ -27,6 +27,7 @@
 class PrestashopAssetsLibraries
 {
     const css = 'registerStylesheet';
+
     const js = 'registerJavascript';
 
     /**

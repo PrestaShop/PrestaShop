@@ -26,8 +26,11 @@
 class IdentityControllerCore extends FrontController
 {
     public $auth = true;
+
     public $php_self = 'identity';
+
     public $authRedirection = 'identity';
+
     public $ssl = true;
 
     public $passwordRequired = true;

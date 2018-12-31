@@ -40,6 +40,7 @@ class AdminModelAdapterTest extends KernelTestCase
     private $adminModelAdapter;
 
     private $container;
+
     protected static $kernel;
 
     /** @var $product Product */

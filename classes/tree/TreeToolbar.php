@@ -26,12 +26,17 @@
 class TreeToolbarCore implements ITreeToolbarCore
 {
     const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
+
     const DEFAULT_TEMPLATE = 'tree_toolbar.tpl';
 
     private $_actions;
+
     private $_context;
+
     private $_data;
+
     private $_template;
+
     private $_template_directory;
 
     public function __toString()

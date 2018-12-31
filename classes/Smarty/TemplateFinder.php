@@ -33,10 +33,15 @@
 class TemplateFinderCore
 {
     private $directories;
+
     private $extension;
+
     private $productListEntities = array('category', 'manufacturer', 'supplier');
+
     private $productListSearchEntities = array('search', 'price-drop', 'best-sale');
+
     private $productEntities = array('product');
+
     private $brandListEntities = array('manufacturers', 'suppliers');
 
     public function __construct(array $directories, $extension)

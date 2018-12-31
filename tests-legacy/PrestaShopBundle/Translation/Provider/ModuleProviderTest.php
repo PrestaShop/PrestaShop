@@ -39,7 +39,9 @@ class ModuleProviderTest extends TestCase
      * @see /resources/translations/en-US/ModulesWirePaymentShop.en-US.xlf
      */
     private $provider;
+
     private $moduleName;
+
     private static $resourcesDir;
 
     protected function setUp()

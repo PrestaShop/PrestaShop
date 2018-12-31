@@ -33,12 +33,19 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 class AdminModuleDataProviderTest extends UnitTestCase
 {
     const NOTICE = '[AdminModuleDataProvider] ';
+
     private $httpHostNotFound = false;
+
     private $languageISOCode;
+
     private $legacyContext;
+
     private $addonsDataProviderS;
+
     private $categoriesProviderS;
+
     private $adminModuleDataProvider;
+
     private $moduleDataProviderS;
 
     protected function setUp()

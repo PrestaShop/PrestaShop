@@ -30,7 +30,9 @@
 abstract class HTMLTemplateCore
 {
     public $title;
+
     public $date;
+
     public $available_in_your_account = true;
 
     /** @var Smarty */

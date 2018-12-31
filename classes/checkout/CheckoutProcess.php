@@ -34,7 +34,9 @@ class CheckoutProcessCore implements RenderableInterface
      * @var CheckoutSession
      */
     private $checkoutSession;
+
     private $steps = array();
+
     private $has_errors;
 
     private $template = 'checkout/checkout-process.tpl';

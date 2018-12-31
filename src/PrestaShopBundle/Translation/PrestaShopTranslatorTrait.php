@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Translation;
 trait PrestaShopTranslatorTrait
 {
     public static $regexSprintfParams = '#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#';
+
     public static $regexClassicParams = '/%\w+%/';
 
     /**

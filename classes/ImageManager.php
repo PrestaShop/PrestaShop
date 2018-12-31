@@ -34,7 +34,9 @@
 class ImageManagerCore
 {
     const ERROR_FILE_NOT_EXIST = 1;
+
     const ERROR_FILE_WIDTH = 2;
+
     const ERROR_MEMORY_LIMIT = 3;
 
     /**

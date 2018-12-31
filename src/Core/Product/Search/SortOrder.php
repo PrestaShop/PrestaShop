@@ -31,8 +31,11 @@ use Exception;
 class SortOrder
 {
     private $entity;
+
     private $field;
+
     private $direction;
+
     private $label;
 
     public function __construct($entity, $field, $direction = 'asc')

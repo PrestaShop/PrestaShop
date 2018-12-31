@@ -79,7 +79,9 @@ class AdminImportControllerCore extends AdminController
     );
 
     public $separator;
+
     public $convert;
+
     public $multiple_value_separator;
 
     /**

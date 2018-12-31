@@ -30,7 +30,9 @@
 class HTMLTemplateInvoiceCore extends HTMLTemplate
 {
     public $order;
+
     public $order_invoice;
+
     public $available_in_your_account = false;
 
     /**

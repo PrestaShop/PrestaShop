@@ -39,14 +39,18 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
 {
     const DISPATCHER_BEFORE_ACTION = 'actionDispatcherBefore';
+
     const DISPATCHER_AFTER_ACTION = 'actionDispatcherAfter';
 
     /**
      * List of available front controllers types.
      */
     const FRONT_OFFICE_CONTROLLER = 1;
+
     const BACK_OFFICE_CONTROLLER = 2;
+
     const MODULE_CONTROLLER = 3;
+
     const NA_CONTROLLER = 0;
 
     /**

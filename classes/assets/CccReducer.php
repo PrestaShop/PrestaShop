@@ -30,6 +30,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class CccReducerCore
 {
     private $cacheDir;
+
     protected $filesystem;
 
     use PrestaShop\PrestaShop\Adapter\Assets\AssetUrlGeneratorTrait;

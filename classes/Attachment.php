@@ -30,10 +30,15 @@
 class AttachmentCore extends ObjectModel
 {
     public $file;
+
     public $file_name;
+
     public $file_size;
+
     public $name;
+
     public $mime;
+
     public $description;
 
     /** @var int position Position */

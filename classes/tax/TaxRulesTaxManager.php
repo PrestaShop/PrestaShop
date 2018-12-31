@@ -31,7 +31,9 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 class TaxRulesTaxManagerCore implements TaxManagerInterface
 {
     public $address;
+
     public $type;
+
     public $tax_calculator;
 
     /**

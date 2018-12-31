@@ -34,8 +34,11 @@ use Shop;
 class HookRepository
 {
     private $hookInfo;
+
     private $shop;
+
     private $db;
+
     private $db_prefix;
 
     public function __construct(

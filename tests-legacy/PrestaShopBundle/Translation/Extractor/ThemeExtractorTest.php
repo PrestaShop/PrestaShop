@@ -38,11 +38,15 @@ use Symfony\Component\Yaml\Yaml;
 class ThemeExtractorTest extends KernelTestCase
 {
     private $container;
+
     private $filesystem;
+
     private $themeExtractor;
 
     private static $rootDir;
+
     private static $legacyFolder;
+
     private static $xliffFolder;
 
     public static function setUpBeforeClass()

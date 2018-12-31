@@ -32,9 +32,13 @@ class PDFGeneratorCore extends TCPDF
     const DEFAULT_FONT = 'helvetica';
 
     public $header;
+
     public $footer;
+
     public $pagination;
+
     public $content;
+
     public $font;
 
     public $font_by_lang = array(

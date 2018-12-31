@@ -26,15 +26,25 @@
 class HelperCore
 {
     public $currentIndex;
+
     public $table = 'configuration';
+
     public $identifier;
+
     public $token;
+
     public $toolbar_btn;
+
     public $ps_help_context;
+
     public $title;
+
     public $show_toolbar = true;
+
     public $context;
+
     public $toolbar_scroll = false;
+
     public $bootstrap = false;
 
     /**

@@ -43,10 +43,12 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
      * @var ConfigurationMock
      */
     private $configuration;
+
     /**
      * @var ConnectionMock
      */
     private $connection;
+
     /**
      * @var ModuleRepository
      */
@@ -331,6 +333,7 @@ class ConfigurationMock extends Configuration
 class ConnectionMock extends Connection
 {
     public $sql = array();
+
     public $executedSql = array();
 
     public function connect()

@@ -28,13 +28,18 @@ class ChartCore
     protected static $poolId = 0;
 
     protected $width = 600;
+
     protected $height = 300;
 
     /* Time mode */
     protected $timeMode = false;
+
     protected $from;
+
     protected $to;
+
     protected $format;
+
     protected $granularity;
 
     protected $curves = array();

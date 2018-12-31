@@ -36,6 +36,7 @@ class FrontOfficeProviderTest extends TestCase
 {
     /** @see /resources/translations/en-US/ShopNotificationsWarning.en-US.xlf */
     private $provider;
+
     private static $resourcesDir;
 
     protected function setUp()

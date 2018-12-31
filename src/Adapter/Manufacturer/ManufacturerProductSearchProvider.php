@@ -37,7 +37,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ManufacturerProductSearchProvider implements ProductSearchProviderInterface
 {
     private $translator;
+
     private $manufacturer;
+
     private $sortOrderFactory;
 
     public function __construct(

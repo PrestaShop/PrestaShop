@@ -26,7 +26,9 @@
 class CustomerAddressPersisterCore
 {
     private $customer;
+
     private $token;
+
     private $cart;
 
     public function __construct(Customer $customer, Cart $cart, $token)

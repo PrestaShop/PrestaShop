@@ -30,7 +30,9 @@
 class InstallSession
 {
     protected static $_instance;
+
     protected static $_cookie_mode = false;
+
     protected static $_cookie = false;
 
     public static function getInstance()

@@ -45,7 +45,9 @@ class PrestaTrustCheckerTest extends UnitTestCase
      * @var PrestaTrustChecker
      */
     protected $prestatrustChecker;
+
     protected $modules;
+
     protected $prestatrustApiResults;
 
     /* STUBS */

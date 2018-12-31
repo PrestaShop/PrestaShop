@@ -30,6 +30,7 @@
 class PageCore extends ObjectModel
 {
     public $id_page_type;
+
     public $id_object;
 
     public $name;

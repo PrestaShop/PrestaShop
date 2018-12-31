@@ -43,6 +43,7 @@ require_once dirname(__FILE__) . '/../exceptions/UnableToCalculatePositionExcept
  */
 class PositionCalculator {
     private static $_allowedOnOperator = array("\t", "\n", "\r", " ", ",", "(", ")", "_", "'", "\"");
+
     private static $_allowedOnOther = array("\t", "\n", "\r", " ", ",", "(", ")", "<", ">", "*", "+", "-", "/", "|",
         "&", "=", "!", ";",
     );

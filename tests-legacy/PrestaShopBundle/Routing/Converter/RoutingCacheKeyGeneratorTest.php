@@ -39,6 +39,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
      * @var Filesystem
      */
     private $fs;
+
     private $filesTestDir;
 
     protected function setUp()

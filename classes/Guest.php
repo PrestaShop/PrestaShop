@@ -30,19 +30,33 @@
 class GuestCore extends ObjectModel
 {
     public $id_operating_system;
+
     public $id_web_browser;
+
     public $id_customer;
+
     public $javascript;
+
     public $screen_resolution_x;
+
     public $screen_resolution_y;
+
     public $screen_color;
+
     public $sun_java;
+
     public $adobe_flash;
+
     public $adobe_director;
+
     public $apple_quicktime;
+
     public $real_player;
+
     public $windows_media;
+
     public $accept_language;
+
     public $mobile_theme;
 
     /**

@@ -54,7 +54,9 @@ class LexerSplitter {
         "/*", "*/", "--", ">", "<", "|", "=", "^", "(", ")", "\t", "\n", "'", "\"", "`",
         ",", "@", " ", "+", "-", "*", "/", ";",
     );
+
     protected $tokenSize;
+
     protected $hashSet;
 
     /**

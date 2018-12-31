@@ -40,7 +40,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ProductSeo extends CommonAbstractType
 {
     private $translator;
+
     private $locales;
+
     private $router;
 
     /**

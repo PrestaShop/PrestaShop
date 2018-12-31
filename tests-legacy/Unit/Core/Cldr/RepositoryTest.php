@@ -36,6 +36,7 @@ use LegacyTests\TestCase\UnitTestCase;
 class RepositoryTest extends UnitTestCase
 {
     private $locale;
+
     private $region;
 
     protected function setUp()

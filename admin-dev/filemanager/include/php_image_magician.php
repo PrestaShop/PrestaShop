@@ -162,28 +162,41 @@
 class imageLib
 {
     private $fileName;
+
     private $image;
+
     protected $imageResized;
+
     private $widthOriginal;     # Always be the original width
+
     private $heightOriginal;
+
     private $width;         # Current width (width after resize)
+
     private $height;
+
     private $imageSize;
+
     private $fileExtension;
 
     private $debug = true;
+
     private $errorArray = array();
 
     private $forceStretch = true;
+
     private $aggresiveSharpening = false;
 
     private $transparentArray = array('.png', '.gif');
+
     private $keepTransparency = true;
+
     private $fillColorArray = array('r'=>255, 'g'=>255, 'b'=>255);
 
     private $sharpenArray = array('jpg');
 
     private $psdReaderPath;
+
     private $filterOverlayPath;
 
     private $isInterlace;

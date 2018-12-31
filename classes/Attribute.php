@@ -34,10 +34,13 @@ class AttributeCore extends ObjectModel
 
     /** @var string Name */
     public $name;
+
     /** @var string $color */
     public $color;
+
     /** @var int $position */
     public $position;
+
     /** @todo Find type */
     public $default;
 

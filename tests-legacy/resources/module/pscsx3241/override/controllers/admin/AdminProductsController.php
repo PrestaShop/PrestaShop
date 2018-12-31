@@ -30,13 +30,16 @@ class AdminProductsController extends AdminProductsControllerCore
      * As of 1.5 it is recommended to not set a limit to max image size
      */
     protected $max_file_size = null;
+
     protected $max_image_size = null;
 
     protected $_category;
+
     /**
      * @var string name of the tab to display
      */
     protected $tab_display;
+
     protected $tab_display_module;
 
     /**

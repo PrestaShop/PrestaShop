@@ -30,6 +30,7 @@
 class AdminManufacturersControllerCore extends AdminController
 {
     public $bootstrap = true;
+
     /** @var array countries list */
     protected $countries_array = array();
 

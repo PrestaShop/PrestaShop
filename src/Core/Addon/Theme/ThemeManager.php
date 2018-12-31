@@ -51,12 +51,19 @@ class ThemeManager implements AddonManagerInterface
     use TranslationFinderTrait;
 
     private $hookConfigurator;
+
     private $shop;
+
     private $employee;
+
     private $themeValidator;
+
     private $appConfiguration;
+
     private $filesystem;
+
     private $finder;
+
     private $themeRepository;
 
     public function __construct(

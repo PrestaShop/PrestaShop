@@ -30,9 +30,13 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
     protected $template = 'checkout/_partials/steps/addresses.tpl';
 
     private $addressForm;
+
     private $use_same_address = true;
+
     private $show_delivery_address_form = false;
+
     private $show_invoice_address_form = false;
+
     private $form_has_continue_button = false;
 
     public function __construct(

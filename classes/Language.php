@@ -31,7 +31,9 @@ use Symfony\Component\Filesystem\Filesystem;
 class LanguageCore extends ObjectModel
 {
     const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
+
     const SF_LANGUAGE_PACK_URL = 'http://i18n.prestashop.com/translations/%version%/%locale%/%locale%.zip';
+
     const EMAILS_LANGUAGE_PACK_URL = 'http://i18n.prestashop.com/mails/%version%/%locale%/%locale%.zip';
 
     public $id;
@@ -61,7 +63,9 @@ class LanguageCore extends ObjectModel
     public $active = true;
 
     protected static $_cache_language_installation = null;
+
     protected static $_cache_language_installation_by_locale = null;
+
     protected static $_cache_all_language_json = null;
 
     public static $locale_crowdin_lang = 'en-UD';
@@ -86,7 +90,9 @@ class LanguageCore extends ObjectModel
 
     /** @var array Languages cache */
     protected static $_checkedLangs;
+
     protected static $_LANGUAGES;
+
     protected static $countActiveLanguages = array();
 
     protected $webserviceParameters = array(

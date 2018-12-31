@@ -41,7 +41,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductAttachement extends CommonAbstractType
 {
     private $translator;
+
     private $legacyContext;
+
     private $configuration;
 
     /**

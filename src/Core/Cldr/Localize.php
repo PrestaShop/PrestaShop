@@ -41,7 +41,9 @@ class Localize
     );
 
     private static $browserLocales;
+
     private static $environmentLocale;
+
     private static $locale;
 
     public function __toString()

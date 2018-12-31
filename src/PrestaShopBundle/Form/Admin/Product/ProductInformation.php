@@ -49,15 +49,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductInformation extends CommonAbstractType
 {
     private $router;
+
     private $context;
+
     private $translator;
+
     private $locales;
+
     private $productDataProvider;
+
     private $nested_categories;
+
     private $categoryDataProvider;
+
     private $manufacturerDataProvider;
+
     private $manufacturers;
+
     private $productAdapter;
+
     private $configuration;
 
     /**

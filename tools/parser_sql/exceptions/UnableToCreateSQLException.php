@@ -42,8 +42,11 @@
  */
 class UnableToCreateSQLException extends Exception {
     protected $part;
+
     protected $partkey;
+
     protected $entry;
+
     protected $entrykey;
 
     public function __construct($part, $partkey, $entry, $entrykey) {

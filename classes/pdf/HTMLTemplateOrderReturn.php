@@ -30,6 +30,7 @@
 class HTMLTemplateOrderReturnCore extends HTMLTemplate
 {
     public $order_return;
+
     public $order;
 
     /**

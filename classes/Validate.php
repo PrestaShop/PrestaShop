@@ -26,6 +26,7 @@
 class ValidateCore
 {
     const ADMIN_PASSWORD_LENGTH = 8;
+
     const PASSWORD_LENGTH = 5;
 
     public static function isIp2Long($ip)

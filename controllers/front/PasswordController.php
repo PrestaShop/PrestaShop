@@ -26,7 +26,9 @@
 class PasswordControllerCore extends FrontController
 {
     public $php_self = 'password';
+
     public $auth = false;
+
     public $ssl = true;
 
     /**

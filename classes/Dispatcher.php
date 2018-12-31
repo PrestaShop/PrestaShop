@@ -34,7 +34,9 @@ class DispatcherCore
      * List of available front controllers types.
      */
     const FC_FRONT = 1;
+
     const FC_ADMIN = 2;
+
     const FC_MODULE = 3;
 
     /**
@@ -177,6 +179,7 @@ class DispatcherCore
      * @var string Set default controller, which will be used if http parameter 'controller' is empty
      */
     protected $default_controller;
+
     protected $use_default_controller = false;
 
     /**

@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 class CategoryStatus
 {
     const ENABLED = 'enabled';
+
     const DISABLED = 'disabled';
 
     const AVAILABLE_STATUSES = [

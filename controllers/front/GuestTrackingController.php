@@ -28,8 +28,11 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 class GuestTrackingControllerCore extends FrontController
 {
     public $ssl = true;
+
     public $auth = false;
+
     public $php_self = 'guest-tracking';
+
     protected $order;
 
     /**

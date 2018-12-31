@@ -34,6 +34,7 @@ use Tools;
 class LocalizationWarmer implements CacheWarmerInterface
 {
     private $version;
+
     private $country;
 
     public function __construct($version, $country)

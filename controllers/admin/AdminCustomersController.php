@@ -32,8 +32,11 @@ class AdminCustomersControllerCore extends AdminController
     protected $delete_mode;
 
     protected $_defaultOrderBy = 'date_add';
+
     protected $_defaultOrderWay = 'DESC';
+
     protected $can_add_customer = true;
+
     protected static $meaning_status = array();
 
     public function __construct()

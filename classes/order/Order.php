@@ -28,7 +28,9 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 class OrderCore extends ObjectModel
 {
     const ROUND_ITEM = 1;
+
     const ROUND_LINE = 2;
+
     const ROUND_TOTAL = 3;
 
     /** @var int Delivery address id */
@@ -95,6 +97,7 @@ class OrderCore extends ObjectModel
     public $total_discounts;
 
     public $total_discounts_tax_incl;
+
     public $total_discounts_tax_excl;
 
     /** @var float Total to pay */

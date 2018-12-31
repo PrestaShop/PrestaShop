@@ -38,19 +38,25 @@ use stdClass;
 class CategoriesProvider
 {
     const CATEGORY_OTHER = 'other';
+
     const CATEGORY_OTHER_NAME = 'Other';
 
     const CATEGORY_THEME = 'theme_modules';
+
     const CATEGORY_THEME_NAME = 'Theme modules';
 
     const CATEGORY_MY_MODULES = 'my_modules';
+
     const CATEGORY_MY_MODULES_NAME = 'My Modules';
 
     private $apiClient;
+
     private $logger;
+
     private $modulesTheme;
 
     public static $categories;
+
     public static $categoriesFromApi;
 
     public function __construct(ApiClient $apiClient, LoggerInterface $logger, array $addonsCategories, array $modulesTheme)

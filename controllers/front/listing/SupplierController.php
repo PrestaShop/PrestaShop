@@ -33,6 +33,7 @@ class SupplierControllerCore extends ProductListingFrontController
 
     /** @var Supplier */
     protected $supplier;
+
     protected $label;
 
     public function canonicalRedirection($canonicalURL = '')

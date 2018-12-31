@@ -40,7 +40,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductVirtual extends CommonAbstractType
 {
     private $translator;
+
     private $legacyContext;
+
     private $configuration;
 
     /**

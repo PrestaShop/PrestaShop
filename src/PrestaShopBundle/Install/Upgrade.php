@@ -85,27 +85,46 @@ namespace PrestaShopBundle\Install {
     {
         /** @var \FileLogger */
         private $logger;
+
         private $infoList = array();
+
         private $warningList = array();
+
         private $failureList = array();
+
         private $nextQuickInfo = array();
+
         private $nextErrors = array();
+
         private $next;
+
         private $nextDesc;
+
         private $inAutoUpgrade = false;
+
         private $translator;
+
         private $installDir;
+
         private $adminDir = null;
+
         private $oldVersion;
+
         private $db;
+
         private $idEmployee = 0;
+
         private $disableCustomModules = false;
+
         private $changeToDefaultTheme = false;
+
         private $updateDefaultTheme = false;
+
         // used for translations
         public static $l_cache;
 
         const FILE_PREFIX = 'PREFIX_';
+
         const ENGINE_TYPE = 'ENGINE_TYPE';
 
         private static $classes14 = ['Cache', 'CacheFS', 'CarrierModule', 'Db', 'FrontController', 'Helper', 'ImportModule',

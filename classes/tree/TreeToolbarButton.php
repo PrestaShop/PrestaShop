@@ -28,8 +28,11 @@ abstract class TreeToolbarButtonCore
     const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
 
     protected $_attributes;
+
     private $_context;
+
     protected $_template;
+
     protected $_template_directory;
 
     public function __construct($label, $id = null, $name = null, $class = null)

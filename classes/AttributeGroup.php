@@ -31,10 +31,13 @@ class AttributeGroupCore extends ObjectModel
 {
     /** @var string Name */
     public $name;
+
     /** @var bool $is_color_group Whether the attribute group is a color group */
     public $is_color_group;
+
     /** @var int $position Position */
     public $position;
+
     /** @var string $group_type Group type */
     public $group_type;
 

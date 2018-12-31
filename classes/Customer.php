@@ -125,13 +125,17 @@ class CustomerCore extends ObjectModel
     public $date_upd;
 
     public $years;
+
     public $days;
+
     public $months;
 
     /** @var int customer id_country as determined by geolocation */
     public $geoloc_id_country;
+
     /** @var int customer id_state as determined by geolocation */
     public $geoloc_id_state;
+
     /** @var string customer postcode as determined by geolocation */
     public $geoloc_postcode;
 
@@ -208,7 +212,9 @@ class CustomerCore extends ObjectModel
     );
 
     protected static $_defaultGroupId = array();
+
     protected static $_customerHasAddress = array();
+
     protected static $_customer_groups = array();
 
     /**

@@ -43,10 +43,15 @@ class Formatter
      * They are meant to be replaced by the correct localized symbols in the number formatting process.
      */
     const CURRENCY_SYMBOL_PLACEHOLDER = '¤';
+
     const DECIMAL_SEPARATOR_PLACEHOLDER = '.';
+
     const GROUP_SEPARATOR_PLACEHOLDER = ',';
+
     const MINUS_SIGN_PLACEHOLDER = '-';
+
     const PERCENT_SYMBOL_PLACEHOLDER = '%';
+
     const PLUS_SIGN_PLACEHOLDER = '+';
 
     /**

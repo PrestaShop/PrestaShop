@@ -239,15 +239,21 @@ class ProductCore extends ObjectModel
      * @var bool Tells if the product uses the advanced stock management
      */
     public $advanced_stock_management = 0;
+
     public $out_of_stock;
+
     public $depends_on_stock;
 
     public $isFullyLoaded = false;
 
     public $cache_is_pack;
+
     public $cache_has_attachments;
+
     public $is_virtual;
+
     public $id_pack_product_attribute;
+
     public $cache_default_attribute;
 
     /**
@@ -291,8 +297,11 @@ class ProductCore extends ObjectModel
     public $delivery_out_stock;
 
     public static $_taxCalculationMethod = null;
+
     protected static $_prices = array();
+
     protected static $_pricesLevel2 = array();
+
     protected static $_incat = array();
 
     /**
@@ -303,14 +312,18 @@ class ProductCore extends ObjectModel
     protected static $_cart_quantity = array();
 
     protected static $_tax_rules_group = array();
+
     protected static $_cacheFeatures = array();
+
     protected static $_frontFeaturesCache = array();
+
     protected static $productPropertiesCache = array();
 
     /** @var array cache stock data in getStock() method */
     protected static $cacheStock = array();
 
     const STATE_TEMP = 0;
+
     const STATE_SAVED = 1;
 
     public static $definition = array(
@@ -536,13 +549,16 @@ class ProductCore extends ObjectModel
     );
 
     const CUSTOMIZE_FILE = 0;
+
     const CUSTOMIZE_TEXTFIELD = 1;
 
     /**
      * Note:  prefix is "PTYPE" because TYPE_ is used in ObjectModel (definition).
      */
     const PTYPE_SIMPLE = 0;
+
     const PTYPE_PACK = 1;
+
     const PTYPE_VIRTUAL = 2;
 
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)

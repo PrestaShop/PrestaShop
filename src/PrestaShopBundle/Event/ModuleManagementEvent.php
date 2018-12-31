@@ -32,10 +32,15 @@ use Symfony\Component\EventDispatcher\Event;
 class ModuleManagementEvent extends Event
 {
     const INSTALL = 'module.install';
+
     const UNINSTALL = 'module.uninstall';
+
     const DISABLE = 'module.disable';
+
     const ENABLE = 'module.enable';
+
     const UPGRADE = 'module.upgrade';
+
     const RESET = 'module.reset';
 
     private $module;

@@ -40,13 +40,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductOptions extends CommonAbstractType
 {
     private $translator;
+
     private $suppliers;
+
     private $context;
+
     private $productAdapter;
+
     private $router;
+
     private $locales;
+
     private $currencyDataprovider;
+
     private $fullAttachmentList;
+
     private $attachmentList;
 
     /**

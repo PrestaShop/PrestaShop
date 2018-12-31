@@ -31,6 +31,7 @@
 class HelperFormCore extends Helper
 {
     public $id;
+
     public $first_call = true;
 
     /** @var array of forms fields */
@@ -38,6 +39,7 @@ class HelperFormCore extends Helper
 
     /** @var array values of form fields */
     public $fields_value = array();
+
     public $name_controller = '';
 
     /** @var string if not null, a title will be added on that list */
@@ -47,10 +49,15 @@ class HelperFormCore extends Helper
     public $submit_action;
 
     public $token;
+
     public $languages = null;
+
     public $default_form_language = null;
+
     public $allow_employee_form_lang = null;
+
     public $show_cancel_button = false;
+
     public $back_url = '#';
 
     public function __construct()

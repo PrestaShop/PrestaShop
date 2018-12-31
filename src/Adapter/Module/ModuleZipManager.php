@@ -48,6 +48,7 @@ class ModuleZipManager
     /*
      * Services
      */
+
     /**
      * @var \Symfony\Component\Filesystem\Filesystem
      */

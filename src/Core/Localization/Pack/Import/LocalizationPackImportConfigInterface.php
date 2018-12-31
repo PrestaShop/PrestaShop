@@ -35,10 +35,15 @@ interface LocalizationPackImportConfigInterface
      * Available content to import.
      */
     const CONTENT_STATES = 'states';
+
     const CONTENT_TAXES = 'taxes';
+
     const CONTENT_CURRENCIES = 'currencies';
+
     const CONTENT_LANGUAGES = 'languages';
+
     const CONTENT_UNITS = 'units';
+
     const CONTENT_GROUPS = 'groups';
 
     /**

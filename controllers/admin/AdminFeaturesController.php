@@ -30,7 +30,9 @@
 class AdminFeaturesControllerCore extends AdminController
 {
     public $bootstrap = true;
+
     protected $position_identifier = 'id_feature';
+
     protected $feature_name;
 
     public function __construct()

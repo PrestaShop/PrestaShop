@@ -29,11 +29,17 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 class ProductSearchQuery
 {
     private $query_type;
+
     private $id_category;
+
     private $id_manufacturer;
+
     private $id_supplier;
+
     private $search_string;
+
     private $search_tag;
+
     private $encodedFacets;
 
     // A default that is multiple of 2, 3 and 4 should be OK for

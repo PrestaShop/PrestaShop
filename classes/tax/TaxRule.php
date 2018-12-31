@@ -26,12 +26,19 @@
 class TaxRuleCore extends ObjectModel
 {
     public $id_tax_rules_group;
+
     public $id_country;
+
     public $id_state;
+
     public $zipcode_from;
+
     public $zipcode_to;
+
     public $id_tax;
+
     public $behavior;
+
     public $description;
 
     /**

@@ -26,6 +26,7 @@
 class GetFileControllerCore extends FrontController
 {
     protected $display_header = false;
+
     protected $display_footer = false;
 
     public function init()

@@ -32,10 +32,15 @@ use Exception;
 class DatabaseDump
 {
     private $host;
+
     private $port;
+
     private $user;
+
     private $password;
+
     private $databaseName;
+
     private $dumpFile;
 
     /**

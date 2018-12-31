@@ -29,15 +29,19 @@ use Symfony\Component\Translation\TranslatorInterface;
 abstract class AbstractFormCore implements FormInterface
 {
     private $smarty;
+
     protected $translator;
+
     protected $constraintTranslator;
 
     protected $action;
+
     protected $template;
 
     protected $formatter;
 
     protected $formFields = [];
+
     protected $errors = ['' => []];
 
     public function __construct(

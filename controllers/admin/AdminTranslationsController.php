@@ -31,6 +31,7 @@ class AdminTranslationsControllerCore extends AdminController
 {
     /** Name of theme by default */
     const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
+
     const TEXTAREA_SIZED = 70;
 
     /** @var string : Link which list all pack of language */

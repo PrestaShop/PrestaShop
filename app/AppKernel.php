@@ -33,9 +33,13 @@ use Symfony\Component\HttpKernel\Kernel;
 class AppKernel extends Kernel
 {
     const VERSION = '1.7.5.0';
+
     const MAJOR_VERSION_STRING = '1.7';
+
     const MAJOR_VERSION = 17;
+
     const MINOR_VERSION = 5;
+
     const RELEASE_VERSION = 0;
 
     /**

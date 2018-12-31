@@ -39,7 +39,9 @@ use Symfony\Component\Yaml\Parser;
 class ThemeRepository implements AddonRepositoryInterface
 {
     private $appConfiguration;
+
     private $filesystem;
+
     private $shop;
 
     public function __construct(ConfigurationInterface $configuration, Filesystem $filesystem, Shop $shop = null)

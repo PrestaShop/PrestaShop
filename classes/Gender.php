@@ -32,8 +32,11 @@
 class GenderCore extends ObjectModel
 {
     public $id;
+
     public $id_gender;
+
     public $name;
+
     public $type;
 
     /**

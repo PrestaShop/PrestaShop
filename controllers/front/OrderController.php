@@ -29,8 +29,11 @@ use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 class OrderControllerCore extends FrontController
 {
     public $ssl = true;
+
     public $php_self = 'order';
+
     public $page_name = 'checkout';
+
     public $checkoutWarning = false;
 
     /**

@@ -33,13 +33,17 @@ class LinkCore
 {
     /** @var bool Rewriting activation */
     protected $allow;
+
     protected $url;
+
     public static $cache = array('page' => array());
 
     public $protocol_link;
+
     public $protocol_content;
 
     protected $ssl_enable;
+
     protected $urlShopId = null;
 
     protected static $category_disable_rewrite = null;

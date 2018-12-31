@@ -37,6 +37,7 @@ use Phake;
 class CheckoutAddressesStepTest extends UnitTestCase
 {
     private $step;
+
     private $session;
 
     protected function setUp()

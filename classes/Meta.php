@@ -31,10 +31,15 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 class MetaCore extends ObjectModel
 {
     public $page;
+
     public $configurable = 1;
+
     public $title;
+
     public $description;
+
     public $keywords;
+
     public $url_rewrite;
 
     /**

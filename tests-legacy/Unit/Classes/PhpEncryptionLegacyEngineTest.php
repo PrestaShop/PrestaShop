@@ -32,6 +32,7 @@ use PHPUnit\Framework\TestCase;
 class PhpEncryptionLegacyEngineTest extends TestCase
 {
     const FOO = 'foo';
+
     private $engine;
 
     protected function setUp()

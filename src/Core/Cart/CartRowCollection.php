@@ -32,6 +32,7 @@ class CartRowCollection implements \Iterator, \Countable
      * @var CartRow[]
      */
     protected $cartRows = array();
+
     protected $iteratorPosition = 0;
 
     public function addCartRow(CartRow $cartRow)

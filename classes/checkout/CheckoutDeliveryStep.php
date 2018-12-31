@@ -30,9 +30,13 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     protected $template = 'checkout/_partials/steps/shipping.tpl';
 
     private $recyclablePackAllowed = false;
+
     private $giftAllowed = false;
+
     private $giftCost = 0;
+
     private $includeTaxes = false;
+
     private $displayTaxesLabel = false;
 
     public function setRecyclablePackAllowed($recyclablePackAllowed)

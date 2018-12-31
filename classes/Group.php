@@ -65,10 +65,15 @@ class GroupCore extends ObjectModel
     );
 
     protected static $cache_reduction = array();
+
     protected static $group_price_display_method = array();
+
     protected static $ps_group_feature_active = null;
+
     protected static $groups = array();
+
     protected static $ps_unidentified_group = null;
+
     protected static $ps_customer_group = null;
 
     protected $webserviceParameters = array();

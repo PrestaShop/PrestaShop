@@ -27,6 +27,7 @@
 class Datas
 {
     private static $instance = null;
+
     protected static $available_args = array(
         'step' => array(
             'name' => 'step',

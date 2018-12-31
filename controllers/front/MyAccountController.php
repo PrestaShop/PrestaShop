@@ -26,8 +26,11 @@
 class MyAccountControllerCore extends FrontController
 {
     public $auth = true;
+
     public $php_self = 'my-account';
+
     public $authRedirection = 'my-account';
+
     public $ssl = true;
 
     /**

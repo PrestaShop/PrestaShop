@@ -26,11 +26,17 @@
 class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
+
     protected $headerToolbarBtn = array();
+
     protected $title;
+
     protected $showContentHeader = true;
+
     protected $headerTabContent = '';
+
     protected $enableSidebar = false;
+
     protected $helpLink;
 
     public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')

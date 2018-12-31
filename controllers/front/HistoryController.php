@@ -28,9 +28,13 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 class HistoryControllerCore extends FrontController
 {
     public $auth = true;
+
     public $php_self = 'history';
+
     public $authRedirection = 'history';
+
     public $ssl = true;
+
     public $order_presenter;
 
     /**

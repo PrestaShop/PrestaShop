@@ -50,7 +50,9 @@ use Tools;
 class CartGetOrderTotalTest extends IntegrationTestCase
 {
     private static $dump;
+
     private static $id_address;
+
     protected $previousConfig = array(
         'PS_CART_RULE_FEATURE_ACTIVE' => null,
         'PS_GROUP_FEATURE_ACTIVE'     => null,

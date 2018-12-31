@@ -30,8 +30,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 class DeliveryOptionsFinderCore
 {
     private $context;
+
     private $objectPresenter;
+
     private $translator;
+
     private $priceFormatter;
 
     public function __construct(

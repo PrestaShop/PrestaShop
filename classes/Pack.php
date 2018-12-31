@@ -54,7 +54,9 @@ class PackCore extends Product
     const STOCK_TYPE_DEFAULT = 3;
 
     protected static $cachePackItems = array();
+
     protected static $cacheIsPack = array();
+
     protected static $cacheIsPacked = array();
 
     public static function resetStaticCache()

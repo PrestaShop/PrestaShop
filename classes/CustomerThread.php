@@ -26,16 +26,27 @@
 class CustomerThreadCore extends ObjectModel
 {
     public $id;
+
     public $id_shop;
+
     public $id_lang;
+
     public $id_contact;
+
     public $id_customer;
+
     public $id_order;
+
     public $id_product;
+
     public $status;
+
     public $email;
+
     public $token;
+
     public $date_add;
+
     public $date_upd;
 
     /**

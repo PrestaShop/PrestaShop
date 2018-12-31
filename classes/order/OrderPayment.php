@@ -26,15 +26,25 @@
 class OrderPaymentCore extends ObjectModel
 {
     public $order_reference;
+
     public $id_currency;
+
     public $amount;
+
     public $payment_method;
+
     public $conversion_rate;
+
     public $transaction_id;
+
     public $card_number;
+
     public $card_brand;
+
     public $card_expiration;
+
     public $card_holder;
+
     public $date_add;
 
     /**

@@ -40,7 +40,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CategoryProductSearchProvider implements ProductSearchProviderInterface
 {
     private $translator;
+
     private $category;
+
     private $sortOrderFactory;
 
     public function __construct(

@@ -30,9 +30,13 @@
 class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 {
     public $supply_order;
+
     public $warehouse;
+
     public $address_warehouse;
+
     public $address_supplier;
+
     public $context;
 
     /**

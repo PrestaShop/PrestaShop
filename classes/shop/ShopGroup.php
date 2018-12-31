@@ -30,10 +30,15 @@
 class ShopGroupCore extends ObjectModel
 {
     public $name;
+
     public $active = true;
+
     public $share_customer;
+
     public $share_stock;
+
     public $share_order;
+
     public $deleted;
 
     /**

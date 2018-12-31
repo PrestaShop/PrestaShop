@@ -36,6 +36,7 @@ class AdminThemesControllerCore extends AdminController
 {
     // temp
     const CACHE_FILE_CUSTOMER_THEMES_LIST = '/config/xml/customer_themes_list.xml';
+
     const CACHE_FILE_MUST_HAVE_THEMES_LIST = '/config/xml/must_have_themes_list.xml';
 
     /**
@@ -47,8 +48,11 @@ class AdminThemesControllerCore extends AdminController
      * @var ThemeRepository
      */
     protected $theme_repository;
+
     protected $toolbar_scroll = false;
+
     protected $authAccesses = array();
+
     protected $img_error;
 
     /** @var LogoUploader $logo_uploader */

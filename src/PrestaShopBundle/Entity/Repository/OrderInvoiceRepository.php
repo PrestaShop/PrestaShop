@@ -37,6 +37,7 @@ class OrderInvoiceRepository
      * @var Connection
      */
     private $connection;
+
     /**
      * @var string
      */

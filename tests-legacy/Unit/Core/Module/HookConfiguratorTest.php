@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 class HookConfiguratorTest extends UnitTestCase
 {
     private $hookConfigurator;
+
     private $hookRepository;
 
     protected function setUp()

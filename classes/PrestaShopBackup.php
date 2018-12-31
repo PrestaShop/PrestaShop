@@ -42,6 +42,7 @@ class PrestaShopBackupCore
     public $customBackupDir = null;
 
     public $psBackupAll = true;
+
     public $psBackupDropTable = true;
 
     /**

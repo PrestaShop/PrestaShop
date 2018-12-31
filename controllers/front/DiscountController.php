@@ -26,8 +26,11 @@
 class DiscountControllerCore extends FrontController
 {
     public $auth = true;
+
     public $php_self = 'discount';
+
     public $authRedirection = 'discount';
+
     public $ssl = true;
 
     /**

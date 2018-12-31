@@ -93,7 +93,9 @@ class MailCore extends ObjectModel
      * Mail content type.
      */
     const TYPE_HTML = 1;
+
     const TYPE_TEXT = 2;
+
     const TYPE_BOTH = 3;
 
     /**

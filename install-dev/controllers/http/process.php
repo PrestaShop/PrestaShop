@@ -31,7 +31,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 {
     /** @var  Install */
     protected $model_install;
+
     public $process_steps = array();
+
     public $previous_button = false;
 
     public function init()

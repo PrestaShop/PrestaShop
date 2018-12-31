@@ -36,12 +36,19 @@ use ICanBoogie\CLDR\WebProvider;
 class Repository
 {
     protected $cldrCacheFolder;
+
     protected $repository;
+
     protected $localeRepository;
+
     protected $region;
+
     protected $locale;
+
     protected $contextLanguage;
+
     protected $oldUmask;
+
     protected $non_iso_relational_language = array(
         'an-es' => 'en-GB',
         'az-az' => 'az-Cyrl-AZ',

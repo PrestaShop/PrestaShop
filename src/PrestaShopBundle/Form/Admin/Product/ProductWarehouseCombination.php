@@ -39,6 +39,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ProductWarehouseCombination extends CommonAbstractType
 {
     private $translator;
+
     private $contextLegacy;
 
     /**

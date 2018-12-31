@@ -53,6 +53,7 @@ class ImportFormHandler implements ImportFormHandlerInterface
      * @var ImportFormDataProviderInterface
      */
     private $formDataProvider;
+
     /**
      * @var string
      */

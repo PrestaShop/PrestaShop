@@ -48,7 +48,9 @@ class PriceFormatter extends BasePricePresenter
 class ProductPresenterTest extends UnitTestCase
 {
     private $settings;
+
     private $product;
+
     private $language;
 
     protected function setUp()

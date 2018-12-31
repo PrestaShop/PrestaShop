@@ -29,8 +29,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CustomerAddressFormatterCore implements FormFormatterInterface
 {
     private $country;
+
     private $translator;
+
     private $availableCountries;
+
     private $definition;
 
     public function __construct(

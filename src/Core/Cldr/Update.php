@@ -38,6 +38,7 @@ class Update extends Repository
     const ZIP_CORE_URL = 'http://i18n.prestashop.com/cldr/json-full.zip';
 
     protected $newDatasFile = [];
+
     protected $oldUmask;
 
     /**

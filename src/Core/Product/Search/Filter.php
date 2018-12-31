@@ -46,8 +46,11 @@ class Filter
     private $displayed = true;
 
     private $properties = [];
+
     private $magnitude;
+
     private $value;
+
     private $nextEncodedFacets;
 
     public function toArray()

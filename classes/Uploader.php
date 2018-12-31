@@ -32,10 +32,15 @@ class UploaderCore
     const DEFAULT_MAX_SIZE = 10485760;
 
     private $_check_file_size;
+
     private $_accept_types;
+
     private $_files;
+
     private $_max_size;
+
     private $_name;
+
     private $_save_path;
 
     /**

@@ -35,6 +35,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class ThemeRepositoryTest extends TestCase
 {
     const NOTICE = '[ThemeRepository] ';
+
     private $repository;
 
     protected function setUp()

@@ -49,6 +49,7 @@ use StockAvailable;
 abstract class AbstractCartTest extends IntegrationTestCase
 {
     const DEFAULT_SHIPPING_FEE = 7;
+
     const DEFAULT_WRAPPING_FEE = 0;
 
     const PRODUCT_FIXTURES = [

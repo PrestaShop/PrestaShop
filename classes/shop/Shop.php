@@ -43,6 +43,7 @@ class ShopCore extends ObjectModel
     public $name;
 
     public $active = true;
+
     public $deleted;
 
     /** @var string Physical uri of main url (read only) */
@@ -80,7 +81,9 @@ class ShopCore extends ObjectModel
     protected static $shops;
 
     protected static $asso_tables = array();
+
     protected static $id_shop_default_tables = array();
+
     protected static $initialized = false;
 
     protected $webserviceParameters = array(
@@ -106,14 +109,18 @@ class ShopCore extends ObjectModel
      * There are 3 kinds of shop context : shop, group shop and general.
      */
     const CONTEXT_SHOP = 1;
+
     const CONTEXT_GROUP = 2;
+
     const CONTEXT_ALL = 4;
 
     /**
      * Some data can be shared between shops, like customers or orders.
      */
     const SHARE_CUSTOMER = 'share_customer';
+
     const SHARE_ORDER = 'share_order';
+
     const SHARE_STOCK = 'share_stock';
 
     /**

@@ -39,7 +39,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductShipping extends CommonAbstractType
 {
     private $translator;
+
     private $carriersChoices;
+
     private $warehouses;
 
     /**

@@ -31,6 +31,7 @@ class AdminWebserviceControllerCore extends AdminController
 {
     /** this will be filled later */
     public $fields_form = array('webservice form');
+
     protected $toolbar_scroll = false;
 
     public function __construct()

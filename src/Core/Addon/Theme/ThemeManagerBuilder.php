@@ -40,6 +40,7 @@ use Symfony\Component\Finder\Finder;
 class ThemeManagerBuilder
 {
     private $context;
+
     private $db;
 
     public function __construct(Context $context, Db $db)

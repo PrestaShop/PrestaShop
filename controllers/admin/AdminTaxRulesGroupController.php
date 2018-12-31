@@ -30,8 +30,11 @@
 class AdminTaxRulesGroupControllerCore extends AdminController
 {
     public $tax_rule;
+
     public $selected_countries = array();
+
     public $selected_states = array();
+
     public $errors_tax_rule;
 
     public function __construct()

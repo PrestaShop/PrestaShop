@@ -40,9 +40,13 @@ use Symfony\Component\Form\FormEvents;
 class ProductFeature extends CommonAbstractType
 {
     private $featureDataProvider;
+
     private $translator;
+
     private $locales;
+
     private $router;
+
     private $features;
 
     /**

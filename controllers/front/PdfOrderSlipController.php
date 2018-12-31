@@ -26,7 +26,9 @@
 class PdfOrderSlipControllerCore extends FrontController
 {
     public $php_self = 'pdf-order-slip';
+
     protected $display_header = false;
+
     protected $display_footer = false;
 
     protected $order_slip;

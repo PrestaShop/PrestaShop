@@ -39,6 +39,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
 class Router extends BaseRouter
 {
     private $userProvider;
+
     private $tokenManager;
 
     /**

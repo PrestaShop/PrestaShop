@@ -29,11 +29,17 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 class Facet
 {
     private $label;
+
     private $type;
+
     private $displayed = true;
+
     private $properties = [];
+
     private $filters = [];
+
     private $multipleSelectionAllowed = true;
+
     private $widgetType = 'radio';
 
     public function toArray()

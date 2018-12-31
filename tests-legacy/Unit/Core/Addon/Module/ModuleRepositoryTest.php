@@ -45,7 +45,9 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 class ModuleRepositoryTest extends UnitTestCase
 {
     private $moduleRepositoryStub;
+
     private $moduleDataProviderStub;
+
     private $categoriesProviderS;
 
     private $http_host_not_found = false;

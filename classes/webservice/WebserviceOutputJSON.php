@@ -26,8 +26,11 @@
 class WebserviceOutputJSONCore implements WebserviceOutputInterface
 {
     public $docUrl = '';
+
     public $languages = array();
+
     protected $wsUrl;
+
     protected $schemaToDisplay;
 
     /**

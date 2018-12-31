@@ -30,20 +30,31 @@
 class ReferrerCore extends ObjectModel
 {
     public $id_shop;
+
     public $name;
+
     public $passwd;
 
     public $http_referer_regexp;
+
     public $http_referer_like;
+
     public $request_uri_regexp;
+
     public $request_uri_like;
+
     public $http_referer_regexp_not;
+
     public $http_referer_like_not;
+
     public $request_uri_regexp_not;
+
     public $request_uri_like_not;
 
     public $base_fee;
+
     public $percent_fee;
+
     public $click_fee;
 
     public $date_add;

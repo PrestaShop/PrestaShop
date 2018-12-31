@@ -32,15 +32,21 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 class CartTaxesTest extends AbstractCartCalculationTest
 {
     const TAX_RULE_GROUPID_1 = 32;
+
     const ADDRESS_ID_1       = 2;
+
     const TAX_RATE_1         = 4;
 
     const ADDRESS_ID_2       = 4;
+
     const TAX_RULE_GROUPID_2 = 9;
+
     const TAX_RATE_2         = 6;
 
     const ADDRESS_ID_3       = 1;
+
     const TAX_RULE_GROUPID_3 = 0;
+
     const TAX_RATE_3         = 0;
 
     const PRODUCT_FIXTURES = [

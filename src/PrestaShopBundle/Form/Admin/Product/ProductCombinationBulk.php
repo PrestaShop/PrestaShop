@@ -44,8 +44,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ProductCombinationBulk extends CommonAbstractType
 {
     private $isoCode;
+
     private $priceDisplayPrecision;
+
     private $translator;
+
     private $configuration;
 
     public function __construct(TranslatorInterface $translator, Configuration $configuration)

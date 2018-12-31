@@ -15,54 +15,63 @@ class Cart extends CartCore
     * version: 1
     */
     public $allow_seperated_package = false;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
     * version: 1
     */
     protected static $_nbProducts = array();
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
     * version: 1
     */
     protected static $_isVirtualCart = array();
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
     * version: 1
     */
     protected $_products = null;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
     * version: 1
     */
     protected static $_totalWeight = array();
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
     * version: 1
     */
     protected $_taxCalculationMethod = PS_TAX_EXC;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
     * version: 1
     */
     protected static $_carriers = null;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
     * version: 1
     */
     protected static $_taxes_rate = null;
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34
     * version: 1
     */
     protected static $_attributesLists = array();
+
     /*
     * module: pscsx3241
     * date: 2015-07-13 15:56:34

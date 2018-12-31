@@ -30,27 +30,41 @@
 class UpgraderCore
 {
     const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
+
     public $rss_version_link;
+
     public $rss_md5file_link_dir;
+
     /**
      * @var bool contains true if last version is not installed
      */
     protected $need_upgrade = false;
+
     protected $changed_files = array();
+
     protected $missing_files = array();
 
     public $version_name;
+
     public $version_num;
+
     public $version_is_modified = null;
+
     /**
      * @var string contains hte url where to download the file
      */
     public $link;
+
     public $autoupgrade;
+
     public $autoupgrade_module;
+
     public $autoupgrade_last_version;
+
     public $autoupgrade_module_link;
+
     public $changelog;
+
     public $md5;
 
     /**

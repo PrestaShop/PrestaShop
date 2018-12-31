@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 class EntityMetaData
 {
     private $tableName;
+
     private $primaryKeyFieldnames;
 
     public function setTableName($name)

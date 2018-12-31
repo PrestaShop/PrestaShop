@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\EntityMetaDataRetriever;
 class EntityManager
 {
     private $db;
+
     private $configuration;
 
     private $entityMetaData = array();

@@ -26,13 +26,21 @@
 class FormFieldCore
 {
     private $name = '';
+
     private $type = 'text';
+
     private $required = false;
+
     private $label = '';
+
     private $value = null;
+
     private $availableValues = [];
+
     private $maxLength = null;
+
     private $errors = [];
+
     private $constraints = [];
 
     public function toArray()

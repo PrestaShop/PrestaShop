@@ -29,6 +29,7 @@ class JavascriptManagerCore extends AbstractAssetManager
     protected $list;
 
     protected $valid_position = ['head', 'bottom'];
+
     protected $valid_attribute = ['async', 'defer'];
 
     protected function getDefaultList()

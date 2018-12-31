@@ -28,8 +28,11 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter;
 class OrderFollowControllerCore extends FrontController
 {
     public $auth = true;
+
     public $php_self = 'order-follow';
+
     public $authRedirection = 'order-follow';
+
     public $ssl = true;
 
     /**

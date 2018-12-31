@@ -38,7 +38,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductSupplierCombination extends CommonAbstractType
 {
     private $translator;
+
     private $contextLegacy;
+
     private $currencyAdapter;
 
     /**

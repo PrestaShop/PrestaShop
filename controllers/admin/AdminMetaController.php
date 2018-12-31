@@ -30,11 +30,14 @@
 class AdminMetaControllerCore extends AdminController
 {
     public $table = 'meta';
+
     public $className = 'Meta';
+
     public $lang = true;
 
     /** @var ShopUrl */
     protected $url = false;
+
     protected $toolbar_scroll = false;
 
     /**

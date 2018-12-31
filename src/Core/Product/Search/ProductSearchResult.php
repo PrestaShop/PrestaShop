@@ -29,10 +29,15 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 class ProductSearchResult
 {
     private $products = [];
+
     private $totalProductsCount;
+
     private $facetCollection;
+
     private $encodedFacets;
+
     private $availableSortOrders = [];
+
     private $currentSortOrder;
 
     public function setProducts(array $products)

@@ -33,7 +33,9 @@
 class CSVCore
 {
     public $filename;
+
     public $collection;
+
     public $delimiter;
 
     /**

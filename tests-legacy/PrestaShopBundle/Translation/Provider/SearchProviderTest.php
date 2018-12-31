@@ -36,6 +36,7 @@ class SearchProviderTest extends TestCase
 {
     /** @see /resources/translations/en-US/AdminActions.en-US.xlf */
     private $provider;
+
     private static $resourcesDir;
 
     protected function setUp()

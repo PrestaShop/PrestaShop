@@ -46,6 +46,7 @@ final class NonInstalledLocalizationChoiceProvider implements FormChoiceProvider
      * @var LanguageDataProvider
      */
     private $languageProvider;
+
     /**
      * @var array
      */

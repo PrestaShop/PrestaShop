@@ -31,24 +31,35 @@ class CarrierCore extends ObjectModel
      * getCarriers method filter.
      */
     const PS_CARRIERS_ONLY = 1;
+
     const CARRIERS_MODULE = 2;
+
     const CARRIERS_MODULE_NEED_RANGE = 3;
+
     const PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE = 4;
+
     const ALL_CARRIERS = 5;
 
     const SHIPPING_METHOD_DEFAULT = 0;
+
     const SHIPPING_METHOD_WEIGHT = 1;
+
     const SHIPPING_METHOD_PRICE = 2;
+
     const SHIPPING_METHOD_FREE = 3;
 
     const SHIPPING_PRICE_EXCEPTION = 0;
+
     const SHIPPING_WEIGHT_EXCEPTION = 1;
+
     const SHIPPING_SIZE_EXCEPTION = 2;
 
     const SORT_BY_PRICE = 0;
+
     const SORT_BY_POSITION = 1;
 
     const SORT_BY_ASC = 0;
+
     const SORT_BY_DESC = 1;
 
     /** @var int common id for carrier historization */
@@ -147,8 +158,11 @@ class CarrierCore extends ObjectModel
     );
 
     protected static $price_by_weight = array();
+
     protected static $price_by_weight2 = array();
+
     protected static $price_by_price = array();
+
     protected static $price_by_price2 = array();
 
     protected static $cache_tax_rule = array();

@@ -30,17 +30,24 @@ class CartControllerCore extends FrontController
     public $php_self = 'cart';
 
     protected $id_product;
+
     protected $id_product_attribute;
+
     protected $id_address_delivery;
+
     protected $customization_id;
+
     protected $qty;
+
     /**
      * To specify if you are in the preview mode or not.
      *
      * @var bool
      */
     protected $preview;
+
     public $ssl = true;
+
     /**
      * An array of errors, in case the update action of product is wrong.
      *

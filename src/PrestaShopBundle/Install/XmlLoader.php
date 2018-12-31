@@ -67,8 +67,11 @@ class XmlLoader
     protected $errors = array();
 
     protected $data_path;
+
     protected $lang_path;
+
     protected $img_path;
+
     public $path_type;
 
     protected $ids = array();

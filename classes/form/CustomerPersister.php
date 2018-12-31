@@ -29,9 +29,13 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CustomerPersisterCore
 {
     private $errors = [];
+
     private $context;
+
     private $crypto;
+
     private $translator;
+
     private $guest_allowed;
 
     public function __construct(

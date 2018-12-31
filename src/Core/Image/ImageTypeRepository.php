@@ -32,7 +32,9 @@ use Shop;
 class ImageTypeRepository
 {
     private $shop;
+
     private $db;
+
     private $db_prefix;
 
     public function __construct(

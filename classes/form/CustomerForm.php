@@ -33,10 +33,13 @@ class CustomerFormCore extends AbstractForm
     protected $template = 'customer/_partials/customer-form.tpl';
 
     private $context;
+
     private $urls;
 
     private $customerPersister;
+
     private $guest_allowed;
+
     private $passwordRequired = true;
 
     public function __construct(

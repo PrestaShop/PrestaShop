@@ -65,6 +65,7 @@ use Symfony\Component\Yaml\Yaml;
 class Install extends AbstractInstall
 {
     const SETTINGS_FILE = 'config/settings.inc.php';
+
     const BOOTSTRAP_FILE = 'config/bootstrap.php';
 
     protected $logger;

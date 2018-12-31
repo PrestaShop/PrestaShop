@@ -29,7 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Checkout;
 class TermsAndConditions
 {
     private $identifier;
+
     private $links;
+
     private $rawText;
 
     public function setText($rawText)

@@ -85,7 +85,9 @@ class CartCore extends ObjectModel
     public $date_upd;
 
     public $checkedTos = false;
+
     public $pictures;
+
     public $textFields;
 
     public $delivery_option;
@@ -94,22 +96,32 @@ class CartCore extends ObjectModel
     public $allow_seperated_package = false;
 
     protected static $_nbProducts = array();
+
     protected static $_isVirtualCart = array();
 
     protected $_products = null;
+
     protected static $_totalWeight = array();
+
     protected $_taxCalculationMethod = PS_TAX_EXC;
+
     protected static $_carriers = null;
+
     protected static $_taxes_rate = null;
+
     protected static $_attributesLists = array();
 
     /** @var Customer|null */
     protected static $_customer = null;
 
     protected static $cacheDeliveryOption = array();
+
     protected static $cacheNbPackages = array();
+
     protected static $cachePackageList = array();
+
     protected static $cacheDeliveryOptionList = array();
+
     protected static $cacheMultiAddressDelivery = array();
 
     /**
@@ -174,14 +186,20 @@ class CartCore extends ObjectModel
     protected $shouldExcludeGiftsDiscount = false;
 
     const ONLY_PRODUCTS = 1;
+
     const ONLY_DISCOUNTS = 2;
+
     const BOTH = 3;
+
     const BOTH_WITHOUT_SHIPPING = 4;
+
     const ONLY_SHIPPING = 5;
+
     const ONLY_WRAPPING = 6;
 
     /** @deprecated since 1.7 **/
     const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
+
     const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
 
     /**

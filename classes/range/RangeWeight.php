@@ -26,7 +26,9 @@
 class RangeWeightCore extends ObjectModel
 {
     public $id_carrier;
+
     public $delimiter1;
+
     public $delimiter2;
 
     /**

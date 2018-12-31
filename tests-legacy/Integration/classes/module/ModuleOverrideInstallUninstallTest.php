@@ -35,6 +35,7 @@ use PrestaShopAutoload;
 class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
 {
     public $moduleManagerBuilder;
+
     public $moduleManager;
 
     public $moduleNames;

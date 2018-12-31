@@ -26,6 +26,7 @@
 abstract class AbstractLoggerCore
 {
     public $level;
+
     protected $level_value = array(
         0 => 'DEBUG',
         1 => 'INFO',
@@ -34,8 +35,11 @@ abstract class AbstractLoggerCore
     );
 
     const DEBUG = 0;
+
     const INFO = 1;
+
     const WARNING = 2;
+
     const ERROR = 3;
 
     public function __construct($level = self::INFO)

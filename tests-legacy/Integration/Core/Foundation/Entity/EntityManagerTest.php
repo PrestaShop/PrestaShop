@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\ContainerBuilder;
 class EntityManagerTest extends IntegrationTestCase
 {
     private $container;
+
     private $entityManager;
 
     /**

@@ -38,6 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductCustomField extends CommonAbstractType
 {
     private $translator;
+
     private $locales;
 
     /**

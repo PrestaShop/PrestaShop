@@ -95,6 +95,7 @@ class EditableCategory
      * @var array
      */
     private $menuThumbnailImages;
+
     private $isRootCategory;
 
     /**

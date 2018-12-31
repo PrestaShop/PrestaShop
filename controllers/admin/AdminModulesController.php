@@ -32,6 +32,7 @@ class AdminModulesControllerCore extends AdminController
         /* 'bloctopmenu' => array('advancedtopmenu'), */
         'blocklayered' => array('pm_advancedsearch4'),
     );
+
     /*
     ** @var array map with $_GET keywords and their callback
     */
@@ -47,18 +48,25 @@ class AdminModulesControllerCore extends AdminController
     );
 
     protected $list_modules_categories = array();
+
     protected $list_partners_modules = array();
+
     protected $list_natives_modules = array();
 
     protected $nb_modules_total = 0;
+
     protected $nb_modules_installed = 0;
+
     protected $nb_modules_activated = 0;
 
     protected $serial_modules = '';
+
     protected $modules_authors = array();
 
     protected $id_employee;
+
     protected $iso_default_country;
+
     protected $filter_configuration = array();
 
     protected $xml_modules_list = _PS_API_MODULES_LIST_16_;

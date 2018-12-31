@@ -32,9 +32,11 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 class AssetsCoreTest extends TestCase
 {
     private $stylesheetManager;
+
     private $javascriptManager;
 
     private $listCSS;
+
     private $listJS;
 
     private $testsPath;

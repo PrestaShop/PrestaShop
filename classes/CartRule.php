@@ -32,10 +32,15 @@ class CartRuleCore extends ObjectModel
     /* Filters used when retrieving the cart rules applied to a cart of when calculating the value of a reduction */
 
     const FILTER_ACTION_ALL = 1;
+
     const FILTER_ACTION_SHIPPING = 2;
+
     const FILTER_ACTION_REDUCTION = 3;
+
     const FILTER_ACTION_GIFT = 4;
+
     const FILTER_ACTION_ALL_NOCAP = 5;
+
     const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
 
     /**
@@ -47,42 +52,74 @@ class CartRuleCore extends ObjectModel
     protected static $only_one_gift = array();
 
     public $id;
+
     public $name;
+
     public $id_customer;
+
     public $date_from;
+
     public $date_to;
+
     public $description;
+
     public $quantity = 1;
+
     public $quantity_per_user = 1;
+
     public $priority = 1;
+
     public $partial_use = 1;
+
     public $code;
+
     public $minimum_amount;
+
     public $minimum_amount_tax;
+
     public $minimum_amount_currency;
+
     public $minimum_amount_shipping;
+
     public $country_restriction;
+
     public $carrier_restriction;
+
     public $group_restriction;
+
     public $cart_rule_restriction;
+
     public $product_restriction;
+
     public $shop_restriction;
+
     public $free_shipping;
+
     public $reduction_percent;
+
     public $reduction_amount;
 
     /**
      * @var bool is this voucher value tax included (false = tax excluded value)
      */
     public $reduction_tax;
+
     public $reduction_currency;
+
     public $reduction_product;
+
     public $reduction_exclude_special;
+
     public $gift_product;
+
     public $gift_product_attribute;
+
     public $highlight;
+
     public $active = 1;
+
     public $date_add;
+
     public $date_upd;
 
     protected static $cartAmountCache = array();

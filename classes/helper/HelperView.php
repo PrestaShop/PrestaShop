@@ -26,8 +26,11 @@
 class HelperViewCore extends Helper
 {
     public $id;
+
     public $toolbar = true;
+
     public $table;
+
     public $token;
 
     /** @var string|null If not null, a title will be added on that list */

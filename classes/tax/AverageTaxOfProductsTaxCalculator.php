@@ -26,7 +26,9 @@
 class AverageTaxOfProductsTaxCalculator
 {
     private $id_order;
+
     private $configuration;
+
     private $db;
 
     public $computation_method = 'average_tax_of_products';

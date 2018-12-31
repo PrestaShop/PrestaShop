@@ -26,6 +26,7 @@
 class ContactControllerCore extends FrontController
 {
     public $php_self = 'contact';
+
     public $ssl = true;
 
     /**

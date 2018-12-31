@@ -31,9 +31,11 @@ use GuzzleHttp\Client;
 class ApiClient
 {
     private $addonsApiClient;
+
     private $queryParameters = array(
         'format' => 'json',
     );
+
     private $defaultQueryParameters;
 
     /**

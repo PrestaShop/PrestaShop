@@ -31,8 +31,11 @@ use Context;
 class ProductSearchContext
 {
     private $id_shop;
+
     private $id_lang;
+
     private $id_currency;
+
     private $id_customer;
 
     public function __construct(Context $context = null)

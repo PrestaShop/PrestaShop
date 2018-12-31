@@ -50,6 +50,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     protected $combinations;
 
     protected $quantity_discounts;
+
     protected $adminNotifications = array();
 
     public function canonicalRedirection($canonical_url = '')

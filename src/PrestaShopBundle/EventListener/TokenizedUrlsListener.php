@@ -45,8 +45,11 @@ use Tools;
 class TokenizedUrlsListener
 {
     private $tokenManager;
+
     private $router;
+
     private $username;
+
     private $employeeId;
 
     public function __construct(

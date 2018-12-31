@@ -29,8 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Product;
 interface ProductInterface
 {
     const REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY = '301-category';
+
     const REDIRECT_TYPE_CATEGORY_FOUND = '302-category';
+
     const REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY = '301-product';
+
     const REDIRECT_TYPE_PRODUCT_FOUND = '302-product';
+
     const REDIRECT_TYPE_NOT_FOUND = '404';
 }

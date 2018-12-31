@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 class ProductAssemblerCore
 {
     private $context;
+
     private $searchContext;
 
     /**

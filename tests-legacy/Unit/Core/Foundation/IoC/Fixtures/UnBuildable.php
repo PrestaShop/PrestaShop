@@ -29,7 +29,9 @@ namespace LegacyTests\Unit\Core\Foundation\IoC\Fixtures;
 class UnBuildable
 {
     private $dummy;
+
     private $something;
+
     private $cannotBeBuilt;
 
     public function __construct(Dummy $dummy, $cannotBeBuilt, $something = 4)

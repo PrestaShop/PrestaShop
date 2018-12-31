@@ -48,8 +48,11 @@ class CurrencyCore extends ObjectModel
     public $active;
 
     public $sign;
+
     public $format;
+
     public $blank;
+
     public $decimals;
 
     /**
@@ -70,6 +73,7 @@ class CurrencyCore extends ObjectModel
 
     /** @var array Currency cache */
     protected static $currencies = array();
+
     protected static $countActiveCurrencies = array();
 
     protected $webserviceParameters = array(
@@ -82,6 +86,7 @@ class CurrencyCore extends ObjectModel
      * @var string
      */
     public $prefix = null;
+
     /**
      * contains the sign to display after price, according to its format.
      *

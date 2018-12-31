@@ -26,16 +26,27 @@
 class SpecificPriceRuleCore extends ObjectModel
 {
     public $name;
+
     public $id_shop;
+
     public $id_currency;
+
     public $id_country;
+
     public $id_group;
+
     public $from_quantity;
+
     public $price;
+
     public $reduction;
+
     public $reduction_tax;
+
     public $reduction_type;
+
     public $from;
+
     public $to;
 
     protected static $rules_application_enable = true;

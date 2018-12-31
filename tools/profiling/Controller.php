@@ -27,13 +27,19 @@
 abstract class Controller extends ControllerCore
 {
     protected $total_filesize = 0;
+
     protected $total_query_time = 0;
+
     protected $total_global_var_size = 0;
+
     protected $total_modules_time = 0;
+
     protected $total_modules_memory = 0;
+
     protected $global_var_size = array();
 
     protected $modules_perfs = array();
+
     protected $hooks_perfs = array();
 
     protected $array_queries = array();

@@ -104,8 +104,11 @@ class HelperListCore extends Helper
     public $list_skip_actions = array();
 
     public $bulk_actions = false;
+
     public $force_show_bulk_actions = false;
+
     public $specificConfirmDelete = null;
+
     public $colorOnBackground;
 
     /** @var bool If true, activates color on hover */

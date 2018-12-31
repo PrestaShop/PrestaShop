@@ -26,6 +26,7 @@
 class StatisticsControllerCore extends FrontController
 {
     public $display_header = false;
+
     public $display_footer = false;
 
     protected $param_token;

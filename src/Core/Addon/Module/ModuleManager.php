@@ -49,12 +49,14 @@ class ModuleManager implements AddonManagerInterface
      * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
      */
     private $adminModuleProvider;
+
     /**
      * Module Data Provider.
      *
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
      */
     private $moduleProvider;
+
     /**
      * Module Data Provider.
      *

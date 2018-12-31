@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 class ProductPresenterFactoryCore
 {
     private $context;
+
     private $taxConfiguration;
 
     /**

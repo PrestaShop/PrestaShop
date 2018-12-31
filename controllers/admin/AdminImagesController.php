@@ -30,7 +30,9 @@
 class AdminImagesControllerCore extends AdminController
 {
     protected $start_time = 0;
+
     protected $max_execution_time = 7200;
+
     protected $display_move;
 
     public function __construct()

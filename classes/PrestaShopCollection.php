@@ -32,7 +32,9 @@
 class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 {
     const LEFT_JOIN = 1;
+
     const INNER_JOIN = 2;
+
     const LEFT_OUTER_JOIN = 3;
 
     /**
@@ -86,9 +88,13 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     protected $page_size = 0;
 
     protected $fields = array();
+
     protected $alias = array();
+
     protected $alias_iterator = 0;
+
     protected $join_list = array();
+
     protected $association_definition = array();
 
     const LANG_ALIAS = 'l';

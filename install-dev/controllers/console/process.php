@@ -29,6 +29,7 @@ use PrestaShopBundle\Install\Install;
 class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
 {
     public $process_steps = array();
+
     public $previous_button = false;
 
     public function init()

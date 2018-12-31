@@ -26,14 +26,21 @@
 class ShopUrlCore extends ObjectModel
 {
     public $id_shop;
+
     public $domain;
+
     public $domain_ssl;
+
     public $physical_uri;
+
     public $virtual_uri;
+
     public $main;
+
     public $active;
 
     protected static $main_domain = array();
+
     protected static $main_domain_ssl = array();
 
     /**

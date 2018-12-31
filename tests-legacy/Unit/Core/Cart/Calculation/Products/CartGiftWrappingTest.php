@@ -32,7 +32,9 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 class CartGiftWrappingTest extends AbstractCartCalculationTest
 {
     const GIFT_WRAPPING_PRICE = 5.3;
+
     protected $previousGiftWrapping;
+
     protected $previousGiftWrappingPrice;
 
     protected function setUp()

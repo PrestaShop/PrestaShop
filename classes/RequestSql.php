@@ -30,6 +30,7 @@
 class RequestSqlCore extends ObjectModel
 {
     public $name;
+
     public $sql;
 
     /**

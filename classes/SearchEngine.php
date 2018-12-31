@@ -30,6 +30,7 @@
 class SearchEngineCore extends ObjectModel
 {
     public $server;
+
     public $getvar;
 
     /**

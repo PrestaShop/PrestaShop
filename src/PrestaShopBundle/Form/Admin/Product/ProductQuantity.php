@@ -43,7 +43,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductQuantity extends CommonAbstractType
 {
     private $router;
+
     private $translator;
+
     private $configuration;
 
     /**

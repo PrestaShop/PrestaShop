@@ -26,10 +26,13 @@
 class HelperTreeShopsCore extends TreeCore
 {
     const DEFAULT_TEMPLATE = 'tree_shops.tpl';
+
     const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder_checkbox_shops.tpl';
+
     const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item_checkbox_shops.tpl';
 
     private $_lang;
+
     private $_selected_shops;
 
     public function __construct($id, $title = null, $lang = null)

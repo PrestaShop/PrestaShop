@@ -26,7 +26,9 @@
 class CurveCore
 {
     protected $values = array();
+
     protected $label;
+
     protected $type;
 
     /** @prototype void public function setValues($values) */

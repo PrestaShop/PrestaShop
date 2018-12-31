@@ -30,8 +30,11 @@
 class AdminAttributesGroupsControllerCore extends AdminController
 {
     public $bootstrap = true;
+
     protected $id_attribute;
+
     protected $position_identifier = 'id_attribute_group';
+
     protected $attribute_name;
 
     public function __construct()

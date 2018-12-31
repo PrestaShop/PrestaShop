@@ -38,10 +38,15 @@ use Symfony\Component\Translation\TranslatorInterface;
 final class ServerRequirementsChecker implements ServerRequirementsCheckerInterface
 {
     const ISSUE_NOT_APACHE_SERVER = 'not_apache_server';
+
     const ISSUE_CANNOT_CHECK_APACHE_MODULES = 'cannot_check_apache_modules';
+
     const ISSUE_APACHE_MOD_AUTH_BASIC_NOT_AVAILABLE = 'issue_apache_mod_auth_basic_not_available';
+
     const ISSUE_APACHE_MOD_AUTH_REWRITE_NOT_AVAILABLE = 'issue_apache_mod_auth_rewrite_not_available';
+
     const ISSUE_EXT_SIMPLEXML_NOT_AVAILABLE = 'issue_ext_simplexml_not_available';
+
     const ISSUE_HTTPS_NOT_AVAILABLE = 'issue_https_not_available';
 
     /**

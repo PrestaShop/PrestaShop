@@ -104,6 +104,7 @@ class AddressCore extends ObjectModel
 
     /** @var array Zone IDs cache */
     protected static $_idZones = array();
+
     /** @var array Country IDs cache */
     protected static $_idCountries = array();
 

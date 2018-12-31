@@ -29,6 +29,7 @@ class FileUploaderCore
 
     /** @var QqUploadedFileXhr|QqUploadedFileForm|false */
     protected $file;
+
     protected $sizeLimit;
 
     public function __construct(array $allowedExtensions = array(), $sizeLimit = 10485760)

@@ -29,6 +29,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ConditionsToApproveFinderCore
 {
     private $translator;
+
     private $context;
 
     public function __construct(
