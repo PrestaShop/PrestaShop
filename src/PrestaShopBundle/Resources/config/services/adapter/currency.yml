@@ -52,9 +52,9 @@ services:
 
     # Query handlers
 
-    prestashop.adapter.currency.query_handler.get_currency_for_form_editing:
-        class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetCurrencyForFormEditingHandler'
+    prestashop.adapter.currency.query_handler.get_currency_for_editing:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetCurrencyForEditingHandler'
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForFormEditing' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing' }
