@@ -24,76 +24,80 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
 
 /**
- * Class CustomerMessageInformation holds customer message information.
+ * Class BoughtProductInformation holds information about product that customer has bought.
  */
-class MessageInformation
+class BoughtProductInformation
 {
     /**
      * @var int
      */
-    private $customerThreadId;
+    private $orderId;
 
     /**
      * @var string
      */
-    private $message;
+    private $boughtDate;
 
     /**
      * @var string
      */
-    private $status;
+    private $productName;
 
     /**
-     * @var string
+     * @var int
      */
-    private $date;
+    private $boughtQuantity;
 
     /**
-     * @param int $customerThreadId
-     * @param string $message
-     * @param string $status
-     * @param string $date
+     * @param int $orderId
+     * @param string $boughtDate
+     * @param string $productName
+     * @param int $boughtQuantity
      */
-    public function __construct($customerThreadId, $message, $status, $date)
-    {
-        $this->customerThreadId = $customerThreadId;
-        $this->message = $message;
-        $this->status = $status;
-        $this->date = $date;
+    public function __construct(
+        $orderId,
+        $boughtDate,
+        $productName,
+        $boughtQuantity
+    ) {
+        $this->orderId = $orderId;
+        $this->boughtDate = $boughtDate;
+        $this->productName = $productName;
+        $this->boughtQuantity = $boughtQuantity;
     }
 
     /**
      * @return int
      */
-    public function getCustomerThreadId()
+    public function getOrderId()
     {
-        return $this->customerThreadId;
+        return $this->orderId;
     }
 
     /**
      * @return string
      */
-    public function getMessage()
+    public function getBoughtDate()
     {
-        return $this->message;
+        return $this->boughtDate;
     }
 
     /**
      * @return string
      */
-    public function getStatus()
+    public function getProductName()
     {
-        return $this->status;
+        return $this->productName;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getDate()
+    public function getBoughtQuantity()
     {
-        return $this->date;
+        return $this->boughtQuantity;
     }
 }

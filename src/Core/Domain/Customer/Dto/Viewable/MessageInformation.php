@@ -24,38 +24,69 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
 
 /**
- * Class ReferrerInformation holds information about customer referrer.
+ * Class CustomerMessageInformation holds customer message information.
  */
-class ReferrerInformation
+class MessageInformation
 {
+    /**
+     * @var int
+     */
+    private $customerThreadId;
+
+    /**
+     * @var string
+     */
+    private $message;
+
+    /**
+     * @var string
+     */
+    private $status;
+
     /**
      * @var string
      */
     private $date;
 
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $shop;
-
-    /**
+     * @param int $customerThreadId
+     * @param string $message
+     * @param string $status
      * @param string $date
-     * @param string $name
-     * @param string $shop
      */
-    public function __construct($date, $name, $shop)
+    public function __construct($customerThreadId, $message, $status, $date)
     {
+        $this->customerThreadId = $customerThreadId;
+        $this->message = $message;
+        $this->status = $status;
         $this->date = $date;
-        $this->name = $name;
-        $this->shop = $shop;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCustomerThreadId()
+    {
+        return $this->customerThreadId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
@@ -64,21 +95,5 @@ class ReferrerInformation
     public function getDate()
     {
         return $this->date;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getShop()
-    {
-        return $this->shop;
     }
 }

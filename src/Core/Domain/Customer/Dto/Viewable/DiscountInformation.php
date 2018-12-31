@@ -24,80 +24,96 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
 
 /**
- * Class BoughtProductInformation holds information about product that customer has bought.
+ * Class DiscountInformation.
  */
-class BoughtProductInformation
+class DiscountInformation
 {
     /**
      * @var int
      */
-    private $orderId;
+    private $discountId;
 
     /**
      * @var string
      */
-    private $boughtDate;
+    private $code;
 
     /**
      * @var string
      */
-    private $productName;
+    private $name;
+
+    /**
+     * @var bool
+     */
+    private $isActive;
 
     /**
      * @var int
      */
-    private $boughtQuantity;
+    private $availableQuantity;
 
     /**
-     * @param int $orderId
-     * @param string $boughtDate
-     * @param string $productName
-     * @param int $boughtQuantity
+     * @param int $discountId
+     * @param string $code
+     * @param string $name
+     * @param bool $isActive
+     * @param int $availableQuantity
      */
     public function __construct(
-        $orderId,
-        $boughtDate,
-        $productName,
-        $boughtQuantity
+        $discountId,
+        $code,
+        $name,
+        $isActive,
+        $availableQuantity
     ) {
-        $this->orderId = $orderId;
-        $this->boughtDate = $boughtDate;
-        $this->productName = $productName;
-        $this->boughtQuantity = $boughtQuantity;
+        $this->discountId = $discountId;
+        $this->code = $code;
+        $this->name = $name;
+        $this->isActive = $isActive;
+        $this->availableQuantity = $availableQuantity;
     }
 
     /**
      * @return int
      */
-    public function getOrderId()
+    public function getDiscountId()
     {
-        return $this->orderId;
+        return $this->discountId;
     }
 
     /**
      * @return string
      */
-    public function getBoughtDate()
+    public function getCode()
     {
-        return $this->boughtDate;
+        return $this->code;
     }
 
     /**
      * @return string
      */
-    public function getProductName()
+    public function getName()
     {
-        return $this->productName;
+        return $this->name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->isActive;
     }
 
     /**
      * @return int
      */
-    public function getBoughtQuantity()
+    public function getAvailableQuantity()
     {
-        return $this->boughtQuantity;
+        return $this->availableQuantity;
     }
 }

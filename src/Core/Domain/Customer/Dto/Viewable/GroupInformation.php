@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
 
 /**
  * Class GroupInformation holds customer group information.

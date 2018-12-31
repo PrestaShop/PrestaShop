@@ -26,12 +26,24 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\AddressInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\DiscountInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\GeneralInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\GroupInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\LastConnectionInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\MessageInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\OrdersInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\PersonalInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\ProductsInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\ReferrerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\SentEmailInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
  * Class CustomerInformation stores customer information for viewing in Back Office.
  */
-class CustomerInformation
+class ViewableCustomer
 {
     /**
      * @var CustomerId

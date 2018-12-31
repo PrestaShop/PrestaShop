@@ -24,76 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
 
 /**
- * Class SentEmailInformation holds information about email sent to customer.
+ * Class GeneralInformation.
  */
-class SentEmailInformation
+class GeneralInformation
 {
     /**
      * @var string
      */
-    private $date;
+    private $privateNote;
 
     /**
      * @var string
      */
-    private $language;
+    private $customerBySameEmailExists;
 
     /**
-     * @var string
+     * @param string $privateNote
+     * @param bool $customerBySameEmailExists
      */
-    private $subject;
-
-    /**
-     * @var string
-     */
-    private $template;
-
-    /**
-     * @param string $date
-     * @param string $language
-     * @param string $subject
-     * @param string $template
-     */
-    public function __construct($date, $language, $subject, $template)
+    public function __construct($privateNote, $customerBySameEmailExists)
     {
-        $this->date = $date;
-        $this->language = $language;
-        $this->subject = $subject;
-        $this->template = $template;
+        $this->privateNote = $privateNote;
+        $this->customerBySameEmailExists = $customerBySameEmailExists;
     }
 
     /**
      * @return string
      */
-    public function getDate()
+    public function getPrivateNote()
     {
-        return $this->date;
+        return $this->privateNote;
     }
 
     /**
      * @return string
      */
-    public function getLanguage()
+    public function getCustomerBySameEmailExists()
     {
-        return $this->language;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
+        return $this->customerBySameEmailExists;
     }
 }
