@@ -204,14 +204,4 @@ class Tools
     {
         return LegacyTools::modRewriteActive();
     }
-
-    /**
-     * Gets shop protocol.
-     *
-     * @return string
-     */
-    public function getShopProtocol()
-    {
-        return LegacyTools::getShopProtocol();
-    }
 }
