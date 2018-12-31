@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\IsoCode;
@@ -85,13 +86,15 @@ class EditCurrencyCommand
     }
 
     /**
-     * @param IsoCode $isoCode
+     * @param string $isoCode
      *
      * @return self
+     *
+     * @throws CurrencyConstraintException
      */
-    public function setIsoCode(IsoCode $isoCode)
+    public function setIsoCode($isoCode)
     {
-        $this->isoCode = $isoCode;
+        $this->isoCode = new IsoCode($isoCode);
 
         return $this;
     }
@@ -105,13 +108,15 @@ class EditCurrencyCommand
     }
 
     /**
-     * @param ExchangeRate $exchangeRate
+     * @param float $exchangeRate
      *
      * @return self
+     *
+     * @throws CurrencyConstraintException
      */
-    public function setExchangeRate(ExchangeRate $exchangeRate)
+    public function setExchangeRate($exchangeRate)
     {
-        $this->exchangeRate = $exchangeRate;
+        $this->exchangeRate = new ExchangeRate((float) $exchangeRate);
 
         return $this;
     }
