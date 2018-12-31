@@ -241,16 +241,16 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->initializeContext();
 
         return $this->model_install->configureShop(array(
-            'shop_name' =>                $this->datas->shop_name,
-            'shop_activity' =>            $this->datas->shop_activity,
-            'shop_country' =>            $this->datas->shop_country,
-            'shop_timezone' =>            $this->datas->timezone,
-            'use_smtp' =>                false,
-            'admin_firstname' =>        $this->datas->admin_firstname,
-            'admin_lastname' =>            $this->datas->admin_lastname,
-            'admin_password' =>            $this->datas->admin_password,
-            'admin_email' =>            $this->datas->admin_email,
-            'configuration_agrement' =>    true,
+            'shop_name' => $this->datas->shop_name,
+            'shop_activity' => $this->datas->shop_activity,
+            'shop_country' => $this->datas->shop_country,
+            'shop_timezone' => $this->datas->timezone,
+            'use_smtp' => false,
+            'admin_firstname' => $this->datas->admin_firstname,
+            'admin_lastname' => $this->datas->admin_lastname,
+            'admin_password' => $this->datas->admin_password,
+            'admin_email' => $this->datas->admin_email,
+            'configuration_agrement' => true,
             'send_informations' => true,
             'enable_ssl' => $this->datas->enable_ssl,
         ));

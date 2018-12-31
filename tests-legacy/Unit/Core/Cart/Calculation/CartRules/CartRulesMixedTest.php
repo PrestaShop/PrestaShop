@@ -54,44 +54,44 @@ class CartRulesMixedTest extends AbstractCartCalculationTest
     public function cartWithMultipleCartRulesMixedProvider()
     {
         return [
-            'one product in cart, quantity 1, one 50% global voucher, one 5€ global voucher'   => [
-                'products'        => [
+            'one product in cart, quantity 1, one 50% global voucher, one 5€ global voucher' => [
+                'products' => [
                     1 => 1,
                 ],
-                'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
+                'expectedTotal' => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
                 * static::PRODUCT_FIXTURES[1]['price']
                 - static::CART_RULES_FIXTURES[4]['amount']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [2, 4],
+                'cartRules' => [2, 4],
                 'knownToFailOnV1' => false,
             ],
             'one product in cart, quantity 1, one 50% global voucher, one 500€ global voucher' => [
-                'products'        => [
+                'products' => [
                     1 => 1,
                 ],
-                'expectedTotal'   => static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                'expectedTotal' => static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 // voucher exceeds total
-                'cartRules'       => [2, 5],
+                'cartRules' => [2, 5],
                 'knownToFailOnV1' => false,
             ],
-            'one product in cart, quantity 3, one 5€ global voucher, one 50% global voucher'   => [
-                'products'        => [
+            'one product in cart, quantity 3, one 5€ global voucher, one 50% global voucher' => [
+                'products' => [
                     1 => 3,
                 ],
-                'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[7]['percent'] / 100)
+                'expectedTotal' => (1 - static::CART_RULES_FIXTURES[7]['percent'] / 100)
                 * (3 * static::PRODUCT_FIXTURES[1]['price']
                    - static::CART_RULES_FIXTURES[4]['amount'])
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [4, 7],
+                'cartRules' => [4, 7],
                 'knownToFailOnV1' => true,
             ],
             'one product in cart, quantity 3, one 500€ global voucher, one 50% global voucher' => [
-                'products'        => [
+                'products' => [
                     1 => 3,
                 ],
-                'expectedTotal'   => static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
+                'expectedTotal' => static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 // voucher exceeds total
-                'cartRules'       => [5, 7],
+                'cartRules' => [5, 7],
                 'knownToFailOnV1' => false,
             ],
         ];

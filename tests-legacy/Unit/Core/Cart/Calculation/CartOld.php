@@ -70,16 +70,16 @@ class CartOld extends Cart
         /** @var \PrestaShop\PrestaShop\Adapter\Product\PriceCalculator $price_calculator */
         $price_calculator = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
 
-        $ps_use_ecotax                = $this->configuration->get('PS_USE_ECOTAX');
-        $ps_round_type                = $this->configuration->get('PS_ROUND_TYPE');
+        $ps_use_ecotax = $this->configuration->get('PS_USE_ECOTAX');
+        $ps_round_type = $this->configuration->get('PS_ROUND_TYPE');
         $ps_ecotax_tax_rules_group_id = $this->configuration->get('PS_ECOTAX_TAX_RULES_GROUP_ID');
-        $compute_precision            = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $compute_precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
 
         if (!$this->id) {
             return 0;
         }
 
-        $type       = (int) $type;
+        $type = (int) $type;
         $array_type = [
             Cart::ONLY_PRODUCTS,
             Cart::ONLY_DISCOUNTS,
@@ -92,7 +92,7 @@ class CartOld extends Cart
         ];
 
         // Define virtual context to prevent case where the cart is not the in the global context
-        $virtual_context       = Context::getContext()->cloneContext();
+        $virtual_context = Context::getContext()->cloneContext();
         $virtual_context->cart = $this;
 
         if (!in_array($type, $array_type)) {
@@ -137,7 +137,7 @@ class CartOld extends Cart
         $param_product = true;
         if (is_null($products)) {
             $param_product = false;
-            $products      = $this->getProducts();
+            $products = $this->getProducts();
         }
 
         if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
@@ -155,8 +155,8 @@ class CartOld extends Cart
         }
 
         $products_total = [];
-        $ecotax_total   = 0;
-        $productLines   = $this->countProductLines($products);
+        $ecotax_total = 0;
+        $productLines = $this->countProductLines($products);
 
         foreach ($products as $product) {
             // products refer to the cart details
@@ -179,7 +179,7 @@ class CartOld extends Cart
             // The $null variable below is not used,
             // but it is necessary to pass it to getProductPrice because
             // it expects a reference.
-            $null  = null;
+            $null = null;
             $price = $price_calculator->getProductPrice(
                 (int) $product['id_product'],
                 $with_taxes,
@@ -219,14 +219,14 @@ class CartOld extends Cart
                     break;
 
                 case Order::ROUND_LINE:
-                    $product_price                       = $price * $product['cart_quantity'];
+                    $product_price = $price * $product['cart_quantity'];
                     $products_total[$id_tax_rules_group] += Tools::ps_round($product_price, $compute_precision);
 
                     break;
 
                 case Order::ROUND_ITEM:
                 default:
-                    $product_price                       = /*$with_taxes ? $tax_calculator->addTaxes($price) : */
+                    $product_price = /*$with_taxes ? $tax_calculator->addTaxes($price) : */
                         $price;
                     $products_total[$id_tax_rules_group] += Tools::ps_round($product_price, $compute_precision)
                                                             * (int) $product['cart_quantity'];
@@ -250,7 +250,7 @@ class CartOld extends Cart
             return $wrappingFees;
         }
 
-        $order_total_discount    = 0;
+        $order_total_discount = 0;
         $order_shipping_discount = 0;
         if (!in_array($type, [Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS]) && CartRule::isFeatureActive()) {
             $cart_rules = $this->getTotalCalculationCartRules($type, $with_shipping);
@@ -258,7 +258,7 @@ class CartOld extends Cart
             $package = [
                 'id_carrier' => $id_carrier,
                 'id_address' => $this->getDeliveryAddressId($products),
-                'products'   => $products,
+                'products' => $products,
             ];
 
             // Then, calculate the contextual value for each one
@@ -278,7 +278,7 @@ class CartOld extends Cart
                         ),
                         $compute_precision
                     );
-                    $flag                    = true;
+                    $flag = true;
                 }
 
                 // If the cart rule is a free gift, then add the free gift value only if the gift is in this package
@@ -324,7 +324,7 @@ class CartOld extends Cart
 
             $order_total_discount = min(Tools::ps_round($order_total_discount, 2), (float) $order_total_products)
                                     + (float) $order_shipping_discount;
-            $order_total          -= $order_total_discount;
+            $order_total -= $order_total_discount;
         }
 
         if ($type == Cart::BOTH) {

@@ -58,13 +58,13 @@ abstract class AbstractCartTest extends IntegrationTestCase
         4 => ['price' => 35.567, 'outOfStock' => true],
         5 => ['price' => 23.86, 'quantity' => 50],
         6 => [
-            'price'      => 12.34,
-            'quantity'   => 10,
-            'is_pack'    => true,
+            'price' => 12.34,
+            'quantity' => 10,
+            'is_pack' => true,
             'pack_items' => [
                 [
                     'id_product_fixture' => 5,
-                    'quantity'           => 10,
+                    'quantity' => 10,
                 ],
             ],
         ],
@@ -73,15 +73,15 @@ abstract class AbstractCartTest extends IntegrationTestCase
     ];
 
     const CART_RULES_FIXTURES = [
-        1  => ['priority' => 1, 'code' => 'foo1', 'percent' => 50, 'amount' => 0],
-        2  => ['priority' => 2, 'code' => 'foo2', 'percent' => 50, 'amount' => 0],
-        3  => ['priority' => 3, 'code' => 'foo3', 'percent' => 10, 'amount' => 0],
-        4  => ['priority' => 4, 'code' => 'foo4', 'percent' => 0, 'amount' => 5],
-        5  => ['priority' => 5, 'code' => 'foo5', 'percent' => 0, 'amount' => 500],
-        6  => ['priority' => 6, 'code' => 'foo6', 'percent' => 0, 'amount' => 10],
-        7  => ['priority' => 7, 'code' => 'foo7', 'percent' => 50, 'amount' => 0],
-        8  => ['priority' => 8, 'code' => 'foo8', 'percent' => 0, 'amount' => 5, 'productRestrictionId' => 2],
-        9  => ['priority' => 9, 'code' => 'foo9', 'percent' => 0, 'amount' => 500, 'productRestrictionId' => 2],
+        1 => ['priority' => 1, 'code' => 'foo1', 'percent' => 50, 'amount' => 0],
+        2 => ['priority' => 2, 'code' => 'foo2', 'percent' => 50, 'amount' => 0],
+        3 => ['priority' => 3, 'code' => 'foo3', 'percent' => 10, 'amount' => 0],
+        4 => ['priority' => 4, 'code' => 'foo4', 'percent' => 0, 'amount' => 5],
+        5 => ['priority' => 5, 'code' => 'foo5', 'percent' => 0, 'amount' => 500],
+        6 => ['priority' => 6, 'code' => 'foo6', 'percent' => 0, 'amount' => 10],
+        7 => ['priority' => 7, 'code' => 'foo7', 'percent' => 50, 'amount' => 0],
+        8 => ['priority' => 8, 'code' => 'foo8', 'percent' => 0, 'amount' => 5, 'productRestrictionId' => 2],
+        9 => ['priority' => 9, 'code' => 'foo9', 'percent' => 0, 'amount' => 500, 'productRestrictionId' => 2],
         10 => ['priority' => 10, 'code' => 'foo10', 'percent' => 50, 'amount' => 0, 'productRestrictionId' => 2],
         11 => ['priority' => 11, 'code' => 'foo11', 'percent' => 10, 'amount' => 0, 'productRestrictionId' => 2],
         12 => ['priority' => 12, 'code' => 'foo12', 'percent' => 10, 'amount' => 0, 'productGiftId' => 3],
@@ -121,10 +121,10 @@ abstract class AbstractCartTest extends IntegrationTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->cart              = new CartOld();
-        $this->cart->id_lang     = (int) Context::getContext()->language->id;
+        $this->cart = new CartOld();
+        $this->cart->id_lang = (int) Context::getContext()->language->id;
         $this->cart->id_currency = (int) Context::getContext()->currency->id;
-        $this->cart->id_shop     = (int) Context::getContext()->shop->id;
+        $this->cart->id_shop = (int) Context::getContext()->shop->id;
         $this->cart->add(); // required, else we cannot get the content when calculating total
         Context::getContext()->cart = $this->cart;
         $this->resetCart();
@@ -188,14 +188,14 @@ abstract class AbstractCartTest extends IntegrationTestCase
     protected function insertProductsFromFixtures()
     {
         foreach (static::PRODUCT_FIXTURES as $k => $productFixture) {
-            $product           = new Product();
-            $product->price    = $productFixture['price'];
-            $product->name     = 'product name';
+            $product = new Product();
+            $product->price = $productFixture['price'];
+            $product->name = 'product name';
             $product->quantity = !empty($productFixture['quantity']) ? $productFixture['quantity'] : 1000;
 
             if (!empty($productFixture['outOfStock'])) {
                 $product->out_of_stock = 0;
-                $product->quantity     = 0;
+                $product->quantity = 0;
             }
             if (!empty($productFixture['customizations'])) {
                 $product->customizable = 1;
@@ -206,10 +206,10 @@ abstract class AbstractCartTest extends IntegrationTestCase
             $product->add();
             if (isset($productFixture['combinations'])) {
                 foreach ($productFixture['combinations'] as $combinationName => $combinationData) {
-                    $combination             = new Combination();
-                    $combination->reference  = $combinationName;
+                    $combination = new Combination();
+                    $combination->reference = $combinationName;
                     $combination->id_product = $product->id;
-                    $combination->quantity   = !empty($combinationData['quantity'])
+                    $combination->quantity = !empty($combinationData['quantity'])
                         ? $combinationData['quantity'] : 1000;
                     $combination->add();
                     StockAvailable::setQuantity((int) $product->id, $combination->id, $combination->quantity);
@@ -231,11 +231,11 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
             if (isset($productFixture['customizations'])) {
                 foreach ($productFixture['customizations'] as $customizationName) {
-                    $customizationField             = new CustomizationField();
+                    $customizationField = new CustomizationField();
                     $customizationField->id_product = $product->id;
-                    $customizationField->type       = 1; // text field
-                    $customizationField->required   = 1;
-                    $customizationField->name       = [
+                    $customizationField->type = 1; // text field
+                    $customizationField->required = 1;
+                    $customizationField->name = [
                         (int) Configuration::get('PS_LANG_DEFAULT') => $customizationName,
                     ];
                     $customizationField->add();
@@ -335,15 +335,15 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
     protected function insertCartRule($cartRuleFixtureId, $cartRuleData)
     {
-        $cartRule                    = new CartRule();
+        $cartRule = new CartRule();
         $cartRule->reduction_percent = $cartRuleData['percent'];
-        $cartRule->reduction_amount  = $cartRuleData['amount'];
-        $cartRule->name              = [Configuration::get('PS_LANG_DEFAULT') => 'foo'];
+        $cartRule->reduction_amount = $cartRuleData['amount'];
+        $cartRule->name = [Configuration::get('PS_LANG_DEFAULT') => 'foo'];
         if (!empty($cartRuleData['code'])) {
             $cartRule->code = $cartRuleData['code'];
         }
-        $cartRule->priority          = $cartRuleData['priority'];
-        $cartRule->quantity          = 1000;
+        $cartRule->priority = $cartRuleData['priority'];
+        $cartRule->quantity = 1000;
         $cartRule->quantity_per_user = 1000;
         if (!empty($cartRuleData['productRestrictionId'])) {
             $product = $this->getProductFromFixtureId($cartRuleData['productRestrictionId']);
@@ -352,7 +352,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
                 return;
             }
             $cartRule->product_restriction = true;
-            $cartRule->reduction_product   = $product->id;
+            $cartRule->reduction_product = $product->id;
         }
         if (!empty($cartRuleData['productGiftId'])) {
             $product = $this->getProductFromFixtureId($cartRuleData['productGiftId']);
@@ -368,7 +368,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $cartRule->date_from = $now->format('Y-m-d H:i:s');
         $now->add(new DateInterval('P1Y'));
         $cartRule->date_to = $now->format('Y-m-d H:i:s');
-        $cartRule->active  = 1;
+        $cartRule->active = 1;
         if (!empty($cartRuleData['carrierRestrictionIds'])) {
             $cartRule->carrier_restriction = 1;
         }

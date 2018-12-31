@@ -86,9 +86,9 @@ class MultishopCommandListenerTest extends UnitTestCase
     {
         // Prepare ...
         $command = new Command('Fake');
-        $input   = new StringInput('--id_shop=1');
-        $output  = new NullOutput();
-        $event   = new ConsoleCommandEvent($command, $input, $output);
+        $input = new StringInput('--id_shop=1');
+        $output = new NullOutput();
+        $event = new ConsoleCommandEvent($command, $input, $output);
 
         // Call ...
         $this->commandListener->onConsoleCommand($event);
@@ -101,9 +101,9 @@ class MultishopCommandListenerTest extends UnitTestCase
     {
         // Prepare ...
         $command = new Command('Fake');
-        $input   = new StringInput('--id_shop_group=1');
-        $output  = new NullOutput();
-        $event   = new ConsoleCommandEvent($command, $input, $output);
+        $input = new StringInput('--id_shop_group=1');
+        $output = new NullOutput();
+        $event = new ConsoleCommandEvent($command, $input, $output);
 
         // Call ...
         $this->commandListener->onConsoleCommand($event);
@@ -116,9 +116,9 @@ class MultishopCommandListenerTest extends UnitTestCase
     {
         // Prepare ...
         $command = new Command('Fake');
-        $input   = new StringInput('--id_shop=2 --id_shop_group=1');
-        $output  = new NullOutput();
-        $event   = new ConsoleCommandEvent($command, $input, $output);
+        $input = new StringInput('--id_shop=2 --id_shop_group=1');
+        $output = new NullOutput();
+        $event = new ConsoleCommandEvent($command, $input, $output);
 
         // Call ...
         $this->expectException(

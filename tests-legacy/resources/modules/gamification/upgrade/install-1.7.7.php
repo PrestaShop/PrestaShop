@@ -33,8 +33,8 @@ function upgrade_module_1_7_7($object)
     $cols = array(
         'start_day' => array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` ADD `start_day` INT NULL DEFAULT 0 '),
         'stop_day' => array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` ADD `stop_day` INT NULL DEFAULT 0 '),
-        'start_date' =>  array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `start_date`'),
-        'stop_date' =>  array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `stop_date`'),
+        'start_date' => array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `start_date`'),
+        'stop_date' => array('exist' => false, 'sql' => 'ALTER TABLE `'._DB_PREFIX_.'advice` DROP `stop_date`'),
     );
 
     $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'._DB_PREFIX_.'advice` ');

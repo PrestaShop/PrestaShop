@@ -44,25 +44,25 @@ class CartProductTest extends AbstractCartCalculationTest
     public function cartWithoutCartRulesProvider()
     {
         return array(
-            'empty cart'                             => array(
-                'products'      => array(),
+            'empty cart' => array(
+                'products' => array(),
                 'expectedTotal' => 0,
-                'cartRules'     => array(),
+                'cartRules' => array(),
             ),
-            'one product in cart, quantity 1'        => array(
-                'products'      => array(1 => 1),
+            'one product in cart, quantity 1' => array(
+                'products' => array(1 => 1),
                 'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => array(),
+                'cartRules' => array(),
             ),
-            'one product in cart, quantity 3'        => array(
-                'products'      => array(1 => 3),
+            'one product in cart, quantity 3' => array(
+                'products' => array(1 => 3),
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => array(),
+                'cartRules' => array(),
             ),
             '3 products in cart, several quantities' => array(
-                'products'      => array(
+                'products' => array(
                     2 => 2,
                     1 => 3,
                     3 => 1,
@@ -71,7 +71,7 @@ class CartProductTest extends AbstractCartCalculationTest
                 + 2 * static::PRODUCT_FIXTURES[2]['price']
                 + static::PRODUCT_FIXTURES[3]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => array(),
+                'cartRules' => array(),
             ),
         );
     }

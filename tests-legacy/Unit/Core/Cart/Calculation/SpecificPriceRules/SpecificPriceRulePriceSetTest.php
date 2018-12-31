@@ -62,66 +62,66 @@ class SpecificPriceRulePriceSetTest extends AbstractSpecificPriceRuleTest
     public function specificPriceRulePriceSetProvider()
     {
         return [
-            '1 product in cart, quantity 1, one rule price set from quantity 1'                                  => [
-                'products'             => [
+            '1 product in cart, quantity 1, one rule price set from quantity 1' => [
+                'products' => [
                     1 => 1,
                 ],
-                'expectedTotal'        => static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
+                'expectedTotal' => static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [1],
             ],
-            '1 product in cart, quantity 1, one rule price set from quantity 2'                                  => [
-                'products'             => [
+            '1 product in cart, quantity 1, one rule price set from quantity 2' => [
+                'products' => [
                     1 => 1,
                 ],
-                'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [2],
             ],
-            '1 product in cart, quantity 3, one rule price set from quantity 1'                                  => [
-                'products'             => [
+            '1 product in cart, quantity 3, one rule price set from quantity 1' => [
+                'products' => [
                     1 => 3,
                 ],
-                'expectedTotal'        => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
+                'expectedTotal' => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [1],
             ],
-            '1 product in cart, quantity 3, one rule price set from quantity 2'                                  => [
-                'products'             => [
+            '1 product in cart, quantity 3, one rule price set from quantity 2' => [
+                'products' => [
                     1 => 3,
                 ],
-                'expectedTotal'        => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[2]['price']
+                'expectedTotal' => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[2]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [2],
             ],
-            '3 products in cart, several quantities, one rule price set from quantity 1'                         => [
-                'products'             => [
+            '3 products in cart, several quantities, one rule price set from quantity 1' => [
+                'products' => [
                     2 => 2,
                     1 => 3,
                     3 => 1,
                 ],
-                'expectedTotal'        => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
+                'expectedTotal' => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
                 + 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
                 + static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [1],
             ],
-            '3 products in cart, several quantities, one rule price set from quantity 2'                         => [
-                'products'             => [
+            '3 products in cart, several quantities, one rule price set from quantity 2' => [
+                'products' => [
                     2 => 2,
                     1 => 3,
                     3 => 1,
                 ],
-                'expectedTotal'        => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
+                'expectedTotal' => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
                 + 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
                 + static::PRODUCT_FIXTURES[3]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [2],
             ],
         ];

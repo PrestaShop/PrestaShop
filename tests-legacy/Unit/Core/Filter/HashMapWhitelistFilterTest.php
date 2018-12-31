@@ -120,61 +120,61 @@ class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
         ];
 
         return [
-            'keep 1st'         => [
-                'subject'   => $basicArray,
+            'keep 1st' => [
+                'subject' => $basicArray,
                 'whitelist' => [
                     'foo',
                 ],
-                'expected'  => [
+                'expected' => [
                     'foo' => 'something',
                 ],
             ],
-            'keep 2nd'         => [
-                'subject'   => $basicArray,
+            'keep 2nd' => [
+                'subject' => $basicArray,
                 'whitelist' => [
                     'bar',
                 ],
-                'expected'  => [
+                'expected' => [
                     'bar' => null,
                 ],
             ],
-            'keep 3rd'         => [
-                'subject'   => $basicArray,
+            'keep 3rd' => [
+                'subject' => $basicArray,
                 'whitelist' => [
                     'baz',
                 ],
-                'expected'  => [
+                'expected' => [
                     'baz' => array(),
                 ],
             ],
             'keep 1st and 2nd' => [
-                'subject'   => $basicArray,
+                'subject' => $basicArray,
                 'whitelist' => [
                     'foo', 'bar',
                 ],
-                'expected'  => [
+                'expected' => [
                     'foo' => 'something',
                     'bar' => null,
                 ],
             ],
-            'keep all'         => [
-                'subject'   => $basicArray,
+            'keep all' => [
+                'subject' => $basicArray,
                 'whitelist' => [
                     'foo', 'bar', 'baz',
                 ],
-                'expected'  => [
+                'expected' => [
                     'foo' => 'something',
                     'bar' => null,
                     'baz' => [],
                 ],
             ],
-            'keep none'        => [
-                'subject'   => $basicArray,
+            'keep none' => [
+                'subject' => $basicArray,
                 'whitelist' => [],
-                'expected'  => [],
+                'expected' => [],
             ],
             'nested filter' => [
-                'subject'   => $nestedArray,
+                'subject' => $nestedArray,
                 'whitelist' => [
                     'foo',
                     'baz' => (new HashMapWhitelistFilter())->whitelist(['foo', 'baz']),

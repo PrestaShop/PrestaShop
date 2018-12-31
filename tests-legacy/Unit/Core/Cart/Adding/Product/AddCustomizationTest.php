@@ -46,15 +46,15 @@ class AddCustomizationTest extends AbstractCartTest
     protected function addCustomization(Product $product)
     {
 
-        $customization                       = new Customization();
-        $customization->id_product           = $product->id;
+        $customization = new Customization();
+        $customization->id_product = $product->id;
         $customization->id_product_attribute = 0;
-        $customization->id_address_delivery  = 0;
-        $customization->quantity             = 0;
-        $customization->quantity_refunded    = 0;
-        $customization->quantity_returned    = 0;
-        $customization->in_cart              = 0;
-        $customization->id_cart              = $this->cart->id;
+        $customization->id_address_delivery = 0;
+        $customization->quantity = 0;
+        $customization->quantity_refunded = 0;
+        $customization->quantity_returned = 0;
+        $customization->in_cart = 0;
+        $customization->id_cart = $this->cart->id;
         $customization->add();
 
         $this->customizations[] = $customization;
@@ -65,8 +65,8 @@ class AddCustomizationTest extends AbstractCartTest
     public function testCustomizationCanBeAddedInCartIfAvailable()
     {
         $customizationField = $this->getCustomizationFieldFromFixtureName('a');
-        $product            = new Product($customizationField->id_product);
-        $customization      = $this->addCustomization($product);
+        $product = new Product($customizationField->id_product);
+        $customization = $this->addCustomization($product);
 
         $nbProduct = Product::getQuantity($product->id, null, null, $this->cart, null);
         $this->assertEquals(30, $nbProduct);
@@ -84,8 +84,8 @@ class AddCustomizationTest extends AbstractCartTest
     public function testCustomizationCannotBeAddedInCartIfMoreThanStock()
     {
         $customizationField = $this->getCustomizationFieldFromFixtureName('a');
-        $product            = new Product($customizationField->id_product);
-        $customization      = $this->addCustomization($product);
+        $product = new Product($customizationField->id_product);
+        $customization = $this->addCustomization($product);
 
         $result = $this->cart->updateQty(41, $product->id, null, $customization->id);
         $this->assertFalse($result);
@@ -98,8 +98,8 @@ class AddCustomizationTest extends AbstractCartTest
     public function testCustomizationCanBeAddedInCartIfMoreThanStockButAvailableWhenOutOfStock()
     {
         $customizationField = $this->getCustomizationFieldFromFixtureName('a');
-        $product            = new Product($customizationField->id_product);
-        $customization      = $this->addCustomization($product);
+        $product = new Product($customizationField->id_product);
+        $customization = $this->addCustomization($product);
 
         $oldOrderOutOfStock = Configuration::get('PS_ORDER_OUT_OF_STOCK');
         Configuration::set('PS_ORDER_OUT_OF_STOCK', 1);

@@ -126,7 +126,7 @@ class StepList implements IteratorAggregate
      */
     public function next()
     {
-        if (array_key_exists($this->offset+1, $this->steps)) {
+        if (array_key_exists($this->offset + 1, $this->steps)) {
             $this->offset++;
         }
 
@@ -139,7 +139,7 @@ class StepList implements IteratorAggregate
      */
     public function previous()
     {
-        if (array_key_exists($this->offset-1, $this->steps)) {
+        if (array_key_exists($this->offset - 1, $this->steps)) {
             $this->offset--;
         }
 
@@ -161,7 +161,7 @@ class StepList implements IteratorAggregate
      */
     public function isLastStep()
     {
-        return $this->offset == count($this->steps) -1;
+        return $this->offset == count($this->steps) - 1;
     }
 
     /**

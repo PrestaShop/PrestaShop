@@ -26,7 +26,7 @@
 
 function update_order_canada()
 {
-    $sql ='SHOW TABLES LIKE "'.str_replace('_', '\_', _DB_PREFIX_).'order\_tax"';
+    $sql = 'SHOW TABLES LIKE "'.str_replace('_', '\_', _DB_PREFIX_).'order\_tax"';
     $table = Db::getInstance()->executeS($sql);
 
     if (!count($table)) {
@@ -112,9 +112,9 @@ function update_order_canada_ps_round($val)
 
     switch ($ps_price_round_mode) {
         case 0:
-            return ceil($val * 100)/100;
+            return ceil($val * 100) / 100;
         case 1:
-            return floor($val * 100)/100;
+            return floor($val * 100) / 100;
         default:
             return round($val, 2);
     }

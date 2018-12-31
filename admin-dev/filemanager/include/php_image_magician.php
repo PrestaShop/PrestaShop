@@ -179,7 +179,7 @@ class imageLib
 
     private $transparentArray = array('.png', '.gif');
     private $keepTransparency = true;
-    private $fillColorArray = array('r'=>255, 'g'=>255, 'b'=>255);
+    private $fillColorArray = array('r' => 255, 'g' => 255, 'b' => 255);
 
     private $sharpenArray = array('jpg');
 
@@ -229,7 +229,7 @@ class imageLib
         // *** If file is an image
         if ($this->testIsImage($this->image)) {
             // *** Get width and height
-            $this->width  = imagesx($this->image);
+            $this->width = imagesx($this->image);
             $this->widthOriginal = imagesx($this->image);
             $this->height = imagesy($this->image);
             $this->heightOriginal = imagesy($this->image);
@@ -329,7 +329,7 @@ class imageLib
     // *** Get optimal width and height - based on $option
     $dimensionsArray = $this->getDimensions($newWidth, $newHeight, $option);
 
-        $optimalWidth  = $dimensionsArray['optimalWidth'];
+        $optimalWidth = $dimensionsArray['optimalWidth'];
         $optimalHeight = $dimensionsArray['optimalHeight'];
 
     // *** Resample - create image canvas of x, y size
@@ -461,7 +461,7 @@ class imageLib
 
 ## --------------------------------------------------------
 
-  private function getCropPlacing($optimalWidth, $optimalHeight, $newWidth, $newHeight, $pos='m')
+  private function getCropPlacing($optimalWidth, $optimalHeight, $newWidth, $newHeight, $pos = 'm')
   #
   # Author:   Jarrod Oberto
   # Date:   July 11
@@ -490,7 +490,7 @@ class imageLib
           break;
 
         case 't':
-          $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
+          $cropStartX = ($optimalWidth / 2) - ($newWidth / 2);
           $cropStartY = 0;
 
           break;
@@ -503,19 +503,19 @@ class imageLib
 
         case 'l':
           $cropStartX = 0;
-          $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
+          $cropStartY = ($optimalHeight / 2) - ($newHeight / 2);
 
           break;
 
         case 'm':
-          $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
-          $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
+          $cropStartX = ($optimalWidth / 2) - ($newWidth / 2);
+          $cropStartY = ($optimalHeight / 2) - ($newHeight / 2);
 
           break;
 
         case 'r':
           $cropStartX = $optimalWidth - $newWidth;
-          $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
+          $cropStartY = ($optimalHeight / 2) - ($newHeight / 2);
 
           break;
 
@@ -526,7 +526,7 @@ class imageLib
           break;
 
         case 'b':
-          $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
+          $cropStartX = ($optimalWidth / 2) - ($newWidth / 2);
           $cropStartY = $optimalHeight - $newHeight;
 
           break;
@@ -540,21 +540,21 @@ class imageLib
         case 'auto':
           // *** If image is a portrait crop from top, not center. v1.5
           if ($optimalHeight > $optimalWidth) {
-              $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
-              $cropStartY = ($this->cropFromTopPercent /100) * $optimalHeight;
+              $cropStartX = ($optimalWidth / 2) - ($newWidth / 2);
+              $cropStartY = ($this->cropFromTopPercent / 100) * $optimalHeight;
           } else {
 
             // *** Else crop from the center
-            $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
-              $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
+            $cropStartX = ($optimalWidth / 2) - ($newWidth / 2);
+              $cropStartY = ($optimalHeight / 2) - ($newHeight / 2);
           }
 
           break;
 
         default:
           // *** Default to center
-          $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
-          $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
+          $cropStartX = ($optimalWidth / 2) - ($newWidth / 2);
+          $cropStartY = ($optimalHeight / 2) - ($newHeight / 2);
 
           break;
       }
@@ -591,7 +591,7 @@ class imageLib
             case '0':
       case 'exact':
                 $optimalWidth = $newWidth;
-                $optimalHeight= $newHeight;
+                $optimalHeight = $newHeight;
 
                 break;
             case '1':
@@ -724,7 +724,7 @@ class imageLib
       } else {
           // *** Sqaure being resized to a square
         $optimalWidth = $newWidth;
-          $optimalHeight= $newHeight;
+          $optimalHeight = $newHeight;
       }
         }
 
@@ -775,7 +775,7 @@ class imageLib
     }
 
         $heightRatio = $this->height / $newHeight;
-        $widthRatio  = $this->width /  $newWidth;
+        $widthRatio = $this->width / $newWidth;
 
         if ($heightRatio < $widthRatio) {
             $optimalRatio = $heightRatio;
@@ -784,7 +784,7 @@ class imageLib
         }
 
         $optimalHeight = round($this->height / $optimalRatio);
-        $optimalWidth  = round($this->width  / $optimalRatio);
+        $optimalWidth = round($this->width / $optimalRatio);
 
         return array('optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight);
     }
@@ -817,15 +817,15 @@ class imageLib
       } else {
           # More subtle and personally more desirable
 
-        $sharpness  = $this->findSharp($this->widthOriginal, $this->width);
+        $sharpness = $this->findSharp($this->widthOriginal, $this->width);
 
-          $sharpenMatrix  = array(
+          $sharpenMatrix = array(
               array(-1, -2, -1),
               array(-2, $sharpness + 12, -2), //Lessen the effect of a filter by increasing the value in the center cell
               array(-1, -2, -1),
           );
-          $divisor    = $sharpness; // adjusts brightness
-        $offset     = 0;
+          $divisor = $sharpness; // adjusts brightness
+        $offset = 0;
           imageconvolution($this->imageResized, $sharpenMatrix, $divisor, $offset);
       }
       } else {
@@ -839,9 +839,9 @@ class imageLib
 
   private function sharpen2($level)
   {
-      $sharpenMatrix  = array(
+      $sharpenMatrix = array(
           array($level, $level, $level),
-          array($level, (8*$level)+1, $level), //Lessen the effect of a filter by increasing the value in the center cell
+          array($level, (8 * $level) + 1, $level), //Lessen the effect of a filter by increasing the value in the center cell
           array($level, $level, $level),
       );
   }
@@ -857,10 +857,10 @@ class imageLib
     # Notes:
     #
   {
-      $final  = $final * (750.0 / $orig);
-      $a    = 52;
-      $b    = -0.27810650887573124;
-      $c    = .00047337278106508946;
+      $final = $final * (750.0 / $orig);
+      $a = 52;
+      $b = -0.27810650887573124;
+      $c = .00047337278106508946;
 
       $result = $a + $b * $final + $c * $final * $final;
 
@@ -1186,7 +1186,7 @@ class imageLib
   Reflection
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-  public function addReflection($reflectionHeight = 50, $startingTransparency = 30, $inside = false, $bgColor = '#fff', $stretch=false, $divider = 0)
+  public function addReflection($reflectionHeight = 50, $startingTransparency = 30, $inside = false, $bgColor = '#fff', $stretch = false, $divider = 0)
   {
 
     // *** Convert color
@@ -1212,7 +1212,7 @@ class imageLib
       $bg = imagecreatetruecolor($this->width, $reflectionHeight);
 
       for ($x = 0; $x < $this->width; $x++) {
-          imagecopy($bg, $im, $x, 0, $this->width-$x -1, 0, 1, $reflectionHeight);
+          imagecopy($bg, $im, $x, 0, $this->width - $x - 1, 0, 1, $reflectionHeight);
       }
       $im = $bg;
 
@@ -1220,19 +1220,19 @@ class imageLib
 
     // *** Fade
     if ($stretch) {
-        $step = 100/($reflectionHeight + $startingTransparency);
+        $step = 100 / ($reflectionHeight + $startingTransparency);
     } else {
-        $step = 100/$reflectionHeight;
+        $step = 100 / $reflectionHeight;
     }
-      for ($i=0; $i<=$reflectionHeight; $i++) {
-          if ($startingTransparency>100) {
+      for ($i = 0; $i <= $reflectionHeight; $i++) {
+          if ($startingTransparency > 100) {
               $startingTransparency = 100;
           }
-          if ($startingTransparency< 1) {
+          if ($startingTransparency < 1) {
               $startingTransparency = 1;
           }
           imagecopymerge($bg, $li, 0, $i, 0, 0, $this->width, 1, $startingTransparency);
-          $startingTransparency+=$step;
+          $startingTransparency += $step;
       }
 
     // *** Apply fade
@@ -1422,7 +1422,7 @@ class imageLib
   Shadow
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-  public function addShadow($shadowAngle=45, $blur=15, $bgColor='transparent')
+  public function addShadow($shadowAngle = 45, $blur = 15, $bgColor = 'transparent')
   #
   # Author:   Jarrod Oberto (Adapted from Pascal Naidon)
   # Ref:    http://www.les-stooges.org/pascal/webdesign/vignettes/index.php?la=en
@@ -1435,10 +1435,10 @@ class imageLib
   #
   {
       // *** A higher number results in a smoother shadow
-    define('STEPS', $blur*2);
+    define('STEPS', $blur * 2);
 
     // *** Set the shadow distance
-    $shadowDistance = $blur*0.25;
+    $shadowDistance = $blur * 0.25;
 
     // *** Set blur width and height
     $blurWidth = $blurHeight = $blur;
@@ -1467,59 +1467,59 @@ class imageLib
       imagecopyresampled($newImage, $image, 0, 0, 0, 0, $width, $height, $width, $height);
 
     // *** RGB
-    $rgb = imagecreatetruecolor($width+$blurWidth, $height+$blurHeight);
+    $rgb = imagecreatetruecolor($width + $blurWidth, $height + $blurHeight);
       $colour = imagecolorallocate($rgb, 0, 0, 0);
-      imagefilledrectangle($rgb, 0, 0, $width+$blurWidth, $height+$blurHeight, $colour);
+      imagefilledrectangle($rgb, 0, 0, $width + $blurWidth, $height + $blurHeight, $colour);
       $colour = imagecolorallocate($rgb, 255, 255, 255);
     //imagefilledrectangle($rgb, $blurWidth*0.5-$distWidth, $blurHeight*0.5-$distHeight, $width+$blurWidth*0.5-$distWidth, $height+$blurWidth*0.5-$distHeight, $colour);
-    imagefilledrectangle($rgb, $blurWidth*0.5-$distWidth, $blurHeight*0.5-$distHeight, $width+$blurWidth*0.5-$distWidth, $height+$blurWidth*0.5-$distHeight, $colour);
+    imagefilledrectangle($rgb, $blurWidth * 0.5 - $distWidth, $blurHeight * 0.5 - $distHeight, $width + $blurWidth * 0.5 - $distWidth, $height + $blurWidth * 0.5 - $distHeight, $colour);
     //imagecopymerge($rgb, $newImage, 1+$blurWidth*0.5-$distWidth, 1+$blurHeight*0.5-$distHeight, 0,0, $width, $height, 100);
-    imagecopymerge($rgb, $newImage, $blurWidth*0.5-$distWidth, $blurHeight*0.5-$distHeight, 0, 0, $width+$blurWidth, $height+$blurHeight, 100);
+    imagecopymerge($rgb, $newImage, $blurWidth * 0.5 - $distWidth, $blurHeight * 0.5 - $distHeight, 0, 0, $width + $blurWidth, $height + $blurHeight, 100);
 
     // *** Shadow (alpha)
-    $shadow = imagecreatetruecolor($width+$blurWidth, $height+$blurHeight);
+    $shadow = imagecreatetruecolor($width + $blurWidth, $height + $blurHeight);
       imagealphablending($shadow, false);
       $colour = imagecolorallocate($shadow, 0, 0, 0);
-      imagefilledrectangle($shadow, 0, 0, $width+$blurWidth, $height+$blurHeight, $colour);
+      imagefilledrectangle($shadow, 0, 0, $width + $blurWidth, $height + $blurHeight, $colour);
 
-      for ($i=0;$i<=STEPS;$i++) {
-          $t = ((1.0*$i)/STEPS);
-          $intensity = 255*$t*$t;
+      for ($i = 0;$i <= STEPS;$i++) {
+          $t = ((1.0 * $i) / STEPS);
+          $intensity = 255 * $t * $t;
 
           $colour = imagecolorallocate($shadow, $intensity, $intensity, $intensity);
           $points = array(
-              $blurWidth*$t,        $blurHeight,     // Point 1 (x, y)
-              $blurWidth,         $blurHeight*$t,  // Point 2 (x, y)
-              $width,           $blurHeight*$t,  // Point 3 (x, y)
-              $width+$blurWidth*(1-$t), $blurHeight,     // Point 4 (x, y)
-              $width+$blurWidth*(1-$t), $height,     // Point 5 (x, y)
-              $width,           $height+$blurHeight*(1-$t),  // Point 6 (x, y)
-              $blurWidth,         $height+$blurHeight*(1-$t),  // Point 7 (x, y)
-              $blurWidth*$t,        $height,      // Point 8 (x, y)
+              $blurWidth * $t,        $blurHeight,     // Point 1 (x, y)
+              $blurWidth,         $blurHeight * $t,  // Point 2 (x, y)
+              $width,           $blurHeight * $t,  // Point 3 (x, y)
+              $width + $blurWidth * (1 - $t), $blurHeight,     // Point 4 (x, y)
+              $width + $blurWidth * (1 - $t), $height,     // Point 5 (x, y)
+              $width,           $height + $blurHeight * (1 - $t),  // Point 6 (x, y)
+              $blurWidth,         $height + $blurHeight * (1 - $t),  // Point 7 (x, y)
+              $blurWidth * $t,        $height,      // Point 8 (x, y)
           );
           imagepolygon($shadow, $points, 8, $colour);
       }
 
-      for ($i=0;$i<=STEPS;$i++) {
-          $t = ((1.0*$i)/STEPS);
-          $intensity = 255*$t*$t;
+      for ($i = 0;$i <= STEPS;$i++) {
+          $t = ((1.0 * $i) / STEPS);
+          $intensity = 255 * $t * $t;
 
           $colour = imagecolorallocate($shadow, $intensity, $intensity, $intensity);
-          imagefilledarc($shadow, $blurWidth-1, $blurHeight-1, 2*(1-$t)*$blurWidth, 2*(1-$t)*$blurHeight, 180, 268, $colour, IMG_ARC_PIE);
-          imagefilledarc($shadow, $width, $blurHeight-1, 2*(1-$t)*$blurWidth, 2*(1-$t)*$blurHeight, 270, 358, $colour, IMG_ARC_PIE);
-          imagefilledarc($shadow, $width, $height, 2*(1-$t)*$blurWidth, 2*(1-$t)*$blurHeight, 0, 90, $colour, IMG_ARC_PIE);
-          imagefilledarc($shadow, $blurWidth-1, $height, 2*(1-$t)*$blurWidth, 2*(1-$t)*$blurHeight, 90, 180, $colour, IMG_ARC_PIE);
+          imagefilledarc($shadow, $blurWidth - 1, $blurHeight - 1, 2 * (1 - $t) * $blurWidth, 2 * (1 - $t) * $blurHeight, 180, 268, $colour, IMG_ARC_PIE);
+          imagefilledarc($shadow, $width, $blurHeight - 1, 2 * (1 - $t) * $blurWidth, 2 * (1 - $t) * $blurHeight, 270, 358, $colour, IMG_ARC_PIE);
+          imagefilledarc($shadow, $width, $height, 2 * (1 - $t) * $blurWidth, 2 * (1 - $t) * $blurHeight, 0, 90, $colour, IMG_ARC_PIE);
+          imagefilledarc($shadow, $blurWidth - 1, $height, 2 * (1 - $t) * $blurWidth, 2 * (1 - $t) * $blurHeight, 90, 180, $colour, IMG_ARC_PIE);
       }
 
       $colour = imagecolorallocate($shadow, 255, 255, 255);
       imagefilledrectangle($shadow, $blurWidth, $blurHeight, $width, $height, $colour);
-      imagefilledrectangle($shadow, $blurWidth*0.5-$distWidth, $blurHeight*0.5-$distHeight, $width+$blurWidth*0.5-1-$distWidth, $height+$blurHeight*0.5-1-$distHeight, $colour);
+      imagefilledrectangle($shadow, $blurWidth * 0.5 - $distWidth, $blurHeight * 0.5 - $distHeight, $width + $blurWidth * 0.5 - 1 - $distWidth, $height + $blurHeight * 0.5 - 1 - $distHeight, $colour);
 
     // *** The magic
         imagealphablending($rgb, false);
 
-      for ($theX=0;$theX<imagesx($rgb);$theX++) {
-          for ($theY=0;$theY<imagesy($rgb);$theY++) {
+      for ($theX = 0;$theX < imagesx($rgb);$theX++) {
+          for ($theY = 0;$theY < imagesy($rgb);$theY++) {
 
         // *** Get the RGB values for every pixel of the RGB image
         $colArray = imagecolorat($rgb, $theX, $theY);
@@ -1530,14 +1530,14 @@ class imageLib
         // *** Get the alpha value for every pixel of the shadow image
         $colArray = imagecolorat($shadow, $theX, $theY);
               $a = $colArray & 0xFF;
-              $a = 127-floor($a/2);
-              $t = $a/128.0;
+              $a = 127 - floor($a / 2);
+              $t = $a / 128.0;
 
         // *** Create color
         if (fix_strtolower($bgColor) == 'transparent') {
             $myColour = imagecolorallocatealpha($rgb, $r, $g, $b, $a);
         } else {
-            $myColour = imagecolorallocate($rgb, $r*(1.0-$t)+$r0*$t, $g*(1.0-$t)+$g0*$t, $b*(1.0-$t)+$b0*$t);
+            $myColour = imagecolorallocate($rgb, $r * (1.0 - $t) + $r0 * $t, $g * (1.0 - $t) + $g0 * $t, $b * (1.0 - $t) + $b0 * $t);
         }
 
         // *** Add color to new rgb image
@@ -1559,7 +1559,7 @@ class imageLib
   Add Caption Box
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-  public function addCaptionBox($side='b', $thickness=50, $padding=0, $bgColor='#000', $transparencyAmount=30)
+  public function addCaptionBox($side = 'b', $thickness = 50, $padding = 0, $bgColor = '#000', $transparencyAmount = 30)
   #
   # Author:   Jarrod Oberto
   # Date:   26 May 2011
@@ -1593,7 +1593,7 @@ class imageLib
 
   ## --------------------------------------------------------
 
-  public function addTextToCaptionBox($text, $fontColor='#fff', $fontSize = 12, $angle = 0, $font = null)
+  public function addTextToCaptionBox($text, $fontColor = '#fff', $fontSize = 12, $angle = 0, $font = null)
   #
   # Author:   Jarrod Oberto
   # Date:   03 Aug 11
@@ -1632,8 +1632,8 @@ class imageLib
       $boxYMiddle = (($y2 - $y1) / 2);
 
     // *** Box middle - half the text width/height
-    $xPos = ($x1 + $boxXMiddle) - ($textWidth/2);
-      $yPos = ($y1 + $boxYMiddle) - ($textHeight/2);
+    $xPos = ($x1 + $boxXMiddle) - ($textWidth / 2);
+      $yPos = ($y1 + $boxYMiddle) - ($textHeight / 2);
 
       $pos = $xPos . 'x' . $yPos;
 
@@ -1687,7 +1687,7 @@ class imageLib
   Get EXIF Data
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-  public function getExif($debug=false)
+  public function getExif($debug = false)
     # Author:     Jarrod Oberto
     # Date:       07-05-2011
     # Purpose:    Get image EXIF data
@@ -1755,7 +1755,7 @@ class imageLib
 
     // *** Resolve ExposureProgram
     if (isset($exifData['ExposureProgram'])) {
-        $ep =  $exifData['ExposureProgram'];
+        $ep = $exifData['ExposureProgram'];
     }
       if (isset($ep)) {
           $ep = $this->resolveExposureProgram($ep);
@@ -2139,7 +2139,7 @@ class imageLib
   Add Text
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-  public function addText($text, $pos = '20x20', $padding = 0, $fontColor='#fff', $fontSize = 12, $angle = 0, $font = null)
+  public function addText($text, $pos = '20x20', $padding = 0, $fontColor = '#fff', $fontSize = 12, $angle = 0, $font = null)
     # Author:     Jarrod Oberto
   # Date:       18-11-09
     # Purpose:    Add text to an image
@@ -2180,7 +2180,7 @@ class imageLib
   private function getTextFont($font)
   {
       // *** Font path (shou
-    $fontPath =  dirname(__FILE__) . '/' . $this->fontDir;
+    $fontPath = dirname(__FILE__) . '/' . $this->fontDir;
 
     // *** The below is/may be needed depending on your version (see ref)
     putenv('GDFONTPATH=' . realpath('.'));
@@ -2520,7 +2520,7 @@ class imageLib
 
 ## --------------------------------------------------------
 
-    public function saveImage($savePath, $imageQuality="100")
+    public function saveImage($savePath, $imageQuality = "100")
     # Author:     Jarrod Oberto
     # Date:       27-02-08
     # Purpose:    Saves the image
@@ -2584,7 +2584,7 @@ class imageLib
 
             case '.png':
         // *** Scale quality from 0-100 to 0-9
-        $scaleQuality = round(($imageQuality/100) * 9);
+        $scaleQuality = round(($imageQuality / 100) * 9);
 
         // *** Invert qualit setting as 0 is best, not 9
         $invertScaleQuality = 9 - $scaleQuality;
@@ -2622,7 +2622,7 @@ class imageLib
 
 ## --------------------------------------------------------
 
-  public function displayImage($fileType = 'jpg', $imageQuality="100")
+  public function displayImage($fileType = 'jpg', $imageQuality = "100")
     # Author:     Jarrod Oberto
     # Date:       18-11-09
     # Purpose:    Display images directly to the browser
@@ -2656,7 +2656,7 @@ class imageLib
         header('Content-type: image/png');
 
         // *** Scale quality from 0-100 to 0-9
-        $scaleQuality = round(($imageQuality/100) * 9);
+        $scaleQuality = round(($imageQuality / 100) * 9);
 
         // *** Invert qualit setting as 0 is best, not 9
         $invertScaleQuality = 9 - $scaleQuality;
@@ -3024,7 +3024,7 @@ class imageLib
 
   ## --------------------------------------------------------
 
-  private function invertTransparency($value, $originalMax, $invert=true)
+  private function invertTransparency($value, $originalMax, $invert = true)
   # Purpose:  This does two things:
   #       1) Convert the range from 0-127 to 0-100
   #       2) Inverts value to 100 is not transparent while 0 is fully
@@ -3041,9 +3041,9 @@ class imageLib
     }
 
       if ($invert) {
-          return $originalMax - (($value/100) * $originalMax);
+          return $originalMax - (($value / 100) * $originalMax);
       } else {
-          return ($value/100) * $originalMax;
+          return ($value / 100) * $originalMax;
       }
   }
 
@@ -3080,7 +3080,7 @@ class imageLib
   public function checkStringStartsWith($needle, $haystack)
   # Check if a string starts with a specific pattern
   {
-      return substr($haystack, 0, strlen($needle))==$needle;
+      return substr($haystack, 0, strlen($needle)) == $needle;
   }
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -3116,14 +3116,14 @@ class imageLib
 
       $bmpSize = strlen($BMP) + 14 + 40;
     // BITMAPFILEHEADER [14 bytes] - http://msdn.microsoft.com/library/en-us/gdi/bitmaps_62uq.asp
-    $BITMAPFILEHEADER  = 'BM';                                    // WORD    bfType;
+    $BITMAPFILEHEADER = 'BM';                                    // WORD    bfType;
     $BITMAPFILEHEADER .= $this->LittleEndian2String($bmpSize, 4); // DWORD   bfSize;
     $BITMAPFILEHEADER .= $this->LittleEndian2String(0, 2); // WORD    bfReserved1;
     $BITMAPFILEHEADER .= $this->LittleEndian2String(0, 2); // WORD    bfReserved2;
     $BITMAPFILEHEADER .= $this->LittleEndian2String(54, 4); // DWORD   bfOffBits;
 
     // BITMAPINFOHEADER - [40 bytes] http://msdn.microsoft.com/library/en-us/gdi/bitmaps_1rw2.asp
-    $BITMAPINFOHEADER  = $this->LittleEndian2String(40, 4); // DWORD  biSize;
+    $BITMAPINFOHEADER = $this->LittleEndian2String(40, 4); // DWORD  biSize;
     $BITMAPINFOHEADER .= $this->LittleEndian2String($imageX, 4); // LONG   biWidth;
     $BITMAPINFOHEADER .= $this->LittleEndian2String($imageY, 4); // LONG   biHeight;
     $BITMAPINFOHEADER .= $this->LittleEndian2String(1, 2); // WORD   biPlanes;
@@ -3158,7 +3158,7 @@ class imageLib
 
 ## --------------------------------------------------------
 
-  private function LittleEndian2String($number, $minbytes=1)
+  private function LittleEndian2String($number, $minbytes = 1)
     # Author:     James Heinrich
     # Purpose:    BMP SUPPORT (SAVING)
     # Param in:
@@ -3210,17 +3210,17 @@ class imageLib
     $BMP = unpack('Vheader_size/Vwidth/Vheight/vplanes/vbits_per_pixel'.
            '/Vcompression/Vsize_bitmap/Vhoriz_resolution'.
            '/Vvert_resolution/Vcolors_used/Vcolors_important', fread($f1, 40));
-      $BMP['colors'] = 2** $BMP['bits_per_pixel'];
+      $BMP['colors'] = 2 ** $BMP['bits_per_pixel'];
 
       if ($BMP['size_bitmap'] == 0) {
           $BMP['size_bitmap'] = $FILE['file_size'] - $FILE['bitmap_offset'];
       }
 
-      $BMP['bytes_per_pixel'] = $BMP['bits_per_pixel']/8;
+      $BMP['bytes_per_pixel'] = $BMP['bits_per_pixel'] / 8;
       $BMP['bytes_per_pixel2'] = ceil($BMP['bytes_per_pixel']);
-      $BMP['decal'] = ($BMP['width']*$BMP['bytes_per_pixel']/4);
-      $BMP['decal'] -= floor($BMP['width']*$BMP['bytes_per_pixel']/4);
-      $BMP['decal'] = 4-(4*$BMP['decal']);
+      $BMP['decal'] = ($BMP['width'] * $BMP['bytes_per_pixel'] / 4);
+      $BMP['decal'] -= floor($BMP['width'] * $BMP['bytes_per_pixel'] / 4);
+      $BMP['decal'] = 4 - (4 * $BMP['decal']);
 
       if ($BMP['decal'] == 4) {
           $BMP['decal'] = 0;
@@ -3229,7 +3229,7 @@ class imageLib
     //3 : Chargement des couleurs de la palette
     $PALETTE = array();
       if ($BMP['colors'] < 16777216) {
-          $PALETTE = unpack('V'.$BMP['colors'], fread($f1, $BMP['colors']*4));
+          $PALETTE = unpack('V'.$BMP['colors'], fread($f1, $BMP['colors'] * 4));
       }
 
     //4 : Cr�ation de l'image
@@ -3238,9 +3238,9 @@ class imageLib
 
       $res = imagecreatetruecolor($BMP['width'], $BMP['height']);
       $P = 0;
-      $Y = $BMP['height']-1;
+      $Y = $BMP['height'] - 1;
       while ($Y >= 0) {
-          $X=0;
+          $X = 0;
           while ($X < $BMP['width']) {
               if ($BMP['bits_per_pixel'] == 24) {
                   $COLOR = unpack("V", substr($IMG, $P, 3).$VIDE);
@@ -3269,35 +3269,35 @@ class imageLib
                   $COLOR[1] = $red * 65536 + $green * 256 + $blue;
               } elseif ($BMP['bits_per_pixel'] == 8) {
                   $COLOR = unpack("n", $VIDE.substr($IMG, $P, 1));
-                  $COLOR[1] = $PALETTE[$COLOR[1]+1];
+                  $COLOR[1] = $PALETTE[$COLOR[1] + 1];
               } elseif ($BMP['bits_per_pixel'] == 4) {
                   $COLOR = unpack("n", $VIDE.substr($IMG, floor($P), 1));
-                  if (($P*2)%2 == 0) {
+                  if (($P * 2) % 2 == 0) {
                       $COLOR[1] = ($COLOR[1] >> 4) ;
                   } else {
                       $COLOR[1] = ($COLOR[1] & 0x0F);
                   }
-                  $COLOR[1] = $PALETTE[$COLOR[1]+1];
+                  $COLOR[1] = $PALETTE[$COLOR[1] + 1];
               } elseif ($BMP['bits_per_pixel'] == 1) {
                   $COLOR = unpack("n", $VIDE.substr($IMG, floor($P), 1));
-                  if (($P*8)%8 == 0) {
-                      $COLOR[1] =  $COLOR[1]        >>7;
-                  } elseif (($P*8)%8 == 1) {
-                      $COLOR[1] = ($COLOR[1] & 0x40)>>6;
-                  } elseif (($P*8)%8 == 2) {
-                      $COLOR[1] = ($COLOR[1] & 0x20)>>5;
-                  } elseif (($P*8)%8 == 3) {
-                      $COLOR[1] = ($COLOR[1] & 0x10)>>4;
-                  } elseif (($P*8)%8 == 4) {
-                      $COLOR[1] = ($COLOR[1] & 0x8)>>3;
-                  } elseif (($P*8)%8 == 5) {
-                      $COLOR[1] = ($COLOR[1] & 0x4)>>2;
-                  } elseif (($P*8)%8 == 6) {
-                      $COLOR[1] = ($COLOR[1] & 0x2)>>1;
-                  } elseif (($P*8)%8 == 7) {
+                  if (($P * 8) % 8 == 0) {
+                      $COLOR[1] = $COLOR[1] >> 7;
+                  } elseif (($P * 8) % 8 == 1) {
+                      $COLOR[1] = ($COLOR[1] & 0x40) >> 6;
+                  } elseif (($P * 8) % 8 == 2) {
+                      $COLOR[1] = ($COLOR[1] & 0x20) >> 5;
+                  } elseif (($P * 8) % 8 == 3) {
+                      $COLOR[1] = ($COLOR[1] & 0x10) >> 4;
+                  } elseif (($P * 8) % 8 == 4) {
+                      $COLOR[1] = ($COLOR[1] & 0x8) >> 3;
+                  } elseif (($P * 8) % 8 == 5) {
+                      $COLOR[1] = ($COLOR[1] & 0x4) >> 2;
+                  } elseif (($P * 8) % 8 == 6) {
+                      $COLOR[1] = ($COLOR[1] & 0x2) >> 1;
+                  } elseif (($P * 8) % 8 == 7) {
                       $COLOR[1] = ($COLOR[1] & 0x1);
                   }
-                  $COLOR[1] = $PALETTE[$COLOR[1]+1];
+                  $COLOR[1] = $PALETTE[$COLOR[1] + 1];
               } else {
                   return false;
               }
@@ -3308,7 +3308,7 @@ class imageLib
           }
 
           $Y--;
-          $P+=$BMP['decal'];
+          $P += $BMP['decal'];
       }
     //Fermeture du fichier
     fclose($f1);

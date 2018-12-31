@@ -207,7 +207,7 @@ class ColumnCollectionTest extends TestCase
      */
     private function getColumnPositions(ColumnCollection $columns)
     {
-        $positions= [];
+        $positions = [];
 
         foreach ($columns as $column) {
             $positions[] = $column->getId();

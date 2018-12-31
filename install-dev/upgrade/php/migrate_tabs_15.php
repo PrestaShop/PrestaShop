@@ -56,19 +56,19 @@ function migrate_tabs_15()
 
     // ===== Create new parent tabs =====
     $parent = array(
-        'AdminCatalog' =>            get_tab_id('AdminCatalog'),
-        'AdminParentOrders' =>        add_new_tab('AdminParentOrders', 'en:Orders|fr:Commandes|es:Pedidos|de:Bestellungen|it:Ordini', 0, true),
-        'AdminParentCustomer' =>    add_new_tab('AdminParentCustomer', 'en:Customers|fr:Clients|es:Clientes|de:Kunden|it:Clienti', 0, true),
-        'AdminPriceRule' =>        add_new_tab('AdminPriceRule', 'en:Price rules|fr:Promotions|es:Price rules|de:Price rules|it:Price rules', 0, true),
-        'AdminParentShipping' =>    add_new_tab('AdminParentShipping', 'en:Shipping|fr:Transport|es:Transporte|de:Versandkosten|it:Spedizione', 0, true),
-        'AdminParentLocalization' =>add_new_tab('AdminParentLocalization', 'en:Localization|fr:Localisation|es:Ubicación|de:Lokalisierung|it:Localizzazione', 0, true),
-        'AdminParentModules' =>    add_new_tab('AdminParentModules', 'en:Modules|fr:Modules|es:Módulos|de:Module|it:Moduli', 0, true),
+        'AdminCatalog' => get_tab_id('AdminCatalog'),
+        'AdminParentOrders' => add_new_tab('AdminParentOrders', 'en:Orders|fr:Commandes|es:Pedidos|de:Bestellungen|it:Ordini', 0, true),
+        'AdminParentCustomer' => add_new_tab('AdminParentCustomer', 'en:Customers|fr:Clients|es:Clientes|de:Kunden|it:Clienti', 0, true),
+        'AdminPriceRule' => add_new_tab('AdminPriceRule', 'en:Price rules|fr:Promotions|es:Price rules|de:Price rules|it:Price rules', 0, true),
+        'AdminParentShipping' => add_new_tab('AdminParentShipping', 'en:Shipping|fr:Transport|es:Transporte|de:Versandkosten|it:Spedizione', 0, true),
+        'AdminParentLocalization' => add_new_tab('AdminParentLocalization', 'en:Localization|fr:Localisation|es:Ubicación|de:Lokalisierung|it:Localizzazione', 0, true),
+        'AdminParentModules' => add_new_tab('AdminParentModules', 'en:Modules|fr:Modules|es:Módulos|de:Module|it:Moduli', 0, true),
         'AdminParentPreferences' => add_new_tab('AdminParentPreferences', 'en:Preferences|fr:Préférences|es:Preferencias|de:Voreinstellungen|it:Preferenze', 0, true),
-        'AdminTools' =>                get_tab_id('AdminTools'),
-        'AdminAdmin' =>            add_new_tab('AdminAdmin', 'en:Administration|fr:Administration|es:Administration|de:Administration|it:Administration', 0, true),
-        'AdminParentStats' =>        add_new_tab('AdminParentStats', 'en:Stats|fr:Stats|es:Estadísticas|de:Statistik|it:Stat', 0, true),
-        'AdminParentShop' =>        add_new_tab('AdminParentShop', 'en:Shops|fr:Boutiques|es:Shops|de:Shops|it:Shops', 0, true),
-        'AdminStock' =>                get_tab_id('AdminStock'),
+        'AdminTools' => get_tab_id('AdminTools'),
+        'AdminAdmin' => add_new_tab('AdminAdmin', 'en:Administration|fr:Administration|es:Administration|de:Administration|it:Administration', 0, true),
+        'AdminParentStats' => add_new_tab('AdminParentStats', 'en:Stats|fr:Stats|es:Estadísticas|de:Statistik|it:Stat', 0, true),
+        'AdminParentShop' => add_new_tab('AdminParentShop', 'en:Shops|fr:Boutiques|es:Shops|de:Shops|it:Shops', 0, true),
+        'AdminStock' => get_tab_id('AdminStock'),
     );
 
     // ===== Move tabs from old parents to new parents =====

@@ -694,7 +694,7 @@ class CronJobs extends Module
 
         $context_options = array('http' => array(
             'method' => (is_null($webservice_id) == true) ? 'POST' : 'PUT',
-            'header'  => 'Content-type: application/x-www-form-urlencoded',
+            'header' => 'Content-type: application/x-www-form-urlencoded',
             'content' => http_build_query($data),
         ));
 

@@ -47,8 +47,8 @@ class AverageTaxOfProductsTaxCalculatorTest extends UnitTestCase
         $amounts = $taxCalculator->getTaxesAmount(7, null, 2, PS_ROUND_HALF_UP);
 
         $expected = array(
-            1 => round(7 * 20  / (20 + 10) * 0.1, 2),
-            2 => round(7 * 10  / (20 + 10) * 0.2, 2),
+            1 => round(7 * 20 / (20 + 10) * 0.1, 2),
+            2 => round(7 * 10 / (20 + 10) * 0.2, 2),
         );
 
         $this->assertEquals($expected, $amounts);
