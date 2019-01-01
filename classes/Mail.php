@@ -109,23 +109,23 @@ class MailCore extends ObjectModel
     /**
      * Send Email.
      *
-     * @param int    $idLang         Language ID of the email (to translate the template)
-     * @param string $template       Template: the name of template not be a var but a string !
-     * @param string $subject        Subject of the email
-     * @param string $templateVars   Template variables for the email
-     * @param string $to             To email
-     * @param string $toName         To name
-     * @param string $from           From email
-     * @param string $fromName       To email
-     * @param array  $fileAttachment array with three parameters (content, mime and name).
-     *                               You can use an array of array to attach multiple files
-     * @param bool   $mode_smtp      SMTP mode (deprecated)
-     * @param string $templatePath   Template path
-     * @param bool   $die            Die after error
-     * @param int    $idShop         Shop ID
-     * @param string $bcc            Bcc recipient address. You can use an array of array to send to multiple recipients
-     * @param string $replyTo        Reply-To recipient address
-     * @param string $replyToName    Reply-To recipient name
+     * @param int $idLang Language ID of the email (to translate the template)
+     * @param string $template Template: the name of template not be a var but a string !
+     * @param string $subject Subject of the email
+     * @param string $templateVars Template variables for the email
+     * @param string $to To email
+     * @param string $toName To name
+     * @param string $from From email
+     * @param string $fromName To email
+     * @param array $fileAttachment array with three parameters (content, mime and name).
+     *                              You can use an array of array to attach multiple files
+     * @param bool $mode_smtp SMTP mode (deprecated)
+     * @param string $templatePath Template path
+     * @param bool $die Die after error
+     * @param int $idShop Shop ID
+     * @param string $bcc Bcc recipient address. You can use an array of array to send to multiple recipients
+     * @param string $replyTo Reply-To recipient address
+     * @param string $replyToName Reply-To recipient name
      *
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded
      */
@@ -671,16 +671,16 @@ class MailCore extends ObjectModel
     /**
      * Send a test email.
      *
-     * @param bool        $smtpChecked    Is SMTP checked?
-     * @param string      $smtp_server    SMTP Server hostname
-     * @param string      $content        Content of the email
-     * @param string      $subject        Subject of the email
-     * @param bool        $type           Deprecated
-     * @param string      $to             To email address
-     * @param string      $from           From email address
-     * @param string      $smtpLogin      SMTP login name
-     * @param string      $smtpPassword   SMTP password
-     * @param int         $smtpPort       SMTP Port
+     * @param bool $smtpChecked Is SMTP checked?
+     * @param string $smtp_server SMTP Server hostname
+     * @param string $content Content of the email
+     * @param string $subject Subject of the email
+     * @param bool $type Deprecated
+     * @param string $to To email address
+     * @param string $from From email address
+     * @param string $smtpLogin SMTP login name
+     * @param string $smtpPassword SMTP password
+     * @param int $smtpPort SMTP Port
      * @param bool|string $smtpEncryption Encryption type. "off" or false disable encryption
      *
      * @return bool|string True if succeeded, otherwise the error message
@@ -816,7 +816,7 @@ class MailCore extends ObjectModel
     /**
      * MIME encode the string.
      *
-     * @param string $string  The string to encode
+     * @param string $string The string to encode
      * @param string $charset The character set to use
      * @param string $newline The newline character(s)
      *
@@ -894,10 +894,10 @@ class MailCore extends ObjectModel
     /**
      * Generic function to dieOrLog with translations.
      *
-     * @param bool   $die       Should die
-     * @param string $message   Message
-     * @param array  $templates Templates list
-     * @param string $domain    Translation domain
+     * @param bool $die Should die
+     * @param string $message Message
+     * @param array $templates Templates list
+     * @param string $domain Translation domain
      */
     protected static function dieOrLog(
         $die,
