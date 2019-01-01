@@ -864,6 +864,9 @@ class MailCore extends ObjectModel
     /**
      * Automatically convert email to Punycode.
      *
+     * Try to use INTL_IDNA_VARIANT_UTS46 only if defined, else use INTL_IDNA_VARIANT_2003
+     * See https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
+     *
      * @param string $to Email address
      *
      * @return string
@@ -873,6 +876,18 @@ class MailCore extends ObjectModel
         $address = explode('@', $to);
         if (empty($address[0]) || empty($address[1])) {
             return $to;
+        }
+
+        if (defined('INTL_IDNA_VARIANT_UTS46')) {
+            return $address[0] . '@' . idn_to_ascii($address[1], 0, INTL_IDNA_VARIANT_UTS46);
+        }
+
+        /*
+         * INTL_IDNA_VARIANT_2003 const will be removed in PHP 8.
+         * See https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
+         */
+        if (defined('INTL_IDNA_VARIANT_2003')) {
+            return $address[0] . '@' . idn_to_ascii($address[1], 0, INTL_IDNA_VARIANT_2003);
         }
 
         return $address[0] . '@' . idn_to_ascii($address[1]);
