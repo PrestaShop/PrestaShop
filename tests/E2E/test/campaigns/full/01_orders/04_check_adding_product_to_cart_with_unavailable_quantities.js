@@ -1,10 +1,14 @@
+/**
+ * This scenario is based on the bug described in this ticket
+ * http://forge.prestashop.com/browse/BOOM-2805
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
-
 const common_scenarios = require('../../common_scenarios/product');
 
 let productData = {
@@ -14,11 +18,6 @@ let productData = {
   image_name: 'image_test.jpg',
   reference: 'test_1',
 };
-
-/**
- * This scenario is based on the bug described in this ticket
- * http://forge.prestashop.com/browse/BOOM-2805
- **/
 
 scenario('Check adding a product to the cart with unavailable quantities', () => {
 

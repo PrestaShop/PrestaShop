@@ -1,3 +1,10 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-133"][Name="Create a new block"]
+ * [id="PS-134"][Name="Edit a block"]
+ * [id="PS-135"][Name="Delete a block"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../../selectors/FO/access_page');
 const {LinkWidget} = require('../../../../selectors/BO/design/link_widget');

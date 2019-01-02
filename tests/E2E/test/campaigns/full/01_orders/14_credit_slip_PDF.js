@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-93"][Name="Credit slips PDF"]
+ **/
+
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {CreditSlip} = require('../../../selectors/BO/order');
 const commonOrder = require('../../common_scenarios/order');
@@ -5,7 +10,6 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {MerchandiseReturns} = require('../../../selectors/BO/Merchandise_returns');
 const common = require('../../../common.webdriverio');
-
 let promise = Promise.resolve();
 let Date = common.getCustomDate(0);
 scenario('Create three credits slips and generate them', () => {

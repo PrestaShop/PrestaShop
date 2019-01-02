@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-71"][Name="Check the addons catalog page"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Menu} = require('../../../selectors/BO/menu');
 const {ModulesCatalogPage} = require('../../../selectors/BO/addons_catalog_page');

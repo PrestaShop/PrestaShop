@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-105"][Name="Filter by categories in catalog page"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const commonProduct = require('../../common_scenarios/product');

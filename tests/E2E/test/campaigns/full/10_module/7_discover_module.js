@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-382"][Name="Click on discover"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {ModulePage} = require('../../../selectors/BO/module_page');
 const {Menu} = require('../../../selectors/BO/menu');

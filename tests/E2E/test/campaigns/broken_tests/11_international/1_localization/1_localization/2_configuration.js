@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-142"][Name="Configuration"]
+ **/
+
 const {AccessPageBO} = require('../../../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../../../selectors/FO/access_page');
 const {languageFO} = require('../../../../../selectors/FO/index');

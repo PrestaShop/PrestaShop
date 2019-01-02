@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-390"][Name="Buttons in header product page"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');

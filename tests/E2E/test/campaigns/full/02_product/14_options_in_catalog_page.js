@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-103"][Name="Options in catalog page"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {Menu} = require('../../../selectors/BO/menu.js');

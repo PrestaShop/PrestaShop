@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-119"][Name="Check the page"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {Menu} = require('../../../../selectors/BO/menu');
 const {ThemeCatalog} = require('../../../../selectors/BO/design/theme_catalog');

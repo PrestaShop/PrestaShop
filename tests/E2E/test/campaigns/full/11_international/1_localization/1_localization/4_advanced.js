@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-144"][Name="Advanced"]
+ **/
+
 const {AccessPageBO} = require('../../../../../selectors/BO/access_page');
 const {Menu} = require('../../../../../selectors/BO/menu.js');
 const commonLocalization = require('../../../../common_scenarios/localization');

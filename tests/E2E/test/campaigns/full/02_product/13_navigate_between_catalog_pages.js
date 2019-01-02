@@ -1,8 +1,11 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-386"][Name="Navigate between page in catalog page"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
-const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonProduct = require('../../common_scenarios/product');
-let promise = Promise.resolve();
 let productData = {
   name: 'Product test',
   quantity: "50",

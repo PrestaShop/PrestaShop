@@ -1,3 +1,9 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-95"][Name="Delivery slips PDF"]
+ * [id="PS-96"][Name="Delivery slips options"]
+ **/
+
 const {Menu} = require('../../../selectors/BO/menu.js');
 const commonOrder = require('../../common_scenarios/order');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');

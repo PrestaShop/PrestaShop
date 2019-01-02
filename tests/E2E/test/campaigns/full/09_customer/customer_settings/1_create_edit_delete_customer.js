@@ -1,3 +1,10 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-60"][Name="create a customer"]
+ * [id="PS-61"][Name="edit a customer"]
+ * [id="PS-62"][Name="delete a customer"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../../selectors/FO/access_page');
 const {accountPage} = require('../../../../selectors/FO/add_account_page');

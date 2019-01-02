@@ -1,6 +1,12 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-42"][Name="Edit Feature"]
+ * [id="PS-43"][Name="Delete Feature"]
+ **/
+
 const commonFeature = require('../../common_scenarios/feature');
 const commonProduct = require('../../common_scenarios/product');
 const welcomeScenarios = require('../../common_scenarios/welcome');
