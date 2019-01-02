@@ -28,10 +28,10 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerAddressFormatterCore implements FormFormatterInterface
 {
-    private $country;
-    private $translator;
-    private $availableCountries;
-    private $definition;
+    protected $country;
+    protected $translator;
+    protected $availableCountries;
+    protected $definition;
 
     public function __construct(
         Country $country,
@@ -170,7 +170,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         );
     }
 
-    private function addConstraints(array $format)
+    protected function addConstraints(array $format)
     {
         foreach ($format as $field) {
             if (!empty($this->definition[$field->getName()]['validate'])) {
@@ -183,7 +183,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         return $format;
     }
 
-    private function addMaxLength(array $format)
+    protected function addMaxLength(array $format)
     {
         foreach ($format as $field) {
             if (!empty($this->definition[$field->getName()]['size'])) {
@@ -196,7 +196,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         return $format;
     }
 
-    private function getFieldLabel($field)
+    protected function getFieldLabel($field)
     {
         // Country:name => Country, Country:iso_code => Country,
         // same label regardless of which field is used for mapping.
