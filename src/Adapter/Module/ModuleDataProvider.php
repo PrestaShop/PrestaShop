@@ -182,7 +182,21 @@ class ModuleDataProvider
     public function isInstalled($name)
     {
         // ToDo: Load list of all installed modules ?
-        return (bool) Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"');
+        return (bool) $this->getModuleIdByName($name);
+    }
+
+    /**
+     * Returns the Module Id
+     *
+     * @param string $name The technical module name
+     *
+     * @return int the Module Id, or 0 if not found
+     */
+    public function getModuleIdByName($name)
+    {
+        return (int) Db::getInstance()->getValue(
+            'SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"'
+        );
     }
 
     /**

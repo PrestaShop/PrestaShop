@@ -50,7 +50,7 @@ class AdapterDatabaseTest extends IntegrationTestCase
     }
 
     /**
-     * @dataProvider test_values_are_escaped_dataProvider
+     * @dataProvider testValuesAreEscapedDataProvider
      */
     public function testValuesAreEscaped($expectedSanitizedValue, $unsafeInput)
     {

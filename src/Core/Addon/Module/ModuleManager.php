@@ -700,6 +700,19 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
+     * Shortcut to the module data provider in order to know the module id depends
+     * on its name.
+     *
+     * @param string $name The technical module name
+     *
+     * @return int the Module Id, or 0 if not found
+     */
+    public function getModuleIdByName($name)
+    {
+        return $this->moduleProvider->getModuleIdByName($name);
+    }
+
+    /**
      * Shortcut to the module data updater to remove the module from the disk.
      *
      * @param string $name The technical module name
