@@ -81,10 +81,10 @@ class LightWebTestCase extends TestCase
             ->getMock();
 
         $contextMock->method('getTranslator')
-            ->will(self::returnValue($this->translator));
+            ->will($this->returnValue($this->translator));
 
         $contextMock->method('getContext')
-            ->will(self::returnValue($contextMock));
+            ->will($this->returnValue($contextMock));
 
         $contextMock->employee = $employeeMock;
 
@@ -133,7 +133,7 @@ class LightWebTestCase extends TestCase
             ->getMock();
 
         $currencyDataProviderMock->method('getDefaultCurrencyIsoCode')
-            ->will(self::returnValue('en'));
+            ->will($this->returnValue('en'));
 
         $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
             ->setMethods([
@@ -154,7 +154,7 @@ class LightWebTestCase extends TestCase
 
         $legacyContextMock->method('getLanguages')
             ->will(
-                self::returnValue(
+                $this->returnValue(
                     [
                         [
                             'id_lang' => '1',
@@ -176,7 +176,7 @@ class LightWebTestCase extends TestCase
 
         $legacyContextMock->method('getLanguage')
             ->will(
-                self::returnValue($languageMock)
+                $this->returnValue($languageMock)
             );
 
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
@@ -198,7 +198,7 @@ class LightWebTestCase extends TestCase
         );
 
         $configurationMock->method('get')
-            ->will(self::returnValueMap($values));
+            ->will($this->returnValueMap($values));
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
     }
