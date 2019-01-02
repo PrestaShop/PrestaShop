@@ -332,15 +332,12 @@ class AddressCore extends ObjectModel
      */
     public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
     {
-        if (true !== ($error = parent::validateField($field, $value, $id_lang, $skip, $human_errors))) {
+        $error = parent::validateField($field, $value, $id_lang, $skip, $human_errors);
+        if (true !== $error || 'dni' !== $field) {
             return $error;
         }
 
-        //Special validation for dni, check if the country needs it
-        if ('dni' === $field) {
-            return true;
-        }
-
+        // Special validation for dni, check if the country needs it
         $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT c.`need_identification_number`
 			FROM `' . _DB_PREFIX_ . 'country` c
