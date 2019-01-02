@@ -106,7 +106,7 @@ class AddCurrencyCommand
      *
      * @return self
      */
-    public function setShopIds($shopIds)
+    public function setShopIds(array $shopIds)
     {
         $this->shopIds = $shopIds;
 
