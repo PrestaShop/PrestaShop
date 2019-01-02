@@ -582,8 +582,7 @@ class CartControllerCore extends FrontController
             $this->id_product,
             $this->id_product_attribute,
             null,
-            $this->context->cart,
-            $this->customization_id
+            $this->context->cart
         );
 
         return $productQuantity < 0;
