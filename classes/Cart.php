@@ -2017,7 +2017,7 @@ class CartCore extends ObjectModel
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
      */
-    private function newCalculator($products, $cartRules, $id_carrier)
+    public function newCalculator($products, $cartRules, $id_carrier)
     {
         $calculator = new Calculator($this, $id_carrier);
 
