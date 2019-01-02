@@ -47,6 +47,8 @@ use Tools;
  * in CronJobs module it creates new record with url which points to the script which is being executed at certain time
  * of period. If the setting is off then it removes that record.
  *
+ * @todo: an issue with multi-store cron task scheduler.
+ *
  * @internal
  */
 final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesUpdateHandlerInterface
