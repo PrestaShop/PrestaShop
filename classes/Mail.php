@@ -873,7 +873,8 @@ class MailCore extends ObjectModel
      * Try to use INTL_IDNA_VARIANT_UTS46 only if defined or PHP version >= 8.0.0
      * If not, use INTL_IDNA_VARIANT_2003
      * PHP 7.2.0 up to 8.0.0 will return E_DEPRECATED notices but INTL_IDNA_VARIANT_2003 will still work.
-     * From PHP 8.0.0, we cannot longer use INTL_IDNA_VARIANT_2003 so we'll get an Exception using default if INTL_IDNA_VARIANT_UTS46 not defined.
+     * From PHP 8.0.0, we cannot longer use INTL_IDNA_VARIANT_2003 so we'll get an Exception using
+     * default if INTL_IDNA_VARIANT_UTS46 not defined.
      * See https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
      */
     public static function toPunycode($to)
@@ -882,13 +883,16 @@ class MailCore extends ObjectModel
         if (empty($address[0]) || empty($address[1])) {
             return $to;
         }
+
         if (defined('INTL_IDNA_VARIANT_UTS46')) {
             return $address[0] . '@' . idn_to_ascii($address[1], 0, INTL_IDNA_VARIANT_UTS46);
-        } elseif (version_compare(phpversion(), '8.0.0', '<')) {
-            return $address[0] . '@' . idn_to_ascii($address[1], 0, INTL_IDNA_VARIANT_2003);
-        } else {
-            return $address[0] . '@' . idn_to_ascii($address[1]);
         }
+
+        if (version_compare(phpversion(), '8.0.0', '<')) {
+            return $address[0] . '@' . idn_to_ascii($address[1], 0, INTL_IDNA_VARIANT_2003);
+        }
+
+        return $address[0] . '@' . idn_to_ascii($address[1]);
     }
 
     /**
