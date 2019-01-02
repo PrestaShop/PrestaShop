@@ -183,6 +183,11 @@ class ProductInformation extends CommonAbstractType
                     'attr' => [
                         'class' => 'serp-default-description',
                     ],
+                    'constraints' => [
+                        new TinyMceMaxLength([
+                            'max' => FormattedTextareaType::LIMIT_TEXT_UTF8,
+                        ]),
+                    ],
                 ],
                 'locales' => $this->locales,
                 'hideTabs' => true,
