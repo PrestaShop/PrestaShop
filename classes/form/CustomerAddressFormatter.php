@@ -98,7 +98,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                     }
                 } elseif ($field === 'phone') {
                     $formField->setType('tel');
-                } elseif (($field === 'dni' && null !== $this->country)) {
+                } elseif ($field === 'dni' && null !== $this->country) {
                     if ($this->country->need_identification_number) {
                         $formField->setRequired(true);
                     }

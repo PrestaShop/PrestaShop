@@ -348,10 +348,18 @@ class AddressCore extends ObjectModel
 
         if ($result && Tools::isEmpty($value)) {
             if ($human_errors) {
-                return $this->trans('The %s field is required.', array($this->displayFieldName($field, get_class($this))), 'Admin.Notifications.Error');
+                return $this->trans(
+                    'The %s field is required.',
+                    [$this->displayFieldName($field, get_class($this))],
+                    'Admin.Notifications.Error'
+                );
             }
 
-            return $this->trans('Property %s is empty.', array(get_class($this) . '->' . $field), 'Admin.Notifications.Error');
+            return $this->trans(
+                'Property %s is empty.',
+                [get_class($this) . '->' . $field],
+                'Admin.Notifications.Error'
+            );
         }
 
         return true;
