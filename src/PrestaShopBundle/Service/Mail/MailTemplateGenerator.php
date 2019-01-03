@@ -73,12 +73,13 @@ class MailTemplateGenerator
         /** @var MailTemplateInterface $template */
         foreach ($templates as $template) {
             $generatedTemplate = $this->renderer->render($template, $language);
-            $templatePath = implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getType()]);
+            $templatePath = $this->generateTemplatePath($template, $outputFolder);
+            $this->fs->dumpFile($templatePath, $generatedTemplate);
         }
     }
 
     private function generateTemplatePath(MailTemplateInterface $template, $outputFolder)
     {
-        return implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getType(), $template->getName()]);
+        return implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getName()]);
     }
 }
