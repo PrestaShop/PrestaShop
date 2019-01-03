@@ -392,7 +392,10 @@ class AdminReferrersControllerCore extends AdminController
         );
 
         foreach ($result as $row) {
-            $json_array[] = '{id_product:' . (int) $row['id_product'] . ',name:\'' . addslashes($row['name']) . '\'}';
+            $json_array[] = [
+                'id_product' => (int) $row['id_product'],
+                'name' => $row['name'],
+            ];
         }
 
         $this->ajaxRender('[' . implode(',', $json_array) . ']');
