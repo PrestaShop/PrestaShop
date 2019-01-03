@@ -37,7 +37,7 @@ use Symfony\Component\Finder\SplFileInfo;
 class UpdateLicensesCommand extends Command
 {
     private $text = '/**
- * 2007-{currentYear} PrestaShop
+ * 2007-{currentYear} PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -53,10 +53,10 @@ class UpdateLicensesCommand extends Command
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-{currentYear} PrestaShop SA
+ * @copyright 2007-{currentYear} PrestaShop SA and Contributors
  * @license   {licenseLink} {licenseName}
  * International Registered Trademark & Property of PrestaShop SA
  */';
