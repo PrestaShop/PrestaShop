@@ -79,8 +79,7 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
      */
     public function listTemplates($theme)
     {
-        $finder = new Finder();
-        $templates = [];
+        $collection = new MailTemplateCollection();
 
         //Core templates
         $coreTemplatesFolder = implode(DIRECTORY_SEPARATOR, [
@@ -88,17 +87,7 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
             $theme,
             MailTemplateInterface::CORE_TEMPLATES,
         ]);
-        $finder->files()->in($coreTemplatesFolder)->sortByName();
-        /** @var SplFileInfo $fileInfo */
-        foreach ($finder as $fileInfo) {
-            $suffix = !empty($fileInfo->getExtension()) ? '.' . $fileInfo->getExtension() : '';
-            $templates[] = new MailTemplate(
-                $theme,
-                MailTemplateInterface::CORE_TEMPLATES,
-                $fileInfo->getBasename($suffix),
-                $fileInfo->getRealPath()
-            );
-        }
+        $this->addTemplatesFromFolder($collection, $coreTemplatesFolder, $theme, MailTemplateInterface::CORE_TEMPLATES);
 
         //Modules templates
         $moduleTemplatesFolder = implode(DIRECTORY_SEPARATOR, [
@@ -112,21 +101,39 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
         /* @var SplFileInfo $fileInfo */
         foreach ($moduleFinder as $moduleFileInfo) {
             $moduleName = $moduleFileInfo->getFilename();
-            $finder = new Finder();
-            $finder->files()->in($moduleTemplatesFolder . DIRECTORY_SEPARATOR . $moduleName)->depth(0)->sortByName();
-            /** @var SplFileInfo $fileInfo */
-            foreach ($finder as $fileInfo) {
-                $suffix = !empty($fileInfo->getExtension()) ? '.' . $fileInfo->getExtension() : '';
-                $templates[] = new MailTemplate(
-                    $theme,
-                    MailTemplateInterface::MODULES_TEMPLATES,
-                    $fileInfo->getBasename($suffix),
-                    $fileInfo->getRealPath(),
-                    $moduleName
-                );
-            }
+            $moduleFolder = implode(DIRECTORY_SEPARATOR, [$moduleTemplatesFolder, $moduleName]);
+            $this->addTemplatesFromFolder($collection, $moduleFolder, $theme, MailTemplateInterface::MODULES_TEMPLATES, $moduleName);
         }
 
-        return new MailTemplateCollection($templates);
+        return $collection;
+    }
+
+    /**
+     * @param MailTemplateCollectionInterface $collection
+     * @param string $folder
+     * @param string $theme
+     * @param string $type
+     * @param string|null $moduleName
+     */
+    private function addTemplatesFromFolder(
+        MailTemplateCollectionInterface $collection,
+        $folder,
+        $theme,
+        $type,
+        $moduleName = null
+    ) {
+        $finder = new Finder();
+        $finder->files()->in($folder)->depth(0)->sortByName();
+        /** @var SplFileInfo $fileInfo */
+        foreach ($finder as $fileInfo) {
+            $suffix = !empty($fileInfo->getExtension()) ? '.' . $fileInfo->getExtension() : '';
+            $collection->add(new MailTemplate(
+                $theme,
+                $type,
+                $fileInfo->getBasename($suffix),
+                $fileInfo->getRealPath(),
+                $moduleName
+            ));
+        }
     }
 }
