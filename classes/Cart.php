@@ -382,12 +382,19 @@ class CartCore extends ObjectModel
     /**
      * Calculate average Tax rate in Cart.
      *
+     * @deprecated since version 1.7.6. Use $cart->getAverageProductsTaxRate() instead.
+     *
      * @param mixed $cart Cart ID or Cart Object
      *
      * @return float Average Tax used in Cart
      */
     public static function getTaxesAverageUsed($cart)
     {
+        @trigger_error(
+            'Cart::getTaxesAverageUsed() is deprecated since version 1.7.6. Use $cart->getAverageProductsTaxRate() instead.',
+            E_USER_DEPRECATED
+        );
+
         if (!is_object($cart)) {
             $cart = new Cart((int) $cart);
         }
@@ -399,41 +406,12 @@ class CartCore extends ObjectModel
             return 0;
         }
 
-        $products = $cart->getProducts();
-        $total_products_average = 0;
-        $ratio_tax = 0;
-
-        if (!count($products)) {
-            return 0;
-        }
-
-        foreach ($products as $product) {
-            // products refer to the cart details
-
-            if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice') {
-                $address_id = (int) $cart->id_address_invoice;
-            } else {
-                $address_id = (int) $product['id_address_delivery'];
-            } // Get delivery address of the product from the cart
-            if (!Address::addressExists($address_id)) {
-                $address_id = null;
-            }
-
-            $total_products_average += $product['total_wt'];
-            $ratio_tax += $product['total_wt'] * Tax::getProductTaxRate(
-                    (int) $product['id_product'],
-                    (int) $address_id
-                );
-        }
-
-        if ($total_products_average > 0) {
-            return $ratio_tax / $total_products_average;
-        }
-
-        return 0;
+        return $cart->getAverageProductsTaxRate();
     }
 
     /**
+     * Returns the average Tax rate for all products in the cart.
+     *
      * The arguments are optional and only serve as return values in case caller needs the details.
      *
      * @param float|null $cartAmountTaxExcluded If the reference is given, it will be updated with the
