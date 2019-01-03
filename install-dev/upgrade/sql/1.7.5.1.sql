@@ -10,4 +10,10 @@ ALTER TABLE `PREFIX_product`
 ALTER TABLE `PREFIX_order_detail`
   CHANGE `product_supplier_reference` `product_supplier_reference` varchar(64) DEFAULT NULL;
 
+-- Update default links in quick access
+UPDATE ps_quick_access SET link = "index.php/improve/modules/manage"
+  WHERE link = "index.php/module/manage";
+UPDATE ps_quick_access SET link = "index.php/sell/catalog/products/new"
+  WHERE link = "index.php/product/new";
+
 /* PHP:ps_1751_update_module_sf_tab(); */;
