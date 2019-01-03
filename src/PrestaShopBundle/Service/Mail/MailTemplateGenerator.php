@@ -26,23 +26,59 @@
 
 namespace PrestaShopBundle\Service\Mail;
 
-use Symfony\Component\Templating\EngineInterface;
+
+use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use Symfony\Component\Filesystem\Filesystem;
 
 class MailTemplateGenerator
 {
-    /**
-     * @var EngineInterface
-     */
-    private $engine;
+    /** @var MailTemplateCatalogInterface */
+    private $catalog;
+
+    /** @var MailTemplateRenderer */
+    private $renderer;
+
+    /** @var Filesystem */
+    private $fs;
 
     public function __construct(
-        MailTemplateCatalogInterface $templateCatalog,
-        EngineInterface $engine
+        MailTemplateCatalogInterface $catalog,
+        MailTemplateRenderer $renderer
     ) {
-        $this->engine = $engine;
+        $this->catalog = $catalog;
+        $this->renderer = $renderer;
+        $this->fs = new Filesystem();
     }
 
-    public function generateTemplates($theme, $language)
+    public function generateThemeTemplates($theme, $outputFolder, $language = null)
     {
+        $availableThemes = $this->catalog->listThemes();
+        if (!in_array($theme, $availableThemes)) {
+            throw new InvalidException(sprintf(
+                'Invalid theme used "%s", only available themes are: %s',
+                $theme,
+                implode(', ', $availableThemes)
+            ));
+        }
+
+        if (!$this->fs->exists($outputFolder) || !is_dir($outputFolder)) {
+            throw new InvalidException(sprintf(
+                'Invalid output folder "%s"',
+                $outputFolder
+            ));
+        }
+
+        /** @var MailTemplateCollectionInterface $templates */
+        $templates = $this->catalog->listTemplates($theme);
+        /** @var MailTemplateInterface $template */
+        foreach ($templates as $template) {
+            $generatedTemplate = $this->renderer->render($template, $language);
+            $templatePath = implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getType()]);
+        }
+    }
+
+    private function generateTemplatePath(MailTemplateInterface $template, $outputFolder)
+    {
+        return implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getType(), $template->getName()]);
     }
 }
