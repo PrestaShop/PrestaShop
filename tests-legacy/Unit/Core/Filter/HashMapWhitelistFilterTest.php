@@ -26,6 +26,7 @@
 
 namespace LegacyTests\Unit\Core\Filter;
 
+use LegacyTests\Unit\Core\Filter\_Artifacts\TestLazyArray;
 use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
 class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
@@ -103,6 +104,30 @@ class HashMapWhitelistFilterTest extends \PHPUnit\Framework\TestCase
         ];
 
         $this->assertSame($expected, $filter->filter($subject));
+    }
+
+    public function testFilteringLazyArrayReturnsNewInstanceOfSubject()
+    {
+        $subject = new TestLazyArray();
+
+        $filter = new HashMapWhitelistFilter();
+        $filter->whitelist([
+            'some_property',
+        ]);
+
+        $filteredSubject = $filter->filter($subject);
+
+        $this->assertNotSame($subject, $filteredSubject);
+        $this->assertArrayNotHasKey(
+            'some_other_property',
+            $filteredSubject,
+            "The filtered subject still has properties that should have been filtered out"
+        );
+        $this->assertArrayHasKey(
+            'some_other_property',
+            $subject,
+            "The original subject has been altered"
+        );
     }
 
     public function provideTestCases()
