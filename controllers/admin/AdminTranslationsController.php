@@ -3331,6 +3331,7 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $email = Tools::getValue('email');
         $this->ajaxRender(
-            AdminTranslationsController::getEmailHTML($email));
+            AdminTranslationsController::getEmailHTML($email)
+        );
     }
 }
