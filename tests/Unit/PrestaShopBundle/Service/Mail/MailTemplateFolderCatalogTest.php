@@ -87,10 +87,11 @@ class MailTemplateFolderCatalogTest extends TestCase
         $templateCollection = $catalog->listTemplates('classic');
         $this->assertNotNull($templateCollection);
         $this->assertInstanceOf(MailTemplateCollectionInterface::class, $templateCollection);
-        $this->assertEquals(8, $templateCollection->count());
+        $this->assertEquals(10, $templateCollection->count());
 
+        //Check core templates
         $coreTemplates = $this->filterTemplatesByType($templateCollection, MailTemplateInterface::CORE_TEMPLATES);
-        $this->assertCount(4, $coreTemplates);
+        $this->assertCount(5, $coreTemplates);
 
         /** @var MailTemplateInterface $template */
         $template = $coreTemplates[0];
@@ -99,13 +100,34 @@ class MailTemplateFolderCatalogTest extends TestCase
             realpath($this->tempDir),
             'classic',
             MailTemplateInterface::CORE_TEMPLATES,
-            'account.twig',
+            'account.html.twig',
         ]);
         $this->assertEquals($expectedPath, $template->getPath());
         $this->assertEquals('classic', $template->getTheme());
-        $this->assertEquals('account', $template->getName());
+        $this->assertEquals('account.html', $template->getName());
         $this->assertEquals(MailTemplateInterface::CORE_TEMPLATES, $template->getType());
         $this->assertNull($template->getModule());
+
+        //Check module templates
+        $modulesTemplates = $this->filterTemplatesByType($templateCollection, MailTemplateInterface::MODULES_TEMPLATES);
+        $this->assertCount(5, $modulesTemplates);
+
+        $moduleTemplatesCount = [];
+        /** @var MailTemplateInterface $moduleTemplate */
+        foreach ($modulesTemplates as $moduleTemplate) {
+            $this->assertEquals('classic', $template->getTheme());
+            $this->assertEquals(MailTemplateInterface::MODULES_TEMPLATES, $moduleTemplate->getType());
+            $this->assertNotNull($moduleTemplate->getModule());
+            if (!isset($moduleTemplatesCount[$moduleTemplate->getModule()])) {
+                $moduleTemplatesCount[$moduleTemplate->getModule()] = [$moduleTemplate->getName()];
+            } else {
+                $moduleTemplatesCount[$moduleTemplate->getModule()][] = $moduleTemplate->getName();
+            }
+        }
+        $this->assertCount(3, $moduleTemplatesCount['followup']);
+        $this->assertEquals(['followup_1', 'followup_2', 'followup_3'], $moduleTemplatesCount['followup']);
+        $this->assertCount(2, $moduleTemplatesCount['ps_emailalerts']);
+        $this->assertEquals(['productoutofstock', 'return_slip'], $moduleTemplatesCount['ps_emailalerts']);
     }
 
     /**
@@ -134,7 +156,8 @@ class MailTemplateFolderCatalogTest extends TestCase
             'modern',
         ];
         $this->coreTemplates = [
-            'account.twig',
+            'account.html.twig',
+            'account.txt.twig',
             'password.twig',
             'order_conf.twig',
             'bank_wire.twig',
@@ -143,6 +166,7 @@ class MailTemplateFolderCatalogTest extends TestCase
             'followup' => [
                 'followup_1.twig',
                 'followup_2.twig',
+                'followup_3.twig',
             ],
             'ps_emailalerts' => [
                 'return_slip.twig',
