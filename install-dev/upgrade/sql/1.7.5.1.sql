@@ -9,3 +9,5 @@ ALTER TABLE `PREFIX_product`
 
 ALTER TABLE `PREFIX_order_detail`
   CHANGE `product_supplier_reference` `product_supplier_reference` varchar(64) DEFAULT NULL;
+
+/* PHP:ps_1751_update_module_sf_tab(); */;
