@@ -3329,7 +3329,7 @@ class AdminProductsControllerCore extends AdminController
             }
 
             if (!$forceJson) {
-                $this->ajaxRender(implode("\n", $results));
+                $this->ajaxRender(implode(PHP_EOL, $results));
             } else {
                 $this->ajaxRender(json_encode($results));
             }
