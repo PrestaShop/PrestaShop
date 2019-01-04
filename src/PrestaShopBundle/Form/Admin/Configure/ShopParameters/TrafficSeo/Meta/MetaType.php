@@ -169,7 +169,7 @@ class MetaType extends AbstractType
             ])
         ;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $formData = $event->getData();
 
             if (isset($formData['page_name']) && 'index' !== $formData['page_name']) {
