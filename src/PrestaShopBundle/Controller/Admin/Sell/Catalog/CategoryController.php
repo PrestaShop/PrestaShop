@@ -604,7 +604,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         try {
-            $command = new ToggleCategoryStatusCommand(new CategoryId((int) $categoryId));
+            $command = new ToggleCategoryStatusCommand((int) $categoryId);
 
             $this->getCommandBus()->handle($command);
 
