@@ -5,6 +5,9 @@ const {CustomerSettings} = require('../../../selectors/BO/shopParameters/custome
 const {OrderPage} = require('../../../selectors/BO/order');
 const {Invoices} = require('../../../selectors/BO/order');
 const commonOrder = require('../../common_scenarios/order');
+const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+const {OnBoarding} = require('../../../selectors/BO/onboarding');
+
 let promise = Promise.resolve();
 
 global.orderInfo = [];
@@ -120,7 +123,7 @@ scenario('Generate a PDF by date', () => {
         test('should check the "Carrier" name of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].Carrier));
         test('should check the "Payment Method" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].PaymentMethod));
       }
-      test('should delete the invoice pdf file', () => client.deleteFile(global.downloadsFolderPath, 'invoices.pdf'));
+      test('should delete the invoice pdf file', () => client.deleteFile(global.downloadsFolderPath, 'invoices', '.pdf'));
     }, 'order');
   }, 'order');
   scenario('Change the date', client => {
@@ -128,5 +131,29 @@ scenario('Generate a PDF by date', () => {
     test('should set the "To" date', () => client.waitAndSetValue(Invoices.from_input, '2020-08-10'));
     test('should click on "Generate PDF file by date"', () => client.waitForExistAndClick(Invoices.generate_pdf_button));
     test('should check that no invoice has been found', () => client.checkTextValue(Invoices.no_invoice_alert, 'No invoice has been found for this period.', 'contain'));
+  }, 'order');
+  scenario('Close symfony toolbar then click on "Stop the OnBoarding" button', client => {
+    test('should close symfony toolbar', () => {
+      return promise
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+          }
+        });
+    });
+    test('should check and click on "Stop the OnBoarding" button', () => {
+      return promise
+        .then(() => client.isVisible(OnBoarding.stop_button))
+        .then(() => client.stopOnBoarding(OnBoarding.stop_button))
+        .then(() => client.pause(2000));
+    });
+  }, 'onboarding');
+  scenario('Back Customer Group tax parameter to default behaviour', client => {
+    test('should go to "Customer settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.customer_settings_submenu));
+    test('should click on "Group" tab', () => client.waitForExistAndClick(CustomerSettings.groups.group_button));
+    test('should click on customer "Edit" button', () => client.waitForExistAndClick(CustomerSettings.groups.customer_edit_button));
+    test('should select "Tax included" option for "Price display method"', () => client.waitAndSelectByValue(CustomerSettings.groups.price_display_method, "0"));
+    test('should click on "Save" button', () => client.waitForExistAndClick(CustomerSettings.groups.save_button));
   }, 'order');
 }, 'order', true);

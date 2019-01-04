@@ -35,7 +35,7 @@ module.exports = {
       });
       test('should click on "Add new value" button', () => client.waitForExistAndClick(AttributeSubMenu.add_value_button));
       Object.keys(data.values).forEach(function (key) {
-        test('should set the "Value" input', () => client.waitAndSetValue(AttributeSubMenu.value_input, data.values[key].value));
+        test('should set the "Value" input', () => client.waitAndSetValue(AttributeSubMenu.value_input, data.values[key].value), 2000);
         if (data.values[key].hasOwnProperty('color')) {
           test('should set the "Color" input', () => client.waitAndSetValue(AttributeSubMenu.color_input, data.values[key].color));
         }
@@ -90,7 +90,7 @@ module.exports = {
       test('should select the attribute', () => client.waitForExistAndClick(AttributeSubMenu.attribute_name));
       Object.keys(data.values).forEach(function (key) {
         test('should click on "Edit" action', () => client.waitForExistAndClick(AttributeSubMenu.update_value_button.replace('%POS', key)));
-        test('should set the "Value" input', () => client.waitAndSetValue(AttributeSubMenu.value_input, data.values[key].value));
+        test('should set the "Value" input', () => client.waitAndSetValue(AttributeSubMenu.value_input, data.values[key].value, 2000));
         test('should click on "Save" button', () => client.waitForExistAndClick(AttributeSubMenu.save_value_button));
       });
       test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful update.'));

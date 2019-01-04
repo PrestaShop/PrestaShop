@@ -6,7 +6,7 @@ module.exports = {
         orders_menu: '//*[@id="subtab-AdminParentOrders"]/a',
         orders_submenu: '#subtab-AdminOrders',
         invoices_submenu: '#subtab-AdminInvoices',
-        credit_slips_submenu: '#subtab-AdminSlip',
+        credit_slips_submenu: '#subtab-AdminSlip a',
         delivery_slips_submenu: '#subtab-AdminDeliverySlip',
         shopping_carts_submenu: '#subtab-AdminCarts'
       },

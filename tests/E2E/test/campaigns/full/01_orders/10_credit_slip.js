@@ -2,6 +2,7 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const commonOrder = require('../../common_scenarios/order');
 let promise = Promise.resolve();
+
 scenario('Generate and check a Credit slip', () => {
   scenario('Open the browser login successfully in the Back Office ', client => {
     test('should open the browser', () => client.open());
@@ -32,8 +33,14 @@ scenario('Generate and check a Credit slip', () => {
     }, 'common_client');
     commonOrder.creditSlip('2');
     commonOrder.checkCreditSlip('2');
+
   }, 'order');
+  scenario('Back to default behaviour', () => {
+    commonOrder.disableMerchandise();
+  }, 'order');
+
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from Back Office', () => client.signOutBO());
   }, 'common_client');
 }, 'order', true);
+

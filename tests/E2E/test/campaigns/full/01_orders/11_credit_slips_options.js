@@ -2,7 +2,6 @@ const {CreditSlip} = require('../../../selectors/BO/order');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {Menu} = require('../../../selectors/BO/menu.js');
-let promise = Promise.resolve();
 require('./10_credit_slip');
 scenario('Generate and check a Credit slips options ', () => {
   scenario('Open the browser and login successfully in the Back Office ', client => {
@@ -19,11 +18,10 @@ scenario('Generate and check a Credit slips options ', () => {
     test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
     test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
     test('should click on "DOCUMENTS" subtab', () => client.scrollWaitForExistAndClick(OrderPage.document_submenu));
-    test('should get the credit slip name', () => client.getDocumentName(OrderPage.credit_slip_document_name));
-    test('should check the existence of "prefix value" ', () => {
-      return promise
-        .then(() => client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'PrefixTest'))
-        .then(() => client.deleteDownloadedDocument(global.creditSlip));
+    test('should check the existence of "prefix value" ', async () => {
+      await client.getCreditSlipDocumentName(OrderPage.credit_slip_document_name);
+      await client.pause(3000);
+      await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'PrefixTest');
     });
   }, 'order');
   scenario('Logout from the Back Office', client => {

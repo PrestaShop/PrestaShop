@@ -117,7 +117,7 @@ module.exports = {
                   client.pause(0);
                 }
               })
-              .then(() => client.getCombinationData(1, 5000));
+              .then(() => client.getCombinationData(1, 7000));
           });
           test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected, 2000));
           test('should set the "Variations quantity" input', () => {
