@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PHP_BINARY=`which php`
-STAGED_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep \\\\.php`
+STAGED_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep '\.php$'`
 PROJECT_PATH=$(cd "$( dirname "$0" )/../../" && pwd)
 
 # Determine if a file list is passed
@@ -15,19 +15,23 @@ then
 fi
 SFILES=${SFILES:-$STAGED_FILES_CMD}
 
+if [[ -n $SFILES ]]
+then
+  echo "Checking PHP Lint..."
+  for FILE in $SFILES
+  do
+    $PHP_BINARY -l -d display_errors=0 $PROJECT_PATH/$FILE
+    if [ $? != 0 ]
+    then
+      echo "Error(s), please fix it before commit."
+      exit 1
+    fi
+  done
 
-echo "Checking PHP Lint..."
-for FILE in $SFILES
-do
-  $PHP_BINARY -l -d display_errors=0 $PROJECT_PATH/$FILE
-  if [ $? != 0 ]
-  then
-    echo "Error(s), please fix it before commit."
-    exit 1
-  fi
-done
+  echo "Running PHP CS Fixer..."
+  $PHP_BINARY ./vendor/bin/php-cs-fixer fix --show-progress=dot
+  exit $?
 
-echo "Running PHP CS Fixer..."
-$PHP_BINARY ./vendor/bin/php-cs-fixer fix
-
-exit $?
+else
+  echo "No modified PHP files to check."
+fi
