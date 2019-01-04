@@ -26,32 +26,61 @@
 
 namespace PrestaShopBundle\Service\Mail;
 
+/**
+ * Interface MailTemplateInterface is used to contain the basic info about a mail template:
+ */
 interface MailTemplateInterface
 {
-    const CORE_TEMPLATES = 'core';
-    const MODULES_TEMPLATES = 'modules';
+    const CORE_CATEGORY = 'core';
+    const MODULES_CATEGORY = 'modules';
+
+    const HTML_TYPE = 'html';
+    const RAW_TYPE = 'raw';
 
     /**
+     * Whether the template is used by the core or modules
+     *
+     * @return string
+     */
+    public function getCategory();
+
+    /**
+     * There are two types of mail templates, either HTML or RAW ones
+     *
      * @return string
      */
     public function getType();
 
     /**
+     * Returns the extension of the generated file, either txt or html
+     * @return string
+     */
+    public function getExtension();
+
+    /**
+     * Name of the template to identify its purpose
+     *
      * @return string
      */
     public function getName();
 
     /**
+     * Which theme this template is associated to
+     *
      * @return string
      */
     public function getTheme();
 
     /**
+     * Absolute path of the template file
+     *
      * @return string
      */
     public function getPath();
 
     /**
+     * Which module this template is associated to (if any)
+     *
      * @return string|null
      */
     public function getModule();
