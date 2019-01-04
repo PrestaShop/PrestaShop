@@ -79,8 +79,8 @@ class GetFileControllerCore extends FrontController
             if (!$state || !$state->paid) {
                 $this->displayCustomError('This order has not been paid.');
             }
-            
-            /* check whether the order was made by the current user  */
+
+            /* check whether the order was made by the current user */
             if ($order->secure_key != $this->context->customer->secure_key) {
                 $this->displayCustomError('Invalid key.');
             }
