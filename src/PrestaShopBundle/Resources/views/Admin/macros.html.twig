@@ -118,15 +118,33 @@
   {% set vars = vars|merge({'attr': attr}) %}
 
   {{ form_widget(form, vars) }}
-  {% if errors|length > 0 %}
 
+  {% if errors|length > 0 %}
+    {# form form types which has locales and there are more then 1 error , additional errors are displaying inside popup #}
     {% set errorPopover = null %}
-    {% if form.vars.locales is defined and form.vars.locales is not null and form.vars.locales|length > 1 %}
+    {% if form.vars.locales is defined and
+          form.vars.locales is not null and
+          form.vars.locales|length > 1 and
+          errors|length > 1
+    %}
       {% set popoverErrors = errors|slice(1) %}
       {% set errors = [errors|first] %}
 
+      {% set popoverErrorContent %}
+
+      {% endset %}
+
+      {#todo: ask if use popover or keep the default functionality#}
+      <ul class="popover-error-list">
+        {% for popoverError in popoverErrors %}
+          <li class="invalid-feedback">
+            {{ popoverError }}
+          </li>
+        {% endfor %}
+      </ul>
+
       {% set errorPopover %}
-        <span class="">
+        <span class="translatable-input-popover-trigger">
           <u>+ {{ '%count% more'|trans({'%count%': popoverErrors|length}, 'Admin.Actions') }}</u>
         </span>
       {% endset %}
@@ -138,6 +156,7 @@
         {{ error }} {{ (errorPopover is not null) ? errorPopover : '' }}
       </div>
     {% endfor %}
+
   {% endif %}
 {% endmacro %}
 
