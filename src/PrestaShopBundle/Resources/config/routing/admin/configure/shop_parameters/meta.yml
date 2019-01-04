@@ -14,7 +14,7 @@ admin_meta_search:
     _legacy_controller: AdminMeta
 
 admin_meta_create:
-  path: /create
+  path: /new
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:create'
