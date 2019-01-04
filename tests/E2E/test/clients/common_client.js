@@ -621,15 +621,24 @@ class CommonClient {
    * These functions are used to sort table then check the sorted table
    * elementsTable, elementsSortedTable are two global variables that must be initialized in the sort table function
    * "normalize('NFKD').replace(/[\u0300-\u036F]/g, '')" is used to replace special characters example ô to o
+   * * "normalize('NFKD').replace(/[\u0300-\u036F]/g, '')" is used to replace special characters example € to o
    */
-  getTableField(element_list, i, sorted = false) {
+  getTableField(element_list, i, sorted = false, priceWithCurrency = false) {
     return this.client
       .getText(element_list.replace("%ID", i + 1)).then(function (name) {
         if (sorted) {
-          elementsSortedTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+          if (priceWithCurrency === true) {
+            elementsSortedTable[i] = name.normalize('NFKD').replace(/[^\x00-\x7F]/g, '').toLowerCase();
+          } else {
+            elementsSortedTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+          }
         }
         else {
-          elementsTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+          if (priceWithCurrency === true) {
+            elementsTable[i] = name.normalize('NFKD').replace(/[^\x00-\x7F]/g, '').toLowerCase();
+          } else {
+            elementsTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+          }
         }
       });
   }
