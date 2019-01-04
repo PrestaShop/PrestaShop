@@ -69,3 +69,7 @@ table.grid-ordering-column tr.position-row-while-drag {
     }
   }
 }
+
+table .thead-default .column-headers th:last-child .grid-actions-header-text span {
+  padding-right: 14px;
+}
