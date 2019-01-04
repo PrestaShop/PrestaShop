@@ -74,7 +74,7 @@ final class EditMetaHandler implements EditMetaHandlerInterface
             }
 
             if (null !== $command->getPageName()) {
-                $entity->page = $command->getPageName();
+                $entity->page = $command->getPageName()->getValue();
             }
 
             if (null !== $command->getRewriteUrl()) {

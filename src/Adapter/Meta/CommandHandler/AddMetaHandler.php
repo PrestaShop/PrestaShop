@@ -87,7 +87,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
             new DefaultLanguage()
         );
 
-        if ('index' !== $command->getPageName() && 0 !== count($urlRewriteErrors)) {
+        if (0 !== count($urlRewriteErrors) && 'index' !== $command->getPageName()->getValue()) {
             throw new MetaConstraintException(
                 'The url rewrite is missing for the default language when creating new meta record',
                 MetaConstraintException::INVALID_URL_REWRITE
@@ -110,7 +110,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
 
         try {
             $entity = new Meta();
-            $entity->page = $command->getPageName();
+            $entity->page = $command->getPageName()->getValue();
             $entity->title = $command->getPageTitle();
             $entity->description = $command->getMetaDescription();
             $entity->keywords = $command->getMetaKeywords();

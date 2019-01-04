@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\PageName;
 
 /**
  * Class EditMetaCommand
@@ -41,7 +42,7 @@ class EditMetaCommand extends AbstractMetaCommand
     private $metaId;
 
     /**
-     * @var string
+     * @var PageName
      */
     private $pageName;
 
@@ -84,7 +85,7 @@ class EditMetaCommand extends AbstractMetaCommand
     }
 
     /**
-     * @return string
+     * @return PageName
      */
     public function getPageName()
     {
@@ -100,8 +101,7 @@ class EditMetaCommand extends AbstractMetaCommand
      */
     public function setPageName($pageName)
     {
-        $this->validatePageName($pageName);
-        $this->pageName = $pageName;
+        $this->pageName = new PageName($pageName);
 
         return $this;
     }

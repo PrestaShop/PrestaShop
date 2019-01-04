@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\PageName;
 
 /**
  * Class AddMetaCommand is responsible for saving meta entities data.
@@ -34,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 class AddMetaCommand extends AbstractMetaCommand
 {
     /**
-     * @var string
+     * @var PageName
      */
     private $pageName;
 
@@ -65,13 +66,11 @@ class AddMetaCommand extends AbstractMetaCommand
      */
     public function __construct($pageName)
     {
-        $this->validatePageName($pageName);
-
-        $this->pageName = $pageName;
+        $this->pageName = new PageName($pageName);
     }
 
     /**
-     * @return string
+     * @return PageName
      */
     public function getPageName()
     {

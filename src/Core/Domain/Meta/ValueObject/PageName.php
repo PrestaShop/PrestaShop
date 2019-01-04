@@ -24,35 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 
 /**
- * Class AbstractMetaCommand is responsible for defining the abstraction for AddMetaCommand and EditMetaCommand.
+ * Class PageName
  */
-abstract class AbstractMetaCommand
+class PageName
 {
     /**
-     * @param int $languageId
-     * @param string $value
-     * @param int $constraintErrorCode
+     * @var string
+     */
+    private $pageName;
+
+    /**
+     * @param string $pageName
      *
      * @throws MetaConstraintException
      */
-    protected function validateName($languageId, $value, $constraintErrorCode)
+    public function __construct($pageName)
     {
-        $regex = '/^[^<>={}]*$/u';
+        $this->assertIsValidPageName($pageName);
 
-        if ($value && !preg_match($regex, $value)) {
+        $this->pageName = $pageName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->pageName;
+    }
+
+    /**
+     * @param string $pageName
+     *
+     * @throws MetaConstraintException
+     */
+    private function assertIsValidPageName($pageName)
+    {
+        if (!is_string($pageName) || !$pageName || !preg_match('/^[a-zA-Z0-9_.-]+$/', $pageName)) {
             throw new MetaConstraintException(
-                sprintf(
-                    'Value "%s" for language id %s did not passed the regex expression: %s',
-                    $value,
-                    $languageId,
-                    $regex
-                ),
-                $constraintErrorCode
+                sprintf('Invalid Meta page name %s', var_export($pageName, true)),
+                MetaConstraintException::INVALID_PAGE_NAME
             );
         }
     }
