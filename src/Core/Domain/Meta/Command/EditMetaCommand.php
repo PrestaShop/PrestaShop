@@ -27,12 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
  * Class EditMetaCommand
  */
-class EditMetaCommand extends AbstractSaveMetaCommand
+class EditMetaCommand extends AbstractMetaCommand
 {
     /**
      * @var MetaId
@@ -65,11 +66,13 @@ class EditMetaCommand extends AbstractSaveMetaCommand
     private $rewriteUrl;
 
     /**
-     * @param MetaId $metaId
+     * @param int $metaId
+     *
+     * @throws MetaException
      */
-    public function __construct(MetaId $metaId)
+    public function __construct($metaId)
     {
-        $this->metaId = $metaId;
+        $this->metaId = new MetaId($metaId);
     }
 
     /**

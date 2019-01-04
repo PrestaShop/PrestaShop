@@ -141,6 +141,6 @@ final class AddMetaHandler implements AddMetaHandlerInterface
 
         $this->hookDispatcher->dispatchWithParameters('actionAdminMetaSave');
 
-        return new MetaId($entity->id);
+        return new MetaId((int) $entity->id);
     }
 }

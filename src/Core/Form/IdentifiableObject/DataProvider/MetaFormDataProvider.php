@@ -51,9 +51,8 @@ final class MetaFormDataProvider implements FormDataProviderInterface
      */
     public function getData($metaId)
     {
-        $metaId = new MetaId($metaId);
         /** @var EditableMeta $result */
-        $result = $this->queryBus->handle(new GetMetaForEditing($metaId));
+        $result = $this->queryBus->handle(new GetMetaForEditing((int) $metaId));
 
         return [
             'page_name' => $result->getPageName(),

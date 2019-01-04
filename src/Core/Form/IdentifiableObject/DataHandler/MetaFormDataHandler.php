@@ -77,7 +77,7 @@ final class MetaFormDataHandler implements FormDataHandlerInterface
      */
     public function update($metaId, array $data)
     {
-        $editMetaCommand = (new EditMetaCommand(new MetaId($metaId)))
+        $editMetaCommand = (new EditMetaCommand((int) $metaId))
             ->setPageName($data['page_name'])
             ->setPageTitle($data['page_title'])
             ->setMetaDescription($data['meta_description'])

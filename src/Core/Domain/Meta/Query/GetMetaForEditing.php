@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
@@ -41,11 +42,13 @@ class GetMetaForEditing
     /**
      * GetMetaForEditing constructor.
      *
-     * @param MetaId $metaId
+     * @param int $metaId
+     *
+     * @throws MetaException
      */
-    public function __construct(MetaId $metaId)
+    public function __construct($metaId)
     {
-        $this->metaId = $metaId;
+        $this->metaId = new MetaId($metaId);
     }
 
     /**

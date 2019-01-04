@@ -29,6 +29,7 @@ namespace Tests\Unit\Core\Domain\Meta;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
@@ -37,6 +38,15 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 class EditMetaCommandTest extends TestCase
 {
     /**
+     * @dataProvider getIncorrectIds
+     */
+    public function testItThrowsAnExceptionOnIncorrectMetaIdPassed($incorrectId)
+    {
+        $this->expectException(MetaException::class);
+        $command = new EditMetaCommand($incorrectId);
+    }
+
+    /**
      * @dataProvider getIncorrectPageNames
      */
     public function testItThrowsAnExceptionOnIncorrectOrMissingPageName($incorrectPageName)
@@ -44,7 +54,7 @@ class EditMetaCommandTest extends TestCase
         $this->expectException(MetaConstraintException::class);
         $this->expectExceptionCode(MetaConstraintException::INVALID_PAGE_NAME);
 
-        $command = new EditMetaCommand(new MetaId(1));
+        $command = new EditMetaCommand(1);
         $command->setPageName($incorrectPageName);
     }
 
@@ -56,7 +66,7 @@ class EditMetaCommandTest extends TestCase
         $this->expectException(MetaConstraintException::class);
         $this->expectExceptionCode(MetaConstraintException::INVALID_PAGE_TITLE);
 
-        $command = new EditMetaCommand(new MetaId(1));
+        $command = new EditMetaCommand(1);
 
         $command->setPageTitle($incorrectNames);
     }
@@ -69,7 +79,7 @@ class EditMetaCommandTest extends TestCase
         $this->expectException(MetaConstraintException::class);
         $this->expectExceptionCode(MetaConstraintException::INVALID_META_DESCRIPTION);
 
-        $command = new EditMetaCommand(new MetaId(1));
+        $command = new EditMetaCommand(1);
 
         $command->setMetaDescription($incorrectNames);
     }
@@ -82,7 +92,7 @@ class EditMetaCommandTest extends TestCase
         $this->expectException(MetaConstraintException::class);
         $this->expectExceptionCode(MetaConstraintException::INVALID_META_KEYWORDS);
 
-        $command = new EditMetaCommand(new MetaId(1));
+        $command = new EditMetaCommand(1);
 
         $command->setMetaKeywords($incorrectNames);
     }
@@ -109,6 +119,21 @@ class EditMetaCommandTest extends TestCase
                 [
                     '#$%^@{}',
                 ]
+            ]
+        ];
+    }
+
+    public function getIncorrectIds()
+    {
+        return [
+            [
+                '1',
+            ],
+            [
+                -1,
+            ],
+            [
+                0,
             ]
         ];
     }

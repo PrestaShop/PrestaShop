@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 
 /**
- * Class AbstractSaveMetaCommand is responsible for defining the abstraction for AddMetaCommand and EditMetaCommand.
+ * Class AbstractMetaCommand is responsible for defining the abstraction for AddMetaCommand and EditMetaCommand.
  */
-abstract class AbstractSaveMetaCommand
+abstract class AbstractMetaCommand
 {
     /**
      * Validates page name.

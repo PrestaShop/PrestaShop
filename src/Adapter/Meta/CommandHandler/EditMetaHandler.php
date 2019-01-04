@@ -138,6 +138,6 @@ final class EditMetaHandler implements EditMetaHandlerInterface
             );
         }
 
-        return new MetaId($entity->id);
+        return new MetaId((int) $entity->id);
     }
 }
