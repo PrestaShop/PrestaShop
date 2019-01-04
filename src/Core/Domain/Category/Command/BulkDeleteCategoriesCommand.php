@@ -48,16 +48,17 @@ class BulkDeleteCategoriesCommand
 
     /**
      * @param int[] $categoryIds
-     * @param CategoryDeleteMode $deleteMode
+     * @param string $deleteMode
      *
      * @throws CategoryConstraintException
      * @throws CategoryException
      */
-    public function __construct(array $categoryIds, CategoryDeleteMode $deleteMode)
+    public function __construct(array $categoryIds, $deleteMode)
     {
         $this
             ->setCategoryIds($categoryIds)
-            ->setDeleteMode($deleteMode);
+            ->setDeleteMode($deleteMode)
+        ;
     }
 
     /**
@@ -77,13 +78,13 @@ class BulkDeleteCategoriesCommand
     }
 
     /**
-     * @param CategoryDeleteMode $mode
+     * @param string $mode
      *
      * @return self
      */
-    private function setDeleteMode(CategoryDeleteMode $mode)
+    private function setDeleteMode($mode)
     {
-        $this->deleteMode = $mode;
+        $this->deleteMode = new CategoryDeleteMode($mode);
 
         return $this;
     }

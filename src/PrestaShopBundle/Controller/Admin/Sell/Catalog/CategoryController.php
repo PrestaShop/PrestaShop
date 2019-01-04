@@ -591,7 +591,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $command = new BulkDeleteCategoriesCommand(
                     $categoriesDeleteData['categories_to_delete'],
-                    new CategoryDeleteMode($categoriesDeleteData['delete_mode'])
+                    $categoriesDeleteData['delete_mode']
                 );
 
                 $this->getCommandBus()->handle($command);
