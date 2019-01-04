@@ -25,9 +25,13 @@
 
 const $ = window.$;
 
-export default class CurrencyLiveExchangeRate {
-  initEvents() {
-    $(document).on('change', '.js-live-exchange-rate', (event) => this._initLiveExchangeRate(event))
+export default class ExchangeRatesUpdateScheduler {
+  constructor() {
+   this._initEvents();
+  }
+
+  _initEvents() {
+    $(document).on('change', '.js-live-exchange-rate', (event) => this._initLiveExchangeRate(event));
   }
 
   /**
