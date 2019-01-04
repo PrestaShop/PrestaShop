@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
- * Class EnableCategoriesCommand enables provides categories.
+ * Enables given categories
  */
 class EnableCategoriesCommand extends UpdateCategoriesStatusCommand
 {

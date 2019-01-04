@@ -639,9 +639,11 @@ class CategoryController extends FrameworkBundleAdminController
     public function processBulkStatusEnableAction(Request $request)
     {
         try {
-            $command = new EnableCategoriesCommand(
-                $request->request->get('categories_bulk')
-            );
+            $categoryIds = array_map(function ($categoryId) {
+                return (int) $categoryId;
+            }, $request->request->get('categories_bulk'));
+
+            $command = new EnableCategoriesCommand($categoryIds);
 
             $this->getCommandBus()->handle($command);
 
@@ -673,9 +675,11 @@ class CategoryController extends FrameworkBundleAdminController
     public function processBulkStatusDisableAction(Request $request)
     {
         try {
-            $command = new DisableCategoriesCommand(
-                $request->request->get('categories_bulk')
-            );
+            $categoryIds = array_map(function ($categoryId) {
+                return (int) $categoryId;
+            }, $request->request->get('categories_bulk'));
+
+            $command = new DisableCategoriesCommand($categoryIds);
 
             $this->getCommandBus()->handle($command);
 
