@@ -45,13 +45,13 @@ class DeleteCategoryCommand
     private $deleteMode;
 
     /**
-     * @param CategoryId $categoryId
-     * @param CategoryDeleteMode $mode
+     * @param int $categoryId
+     * @param string $mode
      */
-    public function __construct(CategoryId $categoryId, CategoryDeleteMode $mode)
+    public function __construct($categoryId, $mode)
     {
-        $this->categoryId = $categoryId;
-        $this->deleteMode = $mode;
+        $this->categoryId = new CategoryId($categoryId);
+        $this->deleteMode = new CategoryDeleteMode($mode);
     }
 
     /**

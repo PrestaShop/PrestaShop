@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Group\DefaultGroups;
 use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
@@ -632,8 +631,8 @@ class CategoryController extends FrameworkBundleAdminController
 
             try {
                 $command = new DeleteCategoryCommand(
-                    new CategoryId(reset($categoriesDeleteData['categories_to_delete'])),
-                    new CategoryDeleteMode($categoriesDeleteData['delete_mode'])
+                    (int) reset($categoriesDeleteData['categories_to_delete']),
+                    $categoriesDeleteData['delete_mode']
                 );
 
                 $this->getCommandBus()->handle($command);
