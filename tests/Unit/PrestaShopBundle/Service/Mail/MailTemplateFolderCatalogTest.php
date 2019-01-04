@@ -27,6 +27,7 @@
 namespace Tests\Unit\PrestaShopBundle\Service\Mail;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Exception\InvalidException;
 use PrestaShopBundle\Service\Mail\MailTemplateCollectionInterface;
 use PrestaShopBundle\Service\Mail\MailTemplateFolderCatalog;
 use PrestaShopBundle\Service\Mail\MailTemplateInterface;
@@ -81,17 +82,36 @@ class MailTemplateFolderCatalogTest extends TestCase
         $this->assertEquals($this->expectedThemes, $listedThemes);
     }
 
+    public function testListThemesWithoutThemesFolder()
+    {
+        $catalog = new MailTemplateFolderCatalog(implode(
+            DIRECTORY_SEPARATOR,
+            [$this->tempDir, 'invisible']
+        ));
+        $this->assertNotNull($catalog);
+
+        $caughtException = null;
+        try {
+            $catalog->listThemes();
+        } catch (InvalidException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+        $this->assertContains('Invalid mail themes folder', $caughtException->getMessage());
+        $this->assertContains(': no such directory', $caughtException->getMessage());
+    }
+
     public function testListTemplates()
     {
         $catalog = new MailTemplateFolderCatalog($this->tempDir);
         $templateCollection = $catalog->listTemplates('classic');
         $this->assertNotNull($templateCollection);
         $this->assertInstanceOf(MailTemplateCollectionInterface::class, $templateCollection);
-        $this->assertEquals(10, $templateCollection->count());
+        $this->assertEquals(11, $templateCollection->count());
 
         //Check core templates
-        $coreTemplates = $this->filterTemplatesByType($templateCollection, MailTemplateInterface::CORE_TEMPLATES);
-        $this->assertCount(5, $coreTemplates);
+        $coreTemplates = $this->filterTemplatesByCategory($templateCollection, MailTemplateInterface::CORE_CATEGORY);
+        $this->assertCount(6, $coreTemplates);
 
         /** @var MailTemplateInterface $template */
         $template = $coreTemplates[0];
@@ -99,24 +119,27 @@ class MailTemplateFolderCatalogTest extends TestCase
         $expectedPath = implode(DIRECTORY_SEPARATOR, [
             realpath($this->tempDir),
             'classic',
-            MailTemplateInterface::CORE_TEMPLATES,
+            MailTemplateInterface::CORE_CATEGORY,
+            MailTemplateInterface::HTML_TYPE,
             'account.html.twig',
         ]);
         $this->assertEquals($expectedPath, $template->getPath());
         $this->assertEquals('classic', $template->getTheme());
         $this->assertEquals('account.html', $template->getName());
-        $this->assertEquals(MailTemplateInterface::CORE_TEMPLATES, $template->getType());
+        $this->assertEquals(MailTemplateInterface::CORE_CATEGORY, $template->getCategory());
+        $this->assertEquals(MailTemplateInterface::HTML_TYPE, $template->getType());
         $this->assertNull($template->getModule());
 
         //Check module templates
-        $modulesTemplates = $this->filterTemplatesByType($templateCollection, MailTemplateInterface::MODULES_TEMPLATES);
+        $modulesTemplates = $this->filterTemplatesByCategory($templateCollection, MailTemplateInterface::MODULES_CATEGORY);
         $this->assertCount(5, $modulesTemplates);
 
         $moduleTemplatesCount = [];
         /** @var MailTemplateInterface $moduleTemplate */
         foreach ($modulesTemplates as $moduleTemplate) {
             $this->assertEquals('classic', $template->getTheme());
-            $this->assertEquals(MailTemplateInterface::MODULES_TEMPLATES, $moduleTemplate->getType());
+            $this->assertEquals(MailTemplateInterface::MODULES_CATEGORY, $moduleTemplate->getCategory());
+            $this->assertContains($moduleTemplate->getType(), [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::RAW_TYPE]);
             $this->assertNotNull($moduleTemplate->getModule());
             if (!isset($moduleTemplatesCount[$moduleTemplate->getModule()])) {
                 $moduleTemplatesCount[$moduleTemplate->getModule()] = [$moduleTemplate->getName()];
@@ -128,6 +151,50 @@ class MailTemplateFolderCatalogTest extends TestCase
         $this->assertEquals(['followup_1', 'followup_2', 'followup_3'], $moduleTemplatesCount['followup']);
         $this->assertCount(2, $moduleTemplatesCount['ps_emailalerts']);
         $this->assertEquals(['productoutofstock', 'return_slip'], $moduleTemplatesCount['ps_emailalerts']);
+
+        //Check templates types
+        $htmlTemplates = $this->filterTemplatesByType($templateCollection, MailTemplateInterface::HTML_TYPE);
+        $this->assertCount(5, $htmlTemplates);
+        $rawTemplates = $this->filterTemplatesByType($templateCollection, MailTemplateInterface::RAW_TYPE);
+        $this->assertCount(6, $rawTemplates);
+    }
+
+    public function testListTemplatesWithoutCoreFolder()
+    {
+        $catalog = new MailTemplateFolderCatalog($this->tempDir);
+        //No bug occurs if the folder does not exist
+        $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::CORE_CATEGORY]));
+        /** @var MailTemplateCollectionInterface $templates */
+        $templates = $catalog->listTemplates('classic');
+        $this->assertEquals(5, $templates->count());
+    }
+
+    public function testListTemplatesWithoutModulesFolder()
+    {
+        $catalog = new MailTemplateFolderCatalog($this->tempDir);
+        $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::MODULES_CATEGORY]));
+        /** @var MailTemplateCollectionInterface $templates */
+        $templates = $catalog->listTemplates('classic');
+        $this->assertEquals(6, $templates->count());
+    }
+
+    /**
+     * @param MailTemplateCollectionInterface $collection
+     * @param string $category
+     *
+     * @return MailTemplateInterface[]
+     */
+    private function filterTemplatesByCategory(MailTemplateCollectionInterface $collection, $category)
+    {
+        $templates = [];
+        /** @var MailTemplateInterface $template */
+        foreach ($collection as $template) {
+            if ($category == $template->getCategory()) {
+                $templates[] = $template;
+            }
+        }
+
+        return $templates;
     }
 
     /**
@@ -156,21 +223,30 @@ class MailTemplateFolderCatalogTest extends TestCase
             'modern',
         ];
         $this->coreTemplates = [
-            'account.html.twig',
-            'account.txt.twig',
-            'password.twig',
-            'order_conf.twig',
-            'bank_wire.twig',
+            MailTemplateInterface::HTML_TYPE => [
+                'account.html.twig',
+                'password.html.twig',
+            ],
+            MailTemplateInterface::RAW_TYPE => [
+                'account.txt.twig',
+                'password.txt.twig',
+                'order_conf.twig',
+                'bank_wire.twig',
+            ],
         ];
         $this->moduleTemplates = [
             'followup' => [
-                'followup_1.twig',
-                'followup_2.twig',
-                'followup_3.twig',
+                MailTemplateInterface::HTML_TYPE => [
+                    'followup_1.twig',
+                    'followup_2.twig',
+                    'followup_3.twig',
+                ],
             ],
             'ps_emailalerts' => [
-                'return_slip.twig',
-                'productoutofstock.twig',
+                MailTemplateInterface::RAW_TYPE => [
+                    'return_slip.twig',
+                    'productoutofstock.twig',
+                ],
             ],
             'empty_module' => [
             ]
@@ -179,19 +255,25 @@ class MailTemplateFolderCatalogTest extends TestCase
         foreach ($this->expectedThemes as $theme) {
             //Insert core files
             $themeFolder = $this->tempDir . DIRECTORY_SEPARATOR . $theme;
-            $coreFolder = $themeFolder . DIRECTORY_SEPARATOR . MailTemplateInterface::CORE_TEMPLATES;
-            $this->fs->mkdir($coreFolder);
-            foreach ($this->coreTemplates as $template) {
-                $this->fs->touch($coreFolder . DIRECTORY_SEPARATOR . $template);
+            $coreFolder = implode(DIRECTORY_SEPARATOR, [$themeFolder, MailTemplateInterface::CORE_CATEGORY]);
+            foreach ($this->coreTemplates as $templateType => $templates) {
+                $typeFolder = implode(DIRECTORY_SEPARATOR, [$coreFolder, $templateType]);
+                $this->fs->mkdir($typeFolder);
+                foreach ($templates as $template) {
+                    $this->fs->touch(implode(DIRECTORY_SEPARATOR, [$typeFolder, $template]));
+                }
             }
 
             //Insert modules files
-            $modulesFolder = $themeFolder . DIRECTORY_SEPARATOR . MailTemplateInterface::MODULES_TEMPLATES;
+            $modulesFolder = $themeFolder . DIRECTORY_SEPARATOR . MailTemplateInterface::MODULES_CATEGORY;
             foreach ($this->moduleTemplates as $moduleName => $moduleTemplates) {
                 $moduleFolder = $modulesFolder . DIRECTORY_SEPARATOR . $moduleName;
-                $this->fs->mkdir($moduleFolder);
-                foreach ($moduleTemplates as $moduleTemplate) {
-                    $this->fs->touch($moduleFolder . DIRECTORY_SEPARATOR . $moduleTemplate);
+                foreach ($moduleTemplates as $templateType => $templates) {
+                    $typeFolder = implode(DIRECTORY_SEPARATOR, [$moduleFolder, $templateType]);
+                    $this->fs->mkdir($typeFolder);
+                    foreach ($templates as $template) {
+                        $this->fs->touch(implode(DIRECTORY_SEPARATOR, [$typeFolder, $template]));
+                    }
                 }
             }
 

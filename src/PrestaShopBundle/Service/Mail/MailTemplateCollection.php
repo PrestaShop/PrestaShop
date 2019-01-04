@@ -30,9 +30,7 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidException;
 
 class MailTemplateCollection implements MailTemplateCollectionInterface
 {
-    /**
-     * @var MailTemplateInterface[]
-     */
+    /** @var MailTemplateInterface[] */
     private $templates;
 
     /**
