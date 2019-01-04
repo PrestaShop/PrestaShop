@@ -28,10 +28,15 @@ namespace PrestaShopBundle\Service\Mail;
 
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 use Symfony\Component\Filesystem\Filesystem;
+use Language;
 
 class MailTemplateGenerator
 {
+    use LoggerAwareTrait;
+
     /** @var MailTemplateCatalogInterface */
     private $catalog;
 
@@ -47,10 +52,18 @@ class MailTemplateGenerator
     ) {
         $this->catalog = $catalog;
         $this->renderer = $renderer;
+        $this->logger = new NullLogger();
         $this->fs = new Filesystem();
     }
 
-    public function generateThemeTemplates($theme, $outputFolder, $language = null)
+    /**
+     * @param string $theme
+     * @param Language $language
+     * @param string $outputFolder
+     *
+     * @throws InvalidException
+     */
+    public function generateThemeTemplates($theme, Language $language, $outputFolder)
     {
         $availableThemes = $this->catalog->listThemes();
         if (!in_array($theme, $availableThemes)) {
@@ -78,8 +91,14 @@ class MailTemplateGenerator
         }
     }
 
+    /**
+     * @param MailTemplateInterface $template
+     * @param string $outputFolder
+     *
+     * @return string
+     */
     private function generateTemplatePath(MailTemplateInterface $template, $outputFolder)
     {
-        return implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getName()]);
+        return implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getName()]) . '.' . $template->getExtension();
     }
 }

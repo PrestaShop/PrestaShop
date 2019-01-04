@@ -28,9 +28,11 @@ namespace Tests\Unit\PrestaShopBundle\Service\Mail;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Service\Mail\MailTemplate;
+use PrestaShopBundle\Service\Mail\MailTemplateParametersBuilderInterface;
 use PrestaShopBundle\Service\Mail\MailTemplateRenderer;
 use PrestaShopBundle\Service\Mail\MailTemplateInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Language;
 
 class MailTemplateRendererTest extends TestCase
 {
@@ -41,7 +43,12 @@ class MailTemplateRendererTest extends TestCase
             ->getMock()
         ;
 
-        $generator = new MailTemplateRenderer($engineMock);
+        $builderMock = $this->getMockBuilder(MailTemplateParametersBuilderInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $generator = new MailTemplateRenderer($engineMock, $builderMock);
         $this->assertNotNull($generator);
     }
 
@@ -49,76 +56,28 @@ class MailTemplateRendererTest extends TestCase
     {
         $expectedTemplate = 'mail_template';
         $expectedPath = 'path/to/test_template.twig';
-        $expectedParameters = ['_locale' => null];
+        $expectedParameters = ['locale' => null, 'url' => 'http://test.com'];
+        $expectedLanguage = $this->createLanguageMock();
+        $template = $this->createMailTemplateMock($expectedPath);
 
-        $generator = new MailTemplateRenderer($this->createEngineMock($expectedPath, $expectedTemplate, $expectedParameters));
+        $generator = new MailTemplateRenderer(
+            $this->createEngineMock($expectedPath, $expectedParameters, $expectedTemplate),
+            $this->createParametersBuilderMock($expectedParameters, $expectedLanguage)
+        );
         $this->assertNotNull($generator);
 
-        $template = new MailTemplate(
-            'unrelevant',
-            MailTemplateInterface::CORE_TEMPLATES,
-            'unrelevant',
-            $expectedPath,
-            null
-        );
-        $generatedTemplate = $generator->render($template);
-        $this->assertEquals($expectedTemplate, $generatedTemplate);
-    }
-
-    public function testRenderDefaultLocale()
-    {
-        $expectedTemplate = 'mail_template';
-        $expectedPath = 'path/to/test_template.twig';
-        $expectedParameters = [
-            '_locale' => 'en',
-        ];
-
-        $generator = new MailTemplateRenderer($this->createEngineMock($expectedPath, $expectedTemplate, $expectedParameters));
-        $this->assertNotNull($generator);
-
-        $template = new MailTemplate(
-            'unrelevant',
-            MailTemplateInterface::CORE_TEMPLATES,
-            'unrelevant',
-            $expectedPath,
-            null
-        );
-        $generator->setDefaultLocale('en');
-        $generatedTemplate = $generator->render($template);
-        $this->assertEquals($expectedTemplate, $generatedTemplate);
-    }
-
-    public function testRenderLocale()
-    {
-        $expectedTemplate = 'mail_template';
-        $expectedPath = 'path/to/test_template.twig';
-        $expectedParameters = [
-            '_locale' => 'fr',
-        ];
-
-        $generator = new MailTemplateRenderer($this->createEngineMock($expectedPath, $expectedTemplate, $expectedParameters));
-        $this->assertNotNull($generator);
-
-        $template = new MailTemplate(
-            'unrelevant',
-            MailTemplateInterface::CORE_TEMPLATES,
-            'unrelevant',
-            $expectedPath,
-            null
-        );
-        $generator->setDefaultLocale('en');
-        $generatedTemplate = $generator->render($template, 'fr');
+        $generatedTemplate = $generator->render($template, $expectedLanguage);
         $this->assertEquals($expectedTemplate, $generatedTemplate);
     }
 
     /**
      * @param string $expectedPath
-     * @param string $expectedTemplate
      * @param array  $expectedParameters
+     * @param string $generatedTemplate
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|EngineInterface
      */
-    private function createEngineMock($expectedPath, $expectedTemplate, array $expectedParameters)
+    private function createEngineMock($expectedPath, array $expectedParameters, $generatedTemplate)
     {
         $engineMock = $this->getMockBuilder(EngineInterface::class)
             ->disableOriginalConstructor()
@@ -132,9 +91,70 @@ class MailTemplateRendererTest extends TestCase
                 $this->equalTo($expectedPath),
                 $this->equalTo($expectedParameters)
             )
-            ->willReturn($expectedTemplate)
+            ->willReturn($generatedTemplate)
         ;
 
         return $engineMock;
     }
+
+    /**
+     * @param array $parameters
+     * @param Language $expectedLanguage
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateParametersBuilderInterface
+     */
+    private function createParametersBuilderMock(array $parameters, Language $expectedLanguage)
+    {
+        $builderMock = $this->getMockBuilder(MailTemplateParametersBuilderInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $builderMock
+            ->expects($this->once())
+            ->method('buildParameters')
+            ->with(
+                $this->isInstanceOf(MailTemplateInterface::class),
+                $this->equalTo($expectedLanguage)
+            )
+            ->willReturn($parameters)
+        ;
+
+        return $builderMock;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|Language
+     */
+    private function createLanguageMock()
+    {
+        $languageMock = $this->getMockBuilder(Language::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        ;
+
+        return $languageMock;
+    }
+
+    /**
+     * @param string $expectedPath
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateInterface
+     */
+    private function createMailTemplateMock($expectedPath)
+    {
+        $templateMock = $this->getMockBuilder(MailTemplateInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $templateMock
+            ->expects($this->once())
+            ->method('getPath')
+            ->willReturn($expectedPath)
+        ;
+
+        return $templateMock;
+    }
+
 }

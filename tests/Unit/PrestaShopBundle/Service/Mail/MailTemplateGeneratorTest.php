@@ -37,6 +37,7 @@ use PrestaShopBundle\Service\Mail\MailTemplateInterface;
 use PrestaShopBundle\Service\Mail\MailTemplateRenderer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Language;
 
 class MailTemplateGeneratorTest extends TestCase
 {
@@ -58,25 +59,29 @@ class MailTemplateGeneratorTest extends TestCase
         $this->templates = new MailTemplateCollection([
             new MailTemplate(
                 'classic',
-                MailTemplateInterface::CORE_TEMPLATES,
-                'account.html',
+                MailTemplateInterface::CORE_CATEGORY,
+                MailTemplateInterface::HTML_TYPE,
+                'account',
                 implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'core', 'account.html.twig'])
             ),
             new MailTemplate(
                 'classic',
-                MailTemplateInterface::CORE_TEMPLATES,
-                'account.txt',
+                MailTemplateInterface::CORE_CATEGORY,
+                MailTemplateInterface::RAW_TYPE,
+                'account',
                 implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'core', 'account.txt.twig'])
             ),
             new MailTemplate(
                 'classic',
-                MailTemplateInterface::MODULES_TEMPLATES,
+                MailTemplateInterface::MODULES_CATEGORY,
+                MailTemplateInterface::HTML_TYPE,
                 'followup_1',
                 implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'modules', 'followup', 'followup_1.twig'])
             ),
             new MailTemplate(
                 'classic',
-                MailTemplateInterface::MODULES_TEMPLATES,
+                MailTemplateInterface::MODULES_CATEGORY,
+                MailTemplateInterface::RAW_TYPE,
                 'productoutofstock',
                 implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'modules', 'ps_emailalerts', 'productoutofstock.twig'])
             ),
@@ -91,8 +96,13 @@ class MailTemplateGeneratorTest extends TestCase
             ->getMock()
         ;
 
+        $catalogMock = $this->getMockBuilder(MailTemplateCatalogInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
         $generator = new MailTemplateGenerator(
-            $this->createCatalogMock(),
+            $catalogMock,
             $mailRenderer
         );
         $this->assertNotNull($generator);
@@ -115,7 +125,7 @@ class MailTemplateGeneratorTest extends TestCase
         );
         $this->assertNotNull($generator);
 
-        $generator->generateThemeTemplates('toto', sys_get_temp_dir());
+        $generator->generateThemeTemplates('toto', $this->createLanguageMock(), sys_get_temp_dir());
     }
 
     public function testInvalidOutputFolder()
@@ -134,7 +144,7 @@ class MailTemplateGeneratorTest extends TestCase
         $fakeFolder = $this->tempDir . DIRECTORY_SEPARATOR . 'invisible';
         $caughtException = null;
         try {
-            $generator->generateThemeTemplates('toto', $fakeFolder);
+            $generator->generateThemeTemplates('toto', $this->createLanguageMock(), $fakeFolder);
         } catch (InvalidException $e) {
             $caughtException = $e;
         }
@@ -155,12 +165,12 @@ class MailTemplateGeneratorTest extends TestCase
         );
         $this->assertNotNull($generator);
 
-        $generator->generateThemeTemplates('classic', $this->tempDir);
+        $generator->generateThemeTemplates('classic', $this->createLanguageMock(), $this->tempDir);
         $expectedFiles = [
-            'account.html' => 'account.html_',
-            'account.txt' => 'account.txt_',
-            'followup_1' => 'followup_1_',
-            'productoutofstock' => 'productoutofstock_',
+            'account.html' => 'account_html_core_',
+            'account.txt' => 'account_raw_core_',
+            'followup_1.html' => 'followup_1_html_modules_',
+            'productoutofstock.txt' => 'productoutofstock_raw_modules_',
         ];
         $this->checkExpectedFiles($expectedFiles);
     }
@@ -173,12 +183,12 @@ class MailTemplateGeneratorTest extends TestCase
         );
         $this->assertNotNull($generator);
 
-        $generator->generateThemeTemplates('classic', $this->tempDir, 'fr');
+        $generator->generateThemeTemplates('classic', $this->createLanguageMock('fr'), $this->tempDir);
         $expectedFiles = [
-            'account.html' => 'account.html_fr',
-            'account.txt' => 'account.txt_fr',
-            'followup_1' => 'followup_1_fr',
-            'productoutofstock' => 'productoutofstock_fr',
+            'account.html' => 'account_html_core_fr',
+            'account.txt' => 'account_raw_core_fr',
+            'followup_1.html' => 'followup_1_html_modules_fr',
+            'productoutofstock.txt' => 'productoutofstock_raw_modules_fr',
         ];
         $this->checkExpectedFiles($expectedFiles);
     }
@@ -193,7 +203,7 @@ class MailTemplateGeneratorTest extends TestCase
         $this->assertCount(count($expectedFiles), $finder);
         foreach ($expectedFiles as $expectedFile => $expectedContent) {
             $filePath = implode(DIRECTORY_SEPARATOR, [$this->tempDir, $expectedFile]);
-            $this->assertTrue($this->fs->exists($filePath));
+            $this->assertTrue($this->fs->exists($filePath), 'File not found '.$filePath);
             $this->assertEquals($expectedContent, file_get_contents($filePath));
         }
     }
@@ -212,8 +222,8 @@ class MailTemplateGeneratorTest extends TestCase
         $renderer
             ->expects($this->atLeastOnce())
             ->method('render')
-            ->will($this->returnCallback(function(MailTemplateInterface $template, $locale) {
-                return implode('_', [$template->getName(), $locale]);
+            ->will($this->returnCallback(function(MailTemplateInterface $template, Language $language) {
+                return implode('_', [$template->getName(), $template->getType(), $template->getCategory(), $language->iso_code]);
             }))
         ;
 
@@ -251,5 +261,20 @@ class MailTemplateGeneratorTest extends TestCase
         }
 
         return $catalogMock;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|Language
+     */
+    private function createLanguageMock($isoCode = null)
+    {
+        $languageMock = $this->getMockBuilder(Language::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        ;
+
+        $languageMock->iso_code = $isoCode;
+
+        return $languageMock;
     }
 }
