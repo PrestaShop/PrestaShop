@@ -245,17 +245,15 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function editAction($categoryId, Request $request)
     {
-        $categoryId = new CategoryId((int) $categoryId);
-
         /** @var EditableCategory $editableCategory */
-        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing((int) $categoryId));
 
         if ($editableCategory->isRootCategory()) {
-            return $this->redirectToRoute('admin_category_edit_root', ['categoryId' => $categoryId->getValue()]);
+            return $this->redirectToRoute('admin_category_edit_root', ['categoryId' => $categoryId]);
         }
 
         $categoryFormOptions = [
-            'id_category' => $categoryId->getValue(),
+            'id_category' => $categoryId,
         ];
 
         $categoryFormData = [
@@ -278,7 +276,7 @@ class CategoryController extends FrameworkBundleAdminController
             $data = $categoryForm->getData();
 
             try {
-                $command = new EditCategoryCommand($categoryId);
+                $command = new EditCategoryCommand((int) $categoryId);
 
                 $this->populateCommandWithFormData($command, $data);
 
