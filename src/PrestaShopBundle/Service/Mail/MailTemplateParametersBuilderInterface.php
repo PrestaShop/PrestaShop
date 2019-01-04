@@ -26,39 +26,15 @@
 
 namespace PrestaShopBundle\Service\Mail;
 
-use Symfony\Component\Templating\EngineInterface;
 use Language;
 
-class MailTemplateRenderer
+interface MailTemplateParametersBuilderInterface
 {
-    /** @var EngineInterface */
-    private $engine;
-
-    /** @var MailTemplateParametersBuilderInterface */
-    private $parametersBuilder;
-
-    /**
-     * @param EngineInterface $engine
-     * @param MailTemplateParametersBuilderInterface $parametersBuilder
-     */
-    public function __construct(
-        EngineInterface $engine,
-        MailTemplateParametersBuilderInterface $parametersBuilder
-    ) {
-        $this->engine = $engine;
-        $this->parametersBuilder = $parametersBuilder;
-    }
-
     /**
      * @param MailTemplateInterface $template
      * @param Language $language
      *
-     * @return string
+     * @return mixed
      */
-    public function render(MailTemplateInterface $template, Language $language)
-    {
-        $parameters = $this->parametersBuilder->buildParameters($template, $language);
-
-        return $this->engine->render($template->getPath(), $parameters);
-    }
+    public function buildParameters(MailTemplateInterface $template, Language $language);
 }
