@@ -98,3 +98,8 @@ services:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'language', 'action': 'index'})"
             - "@=service('router').generate('admin_languages_index')"
         public: true
+
+    prestashop.core.grid.definition.factory.currency:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true

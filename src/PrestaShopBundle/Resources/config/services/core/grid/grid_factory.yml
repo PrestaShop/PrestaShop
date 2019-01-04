@@ -89,3 +89,11 @@ services:
             - '@prestashop.core.grid.factory.language_decorator'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.currency:
+      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+      arguments:
+        - '@prestashop.core.grid.definition.factory.currency'
+        - '@prestashop.core.currency.grid_data_factory'
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@prestashop.core.hook.dispatcher'
