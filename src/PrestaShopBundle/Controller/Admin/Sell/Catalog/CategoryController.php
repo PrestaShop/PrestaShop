@@ -223,7 +223,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         $categoryFormOptions = [
-            'id_category' => $categoryId,
+            'id_category' => (int) $categoryId,
         ];
 
         $categoryFormData = [
@@ -586,9 +586,12 @@ class CategoryController extends FrameworkBundleAdminController
         if ($deleteCategoriesForm->isSubmitted()) {
             try {
                 $categoriesDeleteData = $deleteCategoriesForm->getData();
+                $categoryIds = array_map(function ($categoryId) {
+                    return (int) $categoryId;
+                }, $categoriesDeleteData['categories_to_delete']);
 
                 $command = new BulkDeleteCategoriesCommand(
-                    $categoriesDeleteData['categories_to_delete'],
+                    $categoryIds,
                     $categoriesDeleteData['delete_mode']
                 );
 

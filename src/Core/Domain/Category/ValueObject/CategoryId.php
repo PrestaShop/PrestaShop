@@ -69,7 +69,7 @@ class CategoryId
      */
     private function setCategoryId($categoryId)
     {
-        if (!is_numeric($categoryId) || 0 >= $categoryId) {
+        if (!is_int($categoryId) || 0 >= $categoryId) {
             throw new CategoryException(
                 sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
             );
