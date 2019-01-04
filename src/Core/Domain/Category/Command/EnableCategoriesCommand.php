@@ -43,6 +43,6 @@ class EnableCategoriesCommand extends UpdateCategoriesStatusCommand
      */
     public function __construct(array $categoryIds)
     {
-        parent::__construct($categoryIds, new CategoryStatus(CategoryStatus::ENABLED));
+        parent::__construct($categoryIds, CategoryStatus::ENABLED);
     }
 }
