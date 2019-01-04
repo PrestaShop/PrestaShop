@@ -244,7 +244,7 @@ class EmployeeController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error',
                 [
                     '%id%' => $e instanceof CannotDeleteEmployeeException ? $e->getEmployeeId()->getValue() : 0,
-                ],
+                ]
             ),
         ];
 
