@@ -32,6 +32,9 @@ class MailTemplate implements MailTemplateInterface
     private $theme;
 
     /** @var string */
+    private $category;
+
+    /** @var string */
     private $type;
 
     /** @var string */
@@ -47,6 +50,7 @@ class MailTemplate implements MailTemplateInterface
      * MailTemplate constructor.
      *
      * @param string $theme
+     * @param string $category
      * @param string $type
      * @param string $name
      * @param string $path
@@ -54,12 +58,14 @@ class MailTemplate implements MailTemplateInterface
      */
     public function __construct(
         $theme,
+        $category,
         $type,
         $name,
         $path,
         $module = null
     ) {
         $this->theme = $theme;
+        $this->category = $category;
         $this->type = $type;
         $this->name = $name;
         $this->path = $path;
@@ -69,9 +75,27 @@ class MailTemplate implements MailTemplateInterface
     /**
      * @return string
      */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @return string
+     */
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Raw type templates are written in txt files for backward compatibility with the Mail class
+     *
+     * @return string
+     */
+    public function getExtension()
+    {
+        return self::RAW_TYPE == $this->type ? 'txt' : $this->type;
     }
 
     /**

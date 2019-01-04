@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Service\Mail;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+
 /**
  * Interface MailTemplateCatalogInterface is used to list the available themes to generate
  * mail templates. It also allows you to list the available templates for a specific theme.
@@ -37,6 +39,8 @@ interface MailTemplateCatalogInterface
      * Returns the list of existing themes (non empty folders, in the mail themes
      * folder).
      *
+     * @throws InvalidException
+     *
      * @return string[]
      */
     public function listThemes();
@@ -45,6 +49,8 @@ interface MailTemplateCatalogInterface
      * Returns a collection of templates via a MailTemplateCollectionInterface
      *
      * @param string $theme
+     *
+     * @throws InvalidException
      *
      * @return MailTemplateCollectionInterface
      */

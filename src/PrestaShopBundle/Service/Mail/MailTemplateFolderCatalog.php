@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Service\Mail;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -35,9 +36,7 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $mailThemesFolder;
 
     /**
@@ -54,13 +53,16 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
      * Returns the list of found themes (non empty folders, in the mail themes
      * folder).
      *
+     * @throws InvalidException
+     *
      * @return string[]
      */
     public function listThemes()
     {
+        $this->checkTemplatesFolder();
+
         $finder = new Finder();
         $finder->directories()->in($this->mailThemesFolder)->depth(0);
-
         $themes = [];
         /** @var SplFileInfo $themeFolder */
         foreach ($finder as $themeFolder) {
@@ -79,22 +81,48 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
      */
     public function listTemplates($theme)
     {
-        $collection = new MailTemplateCollection();
+        $this->checkTemplatesFolder();
 
-        //Core templates
+        $collection = new MailTemplateCollection();
+        $this->listCoreTemplates($collection, $theme);
+        $this->listModulesTemplates($collection, $theme);
+
+        return $collection;
+    }
+
+    /**
+     * @param MailTemplateCollectionInterface $collection
+     * @param string $theme
+     */
+    private function listCoreTemplates(MailTemplateCollectionInterface $collection, $theme)
+    {
         $coreTemplatesFolder = implode(DIRECTORY_SEPARATOR, [
             $this->mailThemesFolder,
             $theme,
-            MailTemplateInterface::CORE_TEMPLATES,
+            MailTemplateInterface::CORE_CATEGORY,
         ]);
-        $this->addTemplatesFromFolder($collection, $coreTemplatesFolder, $theme, MailTemplateInterface::CORE_TEMPLATES);
+        if (!file_exists($coreTemplatesFolder) || !is_dir($coreTemplatesFolder)) {
+            return;
+        }
 
-        //Modules templates
+        $this->addTemplatesFromFolder($collection, $coreTemplatesFolder, $theme, MailTemplateInterface::CORE_CATEGORY);
+    }
+
+    /**
+     * @param MailTemplateCollectionInterface $collection
+     * @param string $theme
+     */
+    private function listModulesTemplates(MailTemplateCollectionInterface $collection, $theme)
+    {
         $moduleTemplatesFolder = implode(DIRECTORY_SEPARATOR, [
             $this->mailThemesFolder,
             $theme,
-            MailTemplateInterface::MODULES_TEMPLATES,
+            MailTemplateInterface::MODULES_CATEGORY,
         ]);
+        if (!file_exists($moduleTemplatesFolder) || !is_dir($moduleTemplatesFolder)) {
+            return;
+        }
+
         $moduleFinder = new Finder();
         $moduleFinder->directories()->in($moduleTemplatesFolder)->depth(0);
 
@@ -102,37 +130,61 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
         foreach ($moduleFinder as $moduleFileInfo) {
             $moduleName = $moduleFileInfo->getFilename();
             $moduleFolder = implode(DIRECTORY_SEPARATOR, [$moduleTemplatesFolder, $moduleName]);
-            $this->addTemplatesFromFolder($collection, $moduleFolder, $theme, MailTemplateInterface::MODULES_TEMPLATES, $moduleName);
+            $this->addTemplatesFromFolder($collection, $moduleFolder, $theme, MailTemplateInterface::MODULES_CATEGORY, $moduleName);
         }
-
-        return $collection;
     }
 
     /**
      * @param MailTemplateCollectionInterface $collection
      * @param string $folder
      * @param string $theme
-     * @param string $type
+     * @param string $category
      * @param string|null $moduleName
      */
     private function addTemplatesFromFolder(
         MailTemplateCollectionInterface $collection,
         $folder,
         $theme,
-        $type,
+        $category,
         $moduleName = null
     ) {
-        $finder = new Finder();
-        $finder->files()->in($folder)->depth(0)->sortByName();
-        /** @var SplFileInfo $fileInfo */
-        foreach ($finder as $fileInfo) {
-            $suffix = !empty($fileInfo->getExtension()) ? '.' . $fileInfo->getExtension() : '';
-            $collection->add(new MailTemplate(
-                $theme,
-                $type,
-                $fileInfo->getBasename($suffix),
-                $fileInfo->getRealPath(),
-                $moduleName
+        $templateTypes = [
+            MailTemplateInterface::HTML_TYPE,
+            MailTemplateInterface::RAW_TYPE,
+        ];
+
+        foreach ($templateTypes as $templateType) {
+            $typeFolder = implode(DIRECTORY_SEPARATOR, [$folder, $templateType]);
+            if (!file_exists($typeFolder) || !is_dir($typeFolder)) {
+                continue;
+            }
+
+            $finder = new Finder();
+            $finder->files()->in($typeFolder)->depth(0)->sortByName();
+            /** @var SplFileInfo $fileInfo */
+            foreach ($finder as $fileInfo) {
+                $suffix = !empty($fileInfo->getExtension()) ? '.' . $fileInfo->getExtension() : '';
+                $collection->add(new MailTemplate(
+                    $theme,
+                    $category,
+                    $templateType,
+                    $fileInfo->getBasename($suffix),
+                    $fileInfo->getRealPath(),
+                    $moduleName
+                ));
+            }
+        }
+    }
+
+    /**
+     * @throws InvalidException
+     */
+    private function checkTemplatesFolder()
+    {
+        if (!file_exists($this->mailThemesFolder) || !is_dir($this->mailThemesFolder)) {
+            throw new InvalidException(sprintf(
+                'Invalid mail themes folder "%s": no such directory',
+                $this->mailThemesFolder
             ));
         }
     }
