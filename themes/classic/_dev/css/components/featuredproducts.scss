@@ -1,3 +1,6 @@
+$thumbnail-size: 250px;
+$product-description-height: 70px;
+
 #products,.featured-products,.product-accessories,.product-miniature  {
   .products {
     display: flex;
@@ -18,7 +21,7 @@
     position: relative;
     margin-bottom: 1.563rem;
     height: 318px;
-    width: 250px;
+    width: $thumbnail-size;
     background: white;
     @include box-shadow;
     &:hover, &:focus {
@@ -43,7 +46,7 @@
     }
     .product-thumbnail {
       position: relative;
-      height: calc(100% - 70px);
+      height: calc(100% - #{$product-description-height});
       img {
         max-width: 100%;
         position: absolute;
@@ -85,7 +88,7 @@
     z-index: 0;
     background: white;
     text-align: center;
-    width: 250px;
+    width: $thumbnail-size;
     height: 3.125rem;
     box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
     transition: bottom .3s;
@@ -102,9 +105,9 @@
     position: absolute;
     z-index: 1;
     background: white;
-    width: 250px;
+    width: $thumbnail-size;
     bottom: 0;
-    height: 70px;
+    height: $product-description-height;
   }
 
   .product-miniature {
