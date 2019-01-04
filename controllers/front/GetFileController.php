@@ -73,7 +73,7 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This product does not exist in our store.');
             }
 
-             /* check whether order has been paid, which is required to download the product */
+            /* check whether order has been paid, which is required to download the product */
             $order = new Order((int) $info['id_order']);
             $state = $order->getCurrentOrderState();
             if (!$state || !$state->paid) {
