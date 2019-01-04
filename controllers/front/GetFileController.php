@@ -56,16 +56,8 @@ class GetFileControllerCore extends FrontController
             }
 
             Tools::setCookieLanguage();
-            if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
+            if (!$this->context->customer->isLogged()) {
                 Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
-            } elseif (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order')) {
-                $order = new Order((int) Tools::getValue('id_order'));
-                if (!Validate::isLoadedObject($order)) {
-                    $this->displayCustomError('Invalid key.');
-                }
-                if ($order->secure_key != Tools::getValue('secure_key')) {
-                    $this->displayCustomError('Invalid key.');
-                }
             }
 
             /* Key format: <sha1-filename>-<hashOrder> */
@@ -81,11 +73,16 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This product does not exist in our store.');
             }
 
-            /* check whether order has been paid, which is required to download the product */
+             /* check whether order has been paid, which is required to download the product */
             $order = new Order((int) $info['id_order']);
             $state = $order->getCurrentOrderState();
             if (!$state || !$state->paid) {
                 $this->displayCustomError('This order has not been paid.');
+            }
+            
+            /* check whether the order was made by the current user  */
+            if ($order->secure_key != $this->context->customer->secure_key) {
+                $this->displayCustomError('Invalid key.');
             }
 
             /* Product no more present in catalog */
