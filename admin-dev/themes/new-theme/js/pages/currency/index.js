@@ -23,14 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from "../../components/grid/grid";
-import SortingExtension from "../../components/grid/extension/sorting-extension";
-import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
-import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
-import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
-import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
-import ChoiceTree from "../../components/form/choice-tree";
-import CurrencyLiveExchangeRate from "./CurrencyLiveExchangeRate";
+import Grid from '../../components/grid/grid';
+import SortingExtension from '../../components/grid/extension/sorting-extension';
+import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
+import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
+import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
+import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
+import ChoiceTree from '../../components/form/choice-tree';
+import ExchangeRatesUpdateScheduler from './ExchangeRatesUpdateScheduler';
 
 const $ = window.$;
 
@@ -45,6 +45,6 @@ $(() => {
   const choiceTree = new ChoiceTree('#currency_shop_association');
   choiceTree.enableAutoCheckChildren();
 
-  const currencyLiveExchangeRate = new CurrencyLiveExchangeRate();
-  currencyLiveExchangeRate.initEvents();
+  // allows scheduling cronjob via ajax for currency exchange rates update from "Live exchange rates" form
+  new ExchangeRatesUpdateScheduler();
 });
