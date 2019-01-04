@@ -96,7 +96,11 @@ class CurrencyType extends AbstractType
                         ),
                     ]),
                 ],
-                'invalid_message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                'invalid_message' => $this->trans(
+                    'This field is invalid, it must contain numeric values',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
             ])
             ->add('active', SwitchType::class)
         ;
