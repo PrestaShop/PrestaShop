@@ -32,6 +32,28 @@ use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 
 class UrlFileCheckerTest extends TestCase
 {
+    protected function setUp()
+    {
+        touch(realpath(__DIR__) . '/not_writable_files/.htaccess');
+        touch(realpath(__DIR__) . '/not_writable_files/robots.txt');
+        chmod(realpath(__DIR__) . '/not_writable_files/.htaccess', 111);
+        chmod(realpath(__DIR__) . '/not_writable_files/robots.txt', 111);
+
+        touch(realpath(__DIR__) . '/writable_files/.htaccess');
+        touch(realpath(__DIR__) . '/writable_files/robots.txt');
+        chmod(realpath(__DIR__) . '/writable_files/.htaccess', 755);
+        chmod(realpath(__DIR__) . '/writable_files/robots.txt', 755);
+    }
+
+    protected function tearDown()
+    {
+        unlink(realpath(__DIR__) . '/not_writable_files/.htaccess');
+        unlink(realpath(__DIR__) . '/not_writable_files/robots.txt');
+
+        unlink(realpath(__DIR__) . '/writable_files/.htaccess');
+        unlink(realpath(__DIR__) . '/writable_files/robots.txt');
+    }
+
     public function testIsValidImplementation()
     {
         $checker = new UrlFileChecker(realpath(__DIR__));
