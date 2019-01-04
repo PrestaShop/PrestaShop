@@ -41,6 +41,6 @@ class DisableCategoriesCommand extends UpdateCategoriesStatusCommand
      */
     public function __construct(array $categoryIds)
     {
-        parent::__construct($categoryIds, new CategoryStatus(CategoryStatus::DISABLED));
+        parent::__construct($categoryIds, CategoryStatus::DISABLED);
     }
 }
