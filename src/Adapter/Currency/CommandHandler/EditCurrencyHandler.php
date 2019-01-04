@@ -198,6 +198,10 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
      */
     private function assertDefaultCurrencyIsBeingRemovedFromShop($currencyId, array $shopIds)
     {
+        if (!$this->isMultiStoreFeature) {
+            return;
+        }
+
         $activeShopIds = Shop::getShops(true, null, true);
 
         foreach ($activeShopIds as $shopId) {
