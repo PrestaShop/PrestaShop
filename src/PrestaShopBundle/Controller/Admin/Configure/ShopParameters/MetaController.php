@@ -378,43 +378,108 @@ class MetaController extends FrameworkBundleAdminController
     private function handleException(MetaException $exception)
     {
         if (0 !== $exception->getCode()) {
-            return $this->getExceptionByErrorCode($exception);
+            return $this->getExceptionByClassAndErrorCode($exception);
         }
 
         return $this->getExceptionByType($exception);
     }
 
-    private function getExceptionByErrorCode(MetaException $exception)
+    /**
+     * Gets exception by class and error code.
+     *
+     * @param MetaException $exception
+     *
+     * @return string
+     */
+    private function getExceptionByClassAndErrorCode(MetaException $exception)
     {
-        //todo: finish exception handling
         $exceptionDictionary = [
             MetaConstraintException::class => [
                 MetaConstraintException::INVALID_URL_REWRITE =>
                     $this->trans(
                         'The %s field is not valid',
+                        'Admin.Notifications.Error',
                         [
                             sprintf(
-                                '"%s"',
-                                $this->trans('Rewritten URL', [], 'Admin.Shopparameters.Feature')),
-                        ],
-                        'Admin.Notifications.Error'
+                                '%s',
+                                $this->trans('Rewritten URL', 'Admin.Shopparameters.Feature')),
+                        ]
                     ),
                 MetaConstraintException::INVALID_PAGE_NAME =>
                     $this->trans(
                         'The %s field is required.',
+                        'Admin.Notifications.Error',
                         [
                             sprintf(
-                                '"%s"',
-                                $this->trans('Page name', [], 'Admin.Shopparameters.Feature')),
-                        ],
-                        'Admin.Notifications.Error'
+                                '%s',
+                                $this->trans('Page name', 'Admin.Shopparameters.Feature')),
+                        ]
+                    ),
+                MetaConstraintException::INVALID_PAGE_TITLE =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '%s',
+                                $this->trans('Page title', 'Admin.Shopparameters.Feature')),
+                        ]
+                    ),
+                MetaConstraintException::INVALID_META_DESCRIPTION =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '%s',
+                                $this->trans('Meta description', 'Admin.Global')),
+                        ]
+                    ),
+                MetaConstraintException::INVALID_META_KEYWORDS =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '%s',
+                                $this->trans('Meta keywords', 'Admin.Global')),
+                        ]
                     ),
             ],
         ];
+
+        $exceptionClass = get_class($exception);
+        $exceptionCode = $exception->getCode();
+        if (isset($exceptionDictionary[$exceptionClass][$exceptionCode])) {
+
+            return $exceptionDictionary[$exceptionClass][$exceptionCode];
+        }
+
+        return $this->getFallbackErrorMessage($exceptionClass, $exceptionCode);
     }
 
+    /**
+     * Gets exception by class type.
+     *
+     * @param MetaException $exception
+     *
+     * @return string
+     */
     private function getExceptionByType(MetaException $exception)
     {
+        $exceptionDictionary = [
+            MetaNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+        ];
 
+        $exceptionClass = get_class($exception);
+        if (isset($exceptionDictionary[$exceptionClass])) {
+
+            return $exceptionDictionary[$exceptionClass];
+        }
+
+        return $this->getFallbackErrorMessage($exceptionClass, $exception->getCode());
     }
 }
