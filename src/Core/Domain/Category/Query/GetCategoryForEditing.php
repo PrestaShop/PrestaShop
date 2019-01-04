@@ -39,11 +39,11 @@ class GetCategoryForEditing
     private $categoryId;
 
     /**
-     * @param CategoryId $categoryId
+     * @param int $categoryId
      */
-    public function __construct(CategoryId $categoryId)
+    public function __construct($categoryId)
     {
-        $this->categoryId = $categoryId;
+        $this->categoryId = new CategoryId($categoryId);
     }
 
     /**
