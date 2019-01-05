@@ -32,7 +32,11 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CustomerFormDataProvider;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroup;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroups;
@@ -68,10 +72,10 @@ class CustomerFormDataProviderTest extends TestCase
                 new EditableCustomer(
                     new CustomerId(1),
                     2,
-                    'Firstname',
-                    'Lastname',
-                    'firstname.lastname@prestashop.com',
-                    '1990-01-01',
+                    new FirstName('Firstname'),
+                    new LastName('Lastname'),
+                    new Email('firstname.lastname@prestashop.com'),
+                    new Birthday('1990-01-01'),
                     true,
                     true,
                     [1, 2, 3],
@@ -124,7 +128,7 @@ class CustomerFormDataProviderTest extends TestCase
             'first_name' => 'Firstname',
             'last_name' => 'Lastname',
             'email' => 'firstname.lastname@prestashop.com',
-            'birthday' => new DateTime('1990-01-01'),
+            'birthday' => '1990-01-01',
             'is_enabled' => true,
             'is_partner_offers_subscribed' => true,
             'group_ids' => [1, 2, 3],
@@ -146,7 +150,7 @@ class CustomerFormDataProviderTest extends TestCase
             'first_name' => 'Firstname',
             'last_name' => 'Lastname',
             'email' => 'firstname.lastname@prestashop.com',
-            'birthday' => new DateTime('1990-01-01'),
+            'birthday' => '1990-01-01',
             'is_enabled' => true,
             'is_partner_offers_subscribed' => true,
             'group_ids' => [1, 2, 3],
