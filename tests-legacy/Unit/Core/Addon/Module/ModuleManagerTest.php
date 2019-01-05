@@ -47,7 +47,7 @@ class ModuleManagerTest extends TestCase
     private $employeeS;
     private $cacheClearerS;
 
-    public function setUp()
+    protected function setUp()
     {
         // Mocks
         $this->initMocks();
@@ -63,7 +63,7 @@ class ModuleManagerTest extends TestCase
         );
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         // destroy Mocks
         $this->destroyMocks();
@@ -310,6 +310,7 @@ class ModuleManagerTest extends TestCase
     private function mockCacheClearer()
     {
         $this->cacheClearerS = $this->getMockBuilder(CacheClearer::class)
+            ->disableOriginalConstructor()
             ->getMock();
     }
 

@@ -36,7 +36,7 @@ use PrestaShopBundle\Api\QueryStockParamsCollection;
  */
 class StockManagementControllerTest extends ApiTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

@@ -118,7 +118,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
      */
     protected $customizationFields = [];
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->cart              = new CartOld();
@@ -132,7 +132,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $this->insertCartRulesFromFixtures();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         $this->resetCart();
 

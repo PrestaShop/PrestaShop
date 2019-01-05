@@ -1,6 +1,9 @@
 <phpunit bootstrap="bootstrap.php"
          color="true"
          stopOnFailure="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
 >
     <php>
         <server name="KERNEL_CLASS" value="AppKernel" />
@@ -8,6 +11,7 @@
         <env name="kernel.environment" value="test" />
     </php>
     <listeners>
+        <listener class="Tests\TestCase\ErrorsDataListener" />
         <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
     </listeners>
     <groups>
@@ -22,6 +26,10 @@
     <testsuites>
         <testsuite name="Unit">
             <directory>Unit</directory>
+            <exclude>Unit/Core/Cart</exclude>
+        </testsuite>
+        <testsuite name="CoreCart">
+            <directory>Unit/Core/Cart</directory>
         </testsuite>
         <testsuite name="Integration">
             <directory>Integration</directory>

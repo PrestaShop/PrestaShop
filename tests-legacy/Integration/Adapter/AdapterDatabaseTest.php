@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Database;
 
 class AdapterDatabaseTest extends IntegrationTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->db = new Database();
@@ -50,7 +50,7 @@ class AdapterDatabaseTest extends IntegrationTestCase
     }
 
     /**
-     * @dataProvider test_values_are_escaped_dataProvider
+     * @dataProvider testValuesAreEscapedDataProvider
      */
     public function testValuesAreEscaped($expectedSanitizedValue, $unsafeInput)
     {

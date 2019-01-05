@@ -66,7 +66,12 @@ module.exports = {
     generate_invoice_button: '//*[@id="documents_table"]/tbody/tr/td/a',
     awaiting_bank_wire_payment_option: '//*[@id="form_generate_by_status_order_states"]//label/span[contains(text(),"Awaiting bank wire payment")]',
     awaiting_check_payment: '//*[@id="form_generate_by_status_order_states"]//label/span[contains(text(),"Awaiting check payment")]',
-    cancelled_option: '//*[@id="form_generate_by_status_order_states"]//label/span[contains(text(),"Canceled")]'
+    cancelled_option: '//*[@id="form_generate_by_status_order_states"]//label/span[contains(text(),"Canceled")]',
+    delivery_document_name: '//*[@id="documents_table"]//tr[3]//a',
+    product_total_price: '//*[@id="total_order"]/td[2]/strong',
+    delivery_slip_document: '//*[@id="documents_table"]//a[contains(@href, "DeliverySlip")]',
+    status:'//*[@id="status"]//tr[1]/td[contains(text(),"%STATUS")]'
+
   },
 
   CreateOrder: {
@@ -101,23 +106,24 @@ module.exports = {
     export_carts_button: '//*[@id="page-header-desc-cart-export_cart"]',
     search_input: '//*[@id="table-cart"]//thead//input[@name="cartFilter_%searchParam"]',
     search_button: '//*[@id="submitFilterButtoncart"]',
-    id: '//*[@id="table-cart"]//tr[%NUMBER]/td[1]',
-    order_id: '//*[@id="table-cart"]//tr[%NUMBER]/td[2]',
-    customer: '//*[@id="table-cart"]//tr[%NUMBER]/td[3]',
-    total: '//*[@id="table-cart"]//tr[%NUMBER]/td[4]',
-    carrier: '//*[@id="table-cart"]//tr[%NUMBER]/td[5]',
-    date: '//*[@id="table-cart"]//tr[%NUMBER]/td[6]',
-    customer_online: '//*[@id="table-cart"]//tr[%NUMBER]/td[7]',
+    id: '//*[@id="table-cart"]//tr[%NUMBER]/td[%COL]',
+    order_id: '//*[@id="table-cart"]//tr[%NUMBER]/td[%COL]',
+    customer: '//*[@id="table-cart"]//tr[%NUMBER]/td[%COL]',
+    total: '//*[@id="table-cart"]//tr[%NUMBER]/td[%COL]',
+    carrier: '//*[@id="table-cart"]//tr[%NUMBER]/td[%COL]',
+    date: '//*[@id="table-cart"]//tr[%NUMBER]/td[%COL]',
+    customer_online: '//*[@id="table-cart"]//tr[%NUMBER]/td[%COL]',
     id_shopping_carts: 'table-cart',
-    reset_button: '//*[@name="submitResetcart"]'
+    reset_button: '//*[@name="submitResetcart"]',
+    checkbox_input: '//*[@id="table-cart"]//input[@name="cartBox[]"]',
   },
 
   CreditSlip: {
-    download_btn: '//*[@id="table-order_slip"]//td[contains(text(),"%ID")]/..//a',
+    download_btn: '//*[@id="table-order_slip"]//td[2][contains(text(),"%ID")]/..//a',
     date_form: '//*[@id="date_from"]',
     date_to: '//*[@id="date_to"]',
     generate_button: '//*[@id="submitPrint"]',
-    alerte_message: '//*[@id="content"]/div[4]/div',
+    alert_message: '//*[@id="content"]//div[contains(@class,"alert-danger")]',
     credit_slip_prefix_input: '//*[@id="conf_id_PS_CREDIT_SLIP_PREFIX"]//div[@class="translatable-field lang-1"]//input',
     save_button: '//*[@id="order_slip_fieldset_general"]//button[@type="submit"]',
     green_validation: '//*[@id="content"]//div[@class="alert alert-success"]',
@@ -130,5 +136,15 @@ module.exports = {
     from_input: '//*[@id="form_generate_by_date_date_from"]',
     to_input: '//*[@id="form_generate_by_date_date_to"]',
     no_invoice_alert: '//*[@id="main-div"]//div[@class="alert-text"]/p'
+  },
+  DeliverySlip: {
+    generate_btn: '//*[@id="delivery_pdf_fieldset"]//button',
+    delivery_prefix: '//*[@id="form_options_prefix_1"]',
+    delivery_number: '//*[@id="form_options_number"]',
+    enable_product_image: '//*[@id="delivery_options_fieldset"]//label[@for="form_options_enable_product_image_1"]',
+    disable_product_image: '//*[@id="delivery_options_fieldset"]//label[@for="form_options_enable_product_image_0"]',
+    save_button: '//*[@id="delivery_options_fieldset"]//button[text()="Save"]',
+    success_message: '//*[@id="main-div"]//div[@class="alert-text"]/p'
   }
 };
+

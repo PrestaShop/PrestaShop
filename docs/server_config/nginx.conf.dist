@@ -33,7 +33,7 @@ server {
     # [REQUIRED EDIT] Absolute path to your website root on the filesystem
     root /path/to/prestashop;
 
-    index index.php
+    index index.php;
 
     # Redirect 404 errors to prestashop
     error_page 404 /index.php?controller=404;

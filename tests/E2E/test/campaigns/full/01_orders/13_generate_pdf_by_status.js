@@ -6,6 +6,8 @@ const {OrderPage} = require('../../../selectors/BO/order');
 const {Invoices} = require('../../../selectors/BO/order');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonOrder = require('../../common_scenarios/order');
+const {OnBoarding} = require('../../../selectors/BO/onboarding');
+
 let promise = Promise.resolve();
 
 global.orderInfo = [];
@@ -199,8 +201,31 @@ scenario('Generate a PDF by status', () => {
       for (let i = 1; i <= 2; i++) {
         commonOrder.checkOrderInvoice(client, i)
       }
-      test('should delete the invoice pdf file', () => client.deleteFile(global.downloadsFolderPath, 'invoices.pdf'));
+      test('should delete the invoice pdf file', () => client.deleteFile(global.downloadsFolderPath, 'invoices','.pdf'));
     }, 'order');
   }, 'order');
-
+  scenario('Close symfony toolbar then click on "Stop the OnBoarding" button', client => {
+    test('should close symfony toolbar', () => {
+      return promise
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+          }
+        });
+    });
+    test('should check and click on "Stop the OnBoarding" button', () => {
+      return promise
+        .then(() => client.isVisible(OnBoarding.stop_button))
+        .then(() => client.stopOnBoarding(OnBoarding.stop_button))
+        .then(() => client.pause(2000));
+    });
+  }, 'onboarding');
+  scenario('Back Customer Group tax parameter to default behaviour', client => {
+    test('should go to "Customer settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.customer_settings_submenu));
+    test('should click on "Group" tab', () => client.waitForExistAndClick(CustomerSettings.groups.group_button));
+    test('should click on customer "Edit" button', () => client.waitForExistAndClick(CustomerSettings.groups.customer_edit_button));
+    test('should select "Tax included" option for "Price display method"', () => client.waitAndSelectByValue(CustomerSettings.groups.price_display_method, "0"));
+    test('should click on "Save" button', () => client.waitForExistAndClick(CustomerSettings.groups.save_button));
+  }, 'order');
 }, 'order', true);

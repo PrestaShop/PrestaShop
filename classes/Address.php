@@ -328,6 +328,41 @@ class AddressCore extends ObjectModel
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
+    {
+        $error = parent::validateField($field, $value, $id_lang, $skip, $human_errors);
+        if (true !== $error || 'dni' !== $field) {
+            return $error;
+        }
+
+        // Special validation for dni, check if the country needs it
+        $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT c.`need_identification_number`
+			FROM `' . _DB_PREFIX_ . 'country` c
+			WHERE c.`id_country` = ' . (int) $this->id_country);
+
+        if ($result && Tools::isEmpty($value)) {
+            if ($human_errors) {
+                return $this->trans(
+                    'The %s field is required.',
+                    [$this->displayFieldName($field, get_class($this))],
+                    'Admin.Notifications.Error'
+                );
+            }
+
+            return $this->trans(
+                'Property %s is empty.',
+                [get_class($this) . '->' . $field],
+                'Admin.Notifications.Error'
+            );
+        }
+
+        return true;
+    }
+
+    /**
      * Check if Address is used (at least one order placed).
      *
      * @return int Order count for this Address

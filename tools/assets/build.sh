@@ -6,9 +6,10 @@
 
 #http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
+ADMIN_DIR="${ADMIN_DIR:-admin-dev}"
 
-if [[ ! -d "admin-dev" ]]; then
-  echo "Could not find directory 'admin-dev'. Make sure to launch this script from the root directory of PrestaShop"
+if [[ ! -d $ADMIN_DIR ]]; then
+  echo "Could not find directory '$ADMIN_DIR'. Make sure to launch this script from the root directory of PrestaShop"
   return 1
 fi
 
@@ -24,19 +25,19 @@ function build {
 
 #echo ">>> Building admin bundle..."
 
-#cd "$BASE_DIRECTORY/admin-dev"
+#cd "$BASE_DIRECTORY/$ADMIN_DIR"
 
 #build
 
 echo ">>> Building admin default theme..."
 
-cd "$BASE_DIRECTORY/admin-dev/themes/default"
+cd "$BASE_DIRECTORY/$ADMIN_DIR/themes/default"
 
 build
 
 echo ">>> Building admin new theme..."
 
-cd "$BASE_DIRECTORY/admin-dev/themes/new-theme"
+cd "$BASE_DIRECTORY/$ADMIN_DIR/themes/new-theme"
 
 build
 

@@ -377,7 +377,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     /**
      * Provide sensible defaults for tests that don't specify them.
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

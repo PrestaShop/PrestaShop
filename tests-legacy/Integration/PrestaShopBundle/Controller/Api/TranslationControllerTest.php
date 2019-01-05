@@ -34,7 +34,7 @@ namespace LegacyTests\Integration\PrestaShopBundle\Controller\Api;
  */
 class TranslationControllerTest extends ApiTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

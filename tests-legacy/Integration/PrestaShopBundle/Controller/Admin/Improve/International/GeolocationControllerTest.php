@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class GeolocationControllerTest extends WebTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

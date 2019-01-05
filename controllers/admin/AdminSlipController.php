@@ -51,6 +51,7 @@ class AdminSlipControllerCore extends AdminController
                 'title' => $this->trans('Order ID', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'left',
                 'class' => 'fixed-width-md',
+                'filter_key' => 'a!id_order',
             ),
             'date_add' => array(
                 'title' => $this->trans('Date issued', array(), 'Admin.Orderscustomers.Feature'),

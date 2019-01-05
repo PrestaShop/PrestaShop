@@ -206,7 +206,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
         return $this->sfKernel;
     }
 
-    public function teardown()
+    protected function teardown()
     {
         Cache::deleteTestingInstance();
         Db::deleteTestingInstance();

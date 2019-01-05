@@ -38,7 +38,7 @@ class RepositoryTest extends UnitTestCase
     private $locale;
     private $region;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->cldrCacheFolder = _PS_CACHE_DIR_.'cldr-test';
         $this->locale = 'fr';

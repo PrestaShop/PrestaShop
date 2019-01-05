@@ -214,6 +214,15 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     }
 
     /**
+     * Needed to ensure that any changes to this object won't bleed to other instances
+     */
+    public function __clone()
+    {
+        $this->arrayAccessList = clone $this->arrayAccessList;
+        $this->arrayAccessIterator = clone $this->arrayAccessIterator;
+    }
+
+    /**
      * Get the value associated with the $index from the lazyArray.
      *
      * @param mixed $index

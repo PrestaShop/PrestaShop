@@ -98,23 +98,9 @@ class Order extends CommonClient {
       .then((text) => expect(text).to.be.false);
   }
 
-  getDocumentName(selector) {
-    return this.client
-      .then(() => this.client.getText(selector))
-      .then((name) =>{
-        global.creditSlip = name.replace('#', '')
-      })
-  }
-
-  async deleteDownloadedDocument(fileName, extension = "pdf") {
-    await exec('rm ' + global.downloadsFolderPath + fileName + "." + extension,
-      (error, stdout, stderr) => {
-        if (error !== null) {
-          console.log(`[exec] Error while removing the downloaded file: ${error}`);
-        }
-      });
-    return this.client
-      .pause(4000);
+  async getCreditSlipDocumentName(selector) {
+    let name = await this.client.getText(selector);
+     global.creditSlip = await name.replace('#', '');
   }
 }
 
