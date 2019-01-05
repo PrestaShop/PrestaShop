@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
 /**
@@ -71,6 +72,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         }
 
         $editableCategory = new EditableCategory(
+            $query->getCategoryId(),
             $category->name,
             (bool) $category->active,
             $category->description,
@@ -184,18 +186,23 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     {
         $menuThumbnails = [];
 
-        for ($i = 0; $i < 3; ++$i) {
-            if (file_exists(_PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $i . '_thumb.jpg')) {
+        foreach (MenuThumbnailId::ALLOWED_ID_VALUES as $id) {
+            $thumbnailPath = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $id . '_thumb.jpg';
+
+            if (file_exists($thumbnailPath)) {
                 $imageTag = ImageManager::thumbnail(
-                    _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $i . '_thumb.jpg',
-                    'category_' . $categoryId->getValue() . '-' . $i . '_thumb.jpg',
+                    $thumbnailPath,
+                    'category_' . $categoryId->getValue() . '-' . $id . '_thumb.jpg',
                     100,
                     'jpg',
                     true,
                     true
                 );
 
-                $menuThumbnails[$i]['path'] = $this->imageTagSourceParser->parse($imageTag);
+                $menuThumbnails[$id] = [
+                    'path' => $this->imageTagSourceParser->parse($imageTag),
+                    'id' => $id,
+                ];
             }
         }
 

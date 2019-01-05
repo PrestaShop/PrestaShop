@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -29,21 +29,28 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 
 /**
- * Class CategoryId.
+ * Stores id for category's menu thumbnail image.
  */
-class CategoryId
+class MenuThumbnailId
 {
+    /**
+     * @var array category is of having maximum of 3 menu thumbnails with defined Ids
+     */
+    const ALLOWED_ID_VALUES = [0, 1, 2];
+
     /**
      * @var int
      */
-    private $categoryId;
+    private $menuThumbnailId;
 
     /**
-     * @param int $categoryId
+     * @param int $menuThumbnailId
      */
-    public function __construct($categoryId)
+    public function __construct($menuThumbnailId)
     {
-        $this->setCategoryId($categoryId);
+        $this->assertMenuThumbnailIsWithinAllowedValueRange($menuThumbnailId);
+
+        $this->menuThumbnailId = $menuThumbnailId;
     }
 
     /**
@@ -51,30 +58,22 @@ class CategoryId
      */
     public function getValue()
     {
-        return $this->categoryId;
+        return $this->menuThumbnailId;
     }
 
     /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
+     * @param int $menuThumbnailId
      */
-    public function isEqual(CategoryId $categoryId)
+    private function assertMenuThumbnailIsWithinAllowedValueRange($menuThumbnailId)
     {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
+        if (!is_int($menuThumbnailId) || !in_array($menuThumbnailId, self::ALLOWED_ID_VALUES)) {
             throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
+                sprintf(
+                    'Category menu  thumbnail id "%s" invalid. Available values are: %s',
+                    var_export($menuThumbnailId, true),
+                    implode(',', self::ALLOWED_ID_VALUES)
+                )
             );
         }
-
-        $this->categoryId = $categoryId;
     }
 }

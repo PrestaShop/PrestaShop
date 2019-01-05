@@ -26,11 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Category;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
+
 /**
- * Class EditableCategory.
+ * Stores category data needed for editing.
  */
 class EditableCategory
 {
+    /**
+     * @var CategoryId
+     */
+    private $id;
+
     /**
      * @var string[]
      */
@@ -95,9 +103,14 @@ class EditableCategory
      * @var array
      */
     private $menuThumbnailImages;
+
+    /**
+     * @var bool
+     */
     private $isRootCategory;
 
     /**
+     * @param CategoryId $id
      * @param string[] $name
      * @param bool $isActive
      * @param string[] $description
@@ -114,6 +127,7 @@ class EditableCategory
      * @param array $menuThumbnailImages
      */
     public function __construct(
+        CategoryId $id,
         array $name,
         $isActive,
         array $description,
@@ -129,6 +143,7 @@ class EditableCategory
         $thumbnailImage = null,
         array $menuThumbnailImages = []
     ) {
+        $this->id = $id;
         $this->name = $name;
         $this->isActive = $isActive;
         $this->description = $description;
@@ -143,6 +158,14 @@ class EditableCategory
         $this->coverImage = $coverImage;
         $this->menuThumbnailImages = $menuThumbnailImages;
         $this->isRootCategory = $isRootCategory;
+    }
+
+    /**
+     * @return CategoryId
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -255,5 +278,13 @@ class EditableCategory
     public function isRootCategory()
     {
         return $this->isRootCategory;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canContainMoreMenuThumbnails()
+    {
+        return count($this->getMenuThumbnailImages()) < count(MenuThumbnailId::ALLOWED_ID_VALUES);
     }
 }

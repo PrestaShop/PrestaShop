@@ -71,6 +71,6 @@ final class EditCategoryHandler extends AbstractCategoryHandler implements EditC
 
         $this->uploadImages($category, $command);
 
-        return new CategoryId($category->id);
+        return new CategoryId((int) $category->id);
     }
 }

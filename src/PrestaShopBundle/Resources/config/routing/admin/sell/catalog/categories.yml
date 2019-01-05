@@ -88,3 +88,22 @@ admin_category_edit_root:
         _legacy_controller: AdminCategories
     requirements:
         categoryId: \d+
+
+admin_categories_delete_cover_image:
+    path: /{categoryId}/delete-cover-image
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:deleteCoverImage
+        _legacy_controller: AdminCategories
+    requirements:
+        categoryId: \d+
+
+admin_categories_delete_menu_thumbnail:
+    path: /{categoryId}/menu-thumbnails/{menuThumbnailId}/delete
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:deleteMenuThumbnail
+        _legacy_controller: AdminCategories
+    requirements:
+        categoryId: \d+
+        menuThumbnailId: 0|1|2 # menu thumbnails only have 3 fixed ids

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 
 /**
- * Class EditCategoryCommand edits given category.
+ * Deletes given menu thumbnail for category.
  */
-class EditCategoryCommand extends AbstractCategoryCommand
+class DeleteCategoryMenuThumbnailImageCommand
 {
     /**
      * @var CategoryId
@@ -40,16 +40,18 @@ class EditCategoryCommand extends AbstractCategoryCommand
     private $categoryId;
 
     /**
-     * @var int
+     * @var MenuThumbnailId
      */
-    private $parentCategoryId;
+    private $menuThumbnailId;
 
     /**
      * @param CategoryId $categoryId
+     * @param MenuThumbnailId $menuThumbnailId
      */
-    public function __construct(CategoryId $categoryId)
+    public function __construct(CategoryId $categoryId, MenuThumbnailId $menuThumbnailId)
     {
         $this->categoryId = $categoryId;
+        $this->menuThumbnailId = $menuThumbnailId;
     }
 
     /**
@@ -61,35 +63,10 @@ class EditCategoryCommand extends AbstractCategoryCommand
     }
 
     /**
-     * @return int
+     * @return MenuThumbnailId
      */
-    public function getParentCategoryId()
+    public function getMenuThumbnailId()
     {
-        return $this->parentCategoryId;
-    }
-
-    /**
-     * @param int $parentCategoryId
-     *
-     * @return self
-     *
-     * @throws CategoryConstraintException
-     */
-    public function setParentCategoryId($parentCategoryId)
-    {
-        if (!is_numeric($parentCategoryId) || 0 >= $parentCategoryId) {
-            throw new CategoryConstraintException(
-                sprintf('Invalid Category parent id %s supplied', var_export($parentCategoryId, true)),
-                CategoryConstraintException::INVALID_PARENT_ID
-            );
-        }
-
-        if ($this->categoryId->isEqual(new CategoryId((int) $parentCategoryId))) {
-            throw new CategoryConstraintException('Category cannot be parent of itself.');
-        }
-
-        $this->parentCategoryId = $parentCategoryId;
-
-        return $this;
+        return $this->menuThumbnailId;
     }
 }
