@@ -15,3 +15,20 @@
     }
   }
 }
+
+.form-group {
+  [class^="locale-input-error-popover-container"] {
+    .popover {
+      max-width: inherit !important;
+      .popover-error-list {
+        padding-left: 0;
+        li {
+          color: #c05c67;
+          .invalid-feedback {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

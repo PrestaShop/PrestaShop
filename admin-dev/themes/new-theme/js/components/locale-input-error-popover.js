@@ -39,11 +39,12 @@ export default class LocaleInputErrorPopover {
     const $formGroup = $element.closest('.form-group');
     const $localeInputGroup = $formGroup.find('.js-locale-input-group');
     const $errorPopover = $formGroup.find('.js-locale-input-error-popover');
+
+    $errorPopover.css('width', $localeInputGroup.find('.js-locale-input').width());
+
     const horizontalDifference = this.getHorizontalDifference($localeInputGroup, $errorPopover);
 
-    $errorPopover.css({
-      left: `-${horizontalDifference}px`,
-    });
+    $errorPopover.css('left', `${horizontalDifference}px`);
   }
 
   /**
@@ -57,6 +58,6 @@ export default class LocaleInputErrorPopover {
     const localeInputHorizontalPosition = $localeInputGroup.offset().left;
     const popoverHorizontalPosition = $errorPopover.offset().left;
 
-    return Math.abs(localeInputHorizontalPosition - popoverHorizontalPosition);
+    return localeInputHorizontalPosition - popoverHorizontalPosition;
   }
 }
