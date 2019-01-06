@@ -129,6 +129,9 @@
     %}
       {% set popoverErrors = errors|slice(1) %}
       {% set errors = [errors|first] %}
+      {% set popoverContainer = 'language-input-error-popover-container-'~form.vars.id %}
+
+      <div class="{{ popoverContainer }}"></div>
 
       {% set popoverErrorContent %}
         <ul class="popover-error-list">
@@ -140,15 +143,15 @@
         </ul>
       {% endset %}
 
-
       {% set errorPopover %}
         <span
-          class="popover-trigger"
+          class="language-input-error-popover-trigger"
           data-toggle="popover"
           data-placement="top"
           data-html="true"
           data-content='{{ popoverErrorContent }}'
           data-trigger="click"
+          data-container=".{{ popoverContainer }}"
           {#todo hover#}
         >
           {#todo: ask about translation domain#}
