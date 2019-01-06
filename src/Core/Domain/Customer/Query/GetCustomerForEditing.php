@@ -24,45 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Is thrown when customer constraint is violated
+ * Gets customer information for editing.
  */
-class CustomerConstraintException extends CustomerException
+final class GetCustomerForEditing
 {
     /**
-     * @var int Code is used when invalid email is provided for customer
+     * @var CustomerId
      */
-    const INVALID_EMAIL = 1;
+    private $customerId;
 
     /**
-     * @var int Code is used when invalid first name is provided for customer
+     * @param CustomerId $customerId
      */
-    const INVALID_FIRST_NAME = 2;
+    public function __construct(CustomerId $customerId)
+    {
+        $this->customerId = $customerId;
+    }
 
     /**
-     * @var int Code is used when invalid last name is provided for customer
+     * @return CustomerId
      */
-    const INVALID_LAST_NAME = 3;
-
-    /**
-     * @var int Code is used when invalid password is provided for customer
-     */
-    const INVALID_PASSWORD = 4;
-
-    /**
-     * @var int Code is used when invalid APE code is provided
-     */
-    const INVALID_APE_CODE = 5;
-
-    /**
-     * @var int Is used when invalid (not string) private note is provided as private note
-     */
-    const INVALID_PRIVATE_NOTE = 6;
-
-    /**
-     * @var int Code is used when invalid customer birthday is provided
-     */
-    const INVALID_BIRTHDAY = 7;
+    public function getCustomerId()
+    {
+        return $this->customerId;
+    }
 }

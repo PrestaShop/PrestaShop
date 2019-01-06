@@ -25,13 +25,16 @@
 
 {% set enableSidebar = true %}
 {% set layoutTitle = 'Manage your Customers'|trans({}, 'Admin.Orderscustomers.Feature') %}
-{% set layoutHeaderToolbarBtn = {
-  'add': {
-    'href': path('admin_customers_create'),
-    'desc': 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature'),
-    'icon': 'add_circle_outline'
-  }
-} %}
+
+{% if isSingleShopContext %}
+  {% set layoutHeaderToolbarBtn = {
+    'add': {
+      'href': path('admin_customers_create'),
+      'desc': 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature'),
+      'icon': 'add_circle_outline'
+    }
+  } %}
+{% endif %}
 
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
@@ -50,6 +53,16 @@
   {% endblock %}
 
   {% block customers_listing %}
+    {% if not isSingleShopContext %}
+      <div class="col-md-12">
+        <div class="alert alert-info" role="alert">
+          <p class="alert-text">
+            {{ 'You have to select a shop if you want to create a customer.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+
     <div class="col-md-12">
       {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGrid} %}
     </div>

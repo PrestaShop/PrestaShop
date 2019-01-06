@@ -6,3 +6,11 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SqlRequestFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.customer_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CustomerFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.group.provider.default_groups_provider'
+      - '@=service("prestashop.core.b2b.b2b_feature").isActive()'

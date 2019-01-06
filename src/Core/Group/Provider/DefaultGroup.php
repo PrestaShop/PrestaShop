@@ -24,45 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
+namespace PrestaShop\PrestaShop\Core\Group\Provider;
 
 /**
- * Is thrown when customer constraint is violated
+ * Stores information for default group
  */
-class CustomerConstraintException extends CustomerException
+class DefaultGroup
 {
     /**
-     * @var int Code is used when invalid email is provided for customer
+     * @var int
      */
-    const INVALID_EMAIL = 1;
+    private $groupId;
 
     /**
-     * @var int Code is used when invalid first name is provided for customer
+     * @var string
      */
-    const INVALID_FIRST_NAME = 2;
+    private $name;
 
     /**
-     * @var int Code is used when invalid last name is provided for customer
+     * @param int $groupId
+     * @param string $name
      */
-    const INVALID_LAST_NAME = 3;
+    public function __construct($groupId, $name)
+    {
+        $this->groupId = $groupId;
+        $this->name = $name;
+    }
 
     /**
-     * @var int Code is used when invalid password is provided for customer
+     * @return int
      */
-    const INVALID_PASSWORD = 4;
+    public function getId()
+    {
+        return $this->groupId;
+    }
 
     /**
-     * @var int Code is used when invalid APE code is provided
+     * @return string
      */
-    const INVALID_APE_CODE = 5;
-
-    /**
-     * @var int Is used when invalid (not string) private note is provided as private note
-     */
-    const INVALID_PRIVATE_NOTE = 6;
-
-    /**
-     * @var int Code is used when invalid customer birthday is provided
-     */
-    const INVALID_BIRTHDAY = 7;
+    public function getName()
+    {
+        return $this->name;
+    }
 }

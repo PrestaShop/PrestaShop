@@ -24,45 +24,52 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 
 /**
- * Is thrown when customer constraint is violated
+ * Every business in France is classified under an activity code
+ * entitled APE - Activite Principale de l’Entreprise
  */
-class CustomerConstraintException extends CustomerException
+class ApeCode
 {
     /**
-     * @var int Code is used when invalid email is provided for customer
+     * @var string
      */
-    const INVALID_EMAIL = 1;
+    private $code;
 
     /**
-     * @var int Code is used when invalid first name is provided for customer
+     * @param $code
      */
-    const INVALID_FIRST_NAME = 2;
+    public function __construct($code)
+    {
+        $this->assertIsApeCode($code);
+
+        $this->code = $code;
+    }
 
     /**
-     * @var int Code is used when invalid last name is provided for customer
+     * @return string
      */
-    const INVALID_LAST_NAME = 3;
+    public function getValue()
+    {
+        return $this->code;
+    }
 
-    /**
-     * @var int Code is used when invalid password is provided for customer
-     */
-    const INVALID_PASSWORD = 4;
+    private function assertIsApeCode($code)
+    {
+        if (is_string($code) && empty($code)) {
+            return;
+        }
 
-    /**
-     * @var int Code is used when invalid APE code is provided
-     */
-    const INVALID_APE_CODE = 5;
+        $isApeCode = is_string($code) && (bool) preg_match('/^\d{3,4}[a-zA-Z]{1}$/', $code);
 
-    /**
-     * @var int Is used when invalid (not string) private note is provided as private note
-     */
-    const INVALID_PRIVATE_NOTE = 6;
-
-    /**
-     * @var int Code is used when invalid customer birthday is provided
-     */
-    const INVALID_BIRTHDAY = 7;
+        if (!$isApeCode) {
+            throw new CustomerConstraintException(
+                sprintf('Invalid ape code %s provided', var_export($code, true)),
+                CustomerConstraintException::INVALID_APE_CODE
+            );
+        }
+    }
 }
