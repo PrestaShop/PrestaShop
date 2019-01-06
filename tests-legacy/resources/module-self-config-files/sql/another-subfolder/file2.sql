@@ -1,2 +1,2 @@
-TRUNCATE TABLE `ps_doge_army`;
-TRUNCATE TABLE `ps_lolcat_army`;
+TRUNCATE TABLE `PREFIX_doge_army`;
+TRUNCATE TABLE `PREFIX_lolcat_army`;

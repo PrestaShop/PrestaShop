@@ -1,1 +1,1 @@
-UPDATE `ps_doge` SET `wow` = 1
+UPDATE `PREFIX_doge` SET `wow` = 1
