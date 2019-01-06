@@ -29,7 +29,9 @@ export default class LocaleInputErrorPopover {
   }
 
   initEvents() {
-    $(document).on('shown.bs.popover', '[data-toggle="popover"]', (event) => this.repositionPopover(event));
+    $('[data-toggle="locale-input-popover"]').popover();
+
+    $(document).on('shown.bs.popover', '[data-toggle="locale-input-popover"]', (event) => this.repositionPopover(event));
   }
 
   repositionPopover(event) {
