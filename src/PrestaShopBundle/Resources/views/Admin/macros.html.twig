@@ -120,7 +120,7 @@
   {{ form_widget(form, vars) }}
   {% if errors|length > 0 %}
 
-    {# form form types which has locales and there are more then 1 error , additional errors are displaying inside popup #}
+    {# for form types which has locales and there are more then 1 error , additional errors are displaying inside popover #}
     {% set errorPopover = null %}
     {% if form.vars.locales is defined and
           form.vars.locales is not null and

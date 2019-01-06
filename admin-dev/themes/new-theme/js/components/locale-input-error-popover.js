@@ -28,12 +28,20 @@ export default class LocaleInputErrorPopover {
     this.initEvents();
   }
 
+  /**
+   * creates new popover instance and registers events related with it.
+   */
   initEvents() {
     $('[data-toggle="locale-input-popover"]').popover();
 
     $(document).on('shown.bs.popover', '[data-toggle="locale-input-popover"]', (event) => this.repositionPopover(event));
   }
 
+  /**
+   * Recalculates popover position so it is always aligned with locale input group horizontally and width is identical
+   * to the child elements of locale input group.
+   * @param {Object} event
+   */
   repositionPopover(event) {
     const $element = $(event.currentTarget);
     const $formGroup = $element.closest('.form-group');
@@ -48,9 +56,9 @@ export default class LocaleInputErrorPopover {
   }
 
   /**
-   *
-   * @param $localeInputGroup
-   * @param $errorPopover
+   * gets horizontal difference which helps to align popover horizontally.
+   * @param {jQuery} $localeInputGroup
+   * @param {jQuery} $errorPopover
    * @returns {number}
    */
   getHorizontalDifference($localeInputGroup, $errorPopover)
