@@ -214,10 +214,10 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
         $this->assertTrue($this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure());
         // Check files are equals
-        $this->assertTrue(in_array('TRUNCATE TABLE `ps_doge_army`', $this->connection->executedSql));
-        $this->assertTrue(in_array('UPDATE `ps_doge` SET `wow` = 1', $this->connection->executedSql));
-        $this->assertFalse(in_array('UPDATE `ps_doge` SET `wow` = 1;', $this->connection->executedSql));
-        $this->assertTrue(in_array('TRUNCATE TABLE `ps_lolcat_army`', $this->connection->executedSql));
+        $this->assertTrue(in_array('TRUNCATE TABLE `PREFIX_doge_army`', $this->connection->executedSql));
+        $this->assertTrue(in_array('UPDATE `PREFIX` SET `wow` = 1', $this->connection->executedSql));
+        $this->assertFalse(in_array('UPDATE `PREFIX` SET `wow` = 1;', $this->connection->executedSql));
+        $this->assertTrue(in_array('TRUNCATE TABLE `PREFIX_lolcat_army`', $this->connection->executedSql));
     }
 
     public function testSqlExceptionMissingFile()
