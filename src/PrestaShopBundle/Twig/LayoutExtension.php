@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Twig;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template.
@@ -147,7 +147,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         $helpLink = ''
     ) {
         if ($this->environment == 'test') {
-            return <<<EOF
+            return <<<'EOF'
 <html>
   <head>
     <title>Test layout</title>

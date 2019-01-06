@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
-use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOException;
 use Module as LegacyModule;
+use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Responsible of managing updates of modules.
@@ -78,6 +78,7 @@ class ModuleDataUpdater
     public function removeModuleFromDisk($name)
     {
         $fs = new FileSystem();
+
         try {
             $fs->remove(_PS_MODULE_DIR_ . '/' . $name);
 

@@ -99,8 +99,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb)
-        ;
+            ->applySorting($searchCriteria, $qb);
 
         return $qb;
     }
@@ -129,8 +128,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'category', 'c')
             ->setParameter('context_lang_id', $this->contextLangId)
-            ->setParameter('context_shop_id', $this->contextShopId)
-        ;
+            ->setParameter('context_shop_id', $this->contextShopId);
 
         $qb->leftJoin(
             'c',

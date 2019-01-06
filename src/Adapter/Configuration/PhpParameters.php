@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Configuration;
 
-use Symfony\Component\Filesystem\Filesystem;
+use InvalidArgumentException;
 use Shudrum\Component\ArrayFinder\ArrayFinder;
 use Symfony\Component\Filesystem\Exception\IOException;
-use InvalidArgumentException;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Class able to manage configuration stored in Php files.

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_tab.php');
+require_once _PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_tab.php';
 
 function create_multistore()
 {
@@ -90,5 +90,6 @@ function create_multistore()
 function create_multistore_getHttpHost()
 {
     $host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']);
+
     return $host;
 }

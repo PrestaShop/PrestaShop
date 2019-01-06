@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Customer;
 
-use Symfony\Component\Process\Exception\LogicException;
 use Customer;
+use Symfony\Component\Process\Exception\LogicException;
 
 /**
  * This class will provide data from DB / ORM about Customer.

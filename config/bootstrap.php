@@ -26,10 +26,10 @@
 
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOException;
 
 $container_builder = new ContainerBuilder();
 $container = $container_builder->build();
@@ -38,7 +38,7 @@ ServiceLocator::setServiceContainerInstance($container);
 if (!file_exists(_PS_CACHE_DIR_)) {
     @mkdir(_PS_CACHE_DIR_);
     $warmer = new CacheWarmerAggregate([
-        new PrestaShopBundle\Cache\LocalizationWarmer(_PS_VERSION_, 'en') //@replace hard-coded Lang
+        new PrestaShopBundle\Cache\LocalizationWarmer(_PS_VERSION_, 'en'), //@replace hard-coded Lang
     ]);
     $warmer->warmUp(_PS_CACHE_DIR_);
 }
@@ -55,6 +55,7 @@ $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
     } catch (IOException $e) {
         return false;
     }
+
     return true;
 };
 
@@ -75,7 +76,7 @@ if ($lastParametersModificationTime) {
     if (!$lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
         // When parameters file is available, update its cache if it is stale.
         if (file_exists($phpParametersFilepath)) {
-            $config = require($phpParametersFilepath);
+            $config = require $phpParametersFilepath;
             $exportPhpConfigFile($config, $cachedParameters);
         } elseif (file_exists($yamlParametersFilepath)) {
             $config = Yaml::parse($yamlParametersFilepath);
@@ -139,10 +140,10 @@ if ($lastParametersModificationTime) {
 
     define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);
 
-    if (isset($config['parameters']['_rijndael_key']) && isset($config['parameters']['_rijndael_iv'])) {
+    if (isset($config['parameters']['_rijndael_key'], $config['parameters']['_rijndael_iv'])) {
         define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
         define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
     }
-} else if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
-    require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
+} elseif (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
+    require_once _PS_ROOT_DIR_.'/config/settings.inc.php';
 }

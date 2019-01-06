@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use Symfony\Component\HttpFoundation\Response;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Admin controller for warehouse on the /product/form page.

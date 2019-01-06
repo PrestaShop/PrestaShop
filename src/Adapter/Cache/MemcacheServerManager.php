@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache;
 
+use Doctrine\DBAL\Connection;
 use Memcache;
 use Memcached;
-use Doctrine\DBAL\Connection;
 
 /**
  * This class manages Memcache(d) servers in "Configure > Advanced Parameters > Performance" page.
@@ -61,9 +61,9 @@ class MemcacheServerManager
     public function addServer($serverIp, $serverPort, $serverWeight)
     {
         $this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', array(
-           'serverIp' => $serverIp,
-           'serverPort' => (int) $serverPort,
-           'serverWeight' => (int) $serverWeight,
+            'serverIp' => $serverIp,
+            'serverPort' => (int) $serverPort,
+            'serverWeight' => (int) $serverWeight,
         ));
 
         return array(

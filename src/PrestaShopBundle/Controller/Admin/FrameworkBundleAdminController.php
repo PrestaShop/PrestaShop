@@ -26,17 +26,18 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShopBundle\Security\Voter\PageVoter;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
@@ -162,7 +163,7 @@ class FrameworkBundleAdminController extends Controller
      *
      * @return array The responses of hooks
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function renderHook($hookName, array $parameters)
     {
@@ -333,7 +334,7 @@ class FrameworkBundleAdminController extends Controller
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getForbiddenActionMessage($action, $suffix = '')
     {
@@ -349,7 +350,7 @@ class FrameworkBundleAdminController extends Controller
             return $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
         }
 
-        throw new \Exception(sprintf('Invalid action (%s)', $action . $suffix));
+        throw new Exception(sprintf('Invalid action (%s)', $action . $suffix));
     }
 
     /**
@@ -431,5 +432,52 @@ class FrameworkBundleAdminController extends Controller
         $response->setData($errors);
 
         return $response;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getContextLangId()
+    {
+        return $this->getContext()->language->id;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getContextShopId()
+    {
+        return $this->getContext()->shop->id;
+    }
+
+    /**
+     * Get error by exception from given messages
+     *
+     * @param Exception $e
+     * @param array $messages
+     *
+     * @return string
+     */
+    protected function getErrorMessageForException(Exception $e, array $messages)
+    {
+        $exceptionType = get_class($e);
+        $exceptionCode = $e->getCode();
+
+        if (isset($messages[$exceptionType])) {
+            $message = $messages[$exceptionType];
+
+            if (is_string($message)) {
+                return $message;
+            }
+
+            if (is_array($message) && isset($message[$exceptionCode])) {
+                return $message[$exceptionCode];
+            }
+        }
+
+        return $this->getFallbackErrorMessage(
+            $exceptionType,
+            $exceptionCode
+        );
     }
 }

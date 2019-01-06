@@ -93,7 +93,7 @@ class CombinationCore extends ObjectModel
             'unit_price_impact' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
             'minimal_quantity' => array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId', 'required' => true),
             'low_stock_threshold' => array('type' => self::TYPE_INT, 'shop' => true, 'allow_null' => true, 'validate' => 'isInt'),
-            'low_stock_alert' => array('type' => self::TYPE_BOOL, 'shop' => true, 'allow_null' => true, 'validate' => 'isBool'),
+            'low_stock_alert' => array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'default_on' => array('type' => self::TYPE_BOOL, 'allow_null' => true, 'shop' => true, 'validate' => 'isBool'),
             'available_date' => array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
         ),
@@ -251,7 +251,8 @@ class CombinationCore extends ObjectModel
                 $sqlValues[] = '(' . (int) $value . ', ' . (int) $this->id . ')';
             }
 
-            $result = Db::getInstance()->execute('
+            $result = Db::getInstance()->execute(
+                '
 				INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
 				VALUES ' . implode(',', $sqlValues)
             );
@@ -326,7 +327,8 @@ class CombinationCore extends ObjectModel
             }
 
             if (is_array($sqlValues) && count($sqlValues)) {
-                Db::getInstance()->execute('
+                Db::getInstance()->execute(
+                    '
 					INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_image` (`id_product_attribute`, `id_image`)
 					VALUES ' . implode(',', $sqlValues)
                 );
@@ -446,7 +448,8 @@ class CombinationCore extends ObjectModel
      */
     public static function getPrice($idProductAttribute)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT product_attribute_shop.`price`
 			FROM `' . _DB_PREFIX_ . 'product_attribute` pa
 			' . Shop::addSqlAssociation('product_attribute', 'pa') . '

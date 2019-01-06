@@ -41,7 +41,7 @@ class AdminCategoriesControllerCore extends AdminController
     /** @var bool does the product have to be disable during the delete process */
     public $disable_products = false;
 
-    private $original_filter = '';
+    protected $original_filter = '';
 
     public function __construct()
     {
@@ -564,8 +564,8 @@ class AdminCategoriesControllerCore extends AdminController
                     'image' => $image_url ? $image_url : false,
                     'size' => $image_size,
                     'delete_url' => self::$currentIndex . '&' . $this->identifier . '=' . $this->_category->id . '&token=' . $this->token . '&deleteImage=1',
-                   'hint' => $this->trans('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.', array(), 'Admin.Catalog.Help'),
-                   'format' => $format['category'],
+                    'hint' => $this->trans('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.', array(), 'Admin.Catalog.Help'),
+                    'format' => $format['category'],
                 ),
                 array(
                     'type' => 'file',
@@ -988,8 +988,9 @@ class AdminCategoriesControllerCore extends AdminController
         if (is_array($positions)) {
             foreach ($positions as $key => $value) {
                 $pos = explode('_', $value);
-                if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move)) {
+                if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move)) {
                     $position = $key;
+
                     break;
                 }
             }
@@ -1088,8 +1089,14 @@ class AdminCategoriesControllerCore extends AdminController
                 }
 
                 //Add image preview and delete url
-                $file['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_ . (int) $category->id . '-' . $id . '_thumb.jpg',
-                    $this->context->controller->table . '_' . (int) $category->id . '-' . $id . '_thumb.jpg', 100, 'jpg', true, true);
+                $file['image'] = ImageManager::thumbnail(
+                    _PS_CAT_IMG_DIR_ . (int) $category->id . '-' . $id . '_thumb.jpg',
+                    $this->context->controller->table . '_' . (int) $category->id . '-' . $id . '_thumb.jpg',
+                    100,
+                    'jpg',
+                    true,
+                    true
+                );
                 $file['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories') . '&deleteThumb='
                     . $id . '&id_category=' . (int) $category->id . '&updatecategory';
             }

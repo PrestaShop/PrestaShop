@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+use Language;
+use Link;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Symfony\Component\Translation\TranslatorInterface;
-use Language;
-use Link;
 
 class ProductPresenter
 {

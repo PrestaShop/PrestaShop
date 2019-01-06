@@ -27,13 +27,13 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * This form class is responsible to generate the product attachments.

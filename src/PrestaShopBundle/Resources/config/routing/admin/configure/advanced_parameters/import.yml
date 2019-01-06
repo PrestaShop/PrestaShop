@@ -8,10 +8,21 @@ admin_import:
 
 admin_import_show_data:
     path: /data
-    methods: [GET]
+    methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:showImportData'
         _legacy_controller: AdminImport
+
+# This redirect prevents an error (redirects to import first page instead) when
+# trying to access import data page with GET http method.
+# It happens on direct access or when the session token expires and
+# the user clicks "I understand the risk" in the warning page.
+admin_import_show_data_redirect:
+    path: /data
+    methods: [GET]
+    controller: 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction'
+    defaults:
+        route: 'admin_import'
 
 admin_import_file_upload:
     path: /file/upload

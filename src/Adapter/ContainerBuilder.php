@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
-use Symfony\Component\Config\FileLocator;
 use LegacyCompilerPass;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
+use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Build the Container for PrestaShop Legacy.

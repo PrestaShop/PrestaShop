@@ -51,7 +51,7 @@
       </li>
 
       <li class="nav-item">
-        <span href="nav-separator"> | </span>
+        <span class="nav-separator"> | </span>
       </li>
 
       <li class="nav-item">

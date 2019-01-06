@@ -57,8 +57,7 @@ class UpdateCategoriesStatusCommand
     {
         $this
             ->setCategoryIds($categoryIds)
-            ->setNewStatus($newStatus)
-        ;
+            ->setNewStatus($newStatus);
     }
 
     /**
@@ -92,7 +91,7 @@ class UpdateCategoriesStatusCommand
         }
 
         foreach ($categoryIds as $categoryId) {
-            $this->categoryIds[] = new CategoryId($categoryId);
+            $this->categoryIds[] = new CategoryId((int) $categoryId);
         }
 
         return $this;

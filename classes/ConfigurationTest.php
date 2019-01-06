@@ -141,7 +141,7 @@ class ConfigurationTestCore
 
     public static function test_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.6.0', '>=');
+        return version_compare(substr(PHP_VERSION, 0, 5), '5.6.0', '>=');
     }
 
     public static function test_apache_mod_rewrite()
@@ -156,7 +156,7 @@ class ConfigurationTestCore
 
     public static function test_new_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.6.0', '>=');
+        return version_compare(substr(PHP_VERSION, 0, 5), '5.6.0', '>=');
     }
 
     public static function test_mysql_support()

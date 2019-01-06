@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Form\Admin\Product\ProductCombination;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class CombinationController extends FrameworkBundleAdminController
 {

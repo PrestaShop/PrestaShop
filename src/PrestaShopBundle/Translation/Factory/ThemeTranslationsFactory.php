@@ -56,8 +56,7 @@ class ThemeTranslationsFactory extends TranslationsFactory
         return $this->themeProvider
             ->setThemeName($themeName)
             ->setLocale($locale)
-            ->getMessageCatalogue()
-        ;
+            ->getMessageCatalogue();
     }
 
     /**

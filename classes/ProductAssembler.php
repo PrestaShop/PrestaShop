@@ -38,7 +38,7 @@ class ProductAssemblerCore
      *
      * @param \Context $context
      */
-    public function __construct(\Context $context)
+    public function __construct(Context $context)
     {
         $this->context = $context;
         $this->searchContext = new ProductSearchContext($context);

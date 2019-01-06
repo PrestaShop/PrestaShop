@@ -28,8 +28,8 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use Employee;
-use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShopBundle\Exception\NotImplementedException;
 use RuntimeException;
 use Shop;
 
@@ -133,7 +133,8 @@ class FeatureAttributeRepository
                 AND LENGTH(TRIM(agl.name)) > 0
             )
             GROUP BY ag.id_attribute_group
-        ');
+        '
+        );
 
         $statement = $this->connection->prepare($query);
 
@@ -182,7 +183,8 @@ class FeatureAttributeRepository
             WHERE fv.custom = 0
             GROUP BY fv.id_feature
             ORDER BY f.id_feature
-        ');
+        '
+        );
 
         $statement = $this->connection->prepare($query);
 

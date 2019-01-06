@@ -27,7 +27,7 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 /**
  * @deprecated 1.5.0
@@ -48,7 +48,7 @@ $function_array = array(
     'invoices2' => 'generateInvoicesPDF2',
     'slips' => 'generateOrderSlipsPDF',
     'deliveryslips' => 'generateDeliverySlipsPDF',
-    'id_supply_order' => 'generateSupplyOrderFormPDF'
+    'id_supply_order' => 'generateSupplyOrderFormPDF',
 );
 
 $pdf_controller = new AdminPdfController();

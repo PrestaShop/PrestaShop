@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96c76d5671ec24479b03e479fe8058f2",
+    "content-hash": "60b4922d90de8e7bd6b9d0ef3a1ffd60",
     "packages": [
         {
             "name": "analog/analog",
@@ -854,16 +854,16 @@
         },
         {
             "name": "doctrine/doctrine-bundle",
-            "version": "1.9.1",
+            "version": "1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "703fad32e4c8cbe609caf45a71a1d4266c830f0f"
+                "reference": "82d2c63cd09acbde2332f55d9aa7b28aefe4983d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/703fad32e4c8cbe609caf45a71a1d4266c830f0f",
-                "reference": "703fad32e4c8cbe609caf45a71a1d4266c830f0f",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/82d2c63cd09acbde2332f55d9aa7b28aefe4983d",
+                "reference": "82d2c63cd09acbde2332f55d9aa7b28aefe4983d",
                 "shasum": ""
             },
             "require": {
@@ -881,8 +881,8 @@
             },
             "require-dev": {
                 "doctrine/orm": "~2.4",
+                "php-coveralls/php-coveralls": "^2.1",
                 "phpunit/phpunit": "^4.8.36|^5.7|^6.4",
-                "satooshi/php-coveralls": "^1.0",
                 "symfony/phpunit-bridge": "~2.7|~3.0|~4.0",
                 "symfony/property-info": "~2.8|~3.0|~4.0",
                 "symfony/validator": "~2.7|~3.0|~4.0",
@@ -897,7 +897,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.8.x-dev"
+                    "dev-master": "1.9.x-dev"
                 }
             },
             "autoload": {
@@ -935,20 +935,20 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2018-04-19T14:07:39+00:00"
+            "time": "2018-11-30T13:53:17+00:00"
         },
         {
             "name": "doctrine/doctrine-cache-bundle",
-            "version": "1.3.3",
+            "version": "1.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineCacheBundle.git",
-                "reference": "4c8e363f96427924e7e519c5b5119b4f54512697"
+                "reference": "5514c90d9fb595e1095e6d66ebb98ce9ef049927"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineCacheBundle/zipball/4c8e363f96427924e7e519c5b5119b4f54512697",
-                "reference": "4c8e363f96427924e7e519c5b5119b4f54512697",
+                "url": "https://api.github.com/repos/doctrine/DoctrineCacheBundle/zipball/5514c90d9fb595e1095e6d66ebb98ce9ef049927",
+                "reference": "5514c90d9fb595e1095e6d66ebb98ce9ef049927",
                 "shasum": ""
             },
             "require": {
@@ -961,7 +961,7 @@
                 "instaclick/coding-standard": "~1.1",
                 "instaclick/object-calisthenics-sniffs": "dev-master",
                 "instaclick/symfony2-coding-standard": "dev-remaster",
-                "phpunit/phpunit": "~4|~5",
+                "phpunit/phpunit": "~4.8.36|~5.6|~6.5|~7.0",
                 "predis/predis": "~0.8",
                 "satooshi/php-coveralls": "^1.0",
                 "squizlabs/php_codesniffer": "~1.5",
@@ -985,7 +985,10 @@
             "autoload": {
                 "psr-4": {
                     "Doctrine\\Bundle\\DoctrineCacheBundle\\": ""
-                }
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1018,12 +1021,12 @@
                 }
             ],
             "description": "Symfony Bundle for Doctrine Cache",
-            "homepage": "http://www.doctrine-project.org",
+            "homepage": "https://www.doctrine-project.org",
             "keywords": [
                 "cache",
                 "caching"
             ],
-            "time": "2018-03-27T09:22:12+00:00"
+            "time": "2018-11-09T06:25:35+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -2337,16 +2340,16 @@
         },
         {
             "name": "matthiasmullie/minify",
-            "version": "1.3.60",
+            "version": "1.3.61",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matthiasmullie/minify.git",
-                "reference": "ab7fea80ce5ce6549baaf272bc8bd926a7e08f90"
+                "reference": "d5acb8ce5b6acb7d11bafe97cecc533f6e4fd751"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/ab7fea80ce5ce6549baaf272bc8bd926a7e08f90",
-                "reference": "ab7fea80ce5ce6549baaf272bc8bd926a7e08f90",
+                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/d5acb8ce5b6acb7d11bafe97cecc533f6e4fd751",
+                "reference": "d5acb8ce5b6acb7d11bafe97cecc533f6e4fd751",
                 "shasum": ""
             },
             "require": {
@@ -2393,7 +2396,7 @@
                 "minifier",
                 "minify"
             ],
-            "time": "2018-04-18T08:50:35+00:00"
+            "time": "2018-11-26T23:10:39+00:00"
         },
         {
             "name": "matthiasmullie/path-converter",
@@ -2446,16 +2449,16 @@
         },
         {
             "name": "maxmind-db/reader",
-            "version": "v1.3.0",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/MaxMind-DB-Reader-php.git",
-                "reference": "e042b4f8a2dff41e19019faf16427178b07fbd58"
+                "reference": "2f1086e38939e808cc23b17daa469da094af9125"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/MaxMind-DB-Reader-php/zipball/e042b4f8a2dff41e19019faf16427178b07fbd58",
-                "reference": "e042b4f8a2dff41e19019faf16427178b07fbd58",
+                "url": "https://api.github.com/repos/maxmind/MaxMind-DB-Reader-php/zipball/2f1086e38939e808cc23b17daa469da094af9125",
+                "reference": "2f1086e38939e808cc23b17daa469da094af9125",
                 "shasum": ""
             },
             "require": {
@@ -2498,7 +2501,7 @@
                 "geolocation",
                 "maxmind"
             ],
-            "time": "2018-02-21T21:23:33+00:00"
+            "time": "2018-11-20T16:04:10+00:00"
         },
         {
             "name": "maxmind/web-service-common",
@@ -2600,16 +2603,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.23.0",
+            "version": "1.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4"
+                "reference": "bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
-                "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266",
+                "reference": "bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266",
                 "shasum": ""
             },
             "require": {
@@ -2674,7 +2677,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2017-06-19T01:22:40+00:00"
+            "time": "2018-11-05T09:00:11+00:00"
         },
         {
             "name": "mrclay/minify",
@@ -3035,16 +3038,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "2dfd06c59825914a1a325f2a2ed13634b9d8c411"
+                "reference": "7f46932b2fabbaaf5a70e67cacc472a50b95cbb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/2dfd06c59825914a1a325f2a2ed13634b9d8c411",
-                "reference": "2dfd06c59825914a1a325f2a2ed13634b9d8c411",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/7f46932b2fabbaaf5a70e67cacc472a50b95cbb9",
+                "reference": "7f46932b2fabbaaf5a70e67cacc472a50b95cbb9",
                 "shasum": ""
             },
             "require": {
@@ -3069,6 +3072,7 @@
                 "friendsofphp/php-cs-fixer": "@stable",
                 "jpgraph/jpgraph": "^4.0",
                 "mpdf/mpdf": "^7.0.0",
+                "phpcompatibility/php-compatibility": "^8.0",
                 "phpunit/phpunit": "^5.7",
                 "squizlabs/php_codesniffer": "^3.3",
                 "tecnickcom/tcpdf": "^6.2"
@@ -3091,19 +3095,22 @@
             ],
             "authors": [
                 {
-                    "name": "Maarten Balliauw",
-                    "homepage": "http://blog.maartenballiauw.be"
-                },
-                {
                     "name": "Erik Tilt"
                 },
                 {
-                    "name": "Franck Lefevre",
-                    "homepage": "http://rootslabs.net"
+                    "name": "Adrien Crivelli"
+                },
+                {
+                    "name": "Maarten Balliauw",
+                    "homepage": "https://blog.maartenballiauw.be"
                 },
                 {
                     "name": "Mark Baker",
-                    "homepage": "http://markbakeruk.net"
+                    "homepage": "https://markbakeruk.net"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "https://rootslabs.net"
                 }
             ],
             "description": "PHPSpreadsheet - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
@@ -3118,7 +3125,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2018-10-21T10:04:54+00:00"
+            "time": "2018-11-20T19:51:42+00:00"
         },
         {
             "name": "prestashop/blockreassurance",
@@ -3554,16 +3561,16 @@
         },
         {
             "name": "prestashop/ps_checkpayment",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_checkpayment.git",
-                "reference": "becd3610e4d315916757957a810071c1bab43563"
+                "reference": "22dc50a3155355d672d483bb94424a69de40020b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_checkpayment/zipball/becd3610e4d315916757957a810071c1bab43563",
-                "reference": "becd3610e4d315916757957a810071c1bab43563",
+                "url": "https://api.github.com/repos/PrestaShop/ps_checkpayment/zipball/22dc50a3155355d672d483bb94424a69de40020b",
+                "reference": "22dc50a3155355d672d483bb94424a69de40020b",
                 "shasum": ""
             },
             "require": {
@@ -3582,7 +3589,7 @@
             ],
             "description": "PrestaShop module ps_checkpayment",
             "homepage": "https://github.com/PrestaShop/ps_checkpayment",
-            "time": "2017-02-22T08:00:01+00:00"
+            "time": "2018-11-05T11:37:25+00:00"
         },
         {
             "name": "prestashop/ps_contactinfo",
@@ -5206,16 +5213,16 @@
         },
         {
             "name": "psr/log",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
                 "shasum": ""
             },
             "require": {
@@ -5249,7 +5256,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10T12:19:37+00:00"
+            "time": "2018-11-20T15:27:04+00:00"
         },
         {
             "name": "psr/simple-cache",
@@ -5663,16 +5670,16 @@
         },
         {
             "name": "symfony/monolog-bundle",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/monolog-bundle.git",
-                "reference": "8204f3cd7c1bd6a6e2955c0a34475243a7bd9802"
+                "reference": "572e143afc03419a75ab002c80a2fd99299195ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/8204f3cd7c1bd6a6e2955c0a34475243a7bd9802",
-                "reference": "8204f3cd7c1bd6a6e2955c0a34475243a7bd9802",
+                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/572e143afc03419a75ab002c80a2fd99299195ff",
+                "reference": "572e143afc03419a75ab002c80a2fd99299195ff",
                 "shasum": ""
             },
             "require": {
@@ -5722,7 +5729,7 @@
                 "log",
                 "logging"
             ],
-            "time": "2018-06-04T05:55:43+00:00"
+            "time": "2018-11-04T09:58:13+00:00"
         },
         {
             "name": "symfony/polyfill-apcu",
@@ -6071,6 +6078,61 @@
             "time": "2018-09-21T06:26:08+00:00"
         },
         {
+            "name": "symfony/polyfill-php73",
+            "version": "v1.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php73.git",
+                "reference": "47ad352296d61aae366f075b8609f4dcc28853ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php73/zipball/47ad352296d61aae366f075b8609f4dcc28853ef",
+                "reference": "47ad352296d61aae366f075b8609f4dcc28853ef",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php73\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2018-09-25T06:33:47+00:00"
+        },
+        {
             "name": "symfony/polyfill-util",
             "version": "v1.10.0",
             "source": {
@@ -6183,16 +6245,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v3.4.17",
+            "version": "v3.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "de239d25e0bb3be451a17b627705a5970c6c59e6"
+                "reference": "f6b8ddc362b1cf3fb06548693c3adbb736092412"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/de239d25e0bb3be451a17b627705a5970c6c59e6",
-                "reference": "de239d25e0bb3be451a17b627705a5970c6c59e6",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/f6b8ddc362b1cf3fb06548693c3adbb736092412",
+                "reference": "f6b8ddc362b1cf3fb06548693c3adbb736092412",
                 "shasum": ""
             },
             "require": {
@@ -6334,7 +6396,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2018-10-03T12:03:55+00:00"
+            "time": "2018-12-06T15:24:36+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -6530,16 +6592,16 @@
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "b8e9745fb9b06ea6664d8872c4505fb16df4611c"
+                "reference": "dc523135366eb68f22268d069ea7749486458562"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/b8e9745fb9b06ea6664d8872c4505fb16df4611c",
-                "reference": "b8e9745fb9b06ea6664d8872c4505fb16df4611c",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/dc523135366eb68f22268d069ea7749486458562",
+                "reference": "dc523135366eb68f22268d069ea7749486458562",
                 "shasum": ""
             },
             "require": {
@@ -7979,7 +8041,7 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.4.17",
+            "version": "v3.4.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
@@ -8160,6 +8222,7 @@
     "platform": {
         "php": ">=5.6.0",
         "ext-curl": "*",
+        "ext-fileinfo": "*",
         "ext-intl": "*",
         "ext-zip": "*"
     },

@@ -26,16 +26,16 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use PrestaShopBundle\Form\Admin\Type\DatePickerType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 /**
  * This form class is responsible to generate the form for bulk combination feature

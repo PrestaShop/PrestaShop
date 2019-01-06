@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Object;
 
-use Hook;
-use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
-use ObjectModel;
 use Exception;
+use Hook;
+use ObjectModel;
+use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 
 class ObjectPresenter implements PresenterInterface
 {

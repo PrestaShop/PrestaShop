@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to create a category selector using Nested sets.

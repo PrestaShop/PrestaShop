@@ -27,17 +27,17 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * This form class is responsible to generate the product combination form.

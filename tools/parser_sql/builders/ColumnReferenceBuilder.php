@@ -51,14 +51,15 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class ColumnReferenceBuilder {
-
     protected function buildDirection($parsed) {
         $builder = new DirectionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildAlias($parsed) {
         $builder = new AliasBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -69,7 +70,7 @@ class ColumnReferenceBuilder {
         $sql = $parsed['base_expr'];
         $sql .= $this->buildAlias($parsed);
         $sql .= $this->buildDirection($parsed);
+
         return $sql;
     }
 }
-?>

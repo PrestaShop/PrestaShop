@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use DbQuery;
-use Db;
-use Shop;
 use Cache;
+use Db;
+use DbQuery;
+use Shop;
 
 /**
  * Not used in PrestaShop core, only in tests.

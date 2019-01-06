@@ -62,8 +62,7 @@ class MetaController extends FrameworkBundleAdminController
         $tools = $this->get('prestashop.adapter.tools');
         $context = $this->get('prestashop.adapter.shop.context');
 
-        $htaccessFileChecker = $this->get('prestashop.core.util.url.htaccess_file_checker');
-        $robotsTextFileChecker = $this->get('prestashop.core.util.url.robots_text_file_checker');
+        $urlFileChecker = $this->get('prestashop.core.util.url.url_file_checker');
 
         $hostingInformation = $this->get('prestashop.adapter.hosting_information');
 
@@ -88,8 +87,8 @@ class MetaController extends FrameworkBundleAdminController
             'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
             'routeKeywords' => $defaultRoutesProvider->getKeywords(),
             'isModRewriteActive' => $tools->isModRewriteActive(),
-            'isHtaccessFileValid' => $htaccessFileChecker->isValidFile(),
-            'isRobotsTextFileValid' => $robotsTextFileChecker->isValidFile(),
+            'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
+            'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
             'isShopContext' => $isShopContext,
             'isShopFeatureActive' => $isShopFeatureActive,
             'isHostMode' => $hostingInformation->isHostMode(),

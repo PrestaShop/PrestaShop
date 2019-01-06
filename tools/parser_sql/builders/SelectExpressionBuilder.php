@@ -52,14 +52,15 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class SelectExpressionBuilder {
-
     protected function buildSubTree($parsed, $delim) {
         $builder = new SubTreeBuilder();
+
         return $builder->build($parsed, $delim);
     }
 
     protected function buildAlias($parsed) {
         $builder = new AliasBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -69,7 +70,7 @@ class SelectExpressionBuilder {
         }
         $sql = $this->buildSubTree($parsed, " ");
         $sql .= $this->buildAlias($parsed);
+
         return $sql;
     }
 }
-?>

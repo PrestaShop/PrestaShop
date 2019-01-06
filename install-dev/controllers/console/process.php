@@ -23,12 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShopBundle\Install\Install;
 use PrestaShopBundle\Install\Database;
+use PrestaShopBundle\Install\Install;
 
 class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
 {
-
     public $process_steps = array();
     public $previous_button = false;
 
@@ -163,12 +162,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         if ($this->datas->newsletter) {
             $params = http_build_query(array(
-                    'email' => $this->datas->admin_email,
-                    'method' => 'addMemberToNewsletter',
-                    'language' => $this->datas->lang,
-                    'visitorType' => 1,
-                    'source' => 'installer'
-                ));
+                'email' => $this->datas->admin_email,
+                'method' => 'addMemberToNewsletter',
+                'language' => $this->datas->lang,
+                'visitorType' => 1,
+                'source' => 'installer',
+            ));
             Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }
@@ -283,6 +282,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
         $result = $this->model_install->installFixtures(null, array('shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country));
         $this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
+
         return $result;
     }
 
@@ -302,6 +302,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     public function processInstallTheme()
     {
         $this->initializeContext();
+
         return $this->model_install->installTheme($this->datas->theme);
     }
 

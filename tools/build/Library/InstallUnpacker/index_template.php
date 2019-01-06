@@ -83,8 +83,8 @@ if (isset($_GET['run']) && ($_GET['run'] === 'check-version')) {
 
         $latestVersionAvailable = $installManager->getLatestStableAvailableVersion();
 
-        $isThisTheLatestAvailableVersion = (_PS_VERSION_ === $latestVersionAvailable);
-        if ($isThisTheLatestAvailableVersion) {
+        $isThisTheLatestStableAvailableVersion = ($latestVersionAvailable->compare(VersionNumber::fromString(_PS_VERSION_)) < 1);
+        if ($isThisTheLatestStableAvailableVersion) {
             die(json_encode([
                 'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false,
             ]));
@@ -207,26 +207,32 @@ if (isset($_GET['element'])) {
         case 'font':
             header('Content-Type: application/font-sfnt');
             echo getFileContent('OpenSans-Regular.ttf', true);
+
             break;
         case 'css':
             header('Content-Type: text/css');
             echo getFileContent('style.css', true);
+
             break;
         case 'jquery':
             header('Content-Type: text/javascript');
             echo getFileContent('jquery-2.2.3.min.js', true);
+
             break;
         case 'gif':
             header('Content-Type: image/gif');
             echo getFileContent('installer.gif', true);
+
             break;
         case 'png-installer':
             header('Content-Type: image/png');
             echo getFileContent('installer-static.png', true);
+
             break;
         case 'js-runner':
             header('Content-Type: application/javascript');
             echo getFileContent('js-runner.js', true);
+
             break;
     }
     exit;
@@ -238,16 +244,16 @@ if (isset($_GET['element'])) {
   <head>
       <meta charset="UTF-8">
       <title>PrestaShop installation</title>
-      <link rel="stylesheet" type="text/css" href="<?= $selfUri; ?>?element=css">
+      <link rel="stylesheet" type="text/css" href="<?php echo $selfUri; ?>?element=css">
   </head>
   <body>
     <div id="content-install-in-progress"
-       data-extract-url="<?= $selfUri; ?>"
-       data-check-version-url="<?= $selfUri; ?>?run=check-version"
-       data-download-latest-url="<?= $selfUri; ?>">
+       data-extract-url="<?php echo $selfUri; ?>"
+       data-check-version-url="<?php echo $selfUri; ?>?run=check-version"
+       data-download-latest-url="<?php echo $selfUri; ?>">
         <div>
-            <img id="spinner" src="<?= $selfUri; ?>?element=gif"/>
-            <div id="versionPanel" style="display: none;">Installing Prestashop <?= _PS_VERSION_; ?></div>
+            <img id="spinner" src="<?php echo $selfUri; ?>?element=gif"/>
+            <div id="versionPanel" style="display: none;">Installing Prestashop <?php echo _PS_VERSION_; ?></div>
             <div id="initializationMessage">Initialization ...</div>
             <div id="progressContainer">
                 <div class="progressNumber">0 %</div>
@@ -262,7 +268,7 @@ if (isset($_GET['element'])) {
     </div>
     <div id="content-install-form" style="display: none">
       <div>
-        <img id="puffin" src="<?= $selfUri; ?>?element=png-installer"/>
+        <img id="puffin" src="<?php echo $selfUri; ?>?element=png-installer"/>
         <div id="header">
           The version you’re about to install is not
           the latest version of PrestaShop
@@ -284,7 +290,7 @@ if (isset($_GET['element'])) {
         </div>
       </div>
     </div>
-    <script type="text/javascript" src="<?= $selfUri; ?>?element=jquery"></script>
-    <script type="text/javascript" src="<?= $selfUri; ?>?element=js-runner"></script>
+    <script type="text/javascript" src="<?php echo $selfUri; ?>?element=jquery"></script>
+    <script type="text/javascript" src="<?php echo $selfUri; ?>?element=js-runner"></script>
   </body>
 </html>

@@ -50,7 +50,8 @@ function set_product_suppliers()
 		');
 
         //Try to get product attribues
-        $attributes = Db::getInstance()->executeS('
+        $attributes = Db::getInstance()->executeS(
+            '
 			SELECT id_product_attribute, supplier_reference, wholesale_price
 			FROM `'._DB_PREFIX_.'product_attribute`
 			WHERE `id_product` = '.(int)$row['id_product']

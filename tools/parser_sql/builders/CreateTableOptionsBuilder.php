@@ -53,22 +53,24 @@ require_once dirname(__FILE__) . '/CollationBuilder.php';
  *  
  */
 class CreateTableOptionsBuilder {
-
     protected function buildExpression($parsed) {
         $builder = new SelectExpressionBuilder();
+
         return $builder->build($parsed);
     }
-	
+
     protected function buildCharacterSet($parsed) {
         $builder = new CharacterSetBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     protected function buildCollation($parsed) {
         $builder = new CollationBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     /**
      * Returns a well-formatted delimiter string. If you don't need nice SQL,
      * you could simply return $parsed['delim'].
@@ -77,9 +79,9 @@ class CreateTableOptionsBuilder {
      * @return a string, which is added right after the expression
      */
     protected function getDelimiter($parsed) {
-        return ($parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
+        return $parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' ');
     }
-     
+
     public function build($parsed) {
         if (!isset($parsed['options']) || $parsed['options'] === false) {
             return "";
@@ -98,7 +100,7 @@ class CreateTableOptionsBuilder {
 
             $sql .= $this->getDelimiter($v);
         }
+
         return " " . substr($sql, 0, -1);
     }
 }
-?>

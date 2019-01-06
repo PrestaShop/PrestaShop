@@ -29,8 +29,8 @@ namespace PrestaShopBundle\Entity\Repository;
 use Doctrine\DBAL\Driver\Connection;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
-use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShopBundle\Exception\NotImplementedException;
 use RuntimeException;
 use Shop;
@@ -117,7 +117,8 @@ class CategoryRepository
             INNER JOIN {table_prefix}category_lang cl ON (cl.id_category = c.id_category AND cl.id_lang = :language_id AND cl.id_shop = :shop_id)
             INNER JOIN {table_prefix}category_shop cs ON (cs.id_category = c.id_category AND cs.id_shop = :shop_id)
             ORDER BY c.id_parent ASC
-        ');
+        '
+        );
 
         $statement = $this->connection->prepare($query);
 

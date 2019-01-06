@@ -37,7 +37,9 @@
 @import "components/form";
 @import "components/grid";
 @import "components/showcase-card";
+@import "components/material_choice_tree";
 @import "components/button_groups";
+@import "components/cursor";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
@@ -47,6 +49,7 @@
 @import "pages/invoices";
 @import "pages/meta";
 @import "pages/import_data";
+@import "pages/currency";
 
 // Main Layout
 @import "pages/modules";

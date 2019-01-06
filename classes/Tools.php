@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Filesystem\Filesystem;
-use PHPSQLParser\PHPSQLParser;
 use Composer\CaBundle\CaBundle;
+use PHPSQLParser\PHPSQLParser;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Request;
 
 class ToolsCore
 {
@@ -75,9 +75,11 @@ class ToolsCore
         switch ($flag) {
             case 'NUMERIC':
                 $str = '0123456789';
+
                 break;
             case 'NO_NUMERIC':
                 $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
                 break;
             case 'RANDOM':
                 $num_bytes = ceil($length * 0.75);
@@ -87,6 +89,7 @@ class ToolsCore
             case 'ALPHANUMERIC':
             default:
                 $str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
                 break;
         }
 
@@ -647,7 +650,7 @@ class ToolsCore
     public static function getCountry($address = null)
     {
         $id_country = (int) Tools::getValue('id_country');
-        if (!$id_country && isset($address) && isset($address->id_country) && $address->id_country) {
+        if (!$id_country && isset($address, $address->id_country) && $address->id_country) {
             $id_country = (int) $address->id_country;
         } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
@@ -756,8 +759,9 @@ class ToolsCore
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
 
-    /*
+    /**
      * Return a number well formatted
+     *
      * @param float $number A number
      * @param nullable $currency / not used anymaore
      */
@@ -1185,8 +1189,7 @@ class ToolsCore
     {
         return
             isset($_POST[$submit]) || isset($_POST[$submit . '_x']) || isset($_POST[$submit . '_y'])
-            || isset($_GET[$submit]) || isset($_GET[$submit . '_x']) || isset($_GET[$submit . '_y'])
-        ;
+            || isset($_GET[$submit]) || isset($_GET[$submit . '_x']) || isset($_GET[$submit . '_y']);
     }
 
     /**
@@ -1487,16 +1490,17 @@ class ToolsCore
             /* YI */ '/[\x{0407}]/u',
             /* YO */ '/[\x{0401}]/u',
             /* YU */ '/[\x{042E}]/u',
-            /* ZH */ '/[\x{0416}]/u', );
+            /* ZH */ '/[\x{0416}]/u',
+        );
 
         // ö to oe
         // å to aa
         // ä to ae
 
         $replacements = array(
-                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 'ss', 't', 'u', 'v', 'w', 'y', 'z', 'ae', 'ch', 'kh', 'oe', 'sh', 'shh', 'ya', 'ye', 'yi', 'yo', 'yu', 'zh',
-                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', 'AE', 'CH', 'KH', 'OE', 'SH', 'SHH', 'YA', 'YE', 'YI', 'YO', 'YU', 'ZH',
-            );
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 'ss', 't', 'u', 'v', 'w', 'y', 'z', 'ae', 'ch', 'kh', 'oe', 'sh', 'shh', 'ya', 'ye', 'yi', 'yo', 'yu', 'zh',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', 'AE', 'CH', 'KH', 'OE', 'SH', 'SHH', 'YA', 'YE', 'YI', 'YO', 'YU', 'ZH',
+        );
 
         return preg_replace($patterns, $replacements, $str);
     }
@@ -1576,6 +1580,7 @@ class ToolsCore
                     }
 
                     $truncate .= Tools::substr($tag[3], 0, $left + $entities_length);
+
                     break;
                 } else {
                     $truncate .= $tag[3];
@@ -1873,13 +1878,13 @@ class ToolsCore
         }
 
         $precision_places = 14 - floor(log10(abs($value)));
-        $f1 = pow(10.0, (float) abs($places));
+        $f1 = 10.0 ** (float) abs($places);
 
         /* If the decimal precision guaranteed by FP arithmetic is higher than
         * the requested places BUT is small enough to make sure a non-zero value
         * is returned, pre-round the result to the precision */
         if ($precision_places > $places && $precision_places - $places < 15) {
-            $f2 = pow(10.0, (float) abs($precision_places));
+            $f2 = 10.0 ** (float) abs($precision_places);
 
             if ($precision_places >= 0) {
                 $tmp_value = $value * $f2;
@@ -1891,7 +1896,7 @@ class ToolsCore
             * thus never larger than 1e15 here) */
             $tmp_value = Tools::round_helper($tmp_value, $mode);
             /* now correctly move the decimal point */
-            $f2 = pow(10.0, (float) abs($places - $precision_places));
+            $f2 = 10.0 ** (float) abs($places - $precision_places);
             /* because places < precision_places */
             $tmp_value = $tmp_value / $f2;
         } else {
@@ -1956,7 +1961,7 @@ class ToolsCore
      */
     public static function ceilf($value, $precision = 0)
     {
-        $precision_factor = $precision == 0 ? 1 : pow(10, $precision);
+        $precision_factor = $precision == 0 ? 1 : 10 ** $precision;
         $tmp = $value * $precision_factor;
         $tmp2 = (string) $tmp;
         // If the current value has already the desired precision
@@ -1980,7 +1985,7 @@ class ToolsCore
      */
     public static function floorf($value, $precision = 0)
     {
-        $precision_factor = $precision == 0 ? 1 : pow(10, $precision);
+        $precision_factor = $precision == 0 ? 1 : 10 ** $precision;
         $tmp = $value * $precision_factor;
         $tmp2 = (string) $tmp;
         // If the current value has already the desired precision
@@ -2173,11 +2178,11 @@ class ToolsCore
      */
     public static function createFileFromUrl($url)
     {
-        $remoteFile = fopen($url, 'r');
+        $remoteFile = fopen($url, 'rb');
         if (!$remoteFile) {
             return false;
         }
-        $localFile = fopen(basename($url), 'w');
+        $localFile = fopen(basename($url), 'wb');
         if (!$localFile) {
             return false;
         }
@@ -2363,7 +2368,7 @@ class ToolsCore
         }
 
         // Write .htaccess data
-        if (!$write_fd = @fopen($path, 'w')) {
+        if (!$write_fd = @fopen($path, 'wb')) {
             return false;
         }
         if ($specific_before) {
@@ -2456,8 +2461,7 @@ class ToolsCore
                 fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:' . $uri['physical'] . ']' . "\n");
 
                 // Webservice
-                fwrite($write_fd, 'RewriteRule ^api$ api/ [L]' . "\n\n");
-                fwrite($write_fd, 'RewriteRule ^api/(.*)$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]' . "\n\n");
+                fwrite($write_fd, 'RewriteRule ^api(?:/(.*))?$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]' . "\n\n");
 
                 if (!$rewrite_settings) {
                     $rewrite_settings = (int) Configuration::get('PS_REWRITING_SETTINGS', null, null, (int) $uri['id_shop']);
@@ -2610,7 +2614,7 @@ FileETag none
     {
         $robots_file = _PS_ROOT_DIR_ . '/robots.txt';
 
-        if (!$write_fd = @fopen($robots_file, 'w')) {
+        if (!$write_fd = @fopen($robots_file, 'wb')) {
             return false;
         }
 
@@ -2826,7 +2830,8 @@ exit;
     public static function getDirectoriesWithGlob($path)
     {
         $directoryList = glob($path . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
-        array_walk($directoryList,
+        array_walk(
+            $directoryList,
             function (&$absolutePath, $key) {
                 $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
             }
@@ -3126,6 +3131,7 @@ exit;
                 }
 
                 return $order_by_prefix . $value;
+
             break;
 
             case 'way':
@@ -3133,6 +3139,7 @@ exit;
                 $list = array(0 => 'asc', 1 => 'desc');
 
                 return (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc');
+
             break;
         }
     }
@@ -3155,12 +3162,15 @@ exit;
             switch ($unit) {
                 case 'k':
                     $qty *= 1024;
+
                     break;
                 case 'm':
                     $qty *= 1048576;
+
                     break;
                 case 'g':
                     $qty *= 1073741824;
+
                     break;
             }
 
@@ -3366,7 +3376,7 @@ exit;
      */
     public static function isPHPCLI()
     {
-        return defined('STDIN') || (Tools::strtolower(php_sapi_name()) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR'])));
+        return defined('STDIN') || (Tools::strtolower(PHP_SAPI) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR'])));
     }
 
     public static function argvToGET($argc, $argv)
@@ -3483,8 +3493,6 @@ exit;
             $array[key($array2)] = current($array2);
             next($array2);
         }
-
-        return;
     }
 
     /**
@@ -3523,9 +3531,9 @@ exit;
     }
 
     /**
-     * @params string $path Path to scan
-     * @params string $ext Extention to filter files
-     * @params string $dir Add this to prefix output for example /path/dir/*
+     * @param string $path Path to scan
+     * @param string $ext Extention to filter files
+     * @param string $dir Add this to prefix output for example /path/dir/*
      *
      * @return array List of file found
      *
@@ -3638,7 +3646,7 @@ exit;
      */
     public static function arrayUnique($array)
     {
-        if (version_compare(phpversion(), '5.2.9', '<')) {
+        if (version_compare(PHP_VERSION, '5.2.9', '<')) {
             return array_unique($array);
         } else {
             return array_unique($array, SORT_REGULAR);
@@ -3688,51 +3696,64 @@ exit;
         switch ($request) {
             case 'native':
                 $post_data .= '&method=listing&action=native';
+
                 break;
             case 'partner':
                 $post_data .= '&method=listing&action=partner';
+
                 break;
             case 'service':
                 $post_data .= '&method=listing&action=service';
+
                 break;
             case 'native_all':
                 $post_data .= '&method=listing&action=native&iso_code=all';
+
                 break;
             case 'must-have':
                 $post_data .= '&method=listing&action=must-have';
+
                 break;
             case 'must-have-themes':
                 $post_data .= '&method=listing&action=must-have-themes';
+
                 break;
             case 'customer':
                 $post_data .= '&method=listing&action=customer&username=' . urlencode(trim(Context::getContext()->cookie->username_addons))
                     . '&password=' . urlencode(trim(Context::getContext()->cookie->password_addons));
+
                 break;
             case 'customer_themes':
                 $post_data .= '&method=listing&action=customer-themes&username=' . urlencode(trim(Context::getContext()->cookie->username_addons))
                     . '&password=' . urlencode(trim(Context::getContext()->cookie->password_addons));
+
                 break;
             case 'check_customer':
                 $post_data .= '&method=check_customer&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
+
                 break;
             case 'check_module':
                 $post_data .= '&method=check&module_name=' . urlencode($params['module_name']) . '&module_key=' . urlencode($params['module_key']);
+
                 break;
             case 'module':
                 $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
-                if (isset($params['username_addons']) && isset($params['password_addons'])) {
+                if (isset($params['username_addons'], $params['password_addons'])) {
                     $post_data .= '&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
                 }
+
                 break;
             case 'hosted_module':
                 $post_data .= '&method=module&id_module=' . urlencode((int) $params['id_module']) . '&username=' . urlencode($params['hosted_email'])
                     . '&password=' . urlencode($params['password_addons'])
                     . '&shop_url=' . urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
                     . '&mail=' . urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
+
                 break;
             case 'install-modules':
                 $post_data .= '&method=listing&action=install-modules';
                 $post_data .= defined('_PS_HOST_MODE_') ? '-od' : '';
+
                 break;
             default:
                 return false;
@@ -3843,7 +3864,7 @@ exit;
         $base = log($size) / log(1024);
         $suffixes = array('', 'k', 'M', 'G', 'T');
 
-        return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
+        return round(1024 ** ($base - floor($base)), $precision) . $suffixes[floor($base)];
     }
 
     public static function boolVal($value)
@@ -4024,7 +4045,7 @@ exit;
 
         uasort($rows, $sort_function);
 
-        $unit = pow(10, $precision);
+        $unit = 10 ** $precision;
 
         $int_amount = (int) round($unit * $amount);
 

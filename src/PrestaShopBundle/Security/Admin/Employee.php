@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Security\Admin;
 
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class Employee is used for Symfony security components to authenticate the user.

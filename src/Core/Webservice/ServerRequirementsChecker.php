@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Webservice;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation;
 use PrestaShop\PrestaShop\Core\Configuration\PhpExtensionCheckerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use RuntimeException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Looks at server configuration in order to check if PrestaShop's Webservice feature can be enabled.

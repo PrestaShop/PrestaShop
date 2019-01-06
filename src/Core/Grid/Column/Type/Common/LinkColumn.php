@@ -61,7 +61,6 @@ final class LinkColumn extends AbstractColumn
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
-            ->setAllowedTypes('sortable', 'bool')
-        ;
+            ->setAllowedTypes('sortable', 'bool');
     }
 }

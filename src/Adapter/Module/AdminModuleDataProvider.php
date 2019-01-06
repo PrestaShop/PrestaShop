@@ -26,7 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Context;
 use Doctrine\Common\Cache\CacheProvider;
+use Employee;
+use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
@@ -35,9 +38,6 @@ use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
-use Module as LegacyModule;
-use Context;
-use Employee;
 use Tools;
 
 /**
@@ -167,7 +167,8 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     public function getAllModules()
     {
-        return LegacyModule::getModulesOnDisk(true,
+        return LegacyModule::getModulesOnDisk(
+            true,
             $this->addonsDataProvider->isAddonsAuthenticated(),
             (int) Context::getContext()->employee->id
         );
@@ -185,7 +186,8 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $this->applyModuleFilters(
-                $this->catalog_modules, $filters
+                $this->catalog_modules,
+            $filters
         );
     }
 
@@ -390,10 +392,12 @@ class AdminModuleDataProvider implements ModuleInterface
                             }
                         }
                     }
+
                     break;
                 case 'name':
                     // exact given name (should return 0 or 1 result)
                     $search_result[] = $value;
+
                     break;
                 default:
                     // "the switch statement is considered a looping structure for the purposes of continue."
@@ -448,8 +452,7 @@ class AdminModuleDataProvider implements ModuleInterface
                         $addon->origin = $action;
                         $addon->origin_filter_value = $action_filter_value;
                         $addon->categoryParent = $this->categoriesProvider
-                            ->getParentCategory($addon->categoryName)
-                        ;
+                            ->getParentCategory($addon->categoryName);
                         if (isset($addon->version)) {
                             $addon->version_available = $addon->version;
                         }

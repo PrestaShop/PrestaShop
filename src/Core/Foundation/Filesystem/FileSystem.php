@@ -67,7 +67,7 @@ class FileSystem
                 $arg_0,
                 call_user_func_array(
                     array($this,
-                          'joinPaths', ),
+                        'joinPaths', ),
                     array_slice($func_args, 1)
                 )
             );
@@ -128,7 +128,7 @@ class FileSystem
     /**
      * Filter used by listFilesRecursively.
      */
-    private function matchOnlyFiles(\SplFileInfo $info)
+    private function matchOnlyFiles(SplFileInfo $info)
     {
         return $info->isFile();
     }

@@ -127,7 +127,7 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
         }
 
         $shortDescriptionLimit = $data['general']['short_description_limit'];
-        if (!is_numeric($shortDescriptionLimit) || 0 > $shortDescriptionLimit) {
+        if (!is_numeric($shortDescriptionLimit) || 0 >= $shortDescriptionLimit) {
             $invalidFields[] = $this->translator->trans(
                 'Max size of product summary',
                 [],

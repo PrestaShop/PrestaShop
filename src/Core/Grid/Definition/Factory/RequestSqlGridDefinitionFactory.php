@@ -71,7 +71,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getId()
     {
-        return 'SqlRequest';
+        return 'sql_request';
     }
 
     /**
@@ -88,72 +88,80 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
+            ->add(
+                (new BulkActionColumn('bulk'))
                 ->setOptions([
                     'bulk_field' => 'id_request_sql',
                 ])
             )
-            ->add((new DataColumn('id_request_sql'))
+            ->add(
+                (new DataColumn('id_request_sql'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_request_sql',
                 ])
             )
-            ->add((new DataColumn('name'))
+            ->add(
+                (new DataColumn('name'))
                 ->setName($this->trans('SQL query Name', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'field' => 'name',
                 ])
             )
-            ->add((new DataColumn('sql'))
+            ->add(
+                (new DataColumn('sql'))
                 ->setName($this->trans('SQL query', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'field' => 'sql',
                 ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('export'))
+                        ->add(
+                            (new LinkRowAction('export'))
                             ->setIcon('cloud_download')
                             ->setOptions([
-                                'route' => 'admin_sql_request_export',
+                                'route' => 'admin_sql_requests_export',
                                 'route_param_name' => 'sqlRequestId',
                                 'route_param_field' => 'id_request_sql',
                             ])
                         )
-                        ->add((new LinkRowAction('view'))
+                        ->add(
+                            (new LinkRowAction('view'))
                             ->setName($this->trans('View', [], 'Admin.Global'))
                             ->setIcon('remove_red_eye')
                             ->setOptions([
-                                'route' => 'admin_sql_request_view',
+                                'route' => 'admin_sql_requests_view',
                                 'route_param_name' => 'sqlRequestId',
                                 'route_param_field' => 'id_request_sql',
                             ])
                         )
-                        ->add((new LinkRowAction('edit'))
+                        ->add(
+                            (new LinkRowAction('edit'))
                             ->setName($this->trans('Edit', [], 'Admin.Global'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_sql_request_edit',
+                                'route' => 'admin_sql_requests_edit',
                                 'route_param_name' => 'sqlRequestId',
                                 'route_param_field' => 'id_request_sql',
                             ])
                         )
-                        ->add((new LinkRowAction('delete'))
+                        ->add(
+                            (new LinkRowAction('delete'))
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
                                 'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
-                                'route' => 'admin_sql_request_delete',
+                                'route' => 'admin_sql_requests_delete',
                                 'route_param_name' => 'sqlRequestId',
                                 'route_param_field' => 'id_request_sql',
                             ])
                         ),
                 ])
-            )
-        ;
+            );
     }
 
     /**
@@ -162,25 +170,29 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     public function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_request_sql', TextType::class))
+            ->add(
+                (new Filter('id_request_sql', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('id_request_sql')
             )
-            ->add((new Filter('name', TextType::class))
+            ->add(
+                (new Filter('name', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('name')
             )
-            ->add((new Filter('sql', TextType::class))
+            ->add(
+                (new Filter('sql', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('sql')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
                     'attr' => [
                         'data-url' => $this->resetSearchUrl,
@@ -188,8 +200,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                     ],
                 ])
                 ->setAssociatedColumn('actions')
-            )
-        ;
+            );
     }
 
     /**
@@ -198,15 +209,15 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('delete_all'))
+            ->add(
+                (new SubmitBulkAction('delete_all'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_sql_request_delete_bulk',
+                    'submit_route' => 'admin_sql_requests_delete_bulk',
                     'submit_method' => 'POST',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
-            )
-        ;
+            );
     }
 
     /**
@@ -215,18 +226,20 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SimpleGridAction('common_refresh_list'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
                 ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
                 ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
                 ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
                 ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
-            )
-        ;
+            );
     }
 }

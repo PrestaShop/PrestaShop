@@ -43,7 +43,6 @@ class AdvancedConfigurationType extends AbstractType
     {
         $builder
             ->add('language_identifier', TextType::class)
-            ->add('country_identifier', TextType::class)
-        ;
+            ->add('country_identifier', TextType::class);
     }
 }

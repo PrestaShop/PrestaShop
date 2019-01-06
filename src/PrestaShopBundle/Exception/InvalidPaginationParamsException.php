@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Exception;
 
-use OutOfBoundsException;
 use Exception;
+use OutOfBoundsException;
 
 class InvalidPaginationParamsException extends OutOfBoundsException
 {

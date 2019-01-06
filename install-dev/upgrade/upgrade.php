@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 use PrestaShopBundle\Install\Upgrade;
 
 // Although no arguments execute the script, you can get some help if requested.
@@ -44,9 +43,9 @@ if (isset($_GET['adminDir']) && $_GET['adminDir'] && !defined('_PS_ADMIN_DIR_'))
     define('_PS_ADMIN_DIR_', base64_decode($_GET['adminDir']));
 }
 
-require_once(dirname(__FILE__).'/../init.php');
+require_once dirname(__FILE__).'/../init.php';
 Upgrade::migrateSettingsFile();
-require_once(_PS_CONFIG_DIR_.'bootstrap.php');
+require_once _PS_CONFIG_DIR_.'bootstrap.php';
 
 $logDir = _PS_ROOT_DIR_.'/var/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';
 @mkdir($logDir, 0777, true);
@@ -117,7 +116,7 @@ if ($upgrade->getInAutoUpgrade()) {
         'nextErrors' => $upgrade->getNextErrors(),
         'next' => $upgrade->getNext(),
         'nextDesc' => $upgrade->getNextDesc(),
-        'warningExists' => $upgrade->hasWarning()
+        'warningExists' => $upgrade->hasWarning(),
     ));
 } else {
     header('Content-Type: text/xml');
@@ -129,7 +128,7 @@ if ($upgrade->getInAutoUpgrade()) {
  */
 function displayHelp()
 {
-    echo <<<EOF
+    echo <<<'EOF'
 PrestaShop upgrade
 
 This script can be called directly and is used by the 1-click upgrade module. It ouputs xml in the first case and json data for the module.

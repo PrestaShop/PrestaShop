@@ -26,16 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use AdminController;
+use AdminLegacyLayoutControllerCore;
+use Context;
 use Employee;
+use Language;
 use RuntimeException;
 use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
-use Context;
-use Language;
-use AdminController;
-use Link;
 use Tab;
-use AdminLegacyLayoutControllerCore;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -104,9 +103,25 @@ class LegacyContext
     }
 
     /**
+     * Returns the controller link in its legacy form, without trying to convert it in symfony url.
+     *
+     * @param string $controller
+     * @param bool $withToken
+     * @param array $extraParams
+     *
+     * @return string
+     */
+    public function getLegacyAdminLink($controller, $withToken = true, $extraParams = array())
+    {
+        return $this->getContext()->link->getLegacyAdminLink($controller, $withToken, $extraParams);
+    }
+
+    /**
      * Adapter to get Front controller HTTP link.
      *
      * @param string $controller the controller name
+     *
+     * @return string
      */
     public function getFrontUrl($controller)
     {

@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
-use Symfony\Component\Routing\Router;
 use Module;
+use Symfony\Component\Routing\Router;
 
 /**
  * Data provider for new Architecture, about recommended modules.

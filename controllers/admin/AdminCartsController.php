@@ -401,6 +401,7 @@ class AdminCartsControllerCore extends AdminController
                             if ($customization_field['required']) {
                                 $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
                             }
+
                             continue;
                         }
                         if (!Validate::isMessage(Tools::getValue($field_id))) {
@@ -412,6 +413,7 @@ class AdminCartsControllerCore extends AdminController
                             if ($customization_field['required']) {
                                 $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
                             }
+
                             continue;
                         }
                         if ($error = ImageManager::validateUpload($_FILES[$field_id], (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
@@ -420,7 +422,7 @@ class AdminCartsControllerCore extends AdminController
                         if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$field_id]['tmp_name'], $tmp_name)) {
                             $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
                         }
-                        $file_name = md5(uniqid(rand(), true));
+                        $file_name = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
                         if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name)) {
                             continue;
                         } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name . '_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
@@ -437,7 +439,7 @@ class AdminCartsControllerCore extends AdminController
             $this->setMedia(false);
             $this->initFooter();
             $this->context->smarty->assign(array('customization_errors' => implode('<br />', $errors),
-                                                            'css_files' => $this->css_files, ));
+                'css_files' => $this->css_files, ));
 
             return $this->smartyOutputContent('controllers/orders/form_customization_feedback.tpl');
         }
@@ -757,6 +759,7 @@ class AdminCartsControllerCore extends AdminController
                 $cart_obj = new Cart((int) $cart['id_cart']);
                 if ($cart['id_cart'] == $this->context->cart->id) {
                     unset($carts[$key]);
+
                     continue;
                 }
                 $currency = new Currency((int) $cart['id_currency']);
@@ -769,7 +772,8 @@ class AdminCartsControllerCore extends AdminController
             }
         }
         if ($orders || $carts) {
-            $to_return = array_merge($this->ajaxReturnVars(),
+            $to_return = array_merge(
+                $this->ajaxReturnVars(),
                 array(
                     'carts' => $carts,
                     'orders' => $orders,
@@ -797,6 +801,7 @@ class AdminCartsControllerCore extends AdminController
             foreach ($cart_rules as $cart_rule) {
                 if ($cart_rule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX . (int) $this->context->cart->id)) {
                     $free_shipping = true;
+
                     break;
                 }
             }
@@ -818,7 +823,8 @@ class AdminCartsControllerCore extends AdminController
             'id_cart' => $id_cart,
             'order_message' => $message_content,
             'link_order' => $this->context->link->getPageLink(
-                'order', false,
+                'order',
+                false,
                 (int) $this->context->cart->id_lang,
                 'step=3&recover_cart=' . $id_cart . '&token_cart=' . md5(_COOKIE_KEY_ . 'recover_cart_' . $id_cart)
             ),

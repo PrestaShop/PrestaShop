@@ -26,10 +26,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
+use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 
 class UploadQuotaType extends TranslatorAwareType
 {

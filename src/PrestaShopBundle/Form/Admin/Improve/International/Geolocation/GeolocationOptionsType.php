@@ -92,8 +92,7 @@ class GeolocationOptionsType extends TranslatorAwareType
             ->add('geolocation_countries', MaterialChoiceTableType::class, [
                 'choices' => $this->countryChoices,
                 'choice_translation_domain' => false,
-            ])
-        ;
+            ]);
 
         $builder->get('geolocation_countries')->addModelTransformer(new CallbackTransformer(
             function ($countriesAsString) {

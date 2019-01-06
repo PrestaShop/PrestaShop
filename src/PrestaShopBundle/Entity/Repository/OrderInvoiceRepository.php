@@ -61,7 +61,7 @@ class OrderInvoiceRepository
      */
     public function countByOrderState(array $shopIds)
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT COUNT(o.id_order) AS nbOrders, o.current_state as id_order_state
 FROM `{table_prefix}order_invoice` oi
 LEFT JOIN `{table_prefix}orders` o ON oi.id_order = o.id_order

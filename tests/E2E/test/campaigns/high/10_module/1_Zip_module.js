@@ -3,6 +3,7 @@ const {ModulePage} = require('../../../selectors/BO/module_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const module_common_scenarios = require('../../common_scenarios/module');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 scenario('Install "PrestaShop Security" module', () => {
@@ -10,6 +11,7 @@ scenario('Install "PrestaShop Security" module', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Install "PrestaShop Security" module by uploading a ZIP file', client => {
     test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
     test('should click on "Upload a module" button', () => client.waitForExistAndClick(ModulePage.upload_button));

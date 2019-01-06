@@ -367,7 +367,6 @@ class AdminModuleController {
       }
     }
 
-
     const currentCompare = (a, b) => {
       let aData = a[key];
       let bData = b[key];
@@ -376,6 +375,9 @@ class AdminModuleController {
         bData = (new Date(bData)).getTime();
         aData = isNaN(aData) ? 0 : aData;
         bData = isNaN(bData) ? 0 : bData;
+        if (aData === bData) {
+          return b.name.localeCompare(a.name);
+        }
       }
 
       if (aData < bData) return -1;

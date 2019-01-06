@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Utils;
 
-use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use ZipArchive;
 
 class ZipManager

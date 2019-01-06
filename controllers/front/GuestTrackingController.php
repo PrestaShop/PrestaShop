@@ -30,7 +30,7 @@ class GuestTrackingControllerCore extends FrontController
     public $ssl = true;
     public $auth = false;
     public $php_self = 'guest-tracking';
-    private $order;
+    protected $order;
 
     /**
      * Initialize guest tracking controller.
@@ -128,7 +128,9 @@ class GuestTrackingControllerCore extends FrontController
 
         if ((int) $this->order->isReturnable()) {
             $this->info[] = $this->trans(
-                'You cannot return merchandise with a guest account.', array(), 'Shop.Notifications.Warning'
+                'You cannot return merchandise with a guest account.',
+                array(),
+                'Shop.Notifications.Warning'
             );
         }
 

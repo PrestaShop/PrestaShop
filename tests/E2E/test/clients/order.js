@@ -7,6 +7,7 @@ global.orders = [];
 global.lineFile = [];
 let common = require('../common.webdriverio');
 let fs = require('fs');
+const exec = require('child_process').exec;
 
 class Order extends CommonClient {
 
@@ -97,6 +98,10 @@ class Order extends CommonClient {
       .then((text) => expect(text).to.be.false);
   }
 
+  async getCreditSlipDocumentName(selector) {
+    let name = await this.client.getText(selector);
+     global.creditSlip = await name.replace('#', '');
+  }
 }
 
 module.exports = Order;

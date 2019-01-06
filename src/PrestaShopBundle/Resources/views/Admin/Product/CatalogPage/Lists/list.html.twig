@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 <tbody
-    {% if activate_drag_and_drop and has_category_filter %}class="sortable"{% endif %}
+    {% if activate_drag_and_drop %}class="sortable"{% endif %}
     last_sql="{{ last_sql_query|escape('html_attr') }}"
 >
     {% for product in products %}
@@ -56,6 +56,9 @@
         </td>
         <td class="text-center">
             <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default('N/A'|trans({}, 'Admin.Global')) }}</a>
+        </td>
+        <td class="text-center">
+            <a href="{{ product.url|default('') }}#tab-step2">{{ product.price_final|default('N/A'|trans({}, 'Admin.Global')) }}</a>
         </td>
 
         {% if 'PS_STOCK_MANAGEMENT'|configuration %}

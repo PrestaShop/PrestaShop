@@ -86,12 +86,12 @@ class OrderDetailControllerCore extends FrontController
                     $cm->add();
 
                     if (!Configuration::get('PS_MAIL_EMAIL_MESSAGE')) {
-                        $to = strval(Configuration::get('PS_SHOP_EMAIL'));
+                        $to = (string) Configuration::get('PS_SHOP_EMAIL');
                     } else {
                         $to = new Contact((int) Configuration::get('PS_MAIL_EMAIL_MESSAGE'));
-                        $to = strval($to->email);
+                        $to = (string) $to->email;
                     }
-                    $toName = strval(Configuration::get('PS_SHOP_NAME'));
+                    $toName = (string) Configuration::get('PS_SHOP_NAME');
                     $customer = $this->context->customer;
 
                     $product = new Product($id_product);
@@ -120,7 +120,7 @@ class OrderDetailControllerCore extends FrontController
                             ),
                             $to,
                             $toName,
-                            strval(Configuration::get('PS_SHOP_EMAIL')),
+                            (string) Configuration::get('PS_SHOP_EMAIL'),
                             $customer->firstname . ' ' . $customer->lastname,
                             null,
                             null,

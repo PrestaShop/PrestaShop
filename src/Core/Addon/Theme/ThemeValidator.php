@@ -69,7 +69,9 @@ class ThemeValidator
                 }
 
                 $this->errors[$themeName] = $this->translator->trans(
-                    'An error occurred. The information "%s" is missing.', array($prop), 'Admin.Design.Notification'
+                    'An error occurred. The information "%s" is missing.',
+                    array($prop),
+                    'Admin.Design.Notification'
                 );
             }
         }

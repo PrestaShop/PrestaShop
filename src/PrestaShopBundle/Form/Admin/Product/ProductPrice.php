@@ -27,10 +27,10 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * This form class is responsible to generate the product price form.
@@ -185,7 +185,8 @@ class ProductPrice extends CommonAbstractType
                     'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'Admin.Catalog.Help')],
                 ]
             )
-            ->add('specific_price',
+            ->add(
+                'specific_price',
                 ProductSpecificPrice::class,
                 [
                     'id_product' => $options['id_product'],

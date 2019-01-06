@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
-use PrestaShopBundle\Translation\TranslatorComponent;
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use Cart;
 use Configuration;
 use Context;
-use Order;
-use TaxConfiguration;
 use Currency;
+use Order;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShopBundle\Translation\TranslatorComponent;
+use TaxConfiguration;
 
 class OrderSubtotalLazyArray extends AbstractLazyArray
 {

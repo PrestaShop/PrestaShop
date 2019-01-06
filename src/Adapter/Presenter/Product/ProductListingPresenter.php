@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
-use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Language;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 
 class ProductListingPresenter extends ProductPresenter
 {

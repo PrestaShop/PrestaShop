@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use Product;
 use Context;
+use Product;
 
 /**
  * Access Product price depending on taxes, eco tax, reductions.

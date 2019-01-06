@@ -467,7 +467,7 @@ class PackCore extends Product
                 'id_product_item' => (int) $id_item,
                 'id_product_attribute_item' => (int) $id_attribute_item,
                 'quantity' => (int) $qty,
-                ))
+            ))
             && Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', '1');
     }
 

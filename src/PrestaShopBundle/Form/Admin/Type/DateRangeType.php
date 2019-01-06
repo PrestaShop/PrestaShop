@@ -50,8 +50,7 @@ class DateRangeType extends AbstractType
                     'placeholder' => 'To',
                 ],
                 'translation_domain' => 'Admin.Global',
-            ])
-        ;
+            ]);
     }
 
     /**

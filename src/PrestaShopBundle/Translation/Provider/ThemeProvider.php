@@ -207,8 +207,7 @@ class ThemeProvider extends AbstractProvider
         $this->themeExtractor
             ->setOutputPath($path)
             ->setThemeProvider($this)
-            ->extract($theme, $this->locale)
-        ;
+            ->extract($theme, $this->locale);
 
         $translationFilesPath = $path . DIRECTORY_SEPARATOR . $this->locale;
         Flattenizer::flatten($translationFilesPath, $translationFilesPath, $this->locale, false);

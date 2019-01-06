@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Meta;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**

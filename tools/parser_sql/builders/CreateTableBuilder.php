@@ -53,29 +53,30 @@ require_once dirname(__FILE__) . '/CreateTableOptionsBuilder.php';
  *  
  */
 class CreateTableBuilder {
-
     protected function buildCreateTableDefinition($parsed) {
         $builder = new CreateTableDefinitionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildCreateTableOptions($parsed) {
         $builder = new CreateTableOptionsBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     protected function buildCreateTableSelectOption($parsed) {
         $builder = new CreateTableSelectOptionBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     public function build($parsed) {
         $sql = $parsed['name'];
         $sql .= $this->buildCreateTableDefinition($parsed);
         $sql .= $this->buildCreateTableOptions($parsed);
         $sql .= $this->buildCreateTableSelectOption($parsed);
+
         return $sql;
     }
-    
 }
-?>

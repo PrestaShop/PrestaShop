@@ -527,6 +527,7 @@ class CurrencyCore extends ObjectModel
             foreach ($data->currency as $currency) {
                 if ($currency['iso_code'] == $defaultCurrency->iso_code) {
                     $exchangeRate = round((float) $currency['rate'], 6);
+
                     break;
                 }
             }
@@ -539,8 +540,9 @@ class CurrencyCore extends ObjectModel
                 $rate = 1;
             } else {
                 foreach ($data->currency as $obj) {
-                    if ($this->iso_code == strval($obj['iso_code'])) {
+                    if ($this->iso_code == (string) ($obj['iso_code'])) {
                         $rate = (float) $obj['rate'];
+
                         break;
                     }
                 }
@@ -584,7 +586,7 @@ class CurrencyCore extends ObjectModel
         }
 
         // Default feed currency (EUR)
-        $isoCodeSource = strval($feed->source['iso_code']);
+        $isoCodeSource = (string) ($feed->source['iso_code']);
 
         if (!$defaultCurrency = Currency::getDefaultCurrency()) {
             return Context::getContext()->getTranslator()->trans('No default currency', array(), 'Admin.Notifications.Error');

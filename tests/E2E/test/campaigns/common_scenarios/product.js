@@ -1,7 +1,6 @@
 const {Menu} = require('../../selectors/BO/menu.js');
 let promise = Promise.resolve();
-const {ProductList} = require('../../selectors/BO/add_product_page');
-const {AddProductPage} = require('../../selectors/BO/add_product_page');
+const {ProductList, AddProductPage} = require('../../selectors/BO/add_product_page');
 let data = require('../../datas/product-data');
 
 global.productVariations = [];
@@ -20,10 +19,15 @@ global.productVariations = [];
  *        variation_quantity: 'product_variation_quantity'
  *      }
  *  },
- *  feature: {
- *      name: 'feature_name',
- *      value: 'feature_value'
- *  },
+ *  feature: [
+ *   {
+ *     name: 'Feature',
+ *     value: 'Value 1'
+ *   }, {
+ *     name: 'Feature',
+ *     value: 'Value 2'
+ *   }
+ * ]
  *  pricing: {
  *      unitPrice: "product_unit_price",
  *      unity: "product_unity",
@@ -97,10 +101,27 @@ module.exports = {
           });
           test('should click on "Generate" button', () => client.scrollWaitForExistAndClick(AddProductPage.variations_generate));
           test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
-          test('should get the combination data', () => client.getCombinationData(1));
-          test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected));
+
+          /**
+           * Should refresh the page because of the issue here
+           * https://github.com/PrestaShop/PrestaShop/issues/9826
+           **/
+          test('should refresh the page if "Debug" mode is active because of the issue here  "#9826" ', () => {
+            return promise
+              .then(() => client.isVisible(AddProductPage.var_selected))
+              .then(() => {
+                if (global.ps_mode_dev && !isVisible) {
+                  client.refresh();
+                } else {
+                  client.pause(0);
+                }
+              })
+              .then(() => client.getCombinationData(1, 7000));
+          });
+          test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected, 2000));
           test('should set the "Variations quantity" input', () => {
             return promise
+              .then(() => client.pause(4000))
               .then(() => client.setVariationsQuantity(AddProductPage, productData.attribute[1].variation_quantity))
               .then(() => {
                 if (global.ps_mode_dev) {
@@ -113,13 +134,15 @@ module.exports = {
       }
 
       if (productData.hasOwnProperty('feature')) {
-        scenario('Add Feature', client => {
-          test('should click on "Add feature" button', () => {
-            return promise
-              .then(() => client.scrollWaitForExistAndClick(AddProductPage.add_feature_to_product_button));
-          });
-          test('should select the created feature', () => client.selectFeature(AddProductPage, productData['feature']['name'] + date_time, productData['feature']['value']));
-        }, 'product/product');
+        for (let f = 0; f < productData['feature'].length; f++) {
+          scenario('Add Feature', client => {
+            test('should click on "Add feature" button', () => {
+              return promise
+                .then(() => client.scrollWaitForExistAndClick(AddProductPage.add_feature_to_product_button));
+            });
+            test('should select the created feature', () => client.selectFeature(AddProductPage, productData['feature'][f].name + date_time, productData['feature'][f].value, f));
+          }, 'product/product');
+        }
       }
 
       if (productData.hasOwnProperty('pricing')) {
@@ -171,10 +194,13 @@ module.exports = {
       }
 
       scenario('Save the created product', client => {
-        test('should switch the product online', () => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000));
-        test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
+        test('should switch the product online and verify the appearance of the green validation', () => {
+          return promise
+            .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000))
+            .then(() => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.', 3000));
+        });
         test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 7000));
-        test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
+        test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.', 'equal', 2000));
       }, 'product/product');
 
     }, 'product/product');
@@ -193,40 +219,113 @@ module.exports = {
       test('should click on "Reset button"', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     }, 'product/check_product');
   },
-  sortProduct: function (selector, sortBy) {
+  sortProduct: async function (selector, sortBy, isNumber = false, priceWithCurrency = false) {
+    global.elementsSortedTable = [];
+    global.elementsTable = [];
     scenario('Check the sort of products by "' + sortBy.toUpperCase() + '"', client => {
-      test('should click on "Sort by ASC" icon', () => {
-        let sortSelector = sortBy === 'name' || sortBy === 'reference' ? ProductList.sort_button.replace("%B", sortBy) : sortBy === 'id_product' ? ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc") : ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc");
-        for (let j = 0; j < global.productsNumber; j++) {
-          promise = client.getProductsInformation(selector, j);
+      test('should click on "Sort by ASC" icon', async () => {
+        for (let j = 0; j < (parseInt(global.productsNumber)); j++) {
+          await client.getTableField(selector, j, false, priceWithCurrency);
         }
-        return promise
-          .then(() => client.moveToObject(sortSelector))
-          .then(() => client.waitForExistAndClick(sortSelector));
-      });
-      test('should check that the products is well sorted by ASC', () => {
-        for (let j = 0; j < global.productsNumber; j++) {
-          promise = client.getProductsInformation(selector, j, true);
+        if (sortBy === 'id_product') {
+          await client.moveToObject(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc"));
+          await client.scrollWaitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc"));
+        } else if (sortBy === 'price_included') {
+          await client.moveToObject(ProductList.price_tax_included_sort_button);
+          await client.waitForExistAndClick(ProductList.price_tax_included_sort_button);
+        } else {
+          await client.moveToObject(ProductList.sort_button.replace("%B", sortBy));
+          await client.waitForExistAndClick(ProductList.sort_button.replace("%B", sortBy));
         }
-        return promise
-          .then(() => client.sortTable("ASC", sortBy))
-          .then(() => client.checkSortProduct());
       });
-      test('should click on "Sort by DESC" icon', () => {
-        return promise
-          .then(() => client.moveToObject(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc")))
-          .then(() => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc")));
-      });
-      test('should check that the products is well sorted by DESC', () => {
-        for (let j = 0; j < global.productsNumber; j++) {
-          promise = client.getProductsInformation(selector, j, true);
+      test('should check that the products are well sorted by ASC', async () => {
+        for (let j = 0; j < (parseInt(global.productsNumber)); j++) {
+          await client.getTableField(selector, j, true, priceWithCurrency);
         }
-        return promise
-          .then(() => client.sortTable("DESC", sortBy))
-          .then(() => client.checkSortProduct());
+        await client.checkSortTable(isNumber, 'ASC');
+      });
+      test('should click on "Sort by DESC" icon', async () => {
+        if (sortBy === 'id_product') {
+          await client.moveToObject(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc"));
+          await client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc"));
+        } else if (sortBy === 'price_included') {
+          await client.moveToObject(ProductList.price_tax_included_sort_button);
+          await client.waitForExistAndClick(ProductList.price_tax_included_sort_button);
+        } else {
+          await client.moveToObject(ProductList.sort_button.replace("%B", sortBy));
+          await client.waitForExistAndClick(ProductList.sort_button.replace("%B", sortBy));
+        }
+      });
+      test('should check that the products are well sorted by DESC', async () => {
+        for (let j = 0; j < (parseInt(global.productsNumber)); j++) {
+          await client.getTableField(selector, j, true, priceWithCurrency);
+        }
+        await client.checkSortTable(isNumber, 'DESC');
       });
     }, 'product/product');
   },
+  sortProductByStatus: async function () {
+    scenario('Check the sort of products by "STATUS"', client => {
+      test('should select "Inactive" in Status list then click on "Search" button', async () => {
+        await client.waitAndSelectByValue(ProductList.status_filter, "0");
+        await client.waitForExistAndClick(AddProductPage.catalogue_submit_filter_button);
+      });
+      test('should get the number of inactive products', async () => {
+        await client.isVisible(ProductList.pagination_products);
+        await client.getProductsNumber(ProductList.pagination_products);
+      });
+      test('should click on "Reset" button', async () => {
+        await client.pause(1000);
+        global.inactiveProductsNumber = await global.productsNumber;
+        await client.waitForExistAndClick(AddProductPage.catalog_reset_filter);
+      });
+      test('should select "Active" in Status list then click on "Search" button', async () => {
+        await client.waitAndSelectByValue(ProductList.status_filter, "1");
+        await client.waitForExistAndClick(AddProductPage.catalogue_submit_filter_button);
+      });
+      test('should get the number of active products', async () => {
+        await client.isVisible(ProductList.pagination_products);
+        await client.getProductsNumber(ProductList.pagination_products);
+      });
+      test('should click on "Reset" button', async () => {
+        await client.pause(1000);
+        global.activeProductsNumber = await global.productsNumber;
+        await client.waitForExistAndClick(AddProductPage.catalog_reset_filter);
+      });
+      test('should check that the products are well sorted by ASC', async () => {
+        await client.moveToObject(ProductList.sort_button.replace("%B", 'active'));
+        await client.waitForExistAndClick(ProductList.sort_button.replace("%B", 'active'));
+        for (let j = 0; j < (parseInt(global.inactiveProductsNumber)); j++) {
+          await client.isExisting(ProductList.product_status_icon.replace('%TR', j + 1).replace('%STATUS', 'disabled'));
+        }
+        for (let j = parseInt(global.inactiveProductsNumber); j < (parseInt(global.inactiveProductsNumber) + parseInt(global.activeProductsNumber)); j++) {
+          await client.isExisting(ProductList.product_status_icon.replace('%TR', j + 1).replace('%STATUS', 'enabled'));
+        }
+      });
+      test('should check that the products are well sorted by DESC', async () => {
+        await client.moveToObject(ProductList.sort_button.replace("%B", 'active'));
+        await client.waitForExistAndClick(ProductList.sort_button.replace("%B", 'active'));
+        for (let j = 0; j < (parseInt(global.activeProductsNumber)); j++) {
+          await client.isExisting(ProductList.product_status_icon.replace('%TR', j + 1).replace('%STATUS', 'enabled'));
+        }
+        for (let j = parseInt(global.activeProductsNumber); j < (parseInt(global.inactiveProductsNumber) + parseInt(global.activeProductsNumber)); j++) {
+          await client.isExisting(ProductList.product_status_icon.replace('%TR', j + 1).replace('%STATUS', 'disabled'));
+        }
+      });
+    }, 'product/product');
+  },
+  productList: function (AddProductPage, selector, searchBy, client, min = 0, max = 0) {
+    test('should check the list of products by "' + searchBy + '"', async () => {
+      global.elementsTable = [];
+      await client.pause(1000);
+      for (let j = 0; j < global.productsNumber; j++) {
+        await client.getTableField(selector, j, false, true);
+      }
+      await client.checkSearchProduct(searchBy, min, max);
+    });
+    test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+  },
+
   checkPaginationFO(client, productPage, buttonName, pageNumber) {
     let selectorButton = buttonName === 'Next' ? productPage.pagination_next : productPage.pagination_previous;
     test('should click on "' + buttonName + '" button', () => {
@@ -247,14 +346,16 @@ module.exports = {
       test('should check that the number of products is less or equal to "' + itemPerPage + '"', () => {
         return promise
           .then(() => client.getProductPageNumber('product_catalog_list'))
-          .then(() => expect(global.productsNumber).to.be.at.most(itemPerPage));
+          .then(() => expect(global.productsNumber).to.be.at.most(itemPerPage))
       });
       if (paginateBetweenPages) {
-        if (global.ps_mode_dev) {
-          test('should close the symfony toolbar if exists', () =>
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar, 2000)
-          );
-        }
+        test('should close the symfony toolbar if exists', async () => {
+          if (global.ps_mode_dev) {
+            await client.waitForExistAndClick(AddProductPage.symfony_toolbar, 3000);
+          } else {
+            await client.pause(1000);
+          }
+        });
         test('should click on "' + nextOrPrevious + '" button', () => {
           return promise
             .then(() => client.isVisible(selectorButton))
@@ -270,7 +371,7 @@ module.exports = {
       }
       if (close)
         test('should set the "item per page" to 20 (back to normal)', () => client.waitAndSelectByValue(ProductList.item_per_page, 20));
-    }, 'product/product', close);
+    }, 'product/product');
   },
 
   deleteProduct(AddProductPage, productData) {
@@ -294,7 +395,7 @@ module.exports = {
     test('should choose "' + feature + '" feature from the dropdown list', () => {
       return promise
         .then(() => client.scrollWaitForExistAndClick(AddProductPage.feature_select_button.replace('%ID', id)))
-        .then(() => client.waitForVisibleAndClick(AddProductPage.feature_select_option.replace('%ID', id).replace('%V', feature)));
+        .then(() => client.waitForVisibleAndClick(AddProductPage.feature_select_option_text.replace('%ID', id).replace('%V', feature)));
     });
     if (option === "predefined_value") {
       test('should choose "Cotton" pre-defined value from the dropdown list', () => client.waitAndSelectByVisibleText(AddProductPage.feature_value_select.replace('%ID', id).replace('%V', 'not(@disabled)'), predefinedValue, 2000));
@@ -497,9 +598,9 @@ module.exports = {
         });
       }
       if (productData.hasOwnProperty('combination') && productData.type === 'combination') {
-        test('should check that "Product with combination" is well selected', () => client.checkAttributeValue(AddProductPage.product_combinations, 'value', '1'));
+        test('should check that "Product with combination" is well selected', () => client.checkAttributeValue(AddProductPage.product_combinations.replace('%I', 2), 'value', '1'));
         test('should click on "Combinations" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_combinations_tab));
-        test('should check the appearance of the first generated combination ', () => client.waitForExist(AddProductPage.combination_first_table));
+        test('should check the appearance of the first generated combination ', () => client.waitForExist(AddProductPage.combination_table));
       }
       if (productData.type === 'virtual') {
         test('should click on "Virtual" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_combinations_tab));
@@ -508,6 +609,7 @@ module.exports = {
       test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     }, 'product/check_product');
   },
+
   clickOnPreviewLink(client, selector, productSelector) {
     test('should click on the "Preview" link', () => {
       return promise
@@ -518,7 +620,34 @@ module.exports = {
           } else {
             client.pause(0);
           }
-        });
+        })
+        .then(() => client.pause(5000));
     });
+  },
+
+  async checkPaginationThenCreateProduct(client, productData) {
+    await client.getProductPageNumber('product_catalog_list', 5000);
+    let productNumber = await 20 - global.productsNumber;
+    if (productNumber !== 0) {
+      for (let i = 0; i < productNumber + 1; i++) {
+        await client.waitForExistAndClick(Menu.Sell.Catalog.products_submenu, 1000);
+        await client.waitForExistAndClick(AddProductPage.new_product_button, 2000);
+        await client.waitAndSetValue(AddProductPage.product_name_input, productData["name"] + date_time);
+        await client.waitAndSetValue(AddProductPage.product_reference, productData["reference"]);
+        await client.waitAndSetValue(AddProductPage.quantity_shortcut_input, productData["quantity"]);
+        await client.setPrice(AddProductPage.priceTE_shortcut, productData["price"]);
+        await client.uploadPicture(productData["image_name"], AddProductPage.picture);
+        if (global.ps_mode_dev) {
+          await client.isVisible(AddProductPage.symfony_toolbar);
+          if (global.isVisible) {
+            await client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+          }
+        }
+        await client.waitForExistAndClick(AddProductPage.product_online_toggle, 1000);
+        await client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.');
+        await client.waitForExistAndClick(AddProductPage.save_product_button, 4000);
+        await client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.');
+      }
+    }
   }
 };

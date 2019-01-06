@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Debug;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 umask(0000); // This will let the permissions be 0777
 
@@ -39,7 +39,7 @@ if (!defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
-require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+require _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 //small test to clear cache after upgrade
 if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {

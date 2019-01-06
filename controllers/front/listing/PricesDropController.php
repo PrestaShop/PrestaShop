@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\PricesDrop\PricesDropProductSearchProvider;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Adapter\PricesDrop\PricesDropProductSearchProvider;
 
 class PricesDropControllerCore extends ProductListingFrontController
 {
@@ -46,8 +46,7 @@ class PricesDropControllerCore extends ProductListingFrontController
         $query = new ProductSearchQuery();
         $query
             ->setQueryType('prices-drop')
-            ->setSortOrder(new SortOrder('product', 'name', 'asc'))
-        ;
+            ->setSortOrder(new SortOrder('product', 'name', 'asc'));
 
         return $query;
     }

@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\ORM\EntityManager;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
@@ -39,7 +40,6 @@ use PrestaShopBundle\Api\Stock\MovementsCollection;
 use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Exception\ProductNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 
 class StockRepository extends StockManagementRepository
 {

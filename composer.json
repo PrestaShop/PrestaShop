@@ -5,9 +5,9 @@
     "require": {
         "php": ">=5.6.0",
         "ext-curl": "*",
+        "ext-fileinfo": "*",
         "ext-intl": "*",
         "ext-zip": "*",
-        "ext-fileinfo": "*",
         "beberlei/DoctrineExtensions": "^1.0",
         "composer/ca-bundle": "^1.0",
         "composer/installers": "^1.0.21",
@@ -103,6 +103,7 @@
         "swiftmailer/swiftmailer": "~5.4.3",
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
+        "symfony/polyfill-php73": "^1.10",
         "symfony/swiftmailer-bundle": "^2.6.4",
         "symfony/symfony": ">=3.4.8",
         "tecnickcom/tcpdf": "^6.2.12",
@@ -123,6 +124,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "LegacyTests\\": "tests-legacy/",
             "Tests\\": "tests/"
         },
         "files": [
@@ -150,7 +152,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
-            "@php ./tests/create-test-db.php",
+            "@php ./tests-legacy/create-test-db.php",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
         ],
         "test-all": [
@@ -161,23 +163,28 @@
         ],
         "phpunit-legacy": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml --testsuite Unit",
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml --testsuite CoreCart",
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml --testsuite Integration"
+        ],
+        "unit-tests": [
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
         ],
         "phpunit-admin": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
         ],
         "phpunit-routing": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-routing.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-routing.xml"
         ],
         "phpunit-sf": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/sf-tests.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/sf-tests.xml"
         ],
         "phpunit-controllers": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/old-controllers.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",

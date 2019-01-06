@@ -123,10 +123,7 @@ function productOrderTable(orderBy, orderWay) {
 }
 
 function productOrderPrioritiesTable() {
-  var form = $('form#product_catalog_list');
-  var url = form.attr('orderingurl').replace(/name/, 'position_ordering').replace(/desc/, 'asc');
-  url = url.replace(/\/\d+\/\d+\/position_ordering\//, '/0/300/position_ordering/');
-  window.location.href = url;
+  window.location.href = $('form#product_catalog_list').attr('orderingurl');
 }
 
 function updateBulkMenu() {

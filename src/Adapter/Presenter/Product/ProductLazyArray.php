@@ -26,6 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+use Configuration;
+use Hook;
+use Language;
+use Link;
 use PrestaShop\Decimal\Number;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Entity\Product;
@@ -36,9 +40,6 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Component\Translation\TranslatorInterface;
-use Configuration;
-use Language;
-use Link;
 use Tools;
 
 class ProductLazyArray extends AbstractLazyArray
@@ -231,6 +232,7 @@ class ProductLazyArray extends AbstractLazyArray
                     'label' => $this->translator->trans('Used', array(), 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/UsedCondition',
                 );
+
                 break;
             case 'refurbished':
                 return array(
@@ -238,6 +240,7 @@ class ProductLazyArray extends AbstractLazyArray
                     'label' => $this->translator->trans('Refurbished', array(), 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/RefurbishedCondition',
                 );
+
                 break;
             default:
                 return false;
@@ -466,6 +469,11 @@ class ProductLazyArray extends AbstractLazyArray
             );
         }
 
+        Hook::exec('actionProductFlagsModifier', array(
+            'flags' => &$flags,
+            'product' => $this->product,
+        ));
+
         return $flags;
     }
 
@@ -623,12 +631,18 @@ class ProductLazyArray extends AbstractLazyArray
             // TODO: add percent sign according to locale preferences
             $this->product['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
             $this->product['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
-            // TODO: Fix issue with tax calculation
-            $this->product['discount_amount'] = $this->priceFormatter->format(
-                $product['reduction']
-            );
+            if ($settings->include_taxes) {
+                $regular_price = $product['price_without_reduction'];
+                $this->product['discount_amount'] = $this->priceFormatter->format(
+                    $product['reduction']
+                );
+            } else {
+                $regular_price = $product['price_without_reduction_without_tax'];
+                $this->product['discount_amount'] = $this->priceFormatter->format(
+                    $product['reduction_without_tax']
+                );
+            }
             $this->product['discount_amount_to_display'] = '-' . $this->product['discount_amount'];
-            $regular_price = $product['price_without_reduction'];
         }
 
         $this->product['price_amount'] = $price;
@@ -762,7 +776,7 @@ class ProductLazyArray extends AbstractLazyArray
                     : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
                 $this->product['availability_date'] = $product['available_date'];
                 $this->product['availability'] = 'available';
-            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] >= 0) {
+            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'There are not enough products in stock',
                     array(),

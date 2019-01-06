@@ -390,7 +390,7 @@ class CategoryCore extends ObjectModel
         foreach ($allCat as $cat) {
             /* @var Category $cat */
             $cat->deleteLite();
-            if (!$this->hasMultishopEntries()) {
+            if (!$cat->hasMultishopEntries()) {
                 $cat->deleteImage();
                 $cat->cleanGroups();
                 $cat->cleanAssoProducts();
@@ -457,6 +457,7 @@ class CategoryCore extends ObjectModel
             } else {
                 $name = $this->name;
             }
+
             throw new PrestaShopException('Parent category ' . $this->id_parent .
                 ' does not exist. Current category: ' . $name);
         }
@@ -484,7 +485,16 @@ class CategoryCore extends ObjectModel
         $n = 1;
 
         if (isset($categoriesArray[0]) && $categoriesArray[0]['subcategories']) {
-            Category::subTree($categoriesArray, $categoriesArray[0]['subcategories'][0], $n);
+            $queries = Category::computeNTreeInfos($categoriesArray, $categoriesArray[0]['subcategories'][0], $n);
+
+            // update by batch of 5000 categories
+            $chunks = array_chunk($queries, 5000);
+            foreach ($chunks as $chunk) {
+                $sqlChunk = array_map(function ($value) { return '(' . rtrim(implode(',', $value)) . ')'; }, $chunk);
+                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'category` (id_category, nleft, nright) 
+                VALUES ' . rtrim(implode(',', $sqlChunk), ',') . ' 
+                ON DUPLICATE KEY UPDATE nleft=VALUES(nleft), nright=VALUES(nright)');
+            }
         }
     }
 
@@ -501,11 +511,36 @@ class CategoryCore extends ObjectModel
     }
 
     /**
+     * @param array $categories
+     * @param int $idCategory
+     * @param int $n
+     *
+     * @return array ntree infos
+     */
+    protected static function computeNTreeInfos(&$categories, $idCategory, &$n)
+    {
+        $queries = array();
+        $left = $n++;
+        if (isset($categories[(int) $idCategory]['subcategories'])) {
+            foreach ($categories[(int) $idCategory]['subcategories'] as $idSubcategory) {
+                $queries = array_merge($queries, Category::computeNTreeInfos($categories, (int) $idSubcategory, $n));
+            }
+        }
+        $right = (int) $n++;
+
+        $queries[] = array($idCategory, $left, $right);
+
+        return $queries;
+    }
+
+    /**
      * @param $categories
      * @param $idCategory
      * @param $n
      *
      * @return bool Indicates whether the sub tree of categories has been successfully updated
+     *
+     * @deprecated 1.7.6.0 use computeNTreeInfos + sql query instead
      */
     protected static function subTree(&$categories, $idCategory, &$n)
     {
@@ -584,7 +619,8 @@ class CategoryCore extends ObjectModel
         if (!Validate::isBool($active)) {
             die(Tools::displayError());
         }
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'category` c
 			' . Shop::addSqlAssociation('category', 'c') . '
@@ -656,7 +692,8 @@ class CategoryCore extends ObjectModel
         );
 
         if (!Cache::isStored($cacheId)) {
-            $result = Db::getInstance()->executeS('
+            $result = Db::getInstance()->executeS(
+                '
 				SELECT c.`id_category`, cl.`name`
 				FROM `' . _DB_PREFIX_ . 'category` c
 				' . ($useShopRestriction ? Shop::addSqlAssociation('category', 'c') : '') . '
@@ -730,7 +767,8 @@ class CategoryCore extends ObjectModel
             );
 
         if (!Cache::isStored($cacheId)) {
-            $result = Db::getInstance()->executeS('
+            $result = Db::getInstance()->executeS(
+                '
 				SELECT c.*, cl.*
 				FROM `' . _DB_PREFIX_ . 'category` c
 				' . ($useShopRestriction ? Shop::addSqlAssociation('category', 'c') : '') . '
@@ -1255,7 +1293,8 @@ class CategoryCore extends ObjectModel
             }
         }
 
-        $flag = Db::getInstance()->execute('
+        $flag = Db::getInstance()->execute(
+            '
 			INSERT IGNORE INTO `' . _DB_PREFIX_ . 'category_product` (`id_product`, `id_category`, `position`)
 			VALUES ' . implode(',', $row)
         );

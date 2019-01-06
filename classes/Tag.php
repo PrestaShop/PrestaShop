@@ -245,7 +245,7 @@ class TagCore extends ObjectModel
      *
      * @return array|false|mysqli_result|null|PDOStatement|resource
      */
-    public function getProducts($associated = true, \Context $context = null)
+    public function getProducts($associated = true, Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();

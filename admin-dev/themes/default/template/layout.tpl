@@ -35,7 +35,7 @@
   <div class="bootstrap">
     <div class="alert alert-danger">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
-      {$error}
+      {$error|escape:'html':'UTF-8'}
     </div>
   </div>
 {/if}
@@ -45,13 +45,13 @@
 		<div class="alert alert-danger">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 		{if count($errors) == 1}
-			{reset($errors)}
+			{reset($errors)|escape:'html':'UTF-8'}
 		{else }
 			{l s='%d errors' sprintf=[$errors|count]}
 			<br/>
 			<ol>
 				{foreach $errors as $error}
-					<li>{$error}</li>
+					<li>{$error|escape:'html':'UTF-8'}</li>
 				{/foreach}
 			</ol>
 		{/if}

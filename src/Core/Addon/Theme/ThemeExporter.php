@@ -28,10 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Entity\Repository\LangRepository;
+use PrestaShopBundle\Translation\Exporter\ThemeExporter as TranslationsExporter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use ZipArchive;
-use PrestaShopBundle\Translation\Exporter\ThemeExporter as TranslationsExporter;
 
 class ThemeExporter
 {

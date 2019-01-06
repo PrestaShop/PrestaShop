@@ -528,8 +528,11 @@ class AdminProductsControllerCore extends AdminController
                     }
                 }
             }
-            unset($product->id);
-            unset($product->id_product);
+            unset(
+                $product->id,
+                $product->id_product
+            );
+
             $product->indexed = 0;
             $product->active = 0;
             if ($product->add()
@@ -551,7 +554,7 @@ class AdminProductsControllerCore extends AdminController
                 if (!Tools::getValue('noimage') && !Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                     $this->errors[] = $this->trans('An error occurred while copying the image.', array(), 'Admin.Notifications.Error');
                 } else {
-                    Hook::exec('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
+                    Hook::exec('actionProductAdd', array('id_product_old' => $id_product_old, 'id_product' => (int) $product->id, 'product' => $product));
                     if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $product->id);
                     }
@@ -652,7 +655,7 @@ class AdminProductsControllerCore extends AdminController
                     $products = Tools::getValue($this->table . 'Box');
                     if (is_array($products) && ($count = count($products))) {
                         // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
-                        if (intval(ini_get('max_execution_time')) < round($count * 1.5)) {
+                        if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
                             ini_set('max_execution_time', round($count * 1.5));
                         }
 
@@ -1701,7 +1704,6 @@ class AdminProductsControllerCore extends AdminController
     protected function updateAssoShop($id_object)
     {
         //override AdminController::updateAssoShop() specifically for products because shop association is set with the context in ObjectModel
-        return;
     }
 
     public function processAdd()
@@ -1746,7 +1748,7 @@ class AdminProductsControllerCore extends AdminController
                 } elseif (!$this->updateTags($languages, $this->object)) {
                     $this->errors[] = $this->trans('An error occurred while adding tags.', array(), 'Admin.Catalog.Notification');
                 } else {
-                    Hook::exec('actionProductAdd', array('id_product' => (int) $this->object->id, 'product' => $this->object));
+                    Hook::exec('actionProductAdd', array('id_product_old' => null, 'id_product' => (int) $this->object->id, 'product' => $this->object));
                     if (in_array($this->object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $this->object->id);
                     }
@@ -1994,7 +1996,7 @@ class AdminProductsControllerCore extends AdminController
      */
     public function checkProduct()
     {
-        // @todo : the call_user_func seems to contains only statics values (className = 'Product')
+        /** @todo : the call_user_func seems to contains only statics values (className = 'Product') */
         $rules = call_user_func(array($this->className, 'getValidationRules'), $this->className);
         $default_language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         $languages = Language::getLanguages(false);
@@ -2727,6 +2729,7 @@ class AdminProductsControllerCore extends AdminController
                 foreach ($carrier_selected_list as $carrier_selected) {
                     if ($carrier_selected['id_reference'] == $carrier['id_reference']) {
                         $carrier['selected'] = true;
+
                         continue;
                     }
                 }
@@ -2813,6 +2816,7 @@ class AdminProductsControllerCore extends AdminController
             } else {
                 if (!$new_path = $image->getPathForCreation()) {
                     $file['error'] = $this->trans('An error occurred while attempting to create a new folder.', array(), 'Admin.Notifications.Error');
+
                     continue;
                 }
 
@@ -2822,20 +2826,25 @@ class AdminProductsControllerCore extends AdminController
                     switch ($error) {
                         case ImageManager::ERROR_FILE_NOT_EXIST:
                             $file['error'] = $this->trans('An error occurred while copying image, the file does not exist anymore.', array(), 'Admin.Catalog.Notification');
+
                             break;
 
                         case ImageManager::ERROR_FILE_WIDTH:
                             $file['error'] = $this->trans('An error occurred while copying image, the file width is 0px.', array(), 'Admin.Catalog.Notification');
+
                             break;
 
                         case ImageManager::ERROR_MEMORY_LIMIT:
                             $file['error'] = $this->trans('An error occurred while copying image, check your memory limit.', array(), 'Admin.Catalog.Notification');
+
                             break;
 
                         default:
                             $file['error'] = $this->trans('An error occurred while copying the image.', array(), 'Admin.Catalog.Notification');
+
                             break;
                     }
+
                     continue;
                 } else {
                     $imagesTypes = ImageType::getImagesTypes('products');
@@ -2844,12 +2853,14 @@ class AdminProductsControllerCore extends AdminController
                     foreach ($imagesTypes as $imageType) {
                         if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
                             $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
+
                             continue;
                         }
 
                         if ($generate_hight_dpi_images) {
                             if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $image->image_format, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $image->image_format)) {
                                 $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
+
                                 continue;
                             }
                         }
@@ -2863,6 +2874,7 @@ class AdminProductsControllerCore extends AdminController
 
                 if (!$image->update()) {
                     $file['error'] = $this->trans('Error while updating the status.', array(), 'Admin.Notifications.Error');
+
                     continue;
                 }
 
@@ -2918,11 +2930,14 @@ class AdminProductsControllerCore extends AdminController
                 }
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
                     && (int) Tools::getValue('value') == 1
-                    && (Pack::isPack($product->id)
+                    && (
+                        Pack::isPack($product->id)
                         && !Pack::allUsesAdvancedStockManagement($product->id)
-                        && ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                        && (
+                            $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
                             || $product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
-                            || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                            || (
+                                $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
                                 && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PRODUCTS_ONLY
                                     || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
                             )
@@ -2935,6 +2950,7 @@ class AdminProductsControllerCore extends AdminController
                 }
 
                 StockAvailable::setProductDependsOnStock($product->id, (int) Tools::getValue('value'));
+
                 break;
 
             case 'pack_stock_type':
@@ -2948,9 +2964,11 @@ class AdminProductsControllerCore extends AdminController
                 }
                 if ($product->depends_on_stock
                     && !Pack::allUsesAdvancedStockManagement($product->id)
-                    && ((int) $value == 1
+                    && (
+                        (int) $value == 1
                         || (int) $value == 2
-                        || ((int) $value == 3
+                        || (
+                            (int) $value == 3
                             && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PRODUCTS_ONLY
                                 || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
                         )
@@ -2962,6 +2980,7 @@ class AdminProductsControllerCore extends AdminController
                 }
 
                 Product::setPackStockType($product->id, $value);
+
                 break;
 
             case 'out_of_stock':
@@ -2973,6 +2992,7 @@ class AdminProductsControllerCore extends AdminController
                 }
 
                 StockAvailable::setProductOutOfStock($product->id, (int) Tools::getValue('value'));
+
                 break;
 
             case 'set_qty':
@@ -2993,6 +3013,7 @@ class AdminProductsControllerCore extends AdminController
                     ob_end_clean();
                     die(json_encode(array('error' => $error)));
                 }
+
                 break;
             case 'advanced_stock_management':
                 if (Tools::getValue('value') === false) {
@@ -3009,6 +3030,7 @@ class AdminProductsControllerCore extends AdminController
                 if (StockAvailable::dependsOnStock($product->id) == 1 && (int) Tools::getValue('value') == 0) {
                     StockAvailable::setProductDependsOnStock($product->id, 0);
                 }
+
                 break;
         }
         die(json_encode(array('error' => false)));
@@ -3146,7 +3168,7 @@ class AdminProductsControllerCore extends AdminController
                 foreach ($positions as $position => $value) {
                     $pos = explode('_', $value);
 
-                    if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int) $pos[2] === $id_product)) {
+                    if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category && (int) $pos[2] === $id_product)) {
                         if ($page > 1) {
                             $position = $position + (($page - 1) * $selected_pagination);
                         }

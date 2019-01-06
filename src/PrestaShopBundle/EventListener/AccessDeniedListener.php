@@ -26,14 +26,14 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Allow a redirection to the right url when using BetterSecurity annotation.

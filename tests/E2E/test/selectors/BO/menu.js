@@ -6,7 +6,7 @@ module.exports = {
         orders_menu: '//*[@id="subtab-AdminParentOrders"]/a',
         orders_submenu: '#subtab-AdminOrders',
         invoices_submenu: '#subtab-AdminInvoices',
-        credit_slips_submenu: '#subtab-AdminSlip',
+        credit_slips_submenu: '#subtab-AdminSlip a',
         delivery_slips_submenu: '#subtab-AdminDeliverySlip',
         shopping_carts_submenu: '#subtab-AdminCarts'
       },
@@ -56,7 +56,7 @@ module.exports = {
       Design: {
         design_menu: '//*[@id="subtab-AdminParentThemes"]/a',
         theme_logo_submenu: '#subtab-AdminThemesParent',
-        theme_catalog_submenu: '#subtab-AdminThemesCatalog',
+        theme_catalog_submenu: '#subtab-AdminPsMboTheme',
         pages_submenu: '#subtab-AdminCmsContent',
         positions_submenu: '#subtab-AdminModulesPositions',
         image_settings_submenu: '#subtab-AdminImages',

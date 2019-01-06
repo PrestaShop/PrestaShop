@@ -162,7 +162,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         return substr(
             $result,
             0,
-            intval($bytes)
+            (int) $bytes
         );
     }
 }

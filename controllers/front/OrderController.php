@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 
 class OrderControllerCore extends FrontController
 {
@@ -65,7 +65,9 @@ class OrderControllerCore extends FrontController
                 $this->errors[] = $this->trans('Sorry. We cannot renew your order.', array(), 'Shop.Notifications.Error');
             } elseif (!$duplication['success']) {
                 $this->errors[] = $this->trans(
-                    'Some items are no longer available, and we are unable to renew your order.', array(), 'Shop.Notifications.Error'
+                    'Some items are no longer available, and we are unable to renew your order.',
+                    array(),
+                    'Shop.Notifications.Error'
                 );
             } else {
                 $this->context->cookie->id_cart = $duplication['cart']->id;
@@ -153,8 +155,7 @@ class OrderControllerCore extends FrontController
                     $this->context,
                     $translator
                 )
-            ))
-        ;
+            ));
     }
 
     /**
@@ -250,8 +251,6 @@ class OrderControllerCore extends FrontController
                 'static_token' => Tools::getToken(false),
             )),
         )));
-
-        return;
     }
 
     public function initContent()
@@ -342,7 +341,5 @@ class OrderControllerCore extends FrontController
                 $templateParams
             ),
         )));
-
-        return;
     }
 }

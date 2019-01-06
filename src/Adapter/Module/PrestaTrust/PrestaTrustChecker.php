@@ -26,14 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\PrestaTrust;
 
-use Exception;
-use ZipArchive;
 use Doctrine\Common\Cache\Cache;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZip;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
+use ZipArchive;
 
 /**
  * Responsible of Module verification by PrestaTrust system.

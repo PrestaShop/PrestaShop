@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Class AbstractGridDefinitionFactory implements grid definition creation.
@@ -58,7 +59,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getBulkActions()
         );
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridDefinitionModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDefinitionModifier', [
             'definition' => $definition,
         ]);
 

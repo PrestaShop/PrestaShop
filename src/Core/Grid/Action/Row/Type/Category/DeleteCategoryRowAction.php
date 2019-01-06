@@ -53,7 +53,6 @@ final class DeleteCategoryRowAction extends AbstractRowAction
                 'category_delete_route',
             ])
             ->setAllowedTypes('category_id_field', 'string')
-            ->setAllowedTypes('category_delete_route', 'string')
-        ;
+            ->setAllowedTypes('category_delete_route', 'string');
     }
 }

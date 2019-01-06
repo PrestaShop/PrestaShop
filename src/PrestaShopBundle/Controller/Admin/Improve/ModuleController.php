@@ -29,10 +29,6 @@ namespace PrestaShopBundle\Controller\Admin\Improve;
 use DateTime;
 use Exception;
 use Module;
-use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
-use PrestaShopBundle\Entity\ModuleHistory;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
@@ -40,13 +36,17 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
+use PrestaShopBundle\Entity\ModuleHistory;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Profile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 
 /**
  * Responsible of "Improve > Modules > Modules & Services > Catalog / Manage" page display.
@@ -171,6 +171,7 @@ class ModuleController extends ModuleAbstractController
                 foreach ($modulesListUnsorted['installed'] as $moduleInstalled) {
                     if ($moduleInstalled['attributes']['name'] == $value) {
                         $installed[] = $moduleInstalled;
+
                         continue 2;
                     }
                 }
@@ -178,6 +179,7 @@ class ModuleController extends ModuleAbstractController
                 foreach ($modulesListUnsorted['not_installed'] as $moduleNotInstalled) {
                     if ($moduleNotInstalled['attributes']['name'] == $value) {
                         $uninstalled[] = $moduleNotInstalled;
+
                         continue 2;
                     }
                 }
@@ -214,7 +216,7 @@ class ModuleController extends ModuleAbstractController
      */
     public function configureModuleAction($module_name)
     {
-        /* @var UrlGeneratorInterface $legacyUrlGenerator */
+        /** @var UrlGeneratorInterface $legacyUrlGenerator */
         $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
         $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
         $legacyContext = $legacyContextProvider->getContext();
@@ -316,8 +318,7 @@ class ModuleController extends ModuleAbstractController
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setStatus(~AddonListFilterStatus::INSTALLED)
-        ;
+            ->setStatus(~AddonListFilterStatus::INSTALLED);
 
         try {
             $modulesFromRepository = AddonsCollection::createFrom($moduleRepository->getFilteredList($filters));
@@ -780,7 +781,7 @@ class ModuleController extends ModuleAbstractController
      */
     private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
     {
-        /* @var CategoriesProvider */
+        /** @var CategoriesProvider */
         $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
 
         foreach ($categories['categories']->subMenu as $category) {

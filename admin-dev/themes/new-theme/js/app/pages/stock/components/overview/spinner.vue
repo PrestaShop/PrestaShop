@@ -61,7 +61,7 @@
       qty() {
         if (!this.product.qty) {
           this.isEnabled = false;
-          this.value = 0;
+          this.value = '';
         }
         return this.product.qty;
       },

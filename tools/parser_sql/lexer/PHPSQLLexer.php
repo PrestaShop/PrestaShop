@@ -52,7 +52,6 @@ require_once dirname(__FILE__) . '/../exceptions/InvalidParameterException.php';
  *
  */
 class PHPSQLLexer {
-
     protected $splitters;
 
     /**
@@ -77,7 +76,8 @@ class PHPSQLLexer {
         if ($length == 0) {
             return true;
         }
-        return (substr($haystack, -$length) === $needle);
+
+        return substr($haystack, -$length) === $needle;
     }
 
     public function split($sql) {
@@ -125,6 +125,7 @@ class PHPSQLLexer {
         $tokens = $this->balanceParenthesis($tokens);
         $tokens = $this->concatComments($tokens);
         $tokens = $this->concatUserDefinedVariables($tokens);
+
         return $tokens;
     }
 
@@ -137,6 +138,7 @@ class PHPSQLLexer {
 
             if (!isset($tokens[$i])) {
                 $i++;
+
                 continue;
             }
 
@@ -170,6 +172,7 @@ class PHPSQLLexer {
 
             if (!isset($tokens[$i])) {
                 $i++;
+
                 continue;
             }
 
@@ -204,7 +207,7 @@ class PHPSQLLexer {
     }
 
     protected function isBacktick($token) {
-        return ($token === "'" || $token === "\"" || $token === "`");
+        return $token === "'" || $token === "\"" || $token === "`";
     }
 
     protected function balanceBackticks($tokens) {
@@ -214,6 +217,7 @@ class PHPSQLLexer {
 
             if (!isset($tokens[$i])) {
                 $i++;
+
                 continue;
             }
 
@@ -239,6 +243,7 @@ class PHPSQLLexer {
 
             if (!isset($tokens[$i])) {
                 $i++;
+
                 continue;
             }
 
@@ -252,6 +257,7 @@ class PHPSQLLexer {
 
             $i++;
         }
+
         return array_values($tokens);
     }
 
@@ -271,6 +277,7 @@ class PHPSQLLexer {
 
             if (!isset($tokens[$i])) {
                 $i++;
+
                 continue;
             }
 
@@ -282,6 +289,7 @@ class PHPSQLLexer {
                 while (($k >= 0) && ($len == strlen($tokens[$i]))) {
                     if (!isset($tokens[$k])) { // FIXME: this can be wrong if we have schema . table . column
                         $k--;
+
                         continue;
                     }
                     $tokens[$i] = $tokens[$k] . $tokens[$i];
@@ -298,6 +306,7 @@ class PHPSQLLexer {
                 while (($k < $cnt) && ($len == strlen($tokens[$i]))) {
                     if (!isset($tokens[$k])) {
                         $k++;
+
                         continue;
                     }
                     $tokens[$i] .= $tokens[$k];
@@ -326,6 +335,7 @@ class PHPSQLLexer {
             }
             $i++;
         }
+
         return array_values($tokens);
     }
 
@@ -335,6 +345,7 @@ class PHPSQLLexer {
         while ($i < $token_count) {
             if ($tokens[$i] !== '(') {
                 $i++;
+
                 continue;
             }
             $count = 1;
@@ -350,13 +361,13 @@ class PHPSQLLexer {
                 unset($tokens[$n]);
                 if ($count === 0) {
                     $n++;
+
                     break;
                 }
             }
             $i = $n;
         }
+
         return array_values($tokens);
     }
 }
-
-?>

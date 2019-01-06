@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Translation\View;
 
-use PrestaShopBundle\Translation\Provider\AbstractProvider;
 use Doctrine\Common\Util\Inflector;
+use PrestaShopBundle\Translation\Provider\AbstractProvider;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class TreeBuilder

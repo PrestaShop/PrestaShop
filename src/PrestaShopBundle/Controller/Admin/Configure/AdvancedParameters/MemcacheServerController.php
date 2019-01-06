@@ -29,8 +29,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -113,8 +113,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
                     $postValues->get('server_ip'),
                     $postValues->getInt('server_port'),
                     $postValues->get('server_weight')
-                )
-            ;
+                );
 
             return new JsonResponse($server, 201);
         }

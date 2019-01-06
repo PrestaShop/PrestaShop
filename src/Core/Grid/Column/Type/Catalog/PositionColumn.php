@@ -62,15 +62,14 @@ final class PositionColumn extends AbstractColumn
             ->setDefaults([
                 'sortable' => true,
                 'update_method' => 'GET',
-                'route_params' => [],
+                'record_route_params' => [],
             ])
             ->setAllowedTypes('id_field', 'string')
             ->setAllowedTypes('position_field', 'string')
             ->setAllowedTypes('update_route', 'string')
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('update_method', 'string')
-            ->setAllowedTypes('route_params', ['array'])
-            ->setAllowedValues('update_method', ['GET', 'POST'])
-        ;
+            ->setAllowedTypes('record_route_params', ['array'])
+            ->setAllowedValues('update_method', ['GET', 'POST']);
     }
 }

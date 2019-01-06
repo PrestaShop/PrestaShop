@@ -10,16 +10,6 @@ File: modules/ps_cashondelivery/ps_cashondelivery.php:100</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_cashondelivery/views/templates/hook/ps_cashondelivery_intro.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="536dc7424180872c8c2488ae0286fb53">
-        <source>You pay for the merchandise upon delivery</source>
-        <target>You pay for the merchandise upon delivery</target>
-        <note>Context:
-File: modules/ps_cashondelivery/views/templates/hook/ps_cashondelivery_intro.tpl:28</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_cashondelivery/views/templates/hook/payment_return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="88526efe38fd18179a127024aba8c1d7">
@@ -51,6 +41,16 @@ File: modules/ps_cashondelivery/views/templates/hook/payment_return.tpl:31</note
         <target>customer support</target>
         <note>Context:
 File: modules/ps_cashondelivery/views/templates/hook/payment_return.tpl:31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_cashondelivery/views/templates/hook/ps_cashondelivery_intro.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="536dc7424180872c8c2488ae0286fb53">
+        <source>You pay for the merchandise upon delivery</source>
+        <target>You pay for the merchandise upon delivery</target>
+        <note>Context:
+File: modules/ps_cashondelivery/views/templates/hook/ps_cashondelivery_intro.tpl:28</note>
       </trans-unit>
     </body>
   </file>

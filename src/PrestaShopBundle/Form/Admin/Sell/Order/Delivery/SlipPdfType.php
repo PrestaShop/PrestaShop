@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
 
 use DateTime;
-use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**

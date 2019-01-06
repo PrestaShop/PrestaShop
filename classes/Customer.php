@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\CoreException;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 /***
  * Class CustomerCore
@@ -239,7 +239,7 @@ class CustomerCore extends ObjectModel
         $this->id_shop_group = ($this->id_shop_group) ? $this->id_shop_group : Context::getContext()->shop->id_shop_group;
         $this->id_lang = ($this->id_lang) ? $this->id_lang : Context::getContext()->language->id;
         $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
-        $this->secure_key = md5(uniqid(rand(), true));
+        $this->secure_key = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_FRONT') . 'minutes'));
 
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
@@ -289,7 +289,8 @@ class CustomerCore extends ObjectModel
             $addresses = $this->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
             foreach ($addresses as $address) {
                 $obj = new Address((int) $address['id_address']);
-                $obj->delete();
+                $obj->deleted = true;
+                $obj->save();
             }
         }
 
@@ -353,7 +354,8 @@ class CustomerCore extends ObjectModel
      */
     public static function getCustomers($onlyActive = null)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
             SELECT `id_customer`, `email`, `firstname`, `lastname`
             FROM `' . _DB_PREFIX_ . 'customer`
             WHERE 1 ' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) .
@@ -395,6 +397,7 @@ class CustomerCore extends ObjectModel
         $sql->where('c.`deleted` = 0');
 
         $passwordHash = Db::getInstance()->getValue($sql);
+
         try {
             /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
             $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
@@ -620,7 +623,7 @@ class CustomerCore extends ObjectModel
      */
     public function getSimpleAddress($idAddress, $idLang = null)
     {
-        if (!$this->id || !intval($idAddress) || !$idAddress) {
+        if (!$this->id || !(int) $idAddress || !$idAddress) {
             return array(
                 'id' => '',
                 'alias' => '',
@@ -717,7 +720,8 @@ class CustomerCore extends ObjectModel
      */
     public static function getAddressesTotalById($idCustomer)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
             SELECT COUNT(`id_address`)
             FROM `' . _DB_PREFIX_ . 'address`
             WHERE `id_customer` = ' . (int) $idCustomer . '
@@ -875,7 +879,8 @@ class CustomerCore extends ObjectModel
             return array();
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
     		SELECT c.id_connections, c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
     		FROM `' . _DB_PREFIX_ . 'guest` g
     		LEFT JOIN `' . _DB_PREFIX_ . 'connections` c ON c.id_guest = g.id_guest
@@ -1019,7 +1024,8 @@ class CustomerCore extends ObjectModel
         }
 
         if (!isset(self::$_defaultGroupId[(int) $idCustomer])) {
-            self::$_defaultGroupId[(int) $idCustomer] = Db::getInstance()->getValue('
+            self::$_defaultGroupId[(int) $idCustomer] = Db::getInstance()->getValue(
+                '
                 SELECT `id_default_group`
                 FROM `' . _DB_PREFIX_ . 'customer`
                 WHERE `id_customer` = ' . (int) $idCustomer
@@ -1043,7 +1049,8 @@ class CustomerCore extends ObjectModel
             $cart = Context::getContext()->cart;
         }
         if (!$cart || !$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
-            $idAddress = (int) Db::getInstance()->getValue('
+            $idAddress = (int) Db::getInstance()->getValue(
+                '
                 SELECT `id_address`
                 FROM `' . _DB_PREFIX_ . 'address`
                 WHERE `id_customer` = ' . (int) $idCustomer . '
@@ -1280,7 +1287,8 @@ class CustomerCore extends ObjectModel
      */
     public function getWsGroups()
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
             SELECT cg.`id_group` as id
             FROM ' . _DB_PREFIX_ . 'customer_group cg
             ' . Shop::addSqlAssociation('group', 'cg') . '

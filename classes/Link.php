@@ -23,11 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LinkCore
 {
@@ -766,6 +766,7 @@ class LinkCore
                 } else {
                     $params = array_merge($params, $sfRouteParams);
                 }
+
                 break;
 
             case 'AdminTranslations':
@@ -803,6 +804,27 @@ class LinkCore
         }
 
         $idLang = Context::getContext()->language->id;
+
+        return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
+    }
+
+    /**
+     * Used when you explicitly want to create a LEGACY admin link, this should be deprecated
+     * in 1.8.0.
+     *
+     * @param $controller
+     * @param bool $withToken
+     * @param array $params
+     *
+     * @return string
+     */
+    public function getLegacyAdminLink($controller, $withToken = true, $params = array())
+    {
+        $idLang = Context::getContext()->language->id;
+
+        if ($withToken && !TokenInUrls::isDisabled()) {
+            $params['token'] = Tools::getAdminTokenLite($controller);
+        }
 
         return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
     }
@@ -875,6 +897,7 @@ class LinkCore
                 // A shop matching current URL was found
                 if (preg_match('#^' . preg_quote($row['uri'], '#') . '#i', $request_uri)) {
                     $this->urlShopId = $row['id_shop'];
+
                     break;
                 }
             }
@@ -1055,7 +1078,7 @@ class LinkCore
                 unset($request['controller']);
             }
         } else {
-            // @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ...
+            /** @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ... */
             $request = html_entity_decode($request);
             if ($requestUrlEncode) {
                 $request = urlencode($request);
@@ -1387,6 +1410,7 @@ class LinkCore
         switch ($params['entity']) {
             case 'language':
                 $link = $context->link->getLanguageLink($params['id']);
+
                 break;
             case 'product':
                 $link = $context->link->getProductLink(
@@ -1400,6 +1424,7 @@ class LinkCore
                     false,
                     $params['relative_protocol']
                 );
+
                 break;
             case 'category':
                 $params = array_merge(array('selected_filters' => null), $params);
@@ -1411,6 +1436,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
             case 'categoryImage':
                 $params = array_merge(array('selected_filters' => null), $params);
@@ -1419,6 +1445,7 @@ class LinkCore
                     $params['id'],
                     $params['type'] = (isset($params['type']) ? $params['type'] : null)
                 );
+
                 break;
             case 'cms':
                 $link = $context->link->getCMSLink(
@@ -1429,6 +1456,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
             case 'module':
                 $params = array_merge(array(
@@ -1445,6 +1473,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
             case 'sf':
                 if (!array_key_exists('route', $params)) {
@@ -1462,6 +1491,7 @@ class LinkCore
                 } else {
                     throw new \InvalidArgumentException('You can\'t use Symfony router in legacy context.');
                 }
+
                 break;
             default:
                 $link = $context->link->getPageLink(
@@ -1473,6 +1503,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
         }
 

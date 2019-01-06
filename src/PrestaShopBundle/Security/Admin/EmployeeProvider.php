@@ -27,12 +27,12 @@
 namespace PrestaShopBundle\Security\Admin;
 
 use Access;
-use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Class EmployeeProvider To retrieve Employee entities for the Symfony security components.

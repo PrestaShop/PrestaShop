@@ -84,8 +84,7 @@ class ImportLocalizationPackType extends TranslatorAwareType
             ])
             ->add('download_pack_data', SwitchType::class, [
                 'data' => 1,
-            ])
-        ;
+            ]);
     }
 
     /**

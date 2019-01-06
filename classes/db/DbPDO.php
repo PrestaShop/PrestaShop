@@ -34,7 +34,7 @@ class DbPDOCore extends Db
     /** @var PDO */
     protected $link;
 
-    /* @var PDOStatement */
+    /** @var PDOStatement */
     protected $result;
 
     /**
@@ -433,6 +433,7 @@ class DbPDOCore extends Db
                 if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
                     $value = 'InnoDB';
                 }
+
                 break;
             }
         }

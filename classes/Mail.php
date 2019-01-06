@@ -414,6 +414,7 @@ class MailCore extends ObjectModel
                     );
                 } else {
                     $templatePathExists = true;
+
                     break;
                 }
             }
@@ -458,7 +459,7 @@ class MailCore extends ObjectModel
             );
 
             /* Create mail and attach differents parts */
-            $subject = '[' . Configuration::get('PS_SHOP_NAME', null, null, $idShop) . '] ' . $subject;
+            $subject = '[' . $shop->name . '] ' . $subject;
             $message->setSubject($subject);
 
             $message->setCharset('utf-8');
@@ -498,7 +499,7 @@ class MailCore extends ObjectModel
                 Context::getContext()->link = new Link();
             }
 
-            $templateVars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME', null, null, $idShop));
+            $templateVars['{shop_name}'] = Tools::safeOutput($shop->name);
             $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink(
                 'index',
                 true,
@@ -565,7 +566,7 @@ class MailCore extends ObjectModel
                 }
 
                 foreach ($fileAttachment as $attachment) {
-                    if (isset($attachment['content']) && isset($attachment['name']) && isset($attachment['mime'])) {
+                    if (isset($attachment['content'], $attachment['name'], $attachment['mime'])) {
                         $message->attach(
                             \Swift_Attachment::newInstance()->setFilename(
                                 $attachment['name']
@@ -698,6 +699,7 @@ class MailCore extends ObjectModel
         $smtpEncryption
     ) {
         $result = false;
+
         try {
             if ($smtpChecked) {
                 if (Tools::strtolower($smtpEncryption) === 'off') {
@@ -875,7 +877,7 @@ class MailCore extends ObjectModel
             return $to;
         }
 
-        return $address[0] . '@' . idn_to_ascii($address[1]);
+        return $address[0] . '@' . idn_to_ascii($address[1], 0, INTL_IDNA_VARIANT_UTS46);
     }
 
     /**

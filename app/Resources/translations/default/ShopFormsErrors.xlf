@@ -5,26 +5,22 @@
       <trans-unit id="f55c2aa6ad7a9d9d52eaca01b6a8f121">
         <source>Invalid name</source>
         <target>Invalid name</target>
-        <note>Context:
-File: classes/ValidateConstraintTranslator.php:54</note>
+        <note>Line: 54</note>
       </trans-unit>
       <trans-unit id="694db8ddd75de82e148834e0f55e4761">
         <source>Format should be %s.</source>
         <target>Format should be %s.</target>
-        <note>Context:
-File: classes/ValidateConstraintTranslator.php:58</note>
+        <note>Line: 58</note>
       </trans-unit>
       <trans-unit id="19f823c6453c2b1ffd09cb715214813d">
         <source>Required field</source>
         <target>Required field</target>
-        <note>Context:
-File: classes/ValidateConstraintTranslator.php:62</note>
+        <note>Line: 62</note>
       </trans-unit>
       <trans-unit id="23cac50dabcf7afd3eb4218454e5e911">
         <source>Invalid format.</source>
         <target>Invalid format.</target>
-        <note>Context:
-File: classes/ValidateConstraintTranslator.php:67</note>
+        <note>Line: 67</note>
       </trans-unit>
     </body>
   </file>
@@ -33,8 +29,7 @@ File: classes/ValidateConstraintTranslator.php:67</note>
       <trans-unit id="2845ecdc5099c86c8375b45aae5178b6">
         <source>Invalid postcode - should look like "%zipcode%"</source>
         <target>Invalid postcode - should look like "%zipcode%"</target>
-        <note>Context:
-File: classes/form/CustomerAddressForm.php:113</note>
+        <note>Line: 113</note>
       </trans-unit>
     </body>
   </file>

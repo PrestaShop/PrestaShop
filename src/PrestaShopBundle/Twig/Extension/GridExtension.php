@@ -75,6 +75,9 @@ class GridExtension extends AbstractExtension
             new SimpleFunction('column_header', [$this, 'renderColumnHeader'], [
                 'is_safe' => ['html'],
             ]),
+            new SimpleFunction('is_ordering_column', [$this, 'isOrderingColumn'], [
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 
@@ -156,6 +159,32 @@ class GridExtension extends AbstractExtension
             'column' => $column,
             'grid' => $grid,
         ]);
+    }
+
+    /**
+     * @param array $grid
+     *
+     * @return bool
+     */
+    public function isOrderingColumn(array $grid)
+    {
+        if (empty($grid['columns'])
+            || empty($grid['sorting']['order_by'])
+            || empty($grid['sorting']['order_way'])
+            || 'asc' != strtolower($grid['sorting']['order_way'])) {
+            return false;
+        }
+
+        foreach ($grid['columns'] as $column) {
+            if ('position' == $column['type']) {
+                $positionField = $column['id'];
+                if (strtolower($positionField) == strtolower($grid['sorting']['order_by'])) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

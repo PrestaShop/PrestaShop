@@ -260,7 +260,7 @@ class OrderCore extends ObjectModel
             'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
                 'fields' => array(
                     'id' => array(),
-                    'product_id' => array('required' => true),
+                    'product_id' => array('required' => true, 'xlink_resource' => 'products'),
                     'product_attribute_id' => array('required' => true),
                     'product_quantity' => array('required' => true),
                     'product_name' => array('setter' => false),
@@ -269,6 +269,7 @@ class OrderCore extends ObjectModel
                     'product_isbn' => array('setter' => false),
                     'product_upc' => array('setter' => false),
                     'product_price' => array('setter' => false),
+                    'id_customization' => array('required' => false, 'xlink_resource' => 'customizations'),
                     'unit_price_tax_incl' => array('setter' => false),
                     'unit_price_tax_excl' => array('setter' => false),
                 ), ),
@@ -1638,6 +1639,7 @@ class OrderCore extends ObjectModel
             `product_price`,
             `id_order`,
             `product_attribute_id`,
+            `id_customization`,
             `product_quantity`,
             `product_name`,
             `product_reference`,
@@ -2106,8 +2108,9 @@ class OrderCore extends ObjectModel
             foreach ($taxes_infos as $tax_infos) {
                 if (!isset($tmp_tax_infos[$tax_infos['rate']])) {
                     $tmp_tax_infos[$tax_infos['rate']] = array('total_amount' => 0,
-                                                                'name' => 0,
-                                                                'total_price_tax_excl' => 0, );
+                        'name' => 0,
+                        'total_price_tax_excl' => 0,
+                    );
                 }
 
                 $tmp_tax_infos[$tax_infos['rate']]['total_amount'] += $tax_infos['total_amount'];
@@ -2502,14 +2505,17 @@ class OrderCore extends ObjectModel
                     case Order::ROUND_ITEM:
                         $total_tax_base = $quantity * Tools::ps_round($discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
                         $total_amount = $quantity * Tools::ps_round($unit_amount, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+
                         break;
                     case Order::ROUND_LINE:
                         $total_tax_base = Tools::ps_round($quantity * $discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
                         $total_amount = Tools::ps_round($quantity * $unit_amount, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+
                         break;
                     case Order::ROUND_TOTAL:
                         $total_tax_base = $quantity * $discounted_price_tax_excl;
                         $total_amount = $quantity * $unit_amount;
+
                         break;
                 }
 

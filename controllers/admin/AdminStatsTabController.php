@@ -148,8 +148,10 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             if ($module_instance[$module['name']] = Module::getInstanceByName($module['name'])) {
                 $modules[$m]['displayName'] = $module_instance[$module['name']]->displayName;
             } else {
-                unset($module_instance[$module['name']]);
-                unset($modules[$m]);
+                unset(
+                    $module_instance[$module['name']],
+                    $modules[$m]
+                );
             }
         }
 
@@ -266,7 +268,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             $from = (date('Y') - 1) . date('-01-01');
             $to = (date('Y') - 1) . date('-12-31');
         }
-        if (isset($from) && isset($to) && !count($this->errors)) {
+        if (isset($from, $to) && !count($this->errors)) {
             $this->context->employee->stats_date_from = $from;
             $this->context->employee->stats_date_to = $to;
             $this->context->employee->update();
@@ -282,17 +284,19 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
         if ($this->isXmlHttpRequest()) {
             if (is_array($this->errors) && count($this->errors)) {
-                die(json_encode(array(
-                    'has_errors' => true,
-                    'errors' => array($this->errors),
-                    'date_from' => $this->context->employee->stats_date_from,
-                    'date_to' => $this->context->employee->stats_date_to, )
+                die(json_encode(
+                    array(
+                        'has_errors' => true,
+                        'errors' => array($this->errors),
+                        'date_from' => $this->context->employee->stats_date_from,
+                        'date_to' => $this->context->employee->stats_date_to, )
                 ));
             } else {
-                die(json_encode(array(
-                    'has_errors' => false,
-                    'date_from' => $this->context->employee->stats_date_from,
-                    'date_to' => $this->context->employee->stats_date_to, )
+                die(json_encode(
+                    array(
+                        'has_errors' => false,
+                        'date_from' => $this->context->employee->stats_date_from,
+                        'date_to' => $this->context->employee->stats_date_to, )
                     ));
             }
         }

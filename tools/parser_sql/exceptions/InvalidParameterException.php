@@ -39,7 +39,6 @@
  *
  */
 class InvalidParameterException extends InvalidArgumentException {
-
     protected $argument;
 
     public function __construct($argument) {
@@ -51,5 +50,3 @@ class InvalidParameterException extends InvalidArgumentException {
         return $this->argument;
     }
 }
-
-?>
