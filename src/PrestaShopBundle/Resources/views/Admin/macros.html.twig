@@ -129,15 +129,15 @@
     %}
       {% set popoverErrors = errors|slice(1) %}
       {% set errors = [errors|first] %}
-      {% set popoverContainer = 'language-input-error-popover-container-'~form.vars.id %}
+      {% set popoverContainer = 'locale-input-error-popover-container-'~form.vars.id %}
 
       <div class="{{ popoverContainer }}"></div>
 
       {% set popoverErrorContent %}
         <ul class="popover-error-list">
           {% for popoverError in popoverErrors %}
-              <li class="invalid-feedback">
-                {{ popoverError }}
+              <li>
+                <span class="invalid-feedback">{{ popoverError }}</span>
               </li>
           {% endfor %}
         </ul>
@@ -145,10 +145,11 @@
 
       {% set errorPopover %}
         <span
-          class="language-input-error-popover-trigger"
+          class="js-locale-input-error-popover-trigger"
           data-toggle="popover"
           data-placement="top"
           data-html="true"
+          data-template='<div class="popover js-locale-input-error-popover" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
           data-content='{{ popoverErrorContent }}'
           data-trigger="click"
           data-container=".{{ popoverContainer }}"
@@ -161,11 +162,14 @@
 
     {% endif %}
 
-    {% for error in errors %}
-      <div class="text-danger">
-        {{ error }} {{ (errorPopover is not null) ? errorPopover : '' }}
-      </div>
-    {% endfor %}
+    <div class="invalid-feedback-container">
+
+      {% for error in errors %}
+        <div class="invalid-feedback">
+          {{ error }} {{ (errorPopover is not null) ? errorPopover : '' }}
+        </div>
+      {% endfor %}
+    </div>
   {% endif %}
 {% endmacro %}
 
