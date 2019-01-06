@@ -151,9 +151,8 @@
           data-html="true"
           data-template='<div class="popover js-locale-input-error-popover" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
           data-content='{{ popoverErrorContent }}'
-          data-trigger="click"
+          data-trigger="hover"
           data-container=".{{ popoverContainer }}"
-          {#todo hover#}
         >
           {#todo: ask about translation domain#}
           <u>+ {{ '%count% more'|trans({'%count%': popoverErrors|length}, 'Admin.Actions') }}</u>
