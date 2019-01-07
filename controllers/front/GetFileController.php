@@ -57,16 +57,18 @@ class GetFileControllerCore extends FrontController
 
             Tools::setCookieLanguage();
             if (!$this->context->customer->isLogged()) {
-                if (Tools::getValue('secure_key') && Tools::getValue('id_order')) {
-                    $order = new Order((int) Tools::getValue('id_order'));
-                    if (!Validate::isLoadedObject($order)) {
-                        $this->displayCustomError('Invalid key.');
-                    }
-                    if ($order->secure_key != Tools::getValue('secure_key')) {
-                        $this->displayCustomError('Invalid key.');
-                    }
+            	if (!Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
+                	Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
+                } elseif (Tools::getValue('secure_key') && Tools::getValue('id_order')) {
+                	$order = new Order((int) Tools::getValue('id_order'));
+	                if (!Validate::isLoadedObject($order)) {
+	                    $this->displayCustomError('Invalid key.');
+	                }
+	                if ($order->secure_key != Tools::getValue('secure_key')) {
+	                    $this->displayCustomError('Invalid key.');
+	                }
                 } else {
-                     Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
+                	$this->displayCustomError('Invalid key.');
                 }
             }
 
