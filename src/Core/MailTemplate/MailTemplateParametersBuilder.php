@@ -63,7 +63,7 @@ class MailTemplateParametersBuilder implements MailTemplateParametersBuilderInte
             'templateType' => $template->getType(),
             'templateTheme' => $template->getTheme(),
             'templateName' => $template->getName(),
-            'templateModule' => $template->getModule(),
+            'templateModuleName' => $template->getModuleName(),
             'locale' => $language->locale,
         ]);
 

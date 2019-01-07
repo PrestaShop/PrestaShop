@@ -28,13 +28,22 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 use Language;
 
+/**
+ * MailTemplateParametersBuilderInterface is used by the MailTemplateRendererInterface
+ * to render the mails, it returns an array of generic template parameters like:
+ *  - templateType: the type of template (HTML, RAW)
+ *  - templateTheme: the associated mail theme
+ *  - templateModuleName: name of the associated module
+ *  - locale: the locale in which the template is generated
+ *  - emailPublicWebRoot: public mail root for assets
+ */
 interface MailTemplateParametersBuilderInterface
 {
     /**
      * @param MailTemplateInterface $template
      * @param Language $language
      *
-     * @return mixed
+     * @return array
      */
     public function buildParameters(MailTemplateInterface $template, Language $language);
 }
