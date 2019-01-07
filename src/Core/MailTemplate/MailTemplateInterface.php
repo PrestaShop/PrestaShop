@@ -83,5 +83,5 @@ interface MailTemplateInterface
      *
      * @return string|null
      */
-    public function getModule();
+    public function getModuleName();
 }

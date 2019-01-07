@@ -32,6 +32,11 @@ use Psr\Log\NullLogger;
 use Symfony\Component\Filesystem\Filesystem;
 use Language;
 
+/**
+ * Class MailTemplateGenerator iterates through the template in the provided catalog,
+ * it uses the renderer to output them (with the requested Language) and then export
+ * them as files in the specified output folder.
+ */
 class MailTemplateGenerator
 {
     use LoggerAwareTrait;
