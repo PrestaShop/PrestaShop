@@ -28,7 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use AdminController;
 use AdminLegacyLayoutControllerCore;
+use Configuration;
 use Context;
+use Currency;
 use Employee;
 use Language;
 use RuntimeException;
@@ -43,6 +45,12 @@ use Tab;
  */
 class LegacyContext
 {
+    /** @var Currency */
+    private $defaultCurrency;
+
+    /** @var Currency */
+    private $employeeCurrency;
+
     /**
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\context class,
      * that will contains all you need in the Core architecture.
@@ -228,17 +236,37 @@ class LegacyContext
     }
 
     /**
-     * Returns Currency set for the current employee.
+     * Returns Currency set for the current employee, you can force to return the default
+     * currency if the employee one is not set.
+     *
+     * @param bool $defaultFallback
+     *
+     * @return Currency
      */
-    public function getEmployeeCurrency()
+    public function getEmployeeCurrency($defaultFallback = false)
     {
-        static $employeeCurrency;
-
-        if (null === $employeeCurrency) {
-            $employeeCurrency = $this->getContext()->currency->sign;
+        if (null === $this->employeeCurrency && $this->getContext()->currency) {
+            $this->employeeCurrency = $this->getContext()->currency->sign;
+        }
+        if (null === $this->employeeCurrency && $defaultFallback) {
+            return $this->getDefaultCurrency();
         }
 
-        return $employeeCurrency;
+        return $this->employeeCurrency;
+    }
+
+    /**
+     * Returns default cCurrency set in Configuration
+     *
+     * @return Currency
+     */
+    public function getDefaultCurrency()
+    {
+        if (null === $this->defaultCurrency && ($id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT'))) {
+            $this->defaultCurrency = new Currency($id_currency);
+        }
+
+        return $this->defaultCurrency;
     }
 
     /**
