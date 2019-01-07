@@ -48,7 +48,7 @@ class MailTemplateParametersBuilderTest extends TestCase
             'getType' => MailTemplateInterface::HTML_TYPE,
             'getTheme' => 'classic',
             'getName' => 'user_account',
-            'getModule' => null,
+            'getModuleName' => null,
         ];
         $templateMock = $this->buildTemplateMock($templateInfos);
         $languageMock = $this->buildLanguageMock();
@@ -73,7 +73,7 @@ class MailTemplateParametersBuilderTest extends TestCase
             'getType' => MailTemplateInterface::HTML_TYPE,
             'getTheme' => 'classic',
             'getName' => 'user_account',
-            'getModule' => null,
+            'getModuleName' => null,
         ];
         $templateMock = $this->buildTemplateMock($templateInfos);
         $languageMock = $this->buildLanguageMock();
@@ -102,7 +102,7 @@ class MailTemplateParametersBuilderTest extends TestCase
             'getType' => MailTemplateInterface::HTML_TYPE,
             'getTheme' => 'classic',
             'getName' => 'user_account',
-            'getModule' => 'ps_reminder',
+            'getModuleName' => 'ps_reminder',
         ];
         $templateMock = $this->buildTemplateMock($templateInfos);
         $languageMock = $this->buildLanguageMock('ar', true);
