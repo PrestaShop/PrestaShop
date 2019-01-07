@@ -128,7 +128,7 @@ class MailTemplateFolderCatalogTest extends TestCase
         $this->assertEquals('account.html', $template->getName());
         $this->assertEquals(MailTemplateInterface::CORE_CATEGORY, $template->getCategory());
         $this->assertEquals(MailTemplateInterface::HTML_TYPE, $template->getType());
-        $this->assertNull($template->getModule());
+        $this->assertNull($template->getModuleName());
 
         //Check module templates
         $modulesTemplates = $this->filterTemplatesByCategory($templateCollection, MailTemplateInterface::MODULES_CATEGORY);
@@ -140,11 +140,11 @@ class MailTemplateFolderCatalogTest extends TestCase
             $this->assertEquals('classic', $template->getTheme());
             $this->assertEquals(MailTemplateInterface::MODULES_CATEGORY, $moduleTemplate->getCategory());
             $this->assertContains($moduleTemplate->getType(), [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::RAW_TYPE]);
-            $this->assertNotNull($moduleTemplate->getModule());
-            if (!isset($moduleTemplatesCount[$moduleTemplate->getModule()])) {
-                $moduleTemplatesCount[$moduleTemplate->getModule()] = [$moduleTemplate->getName()];
+            $this->assertNotNull($moduleTemplate->getModuleName());
+            if (!isset($moduleTemplatesCount[$moduleTemplate->getModuleName()])) {
+                $moduleTemplatesCount[$moduleTemplate->getModuleName()] = [$moduleTemplate->getName()];
             } else {
-                $moduleTemplatesCount[$moduleTemplate->getModule()][] = $moduleTemplate->getName();
+                $moduleTemplatesCount[$moduleTemplate->getModuleName()][] = $moduleTemplate->getName();
             }
         }
         $this->assertCount(3, $moduleTemplatesCount['followup']);
