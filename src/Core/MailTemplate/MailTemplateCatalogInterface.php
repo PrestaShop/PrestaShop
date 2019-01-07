@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,45 +19,40 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Mail;
+namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidException;
 
-interface MailTemplateCollectionInterface extends \IteratorAggregate, \Countable
+/**
+ * Interface MailTemplateCatalogInterface is used to list the available themes to generate
+ * mail templates. It also allows you to list the available templates for a specific theme.
+ * Templates are divided in two categories "core" and "modules" templates.
+ */
+interface MailTemplateCatalogInterface
 {
     /**
-     * @param MailTemplateInterface $template
-     *
-     * @return bool
-     */
-    public function has(MailTemplateInterface $template);
-
-    /**
-     * @param MailTemplateInterface $template
-     */
-    public function add(MailTemplateInterface $template);
-
-    /**
-     * @param MailTemplateInterface $template
+     * Returns the list of existing themes (non empty folders, in the mail themes
+     * folder).
      *
      * @throws InvalidException
+     *
+     * @return string[]
      */
-    public function remove(MailTemplateInterface $template);
+    public function listThemes();
 
     /**
-     * @return MailTemplateInterface[]
-     */
-    public function getTemplates();
-
-    /**
-     * @param array $templates
+     * Returns a collection of templates via a MailTemplateCollectionInterface
+     *
+     * @param string $theme
      *
      * @throws InvalidException
+     *
+     * @return MailTemplateCollectionInterface
      */
-    public function setTemplates($templates = []);
+    public function listTemplates($theme);
 }

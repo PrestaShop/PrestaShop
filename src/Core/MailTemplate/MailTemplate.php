@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Mail;
+namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
+/**
+ * Class MailTemplate is the default implementation of MailTemplateInterface,
+ * it is a simple data container with nearly no logic (except for getExtension).
+ */
 class MailTemplate implements MailTemplateInterface
 {
     /** @var string */
@@ -49,12 +53,12 @@ class MailTemplate implements MailTemplateInterface
     /**
      * MailTemplate constructor.
      *
-     * @param string $theme
-     * @param string $category
-     * @param string $type
-     * @param string $name
-     * @param string $path
-     * @param string|null $module
+     * @param string $theme Which theme this template is associated to
+     * @param string $category Whether the template is used by the core or modules
+     * @param string $type There are two types of mail templates, either HTML or RAW ones
+     * @param string $name Name of the template to describe its purpose
+     * @param string $path Absolute path of the template file
+     * @param string|null $module Which module this template is associated to (if any)
      */
     public function __construct(
         $theme,

@@ -24,17 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle\Service\Mail;
+namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\InvalidException;
-use PrestaShopBundle\Service\Mail\MailTemplate;
-use PrestaShopBundle\Service\Mail\MailTemplateCatalogInterface;
-use PrestaShopBundle\Service\Mail\MailTemplateCollection;
-use PrestaShopBundle\Service\Mail\MailTemplateCollectionInterface;
-use PrestaShopBundle\Service\Mail\MailTemplateGenerator;
-use PrestaShopBundle\Service\Mail\MailTemplateInterface;
-use PrestaShopBundle\Service\Mail\MailTemplateRenderer;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplate;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateCatalogInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateCollection;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateCollectionInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Language;
@@ -91,7 +91,7 @@ class MailTemplateGeneratorTest extends TestCase
 
     public function testConstructor()
     {
-        $mailRenderer = $this->getMockBuilder(MailTemplateRenderer::class)
+        $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -114,7 +114,7 @@ class MailTemplateGeneratorTest extends TestCase
      */
     public function testInvalidTheme()
     {
-        $mailRenderer = $this->getMockBuilder(MailTemplateRenderer::class)
+        $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -130,7 +130,7 @@ class MailTemplateGeneratorTest extends TestCase
 
     public function testInvalidOutputFolder()
     {
-        $mailRenderer = $this->getMockBuilder(MailTemplateRenderer::class)
+        $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -210,11 +210,11 @@ class MailTemplateGeneratorTest extends TestCase
 
     /**
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateRenderer
+     * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateRendererInterface
      */
     private function createRendererMock()
     {
-        $renderer = $this->getMockBuilder(MailTemplateRenderer::class)
+        $renderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
