@@ -11,15 +11,20 @@ scenario('Generate and check a Credit slips options ', () => {
   scenario('Change the credit slip prefix ', client => {
     test('should go to "Credit slip" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.credit_slips_submenu));
     test('should change the credit slip prefix value', () => client.waitAndSetValue(CreditSlip.credit_slip_prefix_input, 'PrefixTest'));
-    test('should click on "Save" button', () => client.waitForExistAndClick(CreditSlip.save_button));
+    test('should click on "Save" button', () => client.waitForExistAndClick(CreditSlip.save_button, 2000));
     test('should check the green validation message', () => client.checkTextValue(CreditSlip.green_validation, 'The settings have been successfully updated.', 'contain'));
   }, 'common_client');
   scenario('Verify the prefix value', client => {
     test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
     test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
-    test('should click on "DOCUMENTS" subtab', () => client.scrollWaitForExistAndClick(OrderPage.document_submenu));
-    test('should check the existence of "prefix value" ', async () => {
+    test('should click on "DOCUMENTS" subtab', async () => {
+      await client.pause(3000);
+      await client.waitForExistAndClick(OrderPage.document_submenu, 2000);
+      await client.pause(3000);
       await client.getCreditSlipDocumentName(OrderPage.credit_slip_document_name);
+    });
+    test('should download the credit slip', () => client.waitForExistAndClick(OrderPage.credit_slip_document_name));
+    test('should check the existence of "prefix value" ', async () => {
       await client.pause(3000);
       await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'PrefixTest');
     });
