@@ -64,7 +64,7 @@ twig:
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
         '%admin_page%/Configure/ShopParameters': ShopParameters
         '%kernel.root_dir%/../modules': Modules
-        '%mail_themes_dir%': Mail
+        '%mail_themes_dir%': MailThemes
     globals:
         webpack_server: false
 
