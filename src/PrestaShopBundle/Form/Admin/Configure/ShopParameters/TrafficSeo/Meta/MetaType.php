@@ -95,10 +95,8 @@ class MetaType extends AbstractType
                     new Regex([
                         'pattern' => '/^[a-zA-Z0-9_.-]+$/',
                         'message' => $this->trans(
-                            'The %s field is not valid',
-                            [
-                                sprintf('"%s"', $this->trans('Page name', [], 'Admin.Shopparameters.Feature')),
-                            ],
+                            '%s is invalid.',
+                            [],
                             'Admin.Notifications.Error'
                         )
                     ])
@@ -111,7 +109,7 @@ class MetaType extends AbstractType
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans(
-                                '{{ value }} is invalid.',
+                                '%s is invalid.',
                                 [],
                                 'Admin.Notifications.Error'
                             )
@@ -126,7 +124,7 @@ class MetaType extends AbstractType
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans(
-                                '{{ value }} is invalid.',
+                                '%s is invalid.',
                                 [],
                                 'Admin.Notifications.Error'
                             )
@@ -141,7 +139,7 @@ class MetaType extends AbstractType
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans(
-                                '{{ value }} is invalid.',
+                                '%s is invalid.',
                                 [],
                                 'Admin.Notifications.Error'
                             )
