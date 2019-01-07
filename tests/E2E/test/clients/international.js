@@ -48,6 +48,35 @@ class International extends CommonClient {
         expect(status.value).to.equal(checkedValue)
       });
   }
+
+  clearAddressFormat(selector, value) {
+    return this.client
+      .execute(function (element, value) {
+        let addressFormatValue = document.getElementById(element).textContent;
+        let editedAddressFormat = addressFormatValue.replace(addressFormatValue.substring(0, addressFormatValue.indexOf(value)), '');
+        document.getElementById(element).value = editedAddressFormat;
+      }, selector, value)
+  }
+
+  getCallPrefixField(element_list, i, sorted = false) {
+    return this.client
+      .getText(element_list.replace("%ID", i + 1)).then(function (name) {
+        if (sorted) {
+          if (name === '-') {
+            elementsSortedTable[i] = '0';
+          } else {
+            elementsSortedTable[i] = name.normalize('NFKD').replace(/[+]/g, '').toLowerCase();
+          }
+        }
+        else {
+          if (name === '-') {
+            elementsTable[i] = '0';
+          } else {
+            elementsTable[i] = name.normalize('NFKD').replace(/[+]/g, '').toLowerCase();
+          }
+        }
+      });
+  }
 }
 
 module.exports = International;

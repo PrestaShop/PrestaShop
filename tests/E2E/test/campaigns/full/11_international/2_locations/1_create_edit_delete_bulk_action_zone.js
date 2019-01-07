@@ -14,6 +14,7 @@ const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {Menu} = require('../../../../selectors/BO/menu.js');
 const {Location} = require('../../../../selectors/BO/international/location');
 const commonLocation = require('../../../common_scenarios/location');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 scenario('Add, edit, delete and bulk actions "Zone" in the Back Office', () => {
@@ -21,7 +22,7 @@ scenario('Add, edit, delete and bulk actions "Zone" in the Back Office', () => {
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Test 1: Add zone in the Back Office', () => {
     commonLocation.createZone("", true);
     commonLocation.createZone("Canaries", false);
