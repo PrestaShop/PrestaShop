@@ -161,7 +161,7 @@
     {% endif %}
 
     <div class="invalid-feedback-container">
-
+    {#todo: text-danger and change classes#}
       {% for error in errors %}
         <div class="invalid-feedback">
           {{ error }} {{ (errorPopover is not null) ? errorPopover : '' }}
