@@ -92,13 +92,6 @@
 {% macro form_widget_with_error(form, vars, extraVars) %}
   {% set vars = vars|default({}) %}
   {% set extraVars = extraVars|default({}) %}
-
-  {{ form_widget(form, vars) }}
-
-  {% if extraVars.help is defined %}
-    <small class="form-text">{{ extraVars.help }}</small>
-  {% endif %}
-
   {% set attr = vars.attr|default({}) %}
   {% set errors = [] %}
 
@@ -118,8 +111,12 @@
   {% set vars = vars|merge({'attr': attr}) %}
 
   {{ form_widget(form, vars) }}
-  {% if errors|length > 0 %}
 
+  {% if extraVars.help is defined %}
+    <small class="form-text">{{ extraVars.help }}</small>
+  {% endif %}
+
+  {% if errors|length > 0 %}
     {# for form types which has locales and there are more then 1 error , additional errors are displaying inside popover #}
     {% set errorPopover = null %}
     {% if form.vars.locales is defined and
@@ -136,8 +133,8 @@
       {% set popoverErrorContent %}
         <ul class="popover-error-list">
           {% for popoverError in popoverErrors %}
-              <li>
-                <span class="invalid-feedback">{{ popoverError }}</span>
+              <li class="text-danger">
+                {{  popoverError }}
               </li>
           {% endfor %}
         </ul>
@@ -161,9 +158,8 @@
     {% endif %}
 
     <div class="invalid-feedback-container">
-    {#todo: text-danger and change classes#}
       {% for error in errors %}
-        <div class="invalid-feedback">
+        <div class="text-danger">
           {{ error }} {{ (errorPopover is not null) ? errorPopover : '' }}
         </div>
       {% endfor %}
