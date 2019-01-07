@@ -1,9 +1,11 @@
 const {Menu} = require('../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 const {ProductList, AddProductPage} = require('../../selectors/BO/add_product_page');
+const {CategorySubMenu} = require('../../selectors/BO/catalogpage/category_submenu');
 let data = require('../../datas/product-data');
-
 global.productVariations = [];
+global.productCategories = {HOME: {}};
+global.categories = {HOME: {}};
 
 /**** Example of product data ****
  * var productData = {
@@ -649,5 +651,55 @@ module.exports = {
         await client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.');
       }
     }
-  }
+  },
+
+  getCategories: async function (client) {
+    if (global.categoriesPageNumber !== 0) {
+      for (let i = 1; i <= global.categoriesPageNumber; i++) {
+        await client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.category_submenu);
+        await client.getTextInVar(CategorySubMenu.category_name.replace('%ID', i), "category");
+        global.categories.HOME[tab["category"]] = await [tab["category"]];
+        await client.isVisible(CategorySubMenu.category_view_button.replace('%ID', i));
+        if (global.isVisible) {
+          await client.waitForExistAndClick(CategorySubMenu.category_view_button.replace('%ID', i));
+          await client.getProductPageNumber('table-category');
+          for (let j = 1; j <= global.productsNumber; j++) {
+            await client.getTextInVar(CategorySubMenu.category_name.replace('%ID', j), "subCategory");
+            global.categories.HOME[tab["category"]][j] = await tab["subCategory"];
+          }
+        }
+
+      }
+    }
+  },
+
+  checkCategories: async function (client) {
+    await client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu);
+    await client.waitForExistAndClick(ProductList.filter_by_category_button);
+    await client.waitForExistAndClick(ProductList.expand_filter_link);
+    for (let i = 1; i <= global.categoriesPageNumber; i++) {
+      await client.getTextInVar(ProductList.filter_list_category_label.replace('%ID', i), "productCategory");
+      global.productCategories.HOME[tab["productCategory"]] = await [tab["productCategory"]];
+      await client.getSubCategoryNumber('product_categories_categories', i);
+      if (global.subCatNumber !== 0) {
+        for (let j = 1; j <= global.subCatNumber; j++) {
+          await client.getTextInVar(ProductList.sub_category_label.replace('%I', i).replace('%J', j), 'psubCategory');
+          global.productCategories.HOME[tab["productCategory"]][j] = await tab["psubCategory"];
+        }
+      }
+    }
+  },
+
+  checkFiltersCategories: async function (client) {
+    await client.waitForExistAndClick(ProductList.category_radio.replace('%CATEGORY', 'Accessories'));
+    await client.getProductPageNumber('product_catalog_list');
+    for (let i = 1; i <= global.productsNumber; i++) {
+      await client.getTextInVar(ProductList.products_column.replace('%ID', i).replace('%COL', 6), 'categoryName');
+      await client.checkCategoryProduct();
+    }
+    await client.waitForExistAndClick(ProductList.filter_by_category_button);
+    await client.waitForExistAndClick(ProductList.unselect_filter_link);
+  },
+
+
 };

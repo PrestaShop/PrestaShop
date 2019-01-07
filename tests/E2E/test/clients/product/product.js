@@ -238,24 +238,24 @@ class Product extends CommonClient {
 
   checkProductCategory(i) {
     return this.client
-      .scrollWaitForExistAndClick(ProductList.product_name_link.replace("%ID", global.positionTable[i - 1], 50000))
+      .scrollWaitForExistAndClick(AddProductPage.catalog_product_name.replace("%ID", global.positionTable[i - 1], 50000))
       .waitForVisible(AddProductPage.product_name_input)
-      .scrollWaitForExistAndClick(AddProductPage.expand_categories_button)
+      //.scrollWaitForExistAndClick(AddProductPage.expand_categories_button)
   }
 
-  getSubCategoryNumber(i) {
+  getSubCategoryNumber(selector, i) {
     return this.client
-      .execute(function (i) {
+      .execute(function (selector, i) {
         let count;
         try {
-          count = document.getElementById('choice_tree').getElementsByTagName("ul")[i + 1].children.length;
+          count = document.getElementById(selector).getElementsByTagName("ul")[i + 1].children.length;
           return count;
         }
         catch (err) {
           count = 0;
           return count;
         }
-      }, i)
+      }, selector, i)
       .then((count) => {
         global.subCatNumber = count.value;
       })
@@ -324,6 +324,27 @@ class Product extends CommonClient {
         }
       });
   }
+
+  checkCategoryProduct() {
+    return this.client
+      .pause(1000)
+      .then(() => {
+          expect(global.productCategories.HOME.Accessories).to.contains(tab['categoryName'])
+      });
+  }
+
+  getCategoriesPageNumber(selector) {
+    return this.client
+      .execute(function (selector) {
+        return document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
+      }, selector)
+      .then((count) => {
+        global.categoriesPageNumber = count.value;
+      });
+  }
+
+
+
 }
 
 module.exports = Product;
