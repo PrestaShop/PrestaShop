@@ -24,17 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle\Service\Mail;
+namespace Tests\Unit\Adapter\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Service\Mail\MailTemplate;
-use PrestaShopBundle\Service\Mail\MailTemplateParametersBuilderInterface;
-use PrestaShopBundle\Service\Mail\MailTemplateRenderer;
-use PrestaShopBundle\Service\Mail\MailTemplateInterface;
+use PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateParametersBuilderInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Language;
 
-class MailTemplateRendererTest extends TestCase
+class MailTemplateTwigRendererTest extends TestCase
 {
     public function testConstructor()
     {
@@ -48,7 +47,7 @@ class MailTemplateRendererTest extends TestCase
             ->getMock()
         ;
 
-        $generator = new MailTemplateRenderer($engineMock, $builderMock);
+        $generator = new MailTemplateTwigRenderer($engineMock, $builderMock);
         $this->assertNotNull($generator);
     }
 
@@ -60,7 +59,7 @@ class MailTemplateRendererTest extends TestCase
         $expectedLanguage = $this->createLanguageMock();
         $template = $this->createMailTemplateMock($expectedPath);
 
-        $generator = new MailTemplateRenderer(
+        $generator = new MailTemplateTwigRenderer(
             $this->createEngineMock($expectedPath, $expectedParameters, $expectedTemplate),
             $this->createParametersBuilderMock($expectedParameters, $expectedLanguage)
         );
