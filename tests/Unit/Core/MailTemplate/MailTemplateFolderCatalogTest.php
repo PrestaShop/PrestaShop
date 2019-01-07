@@ -139,7 +139,7 @@ class MailTemplateFolderCatalogTest extends TestCase
         foreach ($modulesTemplates as $moduleTemplate) {
             $this->assertEquals('classic', $template->getTheme());
             $this->assertEquals(MailTemplateInterface::MODULES_CATEGORY, $moduleTemplate->getCategory());
-            $this->assertContains($moduleTemplate->getType(), [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::RAW_TYPE]);
+            $this->assertContains($moduleTemplate->getType(), [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::TXT_TYPE]);
             $this->assertNotNull($moduleTemplate->getModuleName());
             if (!isset($moduleTemplatesCount[$moduleTemplate->getModuleName()])) {
                 $moduleTemplatesCount[$moduleTemplate->getModuleName()] = [$moduleTemplate->getName()];
@@ -155,7 +155,7 @@ class MailTemplateFolderCatalogTest extends TestCase
         //Check templates types
         $htmlTemplates = $this->filterTemplatesByType($templateCollection, MailTemplateInterface::HTML_TYPE);
         $this->assertCount(5, $htmlTemplates);
-        $rawTemplates = $this->filterTemplatesByType($templateCollection, MailTemplateInterface::RAW_TYPE);
+        $rawTemplates = $this->filterTemplatesByType($templateCollection, MailTemplateInterface::TXT_TYPE);
         $this->assertCount(6, $rawTemplates);
     }
 
@@ -227,7 +227,7 @@ class MailTemplateFolderCatalogTest extends TestCase
                 'account.html.twig',
                 'password.html.twig',
             ],
-            MailTemplateInterface::RAW_TYPE => [
+            MailTemplateInterface::TXT_TYPE => [
                 'account.txt.twig',
                 'password.txt.twig',
                 'order_conf.twig',
@@ -243,7 +243,7 @@ class MailTemplateFolderCatalogTest extends TestCase
                 ],
             ],
             'ps_emailalerts' => [
-                MailTemplateInterface::RAW_TYPE => [
+                MailTemplateInterface::TXT_TYPE => [
                     'return_slip.twig',
                     'productoutofstock.twig',
                 ],

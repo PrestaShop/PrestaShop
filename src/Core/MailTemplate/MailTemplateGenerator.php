@@ -104,6 +104,6 @@ class MailTemplateGenerator
      */
     private function generateTemplatePath(MailTemplateInterface $template, $outputFolder)
     {
-        return implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getName()]) . '.' . $template->getExtension();
+        return implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getName()]) . '.' . $template->getType();
     }
 }
