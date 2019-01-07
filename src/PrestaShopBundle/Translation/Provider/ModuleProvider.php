@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,7 +38,7 @@ class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function getTranslationDomains()
     {
         return array(
-            '^Modules'.$this->getModuleDomain().'*',
+            '^Modules' . $this->getModuleDomain() . '*',
         );
     }
 
@@ -48,7 +48,7 @@ class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function getFilters()
     {
         return array(
-            '#^Modules'.$this->getModuleDomain().'*#i',
+            '#^Modules' . $this->getModuleDomain() . '*#i',
         );
     }
 
@@ -63,6 +63,7 @@ class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function setModuleName($moduleName)
     {
         $this->moduleName = $moduleName;
+
         return $this;
     }
 
@@ -94,7 +95,7 @@ class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory.DIRECTORY_SEPARATOR.'default';
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 
     private function getModuleDomain()

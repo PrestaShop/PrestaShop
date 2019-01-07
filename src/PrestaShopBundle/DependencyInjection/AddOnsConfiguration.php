@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\DependencyInjection;
 
 use Tools;
@@ -42,6 +43,38 @@ class AddOnsConfiguration implements ConfigurationInterface
             ->children()
                 ->arrayNode('addons')
                     ->children()
+                        ->arrayNode('categories')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('id_category')->isRequired()->end()
+                                    ->scalarNode('name')->isRequired()->end()
+                                    ->scalarNode('order')->isRequired()->end()
+                                    ->scalarNode('link')->isRequired()->end()
+                                    ->scalarNode('id_parent')->isRequired()->end()
+                                    ->scalarNode('parent_link')->isRequired()->end()
+                                    ->scalarNode('tab')->isRequired()->end()
+                                    ->arrayNode('categories')
+                                        ->arrayPrototype()
+                                            ->children()
+                                                ->scalarNode('id_category')->isRequired()->end()
+                                                ->scalarNode('name')->isRequired()->end()
+                                                ->scalarNode('link')->isRequired()->end()
+                                                ->scalarNode('id_parent')->isRequired()->end()
+                                                ->scalarNode('link_rewrite')->isRequired()->end()
+                                                ->scalarNode('tab')->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('prestatrust')
+                            ->children()
+                                ->booleanNode('enabled')
+                                    ->defaultFalse()
+                                ->end()
+                            ->end()
+                        ->end()
                         ->arrayNode('api_client')
                             ->children()
                                 ->integerNode('ttl')

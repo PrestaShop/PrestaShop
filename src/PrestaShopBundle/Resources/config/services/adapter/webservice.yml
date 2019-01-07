@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.webservice.webservice_key_eraser:
+      class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceKeyEraser'
+
+    prestashop.adapter.webservice.webservice_key_status_modifier:
+      class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceKeyStatusModifier'
+      arguments:
+          - '@translator'

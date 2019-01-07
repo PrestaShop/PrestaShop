@@ -1,0 +1,98 @@
+admin_sql_request:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:index'
+        _legacy_controller: AdminRequestSql
+#@todo: uncomment when CQRS pages are hookable
+#        _legacy_link: AdminRequestSql
+
+admin_sql_request_search:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:search'
+        _legacy_controller: AdminRequestSql
+#        _legacy_link: AdminRequestSql:search
+
+admin_sql_request_process:
+    path: /settings
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:processForm'
+        _legacy_controller: AdminRequestSql
+#        _legacy_link: AdminRequestSql:update
+
+admin_sql_request_create:
+    path: /new
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:create'
+        _legacy_controller: AdminRequestSql
+#        _legacy_link: AdminRequestSql:addrequest_sql
+
+admin_sql_request_edit:
+    path: /edit/{sqlRequestId}
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:edit'
+        _legacy_controller: AdminRequestSql
+#        _legacy_link: AdminRequestSql:updaterequest_sql
+#        _legacy_parameters:
+#            id_request_sql: sqlRequestId
+    requirements:
+        sqlRequestId: \d+
+
+admin_sql_request_delete:
+    path: /delete/{sqlRequestId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:delete'
+        _legacy_controller: AdminRequestSql
+#        _legacy_link: AdminRequestSql:deleterequest_sql
+#        _legacy_parameters:
+#            id_request_sql: sqlRequestId
+    requirements:
+        sqlRequestId: \d+
+
+admin_sql_request_delete_bulk:
+    path: /delete/bulk
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:deleteBulk'
+        _legacy_controller: AdminRequestSql
+#        _legacy_link: AdminRequestSql:submitBulkdeleterequest_sql
+
+admin_sql_request_table_columns:
+    path: /tables/{mySqlTableName}/columns
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:ajaxTableColumns'
+        _legacy_controller: AdminRequestSql
+#        _legacy_link: AdminRequestSql:ajax
+#        _legacy_parameters:
+#            table: mySqlTableName
+
+admin_sql_request_view:
+    path: /view/{sqlRequestId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:view'
+        _legacy_controller: AdminRequestSql
+#        _legacy_link: AdminRequestSql:viewsql_request
+#        _legacy_parameters:
+#            id_request_sql: sqlRequestId
+    requirements:
+        sqlRequestId: \d+
+
+admin_sql_request_export:
+    path: /export/{sqlRequestId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:export'
+        _legacy_controller: AdminRequestSql
+#        _legacy_link: AdminRequestSql:exportsql_request
+#        _legacy_parameters:
+#            id_request_sql: sqlRequestId
+    requirements:
+        sqlRequestId: \d+

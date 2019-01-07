@@ -7,4 +7,5 @@
   <quick_access id="New_voucher" name="New voucher"/>
   <quick_access id="Orders" name="Orders"/>
   <quick_access id="Installed_modules" name="Installed modules"/>
+  <quick_access id="Catalog_evaluation" name="Catalog evaluation"/>
 </entity_quick_access>

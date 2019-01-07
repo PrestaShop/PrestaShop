@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,7 +42,7 @@ function generate_tax_rules()
             'name' => 'Rule '.$tax['rate'].'%',
         );
         $res &= Db::getInstance()->insert('tax_rules_group', $row);
-        $id_tax_rules_group = Db::getInstance()->insert_id();
+        $id_tax_rules_group = Db::getInstance()->Insert_ID();
 
 
         $countries = Db::getInstance()->executeS('

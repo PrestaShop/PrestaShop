@@ -1,0 +1,20 @@
+admin_employees_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:index'
+    _legacy_controller: AdminEmployees
+
+admin_employees_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:search'
+    _legacy_controller: AdminEmployees
+
+admin_employees_save_options:
+  path: /save-options
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:saveOptions'
+    _legacy_controller: AdminEmployees

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,17 +19,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
-namespace PrestaShop\PrestaShop\Tests\Unit\PrestaShopBundle\Utils;
+namespace Tests\Unit\PrestaShopBundle\Utils;
 
 use PrestaShopBundle\Utils\FloatParser;
+use PHPUnit\Framework\TestCase;
 
-class FloatParserTest extends \PHPUnit_Framework_TestCase
+class FloatParserTest extends TestCase
 {
 
     /**
@@ -81,6 +81,10 @@ class FloatParserTest extends \PHPUnit_Framework_TestCase
             ['12,345,678', 12345.678],
             ['9.E-10', 9.E-10],
             ['-1,234,567.89', -1234567.89],
+            // persian
+            'persian' => ['۲۰٫۵۰۱۲۳۶۴', 20.5012364],
+            // arabic
+            'arabic' => ['٢٠٫٥٠١٢٣٦٤', 20.5012364],
             // edge cases
             ['1 dot 10', 1.1],
             ['1 hundred and 10 dot 15', 110.15],

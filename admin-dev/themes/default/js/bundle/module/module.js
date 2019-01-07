@@ -19,7 +19,6 @@ var AdminModuleController = function() {
   this.pstaggerInput = null;
   this.lastBulkAction = null;
   this.isUploadStarted = false;
-  this.baseAdminDir = '';
 
   /**
    * Loaded modules list.
@@ -77,6 +76,7 @@ var AdminModuleController = function() {
   this.addonsLogoutModalBtnSelector = '#page-header-desc-configuration-addons_logout';
   this.addonsImportModalBtnSelector = '#page-header-desc-configuration-add_module';
   this.dropZoneModalSelector = '#module-modal-import';
+  this.dropZoneModalFooterSelector = '#module-modal-import .modal-footer';
   this.dropZoneImportZoneSelector = '#importDropzone';
   this.addonsConnectModalSelector = '#module-modal-addons-connect';
   this.addonsLogoutModalSelector = '#module-modal-addons-logout';
@@ -91,6 +91,7 @@ var AdminModuleController = function() {
   this.moduleImportFailureDetailsBtnSelector = '.module-import-failure-details-action';
   this.moduleImportSelectFileManualSelector = '.module-import-start-select-manual';
   this.moduleImportFailureMsgDetailsSelector = '.module-import-failure-details';
+  this.moduleImportConfirmSelector = '.module-import-confirm';
 
   /**
    * Initialize all listners and bind everything
@@ -115,6 +116,7 @@ var AdminModuleController = function() {
     this.initPlaceholderMechanism();
     this.initFilterStatusDropdown();
     this.fetchModulesList();
+    this.getNotificationsCount();
   };
 
   this.initFilterStatusDropdown = function() {
@@ -172,13 +174,11 @@ var AdminModuleController = function() {
   };
 
   this.ajaxLoadPage = function() {
-    var token = window.location.search;
-    var urlToCall = this.baseAdminDir+'module/catalog/refresh' + token;
     var self = this;
 
     $.ajax({
       method: 'GET',
-      url: urlToCall
+      url: moduleURLs.catalogRefresh
     }).done(function (response) {
       if (response.status === true) {
         if (typeof response.domElements === 'undefined') response.domElements = null;
@@ -187,7 +187,8 @@ var AdminModuleController = function() {
         var stylesheet = document.styleSheets[0];
         var stylesheetRule = '{display: none}';
         var moduleGlobalSelector = '.modules-list';
-        var requiredSelectorCombination = moduleGlobalSelector + ', .module-sorting-menu ';
+        var moduleSortingSelector = '.module-sorting-menu';
+        var requiredSelectorCombination = moduleGlobalSelector + ', ' + moduleSortingSelector;
 
         if (stylesheet.insertRule) {
           stylesheet.insertRule(
@@ -206,7 +207,8 @@ var AdminModuleController = function() {
           $.each(response.domElements, function(index, element){
             $(element.selector).append(element.content);
           });
-          $(requiredSelectorCombination).fadeIn(800);
+          $(moduleGlobalSelector).fadeIn(800).css('display','flex');
+          $(moduleSortingSelector).fadeIn(800);
           $('[data-toggle="popover"]').popover();
           self.initCurrentDisplay();
           self.fetchModulesList();
@@ -439,7 +441,7 @@ var AdminModuleController = function() {
     var self = this;
     var body = $('body');
     var dropzone = $('.dropzone');
-
+    
     // Reset modal when click on Retry in case of failure
     body.on('click', this.moduleImportFailureRetrySelector, function() {
       $(self.moduleImportSuccessSelector + ', ' + self.moduleImportFailureSelector + ', ' + self.moduleImportProcessingSelector).fadeOut(function() {
@@ -461,6 +463,8 @@ var AdminModuleController = function() {
       dropzone.removeAttr('style');
       $(self.moduleImportFailureMsgDetailsSelector).hide();
       $(self.moduleImportSuccessConfigureBtnSelector).hide();
+      $(self.dropZoneModalFooterSelector).html('');
+      $(self.moduleImportConfirmSelector).hide();
     });
 
     // Change the way Dropzone.js lib handle file input trigger
@@ -504,8 +508,8 @@ var AdminModuleController = function() {
     });
 
     // @see: dropzone.js
-    Dropzone.options.importDropzone = {
-      url: 'import' + window.location.search,
+    var dropzoneOptions = {
+      url: moduleURLs.moduleImport,
       acceptedFiles: '.zip, .tar',
       // The name that will be used to transfer the file
       paramName: 'file_uploaded',
@@ -514,21 +518,15 @@ var AdminModuleController = function() {
       addRemoveLinks: true,
       dictDefaultMessage: '',
       hiddenInputContainer: self.dropZoneImportZoneSelector,
+      timeout:0, // add unlimited timeout. Otherwise dropzone timeout is 30 seconds and if a module is long to install, it is not possible to install the module.
       addedfile: function() {
-        // State that we start module upload
-        self.isUploadStarted = true;
-        $(self.moduleImportStartSelector).hide(0);
-        dropzone.css('border', 'none');
-        $(self.moduleImportProcessingSelector).fadeIn();
+        self.animateStartUpload();
       },
       processing: function () {
         // Leave it empty since we don't require anything while processing upload
       },
       error: function (file, message) {
-        $(self.moduleImportProcessingSelector).finish().fadeOut(function() {
-          $(self.moduleImportFailureMsgDetailsSelector).html(message);
-          $(self.moduleImportFailureSelector).fadeIn();
-        });
+        self.displayOnUploadError(message);
       },
       complete: function (file) {
         if (file.status !== 'error') {
@@ -536,23 +534,94 @@ var AdminModuleController = function() {
           if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
           if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
 
-          $(self.moduleImportProcessingSelector).finish().fadeOut(function() {
-            if (responseObject.status === true) {
-              if (responseObject.is_configurable === true) {
-                var configureLink = self.baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name + window.location.search;
-                $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
-                $(self.moduleImportSuccessConfigureBtnSelector).show();
-              }
-              $(self.moduleImportSuccessSelector).fadeIn();
-            } else {
-              $(self.moduleImportFailureMsgDetailsSelector).html(responseObject.msg);
-              $(self.moduleImportFailureSelector).fadeIn();
-            }
-          });
+          self.displayOnUploadDone(responseObject);
         }
         // State that we have finish the process to unlock some actions
         self.isUploadStarted = false;
       }
+    };
+    dropzone.dropzone($.extend(dropzoneOptions));
+    
+    this.animateStartUpload = function() {
+        // State that we start module upload
+        self.isUploadStarted = true;
+        $(self.moduleImportStartSelector).hide(0);
+        dropzone.css('border', 'none');
+        $(self.moduleImportProcessingSelector).fadeIn();
+    };
+    
+    this.animateEndUpload = function(callback) {
+        $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
+    };
+    
+    /**
+     * Method to call for upload modal, when the ajax call went well.
+     * 
+     * @param object result containing the server response
+     */
+    this.displayOnUploadDone = function(result) {
+        var self = this;
+        self.animateEndUpload(function() {
+            if (result.status === true) {
+              if (result.is_configurable === true) {
+                var configureLink = moduleURLs.configurationPage.replace('1', result.module_name);
+                $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+                $(self.moduleImportSuccessConfigureBtnSelector).show();
+              }
+              $(self.moduleImportSuccessSelector).fadeIn();
+            } else if (typeof result.confirmation_subject !== 'undefined') {
+                self.displayPrestaTrustStep(result);
+            } else {
+              $(self.moduleImportFailureMsgDetailsSelector).html(result.msg);
+              $(self.moduleImportFailureSelector).fadeIn();
+            }
+          });
+    };
+
+    /**
+     * Method to call for upload modal, when the ajax call went wrong or when the action requested could not
+     * succeed for some reason.
+     * 
+     * @param string message explaining the error.
+     */
+    this.displayOnUploadError = function(message) {
+        self.animateEndUpload(function() {
+            $(self.moduleImportFailureMsgDetailsSelector).html(message);
+            $(self.moduleImportFailureSelector).fadeIn();
+        });
+    };
+
+    /**
+     * If PrestaTrust needs to be confirmed, we ask for the confirmation modal content and we display it in the
+     * currently displayed one. We also generate the ajax call to trigger once we confirm we want to install
+     * the module.
+     * 
+     * @param Previous server response result
+     */
+    this.displayPrestaTrustStep = function (result) {
+          var self = this;
+          var modal = module_card_controller.replacePrestaTrustPlaceholders(result);
+          var moduleName = result.module.attributes.name;
+          $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
+          $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
+          $(this.dropZoneModalFooterSelector).find(".pstrust-install").off('click').on('click', function() {
+            
+            $(self.moduleImportConfirmSelector).hide();
+            $(self.dropZoneModalFooterSelector).html('');
+            self.animateStartUpload();
+            
+            // Install ajax call
+            $.post(result.module.attributes.urls.install, { 'actionParams[confirmPrestaTrust]': "1"})
+              .done(function(data) {
+                self.displayOnUploadDone(data[moduleName]);
+              })
+              .fail(function(data) {
+                self.displayOnUploadError(data[moduleName]);
+              })
+              .always(function() {
+                  self.isUploadStarted = false;
+              });
+          });
     };
   };
 
@@ -571,19 +640,41 @@ var AdminModuleController = function() {
 
   this.loadVariables = function () {
     this.initCurrentDisplay();
-
-    // If index.php found in the current URL, we need it also in the baseAdminDir
-    //noinspection JSUnresolvedVariable
-    this.baseAdminDir = baseAdminDir;
-    if (window.location.href.indexOf('index.php') != -1) {
-      this.baseAdminDir += 'index.php/';
-    }
   };
 
   this.getModuleItemSelector = function () {
     return this.currentDisplay == 'grid'
       ? this.moduleItemGridSelector
       : this.moduleItemListSelector;
+  };
+  
+  /**
+   * Get the module notifications count and displays it as a badge on the notification tab
+   * @return void
+   */
+  this.getNotificationsCount = function () {
+    var urlToCall = moduleURLs.notificationsCount;
+
+    $.getJSON(
+        urlToCall,
+        this.updateNotificationsCount
+    ).fail(function() {
+        console.error('Could not retrieve module notifications count.');
+    });
+  };
+  
+  this.updateNotificationsCount = function(badge) {
+    var destinationTabs = {
+        'to_configure': $("#subtab-AdminModulesNotifications"),
+        'to_update': $("#subtab-AdminModulesUpdates"),
+    };
+    
+    for (var key in destinationTabs) {
+        if (destinationTabs[key].length === 0) {
+            continue;
+        }
+        destinationTabs[key].find('.notification-counter').text(badge[key]);
+    };
   };
 
   this.initAddonsSearch = function () {
@@ -631,11 +722,10 @@ var AdminModuleController = function() {
   };
 
   this.initCurrentDisplay = function() {
-    var currentDisplaySwitch = $('.module-sort-active');
-    if (currentDisplaySwitch.length) {
-      this.currentDisplay = currentDisplaySwitch.attr('data-switch');
-    } else {
+    if (this.currentDisplay === '') {
       this.currentDisplay = 'list';
+    } else {
+      this.currentDisplay = 'grid';
     }
   }
 
@@ -664,9 +754,6 @@ var AdminModuleController = function() {
       'bulk-reset': 'reset'
     };
 
-    // char is used only to be easy to replace by the end of this function
-    var baseActionUrl = this.baseAdminDir + 'module/manage/action/@/';
-
     // Note no grid selector used yet since we do not needed it at dev time
     // Maybe useful to implement this kind of things later if intended to
     // use this functionality elsewhere but "manage my module" section
@@ -693,7 +780,6 @@ var AdminModuleController = function() {
         var moduleTechName = data.techName;
 
         var urlActionSegment = bulkActionToUrl[requestedBulkAction];
-        baseActionUrl.replace('@', urlActionSegment);
 
         if (typeof module_card_controller !== 'undefined') {
           // We use jQuery to get the specific link for this action. If found, we send it.
@@ -818,12 +904,6 @@ var AdminModuleController = function() {
       inputPlaceholder: translate_javascripts['Search - placeholder'],
       closingCross: true,
       context: self,
-      clearAllBtn: true,
-      clearAllIconClassAdditional: 'material-icons',
-      clearAllSpanClassAdditional: 'module-tags-clear-btn ',
-      tagInputClassAdditional: 'module-tags-input',
-      tagClassAdditional: 'module-tag ',
-      tagsWrapperClassAdditional: 'module-tags-labels'
     });
 
     $('body').on('click', '.module-addons-search-link', function(event) {

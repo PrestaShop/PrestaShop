@@ -83,13 +83,16 @@
         margin-left: -10px;
       }
     }
+    form {
+      text-align: center;
+    }
   }
   .promo-input {
     color: $gray-darker;
     border: $gray 1px solid;
     height: 2.5rem;
     text-indent: 0.625rem;
-    width: 60%;
+    width: 50%;
     + button {
       margin-top: -4px;
       text-transform: capitalize;

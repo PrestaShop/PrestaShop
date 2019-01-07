@@ -1,0 +1,181 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Admin.Shopparameters.Feature" %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{%
+  set generalForm = form.general
+%}
+
+{% block content %}
+    {{ form_start(form, {'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+    <div class="row justify-content-center">
+        {% block preferences_form_general %}
+            <div class="col-xl-10">
+                <div class="card">
+                    <h3 class="card-header">
+                        <i class="material-icons">settings</i> {{ 'General'|trans({}, 'Admin.Global') }}
+                    </h3>
+                    <div class="card-block row">
+                        <div class="card-text">
+                            <div class="form-group row">
+                                {{ ps.label_with_help(
+                                    ('Enable SSL'|trans),
+                                    ('If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.'|trans({}, 'Admin.Shopparameters.Help'))
+                                ) }}
+                                {% if app.request.isSecure() %}
+                                    <div class="col-sm">
+                                        {{ form_errors(generalForm.enable_ssl) }}
+                                        {{ form_widget(generalForm.enable_ssl) }}
+                                        <small class="form-text">{{ 'If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                    </div>
+                                {% else %}
+                                    <div class="col-sm">
+                                        <div class="form-control-plaintext">
+                                            <a class="d-block" href="{{ sslUri }}">
+                                                {{ 'Please click here to check if your shop supports HTTPS.'|trans({}, 'Admin.Shopparameters.Feature') }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Enable SSL on all pages'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.enable_ssl_everywhere) }}
+                                    {{ form_widget(generalForm.enable_ssl_everywhere) }}
+                                    <small class="form-text">{{ 'When enabled, all the pages of your shop will be SSL-secured.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Increase front office security'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.enable_token) }}
+                                    {{ form_widget(generalForm.enable_token) }}
+                                    <small class="form-text">{{ 'Enable or disable token in the Front Office to improve PrestaShop\'s security.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+
+                                    {% if generalForm.enable_token.vars.disabled %}
+                                      <div class="alert alert-warning mt-2 mb-0" role="alert">
+                                        <p class="alert-text">
+                                          {{ 'You can\'t change the value of this configuration field in the context of this shop.'|trans({}, 'Admin.Notifications.Warning') }}
+                                        </p>
+                                      </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Allow iframes on HTML fields'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.allow_html_iframes) }}
+                                    {{ form_widget(generalForm.allow_html_iframes) }}
+                                    <small class="form-text">{{ 'Allow iframes on text fields like product description. We recommend that you leave this option disabled.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Use HTMLPurifier Library'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.use_htmlpurifier) }}
+                                    {{ form_widget(generalForm.use_htmlpurifier) }}
+                                    <small class="form-text">{{ 'Clean the HTML content on text fields. We recommend that you leave this option enabled.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Round mode'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.price_round_mode) }}
+                                    {{ form_widget(generalForm.price_round_mode) }}
+                                    <small class="form-text">{{ 'You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Round type'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.price_round_type) }}
+                                    {{ form_widget(generalForm.price_round_type) }}
+                                    <small class="form-text">{{ 'You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Number of decimals'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.price_display_precision) }}
+                                    {{ form_widget(generalForm.price_display_precision) }}
+                                    <small class="form-text">{{ 'Choose how many decimals you want to display'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Display brands and suppliers'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.display_suppliers) }}
+                                    {{ form_widget(generalForm.display_suppliers) }}
+                                    <small class="form-text">{{ 'Enable brands and suppliers pages on your front office even when their respective modules are disabled.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Display best sellers'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.display_best_sellers) }}
+                                    {{ form_widget(generalForm.display_best_sellers) }}
+                                    <small class="form-text">{{ 'Enable best sellers page on your front office even when its respective module is disabled.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Enable Multistore'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.multishop_feature_active) }}
+                                    {{ form_widget(generalForm.multishop_feature_active) }}
+                                    <small class="form-text">{{ 'The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+
+                                    {% if generalForm.multishop_feature_active.vars.disabled %}
+                                      <div class="alert alert-warning mt-2 mb-0" role="alert">
+                                        <p class="alert-text">
+                                          {{ 'You can\'t change the value of this configuration field in the context of this shop.'|trans({}, 'Admin.Notifications.Warning') }}
+                                        </p>
+                                      </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Main Shop Activity'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.shop_activity) }}
+                                    {{ form_widget(generalForm.shop_activity) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

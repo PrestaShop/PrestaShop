@@ -1,0 +1,23 @@
+admin_localization_index:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Improve\International\Localization:index
+        _legacy_controller: AdminLocalization
+        _legacy_link: AdminLocalization
+
+admin_localization_save_options:
+    path: /options
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Improve\International\Localization:saveOptions
+        _legacy_controller: AdminLocalization
+        _legacy_link: AdminLocalization:update
+
+admin_localization_import_pack:
+    path: /import-pack
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Improve\International\Localization:importPack
+        _legacy_controller: AdminLocalization
+        _legacy_link: AdminLocalization:submitLocalizationPack

@@ -21,8 +21,10 @@ var combinations = (function() {
           url: elem.attr('href'),
           beforeSend: function() {
             elem.attr('disabled', 'disabled');
+            $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
           },
           success: function(response) {
+            refreshTotalCombinations(-1, 1);
             combinationElem.remove();
             showSuccessMessage(response.message);
             displayFieldsManager.refresh();
@@ -32,6 +34,7 @@ var combinations = (function() {
           },
           complete: function() {
             elem.removeAttr('disabled');
+            $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
             supplierCombinations.refresh();
             warehouseCombinations.refresh();
             if ($('.js-combinations-list .combination').length <= 0) {
@@ -227,7 +230,7 @@ var combinations = (function() {
 
           contentElem.insertBefore('#form-nav').removeClass('hide').show();
 
-          contentElem.find('.datepicker').datetimepicker({
+          contentElem.find('.datepicker input[type="text"]').datetimepicker({
             locale: iso_user,
             format: 'YYYY-MM-DD'
           });
@@ -277,3 +280,15 @@ var combinations = (function() {
 BOEvent.on("Product Combinations Management started", function initCombinationsManagement() {
   combinations.init();
 }, "Back office");
+
+/**
+ * Refresh bulk actions combination number after creating or deleting combinations
+ *
+ * @param {number} sign
+ * @param {number} number
+ */
+var refreshTotalCombinations = function (sign, number) {
+  var $bulkCombinationsTotal = $('#js-bulk-combinations-total');
+  var currentnumber = parseInt($bulkCombinationsTotal.text()) + (sign * number);
+  $bulkCombinationsTotal.text(currentnumber);
+}

@@ -1,0 +1,13 @@
+{
+    "name": "prestashop/ademo",
+    "description": "A module for testing purposes",
+    "autoload": {
+        "psr-4": {
+            "PsTest\\": "src/"
+        },
+        "exclude-from-classmap": []
+    },
+    "license": "MIT",
+    "type": "prestashop-module",
+    "require": {}
+}

@@ -1,0 +1,78 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Admin.Advparameters.Feature" %}
+
+{% block content %}
+  {% block request_sql_view_block %}
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            <h3>
+              <i class="material-icons">list</i>
+              {{ 'SQL query result'|trans }} ({{ sqlRequestResult.rows|length }})
+            </h3>
+          </div>
+            <div class="card-block">
+              {% if sqlRequestResult.rows is not empty %}
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      {% for column in sqlRequestResult.columns %}
+                        <th>{{ column }}</th>
+                      {% endfor %}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for row in sqlRequestResult.rows %}
+                    <tr>
+                      {% for column in sqlRequestResult.columns %}
+                        {% if requestSqlView.attributes[column] is defined %}
+                          <td>{{ requestSqlView.attributes[column] }}</td>
+                        {% else %}
+                          <td>{{ row[column] }}</td>
+                        {% endif %}
+                      {% endfor %}
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+                <div class="alert alert-warning">
+                  <p class="alert-text">
+                    {{ 'This SQL query has no result.'|trans({}, 'Admin.Advparameters.Notification') }}
+                  </p>
+                </div>
+              {% endif %}
+            </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+{% endblock %}

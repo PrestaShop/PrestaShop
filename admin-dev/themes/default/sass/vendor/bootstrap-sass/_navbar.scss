@@ -180,29 +180,6 @@
   }
 }
 
-// Shop state / Maintenance / Debug
-
-.shop-state {
-  float: left;
-  padding: $navbar-padding-vertical $navbar-padding-horizontal;
-  font-size: $font-size-large;
-  line-height: $line-height-computed;
-  height: $navbar-height;
-  margin-right: $navbar-padding-horizontal;
-
-  &:hover,
-  &:focus {
-    text-decoration: none;
-  }
-
-  > .material-icons {
-    font-size: $font-size-large;
-    color: #ffbb00;
-    float: left;
-    margin-right: $navbar-padding-horizontal;
-  }
-}
-
 // Navbar toggle
 //
 // Custom button for toggling the `.navbar-collapse`, powered by the collapse

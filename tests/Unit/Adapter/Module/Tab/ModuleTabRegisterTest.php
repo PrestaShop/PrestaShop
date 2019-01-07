@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module\Tab;
+namespace Tests\Unit\Adapter\Module\Tab;
 
 use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ModuleTabRegisterTest extends UnitTestCase
@@ -125,22 +125,22 @@ class ModuleTabRegisterTest extends UnitTestCase
 
     public function setUp()
     {
-        parent::setup();
-        
+        parent::setUp();
+
         $this->setupSfKernel();
 
-        $this->tabRegister = $this->getMock(
-            'PrestaShop\\PrestaShop\\Adapter\\Module\\Tab\\ModuleTabRegister',
-            array('getModuleAdminControllersFilename'),
-            array(
+        $this->tabRegister = $this->getMockBuilder('PrestaShop\\PrestaShop\\Adapter\\Module\\Tab\\ModuleTabRegister')
+            ->setMethods(array('getModuleAdminControllersFilename'))
+            ->setConstructorArgs(array(
                 $this->sfKernel->getContainer()->get('prestashop.core.admin.tab.repository'),
                 $this->sfKernel->getContainer()->get('prestashop.core.admin.lang.repository'),
                 $this->sfKernel->getContainer()->get('logger'),
                 $this->sfKernel->getContainer()->get('translator'),
                 $this->sfKernel->getContainer()->get('filesystem'),
                 $this->languages,
-            )
-        );
+            ))
+            ->getMock()
+        ;
         $this->tabRegister
             ->method('getModuleAdminControllersFilename')
             ->will($this->returnValueMap($this->moduleAdminControllers));
@@ -221,24 +221,5 @@ class ModuleTabRegisterTest extends UnitTestCase
         );
         $expectedResult = array(1 => $names['fr'], 2 => $names['en'], 3 => $names['en']);
         $this->assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
-    }
-
-    /**
-    * Call protected/private method of a class.
-    *
-    * @param object &$object    Instantiated object that we will run method on.
-    * @param string $methodName Method name to call
-    * @param array  $parameters Array of parameters to pass into method.
-    *
-    * @return mixed Method return.
-    * @link https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
-    */
-    protected function invokeMethod(&$object, $methodName, array $parameters = array())
-    {
-        $reflection = new \ReflectionClass(get_class($object));
-        $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
-
-        return $method->invokeArgs($object, $parameters);
     }
 }

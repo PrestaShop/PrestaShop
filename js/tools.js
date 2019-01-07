@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,6 +45,18 @@ var Tools = {
     if (String(parsed) === value) {
       return parsed;
     }
+
+    // replace arabic numbers by latin
+		value = value
+			// arabic
+			.replace(/[\u0660-\u0669]/g, function(d) {
+				return d.charCodeAt(0) - 1632;
+			})
+			// persian
+			.replace(/[\u06F0-\u06F9]/g, function(d) {
+        return d.charCodeAt(0) - 1776;
+      })
+		;
 
     // remove all non-digit characters
     var split = value.split(/[^\dE-]+/);

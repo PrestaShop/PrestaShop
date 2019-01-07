@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,18 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
+/**
+ * Not used in PrestaShop.
+ *
+ * @deprecated since 1.7.5, to be removed in 1.8
+ */
 class ClassLang
 {
     /**
@@ -34,17 +40,21 @@ class ClassLang
 
     /**
      * ClassLang constructor.
+     *
      * @param $locale
      */
-    public function __construct($locale) {
+    public function __construct($locale)
+    {
         $this->locale = $locale;
     }
 
     /**
      * @param $className
+     *
      * @return bool
      */
-    public function getClassLang($className) {
+    public function getClassLang($className)
+    {
         if (!class_exists($className)) {
             return false;
         }

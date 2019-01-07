@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
@@ -49,14 +48,15 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->headerTabContent = $headerTabContent;
         $this->enableSidebar = $enableSidebar;
         $this->helpLink = $helpLink;
+        $this->php_self = $controllerName;
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
         parent::setMedia(true);
     }
 
-    public function viewAccess()
+    public function viewAccess($disable = false)
     {
         return true;
     }
@@ -79,21 +79,21 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->show_page_header_toolbar = (bool) $this->showContentHeader;
 
         $vars = array(
-            'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
-            'debug_mode' => (bool)_PS_MODE_DEV_,
+            'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
+            'debug_mode' => (bool) _PS_MODE_DEV_,
             'headerTabContent' => $this->headerTabContent,
             'content' => '{$content}', //replace content by original smarty tag var
             'enableSidebar' => $this->enableSidebar,
             'lite_display' => $this->lite_display,
-            'url_post' => self::$currentIndex.'&token='.$this->token,
+            'url_post' => self::$currentIndex . '&token=' . $this->token,
             'show_page_header_toolbar' => $this->show_page_header_toolbar,
             'page_header_toolbar_title' => $this->page_header_toolbar_title,
             'title' => $this->title ? $this->title : $this->page_header_toolbar_title,
             'toolbar_btn' => $this->page_header_toolbar_btn,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
+            'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
         );
 
-        if (!empty($this->helpLink)) {
+        if ($this->helpLink === false || !empty($this->helpLink)) {
             $vars['help_link'] = $this->helpLink;
         }
 

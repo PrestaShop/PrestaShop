@@ -1,16 +1,9 @@
-.lang-rtl {
-  * {
-    direction: rtl !important;
-  }
-  main {
-    text-align: right !important;
-  }
-}
 body,
 html {
   height: 100%;
 }
 body {
+  direction: ltr;
   font-family: 'Noto Sans', sans-serif;
   font-size: $base-font-size;
   -webkit-font-smoothing: antialiased;
@@ -153,7 +146,7 @@ small.label, small.value {
       text-transform: uppercase;
       &[data-action="show-password"]{
         background: $gray;
-        height: 100%;
+        padding: .78rem 1rem;
       }
     }
   }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Pack;
 
 use Pack;
@@ -30,12 +31,12 @@ use Product;
 use Context;
 
 /**
- * This class will provide data from DB / ORM about product pack
+ * This class will provide data from DB / ORM about product pack.
  */
 class PackDataProvider
 {
     /**
-     * Get product pack items
+     * Get product pack items.
      *
      * @param int $id_product
      * @param int $id_lang
@@ -44,7 +45,7 @@ class PackDataProvider
     {
         $packItems = Pack::getItems($id_product, $id_lang);
 
-        foreach ($packItems as $k => $packItem) {
+        foreach ($packItems as $packItem) {
             $cover = $packItem->id_pack_product_attribute ? Product::getCombinationImageById($packItem->id_pack_product_attribute, $id_lang) : Product::getCover($packItem->id);
             $packItem->image = Context::getContext()->link->getImageLink($packItem->link_rewrite, $cover ? $cover['id_image'] : '', 'home_default');
         }

@@ -1,6 +1,6 @@
 php:
+    # Question: should we make a class to extend or do we ask for a function to call ?
     - file: "php/MyComplexModuleConfiguration.php"
-      # Question: should we make a class to extend or do we ask for a function to call ?
       params:
         - myParam1: 1
         - oneArrayParam:

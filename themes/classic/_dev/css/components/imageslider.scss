@@ -6,21 +6,41 @@
   }
   .carousel-inner {
     height: 340px;
+    @media (max-width: 767px) {
+      height: auto;
+    }
   }
   .carousel-item {
     height: 100%;
     img {
+      @media (max-width: 767px) {
+        max-width: 100%;
+        height: auto;
+      }
+      @media (min-width: 768px) {
       width: 100%;
       margin-left: 0;
     }
+    }
     .caption {
       position: absolute;
+      @media (min-width: 768px) {
       bottom: 28px;
       left: 90px;
+      }
+      @media (max-width: 767px) {
+        bottom: 5px;
+        left: 40px;
+      }
       color: white;
       max-width: 340px;
       .caption-description p {
         color: white;
+      }
+    }
+    figure {
+      @media (max-width: 767px) {
+        margin: 0;
       }
     }
   }

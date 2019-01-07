@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,8 +36,7 @@ const state = {
   order: '',
   pageIndex: 1,
   totalPages: 0,
-  productsPerPage: 100,
-  productsToUpdate: [],
+  productsPerPage: 30,
   products: [],
   hasQty: false,
   keywords: [],
@@ -53,6 +52,9 @@ const state = {
   isLoading: false,
   isReady: false,
   editBulkUrl: '',
+  bulkEditQty: null,
+  productsToUpdate: [],
+  selectedProducts: [],
 };
 
 // getters are functions
@@ -77,6 +79,9 @@ const getters = {
       return categories;
     }
     return convert(rootState.categories);
+  },
+  selectedProductsLng(rootState) {
+    return rootState.selectedProducts.length;
   },
 };
 

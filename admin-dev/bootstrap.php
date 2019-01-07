@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-umask(0000); // This will let the permissions be 0775
+umask(0000); // This will let the permissions be 0777
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
@@ -32,5 +32,3 @@ if (!defined('PS_ADMIN_DIR')) {
 }
 
 require_once(dirname(__FILE__).'/../config/config.inc.php');
-
-$loader = require_once(dirname(__FILE__).'/../app/bootstrap.php.cache');

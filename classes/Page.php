@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class PageCore
+ * Class PageCore.
  */
 class PageCore extends ObjectModel
 {
@@ -70,13 +70,13 @@ class PageCore extends ObjectModel
 
         if (array_key_exists($controller, $specialArray)) {
             $objectId = Tools::getValue($specialArray[$controller], null);
-            $where = ' AND `id_object` = '.(int) $objectId;
+            $where = ' AND `id_object` = ' . (int) $objectId;
             $insertData['id_object'] = (int) $objectId;
         }
 
         $sql = 'SELECT `id_page`
-				FROM `'._DB_PREFIX_.'page`
-				WHERE `id_page_type` = '.(int) $pageTypeId.$where;
+				FROM `' . _DB_PREFIX_ . 'page`
+				WHERE `id_page_type` = ' . (int) $pageTypeId . $where;
         $result = Db::getInstance()->getRow($sql);
         if ($result['id_page']) {
             return $result['id_page'];
@@ -88,7 +88,7 @@ class PageCore extends ObjectModel
     }
 
     /**
-     * Return page type ID from page name
+     * Return page type ID from page name.
      *
      * @param string $name Page name (E.g. product.php)
      */
@@ -96,8 +96,8 @@ class PageCore extends ObjectModel
     {
         if ($value = Db::getInstance()->getValue('
 				SELECT id_page_type
-				FROM '._DB_PREFIX_.'page_type
-				WHERE name = \''.pSQL($name).'\''
+				FROM ' . _DB_PREFIX_ . 'page_type
+				WHERE name = \'' . pSQL($name) . '\''
                 )
             ) {
             return $value;
@@ -109,7 +109,7 @@ class PageCore extends ObjectModel
     }
 
     /**
-     * Increase page viewed number by one
+     * Increase page viewed number by one.
      *
      * @param int $idPage Page ID
      */
@@ -119,11 +119,11 @@ class PageCore extends ObjectModel
         $context = Context::getContext();
 
         // Try to increment the visits counter
-        $sql = 'UPDATE `'._DB_PREFIX_.'page_viewed`
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'page_viewed`
 				SET `counter` = `counter` + 1
-				WHERE `id_date_range` = '.(int) $idDateRange.'
-					AND `id_page` = '.(int) $idPage.'
-					AND `id_shop` = '.(int) $context->shop->id;
+				WHERE `id_date_range` = ' . (int) $idDateRange . '
+					AND `id_page` = ' . (int) $idPage . '
+					AND `id_shop` = ' . (int) $context->shop->id;
         Db::getInstance()->execute($sql);
 
         // If no one has seen the page in this date range, it is added

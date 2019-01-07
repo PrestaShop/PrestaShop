@@ -1,0 +1,60 @@
+admin_emails_index:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:index'
+        _legacy_controller: AdminEmails
+        _legacy_link: AdminEmails
+
+admin_emails_search:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:search'
+        _legacy_controller: AdminEmails
+        _legacy_link: AdminEmails:search
+
+admin_emails_save_options:
+    path: /options
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:saveOptions'
+        _legacy_controller: AdminEmails
+        _legacy_link: AdminEmails:update
+
+admin_emails_send_test:
+    path: /send-testing-email
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:sendTest'
+        _legacy_controller: AdminEmails
+        _legacy_link: AdminEmails:testEmail
+    condition: 'request.isXmlHttpRequest()'
+
+admin_emails_delete_bulk:
+    path: /delete-bulk
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:deleteBulk'
+        _legacy_controller: AdminEmails
+        _legacy_link: AdminEmails:submitBulkdeletemail
+
+admin_emails_delete_all:
+    path: /delete-all
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:deleteAll'
+        _legacy_controller: AdminEmails
+        _legacy_link: AdminEmails:deleteAll
+
+admin_emails_delete:
+    path: /delete/{mailId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:delete'
+        _legacy_controller: AdminEmails
+        _legacy_link: AdminEmails:deletemail
+        _legacy_parameters:
+            id_mail: mailId
+    requirements:
+        mailId: \d+

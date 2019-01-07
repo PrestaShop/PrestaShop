@@ -1,0 +1,32 @@
+version: '3.1'
+services:
+    db:
+        image: mysql:5.7
+        environment:
+            MYSQL_ROOT_PASSWORD: example
+            MYSQL_DATABASE: prestashop
+            MYSQL_USER: prestashop
+            MYSQL_PASSWORD: prestashop
+        networks:
+          - default
+
+    nginx:
+        build:
+            context: prestashop-nginx-fpm
+        ports:
+            - "8080:80"
+        volumes:
+            - ./prestashop/:/prestashop/
+        environment:
+          PUID: "1001"
+          WEBROOT: "/prestashop"
+          SKIP_COMPOSER: 1
+          REMOVE_FILES: 0
+          REAL_IP_HEADER: 1
+          REAL_IP_FROM: "10.1.0.0/16"
+          PHP_ERRORS_STDERR: 1
+        networks:
+          - default
+
+networks:
+  default:

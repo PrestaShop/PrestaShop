@@ -1,0 +1,71 @@
+.grid-toggler-icon-valid {
+  color: #78d07d;
+  cursor: pointer;
+}
+
+.grid-toggler-icon-not-valid {
+  color: #c05c67;
+  cursor: pointer;
+}
+
+table.grid-ordering-column tr {
+  transition-property: all;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-out;
+  &.hover {
+    background-color: $gray-soft;
+  }
+  &:hover {
+    .position-drag-handle {
+      visibility: visible;
+    }
+  }
+}
+
+table.grid-ordering-column tr.position-row-while-drag {
+  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
+  color: white;
+  transform: translate(5px,10px);
+  background: none;
+  td {
+    background-color: $medium-gray;
+  }
+  td:first-child { border-top-left-radius: 3px; }
+  td:first-child { border-bottom-left-radius: 3px; }
+  td:last-child { border-top-right-radius: 3px; }
+  td:last-child { border-bottom-right-radius: 3px; }
+
+  .position-drag-handle,
+  .position-drag-handle:hover,
+  .btn, .btn:after, .btn .material-icons {
+    color: white;
+  }
+}
+
+.js-drag-handle {
+  cursor: move;
+}
+
+.position-drag-handle {
+  color: $gray-medium;
+  visibility: hidden;
+
+  &:hover {
+    color: $primary;
+  }
+}
+
+.btn-group-action {
+  a.dropdown-toggle,
+  button.dropdown-toggle,
+  .dropdown-toggle {
+    color: $gray-medium;
+    &:after {
+      content: "more_vert";
+    }
+
+    &:hover {
+      color: $primary;
+    }
+  }
+}

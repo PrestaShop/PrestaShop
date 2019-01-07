@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,35 +18,44 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
 
 export default class ProductMinitature {
-  init(){
+  init() {
     $('.js-product-miniature').each((index, element) => {
       const FLAG_MARGIN = 10;
-      let $percent = $(element).find('.discount-percentage');
-      let $onsale =  $(element).find('.on-sale');
-      let $new = $(element).find('.new');
-      if($percent.length){
-        $new.css('top', $percent.height() * 2 + FLAG_MARGIN);
-        $percent.css('top',-$(element).find('.thumbnail-container').height() + $(element).find('.product-description').height() + FLAG_MARGIN);
+      const discountElems = $(element).find('.discount-product');
+      const onSaleElems =  $(element).find('.on-sale');
+      const newElems = $(element).find('.new');
+
+      if (discountElems.length) {
+        newElems.css('top', discountElems.height() * 2 + FLAG_MARGIN);
+        discountElems.css('top', -$(element).find('.thumbnail-container').height() + $(element).find('.product-description').height() + FLAG_MARGIN);
+
+        if ($(element).find('.pack').length) {
+          $(element).find('.pack').css('top', discountElems.height() * 2 + FLAG_MARGIN);
+        }
       }
-      if($onsale.length){
-        $percent.css('top', parseFloat($percent.css('top')) + $onsale.height() + FLAG_MARGIN);
-        $new.css('top', ($percent.height() * 2 + $onsale.height()) + FLAG_MARGIN * 2);
+
+      if (onSaleElems.length) {
+        discountElems.css('top', parseFloat(discountElems.css('top')) + onSaleElems.height() + FLAG_MARGIN);
+        newElems.css('top', (discountElems.height() * 2 + onSaleElems.height()) + FLAG_MARGIN * 2);
       }
-      if($(element).find('.color').length > 5){
+
+      if ($(element).find('.color').length > 5) {
         let count = 0;
-        $(element).find('.color').each((index, element) =>{
-          if(index > 4){
+
+        $(element).find('.color').each((index, element) => {
+          if (index > 4) {
             $(element).hide();
             count ++;
           }
         });
+
         $(element).find('.js-count').append(`+${count}`);
       }
     });

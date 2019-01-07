@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -64,6 +64,11 @@ abstract class InstallControllerConsole
     protected $model_install;
 
     /**
+     * @var \PrestaShopBundle\Install\Database
+     */
+    protected $model_database;
+
+    /**
      * Validate current step.
      */
     abstract public function validate();
@@ -72,10 +77,10 @@ abstract class InstallControllerConsole
     {
         if (!($argc - 1)) {
             $available_arguments = Datas::getInstance()->getArgs();
-            echo 'Arguments available:'."\n";
+            echo 'Arguments available:'.PHP_EOL;
             foreach ($available_arguments as $key => $arg) {
                 $name = isset($arg['name']) ? $arg['name'] : $key;
-                echo '--'.$name."\t".(isset($arg['help']) ? $arg['help'] : '').(isset($arg['default']) ? "\t".'(Default: '.$arg['default'].')' : '')."\n";
+                echo '--'.$name."\t".(isset($arg['help']) ? $arg['help'] : '').(isset($arg['default']) ? "\t".'(Default: '.$arg['default'].')' : '').PHP_EOL;
             }
             exit;
         }
@@ -89,7 +94,7 @@ abstract class InstallControllerConsole
         if ($errors !== true) {
             if (count($errors)) {
                 foreach ($errors as $error) {
-                    echo $error."\n";
+                    echo $error.PHP_EOL;
                 }
             }
             exit;
@@ -140,15 +145,21 @@ abstract class InstallControllerConsole
 
     public function printErrors()
     {
-        $errors = $this->model_install->getErrors();
+        $errors = array_merge(
+            $this->model_database->getErrors(),
+            $this->model_install->getErrors()
+        );
         if (count($errors)) {
             if (!is_array($errors)) {
                 $errors = array($errors);
             }
-            echo 'Errors :'."\n";
+            echo 'Errors :'. PHP_EOL;
             foreach ($errors as $error_process) {
+                if (!is_array($error_process)) {
+                    $error_process = [$error_process];
+                }
                 foreach ($error_process as $error) {
-                    echo(is_string($error) ? $error : print_r($error, true))."\n";
+                    echo(is_string($error) ? $error : print_r($error, true)).PHP_EOL;
                 }
             }
             die;

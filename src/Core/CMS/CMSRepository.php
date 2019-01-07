@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,37 +19,31 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\CMS;
 
 class CMSRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\EntityRepository
 {
     /**
-     * Return CMSRepository lang associative table name
-     * @return string
-     */
-    private function getLanguageTableNameWithPrefix()
-    {
-        return $this->getTableNameWithPrefix() . '_lang';
-    }
-
-    /**
-     * Return all CMSRepositories depending on $id_lang/$id_shop tuple
+     * Return all CMSRepositories depending on $id_lang/$id_shop tuple.
+     *
      * @param $id_lang
      * @param $id_shop
+     *
      * @return array|null
      */
     public function i10nFindAll($id_lang, $id_shop)
     {
         $sql = '
 			SELECT *
-			FROM `'.$this->getTableNameWithPrefix().'` c
-			JOIN `'.$this->getPrefix().'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
-			WHERE cl.`id_lang` = '.(int)$id_lang.'
-			AND cl.`id_shop` = '.(int)$id_shop.'
+			FROM `' . $this->getTableNameWithPrefix() . '` c
+			JOIN `' . $this->getPrefix() . 'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
+			WHERE cl.`id_lang` = ' . (int) $id_lang . '
+			AND cl.`id_shop` = ' . (int) $id_shop . '
 
 		';
 
@@ -57,22 +51,25 @@ class CMSRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\Enti
     }
 
     /**
-     * Return all CMSRepositories depending on $id_lang/$id_shop tuple
+     * Return all CMSRepositories depending on $id_lang/$id_shop tuple.
+     *
      * @param $id_cms
      * @param $id_lang
      * @param $id_shop
+     *
      * @return CMS|null
+     *
      * @throws \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
      */
     public function i10nFindOneById($id_cms, $id_lang, $id_shop)
     {
         $sql = '
 			SELECT *
-			FROM `'.$this->getTableNameWithPrefix().'` c
-			JOIN `'.$this->getPrefix().'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
-			WHERE c.`id_cms` = '.(int)$id_cms.'
-			AND cl.`id_lang` = '.(int)$id_lang.'
-			AND cl.`id_shop` = '.(int)$id_shop.'
+			FROM `' . $this->getTableNameWithPrefix() . '` c
+			JOIN `' . $this->getPrefix() . 'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
+			WHERE c.`id_cms` = ' . (int) $id_cms . '
+			AND cl.`id_lang` = ' . (int) $id_lang . '
+			AND cl.`id_shop` = ' . (int) $id_shop . '
 			LIMIT 0 , 1
 		';
 

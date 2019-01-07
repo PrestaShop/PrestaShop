@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,32 +18,35 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <section>
-    <PSTable class="m-t-1">
+  <section class="stock-movements">
+    <PSTable class="mt-1">
       <thead>
         <tr>
           <th width="30%">
-            {{trans('title_product')}}
-            <PSSort order="product" @sort="toggleSort" />
+            <PSSort order="product" @sort="sort" :current-sort="currentSort">
+              {{trans('title_product')}}
+            </PSSort>
           </th>
           <th>
-            {{trans('title_reference')}}
-            <PSSort order="reference" @sort="toggleSort" />
+            <PSSort order="reference" @sort="sort" :current-sort="currentSort">
+              {{trans('title_reference')}}
+            </PSSort>
           </th>
           <th>
             {{trans('title_movements_type')}}
           </th>
-          <th class="text-xs-center">
+          <th class="text-center">
             {{trans('title_quantity')}}
           </th>
-          <th class="text-xs-center">
-            {{trans('title_date')}}
-            <PSSort order="date_add" @sort="toggleSort" />
+          <th class="text-center">
+            <PSSort order="date_add" @sort="sort" :current-sort="currentSort">
+              {{trans('title_date')}}
+            </PSSort>
           </th>
           <th>
             {{trans('title_employee')}}
@@ -52,8 +55,8 @@
       </thead>
       <tbody>
         <tr v-if="this.isLoading">
-          <td colspan="7">
-            <PSLoader v-for="(n, index) in 3" class="m-t-1" :key="index">
+          <td colspan="6">
+            <PSLoader v-for="(n, index) in 3" class="mt-1" :key="index">
               <div class="background-masker header-top"></div>
               <div class="background-masker header-left"></div>
               <div class="background-masker header-bottom"></div>
@@ -63,7 +66,7 @@
           </td>
         </tr>
         <tr v-else-if="emptyMovements">
-          <td colspan="7">
+          <td colspan="6">
             <PSAlert alertType="ALERT_TYPE_WARNING" :hasClose="false">
               {{trans('no_product')}}
             </PSAlert>
@@ -82,7 +85,7 @@
   import PSLoader from 'app/widgets/ps-loader';
   import MovementLine from './movement-line';
 
-  const DEFAULT_SORT = ' desc';
+  const DEFAULT_SORT = 'desc';
 
   export default {
     computed: {
@@ -95,12 +98,14 @@
       emptyMovements() {
         return !this.$store.state.movements.length;
       },
+      currentSort() {
+        return this.$store.state.order;
+      },
     },
     methods: {
-      toggleSort(order, isSorted) {
-        const desc = isSorted ? ' desc' : '';
+      sort(order, sortDirection) {
         this.$store.dispatch('updateOrder', order);
-        this.$emit('fetch', desc);
+        this.$emit('fetch', sortDirection === 'desc' ? 'desc' : 'asc');
       },
     },
     mounted() {

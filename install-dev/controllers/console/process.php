@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,7 +29,6 @@ use PrestaShopBundle\Install\Database;
 class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
 {
 
-    protected $model_database;
     public $process_steps = array();
     public $previous_button = false;
 
@@ -254,6 +253,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             'admin_email' =>            $this->datas->admin_email,
             'configuration_agrement' =>    true,
             'send_informations' => true,
+            'enable_ssl' => $this->datas->enable_ssl,
         ));
     }
 
@@ -308,7 +308,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     private function clearConfigXML()
     {
         $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
-        $cacheFiles = scandir($configXMLPath);
+        $cacheFiles = scandir($configXMLPath, SCANDIR_SORT_NONE);
         $excludes = ['.htaccess', 'index.php'];
 
         foreach($cacheFiles as $file) {
@@ -322,7 +322,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     private function clearConfigThemes()
     {
         $themesPath = _PS_ROOT_DIR_.'/config/themes/';
-        $cacheFiles = scandir($themesPath);
+        $cacheFiles = scandir($themesPath, SCANDIR_SORT_NONE);
         foreach($cacheFiles as $file) {
             $file = $themesPath.$file;
             if (is_file($file)) {

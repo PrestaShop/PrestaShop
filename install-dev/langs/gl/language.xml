@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+	<name><![CDATA[Galego (Galician)]]></name>
+	<locale>gl-ES</locale>
+	<language_code>gl-es</language_code>
+	<date_format_lite>j/m/Y</date_format_lite>
+	<date_format_full>j/m/Y H:i:s</date_format_full>
+	<is_rtl>false</is_rtl>
+</language>

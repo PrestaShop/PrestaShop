@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class AuthControllerCore extends FrontController
 {
     public $ssl = true;
@@ -65,8 +64,8 @@ class AuthControllerCore extends FrontController
             }
 
             $this->context->smarty->assign([
-                'register_form'  => $register_form->getProxy(),
-                'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop')
+                'register_form' => $register_form->getProxy(),
+                'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop'),
             ]);
             $this->setTemplate('customer/registration');
         } else {
@@ -81,7 +80,7 @@ class AuthControllerCore extends FrontController
             }
 
             $this->context->smarty->assign([
-                'login_form' => $login_form->getProxy()
+                'login_form' => $login_form->getProxy(),
             ]);
             $this->setTemplate('customer/authentication');
         }
@@ -91,23 +90,21 @@ class AuthControllerCore extends FrontController
         if ($should_redirect && !$this->ajax) {
             $back = urldecode(Tools::getValue('back'));
 
-            if (Tools::secureReferrer($back)) {
+            if (Tools::urlBelongsToShop($back)) {
                 // Checks to see if "back" is a fully qualified
                 // URL that is on OUR domain, with the right protocol
-                $this->redirectWithNotifications($back);
-            } else {
-                // Well we're not redirecting to a URL,
-                // so...
-                if ($this->authRedirection) {
-                    // We may need to go there if defined
-                    $back = $this->authRedirection;
-                } elseif (!preg_match('/^[\w\-]+$/', $back)) {
-                    // Otherwise, check that "back" matches a controller name
-                    // and set a default if not.
-                    $back = 'my-account';
-                }
-                $this->redirectWithNotifications('index.php?controller='.urlencode($back));
+                return $this->redirectWithNotifications($back);
             }
+
+            // Well we're not redirecting to a URL,
+            // so...
+            if ($this->authRedirection) {
+                // We may need to go there if defined
+                return $this->redirectWithNotifications($this->authRedirection);
+            }
+
+            // go home
+            return $this->redirectWithNotifications(__PS_BASE_URI__);
         }
     }
 }

@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.export.dir:
+        class: 'PrestaShop\PrestaShop\Core\Export\ExportDirectory'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.export.file_writer.export_csv_file_writer:
+        class: 'PrestaShop\PrestaShop\Core\Export\FileWriter\ExportCsvFileWriter'
+        arguments:
+            - '@prestashop.core.export.dir'

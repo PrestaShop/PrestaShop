@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Foundation\Filesystem;
 
 use SplFileInfo;
@@ -66,7 +67,7 @@ class FileSystem
                 $arg_0,
                 call_user_func_array(
                     array($this,
-                          'joinPaths'),
+                          'joinPaths', ),
                     array_slice($func_args, 1)
                 )
             );
@@ -78,6 +79,7 @@ class FileSystem
      * Throws exception if $path is not a file.
      * If $path is a file and not a directory, just gets the file info for it
      * and return it in an array.
+     *
      * @return an array of SplFileInfo object indexed by file path
      */
     public function listEntriesRecursively($path)

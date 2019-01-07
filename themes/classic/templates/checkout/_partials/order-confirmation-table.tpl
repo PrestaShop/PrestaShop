@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -42,7 +42,7 @@
             {if $add_product_link}<a href="{$product.url}" target="_blank">{/if}
               <span>{$product.name}</span>
             {if $add_product_link}</a>{/if}
-            {if $product.customizations|count}
+            {if is_array($product.customizations) && $product.customizations|count}
               {foreach from=$product.customizations item="customization"}
                 <div class="customizations">
                   <a href="#" data-toggle="modal" data-target="#product-customizations-modal-{$customization.id_customization}">{l s='Product customization' d='Shop.Theme.Catalog'}</a>
@@ -85,9 +85,9 @@
           </div>
           <div class="col-sm-6 col-xs-12 qty">
             <div class="row">
-              <div class="col-xs-5 text-smright text-xsleft">{$product.price}</div>
+              <div class="col-xs-5 text-sm-right text-xs-left">{$product.price}</div>
               <div class="col-xs-2">{$product.quantity}</div>
-              <div class="col-xs-5 text-xsright bold">{$product.total}</div>
+              <div class="col-xs-5 text-xs-right bold">{$product.total}</div>
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@
 
       <table>
         {foreach $subtotals as $subtotal}
-          {if $subtotal.type !== 'tax'}
+          {if $subtotal.type !== 'tax' && $subtotal.label !== null}
             <tr>
               <td>{$subtotal.label}</td>
               <td>{$subtotal.value}</td>

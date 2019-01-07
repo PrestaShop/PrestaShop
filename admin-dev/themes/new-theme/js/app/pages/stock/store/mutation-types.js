@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,23 +18,28 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 export const ADD_PRODUCTS = 'ADD_PRODUCTS';
-export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
-export const UPDATE_PRODUCTS_QTY = 'UPDATE_PRODUCTS_QTY';
-export const UPDATE_PRODUCT_QTY = 'UPDATE_PRODUCT_QTY';
-export const UPDATE_ORDER = 'UPDATE_ORDER';
-export const SET_TOTAL_PAGES = 'SET_TOTAL_PAGES';
+export const ADD_PRODUCT_TO_UPDATE = 'ADD_PRODUCT_TO_UPDATE';
+export const ADD_SELECTED_PRODUCT = 'ADD_SELECTED_PRODUCT';
+export const APP_IS_READY = 'APP_IS_READY';
+export const LOADING_STATE = 'LOADING_STATE';
+export const REMOVE_PRODUCT_TO_UPDATE = 'REMOVE_PRODUCT_TO_UPDATE';
+export const REMOVE_SELECTED_PRODUCT = 'REMOVE_SELECTED_PRODUCT';
+export const SET_CATEGORIES = 'SET_CATEGORIES';
+export const SET_EMPLOYEES_LIST = 'SET_EMPLOYEES_LIST';
+export const SET_MOVEMENTS = 'SET_MOVEMENTS';
+export const SET_MOVEMENTS_TYPES = 'SET_MOVEMENTS_TYPES';
 export const SET_PAGE_INDEX = 'SET_PAGE_INDEX';
 export const SET_SUPPLIERS = 'SET_SUPPLIERS';
-export const SET_CATEGORIES = 'SET_CATEGORIES';
-export const SET_MOVEMENTS = 'SET_MOVEMENTS';
+export const SET_TOTAL_PAGES = 'SET_TOTAL_PAGES';
 export const SET_TRANSLATIONS = 'SET_TRANSLATIONS';
+export const UPDATE_BULK_EDIT_QTY = 'UPDATE_BULK_EDIT_QTY';
 export const UPDATE_KEYWORDS = 'UPDATE_KEYWORDS';
-export const LOADING_STATE = 'LOADING_STATE';
-export const APP_IS_READY = 'APP_IS_READY';
-export const SET_EMPLOYEES_LIST = 'SET_EMPLOYEES_LIST';
-export const SET_MOVEMENTS_TYPES = 'SET_MOVEMENTS_TYPES';
+export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
+export const UPDATE_PRODUCT_QTY = 'UPDATE_PRODUCT_QTY';
+export const UPDATE_PRODUCTS_QTY = 'UPDATE_PRODUCTS_QTY';
+export const UPDATE_ORDER = 'UPDATE_ORDER';

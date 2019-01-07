@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -28,7 +28,7 @@
 		<div class="modal-dialog">
 			<div class="alert alert-danger clearfix">
 				{foreach $php_errors item=php_error}
-					{l s='%1$s on line %2$s in file %3$s' sprintf=[$php_error.type|escape, $php_error.errline|escape, $php_error.errfile|escape]}<br />
+					{l s='%1$s on line %2$s in file %3$s' sprintf=[$php_error.type|escape, $php_error.errline|escape, $php_error.errfile|escape] d='Admin.Notifications.Error'}<br />
 					[{$php_error.errno|escape}] {$php_error.errstr|escape}<br /><br />
 				{/foreach}
 				<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><i class="icon-remove"></i> Close</button>

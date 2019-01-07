@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -89,9 +89,9 @@ abstract class Controller extends ControllerCore
 
     private function getPhpVersionColor($version)
     {
-        if (version_compare($version, '5.3') < 0) {
+        if (version_compare($version, '5.6') < 0) {
             return '<span style="color:red">'.$version.' (Upgrade strongly recommended)</span>';
-        } elseif (version_compare($version, '5.4') < 0) {
+        } elseif (version_compare($version, '7.1') < 0) {
             return '<span style="color:#EF8B00">'.$version.' (Consider upgrading)</span>';
         }
         return '<span style="color:green">'.$version.' (OK)</span>';
@@ -321,7 +321,7 @@ abstract class Controller extends ControllerCore
             $this->array_queries[] = $query_row;
         }
 
-        uasort(ObjectModel::$debug_list, create_function('$a,$b', 'return (count($a) < count($b)) ? 1 : -1;'));
+        uasort(ObjectModel::$debug_list, function ($a, $b) { return (count($a) < count($b)) ? 1 : -1; });
         arsort(Db::getInstance()->tables);
         arsort(Db::getInstance()->uniqQueries);
     }

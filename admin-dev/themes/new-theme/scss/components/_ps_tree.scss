@@ -1,0 +1,59 @@
+.ps-tree {
+  ul {
+    list-style-type: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tree-header {
+    border-bottom: $gray-light 1px solid;
+
+    button {
+      color: $gray-medium;
+      font-size: .65rem;
+      font-weight: 700;
+      height: 1.563rem;
+    }
+  }
+}
+
+.ps-tree-items {
+  .tree-name {
+    align-items: center;
+
+    button {
+      &:before {
+        @extend .material-icons;
+        font-size: 1.25rem;
+      }
+      &.open:before {
+        content: "keyboard_arrow_down";
+      }
+      &.closed:before {
+        content: "keyboard_arrow_right"
+      }
+    }
+  }
+
+  .tree {
+    padding: 0 0 0 20px;
+    .tree-item {
+      margin: 5px 0;
+      list-style-type: none;
+    }
+  }
+  .tree-label {
+    margin-left: 5px;
+  }
+  .warning {
+    color: $danger;
+    background: none;
+  }
+  .hidden {
+    visibility: hidden;
+  }
+  .disable {
+    display: none;
+  }
+}

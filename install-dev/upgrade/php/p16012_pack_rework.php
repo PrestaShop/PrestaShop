@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,17 +27,17 @@
 function p16012_pack_rework()
 {
     Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_PACK_STOCK_TYPE", "0", NOW(), NOW())');
-    $all_product_in_pack = Db::getInstance()->ExecuteS('SELECT `id_product_item` FROM '._DB_PREFIX_.'pack GROUP BY `id_product_item`');
+    $all_product_in_pack = Db::getInstance()->executeS('SELECT `id_product_item` FROM '._DB_PREFIX_.'pack GROUP BY `id_product_item`');
     foreach ($all_product_in_pack as $value) {
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'pack
 		 	SET `id_product_attribute_item` = '.(getDefaultAttribute($value['id_product_item']) ? getDefaultAttribute($value['id_product_item']).' ' : '0 ').'
 		 	WHERE `id_product_item` = '.$value['id_product_item']);
     }
 
-    $all_product_pack = Db::getInstance()->ExecuteS('SELECT `id_product_pack` FROM '._DB_PREFIX_.'pack GROUP BY `id_product_pack`');
+    $all_product_pack = Db::getInstance()->executeS('SELECT `id_product_pack` FROM '._DB_PREFIX_.'pack GROUP BY `id_product_pack`');
     foreach ($all_product_pack as $value) {
         $work_with_stock = 1;
-        $lang = Db::getInstance()->ExecuteS('SELECT value FROM '._DB_PREFIX_.'configuration WHERE `id_shop` = NULL AND `id_shop_group` = NULL AND `name` = "PS_LANG_DEFAULT"');
+        $lang = Db::getInstance()->executeS('SELECT value FROM '._DB_PREFIX_.'configuration WHERE `id_shop` = NULL AND `id_shop_group` = NULL AND `name` = "PS_LANG_DEFAULT"');
         $products = getItems($value['id_product_pack']);
         foreach ($products as $product) {
             if ($product != 1) {

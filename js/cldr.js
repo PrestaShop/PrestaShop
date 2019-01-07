@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,10 @@
 var cldrLoadedCatalogs = [];
 var cldrLoaderError = false;
 var cldrCatalogsPath = (typeof baseDir !== 'undefined' ? baseDir : '') + 'translations/cldr/datas/';
+
+/* Variables avoiding several loading of the same file */
+var deferreds = [];
+var deferredUrls = [];
 
 /**
  * Will get list of CLDR catalogs by XHR.
@@ -77,14 +81,16 @@ function cldrLazyLoadCatalogs(catalogs, callback) {
 			return new Globalize(culture);
 		}
 	} else {
-		var deferreds = [];
 		catalogs.forEach(function(catalog) {
 			var url = cldrCatalogsPath + catalog.replace(/main\/[^\/]+/, 'main/'+culture) + '.json';
-			if ($.inArray(url, cldrLoadedCatalogs) === -1) {
+			if ($.inArray(url, cldrLoadedCatalogs) === -1 && $.inArray(url, deferredUrls) === -1) {
+				deferredUrls.push(url);
 				this.push($.get(url).done(function() {
 						cldrLoadedCatalogs.push(url);
 					}).fail(function() {
 						cldrLoaderError = true;
+					}).always(function() {
+						deferredUrls.splice(deferredUrls.indexOf(url), 1)
 					}));
 			}
 		}, deferreds);

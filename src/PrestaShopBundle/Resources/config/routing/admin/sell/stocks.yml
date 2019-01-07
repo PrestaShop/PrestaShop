@@ -1,0 +1,12 @@
+admin_stock_overview:
+    path:     /
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Stock:overview
+        _legacy_link: AdminStockManagement
+
+admin_stock_movements_overview:
+    path: /movements
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Stock:overview

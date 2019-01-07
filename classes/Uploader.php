@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class UploaderCore
+ * Class UploaderCore.
  */
 class UploaderCore
 {
@@ -95,10 +95,10 @@ class UploaderCore
 
         $pathInfo = pathinfo($fileName);
         if (isset($pathInfo['extension'])) {
-            $fileName = $pathInfo['filename'].'.'.Tools::strtolower($pathInfo['extension']);
+            $fileName = $pathInfo['filename'] . '.' . Tools::strtolower($pathInfo['extension']);
         }
 
-        return $this->getSavePath().$fileName;
+        return $this->getSavePath() . $fileName;
     }
 
     /**
@@ -121,6 +121,7 @@ class UploaderCore
     public function setMaxSize($value)
     {
         $this->_max_size = intval($value);
+
         return $this;
     }
 
@@ -144,6 +145,7 @@ class UploaderCore
     public function setName($value)
     {
         $this->_name = $value;
+
         return $this;
     }
 
@@ -163,6 +165,7 @@ class UploaderCore
     public function setSavePath($value)
     {
         $this->_save_path = $value;
+
         return $this;
     }
 
@@ -172,13 +175,18 @@ class UploaderCore
     public function getPostMaxSizeBytes()
     {
         $postMaxSize = ini_get('post_max_size');
-        $bytes         = (int) trim($postMaxSize);
-        $last          = strtolower($postMaxSize[strlen($postMaxSize) - 1]);
+        $bytes = (int) trim($postMaxSize);
+        $last = strtolower($postMaxSize[strlen($postMaxSize) - 1]);
 
         switch ($last) {
-            case 'g': $bytes *= 1024;
-            case 'm': $bytes *= 1024;
-            case 'k': $bytes *= 1024;
+            case 'g':
+                $bytes *= 1024;
+                // no break
+            case 'm':
+                $bytes *= 1024;
+                // no break
+            case 'k':
+                $bytes *= 1024;
         }
 
         if ($bytes == '') {
@@ -215,7 +223,7 @@ class UploaderCore
      */
     public function checkFileSize()
     {
-        return (isset($this->_check_file_size) && $this->_check_file_size);
+        return isset($this->_check_file_size) && $this->_check_file_size;
     }
 
     /**
@@ -232,10 +240,10 @@ class UploaderCore
             foreach ($upload['tmp_name'] as $index => $value) {
                 $tmp[$index] = array(
                     'tmp_name' => $upload['tmp_name'][$index],
-                    'name'     => $upload['name'][$index],
-                    'size'     => $upload['size'][$index],
-                    'type'     => $upload['type'][$index],
-                    'error'    => $upload['error'][$index],
+                    'name' => $upload['name'][$index],
+                    'size' => $upload['size'][$index],
+                    'type' => $upload['type'][$index],
+                    'error' => $upload['error'][$index],
                 );
 
                 $this->files[] = $this->upload($tmp[$index], $dest);
@@ -248,7 +256,7 @@ class UploaderCore
     }
 
     /**
-     * @param      $file
+     * @param $file
      * @param null $dest
      *
      * @return mixed
@@ -316,6 +324,7 @@ class UploaderCore
             default:
                 break;
         }
+
         return $error;
     }
 
@@ -332,6 +341,7 @@ class UploaderCore
 
         if ($postMaxSize && ($this->_getServerVars('CONTENT_LENGTH') > $postMaxSize)) {
             $file['error'] = Context::getContext()->getTranslator()->trans('The uploaded file exceeds the post_max_size directive in php.ini', array(), 'Admin.Notifications.Error');
+
             return false;
         }
 
@@ -361,7 +371,7 @@ class UploaderCore
 
     /**
      * @param string $filePath
-     * @param bool   $clearStatCache
+     * @param bool $clearStatCache
      *
      * @return int
      *
@@ -374,7 +384,7 @@ class UploaderCore
 
     /**
      * @param string $filePath
-     * @param bool   $clearStatCache
+     * @param bool $clearStatCache
      *
      * @return int
      *
@@ -410,7 +420,7 @@ class UploaderCore
      */
     protected function getServerVars($var)
     {
-        return (isset($_SERVER[$var]) ? $_SERVER[$var] : '');
+        return isset($_SERVER[$var]) ? $_SERVER[$var] : '';
     }
 
     /**

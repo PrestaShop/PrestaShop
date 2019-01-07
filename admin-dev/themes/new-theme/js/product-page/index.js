@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,11 +18,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import $ from 'jquery';
 import productHeader from './product-header';
 import productSearchAutocomplete from './product-search-autocomplete';
 import categoryTree from './category-tree';
@@ -30,6 +29,7 @@ import attributes from './attributes';
 import bulkCombination from './product-bulk-combinations';
 import nestedCategory from './nested-categories';
 import combination from './combination';
+import Serp from '../app/utils/serp/index';
 
 $(() => {
   productHeader();
@@ -39,6 +39,23 @@ $(() => {
   combination();
   bulkCombination().init();
   nestedCategory().init();
+
+  const serpComp = new Serp();
+  if (serpComp.isActive()) {
+    serpComp.vm.$refs.serp.setUrl($('#product_form_preview_btn').data('redirect'));
+
+    const watchedMetaUrl = $('.serp-watched-url:input');
+    const initialValue = watchedMetaUrl.val();
+
+    // Because the url is in a data attribute never updated, we need a custom update
+    watchedMetaUrl.on('keyup change', (e) => {
+      serpComp.vm.$refs.serp.setUrl(
+        $('#product_form_preview_btn').data('redirect').replace(
+          initialValue, watchedMetaUrl.val()
+        )
+      );
+    });
+  }
 
   // This is the only script for the module page so there is no specific file for it.
   $('.modules-list-select').on("change", (e) => {

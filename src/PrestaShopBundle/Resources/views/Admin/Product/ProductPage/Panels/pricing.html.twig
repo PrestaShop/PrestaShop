@@ -1,0 +1,225 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<div role="tabpanel" class="form-contenttab tab-pane" id="step2">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="container-fluid">
+        <div class="row">
+
+          <div class="col-md-12">
+            <h2>{{ 'Retail price'|trans({}, 'Admin.Catalog.Feature') }}
+              <span class="help-box" data-toggle="popover"
+                data-content="{{ "This is the price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+            </h2>
+          </div>
+
+          <div class="col-md-12 form-group">
+            <div class="row">
+
+              <div class="col-xl-2 col-lg-3">
+                <label class="form-control-label">{{ pricingForm.price.vars.label }}</label>
+                {{ form_errors(pricingForm.price) }}
+                {{ form_widget(pricingForm.price) }}
+              </div>
+              <div class="col-xl-2 col-lg-3">
+                <label class="form-control-label">{{ pricingForm.price_ttc.vars.label }}</label>
+                {{ form_errors(pricingForm.price_ttc) }}
+                {{ form_widget(pricingForm.price_ttc) }}
+              </div>
+
+              <div class="col-xl-4 col-lg-6 mx-auto">
+                <label class="form-control-label">
+                  {{ pricingForm.unit_price.vars.label }}
+                  <span class="help-box" data-toggle="popover"
+                    data-content="{{ "Some products can be purchased by unit (per bottle, per pound, etc.),  and this is the price for one unit. For instance, if you’re selling fabrics, it would be the price per meter."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                </label>
+                <div class="row">
+                  <div class="col-md-6">
+                    {{ form_errors(pricingForm.unit_price) }}
+                    {{ form_widget(pricingForm.unit_price) }}
+                  </div>
+                  <div class="col-md-6">
+                    {{ form_errors(pricingForm.unity) }}
+                    {{ form_widget(pricingForm.unity) }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2 col-md-offset-1 {% if 'PS_USE_ECOTAX'|configuration != 1 %}hide{% endif %}">
+                <label class="form-control-label">{{ pricingForm.ecotax.vars.label }}</label>
+                {{ form_errors(pricingForm.ecotax) }}
+                {{ form_widget(pricingForm.ecotax) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="row form-group">
+              <div class="col-md-4">
+                <label class="form-control-label">{{ pricingForm.id_tax_rules_group.vars.label }}</label>
+                {{ form_errors(pricingForm.id_tax_rules_group) }}
+                {{ form_widget(pricingForm.id_tax_rules_group) }}
+              </div>
+              <div class="col-md-8">
+                <label class="form-control-label">&nbsp;</label>
+                <a class="form-control-static external-link" href="{{ getAdminLink("AdminTaxes") }}">
+                  {{ 'Manage tax rules'|trans({}, 'Admin.Catalog.Feature') }}
+                </a>
+              </div>
+              <div class="col-md-12 pt-1">
+                {{ form_widget(pricingForm.on_sale) }}
+              </div>
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-xl-5 col-lg-12">
+                    <div class="alert alert-info mt-2" role="alert">
+                      <p class="alert-text">
+                        {{ 'Final retail price: [1][2][/2] tax incl.[/1] / [3][/3] tax excl.'|trans({}, 'Admin.Catalog.Feature')|replace({ '[1]': '<strong>', '[/1]': '</strong>', '[2]': '<span id="final_retail_price_ti">', '[/2]': '</span>', '[3]': '<span id="final_retail_price_te">', '[/3]': '</span>', })|raw }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <h2>
+                  {{ 'Cost price'|trans({}, 'Admin.Catalog.Feature') }}
+                  <span class="help-box" data-toggle="popover"
+                    data-content="{{ "The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                </h2>
+              </div>
+              <div class="col-xl-2 col-lg-3 form-group">
+                <label class="form-control-label">{{ pricingForm.wholesale_price.vars.label|raw }}</label>
+                {{ form_errors(pricingForm.wholesale_price) }}
+                {{ form_widget(pricingForm.wholesale_price) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <h2>
+                  {{ 'Specific prices'|trans({}, 'Admin.Catalog.Feature') }}
+                  <span class="help-box" data-toggle="popover"
+                    data-content="{{ "You can set specific prices for customers belonging to different groups, different countries, etc."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                </h2>
+              </div>
+              <div class="col-md-12">
+                <div id="specific-price" class="mb-2">
+                  <a id="js-open-create-specific-price-form" class="btn btn-outline-primary mb-3" data-toggle="collapse" href="#specific_price_form" aria-expanded="false">
+                    <i class="material-icons">add_circle</i>
+                    {{ 'Add a specific price'|trans({}, 'Admin.Catalog.Feature') }}
+                  </a>
+                  <div class="collapse" id="specific_price_form" data-action="{{ path('admin_specific_price_add') }}">
+                      {{ include('@Product/ProductPage/Forms/form_specific_price.html.twig', {'form': pricingForm.specific_price, 'is_multishop_context': is_multishop_context}) }}
+                  </div>
+                  <table
+                      id="js-specific-price-list"
+                      class="table hide seo-table"
+                      data-listing-url="{{ path('admin_specific_price_list', { 'idProduct': 1 }) }}"
+                      data-action-delete="{{ path('admin_delete_specific_price', { 'idSpecificPrice': 1 }) }}"
+                      data-action-edit="{{ path('admin_get_specific_price_update_form', { 'idSpecificPrice': 1 }) }}">
+                    <thead class="thead-default">
+                    <tr>
+                      <th>{{ 'Rule'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                      <th>{{ 'Combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                      <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
+                      <th>{{ 'Country'|trans({}, 'Admin.Global') }}</th>
+                      <th>{{ 'Group'|trans({}, 'Admin.Global') }}</th>
+                      <th>{{ 'Customer'|trans({}, 'Admin.Global') }}</th>
+                      <th>{{ 'Fixed price'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                      <th>{{ 'Impact'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                      <th>{{ 'Period'|trans({}, 'Admin.Global') }}</th>
+                      <th>{{ 'From'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            {{ include('@Product/ProductPage/Forms/form_edit_specific_price_modal.html.twig') }}
+          </div>
+
+
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-12">
+                <h2>
+                  {{ 'Priority management'|trans({}, 'Admin.Catalog.Feature') }}
+                  <span class="help-box" data-toggle="popover"
+                    data-content="{{ "Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                </h2>
+              </div>
+              <div class="col-md-3">
+                <fieldset class="form-group">
+                  <label>{{ 'Priorities'|trans({}, 'Admin.Catalog.Feature') }}</label>
+                  {{ form_errors(pricingForm.specificPricePriority_0) }}
+                  {{ form_widget(pricingForm.specificPricePriority_0) }}
+                </fieldset>
+              </div>
+              <div class="col-md-3">
+                <fieldset class="form-group">
+                  <label>&nbsp;</label>
+                  {{ form_errors(pricingForm.specificPricePriority_1) }}
+                  {{ form_widget(pricingForm.specificPricePriority_1) }}
+                </fieldset>
+              </div>
+              <div class="col-md-3">
+                <fieldset class="form-group">
+                  <label>&nbsp;</label>
+                  {{ form_errors(pricingForm.specificPricePriority_2) }}
+                  {{ form_widget(pricingForm.specificPricePriority_2) }}
+                </fieldset>
+              </div>
+              <div class="col-md-3">
+                <fieldset class="form-group">
+                  <label>&nbsp;</label>
+                  {{ form_errors(pricingForm.specificPricePriority_3) }}
+                  {{ form_widget(pricingForm.specificPricePriority_3) }}
+                </fieldset>
+              </div>
+              <div class="col-md-12">
+                {{ form_widget(pricingForm.specificPricePriorityToAll) }}
+              </div>
+            </div>
+          </div>
+
+          {{ renderhook('displayAdminProductsPriceStepBottom', { 'id_product': productId }) }}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,9 +47,10 @@ class TranslationController extends ApiController
     public $translationService;
 
     /**
-     * Show translations for 1 domain & 1 locale given & 1 theme given (optional)
+     * Show translations for 1 domain & 1 locale given & 1 theme given (optional).
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listDomainTranslationAction(Request $request)
@@ -68,10 +69,11 @@ class TranslationController extends ApiController
 
             $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search);
             $info = array(
-                'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size'])
+                'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
             );
 
-            $catalog['info'] = array_merge($catalog['info'],
+            $catalog['info'] = array_merge(
+                $catalog['info'],
                 array(
                     'locale' => $locale,
                     'domain' => $domain,
@@ -81,9 +83,9 @@ class TranslationController extends ApiController
                 )
             );
 
-            foreach ($catalog['data'] as $k => $message) {
+            foreach ($catalog['data'] as $message) {
                 if (empty($message['xliff']) && empty($message['database'])) {
-                    $catalog['info']['total_missing_translations']++;
+                    ++$catalog['info']['total_missing_translations'];
                 }
             }
 
@@ -94,16 +96,16 @@ class TranslationController extends ApiController
             );
 
             return $this->jsonResponse($catalog, $request, $queryParamsCollection, 200, $info);
-
         } catch (Exception $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
     }
 
     /**
-     * Show tree for translation page with some params
+     * Show tree for translation page with some params.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listTreeAction(Request $request)
@@ -131,16 +133,16 @@ class TranslationController extends ApiController
             }
 
             return $this->jsonResponse($tree, $request);
-
         } catch (Exception $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
     }
 
     /**
-     * Route to edit translation
+     * Route to edit translation.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function translationEditAction(Request $request)
@@ -152,8 +154,7 @@ class TranslationController extends ApiController
             $this->guardAgainstInvalidTranslationEditRequest($translations);
 
             $translationService = $this->container->get('prestashop.service.translation');
-            $response = array();
-
+            $response = [];
             foreach ($translations as $translation) {
                 if (!array_key_exists('theme', $translation)) {
                     $translation['theme'] = null;
@@ -174,19 +175,19 @@ class TranslationController extends ApiController
                 );
             }
 
-             $this->clearCache();
+            $this->clearCache();
 
             return new JsonResponse($response, 200);
-
         } catch (BadRequestHttpException $exception) {
             return $this->handleException($exception);
         }
     }
 
     /**
-     * Route to reset translation
+     * Route to reset translation.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function translationResetAction(Request $request)
@@ -198,7 +199,7 @@ class TranslationController extends ApiController
             $this->guardAgainstInvalidTranslationResetRequest($translations);
 
             $translationService = $this->container->get('prestashop.service.translation');
-            $response = array();
+            $response = [];
 
             foreach ($translations as $translation) {
                 if (!array_key_exists('theme', $translation)) {
@@ -219,10 +220,9 @@ class TranslationController extends ApiController
                 );
             }
 
-             $this->clearCache();
+            $this->clearCache();
 
             return new JsonResponse($response, 200);
-
         } catch (BadRequestHttpException $exception) {
             return $this->handleException($exception);
         }
@@ -230,6 +230,7 @@ class TranslationController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return mixed
      */
     private function guardAgainstInvalidTranslationBulkRequest(Request $request)
@@ -238,7 +239,10 @@ class TranslationController extends ApiController
 
         $decodedContent = $this->guardAgainstInvalidJsonBody($content);
 
-        if (empty($decodedContent) || !array_key_exists('translations', $decodedContent) || !is_array($decodedContent['translations'])) {
+        if (empty($decodedContent) ||
+            !array_key_exists('translations', $decodedContent) ||
+            !is_array($decodedContent['translations'])
+        ) {
             $message = 'The request body should contain a JSON-encoded array of translations';
             throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
         }
@@ -252,7 +256,7 @@ class TranslationController extends ApiController
     private function guardAgainstInvalidTranslationEditRequest($content)
     {
         $message = 'Each item of JSON-encoded array in the request body should contain ' .
-            'a "locale", a "domain", a "default" and a "edited" values. '.
+            'a "locale", a "domain", a "default" and a "edited" values. ' .
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
@@ -269,10 +273,10 @@ class TranslationController extends ApiController
     /**
      * @param $content
      */
-    function guardAgainstInvalidTranslationResetRequest($content)
+    protected function guardAgainstInvalidTranslationResetRequest($content)
     {
         $message = 'Each item of JSON-encoded array in the request body should contain ' .
-            'a "locale", a "domain" and a "default" values. '.
+            'a "locale", a "domain" and a "default" values. ' .
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
@@ -321,7 +325,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * Make final tree
+     * Make final tree.
      *
      * @param TreeBuilder $treeBuilder
      * @param $catalogue

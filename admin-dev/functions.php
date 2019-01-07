@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -488,11 +488,11 @@ function runAdminTab($tab, $ajax_mode = false)
                                 if (is_array($admin_obj->table)) {
                                     foreach ($admin_obj->table as $table) {
                                         if (strncmp($key, $table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0) {
-                                            $cookie->$key = !is_array($value) ? $value : serialize($value);
+                                            $cookie->$key = !is_array($value) ? $value : json_encode($value);
                                         }
                                     }
                                 } elseif (strncmp($key, $admin_obj->table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0) {
-                                    $cookie->$key = !is_array($value) ? $value : serialize($value);
+                                    $cookie->$key = !is_array($value) ? $value : json_encode($value);
                                 }
                             }
                         }

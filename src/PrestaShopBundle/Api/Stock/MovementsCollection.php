@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,6 +34,7 @@ class MovementsCollection
 
     /**
      * @param array $stockMovementsParams
+     *
      * @return $this
      */
     public function fromArray(array $stockMovementsParams)
@@ -50,7 +51,7 @@ class MovementsCollection
 
                 $productIdentity = ProductIdentity::fromArray(array(
                     'product_id' => $item['product_id'],
-                    'combination_id' => $combinationId
+                    'combination_id' => $combinationId,
                 ));
 
                 $movements[] = new Movement($productIdentity, $item['delta']);
@@ -64,6 +65,7 @@ class MovementsCollection
 
     /**
      * @param callable $callback
+     *
      * @return array
      */
     public function map(callable $callback)

@@ -22,4 +22,13 @@ Customer service</value>
     <value>We are currently updating our shop and will be back really soon.&#xD;
 Thanks for your patience.</value>
   </configuration>
+  <configuration id="PS_LABEL_IN_STOCK_PRODUCTS">
+    <value></value>
+  </configuration>
+  <configuration id="PS_LABEL_OOS_PRODUCTS_BOA">
+    <value></value>
+  </configuration>
+  <configuration id="PS_LABEL_OOS_PRODUCTS_BOD">
+    <value>Out-of-Stock</value>
+  </configuration>
 </entity_configuration>

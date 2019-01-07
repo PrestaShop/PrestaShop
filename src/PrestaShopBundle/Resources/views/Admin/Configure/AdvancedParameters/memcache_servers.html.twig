@@ -1,0 +1,102 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% trans_default_domain "Admin.Advparameters.Feature" %}
+
+{% block perfs_memcache_servers %}
+<div class="form-group row memcache" id="new-server-btn">
+    <a
+        class="btn btn-default"
+        data-toggle="collapse"
+        href="#server-form"
+        aria-expanded="false"
+        aria-controls="server-form"
+    ><i class="material-icons">add_circle</i> {{ 'Add server'|trans }}</a>
+</div>
+
+<div id="server-form" class="collapse">
+    <div class="form-group row">
+        <label class="form-control-label">{{ 'IP Address'|trans }}</label>
+        <div class="col-sm">
+          {{ form_errors(form.memcache_ip) }}
+          {{ form_widget(form.memcache_ip) }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="form-control-label">{{ 'Port'|trans }}</label>
+        <div class="col-sm">
+          {{ form_errors(form.memcache_port) }}
+          {{ form_widget(form.memcache_port) }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="form-control-label">{{ 'Weight'|trans }}</label>
+        <div class="col-sm">
+          {{ form_errors(form.memcache_weight) }}
+          {{ form_widget(form.memcache_weight) }}
+        </div>
+    </div>
+
+    {{ form_rest(form) }}
+
+    <div class="form-group">
+        <div class="float-right">
+            <button id="add-server-btn" class="btn btn-primary">{{ 'Add Server'|trans }}</button>
+            <button id="test-server-btn" class="btn btn-primary">{{ 'Test Server'|trans }}</button>
+        </div>
+    </div>
+</div>
+
+<div id="servers-list" class="memcache">
+    <div class="form-group">
+        <table class="table" id="servers-table">
+            <thead>
+            <tr>
+                <th class="fixed-width-xs"><span class="title_box">{{ 'ID'|trans({}, 'Admin.Global') }}</span></th>
+                <th><span class="title_box">{{ 'IP Address'|trans }}</span></th>
+                <th class="fixed-width-xs"><span class="title_box">{{ 'Port'|trans }}</span></th>
+                <th class="fixed-width-xs"><span class="title_box">{{ 'Weight'|trans }}</span></th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for server in servers %}
+                <tr id="row_{{ server.id_memcached_server }}">
+                    <td>{{ server.id_memcached_server }}</td>
+                    <td>{{ server.ip }}</td>
+                    <td>{{ server.port }}</td>
+                    <td>{{ server.weight }}</td>
+                    <td>
+                        {% set removeMsg = 'Do you really want to remove the server %serverIp%:%serverPort% ?'|trans({'%serverIp%': server.ip, '%serverPort%': server.port}, 'Admin.Advparameters.Notification')|json_encode|raw  %}
+                        <a class="btn btn-default" href="" onclick="app.removeServer({{ server.id_memcached_server }}, {{ removeMsg }});"><i class="material-icons">remove_circle</i> {{ 'Remove'|trans({}, 'Admin.Actions') }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

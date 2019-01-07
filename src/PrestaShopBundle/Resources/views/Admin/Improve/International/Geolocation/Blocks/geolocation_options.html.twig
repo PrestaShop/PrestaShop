@@ -1,0 +1,87 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain 'Admin.International.Feature' %}
+
+{% block geolocation_options %}
+  <div class="card">
+    <h3 class="card-header">
+      {{ 'Options'|trans({}, 'Admin.Global') }}
+    </h3>
+    <div class="card-block row">
+      <div class="card-text">
+        <div class="row">
+          <div class="col">
+            <div class="alert alert-info" role="alert">
+              <span class="alert-text">
+                {{ 'The following features are only available if you enable the Geolocation by IP address feature.'|trans }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Geolocation behavior for restricted countries'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(geolocationOptionsForm.geolocation_behaviour) }}
+            {{ form_widget(geolocationOptionsForm.geolocation_behaviour) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Geolocation behavior for other countries'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(geolocationOptionsForm.geolocation_na_behaviour) }}
+            {{ form_widget(geolocationOptionsForm.geolocation_na_behaviour) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Select the countries from which your store is accessible'|trans }}
+          </label>
+
+          <div class="col-sm">
+            <div class="form-group">
+              {{ form_errors(geolocationOptionsForm.geolocation_countries) }}
+              {{ form_widget(geolocationOptionsForm.geolocation_countries) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  </div>
+{% endblock %}

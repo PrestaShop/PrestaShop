@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,7 +32,7 @@ function update_module_pagesnotfound()
         if ($id_hook) {
             $position = (int)Db::getInstance()->getValue('SELECT IFNULL(MAX(`position`), 0) + 1 FROM `'._DB_PREFIX_.'hook_module` WHERE `id_hook` = '.(int)$id_hook);
             if ($position) {
-                return Db::getInstance()->Execute('INSERT IGNORE INTO `'._DB_PREFIX_.'hook_module` (`id_hook`, `id_module`, `position`) VALUES ('.(int)$id_hook.', '.(int)$id_pagesnotfound.', '.(int)$position.')');
+                return Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'hook_module` (`id_hook`, `id_module`, `position`) VALUES ('.(int)$id_hook.', '.(int)$id_pagesnotfound.', '.(int)$position.')');
             }
         }
     }

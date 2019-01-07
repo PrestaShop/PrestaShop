@@ -1,0 +1,80 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<h2>{{ "Categories"|trans({}, 'Admin.Catalog.Feature') }}
+  <span class="help-box" data-toggle="popover"
+    data-content="{{ "Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+</h2>
+<div class="categories-tree js-categories-tree">
+  <fieldset class="form-group">
+    <div class="ui-widget">
+      <div class="search search-with-icon">
+        <input type="text" id="ps-select-product-category" class="form-control autocomplete search mb-1" placeholder="{{ 'Search categories'|trans({}, 'Admin.Catalog.Help') }}">
+      </div>
+      <label class="form-control-label text-uppercase">{{ 'Associated categories'|trans({}, 'Admin.Catalog.Feature') }}</label>
+      {{ include('@PrestaShop/Admin/Category/categories.html.twig', {'categories': categories }) }}
+      {{ form_errors(form.id_category_default) }}
+      {{ form_widget(form.id_category_default) }}
+      <div class="categories-tree-actions js-categories-tree-actions">
+        <span class="form-control-label" id="categories-tree-expand"><i class="material-icons">expand_more</i>{{ "Expand"|trans({}, 'Admin.Actions') }}</span>
+        <span class="form-control-label" id="categories-tree-reduce"><i class="material-icons">expand_less</i>{{ "Collapse"|trans({}, 'Admin.Actions') }}</span>
+      </div>
+      {{ form_widget(form.categories, {'defaultCategory': true}) }} {# see bootstrap_4_layout.html.twig #}
+    </div>
+  </fieldset>
+  {{ form_errors(form.categories) }}
+  {{ form_widget(form.categories) }} {# see bootstrap_4_layout.html.twig #}
+</div>
+<div id="add-categories">
+  <h2>
+    {{ "Create a new category"|trans({}, 'Admin.Catalog.Feature') }}
+    <span class="help-box" data-toggle="popover"
+      data-content="{{ "If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+  </h2>
+  <div id="add-categories-content" class="hide">
+    <div id="form_step1_new_category" data-action="{{ path('admin_category_simple_add_form', {'id_product': productId }) }}">
+      <fieldset class="form-group">
+        <label class="form-control-label">{{ "New category name"|trans({}, 'Admin.Catalog.Feature') }}</label>
+        {{ form_errors(form.new_category) }}
+        {{ form_widget(form.new_category.name) }}
+      </fieldset>
+
+    </div>
+
+      <fieldset class="form-group">
+        <label class="form-control-label">{{ form.new_category.id_parent.vars.label }}</label>
+        {{ form_widget(form.new_category.id_parent) }}
+      </fieldset>
+
+      <fieldset class="form-group text-sm-right">
+        <button type="reset" id="form_step1_new_category_reset" class="btn btn-outline-secondary btn-sm">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</button>
+        <button type="button" id="form_step1_new_category_save" class="btn btn-primary save btn-sm">{{ 'Create'|trans({}, 'Admin.Actions') }}</button>
+      </fieldset>
+    </div>
+
+  <a href="#" class="btn btn-outline-secondary open" id="add-category-button">
+    <i class="material-icons">add_circle</i>
+    {{ 'Create a category'|trans({}, 'Admin.Catalog.Feature') }}
+  </a>
+</div>

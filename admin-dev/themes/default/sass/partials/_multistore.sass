@@ -34,37 +34,56 @@
 
 #header_shop
   .dropdown-menu
-    min-width: 210px
-    list-style: none
+    margin: 0
+    padding: 0
+    border-radius: 0
+    min-width: 17.75rem !important
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1)
+    border: 1px solid #bbcdd2
+    top: 40px
+    right: -100px !important
     padding-left: 0
     font-size: 13px
+    &:before, &:after
+      bottom: 100%
+      right: 95px
+      border: solid transparent
+      content: " "
+      height: 0
+      width: 0
+      position: absolute
+      pointer-events: none
+    &:after
+      border-color: transparent
+      border-bottom-color: white
+      border-width: 7px
+      margin-right: 1px
+    &:before
+      border-color: transparent
+      border-bottom-color: #bbcdd2
+      border-width: 8px
+      margin-left: -8px
     li:first-child a
-      color: #00aff0
-      background: #fff
-      &.active, &:hover
-        color: #00aff0
-        background: #fff
+      color: $brand-info !important
+      font-size: 0.875rem !important
+      font-weight: bold
     li:not(:first-child)
       line-height: 32px
-      &.active, &:hover
-        background-color: #00aff0
-        a
-          color: #fff
-        i.material-icons:hover
-          color: #fff
-          border: solid 1px #fff
       a:not(.link-shop)
         display: inline-block
         width: inherit
         padding-top: .3125rem
         padding-bottom: .3125rem
+    a
+      color: #4e6167
     .group
       a
-        padding-left: 1.875rem
+        padding-left: 0.625rem
     .shop
       display: flex
       a
-        padding-left: 3.75rem
+        padding-left: 1.5625rem
+        font-weight: 600
       a.link-shop
         text-decoration: none
         float: right
@@ -76,12 +95,21 @@
           cursor: pointer
           color: #6c868e
           border: 1px solid #bbcdd2
-          padding: 1px 8px
-          font-size: 12px
+          border-radius: 1px
+          padding: 2px 10px
+          font-size: 14px
+    li
+      &.active, &:hover
+        a
+          color: #4e6167 !important
+        i.material-icons
+          color: $brand-info !important
+          border: solid 1px $brand-info !important
+
   .selected-item
     color: #00aff0
     cursor: pointer
-
+        
 @media screen and (-webkit-min-device-pixel-ratio:0)
   .custom-select select
     @include padding-right(30px)

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,93 +19,23 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Test;
+namespace Tests\Integration\PrestaShopBundle\Test;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
+use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 
-class WebTestCase extends TestCase
+/**
+ * Responsible of e2e and integration tests using Symfony.
+ * Time-consuming, by default dump and restore the entire database.
+ */
+class WebTestCase extends LightWebTestCase
 {
-    /**
-     * @var \Symfony\Bundle\FrameworkBundle\Client
-     */
-    protected $client;
-
-    /**
-     * @var \Symfony\Component\Routing\Router
-     */
-    protected $router;
-
-    /**
-     * @var \Symfony\Component\Translation\Translator
-     */
-    protected $translator;
-
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->client = self::createClient();
-        $this->router = self::$kernel->getContainer()->get('router');
-        $this->translator = self::$kernel->getContainer()->get('translator');
-
-        $employeeMock = $this->getMockBuilder('\Employee')
-            ->getMock();
-        $employeeMock->id_profile = 1;
-
-        $contextMock = $this->getMockBuilder('\Context')
-            ->setMethods(array('getTranslator'))
-            ->disableAutoload()
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $contextMock->method('getTranslator')
-            ->will($this->returnValue($this->translator));
-
-        $contextMock->employee = $employeeMock;
-
-        $languageMock = $this->getMockBuilder('\Language')
-            ->disableAutoload()
-            ->disableOriginalConstructor()
-            ->getMock();
-        $contextMock->language = $languageMock;
-
-        $currencyMock = $this->getMockBuilder('\Currency')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $contextMock->currency = $currencyMock;
-
-        $legacyContextMock = $this->getMockBuilder('\PrestaShop\PrestaShop\Adapter\LegacyContext')
-            ->setMethods([
-                'getContext',
-                'getEmployeeLanguageIso',
-                'getEmployeeCurrency',
-                'getRootUrl'
-            ])
-            ->disableAutoload()
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $legacyContextMock->method('getContext')
-            ->will($this->returnValue($contextMock));
-
-        self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
-    }
-
-    protected function enableDemoMode()
-    {
-        $configurationMock = $this->getMockBuilder('\PrestaShop\PrestaShop\Adapter\Configuration')
-            ->setMethods(['get'])
-            ->disableOriginalConstructor()
-            ->disableAutoload()
-            ->getMock();
-
-        $configurationMock->method('get')->with('_PS_MODE_DEMO_')
-            ->will($this->returnValue(true));
-
-        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
+        Database::restoreTestDB();
     }
 }

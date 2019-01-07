@@ -58,9 +58,22 @@
   margin-top: 0;
 }
 
+#_desktop_top_menu {
+  .top-menu {
+    &[data-depth="0"] {
+      li {
+        &:hover {
+          .sub-menu {
+            display: block !important;
+          }
+        }
+      }
+    }
+  }
+}
+
 #mobile_top_menu_wrapper {
-  margin-top: 0.625rem;
-  padding-bottom: 0.625rem;
+  padding: 15px;
   background: white;
   #top-menu {
     margin-bottom: 0.625rem;
@@ -107,7 +120,7 @@
       margin-left: 0;
       width: 100%;
       min-width: 100%;
-      background: $gray-lighter;
+      background: white;
       ul[data-depth="0"] > li {
         border-bottom: 1px solid $gray;
       }

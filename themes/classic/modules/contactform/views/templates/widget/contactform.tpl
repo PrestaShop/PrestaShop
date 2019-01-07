@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -109,9 +109,24 @@
           </div>
         </div>
 
+        {if isset($id_module)}
+          <div class="form-group row">
+            <div class="offset-md-3">
+              {hook h='displayGDPRConsent' id_module=$id_module}
+            </div>
+          </div>
+        {/if}
+
       </section>
 
       <footer class="form-footer text-sm-right">
+        <style>
+          input[name=url] {
+            display: none !important;
+          }
+        </style>
+        <input type="text" name="url" value=""/>
+        <input type="hidden" name="token" value="{$token}" />
         <input class="btn btn-primary" type="submit" name="submitMessage" value="{l s='Send' d='Shop.Theme.Actions'}">
       </footer>
     {/if}

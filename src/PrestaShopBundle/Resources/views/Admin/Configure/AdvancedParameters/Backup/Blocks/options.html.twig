@@ -1,0 +1,73 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% block backup_options_card %}
+  {{ form_start(backupForm) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i> {{ 'Backup options'|trans({}, 'Admin.Advparameters.Feature') }}
+    </h3>
+    <div class="card-block row">
+      <div class="card-text">
+        <div class="form-group row">
+          <label class="form-control-label">{{ 'Ignore statistics tables'|trans }}</label>
+          <div class="col-sm">
+            {{ form_errors(backupForm.backup_options.backup_all) }}
+            {{ form_widget(backupForm.backup_options.backup_all) }}
+
+            <small class="form-text">
+              {{ 'Drop existing tables during import.'|trans({}, 'Admin.Advparameters.Help') }} <br>
+              {{ '%prefix%connections, %prefix%connections_page %prefix%connections_source, %prefix%guest, %prefix%statssearch'|replace({'%prefix%': dbPrefix}) }}
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          {% set helpMessage = 'If enabled, the backup script will drop your tables prior to restoring data.'|trans({}, 'Admin.Advparameters.Help') %}
+          {% set helpMessage = helpMessage ~ ' ' ~ '(ie. "DROP TABLE IF EXISTS")'|trans({}, 'Admin.Advparameters.Help') %}
+
+          {{ ps.label_with_help(('Drop existing tables during import'|trans), helpMessage) }}
+          <div class="col-sm">
+            {{ form_errors(backupForm.backup_options.backup_drop_tables) }}
+            {{ form_widget(backupForm.backup_options.backup_drop_tables) }}
+          </div>
+        </div>
+
+        {% block backup_options_rest %}
+          {{ form_rest(backupForm) }}
+        {% endblock %}
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+  {{ form_end(backupForm) }}
+{% endblock %}

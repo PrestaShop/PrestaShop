@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
@@ -36,10 +36,16 @@
    },
    computed: {
      classObject() {
+       if (this.ghost) {
+         return {
+           'btn-outline-primary': this.primary,
+           'btn-outline-secondary': !this.primary,
+         };
+       }
+
        return {
          'btn-primary': this.primary,
          'btn-secondary': !this.primary,
-         ghost: this.ghost,
        };
      },
    },
@@ -50,28 +56,3 @@
    },
  };
 </script>
-
-<style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
-  .btn {
-    border-radius:0;
-    min-height: 34px;
-  }
-  .btn-secondary {
-    background-color: $gray-medium;
-    border: none;
-    &.ghost {
-      background-color: white;
-      border: $gray-medium 2px solid;
-      color: $gray-medium;
-      &:hover {
-        border: $gray-dark 2px solid;
-      }
-    }
-    &:hover {
-      background-color: $gray-dark;
-      color: white;
-    }
-  }
-
-</style>

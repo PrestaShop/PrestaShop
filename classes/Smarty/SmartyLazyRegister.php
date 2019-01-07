@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,8 +57,8 @@ class SmartyLazyRegister
     /**
      * Dynamically call static function or method.
      *
-     * @param string $name      function name
-     * @param mixed  $arguments function argument
+     * @param string $name function name
+     * @param mixed $arguments function argument
      *
      * @return mixed function return
      */
@@ -68,7 +68,7 @@ class SmartyLazyRegister
 
         // case 1: call to static method - case 2 : call to static function
         if (is_array($item[1])) {
-            return call_user_func_array($item[1].'::'.$item[0], array($arguments[0], &$arguments[1]));
+            return call_user_func_array($item[1] . '::' . $item[0], array($arguments[0], &$arguments[1]));
         } else {
             $args = array();
 

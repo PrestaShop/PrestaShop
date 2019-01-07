@@ -1,0 +1,352 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Admin.Advparameters.Feature" %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{%
+    set smartyForm, debugModeForm, optionalFeaturesForm, combineCompressCacheForm, mediaServersForm, cachingForm, memcacheForm =
+    form.smarty, form.debug_mode, form.optional_features, form.ccc, form.media_servers, form.caching, form.add_memcache_server
+%}
+
+{% block content %}
+  {{ form_start(form, {'attr' : {'class': 'form'} }) }}
+  <div class="row justify-content-center">
+    {% block perfs_form_smarty_cache %}
+      <div class="col-xl-10">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">business_center</i> {{ 'Smarty'|trans }}
+          </h3>
+          <div class="card-block row">
+            <div class="card-text">
+              <div class="form-group row">
+                <label class="form-control-label">{{ 'Template compilation'|trans }}</label>
+                <div class="col-sm">
+                  {{ form_errors(smartyForm.template_compilation) }}
+                  {{ form_widget(smartyForm.template_compilation) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Cache'|trans), ('Should be enabled except for debugging.'|trans)) }}
+                <div class="col-sm">
+                  {{ form_errors(smartyForm.cache) }}
+                  {{ form_widget(smartyForm.cache) }}
+                </div>
+              </div>
+              <div class="form-group row smarty-cache-option">
+                {{ ps.label_with_help(('Multi-front optimizations'|trans), ('Should be enabled if you want to avoid to store the smarty cache on NFS.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(smartyForm.multi_front_optimization) }}
+                  {{ form_widget(smartyForm.multi_front_optimization) }}
+                </div>
+              </div>
+              <div class="form-group row smarty-cache-option">
+                <label class="form-control-label">{{ 'Caching type'|trans }}</label>
+                <div class="col-sm">
+                  {{ form_errors(smartyForm.caching_type) }}
+                  {{ form_widget(smartyForm.caching_type) }}
+                </div>
+              </div>
+              <div class="form-group row smarty-cache-option">
+                <label class="form-control-label">{{ 'Clear cache'|trans }}</label>
+                <div class="col-sm">
+                  {{ form_errors(smartyForm.clear_cache) }}
+                  {{ form_widget(smartyForm.clear_cache) }}
+                </div>
+              </div>
+              {{ form_rest(smartyForm) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+
+    {% block perfs_form_debug_mode %}
+      <div class="col-xl-10">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">bug_report</i> {{ 'Debug mode'|trans }}
+          </h3>
+          <div class="card-block row">
+            <div class="card-text">
+              <div class="form-group row">
+                {{ ps.label_with_help(('Disable non PrestaShop modules'|trans), ('Enable or disable non PrestaShop Modules.'|trans({}, 'Admin.Advparameters.Feature'))) }}
+                <div class="col-sm">
+                  {{ form_errors(debugModeForm.disable_non_native_modules) }}
+                  {{ form_widget(debugModeForm.disable_non_native_modules) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Disable all overrides'|trans), ('Enable or disable all classes and controllers overrides.'|trans({}, 'Admin.Advparameters.Feature'))) }}
+                <div class="col-sm">
+                  {{ form_errors(debugModeForm.disable_overrides) }}
+                  {{ form_widget(debugModeForm.disable_overrides) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Debug mode'|trans), ('Enable or disable debug mode.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(debugModeForm.debug_mode) }}
+                  {{ form_widget(debugModeForm.debug_mode) }}
+                </div>
+              </div>
+              {{ form_rest(debugModeForm) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+
+    {% block perfs_form_optional_features %}
+      <div class="col-xl-10">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">extension</i> {{ 'Optional features'|trans }}
+          </h3>
+          <div class="card-block row">
+            <div class="card-text">
+
+              <div class="row">
+                <div class="col">
+                  {{ ps.infotip('Some features can be disabled in order to improve performance.'|trans({}, 'Admin.Advparameters.Help')) }}
+                </div>
+              </div>
+
+              <div class="form-group row">
+                {{ ps.label_with_help(('Combinations'|trans({}, 'Admin.Global')), ('Choose "No" to disable Product Combinations.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(optionalFeaturesForm.combinations) }}
+                  {{ form_widget(optionalFeaturesForm.combinations) }}
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  {% if optionalFeaturesForm.combinations.vars.disabled %}
+                    {{ ps.warningtip('You cannot set this parameter to No when combinations are already used by some of your products'|trans({}, 'Admin.Advparameters.Help')) }}
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="form-group row">
+                {{ ps.label_with_help(('Features'|trans({}, 'Admin.Global')), ('Choose "No" to disable Product Features.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(optionalFeaturesForm.features) }}
+                  {{ form_widget(optionalFeaturesForm.features) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Customer groups'|trans), ('Choose "No" to disable Customer Groups.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(optionalFeaturesForm.customer_groups) }}
+                  {{ form_widget(optionalFeaturesForm.customer_groups) }}
+                </div>
+              </div>
+              {{ form_rest(optionalFeaturesForm) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+
+    {% block perfs_form_ccc %}
+      <div class="col-xl-10">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">zoom_out_map</i> {{ 'CCC (Combine, Compress and Cache)'|trans }}
+          </h3>
+          <div class="card-block row">
+            <div class="card-text">
+              <div class="row">
+                <div class="col">
+                  {{ ps.infotip('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.'|trans({}, 'Admin.Advparameters.Help')) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="form-control-label">{{ 'Smart cache for CSS'|trans }}</label>
+                <div class="col-sm">
+                  {{ form_errors(combineCompressCacheForm.smart_cache_css) }}
+                  {{ form_widget(combineCompressCacheForm.smart_cache_css) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="form-control-label">{{ 'Smart cache for JavaScript'|trans }}</label>
+                <div class="col-sm">
+                  {{ form_errors(combineCompressCacheForm.smart_cache_js) }}
+                  {{ form_widget(combineCompressCacheForm.smart_cache_js) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Apache optimization'|trans), ('This will add directives to your .htaccess file, which should improve caching and compression.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(combineCompressCacheForm.apache_optimization) }}
+                  {{ form_widget(combineCompressCacheForm.apache_optimization) }}
+                </div>
+              </div>
+              {{ form_rest(combineCompressCacheForm) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+
+    {% block perfs_form_media_servers %}
+      <div class="col-xl-10">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">link</i> {{ 'Media servers (use only with CCC)'|trans }}
+          </h3>
+          <div class="card-block row">
+            <div class="card-text">
+              <div class="row">
+                <div class="col">
+                  {{ ps.infotip('You must enter another domain, or subdomain, in order to use cookieless static content.'|trans({}, 'Admin.Advparameters.Feature')) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Media server #1'|trans({}, 'Admin.Advparameters.Feature')), ('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(mediaServersForm.media_server_one) }}
+                  {{ form_widget(mediaServersForm.media_server_one) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Media server #2'|trans({}, 'Admin.Advparameters.Feature')), ('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(mediaServersForm.media_server_two) }}
+                  {{ form_widget(mediaServersForm.media_server_two) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Media server #3'|trans({}, 'Admin.Advparameters.Feature')), ('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(mediaServersForm.media_server_three) }}
+                  {{ form_widget(mediaServersForm.media_server_three) }}
+                </div>
+              </div>
+              {{ form_rest(mediaServersForm) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+
+    {% block perfs_form_caching %}
+      <div class="col-xl-10">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">link</i> {{ 'Caching'|trans }}
+          </h3>
+          <div class="card-block row">
+            <div class="card-text">
+              <div class="form-group row">
+                <label class="form-control-label">{{ 'Use cache'|trans }}</label>
+                <div class="col-sm">
+                  {{ form_errors(cachingForm.use_cache) }}
+                  {{ form_widget(cachingForm.use_cache) }}
+                </div>
+              </div>
+              <div class="form-group row memcache" id="caching_systems">
+                <label class="form-control-label">{{ 'Caching system'|trans }}</label>
+                <div class="col-sm">
+                  {{ form_errors(cachingForm.caching_system) }}
+                  {{ form_widget(cachingForm.caching_system) }}
+                </div>
+              </div>
+              {{ form_rest(cachingForm) }}
+              {{ include('@AdvancedParameters/memcache_servers.html.twig', {'form': memcacheForm}) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+  </div>
+  {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/default/js/bundle/admin_parameters/performancePage.js') }}"></script>
+  <script>
+    var configuration = {
+      'addServerUrl': '{{ url('admin_servers_add')|e('js') }}',
+      'removeServerUrl': '{{ url('admin_servers_delete')|e('js') }}',
+      'testServerUrl': '{{ url('admin_servers_test')|e('js') }}'
+    };
+    var app = new PerformancePage(
+      configuration.addServerUrl,
+      configuration.removeServerUrl,
+      configuration.testServerUrl
+    );
+
+    window.addEventListener('load', function() {
+      var addServerBtn = document.getElementById('add-server-btn');
+      var testServerBtn = document.getElementById('test-server-btn');
+
+      addServerBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        app.addServer();
+      });
+
+      testServerBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        app.testServer();
+      });
+    });
+  </script>
+
+  <script src="{{ asset('themes/default/js/bundle/admin_parameters/performancePageUI.js') }}"></script>
+{% endblock %}

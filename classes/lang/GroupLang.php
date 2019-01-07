@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class GroupLangCore extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
@@ -32,15 +31,4 @@ class GroupLangCore extends DataLangCore
     protected $keys = array('id_group');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Visitor') => $this->translator->trans('Visitor', array(), 'Admin.Shopparameters.Feature', $this->locale),
-                md5('Guest') => $this->translator->trans('Guest', array(), 'Admin.Shopparameters.Feature', $this->locale),
-                md5('Customer') => $this->translator->trans('Customer', array(), 'Admin.Shopparameters.Feature', $this->locale),
-            ),
-        );
-    }
 }

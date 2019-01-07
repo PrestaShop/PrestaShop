@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShop\PrestaShop\Adapter\BestSales;
 
@@ -35,10 +34,18 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use Symfony\Component\Translation\TranslatorInterface;
 use ProductSale;
+use Tools;
 
 class BestSalesProductSearchProvider implements ProductSearchProviderInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var SortOrderFactory
+     */
     private $sortOrderFactory;
 
     public function __construct(
@@ -48,10 +55,24 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchQuery $query
+     *
+     * @return ProductSearchResult
+     */
     public function runQuery(
         ProductSearchContext $context,
         ProductSearchQuery $query
     ) {
+        $sortBySales = (new SortOrder('product', 'sales', 'desc'))->setLabel(
+            $this->translator->trans('Sales, highest to lowest', array(), 'Shop.Theme.Catalog')
+        );
+
+        if (!Tools::getValue('order', 0)) {
+            $query->setSortOrder($sortBySales);
+        }
+
         if (!$products = ProductSale::getBestSales(
             $context->getIdLang(),
             $query->getPage(),
@@ -73,6 +94,7 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
 
             $result->setAvailableSortOrders(
                 array(
+                    $sortBySales,
                     (new SortOrder('product', 'name', 'asc'))->setLabel(
                         $this->translator->trans('Name, A to Z', array(), 'Shop.Theme.Catalog')
                     ),

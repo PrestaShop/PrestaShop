@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
@@ -26,12 +26,12 @@
   <div v-if="isReady" id="app" class="translations-app">
     <TranslationsHeader />
     <div class="container-fluid">
-      <div class="row">
-        <div class="translations-summary pull-xs-right">
+      <div class="row justify-content-between align-items-center">
+        <Search @search="onSearch" />
+        <div class="translations-summary">
           <span>{{ totalTranslations }}</span>
           <span v-show="totalMissingTranslations"> - <span class="missing">{{ totalMissingTranslationsString }}</span></span>
         </div>
-        <Search @search="onSearch" />
       </div>
 
       <div class="row">
@@ -134,14 +134,12 @@
   };
 </script>
 
-<style lang="sass?outputStyle=expanded">
-  @import "~PrestaKit/scss/custom/_variables.scss";
-  .header-toolbar {
-    z-index: 0;
-    height: 128px;
-  }
-  .translations-app {
-    padding-top: 3em;
+<style lang="sass" type="text/scss">
+  @import "../../../../../scss/config/_settings.scss";
+  // hide the layout header
+  #main-div > .header-toolbar {
+    height: 0;
+    display: none;
   }
   .flex {
     display: flex;
