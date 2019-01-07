@@ -347,7 +347,7 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     private function getCurrencyFormBuilder()
     {
-        return $this->get('prestashop.core.form.builder.currency_builder');
+        return $this->get('prestashop.core.form.builder.currency_form_builder');
     }
 
     /**
