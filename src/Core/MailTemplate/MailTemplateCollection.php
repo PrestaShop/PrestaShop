@@ -56,8 +56,7 @@ class MailTemplateCollection implements MailTemplateCollectionInterface
      */
     public function add(MailTemplateInterface $template)
     {
-        $index = array_search($template, $this->templates);
-        if (false === $index) {
+        if (!$this->has($template)) {
             $this->templates[] = $template;
         }
     }
@@ -90,7 +89,7 @@ class MailTemplateCollection implements MailTemplateCollectionInterface
     {
         foreach ($templates as $template) {
             if (!($template instanceof MailTemplateInterface)) {
-                throw new InvalidException(sprintf('Invalid argument in array, %s expected', MailTemplateInterface::class));
+                throw new InvalidException(sprintf('Invalid argument of type %s in array, %s expected', get_class($template), MailTemplateInterface::class));
             }
         }
 
