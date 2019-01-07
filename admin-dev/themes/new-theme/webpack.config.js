@@ -28,10 +28,10 @@
  * Three mode available:
  *  build = production mode
  *  build:analyze = production mode with bundler analyzer
- *  dev = development mode with live reload
+ *  dev = development mode
  */
-module.exports = (env, argvs) => {
-  return  (argvs.mode === 'production')
-          ? require('./.webpack/prod.js')(argvs.analyze)
-          : require('./.webpack/dev.js')(argvs.hostname);
-};
+module.exports = (env, argvs) => (
+  argvs.mode === 'production' ?
+  require('./.webpack/prod.js')(argvs.analyze) :
+  require('./.webpack/dev.js')()
+);

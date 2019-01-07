@@ -47,12 +47,16 @@
         }
     </script>
 
-    {{ ps.load_css(asset('themes/new-theme/public/translations.css')) }}
-
     {% if webpack_server %}
         <script src="http://localhost:8080/translations.bundle.js"></script>
     {% else %}
         <script src="{{ asset('themes/new-theme/public/translations.bundle.js') }}"></script>
     {% endif %}
 
+{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/translations.css') }}">
 {% endblock %}

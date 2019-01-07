@@ -14,36 +14,40 @@ const keepLicense = require('uglify-save-license');
 function prodConfig(analyze) {
   const cssExtractedFileName = 'theme';
 
-  let prod = Object.assign(common, {
-    stats: 'minimal',
-    optimization: {
-      // With mini-css-extract-plugin, one file is created for each '.js' where css is imported.
-      // The use of this optimization merges them into one file.
-      splitChunks: {
-        cacheGroups: {
-          styles: {
-            name: cssExtractedFileName,
-            test: /\.(s*)css$/,
-            chunks: 'all'
-          }
-        }
-      },
-      minimizer: [
-        new UglifyJsPlugin({
-          sourceMap: false,
-          uglifyOptions: {
-            compress: {
-              drop_console: true
-            },
-            output: {
-              comments: keepLicense
+  let prod = Object.assign(
+    common,
+    {
+      mode: 'production',
+      stats: 'minimal',
+      optimization: {
+        // With mini-css-extract-plugin, one file is created for each '.js' where css is imported.
+        // The use of this optimization merges them into one file.
+        splitChunks: {
+          cacheGroups: {
+            styles: {
+              name: cssExtractedFileName,
+              test: /\.(s*)css$/,
+              chunks: 'all'
             }
-          },
-        }),
-        new OptimizeCSSAssetsPlugin()
-      ]
+          }
+        },
+        minimizer: [
+          new UglifyJsPlugin({
+            sourceMap: true,
+            uglifyOptions: {
+              compress: {
+                drop_console: true
+              },
+              output: {
+                comments: keepLicense
+              }
+            },
+          }),
+          new OptimizeCSSAssetsPlugin()
+        ]
+      },
     }
-  });
+  );
 
   prod.module.rules.push({
     test:/\.(s*)css$/,

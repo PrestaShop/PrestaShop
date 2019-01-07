@@ -23,6 +23,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+const $ = global.$;
+// Dependencies
+
+import 'prestakit/dist/js/prestashop-ui-kit';
+import 'jquery-ui-dist/jquery-ui';
+import 'bootstrap-tokenfield';
+import 'eonasdan-bootstrap-datetimepicker';
+import 'jwerty';
+import 'magnific-popup';
+import 'dropzone';
+import 'typeahead.js/dist/typeahead.jquery';
+import 'typeahead.js/dist/bloodhound.min';
+import 'sprintf-js';
+
 // Plugins CSS
 import 'dropzone/dist/min/dropzone.min.css';
 import 'magnific-popup/dist/magnific-popup.css';
@@ -32,7 +46,7 @@ import '../scss/theme.scss';
 
 // Theme Javascript
 window.Dropzone.autoDiscover = false;
-import NavBar from './nav_bar.js';
+import NavBar from './nav_bar';
 
 // this needs to be ported into the UI kit
 import './clickable-dropdown';
@@ -40,13 +54,12 @@ import './clickable-dropdown';
 import './maintenance-page';
 import './translation-page/index';
 
-import Header from './header.js';
-import initDatePickers from './app/utils/datepicker';
-
-const $ = global.$;
+import Header from './header';
 
 new NavBar();
 new Header();
+
+import initDatePickers from './app/utils/datepicker';
 
 $(() => {
   initDatePickers();

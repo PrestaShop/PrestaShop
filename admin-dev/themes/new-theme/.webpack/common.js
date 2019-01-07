@@ -4,21 +4,11 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
+  externals: {
+    jquery: 'jQuery',
+  },
   entry: {
-    main: [
-      'prestakit/dist/js/prestashop-ui-kit.js',
-      'jquery-ui-dist/jquery-ui.js',
-      'bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
-      'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
-      'jwerty/jwerty.js',
-      'magnific-popup/dist/jquery.magnific-popup.js',
-      'dropzone/dist/dropzone.js',
-      'typeahead.js/dist/typeahead.jquery.js',
-      'typeahead.js/dist/bloodhound.min.js',
-      // 'bootstrap-slider/dist/bootstrap-slider.js',
-      'sprintf-js/src/sprintf.js',
-      './js/theme.js',
-    ],
+    main: './js/theme.js',
     catalog: './js/app/pages/catalog',
     stock: './js/app/pages/stock',
     translations: './js/app/pages/translations',
@@ -121,8 +111,8 @@ module.exports = {
       },
       // FILES
       {
-        test: /.(jpg|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=.]+)?$/,
-        use: 'file-loader?name=[hash].[ext]',
+        test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
+        loader: 'file-loader?name=[hash].[ext]',
       },
     ],
   },
@@ -133,6 +123,8 @@ module.exports = {
     new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
-    })
+      $: 'jquery', // needed for jquery-ui
+      jQuery: 'jquery',
+    }),
   ],
 };

@@ -2,10 +2,10 @@
   "name": "new-theme",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "private": "true",
   "scripts": {
-    "build": "webpack --mode='production'",
-    "build:analyze": "webpack --mode='production' --analyze",
+    "build": "NODE_ENV=production webpack --mode='production'",
+    "build:analyze": "NODE_ENV=production webpack --mode='production' --analyze",
     "dev": "webpack --mode='development' --watch"
   },
   "author": "PrestaShop",
@@ -17,13 +17,14 @@
     "compass": "^0.1.1",
     "dropzone": "^5.0.0",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
-    "jquery-ui-dist": "^1.12.1",
     "jets": "0.11.0",
+    "jquery-ui-dist": "^1.12.1",
     "jwerty": "^0.3.2",
     "magnific-popup": "^1.1.0",
     "mobile-detect": "^1.3.5",
-    "prestakit": "^1.0.2",
     "moment": "^2.19.1",
+    "prestakit": "^1.0.2",
+    "sprintf-js": "^1.1.2",
     "tether": "^1.3.2",
     "typeahead.js": "^0.11.1",
     "url-polyfill": "^1.0.11",
@@ -78,7 +79,6 @@
     "sass-loader": "^7.1.0",
     "sinon": "^2.4.1",
     "sinon-chai": "^2.12.0",
-    "sprintf-js": "^1.0.3",
     "style-loader": "^0.23.0",
     "tablednd": "^1.0.3",
     "uglify-save-license": "^0.4.1",
@@ -86,7 +86,6 @@
     "vue-loader": "^15.4.2",
     "webpack": "^4.19.1",
     "webpack-bundle-analyzer": "^3.0.2",
-    "webpack-cli": "^3.1.0",
-    "webpack-livereload-plugin": "^2.1.1"
+    "webpack-cli": "^3.1.0"
   }
 }

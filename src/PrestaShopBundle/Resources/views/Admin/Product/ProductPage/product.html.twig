@@ -288,9 +288,13 @@
 
 {% endblock %}
 
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product_page.css') }}">
+{% endblock %}
+
 {% block javascripts %}
   {{ parent() }}
-  {{ ps.load_css(asset('themes/new-theme/public/product_page.css')) }}
 
   <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/catalog_product.bundle.js') }}"></script>
