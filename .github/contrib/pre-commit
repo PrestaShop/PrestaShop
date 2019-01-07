@@ -15,7 +15,7 @@ then
 fi
 SFILES=${SFILES:-$STAGED_FILES_CMD}
 
-if [[ -n $SFILES ]]
+if [ -n "$SFILES" ]
 then
   echo "Checking PHP Lint..."
   for FILE in $SFILES
