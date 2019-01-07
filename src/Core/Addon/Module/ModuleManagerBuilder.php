@@ -32,7 +32,6 @@ use Db;
 use Doctrine\Common\Cache\FilesystemCache;
 use GuzzleHttp\Client;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
-use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -44,7 +43,6 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerChain;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
@@ -113,12 +111,7 @@ class ModuleManagerBuilder
                     self::$moduleZipManager,
                     self::$translator,
                     new NullDispatcher(),
-                    new CacheClearer(
-                        new CacheClearerChain(),
-                        new Clearer\SymfonyCacheClearer(),
-                        new Clearer\MediaCacheClearer(),
-                        new Clearer\SmartyCacheClearer()
-                    )
+                    new Clearer\SymfonyCacheClearer()
                 );
             }
         }
