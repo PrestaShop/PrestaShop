@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 /**
  * Class MailTemplate is the default implementation of MailTemplateInterface,
- * it is a simple data container with nearly no logic (except for getExtension).
+ * it is a simple data container with no logic.
  */
 class MailTemplate implements MailTemplateInterface
 {
@@ -90,16 +90,6 @@ class MailTemplate implements MailTemplateInterface
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Raw type templates are written in txt files for backward compatibility with the Mail class
-     *
-     * @return string
-     */
-    public function getExtension()
-    {
-        return self::RAW_TYPE == $this->type ? 'txt' : $this->type;
     }
 
     /**
