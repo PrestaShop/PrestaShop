@@ -27,16 +27,12 @@
 namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidException;
-use PrestaShopBundle\Service\Mail\MailTemplateGenerator;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Configuration;
-use Context;
-use Currency;
 use Language;
-use Validate;
 
 class GenerateMailTemplatesCommand extends ContainerAwareCommand
 {
