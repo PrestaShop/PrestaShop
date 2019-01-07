@@ -65,7 +65,7 @@ trait AssetUrlGeneratorTrait
      */
     protected function getFQDN()
     {
-        if (is_null($this->fqdn)) {
+        if (null === $this->fqdn) {
             if ($this->configuration->get('PS_SSL_ENABLED') && ToolsLegacy::usingSecureMode()) {
                 $this->fqdn = $this->configuration->get('_PS_BASE_URL_SSL_');
             } else {

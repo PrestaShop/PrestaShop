@@ -105,7 +105,7 @@ class AdminTranslationsControllerCore extends AdminController
      */
     public function initContent()
     {
-        if (!is_null($this->type_selected)) {
+        if (null !== $this->type_selected) {
             $method_name = 'initForm' . $this->type_selected;
             if (method_exists($this, $method_name)) {
                 $this->content = $this->initForm($method_name);

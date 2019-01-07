@@ -227,7 +227,7 @@ class ProductSupplierCore extends ObjectModel
      */
     public static function getProductPrice($idSupplier, $idProduct, $idProductAttribute = 0, $convertedPrice = false)
     {
-        if (is_null($idSupplier) || is_null($idProduct)) {
+        if (null === $idSupplier || null === $idProduct) {
             return;
         }
 

@@ -55,7 +55,7 @@ class PreferencesController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, FormInterface $form = null)
     {
-        if (is_null($form)) {
+        if (null === $form) {
             $form = $this->get('prestashop.adapter.preferences.form_handler')->getForm();
         }
 

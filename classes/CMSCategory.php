@@ -137,7 +137,7 @@ class CMSCategoryCore extends ObjectModel
             $link = Context::getContext()->link;
         }
 
-        if (is_null($id_lang)) {
+        if (null === $id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
 
@@ -170,7 +170,7 @@ class CMSCategoryCore extends ObjectModel
         if (!$link) {
             $link = Context::getContext()->link;
         }
-        if (is_null($id_lang)) {
+        if (null === $id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
 
@@ -611,7 +611,7 @@ class CMSCategoryCore extends ObjectModel
      */
     public function getParentsCategories($id_lang = null)
     {
-        if (is_null($id_lang)) {
+        if (null === $id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
 

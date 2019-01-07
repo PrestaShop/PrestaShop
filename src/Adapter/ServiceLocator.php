@@ -58,7 +58,7 @@ class ServiceLocator
      */
     public static function get($serviceName)
     {
-        if (empty(self::$service_container) || is_null(self::$service_container)) {
+        if (empty(self::$service_container) || null === self::$service_container) {
             throw new CoreException('Service container is not set.');
         }
 

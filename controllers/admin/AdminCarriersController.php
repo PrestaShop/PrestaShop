@@ -707,7 +707,7 @@ class AdminCarriersControllerCore extends AdminController
                 self::$cache_lang['Name'] = $this->trans('Name:', array(), 'Admin.Shipping.Feature');
             }
 
-            if (!is_null($name)) {
+            if (null !== $name) {
                 $name = '\n\n' . self::$cache_lang['Name'] . ' ' . $name;
             }
 
@@ -718,7 +718,7 @@ class AdminCarriersControllerCore extends AdminController
             );
 
             if ($this->specificConfirmDelete !== false) {
-                $data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r' . $this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'] . $name), '\'');
+                $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'] . $name), '\'');
             }
 
             $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));

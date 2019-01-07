@@ -147,7 +147,7 @@ class ThemeExtractor
      */
     private function overrideFromDatabase($themeName, $locale, &$catalogue)
     {
-        if (is_null($this->themeProvider)) {
+        if (null === $this->themeProvider) {
             throw new \Exception('Theme provider is required.');
         }
 

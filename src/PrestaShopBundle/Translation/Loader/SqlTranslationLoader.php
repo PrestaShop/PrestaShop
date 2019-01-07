@@ -83,7 +83,7 @@ class SqlTranslationLoader implements LoaderInterface
         $catalogue = new MessageCatalogue($locale);
         $this->addTranslationsToCatalogue($translations, $catalogue);
 
-        if (!is_null($this->theme)) {
+        if (null !== $this->theme) {
             $selectThemeTranslationsQuery =
                 $selectTranslationsQuery . "\n" .
                 "AND theme = '" . $this->theme->getName() . "'";

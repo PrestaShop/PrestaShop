@@ -118,7 +118,7 @@ class PrestaShopExceptionCore extends Exception
         $lines = array_slice($lines, $offset, $total);
         ++$offset;
 
-        echo '<div class="psTrace" id="psTrace_' . $id . '" ' . ((is_null($id) ? 'style="display: block"' : '')) . '><pre>';
+        echo '<div class="psTrace" id="psTrace_' . $id . '" ' . ((null === $id ? 'style="display: block"' : '')) . '><pre>';
         foreach ($lines as $k => $l) {
             $string = ($offset + $k) . '. ' . htmlspecialchars($l);
             if ($offset + $k == $line) {

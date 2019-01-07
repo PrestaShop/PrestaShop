@@ -90,7 +90,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
      */
     public function setupDatabaseMock($mock = null)
     {
-        if (is_null($mock)) {
+        if (null === $mock) {
             $this->database = Phake::mock('Db');
         } else {
             $this->database = $mock;

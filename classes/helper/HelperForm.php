@@ -70,7 +70,7 @@ class HelperFormCore extends Helper
     public function generate()
     {
         $this->tpl = $this->createTemplate($this->base_tpl);
-        if (is_null($this->submit_action)) {
+        if (null === $this->submit_action) {
             $this->submit_action = 'submitAdd' . $this->table;
         }
 

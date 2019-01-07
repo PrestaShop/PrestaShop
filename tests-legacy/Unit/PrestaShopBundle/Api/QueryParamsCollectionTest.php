@@ -460,7 +460,7 @@ AND EXISTS(SELECT 1
         );
 
         array_walk($validQueryParams, function ($name) use ($testedParams, &$params) {
-            if (array_key_exists($name, $testedParams) && !is_null($testedParams[$name])) {
+            if (array_key_exists($name, $testedParams) && null !== $testedParams[$name]) {
                 $params[$name] = $testedParams[$name];
             }
         });
@@ -500,7 +500,7 @@ AND EXISTS(SELECT 1
         $requestMock = $this->prophet->prophesize('\Symfony\Component\HttpFoundation\Request');
         $requestMock->query = $queryMock->reveal();
 
-        if (!is_null($attributesMock)) {
+        if (null !== $attributesMock) {
             $requestMock->attributes = $attributesMock;
         }
 

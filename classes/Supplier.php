@@ -200,7 +200,7 @@ class SupplierCore extends ObjectModel
      */
     public static function getLiteSuppliersList($idLang = null, $format = 'default')
     {
-        $idLang = is_null($idLang) ? Context::getContext()->language->id : (int) $idLang;
+        $idLang = null === $idLang ? Context::getContext()->language->id : (int) $idLang;
 
         $suppliersList = array();
         $suppliers = Supplier::getSuppliers(false, $idLang, true);
