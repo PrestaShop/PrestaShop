@@ -101,7 +101,7 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
             $theme,
             MailTemplateInterface::CORE_CATEGORY,
         ]);
-        if (!file_exists($coreTemplatesFolder) || !is_dir($coreTemplatesFolder)) {
+        if (!is_dir($coreTemplatesFolder)) {
             return;
         }
 
@@ -119,7 +119,7 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
             $theme,
             MailTemplateInterface::MODULES_CATEGORY,
         ]);
-        if (!file_exists($moduleTemplatesFolder) || !is_dir($moduleTemplatesFolder)) {
+        if (!is_dir($moduleTemplatesFolder)) {
             return;
         }
 
@@ -150,12 +150,12 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
     ) {
         $templateTypes = [
             MailTemplateInterface::HTML_TYPE,
-            MailTemplateInterface::RAW_TYPE,
+            MailTemplateInterface::TXT_TYPE,
         ];
 
         foreach ($templateTypes as $templateType) {
             $typeFolder = implode(DIRECTORY_SEPARATOR, [$folder, $templateType]);
-            if (!file_exists($typeFolder) || !is_dir($typeFolder)) {
+            if (!is_dir($typeFolder)) {
                 continue;
             }
 
@@ -181,7 +181,7 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
      */
     private function checkTemplatesFolder()
     {
-        if (!file_exists($this->mailThemesFolder) || !is_dir($this->mailThemesFolder)) {
+        if (!is_dir($this->mailThemesFolder)) {
             throw new InvalidException(sprintf(
                 'Invalid mail themes folder "%s": no such directory',
                 $this->mailThemesFolder
