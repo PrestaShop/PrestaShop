@@ -9,6 +9,9 @@ services:
 
   prestashop.service.mail.mail_template_parameters_builder:
     class: 'PrestaShopBundle\Service\Mail\MailTemplateParametersBuilder'
+    arguments:
+      -
+        emailPublicWebRoot: "@=service('prestashop.adapter.legacy.context').getRootUrl()"
 
   prestashop.service.mail.mail_template_renderer:
     class: 'PrestaShopBundle\Service\Mail\MailTemplateRenderer'
