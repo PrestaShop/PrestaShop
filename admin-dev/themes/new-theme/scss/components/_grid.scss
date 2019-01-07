@@ -77,3 +77,8 @@ table .thead-default .column-headers th:last-child .grid-actions-header-text {
     padding-right: 14px;
   }
 }
+
+table .column-filters td:last-child .grid-search-button,
+table .column-filters td:last-child .grid-reset-button {
+  float: right;
+}
