@@ -35,7 +35,7 @@ interface MailTemplateInterface
     const MODULES_CATEGORY = 'modules';
 
     const HTML_TYPE = 'html';
-    const RAW_TYPE = 'raw';
+    const TXT_TYPE = 'txt';
 
     /**
      * Whether the template is used by the core or modules
@@ -50,12 +50,6 @@ interface MailTemplateInterface
      * @return string
      */
     public function getType();
-
-    /**
-     * Returns the extension of the generated file, either txt or html
-     * @return string
-     */
-    public function getExtension();
 
     /**
      * Name of the template to describe its purpose

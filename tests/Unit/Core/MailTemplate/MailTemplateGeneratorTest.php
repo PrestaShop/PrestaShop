@@ -67,7 +67,7 @@ class MailTemplateGeneratorTest extends TestCase
             new MailTemplate(
                 'classic',
                 MailTemplateInterface::CORE_CATEGORY,
-                MailTemplateInterface::RAW_TYPE,
+                MailTemplateInterface::TXT_TYPE,
                 'account',
                 implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'core', 'account.txt.twig'])
             ),
@@ -81,7 +81,7 @@ class MailTemplateGeneratorTest extends TestCase
             new MailTemplate(
                 'classic',
                 MailTemplateInterface::MODULES_CATEGORY,
-                MailTemplateInterface::RAW_TYPE,
+                MailTemplateInterface::TXT_TYPE,
                 'productoutofstock',
                 implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'modules', 'ps_emailalerts', 'productoutofstock.twig'])
             ),
@@ -168,9 +168,9 @@ class MailTemplateGeneratorTest extends TestCase
         $generator->generateThemeTemplates('classic', $this->createLanguageMock(), $this->tempDir);
         $expectedFiles = [
             'account.html' => 'account_html_core_',
-            'account.txt' => 'account_raw_core_',
+            'account.txt' => 'account_txt_core_',
             'followup_1.html' => 'followup_1_html_modules_',
-            'productoutofstock.txt' => 'productoutofstock_raw_modules_',
+            'productoutofstock.txt' => 'productoutofstock_txt_modules_',
         ];
         $this->checkExpectedFiles($expectedFiles);
     }
@@ -186,9 +186,9 @@ class MailTemplateGeneratorTest extends TestCase
         $generator->generateThemeTemplates('classic', $this->createLanguageMock('fr'), $this->tempDir);
         $expectedFiles = [
             'account.html' => 'account_html_core_fr',
-            'account.txt' => 'account_raw_core_fr',
+            'account.txt' => 'account_txt_core_fr',
             'followup_1.html' => 'followup_1_html_modules_fr',
-            'productoutofstock.txt' => 'productoutofstock_raw_modules_fr',
+            'productoutofstock.txt' => 'productoutofstock_txt_modules_fr',
         ];
         $this->checkExpectedFiles($expectedFiles);
     }
