@@ -24,13 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle\Service\Mail;
+namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\InvalidException;
-use PrestaShopBundle\Service\Mail\MailTemplateCollectionInterface;
-use PrestaShopBundle\Service\Mail\MailTemplateFolderCatalog;
-use PrestaShopBundle\Service\Mail\MailTemplateInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateCollectionInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateFolderCatalog;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class MailTemplateFolderCatalogTest extends TestCase
