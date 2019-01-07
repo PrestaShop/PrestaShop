@@ -88,6 +88,7 @@ class MailTemplateGenerator
             $generatedTemplate = $this->renderer->render($template, $language);
             $templatePath = $this->generateTemplatePath($template, $outputFolder);
             $this->fs->dumpFile($templatePath, $generatedTemplate);
+            $this->logger->info(sprintf('Generate template %s at %s', $template->getName(), $templatePath));
         }
     }
 
