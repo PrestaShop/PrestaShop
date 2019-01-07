@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Mail;
-
+namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidException;
 use Psr\Log\LoggerAwareTrait;
@@ -40,7 +39,7 @@ class MailTemplateGenerator
     /** @var MailTemplateCatalogInterface */
     private $catalog;
 
-    /** @var MailTemplateRenderer */
+    /** @var MailTemplateRendererInterface */
     private $renderer;
 
     /** @var Filesystem */
@@ -48,7 +47,7 @@ class MailTemplateGenerator
 
     public function __construct(
         MailTemplateCatalogInterface $catalog,
-        MailTemplateRenderer $renderer
+        MailTemplateRendererInterface $renderer
     ) {
         $this->catalog = $catalog;
         $this->renderer = $renderer;

@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle\Service\Mail;
+namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Service\Mail\MailTemplateInterface;
-use PrestaShopBundle\Service\Mail\MailTemplateParametersBuilder;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateParametersBuilder;
 use Language;
 
 class MailTemplateParametersBuilderTest extends TestCase
