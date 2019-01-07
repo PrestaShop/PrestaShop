@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,46 +19,45 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Mail;
+namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-use Symfony\Component\Templating\EngineInterface;
-use Language;
+use PrestaShop\PrestaShop\Core\Exception\InvalidException;
 
-class MailTemplateRenderer
+interface MailTemplateCollectionInterface extends \IteratorAggregate, \Countable
 {
-    /** @var EngineInterface */
-    private $engine;
-
-    /** @var MailTemplateParametersBuilderInterface */
-    private $parametersBuilder;
-
     /**
-     * @param EngineInterface $engine
-     * @param MailTemplateParametersBuilderInterface $parametersBuilder
+     * @param MailTemplateInterface $template
+     *
+     * @return bool
      */
-    public function __construct(
-        EngineInterface $engine,
-        MailTemplateParametersBuilderInterface $parametersBuilder
-    ) {
-        $this->engine = $engine;
-        $this->parametersBuilder = $parametersBuilder;
-    }
+    public function has(MailTemplateInterface $template);
 
     /**
      * @param MailTemplateInterface $template
-     * @param Language $language
-     *
-     * @return string
      */
-    public function render(MailTemplateInterface $template, Language $language)
-    {
-        $parameters = $this->parametersBuilder->buildParameters($template, $language);
+    public function add(MailTemplateInterface $template);
 
-        return $this->engine->render($template->getPath(), $parameters);
-    }
+    /**
+     * @param MailTemplateInterface $template
+     *
+     * @throws InvalidException
+     */
+    public function remove(MailTemplateInterface $template);
+
+    /**
+     * @return MailTemplateInterface[]
+     */
+    public function getTemplates();
+
+    /**
+     * @param array $templates
+     *
+     * @throws InvalidException
+     */
+    public function setTemplates($templates = []);
 }
