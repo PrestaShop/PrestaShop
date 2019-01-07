@@ -95,10 +95,8 @@ class GetFileControllerCore extends FrontController
             // Check whether the order was made by the current user
             // If the order was made by a guest, skip this step
             $customer = new Customer((int) $order->id_customer);
-            if (!$customer->is_guest) {
-                if ($order->secure_key != $this->context->customer->secure_key) {
-                    Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
-                }
+            if (!$customer->is_guest && $order->secure_key !== $this->context->customer->secure_key) {
+                Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
             }
 
             /* Product no more present in catalog */
