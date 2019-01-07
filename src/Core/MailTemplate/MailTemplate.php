@@ -47,8 +47,8 @@ class MailTemplate implements MailTemplateInterface
     /** @var string */
     private $path;
 
-    /** @var string|null */
-    private $module;
+    /** @var string */
+    private $moduleName;
 
     /**
      * MailTemplate constructor.
@@ -58,7 +58,7 @@ class MailTemplate implements MailTemplateInterface
      * @param string $type There are two types of mail templates, either HTML or RAW ones
      * @param string $name Name of the template to describe its purpose
      * @param string $path Absolute path of the template file
-     * @param string|null $module Which module this template is associated to (if any)
+     * @param string|null $moduleName Which module this template is associated to (if any)
      */
     public function __construct(
         $theme,
@@ -66,14 +66,14 @@ class MailTemplate implements MailTemplateInterface
         $type,
         $name,
         $path,
-        $module = null
+        $moduleName = ''
     ) {
         $this->theme = $theme;
         $this->category = $category;
         $this->type = $type;
         $this->name = $name;
         $this->path = $path;
-        $this->module = $module;
+        $this->moduleName = $moduleName;
     }
 
     /**
@@ -127,10 +127,10 @@ class MailTemplate implements MailTemplateInterface
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getModule()
+    public function getModuleName()
     {
-        return $this->module;
+        return $this->moduleName;
     }
 }
