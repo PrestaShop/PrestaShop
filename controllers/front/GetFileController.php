@@ -57,7 +57,17 @@ class GetFileControllerCore extends FrontController
 
             Tools::setCookieLanguage();
             if (!$this->context->customer->isLogged()) {
-                Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
+                if (Tools::getValue('secure_key') && Tools::getValue('id_order')) {
+                    $order = new Order((int) Tools::getValue('id_order'));
+                    if (!Validate::isLoadedObject($order)) {
+                        $this->displayCustomError('Invalid key.');
+                    }
+                    if ($order->secure_key != Tools::getValue('secure_key')) {
+                        $this->displayCustomError('Invalid key.');
+                    }
+                } else {
+                     Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
+                }
             }
 
             /* Key format: <sha1-filename>-<hashOrder> */
@@ -80,9 +90,13 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This order has not been paid.');
             }
 
-            /* check whether the order was made by the current user */
-            if ($order->secure_key != $this->context->customer->secure_key) {
-                $this->displayCustomError('Invalid key.');
+            // Check whether the order was made by the current user
+            // If the order was made by a guest, skip this step
+            $customer = new Customer((int) $order->id_customer);
+            if (!$customer->is_guest) {
+                if ($order->secure_key != $this->context->customer->secure_key) {
+                    Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
+                }
             }
 
             /* Product no more present in catalog */
