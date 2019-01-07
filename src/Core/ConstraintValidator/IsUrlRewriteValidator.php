@@ -69,7 +69,7 @@ class IsUrlRewriteValidator extends ConstraintValidator
         if (!$this->isUrlRewriteValid($value)) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
-                ->setParameter('%s', $value)
+                ->setParameter('%s', $this->formatValue($value))
                 ->addViolation()
             ;
         }
