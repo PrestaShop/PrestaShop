@@ -1,8 +1,12 @@
 #!/bin/sh
 
+RED=`tput setaf 1`
+RESET=`tput sgr0`
+
 PHP_BINARY=`which php`
 STAGED_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep '\.php$'`
 PROJECT_PATH=$(cd "$( dirname "$0" )/../../" && pwd)
+CS_FIXER="./vendor/bin/php-cs-fixer fix"
 
 # Determine if a file list is passed
 if [ "$#" -eq 1 ]
@@ -29,8 +33,21 @@ then
   done
 
   echo "Running PHP CS Fixer..."
-  $PHP_BINARY ./vendor/bin/php-cs-fixer fix --show-progress=dot
-  exit $?
+
+  $PHP_BINARY $CS_FIXER --verbose --dry-run --show-progress=dots
+
+  if [ $? != 0 ]
+  then
+    printf "\n${RED}Some files need to be fixed!${RESET}\n\n"
+    echo "Please run the following script to fix them. Afterwards, add the changed files and commit again:"
+    echo "
+
+    php $CS_FIXER
+
+    "
+
+    exit 2
+  fi
 
 else
   echo "No modified PHP files to check."
