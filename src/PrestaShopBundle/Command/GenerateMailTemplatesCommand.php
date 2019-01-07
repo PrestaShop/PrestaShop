@@ -26,11 +26,17 @@
 
 namespace PrestaShopBundle\Command;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidException;
 use PrestaShopBundle\Service\Mail\MailTemplateGenerator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Configuration;
+use Context;
+use Currency;
+use Language;
+use Validate;
 
 class GenerateMailTemplatesCommand extends ContainerAwareCommand
 {
@@ -40,7 +46,8 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
             ->setName('prestashop:mail:generate')
             ->setDescription('Generate mail templates for a specified theme')
             ->addArgument('theme', InputArgument::REQUIRED, 'Theme to use for mail templates.')
-            ->addArgument('outputFolder', InputArgument::OPTIONAL, 'Output folder to export templates.')
+            ->addArgument('locale', InputArgument::REQUIRED, 'Which locale to use for the templates.')
+            ->addArgument('outputFolder', InputArgument::REQUIRED, 'Output folder to export templates.')
         ;
     }
 
@@ -53,19 +60,53 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $theme = $input->getArgument('theme');
-        $outputFolder = $input->getArgument('outputFolder', null);
-        if (null !== $outputFolder) {
-            if (!file_exists($outputFolder)) {
-                $outputFolder = implode(DIRECTORY_SEPARATOR, [getcwd(), $outputFolder]);
-                if (file_exists($outputFolder)) {
-                    $outputFolder = realpath($outputFolder);
-                }
+        $outputFolder = $input->getArgument('outputFolder');
+        if (!file_exists($outputFolder)) {
+            $outputFolder = implode(DIRECTORY_SEPARATOR, [getcwd(), $outputFolder]);
+            if (file_exists($outputFolder)) {
+                $outputFolder = realpath($outputFolder);
             }
         }
 
-        $output->writeln('Exporting mail with theme '.$theme.' to '.$outputFolder);
+        $this->initContext();
+
+        $locale = $input->getArgument('locale');
+        $language = $this->getLanguage($locale);
+
+        $output->writeln(sprintf('Exporting mail with theme %s for language %s to %s', $theme, $language->name, $outputFolder));
         /** @var MailTemplateGenerator $catalog */
         $generator = $this->getContainer()->get('prestashop.service.mail.mail_template_generator');
-        $generator->generateThemeTemplates($theme, $outputFolder);
+        $generator->generateThemeTemplates($theme, $language, $outputFolder);
+    }
+
+    /**
+     * Initialize PrestaShop Context
+     */
+    private function initContext()
+    {
+        require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return Language
+     * @throws InvalidException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function getLanguage($locale)
+    {
+        $iso = Language::getIsoByLocale($locale);
+        if (false === $iso) {
+            $localeParts = explode('-', $locale);
+            $iso = $localeParts[0];
+        }
+        $languageId = Language::getIdByIso($iso);
+        if (false === $languageId) {
+            throw new InvalidException(sprintf('Could not find Language for locale: %s', $locale));
+        }
+
+        return new Language($languageId);
     }
 }
