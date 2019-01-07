@@ -48,7 +48,7 @@ class MailTemplateGenerator
     private $renderer;
 
     /** @var Filesystem */
-    private $fs;
+    private $fileSystem;
 
     public function __construct(
         MailTemplateCatalogInterface $catalog,
@@ -57,7 +57,7 @@ class MailTemplateGenerator
         $this->catalog = $catalog;
         $this->renderer = $renderer;
         $this->logger = new NullLogger();
-        $this->fs = new Filesystem();
+        $this->fileSystem = new Filesystem();
     }
 
     /**
@@ -78,7 +78,7 @@ class MailTemplateGenerator
             ));
         }
 
-        if (!$this->fs->exists($outputFolder) || !is_dir($outputFolder)) {
+        if (!$this->fileSystem->exists($outputFolder) || !is_dir($outputFolder)) {
             throw new InvalidException(sprintf(
                 'Invalid output folder "%s"',
                 $outputFolder
@@ -91,7 +91,7 @@ class MailTemplateGenerator
         foreach ($templates as $template) {
             $generatedTemplate = $this->renderer->render($template, $language);
             $templatePath = $this->generateTemplatePath($template, $outputFolder);
-            $this->fs->dumpFile($templatePath, $generatedTemplate);
+            $this->fileSystem->dumpFile($templatePath, $generatedTemplate);
             $this->logger->info(sprintf('Generate template %s at %s', $template->getName(), $templatePath));
         }
     }
