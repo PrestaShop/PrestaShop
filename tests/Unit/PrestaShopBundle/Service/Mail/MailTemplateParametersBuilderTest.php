@@ -63,6 +63,7 @@ class MailTemplateParametersBuilderTest extends TestCase
             'templateModule' => null,
             'languageIsRTL' => false,
             'languageDefaultFont' => '',
+            'locale' => 'en-EN',
         ], $parameters);
     }
 
@@ -91,6 +92,7 @@ class MailTemplateParametersBuilderTest extends TestCase
             'templateModule' => null,
             'languageIsRTL' => false,
             'languageDefaultFont' => '',
+            'locale' => 'en-EN',
         ], $parameters);
     }
 
@@ -115,6 +117,7 @@ class MailTemplateParametersBuilderTest extends TestCase
             'templateModule' => 'ps_reminder',
             'languageIsRTL' => true,
             'languageDefaultFont' => 'Tahoma,',
+            'locale' => 'ar-AR',
         ], $parameters);
     }
 
@@ -132,6 +135,7 @@ class MailTemplateParametersBuilderTest extends TestCase
         ;
 
         $languageMock->iso_code = $isoCode;
+        $languageMock->locale = sprintf('%s-%s', $isoCode, strtoupper($isoCode));
         $languageMock->is_rtl = $isRTL;
 
         return $languageMock;
