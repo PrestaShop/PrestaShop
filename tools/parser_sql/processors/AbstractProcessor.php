@@ -101,7 +101,7 @@ abstract class AbstractProcessor {
         while ($i < strlen($trim)) {
 
             if ($trim[$i] === "\\") {
-                $i += 2; # an escape character, the next character is irrelevant
+                $i += 2; // an escape character, the next character is irrelevant
                 continue;
             }
 
@@ -157,7 +157,7 @@ abstract class AbstractProcessor {
     }
 
     protected function isCommentToken($token) {
-        return isset($token[0]) && isset($token[1])
+        return isset($token[0], $token[1])  
             && (($token[0] === '-' && $token[1] === '-') || ($token[0] === '/' && $token[1] === '*'));
     }
 
@@ -211,4 +211,3 @@ abstract class AbstractProcessor {
         return $array;
     }
 }
-?>

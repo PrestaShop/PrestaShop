@@ -81,7 +81,7 @@ function migrate_orders()
     }
     for ($i = 0; $i < $nb_loop; $i++) {
         $order_res = Db::getInstance()->query('SELECT * FROM `'._DB_PREFIX_.'orders` LIMIT '.(int)$start.', '.(int)$step);
-        $start = intval(($i+1) * $step);
+        $start = (int) (($i+1) * $step);
         $cpt = 0;
         $flush_limit = 200;
         while ($order = Db::getInstance()->nextRow($order_res)) {
@@ -319,7 +319,7 @@ function mo_setProductPrices($row, $tax_calculation_method)
         }
     }
 
-    if (($row['reduction_percent'] or $row['reduction_amount'] or $row['group_reduction']) and $tax_calculation_method == PS_TAX_EXC) {
+    if (($row['reduction_percent'] || $row['reduction_amount'] || $row['group_reduction']) && $tax_calculation_method == PS_TAX_EXC) {
         $row['product_price'] = mo_ps_round($row['product_price']);
     }
 

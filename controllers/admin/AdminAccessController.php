@@ -29,7 +29,7 @@
  */
 class AdminAccessControllerCore extends AdminController
 {
-    /* @var array : Black list of id_tab that do not have access */
+    /** @var array : Black list of id_tab that do not have access */
     public $accesses_black_list = array();
 
     public function __construct()
@@ -194,7 +194,7 @@ class AdminAccessControllerCore extends AdminController
         return (isset($_GET['id_profile']) && !empty($_GET['id_profile']) && is_numeric($_GET['id_profile'])) ? (int) $_GET['id_profile'] : 1;
     }
 
-    private function sortModuleByName($a, $b)
+    protected function sortModuleByName($a, $b)
     {
         return strnatcmp($a['name'], $b['name']);
     }
@@ -202,14 +202,14 @@ class AdminAccessControllerCore extends AdminController
     /**
      * return human readable Tabs hierarchy for display.
      */
-    private function displayTabs(array $tabs)
+    protected function displayTabs(array $tabs)
     {
         $tabsTree = $this->getChildrenTab($tabs);
 
         return $tabsTree;
     }
 
-    private function getChildrenTab(array &$tabs, $id_parent = 0)
+    protected function getChildrenTab(array &$tabs, $id_parent = 0)
     {
         $children = [];
         foreach ($tabs as &$tab) {

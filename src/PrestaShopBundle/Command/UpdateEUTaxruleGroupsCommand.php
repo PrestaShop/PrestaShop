@@ -182,7 +182,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
         $output->writeln("<info>Updated the virtual tax groups for $nUpdated localization files</info>");
     }
 
-    protected function addTax(\SimpleXMLElement $taxes, \SimpleXMLElement $tax, array $attributesToUpdate = array(), array $attributesToRemove = array())
+    protected function addTax(SimpleXMLElement $taxes, SimpleXMLElement $tax, array $attributesToUpdate = array(), array $attributesToRemove = array())
     {
         $newTax = new SimpleXMLElement('<tax/>');
 
@@ -230,7 +230,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
         return $newTax;
     }
 
-    protected function addTaxRule(\SimpleXMLElement $taxRulesGroup, \SimpleXMLElement $tax, $iso_code_country)
+    protected function addTaxRule(SimpleXMLElement $taxRulesGroup, SimpleXMLElement $tax, $iso_code_country)
     {
         $taxRule = $taxRulesGroup->addChild('taxRule');
 

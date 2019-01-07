@@ -87,13 +87,13 @@ class Datas
             'name' => 'db_clear',
             'default' => '1',
             'validate' => 'isInt',
-            'help' => 'Drop existing tables'
+            'help' => 'Drop existing tables',
         ),
         'database_create' => array(
             'name' => 'db_create',
             'default' => '0',
             'validate' => 'isInt',
-            'help' => 'Create the database if not exist'
+            'help' => 'Create the database if not exist',
         ),
         'database_prefix' => array(
             'name' => 'prefix',
@@ -120,7 +120,7 @@ class Datas
             'name' => 'country',
             'validate' => 'isLanguageIsoCode',
             'default' => 'fr',
-            ),
+        ),
         'admin_firstname' => array(
             'name' => 'firstname',
             'validate' => 'isName',
@@ -139,12 +139,12 @@ class Datas
         'admin_email' => array(
             'name' => 'email',
             'validate' => 'isEmail',
-            'default' => 'pub@prestashop.com'
+            'default' => 'pub@prestashop.com',
         ),
         'show_license' => array(
             'name' => 'license',
             'default' => 0,
-            'help' => 'show PrestaShop license'
+            'help' => 'show PrestaShop license',
         ),
         'newsletter' => array(
             'name' => 'newsletter',
@@ -153,12 +153,12 @@ class Datas
         ),
         'theme' => array(
             'name' => 'theme',
-            'default' => ''
+            'default' => '',
         ),
         'enable_ssl' => array(
             'name' => 'ssl',
             'default' => 0,
-            'help' => 'enable SSL for PrestaShop'
+            'help' => 'enable SSL for PrestaShop',
         ),
     );
 

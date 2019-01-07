@@ -150,7 +150,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
             }
             $this->currentEntity = array();
         }
-        if (count($this->currentAssociatedEntity)) {
+        if (is_countable($this->currentAssociatedEntity) && count($this->currentAssociatedEntity)) {
             $current = array();
             foreach ($this->currentAssociatedEntity as $element) {
                 $current[$element['key']] = $element['value'];
@@ -192,7 +192,6 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
 
     public function renderAssociationFooter($obj, $params, $assoc_name)
     {
-        return;
     }
 
     public function renderErrorsHeader()

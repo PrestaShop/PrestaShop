@@ -122,7 +122,7 @@ class PasswordControllerCore extends FrontController
             if ($isSubmit = Tools::isSubmit('passwd')) {
                 // If password is submitted validate pass and confirmation
                 if (!$passwd = Tools::getValue('passwd')) {
-                    $this->errors[] = $this->trans("The password is missing: please enter your new password.", array(), 'Shop.Notifications.Error');
+                    $this->errors[] = $this->trans('The password is missing: please enter your new password.', array(), 'Shop.Notifications.Error');
                 }
 
                 if (!$confirmation = Tools::getValue('confirmation')) {

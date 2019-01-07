@@ -61,5 +61,20 @@ module.exports = {
     modal_content: '//*[@id="blockcart-modal"]//div[@class="modal-content"]',
     cart_page: '//*[@id="cart"]',
     cart_body: '(//*[@id="main"]//div[contains(@class, "body")])[1]'
+  },
+  CustomerAccount: {
+    order_history_button: '//*[@id="history-link"]',
+    details_buttons: 'a[data-link-action="view-order-details"]',
+    details_button: '//*[@id="content"]//tr[%NUMBER]/td[6]/a[contains(@data-link-action,"details")]',
+    order_details_words: '//*[@id="main"]//h1',
+    order_infos_block: '//*[@id="order-infos"]',
+    order_status_block: '//*[@id="order-history"]',
+    invoice_address_block: '//*[@id="invoice-address"]',
+    order_products_block: '//*[@id="order-products"]',
+    request_return_button: '//*[@id="order-return-form"]//button',
+    add_message_block: '//*[@id="content"]/section[@class="order-message-form box"]',
+    message_input: '//*[@id="content"]//textarea[@name="msgText"]',
+    send_button: '//*[@id="content"]//button[@name="submitMessage"]',
+    success_panel: '//*[@id="notifications"]//article[@class="alert alert-success"]'
   }
 };

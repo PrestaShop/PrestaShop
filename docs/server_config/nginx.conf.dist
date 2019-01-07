@@ -162,7 +162,7 @@ server {
 
         fastcgi_index  index.php;
 
-        # Envirnoment variables for PHP
+        # Environment variables for PHP
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
 
         include       fastcgi_params;

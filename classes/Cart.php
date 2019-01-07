@@ -810,6 +810,7 @@ class CartCore extends ObjectModel
 
                 $additionalRow = Product::getProductProperties((int) $this->id_lang, $row);
                 $row['reduction'] = $additionalRow['reduction'];
+                $row['reduction_without_tax'] = $additionalRow['reduction_without_tax'];
                 $row['price_without_reduction'] = $additionalRow['price_without_reduction'];
                 $row['specific_prices'] = $additionalRow['specific_prices'];
                 unset($additionalRow);
@@ -895,6 +896,27 @@ class CartCore extends ObjectModel
         $row['price_without_reduction'] = Product::getPriceStatic(
             (int) $row['id_product'],
             true,
+            isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
+            6,
+            null,
+            false,
+            false,
+            $productQuantity,
+            false,
+            (int) $this->id_customer ? (int) $this->id_customer : null,
+            (int) $this->id,
+            $address_id,
+            $specific_price_output,
+            true,
+            true,
+            $shopContext,
+            true,
+            $row['id_customization']
+        );
+
+        $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
+            (int) $row['id_product'],
+            false,
             isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
             6,
             null,
@@ -1458,6 +1480,7 @@ class CartCore extends ObjectModel
         $context = Context::getContext()->cloneContext();
         $context->cart = $this;
         Cache::clean('getContextualValue_*');
+        CartRule::autoRemoveFromCart();
         if ($auto_add_cart_rule) {
             CartRule::autoAddToCart($context);
         }
@@ -2191,7 +2214,8 @@ class CartCore extends ObjectModel
                 Tools::ps_round(
                     $this->getGiftWrappingPrice($withTaxes),
                     $computePrecision
-                ), Currency::getCurrencyInstance((int) $this->id_currency)
+                ),
+                Currency::getCurrencyInstance((int) $this->id_currency)
             );
         }
 
@@ -2646,7 +2670,8 @@ class CartCore extends ObjectModel
                     }
                     $carriers_price[$id_address][$id_package][$id_carrier] = array(
                         'without_tax' => $price_without_tax,
-                        'with_tax' => $price_with_tax, );
+                        'with_tax' => $price_with_tax,
+                    );
 
                     $grade = $carriers_instance[$id_carrier]->grade;
                     if (is_null($best_grade) || $grade > $best_grade) {
@@ -2956,7 +2981,7 @@ class CartCore extends ObjectModel
                 foreach ($option['carrier_list'] as $carrier) {
                     $nameList[] = $carrier['instance']->name;
                 }
-                $name = join(' -', $nameList);
+                $name = implode(' -', $nameList);
                 $img = ''; // No images if multiple carriers
                 $delay = '';
             }
@@ -3117,7 +3142,7 @@ class CartCore extends ObjectModel
     {
         $delivery_option_list = $this->getDeliveryOptionList();
         foreach ($delivery_option as $key => $value) {
-            if (isset($delivery_option_list[$key]) && isset($delivery_option_list[$key][$value])) {
+            if (isset($delivery_option_list[$key][$value])) {
                 if (count($delivery_option_list[$key][$value]['carrier_list']) == 1) {
                     return current(array_keys($delivery_option_list[$key][$value]['carrier_list']));
                 }
@@ -3529,7 +3554,8 @@ class CartCore extends ObjectModel
             }
 
             if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int) $id_zone))
-                || ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int) $this->id_currency)
+                || (
+                    $shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int) $this->id_currency)
                 )) {
                 $shipping_cost += 0;
             } else {
@@ -4067,10 +4093,10 @@ class CartCore extends ObjectModel
     /**
      * Add customer's text.
      *
-     * @params int $id_product Product ID
-     * @params int $index
-     * @params int $type
-     * @params string $textValue
+     * @param int $id_product Product ID
+     * @param int $index
+     * @param int $type
+     * @param string $textValue
      *
      * @return bool Always true
      * @todo: Improve this PHPDoc comment
@@ -4269,7 +4295,8 @@ class CartCore extends ObjectModel
         }
 
         // Backward compatibility: if true set customizations quantity to 0, they will be updated in Cart::_updateCustomizationQuantity
-        $new_customization_method = (int) Db::getInstance()->getValue('
+        $new_customization_method = (int) Db::getInstance()->getValue(
+            '
             SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
             WHERE `id_cart` = ' . (int) $this->id .
                 ' AND `id_customization` != 0'
@@ -4302,7 +4329,7 @@ class CartCore extends ObjectModel
                 $customized_value = $custom['value'];
 
                 if ((int) $custom['type'] == 0) {
-                    $customized_value = md5(uniqid(rand(), true));
+                    $customized_value = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
                     Tools::copy(_PS_UPLOAD_DIR_ . $custom['value'], _PS_UPLOAD_DIR_ . $customized_value);
                     Tools::copy(_PS_UPLOAD_DIR_ . $custom['value'] . '_small', _PS_UPLOAD_DIR_ . $customized_value . '_small');
                 }
@@ -4322,7 +4349,7 @@ class CartCore extends ObjectModel
             }
 
             foreach ($product_gift as $gift) {
-                if (isset($gift['gift_product']) && isset($gift['gift_product_attribute']) && (int) $gift['gift_product'] == (int) $product['id_product'] && (int) $gift['gift_product_attribute'] == (int) $product['id_product_attribute']) {
+                if (isset($gift['gift_product'], $gift['gift_product_attribute']) && (int) $gift['gift_product'] == (int) $product['id_product'] && (int) $gift['gift_product_attribute'] == (int) $product['id_product_attribute']) {
                     $product['quantity'] = (int) $product['quantity'] - 1;
                 }
             }

@@ -93,7 +93,6 @@ class ThemeController extends AbstractAdminController
     protected function canCustomizePageLayouts(Request $request)
     {
         return !$this->isDemoModeEnabled() &&
-            $this->isGranted(PageVoter::UPDATE, $request->attributes->get('_legacy_controller'))
-        ;
+            $this->isGranted(PageVoter::UPDATE, $request->attributes->get('_legacy_controller'));
     }
 }

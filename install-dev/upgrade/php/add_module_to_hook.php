@@ -28,7 +28,8 @@ function add_module_to_hook($module_name, $hook_name)
 {
     $res = true;
 
-    $id_module = Db::getInstance()->getValue('
+    $id_module = Db::getInstance()->getValue(
+        '
 	SELECT `id_module` FROM `'._DB_PREFIX_.'module`
 	WHERE `name` = "'.$module_name.'"'
     );

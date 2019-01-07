@@ -96,7 +96,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 'action' => 'catalogAction',
             ));
 
-            /* @var $filter AdminFilter */
+            /** @var $filter AdminFilter */
             if (is_null($filter)) {
                 $filters = AdminFilter::getProductCatalogEmptyFilter();
             } else {
@@ -230,7 +230,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $sqlSelect = array(
             'id_product' => array('table' => 'p', 'field' => 'id_product', 'filtering' => ' %s '),
             'reference' => array('table' => 'p', 'field' => 'reference', 'filtering' => self::FILTERING_LIKE_BOTH),
-            'price' => array('table' => 'p', 'field' => 'price', 'filtering' => ' %s '),
+            'price' => array('table' => 'sa', 'field' => 'price', 'filtering' => ' %s '),
             'id_shop_default' => array('table' => 'p', 'field' => 'id_shop_default'),
             'is_virtual' => array('table' => 'p', 'field' => 'is_virtual'),
             'name' => array('table' => 'pl', 'field' => 'name', 'filtering' => self::FILTERING_LIKE_BOTH),
@@ -367,9 +367,23 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         foreach ($products as &$product) {
             $product['total'] = $total; // total product count (filtered)
-            $product['price_final'] = Product::getPriceStatic($product['id_product'], true, null,
-                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
-                true, null, null, null, $nothing, true, true);
+            $product['price_final'] = Product::getPriceStatic(
+                $product['id_product'],
+                true,
+                null,
+                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
+                null,
+                false,
+                true,
+                1,
+                true,
+                null,
+                null,
+                null,
+                $nothing,
+                true,
+                true
+            );
             if ($formatCldr) {
                 $product['price'] = Tools::displayPrice($product['price'], $currency);
                 $product['price_final'] = Tools::displayPrice($product['price_final'], $currency);

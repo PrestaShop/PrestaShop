@@ -30,8 +30,8 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
  * 
@@ -96,7 +96,8 @@ class ExplainProcessor extends AbstractProcessor {
                     if ($currCategory === 'FORMAT') {
                         $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
                         return array('expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($base_expr),
-                                     'sub_tree' => $expr);
+                            'sub_tree' => $expr,
+                        );
                     }
                     // else?
                     break;
@@ -136,4 +137,3 @@ class ExplainProcessor extends AbstractProcessor {
         return empty($expr) ? null : $expr;
     }
 }
-?>

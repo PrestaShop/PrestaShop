@@ -81,7 +81,7 @@ class RenderingHookEvent extends HookEvent
     public function popContent()
     {
         $content = $this->currentContent;
-        $this->currentContent = '';
+        $this->currentContent = [];
 
         return $content;
     }

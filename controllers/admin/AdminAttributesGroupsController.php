@@ -406,14 +406,19 @@ class AdminAttributesGroupsControllerCore extends AdminController
             /** @var AttributeGroup $object */
             $object = new $this->className();
             foreach (Language::getLanguages(false) as $language) {
-                if ($object->isAttribute((int) Tools::getValue('id_attribute_group'),
-                    Tools::getValue('name_' . $language['id_lang']), $language['id_lang'])) {
-                    $this->errors['name_' . $language['id_lang']] = $this->trans('The attribute value "%1$s" already exist for %2$s language',
+                if ($object->isAttribute(
+                    (int) Tools::getValue('id_attribute_group'),
+                    Tools::getValue('name_' . $language['id_lang']),
+                    $language['id_lang']
+                )) {
+                    $this->errors['name_' . $language['id_lang']] = $this->trans(
+                        'The attribute value "%1$s" already exist for %2$s language',
                         array(
                             Tools::getValue('name_' . $language['id_lang']),
                             $language['name'],
                         ),
-                        'Admin.Catalog.Notification');
+                        'Admin.Catalog.Notification'
+                    );
                 }
             }
 
@@ -561,30 +566,30 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 }
 
                 $this->toolbar_btn['back'] = array(
-                    'href' => self::$currentIndex . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups'),
                     'desc' => $this->trans('Back to list', array(), 'Admin.Actions'),
                 );
                 break;
             case 'view':
                 $this->toolbar_btn['newAttributes'] = array(
-                    'href' => self::$currentIndex . '&updateattribute&id_attribute_group=' . (int) Tools::getValue('id_attribute_group') . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups', true, array(), array('updateattribute' => 1, 'id_attribute_group' => (int) Tools::getValue('id_attribute_group'))),
                     'desc' => $this->trans('Add New Values', array(), 'Admin.Catalog.Feature'),
                     'class' => 'toolbar-new',
                 );
 
                 $this->toolbar_btn['back'] = array(
-                    'href' => self::$currentIndex . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups'),
                     'desc' => $this->trans('Back to list', array(), 'Admin.Actions'),
                 );
                 break;
             default: // list
                 $this->toolbar_btn['new'] = array(
-                    'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups', true, array(), array('add' . $this->table => 1)),
                     'desc' => $this->trans('Add New Attributes', array(), 'Admin.Catalog.Feature'),
                 );
                 if ($this->can_import) {
                     $this->toolbar_btn['import'] = array(
-                        'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=combinations',
+                        'href' => $this->context->link->getAdminLink('AdminImport', true, array(), array('import_type' => 'combinations')),
                         'desc' => $this->trans('Import', array(), 'Admin.Actions'),
                     );
                 }
@@ -627,7 +632,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                                 'Edit: %value%',
                                 array(
                                     '%value%' => $obj->name[$this->context->employee->id_lang],
-                                    ),
+                                ),
                                 'Admin.Catalog.Feature'
                             );
                         }
@@ -948,7 +953,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             foreach ($positions as $position => $value) {
                 $pos = explode('_', $value);
 
-                if ((isset($pos[1]) && isset($pos[2])) && (int) $pos[2] === $id_attribute) {
+                if ((isset($pos[1], $pos[2])) && (int) $pos[2] === $id_attribute) {
                     if ($attribute = new Attribute((int) $pos[2])) {
                         if (isset($position) && $attribute->updatePosition($way, $position)) {
                             echo 'ok position ' . (int) $position . ' for attribute ' . (int) $pos[2] . '\r\n';

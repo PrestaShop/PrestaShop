@@ -52,8 +52,7 @@ class AddCategoryCommand extends AbstractCategoryCommand
             ->setLocalizedNames($localizedNames)
             ->setLocalizedLinkRewrites($localizedLinkRewrites)
             ->setIsActive($isActive)
-            ->setParentCategoryId($parentCategoryId)
-        ;
+            ->setParentCategoryId($parentCategoryId);
     }
 
     /**

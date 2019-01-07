@@ -75,7 +75,8 @@ class ProfileCore extends ObjectModel
             $idLang = Configuration::get('PS_LANG_DEFAULT');
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+            '
 			SELECT `name`
 			FROM `' . _DB_PREFIX_ . 'profile` p
 			LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
@@ -94,8 +95,7 @@ class ProfileCore extends ObjectModel
         if (parent::delete()) {
             return
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'access` WHERE `id_profile` = ' . (int) $this->id)
-                && Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_access` WHERE `id_profile` = ' . (int) $this->id)
-            ;
+                && Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_access` WHERE `id_profile` = ' . (int) $this->id);
         }
 
         return false;

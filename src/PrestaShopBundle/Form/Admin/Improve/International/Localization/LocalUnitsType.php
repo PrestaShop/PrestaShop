@@ -45,7 +45,6 @@ class LocalUnitsType extends AbstractType
             ->add('weight_unit', TextType::class)
             ->add('distance_unit', TextType::class)
             ->add('volume_unit', TextType::class)
-            ->add('dimension_unit', TextType::class)
-        ;
+            ->add('dimension_unit', TextType::class);
     }
 }

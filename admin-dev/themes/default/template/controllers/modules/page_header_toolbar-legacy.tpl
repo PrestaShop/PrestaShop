@@ -65,7 +65,7 @@
 			</li>
 			{else}
 			<li>
-				<a id="desc-module-new" class="toolbar_btn" href="{$link->getAdminLink('AdminModules')}&addnewmodule" title="{l s='Add a new module'}">
+				<a id="desc-module-new" class="toolbar_btn" href="{$link->getAdminLink('AdminModules', true, [], ['addnewmodule' => 1])}" title="{l s='Add a new module'}">
 					<i class="process-icon-new"></i>
 					<div>{l s='Add a new module'}</div>
 				</a>

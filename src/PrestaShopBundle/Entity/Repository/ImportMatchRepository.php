@@ -68,8 +68,7 @@ class ImportMatchRepository implements RepositoryInterface
             ->select('*')
             ->from($this->importMatchTable)
             ->where('id_import_match = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         return $queryBuilder->execute()->fetch();
     }
@@ -88,8 +87,7 @@ class ImportMatchRepository implements RepositoryInterface
             ->select('*')
             ->from($this->importMatchTable)
             ->where('`name` = :name')
-            ->setParameter('name', $name)
-        ;
+            ->setParameter('name', $name);
 
         return $queryBuilder->execute()->fetch();
     }
@@ -102,8 +100,7 @@ class ImportMatchRepository implements RepositoryInterface
         $queryBuilder = $this->connection
             ->createQueryBuilder()
             ->select('*')
-            ->from($this->importMatchTable)
-        ;
+            ->from($this->importMatchTable);
 
         return $queryBuilder->execute()->fetchAll();
     }

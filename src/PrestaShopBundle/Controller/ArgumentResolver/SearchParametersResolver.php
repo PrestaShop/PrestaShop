@@ -98,8 +98,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     public function supports(Request $request, ArgumentMetadata $argument)
     {
         return is_subclass_of($argument->getType(), Filters::class) &&
-            $this->employee instanceof Employee
-        ;
+            $this->employee instanceof Employee;
     }
 
     /**

@@ -33,8 +33,8 @@ class SearchControllerCore extends ProductListingFrontController
     public $instant_search;
     public $ajax_search;
 
-    private $search_string;
-    private $search_tag;
+    protected $search_string;
+    protected $search_tag;
 
     /**
      * Assign template vars related to page content.

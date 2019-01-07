@@ -115,8 +115,7 @@ abstract class AbstractColumn implements ColumnInterface
             ->setDefaults([
                 'sortable' => true,
             ])
-            ->setAllowedTypes('sortable', 'bool')
-        ;
+            ->setAllowedTypes('sortable', 'bool');
     }
 
     /**

@@ -96,32 +96,32 @@ class InstallControllerHttp
             array(
                 'name' => 'welcome',
                 'displayName' => $this->translator->trans('Choose your language', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpWelcome'
+                'controllerClass' => 'InstallControllerHttpWelcome',
             ),
             array(
                 'name' => 'license',
                 'displayName' => $this->translator->trans('License agreements', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpLicense'
+                'controllerClass' => 'InstallControllerHttpLicense',
             ),
             array(
                 'name' => 'system',
                 'displayName' => $this->translator->trans('System compatibility', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpSystem'
+                'controllerClass' => 'InstallControllerHttpSystem',
             ),
             array(
                 'name' => 'configure',
                 'displayName' => $this->translator->trans('Store information', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpConfigure'
+                'controllerClass' => 'InstallControllerHttpConfigure',
             ),
             array(
                 'name' => 'database',
                 'displayName' => $this->translator->trans('System configuration', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpDatabase'
+                'controllerClass' => 'InstallControllerHttpDatabase',
             ),
             array(
                 'name' => 'process',
                 'displayName' => $this->translator->trans('Store installation', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpProcess'
+                'controllerClass' => 'InstallControllerHttpProcess',
             ),
         );
         self::$steps = new StepList($stepConfig);
@@ -175,7 +175,7 @@ class InstallControllerHttp
         $self = new self();
 
         if (Tools::getValue('compile_templates')) {
-            require_once(_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
+            require_once _PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php';
             exit;
         }
 
@@ -242,6 +242,12 @@ class InstallControllerHttp
             if (self::$steps->current()->getControllerInstance()->validate()) {
                 self::$steps->next();
             }
+
+            // Don't display system step if mandatory requirements is valid
+            if (self::$steps->current()->getName() == 'system' && self::$steps->current()->getControllerInstance()->validate()) {
+                self::$steps->next();
+            }
+
             $session->step = self::$steps->current()->getName();
 
             // Change last step
@@ -466,7 +472,7 @@ class InstallControllerHttp
             ob_start();
         }
 
-        include($path.$template.'.php');
+        include $path.$template.'.php';
 
         if ($get_output) {
             $content = ob_get_contents();

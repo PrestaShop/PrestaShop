@@ -66,4 +66,3 @@ class ConstantBuilder {
         return $sql;
     }
 }
-?>

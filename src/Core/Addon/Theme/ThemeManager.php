@@ -228,7 +228,6 @@ class ThemeManager implements AddonManagerInterface
      */
     public function getError($themeName)
     {
-        return;
     }
 
     /**
@@ -296,7 +295,8 @@ class ThemeManager implements AddonManagerInterface
                             '%module%' => $moduleName,
                             '%error_details%' => $moduleManager->getError($moduleName),
                         ),
-                        'Admin.Modules.Notification')
+                        'Admin.Modules.Notification'
+                    )
                 );
             }
             if (!$moduleManager->isEnabled($moduleName)) {
@@ -486,8 +486,7 @@ class ThemeManager implements AddonManagerInterface
 
         $defaultCatalogue = $themeProvider
             ->setLocale($locale)
-            ->getDefaultCatalogue()
-        ;
+            ->getDefaultCatalogue();
 
         if (empty($defaultCatalogue)) {
             return $allDomains;

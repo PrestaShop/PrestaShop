@@ -10,6 +10,7 @@ module.exports = {
     basic_settings_tab: '//*[@id="tab_step1"]/a',
     new_product_button: '#page-header-desc-configuration-add',
     product_name_input: '#form_step1_name_1',
+    product_name_fr_input: '#form_step1_name_2',
     save_product_button: '//*[@id="form"]/div[4]/div[2]/div/button[1]',
     green_validation_notice: '[class="growl growl-notice growl-medium"]',
     close_validation_button: '.growl-close',
@@ -32,10 +33,11 @@ module.exports = {
     combinations_thead: '//*[@id="combinations_thead"]/tr/th[7]',
     save_quantitie_button: '//*[@id="apply-on-combinations"]',
     add_feature_to_product_button: '//*[@id="add_feature_button"]',
-    feature_select: '//*[@id="features-content"]/div/div/div[1]/fieldset/span/span[1]/span',
+    feature_select: '//*[@id="features-content"]/div/div[%NUMBER]/div[1]/fieldset/span/span[1]/span',
     select_feature_created: '/html/body//span/span[1]/input',
     feature_select_button: '//*[@id="select2-form_step1_features_%ID_feature-container"]',
     feature_select_button1: '//*[@id="features-content"]/div/div/div[1]/fieldset/span/span[1]/span',
+    customized_value_input: '//*[@id="form_step1_features_%ID_custom_value_1"]',
     feature_btn:'//*[@id="add_feature_button"]',
     result_feature_select: '//*[@id="select2-form_step1_features_%ID_feature-results"]/li',
     summary_textarea: '(//*[@id="form_step1_description_short"]//div[@class="mce-tinymce mce-container mce-panel"])[1]',
@@ -60,7 +62,7 @@ module.exports = {
     product_add_feature_btn: '//*[@id="add_feature_button"]',
     feature_select_option: '//*[@id="select2-form_step1_features_0_feature-results"]/li[2]',
     feature_custom_value_height: '//*[@id="form_step1_features_0_custom_value_1"]',
-    feature_select_option: '//*[@id="select2-form_step1_features_%ID_feature-results"]/li[text()="%V"]',
+    feature_select_option_text: '//*[@id="select2-form_step1_features_%ID_feature-results"]/li[text()="%V"]',
     feature_custom_value: '//*[@id="form_step1_features_%ID_custom_value_1"]',
     priceTE_shortcut: '#form_step1_price_shortcut',
     priceTTC_shortcut: '#form_step1_price_ttc_shortcut',
@@ -86,10 +88,14 @@ module.exports = {
     shipping_height: '//*[@id="form_step4_height"]',
     shipping_depth: '//*[@id="form_step4_depth"]',
     shipping_weight: '//*[@id="form_step4_weight"]',
+    shipping_width_unit: '//*[@id="form_step4_width"]/..//span',
+    shipping_height_unit: '//*[@id="form_step4_height"]/..//span',
+    shipping_depth_unit: '//*[@id="form_step4_depth"]/..//span',
+    shipping_weight_unit: '//*[@id="form_step4_weight"]/..//span',
     shipping_fees: '//*[@id="form_step4_additional_shipping_cost"]',
     shipping_available_carriers: '//*[@id="form_step4_selectedCarriers_1"]',
     product_combinations_tab: '//*[@id="tab_step3"]/a',
-    product_combinations: '//*[@id="show_variations_selector"]/div[2]/label/input',
+    product_combinations: '//*[@id="show_variations_selector"]/div[%I]/label/input',
     combination_size_s: '//*[@id="attribute-group-1"]//label[@for="attribute-1"]',
     combination_size_m: '//*[@id="attribute-group-1"]//label[@for="attribute-2"]',
     combination_color: '//*[@id="attribute-group-2"]//label[@for="attribute-%ID"]',
@@ -185,10 +191,10 @@ module.exports = {
       return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(7)';
     },
     get catalog_product_quantity() {
-      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(8)';
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(9)';
     },
     get catalog_product_online() {
-      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(9) > a > i';
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(10) > a > i';
     },
     get catalog_reset_filter() {
       return this.catalog_product_table + ' .column-filters button[name="products_filter_reset"]';
@@ -196,6 +202,7 @@ module.exports = {
     get catalog_submit_filter() {
       return this.catalog_product_table + '.column-filters button[name="products_filter_submit"]';
     },
+    catalog_home: '//*[@id="form_step1_categories"]/ul/li/div/label',
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
     category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
@@ -206,6 +213,7 @@ module.exports = {
     success_panel: '//div[contains(@class, "alert-success")]//p',
     delete_button: '//*[@id="product_form_delete_btn"]',
     delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "%BUTTON")]',
+    confirmation_modal_content: '//*[@id="confirmation_modal"]//div[@class="modal-body"]',
     symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
     summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]',
     combination_table: '//*[@id="accordion_combinations"]',
@@ -226,7 +234,19 @@ module.exports = {
     product_pack_items: '//*[@id="form_step1_inputPackItems-data"]',
     add_products_to_pack: '//*[@id="js_form_step1_inputPackItems"]/div',
     attribute_group_name: '//*[@id="attributes-list"]//a[text()[contains(.,"%NAME")]]',
-    attribute_value_checkbox: '//*[@id="attribute-group-%ID"]/div/div[%S]//label'
+    attribute_value_checkbox: '//*[@id="attribute-group-%ID"]/div/div[%S]//label',
+    price_tax_included_input: '//*[@id="form_step1_price_ttc_shortcut"]',
+    delete_feature_button: '(//*[@id="features-content"]//a[contains(@class,"delete")])[%ID]',
+    alert_button: '//*[@id="confirmation_modal"]//button[contains(@class,"%B")]',
+    product_language: '//*[@id="form_switch_language"]',
+    sales_button: '//*[@id="product_form_go_to_sales"]',
+    product_list_button: '//*[@id="product_form_open_quicknav"]',
+    help_button: '//*[@id="product_form_open_help"]',
+    tooltip_button: '//*[@id="form"]/div[contains(@class,"product-header")]//span[contains(@class,"help-box")]',
+    tooltip_box_content: '//div[contains(@class, "popover")]/div[2]',
+    input_pack_item: '//*[@id="js_form_step1_inputPackItems"]',
+    calendar_form: '//*[@id="calendar"]',
+    right_sidebar: '//*[@id="right-sidebar"]'
   },
   ProductList: {
     product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',
@@ -235,7 +255,7 @@ module.exports = {
     sort_by_icon: '//*[@id="product_catalog_list"]//div[@data-sort-col-name="%B" and @data-sort-direction="%W"]/span[@role="button"]',
     sort_button: '//*[@id="product_catalog_list"]//div[@data-sort-col-name="%B"]/span[@role="button"]',
     status_select: '//*[@id="product_filter_column_active"]//select[@name="filter_column_active"]',
-    product_status: '//*[@id="product_catalog_list"]//tr[%I]/td[9]/a/i[contains(@class, "action-%ACTION")]',
+    product_status: '//*[@id="product_catalog_list"]//tr[%I]/td[10]/a/i[contains(@class, "action-%ACTION")]',
     edit_button: '//*[@id="product_catalog_list"]//i[text()="mode_edit"]',
     pagination_products: '//*[@id="product_catalog_list"]//div[contains(@class, "justify-content-center")]/div[1]',
     dropdown_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//button[@data-toggle="dropdown"])[%POS]',

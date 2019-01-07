@@ -30,10 +30,10 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/../utils/PHPSQLParserConstants.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
-require_once(dirname(__FILE__) . '/LimitProcessor.php');
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
+require_once dirname(__FILE__) . '/../utils/PHPSQLParserConstants.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__) . '/LimitProcessor.php';
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
  * 
@@ -122,17 +122,20 @@ class ShowProcessor extends AbstractProcessor {
                 case 'FROM':
                 case 'DATABASE':
                     $resultList[] = array('expr_type' => ExpressionType::DATABASE, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
                     break;
                 case 'FOR':
                     $resultList[] = array('expr_type' => ExpressionType::USER, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
                     break;
                 case 'INDEX':
                 case 'COLUMNS':
                 case 'TABLE':
                     $resultList[] = array('expr_type' => ExpressionType::TABLE, 'table' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
                     $category = "TABLENAME";
                     break;
                 case 'FUNCTION':
@@ -142,15 +145,18 @@ class ShowProcessor extends AbstractProcessor {
                         $expr_type = ExpressionType::SIMPLE_FUNCTION;
                     }
                     $resultList[] = array('expr_type' => $expr_type, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
                     break;
                 case 'PROCEDURE':
                     $resultList[] = array('expr_type' => ExpressionType::PROCEDURE, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
                     break;
                 case 'ENGINE':
                     $resultList[] = array('expr_type' => ExpressionType::ENGINE, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
                     break;
                 default:
                 // ignore
@@ -163,4 +169,3 @@ class ShowProcessor extends AbstractProcessor {
         return $resultList;
     }
 }
-?>

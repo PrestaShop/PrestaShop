@@ -5,8 +5,8 @@ if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', dirname(__FILE__).'/../../');
 }
 
-require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
-require_once(_PS_ADMIN_DIR_.'/init.php');
+require_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
+require_once _PS_ADMIN_DIR_.'/init.php';
 
 if (function_exists('mb_internal_encoding')) {
     mb_internal_encoding('UTF-8');

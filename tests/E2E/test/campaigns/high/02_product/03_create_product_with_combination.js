@@ -4,7 +4,6 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
-const commonScenarios = require('../../common_scenarios/product');
 const combination = require('../../common_scenarios/combination');
 let data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
@@ -21,20 +20,15 @@ scenario('Create product with combination in the Back Office', client => {
     test('should set the "Summary" text', () => client.setEditorText(AddProductPage.summary_textarea, data.common.summary));
     test('should click on "Description" tab', () => client.waitForExistAndClick(AddProductPage.tab_description));
     test('should set the "Description" text', () => client.setEditorText(AddProductPage.description_textarea, data.common.description));
-    test('should select the "Pack of products"', () => client.waitForExistAndClick(AddProductPage.product_combinations));
-    test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.standard.name + 'C' + date_time));
-    test('should select the "Product with combination" option', () => client.waitForExistAndClick(AddProductPage.product_combinations));
+    test('should select the "Pack of products"', () => client.waitForExistAndClick(AddProductPage.product_combinations.replace('%I', 2)));
+    test('should set the "product name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, data.standard.name + 'C' + date_time));
+    test('should select the "Product with combination" option', () => client.waitForExistAndClick(AddProductPage.product_combinations.replace('%I',2)));
     test('should upload the first product picture', () => client.uploadPicture('1.png', AddProductPage.picture));
     test('should upload the second product picture', () => client.uploadPicture('2.jpg', AddProductPage.picture));
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.standard.new_category_name + 'C' + date_time));
     test('should click on "Create"', () => client.createCategory());
-<<<<<<< HEAD
-||||||| merged common ancestors
-    test('should open all categories', () => client.openAllCategories());
-=======
-    //test('should open all categories', () => client.openAllCategories()); //TODO: Verify if we should close then open all categories
->>>>>>> origin/1.7.5.x
+ /*   test('should open all categories', () => client.openAllCategories()); To verify with marion (behaviour changed) */
     test('should choose the created category as default', () => {
       return promise
         .then(() => client.waitForVisible(AddProductPage.created_category))
@@ -48,14 +42,7 @@ scenario('Create product with combination in the Back Office', client => {
     });
     test('should click on "ADD RELATED PRODUCT" button', () => client.waitForExistAndClick(AddProductPage.add_related_product_btn));
     test('should search and add a related product', () => client.searchAndAddRelatedProduct());
-<<<<<<< HEAD
-    commonScenarios.addProductFeature(client, "Frame Size", 0, "Cotton");
-    commonScenarios.addProductFeature(client, "Compositions", 1, '', "Azerty", "custom_value");
-||||||| merged common ancestors
-    test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('combination'));
-=======
     test('should click on "ADD A FEATURE" and select one', () => client.addFeature('combination'));
->>>>>>> origin/1.7.5.x
     test('should set "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference" input', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
     test('should switch the product online', () => {
@@ -184,7 +171,7 @@ scenario('Check the product with combination in the Front Office', () => {
   scenario('Check that the product with combination is well displayed in the Front Office', client => {
     test('should set the shop language to "English"', () => client.changeLanguage());
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.standard.name + 'C' + date_time));
-    test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name,2000));
+    test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name, 2000));
     test('should check that the product name is equal to "' + (data.standard.name + 'C' + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.standard.name + 'C' + date_time).toUpperCase()));
     test('should check that the product price is equal to "€27.00"', () => client.checkTextValue(productPage.product_price, '€27.00'));
     test('should set the product size to "S"', () => client.waitAndSelectByAttribute(productPage.product_size, 'title', productVariations[0][0], 3000));
@@ -239,8 +226,8 @@ scenario('Check the product with combination in the Front Office', () => {
               test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
               combination.checkCombinationProductFo(SearchProductPage, productPage, AccessPageFO);
             }, 'product/product');
-          }, 'product/product');
+           }, 'product/product');
         });
     });
   }, 'product/create_combinations');
-}, 'product/product');
+}, 'product/product', true);

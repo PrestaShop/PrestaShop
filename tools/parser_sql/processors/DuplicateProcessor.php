@@ -30,7 +30,7 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/SetProcessor.php');
+require_once dirname(__FILE__) . '/SetProcessor.php';
 
 /**
  * 
@@ -46,4 +46,3 @@ class DuplicateProcessor extends SetProcessor {
     }
 
 }
-?>

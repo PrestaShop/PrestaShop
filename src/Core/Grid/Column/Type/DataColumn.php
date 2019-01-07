@@ -53,7 +53,6 @@ final class DataColumn extends AbstractColumn
             ->setRequired([
                 'field',
             ])
-            ->setAllowedTypes('field', 'string')
-        ;
+            ->setAllowedTypes('field', 'string');
     }
 }

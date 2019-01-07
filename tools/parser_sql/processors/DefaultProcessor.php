@@ -30,9 +30,9 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/UnionProcessor.php');
-require_once(dirname(__FILE__) . '/SQLProcessor.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/UnionProcessor.php';
+require_once dirname(__FILE__) . '/SQLProcessor.php';
 
 /**
  * 
@@ -62,4 +62,3 @@ class DefaultProcessor extends AbstractProcessor {
         return $queries;
     }
 }
-?>

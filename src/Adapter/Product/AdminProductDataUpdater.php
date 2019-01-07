@@ -178,8 +178,11 @@ class AdminProductDataUpdater implements ProductInterface
             }
         }
 
-        unset($product->id);
-        unset($product->id_product);
+        unset(
+            $product->id,
+            $product->id_product
+        );
+
         $product->indexed = 0;
         $product->active = 0;
 
@@ -212,7 +215,7 @@ class AdminProductDataUpdater implements ProductInterface
             if (!Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
             } else {
-                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
+                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product_old' => $id_product_old, 'id_product' => (int) $product->id, 'product' => $product));
                 if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
                     Search::indexation(false, $product->id);
                 }
@@ -236,6 +239,7 @@ class AdminProductDataUpdater implements ProductInterface
         if (!isset($filterParams['filter_category'])) {
             throw new \Exception('Cannot sort when filterParams does not contains \'filter_category\'.', 5010);
         }
+
         foreach ($filterParams as $k => $v) {
             if ($v == '' || strpos($k, 'filter_') !== 0) {
                 continue;

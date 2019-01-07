@@ -33,7 +33,8 @@
 					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}
 					{if isset($params.align)} {$params.align}{/if}"
 					{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
-						onclick="document.location = '{$link->getAdminLink('AdminCarrierWizard', true)|escape:'html':'UTF-8'}&amp;{$identifier|escape:'html':'UTF-8'}={$tr.$identifier|escape:'html':'UTF-8'}'">
+            {assign var="identifier_field" value=$identifier|escape:'html':'UTF-8'}
+						onclick="document.location = '{$link->getAdminLink('AdminCarrierWizard', true, [], [$identifier_field => $tr.$identifier|escape:'html':'UTF-8'])|escape:'html':'UTF-8'}'">
 					{else}
 						>
 					{/if}

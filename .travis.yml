@@ -42,10 +42,10 @@ matrix:
         - mkdir -p /tmp/ps-release
         - php tools/build/CreateRelease.php --destination-dir=/tmp/ps-release
         - cd /tmp/ps-release
-          && today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$i; done
+          && today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$TRAVIS_BRANCH-$i; done
           && cd -
       if: type = cron
-      deploy: 
+      deploy:
         provider: gcs
         access_key_id: $GCS_ACCESS_KEY
         secret_access_key: $GCS_ACCESS_SECRET
@@ -67,7 +67,7 @@ before_install:
   - bash travis-scripts/setup-apache.sh
 
   # PrestaShop configuration
-  - cp tests/parameters.yml.travis app/config/parameters.yml
+  - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
 
 notifications:
@@ -82,15 +82,16 @@ script:
 
   - bash travis-scripts/install-prestashop
   - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
-        bash tests/check_file_syntax.sh;
+        bash tests-legacy/check_file_syntax.sh;
     fi
 
   - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
-        bash tests/check_phpunit.sh;
+        bash tests-legacy/check_phpunit.sh;
+        bash tests/check_unit.sh;
     fi
 
   - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
-        bash tests/check_e2e.sh;
+        bash tests-legacy/check_e2e.sh;
     fi
 
 after_script:

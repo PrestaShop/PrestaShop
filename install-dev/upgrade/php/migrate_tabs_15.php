@@ -29,7 +29,7 @@
  */
 function migrate_tabs_15()
 {
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php');
+    include_once _PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php';
 
     // ===== Remove deleted tabs =====
     $remove_tabs = array(
@@ -145,7 +145,8 @@ function migrate_tabs_15()
         'SELECT id_tab FROM '._DB_PREFIX_.'tab
 		WHERE class_name = \'AdminThemes\'
 			AND id_parent = '.$parent['AdminParentModules'].'
-	');
+	'
+    );
 
     if ($id_tab_theme) {
         Db::getInstance()->delete('tab', 'id_tab = '.$id_tab_theme);

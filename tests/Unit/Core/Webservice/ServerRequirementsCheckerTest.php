@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Webservice;
+namespace tests\Unit\Core\Webservice;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -38,42 +38,42 @@ class ServerRequirementsCheckerTest extends TestCase
     /**
      * @var TranslatorInterface
      */
-    private $translator;
+    private $mockedTranslator;
 
     /**
      * @var Configuration
      */
-    private $configuration;
+    private $mockedConfiguration;
 
     /**
      * @var HostingInformation
      */
-    private $hostingInformation;
+    private $mockedHostingInformation;
 
     /**
      * @var PhpExtensionCheckerInterface
      */
-    private $phpExtensionChecker;
+    private $mockedPhpExtensionChecker;
+
 
     public function setUp()
     {
-        $this->translator = $this->createMock(TranslatorInterface::class);
-        $this->translator
+        $this->mockedTranslator = $this->createMock(TranslatorInterface::class);
+        $this->mockedTranslator
             ->method('trans')
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
-        $this->configuration = $this->createMock(Configuration::class);
-        $this->hostingInformation = $this->createMock(HostingInformation::class);
-        $this->phpExtensionChecker = $this->createMock(PhpExtensionCheckerInterface::class);
+        $this->mockedConfiguration = $this->createMock(Configuration::class);
+        $this->mockedHostingInformation = $this->createMock(HostingInformation::class);
+        $this->mockedPhpExtensionChecker = $this->createMock(PhpExtensionCheckerInterface::class);
     }
+
 
     public function testErrorIsReturnedWhenNonApacheWebServerIsUsed()
     {
-        $this->hostingInformation
+        $this->mockedHostingInformation
             ->method('getServerInformation')
-            ->willReturn(['version' => 'nginx'])
-        ;
+            ->willReturn(['version' => 'nginx']);
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 
@@ -82,10 +82,9 @@ class ServerRequirementsCheckerTest extends TestCase
 
     public function testNoErrorsAreReturnedWhenUsingApacheWebServer()
     {
-        $this->hostingInformation
+        $this->mockedHostingInformation
             ->method('getServerInformation')
-            ->willReturn(['version' => 'Apache/2.4.29 (Ubuntu)'])
-        ;
+            ->willReturn(['version' => 'Apache/2.4.29 (Ubuntu)']);
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 
@@ -94,7 +93,7 @@ class ServerRequirementsCheckerTest extends TestCase
 
     public function testNoErrorsAreReturnedWhenSslIsEnabled()
     {
-        $this->configuration
+        $this->mockedConfiguration
             ->method('getBoolean')
             ->will($this->returnValue(true));
 
@@ -105,7 +104,7 @@ class ServerRequirementsCheckerTest extends TestCase
 
     public function testThatErrorIsReturnedWhenSslIsNotEnabled()
     {
-        $this->configuration
+        $this->mockedConfiguration
             ->method('getBoolean')
             ->will($this->returnValue(false));
 
@@ -114,13 +113,16 @@ class ServerRequirementsCheckerTest extends TestCase
         $this->assertContains('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.', $errors);
     }
 
+    /**
+     * @return ServerRequirementsChecker
+     */
     private function createNewServerRequirementsChecker()
     {
         return new ServerRequirementsChecker(
-            $this->translator,
-            $this->configuration,
-            $this->hostingInformation,
-            $this->phpExtensionChecker
+            $this->mockedTranslator,
+            $this->mockedConfiguration,
+            $this->mockedHostingInformation,
+            $this->mockedPhpExtensionChecker
         );
     }
 }

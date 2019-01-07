@@ -105,8 +105,7 @@ class ThemeExtractor
     {
         $defaultCatalogue = $this->themeProvider
             ->setLocale($locale)
-            ->getDefaultCatalogue()
-        ;
+            ->getDefaultCatalogue();
 
         if (empty($defaultCatalogue)) {
             return;
@@ -155,8 +154,7 @@ class ThemeExtractor
         $databaseCatalogue = $this->themeProvider
             ->setLocale($locale)
             ->setThemeName($themeName)
-            ->getDatabaseCatalogue()
-        ;
+            ->getDatabaseCatalogue();
 
         $catalogue->addCatalogue($databaseCatalogue);
     }

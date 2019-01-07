@@ -652,3 +652,17 @@ services:
             - '@router.default'
         tags:
             - { name: form.type }
+
+    form.type.database.sql_request:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestType'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }
+
+    form.type.customer.required_fields:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.customer_required_fields").getChoices()'
+        tags:
+            - { name: form.type }

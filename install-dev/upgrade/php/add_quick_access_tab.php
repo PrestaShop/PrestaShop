@@ -26,9 +26,10 @@
 
 function add_quick_access_tab()
 {
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php');
+    include_once _PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php';
     add_new_tab(
         'AdminQuickAccesses',
         'en:Quick access|fr:Accès rapide|es:Quick access|de:Quick access|it:Quick access',
-        -1);
+        -1
+    );
 }

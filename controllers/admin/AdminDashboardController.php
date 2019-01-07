@@ -99,7 +99,7 @@ class AdminDashboardControllerCore extends AdminController
                         array(
                             '%currency' => $currency->iso_code,
                             '%module%' => $module->displayName,
-                            ),
+                        ),
                         'Admin.Dashboard.Help'
                     ),
                     'validation' => 'isPrice',
@@ -133,7 +133,8 @@ class AdminDashboardControllerCore extends AdminController
                             array(
                                 '%module%' => $module->displayName,
                             ),
-                            'Admin.Dashboard.Help'),
+                            'Admin.Dashboard.Help'
+                        ),
                         'validation' => 'isPrice',
                         'cast' => 'floatval',
                         'type' => 'text',
@@ -179,7 +180,7 @@ class AdminDashboardControllerCore extends AdminController
                     'For the carrier named %s, indicate the overseas delivery costs in percentage of the price charged to customers.',
                     array(
                         '%s' => $carrier['name'],
-                ),
+                    ),
                     'Admin.Dashboard.Help'
                 ),
                 'validation' => 'isPercentage',
@@ -213,9 +214,9 @@ class AdminDashboardControllerCore extends AdminController
         );
 
         Media::addJsDef(array(
-                'dashboard_ajax_url' => $this->context->link->getAdminLink('AdminDashboard'),
-                'read_more' => '',
-            ));
+            'dashboard_ajax_url' => $this->context->link->getAdminLink('AdminDashboard'),
+            'read_more' => '',
+        ));
 
         return $forms;
     }
@@ -456,7 +457,7 @@ class AdminDashboardControllerCore extends AdminController
             if ($rss) {
                 foreach ($rss->channel->item as $item) {
                     if ($articles_limit > 0 && Validate::isCleanHtml((string) $item->title) && Validate::isCleanHtml((string) $item->description)
-                        && isset($item->link) && isset($item->title)) {
+                        && isset($item->link, $item->title)) {
                         if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
                             $utm_content = 'cloud';
                         } else {
@@ -466,10 +467,10 @@ class AdminDashboardControllerCore extends AdminController
                         $shop_default_country_id = (int) Configuration::get('PS_COUNTRY_DEFAULT');
                         $shop_default_iso_country = (string) Tools::strtoupper(Country::getIsoById($shop_default_country_id));
                         $analytics_params = array('utm_source' => 'back-office',
-                                                'utm_medium' => 'rss',
-                                                'utm_campaign' => 'back-office-' . $shop_default_iso_country,
-                                                'utm_content' => $utm_content,
-                                            );
+                            'utm_medium' => 'rss',
+                            'utm_campaign' => 'back-office-' . $shop_default_iso_country,
+                            'utm_content' => $utm_content,
+                        );
                         $url_query = parse_url($item->link, PHP_URL_QUERY);
                         parse_str($url_query, $link_query_params);
 

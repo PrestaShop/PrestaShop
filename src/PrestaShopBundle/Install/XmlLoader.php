@@ -901,7 +901,7 @@ class XmlLoader
         }
 
         if (preg_match('#^varchar\(([0-9]+)\)$#i', $type, $m)) {
-            return intval($m[1]) >= 64 ? true : false;
+            return (int) ($m[1]) >= 64 ? true : false;
         }
 
         return false;

@@ -709,7 +709,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 $results = Db::getInstance()->executeS(
                     'SELECT *
 					FROM `' . _DB_PREFIX_ . 'customized_data`
-					WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . ' AND type = 0');
+					WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . ' AND type = 0'
+                );
 
                 $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('images', array());
                 foreach ($results as $result) {
@@ -725,7 +726,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     'SELECT *
 					FROM `' . _DB_PREFIX_ . 'customized_data`
 					WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
-					AND `index` = ' . (int) $this->wsObject->urlSegment[4]);
+					AND `index` = ' . (int) $this->wsObject->urlSegment[4]
+                );
                 if (empty($results[0]) || empty($results[0]['value'])) {
                     throw new WebserviceException('This image does not exist on disk', array(61, 500));
                 }
@@ -742,7 +744,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     'SELECT id_customization_field
 					FROM `' . _DB_PREFIX_ . 'customization_field`
 					WHERE id_customization_field = ' . (int) $this->wsObject->urlSegment[4] . '
-					AND type = 0');
+					AND type = 0'
+                );
                 if (empty($results)) {
                     throw new WebserviceException('Customization field does not exist.', array(61, 500));
                 }
@@ -751,7 +754,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					FROM `' . _DB_PREFIX_ . 'customized_data`
 					WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
 					AND `index` = ' . (int) $this->wsObject->urlSegment[4] . '
-					AND type = 0');
+					AND type = 0'
+                );
                 if (!empty($results)) { // customization field exists and has no value
                     throw new WebserviceException('Customization field already have a value, please use PUT method.', array(61, 500));
                 }
@@ -762,7 +766,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 'SELECT *
 				FROM `' . _DB_PREFIX_ . 'customized_data`
 				WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
-				AND `index` = ' . (int) $this->wsObject->urlSegment[4]);
+				AND `index` = ' . (int) $this->wsObject->urlSegment[4]
+            );
             if (empty($results[0]) || empty($results[0]['value'])) {
                 throw new WebserviceException('This image does not exist on disk', array(61, 500));
             }
@@ -866,7 +871,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             // Delete declinated image if needed
             if ($image_types) {
                 foreach ($image_types as $image_type) {
-                    if ($this->defaultImage) { // @todo products images too !!
+                    if ($this->defaultImage) { /** @todo products images too !! */
                         $declination_path = $parent_path . $this->wsObject->urlSegment[3] . '-default-' . $image_type['name'] . '.jpg';
                     } else {
                         $declination_path = $parent_path . $this->wsObject->urlSegment[2] . '-' . $image_type['name'] . '.jpg';
@@ -1157,7 +1162,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);
                         $this->imgToDisplay = $reception_path;
                     } elseif ($this->imageType == 'customizations') {
-                        $filename = md5(uniqid(rand(), true));
+                        $filename = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
                         $this->imgToDisplay = _PS_UPLOAD_DIR_ . $filename;
                         if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
                             throw new WebserviceException('An error occurred during the image upload', array(76, 400));

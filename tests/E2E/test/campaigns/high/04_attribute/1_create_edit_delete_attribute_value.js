@@ -3,6 +3,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonScenarios = require('../../common_scenarios/product');
 const commonAttribute = require('../../common_scenarios/attribute');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = {
   name: 'Att',
@@ -41,6 +42,7 @@ scenario('Create, edit and delete "Attribute"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
+  welcomeScenarios.findAndCloseWelcomeModal();
   commonAttribute.createAttribute(attributeData);
   commonScenarios.createProduct(AddProductPage, productData);
 

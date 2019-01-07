@@ -69,14 +69,12 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
         $qb
             ->from($this->dbPrefix . $positionDefinition->getTable(), 't')
             ->select('t.' . $positionDefinition->getIdField() . ', t.' . $positionDefinition->getPositionField())
-            ->addOrderBy('t.' . $positionDefinition->getPositionField(), 'ASC')
-        ;
+            ->addOrderBy('t.' . $positionDefinition->getPositionField(), 'ASC');
 
         if (null !== $parentId && null !== $positionDefinition->getParentIdField()) {
             $qb
                 ->andWhere('t.' . $positionDefinition->getParentIdField() . ' = :parentId')
-                ->setParameter('parentId', $parentId)
-            ;
+                ->setParameter('parentId', $parentId);
         }
 
         $positions = $qb->execute()->fetchAll();
@@ -104,8 +102,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
                     ->set($positionDefinition->getPositionField(), ':position')
                     ->andWhere($positionDefinition->getIdField() . ' = :rowId')
                     ->setParameter('rowId', $rowId)
-                    ->setParameter('position', $positionIndex)
-                ;
+                    ->setParameter('position', $positionIndex);
 
                 $statement = $qb->execute();
                 if ($statement instanceof Statement && $statement->errorCode()) {

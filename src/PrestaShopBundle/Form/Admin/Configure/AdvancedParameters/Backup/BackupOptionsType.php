@@ -42,7 +42,6 @@ class BackupOptionsType extends AbstractType
     {
         $builder
             ->add('backup_all', SwitchType::class)
-            ->add('backup_drop_tables', SwitchType::class)
-        ;
+            ->add('backup_drop_tables', SwitchType::class);
     }
 }

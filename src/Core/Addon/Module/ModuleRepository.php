@@ -570,7 +570,9 @@ class ModuleRepository implements ModuleRepositoryInterface
                         array(
                             '%module%' => $moduleName,
                             '%error_details%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                        'Admin.Modules.Notification'
+                    )
+                );
             } catch (Exception $e) {
                 $this->logger->critical(
                     $this->translator->trans(
@@ -578,7 +580,9 @@ class ModuleRepository implements ModuleRepositoryInterface
                         array(
                             '%module%' => $moduleName,
                             '%error_details%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                        'Admin.Modules.Notification'
+                    )
+                );
             }
         }
 

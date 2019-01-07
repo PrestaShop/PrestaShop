@@ -38,3 +38,28 @@ admin_customers_view:
     _legacy_controller: AdminCustomers
   requirements:
     customerId: \d+
+
+admin_customers_save_private_note:
+  path: /{customerId}/save-private-note
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:savePrivateNote
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
+
+admin_customers_transform_guest_to_customer:
+  path: /{customerId}/transform-guest-to-customer
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:transformGuestToCustomer
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
+
+admin_customers_set_required_fields:
+  path: /set-required-fields
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:setRequiredFields
+    _legacy_controller: AdminCustomers

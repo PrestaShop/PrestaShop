@@ -316,12 +316,14 @@ class ImageCore extends ObjectModel
             unlink(_PS_TMP_IMG_DIR_ . 'product_' . $idProduct . '.jpg');
         }
 
-        return Db::getInstance()->execute('
+        return Db::getInstance()->execute(
+            '
 			UPDATE `' . _DB_PREFIX_ . 'image`
 			SET `cover` = NULL
 			WHERE `id_product` = ' . (int) $idProduct
         ) &&
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			UPDATE `' . _DB_PREFIX_ . 'image_shop` image_shop
 			SET image_shop.`cover` = NULL
 			WHERE image_shop.id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ') AND image_shop.`id_product` = ' . (int) $idProduct
@@ -385,8 +387,10 @@ class ImageCore extends ObjectModel
                         if (!Configuration::get('PS_LEGACY_IMAGES')) {
                             $imageNew->createImgFolder();
                         }
-                        copy(_PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg',
-                        $newPath . '-' . $imageType['name'] . '.jpg');
+                        copy(
+                            _PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg',
+                        $newPath . '-' . $imageType['name'] . '.jpg'
+                        );
                         if (Configuration::get('WATERMARK_HASH')) {
                             $oldImagePath = _PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.jpg';
                             if (file_exists($oldImagePath)) {
@@ -545,7 +549,8 @@ class ImageCore extends ObjectModel
      */
     public function deleteProductAttributeImage()
     {
-        return Db::getInstance()->execute('
+        return Db::getInstance()->execute(
+            '
 			DELETE
 			FROM `' . _DB_PREFIX_ . 'product_attribute_image`
 			WHERE `id_image` = ' . (int) $this->id
@@ -829,7 +834,7 @@ class ImageCore extends ObjectModel
 
         @mkdir($testFolder, self::$access_rights, true);
         @chmod($testFolder, self::$access_rights);
-        if (!is_writeable($testFolder)) {
+        if (!is_writable($testFolder)) {
             return false;
         }
         @rmdir($testFolder);

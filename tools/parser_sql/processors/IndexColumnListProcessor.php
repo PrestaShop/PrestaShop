@@ -30,8 +30,8 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
  * 
@@ -68,25 +68,27 @@ class IndexColumnListProcessor extends AbstractProcessor {
 
             case 'ASC':
             case 'DESC':
-            # the optional order
+            // the optional order
                 $expr['dir'] = $trim;
                 break;
 
             case ',':
-            # the next column
-                $result[] = array_merge(array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr),
-                        $expr);
+            // the next column
+                $result[] = array_merge(
+                    array('expr_type' => ExpressionType::INDEX_COLUMN, 'base_expr' => $base_expr),
+                        $expr
+                );
                 $expr = $this->initExpression();
                 $base_expr = "";
                 break;
 
             default:
                 if ($upper[0] === '(' && substr($upper, -1) === ')') {
-                    # the optional length
+                    // the optional length
                     $expr['length'] = $this->removeParenthesisFromStart($trim);
                     continue 2;
                 }
-                # the col name
+                // the col name
                 $expr['name'] = $trim;
                 $expr['no_quotes'] = $this->revokeQuotation($trim);
                 break;
@@ -96,4 +98,3 @@ class IndexColumnListProcessor extends AbstractProcessor {
         return $result;
     }
 }
-?>

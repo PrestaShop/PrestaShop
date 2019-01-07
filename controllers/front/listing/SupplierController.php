@@ -33,7 +33,7 @@ class SupplierControllerCore extends ProductListingFrontController
 
     /** @var Supplier */
     protected $supplier;
-    private $label;
+    protected $label;
 
     public function canonicalRedirection($canonicalURL = '')
     {
@@ -91,7 +91,9 @@ class SupplierControllerCore extends ProductListingFrontController
             } else {
                 $this->assignAll();
                 $this->label = $this->trans(
-                    'List of all suppliers', array(), 'Shop.Theme.Catalog'
+                    'List of all suppliers',
+                    array(),
+                    'Shop.Theme.Catalog'
                 );
                 $this->setTemplate('catalog/suppliers', array('entity' => 'suppliers'));
             }
@@ -106,8 +108,7 @@ class SupplierControllerCore extends ProductListingFrontController
         $query = new ProductSearchQuery();
         $query
             ->setIdSupplier($this->supplier->id)
-            ->setSortOrder(new SortOrder('product', 'position', 'asc'))
-        ;
+            ->setSortOrder(new SortOrder('product', 'position', 'asc'));
 
         return $query;
     }

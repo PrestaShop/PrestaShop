@@ -30,8 +30,8 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/SQLChunkProcessor.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/SQLChunkProcessor.php';
 
 /**
  * 
@@ -68,12 +68,12 @@ class SQLProcessor extends SQLChunkProcessor {
              */
             if ($skip_next > 0) {
                 if ($trim === "") {
-                    if ($token_category !== "") { # is this correct??
+                    if ($token_category !== "") { // is this correct??
                         $out[$token_category][] = $token;
                     }
                     continue;
                 }
-                #to skip the token we replace it with whitespace
+                //to skip the token we replace it with whitespace
                 $trim = "";
                 $token = "";
                 $skip_next--;
@@ -125,7 +125,7 @@ class SQLProcessor extends SQLChunkProcessor {
 
             case 'LIMIT':
             case 'PLUGIN':
-            # no separate section
+            // no separate section
                 if ($token_category === 'SHOW') {
                     continue;
                 }
@@ -133,11 +133,11 @@ class SQLProcessor extends SQLChunkProcessor {
                 break;
 
             case 'FROM':
-            # this FROM is different from FROM in other DML (not join related)
+            // this FROM is different from FROM in other DML (not join related)
                 if ($token_category === 'PREPARE') {
                     continue 2;
                 }
-                # no separate section
+                // no separate section
                 if ($token_category === 'SHOW') {
                     continue;
                 }
@@ -243,7 +243,7 @@ class SQLProcessor extends SQLChunkProcessor {
 
             case 'REPLACE':
                 if ($prev_category === 'TABLE') {
-                    # part of the CREATE TABLE statement
+                    // part of the CREATE TABLE statement
                     $out[$prev_category][] = $upper;
                     continue 2;
                 }
@@ -254,7 +254,7 @@ class SQLProcessor extends SQLChunkProcessor {
 
             case 'IGNORE':
                 if ($prev_category === 'TABLE') {
-                    # part of the CREATE TABLE statement
+                    // part of the CREATE TABLE statement
                     $out[$prev_category][] = $upper;
                     continue 2;
                 }
@@ -445,4 +445,3 @@ class SQLProcessor extends SQLChunkProcessor {
         return parent::process($out);
     }
 }
-?>
