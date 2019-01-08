@@ -30,8 +30,10 @@ services:
     prestashop.core.admin.url_generator_legacy:
         class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
         factory: ["@prestashop.core.admin.url_generator_factory", forLegacy]
-        arguments:
-            - "@prestashop.adapter.legacy.context"
+        calls:
+            - method: 'setMailThemesUri'
+              arguments:
+                - "@prestashop.adapter.legacy.context"
 
     prestashop.core.admin.url_generator:
         class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
@@ -105,9 +107,3 @@ services:
     prestashop.core.product.csv_exporter:
         class: PrestaShop\PrestaShop\Core\Product\ProductCsvExporter
         arguments: ['@translator', '@prestashop.core.admin.data_provider.product_interface']
-
-    prestashop.core.mail.template.generator:
-        class: PrestaShopBundle\Service\Mail\MailTemplateGenerator
-        arguments:
-            - "@templating.engine.twig"
-            - "%mail_themes_dir%"
