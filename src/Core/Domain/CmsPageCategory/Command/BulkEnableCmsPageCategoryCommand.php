@@ -51,7 +51,7 @@ class BulkEnableCmsPageCategoryCommand
         if (empty($cmsPageCategoryIds)) {
             throw new CmsPageCategoryConstraintException(
                 'Missing cms page category data for bulk deleting',
-                CmsPageCategoryConstraintException::MISSING_BULK_DATA
+                CmsPageCategoryConstraintException::INVALID_BULK_DATA
             );
         }
 
@@ -74,7 +74,7 @@ class BulkEnableCmsPageCategoryCommand
     private function setCmsPageCategoryIds(array $cmsPageCategoryIds)
     {
         foreach ($cmsPageCategoryIds as $id) {
-            $this->cmsPageCategoryIds[] = new CmsPageCategoryId($id);
+            $this->cmsPageCategoryIds[] = new CmsPageCategoryId((int) $id);
         }
     }
 }

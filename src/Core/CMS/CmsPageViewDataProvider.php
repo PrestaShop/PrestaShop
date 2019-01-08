@@ -72,9 +72,7 @@ final class CmsPageViewDataProvider implements CmsPageViewDataProviderInterface
     private function getBreadcrumbTree($cmsCategoryParentId)
     {
         try {
-            $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryParentId);
-
-            return $this->queryBus->handle(new GetCmsPageCategoriesForBreadcrumb($cmsPageCategoryId));
+            return $this->queryBus->handle(new GetCmsPageCategoriesForBreadcrumb($cmsCategoryParentId));
         } catch (CmsPageCategoryException $exception) {
             return [];
         }
