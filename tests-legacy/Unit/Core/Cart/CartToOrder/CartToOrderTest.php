@@ -93,14 +93,10 @@ class CartToOrderTest extends CartTaxesTest
     )
     {
         // prepare cart
-        $this->cart->id_address_delivery = $addressId;
         $this->resetCart();
+        $this->cart->id_address_delivery = $addressId;
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
-
-        // need to update secret_key in order to get payment working
-        $this->cart->secure_key = md5('xxx');
-        $this->cart->update();
 
         // need to set customer to have a valid email
         $customer = new Customer();
@@ -131,6 +127,11 @@ class CartToOrderTest extends CartTaxesTest
 
         // tests
         $order = Order::getByCartId($this->cart->id);
+        // compare global cart/order total
+        $this->assertEquals($this->cart->getOrderTotal(false), $order->total_paid_tax_excl);
+        $this->assertEquals($this->cart->getOrderTotal(true), $order->total_paid_tax_incl);
+
+        // specific comparisons
         $this->assertEquals($expected_totalProduct_taxIncl, $order->total_products_wt);
         $this->assertEquals($expected_totalProduct_taxExcl, $order->total_products);
         $this->assertEquals($expected_totalDiscount_taxExcl, $order->total_discounts_tax_excl);
@@ -208,7 +209,7 @@ class CartToOrderTest extends CartTaxesTest
                 'expected_discounts_taxExcl' => [57.29],
                 'expected_newVoucherValue' => 0,
             ],
-            '3 product in cart, 3 cart rules' => [
+            '3 product in cart, 2 cart rules' => [
                 'products' => [1 => 1, 2 => 1, 3 => 2],
                 'cartRules' => [1, 2],
                 'addressId' => CartTaxesTest::ADDRESS_ID_1,

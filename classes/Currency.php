@@ -98,9 +98,9 @@ class CurrencyCore extends ObjectModel
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {
-        $this->cldr = Tools::getCldr(Context::getContext());
-
         parent::__construct($id, $idLang, $idShop);
+
+        $this->cldr = Tools::getCldr(Context::getContext());
 
         if ($this->iso_code) {
             $cldrCurrency = $this->cldr->getCurrency($this->iso_code);

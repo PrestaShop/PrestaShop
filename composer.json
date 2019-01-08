@@ -163,9 +163,7 @@
         ],
         "phpunit-legacy": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml --testsuite Unit",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml --testsuite CoreCart",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml --testsuite Integration"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
         ],
         "unit-tests": [
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
