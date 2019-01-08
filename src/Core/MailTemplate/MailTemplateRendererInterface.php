@@ -48,6 +48,8 @@ interface MailTemplateRendererInterface
      * are applied to the output content.
      *
      * @param MailTemplateTransformationInterface $transformer
+     *
+     * @return $this
      */
     public function addTransformation(MailTemplateTransformationInterface $transformer);
 }
