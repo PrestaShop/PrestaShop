@@ -166,18 +166,27 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('id_supplier', TextType::class))
                 ->setAssociatedColumn('id_supplier')
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('ID', [], 'Admin.Global'),
+                    ],
                     'required' => false,
                 ])
             )
             ->add((new Filter('name', TextType::class))
                 ->setAssociatedColumn('name')
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Name', [], 'Admin.Global'),
+                    ],
                     'required' => false,
                 ])
             )
             ->add((new Filter('products_count', TextType::class))
                 ->setAssociatedColumn('products_count')
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Number of products', [], 'Admin.Catalog.Feature'),
+                    ],
                     'required' => false,
                 ])
             )
