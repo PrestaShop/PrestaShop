@@ -23,15 +23,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+const $ = window.$;
+
 /**
  * Class PageNameOptionHandler is responsible for handling any logic related with current page name.
  */
 export default class PageNameOptionHandler {
   constructor() {
-    const currentPage = $(this._pageNameSelector).val();
-    this._setUrlRewriteDisabledStatusByCurrentPage(currentPage);
+    const currentPage = $(this.pageNameSelector).val();
+    this.setUrlRewriteDisabledStatusByCurrentPage(currentPage);
 
-    $(document).on('change', this._pageNameSelector, event => this._changePageNameEvent(event));
+    $(document).on('change', this.pageNameSelector, event => this.changePageNameEvent(event));
   }
 
   /**
@@ -39,8 +41,8 @@ export default class PageNameOptionHandler {
    * @returns {string}
    * @private
    */
-  get _pageNameSelector() {
-    return '#form_meta_page_name';
+  get pageNameSelector() {
+    return '.js-meta-page-name';
   }
 
   /**
@@ -48,11 +50,11 @@ export default class PageNameOptionHandler {
    * @param {object} event
    * @private
    */
-  _changePageNameEvent(event) {
+  changePageNameEvent(event) {
     const $this = $(event.currentTarget);
     const currentPage = $this.val();
 
-    this._setUrlRewriteDisabledStatusByCurrentPage(currentPage);
+    this.setUrlRewriteDisabledStatusByCurrentPage(currentPage);
   }
 
   /**
@@ -60,7 +62,7 @@ export default class PageNameOptionHandler {
    * @param {string} currentPage
    * @private
    */
-  _setUrlRewriteDisabledStatusByCurrentPage(currentPage) {
-    $('[id^="form_meta_url_rewrite"]').prop('disabled', currentPage === 'index');
+  setUrlRewriteDisabledStatusByCurrentPage(currentPage) {
+    $('.js-url-rewrite input').prop('disabled', currentPage === 'index');
   }
 }

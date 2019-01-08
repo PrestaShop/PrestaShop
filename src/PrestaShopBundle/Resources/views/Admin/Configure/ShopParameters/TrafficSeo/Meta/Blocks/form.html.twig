@@ -38,7 +38,7 @@
                 {{ ps.label_with_help('Page name'|trans({}, 'Admin.Shopparameters.Feature'), ('Name of the related page.'|trans({}, 'Admin.Shopparameters.Help'))) }}
               </label>
               <div class="col-sm">
-                {{ ps.form_widget_with_error(metaForm.page_name) }}
+                {{ ps.form_widget_with_error(metaForm.page_name, {'attr': {'class': 'js-meta-page-name'}}) }}
               </div>
             </div>
             <div class="form-group row">
@@ -88,7 +88,7 @@
                 {{ ps.label_with_help('Rewritten URL'|trans({}, 'Admin.Shopparameters.Feature'), (rewriteUrlLabel))}}
               </label>
               <div class="col-sm">
-                {{ ps.form_widget_with_error(metaForm.url_rewrite) }}
+                {{ ps.form_widget_with_error(metaForm.url_rewrite, {'attr': {'class': 'js-url-rewrite'}}) }}
               </div>
             </div>
             {{ form_rest(metaForm) }}
