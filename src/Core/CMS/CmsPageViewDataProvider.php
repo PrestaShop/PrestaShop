@@ -53,6 +53,8 @@ final class CmsPageViewDataProvider implements CmsPageViewDataProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws CmsPageCategoryException
      */
     public function getView($cmsCategoryParentId)
     {
@@ -68,13 +70,11 @@ final class CmsPageViewDataProvider implements CmsPageViewDataProviderInterface
      * @param int $cmsCategoryParentId
      *
      * @return CmsPageCategoriesBreadcrumbTree|array
+     *
+     * @throws CmsPageCategoryException
      */
     private function getBreadcrumbTree($cmsCategoryParentId)
     {
-        try {
-            return $this->queryBus->handle(new GetCmsPageCategoriesForBreadcrumb($cmsCategoryParentId));
-        } catch (CmsPageCategoryException $exception) {
-            return [];
-        }
+        return $this->queryBus->handle(new GetCmsPageCategoriesForBreadcrumb($cmsCategoryParentId));
     }
 }
