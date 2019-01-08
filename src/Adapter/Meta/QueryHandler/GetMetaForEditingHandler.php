@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\QueryHandler\GetMetaForEditingHandler
 
 /**
  * Class GetMetaForEditingHandler is responsible for retrieving meta data.
+ *
+ * @internal
  */
 final class GetMetaForEditingHandler implements GetMetaForEditingHandlerInterface
 {

@@ -40,7 +40,9 @@ use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Class EditMetaHandler is responsible for editing meta data,
+ * Class EditMetaHandler is responsible for editing meta data.
+ *
+ * @internal
  */
 final class EditMetaHandler implements EditMetaHandlerInterface
 {

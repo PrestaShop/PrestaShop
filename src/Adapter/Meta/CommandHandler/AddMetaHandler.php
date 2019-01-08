@@ -41,6 +41,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class SaveMetaHandler is responsible for saving meta data.
+ *
+ * @internal
  */
 final class AddMetaHandler implements AddMetaHandlerInterface
 {

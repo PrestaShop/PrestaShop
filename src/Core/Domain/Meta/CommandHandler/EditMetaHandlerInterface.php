@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 
 /**
- * Interface EditMetaHandlerInterface defines contract for EditMetaCommandHandler.
+ * Interface EditMetaHandlerInterface defines contract for EditMetaHandler.
  */
 interface EditMetaHandlerInterface
 {

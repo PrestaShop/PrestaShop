@@ -30,7 +30,8 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Class IsUrlRewrite.
+ * Class IsUrlRewrite is responsible of validating url rewrites according to several patterns
+ * which differ when ascending urls are enabled or not.
  *
  * @Annotation
  */

@@ -32,7 +32,8 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Class IsUrlRewriteValidator is responsible of validating url rewrites according to valid patterns.
+ * Class IsUrlRewriteValidator is responsible of validating url rewrites according to several patterns
+ * which differ when ascending urls are enabled or not.
  */
 class IsUrlRewriteValidator extends ConstraintValidator
 {

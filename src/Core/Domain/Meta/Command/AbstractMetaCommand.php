@@ -40,7 +40,7 @@ abstract class AbstractMetaCommand
      *
      * @throws MetaConstraintException
      */
-    protected function validateName($languageId, $value, $constraintErrorCode)
+    protected function assertNameMatchesRegexPattern($languageId, $value, $constraintErrorCode)
     {
         $regex = '/^[^<>={}]*$/u';
 
