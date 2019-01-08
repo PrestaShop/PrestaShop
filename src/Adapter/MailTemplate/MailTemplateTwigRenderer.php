@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateParametersBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailTemplateTransformationInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Language;
 
@@ -67,5 +68,13 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         $parameters = $this->parametersBuilder->buildParameters($template, $language);
 
         return $this->engine->render($template->getPath(), $parameters);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addTransformation(MailTemplateTransformationInterface $transformer)
+    {
+        // TODO: Implement addTransformation() method.
     }
 }
