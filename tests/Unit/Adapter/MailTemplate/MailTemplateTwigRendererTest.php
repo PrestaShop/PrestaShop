@@ -30,6 +30,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateParametersBuilderInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailTemplateTransformationInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Language;
 
@@ -67,6 +68,60 @@ class MailTemplateTwigRendererTest extends TestCase
 
         $generatedTemplate = $generator->render($template, $expectedLanguage);
         $this->assertEquals($expectedTemplate, $generatedTemplate);
+    }
+
+    public function testRenderWithTransformations()
+    {
+        $generatedTemplate = 'mail_template';
+        $transformedTemplate = 'mail_template_transformed_fr';
+        $expectedPath = 'path/to/test_template.twig';
+        $expectedParameters = ['locale' => 'fr', 'url' => 'http://test.com'];
+        $expectedLanguage = $this->createLanguageMock();
+        $template = $this->createMailTemplateMock($expectedPath);
+
+        $generator = new MailTemplateTwigRenderer(
+            $this->createEngineMock($expectedPath, $expectedParameters, $generatedTemplate),
+            $this->createParametersBuilderMock($expectedParameters, $expectedLanguage)
+        );
+        $this->assertNotNull($generator);
+
+        $generator->addTransformation($this->createTransformationMock());
+        $generatedTemplate = $generator->render($template, $expectedLanguage);
+        $this->assertEquals($transformedTemplate, $generatedTemplate);
+    }
+
+    /**
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateTransformationInterface
+     */
+    private function createTransformationMock()
+    {
+        $transformationMock = $this->getMockBuilder(MailTemplateTransformationInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $transformationMock
+            ->expects($this->once())
+            ->method('apply')
+            ->will($this->returnCallback(function($templateContent, array $templateVariables) {
+                return $templateContent.'_transformed_'.$templateVariables['locale'];
+            }))
+        ;
+
+        $transformationMock
+            ->expects($this->once())
+            ->method('setTemplate')
+            ->willReturn($transformationMock)
+        ;
+
+        $transformationMock
+            ->expects($this->once())
+            ->method('setLanguage')
+            ->willReturn($transformationMock)
+        ;
+
+        return $transformationMock;
     }
 
     /**

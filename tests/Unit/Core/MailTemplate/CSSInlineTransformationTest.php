@@ -111,6 +111,88 @@ class CSSInlineTransformationTest extends TestCase
         $this->assertStyle($titleTags->getNode(0), []);
     }
 
+    public function testCssSizes()
+    {
+        $cssPath = realpath(__DIR__ . '/../../Resources/assets/css') . '/sizes.css';
+        $simpleHtml = $this->createSimpleHtml($cssPath);
+        $transformation = new CSSInlineTransformation();
+
+        $transformedHtml = $transformation
+            ->setTemplate($this->buildTemplateMock(MailTemplateInterface::HTML_TYPE))
+            ->apply($simpleHtml, [])
+        ;
+        $this->assertNotNull($transformedHtml);
+
+        $crawler = new Crawler($transformedHtml);
+        $spanTags = $crawler->filter('.account_details');
+        $this->assertCount(1, $spanTags);
+        $spanTag = $spanTags->getNode(0);
+        $widthAttribute = $spanTag->attributes->getNamedItem('width');
+        $this->assertNotNull($widthAttribute);
+        $this->assertEquals(100, $widthAttribute->nodeValue);
+    }
+
+    public function testCssOverride()
+    {
+        $cssPath = realpath(__DIR__ . '/../../Resources/assets/css') . '/override.css';
+        $simpleHtml = $this->createSimpleHtml($cssPath);
+        $transformation = new CSSInlineTransformation();
+
+        $transformedHtml = $transformation
+            ->setTemplate($this->buildTemplateMock(MailTemplateInterface::HTML_TYPE))
+            ->apply($simpleHtml, [])
+        ;
+        $this->assertNotNull($transformedHtml);
+
+        $crawler = new Crawler($transformedHtml);
+        $divTags = $crawler->filter('.promo_code');
+        $this->assertCount(2, $divTags);
+
+        $firstDiv = $divTags->getNode(0);
+        $bgColorAttribute = $firstDiv->attributes->getNamedItem('bgcolor');
+        $this->assertNotNull($bgColorAttribute);
+        $this->assertEquals('#ff0000', $bgColorAttribute->nodeValue);
+        $this->assertStyle($firstDiv, ['background-color' => '#ff0000']);
+
+        $secondDiv = $divTags->getNode(1);
+        $bgColorAttribute = $secondDiv->attributes->getNamedItem('bgcolor');
+        $this->assertNotNull($bgColorAttribute);
+        $this->assertEquals('#00ff00', $bgColorAttribute->nodeValue);
+        $this->assertStyle($secondDiv, ['background-color' => '#00ff00']);
+    }
+
+    public function testMultipleCss()
+    {
+        $html = <<<'HTML'
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <link rel="stylesheet" type="text/css" href="file://@TITLES_CSS_PATH@">
+                    <link rel="stylesheet" type="text/css" href="file://@SIZES_CSS_PATH@">
+                </head>
+                <body>
+                    <h1>Test H1</h1>
+                    <span class="account_details">
+                        Account details
+                    </span>
+                </body>
+            </html>
+HTML;
+
+        $cssPath = realpath(__DIR__ . '/../../Resources/assets/css') . '/titles.css';
+        $html = str_replace('@TITLES_CSS_PATH@', $cssPath, $html);
+        $cssPath = realpath(__DIR__ . '/../../Resources/assets/css') . '/sizes.css';
+        $html = str_replace('@SIZES_CSS_PATH@', $cssPath, $html);
+
+        $transformation = new CSSInlineTransformation();
+
+        $transformedHtml = $transformation
+            ->setTemplate($this->buildTemplateMock(MailTemplateInterface::HTML_TYPE))
+            ->apply($html, [])
+        ;
+        $this->assertNotEquals($html, $transformedHtml);
+    }
+
     /**
      * @param DOMElement $node
      * @param array $expectedStyle
@@ -179,6 +261,15 @@ class CSSInlineTransformationTest extends TestCase
                 </head>
                 <body>
                     <h1>Test H1</h1>
+                    <span class="account_details">
+                        Account details
+                    </span>
+                    <div class="promo_code" style="background-color: #ff0000">
+                        Super Promo
+                    </div>
+                    <div class="promo_code">
+                        Super Promo
+                    </div>
                 </body>
             </html>
 HTML;
