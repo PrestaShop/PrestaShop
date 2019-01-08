@@ -145,8 +145,8 @@ class CartRuleCalculator
             if (is_array($selected_products)) {
                 foreach ($this->cartRows as $cartRow) {
                     $product = $cartRow->getRowData();
-                    if (in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
-                        || in_array($product['id_product'] . '-0', $selected_products)
+                    if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
+                        || in_array($product['id_product'] . '-0', $selected_products))
                            && (($cartRule->reduction_exclude_special && !$product['reduction_applies'])
                                || !$cartRule->reduction_exclude_special)) {
                         $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
