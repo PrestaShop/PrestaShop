@@ -1,0 +1,41 @@
+{
+  "name": "geppettov2",
+  "version": "1.1.0",
+  "description": "GeppettoV2 is our new version of test Automation Framework for Prestashop",
+  "main": "index.js",
+  "scripts": {
+    "mocha-test-puppeteer": "node_modules/mocha/bin/mocha test/campaigns/clients/take_screenshot.js",
+    "specific-test": "node_modules/mocha/bin/mocha test/campaigns/suite/$TEST_PATH"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mbadrani/geppettov2.git"
+  },
+  "keywords": [
+    "E2E",
+    "test",
+    "automation",
+    "puppetteer"
+  ],
+  "author": "mbadrani",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mbadrani/geppettov2/issues"
+  },
+  "homepage": "https://github.com/mbadrani/geppettov2#readme",
+  "dependencies": {
+    "faker": "^4.1.0",
+    "minimist": "^1.2.0",
+    "puppeteer": "^1.10.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-string": "^1.5.0",
+    "eslint-plugin-mocha": "^5.2.0",
+    "file-system": "^2.2.2",
+    "lodash": "^4.17.11",
+    "mocha": "^5.2.0",
+    "mochawesome": "^3.1.1",
+    "should": "^13.2.3"
+  }
+}

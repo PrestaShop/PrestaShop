@@ -1,0 +1,4 @@
+--require ./test/helpers.js
+--timeout 400000
+--slow 45000
+--reporter mochawesome --reporter-options reportDir=/projet/presta_test/geppettov2/test/campaigns/files/generated_files/mochawesome-report/
