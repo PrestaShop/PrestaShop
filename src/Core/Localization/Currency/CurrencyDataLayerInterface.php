@@ -56,7 +56,7 @@ interface CurrencyDataLayerInterface
      * @return CurrencyData
      *                      The currency data to be written by the upper data layer
      */
-    public function write($currencyCode, $currencyData);
+    public function write($currencyCode, CurrencyData $currencyData);
 
     /**
      * Set the lower layer.
