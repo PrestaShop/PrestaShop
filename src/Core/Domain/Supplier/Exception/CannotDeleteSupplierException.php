@@ -36,18 +36,18 @@ class CannotDeleteSupplierException extends SupplierException
     const HAS_PENDING_ORDERS = 1;
 
     /**
-     * @var SupplierId
+     * @var int
      */
     private $supplierId;
 
     /**
-     * @param SupplierId $supplierId
+     * @param int $supplierId
      * @param string $message
      * @param int $code
      * @param $previous
      */
     public function __construct(
-        SupplierId $supplierId,
+        $supplierId,
         $message = '',
         $code = 0,
         $previous = null
@@ -57,7 +57,7 @@ class CannotDeleteSupplierException extends SupplierException
     }
 
     /**
-     * @return SupplierId
+     * @return int
      */
     public function getSupplierId()
     {

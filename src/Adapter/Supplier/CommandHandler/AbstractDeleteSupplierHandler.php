@@ -99,7 +99,7 @@ abstract class AbstractDeleteSupplierHandler
 
             if ($this->hasPendingOrders($supplierId)) {
                 throw new CannotDeleteSupplierException(
-                    $supplierId,
+                    $supplierId->getValue(),
                     sprintf(
                         'Supplier with id %s cannot be deleted due to it has pending orders',
                         $supplierId->getValue()
@@ -128,7 +128,7 @@ abstract class AbstractDeleteSupplierHandler
 
             if (false === $entity->delete()) {
                 throw new CannotDeleteSupplierException(
-                    $supplierId,
+                    $supplierId->getValue(),
                     sprintf(
                         'Unable to delete supplier object with id "%s"',
                         $supplierId->getValue()

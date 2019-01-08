@@ -45,13 +45,8 @@ class SupplierId
      */
     public function __construct($supplierId)
     {
-        if (!is_numeric($supplierId) || $supplierId <= 0) {
-            throw new SupplierException(
-                sprintf('Invalid Supplier id: %s', var_export($supplierId, true))
-            );
-        }
-
-        $this->value = (int) $supplierId;
+        $this->assertIsNotIntegerOrLessThanZero($supplierId);
+        $this->value = $supplierId;
     }
 
     /**
@@ -60,5 +55,19 @@ class SupplierId
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @param int $supplierId
+     *
+     * @throws SupplierException
+     */
+    private function assertIsNotIntegerOrLessThanZero($supplierId)
+    {
+        if (!is_int($supplierId) || 0 >= $supplierId) {
+            throw new SupplierException(
+                sprintf('Invalid Supplier id: %s', var_export($supplierId, true))
+            );
+        }
     }
 }

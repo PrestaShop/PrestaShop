@@ -24,12 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Command;
 
 /**
- * Class SupplierConstraintException
+ * Class AbstractBulkSupplierCommand is responsible for providing shared logic between all bulk actions
+ * in brands and suppliers listing.
  */
-class SupplierConstraintException extends SupplierException
+abstract class AbstractBulkSupplierCommand
 {
-    const INVALID_BULK_DATA = 1;
+    /**
+     * @param array $ids
+     *
+     * @return bool
+     */
+    protected function assertIsEmptyOrContainsNonIntegerValues(array $ids)
+    {
+        return empty($ids) || $ids !== array_filter($ids, 'is_int');
+    }
 }
