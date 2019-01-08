@@ -25,3 +25,6 @@ services:
       - method: setLogger
         arguments:
           - '@logger'
+
+  prestashop.core.mail_template.transformation.css_inline:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation'

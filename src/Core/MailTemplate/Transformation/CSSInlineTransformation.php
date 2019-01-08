@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
 use Pelago\Emogrifier;
+use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Language;
@@ -50,7 +51,9 @@ class CSSInlineTransformation implements MailTemplateTransformationInterface
         $cssContent = $this->getCssContent($templateContent);
         $inliner = new Emogrifier($templateContent, $cssContent);
 
-        return $inliner->emogrify();
+        $converter = new CssToAttributeConverter($inliner->emogrify());
+
+        return $converter->convertCssToVisualAttributes()->render();
     }
 
     /**
