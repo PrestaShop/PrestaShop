@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\EditableMeta;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
@@ -48,6 +49,8 @@ final class MetaFormDataProvider implements FormDataProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws MetaException
      */
     public function getData($metaId)
     {
@@ -55,7 +58,7 @@ final class MetaFormDataProvider implements FormDataProviderInterface
         $result = $this->queryBus->handle(new GetMetaForEditing((int) $metaId));
 
         return [
-            'page_name' => $result->getPageName(),
+            'page_name' => $result->getPageName()->getValue(),
             'page_title' => $result->getPageTitle(),
             'meta_description' => $result->getMetaDescription(),
             'meta_keywords' => $result->getMetaKeywords(),

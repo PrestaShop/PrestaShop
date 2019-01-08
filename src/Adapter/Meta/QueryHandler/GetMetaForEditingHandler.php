@@ -65,7 +65,7 @@ final class GetMetaForEditingHandler implements GetMetaForEditingHandlerInterfac
         }
 
         return new EditableMeta(
-            $metaId,
+            $metaId->getValue(),
             $entity->page,
             $entity->title,
             $entity->description,

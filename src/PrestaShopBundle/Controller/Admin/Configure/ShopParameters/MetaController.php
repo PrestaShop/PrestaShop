@@ -208,11 +208,8 @@ class MetaController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_meta_index');
             }
-        } catch (MetaNotFoundException $e) {
-            $this->addFlash(
-                'error',
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
-            );
+        } catch (MetaException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
 
             return $this->redirectToRoute('admin_meta_index');
         }
