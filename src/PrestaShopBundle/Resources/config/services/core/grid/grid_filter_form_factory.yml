@@ -15,3 +15,10 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@router'
             - '@request_stack'
+
+    prestashop.core.grid.filter.cms_page_category_form_factory:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Filter\CmsPageCategoryFilterFormFactory'
+      arguments:
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@router'
+        - '@request_stack'

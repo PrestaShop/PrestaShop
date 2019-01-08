@@ -117,3 +117,10 @@ services:
             - "@=service('router').generate('admin_profiles_index')"
             - '@prestashop.core.grid.action.row.accessibility_checker.delete_profile'
         public: true
+
+    prestashop.core.grid.definition.factory.cms_page_category:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - '@request_stack'
+        public: true
