@@ -1,0 +1,27 @@
+services:
+  _defaults:
+    public: true
+
+  PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateCatalogInterface: '@prestashop.core.mail_template.folder_catalog'
+  PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface: '@prestashop.adapter.mail_template.twig_renderer'
+
+  prestashop.core.mail_template.folder_catalog:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateFolderCatalog'
+    arguments:
+      - '%mail_themes_dir%'
+
+  prestashop.core.mail_template.parameters_builder:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateParametersBuilder'
+    arguments:
+      -
+        mailThemesUrl: "@=service('prestashop.adapter.legacy.context').getMailThemesUrl()"
+
+  prestashop.core.mail_template.generator:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateCatalogInterface'
+      - '@PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface'
+    calls:
+      - method: setLogger
+        arguments:
+          - '@logger'
