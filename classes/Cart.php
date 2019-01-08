@@ -380,13 +380,13 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Calculate average Tax rate in Cart.
+     * Calculate average Tax rate in Cart, as a percentage.
      *
      * @deprecated since version 1.7.6. Use $cart->getAverageProductsTaxRate() instead.
      *
      * @param mixed $cart Cart ID or Cart Object
      *
-     * @return float Average Tax used in Cart
+     * @return float Average Tax used in Cart (eg. 20.0 for 20% average rate)
      */
     public static function getTaxesAverageUsed($cart)
     {
@@ -406,11 +406,11 @@ class CartCore extends ObjectModel
             return 0;
         }
 
-        return $cart->getAverageProductsTaxRate();
+        return $cart->getAverageProductsTaxRate() * 100;
     }
 
     /**
-     * Returns the average Tax rate for all products in the cart.
+     * Returns the average Tax rate for all products in the cart, as a multiplier.
      *
      * The arguments are optional and only serve as return values in case caller needs the details.
      *
@@ -419,7 +419,7 @@ class CartCore extends ObjectModel
      * @param float|null $cartAmountTaxIncluded If the reference is given, it will be updated with the
      *                                          total amount in the Cart including Taxes
      *
-     * @return float Average Tax Rate on Products
+     * @return float Average Tax Rate on Products (eg. 0.2 for 20% average rate)
      */
     public function getAverageProductsTaxRate(&$cartAmountTaxExcluded = null, &$cartAmountTaxIncluded = null)
     {
