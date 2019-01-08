@@ -43,18 +43,11 @@ class BulkDeleteCmsPageCategoryCommand
     /**
      * @param int[] $cmsPageCategoryIds
      *
-     * @throws CmsPageCategoryConstraintException
      * @throws CmsPageCategoryException
      */
     public function __construct(array $cmsPageCategoryIds)
     {
-        if (empty($cmsPageCategoryIds)) {
-            throw new CmsPageCategoryConstraintException(
-                'Missing cms page category data for bulk deleting',
-                CmsPageCategoryConstraintException::MISSING_BULK_DATA
-            );
-        }
-
+        $this->assertIsEmptyOrContainsNonIntegerValues($cmsPageCategoryIds);
         $this->setCmsPageCategoryIds($cmsPageCategoryIds);
     }
 
@@ -64,6 +57,24 @@ class BulkDeleteCmsPageCategoryCommand
     public function getCmsPageCategoryIds()
     {
         return $this->cmsPageCategoryIds;
+    }
+
+    /**
+     * @param array $cmsPageCategoryIds
+     *
+     * @throws CmsPageCategoryConstraintException
+     */
+    private function assertIsEmptyOrContainsNonIntegerValues(array $cmsPageCategoryIds)
+    {
+        if (empty($cmsPageCategoryIds) || $cmsPageCategoryIds !== array_filter($cmsPageCategoryIds, 'is_int')) {
+            throw new CmsPageCategoryConstraintException(
+                sprintf(
+                    'Missing cms page category data or array %s contains non integer values for bulk deleting',
+                    var_export($cmsPageCategoryIds, true)
+                ),
+                CmsPageCategoryConstraintException::INVALID_BULK_DATA
+            );
+        }
     }
 
     /**

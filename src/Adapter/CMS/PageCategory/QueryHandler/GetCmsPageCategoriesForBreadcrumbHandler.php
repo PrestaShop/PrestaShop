@@ -92,7 +92,7 @@ final class GetCmsPageCategoriesForBreadcrumbHandler implements GetCmsPageCatego
         if (CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID === $query->getCurrentCategoryId()->getValue()) {
             return new CmsPageCategoriesBreadcrumbTree([
                 new CmsPageCategory(
-                    new CmsPageCategoryId($rootCategoryData['id_cms_category']),
+                    (int) $rootCategoryData['id_cms_category'],
                     $rootCategoryData['name']
                 ),
             ]);
@@ -105,7 +105,7 @@ final class GetCmsPageCategoriesForBreadcrumbHandler implements GetCmsPageCatego
         $categories = [];
         foreach ($parentCategories as $category) {
             $categories[] = new CmsPageCategory(
-                new CmsPageCategoryId($category['id_cms_category']),
+                (int) $category['id_cms_category'],
                 $category['name']
             );
         }
