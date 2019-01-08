@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
@@ -40,11 +41,13 @@ class GetCmsPageCategoriesForBreadcrumb
     private $currentCategoryId;
 
     /**
-     * @param CmsPageCategoryId $currentCategoryId
+     * @param int $currentCategoryId
+     *
+     * @throws CmsPageCategoryException
      */
-    public function __construct(CmsPageCategoryId $currentCategoryId)
+    public function __construct($currentCategoryId)
     {
-        $this->currentCategoryId = $currentCategoryId;
+        $this->currentCategoryId = new CmsPageCategoryId($currentCategoryId);
     }
 
     /**

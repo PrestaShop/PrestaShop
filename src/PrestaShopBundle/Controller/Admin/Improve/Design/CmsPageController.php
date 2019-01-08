@@ -72,7 +72,10 @@ class CmsPageController extends FrameworkBundleAdminController
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
-        $viewData = $this->get('prestashop.core.cms_page.data_provider.cms_page_view')->getView($cmsCategoryParentId);
+        $viewData = $this
+            ->get('prestashop.core.cms_page.data_provider.cms_page_view')
+            ->getView((int) $cmsCategoryParentId)
+        ;
 
         return [
             'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
@@ -182,8 +185,7 @@ class CmsPageController extends FrameworkBundleAdminController
     public function deleteCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
         try {
-            $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryId);
-            $this->getCommandBus()->handle(new DeleteCmsPageCategoryCommand($cmsPageCategoryId));
+            $this->getCommandBus()->handle(new DeleteCmsPageCategoryCommand((int) $cmsCategoryId));
 
             $this->addFlash(
                 'success',
@@ -222,6 +224,7 @@ class CmsPageController extends FrameworkBundleAdminController
         $cmsCategoriesToDelete = $request->request->get('cms_page_category_bulk');
 
         try {
+            $cmsCategoriesToDelete = array_map(function ($item){ return (int) $item; }, $cmsCategoriesToDelete);
             $this->getCommandBus()->handle(new BulkDeleteCmsPageCategoryCommand($cmsCategoriesToDelete));
 
             $this->addFlash(
@@ -316,8 +319,7 @@ class CmsPageController extends FrameworkBundleAdminController
     public function toggleCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
         try {
-            $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryId);
-            $this->getCommandBus()->handle(new ToggleCmsPageCategoryStatusCommand($cmsPageCategoryId));
+            $this->getCommandBus()->handle(new ToggleCmsPageCategoryStatusCommand((int) $cmsCategoryId));
 
             $this->addFlash(
                 'success',
@@ -482,7 +484,7 @@ class CmsPageController extends FrameworkBundleAdminController
     {
         $exceptionTypeDictionary = [
             CmsPageCategoryConstraintException::class => [
-                CmsPageCategoryConstraintException::MISSING_BULK_DATA => $this->trans(
+                CmsPageCategoryConstraintException::INVALID_BULK_DATA => $this->trans(
                     'You must select at least one element to delete.',
                     'Admin.Notifications.Error'
                 ),

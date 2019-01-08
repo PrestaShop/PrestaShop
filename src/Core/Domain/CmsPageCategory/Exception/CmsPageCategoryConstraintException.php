@@ -31,5 +31,5 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
  */
 class CmsPageCategoryConstraintException extends CmsPageCategoryException
 {
-    const MISSING_BULK_DATA = 1;
+    const INVALID_BULK_DATA = 1;
 }

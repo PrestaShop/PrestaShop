@@ -45,11 +45,7 @@ class CmsPageCategoryId
      */
     public function __construct($cmsPageCategoryId)
     {
-        if (!is_numeric($cmsPageCategoryId) || 0 >= $cmsPageCategoryId) {
-            throw new CmsPageCategoryException(
-                sprintf('Invalid cms page category id %s supplied', var_export($cmsPageCategoryId, true))
-            );
-        }
+        $this->assertIsIntegerAndLargerThenZero($cmsPageCategoryId);
         $this->cmsPageCategoryId = (int) $cmsPageCategoryId;
     }
 
@@ -59,5 +55,19 @@ class CmsPageCategoryId
     public function getValue()
     {
         return $this->cmsPageCategoryId;
+    }
+
+    /**
+     * @param int $cmsPageCategoryId
+     *
+     * @throws CmsPageCategoryException
+     */
+    public function assertIsIntegerAndLargerThenZero($cmsPageCategoryId)
+    {
+        if (!is_int($cmsPageCategoryId) || 0 >= $cmsPageCategoryId) {
+            throw new CmsPageCategoryException(
+                sprintf('Invalid cms page category id %s supplied', var_export($cmsPageCategoryId, true))
+            );
+        }
     }
 }

@@ -26,8 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+
 /**
- * Class CmsPageCategory is responsible for providing data in a comfortable way.
+ * Class CmsPageCategory is responsible for providing cms page id and name combination.
  */
 class CmsPageCategory
 {
@@ -42,12 +44,14 @@ class CmsPageCategory
     private $name;
 
     /**
-     * @param CmsPageCategoryId $cmsPageCategoryId
+     * @param int $cmsPageCategoryId
      * @param string $name
+     *
+     * @throws CmsPageCategoryException
      */
-    public function __construct(CmsPageCategoryId $cmsPageCategoryId, $name)
+    public function __construct($cmsPageCategoryId, $name)
     {
-        $this->cmsPageCategoryId = $cmsPageCategoryId;
+        $this->cmsPageCategoryId = new CmsPageCategoryId($cmsPageCategoryId);
         $this->name = $name;
     }
 
