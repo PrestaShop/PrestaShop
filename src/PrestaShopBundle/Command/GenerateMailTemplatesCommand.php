@@ -71,7 +71,7 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
 
         $output->writeln(sprintf('Exporting mail with theme %s for language %s to %s', $theme, $language->name, $outputFolder));
         /** @var MailTemplateGenerator $catalog */
-        $generator = $this->getContainer()->get('prestashop.service.mail.mail_template_generator');
+        $generator = $this->getContainer()->get('prestashop.core.mail_template.generator');
         $generator->generateThemeTemplates($theme, $language, $outputFolder);
     }
 

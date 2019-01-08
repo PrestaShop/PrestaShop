@@ -37,6 +37,7 @@ use RuntimeException;
 use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
 use Tab;
+use Tools;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -50,6 +51,9 @@ class LegacyContext
 
     /** @var Currency */
     private $employeeCurrency;
+
+    /** @var string */
+    private $mailThemesUri;
 
     /**
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\context class,
@@ -146,6 +150,16 @@ class LegacyContext
     public function getRootUrl()
     {
         return __PS_BASE_URI__;
+    }
+
+    /**
+     * Url to the mail themes folder
+     *
+     * @return string
+     */
+    public function getMailThemesUrl()
+    {
+        return Tools::getShopDomain(true).__PS_BASE_URI__.$this->mailThemesUri;
     }
 
     /**
@@ -298,5 +312,24 @@ class LegacyContext
         $tab = new Tab($idTab);
 
         return $tab->class_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMailThemesUri()
+    {
+        return $this->mailThemesUri;
+    }
+
+    /**
+     * @param string $mailThemesUri
+     * @return LegacyContext
+     */
+    public function setMailThemesUri($mailThemesUri)
+    {
+        $this->mailThemesUri = $mailThemesUri;
+
+        return $this;
     }
 }
