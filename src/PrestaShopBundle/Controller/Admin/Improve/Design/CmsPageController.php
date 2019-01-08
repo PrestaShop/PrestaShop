@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
@@ -36,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsP
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
@@ -44,9 +44,9 @@ use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CmsPageController is responsible for handling the logic in "Improve -> Design -> pages" page.
@@ -58,29 +58,36 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @Template("@PrestaShop/Admin/Improve/Design/Cms/index.html.twig")
-     *
      * @param int $cmsCategoryParentId
      * @param CmsPageCategoryFilters $filters
      *
-     * @return array
+     * @return Response
      */
     public function indexAction($cmsCategoryParentId, CmsPageCategoryFilters $filters)
     {
+        $viewData = [];
+        try {
+            $viewData = $this
+                ->get('prestashop.core.cms_page.data_provider.cms_page_view')
+                ->getView((int) $cmsCategoryParentId)
+            ;
+        } catch (CmsPageCategoryNotFoundException $exception) {
+
+            return $this->redirectToRoute('admin_cms_pages_index', [
+                'cmsCategoryParentId' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
+            ]);
+        } catch (CmsPageCategoryException $exception) {
+        }
+
         $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_page_category');
         $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
-        $viewData = $this
-            ->get('prestashop.core.cms_page.data_provider.cms_page_view')
-            ->getView((int) $cmsCategoryParentId)
-        ;
-
-        return [
+        return $this->render('@PrestaShop/Admin/Improve/Design/Cms/index.html.twig', [
             'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
             'cmsPageView' => $viewData,
-        ];
+        ]);
     }
 
     /**
