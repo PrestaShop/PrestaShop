@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,44 +19,41 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Unit\Core\Crypto;
+namespace Tests\Unit\Core\Crypto;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
-class Core_Crypto_Hashing_Test extends TestCase
+class HashingTest extends TestCase
 {
-    protected function setUp()
-    {
-        if (!defined('_COOKIE_KEY_')) {
-            define('_COOKIE_KEY_', '2349123849231-4123');
-        }
-        $this->hashing = new Hashing();
-    }
-
     public function testSimpleCheckHashMd5()
     {
-        $this->assertTrue($this->hashing->checkHash("123", md5(_COOKIE_KEY_."123"), _COOKIE_KEY_));
-        $this->assertFalse($this->hashing->checkHash("23", md5(_COOKIE_KEY_."123"), _COOKIE_KEY_));
+        $hashing = new Hashing();
+        $salt = '2349123849231-4123';
+
+        $this->assertTrue($hashing->checkHash('123', md5($salt . '123'), $salt));
+        $this->assertFalse($hashing->checkHash('23', md5($salt . '123'), $salt));
     }
 
     public function testSimpleEncrypt()
     {
-        $this->assertInternalType('string', $this->hashing->hash("123", _COOKIE_KEY_));
+        $hashing = new Hashing();
+        $salt = '2349123849231-4123';
+
+        $this->assertInternalType('string', $hashing->hash('123', $salt));
     }
 
     public function testSimpleFirstHash()
     {
-        $this->assertTrue($this->hashing->isFirstHash("123", $this->hashing->hash("123", _COOKIE_KEY_), _COOKIE_KEY_));
-        $this->assertFalse($this->hashing->isFirstHash("123", md5("123", _COOKIE_KEY_), _COOKIE_KEY_));
+        $hashing = new Hashing();
+        $salt = '2349123849231-4123';
+
+        $this->assertTrue($hashing->isFirstHash('123', $hashing->hash('123', $salt), $salt));
+        $this->assertFalse($hashing->isFirstHash('123', md5('123', $salt), $salt));
     }
 }
