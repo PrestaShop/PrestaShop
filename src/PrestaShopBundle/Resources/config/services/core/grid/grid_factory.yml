@@ -97,3 +97,11 @@ services:
         - '@prestashop.core.currency.grid_data_factory'
         - '@prestashop.core.grid.filter.form_factory'
         - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.cms_page_category:
+      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+      arguments:
+        - '@prestashop.core.grid.definition.factory.cms_page_category'
+        - '@prestashop.core.grid.data_provider.cms_page_category'
+        - '@prestashop.core.grid.filter.cms_page_category_form_factory'
+        - '@prestashop.core.hook.dispatcher'
