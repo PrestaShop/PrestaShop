@@ -7,3 +7,7 @@ services:
     arguments:
       - '@templating.engine.twig'
       - '@prestashop.core.mail_template.parameters_builder'
+    calls:
+      - method: 'addTransformation'
+        arguments:
+          - '@prestashop.core.mail_template.transformation.css_inline'
