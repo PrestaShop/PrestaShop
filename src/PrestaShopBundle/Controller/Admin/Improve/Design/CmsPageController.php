@@ -358,6 +358,7 @@ class CmsPageController extends FrameworkBundleAdminController
         $cmsCategoriesToEnable = $request->request->get('cms_page_category_bulk');
 
         try {
+            $cmsCategoriesToEnable = array_map(function ($item){ return (int) $item; }, $cmsCategoriesToEnable);
             $this->getCommandBus()->handle(new BulkEnableCmsPageCategoryCommand($cmsCategoriesToEnable));
 
             $this->addFlash(
@@ -397,6 +398,7 @@ class CmsPageController extends FrameworkBundleAdminController
         $cmsCategoriesToDisable = $request->request->get('cms_page_category_bulk');
 
         try {
+            $cmsCategoriesToDisable = array_map(function ($item){ return (int) $item; }, $cmsCategoriesToDisable);
             $this->getCommandBus()->handle(new BulkDisableCmsPageCategoryCommand($cmsCategoriesToDisable));
 
             $this->addFlash(

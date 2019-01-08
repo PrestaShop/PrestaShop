@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 /**
  * Class BulkEnableCmsPageCategoryCommand is responsible for enabling cms category pages.
  */
-class BulkEnableCmsPageCategoryCommand
+class BulkEnableCmsPageCategoryCommand extends AbstractBulkCmsPageCategoryCommand
 {
     /**
      * @var CmsPageCategoryId[]
@@ -43,14 +43,16 @@ class BulkEnableCmsPageCategoryCommand
     /**
      * @param int[] $cmsPageCategoryIds
      *
-     * @throws CmsPageCategoryConstraintException
      * @throws CmsPageCategoryException
      */
     public function __construct(array $cmsPageCategoryIds)
     {
-        if (empty($cmsPageCategoryIds)) {
+        if ($this->assertIsEmptyOrContainsNonIntegerValues($cmsPageCategoryIds)) {
             throw new CmsPageCategoryConstraintException(
-                'Missing cms page category data for bulk deleting',
+                sprintf(
+                    'Missing cms page category data or array %s contains non integer values for bulk enabling',
+                    var_export($cmsPageCategoryIds, true)
+                ),
                 CmsPageCategoryConstraintException::INVALID_BULK_DATA
             );
         }
@@ -74,7 +76,7 @@ class BulkEnableCmsPageCategoryCommand
     private function setCmsPageCategoryIds(array $cmsPageCategoryIds)
     {
         foreach ($cmsPageCategoryIds as $id) {
-            $this->cmsPageCategoryIds[] = new CmsPageCategoryId((int) $id);
+            $this->cmsPageCategoryIds[] = new CmsPageCategoryId($id);
         }
     }
 }

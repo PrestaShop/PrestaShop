@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 /**
  * Class BulkDisableCmsPageCategoryCommand is responsible for disabling cms category pages.
  */
-class BulkDisableCmsPageCategoryCommand
+class BulkDisableCmsPageCategoryCommand extends AbstractBulkCmsPageCategoryCommand
 {
     /**
      * @var CmsPageCategoryId[]
@@ -48,9 +48,12 @@ class BulkDisableCmsPageCategoryCommand
      */
     public function __construct(array $cmsPageCategoryIds)
     {
-        if (empty($cmsPageCategoryIds)) {
+        if ($this->assertIsEmptyOrContainsNonIntegerValues($cmsPageCategoryIds)) {
             throw new CmsPageCategoryConstraintException(
-                'Missing cms page category data for bulk deleting',
+                sprintf(
+                    'Missing cms page category data or array %s contains non integer values for bulk disabling',
+                    var_export($cmsPageCategoryIds, true)
+                ),
                 CmsPageCategoryConstraintException::INVALID_BULK_DATA
             );
         }
@@ -74,7 +77,7 @@ class BulkDisableCmsPageCategoryCommand
     private function setCmsPageCategoryIds(array $cmsPageCategoryIds)
     {
         foreach ($cmsPageCategoryIds as $id) {
-            $this->cmsPageCategoryIds[] = new CmsPageCategoryId((int) $id);
+            $this->cmsPageCategoryIds[] = new CmsPageCategoryId($id);
         }
     }
 }
