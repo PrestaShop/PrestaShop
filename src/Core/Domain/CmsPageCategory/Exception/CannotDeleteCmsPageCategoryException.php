@@ -39,12 +39,12 @@ class CannotDeleteCmsPageCategoryException extends CmsPageCategoryException
     private $cmsPageCategoryId;
 
     /**
-     * @param CmsPageCategoryId $cmsPageCategoryId
+     * @param int $cmsPageCategoryId
      * @param string $message
      * @param int $code
      * @param null $previous
      */
-    public function __construct(CmsPageCategoryId $cmsPageCategoryId, $message = '', $code = 0, $previous = null)
+    public function __construct($cmsPageCategoryId, $message = '', $code = 0, $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
@@ -52,7 +52,7 @@ class CannotDeleteCmsPageCategoryException extends CmsPageCategoryException
     }
 
     /**
-     * @return CmsPageCategoryId
+     * @return int
      */
     public function getCmsPageCategoryId()
     {
