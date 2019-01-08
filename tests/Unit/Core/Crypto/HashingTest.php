@@ -36,8 +36,8 @@ class HashingTest extends TestCase
         $hashing = new Hashing();
         $salt = '2349123849231-4123';
 
-        $this->assertTrue($hashing->checkHash("123", md5($salt . "123"), $salt));
-        $this->assertFalse($hashing->checkHash("23", md5($salt . "123"), $salt));
+        $this->assertTrue($hashing->checkHash('123', md5($salt . '123'), $salt));
+        $this->assertFalse($hashing->checkHash('23', md5($salt . '123'), $salt));
     }
 
     public function testSimpleEncrypt()
@@ -45,7 +45,7 @@ class HashingTest extends TestCase
         $hashing = new Hashing();
         $salt = '2349123849231-4123';
 
-        $this->assertInternalType('string', $hashing->hash("123", $salt));
+        $this->assertInternalType('string', $hashing->hash('123', $salt));
     }
 
     public function testSimpleFirstHash()
@@ -53,7 +53,7 @@ class HashingTest extends TestCase
         $hashing = new Hashing();
         $salt = '2349123849231-4123';
 
-        $this->assertTrue($hashing->isFirstHash("123", $hashing->hash("123", $salt), $salt));
-        $this->assertFalse($hashing->isFirstHash("123", md5("123", $salt), $salt));
+        $this->assertTrue($hashing->isFirstHash('123', $hashing->hash('123', $salt), $salt));
+        $this->assertFalse($hashing->isFirstHash('123', md5('123', $salt), $salt));
     }
 }
