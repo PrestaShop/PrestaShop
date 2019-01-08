@@ -34,7 +34,7 @@ then
 
   echo "Running PHP CS Fixer..."
 
-  $PHP_BINARY $CS_FIXER --verbose --dry-run --show-progress=dots
+  $PHP_BINARY $CS_FIXER --dry-run
 
   if [ $? != 0 ]
   then
@@ -45,7 +45,6 @@ then
     php $CS_FIXER
 
     "
-
     exit 2
   fi
 
