@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 
 /**
@@ -39,11 +40,13 @@ class DeleteSupplierCommand
     private $supplierId;
 
     /**
-     * @param SupplierId $supplierId
+     * @param int $supplierId
+     *
+     * @throws SupplierException
      */
-    public function __construct(SupplierId $supplierId)
+    public function __construct($supplierId)
     {
-        $this->supplierId = $supplierId;
+        $this->supplierId = new SupplierId($supplierId);
     }
 
     /**

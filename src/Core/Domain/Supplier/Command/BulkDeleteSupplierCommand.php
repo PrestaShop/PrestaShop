@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 /**
  * Class BulkDeleteSupplierCommand is responsible for deleting multiple suppliers.
  */
-class BulkDeleteSupplierCommand
+class BulkDeleteSupplierCommand extends AbstractBulkSupplierCommand
 {
     /**
      * @var SupplierId[]
@@ -48,10 +48,13 @@ class BulkDeleteSupplierCommand
      */
     public function __construct(array $supplierIds)
     {
-        if (empty($supplierIds)) {
+        if ($this->assertIsEmptyOrContainsNonIntegerValues($supplierIds)) {
             throw new SupplierConstraintException(
-                'Missing supplier data for bulk deleting',
-                SupplierConstraintException::MISSING_BULK_DATA
+                sprintf(
+                    'Missing supplier data or array %s contains non integer values for bulk deleting',
+                    var_export($supplierIds, true)
+                ),
+                SupplierConstraintException::INVALID_BULK_DATA
             );
         }
 

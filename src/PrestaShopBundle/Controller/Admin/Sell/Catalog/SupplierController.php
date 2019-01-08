@@ -138,8 +138,7 @@ class SupplierController extends FrameworkBundleAdminController
     public function deleteAction($supplierId)
     {
         try {
-            $supplierId = new SupplierId($supplierId);
-            $this->getCommandBus()->handle(new DeleteSupplierCommand($supplierId));
+            $this->getCommandBus()->handle(new DeleteSupplierCommand((int) $supplierId));
 
             $this->addFlash(
                 'success',
@@ -173,6 +172,7 @@ class SupplierController extends FrameworkBundleAdminController
         $suppliersToDelete = $request->request->get('suppliers_bulk');
 
         try {
+            $suppliersToDelete = array_map(function ($item){ return (int) $item; }, $suppliersToDelete);
             $this->getCommandBus()->handle(new BulkDeleteSupplierCommand($suppliersToDelete));
 
             $this->addFlash(
@@ -207,6 +207,7 @@ class SupplierController extends FrameworkBundleAdminController
         $suppliersToDisable = $request->request->get('suppliers_bulk');
 
         try {
+            $suppliersToDisable = array_map(function ($item){ return (int) $item; }, $suppliersToDisable);
             $this->getCommandBus()->handle(new BulkDisableSupplierCommand($suppliersToDisable));
             $this->addFlash(
                 'success',
@@ -237,10 +238,11 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function bulkEnableAction(Request $request)
     {
-        $suppliersToDisable = $request->request->get('suppliers_bulk');
+        $suppliersToEnable = $request->request->get('suppliers_bulk');
 
         try {
-            $this->getCommandBus()->handle(new BulkEnableSupplierCommand($suppliersToDisable));
+            $suppliersToEnable = array_map(function ($item){ return (int) $item; }, $suppliersToEnable);
+            $this->getCommandBus()->handle(new BulkEnableSupplierCommand($suppliersToEnable));
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
@@ -294,8 +296,7 @@ class SupplierController extends FrameworkBundleAdminController
     public function toggleStatusAction($supplierId)
     {
         try {
-            $supplierId = new SupplierId($supplierId);
-            $this->getCommandBus()->handle(new ToggleSupplierStatusCommand($supplierId));
+            $this->getCommandBus()->handle(new ToggleSupplierStatusCommand((int) $supplierId));
 
             $this->addFlash(
                 'success',
@@ -409,7 +410,7 @@ class SupplierController extends FrameworkBundleAdminController
                 'Can\'t delete #%id%',
                 'Admin.Notifications.Error',
                 [
-                    '%id%' => $exception->getSupplierId()->getValue(),
+                    '%id%' => $exception->getSupplierId(),
                 ]
             );
         }
@@ -433,7 +434,7 @@ class SupplierController extends FrameworkBundleAdminController
     {
         $exceptionConstraintDictionary = [
             SupplierConstraintException::class => [
-                SupplierConstraintException::MISSING_BULK_DATA => $this->trans(
+                SupplierConstraintException::INVALID_BULK_DATA => $this->trans(
                     'You must select at least one element to delete.',
                     'Admin.Notifications.Error'
                 ),
