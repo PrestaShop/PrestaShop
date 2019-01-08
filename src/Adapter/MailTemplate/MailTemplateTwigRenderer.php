@@ -45,6 +45,9 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /** @var MailTemplateParametersBuilderInterface */
     private $parametersBuilder;
 
+    /** @var MailTemplateTransformationInterface[] */
+    private $transformations;
+
     /**
      * @param EngineInterface $engine
      * @param MailTemplateParametersBuilderInterface $parametersBuilder
@@ -55,6 +58,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     ) {
         $this->engine = $engine;
         $this->parametersBuilder = $parametersBuilder;
+        $this->transformations = [];
     }
 
     /**
@@ -67,7 +71,17 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     {
         $parameters = $this->parametersBuilder->buildParameters($template, $language);
 
-        return $this->engine->render($template->getPath(), $parameters);
+        $renderedTemplate = $this->engine->render($template->getPath(), $parameters);
+        /** @var MailTemplateTransformationInterface $transformation */
+        foreach ($this->transformations as $transformation) {
+            $renderedTemplate = $transformation
+                ->setTemplate($template)
+                ->setLanguage($language)
+                ->apply($renderedTemplate, $parameters)
+            ;
+        }
+
+        return $renderedTemplate;
     }
 
     /**
@@ -75,6 +89,8 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      */
     public function addTransformation(MailTemplateTransformationInterface $transformer)
     {
-        // TODO: Implement addTransformation() method.
+        $this->transformations[] = $transformer;
+
+        return $this;
     }
 }
