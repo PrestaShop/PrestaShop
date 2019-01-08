@@ -64,7 +64,7 @@ class MetaDataProvider implements MetaDataProviderInterface
         $query = new DbQuery();
         $query->select('`page`');
         $query->from('meta');
-        $query->where('`id_meta`='.(int) $metaId);
+        $query->where('`id_meta`=' . (int) $metaId);
         $query->where('`page` NOT LIKE "module-%"');
         $result = Db::getInstance()->getValue($query);
 
@@ -83,7 +83,7 @@ class MetaDataProvider implements MetaDataProviderInterface
         $query = new DbQuery();
         $query->select('`page`');
         $query->from('meta');
-        $query->where('`id_meta`='.(int) $metaId);
+        $query->where('`id_meta`=' . (int) $metaId);
         $query->where('`page` LIKE "module-%"');
 
         $result = Db::getInstance()->getValue($query);
@@ -136,7 +136,8 @@ class MetaDataProvider implements MetaDataProviderInterface
      *
      * @return bool
      */
-    private function isModuleFile($fileName) {
+    private function isModuleFile($fileName)
+    {
         return 0 === strncmp($fileName, 'module-', 7);
     }
 }

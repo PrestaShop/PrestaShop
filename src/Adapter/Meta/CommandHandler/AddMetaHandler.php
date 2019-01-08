@@ -132,7 +132,6 @@ final class AddMetaHandler implements AddMetaHandlerInterface
                     sprintf('Invalid entity id after creation: %s', $entity->id)
                 );
             }
-
         } catch (PrestaShopException $exception) {
             throw new MetaException(
                 'Failed to create meta entity',

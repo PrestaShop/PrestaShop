@@ -35,7 +35,6 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -77,10 +76,8 @@ class MetaType extends AbstractType
         $builder
             ->add('page_name', ChoiceType::class, [
                 'choices' => [
-                    $this->trans('Default pages',[],  'Admin.Shopparameters.Feature') =>
-                        $this->defaultPageChoices,
-                    $this->trans('Module pages',[],  'Admin.Shopparameters.Feature') =>
-                        $this->modulePageChoices,
+                    $this->trans('Default pages', [], 'Admin.Shopparameters.Feature') => $this->defaultPageChoices,
+                    $this->trans('Module pages', [], 'Admin.Shopparameters.Feature') => $this->modulePageChoices,
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -98,8 +95,8 @@ class MetaType extends AbstractType
                             '%s is invalid.',
                             [],
                             'Admin.Notifications.Error'
-                        )
-                    ])
+                        ),
+                    ]),
                 ],
                 'choice_translation_domain' => false,
             ])
@@ -112,7 +109,7 @@ class MetaType extends AbstractType
                                 '%s is invalid.',
                                 [],
                                 'Admin.Notifications.Error'
-                            )
+                            ),
                         ]),
                     ],
                     'required' => false,
@@ -127,7 +124,7 @@ class MetaType extends AbstractType
                                 '%s is invalid.',
                                 [],
                                 'Admin.Notifications.Error'
-                            )
+                            ),
                         ]),
                     ],
                     'required' => false,
@@ -142,12 +139,12 @@ class MetaType extends AbstractType
                                 '%s is invalid.',
                                 [],
                                 'Admin.Notifications.Error'
-                            )
+                            ),
                         ]),
                     ],
                     'attr' => [
                         'class' => 'js-token-field',
-                        'placeholder' => $this->trans('Add tag', [],  'Admin.Actions'),
+                        'placeholder' => $this->trans('Add tag', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ],
@@ -156,7 +153,7 @@ class MetaType extends AbstractType
                 'options' => [
                     'constraints' => [
                         new IsUrlRewrite(),
-                    ]
+                    ],
                 ],
             ])
         ;
@@ -174,7 +171,7 @@ class MetaType extends AbstractType
                     'options' => [
                         'constraints' => [
                             new IsUrlRewrite(),
-                        ]
+                        ],
                     ],
                 ]);
             }

@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\EditableMeta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
  * Class MetaFormDataProvider is responsible for providing required data for meta form.

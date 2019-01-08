@@ -37,8 +37,6 @@ interface EditMetaHandlerInterface
      * Handles meta entity editing.
      *
      * @param EditMetaCommand $command
-     *
-     * @return void
      */
     public function handle(EditMetaCommand $command);
 }

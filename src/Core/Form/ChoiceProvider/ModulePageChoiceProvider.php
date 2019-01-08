@@ -87,7 +87,7 @@ final class ModulePageChoiceProvider implements FormChoiceProviderInterface
 
         $metaId = null;
         if (null !== $currentRequest) {
-            $metaId =$currentRequest->attributes->get('metaId');
+            $metaId = $currentRequest->attributes->get('metaId');
         }
 
         $page = '';

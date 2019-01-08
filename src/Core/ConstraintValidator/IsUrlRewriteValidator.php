@@ -80,6 +80,7 @@ class IsUrlRewriteValidator extends ConstraintValidator
      * Validates url rewrite according the patterns which vary based on ascended chars allowed setting.
      *
      * @param string $urlRewrite
+     *
      * @return false|int
      */
     private function isUrlRewriteValid($urlRewrite)

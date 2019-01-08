@@ -86,8 +86,6 @@ class MetaController extends FrameworkBundleAdminController
 
         $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');
 
-
-
         $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
 
@@ -189,7 +187,6 @@ class MetaController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param int $metaId
-     *
      * @param Request $request
      *
      * @return Response
@@ -396,8 +393,7 @@ class MetaController extends FrameworkBundleAdminController
     {
         $exceptionDictionary = [
             MetaConstraintException::class => [
-                MetaConstraintException::INVALID_URL_REWRITE =>
-                    $this->trans(
+                MetaConstraintException::INVALID_URL_REWRITE => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -406,8 +402,7 @@ class MetaController extends FrameworkBundleAdminController
                                 $this->trans('Rewritten URL', 'Admin.Shopparameters.Feature')),
                         ]
                     ),
-                MetaConstraintException::INVALID_PAGE_NAME =>
-                    $this->trans(
+                MetaConstraintException::INVALID_PAGE_NAME => $this->trans(
                         'The %s field is required.',
                         'Admin.Notifications.Error',
                         [
@@ -416,8 +411,7 @@ class MetaController extends FrameworkBundleAdminController
                                 $this->trans('Page name', 'Admin.Shopparameters.Feature')),
                         ]
                     ),
-                MetaConstraintException::INVALID_PAGE_TITLE =>
-                    $this->trans(
+                MetaConstraintException::INVALID_PAGE_TITLE => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -426,8 +420,7 @@ class MetaController extends FrameworkBundleAdminController
                                 $this->trans('Page title', 'Admin.Shopparameters.Feature')),
                         ]
                     ),
-                MetaConstraintException::INVALID_META_DESCRIPTION =>
-                    $this->trans(
+                MetaConstraintException::INVALID_META_DESCRIPTION => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -436,8 +429,7 @@ class MetaController extends FrameworkBundleAdminController
                                 $this->trans('Meta description', 'Admin.Global')),
                         ]
                     ),
-                MetaConstraintException::INVALID_META_KEYWORDS =>
-                    $this->trans(
+                MetaConstraintException::INVALID_META_KEYWORDS => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
@@ -452,7 +444,6 @@ class MetaController extends FrameworkBundleAdminController
         $exceptionClass = get_class($exception);
         $exceptionCode = $exception->getCode();
         if (isset($exceptionDictionary[$exceptionClass][$exceptionCode])) {
-
             return $exceptionDictionary[$exceptionClass][$exceptionCode];
         }
 
@@ -477,7 +468,6 @@ class MetaController extends FrameworkBundleAdminController
 
         $exceptionClass = get_class($exception);
         if (isset($exceptionDictionary[$exceptionClass])) {
-
             return $exceptionDictionary[$exceptionClass];
         }
 
