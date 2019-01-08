@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.mail_template.twig_renderer:
+    class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer'
+    arguments:
+      - '@templating.engine.twig'
+      - '@prestashop.core.mail_template.parameters_builder'
