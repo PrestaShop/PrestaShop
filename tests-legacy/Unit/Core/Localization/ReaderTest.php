@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Unit\Core\Localization\CLDR;
+namespace LegacyTests\Unit\Core\Localization;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
@@ -61,7 +61,7 @@ class ReaderTest extends TestCase
 
         $this->assertInstanceOf(LocaleData::class, $localeData);
 
-        $dns = $localeData->defaultNumberingSystem;
+        $dns = $localeData->getDefaultNumberingSystem();
 
         $this->assertEquals(
             $expectedData['defaultNumberingSystem'],
@@ -70,22 +70,22 @@ class ReaderTest extends TestCase
         );
         $this->assertEquals(
             $expectedData['digitsGroupSeparator'],
-            $localeData->numberSymbols[$dns]->group,
+            $localeData->getNumberSymbols()[$dns]->getGroup(),
             'Wrong group separator'
         );
         $this->assertEquals(
             $expectedData['decimalSeparator'],
-            $localeData->numberSymbols[$dns]->decimal,
+            $localeData->getNumberSymbols()[$dns]->getDecimal(),
             'Wrong decimal separator'
         );
         $this->assertEquals(
             $expectedData['decimalPattern'],
-            $localeData->decimalPatterns[$dns],
+            $localeData->getDecimalPatterns()[$dns],
             'Wrong decimal pattern'
         );
         $this->assertEquals(
             $expectedData['currencyPattern'],
-            $localeData->currencyPatterns[$dns],
+            $localeData->getCurrencyPatterns()[$dns],
             'Wrong currency pattern'
         );
     }
