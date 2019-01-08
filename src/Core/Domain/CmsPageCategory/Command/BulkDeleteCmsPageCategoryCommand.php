@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 /**
  * Class BulkDeleteCmsPageCategoryCommand is responsible for deleting multiple cms page categories.
  */
-class BulkDeleteCmsPageCategoryCommand
+class BulkDeleteCmsPageCategoryCommand extends AbstractBulkCmsPageCategoryCommand
 {
     /**
      * @var CmsPageCategoryId[]
@@ -47,7 +47,16 @@ class BulkDeleteCmsPageCategoryCommand
      */
     public function __construct(array $cmsPageCategoryIds)
     {
-        $this->assertIsEmptyOrContainsNonIntegerValues($cmsPageCategoryIds);
+        if ($this->assertIsEmptyOrContainsNonIntegerValues($cmsPageCategoryIds)) {
+            throw new CmsPageCategoryConstraintException(
+                sprintf(
+                    'Missing cms page category data or array %s contains non integer values for bulk deleting',
+                    var_export($cmsPageCategoryIds, true)
+                ),
+                CmsPageCategoryConstraintException::INVALID_BULK_DATA
+            );
+        }
+
         $this->setCmsPageCategoryIds($cmsPageCategoryIds);
     }
 
@@ -57,24 +66,6 @@ class BulkDeleteCmsPageCategoryCommand
     public function getCmsPageCategoryIds()
     {
         return $this->cmsPageCategoryIds;
-    }
-
-    /**
-     * @param array $cmsPageCategoryIds
-     *
-     * @throws CmsPageCategoryConstraintException
-     */
-    private function assertIsEmptyOrContainsNonIntegerValues(array $cmsPageCategoryIds)
-    {
-        if (empty($cmsPageCategoryIds) || $cmsPageCategoryIds !== array_filter($cmsPageCategoryIds, 'is_int')) {
-            throw new CmsPageCategoryConstraintException(
-                sprintf(
-                    'Missing cms page category data or array %s contains non integer values for bulk deleting',
-                    var_export($cmsPageCategoryIds, true)
-                ),
-                CmsPageCategoryConstraintException::INVALID_BULK_DATA
-            );
-        }
     }
 
     /**
