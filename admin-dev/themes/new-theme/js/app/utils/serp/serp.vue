@@ -26,9 +26,9 @@
 <template>
   <div id="serp"">
     <div class="serp-preview">
-      <div class="serp-title">{{title}}</div>
-      <div class="serp-url">{{url}}<span class="serp-arrow"></span></div>
-      <div class="serp-description">{{description}}</div>
+      <div class="serp-title">{{ displayedTitle }}</div>
+      <div class="serp-url">{{ url }}<span class="serp-arrow"></span></div>
+      <div class="serp-description">{{ displayedDescription }}</div>
     </div>
   </div>
 </template>
@@ -36,37 +36,40 @@
 <script>
   export default {
     name: 'serp',
-    props: {
-        title: {
-          type: String,
-          default: '',
-        },
-        url: {
-          type: String,
-          default: 'http://example.com/',
-        },
-        description: {
-          type: String,
-          default: '',
-        },
+    data() {
+      return {
+        title: '',
+        url: 'http://example.com/',
+        description: '',
+      };
+    },
+    computed: {
+      displayedTitle() {
+        if (this.title.length > 70) {
+          return `${this.title.substring(0, 70)}...`;
+        }
+
+        return this.title;
+      },
+      displayedDescription() {
+        if (this.description.length > 150) {
+          return `${this.description.substring(0, 150)}...`;
+        }
+
+        return this.description;
+      },
     },
     methods: {
-        setTitle(title) {
-            if(title.length > 70) {
-                title = title.substring(0, 70) + ' ...';
-            }
-            this.title = title;
-        },
-        setUrl(url) {
-            this.url = url;
-        },
-        setDescription(description) {
-            if(description.length > 150) {
-                description = description.substring(0, 150) + ' ...';
-            }
-            this.description = description;
-        }
-    }
+      setTitle(title) {
+        this.title = title;
+      },
+      setUrl(url) {
+        this.url = url;
+      },
+      setDescription(description) {
+        this.description = description;
+      },
+    },
   };
 </script>
 
