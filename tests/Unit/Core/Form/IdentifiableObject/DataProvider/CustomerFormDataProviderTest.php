@@ -26,7 +26,6 @@
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -98,7 +97,7 @@ class CustomerFormDataProviderTest extends TestCase
                 $this->returnValueMap([
                     [
                         'PS_CUSTOMER_GROUP', 3,
-                    ]
+                    ],
                 ])
             )
         ;

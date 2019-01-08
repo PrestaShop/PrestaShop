@@ -32,7 +32,7 @@ use PHPUnit_Framework_TestSuite;
 class ErrorsDataListener extends BaseTestListener
 {
     /**
-     * @var PhpErrorsCounter a dedicated error handler.
+     * @var PhpErrorsCounter a dedicated error handler
      */
     private $errorsCounter;
 
@@ -56,7 +56,7 @@ class ErrorsDataListener extends BaseTestListener
 
     public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
-        $this->suites++;
+        ++$this->suites;
         if (!$this->isRegistered) {
             $this->errorsCounter->registerErrorHandler();
             $this->isRegistered = true;
@@ -65,7 +65,7 @@ class ErrorsDataListener extends BaseTestListener
 
     public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
-        $this->suites--;
+        --$this->suites;
 
         if ($this->suites === 0) {
             printf(PHP_EOL . PHP_EOL . 'Current report of phpErrorsHandler:');

@@ -41,7 +41,7 @@ class PhpErrorsCounter
     public function registerErrorHandler()
     {
         set_error_handler(function ($errorType) {
-            switch($errorType) {
+            switch ($errorType) {
                 case E_WARNING:
                     $this->warnings++;
                 break;
@@ -99,7 +99,7 @@ class PhpErrorsCounter
     }
 
     /**
-     * @return string a summary report of errors.
+     * @return string a summary report of errors
      */
     public function displaySummary()
     {
