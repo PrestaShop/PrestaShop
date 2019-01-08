@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -36,6 +37,8 @@ class ThemeCatalogController extends FrameworkBundleAdminController
 {
     /**
      * Displays themes from Addons under "Improve > Design > Themes Catalog".
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
