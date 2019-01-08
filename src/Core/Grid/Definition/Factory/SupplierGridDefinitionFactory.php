@@ -53,26 +53,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
-     * @var string
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectActionUrl;
-
-    /**
-     * @param string $resetActionUrl
-     * @param string $redirectActionUrl
-     */
-    public function __construct($resetActionUrl, $redirectActionUrl)
-    {
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectActionUrl = $redirectActionUrl;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function getId()
