@@ -208,10 +208,14 @@ class MetaController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_meta_index');
             }
-        } catch (MetaException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (MetaNotFoundException $e) {
+            $this->addFlash(
+                'error',
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+            );
 
             return $this->redirectToRoute('admin_meta_index');
+        } catch (MetaException $e) {
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/edit.html.twig', [
