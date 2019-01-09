@@ -1,4 +1,10 @@
 #!/bin/bash
+#
+# DO NOT EXECUTE THIS SCRIPT ON YOUR COMPUTER
+#
+# This script exists only because of Google compute instance.
+# Otherwise it will shutdown your computer.
+#
 
 BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/TRAVIS_BRANCH -H "Metadata-Flavor: Google")
 DIR_PATH=$(mktemp -d)
