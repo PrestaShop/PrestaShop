@@ -36,26 +36,26 @@ class ScheduleExchangeRatesUpdateCommand
     /**
      * @var bool
      */
-    private $isExchangeRateEnabled;
+    private $exchangeRateStatus;
 
     /**
-     * @param bool $isExchangeRateEnabled
+     * @param bool $exchangeRateStatus
      *
      * @throws CurrencyConstraintException
      */
-    public function __construct($isExchangeRateEnabled)
+    public function __construct($exchangeRateStatus)
     {
-        $this->assertIsBool($isExchangeRateEnabled);
+        $this->assertIsBool($exchangeRateStatus);
 
-        $this->isExchangeRateEnabled = $isExchangeRateEnabled;
+        $this->exchangeRateStatus = $exchangeRateStatus;
     }
 
     /**
      * @return bool
      */
-    public function isExchangeRateEnabled()
+    public function exchangeRateStatus()
     {
-        return $this->isExchangeRateEnabled;
+        return $this->exchangeRateStatus;
     }
 
     /**
