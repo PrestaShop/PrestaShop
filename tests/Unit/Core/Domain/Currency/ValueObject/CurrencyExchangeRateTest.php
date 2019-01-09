@@ -53,22 +53,10 @@ class CurrencyExchangeRateTest extends TestCase
                 0
             ],
             [
-                -1,
-            ],
-            [
-                '0',
-            ],
-            [
                 '-1',
             ],
             [
                 '4.294.967.295,000',
-            ],
-            [
-                null,
-            ],
-            [
-                [],
             ],
         ];
     }
