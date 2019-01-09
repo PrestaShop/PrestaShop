@@ -145,7 +145,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
      *
      * @throws InvalidArgumentException
      */
-    protected function checkElementsType(array $elements)
+    private function checkElementsType(array $elements)
     {
         foreach ($elements as $element) {
             $this->checkElementType($element);
@@ -157,7 +157,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
      *
      * @throws InvalidArgumentException
      */
-    protected function checkElementType($element)
+    private function checkElementType($element)
     {
         $expectedType = $this->getType();
         if (!($element instanceof $expectedType)) {
