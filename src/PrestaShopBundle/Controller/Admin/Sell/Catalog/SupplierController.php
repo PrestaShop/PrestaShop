@@ -172,7 +172,7 @@ class SupplierController extends FrameworkBundleAdminController
         $suppliersToDelete = $request->request->get('suppliers_bulk');
 
         try {
-            $suppliersToDelete = array_map(function ($item){ return (int) $item; }, $suppliersToDelete);
+            $suppliersToDelete = array_map(function ($item) { return (int) $item; }, $suppliersToDelete);
             $this->getCommandBus()->handle(new BulkDeleteSupplierCommand($suppliersToDelete));
 
             $this->addFlash(
@@ -207,7 +207,7 @@ class SupplierController extends FrameworkBundleAdminController
         $suppliersToDisable = $request->request->get('suppliers_bulk');
 
         try {
-            $suppliersToDisable = array_map(function ($item){ return (int) $item; }, $suppliersToDisable);
+            $suppliersToDisable = array_map(function ($item) { return (int) $item; }, $suppliersToDisable);
             $this->getCommandBus()->handle(new BulkDisableSupplierCommand($suppliersToDisable));
             $this->addFlash(
                 'success',
@@ -241,7 +241,7 @@ class SupplierController extends FrameworkBundleAdminController
         $suppliersToEnable = $request->request->get('suppliers_bulk');
 
         try {
-            $suppliersToEnable = array_map(function ($item){ return (int) $item; }, $suppliersToEnable);
+            $suppliersToEnable = array_map(function ($item) { return (int) $item; }, $suppliersToEnable);
             $this->getCommandBus()->handle(new BulkEnableSupplierCommand($suppliersToEnable));
             $this->addFlash(
                 'success',
