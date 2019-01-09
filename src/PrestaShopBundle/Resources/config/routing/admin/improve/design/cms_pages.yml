@@ -9,8 +9,11 @@ admin_cms_pages_search_cms_category:
     path: /category/search
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:searchCategory'
-        _legacy_controller: AdminCmsContent
+        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        gridDefinitionFactoryService: prestashop.core.grid.definition.factory.cms_page_category
+        redirectRoute: admin_cms_pages_index
+        redirectQueryParamsToKeep:
+          - 'id_cms_category'
 
 admin_cms_pages_create_cms_category:
     path: /category/new

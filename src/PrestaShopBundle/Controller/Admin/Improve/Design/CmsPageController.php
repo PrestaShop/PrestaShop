@@ -88,34 +88,6 @@ class CmsPageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Implements filtering for the cms page category list.
-     *
-     * @param int $cmsCategoryParentId
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchCategoryAction($cmsCategoryParentId, Request $request)
-    {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.cms_page_category');
-        $definitionFactory = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $searchParametersForm = $gridFilterFormFactory->create($definitionFactory);
-        $searchParametersForm->handleRequest($request);
-
-        $filters = [];
-        if ($searchParametersForm->isSubmitted()) {
-            $filters = $searchParametersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_cms_pages_index', [
-            'cmsCategoryParentId' => $cmsCategoryParentId,
-            'filters' => $filters,
-        ]);
-    }
-
-    /**
      * Displays cms category page form and handles create new cms page category logic.
      *
      * @AdminSecurity(
@@ -132,7 +104,6 @@ class CmsPageController extends FrameworkBundleAdminController
     public function createCmsCategoryAction($cmsCategoryParentId)
     {
 //        todo: remove legacy parts once form is ready and demoRestricted on post action
-        //todo: demo restricted on post action
         $legacyLink = $this->getAdminLink('AdminCmsContent', [
             'addcms_category' => 1,
         ]);
