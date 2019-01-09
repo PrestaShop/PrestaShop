@@ -40,30 +40,30 @@ export default class ExchangeRatesUpdateScheduler {
    * @private
    */
   _initLiveExchangeRate(event) {
-    const $switch = $(event.currentTarget);
-    const $form = $switch.closest('form');
+    const $liveExchangeRatesSwitch = $(event.currentTarget);
+    const $form = $liveExchangeRatesSwitch.closest('form');
     const formItems = $form.serialize();
 
     $.ajax({
       type: 'POST',
-      url: $switch.attr('data-url'),
+      url: $liveExchangeRatesSwitch.attr('data-url'),
       data: formItems,
     })
       .then((response) => {
         if (!response.status) {
           showErrorMessage(response.message);
-          this._changeTextByCurrentSwitchValue($switch.val());
+          this._changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
 
           return;
         }
 
         showSuccessMessage(response.message);
-        this._changeTextByCurrentSwitchValue($switch.val());
+        this._changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
       }
     ).fail((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);
-        this._changeTextByCurrentSwitchValue($switch.val());
+        this._changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
       }
     });
   }
