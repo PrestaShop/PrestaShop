@@ -24,6 +24,19 @@
  *}
 {extends file=$layout}
 
+{block name='head' append}
+  <meta property="og:type" content="article">
+  <meta property="og:updated_time" content="{$category.date_upd}">
+  <meta property="article:published_time" content="{$category.date_add}">
+  <meta property="og:url" content="{$page.canonical}">
+  <meta property="og:title" content="{$category.meta_title}">
+  <meta property="og:description" content="{$category.meta_description}">
+  <meta property="article:tag" content="{$category.meta_keywords}">
+  <meta property="og:image" content="{$category.image.large.url}">
+  <meta property="og:image:width" content="{$category.image.large.width}">
+  <meta property="og:image:height" content="{$category.image.large.height}">
+{/block}
+
 {block name='content'}
   <section id="main">
 
