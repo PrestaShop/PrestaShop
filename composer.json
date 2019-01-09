@@ -116,6 +116,7 @@
         }
     ],
     "require-dev": {
+        "behat/behat": "^3.5",
         "friendsofphp/php-cs-fixer": "^2.12",
         "johnkary/phpunit-speedtrap": "^1.1",
         "phake/phake": "@stable",
@@ -183,6 +184,9 @@
         "phpunit-controllers": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
+        ],
+        "integration-domain-tests": [
+            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Domain/behat.yml"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",
