@@ -27,7 +27,7 @@
               {% endif %}
 
               <div class="mt-4">
-                <button class="btn btn-outline-primary mr-1">
+                <button class="btn btn-outline-primary mr-1 js-go-back-btn" type="button">
                   {{ 'Back to previous page' }}
                 </button>
                 <button class="btn btn-primary">
@@ -40,4 +40,8 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="{{ asset('themes/new-theme/public/error.bundle.js') }}"></script>
 {% endblock %}
