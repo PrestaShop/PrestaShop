@@ -60,7 +60,7 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
             $data['active']
         );
 
-        $command->setShopIds(!is_array($data['shop_association']) ? [] : $data['shop_association']);
+        $command->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : []);
 
         /** @var CurrencyId $currencyId */
         $currencyId = $this->commandBus->handle($command);
@@ -79,7 +79,7 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
             ->setExchangeRate((float) $data['exchange_rate'])
             ->setIsEnabled($data['active'])
             ->setIsoCode($data['iso_code'])
-            ->setShopIds(!is_array($data['shop_association']) ? [] : $data['shop_association'])
+            ->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : [])
         ;
 
         /** @var CurrencyId $currencyId */
