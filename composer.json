@@ -185,8 +185,8 @@
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
         ],
-        "integration-domain-tests": [
-            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Domain/behat.yml"
+        "integration-behaviour-tests": [
+            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",
