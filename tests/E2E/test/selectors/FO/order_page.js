@@ -60,7 +60,8 @@ module.exports = {
     display_after_carrier_second_link_widget: '//*[@id="hook-display-after-carrier"]//div[2]/p',
     modal_content: '//*[@id="blockcart-modal"]//div[@class="modal-content"]',
     cart_page: '//*[@id="cart"]',
-    cart_body: '(//*[@id="main"]//div[contains(@class, "body")])[1]'
+    cart_body: '(//*[@id="main"]//div[contains(@class, "body")])[1]',
+    country_list: '//*[@id="delivery-address"]//select[@name="id_country"]'
   },
   CustomerAccount: {
     order_history_button: '//*[@id="history-link"]',

@@ -243,6 +243,13 @@ class CommonClient {
           .then(() => this.client.getText(selector))
           .then((text) => expect(text).to.not.equal(textToCheckWith));
         break;
+      case "greaterThan":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 9000)
+          .then(() => this.client.getText(selector))
+          .then((text) => expect(parseInt(text)).to.be.gt(textToCheckWith));
+        break;
     }
   }
 
@@ -712,6 +719,10 @@ class CommonClient {
       .then(() => {
         expect(global.upgradeError, "Upgrade process done, but some warnings/errors have been found").to.equal(-1)
       });
+  }
+
+  signOutWithoutCookiesFO(selector) {
+    return this.client.signOutWithoutCookiesFO(selector);
   }
 }
 

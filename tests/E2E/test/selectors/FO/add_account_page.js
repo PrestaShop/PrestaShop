@@ -48,6 +48,21 @@ module.exports = {
     add_new_address: '//*[@id="checkout-addresses-step"]//p[@class="add-address"]/a',
     //---------------------- address management -------------------------//
     address_firstname_input: '//*[@class="js-address-form"]//input[@name="firstname"]',
-    address_lastname_input: '//*[@class="js-address-form"]//input[@name="lastname"]'
+    address_lastname_input: '//*[@class="js-address-form"]//input[@name="lastname"]',
+    delete_address_button: '(//*[@id="main"]//article[@class="address"])[1]//a[@data-link-action="delete-address"]',
+    address_block: 'article.address',
+    create_new_address_button: '//*[@id="content"]//a[@data-link-action="add-address"]',
+    country_list: '//*[@id="content"]//select[@name="id_country"]',
+    country_option: '//*[@id="content"]//select[@name="id_country"]//option[text()="%B"]',
+    last_name_input: '//*[@id="content"]//input[@name="lastname"]',
+    first_name_input: '//*[@id="content"]//input[@name="firstname"]',
+    address1_input: '//*[@id="content"]//input[@name="address1"]',
+    address2_input: '//*[@id="content"]//input[@name="address2"]',
+    dni_input: '//*[@id="content"]//input[@name="dni"]',
+    poste_code_input: '//*[@id="content"]//input[@name="postcode"]',
+    city_input: '//*[@id="content"]//input[@name="city"]',
+    phone_input: '//*[@id="content"]//input[@name="phone"]',
+    date_birthday_input: '//*[@id="content"]//input[@name="birthday"]',
+    personal_information_tab: '//*[@id="checkout-personal-information-step"]/h1'
   }
 };
