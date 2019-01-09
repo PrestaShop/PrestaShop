@@ -250,6 +250,7 @@ module.exports = {
     tax_rule: '//*[@id="select2-step2_id_tax_rules_group_rendered-container"]',
     category_checkbox:'(//*[@id="form_step1_categories"]//label[text()[contains(.,"%CATEGORY")]]/input[1])[1]',
     category_label:'//*[@id="form_step1_categories"]//label[text()[contains(.,"%CATEGORY")]]',
+    brand_option:'//*[@id="select2-form_step1_id_manufacturer-results"]/li[contains(text(),"%BRAND")]',
   },
   ProductList: {
     product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',
