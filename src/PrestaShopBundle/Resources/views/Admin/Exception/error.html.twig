@@ -30,9 +30,13 @@
                 <button class="btn btn-outline-primary mr-1 js-go-back-btn" type="button">
                   {{ 'Back to previous page' }}
                 </button>
-                <button class="btn btn-primary">
-                  {{ 'Enable debug mode' }}
-                </button>
+                <form action="{{ path('admin_errors_enable_debug_mode') }}" method="post" class="d-inline">
+                  <input type="hidden" name="_redirect_url" value="{{ app.request.requestUri }}">
+
+                  <button class="btn btn-primary" type="submit">
+                    {{ 'Enable debug mode' }}
+                  </button>
+                </form>
               </div>
             </div>
           </div>
