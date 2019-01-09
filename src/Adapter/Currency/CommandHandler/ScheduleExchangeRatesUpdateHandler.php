@@ -136,7 +136,7 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
 
         try {
             if ($thereIsOneCronRunning && $command->exchangeRateStatus()) {
-                $this->resetCronConfiguration($cronId);
+                $this->removeConfigurationIfNotFoundOrIsDeactivated($cronId);
             }
 
             if (!$thereIsOneCronRunning && $command->exchangeRateStatus()) {
@@ -208,7 +208,7 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
      *
      * @throws Exception
      */
-    private function resetCronConfiguration($cronId)
+    private function removeConfigurationIfNotFoundOrIsDeactivated($cronId)
     {
         $query = new DbQuery();
         $query
