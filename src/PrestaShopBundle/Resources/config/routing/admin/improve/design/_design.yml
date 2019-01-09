@@ -12,6 +12,4 @@ _theme:
 
 _cms_page:
     resource: "cms_pages.yml"
-    prefix: /cms-pages/{cmsCategoryParentId}
-    requirements:
-        cmsCategoryParentId: \d+
+    prefix: /cms-pages
