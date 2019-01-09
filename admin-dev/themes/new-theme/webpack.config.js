@@ -137,7 +137,10 @@ const config = {
     ],
     themes: [
       './js/pages/themes',
-    ]
+    ],
+    error: [
+      './js/pages/error',
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
