@@ -92,7 +92,7 @@ class AddMetaCommandTest extends TestCase
                 null,
             ],
             [
-                ''
+                '',
             ],
             [
                 'wrong-page-name{}',
@@ -106,8 +106,8 @@ class AddMetaCommandTest extends TestCase
             [
                 [
                     '#$%^@{}',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }

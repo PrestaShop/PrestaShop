@@ -129,7 +129,7 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
             ],
             [
                 'tes/t/001',
-            ]
+            ],
         ];
     }
 
@@ -158,7 +158,7 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
               'Šarūnas',
             ],
             [
-                '_$'
+                '_$',
             ],
         ];
     }

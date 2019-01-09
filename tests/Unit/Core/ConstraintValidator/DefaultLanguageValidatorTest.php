@@ -49,7 +49,6 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
         parent::setUp();
     }
 
-
     public function testItDetectsIncorrectConstraintType()
     {
         $this->expectException(UnexpectedTypeException::class);
@@ -101,7 +100,7 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
             ],
             [
                 null,
-            ]
+            ],
         ];
     }
 
@@ -113,21 +112,19 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
                     0 => 'test1',
                     2 => 'test1',
                 ],
-
             ],
             [
                 [
                     0 => 'test2',
                     $this->defaultLanguageId => null,
                 ],
-
             ],
             [
                 [
                     0 => 'test3',
                     $this->defaultLanguageId => '',
                 ],
-            ]
+            ],
         ];
     }
 

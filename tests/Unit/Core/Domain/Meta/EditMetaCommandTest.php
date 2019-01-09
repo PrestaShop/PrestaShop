@@ -30,7 +30,6 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
-use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
  * Class EditMetaCommandTest
@@ -104,7 +103,7 @@ class EditMetaCommandTest extends TestCase
                 null,
             ],
             [
-                ''
+                '',
             ],
             [
                 'wrong-page-name{}',
@@ -118,8 +117,8 @@ class EditMetaCommandTest extends TestCase
             [
                 [
                     '#$%^@{}',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -134,7 +133,7 @@ class EditMetaCommandTest extends TestCase
             ],
             [
                 0,
-            ]
+            ],
         ];
     }
 }
