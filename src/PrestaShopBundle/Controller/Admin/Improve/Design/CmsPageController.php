@@ -58,13 +58,13 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param int $cmsCategoryParentId
      * @param CmsPageCategoryFilters $filters
      *
      * @return Response
      */
-    public function indexAction($cmsCategoryParentId, CmsPageCategoryFilters $filters)
+    public function indexAction(CmsPageCategoryFilters $filters)
     {
+        $cmsCategoryParentId = $filters->getFilters()['id_cms_category_parent'];
         $viewData = [];
         try {
             $viewData = $this
