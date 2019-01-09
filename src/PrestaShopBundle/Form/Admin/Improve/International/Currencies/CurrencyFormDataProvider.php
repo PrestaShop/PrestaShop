@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 final class CurrencyFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var bool
+     * @var int
      */
     private $cronExchangeRate;
 
