@@ -17,3 +17,7 @@ _admin_configure_routing:
 _admin_improve_routing:
     resource: "admin/improve/_improve.yml"
     prefix: /improve
+
+_admin_errors:
+    resource: "admin/_errors.yml"
+    prefix: /errors
