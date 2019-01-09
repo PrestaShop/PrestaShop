@@ -66,7 +66,7 @@ class FilterCmsPageCategorySearchCriteriaListener
         $request = $this->requestStack->getCurrentRequest();
 
         if (null !== $request) {
-            $cmsCategoryId = $this->requestStack->getCurrentRequest()->query->get('id_cms_category');
+            $cmsCategoryId = $this->requestStack->getCurrentRequest()->query->getInt('id_cms_category');
 
             if (!$cmsCategoryId) {
                 $cmsCategoryId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
