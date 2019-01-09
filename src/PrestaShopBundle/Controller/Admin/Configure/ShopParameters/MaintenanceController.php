@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Voter\PageVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,8 +42,10 @@ class MaintenanceController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminMaintenance';
 
     /**
-     * @var FormInterface
-     * @Template("@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig")
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param FormInterface $form
      *
      * @return Response
      */
@@ -53,7 +55,7 @@ class MaintenanceController extends FrameworkBundleAdminController
             $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
         }
 
-        return array(
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig', [
             'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->trans('Maintenance', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -64,39 +66,22 @@ class MaintenanceController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'form' => $form->createView(),
             'currentIp' => $request->getClientIp(),
-        );
+        ]);
     }
 
     /**
      * @param Request $request
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_maintenance")
+     * @DemoRestricted(redirectRoute="admin_maintenance")
      *
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)
     {
         $redirectResponse = $this->redirectToRoute('admin_maintenance');
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $redirectResponse;
-        }
-
-        if (!in_array(
-            $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            )
-        )) {
-            $this->addFlash(
-                'error',
-                $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error')
-            );
-
-            return $redirectResponse;
-        }
 
         $this->dispatchHook('actionAdminMaintenanceControllerPostProcessBefore', array('controller' => $this));
         $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
