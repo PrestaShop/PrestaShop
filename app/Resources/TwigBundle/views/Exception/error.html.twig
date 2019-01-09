@@ -22,42 +22,5 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% extends '::base.html.twig' %}
 
-{% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}" />
-{% endblock %}
-
-{% block title %}
-  {{ 'An unexpected error occurred'|trans({},'Admin.Catalog.Help' ) }}
-{% endblock %}
-
-{% block body %}
-  <div class="container">
-    <div class="row justify-content-md-center mt-5">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body text-center">
-            <p class="h1 mb-0">{{ 'Oops...' }}</p>
-            <p class="h1">{{ 'looks like an error occurred' }}</p>
-
-            {% if exception %}
-              <p class="mb-0">{{ 'Error code:' }} <em>{{ exception.code }}</em></p>
-              <p class="mb-0">{{ 'Error message:' }} <em>{{ exception.message }}</em></p>
-              <p class="mb-0">{{ 'Enable debug mode and try again to track the issue.' }}</p>
-            {% endif %}
-
-            <div class="mt-4">
-              <button class="btn btn-outline-primary mr-1">
-                {{ 'Back to previous page' }}
-              </button>
-              <button class="btn btn-primary">
-                {{ 'Enable debug mode' }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-{% endblock %}
+{% include '@PrestaShop/Admin/Exception/error.html.twig' %}

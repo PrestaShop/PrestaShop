@@ -56,9 +56,6 @@
 /******/ 		});
 /******/ 	}
 /******/
-<<<<<<< HEAD
-var n={};t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,i){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:i})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=460)}({219:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var i=n(284);(0,window.$)(function(){new i.a})},283:function(e,t,n){"use strict";function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var o=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),r=window.$,s=function(){function e(){i(this,e),r(".js-translation-type").on("change",this.toggleFields.bind(this)),r(".js-email-content-type").on("change",this.toggleEmailFields.bind(this)),this.toggleFields()}return o(e,[{key:"toggleFields",value:function(){var e=r(".js-translation-type").val(),t=r(".js-module-form-group"),n=r(".js-email-form-group"),i=r(".js-theme-form-group"),o=i.find("select"),s=o.find(".js-no-theme"),a=o.find("option:not(.js-no-theme):first");switch(e){case"back":case"others":this._hide(t,n,i);break;case"themes":s.is(":selected")&&o.val(a.val()),this._hide(t,n,s),this._show(i);break;case"modules":this._hide(n,i),this._show(t);break;case"mails":this._hide(t,i),this._show(n)}this.toggleEmailFields()}},{key:"toggleEmailFields",value:function(){if("mails"===r(".js-translation-type").val()){var e=r(".js-email-form-group").find("select").val(),t=r(".js-theme-form-group"),n=t.find(".js-no-theme");"body"===e?(n.prop("selected",!0),this._show(n,t)):this._hide(n,t)}}},{key:"_hide",value:function(){for(var e=arguments.length,t=Array(e),n=0;n<e;n++)t[n]=arguments[n];for(var i in t)t[i].addClass("d-none"),t[i].find("select").prop("disabled","disabled")}},{key:"_show",value:function(){for(var e=arguments.length,t=Array(e),n=0;n<e;n++)t[n]=arguments[n];for(var i in t)t[i].removeClass("d-none"),t[i].find("select").prop("disabled",!1)}}]),e}();t.a=s},284:function(e,t,n){"use strict";function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var o=n(283),r=function e(){i(this,e),new o.a};t.a=r},460:function(e,t,n){e.exports=n(219)}});
-=======
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
@@ -241,7 +238,7 @@ var n={};t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,i){t.o(e,n)||Obj
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 11;
+/******/ 			var chunkId = 22;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -709,302 +706,25 @@ var n={};t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,i){t.o(e,n)||Obj
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(506)(__webpack_require__.s = 506);
+/******/ 	return hotCreateRequire(492)(__webpack_require__.s = 492);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 255:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ 241:
+/***/ (function(module, __webpack_exports__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__TranslationSettingsPage__ = __webpack_require__(304);
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-
-
-var $ = window.$;
-
-$(function () {
-  new __WEBPACK_IMPORTED_MODULE_0__TranslationSettingsPage__["a" /* default */]();
-});
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/var/www/sarjon-PrestaShop/admin-dev/themes/new-theme/js/pages/error/index.js'");
 
 /***/ }),
 
-/***/ 303:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = window.$;
-
-/**
- * Back office translations type
- *
- * @type {string}
- */
-var back = 'back';
-
-/**
- * Modules translations type
- * @type {string}
- */
-var themes = 'themes';
-
-/**
- * Modules translations type
- * @type {string}
- */
-var modules = 'modules';
-
-/**
- * Mails translations type
- * @type {string}
- */
-var mails = 'mails';
-
-/**
- * Other translations type
- * @type {string}
- */
-var others = 'others';
-
-/**
- * Email body translations type
- * @type {string}
- */
-var emailContentBody = 'body';
-
-var FormFieldToggle = function () {
-    function FormFieldToggle() {
-        _classCallCheck(this, FormFieldToggle);
-
-        $('.js-translation-type').on('change', this.toggleFields.bind(this));
-        $('.js-email-content-type').on('change', this.toggleEmailFields.bind(this));
-
-        this.toggleFields();
-    }
-
-    /**
-     * Toggle dependant translations fields, based on selected translation type
-     */
-
-
-    _createClass(FormFieldToggle, [{
-        key: 'toggleFields',
-        value: function toggleFields() {
-            var selectedOption = $('.js-translation-type').val();
-            var $modulesFormGroup = $('.js-module-form-group');
-            var $emailFormGroup = $('.js-email-form-group');
-            var $themesFormGroup = $('.js-theme-form-group');
-            var $themesSelect = $themesFormGroup.find('select');
-            var $noThemeOption = $themesSelect.find('.js-no-theme');
-            var $firstThemeOption = $themesSelect.find('option:not(.js-no-theme):first');
-
-            switch (selectedOption) {
-                case back:
-                case others:
-                    this._hide($modulesFormGroup, $emailFormGroup, $themesFormGroup);
-
-                    break;
-                case themes:
-                    if ($noThemeOption.is(':selected')) {
-                        $themesSelect.val($firstThemeOption.val());
-                    }
-
-                    this._hide($modulesFormGroup, $emailFormGroup, $noThemeOption);
-                    this._show($themesFormGroup);
-
-                    break;
-                case modules:
-                    this._hide($emailFormGroup, $themesFormGroup);
-                    this._show($modulesFormGroup);
-
-                    break;
-                case mails:
-                    this._hide($modulesFormGroup, $themesFormGroup);
-                    this._show($emailFormGroup);
-
-                    break;
-            }
-
-            this.toggleEmailFields();
-        }
-
-        /**
-         * Toggles fields, which are related to email translations
-         */
-
-    }, {
-        key: 'toggleEmailFields',
-        value: function toggleEmailFields() {
-            if ($('.js-translation-type').val() !== mails) {
-                return;
-            }
-
-            var selectedEmailContentType = $('.js-email-form-group').find('select').val();
-            var $themesFormGroup = $('.js-theme-form-group');
-            var $noThemeOption = $themesFormGroup.find('.js-no-theme');
-
-            if (selectedEmailContentType === emailContentBody) {
-                $noThemeOption.prop('selected', true);
-                this._show($noThemeOption, $themesFormGroup);
-            } else {
-                this._hide($noThemeOption, $themesFormGroup);
-            }
-        }
-
-        /**
-         * Make all given selectors hidden
-         *
-         * @param $selectors
-         * @private
-         */
-
-    }, {
-        key: '_hide',
-        value: function _hide() {
-            for (var _len = arguments.length, $selectors = Array(_len), _key = 0; _key < _len; _key++) {
-                $selectors[_key] = arguments[_key];
-            }
-
-            for (var key in $selectors) {
-                $selectors[key].addClass('d-none');
-                $selectors[key].find('select').prop('disabled', 'disabled');
-            }
-        }
-
-        /**
-         * Make all given selectors visible
-         *
-         * @param $selectors
-         * @private
-         */
-
-    }, {
-        key: '_show',
-        value: function _show() {
-            for (var _len2 = arguments.length, $selectors = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-                $selectors[_key2] = arguments[_key2];
-            }
-
-            for (var key in $selectors) {
-                $selectors[key].removeClass('d-none');
-                $selectors[key].find('select').prop('disabled', false);
-            }
-        }
-    }]);
-
-    return FormFieldToggle;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (FormFieldToggle);
-
-/***/ }),
-
-/***/ 304:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__FormFieldToggle__ = __webpack_require__(303);
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-
-
-var TranslationSettingsPage = function TranslationSettingsPage() {
-    _classCallCheck(this, TranslationSettingsPage);
-
-    new __WEBPACK_IMPORTED_MODULE_0__FormFieldToggle__["a" /* default */]();
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (TranslationSettingsPage);
-
-/***/ }),
-
-/***/ 506:
+/***/ 492:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(255);
+module.exports = __webpack_require__(241);
 
 
 /***/ })
 
 /******/ });
->>>>>>> 9e2c9a6ce2... finalize UI for 500 error
