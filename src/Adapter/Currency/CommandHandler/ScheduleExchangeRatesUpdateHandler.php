@@ -131,26 +131,20 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
 
         $this->configuration->restrictUpdatesTo($this->contextShop);
 
-        $cronId = $this->configuration->get('PS_ACTIVE_CRONJOB_EXCHANGE_RATE');
+        $cronId = (int) $this->configuration->get('PS_ACTIVE_CRONJOB_EXCHANGE_RATE');
+        $thereIsOneCronRunning = ($cronId !== 0);
 
         try {
-            if ($cronId && !$command->isExchangeRateEnabled()) {
-                $this->removeCronJob($cronId);
-
-                return;
-            }
-
-            $cronUrl = $this->getCronUrl();
-
-            if (!$cronId && $command->isExchangeRateEnabled() && false === $this->createCronJob($cronUrl)) {
-                throw new ScheduleExchangeRatesUpdateException(
-                    'Failed to create a cron task for live exchange rate update',
-                    ScheduleExchangeRatesUpdateException::CRON_TASK_CREATION_FAILED
-                );
-            }
-
-            if ($cronId) {
+            if ($thereIsOneCronRunning && $command->exchangeRateStatus()) {
                 $this->resetCronConfiguration($cronId);
+            }
+
+            if (!$thereIsOneCronRunning && $command->exchangeRateStatus()) {
+                $this->enableExchangeRatesScheduler();
+            }
+
+            if ($thereIsOneCronRunning && !$command->exchangeRateStatus()) {
+                $this->disableExchangeRatesScheduler($cronId);
             }
         } catch (Exception $exception) {
             throw new CurrencyException(
@@ -176,20 +170,6 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
         );
 
         return $protocol . $shopDomain . $this->adminBaseUrl . $cronFileLink;
-    }
-
-    /**
-     * @param int $cronId
-     *
-     * @throws Exception
-     */
-    private function removeCronJob($cronId)
-    {
-        $this->configuration->set('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', 0);
-
-        Db::getInstance()->execute(
-            'DELETE FROM ' . $this->dbPrefix . 'cronjobs WHERE `id_cronjob`=' . (int) $cronId
-        );
     }
 
     /**
@@ -243,5 +223,40 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
         if (!is_array($row) || empty($row['active'])) {
             $this->configuration->set('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', 0);
         }
+    }
+
+    /**
+     * Creates new cronjob for exchange rates auto update.
+     *
+     * @throws PrestaShopException
+     * @throws ScheduleExchangeRatesUpdateException
+     * @throws Exception
+     */
+    private function enableExchangeRatesScheduler()
+    {
+        $cronUrl = $this->getCronUrl();
+
+        if (false === $this->createCronJob($cronUrl)) {
+            throw new ScheduleExchangeRatesUpdateException(
+                'Failed to create a cron task for live exchange rate update',
+                ScheduleExchangeRatesUpdateException::CRON_TASK_CREATION_FAILED
+            );
+        }
+    }
+
+    /**
+     * Removes given cronjob from  configuration and also from cronjobs table.
+     *
+     * @param int $cronId
+     *
+     * @throws Exception
+     */
+    private function disableExchangeRatesScheduler($cronId)
+    {
+        $this->configuration->set('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', 0);
+
+        Db::getInstance()->execute(
+            'DELETE FROM ' . $this->dbPrefix . 'cronjobs WHERE `id_cronjob`=' . (int) $cronId
+        );
     }
 }
