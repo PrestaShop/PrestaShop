@@ -132,6 +132,9 @@ const config = {
     currency: [
       './js/pages/currency',
     ],
+    error: [
+      './js/pages/error',
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
