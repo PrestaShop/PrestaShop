@@ -1,7 +1,6 @@
 /**
  * This script is based on the scenario described in this test link
  * [id="PS-153"][Name="By IP Adress"]
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-153
  **/
 const {AccessPageBO} = require('../../../../../selectors/BO/access_page');
 const {Localization} = require('../../../../../selectors/BO/international/localization');
