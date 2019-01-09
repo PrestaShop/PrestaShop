@@ -4798,7 +4798,7 @@ class AdminImportControllerCore extends AdminController
             'modal_id' => 'importProgress',
             'modal_class' => 'modal-md',
             'modal_title' => $this->trans('Importing your data...', array(), 'Admin.Advparameters.Notification'),
-            'modal_content' => $modal_content
+            'modal_content' => $modal_content,
         );
     }
 
@@ -4820,6 +4820,7 @@ class AdminImportControllerCore extends AdminController
     private function getSymfonyRequest()
     {
         $requestStack = \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()->get('request_stack');
+
         return $requestStack->getCurrentRequest();
     }
 }
