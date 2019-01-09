@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\EventListener;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
 use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -65,8 +66,13 @@ class FilterCmsPageCategorySearchCriteriaListener
         $request = $this->requestStack->getCurrentRequest();
 
         if (null !== $request) {
-            $filters['id_cms_category_parent'] =
-                $this->requestStack->getCurrentRequest()->attributes->get('cmsCategoryParentId');
+            $cmsCategoryId = $this->requestStack->getCurrentRequest()->query->get('id_cms_category');
+
+            if (!$cmsCategoryId) {
+                $cmsCategoryId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
+            }
+
+            $filters['id_cms_category_parent'] = $cmsCategoryId;
         }
 
         $newSearchCriteria = new CmsPageCategoryFilters([
