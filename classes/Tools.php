@@ -786,7 +786,7 @@ class ToolsCore
             return $locale;
         }
 
-        $container = $context->controller->getContainer();
+        $container = isset($context->controller) ? $context->controller->getContainer() : null;
         if (null === $container) {
             $container = SymfonyContainer::getInstance();
         }
