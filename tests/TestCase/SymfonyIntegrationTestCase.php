@@ -28,8 +28,8 @@ namespace Tests\TestCase;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Tests\Unit\ContextMocker;
-use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\Unit\ContextMocker;
+use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 
 class SymfonyIntegrationTestCase extends KernelTestCase
 {
