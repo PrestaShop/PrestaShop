@@ -142,6 +142,7 @@ class SurvivalTest extends WebTestCase
             'admin_payment_preferences' => ['Payment preferences', 'admin_payment_preferences'],
             'admin_modules_positions' => ['Positions', 'admin_modules_positions'],
             'admin_backups_index' => ['DB Backup', 'admin_backups_index'],
+            'admin_currencies_index' => ['Currencies', 'admin_currencies_index'],
         ];
     }
 
