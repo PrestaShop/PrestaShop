@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\EditableCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 
 /**
