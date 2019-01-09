@@ -35,6 +35,8 @@
   <meta property="og:site_name" content="{$shop.name}">
   <meta property="og:description" content="{$page.meta.description}">
   <meta property="og:image" content="{$product.cover.large.url}">
+  <meta property="og:image:width" content="{$product.cover.large.width}">
+  <meta property="og:image:height" content="{$product.cover.large.height}">
   <meta property="product:pretax_price:amount" content="{$product.price_tax_exc}">
   <meta property="product:pretax_price:currency" content="{$currency.iso_code}">
   <meta property="product:price:amount" content="{$product.price_amount}">
