@@ -52,8 +52,12 @@
 @import "pages/meta";
 @import "pages/import_data";
 @import "pages/currency";
+<<<<<<< HEAD
 @import "pages/themes_logo";
 @import "pages/cms_page";
+=======
+@import "pages/error";
+>>>>>>> 603f702084... finalize UI for 500 error
 
 // Main Layout
 @import "pages/modules";
