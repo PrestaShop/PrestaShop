@@ -73,7 +73,7 @@ class LocaleCurrencyFormatE2ETest extends KernelTestCase
         $this->contextMocker->mockContext();
 
         $this->localeRepo = $this->container->get('prestashop.core.localization.locale.repository');
-        $this->context    = Context::getContext();
+        $this->context = Context::getContext();
     }
 
     protected function tearDown()
@@ -86,17 +86,17 @@ class LocaleCurrencyFormatE2ETest extends KernelTestCase
     public static function setUpBeforeClass()
     {
         Database::restoreTestDB();
-        require_once(__DIR__ . '/../../../config/config.inc.php');
+        require_once __DIR__ . '/../../../config/config.inc.php';
     }
 
     protected function installCurrency($currencyCode)
     {
-        $currency                  = new Currency();
-        $currency->name            = $currencyCode;
-        $currency->iso_code        = $currencyCode;
-        $currency->active          = 1;
+        $currency = new Currency();
+        $currency->name = $currencyCode;
+        $currency->iso_code = $currencyCode;
+        $currency->active = 1;
         $currency->conversion_rate = 0.9;
-        $currency->precision       = 2;
+        $currency->precision = 2;
         $currency->save();
         // needed as currencies are cached :/
         $cacheId = 'Currency::getIdByIsoCode_' . pSQL($currencyCode) . '-0';
@@ -134,7 +134,7 @@ class LocaleCurrencyFormatE2ETest extends KernelTestCase
         $expected
     ) {
         $locale = $this->localeRepo->getLocale($localeCode);
-        $price  = $locale->formatPrice($price, $currencyCode);
+        $price = $locale->formatPrice($price, $currencyCode);
         $this->assertEquals($expected, $price);
     }
 
@@ -164,59 +164,59 @@ class LocaleCurrencyFormatE2ETest extends KernelTestCase
             'fr-FR' => [
                 'EUR' => [
                     [
-                        'price'    => 0.0234,
-                        'expected' => '0,02 €',
+                        'price' => 0.0234,
+                        'expected' => '0,02 €',
                     ],
                     [
-                        'price'    => 2345,
-                        'expected' => '2 345,00 €',
+                        'price' => 2345,
+                        'expected' => '2 345,00 €',
                     ],
                     [
-                        'price'    => 2345.326,
-                        'expected' => '2 345,33 €',
+                        'price' => 2345.326,
+                        'expected' => '2 345,33 €',
                     ],
                 ],
                 'USD' => [
                     [
-                        'price'    => 0.0234,
-                        'expected' => '0,02 $',
+                        'price' => 0.0234,
+                        'expected' => '0,02 $',
                     ],
                     [
-                        'price'    => 2345,
-                        'expected' => '2 345,00 $',
+                        'price' => 2345,
+                        'expected' => '2 345,00 $',
                     ],
                     [
-                        'price'    => 2345.326,
-                        'expected' => '2 345,33 $',
+                        'price' => 2345.326,
+                        'expected' => '2 345,33 $',
                     ],
                 ],
             ],
             'en-US' => [
                 'EUR' => [
                     [
-                        'price'    => 0.0234,
+                        'price' => 0.0234,
                         'expected' => '€0.02',
                     ],
                     [
-                        'price'    => 2345,
+                        'price' => 2345,
                         'expected' => '€2,345.00',
                     ],
                     [
-                        'price'    => 2345.326,
+                        'price' => 2345.326,
                         'expected' => '€2,345.33',
                     ],
                 ],
                 'USD' => [
                     [
-                        'price'    => 0.0234,
+                        'price' => 0.0234,
                         'expected' => '$0.02',
                     ],
                     [
-                        'price'    => 2345,
+                        'price' => 2345,
                         'expected' => '$2,345.00',
                     ],
                     [
-                        'price'    => 2345.326,
+                        'price' => 2345.326,
                         'expected' => '$2,345.33',
                     ],
                 ],
