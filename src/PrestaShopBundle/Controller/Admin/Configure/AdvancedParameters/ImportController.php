@@ -83,11 +83,13 @@ class ImportController extends FrameworkBundleAdminController
             $data = $form->getData();
 
             if (!$errors = $formHandler->save($data)) {
-                return $this->redirectToRoute(
+                // WIP import page 2 redirect
+                /*return $this->redirectToRoute(
                     'admin_import_data_configuration_index',
                     [],
                     Response::HTTP_TEMPORARY_REDIRECT
-                );
+                );*/
+                return $this->forwardRequestToLegacyResponse($request);
             }
 
             $this->flashErrors($errors);
@@ -383,5 +385,23 @@ class ImportController extends FrameworkBundleAdminController
         }
 
         return true;
+    }
+
+    /**
+     * Forwards submitted form data to legacy import page.
+     * To be removed in 1.7.7 version.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    private function forwardRequestToLegacyResponse(Request $request)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+
+        $legacyImportUrl = $legacyContext->getLegacyAdminLink($legacyController);
+
+        return $this->redirect($legacyImportUrl, Response::HTTP_TEMPORARY_REDIRECT);
     }
 }
