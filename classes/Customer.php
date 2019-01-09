@@ -218,8 +218,8 @@ class CustomerCore extends ObjectModel
      */
     public function __construct($id = null)
     {
-        $this->id_default_group = (int) Configuration::get('PS_CUSTOMER_GROUP');
         parent::__construct($id);
+        $this->id_default_group = (int) Configuration::get('PS_CUSTOMER_GROUP');
     }
 
     /**
@@ -545,8 +545,13 @@ class CustomerCore extends ObjectModel
      * @param int $idCustomer Customer ID
      * @param int $idAddress Address ID
      */
-    public static function resetAddressCache($idCustomer, $idAddress)
+    public static function resetAddressCache($idCustomer = null, $idAddress = null)
     {
+        if ($idCustomer === null || $idAddress === null) {
+            self::$_customerHasAddress = array();
+            self::$_customer_groups = array();
+            self::$_defaultGroupId = array();
+        }
         $key = (int) $idCustomer . '-' . (int) $idAddress;
         if (array_key_exists($key, self::$_customerHasAddress)) {
             unset(self::$_customerHasAddress[$key]);

@@ -186,6 +186,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
+     * reset static cache (eg unit testing purpose).
+     */
+    public static function resetStaticCache()
+    {
+        static::$loaded_classes = array();
+    }
+
+    /**
      * Returns object validation rules (fields validity).
      *
      * @param string $class Child class name for static use (optional)

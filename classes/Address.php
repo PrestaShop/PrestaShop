@@ -171,6 +171,15 @@ class AddressCore extends ObjectModel
     }
 
     /**
+     * reset static cache (eg unit testing purpose).
+     */
+    public static function resetStaticCache()
+    {
+        static::$_idZones = array();
+        static::$_idCountries = array();
+    }
+
+    /**
      * @see ObjectModel::add()
      */
     public function add($autodate = true, $null_values = false)
