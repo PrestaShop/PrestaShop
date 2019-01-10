@@ -50,7 +50,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(array $elements = array())
+    public function __construct(array $elements = [])
     {
         $this->checkElementsType($elements);
         parent::__construct($elements);
