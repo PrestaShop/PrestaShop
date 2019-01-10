@@ -1,13 +1,18 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-22"][Name="Bulk action in catalog page"]
+ **/
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {ProductList} = require('../../../selectors/BO/add_product_page');
 const welcomeScenarios = require('../../common_scenarios/welcome');
+const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 global.isPagination = false;
 
 let promise = Promise.resolve();
 
-scenario('Catalog bulk action', () => {
+scenario('Bulk action in catalog page', () => {
 
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
@@ -33,8 +38,19 @@ scenario('Catalog bulk action', () => {
       return promise
         .then(() => expect(global.productStatus).to.not.include("check"));
     });
+    test('should get the "Name" of the last inactive product', () => client.getTextInVar(ProductList.products_column.replace('%ID', 1).replace('%COL', 4), 'productName'));
   }, 'catalogbulkaction');
-
+  scenario('Check existence product in Front Office', client => {
+    test('should go to the "Front Office"', () => {
+      return promise
+        .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
+        .then(() => client.switchWindow(1))
+        .then(() => client.changeLanguage());
+    });
+    test('should search a disabled product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, global.tab['productName']));
+    test('should check the not existence of the disabled product', () => client.isExisting(SearchProductPage.empty_result_section));
+    test('should go back to the Back Office', () => client.switchWindow(0));
+  }, 'catalogbulkaction');
   scenario('Enable the product list', client => {
     test('should click on "Select all" radio button', () => client.selectAllProducts(CatalogPage.select_all_product_button));
     test('should choose the "Activate selection" action', () => client.selectAction(CatalogPage, 1));
@@ -53,8 +69,14 @@ scenario('Catalog bulk action', () => {
       return promise
         .then(() => expect(global.productStatus).to.not.include('clear'));
     });
+    test('should get the "Name" of the last active product', () => client.getTextInVar(ProductList.products_column.replace('%ID', 1).replace('%COL', 4), 'productName'));
   }, 'catalogbulkaction');
-
+  scenario('Check existence product in Front Office', client => {
+    test('should go to the "Front Office"', () => client.switchWindow(1));
+    test('should search an enabled product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, global.tab['productName']));
+    test('should check the existence of the active product', () => client.checkExistenceProduct(SearchProductPage.first_product_name_link, global.tab['productName'].toLowerCase()));
+    test('should go back to the Back Office', () => client.switchWindow(0));
+  }, 'catalogbulkaction');
   scenario('Duplicate the product list', client => {
     test('should click on "Select all" radio button', () => {
       return promise
@@ -92,7 +114,6 @@ scenario('Catalog bulk action', () => {
         });
     });
   }, 'catalogbulkaction');
-
   scenario('Delete duplicated products list with bulk action', () => {
     scenario('Abort the delete product action from the modal', client => {
       test('should set the search input to "copy" to search for the duplicated products', () => client.waitAndSetValue(CatalogPage.name_search_input, "copy"));
@@ -134,8 +155,14 @@ scenario('Catalog bulk action', () => {
         test('should click on "Reset" button', () => client.waitForVisibleAndClick(CatalogPage.reset_button));
       }, 'catalogbulkaction');
     }, 'catalogbulkaction');
-  }, 'catalogbulkaction');
 
+    scenario('Check existence product in Front Office', client => {
+      test('should go to the "Front Office"', () => client.switchWindow(1));
+      test('should search the deleted product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, 'copy'));
+      test('should check the not existence of the disabled product', () => client.isExisting(SearchProductPage.empty_result_section));
+      test('should go back to the Back Office', () => client.switchWindow(0));
+    }, 'catalogbulkaction');
+  }, 'catalogbulkaction');
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from Back Office', () => client.signOutBO());
   }, 'product/product');
