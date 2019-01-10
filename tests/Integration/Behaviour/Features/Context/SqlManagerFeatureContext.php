@@ -54,12 +54,12 @@ class SqlManagerFeatureContext extends AbstractPrestaShopFeatureContext
 
         $realCount = current($realCountResults)['result'];
 
-        if ((int)$realCount !== (int)$count) {
+        if ((int) $realCount !== (int) $count) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %d sql stored requests, got %d instead',
-                    (int)$count,
-                    (int)$realCount
+                    (int) $count,
+                    (int) $realCount
                 )
             );
         }
