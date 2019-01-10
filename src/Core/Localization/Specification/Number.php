@@ -293,7 +293,7 @@ class Number implements NumberInterface
             }
         }
 
-        if (isset($this->maxFractionDigits)
+        if (!isset($this->maxFractionDigits)
             || !is_int($this->maxFractionDigits)
         ) {
             throw new LocalizationException('Invalid maxFractionDigits');
