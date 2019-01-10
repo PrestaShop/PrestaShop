@@ -294,9 +294,9 @@ class Number implements NumberInterface
         }
 
         if (isset($this->maxFractionDigits)
-            && !is_int($this->maxFractionDigits)
+            || !is_int($this->maxFractionDigits)
         ) {
-            throw new LocalizationException('Invalid maxFractionDigits : ' . print_r($this->maxFractionDigits, true));
+            throw new LocalizationException('Invalid maxFractionDigits');
         }
 
         if (!isset($this->minFractionDigits)
