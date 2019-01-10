@@ -31,6 +31,11 @@ use SplFileInfo;
 class FileSystem
 {
     /**
+     * Default mode for directories and files
+     */
+    const DEFAULT_MODE = 0755;
+
+    /**
      * Replaces directory separators with the system's native one
      * and trims the trailing separator.
      */

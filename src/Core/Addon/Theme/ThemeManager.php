@@ -32,6 +32,7 @@ use Language;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShopBundle\Service\TranslationService;
@@ -403,7 +404,7 @@ class ThemeManager implements AddonManagerInterface
     {
         if (!isset($this->sandbox)) {
             $this->sandbox = $this->appConfiguration->get('_PS_CACHE_DIR_') . 'sandbox/' . uniqid() . '/';
-            $this->filesystem->mkdir($this->sandbox, 0755);
+            $this->filesystem->mkdir($this->sandbox, PsFileSystem::DEFAULT_MODE);
         }
 
         return $this->sandbox;
@@ -416,7 +417,7 @@ class ThemeManager implements AddonManagerInterface
     {
         $jsonConfigFolder = $this->appConfiguration->get('_PS_CONFIG_DIR_') . 'themes/' . $theme->getName();
         if (!$this->filesystem->exists($jsonConfigFolder) && !is_dir($jsonConfigFolder)) {
-            mkdir($jsonConfigFolder, 0777, true);
+            mkdir($jsonConfigFolder, PsFileSystem::DEFAULT_MODE, true);
         }
 
         file_put_contents(

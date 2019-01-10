@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use Symfony\Component\Filesystem\Filesystem;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 
 class LanguageCore extends ObjectModel
 {
@@ -1127,7 +1128,7 @@ class LanguageCore extends ObjectModel
             $zipArchive->close();
 
             $coreDestPath = _PS_ROOT_DIR_ . '/mails/' . $lang_pack['iso_code'];
-            $fileSystem->mkdir($coreDestPath, 0755);
+            $fileSystem->mkdir($coreDestPath, PsFileSystem::DEFAULT_MODE);
 
             if ($fileSystem->exists($folder . '/core')) {
                 foreach ($finder->files()->in($folder . '/core') as $coreEmail) {
@@ -1142,7 +1143,7 @@ class LanguageCore extends ObjectModel
             if ($fileSystem->exists($folder . '/modules')) {
                 foreach ($finder->directories()->in($folder . '/modules') as $moduleDirectory) {
                     $moduleDestPath = _PS_ROOT_DIR_ . '/modules/' . $moduleDirectory->getFileName() . '/mails/' . $lang_pack['iso_code'];
-                    $fileSystem->mkdir($moduleDestPath, 0755);
+                    $fileSystem->mkdir($moduleDestPath, PsFileSystem::DEFAULT_MODE);
 
                     $findEmails = new \Symfony\Component\Finder\Finder();
                     foreach ($findEmails->files()->in($moduleDirectory->getRealPath()) as $moduleEmail) {

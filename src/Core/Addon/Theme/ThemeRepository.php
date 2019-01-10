@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShopException;
 use Shop;
 use Symfony\Component\Filesystem\Filesystem;
@@ -65,7 +66,7 @@ class ThemeRepository implements AddonRepositoryInterface
             $data = $this->getConfigFromFile($dir . '/config/theme.yml');
 
             // Write parsed yml data into json conf (faster parsing next time)
-            $this->filesystem->dumpFile($jsonConf, json_encode($data), 0777);
+            $this->filesystem->dumpFile($jsonConf, json_encode($data), PsFileSystem::DEFAULT_MODE);
         }
 
         $data['directory'] = $dir;

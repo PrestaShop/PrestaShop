@@ -47,7 +47,6 @@ abstract class AbstractCommand
      */
     public function __construct(AppKernel $kernel = null)
     {
-        umask(0000);
         set_time_limit(0);
 
         if (null === $kernel) {
