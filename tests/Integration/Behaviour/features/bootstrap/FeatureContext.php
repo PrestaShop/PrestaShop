@@ -43,8 +43,8 @@ class FeatureContext implements Context
     {
         $rootDirectory = __DIR__ . '/../../../../../';
 
-        require_once($rootDirectory . 'config/config.inc.php');
-        require_once($rootDirectory . 'app/AppKernel.php');
+        require_once $rootDirectory . 'config/config.inc.php';
+        require_once $rootDirectory . 'app/AppKernel.php';
 
         self::$kernel = new AppKernel('dev', true);
         self::$kernel->boot();
@@ -110,5 +110,4 @@ class FeatureContext implements Context
     {
         return self::$kernel->getContainer();
     }
-
 }
