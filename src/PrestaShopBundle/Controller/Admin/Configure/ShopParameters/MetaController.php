@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -77,6 +78,10 @@ class MetaController extends FrameworkBundleAdminController
         $helperBlockLinkProvider = $this->get('prestashop.core.helper_doc.meta_page_link_provider');
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
 
+        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+            new GetShowcaseCardIsClosed($this->getContext()->employee->id, ShowcaseCard::SEO_URLS_CARD)
+        );
+
         return $this->render(
             '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig',
             [
@@ -101,6 +106,7 @@ class MetaController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink('AdminMeta'),
                 'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),
                 'indexPageId' => $metaDataProvider->getIdByPage('index'),
+                'showcaseCardIsClosed' => $showcaseCardIsClosed,
             ]
         );
     }
