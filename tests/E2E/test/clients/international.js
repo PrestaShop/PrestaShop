@@ -1,4 +1,6 @@
 var CommonClient = require('./common_client');
+const exec = require('child_process').exec;
+global.downloadedFileName = "";
 
 class International extends CommonClient {
   showSelect(value, selector) {
@@ -76,6 +78,47 @@ class International extends CommonClient {
           }
         }
       });
+  }
+
+  getFileName(href) {
+    global.downloadedFileName = href.split('/')[href.split('/').length - 1];
+    return this.client.pause(100000)
+  }
+
+  unzipFile(downloadsFolderPath, filename) {
+    exec(' gunzip ' + downloadsFolderPath + '/' + filename,
+      (error) => {
+        if (error !== null) {
+          console.log(`exec error: ${error}`);
+        }
+      });
+    return this.client
+      .pause(3000)
+      .refresh();
+  }
+
+  moveFile(downloadsFolderPath, filename, destinationFolder) {
+    exec(' mv ' + downloadsFolderPath + '/' + filename.split('.')[0] + '.' + filename.split('.')[1] + ' ' + destinationFolder,
+      (error) => {
+        if (error !== null) {
+          console.log(`exec error: ${error}`);
+        }
+      });
+    return this.client
+      .pause(3000)
+      .refresh();
+  }
+
+  deleteFile(filename, destinationFolder) {
+    exec(' rm ' + destinationFolder + '/' + filename.split('.')[0] + '.' + filename.split('.')[1],
+      (error) => {
+        if (error !== null) {
+          console.log(`exec error: ${error}`);
+        }
+      });
+    return this.client
+      .pause(3000)
+      .refresh();
   }
 }
 

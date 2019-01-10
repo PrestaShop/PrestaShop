@@ -75,6 +75,13 @@ module.exports = {
       delete_action_button: '//*[@id="form-currency"]//a[contains(@onclick, "Delete selected")]',
       live_exchange_rate_toggle_button: '//*[@id="currencyCronjobLiveExchangeRate"]//div[contains(@class, "checkbox titatoggl")]',
       update_exchange_rate_button: '//*[@id="currency_form"]/button[@name="SubmitExchangesRates"]'
+    },
+    Geolocation: {
+      download_file_link: '//*[@id="main-div"]//a[contains(text(),"this file")]',
+      ip_address_yes_label: '//label[@for="form_geolocation_by_id_address_geolocation_enabled_1"]',
+      ip_address_no_label: '//label[@for="form_geolocation_by_id_address_geolocation_enabled_0"]',
+      save_geolocation_ip_address_button: '(//*[@id="main-div"]//button[contains(text(),"Save")])[1]',
+      alert_panel: '//*[@id="main-div"]//div[contains(@class, "%B") and @role="alert"]/div[@class="alert-text"]',
     }
   }
 };
