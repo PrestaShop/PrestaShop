@@ -34,8 +34,7 @@ class ShowcaseCard
     /**
      * Card shown in SEO & URLs
      */
-    const SEO_URLS_CARD
-        = 'seo-urls_card';
+    const SEO_URLS_CARD = 'seo-urls_card';
 
     /**
      * List of supported card names
