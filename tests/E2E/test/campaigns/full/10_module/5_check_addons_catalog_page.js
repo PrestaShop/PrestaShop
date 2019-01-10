@@ -16,11 +16,7 @@ scenario('Check the addons catalog page in the Back Office', () => {
     test('should click on "View all the Traffic modules" link', () => client.waitForExistAndClick(ModulesCatalogPage.view_all_traffic_modules_link));
     test('should check then close the "Symfony" toolbar', () => {
       return promise
-        .then(() => {
-          if (global.ps_mode_dev) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        })
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
         .then(() => client.pause(1000));
     });
 

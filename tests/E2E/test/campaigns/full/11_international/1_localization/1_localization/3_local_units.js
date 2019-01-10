@@ -25,12 +25,7 @@ scenario('"Local units"', () => {
   scenario('Close symfony toolbar then click on "Stop the OnBoarding" button', client => {
     test('should close symfony toolbar', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-          }
-        });
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should check and click on "Stop the OnBoarding" button', () => {
       return promise

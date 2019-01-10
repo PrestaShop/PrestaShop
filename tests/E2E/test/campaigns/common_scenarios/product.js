@@ -55,11 +55,7 @@ module.exports = {
       test('should click on "New Product" button', () => {
         return promise
           .then(() => client.waitForExistAndClick(AddProductPage.new_product_button))
-          .then(() => {
-            if (global.ps_mode_dev) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-            }
-          });
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
       });
       test('should set the "Name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, productData["name"] + date_time));
       test('should set the "Reference" input', () => client.waitAndSetValue(AddProductPage.product_reference, productData["reference"]));
@@ -125,11 +121,7 @@ module.exports = {
             return promise
               .then(() => client.pause(4000))
               .then(() => client.setVariationsQuantity(AddProductPage, productData.attribute[1].variation_quantity))
-              .then(() => {
-                if (global.ps_mode_dev) {
-                  client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-                }
-              });
+              .then(() => client.waitForSymfonyToolbar(AddProductPage, 3000))
           });
 
         }, 'product/create_combinations');
@@ -351,13 +343,7 @@ module.exports = {
           .then(() => expect(global.productsNumber).to.be.at.most(itemPerPage))
       });
       if (paginateBetweenPages) {
-        test('should close the symfony toolbar if exists', async () => {
-          if (global.ps_mode_dev) {
-            await client.waitForExistAndClick(AddProductPage.symfony_toolbar, 3000);
-          } else {
-            await client.pause(1000);
-          }
-        });
+        test('should close the symfony toolbar if exists', async () => await client.waitForSymfonyToolbar(AddProductPage, 3000));
         test('should click on "' + nextOrPrevious + '" button', () => {
           return promise
             .then(() => client.isVisible(selectorButton))
@@ -639,12 +625,7 @@ module.exports = {
         await client.waitAndSetValue(AddProductPage.quantity_shortcut_input, productData["quantity"]);
         await client.setPrice(AddProductPage.priceTE_shortcut, productData["price"]);
         await client.uploadPicture(productData["image_name"], AddProductPage.picture);
-        if (global.ps_mode_dev) {
-          await client.isVisible(AddProductPage.symfony_toolbar);
-          if (global.isVisible) {
-            await client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-          }
-        }
+        await client.waitForSymfonyToolbar(AddProductPage, 2000);
         await client.waitForExistAndClick(AddProductPage.product_online_toggle, 1000);
         await client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.');
         await client.waitForExistAndClick(AddProductPage.save_product_button, 4000);

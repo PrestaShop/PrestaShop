@@ -323,7 +323,7 @@ class CommonClient {
    * @returns {*}
    */
   async checkDocument(folderPath, fileName, text) {
-   await pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
+    await pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
       global.data = global.data + data;
       global.indexText = global.data.indexOf(text);
     });
@@ -723,6 +723,17 @@ class CommonClient {
 
   signOutWithoutCookiesFO(selector) {
     return this.client.signOutWithoutCookiesFO(selector);
+  }
+
+  waitForSymfonyToolbar(AddProductPage, pause = 0) {
+  return this.client
+      .pause(pause)
+      .isVisible(AddProductPage.symfony_toolbar, 4000)
+      .then((isVisible) => {
+        if (global.ps_mode_dev && isVisible) {
+          this.client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+        }
+      })
   }
 }
 

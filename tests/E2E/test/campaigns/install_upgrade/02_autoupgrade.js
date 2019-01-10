@@ -72,7 +72,6 @@ scenario('The shop installation', () => {
       return promise
         .then(() => client.scrollTo(ModulePage.upgrade_block))
         .then(() => client.waitForExistAndClick(ModulePage.upgrade_button, 50, 7000));
-
     });
     test('should wait until the Upgrade is finished', () => client.waitForExist(ModulePage.loader_tag, 310000));
     test('should check that the Upgrade is finished without Warnings nor errors', () => client.checkAutoUpgrade());

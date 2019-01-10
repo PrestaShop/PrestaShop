@@ -250,11 +250,6 @@ scenario('Create, edit a country and activate country restrictions in the Back O
     commonCustomer.checkCustomerInfo('Corse');
     scenario('Sign out from Front Office then click on the first product', client => {
       test('should click on "Sign out" button', () => client.signOutWithoutCookiesFO(AccessPageFO));
-
-      /**
-       * We to need to change the language due to the bug described in this ticket
-       * https://github.com/PrestaShop/PrestaShop/issues/11141
-       **/
       test('should click on "my store" button', () => {
         return promise
           .then(() => client.waitForExistAndClick(AccessPageFO.logo_home_page))

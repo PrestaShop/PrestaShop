@@ -98,13 +98,7 @@ scenario('Generate a PDF by status', () => {
       test('should click on "Awaiting bank wire payment" option', () => client.waitForExistAndClick(OrderPage.awaiting_bank_wire_payment_option));
       test('should close the symfony toolbar ', () => {
         return promise
-          .then(() => client.pause(2000))
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-            }
-          })
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
       });
       test('should click on "Generate PDF by status"', () => client.waitForExistAndClick(Invoices.generate_pdf_by_status_button));
       test('should wait for the "invoice" to download', () => client.pause(7000));
@@ -207,12 +201,7 @@ scenario('Generate a PDF by status', () => {
   scenario('Close symfony toolbar then click on "Stop the OnBoarding" button', client => {
     test('should close symfony toolbar', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-          }
-        });
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should check and click on "Stop the OnBoarding" button', () => {
       return promise
