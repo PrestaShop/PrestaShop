@@ -25,7 +25,7 @@
  */
 
 if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd());
+    define('_PS_ADMIN_DIR_', __DIR__);
 }
 require_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
 require_once _PS_ADMIN_DIR_.'/init.php';

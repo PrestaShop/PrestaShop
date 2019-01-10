@@ -27,7 +27,7 @@
 umask(0000); // This will let the permissions be 0777
 
 if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd());
+    define('_PS_ADMIN_DIR_', __DIR__);
 }
 
 require _PS_ADMIN_DIR_.'/../config/config.inc.php';
