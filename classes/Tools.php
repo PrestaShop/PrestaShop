@@ -995,7 +995,7 @@ class ToolsCore
             return array_map(array('Tools', 'htmlentitiesUTF8'), $string);
         }
 
-        return htmlentities((string) $string, $type, 'utf-8');
+        return htmlspecialchars((string) $string, $type, 'utf-8');
     }
 
     public static function htmlentitiesDecodeUTF8($string)
