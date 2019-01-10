@@ -105,12 +105,10 @@ class AbstractTypedCollectionTest extends TestCase
         $this->assertCount(0, $collection);
 
         $element = new CollectionTestElement();
-        $elementAdded = $collection->offsetSet(null, $element);
-        $this->assertTrue($elementAdded);
+        $collection->offsetSet(null, $element);
         $this->assertEquals($element, $collection->offsetGet(0));
 
-        $elementAdded = $collection->offsetSet(1, $element);
-        $this->assertNull($elementAdded);
+        $collection->offsetSet(1, $element);
         $this->assertEquals($element, $collection->offsetGet(1));
     }
 
