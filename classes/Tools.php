@@ -2705,7 +2705,7 @@ FileETag none
             fwrite($write_fd, "# Files\n");
             foreach ($robots_content['Files'] as $iso_code => $files) {
                 foreach ($files as $file) {
-                    if (!empty($languagesIsoIds) && count($languagesIsoIds) > 1) {
+                    if (!empty($languagesIsoIds)) {
                         fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . PHP_EOL);
                     } else {
                         fwrite($write_fd, 'Disallow: /' . $file . PHP_EOL);
