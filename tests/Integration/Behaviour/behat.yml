@@ -1,1 +1,5 @@
-# nothing yet here
+default:
+    suites:
+        default:
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
