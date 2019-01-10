@@ -38,6 +38,6 @@
         <a class="btn btn-primary" href="{{ path('admin_metas_edit', {'metaId': indexPageId}) }}">{{ 'Configure index page'|trans }}</a>
       {% endif %}
     </div>
-    <i class="showcase-card__close material-icons js-remove-helper-block">close</i>
+    <i class="showcase-card__close material-icons js-remove-helper-block" data-close-url="{{ path('admin_metas_close_showcase_card') }}">close</i>
   </div>
 {% endblock %}

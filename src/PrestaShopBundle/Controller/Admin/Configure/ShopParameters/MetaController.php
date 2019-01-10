@@ -26,10 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,29 +77,32 @@ class MetaController extends FrameworkBundleAdminController
         $helperBlockLinkProvider = $this->get('prestashop.core.helper_doc.meta_page_link_provider');
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
 
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig', [
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
-                    'href' => $this->getAdminLink('AdminMeta', ['addmeta' => '']),
-                    'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
-                    'icon' => 'add_circle_outline',
+        return $this->render(
+            '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig',
+            [
+                'layoutHeaderToolbarBtn' => [
+                    'add' => [
+                        'href' => $this->getAdminLink('AdminMeta', ['addmeta' => '']),
+                        'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
+                        'icon' => 'add_circle_outline',
+                    ],
                 ],
-            ],
-            'grid' => $presentedGrid,
-            'metaForm' => $metaForm->createView(),
-            'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
-            'routeKeywords' => $defaultRoutesProvider->getKeywords(),
-            'isModRewriteActive' => $tools->isModRewriteActive(),
-            'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
-            'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
-            'isShopContext' => $isShopContext,
-            'isShopFeatureActive' => $isShopFeatureActive,
-            'isHostMode' => $hostingInformation->isHostMode(),
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminMeta'),
-            'helperDocLink' => $helperBlockLinkProvider->getLink(),
-            'indexPageId' => $metaDataProvider->getIdByPage('index'),
-        ]);
+                'grid' => $presentedGrid,
+                'metaForm' => $metaForm->createView(),
+                'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
+                'routeKeywords' => $defaultRoutesProvider->getKeywords(),
+                'isModRewriteActive' => $tools->isModRewriteActive(),
+                'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
+                'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
+                'isShopContext' => $isShopContext,
+                'isShopFeatureActive' => $isShopFeatureActive,
+                'isHostMode' => $hostingInformation->isHostMode(),
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink('AdminMeta'),
+                'helperDocLink' => $helperBlockLinkProvider->getLink(),
+                'indexPageId' => $metaDataProvider->getIdByPage('index'),
+            ]
+        );
     }
 
     /**
@@ -132,9 +138,12 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function createAction()
     {
-        $legacyLink = $this->getAdminLink('AdminMeta', [
-            'addmeta' => 1,
-        ]);
+        $legacyLink = $this->getAdminLink(
+            'AdminMeta',
+            [
+                'addmeta' => 1,
+            ]
+        );
 
         return $this->redirect($legacyLink);
     }
@@ -150,10 +159,13 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function editAction($metaId)
     {
-        $legacyLink = $this->getAdminLink('AdminMeta', [
-            'id_meta' => $metaId,
-            'updatemeta' => 1,
-        ]);
+        $legacyLink = $this->getAdminLink(
+            'AdminMeta',
+            [
+                'id_meta' => $metaId,
+                'updatemeta' => 1,
+            ]
+        );
 
         return $this->redirect($legacyLink);
     }
@@ -282,5 +294,47 @@ class MetaController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_metas_index');
+    }
+
+    /**
+     * Saves the user preference of closing the showcase card
+     *
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_metas_index")
+     *
+     * @return JsonResponse
+     */
+    public function closeShowcaseCardAction(Request $request)
+    {
+        if ('POST' === $request->getMethod() && $request->get('close')) {
+            try {
+                $employeeId = $this->getContext()->employee->id;
+                $closeShowcaseCard = new CloseShowcaseCardCommand($employeeId, ShowcaseCard::SEO_URLS_CARD);
+                $this->getCommandBus()->handle($closeShowcaseCard);
+
+                return $this->json(
+                    [
+                        'success' => true,
+                        'message' => '',
+                    ]
+                );
+            } catch (\Exception $e) {
+                return $this->json(
+                    [
+                        'success' => false,
+                        'message' => $e->getMessage(),
+                    ],
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+        }
+
+        return $this->json(
+            [
+                'success' => false,
+                'message' => '',
+            ],
+            Response::HTTP_BAD_REQUEST
+        );
     }
 }

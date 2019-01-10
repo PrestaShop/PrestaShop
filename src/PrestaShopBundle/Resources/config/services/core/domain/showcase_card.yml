@@ -1,0 +1,17 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.showcase_card.configuration_map:
+        class: 'PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ConfigurationMap'
+
+    # Command handlers
+
+    prestashop.core.showcase_card.command_handler.close_showcase_card:
+        class: 'PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\CommandHandler\CloseShowcaseCardHandler'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.showcase_card.configuration_map'
+        tags:
+            -   name: 'tactician.handler'
+                command: 'PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand'
