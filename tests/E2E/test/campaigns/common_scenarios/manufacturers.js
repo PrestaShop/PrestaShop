@@ -1,6 +1,7 @@
 const {Menu} = require('../../selectors/BO/menu.js');
 const {CatalogPage} = require('../../selectors/BO/catalogpage/index');
 const {Brands} = require('../../selectors/BO/catalogpage/Manufacturers/brands');
+const {BrandAddress} = require('../../selectors/BO/catalogpage/Manufacturers/brands_address');
 let promise = Promise.resolve();
 
 /**** Example of brand data ****
@@ -15,6 +16,22 @@ let promise = Promise.resolve();
  *    1: 'first key',
  *    2: 'second key'
  *  },
+ * };
+ */
+
+/**** Example of brand address data ****
+ * let brandAddressData = {
+ *  brand: 'name of brand',
+ *  lastName: 'last name of the brand address',
+ *  firstName: 'first name of the brand address',
+ *  address: 'address of the brand address',
+ *  secondAddress: 'second address of the brand address',
+ *  postalCode: 'postal code of the brand address',
+ *  city: 'city of the brand address',
+ *  country: 'country of the brand address',
+ *  homePhone: 'home phone of the brand address',
+ *  mobilePhone: 'mobile phone of the brand address',
+ *  other: 'other',
  * };
  */
 
@@ -40,5 +57,23 @@ module.exports = {
       test('should click on "Save" button', () => client.waitForExistAndClick(Brands.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful creation.'));
     }, 'common_client');
-  }
+  },
+  createBrandAddress: function (brandAddressData) {
+    scenario('Create a new "Brand address"', client => {
+      test('should click on "Add new brand address" button', () => client.waitForExistAndClick(BrandAddress.new_brand_address_button));
+      test('should Choose the brand name', () => client.waitAndSelectByVisibleText(BrandAddress.branch_select, brandAddressData.brand + date_time));
+      test('should set the "Last name" input', () => client.waitAndSetValue(BrandAddress.last_name_input, brandAddressData.lastName));
+      test('should set the "First name" input', () => client.waitAndSetValue(BrandAddress.first_name_input, brandAddressData.firstName));
+      test('should set the "Address" input', () => client.waitAndSetValue(BrandAddress.address_input, brandAddressData.address));
+      test('should set the "Second address" input', () => client.waitAndSetValue(BrandAddress.secondary_address, brandAddressData.secondAddress));
+      test('should set the "Zip code" input', () => client.waitAndSetValue(BrandAddress.postal_code_input, brandAddressData.postalCode));
+      test('should set the "City" input', () => client.waitAndSetValue(BrandAddress.city_input, brandAddressData.city));
+      test('should choose the country', () => client.waitAndSelectByVisibleText(BrandAddress.country, brandAddressData.country));
+      test('should set the "Home phone" input', () => client.waitAndSetValue(BrandAddress.phone_input, brandAddressData.homePhone));
+      test('should set the "Mobile phone" input', () => client.waitAndSetValue(BrandAddress.mobile_phone_input, brandAddressData.mobilePhone));
+      test('should set the "Other" input', () => client.waitAndSetValue(BrandAddress.other_input, brandAddressData.other));
+      test('should click on "Save" button', () => client.waitForExistAndClick(BrandAddress.save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful creation.'));
+    }, 'common_client');
+  },
 };
