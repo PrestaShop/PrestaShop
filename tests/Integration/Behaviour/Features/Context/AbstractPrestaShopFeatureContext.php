@@ -1,26 +1,30 @@
 <?php
 
+namespace Tests\Integration\Behaviour\Features\Context;
+
 use Behat\Behat\Context\Context;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 
 /**
- * Defines application features from the specific context.
+ * PrestaShopFeatureContext provides behat hooks to perform necessary operations for testing:
+ * - shop setup
+ * - database reset between scenario
+ * - cache clear between steps
+ * - ...
  */
-class FeatureContext implements Context
+abstract class AbstractPrestaShopFeatureContext implements Context
 {
-    use SqlManagerContextTrait;
-
     /**
      * PrestaShop Symfony AppKernel
      *
      * Required to access services through the container
      *
-     * @var AppKernel
+     * @var \AppKernel
      */
     protected static $kernel;
 
     /**
-     * "When" steps perform actions, and store the latest result
+     * "When" steps perform actions, and some of them store the latest result
      * in this variable so that "Then" action can check its content
      *
      * @var mixed
@@ -32,25 +36,20 @@ class FeatureContext implements Context
     /** @var bool */
     protected $flag_performDatabaseCleanLight = false;
 
-    public function __construct()
-    {
-    }
-
     /**
      * @BeforeSuite
      */
     public static function prepare($scope)
     {
-        $rootDirectory = __DIR__ . '/../../../../../';
+        require_once __DIR__ . '/bootstrap.php';
 
-        require_once $rootDirectory . 'config/config.inc.php';
-        require_once $rootDirectory . 'app/AppKernel.php';
-
-        self::$kernel = new AppKernel('dev', true);
+        self::$kernel = new \AppKernel('test', true);
         self::$kernel->boot();
     }
 
     /**
+     * This hook can be used to flag a scenario as eligible for database hard reset
+     *
      * @BeforeScenario @database-hard-reset
      */
     public function beforeScenario_cleanDatabaseHard()
@@ -59,6 +58,8 @@ class FeatureContext implements Context
     }
 
     /**
+     * This hook can be used to flag a scenario as eligible for database light reset
+     *
      * @BeforeScenario @database-light-reset
      */
     public function beforeScenario_cleanDatabaseLight()
@@ -70,6 +71,8 @@ class FeatureContext implements Context
     }
 
     /**
+     * This hook can be used to perform a database hard reset if the scenario has been flagged accordingly
+     *
      * @AfterScenario @database-hard-reset
      */
     public function afterScenario_cleanDatabaseHard()
@@ -81,6 +84,8 @@ class FeatureContext implements Context
     }
 
     /**
+     * This hook can be used to perform a database light reset if the scenario has been flagged accordingly
+     *
      * @AfterScenario @database-light-reset
      */
     public function afterScenario_cleanDatabaseLight()
@@ -96,7 +101,7 @@ class FeatureContext implements Context
     /**
      * @BeforeStep
      *
-     * Clear entity manager at each step in order to get fresh data
+     * Clear Doctrine entity manager at each step in order to get fresh data
      */
     public function clearEntityManager()
     {
@@ -104,10 +109,12 @@ class FeatureContext implements Context
     }
 
     /**
+     * Return PrestaShop Symfony services container
+     *
      * @return \Symfony\Component\DependencyInjection\ContainerInterface
      */
     protected static function getContainer()
     {
-        return self::$kernel->getContainer();
+        return static::$kernel->getContainer();
     }
 }

@@ -1,12 +1,18 @@
 <?php
 
+namespace Tests\Integration\Behaviour\Features\Context;
+
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\DatabaseTableField;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 use Behat\Gherkin\Node\TableNode;
 
-trait SqlManagerContextTrait
+/**
+ * SqlManagerFeatureContext provides behat steps to perform actions related to prestashop SQL management
+ * and validate returned outputs
+ */
+class SqlManagerFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
      * @When I request the database fields from table :tableName
@@ -48,12 +54,12 @@ trait SqlManagerContextTrait
 
         $realCount = current($realCountResults)['result'];
 
-        if ((int) $realCount !== (int) $count) {
+        if ((int)$realCount !== (int)$count) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %d sql stored requests, got %d instead',
-                    (int) $count,
-                    (int) $realCount
+                    (int)$count,
+                    (int)$realCount
                 )
             );
         }
@@ -109,9 +115,4 @@ trait SqlManagerContextTrait
             $expected
         ));
     }
-
-    /**
-     * @return \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    abstract protected static function getContainer();
 }
