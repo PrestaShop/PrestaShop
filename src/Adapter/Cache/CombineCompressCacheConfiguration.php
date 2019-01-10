@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 
 /**
  * This class manages CCC features configuration for a Shop.
@@ -150,7 +151,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     {
         try {
             $folder = $this->getThemeCacheFolder();
-            $this->filesystem->mkdir($folder, '0777');
+            $this->filesystem->mkdir($folder, PsFileSystem::DEFAULT_MODE);
 
             return true;
         } catch (IOExceptionInterface $e) {

@@ -27,6 +27,7 @@ use Composer\CaBundle\CaBundle;
 use PHPSQLParser\PHPSQLParser;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 
 class ToolsCore
 {
@@ -1033,14 +1034,13 @@ class ToolsCore
                         if (is_dir($dirname . $file)) {
                             Tools::deleteDirectory($dirname . $file);
                         } elseif (file_exists($dirname . $file)) {
-                            @chmod($dirname . $file, 0777); // NT ?
                             unlink($dirname . $file);
                         }
                     }
                 }
+
                 if ($delete_self && file_exists($dirname)) {
                     if (!rmdir($dirname)) {
-                        @chmod($dirname, 0777); // NT ?
                         return false;
                     }
                 }
@@ -1065,7 +1065,6 @@ class ToolsCore
         }
 
         if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === false) {
-            @chmod($file, 0777); // NT ?
             unlink($file);
         }
     }
@@ -3063,7 +3062,7 @@ exit;
     public static function ZipExtract($from_file, $to_dir)
     {
         if (!file_exists($to_dir)) {
-            mkdir($to_dir, 0777);
+            mkdir($to_dir, PsFileSystem::DEFAULT_MODE);
         }
 
         $zip = new ZipArchive();

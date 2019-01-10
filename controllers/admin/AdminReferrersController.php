@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', __DIR__ . '/..');
+    define('_PS_ADMIN_DIR_', getcwd() . '/..');
 }
 
 if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers' . (int) Tab::getIdFromClassName('AdminReferrers') . (int) Tools::getValue('id_employee'))) {
