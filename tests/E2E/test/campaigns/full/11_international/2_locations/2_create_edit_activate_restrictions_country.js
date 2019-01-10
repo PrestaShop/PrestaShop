@@ -3,9 +3,6 @@
  * [id="PS-156"][Name="Add a country"]
  * [id="PS-157"][Name="Edit a country"]
  * [id="PS-158"][Name="Activate country restrictions"]
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-156
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-157
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-158
  **/
 
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');

@@ -4,10 +4,6 @@
  * [id="PS-160"][Name="Edit a zone"]
  * [id="PS-161"][Name="Delete a zone"]
  * [id="PS-162"][Name="Bulk actions"]
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-159
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-160
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-161
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-162
  **/
 
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
