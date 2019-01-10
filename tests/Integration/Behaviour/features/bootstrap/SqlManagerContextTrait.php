@@ -33,7 +33,7 @@ trait SqlManagerContextTrait
 
         foreach ($table->getRows() as $row) {
             $this->assertDatabaseFieldsContain($result, current($row));
-        };
+        }
     }
 
     /**
@@ -48,13 +48,12 @@ trait SqlManagerContextTrait
 
         $realCount = current($realCountResults)['result'];
 
-        if ((int)$realCount !== (int)$count) {
-
+        if ((int) $realCount !== (int) $count) {
             throw new \RuntimeException(
                 sprintf(
                     'Expects %d sql stored requests, got %d instead',
-                    (int)$count,
-                    (int)$realCount
+                    (int) $count,
+                    (int) $realCount
                 )
             );
         }
@@ -114,5 +113,5 @@ trait SqlManagerContextTrait
     /**
      * @return \Symfony\Component\DependencyInjection\ContainerInterface
      */
-    abstract static protected function getContainer();
+    abstract protected static function getContainer();
 }
