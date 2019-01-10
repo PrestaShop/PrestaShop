@@ -2678,11 +2678,14 @@ FileETag none
                         PHP_EOL
                     )
                 );
+                // Disallow multishop directories
                 foreach ($uriList as $uri) {
                     foreach ($robots_content['Directories'] as $dir) {
                         fwrite($write_fd, 'Disallow: ' . $uri['physical'] . $dir . PHP_EOL);
                     }
                 }
+
+                // Disallow multilang directories
                 if (!empty($languagesIsoIds)) {
                     foreach ($languagesIsoIds as $language) {
                         foreach ($robots_content['Directories'] as $dir) {
