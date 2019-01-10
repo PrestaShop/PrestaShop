@@ -67,3 +67,12 @@ admin_metas_generate_robots_file:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:generateRobotsFile'
         _legacy_controller: AdminMeta
         _legacy_link: AdminMeta:submitRobots
+
+admin_metas_close_showcase_card:
+    path: /close-showcase-card
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:closeShowcaseCard'
+        _legacy_controller: AdminMeta
+    requirements:
+        close: \d+
