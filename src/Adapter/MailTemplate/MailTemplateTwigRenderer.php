@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateParametersBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailTemplateTransformationCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailTemplateTransformationInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Language;
@@ -58,10 +59,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     ) {
         $this->engine = $engine;
         $this->parametersBuilder = $parametersBuilder;
-        $this->transformations = [
-            MailTemplateInterface::HTML_TYPE => [],
-            MailTemplateInterface::TXT_TYPE => [],
-        ];
+        $this->transformations = new MailTemplateTransformationCollection();
     }
 
     /**
@@ -72,9 +70,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      */
     public function renderHtml(MailTemplateInterface $template, Language $language)
     {
-        $templatePath = !empty($template->getHtmlPath()) ? $template->getHtmlPath() : $template->getTxtPath();
-
-        return $this->render($template, $language, $templatePath, $this->transformations[MailTemplateInterface::HTML_TYPE]);
+        return $this->render($template, $language, MailTemplateInterface::HTML_TYPE);
     }
 
     /**
@@ -85,30 +81,35 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      */
     public function renderTxt(MailTemplateInterface $template, Language $language)
     {
-        $templatePath = !empty($template->getTxtPath()) ? $template->getTxtPath() : $template->getHtmlPath();
-
-        return $this->render($template, $language, $templatePath, $this->transformations[MailTemplateInterface::TXT_TYPE]);
+        return $this->render($template, $language, MailTemplateInterface::TXT_TYPE);
     }
 
     /**
      * @param MailTemplateInterface $template
      * @param Language $language
-     * @param string $templatePath
-     * @param MailTemplateTransformationInterface[]
+     * @param string $templateType
      *
      * @return string
      */
     private function render(
         MailTemplateInterface $template,
         Language $language,
-        $templatePath,
-        array $transformations
+        $templateType
     ) {
         $parameters = $this->parametersBuilder->buildParameters($template, $language);
+        if (MailTemplateInterface::HTML_TYPE === $templateType) {
+            $templatePath = !empty($template->getHtmlPath()) ? $template->getHtmlPath() : $template->getTxtPath();
+        } else {
+            $templatePath = !empty($template->getTxtPath()) ? $template->getTxtPath() : $template->getHtmlPath();
+        }
 
         $renderedTemplate = $this->engine->render($templatePath, $parameters);
         /** @var MailTemplateTransformationInterface $transformation */
-        foreach ($transformations as $transformation) {
+        foreach ($this->transformations as $transformation) {
+            if ($templateType !== $transformation->getType()) {
+                continue;
+            }
+
             $renderedTemplate = $transformation
                 ->setTemplate($template)
                 ->setLanguage($language)
@@ -122,12 +123,9 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function addTransformationByType(MailTemplateTransformationInterface $transformer, $templateType)
+    public function addTransformation(MailTemplateTransformationInterface $transformation)
     {
-        if (!isset($this->transformations[$templateType])) {
-            $this->transformations[$templateType] = [];
-        }
-        $this->transformations[$templateType][] = $transformer;
+        $this->transformations[] = $transformation;
 
         return $this;
     }

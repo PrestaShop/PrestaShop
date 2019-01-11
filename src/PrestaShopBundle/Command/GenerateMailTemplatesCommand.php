@@ -43,7 +43,8 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
             ->setDescription('Generate mail templates for a specified theme')
             ->addArgument('theme', InputArgument::REQUIRED, 'Theme to use for mail templates.')
             ->addArgument('locale', InputArgument::REQUIRED, 'Which locale to use for the templates.')
-            ->addArgument('outputFolder', InputArgument::REQUIRED, 'Output folder to export templates.')
+            ->addArgument('coreOutputFolder', InputArgument::REQUIRED, 'Output folder to export core templates.')
+            ->addArgument('modulesOutputFolder', InputArgument::OPTIONAL, 'Output folder to export modules templates (by default same as core).')
         ;
     }
 
@@ -56,12 +57,15 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $theme = $input->getArgument('theme');
-        $outputFolder = $input->getArgument('outputFolder');
-        if (!file_exists($outputFolder)) {
-            $outputFolder = implode(DIRECTORY_SEPARATOR, [getcwd(), $outputFolder]);
-            if (file_exists($outputFolder)) {
-                $outputFolder = realpath($outputFolder);
-            }
+        $coreOutputFolder = $input->getArgument('coreOutputFolder');
+        if (file_exists($coreOutputFolder)) {
+            $coreOutputFolder = realpath($coreOutputFolder);
+        }
+        $modulesOutputFolder = $input->getArgument('modulesOutputFolder');
+        if (null !== $modulesOutputFolder && file_exists($modulesOutputFolder)) {
+            $modulesOutputFolder = realpath($modulesOutputFolder);
+        } else {
+            $modulesOutputFolder = $coreOutputFolder;
         }
 
         $this->initContext();
@@ -69,10 +73,13 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
         $locale = $input->getArgument('locale');
         $language = $this->getLanguage($locale);
 
-        $output->writeln(sprintf('Exporting mail with theme %s for language %s to %s', $theme, $language->name, $outputFolder));
+        $output->writeln(sprintf('Exporting mail with theme %s for language %s', $theme, $language->name));
+        $output->writeln(sprintf('Core output folder: %s', $coreOutputFolder));
+        $output->writeln(sprintf('Modules output folder: %s', $modulesOutputFolder));
+
         /** @var MailTemplateGenerator $catalog */
         $generator = $this->getContainer()->get('prestashop.core.mail_template.generator');
-        $generator->generateThemeTemplates($theme, $language, $outputFolder);
+        $generator->generateThemeTemplates($theme, $language, $coreOutputFolder, $modulesOutputFolder);
     }
 
     /**
