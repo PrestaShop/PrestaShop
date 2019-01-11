@@ -31,21 +31,21 @@ use Html2Text\Html2Text;
 class HTMLTextifyTransformation extends AbstractMailTemplateTransformation
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function apply($templateContent, array $templateVariables)
     {
         $textifier = new Html2Text($templateContent);
         $templateContent = $textifier->getText();
 
-        $templateContent = preg_replace('/^\s+/m', "", $templateContent);
+        $templateContent = preg_replace('/^\s+/m', '', $templateContent);
         //$templateContent = preg_replace('/^ +$/m', "", $templateContent);
         $templateContent = preg_replace_callback('/\{\w+\}/', function ($m) {
             return strtolower($m[0]);
         }, $templateContent);
 
         if (!empty($_SERVER['HTTP_HOST'])) {
-            $templateContent = preg_replace('#\w+://'.preg_quote($_SERVER['HTTP_HOST']).'/?#i', '', $templateContent);
+            $templateContent = preg_replace('#\w+://' . preg_quote($_SERVER['HTTP_HOST']) . '/?#i', '', $templateContent);
         }
 
         return $templateContent;

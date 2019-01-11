@@ -120,7 +120,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function addTransformationByType(MailTemplateTransformationInterface $transformer, $templateType)
     {
