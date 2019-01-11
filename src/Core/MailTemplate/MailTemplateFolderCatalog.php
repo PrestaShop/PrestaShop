@@ -157,7 +157,7 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
             if (!isset($templateFiles[$templateName])) {
                 $templateFiles[$templateName] = [
                     MailTemplateInterface::HTML_TYPE => '',
-                    MailTemplateInterface::TXT_TYPE => ''
+                    MailTemplateInterface::TXT_TYPE => '',
                 ];
             }
             $templateType = $this->getTemplateType($fileInfo);

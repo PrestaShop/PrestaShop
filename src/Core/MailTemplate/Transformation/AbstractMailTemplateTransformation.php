@@ -41,7 +41,7 @@ abstract class AbstractMailTemplateTransformation implements MailTemplateTransfo
     protected $language;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setTemplate(MailTemplateInterface $template)
     {
@@ -51,7 +51,7 @@ abstract class AbstractMailTemplateTransformation implements MailTemplateTransfo
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setLanguage(Language $language)
     {
@@ -59,5 +59,4 @@ abstract class AbstractMailTemplateTransformation implements MailTemplateTransfo
 
         return $this;
     }
-
 }
