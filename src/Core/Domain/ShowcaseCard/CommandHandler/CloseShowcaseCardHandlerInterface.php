@@ -34,9 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardComm
 interface CloseShowcaseCardHandlerInterface
 {
     /**
-     * @param CloseShowcaseCardCommand $command
+     * Closes a showcase card permanently
      *
-     * @return bool True if the showcase card is closed, False otherwise
+     * @param CloseShowcaseCardCommand $command
      */
     public function handle(CloseShowcaseCardCommand $command);
 }
