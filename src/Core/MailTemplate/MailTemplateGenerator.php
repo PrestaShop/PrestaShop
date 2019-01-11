@@ -89,21 +89,29 @@ class MailTemplateGenerator
         $templates = $this->catalog->listTemplates($theme);
         /** @var MailTemplateInterface $template */
         foreach ($templates as $template) {
-            $generatedTemplate = $this->renderer->render($template, $language);
-            $templatePath = $this->generateTemplatePath($template, $outputFolder);
-            $this->fileSystem->dumpFile($templatePath, $generatedTemplate);
-            $this->logger->info(sprintf('Generate template %s at %s', $template->getName(), $templatePath));
+            //Generate HTML template
+            $generatedTemplate = $this->renderer->renderHtml($template, $language);
+            $htmlTemplatePath = $this->generateTemplatePath($template, MailTemplateInterface::HTML_TYPE, $outputFolder);
+            $this->fileSystem->dumpFile($htmlTemplatePath, $generatedTemplate);
+
+            //Generate HTML template
+            $generatedTemplate = $this->renderer->renderTxt($template, $language);
+            $txtTemplatePath = $this->generateTemplatePath($template, MailTemplateInterface::TXT_TYPE, $outputFolder);
+            $this->fileSystem->dumpFile($txtTemplatePath, $generatedTemplate);
+            $this->logger->info(sprintf('Generate template %s at html: %s, txt: %s', $template->getName(), $htmlTemplatePath, $txtTemplatePath));
         }
     }
 
     /**
      * @param MailTemplateInterface $template
+     * @param string $type
      * @param string $outputFolder
+     *
      *
      * @return string
      */
-    private function generateTemplatePath(MailTemplateInterface $template, $outputFolder)
+    private function generateTemplatePath(MailTemplateInterface $template, $type, $outputFolder)
     {
-        return implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getName()]) . '.' . $template->getType();
+        return implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getName()]) . '.' . $type;
     }
 }

@@ -24,58 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate;
+namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
+
+use Language;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 
 /**
- * Interface MailTemplateInterface is used to contain the basic info about a mail template:
+ * Class AbstractMailTemplateTransformation
  */
-interface MailTemplateInterface
+abstract class AbstractMailTemplateTransformation implements MailTemplateTransformationInterface
 {
-    const CORE_CATEGORY = 'core';
-    const MODULES_CATEGORY = 'modules';
+    /** @var MailTemplateInterface */
+    protected $template;
 
-    const HTML_TYPE = 'html';
-    const TXT_TYPE = 'txt';
-
-    /**
-     * Whether the template is used by the core or modules
-     *
-     * @return string
-     */
-    public function getCategory();
+    /** @var Language */
+    protected $language;
 
     /**
-     * Name of the template to describe its purpose
-     *
-     * @return string
+     * @inheritDoc
      */
-    public function getName();
+    public function setTemplate(MailTemplateInterface $template)
+    {
+        $this->template = $template;
+
+        return $this;
+    }
 
     /**
-     * Which theme this template is associated to
-     *
-     * @return string
+     * @inheritDoc
      */
-    public function getTheme();
+    public function setLanguage(Language $language)
+    {
+        $this->language = $language;
 
-    /**
-     * Absolute path of the html template file
-     *
-     * @return string
-     */
-    public function getHtmlPath();
+        return $this;
+    }
 
-    /**
-     * Absolute path of the html template file
-     *
-     * @return string
-     */
-    public function getTxtPath();
-
-    /**
-     * Which module this template is associated to (if any)
-     *
-     * @return string|null
-     */
-    public function getModuleName();
 }

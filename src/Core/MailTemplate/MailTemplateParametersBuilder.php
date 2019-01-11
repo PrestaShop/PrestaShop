@@ -60,7 +60,6 @@ class MailTemplateParametersBuilder implements MailTemplateParametersBuilderInte
         $parameters = array_merge($this->defaultParameters, [
             'languageIsRTL' => (bool) $language->is_rtl,
             'languageDefaultFont' => $languageDefaultFont,
-            'templateType' => $template->getType(),
             'templateTheme' => $template->getTheme(),
             'templateName' => $template->getName(),
             'templateModuleName' => $template->getModuleName(),
