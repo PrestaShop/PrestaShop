@@ -1,0 +1,19 @@
+{% extends '@MailThemes/'~templateTheme~'/components/layout.html.twig' %}
+
+{% block content %}
+<tr>
+  <td align="center" class="titleblock">
+    <span class="title">{{ 'Hello'|trans({}, 'EmailsBody', locale) }}</span>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="linkbelow">
+    <span>
+      {{ 'This is a <strong>test e-mail</strong> from your shop.<br /><br /> If you can read this, the test was successful!'|trans({}, 'EmailsBody', locale) }}.
+    </span>
+  </td>
+</tr>
+{% endblock %}
