@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardComm
 /**
  * Saves the showcase card status to keep it closed
  */
-class CloseShowcaseCardHandler implements CloseShowcaseCardHandlerInterface
+final class CloseShowcaseCardHandler implements CloseShowcaseCardHandlerInterface
 {
     /**
      * @var ConfigurationInterface
