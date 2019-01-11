@@ -44,6 +44,15 @@ class MailTemplateGeneratorTest extends TestCase
     /** @var string */
     private $tempDir;
 
+    /** @var string */
+    private $outputTempDir;
+
+    /** @var string */
+    private $coreTempDir;
+
+    /** @var string */
+    private $modulesTempDir;
+
     /** @var Filesystem */
     private $fs;
 
@@ -55,7 +64,10 @@ class MailTemplateGeneratorTest extends TestCase
         parent::setUp();
         $this->fs = new Filesystem();
         $this->tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'mail_templates';
-        $this->fs->remove($this->tempDir);
+        $this->outputTempDir = $this->tempDir . DIRECTORY_SEPARATOR . 'output';
+        $this->coreTempDir = $this->outputTempDir . DIRECTORY_SEPARATOR . MailTemplateInterface::CORE_CATEGORY;
+        $this->modulesTempDir = $this->outputTempDir . DIRECTORY_SEPARATOR . MailTemplateInterface::MODULES_CATEGORY;
+        $this->fs->remove($this->outputTempDir);
         $this->templates = new MailTemplateCollection([
             new MailTemplate(
                 'classic',
@@ -81,7 +93,8 @@ class MailTemplateGeneratorTest extends TestCase
                 'ps_reminder'
             ),
         ]);
-        $this->fs->mkdir($this->tempDir);
+        $this->fs->mkdir($this->coreTempDir);
+        $this->fs->mkdir($this->modulesTempDir);
     }
 
     public function testConstructor()
@@ -120,10 +133,10 @@ class MailTemplateGeneratorTest extends TestCase
         );
         $this->assertNotNull($generator);
 
-        $generator->generateThemeTemplates('toto', $this->createLanguageMock(), sys_get_temp_dir());
+        $generator->generateThemeTemplates('toto', $this->createLanguageMock(), $this->coreTempDir, $this->modulesTempDir);
     }
 
-    public function testInvalidOutputFolder()
+    public function testInvalidCoreOutputFolders()
     {
         $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
@@ -139,14 +152,43 @@ class MailTemplateGeneratorTest extends TestCase
         $fakeFolder = $this->tempDir . DIRECTORY_SEPARATOR . 'invisible';
         $caughtException = null;
         try {
-            $generator->generateThemeTemplates('toto', $this->createLanguageMock(), $fakeFolder);
+            $generator->generateThemeTemplates('toto', $this->createLanguageMock(), $fakeFolder, $this->modulesTempDir);
         } catch (InvalidException $e) {
             $caughtException = $e;
         }
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(InvalidException::class, $caughtException);
         $expectedMessage = sprintf(
-            'Invalid output folder "%s"',
+            'Invalid core output folder "%s"',
+            $fakeFolder
+        );
+        $this->assertEquals($expectedMessage, $caughtException->getMessage());
+    }
+
+    public function testInvalidModulesOutputFolders()
+    {
+        $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $generator = new MailTemplateGenerator(
+            $this->createCatalogMock(['titi', 'tata', 'toto']),
+            $mailRenderer
+        );
+        $this->assertNotNull($generator);
+
+        $fakeFolder = $this->tempDir . DIRECTORY_SEPARATOR . 'invisible';
+        $caughtException = null;
+        try {
+            $generator->generateThemeTemplates('toto', $this->createLanguageMock(), $this->coreTempDir, $fakeFolder);
+        } catch (InvalidException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidException::class, $caughtException);
+        $expectedMessage = sprintf(
+            'Invalid modules output folder "%s"',
             $fakeFolder
         );
         $this->assertEquals($expectedMessage, $caughtException->getMessage());
@@ -160,14 +202,14 @@ class MailTemplateGeneratorTest extends TestCase
         );
         $this->assertNotNull($generator);
 
-        $generator->generateThemeTemplates('classic', $this->createLanguageMock(), $this->tempDir);
+        $generator->generateThemeTemplates('classic', $this->createLanguageMock(), $this->coreTempDir, $this->modulesTempDir);
         $expectedFiles = [
-            'account.html' => 'account_html_core_',
-            'account.txt' => 'account_txt_core_',
-            'followup_1.html' => 'followup_1_html_modules_',
-            'followup_1.txt' => 'followup_1_txt_modules_',
-            'productoutofstock.html' => 'productoutofstock_html_modules_',
-            'productoutofstock.txt' => 'productoutofstock_txt_modules_',
+            'core/account.html' => 'account_html_core_',
+            'core/account.txt' => 'account_txt_core_',
+            'modules/followup/mails/followup_1.html' => 'followup_1_html_modules_',
+            'modules/followup/mails/followup_1.txt' => 'followup_1_txt_modules_',
+            'modules/ps_reminder/mails/productoutofstock.html' => 'productoutofstock_html_modules_',
+            'modules/ps_reminder/mails/productoutofstock.txt' => 'productoutofstock_txt_modules_',
         ];
         $this->checkExpectedFiles($expectedFiles);
     }
@@ -180,14 +222,14 @@ class MailTemplateGeneratorTest extends TestCase
         );
         $this->assertNotNull($generator);
 
-        $generator->generateThemeTemplates('classic', $this->createLanguageMock('fr'), $this->tempDir);
+        $generator->generateThemeTemplates('classic', $this->createLanguageMock('fr'), $this->coreTempDir, $this->modulesTempDir);
         $expectedFiles = [
-            'account.html' => 'account_html_core_fr',
-            'account.txt' => 'account_txt_core_fr',
-            'followup_1.html' => 'followup_1_html_modules_fr',
-            'followup_1.txt' => 'followup_1_txt_modules_fr',
-            'productoutofstock.html' => 'productoutofstock_html_modules_fr',
-            'productoutofstock.txt' => 'productoutofstock_txt_modules_fr',
+            'core/account.html' => 'account_html_core_fr',
+            'core/account.txt' => 'account_txt_core_fr',
+            'modules/followup/mails/followup_1.html' => 'followup_1_html_modules_fr',
+            'modules/followup/mails/followup_1.txt' => 'followup_1_txt_modules_fr',
+            'modules/ps_reminder/mails/productoutofstock.html' => 'productoutofstock_html_modules_fr',
+            'modules/ps_reminder/mails/productoutofstock.txt' => 'productoutofstock_txt_modules_fr',
         ];
         $this->checkExpectedFiles($expectedFiles);
     }
@@ -198,10 +240,10 @@ class MailTemplateGeneratorTest extends TestCase
     private function checkExpectedFiles(array $expectedFiles)
     {
         $finder = new Finder();
-        $finder->files()->in($this->tempDir)->depth(0);
+        $finder->files()->in($this->outputTempDir);
         $this->assertCount(count($expectedFiles), $finder);
         foreach ($expectedFiles as $expectedFile => $expectedContent) {
-            $filePath = implode(DIRECTORY_SEPARATOR, [$this->tempDir, $expectedFile]);
+            $filePath = implode(DIRECTORY_SEPARATOR, [$this->outputTempDir, $expectedFile]);
             $this->assertTrue($this->fs->exists($filePath), 'File not found '.$filePath);
             $this->assertEquals($expectedContent, file_get_contents($filePath));
         }
