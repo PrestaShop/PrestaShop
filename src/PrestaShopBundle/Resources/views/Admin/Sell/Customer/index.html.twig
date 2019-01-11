@@ -39,6 +39,14 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
+  {% block employee_helper_card %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/helper_card.html.twig' %}
+      </div>
+    </div>
+  {% endblock %}
+
   {% block customers_kpis %}
     <div class="col-md-12">
       <div class="card">

@@ -34,6 +34,7 @@ import SubmitGridExtension from '../../components/grid/extension/submit-grid-act
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 import LinkableItem from "../../components/linkable-item";
 import ChoiceTable from "../../components/choice-table";
+import HelperCard from "../../components/helper-card";
 
 const $ = window.$;
 
@@ -58,4 +59,6 @@ $(() => {
 
   // needed for "Group access" input in Add/Edit customer forms
   new ChoiceTable();
+
+  new new HelperCard();
 });

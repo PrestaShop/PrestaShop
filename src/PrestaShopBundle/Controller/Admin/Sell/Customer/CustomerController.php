@@ -72,12 +72,15 @@ class CustomerController extends AbstractAdminController
         $customerGridFactory = $this->get('prestashop.core.grid.factory.customer');
         $customerGrid = $customerGridFactory->getGrid($filters);
 
+        $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
+
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerGrid' => $this->presentGrid($customerGrid),
             'customersKpi' => $customersKpiFactory->build(),
             'customerRequiredFieldsForm' => $this->getRequiredFieldsForm()->createView(),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
+            'helperCardDocumentationLink' => $helperBlockLinkProvider->getLink('customer'),
         ]);
     }
 

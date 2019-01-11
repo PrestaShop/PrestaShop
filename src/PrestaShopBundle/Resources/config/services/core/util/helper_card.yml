@@ -18,3 +18,8 @@ services:
           'es': 'http://doc.prestashop.com/display/PS17/SEO+y+URLs'
           'it': 'http://doc.prestashop.com/display/PS17/SEO+e+URL'
           '_fallback': 'http://doc.prestashop.com/display/PS17/SEO+and+URLs'
+        'customer':
+          'fr': 'http://doc.prestashop.com/display/PS17/Vos+clients'
+          'es': 'http://doc.prestashop.com/display/PS17/Tus+clientes'
+          'it': 'http://doc.prestashop.com/display/PS17/I+Tuoi+Clienti'
+          '_fallback': 'http://doc.prestashop.com/display/PS17/Your+customers'
