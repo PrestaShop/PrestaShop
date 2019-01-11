@@ -28,7 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
 use Currency;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 
 /**
  * Installed Currencies data layer.
