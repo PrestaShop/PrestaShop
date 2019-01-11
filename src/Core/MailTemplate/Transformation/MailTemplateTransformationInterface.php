@@ -37,6 +37,7 @@ interface MailTemplateTransformationInterface
 {
     /**
      * @param string $templateContent
+     * @param array $templateVariables
      *
      * @return string
      */

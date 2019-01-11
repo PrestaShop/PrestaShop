@@ -29,14 +29,13 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 use Pelago\Emogrifier;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Symfony\Component\DomCrawler\Crawler;
-use Language;
 use DOMElement;
 use DOMAttr;
 
 class CSSInlineTransformation extends AbstractMailTemplateTransformation
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function apply($templateContent, array $templateVariables)
     {

@@ -72,7 +72,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      */
     public function getGlobals()
     {
-        /**
+        /*
          * As this is a twig extension we need to be very resilient and prevent it from crashing
          * the environment, for example the command debug:twig should not fail because of this extension
          */

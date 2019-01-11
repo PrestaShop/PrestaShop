@@ -48,7 +48,7 @@ class MailTemplateParametersBuilder implements MailTemplateParametersBuilderInte
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function buildParameters(MailTemplateInterface $template, Language $language)
     {
