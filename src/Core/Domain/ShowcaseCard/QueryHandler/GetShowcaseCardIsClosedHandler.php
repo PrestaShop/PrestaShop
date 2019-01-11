@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ConfigurationMap;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 
-class GetShowcaseCardIsClosedHandler implements GetShowcaseCardIsClosedHandlerInterface
+final class GetShowcaseCardIsClosedHandler implements GetShowcaseCardIsClosedHandlerInterface
 {
     /**
      * @var ConfigurationInterface
