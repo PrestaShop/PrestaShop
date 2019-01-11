@@ -62,6 +62,7 @@ services:
             - 'OrdersInvoicesByDate'
             - '@prestashop.adapter.data_provider.order_invoice'
             - '@prestashop.adapter.pdf.generator.invoice'
+        tags: ['web-only'] # as it relies on PDFGenerator
 
     prestashop.admin.order.invoices.by_status.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByStatusFormHandler'
@@ -74,6 +75,7 @@ services:
             - 'OrdersInvoicesByStatus'
             - '@prestashop.adapter.data_provider.order_invoice'
             - '@prestashop.adapter.pdf.generator.invoice'
+        tags: ['web-only'] # as it relies on PDFGenerator
 
     prestashop.admin.order.invoices.options.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'

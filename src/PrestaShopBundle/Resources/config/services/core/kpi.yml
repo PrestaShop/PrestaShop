@@ -13,6 +13,7 @@ services:
             - '@prestashop.adapter.kpi.enabled_languages'
             - '@prestashop.adapter.kpi.main_country'
             - '@prestashop.adapter.kpi.translations'
+        tags: ['web-only']
 
     prestashop.core.kpi_row.factory.categories:
         class: PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactory
@@ -21,6 +22,7 @@ services:
           - '@prestashop.adapter.kpi.empty_categories'
           - '@prestashop.adapter.kpi.top_category'
           - '@prestashop.adapter.kpi.average_products_in_category'
+        tags: ['web-only']
 
     prestashop.core.kpi_row.factory.customers:
         class: PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactory
@@ -29,3 +31,4 @@ services:
             - '@prestashop.adapter.kpi.average_customer_age'
             - '@prestashop.adapter.kpi.order_per_customer'
             - '@prestashop.adapter.kpi.newsletter_registrations'
+        tags: ['web-only']

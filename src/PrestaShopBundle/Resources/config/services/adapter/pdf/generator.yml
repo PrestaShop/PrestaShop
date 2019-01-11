@@ -7,3 +7,4 @@ services:
         arguments:
             - "@=service('prestashop.adapter.legacy.context').getSmarty()"
             - '@prestashop.adapter.pdf.type_provider.invoice'
+        tags: ['web-only']
