@@ -42,34 +42,21 @@ class CSSInlineTransformationTest extends TestCase
     }
 
     public function testSetters()
-    {
-        $transformation = new CSSInlineTransformation();
+     {
+         $transformation = new CSSInlineTransformation();
 
-        $templateMock = $this->getMockBuilder(MailTemplateInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $this->assertEquals($transformation, $transformation->setTemplate($templateMock));
+         $templateMock = $this->getMockBuilder(MailTemplateInterface::class)
+             ->disableOriginalConstructor()
+             ->getMock()
+         ;
+         $this->assertEquals($transformation, $transformation->setTemplate($templateMock));
 
-        $languageMock = $this->getMockBuilder(Language::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $this->assertEquals($transformation, $transformation->setLanguage($languageMock));
-    }
-
-    public function testTxtTemplate()
-    {
-        $cssPath = realpath(__DIR__ . '/../../Resources/assets/css/titles.css');
-        $simpleHtml = $this->createSimpleHtml($cssPath);
-        $transformation = new CSSInlineTransformation();
-
-        $transformedHtml = $transformation
-            ->setTemplate($this->buildTemplateMock(MailTemplateInterface::TXT_TYPE))
-            ->apply($simpleHtml, [])
-        ;
-        $this->assertEquals($simpleHtml, $transformedHtml);
-    }
+         $languageMock = $this->getMockBuilder(Language::class)
+             ->disableOriginalConstructor()
+             ->getMock()
+         ;
+         $this->assertEquals($transformation, $transformation->setLanguage($languageMock));
+     }
 
     public function testSimpleCss()
     {
@@ -78,8 +65,7 @@ class CSSInlineTransformationTest extends TestCase
         $transformation = new CSSInlineTransformation();
 
         $transformedHtml = $transformation
-            ->setTemplate($this->buildTemplateMock(MailTemplateInterface::HTML_TYPE))
-            ->apply($simpleHtml, [])
+            ->apply($simpleHtml, [], $this->buildLanguageMock())
         ;
         $this->assertNotEquals($simpleHtml, $transformedHtml);
 
@@ -100,8 +86,7 @@ class CSSInlineTransformationTest extends TestCase
         $transformation = new CSSInlineTransformation();
 
         $transformedHtml = $transformation
-            ->setTemplate($this->buildTemplateMock(MailTemplateInterface::HTML_TYPE))
-            ->apply($simpleHtml, [])
+            ->apply($simpleHtml, [], $this->buildLanguageMock())
         ;
         $this->assertNotNull($transformedHtml);
 
@@ -118,8 +103,7 @@ class CSSInlineTransformationTest extends TestCase
         $transformation = new CSSInlineTransformation();
 
         $transformedHtml = $transformation
-            ->setTemplate($this->buildTemplateMock(MailTemplateInterface::HTML_TYPE))
-            ->apply($simpleHtml, [])
+            ->apply($simpleHtml, [], $this->buildLanguageMock())
         ;
         $this->assertNotNull($transformedHtml);
 
@@ -139,8 +123,7 @@ class CSSInlineTransformationTest extends TestCase
         $transformation = new CSSInlineTransformation();
 
         $transformedHtml = $transformation
-            ->setTemplate($this->buildTemplateMock(MailTemplateInterface::HTML_TYPE))
-            ->apply($simpleHtml, [])
+            ->apply($simpleHtml, [], $this->buildLanguageMock())
         ;
         $this->assertNotNull($transformedHtml);
 
@@ -187,8 +170,7 @@ HTML;
         $transformation = new CSSInlineTransformation();
 
         $transformedHtml = $transformation
-            ->setTemplate($this->buildTemplateMock(MailTemplateInterface::HTML_TYPE))
-            ->apply($html, [])
+            ->apply($html, [], $this->buildLanguageMock())
         ;
         $this->assertNotEquals($html, $transformedHtml);
     }
@@ -244,6 +226,19 @@ HTML;
         ;
 
         return $templateMock;
+    }
+
+    /**
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|Language
+     */
+    private function buildLanguageMock()
+    {
+        $languageMock = $this->getMockBuilder(Language::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $languageMock;
     }
 
     /**

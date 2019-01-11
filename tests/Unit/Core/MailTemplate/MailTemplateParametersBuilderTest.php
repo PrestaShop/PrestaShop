@@ -45,7 +45,6 @@ class MailTemplateParametersBuilderTest extends TestCase
     public function testBuildParameters()
     {
         $templateInfos = [
-            'getType' => MailTemplateInterface::HTML_TYPE,
             'getTheme' => 'classic',
             'getName' => 'user_account',
             'getModuleName' => null,
@@ -57,7 +56,6 @@ class MailTemplateParametersBuilderTest extends TestCase
         $parameters = $builder->buildParameters($templateMock, $languageMock);
 
         $this->assertEquals([
-            'templateType' => MailTemplateInterface::HTML_TYPE,
             'templateName' => 'user_account',
             'templateTheme' => 'classic',
             'templateModuleName' => null,
@@ -70,7 +68,6 @@ class MailTemplateParametersBuilderTest extends TestCase
     public function testBuildParametersWithDefault()
     {
         $templateInfos = [
-            'getType' => MailTemplateInterface::HTML_TYPE,
             'getTheme' => 'classic',
             'getName' => 'user_account',
             'getModuleName' => null,
@@ -86,7 +83,6 @@ class MailTemplateParametersBuilderTest extends TestCase
 
         $this->assertEquals([
             'url' => 'http://test.com',
-            'templateType' => MailTemplateInterface::HTML_TYPE,
             'templateName' => 'user_account',
             'templateTheme' => 'classic',
             'templateModuleName' => null,
@@ -99,7 +95,6 @@ class MailTemplateParametersBuilderTest extends TestCase
     public function testBuildParametersWithRTL()
     {
         $templateInfos = [
-            'getType' => MailTemplateInterface::HTML_TYPE,
             'getTheme' => 'classic',
             'getName' => 'user_account',
             'getModuleName' => 'ps_reminder',
@@ -111,7 +106,6 @@ class MailTemplateParametersBuilderTest extends TestCase
         $parameters = $builder->buildParameters($templateMock, $languageMock);
 
         $this->assertEquals([
-            'templateType' => MailTemplateInterface::HTML_TYPE,
             'templateName' => 'user_account',
             'templateTheme' => 'classic',
             'templateModuleName' => 'ps_reminder',
