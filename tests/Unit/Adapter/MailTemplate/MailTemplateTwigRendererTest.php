@@ -52,49 +52,118 @@ class MailTemplateTwigRendererTest extends TestCase
         $this->assertNotNull($generator);
     }
 
-    public function testRender()
+    public function testRenderHtml()
     {
+        $templatePaths = [
+            MailTemplateInterface::HTML_TYPE => 'path/to/test_template.html.twig',
+        ];
         $expectedTemplate = 'mail_template';
-        $expectedPath = 'path/to/test_template.twig';
         $expectedParameters = ['locale' => null, 'url' => 'http://test.com'];
         $expectedLanguage = $this->createLanguageMock();
-        $template = $this->createMailTemplateMock($expectedPath);
+        $template = $this->createMailTemplateMock($templatePaths);
 
         $generator = new MailTemplateTwigRenderer(
-            $this->createEngineMock($expectedPath, $expectedParameters, $expectedTemplate),
+            $this->createEngineMock($templatePaths[MailTemplateInterface::HTML_TYPE], $expectedParameters, $expectedTemplate),
             $this->createParametersBuilderMock($expectedParameters, $expectedLanguage)
         );
         $this->assertNotNull($generator);
 
-        $generatedTemplate = $generator->render($template, $expectedLanguage);
+        $generatedTemplate = $generator->renderHtml($template, $expectedLanguage);
+        $this->assertEquals($expectedTemplate, $generatedTemplate);
+    }
+
+    public function testRenderHtmlWithFallback()
+    {
+        $templatePaths = [
+            MailTemplateInterface::HTML_TYPE => '',
+            MailTemplateInterface::TXT_TYPE => 'path/to/test_template.txt.twig',
+        ];
+        $expectedTemplate = 'mail_template';
+        $expectedParameters = ['locale' => null, 'url' => 'http://test.com'];
+        $expectedLanguage = $this->createLanguageMock();
+        $template = $this->createMailTemplateMock($templatePaths);
+
+        $generator = new MailTemplateTwigRenderer(
+            $this->createEngineMock($templatePaths[MailTemplateInterface::TXT_TYPE], $expectedParameters, $expectedTemplate),
+            $this->createParametersBuilderMock($expectedParameters, $expectedLanguage)
+        );
+        $this->assertNotNull($generator);
+
+        $generatedTemplate = $generator->renderHtml($template, $expectedLanguage);
+        $this->assertEquals($expectedTemplate, $generatedTemplate);
+    }
+
+    public function testRenderTxt()
+    {
+        $templatePaths = [
+            MailTemplateInterface::TXT_TYPE => 'path/to/test_template.txt.twig',
+        ];
+        $expectedTemplate = 'mail_template';
+        $expectedParameters = ['locale' => null, 'url' => 'http://test.com'];
+        $expectedLanguage = $this->createLanguageMock();
+        $template = $this->createMailTemplateMock($templatePaths);
+
+        $generator = new MailTemplateTwigRenderer(
+            $this->createEngineMock($templatePaths[MailTemplateInterface::TXT_TYPE], $expectedParameters, $expectedTemplate),
+            $this->createParametersBuilderMock($expectedParameters, $expectedLanguage)
+        );
+        $this->assertNotNull($generator);
+
+        $generatedTemplate = $generator->renderTxt($template, $expectedLanguage);
+        $this->assertEquals($expectedTemplate, $generatedTemplate);
+    }
+
+    public function testRenderTxtFallback()
+    {
+        $templatePaths = [
+            MailTemplateInterface::HTML_TYPE => 'path/to/test_template.html.twig',
+            MailTemplateInterface::TXT_TYPE => '',
+        ];
+        $expectedTemplate = 'mail_template';
+        $expectedParameters = ['locale' => null, 'url' => 'http://test.com'];
+        $expectedLanguage = $this->createLanguageMock();
+        $template = $this->createMailTemplateMock($templatePaths);
+
+        $generator = new MailTemplateTwigRenderer(
+            $this->createEngineMock($templatePaths[MailTemplateInterface::HTML_TYPE], $expectedParameters, $expectedTemplate),
+            $this->createParametersBuilderMock($expectedParameters, $expectedLanguage)
+        );
+        $this->assertNotNull($generator);
+
+        $generatedTemplate = $generator->renderTxt($template, $expectedLanguage);
         $this->assertEquals($expectedTemplate, $generatedTemplate);
     }
 
     public function testRenderWithTransformations()
     {
+        $templatePaths = [
+            MailTemplateInterface::HTML_TYPE => 'path/to/test_template.html.twig',
+        ];
         $generatedTemplate = 'mail_template';
         $transformedTemplate = 'mail_template_transformed_fr';
-        $expectedPath = 'path/to/test_template.twig';
         $expectedParameters = ['locale' => 'fr', 'url' => 'http://test.com'];
         $expectedLanguage = $this->createLanguageMock();
-        $template = $this->createMailTemplateMock($expectedPath);
+        $template = $this->createMailTemplateMock($templatePaths);
 
         $generator = new MailTemplateTwigRenderer(
-            $this->createEngineMock($expectedPath, $expectedParameters, $generatedTemplate),
+            $this->createEngineMock($templatePaths[MailTemplateInterface::HTML_TYPE], $expectedParameters, $generatedTemplate),
             $this->createParametersBuilderMock($expectedParameters, $expectedLanguage)
         );
         $this->assertNotNull($generator);
 
-        $generator->addTransformation($this->createTransformationMock());
-        $generatedTemplate = $generator->render($template, $expectedLanguage);
+        $generator->addTransformationByType($this->createTransformationMock($generatedTemplate, $expectedParameters), MailTemplateInterface::HTML_TYPE);
+        $generatedTemplate = $generator->renderHtml($template, $expectedLanguage);
         $this->assertEquals($transformedTemplate, $generatedTemplate);
     }
 
     /**
+     * @param string $initialTemplate
+     * @param array $expectedParameters
+     * @param Language $expectedLanguage
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateTransformationInterface
      */
-    private function createTransformationMock()
+    private function createTransformationMock($initialTemplate, $expectedParameters)
     {
         $transformationMock = $this->getMockBuilder(MailTemplateTransformationInterface::class)
             ->disableOriginalConstructor()
@@ -104,6 +173,10 @@ class MailTemplateTwigRendererTest extends TestCase
         $transformationMock
             ->expects($this->once())
             ->method('apply')
+            ->with(
+                $this->equalTo($initialTemplate),
+                $this->equalTo($expectedParameters)
+            )
             ->will($this->returnCallback(function($templateContent, array $templateVariables) {
                 return $templateContent.'_transformed_'.$templateVariables['locale'];
             }))
@@ -191,22 +264,32 @@ class MailTemplateTwigRendererTest extends TestCase
     }
 
     /**
-     * @param string $expectedPath
+     * @param array $expectedPaths
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateInterface
      */
-    private function createMailTemplateMock($expectedPath)
+    private function createMailTemplateMock(array $expectedPaths)
     {
         $templateMock = $this->getMockBuilder(MailTemplateInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $templateMock
-            ->expects($this->once())
-            ->method('getPath')
-            ->willReturn($expectedPath)
-        ;
+        if (isset($expectedPaths[MailTemplateInterface::HTML_TYPE])) {
+            $templateMock
+                ->expects($this->atLeastOnce())
+                ->method('getHtmlPath')
+                ->willReturn($expectedPaths[MailTemplateInterface::HTML_TYPE])
+            ;
+        }
+
+        if (isset($expectedPaths[MailTemplateInterface::TXT_TYPE])) {
+            $templateMock
+                ->expects($this->atLeastOnce())
+                ->method('getTxtPath')
+                ->willReturn($expectedPaths[MailTemplateInterface::TXT_TYPE])
+            ;
+        }
 
         return $templateMock;
     }
