@@ -8,11 +8,9 @@ services:
       - '@templating.engine.twig'
       - '@prestashop.core.mail_template.parameters_builder'
     calls:
-      - method: 'addTransformationByType'
+      - method: 'addTransformation'
         arguments:
           - '@prestashop.core.mail_template.transformation.css_inline'
-          - !php/const PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface::HTML_TYPE
-      - method: 'addTransformationByType'
+      - method: 'addTransformation'
         arguments:
           - '@prestashop.core.mail_template.transformation.html_textify'
-          - !php/const PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface::TXT_TYPE

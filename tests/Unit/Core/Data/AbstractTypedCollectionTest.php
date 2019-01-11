@@ -237,6 +237,23 @@ class AbstractTypedCollectionTest extends TestCase
 
         $collection->add(new InvalidCollectionTestElement());
     }
+
+    public function testAddMock()
+    {
+        $collection = new TestCollection();
+        $this->assertNotNull($collection);
+        $this->assertCount(0, $collection);
+
+        $elementMock = $this->getMockBuilder(CollectionTestElement::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $collection->add($elementMock);
+        $this->assertCount(1, $collection);
+        $this->assertEquals($elementMock, $collection->get(0));
+        $this->assertEquals($elementMock, $collection[0]);
+    }
 }
 
 class TestCollection extends AbstractTypedCollection

@@ -53,12 +53,11 @@ interface MailTemplateRendererInterface
 
     /**
      * Adds a transformer to the renderer, when template is rendered all transformers
-     * matching its type are applied to the output content.
+     * matching its type (html or txt) are applied to the output content.
      *
      * @param MailTemplateTransformationInterface $transformer
-     * @param string $templateType
      *
      * @return $this
      */
-    public function addTransformationByType(MailTemplateTransformationInterface $transformer, $templateType);
+    public function addTransformation(MailTemplateTransformationInterface $transformer);
 }

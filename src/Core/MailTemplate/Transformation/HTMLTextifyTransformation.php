@@ -27,9 +27,15 @@
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
 use Html2Text\Html2Text;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 
 class HTMLTextifyTransformation extends AbstractMailTemplateTransformation
 {
+    public function __construct()
+    {
+        parent::__construct(MailTemplateInterface::TXT_TYPE);
+    }
+
     /**
      * {@inheritdoc}
      */

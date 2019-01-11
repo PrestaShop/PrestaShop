@@ -24,44 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
+namespace PrestaShop\PrestaShop\Core\Exception;
 
-use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
-use Language;
-
-/**
- * MailTemplateTransformerInterface is used by the MailTemplateRendererInterface to
- * apply a transformation on the generated template (textify html, inline css, ...).
- */
-interface MailTemplateTransformationInterface
+class InvalidArgumentException extends CoreException
 {
-    /**
-     * @param string $templateContent
-     * @param array $templateVariables
-     *
-     * @return string
-     */
-    public function apply($templateContent, array $templateVariables);
-
-    /**
-     * Returns the of templates this transformation is associated with
-     * either html or txt
-     *
-     * @return string
-     */
-    public function getType();
-
-    /**
-     * @param MailTemplateInterface $template
-     *
-     * @return $this
-     */
-    public function setTemplate(MailTemplateInterface $template);
-
-    /**
-     * @param Language $language
-     *
-     * @return $this
-     */
-    public function setLanguage(Language $language);
 }
