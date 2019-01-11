@@ -2,24 +2,15 @@ parameters:
     ps_cache_dir: !php/const _PS_CACHE_DIR_
 
 services:
-    prestashop.core.cldr.repository:
-        class: 'PrestaShop\PrestaShop\Core\Cldr\Repository'
-        arguments:
-          - '@=service("prestashop.adapter.legacy.context").getLanguage()'
-    # Data providers service
-    prestashop.adapter.data_provider.currency:
-        class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider
-        arguments:
-          - "@prestashop.adapter.legacy.configuration"
-          - "@=service('prestashop.adapter.legacy.context').getContext().shop?service('prestashop.adapter.legacy.context').getContext().shop.id"
-
-    prestashop.adapter.legacy.configuration:
-        class: PrestaShop\PrestaShop\Adapter\Configuration
-
-    prestashop.adapter.legacy.context:
-        class: PrestaShop\PrestaShop\Adapter\LegacyContext
+    _defaults:
+      public: true
 
     # Localization
+    prestashop.core.cldr.repository:
+      class: 'PrestaShop\PrestaShop\Core\Cldr\Repository'
+      arguments:
+        - '@=service("prestashop.adapter.legacy.context").getLanguage()'
+
     prestashop.core.localization.cache.adapter:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
 
