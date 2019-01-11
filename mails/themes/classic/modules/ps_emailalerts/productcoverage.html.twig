@@ -4,7 +4,7 @@
 <tr>
   <td align="center" class="titleblock">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span class="title">{{ 'Hi,'|trans({}, 'EmailsBody', locale) }}</span>
+      <span class="title">{{ 'Hi,'|trans({}, 'EmailsBody', locale)|raw }}</span>
     </font>
   </td>
 </tr>
@@ -19,11 +19,11 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ '{product} is almost out of stock.'|trans({}, 'EmailsBody', locale) }}
+              {{ '{product} is almost out of stock.'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
-              {{ 'The stock cover is now less than the specified minimum of:'|trans({}, 'EmailsBody', locale) }} <strong><span>{warning_coverage}.</span></strong><br /><br /> 
-              <strong><span>{{ 'Current stock cover:'|trans({}, 'EmailsBody', locale) }}</span></strong> {current_coverage}
+              {{ 'The stock cover is now less than the specified minimum of:'|trans({}, 'EmailsBody', locale)|raw }} <strong><span>{warning_coverage}.</span></strong><br /><br /> 
+              <strong><span>{{ 'Current stock cover:'|trans({}, 'EmailsBody', locale)|raw }}</span></strong> {current_coverage}
             </span>
           </font>
         </td>

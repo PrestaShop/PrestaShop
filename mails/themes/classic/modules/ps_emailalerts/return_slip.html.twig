@@ -4,7 +4,7 @@
 <tr>
   <td align="center" class="titleblock">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span class="title">{{ 'Hi,'|trans({}, 'EmailsBody', locale) }}</span>
+      <span class="title">{{ 'Hi,'|trans({}, 'EmailsBody', locale)|raw }}</span>
     </font>
   </td>
 </tr>
@@ -13,7 +13,7 @@
 </tr>
 <tr>
   <td class="linkbelow" style="border:none;padding:7px 0">
-    <span>{{ 'You have received a new return request for {shop_name}.'|trans({}, 'EmailsBody', locale) }}</span>
+    <span>{{ 'You have received a new return request for {shop_name}.'|trans({}, 'EmailsBody', locale)|raw }}</span>
   </td>
 </tr>
 <tr>
@@ -22,11 +22,11 @@
 <tr>
   <td class="box" colspan="3" style="background-color:#fbfbfb;border:1px solid #d6d4d4!important;padding:10px!important">
     <p style="margin:3px 0 7px;text-transform:uppercase;font-weight:500;font-size:18px;border-bottom:1px solid #d6d4d4!important;padding-bottom:10px">
-      {{ 'Return details'|trans({}, 'EmailsBody', locale) }}
+      {{ 'Return details'|trans({}, 'EmailsBody', locale)|raw }}
     </p>
     <span style="color:#777">
-      <span style="color:#333"><strong>{{ 'Order:'|trans({}, 'EmailsBody', locale) }}</strong></span> {{ '{order_name} Placed on {date}'|trans({}, 'EmailsBody', locale) }}<br />
-      <span style="color:#333"><strong>{{ 'Customer:'|trans({}, 'EmailsBody', locale) }}</strong></span> {firstname} {lastname}, ({email})
+      <span style="color:#333"><strong>{{ 'Order:'|trans({}, 'EmailsBody', locale)|raw }}</strong></span> {{ '{order_name} Placed on {date}'|trans({}, 'EmailsBody', locale)|raw }}<br />
+      <span style="color:#333"><strong>{{ 'Customer:'|trans({}, 'EmailsBody', locale)|raw }}</strong></span> {firstname} {lastname}, ({email})
     </span>
   </td>
 </tr>
@@ -35,9 +35,9 @@
     <table class="table table-recap" bgcolor="#ffffff" style="width:100%;background-color:#fff"><!-- Title -->
       <thead>
         <tr>
-          <th style="border:1px solid #DDD!important;background-color:#fbfbfb;font-family:Arial;color:#333;font-size:13px;padding:10px">{{ 'Reference'|trans({}, 'EmailsBody', locale) }}</th>
-          <th style="border:1px solid #DDD!important;background-color:#fbfbfb;font-family:Arial;color:#333;font-size:13px;padding:10px">{{ 'Product'|trans({}, 'EmailsBody', locale) }}</th>
-          <th style="border:1px solid #DDD!important;background-color:#fbfbfb;font-family:Arial;color:#333;font-size:13px;padding:10px">{{ 'Quantity'|trans({}, 'EmailsBody', locale) }}</th>
+          <th style="border:1px solid #DDD!important;background-color:#fbfbfb;font-family:Arial;color:#333;font-size:13px;padding:10px">{{ 'Reference'|trans({}, 'EmailsBody', locale)|raw }}</th>
+          <th style="border:1px solid #DDD!important;background-color:#fbfbfb;font-family:Arial;color:#333;font-size:13px;padding:10px">{{ 'Product'|trans({}, 'EmailsBody', locale)|raw }}</th>
+          <th style="border:1px solid #DDD!important;background-color:#fbfbfb;font-family:Arial;color:#333;font-size:13px;padding:10px">{{ 'Quantity'|trans({}, 'EmailsBody', locale)|raw }}</th>
         </tr>
       </thead>
       <tbody>
@@ -58,14 +58,14 @@
     <table class="table" style="width:100%;background-color:#fff">
       <tr>
         <td class="box address" width="310" style="background-color:#fbfbfb;border:1px solid #d6d4d4!important;padding:10px!important">
-          <p style="margin:3px 0 7px;text-transform:uppercase;font-weight:500;font-size:18px;border-bottom:1px solid #d6d4d4!important;padding-bottom:10px">{{ 'Delivery address'|trans({}, 'EmailsBody', locale) }}</p>
+          <p style="margin:3px 0 7px;text-transform:uppercase;font-weight:500;font-size:18px;border-bottom:1px solid #d6d4d4!important;padding-bottom:10px">{{ 'Delivery address'|trans({}, 'EmailsBody', locale)|raw }}</p>
           <span style="color:#777">
             {delivery_block_html}
           </span>
         </td>
         <td width="20" class="space_address" style="border:none;padding:7px 0">&nbsp;</td>
         <td class="box address" width="310" style="background-color:#fbfbfb;border:1px solid #d6d4d4!important;padding:10px!important">
-          <p style="margin:3px 0 7px;text-transform:uppercase;font-weight:500;font-size:18px;border-bottom:1px solid #d6d4d4!important;padding-bottom:10px">{{ 'Billing address'|trans({}, 'EmailsBody', locale) }}</p>
+          <p style="margin:3px 0 7px;text-transform:uppercase;font-weight:500;font-size:18px;border-bottom:1px solid #d6d4d4!important;padding-bottom:10px">{{ 'Billing address'|trans({}, 'EmailsBody', locale)|raw }}</p>
           <span style="color:#777">
             {invoice_block_html}
           </span>
@@ -80,7 +80,7 @@
 <tr>
   <td class="box" colspan="3" style="background-color:#fbfbfb;border:1px solid #d6d4d4!important;padding:10px!important">
     <p style="margin:3px 0 7px;text-transform:uppercase;font-weight:500;font-size:18px;border-bottom:1px solid #d6d4d4!important;padding-bottom:10px">
-      {{ 'Customer message:'|trans({}, 'EmailsBody', locale) }}
+      {{ 'Customer message:'|trans({}, 'EmailsBody', locale)|raw }}
     </p>
     <span style="color:#777">
       {message}
