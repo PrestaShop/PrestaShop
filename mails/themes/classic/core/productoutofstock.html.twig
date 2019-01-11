@@ -4,7 +4,7 @@
 <tr>
   <td align="center" class="titleblock">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span class="title">{{ 'Hi,'|trans({}, 'EmailsBody', locale) }}</span>
+      <span class="title">{{ 'Hi,'|trans({}, 'EmailsBody', locale)|raw }}</span>
     </font>
   </td>
 </tr>
@@ -19,12 +19,12 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ '{product} is nearly out of stock.'|trans({}, 'EmailsBody', locale) }}
+              {{ '{product} is nearly out of stock.'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
-              {{ 'The remaining stock is now less than the specified minimum of'|trans({}, 'EmailsBody', locale) }} <strong><span>{last_qty}.</span></strong><br /><br /> 
-              <strong><span>{{ 'Remaining stock:'|trans({}, 'EmailsBody', locale) }}</span></strong> {qty}<br/><br/>
-              {{ 'You are advised to open the product&#039;s admin Product Page in order to replenish your inventory.'|trans({}, 'EmailsBody', locale) }}
+              {{ 'The remaining stock is now less than the specified minimum of'|trans({}, 'EmailsBody', locale)|raw }} <strong><span>{last_qty}.</span></strong><br /><br /> 
+              <strong><span>{{ 'Remaining stock:'|trans({}, 'EmailsBody', locale)|raw }}</span></strong> {qty}<br/><br/>
+              {{ 'You are advised to open the product&#039;s admin Product Page in order to replenish your inventory.'|trans({}, 'EmailsBody', locale)|raw }}
             </span>
           </font>
         </td>

@@ -4,7 +4,7 @@
 <tr>
   <td align="center" class="titleblock">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}</span>
+      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale)|raw }}</span>
     </font>
   </td>
 </tr>
@@ -19,12 +19,12 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Order {order_name}'|trans({}, 'EmailsBody', locale) }}&nbsp;-&nbsp;{{ 'Voucher created'|trans({}, 'EmailsBody', locale) }}
+              {{ 'Order {order_name}'|trans({}, 'EmailsBody', locale)|raw }}&nbsp;-&nbsp;{{ 'Voucher created'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
-              {{ 'A voucher has been created in your name as a result of your order with the reference <span><strong>{order_name}</strong></span>.'|trans({}, 'EmailsBody', locale) }}<br/><br/>
-              {{ '<span><strong>Voucher code: {voucher_num}</strong></span> in the amount of <span><strong>{voucher_amount}</strong></span>'|trans({}, 'EmailsBody', locale) }}<br /><br />
-              {{ 'Simply copy/paste this code during the payment process for your next order.'|trans({}, 'EmailsBody', locale) }}
+              {{ 'A voucher has been created in your name as a result of your order with the reference <span><strong>{order_name}</strong></span>.'|trans({}, 'EmailsBody', locale)|raw }}<br/><br/>
+              {{ '<span><strong>Voucher code: {voucher_num}</strong></span> in the amount of <span><strong>{voucher_amount}</strong></span>'|trans({}, 'EmailsBody', locale)|raw }}<br /><br />
+              {{ 'Simply copy/paste this code during the payment process for your next order.'|trans({}, 'EmailsBody', locale)|raw }}
             </span>
           </font>
         </td>

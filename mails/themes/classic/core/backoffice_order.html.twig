@@ -4,7 +4,7 @@
 <tr>
   <td align="center" class="titleblock">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}</span>
+      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale)|raw }}</span>
     </font>
   </td>
 </tr>
@@ -19,10 +19,10 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p style="border-bottom:1px solid #D6D4D4;">
-              {{ 'A new order has been generated on your behalf.'|trans({}, 'EmailsBody', locale) }}
+              {{ 'A new order has been generated on your behalf.'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
-              {{ 'Please go on <a href="{order_link}">{order_link}</a> to finalize the payment.'|trans({}, 'EmailsBody', locale) }}
+              {{ 'Please go on <a href="{order_link}">{order_link}</a> to finalize the payment.'|trans({}, 'EmailsBody', locale)|raw }}
             </span>
           </font>
         </td>
