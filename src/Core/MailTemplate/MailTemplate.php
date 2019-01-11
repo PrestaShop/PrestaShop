@@ -39,13 +39,13 @@ class MailTemplate implements MailTemplateInterface
     private $category;
 
     /** @var string */
-    private $type;
-
-    /** @var string */
     private $name;
 
     /** @var string */
-    private $path;
+    private $htmlPath;
+
+    /** @var string */
+    private $txtPath;
 
     /** @var string */
     private $moduleName;
@@ -55,24 +55,24 @@ class MailTemplate implements MailTemplateInterface
      *
      * @param string $theme Which theme this template is associated to
      * @param string $category Whether the template is used by the core or modules
-     * @param string $type There are two types of mail templates, either HTML or RAW ones
      * @param string $name Name of the template to describe its purpose
-     * @param string $path Absolute path of the template file
-     * @param string|null $moduleName Which module this template is associated to (if any)
+     * @param string $htmlPath Absolute path of the html template file
+     * @param string $txtPath Absolute path of the txt template file
+     * @param string $moduleName Which module this template is associated to (if any)
      */
     public function __construct(
         $theme,
         $category,
-        $type,
         $name,
-        $path,
+        $htmlPath = '',
+        $txtPath = '',
         $moduleName = ''
     ) {
         $this->theme = $theme;
         $this->category = $category;
-        $this->type = $type;
         $this->name = $name;
-        $this->path = $path;
+        $this->htmlPath = $htmlPath;
+        $this->txtPath = $txtPath;
         $this->moduleName = $moduleName;
     }
 
@@ -82,14 +82,6 @@ class MailTemplate implements MailTemplateInterface
     public function getCategory()
     {
         return $this->category;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
@@ -111,9 +103,17 @@ class MailTemplate implements MailTemplateInterface
     /**
      * @return string
      */
-    public function getPath()
+    public function getHtmlPath()
     {
-        return $this->path;
+        return $this->htmlPath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTxtPath()
+    {
+        return $this->txtPath;
     }
 
     /**

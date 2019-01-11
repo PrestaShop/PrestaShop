@@ -58,7 +58,10 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     ) {
         $this->engine = $engine;
         $this->parametersBuilder = $parametersBuilder;
-        $this->transformations = [];
+        $this->transformations = [
+            MailTemplateInterface::HTML_TYPE => [],
+            MailTemplateInterface::TXT_TYPE => [],
+        ];
     }
 
     /**
@@ -67,13 +70,45 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      *
      * @return string
      */
-    public function render(MailTemplateInterface $template, Language $language)
+    public function renderHtml(MailTemplateInterface $template, Language $language)
     {
+        $templatePath = !empty($template->getHtmlPath()) ? $template->getHtmlPath() : $template->getTxtPath();
+
+        return $this->render($template, $language, $templatePath, $this->transformations[MailTemplateInterface::HTML_TYPE]);
+    }
+
+    /**
+     * @param MailTemplateInterface $template
+     * @param Language $language
+     *
+     * @return string
+     */
+    public function renderTxt(MailTemplateInterface $template, Language $language)
+    {
+        $templatePath = !empty($template->getTxtPath()) ? $template->getTxtPath() : $template->getHtmlPath();
+
+        return $this->render($template, $language, $templatePath, $this->transformations[MailTemplateInterface::TXT_TYPE]);
+    }
+
+    /**
+     * @param MailTemplateInterface $template
+     * @param Language $language
+     * @param string $templatePath
+     * @param MailTemplateTransformationInterface[]
+     *
+     * @return string
+     */
+    private function render(
+        MailTemplateInterface $template,
+        Language $language,
+        $templatePath,
+        array $transformations
+    ) {
         $parameters = $this->parametersBuilder->buildParameters($template, $language);
 
-        $renderedTemplate = $this->engine->render($template->getPath(), $parameters);
+        $renderedTemplate = $this->engine->render($templatePath, $parameters);
         /** @var MailTemplateTransformationInterface $transformation */
-        foreach ($this->transformations as $transformation) {
+        foreach ($transformations as $transformation) {
             $renderedTemplate = $transformation
                 ->setTemplate($template)
                 ->setLanguage($language)
@@ -87,9 +122,12 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /**
      * @inheritDoc
      */
-    public function addTransformation(MailTemplateTransformationInterface $transformer)
+    public function addTransformationByType(MailTemplateTransformationInterface $transformer, $templateType)
     {
-        $this->transformations[] = $transformer;
+        if (!isset($this->transformations[$templateType])) {
+            $this->transformations[$templateType] = [];
+        }
+        $this->transformations[$templateType][] = $transformer;
 
         return $this;
     }
