@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Data;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 
 /**
  * Class AbstractTypedCollection is an abstract collection class which checks
@@ -48,7 +48,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
      *
      * @param array $elements
      *
-     * @throws InvalidArgumentException
+     * @throws TypeException
      */
     public function __construct(array $elements = [])
     {
@@ -61,7 +61,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
      *
      * @return bool
      *
-     * @throws InvalidArgumentException
+     * @throws TypeException
      */
     public function removeElement($element)
     {
@@ -76,7 +76,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
      *
      * @return bool|void
      *
-     * @throws InvalidArgumentException
+     * @throws TypeException
      */
     public function offsetSet($offset, $value)
     {
@@ -90,7 +90,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
      *
      * @return bool
      *
-     * @throws InvalidArgumentException
+     * @throws TypeException
      */
     public function contains($element)
     {
@@ -104,7 +104,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
      *
      * @return bool|false|int|string
      *
-     * @throws InvalidArgumentException
+     * @throws TypeException
      */
     public function indexOf($element)
     {
@@ -117,7 +117,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
      * @param mixed $key
      * @param mixed $value
      *
-     * @throws InvalidArgumentException
+     * @throws TypeException
      */
     public function set($key, $value)
     {
@@ -131,7 +131,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
      *
      * @return bool
      *
-     * @throws InvalidArgumentException
+     * @throws TypeException
      */
     public function add($element)
     {
@@ -143,7 +143,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
     /**
      * @param array $elements
      *
-     * @throws InvalidArgumentException
+     * @throws TypeException
      */
     private function checkElementsType(array $elements)
     {
@@ -155,13 +155,13 @@ abstract class AbstractTypedCollection extends ArrayCollection
     /**
      * @param mixed $element
      *
-     * @throws InvalidArgumentException
+     * @throws TypeException
      */
     private function checkElementType($element)
     {
         $expectedType = $this->getType();
         if (!($element instanceof $expectedType)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new TypeException(sprintf(
                 'Invalid element type %s, expected %s',
                 get_class($element),
                 $expectedType

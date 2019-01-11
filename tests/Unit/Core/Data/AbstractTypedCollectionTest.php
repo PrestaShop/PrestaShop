@@ -46,7 +46,7 @@ class AbstractTypedCollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\TypeException
      * @expectedExceptionMessage Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement
      */
     public function testInvalidConstructor()
@@ -57,7 +57,7 @@ class AbstractTypedCollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\TypeException
      * @expectedExceptionMessage Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement
      */
     public function testPartialInvalidConstructor()
@@ -85,7 +85,7 @@ class AbstractTypedCollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\TypeException
      * @expectedExceptionMessage Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement
      */
     public function testInvalidRemoveElement()
@@ -113,7 +113,7 @@ class AbstractTypedCollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\TypeException
      * @expectedExceptionMessage Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement
      */
     public function testInvalidOffsetSet()
@@ -139,7 +139,7 @@ class AbstractTypedCollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\TypeException
      * @expectedExceptionMessage Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement
      */
     public function testInvalidContains()
@@ -173,7 +173,7 @@ class AbstractTypedCollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\TypeException
      * @expectedExceptionMessage Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement
      */
     public function testInvalidIndexOf()
@@ -200,7 +200,7 @@ class AbstractTypedCollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\TypeException
      * @expectedExceptionMessage Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement
      */
     public function testInvalidSet()
@@ -226,7 +226,7 @@ class AbstractTypedCollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\TypeException
      * @expectedExceptionMessage Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement
      */
     public function testInvalidAdd()
