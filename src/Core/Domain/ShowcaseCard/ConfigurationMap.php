@@ -48,7 +48,7 @@ class ConfigurationMap
     public function __construct()
     {
         $this->closedCardConfiguration = [
-            ShowcaseCard::SEO_URLS_CARD => sprintf(self::CLOSED_TEMPLATE, 'SEO'),
+            ShowcaseCard::SEO_URLS_CARD => sprintf(self::CLOSED_TEMPLATE, 'SEO_URLS'),
         ];
     }
 
