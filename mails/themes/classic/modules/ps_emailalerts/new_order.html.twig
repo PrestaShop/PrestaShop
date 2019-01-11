@@ -4,14 +4,14 @@
 <tr>
   <td align="center" class="titleblock">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span class="title">{{ 'Congratulations!'|trans({}, 'EmailsBody', locale) }}</span>
+      <span class="title">{{ 'Congratulations!'|trans({}, 'EmailsBody', locale)|raw }}</span>
     </font>
   </td>
 </tr>
 <tr>
   <td class="linkbelow">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span>{{ 'A new order was placed on {shop_name} by the following customer: {firstname} {lastname} ({email})'|trans({}, 'EmailsBody', locale) }}</span>
+      <span>{{ 'A new order was placed on {shop_name} by the following customer: {firstname} {lastname} ({email})'|trans({}, 'EmailsBody', locale)|raw }}</span>
     </font>
   </td>
 </tr>
@@ -26,11 +26,11 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Order details'|trans({}, 'EmailsBody', locale) }}
+              {{ 'Order details'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
-              <span><strong>{{ 'Order:'|trans({}, 'EmailsBody', locale) }}</strong></span> {order_name} {{ 'Placed on'|trans({}, 'EmailsBody', locale) }} {date}<br /><br />
-              <span><strong>{{ 'Payment:'|trans({}, 'EmailsBody', locale) }}</strong></span> {payment}
+              <span><strong>{{ 'Order:'|trans({}, 'EmailsBody', locale)|raw }}</strong></span> {order_name} {{ 'Placed on'|trans({}, 'EmailsBody', locale)|raw }} {date}<br /><br />
+              <span><strong>{{ 'Payment:'|trans({}, 'EmailsBody', locale)|raw }}</strong></span> {payment}
             </span>
           </font>
         </td>
@@ -45,11 +45,11 @@
       <table class="table table-recap" bgcolor="#ffffff"><!-- Title -->
         <thead>
           <tr>
-            <th style="border:1px solid #D6D4D4;">{{ 'Reference'|trans({}, 'EmailsBody', locale) }}</th>
-            <th style="border:1px solid #D6D4D4;">{{ 'Product'|trans({}, 'EmailsBody', locale) }}</th>
-            <th style="border:1px solid #D6D4D4;">{{ 'Unit price'|trans({}, 'EmailsBody', locale) }}</th>
-            <th style="border:1px solid #D6D4D4;">{{ 'Quantity'|trans({}, 'EmailsBody', locale) }}</th>
-            <th style="border:1px solid #D6D4D4;">{{ 'Total price'|trans({}, 'EmailsBody', locale) }}</th>
+            <th style="border:1px solid #D6D4D4;">{{ 'Reference'|trans({}, 'EmailsBody', locale)|raw }}</th>
+            <th style="border:1px solid #D6D4D4;">{{ 'Product'|trans({}, 'EmailsBody', locale)|raw }}</th>
+            <th style="border:1px solid #D6D4D4;">{{ 'Unit price'|trans({}, 'EmailsBody', locale)|raw }}</th>
+            <th style="border:1px solid #D6D4D4;">{{ 'Quantity'|trans({}, 'EmailsBody', locale)|raw }}</th>
+            <th style="border:1px solid #D6D4D4;">{{ 'Total price'|trans({}, 'EmailsBody', locale)|raw }}</th>
           </tr>
         </thead>
         <tbody>
@@ -65,7 +65,7 @@
                   <td width="10">&nbsp;</td>
                   <td align="right">
                     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-                      <strong>{{ 'Products'|trans({}, 'EmailsBody', locale) }}</strong>
+                      <strong>{{ 'Products'|trans({}, 'EmailsBody', locale)|raw }}</strong>
                     </font>
                   </td>
                   <td width="10">&nbsp;</td>
@@ -93,7 +93,7 @@
                   <td width="10">&nbsp;</td>
                   <td align="right">
                     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-                      <strong>{{ 'Discounts'|trans({}, 'EmailsBody', locale) }}</strong>
+                      <strong>{{ 'Discounts'|trans({}, 'EmailsBody', locale)|raw }}</strong>
                     </font>
                   </td>
                   <td width="10">&nbsp;</td>
@@ -121,7 +121,7 @@
                   <td width="10">&nbsp;</td>
                   <td align="right">
                     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-                      <strong>{{ 'Gift-wrapping'|trans({}, 'EmailsBody', locale) }}</strong>
+                      <strong>{{ 'Gift-wrapping'|trans({}, 'EmailsBody', locale)|raw }}</strong>
                     </font>
                   </td>
                   <td width="10">&nbsp;</td>
@@ -149,7 +149,7 @@
                   <td width="10">&nbsp;</td>
                   <td align="right">
                     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-                      <strong>{{ 'Shipping'|trans({}, 'EmailsBody', locale) }}</strong>
+                      <strong>{{ 'Shipping'|trans({}, 'EmailsBody', locale)|raw }}</strong>
                     </font>
                   </td>
                   <td width="10">&nbsp;</td>
@@ -177,7 +177,7 @@
                   <td width="10">&nbsp;</td>
                   <td align="right">
                     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-                      <strong>{{ 'Total Tax paid'|trans({}, 'EmailsBody', locale) }}</strong>
+                      <strong>{{ 'Total Tax paid'|trans({}, 'EmailsBody', locale)|raw }}</strong>
                     </font>
                   </td>
                   <td width="10">&nbsp;</td>
@@ -205,7 +205,7 @@
                   <td width="10">&nbsp;</td>
                   <td align="right">
                     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-                      <strong>{{ 'Total paid'|trans({}, 'EmailsBody', locale) }}</strong>
+                      <strong>{{ 'Total paid'|trans({}, 'EmailsBody', locale)|raw }}</strong>
                     </font>
                   </td>
                   <td width="10">&nbsp;</td>
@@ -239,7 +239,7 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Carrier:'|trans({}, 'EmailsBody', locale) }}
+              {{ 'Carrier:'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
               {carrier}
@@ -265,7 +265,7 @@
               <td>
                 <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
                   <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-                    {{ 'Delivery address'|trans({}, 'EmailsBody', locale) }}
+                    {{ 'Delivery address'|trans({}, 'EmailsBody', locale)|raw }}
                   </p>
                   <span>
                     {delivery_block_html}
@@ -284,7 +284,7 @@
               <td>
                 <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
                   <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-                    {{ 'Billing address'|trans({}, 'EmailsBody', locale) }}
+                    {{ 'Billing address'|trans({}, 'EmailsBody', locale)|raw }}
                   </p>
                   <span>
                     {invoice_block_html}
@@ -310,7 +310,7 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Customer message:'|trans({}, 'EmailsBody', locale) }}
+              {{ 'Customer message:'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
               {message}

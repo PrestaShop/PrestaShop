@@ -3,7 +3,7 @@
 {% block content %}
 <tr>
   <td align="center" class="titleblock">
-    <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale) }}</span>
+    <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'EmailsBody', locale)|raw }}</span>
   </td>
 </tr>
 <tr>
@@ -17,12 +17,12 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Referral Program'|trans({}, 'EmailsBody', locale) }}
+              {{ 'Referral Program'|trans({}, 'EmailsBody', locale)|raw }}
             </p>
             <span>
-              {{ 'We have created a voucher in your name for referring a friend.'|trans({}, 'EmailsBody', locale) }}<br /> 
-              {{ 'Here is the code of your voucher:'|trans({}, 'EmailsBody', locale) }} <span><strong>{voucher_num}</strong></span>{{ ', with an amount of'|trans({}, 'EmailsBody', locale) }} <span><strong>{voucher_amount}</strong></span>.<br /><br />
-              {{ 'Simply copy/paste this code during the payment process for your next order.'|trans({}, 'EmailsBody', locale) }}
+              {{ 'We have created a voucher in your name for referring a friend.'|trans({}, 'EmailsBody', locale)|raw }}<br /> 
+              {{ 'Here is the code of your voucher:'|trans({}, 'EmailsBody', locale)|raw }} <span><strong>{voucher_num}</strong></span>{{ ', with an amount of'|trans({}, 'EmailsBody', locale)|raw }} <span><strong>{voucher_amount}</strong></span>.<br /><br />
+              {{ 'Simply copy/paste this code during the payment process for your next order.'|trans({}, 'EmailsBody', locale)|raw }}
             </span>
           </font>
         </td>
