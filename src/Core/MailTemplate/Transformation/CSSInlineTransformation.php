@@ -28,32 +28,32 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
 use Pelago\Emogrifier;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Language;
 use DOMElement;
 use DOMAttr;
 
-class CSSInlineTransformation implements MailTemplateTransformationInterface
+class CSSInlineTransformation extends AbstractMailTemplateTransformation
 {
-    /** @var MailTemplateInterface */
-    private $template;
-
     /**
      * @inheritDoc
      */
     public function apply($templateContent, array $templateVariables)
     {
-        if (MailTemplateInterface::TXT_TYPE === $this->template->getType()) {
-            return $templateContent;
-        }
+        /**
+         * For unknown reason Emogrifier modifies href attribute with variables written
+         * like this {shop_url} so we temporarily change them to @shop_url@
+         */
+        $templateContent = preg_replace('/\{(\w+)\}/', '@\1@', $templateContent);
 
         $cssContent = $this->getCssContent($templateContent);
         $inliner = new Emogrifier($templateContent, $cssContent);
+        $templateContent = $inliner->emogrify();
 
-        $converter = new CssToAttributeConverter($inliner->emogrify());
+        $converter = new CssToAttributeConverter($templateContent);
+        $templateContent = $converter->convertCssToVisualAttributes()->render();
 
-        return $converter->convertCssToVisualAttributes()->render();
+        return preg_replace('/@(\w+)@/', '{\1}', $templateContent);
     }
 
     /**
@@ -82,25 +82,5 @@ class CSSInlineTransformation implements MailTemplateTransformationInterface
         }
 
         return $cssContents;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setTemplate(MailTemplateInterface $template)
-    {
-        $this->template = $template;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setLanguage(Language $language)
-    {
-        //No need for language
-
-        return $this;
     }
 }

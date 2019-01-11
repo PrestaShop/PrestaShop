@@ -41,15 +41,24 @@ interface MailTemplateRendererInterface
      *
      * @return string
      */
-    public function render(MailTemplateInterface $template, Language $language);
+    public function renderTxt(MailTemplateInterface $template, Language $language);
+
+    /**
+     * @param MailTemplateInterface $template
+     * @param Language $language
+     *
+     * @return string
+     */
+    public function renderHtml(MailTemplateInterface $template, Language $language);
 
     /**
      * Adds a transformer to the renderer, when template is rendered all transformers
-     * are applied to the output content.
+     * matching its type are applied to the output content.
      *
      * @param MailTemplateTransformationInterface $transformer
+     * @param string $templateType
      *
      * @return $this
      */
-    public function addTransformation(MailTemplateTransformationInterface $transformer);
+    public function addTransformationByType(MailTemplateTransformationInterface $transformer, $templateType);
 }
