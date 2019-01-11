@@ -28,3 +28,6 @@ services:
 
   prestashop.core.mail_template.transformation.css_inline:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation'
+
+  prestashop.core.mail_template.transformation.html_textify:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLTextifyTransformation'
