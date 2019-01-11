@@ -51,7 +51,7 @@ class ShowcaseCard
     /**
      * ShowcaseCardName constructor.
      *
-     * @param string $name
+     * @param string $name Showcase card name
      *
      * @throws InvalidShowcaseCardNameException
      */
@@ -67,6 +67,16 @@ class ShowcaseCard
     }
 
     /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Indicates if the provided name matches an existing showcase card
+     *
      * @param string $name
      *
      * @return bool
@@ -74,13 +84,5 @@ class ShowcaseCard
     private function isSupported($name)
     {
         return isset(self::SUPPORTED_NAMES[$name]);
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 }

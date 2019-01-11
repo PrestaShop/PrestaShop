@@ -29,8 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ConfigurationMap;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\ShowcaseCardException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 
+/**
+ * Finds out if a showcase card has been closed
+ */
 final class GetShowcaseCardIsClosedHandler implements GetShowcaseCardIsClosedHandlerInterface
 {
     /**
@@ -43,8 +47,6 @@ final class GetShowcaseCardIsClosedHandler implements GetShowcaseCardIsClosedHan
     private $configurationMap;
 
     /**
-     * GetShowcaseCardIsClosedHandler constructor.
-     *
      * @param ConfigurationInterface $configuration
      * @param ConfigurationMap $configurationMap
      */
@@ -58,6 +60,8 @@ final class GetShowcaseCardIsClosedHandler implements GetShowcaseCardIsClosedHan
      * @param GetShowcaseCardIsClosed $query
      *
      * @return bool
+     *
+     * @throws ShowcaseCardException
      */
     public function handle(GetShowcaseCardIsClosed $query)
     {
