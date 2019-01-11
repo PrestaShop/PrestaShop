@@ -28,7 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;

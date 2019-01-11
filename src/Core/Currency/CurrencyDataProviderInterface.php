@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Currency;
+namespace PrestaShop\PrestaShop\Core\Currency;
 
 use Currency;
 use Exception;
