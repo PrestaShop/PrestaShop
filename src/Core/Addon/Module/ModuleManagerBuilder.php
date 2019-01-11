@@ -194,7 +194,7 @@ class ModuleManagerBuilder
             \AppKernel::VERSION
         );
 
-        $marketPlaceClient->setSslVerification(_PS_CACHE_CA_CERT_FILE_);
+        $marketPlaceClient->setSslVerification('_PS_CACHE_CA_CERT_FILE_');
         if (file_exists($this->getConfigDir() . '/parameters.php')) {
             $parameters = require $this->getConfigDir() . '/parameters.php';
             if (array_key_exists('addons.api_client.verify_ssl', $parameters['parameters'])) {

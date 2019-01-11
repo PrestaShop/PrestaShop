@@ -2034,7 +2034,7 @@ class ToolsCore
      */
     public static function refreshCACertFile()
     {
-        if ((time() - @filemtime(_PS_CACHE_CA_CERT_FILE_) > 1296000)) {
+        if ((time() - @filemtime('_PS_CACHE_CA_CERT_FILE_') > 1296000)) {
             $stream_context = @stream_context_create(
                 array(
                     'http' => array('timeout' => 3),
@@ -2053,7 +2053,7 @@ class ToolsCore
                 preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content) &&
                 substr(rtrim($ca_cert_content), -1) == '-'
             ) {
-                file_put_contents(_PS_CACHE_CA_CERT_FILE_, $ca_cert_content);
+                file_put_contents('_PS_CACHE_CA_CERT_FILE_', $ca_cert_content);
             }
         }
     }
@@ -2074,7 +2074,7 @@ class ToolsCore
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
             curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-            curl_setopt($curl, CURLOPT_CAINFO, _PS_CACHE_CA_CERT_FILE_);
+            curl_setopt($curl, CURLOPT_CAINFO, '_PS_CACHE_CA_CERT_FILE_');
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_MAXREDIRS, 5);
 

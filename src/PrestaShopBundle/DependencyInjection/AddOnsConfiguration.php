@@ -81,7 +81,7 @@ class AddOnsConfiguration implements ConfigurationInterface
                                     ->defaultValue(0)
                                 ->end()
                                 ->scalarNode('verify_ssl')
-                                    ->defaultValue(_PS_CACHE_CA_CERT_FILE_)
+                                    ->defaultValue('_PS_CACHE_CA_CERT_FILE_')
                                 ->end()
                             ->end()
                         ->end()
