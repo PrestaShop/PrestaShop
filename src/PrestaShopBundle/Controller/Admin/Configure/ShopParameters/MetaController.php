@@ -26,14 +26,12 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -106,6 +104,7 @@ class MetaController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink('AdminMeta'),
                 'helperDocLink' => $helperBlockLinkProvider->getLink(),
                 'indexPageId' => $metaDataProvider->getIdByPage('index'),
+                'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
                 'showcaseCardIsClosed' => $showcaseCardIsClosed,
             ]
         );
@@ -300,47 +299,5 @@ class MetaController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_metas_index');
-    }
-
-    /**
-     * Saves the user preference of closing the showcase card
-     *
-     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_metas_index")
-     *
-     * @return JsonResponse
-     */
-    public function closeShowcaseCardAction(Request $request)
-    {
-        if ('POST' === $request->getMethod() && $request->get('close')) {
-            try {
-                $employeeId = $this->getContext()->employee->id;
-                $closeShowcaseCard = new CloseShowcaseCardCommand($employeeId, ShowcaseCard::SEO_URLS_CARD);
-                $this->getCommandBus()->handle($closeShowcaseCard);
-
-                return $this->json(
-                    [
-                        'success' => true,
-                        'message' => '',
-                    ]
-                );
-            } catch (\Exception $e) {
-                return $this->json(
-                    [
-                        'success' => false,
-                        'message' => $e->getMessage(),
-                    ],
-                    Response::HTTP_INTERNAL_SERVER_ERROR
-                );
-            }
-        }
-
-        return $this->json(
-            [
-                'success' => false,
-                'message' => '',
-            ],
-            Response::HTTP_BAD_REQUEST
-        );
     }
 }
