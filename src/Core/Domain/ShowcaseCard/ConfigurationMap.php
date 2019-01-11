@@ -27,6 +27,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\ShowcaseCard;
 
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\ShowcaseCardException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 
 /**
@@ -57,13 +58,15 @@ class ConfigurationMap
      * @param ShowcaseCard $cardName
      *
      * @return string
+     *
+     * @throws ShowcaseCardException If there's no configuration for that showcase card
      */
     public function getConfigurationNameForClosedStatus(ShowcaseCard $cardName)
     {
         $name = $cardName->getName();
 
         if (!isset($this->closedCardConfiguration[$name])) {
-            throw new \RuntimeException(sprintf('No closed status configuration found for showcase card "%s"', $name));
+            throw new ShowcaseCardException(sprintf('No closed status configuration found for showcase card "%s"', $name));
         }
 
         return $this->closedCardConfiguration[$name];
