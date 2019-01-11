@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
  */
 class HelperListCore extends Helper
 {
+    /** @var int size which is used for lists image thumbnail generation. */
+    const LIST_THUMBNAIL_SIZE = 45;
+
     /** @var array Cache for query results */
     protected $_list = array();
 
@@ -316,7 +319,7 @@ class HelperListCore extends Helper
                     } else {
                         $path_to_image = _PS_IMG_DIR_ . $params['image'] . '/' . Image::getImgFolderStatic($tr['id_image']) . (int) $tr['id_image'] . '.' . $this->imageType;
                     }
-                    $this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table . '_mini_' . $item_id . '_' . $this->context->shop->id . '.' . $this->imageType, 45, $this->imageType);
+                    $this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table . '_mini_' . $item_id . '_' . $this->context->shop->id . '.' . $this->imageType, self::LIST_THUMBNAIL_SIZE, $this->imageType);
                 } elseif (isset($params['icon'], $tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default']))) {
                     if (!$this->bootstrap) {
                         if (isset($params['icon'][$tr[$key]]) && is_array($params['icon'][$tr[$key]])) {

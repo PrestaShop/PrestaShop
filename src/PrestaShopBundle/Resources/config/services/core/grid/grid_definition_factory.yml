@@ -103,3 +103,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
+
+    prestashop.core.grid.definition.factory.supplier:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SupplierGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true

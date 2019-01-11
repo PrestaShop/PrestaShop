@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Language;
+namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
 use HelperList;
 use ImageManager;
@@ -32,9 +32,9 @@ use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
 /**
- * Class LanguageThumbnailProvider provides path to language's flag thumbnail.
+ * Class SupplierLogoThumbnailProvider is responsible for providing thumbnail path for supplier logo image.
  */
-final class LanguageFlagThumbnailProvider implements ImageProviderInterface
+final class SupplierLogoThumbnailProvider implements ImageProviderInterface
 {
     /**
      * @var ImageTagSourceParserInterface
@@ -48,7 +48,7 @@ final class LanguageFlagThumbnailProvider implements ImageProviderInterface
 
     /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
-     * @param $contextShopId
+     * @param int $contextShopId
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
@@ -61,15 +61,14 @@ final class LanguageFlagThumbnailProvider implements ImageProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getPath($languageId)
+    public function getPath($supplierId)
     {
-        $pathToImage = _PS_IMG_DIR_ . 'l' . DIRECTORY_SEPARATOR . $languageId . '.jpg';
+        $pathToImage = _PS_IMG_DIR_ . 'su' . DIRECTORY_SEPARATOR . $supplierId . '.jpg';
 
         $imageTag = ImageManager::thumbnail(
             $pathToImage,
-            'lang_mini_' . $languageId . '_' . $this->contextShopId . '.jpg',
-            HelperList::LIST_THUMBNAIL_SIZE,
-            'jpg'
+            'supplier_mini_' . $supplierId . '_' . $this->contextShopId . '.jpg',
+            HelperList::LIST_THUMBNAIL_SIZE
         );
 
         return $this->imageTagSourceParser->parse($imageTag);
