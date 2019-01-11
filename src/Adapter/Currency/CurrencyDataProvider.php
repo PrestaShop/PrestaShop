@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Currency;
 use Currency;
 use Exception;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShopException;
 
 /**
