@@ -89,6 +89,7 @@ class CustomerController extends AbstractAdminController
         $customerGrid = $customerGridFactory->getGrid($filters);
 
         $deleteCustomerForm = $this->createForm(DeleteCustomersType::class);
+        $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -97,6 +98,7 @@ class CustomerController extends AbstractAdminController
             'customerRequiredFieldsForm' => $this->getRequiredFieldsForm()->createView(),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
             'deleteCustomersForm' => $deleteCustomerForm->createView(),
+            'helperCardDocumentationLink' => $helperBlockLinkProvider->getLink('customer'),
         ]);
     }
 
