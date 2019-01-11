@@ -60,30 +60,25 @@ class MailTemplateGeneratorTest extends TestCase
             new MailTemplate(
                 'classic',
                 MailTemplateInterface::CORE_CATEGORY,
-                MailTemplateInterface::HTML_TYPE,
                 'account',
-                implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'core', 'account.html.twig'])
-            ),
-            new MailTemplate(
-                'classic',
-                MailTemplateInterface::CORE_CATEGORY,
-                MailTemplateInterface::TXT_TYPE,
-                'account',
+                implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'core', 'account.html.twig']),
                 implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'core', 'account.txt.twig'])
             ),
             new MailTemplate(
                 'classic',
                 MailTemplateInterface::MODULES_CATEGORY,
-                MailTemplateInterface::HTML_TYPE,
                 'followup_1',
-                implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'modules', 'followup', 'followup_1.twig'])
+                implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'modules', 'followup', 'followup_1.html.twig']),
+                '',
+                'followup'
             ),
             new MailTemplate(
                 'classic',
                 MailTemplateInterface::MODULES_CATEGORY,
-                MailTemplateInterface::TXT_TYPE,
                 'productoutofstock',
-                implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'modules', 'ps_emailalerts', 'productoutofstock.twig'])
+                '',
+                implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'modules', 'ps_emailalerts', 'productoutofstock.txt.twig']),
+                'ps_reminder'
             ),
         ]);
         $this->fs->mkdir($this->tempDir);
@@ -170,6 +165,8 @@ class MailTemplateGeneratorTest extends TestCase
             'account.html' => 'account_html_core_',
             'account.txt' => 'account_txt_core_',
             'followup_1.html' => 'followup_1_html_modules_',
+            'followup_1.txt' => 'followup_1_txt_modules_',
+            'productoutofstock.html' => 'productoutofstock_html_modules_',
             'productoutofstock.txt' => 'productoutofstock_txt_modules_',
         ];
         $this->checkExpectedFiles($expectedFiles);
@@ -188,6 +185,8 @@ class MailTemplateGeneratorTest extends TestCase
             'account.html' => 'account_html_core_fr',
             'account.txt' => 'account_txt_core_fr',
             'followup_1.html' => 'followup_1_html_modules_fr',
+            'followup_1.txt' => 'followup_1_txt_modules_fr',
+            'productoutofstock.html' => 'productoutofstock_html_modules_fr',
             'productoutofstock.txt' => 'productoutofstock_txt_modules_fr',
         ];
         $this->checkExpectedFiles($expectedFiles);
@@ -220,10 +219,18 @@ class MailTemplateGeneratorTest extends TestCase
         ;
 
         $renderer
-            ->expects($this->atLeastOnce())
-            ->method('render')
+            ->expects($this->exactly($this->templates->count()))
+            ->method('renderHtml')
             ->will($this->returnCallback(function(MailTemplateInterface $template, Language $language) {
-                return implode('_', [$template->getName(), $template->getType(), $template->getCategory(), $language->iso_code]);
+                return implode('_', [$template->getName(), 'html', $template->getCategory(), $language->iso_code]);
+            }))
+        ;
+
+        $renderer
+            ->expects($this->exactly($this->templates->count()))
+            ->method('renderTxt')
+            ->will($this->returnCallback(function(MailTemplateInterface $template, Language $language) {
+                return implode('_', [$template->getName(), 'txt', $template->getCategory(), $language->iso_code]);
             }))
         ;
 

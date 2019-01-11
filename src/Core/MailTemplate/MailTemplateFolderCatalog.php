@@ -148,32 +148,48 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
         $category,
         $moduleName = null
     ) {
-        $templateTypes = [
-            MailTemplateInterface::HTML_TYPE,
-            MailTemplateInterface::TXT_TYPE,
-        ];
-
-        foreach ($templateTypes as $templateType) {
-            $typeFolder = implode(DIRECTORY_SEPARATOR, [$folder, $templateType]);
-            if (!is_dir($typeFolder)) {
-                continue;
+        $templateFiles = [];
+        $finder = new Finder();
+        $finder->files()->in($folder)->sortByName();
+        /** @var SplFileInfo $fileInfo */
+        foreach ($finder as $fileInfo) {
+            $templateName = preg_replace('/\..+/', '', $fileInfo->getBasename());
+            if (!isset($templateFiles[$templateName])) {
+                $templateFiles[$templateName] = [
+                    MailTemplateInterface::HTML_TYPE => '',
+                    MailTemplateInterface::TXT_TYPE => ''
+                ];
             }
-
-            $finder = new Finder();
-            $finder->files()->in($typeFolder)->depth(0)->sortByName();
-            /** @var SplFileInfo $fileInfo */
-            foreach ($finder as $fileInfo) {
-                $suffix = !empty($fileInfo->getExtension()) ? '.' . $fileInfo->getExtension() : '';
-                $collection->add(new MailTemplate(
-                    $theme,
-                    $category,
-                    $templateType,
-                    $fileInfo->getBasename($suffix),
-                    $fileInfo->getRealPath(),
-                    $moduleName
-                ));
-            }
+            $templateType = $this->getTemplateType($fileInfo);
+            $templateFiles[$templateName][$templateType] = $fileInfo->getRealPath();
         }
+
+        foreach ($templateFiles as $templateName => $templates) {
+            $collection->add(new MailTemplate(
+                $theme,
+                $category,
+                $templateName,
+                $templates[MailTemplateInterface::HTML_TYPE],
+                $templates[MailTemplateInterface::TXT_TYPE],
+                $moduleName
+            ));
+        }
+    }
+
+    /**
+     * @param SplFileInfo $fileInfo
+     *
+     * @return string
+     */
+    private function getTemplateType(SplFileInfo $fileInfo)
+    {
+        $ext = !empty($fileInfo->getExtension()) ? '.' . $fileInfo->getExtension() : '';
+        $htmlTypeRegexp = sprintf('/.+\.%s%s/', MailTemplateInterface::HTML_TYPE, $ext);
+        if (preg_match($htmlTypeRegexp, $fileInfo->getFilename())) {
+            return MailTemplateInterface::HTML_TYPE;
+        }
+
+        return MailTemplateInterface::TXT_TYPE;
     }
 
     /**
