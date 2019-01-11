@@ -42,9 +42,17 @@ export default class ShowcaseCardCloseExtension {
 
       const $btn = $(evt.target);
       const url = $btn.data('closeUrl');
+      const cardName = $btn.data('cardName');
+
       if (url) {
         // notify the card was closed
-        $.post(url, {close: 1});
+        $.post(
+          url,
+          {
+            close: 1,
+            name: cardName
+          }
+        );
       }
     });
   }

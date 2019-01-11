@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\InvalidShowcaseCardNameException;
 
+/**
+ * Showcase cards are help dialogs that appear at the top of pages to guide the merchant
+ */
 class ShowcaseCard
 {
     /**
