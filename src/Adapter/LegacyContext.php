@@ -159,7 +159,7 @@ class LegacyContext
      */
     public function getMailThemesUrl()
     {
-        return Tools::getShopDomain(true).__PS_BASE_URI__.$this->mailThemesUri;
+        return Tools::getShopDomain(true) . __PS_BASE_URI__ . $this->mailThemesUri;
     }
 
     /**
@@ -273,7 +273,7 @@ class LegacyContext
     public function getDefaultCurrency()
     {
         if (null === $this->defaultCurrency) {
-            $this->defaultCurrency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
+            $this->defaultCurrency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         return $this->defaultCurrency;
@@ -324,6 +324,7 @@ class LegacyContext
 
     /**
      * @param string $mailThemesUri
+     *
      * @return LegacyContext
      */
     public function setMailThemesUri($mailThemesUri)

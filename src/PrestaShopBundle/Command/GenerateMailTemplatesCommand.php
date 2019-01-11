@@ -87,6 +87,7 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
      * @param string $locale
      *
      * @return Language
+     *
      * @throws InvalidException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
