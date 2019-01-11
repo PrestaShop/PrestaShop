@@ -151,7 +151,7 @@ class MailTemplateTwigRendererTest extends TestCase
         );
         $this->assertNotNull($generator);
 
-        $generator->addTransformationByType($this->createTransformationMock($generatedTemplate, $expectedParameters), MailTemplateInterface::HTML_TYPE);
+        $generator->addTransformation($this->createTransformationMock($generatedTemplate, $expectedParameters, MailTemplateInterface::HTML_TYPE));
         $generatedTemplate = $generator->renderHtml($template, $expectedLanguage);
         $this->assertEquals($transformedTemplate, $generatedTemplate);
     }
@@ -159,11 +159,11 @@ class MailTemplateTwigRendererTest extends TestCase
     /**
      * @param string $initialTemplate
      * @param array $expectedParameters
-     * @param Language $expectedLanguage
+     * @param string $templateType
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateTransformationInterface
      */
-    private function createTransformationMock($initialTemplate, $expectedParameters)
+    private function createTransformationMock($initialTemplate, $expectedParameters, $templateType)
     {
         $transformationMock = $this->getMockBuilder(MailTemplateTransformationInterface::class)
             ->disableOriginalConstructor()
@@ -180,6 +180,12 @@ class MailTemplateTwigRendererTest extends TestCase
             ->will($this->returnCallback(function($templateContent, array $templateVariables) {
                 return $templateContent.'_transformed_'.$templateVariables['locale'];
             }))
+        ;
+
+        $transformationMock
+            ->expects($this->once())
+            ->method('getType')
+            ->willReturn($templateType)
         ;
 
         $transformationMock

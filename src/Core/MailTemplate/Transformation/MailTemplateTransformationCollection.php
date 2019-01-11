@@ -26,42 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
-use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
-use Language;
+use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
 
-/**
- * MailTemplateTransformerInterface is used by the MailTemplateRendererInterface to
- * apply a transformation on the generated template (textify html, inline css, ...).
- */
-interface MailTemplateTransformationInterface
+class MailTemplateTransformationCollection extends AbstractTypedCollection
 {
     /**
-     * @param string $templateContent
-     * @param array $templateVariables
-     *
-     * @return string
+     * @inheritDoc
      */
-    public function apply($templateContent, array $templateVariables);
-
-    /**
-     * Returns the of templates this transformation is associated with
-     * either html or txt
-     *
-     * @return string
-     */
-    public function getType();
-
-    /**
-     * @param MailTemplateInterface $template
-     *
-     * @return $this
-     */
-    public function setTemplate(MailTemplateInterface $template);
-
-    /**
-     * @param Language $language
-     *
-     * @return $this
-     */
-    public function setLanguage(Language $language);
+    protected function getType()
+    {
+        return MailTemplateTransformationInterface::class;
+    }
 }
