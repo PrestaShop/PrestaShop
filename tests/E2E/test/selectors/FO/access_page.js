@@ -27,8 +27,8 @@ module.exports = {
     second_footer_block: '//*[@id="footer"]//div[@class="col-md-6 wrapper"][2]/p',
     footer_block_link_widget: '//*[@class="footer-container"]//p[contains(text(),"%FOOTERBLOCKNAME")]',
     footer_block_second_link_widget: '//*[@class="footer-container"]//div[@class="col-md-6 wrapper"][2]/p',
-    display_before_footer_linkwidget:'//*[@id="footer"]/div[1]/div/div[3]/div//p[contains(text(),"%NAME")]',
-    display_before_footer_second_linkwidget:'//*[@id="footer"]/div[1]/div/div[3]/div/div[2]/p',
+    display_before_footer_linkwidget: '//*[@id="footer"]/div[1]/div/div[3]/div//p[contains(text(),"%NAME")]',
+    display_before_footer_second_linkwidget: '//*[@id="footer"]/div[1]/div/div[3]/div/div[2]/p',
     home_link_widget: '//*[@id="content"]/div[3]/div//p[contains(text(),"%HOMELINKWIDGET")]',
     second_home_link_widget: '//*[@id="content"]/div[3]//div[2]//p',
     display_nav1_link_widget: '//*[@id="header"]/nav/div/div/div[1]/div[1]/div[2]/div//p[contains(text(),"%NAVLINKWIDGET")]',
@@ -53,6 +53,8 @@ module.exports = {
     currency_list_element: '//*[@id="_desktop_currency_selector"]//li/a[contains(text(),"%NAME")]',
     selected_currency_option: '//*[@id="_desktop_currency_selector"]//select/option[@selected="selected" and (text()="%D")]',
     selected_language_option: '//*[@id="_desktop_language_selector"]//select/option[@selected="selected" and (text()="%D")]',
-    account:'//*[@id="_desktop_user_info"]/div[@class="user-info"]/a[@class="account"]/span'
+    account: '//*[@id="_desktop_user_info"]/div[@class="user-info"]/a[@class="account"]/span',
+    selected_language_by_isocode_option: '//*[@id="_desktop_language_selector"]//select/option[@selected="selected" and @data-iso-code="%ID"]',
+    language_bloc: '//*[@id="_desktop_language_selector"]',
   }
 };
