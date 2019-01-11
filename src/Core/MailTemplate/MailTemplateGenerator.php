@@ -63,11 +63,12 @@ class MailTemplateGenerator
     /**
      * @param string $theme
      * @param Language $language
-     * @param string $outputFolder
+     * @param string $coreOutputFolder
+     * @param string $modulesOutputFolder
      *
      * @throws InvalidException
      */
-    public function generateThemeTemplates($theme, Language $language, $outputFolder)
+    public function generateThemeTemplates($theme, Language $language, $coreOutputFolder, $modulesOutputFolder)
     {
         $availableThemes = $this->catalog->listThemes();
         if (!in_array($theme, $availableThemes)) {
@@ -78,10 +79,17 @@ class MailTemplateGenerator
             ));
         }
 
-        if (!$this->fileSystem->exists($outputFolder) || !is_dir($outputFolder)) {
+        if (!is_dir($coreOutputFolder)) {
             throw new InvalidException(sprintf(
-                'Invalid output folder "%s"',
-                $outputFolder
+                'Invalid core output folder "%s"',
+                $coreOutputFolder
+            ));
+        }
+
+        if (!is_dir($modulesOutputFolder)) {
+            throw new InvalidException(sprintf(
+                'Invalid modules output folder "%s"',
+                $modulesOutputFolder
             ));
         }
 
@@ -89,12 +97,18 @@ class MailTemplateGenerator
         $templates = $this->catalog->listTemplates($theme);
         /** @var MailTemplateInterface $template */
         foreach ($templates as $template) {
+            if (MailTemplateInterface::MODULES_CATEGORY === $template->getCategory() && !empty($template->getModuleName())) {
+                $outputFolder = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $template->getModuleName(), 'mails']);
+            } else {
+                $outputFolder = $coreOutputFolder;
+            }
+
             //Generate HTML template
             $generatedTemplate = $this->renderer->renderHtml($template, $language);
             $htmlTemplatePath = $this->generateTemplatePath($template, MailTemplateInterface::HTML_TYPE, $outputFolder);
             $this->fileSystem->dumpFile($htmlTemplatePath, $generatedTemplate);
 
-            //Generate HTML template
+            //Generate TXT template
             $generatedTemplate = $this->renderer->renderTxt($template, $language);
             $txtTemplatePath = $this->generateTemplatePath($template, MailTemplateInterface::TXT_TYPE, $outputFolder);
             $this->fileSystem->dumpFile($txtTemplatePath, $generatedTemplate);
@@ -106,7 +120,6 @@ class MailTemplateGenerator
      * @param MailTemplateInterface $template
      * @param string $type
      * @param string $outputFolder
-     *
      *
      * @return string
      */
