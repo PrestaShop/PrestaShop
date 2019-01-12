@@ -33,8 +33,8 @@ use Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ScheduleExchangeRatesUpdateCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\ScheduleExchangeRatesUpdateHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleExchangeRateAutomatizationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\ToggleExchangeRateAutomatizationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ScheduleExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShopException;
@@ -43,7 +43,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 /**
- * Class ScheduleExchangeRatesUpdateHandler is responsible for turning on or off the setting - if its on then
+ * Class ToggleExchangeRateAutomatizationHandler is responsible for turning on or off the setting - if its on then
  * in CronJobs module it creates new record with url which points to the script which is being executed at certain time
  * of period. If the setting is off then it removes that record.
  *
@@ -51,7 +51,7 @@ use Tools;
  *
  * @internal
  */
-final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesUpdateHandlerInterface
+final class ToggleExchangeRateAutomatizationHandler implements ToggleExchangeRateAutomatizationHandlerInterface
 {
     /**
      * @var Configuration
@@ -120,7 +120,7 @@ final class ScheduleExchangeRatesUpdateHandler implements ScheduleExchangeRatesU
      *
      * @throws CurrencyException
      */
-    public function handle(ScheduleExchangeRatesUpdateCommand $command)
+    public function handle(ToggleExchangeRateAutomatizationCommand $command)
     {
         if (!$this->isCronJobModuleInstalled) {
             throw new ScheduleExchangeRatesUpdateException(
