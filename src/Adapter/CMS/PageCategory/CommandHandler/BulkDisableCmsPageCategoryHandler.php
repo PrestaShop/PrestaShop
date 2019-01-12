@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkDisable
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDisableCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShopException;
 
 /**
@@ -46,6 +47,7 @@ final class BulkDisableCmsPageCategoryHandler implements BulkDisableCmsPageCateg
      */
     public function handle(BulkDisableCmsPageCategoryCommand $command)
     {
+        $parentId = null;
         try {
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
@@ -57,6 +59,10 @@ final class BulkDisableCmsPageCategoryHandler implements BulkDisableCmsPageCateg
                             $cmsPageCategoryId->getValue()
                         )
                     );
+                }
+
+                if (null === $parentId) {
+                    $parentId = (int) $entity->id_parent;
                 }
 
                 $entity->active = false;
@@ -77,5 +83,7 @@ final class BulkDisableCmsPageCategoryHandler implements BulkDisableCmsPageCateg
                 $e
             );
         }
+
+        return new CmsPageCategoryId($parentId);
     }
 }
