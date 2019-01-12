@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ScheduleExchangeRatesUpdateCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleExchangeRateAutomatizationCommand;
 
 /**
- * Interface ScheduleExchangeRatesUpdateHandlerInterface defines contract for UpdateLiveExchangeRatesHandler.
+ * Interface ToggleExchangeRateAutomatizationHandlerInterface defines contract for UpdateLiveExchangeRatesHandler.
  */
-interface ScheduleExchangeRatesUpdateHandlerInterface
+interface ToggleExchangeRateAutomatizationHandlerInterface
 {
     /**
-     * @param ScheduleExchangeRatesUpdateCommand $command
+     * @param ToggleExchangeRateAutomatizationCommand $command
      */
-    public function handle(ScheduleExchangeRatesUpdateCommand $command);
+    public function handle(ToggleExchangeRateAutomatizationCommand $command);
 }
