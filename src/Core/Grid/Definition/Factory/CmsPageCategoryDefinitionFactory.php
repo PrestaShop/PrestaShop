@@ -232,7 +232,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     ],
                     'redirect_route' => 'admin_cms_pages_index',
                     'redirect_route_params' => [
-                        'cmsCategoryParentId' => $this->cmsCategoryParentId,
+                        'id_cms_category' => $this->cmsCategoryParentId,
                     ],
                 ])
                 ->setAssociatedColumn('actions')
@@ -308,7 +308,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
         $request = $requestStack->getCurrentRequest();
 
         if (null !== $request) {
-            $this->cmsCategoryParentId = $request->attributes->get('cmsCategoryParentId');
+            $this->cmsCategoryParentId = $request->query->get('id_cms_category');
 
             return;
         }
