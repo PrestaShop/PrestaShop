@@ -56,8 +56,8 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         $this->moduleManager = $this->moduleManagerBuilder->build();
 
         $this->moduleNames= [
-            'pscsx3241',
             'pscsx32412',
+            'pscsx3241',
         ];
     }
 

@@ -48,7 +48,7 @@ class ModuleCacheTest extends IntegrationTestCase
 
         // make sure the cache files are not regenerated
         // (same timestamp on the cache file between two subsequent call to getModulesOnDisk)
-        self::assertEquals($trustedFileCreationTime, $newTrustedFileCreationTime);
+        $this->assertEquals($trustedFileCreationTime, $newTrustedFileCreationTime);
     }
 
     protected function tearDown()

@@ -27,8 +27,8 @@
 namespace LegacyTests\Core\Addon\Module;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 
 class ModuleManagerTest extends TestCase
@@ -309,7 +309,7 @@ class ModuleManagerTest extends TestCase
 
     private function mockCacheClearer()
     {
-        $this->cacheClearerS = $this->getMockBuilder(CacheClearer::class)
+        $this->cacheClearerS = $this->getMockBuilder(CacheClearerInterface::class)
             ->getMock();
     }
 

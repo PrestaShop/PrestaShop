@@ -3,6 +3,7 @@ const {languageFO} = require('../selectors/FO/index');
 let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
+const exec = require('child_process').exec;
 
 global.tab = [];
 global.isOpen = false;
@@ -242,6 +243,13 @@ class CommonClient {
           .then(() => this.client.getText(selector))
           .then((text) => expect(text).to.not.equal(textToCheckWith));
         break;
+      case "greaterThan":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 9000)
+          .then(() => this.client.getText(selector))
+          .then((text) => expect(parseInt(text)).to.be.gt(textToCheckWith));
+        break;
     }
   }
 
@@ -314,10 +322,10 @@ class CommonClient {
    * @param text
    * @returns {*}
    */
-  checkDocument(folderPath, fileName, text) {
-    pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
+  async checkDocument(folderPath, fileName, text) {
+    await pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
       global.data = global.data + data;
-      global.indexText = global.data.indexOf(text)
+      global.indexText = global.data.indexOf(text);
     });
 
     return this.client
@@ -620,15 +628,24 @@ class CommonClient {
    * These functions are used to sort table then check the sorted table
    * elementsTable, elementsSortedTable are two global variables that must be initialized in the sort table function
    * "normalize('NFKD').replace(/[\u0300-\u036F]/g, '')" is used to replace special characters example ô to o
+   * * "normalize('NFKD').replace(/[\u0300-\u036F]/g, '')" is used to replace special characters example € to o
    */
-  getTableField(element_list, i, sorted = false) {
+  getTableField(element_list, i, sorted = false, priceWithCurrency = false) {
     return this.client
       .getText(element_list.replace("%ID", i + 1)).then(function (name) {
         if (sorted) {
-          elementsSortedTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+          if (priceWithCurrency === true) {
+            elementsSortedTable[i] = name.normalize('NFKD').replace(/[^\x00-\x7F]/g, '').toLowerCase();
+          } else {
+            elementsSortedTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+          }
         }
         else {
-          elementsTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+          if (priceWithCurrency === true) {
+            elementsTable[i] = name.normalize('NFKD').replace(/[^\x00-\x7F]/g, '').toLowerCase();
+          } else {
+            elementsTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+          }
         }
       });
   }
@@ -679,10 +696,44 @@ class CommonClient {
       .waitForExistAndClick(selector.update_status_button)
   }
 
-  deleteFile(folderPath, fileName, pause = 0) {
-    fs.unlinkSync(folderPath+fileName);
+  getDocumentName(selector) {
+    return this.client
+      .then(() => this.client.getText(selector))
+      .then((name) => {
+        global.invoiceFileName = name.replace('#', '')
+      });
+  }
+
+  deleteFile(folderPath, fileName, extension = "", pause = 0) {
+    fs.unlinkSync(folderPath + fileName + extension);
     return this.client
       .pause(pause)
+  }
+
+  checkAutoUpgrade() {
+    fs.readFile(rcTarget + 'admin-dev/autoupgrade/tmp/log.txt', 'utf8', (err, content) => {
+      global.upgradeError = content.indexOf("upgradeDbError");
+    });
+    return this.client
+      .pause(2000)
+      .then(() => {
+        expect(global.upgradeError, "Upgrade process done, but some warnings/errors have been found").to.equal(-1)
+      });
+  }
+
+  signOutWithoutCookiesFO(selector) {
+    return this.client.signOutWithoutCookiesFO(selector);
+  }
+
+  waitForSymfonyToolbar(AddProductPage, pause = 0) {
+  return this.client
+      .pause(pause)
+      .isVisible(AddProductPage.symfony_toolbar, 4000)
+      .then((isVisible) => {
+        if (global.ps_mode_dev && isVisible) {
+          this.client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+        }
+      })
   }
 }
 

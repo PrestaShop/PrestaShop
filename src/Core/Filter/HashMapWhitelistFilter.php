@@ -164,6 +164,8 @@ class HashMapWhitelistFilter implements FilterInterface
     {
         // keep whitelisted items
         if ($subject instanceof AbstractLazyArray) {
+            // avoid modifying the original object
+            $subject = clone $subject;
             $subject->intersectKey($this->whitelistItems);
             // run nested filters
             foreach ($this->filters as $key => $filter) {

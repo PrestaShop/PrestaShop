@@ -27,16 +27,20 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType;
@@ -73,6 +77,7 @@ class CustomerController extends AbstractAdminController
             'customerGrid' => $this->presentGrid($customerGrid),
             'customersKpi' => $customersKpiFactory->build(),
             'customerRequiredFieldsForm' => $this->getRequiredFieldsForm()->createView(),
+            'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
         ]);
     }
 
@@ -85,11 +90,34 @@ class CustomerController extends AbstractAdminController
      */
     public function createAction(Request $request)
     {
-        return $this->redirect(
-            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
-                'addcustomer' => 1,
-            ])
-        );
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
+            return $this->redirectToRoute('admin_customers_index');
+        }
+
+        $this->addGroupSelectionToRequest($request);
+
+        $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
+        $customerForm->handleRequest($request);
+
+        $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
+
+        try {
+            $result = $customerFormHandler->handle($customerForm);
+
+            if ($customerId = $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_customers_index');
+            }
+        } catch (CustomerException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Customer/create.html.twig', [
+            'customerForm' => $customerForm->createView(),
+            'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
+            'minPasswordLength' => Password::MIN_LENGTH,
+        ]);
     }
 
     /**
@@ -102,12 +130,42 @@ class CustomerController extends AbstractAdminController
      */
     public function editAction($customerId, Request $request)
     {
-        return $this->redirect(
-            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
-                'updatecustomer' => 1,
-                'id_customer' => $customerId,
-            ])
-        );
+        $this->addGroupSelectionToRequest($request);
+
+        try {
+            /** @var CustomerInformation $customerInformation */
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing(new CustomerId((int) $customerId)));
+
+            $customerFormOptions = [
+                'is_password_required' => false,
+            ];
+            $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
+                ->getFormFor((int) $customerId, [], $customerFormOptions)
+            ;
+            $customerForm->handleRequest($request);
+
+            $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
+            $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_customers_index');
+            }
+        } catch (CustomerException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            if ($e instanceof CustomerNotFoundException) {
+                return $this->redirectToRoute('admin_customers_index');
+            }
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Customer/edit.html.twig', [
+            'customerForm' => $customerForm->createView(),
+            'customerInformation' => $customerInformation,
+            'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
+            'minPasswordLength' => Password::MIN_LENGTH,
+        ]);
     }
 
     /**
@@ -184,17 +242,10 @@ class CustomerController extends AbstractAdminController
                 ));
 
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-            } catch (CustomerNotFoundException $e) {
-                $this->addFlash(
-                    'error',
-                    $this->trans('This customer does not exist.', 'Admin.Orderscustomers.Notification')
-                );
-
-                return $this->redirectToRoute('admin_customers_index');
             } catch (CustomerException $e) {
                 $this->addFlash(
                     'error',
-                    $this->getFallbackErrorMessage(get_class($e), $e->getCode())
+                    $this->getErrorMessageForException($e, $this->getErrorMessages($e))
                 );
             }
         }
@@ -222,29 +273,8 @@ class CustomerController extends AbstractAdminController
             $this->getCommandBus()->handle(new TransformGuestToCustomerCommand(new CustomerId((int) $customerId)));
 
             $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-        } catch (CustomerNotFoundException $e) {
-            $this->addFlash(
-                'error',
-                $this->trans('This customer does not exist.', 'Admin.Orderscustomers.Notification')
-            );
-
-            return $this->redirectToRoute('admin_customers_index');
-        } catch (CustomerTransformationException $e) {
-            $errors = [
-                CustomerTransformationException::CUSTOMER_IS_NOT_GUEST => $this->trans('This customer already exists as a non-guest.', 'Admin.Orderscustomers.Notification'),
-                CustomerTransformationException::TRANSFORMATION_FAILED => $this->trans('An error occurred while updating customer information.', 'Admin.Orderscustomers.Notification'),
-            ];
-
-            $error = isset($errors[$e->getCode()]) ?
-                $errors[$e->getCode()] :
-                $this->getFallbackErrorMessage(get_class($e), $e->getCode());
-
-            $this->addFlash('error', $error);
         } catch (CustomerException $e) {
-            $this->addFlash(
-                'error',
-                $this->getFallbackErrorMessage(get_class($e), $e->getCode())
-            );
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_customers_view', [
@@ -288,5 +318,97 @@ class CustomerController extends AbstractAdminController
         $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForCustomer());
 
         return $this->createForm(RequiredFieldsType::class, ['required_fields' => $requiredFields]);
+    }
+
+    /**
+     * If customer form is submitted and groups are not selected
+     * we add empty groups to request
+     *
+     * @param Request $request
+     */
+    private function addGroupSelectionToRequest(Request $request)
+    {
+        if (!$request->isMethod(Request::METHOD_POST)) {
+            return;
+        }
+
+        if (!$request->request->has('customer')
+            || isset($request->request->get('customer')['group_ids'])
+        ) {
+            return;
+        }
+
+        $customerData = $request->request->get('customer');
+        $customerData['group_ids'] = [];
+
+        $request->request->set('customer', $customerData);
+    }
+
+    /**
+     * Get errors that can be used to translate exceptions into user friendly messages
+     *
+     * @param CustomerException $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(CustomerException $e)
+    {
+        return [
+            CustomerNotFoundException::class => $this->trans(
+                'This customer does not exist.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            DuplicateCustomerEmailException::class => sprintf(
+                '%s %s',
+                $this->trans('An account already exists for this email address:', 'Admin.Orderscustomers.Notification'),
+                $e instanceof DuplicateCustomerEmailException ? $e->getEmail()->getValue() : ''
+            ),
+            CustomerDefaultGroupAccessException::class => $this->trans(
+                'A default customer group must be selected in group box.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            CustomerConstraintException::class => [
+                CustomerConstraintException::INVALID_PASSWORD => $this->trans(
+                    'Password should be at least %length% characters long.',
+                    'Admin.Orderscustomers.Help',
+                    ['%length%' => Password::MIN_LENGTH]
+                ),
+                CustomerConstraintException::INVALID_FIRST_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('First name', 'Admin.Global'))]
+                ),
+                CustomerConstraintException::INVALID_LAST_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Last name', 'Admin.Global'))]
+                ),
+                CustomerConstraintException::INVALID_EMAIL => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Email', 'Admin.Global'))]
+                ),
+                CustomerConstraintException::INVALID_BIRTHDAY => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Birthday', 'Admin.Orderscustomers.Feature'))]
+                ),
+                CustomerConstraintException::INVALID_APE_CODE => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('APE', 'Admin.Orderscustomers.Feature'))]
+                ),
+            ],
+            CustomerTransformationException::class => [
+                CustomerTransformationException::CUSTOMER_IS_NOT_GUEST => $this->trans(
+                    'This customer already exists as a non-guest.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                CustomerTransformationException::TRANSFORMATION_FAILED => $this->trans(
+                    'An error occurred while updating customer information.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ],
+        ];
     }
 }

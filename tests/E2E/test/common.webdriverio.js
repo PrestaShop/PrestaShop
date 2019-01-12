@@ -120,6 +120,12 @@ function initCommands(client) {
       .deleteCookie();
   });
 
+  client.addCommand('signOutWithoutCookiesFO', function (selector) {
+    return client
+      .waitForExistAndClick(selector.sign_out_button)
+      .waitForExist(selector.sign_in_button, 90000)
+  });
+
   client.addCommand('accessToFO', function (selector) {
     return client
       .url(global.URL)

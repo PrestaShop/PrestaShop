@@ -62,7 +62,7 @@ class CategoryConstraintException extends CategoryException
     const CANNOT_BE_PARENT_OF_ITSELF = 10;
 
     /**
-     * Code is used when bulk delete data is empty
+     * Code is used when performing bulk delete of categories with empty data.
      */
     const EMPTY_BULK_DELETE_DATA = 12;
 }

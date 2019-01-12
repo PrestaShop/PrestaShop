@@ -9,6 +9,10 @@ module.exports = {
     active_button: '//*[@id="fieldset_0"]//label[@for="active_on"]',
     save_button: '//*[@id="manufacturer_form_submit_btn"]',
     short_description_input: '(//*[@id="manufacturer_form"]//div[@class="mce-tinymce mce-container mce-panel"])[1]',
-    description_input: '(//*[@id="manufacturer_form"]//div[@class="mce-tinymce mce-container mce-panel"])[3]'
+    description_input: '(//*[@id="manufacturer_form"]//div[@class="mce-tinymce mce-container mce-panel"])[3]',
+    filter_name_input: '//*[@id="table-manufacturer"]//input[@name="manufacturerFilter_name"]',
+    brand_column: '//*[@id="table-manufacturer"]//tr[%TR]/td[%COL]',
+    brand_search_button: '//*[@id="submitFilterButtonmanufacturer"]',
+    brand_reset_button: '//*[@id="submitFilterButtonmanufacturer"]',
   }
 };

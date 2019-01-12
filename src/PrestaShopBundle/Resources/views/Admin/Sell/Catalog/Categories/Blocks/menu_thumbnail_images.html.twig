@@ -30,7 +30,10 @@
         <figure class="figure">
           <img src="{{ menuThumbnail.path }}" class="figure-img img-fluid img-thumbnail">
           <figcaption class="figure-caption">
-            <button class="btn btn-outline-danger btn-sm">
+            <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
+                    data-form-submit-url="{{ path('admin_categories_delete_menu_thumbnail', {'categoryId': editableCategory.id.value, 'menuThumbnailId': menuThumbnail.id}) }}"
+                    data-form-csrf-token="{{ csrf_token('delete-menu-thumbnail') }}"
+            >
               <i class="material-icons">
                 delete_forever
               </i>

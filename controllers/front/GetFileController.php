@@ -56,14 +56,18 @@ class GetFileControllerCore extends FrontController
             }
 
             Tools::setCookieLanguage();
-            if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
-                Tools::redirect('index.php?controller=authentication&back=get-file.php&key=' . $key);
-            } elseif (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order')) {
-                $order = new Order((int) Tools::getValue('id_order'));
-                if (!Validate::isLoadedObject($order)) {
-                    $this->displayCustomError('Invalid key.');
-                }
-                if ($order->secure_key != Tools::getValue('secure_key')) {
+            if (!$this->context->customer->isLogged()) {
+                if (!Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
+                    Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
+                } elseif (Tools::getValue('secure_key') && Tools::getValue('id_order')) {
+                    $order = new Order((int) Tools::getValue('id_order'));
+                    if (!Validate::isLoadedObject($order)) {
+                        $this->displayCustomError('Invalid key.');
+                    }
+                    if ($order->secure_key != Tools::getValue('secure_key')) {
+                        $this->displayCustomError('Invalid key.');
+                    }
+                } else {
                     $this->displayCustomError('Invalid key.');
                 }
             }
@@ -86,6 +90,13 @@ class GetFileControllerCore extends FrontController
             $state = $order->getCurrentOrderState();
             if (!$state || !$state->paid) {
                 $this->displayCustomError('This order has not been paid.');
+            }
+
+            // Check whether the order was made by the current user
+            // If the order was made by a guest, skip this step
+            $customer = new Customer((int) $order->id_customer);
+            if (!$customer->is_guest && $order->secure_key !== $this->context->customer->secure_key) {
+                Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
             }
 
             /* Product no more present in catalog */

@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -36,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -96,9 +96,9 @@ class ModuleManager implements AddonManagerInterface
     private $actionParams;
 
     /**
-     * @var CacheClearer
+     * @var CacheClearerInterface
      */
-    private $cacheClearer;
+    private $symfonyCacheClearer;
 
     /**
      * Used to check if the cache has already been cleaned.
@@ -115,7 +115,7 @@ class ModuleManager implements AddonManagerInterface
      * @param ModuleZipManager $moduleZipManager
      * @param TranslatorInterface $translator
      * @param EventDispatcherInterface $eventDispatcher
-     * @param CacheClearer $cacheClearer
+     * @param CacheClearerInterface $symfonyCacheClearer
      */
     public function __construct(
         AdminModuleDataProvider $adminModuleProvider,
@@ -125,7 +125,7 @@ class ModuleManager implements AddonManagerInterface
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
         EventDispatcherInterface $eventDispatcher,
-        CacheClearer $cacheClearer
+        CacheClearerInterface $symfonyCacheClearer
     ) {
         $this->adminModuleProvider = $adminModuleProvider;
         $this->moduleProvider = $modulesProvider;
@@ -134,7 +134,7 @@ class ModuleManager implements AddonManagerInterface
         $this->moduleZipManager = $moduleZipManager;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
-        $this->cacheClearer = $cacheClearer;
+        $this->symfonyCacheClearer = $symfonyCacheClearer;
         $this->actionParams = new ParameterBag();
     }
 
@@ -700,6 +700,19 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
+     * Shortcut to the module data provider in order to know the module id depends
+     * on its name.
+     *
+     * @param string $name The technical module name
+     *
+     * @return int the Module Id, or 0 if not found
+     */
+    public function getModuleIdByName($name)
+    {
+        return $this->moduleProvider->getModuleIdByName($name);
+    }
+
+    /**
      * Shortcut to the module data updater to remove the module from the disk.
      *
      * @param string $name The technical module name
@@ -797,7 +810,7 @@ class ModuleManager implements AddonManagerInterface
             return;
         }
 
-        $this->cacheClearer->clearSymfonyCache();
+        $this->symfonyCacheClearer->clear();
         $this->cacheCleared = true;
     }
 }

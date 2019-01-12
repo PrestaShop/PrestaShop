@@ -16,9 +16,15 @@ let attributeData = {
   public_name: 'att',
   type: 'color',
   values: {
-    1: 'red',
-    2: 'yellow',
-    3: 'green'
+    1: {
+      value: 'red'
+    },
+    2: {
+      value: 'yellow'
+    },
+    3: {
+      value: 'green'
+    }
   }
 };
 
@@ -46,9 +52,12 @@ let productData = [{
   quantity: '5',
   price: '10',
   image_name: 'combination.jpg',
+  type: "combination",
   attribute: {
-    name: 'att',
-    variation_quantity: '5'
+    1: {
+      name: 'att',
+      variation_quantity: '5'
+    }
   }
 }, {
   name: 'Virtual',
@@ -82,12 +91,7 @@ scenario('Display each kind of product', () => {
       return promise
         .then(() => client.isVisible(ProductList.pagination_products))
         .then(() => client.getProductsNumber(ProductList.pagination_products))
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        });
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should close "catalog" menu', () => client.waitForVisibleAndClick(Menu.Sell.Catalog.catalog_menu));
     test('should go to "Shop Parameters - Product Settings" page', () => {
@@ -104,5 +108,4 @@ scenario('Display each kind of product', () => {
         });
     });
   }, 'product/product');
-
 }, 'product/product');

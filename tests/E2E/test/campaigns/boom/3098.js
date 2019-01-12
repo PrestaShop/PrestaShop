@@ -81,12 +81,7 @@ scenario('Create a product with two combinations', () => {
     scenario('Save Product', client => {
       test('should close the symfony toolbar if exists', () => {
         return promise
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-            }
-          });
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
       });
       test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
       test('should click on "SAVE"', () => client.waitForExistAndClick(AddProductPage.save_product_button));

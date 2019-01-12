@@ -27,11 +27,7 @@ scenario('Check product page buttons', () => {
   scenario('Testing "Preview" button', client => {
     test('should click on "Preview" button', () => {
       return promise
-        .then(() => {
-          if (global.ps_mode_dev) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-          }
-        })
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
         .then(() => client.waitForExistAndClick(AddProductPage.preview_buttons));
     });
     test('should switch to the Front Office', () => client.switchWindow(1));

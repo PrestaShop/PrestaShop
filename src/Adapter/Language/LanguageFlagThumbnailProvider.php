@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language;
 
+use HelperList;
 use ImageManager;
 use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
@@ -67,7 +68,7 @@ final class LanguageFlagThumbnailProvider implements ImageProviderInterface
         $imageTag = ImageManager::thumbnail(
             $pathToImage,
             'lang_mini_' . $languageId . '_' . $this->contextShopId . '.jpg',
-            45,
+            HelperList::LIST_THUMBNAIL_SIZE,
             'jpg'
         );
 

@@ -1,13 +1,13 @@
 let CommonClient = require('./../common_client');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
+const {CatalogPage} = require('../../selectors/BO/catalogpage/index');
 const {ProductList} = require('../../selectors/BO/add_product_page');
 let data = require('./../../datas/product-data');
 let path = require('path');
 
 global.productIdElement = [];
-global.productsTable = [];
-global.productsSortedTable = [];
 global.productStatus = [];
+
 
 class Product extends CommonClient {
 
@@ -177,78 +177,20 @@ class Product extends CommonClient {
         return document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
       }, selector)
       .then((count) => {
-        global.productsNumber = count.value;
-      });
-  }
-
-  /**
-   * This function allows to get the data of all products in Back Office
-   * @param product_list: selector or every id, name or reference
-   * @param i: index of element in the products table
-   * @param sorted: to get the data after sort
-   * @returns {*}
-   */
-  getProductsInformation(product_list, i, sorted = false) {
-    return this.client
-      .getText(product_list.replace("%ID", i + 1)).then(function (name) {
-        if (sorted) {
-          productsSortedTable[i] = name.toLowerCase();
-        } else {
-          productsTable[i] = name.toLowerCase();
+        if (count.value !== 1) {
+          global.productsNumber = count.value;
         }
-      });
-  }
-
-  sortByAsc(sortBy) {
-    if (sortBy === 'id_product') {
-      return productsTable.sort(function (a, b) {
-        return b - a;
-      }).reverse();
-    } else {
-      return productsTable.sort();
-    }
-  }
-
-  sortByDesc(sortBy) {
-    if (sortBy === 'id_product') {
-      return productsTable.sort(function (a, b) {
-        return a - b;
-      }).reverse();
-    } else {
-      return productsTable.sort().reverse();
-    }
-  }
-
-  /**
-   * This function allows to sort the table of all products
-   * @param sort_mode: to sort the table by ascendant(ASC) or descendant(DESC)
-   * @param type: sort by number or string
-   * @returns {*}
-   */
-  sortTable(sort_mode, type = 'id_product') {
-    return this.client
-      .pause(2000)
-      .then(() => {
-        this.client
-          .waitUntil(function () {
-            sort_mode === 'ASC' ? this.sortByAsc(type) : this.sortByDesc(type);
-          }, 1000 * global.productsNumber);
-      });
-  }
-
-  /**
-   * This function allows to check the sort of all products data
-   * @returns {*}
-   */
-  checkSortProduct() {
-    return this.client
-      .pause(1000)
-      .then(() => {
-        this.client
-          .waitUntil(function () {
-            expect(productsTable).to.deep.equal(productsSortedTable);
-          }, 1000 * global.productsNumber);
-      });
+        else {
+          return this.client.isVisible(CatalogPage.search_result_message)
+            .then((isVisible) => {
+              if (isVisible) {
+                global.productsNumber = 0;
+              } else {
+                global.productsNumber = count.value;
+              }
+            });
+        }
+      })
   }
 
   clickPageNext(selector) {
@@ -296,24 +238,24 @@ class Product extends CommonClient {
 
   checkProductCategory(i) {
     return this.client
-      .scrollWaitForExistAndClick(ProductList.product_name_link.replace("%ID", global.positionTable[i - 1], 50000))
+      .scrollWaitForExistAndClick(AddProductPage.catalog_product_name.replace("%ID", global.positionTable[i - 1], 50000))
       .waitForVisible(AddProductPage.product_name_input)
-      .scrollWaitForExistAndClick(AddProductPage.expand_categories_button)
+      //.scrollWaitForExistAndClick(AddProductPage.expand_categories_button)
   }
 
-  getSubCategoryNumber(i) {
+  getSubCategoryNumber(selector, i) {
     return this.client
-      .execute(function (i) {
+      .execute(function (selector, i) {
         let count;
         try {
-          count = document.getElementById('choice_tree').getElementsByTagName("ul")[i + 1].children.length;
+          count = document.getElementById(selector).getElementsByTagName("ul")[i + 1].children.length;
           return count;
         }
         catch (err) {
           count = 0;
           return count;
         }
-      }, i)
+      }, selector, i)
       .then((count) => {
         global.subCatNumber = count.value;
       })
@@ -328,6 +270,81 @@ class Product extends CommonClient {
         expect(values.value).to.contains(value)
       });
   }
+
+  checkSearchProduct(searchBy, min, max) {
+    return this.client
+      .pause(2000)
+      .then(() => {
+        switch (searchBy) {
+          case 'name':
+            for (let k = 0; k < (elementsTable.length); k++) {
+              expect(elementsTable[k]).to.contains("mug");
+            }
+            break;
+          case 'reference':
+            for (let k = 0; k < (elementsTable.length); k++) {
+              expect(elementsTable[k]).to.contains("demo_1");
+            }
+            break;
+          case 'category':
+            for (let k = 0; k < (elementsTable.length); k++) {
+              expect(elementsTable[k]).to.be.equal("art");
+            }
+            break;
+          case 'price':
+            for (let k = 0; k < (elementsTable.length); k++) {
+              expect(elementsTable[k] >= min && elementsTable[k] <= max).to.be.true;
+            }
+            break;
+          case 'min_quantity':
+            for (let k = 0; k < (elementsTable.length); k++) {
+              expect(elementsTable[k] >= min).to.be.true;
+            }
+            break;
+          case 'quantity':
+            for (let k = 0; k < (elementsTable.length); k++) {
+              expect(elementsTable[k] >= min && elementsTable[k] <= max).to.be.true;
+            }
+            break;
+          case 'id':
+            for (let k = 0; k < (elementsTable.length); k++) {
+              expect(elementsTable[k] >= min && elementsTable[k] <= max).to.be.true;
+            }
+            break;
+          case 'active_status':
+            for (let k = 0; k < (elementsTable.length); k++) {
+              expect(elementsTable[k]).to.be.equal("check");
+            }
+            break;
+          case 'inactive_status':
+            for (let k = 0; k < (elementsTable.length); k++) {
+              expect(elementsTable[k]).to.be.equal("clear");
+            }
+            break;
+        }
+      });
+  }
+
+  checkCategoryProduct() {
+    return this.client
+      .pause(1000)
+      .then(() => {
+          expect(global.productCategories.HOME.Accessories).to.contains(tab['categoryName'])
+      });
+  }
+
+  getCategoriesPageNumber(selector) {
+    return this.client
+      .execute(function (selector) {
+        return document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
+      }, selector)
+      .then((count) => {
+        global.categoriesPageNumber = count.value;
+      });
+  }
+
+
+
 }
 
 module.exports = Product;
