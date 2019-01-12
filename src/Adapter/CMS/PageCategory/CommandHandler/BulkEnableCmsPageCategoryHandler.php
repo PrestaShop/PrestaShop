@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkEnableC
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotEnableCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShopException;
 
 /**
@@ -46,9 +47,14 @@ final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategor
      */
     public function handle(BulkEnableCmsPageCategoryCommand $command)
     {
+        $parentId = null;
         try {
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
+
+                if (null === $parentId) {
+                    $parentId = (int) $entity->id_parent;
+                }
 
                 if (0 >= $entity->id) {
                     throw new CmsPageCategoryNotFoundException(
@@ -77,5 +83,7 @@ final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategor
                 $e
             );
         }
+
+        return new CmsPageCategoryId($parentId);
     }
 }
