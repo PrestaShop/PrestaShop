@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsP
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
@@ -189,18 +190,21 @@ class CmsPageController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
      * )
      *
-     * @param int $cmsCategoryParentId
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function deleteBulkCmsCategoryAction($cmsCategoryParentId, Request $request)
+    public function deleteBulkCmsCategoryAction(Request $request)
     {
         $cmsCategoriesToDelete = $request->request->get('cms_page_category_bulk');
-
+        $cmsCategoryParentId = null;
         try {
             $cmsCategoriesToDelete = array_map(function ($item) { return (int) $item; }, $cmsCategoriesToDelete);
-            $this->getCommandBus()->handle(new BulkDeleteCmsPageCategoryCommand($cmsCategoriesToDelete));
+
+            /** @var CmsPageCategoryId $cmsCategoryParentId */
+            $cmsCategoryParentId = $this->getCommandBus()->handle(
+                new BulkDeleteCmsPageCategoryCommand($cmsCategoriesToDelete)
+            );
 
             $this->addFlash(
                 'success',
@@ -210,9 +214,14 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', [
-            'cmsCategoryParentId' => $cmsCategoryParentId,
-        ]);
+        $parameters = [];
+        if (null !== $cmsCategoryParentId) {
+            $parameters = [
+                'id_cms_category' => $cmsCategoryParentId->getValue(),
+            ];
+        }
+
+        return $this->redirectToRoute('admin_cms_pages_index', $parameters);
     }
 
     /**

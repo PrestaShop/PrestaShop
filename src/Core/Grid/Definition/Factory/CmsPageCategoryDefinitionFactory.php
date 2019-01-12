@@ -250,18 +250,12 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_cms_pages_bulk_status_enable',
-                    'route_params_extra' => [
-                        'cmsCategoryParentId' => $this->cmsCategoryParentId,
-                    ],
                 ])
             )
             ->add((new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_cms_pages_bulk_status_disable',
-                    'route_params_extra' => [
-                        'cmsCategoryParentId' => $this->cmsCategoryParentId,
-                    ],
                 ])
             )
             ->add((new SubmitBulkAction('delete_bulk'))
@@ -269,9 +263,6 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setOptions([
                     'submit_route' => 'admin_cms_pages_delete_bulk_cms_category',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                    'route_params_extra' => [
-                        'cmsCategoryParentId' => $this->cmsCategoryParentId,
-                    ],
                 ])
             )
         ;
