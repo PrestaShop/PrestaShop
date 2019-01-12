@@ -52,10 +52,6 @@ final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategor
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
 
-                if (null === $parentId) {
-                    $parentId = (int) $entity->id_parent;
-                }
-
                 if (0 >= $entity->id) {
                     throw new CmsPageCategoryNotFoundException(
                         sprintf(
@@ -63,6 +59,11 @@ final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategor
                             $cmsPageCategoryId->getValue()
                         )
                     );
+                }
+
+
+                if (null === $parentId) {
+                    $parentId = (int) $entity->id_parent;
                 }
 
                 $entity->active = true;

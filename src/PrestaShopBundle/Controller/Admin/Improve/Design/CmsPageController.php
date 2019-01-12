@@ -356,7 +356,7 @@ class CmsPageController extends FrameworkBundleAdminController
         $parameters = [];
         if (null !== $cmsCategoryParentId) {
             $parameters = [
-                'id_cms_category' => $cmsCategoryParentId->getValue()   ,
+                'id_cms_category' => $cmsCategoryParentId->getValue(),
             ];
         }
 
@@ -377,18 +377,20 @@ class CmsPageController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
      * )
      *
-     * @param int $cmsCategoryParentId
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function bulkCmsPageStatusDisableAction($cmsCategoryParentId, Request $request)
+    public function bulkCmsPageStatusDisableAction(Request $request)
     {
         $cmsCategoriesToDisable = $request->request->get('cms_page_category_bulk');
-
+        $cmsCategoryParentId = null;
         try {
             $cmsCategoriesToDisable = array_map(function ($item) { return (int) $item; }, $cmsCategoriesToDisable);
-            $this->getCommandBus()->handle(new BulkDisableCmsPageCategoryCommand($cmsCategoriesToDisable));
+            /** @var CmsPageCategoryId $cmsCategoryParentId */
+            $cmsCategoryParentId = $this->getCommandBus()->handle(
+                new BulkDisableCmsPageCategoryCommand($cmsCategoriesToDisable)
+            );
 
             $this->addFlash(
                 'success',
@@ -398,9 +400,14 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', [
-            'cmsCategoryParentId' => $cmsCategoryParentId,
-        ]);
+        $parameters = [];
+        if (null !== $cmsCategoryParentId) {
+            $parameters = [
+                'id_cms_category' => $cmsCategoryParentId->getValue(),
+            ];
+        }
+
+        return $this->redirectToRoute('admin_cms_pages_index', $parameters);
     }
 
     /**
