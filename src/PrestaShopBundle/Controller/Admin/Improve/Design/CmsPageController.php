@@ -98,11 +98,9 @@ class CmsPageController extends FrameworkBundleAdminController
      *     message="You do not have permission to add this."
      * )
      *
-     * @param int $cmsCategoryParentId
-     *
      * @return RedirectResponse
      */
-    public function createCmsCategoryAction($cmsCategoryParentId)
+    public function createCmsCategoryAction()
     {
 //        todo: remove legacy parts once form is ready and demoRestricted on post action
         $legacyLink = $this->getAdminLink('AdminCmsContent', [
@@ -122,12 +120,11 @@ class CmsPageController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param int $cmsCategoryParentId
      * @param int $cmsCategoryId
      *
      * @return RedirectResponse
      */
-    public function editCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
+    public function editCmsCategoryAction($cmsCategoryId)
     {
 //        todo: remove legacy parts once form is ready and demoRestricted on post action
         //todo: demo restricted on post action
@@ -332,18 +329,21 @@ class CmsPageController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
      * )
      *
-     * @param int $cmsCategoryParentId
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function bulkCmsPageStatusEnableAction($cmsCategoryParentId, Request $request)
+    public function bulkCmsPageStatusEnableAction(Request $request)
     {
         $cmsCategoriesToEnable = $request->request->get('cms_page_category_bulk');
-
+        $cmsCategoryParentId = null;
         try {
             $cmsCategoriesToEnable = array_map(function ($item) { return (int) $item; }, $cmsCategoriesToEnable);
-            $this->getCommandBus()->handle(new BulkEnableCmsPageCategoryCommand($cmsCategoriesToEnable));
+
+            /** @var CmsPageCategoryId $cmsCategoryParentId */
+            $cmsCategoryParentId = $this->getCommandBus()->handle(
+                new BulkEnableCmsPageCategoryCommand($cmsCategoriesToEnable)
+            );
 
             $this->addFlash(
                 'success',
@@ -353,9 +353,14 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', [
-            'cmsCategoryParentId' => $cmsCategoryParentId,
-        ]);
+        $parameters = [];
+        if (null !== $cmsCategoryParentId) {
+            $parameters = [
+                'id_cms_category' => $cmsCategoryParentId->getValue()   ,
+            ];
+        }
+
+        return $this->redirectToRoute('admin_cms_pages_index', $parameters);
     }
 
     /**
