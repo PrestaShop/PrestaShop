@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
  * Interface BulkEnableCmsPageCategoryHandlerInterface defines contract for BulkEnableCmsPageCategoryHandler.
@@ -35,6 +36,8 @@ interface BulkEnableCmsPageCategoryHandlerInterface
 {
     /**
      * @param BulkEnableCmsPageCategoryCommand $command
+     *
+     * @return CmsPageCategoryId
      */
     public function handle(BulkEnableCmsPageCategoryCommand $command);
 }
