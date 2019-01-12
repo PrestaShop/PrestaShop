@@ -97,6 +97,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             );
             $this->assertDefaultCurrencyIsNotBeingDisabled($command->getCurrencyId()->getValue(), $command->isEnabled());
             $this->assertDefaultCurrencyIsBeingRemovedFromShop(
+                $entity,
                 $command->getCurrencyId()->getValue(),
                 $command->getShopIds()
             );
@@ -191,12 +192,12 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
      * On each shop there might be different default currency. This function prevents from removing shop association
      * from each shop.
      *
-     * @param int $currencyId
+     * @param Currency $currency
      * @param array $shopIds
      *
      * @throws CannotRemoveDefaultCurrencyFromShopAssociationException
      */
-    private function assertDefaultCurrencyIsBeingRemovedFromShop($currencyId, array $shopIds)
+    private function assertDefaultCurrencyIsBeingRemovedFromShop(Currency $currency, array $shopIds)
     {
         if (!$this->isMultiStoreFeature) {
             return;
@@ -212,15 +213,18 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 $shopId
             );
 
-            if ($currencyId !== $shopDefaultCurrencyId) {
+            if ((int) $currency->id !== $shopDefaultCurrencyId) {
                 continue;
             }
 
             if (!in_array($shopId, $shopIds)) {
+                $shop = new Shop($shopId);
                 throw new CannotRemoveDefaultCurrencyFromShopAssociationException(
+                    $currency->name,
+                    $shop->name,
                     sprintf(
                         'Currency with id %s cannot be unassigned from shop with id %s because its the default currency.',
-                        $currencyId,
+                        $currency->id,
                         $shopId
                     )
                 );
