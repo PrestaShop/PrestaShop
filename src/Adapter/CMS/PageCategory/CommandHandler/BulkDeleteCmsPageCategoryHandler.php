@@ -52,10 +52,6 @@ final class BulkDeleteCmsPageCategoryHandler implements BulkDeleteCmsPageCategor
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
 
-                if (null === $parentId) {
-                    $parentId = (int) $entity->id_parent;
-                }
-
                 if (0 >= $entity->id) {
                     throw new CmsPageCategoryNotFoundException(
                         sprintf(
@@ -63,6 +59,10 @@ final class BulkDeleteCmsPageCategoryHandler implements BulkDeleteCmsPageCategor
                             $cmsPageCategoryId->getValue()
                         )
                     );
+                }
+
+                if (null === $parentId) {
+                    $parentId = (int) $entity->id_parent;
                 }
 
                 if (false === $entity->delete()) {
