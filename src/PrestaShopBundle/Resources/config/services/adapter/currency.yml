@@ -37,7 +37,7 @@ services:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand' }
 
     prestashop.adapter.currency.command_handler.update_live_exchange_rates:
-        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\ScheduleExchangeRatesUpdateHandler'
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\ToggleExchangeRateAutomatizationHandler'
         arguments:
           - '@prestashop.adapter.legacy.configuration'
           - '@=service("prestashop.adapter.legacy.context").getContext().shop'
@@ -47,7 +47,7 @@ services:
           - '@=service("prestashop.adapter.legacy.context").getAdminBaseUrl()'
           - '%database_prefix%'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\ScheduleExchangeRatesUpdateCommand' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleExchangeRateAutomatizationCommand' }
 
 
     # Query handlers
