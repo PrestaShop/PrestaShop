@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
  * Interface BulkDeleteCmsPageCategoryHandlerInterface defines contract for BulkDeleteCmsPageCategoryHandler.
@@ -35,6 +36,8 @@ interface BulkDeleteCmsPageCategoryHandlerInterface
 {
     /**
      * @param BulkDeleteCmsPageCategoryCommand $command
+     *
+     * @return CmsPageCategoryId - returns common parent cms category id.
      */
     public function handle(BulkDeleteCmsPageCategoryCommand $command);
 }
