@@ -26,9 +26,51 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
+use Throwable;
+
 /**
  * Class CannotRemoveDefaultCurrencyFromShopAssociationException
  */
 class CannotRemoveDefaultCurrencyFromShopAssociationException extends CurrencyException
 {
+    /**
+     * @var string
+     */
+    private $currencyName;
+
+    /**
+     * @var string
+     */
+    private $shopName;
+
+    /**
+     * @param string $currencyName
+     * @param string $shopName
+     * @param string $message
+     * @param int $code
+     * @param null $previous
+     */
+    public function __construct($currencyName, $shopName, $message = "", $code = 0, $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->currencyName = $currencyName;
+        $this->shopName = $shopName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrencyName()
+    {
+        return $this->currencyName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShopName()
+    {
+        return $this->shopName;
+    }
 }
