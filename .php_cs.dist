@@ -11,35 +11,33 @@ return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules([
         '@Symfony:risky' => true,
-        // Spacing to apply around concatenation operator.
+        // Adding one space around concatenation operator.
         'concat_space' => [
             'spacing' => 'one',
         ],
-        // Error control operator should be added to deprecation notices and/or removed from other cases.
+        // Error control operator should not be changed.
         'error_suppression' => [
             'mute_deprecation_error' => false,
             'noise_remaining_usages' => false,
             'noise_remaining_usages_exclude' => [],
         ],
-        // Replace core functions calls returning constants with the constants.
-        'function_to_constant' => false,
-        // PHPDoc summary should end in either a full stop, exclamation mark, or question mark. 
+        //PHPDoc summary should not be changed. 
         'phpdoc_summary' => false,
-        // All items of the given phpdoc tags must be either left-aligned or (by default) aligned vertically. 
+        // All items of the given phpdoc tags must be left-aligned. 
         'phpdoc_align' => [
             'align' => 'left',
         ],
-        // Converts protected variables and methods to private where possible.
+        // Don't convert protected variables and methods to private.
         'protected_to_private' => false,
-        // Class names should match the file name.
+        // Dont force the class names to match the file name.
         'psr4' => false,
-        // Add leading \ before constant invocation of internal constant to speed up resolving. Constant name match is case-sensitive, except for null, false and true.
+        // Don't add leading \ before constant invocation.
         'native_constant_invocation' => false,
-        // Add leading \ before function invocation to speed up resolving.
+        // Don't add leading \ before function invocation.
         'native_function_invocation' => false,
-        // Inside class or interface element self should be preferred to the class name itself.
+        // Don't force use of self.
         'self_accessor' => false,
-        // Write conditions in Yoda style (true), non-Yoda style (false) or ignore those conditions (null) based on configuration.
+        // Ignore yoda style conditions.
         'yoda_style' => null,
         // All multi-line strings must use correct line ending.
         'string_line_ending' => true,
@@ -91,11 +89,11 @@ return PhpCsFixer\Config::create()
         'doctrine_annotation_array_assignment' => true,
         // All multi-line strings must use correct line ending. 
         'string_line_ending' => true,
-        // List (array destructuring). Short requires PHP >= 7.1. 
+        // List (array destructuring) long syntax. Short requires PHP >= 7.1. 
         'list_syntax' => [
             'syntax' => 'long',
         ],
-        // PHP arrays should be declared using the configured syntax. 
+        // Use short PHP arrays. 
         'array_syntax' => [
             'short',
         ],
