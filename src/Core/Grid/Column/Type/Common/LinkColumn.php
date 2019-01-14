@@ -50,7 +50,6 @@ final class LinkColumn extends AbstractColumn
         $resolver
             ->setDefaults([
                 'sortable' => true,
-                'route_params_extra' => [],
             ])
             ->setRequired([
                 'field',
@@ -63,7 +62,6 @@ final class LinkColumn extends AbstractColumn
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
             ->setAllowedTypes('sortable', 'bool')
-            ->setAllowedTypes('route_params_extra', 'array')
         ;
     }
 }

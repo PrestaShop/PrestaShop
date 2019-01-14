@@ -106,9 +106,6 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'route' => 'admin_cms_pages_edit_cms_category',
                     'route_param_name' => 'cmsCategoryId',
                     'route_param_field' => 'id_cms_category',
-                    'route_params_extra' => [
-                        'id_parent' => 'cmsCategoryParentId',
-                    ],
                 ])
             )
             ->add((new DataColumn('description'))
@@ -162,9 +159,6 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                                 'route' => 'admin_cms_pages_edit_cms_category',
                                 'route_param_name' => 'cmsCategoryId',
                                 'route_param_field' => 'id_cms_category',
-                                'route_params_extra' => [
-                                    'id_parent' => 'cmsCategoryParentId',
-                                ],
                             ])
                         )
                         ->add((new SubmitRowAction('delete'))
