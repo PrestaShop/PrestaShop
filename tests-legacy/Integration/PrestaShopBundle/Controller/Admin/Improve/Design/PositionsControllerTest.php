@@ -94,7 +94,8 @@ class PositionsControllerTest extends WebTestCase
         );
         $this->assertContains(
             'This module cannot be loaded.',
-            $messages['error']
+            $messages['error'],
+            print_r($messages['error'],true)
         );
         $this->assertContains(
             'Hook cannot be loaded.',

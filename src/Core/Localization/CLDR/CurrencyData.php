@@ -94,7 +94,7 @@ class CurrencyData
      */
     public function overrideWith(CurrencyData $currencyData)
     {
-        if (null != $currencyData->getIsoCode()) {
+        if (null !== $currencyData->getIsoCode()) {
             $this->setIsoCode($currencyData->getIsoCode());
         }
 
