@@ -183,6 +183,21 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getFilters()
     {
+        $actionsTypeOptions = [
+            'reset_route' => 'admin_common_reset_search',
+            'reset_route_params' => [
+                'controller' => 'CmsPage',
+                'action' => 'index',
+            ],
+            'redirect_route' => 'admin_cms_pages_index',
+        ];
+
+        if ($this->cmsCategoryParentId) {
+            $actionsTypeOptions['redirect_route_params'] = [
+                'id_cms_category' => $this->cmsCategoryParentId,
+            ];
+        }
+
         return (new FilterCollection())
             ->add((new Filter('id_cms_category', TextType::class))
                 ->setTypeOptions([
@@ -212,17 +227,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
-                    'reset_route_params' => [
-                        'controller' => 'CmsPage',
-                        'action' => 'index',
-                    ],
-                    'redirect_route' => 'admin_cms_pages_index',
-                    'redirect_route_params' => [
-                        'id_cms_category' => $this->cmsCategoryParentId,
-                    ],
-                ])
+                ->setTypeOptions($actionsTypeOptions)
                 ->setAssociatedColumn('actions')
             )
         ;
@@ -286,12 +291,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
     {
         $request = $requestStack->getCurrentRequest();
 
-        if (null !== $request) {
-            $this->cmsCategoryParentId = $request->query->get('id_cms_category');
-
-            return;
+        if (null !== $request && $request->query->getInt('id_cms_category')) {
+            $this->cmsCategoryParentId = $request->query->getInt('id_cms_category');
         }
-
-        $this->cmsCategoryParentId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
     }
 }
