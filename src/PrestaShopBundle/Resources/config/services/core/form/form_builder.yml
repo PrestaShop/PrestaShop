@@ -22,3 +22,10 @@ services:
       - 'PrestaShopBundle\Form\Admin\Sell\Customer\CustomerType'
       - '@prestashop.core.form.identifiable_object.data_provider.customer_form_data_provider'
 
+  prestashop.core.form.identifiable_object.builder.contact_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
+      - '@prestashop.core.form.identifiable_object.data_provider.contact_form_data_provider'
+
