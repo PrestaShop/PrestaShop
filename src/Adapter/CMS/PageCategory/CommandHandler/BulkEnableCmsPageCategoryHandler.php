@@ -61,7 +61,6 @@ final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategor
                     );
                 }
 
-
                 if (null === $parentId) {
                     $parentId = (int) $entity->id_parent;
                 }
