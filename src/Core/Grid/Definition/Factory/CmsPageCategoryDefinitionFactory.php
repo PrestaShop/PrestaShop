@@ -134,9 +134,6 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'route' => 'admin_cms_pages_toggle_cms_category',
                     'primary_field' => 'id_cms_category',
                     'route_param_name' => 'cmsCategoryId',
-                    'route_params_extra' => [
-                        'id_parent' => 'cmsCategoryParentId',
-                    ],
                 ])
             )
             ->add((new ActionColumn('actions'))
