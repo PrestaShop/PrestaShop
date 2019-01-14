@@ -15,12 +15,6 @@ return PhpCsFixer\Config::create()
         'concat_space' => [
             'spacing' => 'one',
         ],
-        // Error control operator should not be changed.
-        'error_suppression' => [
-            'mute_deprecation_error' => false,
-            'noise_remaining_usages' => false,
-            'noise_remaining_usages_exclude' => [],
-        ],
         // PHPDoc summary should not be changed. 
         'phpdoc_summary' => false,
         // All items of the given phpdoc tags must be left-aligned. 
