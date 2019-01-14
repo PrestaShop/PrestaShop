@@ -45,7 +45,6 @@ class CurrencyCore extends ObjectModel
 
     /**
      * Numeric ISO 4217 code of this currency
-     * Will be deprecated soon.
      *
      * @var string
      */
@@ -82,7 +81,6 @@ class CurrencyCore extends ObjectModel
 
     /**
      * Currency's symbol
-     * Will be deprecated soon.
      *
      * @var string
      */
@@ -110,7 +108,6 @@ class CurrencyCore extends ObjectModel
 
     /**
      * Number of decimal digits to use when displaying a price in this currency
-     * Will be deprecated soon.
      *
      * @var int
      */
