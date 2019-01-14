@@ -523,11 +523,6 @@ class Install extends AbstractInstall
                     return false;
                 }
             }
-
-            // Copy language default images (we do this action after database in populated because we need image types information)
-            foreach ($languages as $iso) {
-                $this->copyLanguageImages($iso);
-            }
         } catch (PrestashopInstallerException $e) {
             $this->setError($e->getMessage());
 
@@ -682,9 +677,17 @@ class Install extends AbstractInstall
             $types = ImageType::getImagesTypes($cat);
             foreach ($types as $type) {
                 if (file_exists($img_path . $iso . '-default-' . $type['name'] . '.jpg')) {
-                    copy($img_path . $iso . '-default-' . $type['name'] . '.jpg', $dst_path . $iso . '-default-' . $type['name'] . '.jpg');
+                    copy(
+                        $img_path . $iso . '-default-' . $type['name'] . '.jpg',
+                        $dst_path . $iso . '-default-' . $type['name'] . '.jpg'
+                    );
                 } else {
-                    ImageManager::resize($img_path . $iso . '.jpg', $dst_path . $iso . '-default-' . $type['name'] . '.jpg', $type['width'], $type['height']);
+                    ImageManager::resize(
+                        $img_path . $iso . '.jpg',
+                        $dst_path . $iso . '-default-' . $type['name'] . '.jpg',
+                        $type['width'],
+                        $type['height']
+                    );
                 }
             }
         }
@@ -1171,6 +1174,20 @@ class Install extends AbstractInstall
 
         $theme_manager = $builder->build();
 
-        return $theme_manager->install($themeName) && $theme_manager->enable($themeName);
+        if (!($theme_manager->install($themeName) && $theme_manager->enable($themeName))) {
+            return false;
+        }
+
+        /*
+         * Copy language default images.
+         * We do this action after install theme because we
+         * need image types information.
+         */
+        $languages = $this->language->getIsoList();
+        foreach ($languages as $iso) {
+            $this->copyLanguageImages($iso);
+        }
+
+        return true;
     }
 }
