@@ -37,7 +37,7 @@ interface BulkEnableCmsPageCategoryHandlerInterface
     /**
      * @param BulkEnableCmsPageCategoryCommand $command
      *
-     * @return CmsPageCategoryId - returns common parent cms category id.
+     * @return cmsPageCategoryId - returns common parent cms category id
      */
     public function handle(BulkEnableCmsPageCategoryCommand $command);
 }
