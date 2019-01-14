@@ -275,16 +275,15 @@ class Locale
     /**
      * Get a given CLDR Currency.
      *
-     * @param string $currencyCode
-     *                             An ISO 4217 currency code
+     * @param string $currencyCode An ISO 4217 currency code
      *
-     * @return null|CurrencyInterface
-     *                                The wanted CLDR Currency. Null if this currency is not available for this locale.
+     * @return null|CurrencyInterface The wanted CLDR Currency. Null if this currency is not available for this locale.
      */
     public function getCurrency($currencyCode)
     {
-        if (!empty($this->currencies[$currencyCode])) {
-            return new Currency($this->currencies[$currencyCode]);
+        $currencyData = $this->getCurrencyData($currencyCode);
+        if (!empty($currencyData)) {
+            return new Currency($currencyData);
         }
 
         return null;

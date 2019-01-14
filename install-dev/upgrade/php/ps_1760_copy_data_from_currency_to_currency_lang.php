@@ -30,7 +30,7 @@ function ps_1760_copy_data_from_currency_to_currency_lang()
     foreach ($currencies as $currency) {
         Db::getInstance()->execute(
             "INSERT INTO `" . _DB_PREFIX_ . "currency_lang` (`id_currency`, `id_lang`, `name`)
-            SELECT `id_currency`, " . $currency['id_lang'] . " as id_lang , `name`
+            SELECT `id_currency`, " . (int) $currency['id_lang'] . " as id_lang , `name`
             FROM `" . _DB_PREFIX_ . "currency`
             ON DUPLICATE KEY UPDATE
             `name` = `" . _DB_PREFIX_ . "currency`.`name`,

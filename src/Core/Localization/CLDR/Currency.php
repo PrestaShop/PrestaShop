@@ -110,8 +110,7 @@ final class Currency implements CurrencyInterface
     /**
      * Get the numeric ISO code of this currency.
      *
-     * @return string
-     *                The currency's ISO 4217 numeric code
+     * @return string The currency's ISO 4217 numeric code
      */
     public function getNumericIsoCode()
     {
@@ -121,8 +120,7 @@ final class Currency implements CurrencyInterface
     /**
      * Get the number of decimal digits to display when formatting a price with this currency.
      *
-     * @return int
-     *             The number of decimal digits to display
+     * @return int The number of decimal digits to display
      */
     public function getDecimalDigits()
     {
@@ -138,8 +136,7 @@ final class Currency implements CurrencyInterface
      *                             "one"     = talking about one unit of this currency (e.g.: "one euro")
      *                             "other"   = talking about several units of this currency (e.g.: "ten euros")
      *
-     * @return string
-     *                The wanted display name
+     * @return string The wanted display name
      */
     public function getDisplayName($countContext = CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT)
     {
@@ -158,14 +155,11 @@ final class Currency implements CurrencyInterface
     /**
      * Get the symbol of this currency. Narrow symbol is returned by default.
      *
-     * @param string $type
-     *                     Possible value: "default" ("$") and "narrow" ("US$")
+     * @param string $type Possible value: "default" ("$") and "narrow" ("US$")
      *
-     * @return string
-     *                The currency's symbol
+     * @return string The currency's symbol
      *
-     * @throws LocalizationException
-     *                               When an invalid symbol type is passed
+     * @throws LocalizationException When an invalid symbol type is passed
      */
     public function getSymbol($type = CurrencyInterface::SYMBOL_TYPE_NARROW)
     {
