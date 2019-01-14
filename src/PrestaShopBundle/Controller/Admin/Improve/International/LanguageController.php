@@ -169,7 +169,7 @@ class LanguageController extends AbstractAdminController
                 ),
             ],
             LanguageImageUploadingException::class => [
-                LanguageImageUploadingException::MEMORY_LIMIT_RESTRICTION =>  $this->trans(
+                LanguageImageUploadingException::MEMORY_LIMIT_RESTRICTION => $this->trans(
                     'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ',
                     'Admin.Notifications.Error'
                 ),
