@@ -109,6 +109,9 @@
         "tecnickcom/tcpdf": "^6.2.12",
         "twig/twig": "^1.0||^2.0"
     },
+    "conflict": {
+        "twig/twig": "1.37.0|2.6.1"
+    },
     "repositories": [
         {
             "type": "vcs",
