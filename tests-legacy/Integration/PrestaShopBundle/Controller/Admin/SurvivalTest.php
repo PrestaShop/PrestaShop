@@ -146,6 +146,7 @@ class SurvivalTest extends WebTestCase
             'admin_webservice_keys_create' => ['Webservice', 'admin_webservice_keys_create'],
             'admin_languages_index' => ['Languages', 'admin_languages_index'],
             'admin_languages_create' => ['Add new language', 'admin_languages_create'],
+            'admin_meta_index' => ['Meta', 'admin_meta_index'],
         ];
     }
 
