@@ -170,14 +170,9 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        $parameters = [];
-        if (null !== $cmsCategoryParentId) {
-            $parameters = [
-                'id_cms_category' => $cmsCategoryParentId->getValue(),
-            ];
-        }
-
-        return $this->redirectToRoute('admin_cms_pages_index', $parameters);
+        return $this->redirectToIndexPage(
+            null !== $cmsCategoryParentId ? $cmsCategoryParentId->getValue() : 0
+        );
     }
 
     /**
@@ -218,14 +213,9 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        $parameters = [];
-        if (null !== $cmsCategoryParentId) {
-            $parameters = [
-                'id_cms_category' => $cmsCategoryParentId->getValue(),
-            ];
-        }
-
-        return $this->redirectToRoute('admin_cms_pages_index', $parameters);
+        return $this->redirectToIndexPage(
+            null !== $cmsCategoryParentId ? $cmsCategoryParentId->getValue() : 0
+        );
     }
 
     /**
@@ -259,21 +249,13 @@ class CmsPageController extends FrameworkBundleAdminController
 
         $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
 
-        $redirectParameters = [];
-
-        if ($cmsCategoryParentId) {
-            $redirectParameters = [
-                'id_cms_category' => $cmsCategoryParentId,
-            ];
-        }
-
         try {
             $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
         } catch (PositionDataException $e) {
             $errors = [$e->toArray()];
             $this->flashErrors($errors);
 
-            return $this->redirectToRoute('admin_cms_pages_index', $redirectParameters);
+            return $this->redirectToIndexPage($cmsCategoryParentId);
         }
 
         $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
@@ -286,7 +268,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', $redirectParameters);
+        return $this->redirectToIndexPage($cmsCategoryParentId);
     }
 
     /**
@@ -309,10 +291,10 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function toggleCmsCategoryAction($cmsCategoryId)
     {
-        $cmsPageCategoryId = null;
+        $cmsCategoryParentId = null;
         try {
-            /** @var CmsPageCategoryId $cmsPageCategoryId */
-            $cmsPageCategoryId = $this->getCommandBus()->handle(
+            /** @var CmsPageCategoryId $cmsCategoryParentId */
+            $cmsCategoryParentId = $this->getCommandBus()->handle(
                 new ToggleCmsPageCategoryStatusCommand((int) $cmsCategoryId)
             );
 
@@ -324,14 +306,9 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        $parameters = [];
-        if (null !== $cmsPageCategoryId) {
-            $parameters = [
-                'id_cms_category' => $cmsPageCategoryId->getValue(),
-            ];
-        }
-
-        return $this->redirectToRoute('admin_cms_pages_index', $parameters);
+        return $this->redirectToIndexPage(
+            null !== $cmsCategoryParentId ? $cmsCategoryParentId->getValue() : 0
+        );
     }
 
     /**
@@ -372,14 +349,9 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        $parameters = [];
-        if (null !== $cmsCategoryParentId) {
-            $parameters = [
-                'id_cms_category' => $cmsCategoryParentId->getValue(),
-            ];
-        }
-
-        return $this->redirectToRoute('admin_cms_pages_index', $parameters);
+        return $this->redirectToIndexPage(
+            null !== $cmsCategoryParentId ? $cmsCategoryParentId->getValue() : 0
+        );
     }
 
     /**
@@ -419,14 +391,31 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        $parameters = [];
-        if (null !== $cmsCategoryParentId) {
-            $parameters = [
-                'id_cms_category' => $cmsCategoryParentId->getValue(),
+        return $this->redirectToIndexPage(
+            null !== $cmsCategoryParentId ? $cmsCategoryParentId->getValue() : 0
+        );
+    }
+
+    /**
+     * This function is used for redirecting to the specific cms page category page.
+     *
+     * @param int $cmsPageCategoryId
+     *
+     * @return RedirectResponse
+     */
+    private function redirectToIndexPage($cmsPageCategoryId)
+    {
+        $routeParameters = [];
+        if (is_int($cmsPageCategoryId) &&
+            $cmsPageCategoryId &&
+            $cmsPageCategoryId !== CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID
+        ) {
+            $routeParameters = [
+                'id_cms_category' => $cmsPageCategoryId,
             ];
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', $parameters);
+        return $this->redirectToRoute('admin_cms_pages_index', $routeParameters);
     }
 
     /**
