@@ -43,13 +43,6 @@ import DeleteCustomerRowActionExtension
 const $ = window.$;
 
 $(() => {
-  // in customer view page
-  // there are a lot of tables
-  // where you click any row
-  // and it redirects user to related page
-  new LinkableItem();
-  new ChoiceTable();
-
   const customerGrid = new Grid('customer');
 
   customerGrid.addExtension(new ReloadListActionExtension());
@@ -66,4 +59,10 @@ $(() => {
 
   // needed for "Group access" input in Add/Edit customer forms
   new ChoiceTable();
+
+  // in customer view page
+  // there are a lot of tables
+  // where you click any row
+  // and it redirects user to related page
+  new LinkableItem();
 });
