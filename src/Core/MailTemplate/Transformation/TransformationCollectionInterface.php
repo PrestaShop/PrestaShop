@@ -24,35 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate;
-
-use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
 /**
- * Interface MailTemplateCatalogInterface is used to list the available themes to generate
- * mail templates. It also allows you to list the available templates for a specific theme.
- * Templates are divided in two categories "core" and "modules" templates.
+ * TransformationCollectionInterface contains a list of transformations applied
+ * on mail templates when they are generated.
  */
-interface MailTemplateCatalogInterface
+interface TransformationCollectionInterface extends \IteratorAggregate, \Countable
 {
     /**
-     * Returns the list of existing themes (non empty folders, in the mail themes
-     * folder).
+     * @param TransformationInterface $transformation
      *
-     * @throws InvalidException
-     *
-     * @return string[]
+     * @return bool
      */
-    public function listThemes();
+    public function contains($transformation);
 
     /**
-     * Returns a collection of templates via a MailTemplateCollectionInterface
-     *
-     * @param string $theme
-     *
-     * @throws InvalidException
-     *
-     * @return MailTemplateCollectionInterface
+     * @param TransformationInterface $transformation
      */
-    public function listTemplates($theme);
+    public function add($transformation);
+
+    /**
+     * @param TransformationInterface $transformation
+     */
+    public function remove($transformation);
 }

@@ -27,36 +27,35 @@
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 /**
- * Interface MailTemplateInterface describe a mail template. A mail template
- * is a static file (in html or txt format) used by the Mail class to send
- * transactional emails.
+ * Interface MailLayoutInterface is used to contain the basic info about a mail layout
  */
-interface MailTemplateInterface
+interface MailLayoutInterface
 {
-    const CORE_CATEGORY = 'core';
-    const MODULES_CATEGORY = 'modules';
-
-    const HTML_TYPE = 'html';
-    const TXT_TYPE = 'txt';
-
     /**
-     * Whether the template is used by the core or modules
+     * Name of the layout to describe its purpose
      *
      * @return string
      */
-    public function getCategory();
+    public function getName();
 
     /**
-     * Whether the template is an html or txt type
+     * Absolute path of the html layout file
      *
      * @return string
      */
-    public function getType();
+    public function getHtmlPath();
 
     /**
-     * Returns the absolute path to the template file.
+     * Absolute path of the html layout file
      *
      * @return string
      */
-    public function getPath();
+    public function getTxtPath();
+
+    /**
+     * Which module this layout is associated to (if any)
+     *
+     * @return string|null
+     */
+    public function getModuleName();
 }

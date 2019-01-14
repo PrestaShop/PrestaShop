@@ -33,7 +33,13 @@ use Symfony\Component\DomCrawler\Crawler;
 use DOMElement;
 use DOMAttr;
 
-class CSSInlineTransformation extends AbstractMailTemplateTransformation
+/**
+ * Class CSSInlineTransformation applies a transformation on html templates, it downloads
+ * each css files integrated in the template, and then applies them on the html inline-style.
+ * This is used for some mail readers which don't load css styles but can interpret them when
+ * set inline.
+ */
+class CSSInlineTransformation extends AbstractTransformation
 {
     public function __construct()
     {
@@ -62,7 +68,7 @@ class CSSInlineTransformation extends AbstractMailTemplateTransformation
     }
 
     /**
-     * @param $templateContent
+     * @param string $templateContent
      *
      * @return string
      */
