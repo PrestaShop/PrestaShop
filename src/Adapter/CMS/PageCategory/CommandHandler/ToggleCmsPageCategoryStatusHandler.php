@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\ToggleCmsPa
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsPageCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategory;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShopException;
 
 /**
@@ -46,6 +48,7 @@ final class ToggleCmsPageCategoryStatusHandler implements ToggleCmsPageCategoryS
      */
     public function handle(ToggleCmsPageCategoryStatusCommand $command)
     {
+        $parentId = null;
         try {
             $entity = new CMSCategory($command->getCmsPageCategoryId()->getValue());
 
@@ -57,6 +60,8 @@ final class ToggleCmsPageCategoryStatusHandler implements ToggleCmsPageCategoryS
                     )
                 );
             }
+
+            $parentId = (int) $entity->id_parent;
 
             if (false === $entity->toggleStatus()) {
                 throw new CannotToggleCmsPageCategoryStatusException(
@@ -76,5 +81,7 @@ final class ToggleCmsPageCategoryStatusHandler implements ToggleCmsPageCategoryS
                 $exception
             );
         }
+
+        return new CmsPageCategoryId($parentId);
     }
 }

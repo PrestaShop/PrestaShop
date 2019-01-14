@@ -303,15 +303,18 @@ class CmsPageController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
      * )
      *
-     * @param int $cmsCategoryParentId
      * @param int $cmsCategoryId
      *
      * @return RedirectResponse
      */
-    public function toggleCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
+    public function toggleCmsCategoryAction($cmsCategoryId)
     {
+        $cmsPageCategoryId = null;
         try {
-            $this->getCommandBus()->handle(new ToggleCmsPageCategoryStatusCommand((int) $cmsCategoryId));
+            /** @var CmsPageCategoryId $cmsPageCategoryId */
+            $cmsPageCategoryId = $this->getCommandBus()->handle(
+                new ToggleCmsPageCategoryStatusCommand((int) $cmsCategoryId)
+            );
 
             $this->addFlash(
                 'success',
@@ -321,9 +324,14 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', [
-            'cmsCategoryParentId' => $cmsCategoryParentId,
-        ]);
+        $parameters = [];
+        if (null !== $cmsPageCategoryId) {
+            $parameters = [
+                'id_cms_category' => $cmsPageCategoryId->getValue(),
+            ];
+        }
+
+        return $this->redirectToRoute('admin_cms_pages_index', $parameters);
     }
 
     /**
