@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 
 /**
  * Defines Customer ID with it's constraints
-
  */
 class CustomerId
 {
@@ -47,7 +46,6 @@ class CustomerId
         $this->assertIntegerIsGreaterThanZero($customerId);
 
         $this->customerId = $customerId;
-
     }
 
     /**

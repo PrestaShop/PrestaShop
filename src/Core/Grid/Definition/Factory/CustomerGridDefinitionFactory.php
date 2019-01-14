@@ -225,7 +225,6 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ])
                         )
                         ->add((new DeleteCustomerRowAction('delete'))
-
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([

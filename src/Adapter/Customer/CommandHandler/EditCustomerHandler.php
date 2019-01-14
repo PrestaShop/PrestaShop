@@ -234,7 +234,6 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
             throw new CustomerDefaultGroupAccessException(
                 sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId())
             );
-
         }
     }
 }
