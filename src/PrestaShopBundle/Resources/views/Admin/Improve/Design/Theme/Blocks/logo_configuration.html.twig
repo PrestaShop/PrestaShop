@@ -74,7 +74,7 @@
         <div class="form-control-label">
           {{ ps.label_with_help(('Header logo'|trans({}, 'Admin.Design.Feature')), ('Will appear on main page. Recommended size for the default theme: height %height% and width %width%.'|trans({'%height%': '40px', '%width%': '200px'}, 'Admin.Design.Help'))) }}
 
-          <img src="{{ logoProvider.logoPath }}" alt="{{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}">
+          <img src="{{ headerLogoPath }}" alt="{{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}">
         </div>
 
         {{ form_widget(shopLogosForm.header_logo) }}
@@ -85,12 +85,12 @@
         <div class="form-control-label">
           {{ ps.label_with_help(('Mail logo'|trans({}, 'Admin.Design.Feature')), ('Will appear on email headers. If undefined, the header logo will be used.'|trans({}, 'Admin.Design.Help'))) }}
 
-          <img src="{{ logoProvider.logoPath }}" alt="{{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}">
+          <img src="{{ mailLogoPath }}" alt="{{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}">
         </div>
 
         {{ form_widget(shopLogosForm.mail_logo) }}
 
-        {% if logoProvider.logoPath == logoProvider.mailLogoPath %}
+        {% if headerLogoPath == mailLogoPath %}
           <p class="form-text  mt-3">{{ 'Warning: if no email logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Notification') }}</p>
         {% endif %}
       </div>
@@ -99,12 +99,12 @@
         <div class="form-control-label">
           {{ ps.label_with_help(('Invoice logo'|trans({}, 'Admin.Design.Feature')), ('Will appear on invoice headers.'|trans({}, 'Admin.Design.Help')) ~ ('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.'|trans({}, 'Admin.Design.Help'))) }}
 
-          <img src="{{ logoProvider.logoPath }}" alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}">
+          <img src="{{ invoiceLogoPath }}" alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}">
         </div>
 
         {{ form_widget(shopLogosForm.invoice_logo) }}
 
-        {% if logoProvider.logoPath == logoProvider.invoiceLogoPath %}
+        {% if headerLogoPath == invoiceLogoPath %}
           <p class="form-text  mt-3">{{ 'Warning: if no invoice logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Help') }}</p>
         {% endif %}
       </div>
@@ -114,7 +114,7 @@
         <div class="form-control-label">
           {{ ps.label_with_help(('Favicon'|trans({}, 'Admin.Design.Feature')), ('It is the small icon that appears in browser tabs, next to the title'|trans({}, 'Admin.Design.Help'))) }}
 
-          <img src="{{ logoProvider.faviconPath }}" alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}">
+          <img src="{{ faviconPath }}" alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}">
         </div>
 
         {{ form_widget(shopLogosForm.favicon) }}

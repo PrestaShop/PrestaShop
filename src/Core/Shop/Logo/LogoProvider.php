@@ -49,7 +49,7 @@ final class LogoProvider implements LogoProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getLogoPath()
+    public function getHeaderLogo()
     {
         return $this->configuration->get('_PS_IMG_') . $this->configuration->get('PS_LOGO');
     }
@@ -60,16 +60,16 @@ final class LogoProvider implements LogoProviderInterface
     public function getMailLogoPath()
     {
         if (!$mailLogo = $this->configuration->get('PS_LOGO_MAIL')) {
-            return $this->getLogoPath();
+            return $this->getHeaderLogo();
         }
 
         $mailLogoPath = $this->configuration->get('_PS_IMG_DIR_') . $mailLogo;
 
         if (!file_exists($mailLogoPath)) {
-            return $this->getLogoPath();
+            return $this->getHeaderLogo();
         }
 
-        return $mailLogoPath;
+        return $this->configuration->get('_PS_IMG_') . $mailLogo;
     }
 
     /**
@@ -78,16 +78,16 @@ final class LogoProvider implements LogoProviderInterface
     public function getInvoiceLogoPath()
     {
         if (!$invoiceLogo = $this->configuration->get('PS_LOGO_INVOICE')) {
-            return $this->getLogoPath();
+            return $this->getHeaderLogo();
         }
 
         $invoiceLogoPath = $this->configuration->get('_PS_IMG_DIR_') . $invoiceLogo;
 
         if (!file_exists($invoiceLogoPath)) {
-            return $this->getLogoPath();
+            return $this->getHeaderLogo();
         }
 
-        return $invoiceLogoPath;
+        return $this->configuration->get('_PS_IMG_') . $invoiceLogo;
     }
 
     /**

@@ -36,7 +36,7 @@ interface LogoProviderInterface
      *
      * @return string
      */
-    public function getLogoPath();
+    public function getHeaderLogo();
 
     /**
      * Get path to context's shop mail logo.
