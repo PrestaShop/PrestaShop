@@ -127,7 +127,6 @@ class CmsPageController extends FrameworkBundleAdminController
     public function editCmsCategoryAction($cmsCategoryId)
     {
 //        todo: remove legacy parts once form is ready and demoRestricted on post action
-        //todo: demo restricted on post action
         $legacyLink = $this->getAdminLink('AdminCmsContent', [
             'id_cms_category' => $cmsCategoryId,
             'updatecms_category' => 1,
@@ -244,12 +243,12 @@ class CmsPageController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
-     * @param int $cmsCategoryParentId
-     *
      * @return RedirectResponse
      */
-    public function updateCmsCategoryPositionAction(Request $request, $cmsCategoryParentId)
+    public function updateCmsCategoryPositionAction(Request $request)
     {
+        $cmsCategoryParentId = $request->query->getInt('id_cms_category');
+
         //todo: position update using ajax and position search fix in another PR.
         $positionsData = [
             'positions' => $request->request->get('positions'),
@@ -260,15 +259,21 @@ class CmsPageController extends FrameworkBundleAdminController
 
         $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
 
+        $redirectParameters = [];
+
+        if ($cmsCategoryParentId) {
+            $redirectParameters = [
+                'id_cms_category' => $cmsCategoryParentId,
+            ];
+        }
+
         try {
             $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
         } catch (PositionDataException $e) {
             $errors = [$e->toArray()];
             $this->flashErrors($errors);
 
-            return $this->redirectToRoute('admin_cms_pages_index', [
-                'cmsCategoryParentId' => $cmsCategoryParentId,
-            ]);
+            return $this->redirectToRoute('admin_cms_pages_index', $redirectParameters);
         }
 
         $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
@@ -281,9 +286,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', [
-            'cmsCategoryParentId' => $cmsCategoryParentId,
-        ]);
+        return $this->redirectToRoute('admin_cms_pages_index', $redirectParameters);
     }
 
     /**
