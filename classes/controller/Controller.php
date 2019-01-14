@@ -792,16 +792,4 @@ abstract class ControllerCore
     {
         return $this->container;
     }
-
-    /**
-     * @param ContainerBuilder $container
-     *
-     * @return $this
-     */
-    public function setContainer($container)
-    {
-        $this->container = $container;
-
-        return $this;
-    }
 }
