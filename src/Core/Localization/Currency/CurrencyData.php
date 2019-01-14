@@ -119,9 +119,10 @@ class CurrencyData
         }
 
         if ($currencyData->getSymbols() !== null) {
-            foreach ($currencyData->getSymbols() as $type => $symbol) {
-                $this->symbols[$type] = $symbol;
+            if (null === $this->symbols) {
+                $this->symbols = [];
             }
+            $this->symbols = array_merge($this->symbols, $currencyData->getSymbols());
         }
 
         if ($currencyData->getPrecision() !== null) {
@@ -129,9 +130,10 @@ class CurrencyData
         }
 
         if ($currencyData->getNames() !== null) {
-            foreach ($currencyData->getNames() as $localeCode => $name) {
-                $this->names[$localeCode] = $name;
+            if (null === $this->names) {
+                $this->names = [];
             }
+            $this->names = array_merge($this->names, $currencyData->getNames());
         }
 
         return $this;

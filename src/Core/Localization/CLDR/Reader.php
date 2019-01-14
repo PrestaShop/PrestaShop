@@ -430,7 +430,7 @@ class Reader implements ReaderInterface
                     )
                 ) {
                     $aliasNumSys = $matches[1];
-                    $decimalPatterns[$numberSystem] = $localeData->getDecimalPatterns()[$aliasNumSys];
+                    $decimalPatterns[$numberSystem] = $decimalPatterns[$aliasNumSys];
 
                     continue;
                 }
@@ -463,7 +463,7 @@ class Reader implements ReaderInterface
                     )
                 ) {
                     $aliasNumSys = $matches[1];
-                    $percentPatterns[$numberSystem] = $localeData->getPercentPatterns()[$aliasNumSys];
+                    $percentPatterns[$numberSystem] = $percentPatterns[$aliasNumSys];
 
                     continue;
                 }
@@ -499,7 +499,7 @@ class Reader implements ReaderInterface
                     )
                 ) {
                     $aliasNumSys = $matches[1];
-                    $currencyPatterns[$numberSystem] = $localeData->getCurrencyPatterns()[$aliasNumSys];
+                    $currencyPatterns[$numberSystem] = $currencyPatterns[$aliasNumSys];
 
                     continue;
                 }
