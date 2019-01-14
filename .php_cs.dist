@@ -11,52 +11,94 @@ return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules([
         '@Symfony:risky' => true,
+        // Spacing to apply around concatenation operator.
         'concat_space' => [
             'spacing' => 'one',
         ],
-        'cast_spaces' => [
-            'space' => 'single',
-        ],
+        // Error control operator should be added to deprecation notices and/or removed from other cases.
         'error_suppression' => [
             'mute_deprecation_error' => false,
             'noise_remaining_usages' => false,
             'noise_remaining_usages_exclude' => [],
         ],
+        // Replace core functions calls returning constants with the constants.
         'function_to_constant' => false,
+        // PHPDoc summary should end in either a full stop, exclamation mark, or question mark. 
         'phpdoc_summary' => false,
+        // All items of the given phpdoc tags must be either left-aligned or (by default) aligned vertically. 
         'phpdoc_align' => [
             'align' => 'left',
         ],
+        // Converts protected variables and methods to private where possible.
         'protected_to_private' => false,
+        // Class names should match the file name.
         'psr4' => false,
+        // Add leading \ before constant invocation of internal constant to speed up resolving. Constant name match is case-sensitive, except for null, false and true.
         'native_constant_invocation' => false,
+        // Add leading \ before function invocation to speed up resolving.
         'native_function_invocation' => false,
+        // Inside class or interface element self should be preferred to the class name itself.
         'self_accessor' => false,
+        // Write conditions in Yoda style (true), non-Yoda style (false) or ignore those conditions (null) based on configuration.
         'yoda_style' => null,
+        // All multi-line strings must use correct line ending.
         'string_line_ending' => true,
+        // Each line of multi-line DocComments must have an asterisk [PSR-5] and must be aligned with the first one.
         'align_multiline_comment' => [
             'comment_type' => 'phpdocs_only',
         ],
+        // Each element of an array must be indented exactly once.
         'array_indentation' => true,
+        // Using isset($var) && multiple times should be done in one call.
         'combine_consecutive_issets' => true,
+        // Calling unset on multiple items should be done in one call.
         'combine_consecutive_unsets' => true,
+        // The keyword elseif should be used instead of else if so that all control keywords look like single words.
         'elseif' => true,
+        // Replaces superfluous elseif with if.
+        'no_superfluous_elseif' => true,
+        // Convert heredoc to nowdoc where possible.
         'heredoc_to_nowdoc' => true,
+        // Method chaining MUST be properly indented. Method chaining with different levels of indentation is not supported.
         'method_chaining_indentation' => true,
+        // DocBlocks must start with two asterisks, multiline comments must start with a single asterisk, after the opening slash. Both must end with a single asterisk before the closing slash.
         'multiline_comment_opening_closing' => true,
+        // Forbid multi-line whitespace before the closing semicolon or move the semicolon to the new line for chained calls.
         'multiline_whitespace_before_semicolons' => [
             'strategy' => 'no_multi_line',
         ],
+        // Replace control structure alternative syntax to use braces. 
         'no_alternative_syntax' => true,
+        // There should not be a binary flag before strings.
         'no_binary_string' => true,
+        // Replace short-echo <?= with long format <?php echo syntax. 
         'no_short_echo_tag' => true,
+        // Replaces rand, srand, getrandmax functions calls with their mt_* analogs.
         'random_api_migration' => true,
+        // Converts pow to the ** operator.
         'pow_to_exponentiation' => true,
+        // Use && and || logical operators instead of and and or.
+        'logical_operators' => true,
+        // Comments with annotation should be docblock when used on structural elements.
+        'comment_to_phpdoc' => true,
+        // Fixes spaces in Doctrine annotations. 
         'doctrine_annotation_spaces' => true,
+        // Doctrine annotations must be indented with four spaces. 
         'doctrine_annotation_indentation' => true,
+        // Doctrine annotations without arguments must use the configured syntax. 
         'doctrine_annotation_braces' => true,
+        // doctrine_annotation_array_assignment
         'doctrine_annotation_array_assignment' => true,
+        // All multi-line strings must use correct line ending. 
+        'string_line_ending' => true,
+        // List (array destructuring). Short requires PHP >= 7.1. 
+        'list_syntax' => [
+            'syntax' => 'long',
+        ],
+        // PHP arrays should be declared using the configured syntax. 
+        'array_syntax' => [
+            'short',
+        ],
     ])
-    ->setLineEnding("\n")
     ->setFinder($finder)
     ->setCacheFile(__DIR__ . '/var/.php_cs.cache');
