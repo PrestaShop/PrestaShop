@@ -31,7 +31,6 @@ return PhpCsFixer\Config::create()
         'self_accessor' => false,
         'yoda_style' => null,
         'silenced_deprecation_error' => true,
-        'error_suppression' => true,
         'fopen_flags' => true,
         'fopen_flag_order' => true,
         'implode_call' => true,
