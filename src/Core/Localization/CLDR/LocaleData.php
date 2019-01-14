@@ -122,9 +122,10 @@ class LocaleData
         }
 
         if (null !== $localeData->getNumberingSystems()) {
-            foreach ($localeData->getNumberingSystems() as $name => $value) {
-                $this->numberingSystems[$name] = $value;
+            if (null === $this->numberingSystems) {
+                $this->numberingSystems = [];
             }
+            $this->numberingSystems = array_merge($this->numberingSystems, $localeData->getNumberingSystems());
         }
 
         if (null !== $localeData->getDefaultNumberingSystem()) {
@@ -155,9 +156,10 @@ class LocaleData
         }
 
         if (null !== $localeData->getCurrencyPatterns()) {
-            foreach ($localeData->getCurrencyPatterns() as $numberingSystem => $pattern) {
-                $this->currencyPatterns[$numberingSystem] = $pattern;
+            if (null === $this->currencyPatterns) {
+                $this->currencyPatterns = [];
             }
+            $this->currencyPatterns = array_merge($this->currencyPatterns, $localeData->getCurrencyPatterns());
         }
 
         if (null !== $localeData->getCurrencies()) {
