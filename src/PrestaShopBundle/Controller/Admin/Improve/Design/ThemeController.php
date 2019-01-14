@@ -91,12 +91,16 @@ class ThemeController extends AbstractAdminController
 
         $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
         $installedRtlLanguageChecker = $this->get('prestashop.adapter.language.rtl.installed_language_checker');
+        $logoProvider = $this->get('prestashop.core.shop.logo.logo_provider');
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
             'themeCatalogUrl' => $themeCatalogUrl,
             'baseShopUrl' => $this->get('prestashop.adapter.shop.url.base_url_provider')->getUrl(),
             'shopLogosForm' => $this->getLogosUploadForm()->createView(),
-            'logoProvider' => $this->get('prestashop.core.shop.logo.logo_provider'),
+            'headerLogoPath' => $logoProvider->getHeaderLogo(),
+            'mailLogoPath' => $logoProvider->getMailLogoPath(),
+            'invoiceLogoPath' => $logoProvider->getInvoiceLogoPath(),
+            'faviconPath' => $logoProvider->getFaviconPath(),
             'currentlyUsedTheme' => $themeProvider->getCurrentlyUsedTheme(),
             'notUsedThemes' => $themeProvider->getNotUsedThemes(),
             'isDevModeOn' => $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEV_'),
