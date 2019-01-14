@@ -447,10 +447,9 @@ class CustomerController extends AbstractAdminController
     public function toggleStatusAction($customerId)
     {
         try {
-            $customerId = new CustomerId($customerId);
+            $customerId = new CustomerId((int) $customerId);
             /** @var EditableCustomer $editableCustomer */
             $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
-
 
             $editCustomerCommand = new EditCustomerCommand($customerId);
             $editCustomerCommand->setIsEnabled(!$editableCustomer->isEnabled());
@@ -484,7 +483,7 @@ class CustomerController extends AbstractAdminController
     public function toggleNewsletterSubscriptionAction($customerId)
     {
         try {
-            $customerId = new CustomerId($customerId);
+            $customerId = new CustomerId((int) $customerId);
             /** @var EditableCustomer $editableCustomer */
             $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
 
@@ -520,7 +519,7 @@ class CustomerController extends AbstractAdminController
     public function togglePartnerOfferSubscriptionAction($customerId)
     {
         try {
-            $customerId = new CustomerId($customerId);
+            $customerId = new CustomerId((int) $customerId);
             /** @var EditableCustomer $editableCustomer */
             $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
 
@@ -561,9 +560,13 @@ class CustomerController extends AbstractAdminController
         if ($form->isSubmitted()) {
             $data = $form->getData();
 
+            $customerIds = array_map(function ($customerId) {
+                return (int) $customerId;
+            }, $data['customers_to_delete']);
+
             try {
                 $command = new BulkDeleteCustomerCommand(
-                    $data['customers_to_delete'],
+                    $customerIds,
                     new CustomerDeleteMethod($data['delete_method'])
                 );
 
@@ -636,7 +639,9 @@ class CustomerController extends AbstractAdminController
      */
     public function enableBulkAction(Request $request)
     {
-        $customerIds = $request->request->get('customer_customers_bulk', []);
+        $customerIds = array_map(function ($customerId) {
+            return (int) $customerId;
+        }, $request->request->get('customer_customers_bulk', []));
 
         try {
             $command = new BulkEnableCustomerCommand($customerIds);
@@ -667,7 +672,9 @@ class CustomerController extends AbstractAdminController
     public function disableBulkAction(Request $request)
     {
         try {
-            $customerIds = $request->request->get('customer_customers_bulk', []);
+            $customerIds = array_map(function ($customerId) {
+                return (int) $customerId;
+            }, $request->request->get('customer_customers_bulk', []));
 
             $command = new BulkDisableCustomerCommand($customerIds);
 

@@ -136,6 +136,7 @@ class EditableCustomer
      * @param Birthday $birthday
      * @param bool $isEnabled
      * @param bool $isPartnerOffersSubscribed
+     * @param bool $isNewsletterSubscribed
      * @param int[] $groupIds
      * @param int $defaultGroupId
      * @param string $companyName
@@ -155,6 +156,7 @@ class EditableCustomer
         Birthday $birthday,
         $isEnabled,
         $isPartnerOffersSubscribed,
+        $isNewsletterSubscribed,
         array $groupIds,
         $defaultGroupId,
         $companyName,
@@ -173,6 +175,7 @@ class EditableCustomer
         $this->birthday = $birthday;
         $this->isEnabled = $isEnabled;
         $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
+        $this->isNewsletterSubscribed = $isNewsletterSubscribed;
         $this->groupIds = $groupIds;
         $this->defaultGroupId = $defaultGroupId;
         $this->companyName = $companyName;

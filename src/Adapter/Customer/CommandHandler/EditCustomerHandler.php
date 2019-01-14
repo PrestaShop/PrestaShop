@@ -177,8 +177,6 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         if (null !== $command->getRiskId()) {
             $customer->id_risk = $command->getRiskId();
         }
-
-        $this->updateCustomerWithCommandData($customer, $command);
     }
 
     /**
