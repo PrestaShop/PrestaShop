@@ -26,12 +26,11 @@
 
 namespace LegacyTests\Unit\Core\Cart\Calculation\SpecificPriceRules;
 
-use SpecificPriceRule;
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
+use SpecificPriceRule;
 
 abstract class AbstractSpecificPriceRuleTest extends AbstractCartCalculationTest
 {
-
     const SPECIFIC_PRICE_RULES_FIXTURES = [
         1 => ['reductionType' => 'percentage', 'reduction' => 23, 'fromQuantity' => 1],
         2 => ['reductionType' => 'percentage', 'reduction' => 15, 'fromQuantity' => 2],
@@ -44,7 +43,7 @@ abstract class AbstractSpecificPriceRuleTest extends AbstractCartCalculationTest
      */
     protected $specificPriceRules = [];
 
-    public function tearDown()
+    protected function tearDown()
     {
         foreach ($this->specificPriceRules as $rule) {
             $rule->resetApplication();

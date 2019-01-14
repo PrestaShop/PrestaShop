@@ -111,7 +111,7 @@ module.exports = {
           .then(() => client.waitForExistAndClick(Files.action_button.replace('%B', 'View')))
           .then(() => client.pause(2000));
       });
-      test('should check that the file is well downloaded', () => client.checkFile(folderPath, file, 3000));
+      test('should check that the file is well downloaded', () => client.checkFile(folderPath, file, 4000));
       test('should click on "Reset" button', () => {
         return promise
           .then(() => client.isVisible(Files.filter_reset_button))

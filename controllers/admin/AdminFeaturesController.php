@@ -256,6 +256,7 @@ class AdminFeaturesControllerCore extends AdminController
                     'href' => $back,
                     'desc' => $this->trans('Back to the list', array(), 'Admin.Catalog.Help'),
                 );
+
                 break;
             case 'view':
                 $this->toolbar_btn['newAttributes'] = array(
@@ -266,6 +267,7 @@ class AdminFeaturesControllerCore extends AdminController
                     'href' => self::$currentIndex . '&token=' . $this->token,
                     'desc' => $this->trans('Back to the list', array(), 'Admin.Catalog.Help'),
                 );
+
                 break;
             default:
                 parent::initToolbar();
@@ -280,16 +282,19 @@ class AdminFeaturesControllerCore extends AdminController
             case 'edit':
                 $bread_extended[] = $this->trans('Edit New Feature', array(), 'Admin.Catalog.Feature');
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
+
                 break;
 
             case 'add':
                 $bread_extended[] = $this->trans('Add New Feature', array(), 'Admin.Catalog.Feature');
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
+
                 break;
 
             case 'view':
                 $bread_extended[] = $this->feature_name[$this->context->employee->id_lang];
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
+
                 break;
 
             case 'editFeatureValue':
@@ -312,6 +317,7 @@ class AdminFeaturesControllerCore extends AdminController
                 if (count($bread_extended) > 0) {
                     $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
                 }
+
                 break;
         }
 
@@ -431,10 +437,14 @@ class AdminFeaturesControllerCore extends AdminController
                     return;
                 }
                 $this->content .= $this->initFormFeatureValue();
-            } elseif (!$this->ajax) {
+            } elseif ($this->display != 'view' && !$this->ajax) {
                 // If a feature value was saved, we need to reset the values to display the list
                 $this->setTypeFeature();
                 $this->content .= $this->renderList();
+                /* reset all attributes filter */
+                if (!Tools::getValue('submitFilterfeature_value', 0) && !Tools::getIsset('id_feature_value')) {
+                    $this->processResetFilters('feature_value');
+                }
             }
         } else {
             $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
@@ -478,6 +488,11 @@ class AdminFeaturesControllerCore extends AdminController
     {
         if (!Feature::isFeatureActive()) {
             return;
+        }
+
+        /* set location with current index */
+        if (Tools::getIsset('id_feature') && Tools::getIsset('viewfeature')) {
+            self::$currentIndex = self::$currentIndex . '&id_feature=' . Tools::getValue('id_feature', 0) . '&viewfeature';
         }
 
         if ($this->table == 'feature_value' && ($this->action == 'save' || $this->action == 'delete' || $this->action == 'bulkDelete')) {

@@ -1,124 +1,11 @@
 <?php
+
 class Cart extends CartCore
 {
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    public $delivery_option;
-
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    public $allow_seperated_package = false;
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    protected static $_nbProducts = array();
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    protected static $_isVirtualCart = array();
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    protected $_products = null;
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    protected static $_totalWeight = array();
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    protected $_taxCalculationMethod = PS_TAX_EXC;
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    protected static $_carriers = null;
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    protected static $_taxes_rate = null;
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    protected static $_attributesLists = array();
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    protected static $_customer = null;
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
-    {
-        $result = Hook::exec(
-            'ppbsDeleteCartProduct',
-            array(
-                'id_product' => $id_product,
-                'id_product_attribute' => $id_product_attribute,
-                'id_customization' => $id_customization,
-                'id_address_delivery' => $id_address_delivery,
-            ),
-            null,
-            false
-        );
-        if ($result == false) {
-            parent::deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0);
-        }
-    }
-    /*
-    * module: pscsx3241
-    * date: 2015-07-13 15:56:34
-    * version: 1
-    */
-    protected function _getProducts($refresh = false, $id_product = false, $id_country = null)
-    {
-        $products = parent::getProducts($refresh, $id_product, $id_country);
-        if (_PS_VERSION_ >= 1.6) {
-            $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null, true);
-            if (isset($params['productpricebysize']['products'])) {
-                return $params['productpricebysize']['products'];
-            } else {
-                return $products;
-            }
-        } else {
-            $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null);
-            $params = json_decode($params, true);
-            if (isset($params['products'])) {
-                return $params['products'];
-            } else {
-                return $products;
-            }
-        }
-    }
 
     /*
     * module: pscsx32412
-    * date: 2015-07-13 15:56:35
+    * date: 2018-12-26 14:14:05
     * version: 1
     */
     public function updateAddressId($id_address, $id_address_new)
@@ -148,7 +35,7 @@ class Cart extends CartCore
     }
     /*
     * module: pscsx32412
-    * date: 2015-07-13 15:56:35
+    * date: 2018-12-26 14:14:05
     * version: 1
     */
     public function delete()
@@ -186,5 +73,119 @@ class Cart extends CartCore
             return false;
         }
         return parent::delete();
+    }
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    public $delivery_option;
+
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    public $allow_seperated_package = false;
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected static $_nbProducts = array();
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected static $_isVirtualCart = array();
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected $_products = null;
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected static $_totalWeight = array();
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected $_taxCalculationMethod = PS_TAX_EXC;
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected static $_carriers = null;
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected static $_taxes_rate = null;
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected static $_attributesLists = array();
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected static $_customer = null;
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
+    {
+        $result = Hook::exec(
+            'ppbsDeleteCartProduct',
+            array(
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+                'id_customization' => $id_customization,
+                'id_address_delivery' => $id_address_delivery,
+            ),
+            null,
+            false
+        );
+        if ($result == false) {
+            parent::deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0);
+        }
+    }
+    /*
+    * module: pscsx3241
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected function _getProducts($refresh = false, $id_product = false, $id_country = null)
+    {
+        $products = parent::getProducts($refresh, $id_product, $id_country);
+        if (_PS_VERSION_ >= 1.6) {
+            $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null, true);
+            if (isset($params['productpricebysize']['products'])) {
+                return $params['productpricebysize']['products'];
+            } else {
+                return $products;
+            }
+        } else {
+            $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null);
+            $params = json_decode($params, true);
+            if (isset($params['products'])) {
+                return $params['products'];
+            } else {
+                return $products;
+            }
+        }
     }
 }

@@ -64,7 +64,7 @@ export default function () {
   });
 }
 
-$(window).load(() => {
+$(window).on('load', () => {
   let $visibleAddressError = $('.js-address-error:visible');
 
   if (parseInt(useSameAddress) === 0) {

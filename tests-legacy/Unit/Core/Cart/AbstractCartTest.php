@@ -36,10 +36,10 @@ use CustomizationField;
 use DateInterval;
 use DateTime;
 use LegacyTests\TestCase\IntegrationTestCase;
-use Product;
-use Pack;
-use StockAvailable;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
+use Pack;
+use Product;
+use StockAvailable;
 
 /**
  * these tests aim to check cart using mocks
@@ -48,7 +48,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
  */
 abstract class AbstractCartTest extends IntegrationTestCase
 {
-
     const DEFAULT_SHIPPING_FEE = 7;
     const DEFAULT_WRAPPING_FEE = 0;
 
@@ -119,7 +118,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
      */
     protected $customizationFields = [];
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->cart              = new CartOld();
@@ -133,7 +132,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $this->insertCartRulesFromFixtures();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         $this->resetCart();
 

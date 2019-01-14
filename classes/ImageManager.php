@@ -123,13 +123,15 @@ class ImageManagerCore
 
         $memoryLimit = Tools::getMemoryLimit();
         // memory_limit == -1 => unlimited memory
-        if (function_exists('memory_get_usage') && (int) $memoryLimit != -1) {
+        if (isset($infos['bits']) && function_exists('memory_get_usage') && (int) $memoryLimit != -1) {
             $currentMemory = memory_get_usage();
-            $channel = isset($infos['channels']) ? ($infos['channels'] / 8) : 1;
+
+            $bits = $infos['bits'] / 8;
+            $channel = isset($infos['channels']) ? $infos['channels'] : 1;
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             // For perfs, avoid computing static maths formulas in the code. pow(2, 16) = 65536 ; 1024 * 1024 = 1048576
-            if (($infos[0] * $infos[1] * $infos['bits'] * $channel + 65536) * 1.8 + $currentMemory > $memoryLimit - 1048576) {
+            if (($infos[0] * $infos[1] * $bits * $channel + 65536) * 1.8 + $currentMemory > $memoryLimit - 1048576) {
                 return false;
             }
         }
@@ -186,18 +188,21 @@ class ImageManagerCore
                         $sourceWidth = $tmpWidth;
                         $sourceHeight = $tmpHeight;
                         $rotate = 180;
+
                         break;
 
                     case 6:
                         $sourceWidth = $tmpHeight;
                         $sourceHeight = $tmpWidth;
                         $rotate = -90;
+
                         break;
 
                     case 8:
                         $sourceWidth = $tmpHeight;
                         $sourceHeight = $tmpWidth;
                         $rotate = 90;
+
                         break;
 
                     default:
@@ -536,15 +541,18 @@ class ImageManagerCore
         switch ($type) {
             case IMAGETYPE_GIF:
                 return imagecreatefromgif($filename);
+
                 break;
 
             case IMAGETYPE_PNG:
                 return imagecreatefrompng($filename);
+
                 break;
 
             case IMAGETYPE_JPEG:
             default:
                 return imagecreatefromjpeg($filename);
+
                 break;
         }
     }
@@ -591,11 +599,13 @@ class ImageManagerCore
         switch ($type) {
             case 'gif':
                 $success = imagegif($resource, $filename);
+
                 break;
 
             case 'png':
                 $quality = ($psPngQuality === false ? 7 : $psPngQuality);
                 $success = imagepng($resource, $filename, (int) $quality);
+
                 break;
 
             case 'jpg':
@@ -604,6 +614,7 @@ class ImageManagerCore
                 $quality = ($psJpegQuality === false ? 90 : $psJpegQuality);
                 imageinterlace($resource, 1); /// make it PROGRESSIVE
                 $success = imagejpeg($resource, $filename, (int) $quality);
+
                 break;
         }
         imagedestroy($resource);
@@ -632,6 +643,7 @@ class ImageManagerCore
         foreach ($types as $mime => $exts) {
             if (in_array($extension, $exts)) {
                 $mimeType = $mime;
+
                 break;
             }
         }

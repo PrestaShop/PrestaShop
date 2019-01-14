@@ -26,16 +26,16 @@
 
 namespace PrestaShopBundle;
 
+use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
-use PrestaShopBundle\DependencyInjection\Compiler\RemoveXmlCompiledContainerPass;
-use PrestaShopBundle\DependencyInjection\Compiler\PopulateTranslationProvidersPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTranslatorServiceCompilerPass;
+use PrestaShopBundle\DependencyInjection\Compiler\PopulateTranslationProvidersPass;
+use PrestaShopBundle\DependencyInjection\Compiler\RemoveXmlCompiledContainerPass;
+use PrestaShopBundle\DependencyInjection\Compiler\RouterPass;
+use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
-use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
-use PrestaShopBundle\DependencyInjection\Compiler\RouterPass;
 
 class PrestaShopBundle extends Bundle
 {

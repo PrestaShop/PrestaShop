@@ -26,14 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\BestSales;
 
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use ProductSale;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 class BestSalesProductSearchProvider implements ProductSearchProviderInterface

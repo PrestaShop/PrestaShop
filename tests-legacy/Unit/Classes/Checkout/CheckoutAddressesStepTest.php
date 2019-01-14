@@ -31,15 +31,15 @@ use CheckoutProcess;
 use Context;
 use Customer;
 use Language;
-use Phake;
 use LegacyTests\TestCase\UnitTestCase;
+use Phake;
 
 class CheckoutAddressesStepTest extends UnitTestCase
 {
     private $step;
     private $session;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $context = new Context();
@@ -73,6 +73,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
     private function setCustomerAddressesCount($n)
     {
         Phake::when($this->session)->getCustomerAddressesCount()->thenReturn($n);
+
         return $this;
     }
 

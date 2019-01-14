@@ -26,13 +26,12 @@
 
 namespace LegacyTests\TestCase;
 
-use PHPUnit\Framework\TestCase;
-use LegacyTests\Unit\ContextMocker;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\Unit\ContextMocker;
+use PHPUnit\Framework\TestCase;
 
 class IntegrationTestCase extends TestCase
 {
-
     /**
      * @var ContextMocker
      */

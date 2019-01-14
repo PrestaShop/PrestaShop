@@ -29,9 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use Module as LegacyModule;
-use Psr\Log\LoggerInterface;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -41,6 +39,8 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -226,6 +226,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 }
                 if (!isset($productType) || $productType & ~$filter->type) {
                     unset($modules[$key]);
+
                     continue;
                 }
             }
@@ -236,6 +237,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && ($filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
                         || !$filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
+
                     continue;
                 }
 
@@ -243,6 +245,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && (!$filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
                         || $filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
+
                     continue;
                 }
 
@@ -251,6 +254,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && !$filter->hasStatus(AddonListFilterStatus::DISABLED)
                     && $filter->hasStatus(AddonListFilterStatus::ENABLED)) {
                     unset($modules[$key]);
+
                     continue;
                 }
 
@@ -259,6 +263,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && !$filter->hasStatus(AddonListFilterStatus::ENABLED)
                     && $filter->hasStatus(AddonListFilterStatus::DISABLED)) {
                     unset($modules[$key]);
+
                     continue;
                 }
             }
@@ -269,12 +274,14 @@ class ModuleRepository implements ModuleRepositoryInterface
                     !$filter->hasOrigin(AddonListFilterOrigin::DISK)
                 ) {
                     unset($modules[$key]);
+
                     continue;
                 }
                 if ($module->attributes->has('origin_filter_value') &&
                     !$filter->hasOrigin($module->attributes->get('origin_filter_value'))
                 ) {
                     unset($modules[$key]);
+
                     continue;
                 }
             }
@@ -558,6 +565,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             if (!file_exists($this->modulePath . $moduleName . '/' . $moduleName . '.php')) {
                 continue;
             }
+
             try {
                 $module = $this->getModule($moduleName, $skip_main_class_attributes);
                 if ($module instanceof Module) {

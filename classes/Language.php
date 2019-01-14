@@ -956,7 +956,7 @@ class LanguageCore extends ObjectModel
 
         $flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/' . $iso_code . '.jpg');
         if ($flag != null && !preg_match('/<body>/', $flag)) {
-            $file = fopen(_PS_ROOT_DIR_ . '/img/l/' . (int) $lang->id . '.jpg', 'w');
+            $file = fopen(_PS_ROOT_DIR_ . '/img/l/' . (int) $lang->id . '.jpg', 'wb');
             if ($file) {
                 fwrite($file, $flag);
                 fclose($file);

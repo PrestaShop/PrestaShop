@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
 use PrestaShopBundle\Service\Hook\HookFinder;
 
 class PaymentOptionsFinderCore extends HookFinder

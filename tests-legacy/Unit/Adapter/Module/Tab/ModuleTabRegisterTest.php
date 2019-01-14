@@ -23,10 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Adapter\Module\Tab;
 
-use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
 use LegacyTests\TestCase\UnitTestCase;
+use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ModuleTabRegisterTest extends UnitTestCase
@@ -123,7 +124,7 @@ class ModuleTabRegisterTest extends UnitTestCase
      */
     protected $tabRegister;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -168,10 +169,12 @@ class ModuleTabRegisterTest extends UnitTestCase
                     continue;
                 }
                 $data = new ParameterBag($tab);
+
                 try {
                     $this->invokeMethod($this->tabRegister, 'checkIsValid', array($moduleName, $data));
                 } catch (\Exception $e) {
                     $this->assertEquals($e->getMessage(), $tab['exception']);
+
                     continue;
                 }
                 $this->fail('Expected Exception "'.$tab['exception'].'" has not been raised.');

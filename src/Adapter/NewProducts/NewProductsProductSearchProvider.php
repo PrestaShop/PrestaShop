@@ -26,14 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\NewProducts;
 
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use Product;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Used to query the latest products, see NewProductsController in Front Office.

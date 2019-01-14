@@ -44,7 +44,6 @@ function generate_tax_rules()
         $res &= Db::getInstance()->insert('tax_rules_group', $row);
         $id_tax_rules_group = Db::getInstance()->Insert_ID();
 
-
         $countries = Db::getInstance()->executeS(
             '
 		SELECT * FROM `'._DB_PREFIX_.'country` c
@@ -108,5 +107,6 @@ function generate_tax_rules()
 			set value="'.$id_tax_rules_group.'" WHERE name="SOCOLISSIMO_OVERCOST_TAX"');
         }
     }
+
     return $res;
 }

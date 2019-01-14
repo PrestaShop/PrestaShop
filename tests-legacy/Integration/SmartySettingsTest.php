@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace LegacyTests\Integration;
 
 use LegacyTests\TestCase\IntegrationTestCase;
@@ -33,7 +32,7 @@ class SmartySettingsTest extends IntegrationTestCase
 {
     private $smarty;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         global $smarty;
@@ -44,6 +43,7 @@ class SmartySettingsTest extends IntegrationTestCase
     private function render($templateString, array $parameters)
     {
         $this->smarty->assign($parameters);
+
         return $this->smarty->fetch('string:' . $templateString);
     }
 

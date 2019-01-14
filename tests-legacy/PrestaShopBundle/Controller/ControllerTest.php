@@ -28,9 +28,9 @@ namespace LegacyTests\PrestaShopBundle\Controller;
 
 use Context;
 use Controller;
-use Prophecy\Argument;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use Prophecy\Argument;
 use Tools;
 
 /**
@@ -40,7 +40,7 @@ class ControllerTest extends TestCase
 {
     private $context;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->declareRequiredConstants();
         $this->requireAliasesFunctions();
@@ -54,7 +54,7 @@ class ControllerTest extends TestCase
         ServiceLocator::setServiceContainerInstance($containerProphecy->reveal());
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         Context::setInstanceForTesting($this->context);
     }

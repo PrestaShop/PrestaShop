@@ -26,12 +26,11 @@
 
 namespace LegacyTests\Integration;
 
-
-use Module;
-use PrestaShopAutoload;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use LegacyTests\TestCase\IntegrationTestCase;
 use LegacyTests\TestCase\Module as TestingModule;
+use Module;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShopAutoload;
 
 class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
 {
@@ -57,8 +56,8 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         $this->moduleManager = $this->moduleManagerBuilder->build();
 
         $this->moduleNames= [
-            'pscsx3241',
             'pscsx32412',
+            'pscsx3241',
         ];
     }
 
@@ -94,6 +93,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
     {
         $withoutDate        = preg_replace('#\* date: .*?\n#m', '', $str);
         $withoutBlankLines  = preg_replace('#\n?^(?:\s*)$#m', "", $withoutDate);
+
         return $withoutBlankLines;
     }
 

@@ -26,11 +26,11 @@
 
 namespace LegacyTests\Unit\Core\Product;
 
-use Phake;
-use LegacyTests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Language;
+use LegacyTests\TestCase\UnitTestCase;
+use Phake;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter as BasePricePresenter;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 
 class PriceFormatter extends BasePricePresenter
 {
@@ -38,6 +38,7 @@ class PriceFormatter extends BasePricePresenter
     {
         return $price;
     }
+
     public function format($price, $currency = null)
     {
         return "#$price";
@@ -50,7 +51,7 @@ class ProductPresenterTest extends UnitTestCase
     private $product;
     private $language;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->settings = new ProductPresentationSettings();
@@ -124,7 +125,6 @@ class ProductPresenterTest extends UnitTestCase
     {
         return $this->_presentProduct('PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter', $field);
     }
-
 
     public function testPriceShouldBeShownInCatalogMode()
     {

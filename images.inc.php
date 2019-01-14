@@ -30,6 +30,7 @@
 function cacheImage($image, $cacheImage, $size, $imageType = 'jpg', $disableCache = false)
 {
     Tools::displayAsDeprecated();
+
     return ImageManager::thumbnail($image, $cacheImage, $size, $imageType, $disableCache);
 }
 
@@ -39,6 +40,7 @@ function cacheImage($image, $cacheImage, $size, $imageType = 'jpg', $disableCach
 function checkImage($file, $maxFileSize = 0)
 {
     Tools::displayAsDeprecated();
+
     return ImageManager::validateUpload($file, $maxFileSize);
 }
 
@@ -56,6 +58,7 @@ function checkImageUploadError($file)
 function isPicture($file, $types = null)
 {
     Tools::displayAsDeprecated();
+
     return ImageManager::isRealImage($file['tmp_name'], $file['type'], $types);
 }
 
@@ -65,6 +68,7 @@ function isPicture($file, $types = null)
 function checkIco($file, $maxFileSize = 0)
 {
     Tools::displayAsDeprecated();
+
     return ImageManager::validateIconUpload($file, $maxFileSize);
 }
 
@@ -74,6 +78,7 @@ function checkIco($file, $maxFileSize = 0)
 function imageResize($sourceFile, $destFile, $destWidth = null, $destHeight = null, $fileType = 'jpg')
 {
     Tools::displayAsDeprecated();
+
     return ImageManager::resize($sourceFile, $destFile, $destWidth, $destHeight, $fileType);
 }
 
@@ -86,6 +91,7 @@ function imageCut($srcFile, $destFile, $destWidth = null, $destHeight = null, $f
     if (isset($srcFile['tmp_name'])) {
         return ImageManager::cut($srcFile['tmp_name'], $destFile, $destWidth, $destHeight, $fileType, $destX, $destY);
     }
+
     return false;
 }
 
@@ -95,6 +101,7 @@ function imageCut($srcFile, $destFile, $destWidth = null, $destHeight = null, $f
 function createSrcImage($type, $filename)
 {
     Tools::displayAsDeprecated();
+
     return ImageManager::create($type, $filename);
 }
 
@@ -104,6 +111,7 @@ function createSrcImage($type, $filename)
 function createDestImage($width, $height)
 {
     Tools::displayAsDeprecated();
+
     return ImageManager::createWhiteImage($width, $height);
 }
 
@@ -113,6 +121,7 @@ function createDestImage($width, $height)
 function returnDestImage($type, $ressource, $filename)
 {
     Tools::displayAsDeprecated();
+
     return ImageManager::write($type, $ressource, $filename);
 }
 
@@ -166,5 +175,6 @@ function deleteImage($id_item, $id_image = null)
     if (file_exists(_PS_TMP_IMG_DIR_.$table.'_mini_'.$id_item.'.jpg')) {
         unlink(_PS_TMP_IMG_DIR_.$table.'_mini_'.$id_item.'.jpg');
     }
+
     return true;
 }

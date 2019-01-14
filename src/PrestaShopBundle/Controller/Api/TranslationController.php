@@ -30,8 +30,8 @@ use Exception;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\View\TreeBuilder;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TranslationController extends ApiController
@@ -244,6 +244,7 @@ class TranslationController extends ApiController
             !is_array($decodedContent['translations'])
         ) {
             $message = 'The request body should contain a JSON-encoded array of translations';
+
             throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
         }
 

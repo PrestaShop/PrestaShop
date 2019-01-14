@@ -26,14 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Search;
 
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
+use Hook;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
-use Symfony\Component\Translation\TranslatorInterface;
 use Search;
-use Hook;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 /**

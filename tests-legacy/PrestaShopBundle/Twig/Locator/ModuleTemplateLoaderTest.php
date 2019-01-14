@@ -26,8 +26,8 @@
 
 namespace LegacyTests\PrestaShopBundle\Twig\Locator;
 
-use PrestaShopBundle\Twig\Locator\ModuleTemplateLoader;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Twig\Locator\ModuleTemplateLoader;
 
 /**
  * @group sf
@@ -68,13 +68,13 @@ class ModuleTemplateLoaderTest extends TestCase
 
     public function testGetPaths()
     {
-        self::assertCount(
+        $this->assertCount(
             2,
             $this->loader->getPaths('Product'),
             'Two templates for the namespace "Product" should be found.'
         );
 
-        self::assertCount(
+        $this->assertCount(
             3,
             $this->loader->getPaths('PrestaShop'),
             'One templates should be found.'
@@ -89,7 +89,7 @@ class ModuleTemplateLoaderTest extends TestCase
      */
     public function testGetSourceContext($sourceContent, $twigPathAsked, $successMessage)
     {
-        self::assertEquals(
+        $this->assertEquals(
             $sourceContent . PHP_EOL,
             $this->loader->getSourceContext($twigPathAsked)->getCode(),
             $successMessage
@@ -113,7 +113,7 @@ class ModuleTemplateLoaderTest extends TestCase
     {
         $loader = new ModuleTemplateLoader([]);
 
-        self::assertEquals(array(), $loader->getPaths());
+        $this->assertEquals(array(), $loader->getPaths());
     }
 
     /**
@@ -123,10 +123,10 @@ class ModuleTemplateLoaderTest extends TestCase
     {
         $loader = new ModuleTemplateLoader([]);
 
-        self::assertEquals([], $loader->getNamespaces());
+        $this->assertEquals([], $loader->getNamespaces());
 
         $loader->addPath(sys_get_temp_dir(), 'named');
 
-        self::assertEquals(['named'], $loader->getNamespaces());
+        $this->assertEquals(['named'], $loader->getNamespaces());
     }
 }

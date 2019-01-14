@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
+use Exception;
+use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\HttpFoundation\Request;
-use Exception;
-use PhpEncryption;
 
 /**
  * Data provider for new Architecture, about Addons.
@@ -184,6 +184,7 @@ class AddonsDataProvider implements AddonsInterface
             }
         } catch (Exception $e) {
             self::$is_addons_up = false;
+
             throw $e;
         }
     }

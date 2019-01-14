@@ -27,11 +27,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Module;
 
 use Currency;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 
 class ModulePresenter implements PresenterInterface
 {

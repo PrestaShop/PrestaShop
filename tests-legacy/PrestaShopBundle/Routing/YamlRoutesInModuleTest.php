@@ -26,11 +26,10 @@
 
 namespace LegacyTests\PrestaShopBundle\Routing;
 
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\DependencyInjection\Container;
 use LegacyTests\TestCase\Module as HelperModule;
-
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Routing\Route;
 
 class YamlRoutesInModuleTest extends KernelTestCase
 {
@@ -47,7 +46,7 @@ class YamlRoutesInModuleTest extends KernelTestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $kernel = self::createKernel();
         $kernel->boot();
@@ -64,7 +63,7 @@ class YamlRoutesInModuleTest extends KernelTestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    protected function tearDown()
     {
         HelperModule::removeModule('demo');
         $this->module->onUninstall();
@@ -75,10 +74,10 @@ class YamlRoutesInModuleTest extends KernelTestCase
         $router = $this->container->get('router');
         $route = $router->getRouteCollection()->get('demo_admin_demo');
 
-        self::assertInstanceOf(Route::class, $route);
+        $this->assertInstanceOf(Route::class, $route);
 
-        self::assertEquals('/modules/demo/demo', $route->getPath());
-        self::assertEquals([
+        $this->assertEquals('/modules/demo/demo', $route->getPath());
+        $this->assertEquals([
             '_controller' => 'PsTest\Controller\Admin\DemoController::demoAction',
         ], $route->getDefaults());
     }

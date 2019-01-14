@@ -23,10 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Adapter;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Tools;
 
 class ToolsTest extends TestCase
 {

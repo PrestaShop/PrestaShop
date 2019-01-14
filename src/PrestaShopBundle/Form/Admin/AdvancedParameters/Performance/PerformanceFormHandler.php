@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature;
 use PrestaShop\PrestaShop\Core\Form\AbstractFormHandler;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**

@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Service\Routing\Router as PrestaShopRouter;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Admin controller to manage security pages.

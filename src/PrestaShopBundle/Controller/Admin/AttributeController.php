@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Product;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Product;
 
 /**
  * Admin controller for the attribute / attribute group.
@@ -243,6 +243,7 @@ class AttributeController extends FrameworkBundleAdminController
 
             if ($res['status'] == 'error') {
                 $response->setStatusCode(400);
+
                 break;
             }
         }

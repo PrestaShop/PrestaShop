@@ -26,6 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+use Configuration;
+use Hook;
+use Language;
+use Link;
 use PrestaShop\Decimal\Number;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Entity\Product;
@@ -36,11 +40,7 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Component\Translation\TranslatorInterface;
-use Configuration;
-use Language;
-use Link;
 use Tools;
-use Hook;
 
 class ProductLazyArray extends AbstractLazyArray
 {
@@ -232,6 +232,7 @@ class ProductLazyArray extends AbstractLazyArray
                     'label' => $this->translator->trans('Used', array(), 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/UsedCondition',
                 );
+
                 break;
             case 'refurbished':
                 return array(
@@ -239,6 +240,7 @@ class ProductLazyArray extends AbstractLazyArray
                     'label' => $this->translator->trans('Refurbished', array(), 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/RefurbishedCondition',
                 );
+
                 break;
             default:
                 return false;

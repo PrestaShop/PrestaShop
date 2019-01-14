@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Classes\Tax;
 
-use LegacyTests\TestCase\UnitTestCase;
 use AverageTaxOfProductsTaxCalculator;
+use LegacyTests\TestCase\UnitTestCase;
 use Phake;
 
 class AverageTaxOfProductsTaxCalculatorTest extends UnitTestCase
@@ -45,7 +45,6 @@ class AverageTaxOfProductsTaxCalculatorTest extends UnitTestCase
         ));
 
         $amounts = $taxCalculator->getTaxesAmount(7, null, 2, PS_ROUND_HALF_UP);
-
 
         $expected = array(
             1 => round(7 * 20  / (20 + 10) * 0.1, 2),

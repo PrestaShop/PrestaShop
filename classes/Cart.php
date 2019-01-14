@@ -26,10 +26,10 @@
 use PrestaShop\PrestaShop\Adapter\AddressFactory;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheAdapter;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
+use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShop\PrestaShop\Core\Cart\Calculator;
 use PrestaShop\PrestaShop\Core\Cart\CartRow;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
@@ -158,6 +158,7 @@ class CartCore extends ObjectModel
                     'id_product' => array('required' => true, 'xlink_resource' => 'products'),
                     'id_product_attribute' => array('required' => true, 'xlink_resource' => 'combinations'),
                     'id_address_delivery' => array('required' => true, 'xlink_resource' => 'addresses'),
+                    'id_customization' => array('required' => false, 'xlink_resource' => 'customizations'),
                     'quantity' => array('required' => true),
                 ),
             ),
@@ -379,14 +380,21 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Calculate average Tax rate in Cart.
+     * Calculate average Tax rate in Cart, as a percentage.
+     *
+     * @deprecated since version 1.7.6. Use $cart->getAverageProductsTaxRate() instead.
      *
      * @param mixed $cart Cart ID or Cart Object
      *
-     * @return float Average Tax used in Cart
+     * @return float Average Tax used in Cart (eg. 20.0 for 20% average rate)
      */
     public static function getTaxesAverageUsed($cart)
     {
+        @trigger_error(
+            'Cart::getTaxesAverageUsed() is deprecated since version 1.7.6. Use $cart->getAverageProductsTaxRate() instead.',
+            E_USER_DEPRECATED
+        );
+
         if (!is_object($cart)) {
             $cart = new Cart((int) $cart);
         }
@@ -398,41 +406,12 @@ class CartCore extends ObjectModel
             return 0;
         }
 
-        $products = $cart->getProducts();
-        $total_products_average = 0;
-        $ratio_tax = 0;
-
-        if (!count($products)) {
-            return 0;
-        }
-
-        foreach ($products as $product) {
-            // products refer to the cart details
-
-            if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice') {
-                $address_id = (int) $cart->id_address_invoice;
-            } else {
-                $address_id = (int) $product['id_address_delivery'];
-            } // Get delivery address of the product from the cart
-            if (!Address::addressExists($address_id)) {
-                $address_id = null;
-            }
-
-            $total_products_average += $product['total_wt'];
-            $ratio_tax += $product['total_wt'] * Tax::getProductTaxRate(
-                    (int) $product['id_product'],
-                    (int) $address_id
-                );
-        }
-
-        if ($total_products_average > 0) {
-            return $ratio_tax / $total_products_average;
-        }
-
-        return 0;
+        return $cart->getAverageProductsTaxRate() * 100;
     }
 
     /**
+     * Returns the average Tax rate for all products in the cart, as a multiplier.
+     *
      * The arguments are optional and only serve as return values in case caller needs the details.
      *
      * @param float|null $cartAmountTaxExcluded If the reference is given, it will be updated with the
@@ -440,7 +419,7 @@ class CartCore extends ObjectModel
      * @param float|null $cartAmountTaxIncluded If the reference is given, it will be updated with the
      *                                          total amount in the Cart including Taxes
      *
-     * @return float Average Tax Rate on Products
+     * @return float Average Tax Rate on Products (eg. 0.2 for 20% average rate)
      */
     public function getAverageProductsTaxRate(&$cartAmountTaxExcluded = null, &$cartAmountTaxIncluded = null)
     {
@@ -981,6 +960,7 @@ class CartCore extends ObjectModel
             case Order::ROUND_TOTAL:
                 $row['total'] = $row['price_with_reduction_without_tax'] * $productQuantity;
                 $row['total_wt'] = $row['price_with_reduction'] * $productQuantity;
+
                 break;
             case Order::ROUND_LINE:
                 $row['total'] = Tools::ps_round(
@@ -991,6 +971,7 @@ class CartCore extends ObjectModel
                     $row['price_with_reduction'] * $productQuantity,
                     _PS_PRICE_COMPUTE_PRECISION_
                 );
+
                 break;
 
             case Order::ROUND_ITEM:
@@ -1003,6 +984,7 @@ class CartCore extends ObjectModel
                         $row['price_with_reduction'],
                         _PS_PRICE_COMPUTE_PRECISION_
                     ) * $productQuantity;
+
                 break;
         }
 
@@ -1595,6 +1577,7 @@ class CartCore extends ObjectModel
                         @unlink(_PS_UPLOAD_DIR_ . $customization['value']);
                         @unlink(_PS_UPLOAD_DIR_ . $customization['value'] . '_small');
                     }
+
                     break;
                 }
             }
@@ -1964,24 +1947,29 @@ class CartCore extends ObjectModel
                 $calculator->calculateRows();
                 $calculator->calculateFees($computePrecision);
                 $amount = $calculator->getFees()->getInitialShippingFees();
+
                 break;
             case Cart::ONLY_WRAPPING:
                 $calculator->calculateRows();
                 $calculator->calculateFees($computePrecision);
                 $amount = $calculator->getFees()->getInitialWrappingFees();
+
                 break;
             case Cart::BOTH:
                 $calculator->processCalculation($computePrecision);
                 $amount = $calculator->getTotal();
+
                 break;
             case Cart::BOTH_WITHOUT_SHIPPING:
             case Cart::ONLY_PRODUCTS:
                 $calculator->calculateRows();
                 $amount = $calculator->getRowTotal();
+
                 break;
             case Cart::ONLY_DISCOUNTS:
                 $calculator->processCalculation($computePrecision);
                 $amount = $calculator->getDiscountTotal();
+
                 break;
             default:
                 throw new \Exception('unknown cart calculation type : ' . $type);
@@ -2007,7 +1995,7 @@ class CartCore extends ObjectModel
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
      */
-    private function newCalculator($products, $cartRules, $id_carrier)
+    public function newCalculator($products, $cartRules, $id_carrier)
     {
         $calculator = new Calculator($this, $id_carrier);
 
@@ -2253,6 +2241,7 @@ class CartCore extends ObjectModel
                     if ($id_address === null) {
                         $id_address = (int) $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
                     }
+
                     try {
                         $address[$this->id] = Address::initialize($id_address);
                     } catch (Exception $e) {
@@ -3114,6 +3103,7 @@ class CartCore extends ObjectModel
                 foreach ($options as $key => $option) {
                     if ($option['is_best_price']) {
                         $delivery_option[$id_address] = $key;
+
                         break;
                     }
                 }
@@ -3142,7 +3132,7 @@ class CartCore extends ObjectModel
     {
         $delivery_option_list = $this->getDeliveryOptionList();
         foreach ($delivery_option as $key => $value) {
-            if (isset($delivery_option_list[$key]) && isset($delivery_option_list[$key][$value])) {
+            if (isset($delivery_option_list[$key][$value])) {
                 if (count($delivery_option_list[$key][$value]['carrier_list']) == 1) {
                     return current(array_keys($delivery_option_list[$key][$value]['carrier_list']));
                 }
@@ -3180,6 +3170,7 @@ class CartCore extends ObjectModel
                 foreach ($delivery_option as $id_address => $key) {
                     if (!isset($delivery_option_list[$id_address][$key])) {
                         $validated = false;
+
                         break;
                     }
                 }
@@ -3202,12 +3193,15 @@ class CartCore extends ObjectModel
             foreach ($options as $key => $option) {
                 if (Configuration::get('PS_CARRIER_DEFAULT') == -1 && $option['is_best_price']) {
                     $delivery_option[$id_address] = $key;
+
                     break;
                 } elseif (Configuration::get('PS_CARRIER_DEFAULT') == -2 && $option['is_best_grade']) {
                     $delivery_option[$id_address] = $key;
+
                     break;
                 } elseif ($option['unique_carrier'] && in_array(Configuration::get('PS_CARRIER_DEFAULT'), array_keys($option['carrier_list']))) {
                     $delivery_option[$id_address] = $key;
+
                     break;
                 }
             }
@@ -3431,6 +3425,7 @@ class CartCore extends ObjectModel
                 if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight((int) $id_zone) === false)
                     || ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice((int) $id_zone) === false)) {
                     unset($result[$k]);
+
                     continue;
                 }
 
@@ -3445,6 +3440,7 @@ class CartCore extends ObjectModel
                     if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !$check_delivery_price_by_weight)
                         || ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && !$check_delivery_price_by_price)) {
                         unset($result[$k]);
+
                         continue;
                     }
                 }
@@ -4349,7 +4345,7 @@ class CartCore extends ObjectModel
             }
 
             foreach ($product_gift as $gift) {
-                if (isset($gift['gift_product']) && isset($gift['gift_product_attribute']) && (int) $gift['gift_product'] == (int) $product['id_product'] && (int) $gift['gift_product_attribute'] == (int) $product['id_product_attribute']) {
+                if (isset($gift['gift_product'], $gift['gift_product_attribute']) && (int) $gift['gift_product'] == (int) $product['id_product'] && (int) $gift['gift_product_attribute'] == (int) $product['id_product_attribute']) {
                     $product['quantity'] = (int) $product['quantity'] - 1;
                 }
             }
@@ -4380,7 +4376,7 @@ class CartCore extends ObjectModel
     public function getWsCartRows()
     {
         return Db::getInstance()->executeS(
-            'SELECT id_product, id_product_attribute, quantity, id_address_delivery
+            'SELECT id_product, id_product_attribute, quantity, id_address_delivery, id_customization
             FROM `' . _DB_PREFIX_ . 'cart_product`
             WHERE id_cart = ' . (int) $this->id . ' AND id_shop = ' . (int) Context::getContext()->shop->id
         );

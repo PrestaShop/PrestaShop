@@ -26,12 +26,11 @@
 
 namespace LegacyTests\Unit\PrestaShopBundle\Utils;
 
-use PrestaShopBundle\Utils\FloatParser;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Utils\FloatParser;
 
 class FloatParserTest extends TestCase
 {
-
     /**
      * Given a string containing a number with arbitrary characters as thousand and decimal separators
      * When constructing an ImmutableFloat from that string
@@ -65,6 +64,7 @@ class FloatParserTest extends TestCase
     public function provideValidStrings()
     {
         $expected = 1234567.89;
+
         return [
             ['1234567.89', $expected],
             ['1234567,89', $expected],

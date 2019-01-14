@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
 use GuzzleHttp\Exception\RequestException;
+use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Psr\Log\LoggerInterface;
 use stdClass;

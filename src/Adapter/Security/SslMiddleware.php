@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
+use Configuration;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Tools;
-use Configuration;
 
 /**
  * Middleware that is triggered during kernel.request event on Symfony routing process, to redirect to HTTPS in some cases.

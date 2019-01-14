@@ -18,16 +18,12 @@ scenario('Install and Uninstall Module from cross selling', () => {
     module_common_scenarios.installModule(client, ModulePage, AddProductPage, module_tech_name);
   }, 'common_client');
   scenario('Close "Symfony" toolbar', client => {
-        test('should check then close the "Symfony" toolbar', () => {
-            return promise
-                .then(() => {
-                    if (global.ps_mode_dev) {
-                        client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-                    }
-                })
-                .then(() => client.pause(1000));
-        });
-    }, 'common_client');
+    test('should check then close the "Symfony" toolbar', () => {
+      return promise
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
+        .then(() => client.pause(1000));
+    });
+  }, 'common_client');
   scenario('Check Configuration page of "' + module_tech_name + '"', client => {
     module_common_scenarios.checkConfigPage(client, ModulePage, module_tech_name);
   }, 'module');

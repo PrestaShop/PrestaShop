@@ -25,7 +25,7 @@ scenario('The shop installation', () => {
   }, 'installation');
 
   scenario('Rollback to the old version ', client => {
-    test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
+    test('should go to "Module manager" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, 'autoupgrade'));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
     test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.configure_link.replace('%moduleTechName', 'autoupgrade')));

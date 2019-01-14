@@ -24,8 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleComplexConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 
 class MyComplexModuleConfiguration implements ModuleComplexConfigurationInterface
 {

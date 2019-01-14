@@ -26,10 +26,10 @@
 
 namespace LegacyTests\Unit\Core\Payment;
 
-use LegacyTests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
 use DOMDocument;
 use Exception;
+use LegacyTests\TestCase\UnitTestCase;
+use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
 
 class PaymentOptionFormDecoratorTest extends UnitTestCase
 {
@@ -78,6 +78,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
         }
         $doc->preserveWhiteSpace = false;
         $doc->formatOutput = true;
+
         return $doc->saveHTML();
     }
 
@@ -87,6 +88,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
             $this->normalizeHTML($exp),
             $this->normalizeHTML($act)
         );
+
         return $this;
     }
 }

@@ -34,7 +34,7 @@ class PhpEncryptionLegacyEngineTest extends TestCase
     const FOO = 'foo';
     private $engine;
 
-    public function setUp()
+    protected function setUp()
     {
         if (version_compare(PHP_VERSION, '7.1', '>=')) {
             $this->markTestSkipped('Legacy encryption with mcrypt is deprecated from PHP 7.1.');

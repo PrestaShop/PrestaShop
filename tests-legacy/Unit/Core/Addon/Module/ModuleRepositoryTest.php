@@ -26,14 +26,14 @@
 
 namespace LegacyTests\Core\Addon\Module;
 
+use LegacyTests\TestCase\FakeLogger;
+use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use LegacyTests\TestCase\FakeLogger;
-use LegacyTests\TestCase\UnitTestCase;
 
 /**
  * @runInSeparateProcess
@@ -50,7 +50,7 @@ class ModuleRepositoryTest extends UnitTestCase
 
     private $http_host_not_found = false;
 
-    public function setUp()
+    protected function setUp()
     {
         if (!defined('__PS_BASE_URI__')) {
             define('__PS_BASE_URI__', 'http://www.example.com/shop');
@@ -338,7 +338,7 @@ class ModuleRepositoryTest extends UnitTestCase
         $this->assertCount(0, $this->moduleRepositoryStub->getFilteredList($filters));
     }
 
-    public function teardown()
+    protected function teardown()
     {
         parent::teardown();
 

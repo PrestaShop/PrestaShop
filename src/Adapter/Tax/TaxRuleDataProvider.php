@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Tax;
 
-use TaxRulesGroup;
-use Context;
-use TaxManagerFactory;
-use Tax;
-use Product;
 use Address;
+use Context;
+use Product;
+use Tax;
+use TaxManagerFactory;
+use TaxRulesGroup;
 
 /**
  * This class will provide data from DB / ORM about tax rules.

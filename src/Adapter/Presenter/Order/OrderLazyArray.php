@@ -26,27 +26,27 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
-use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
-use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use Doctrine\Common\Annotations\AnnotationException;
-use ReflectionException;
-use PrestaShopException;
 use Address;
 use AddressFormat;
 use Carrier;
 use Cart;
 use Configuration;
 use Context;
+use Currency;
 use CustomerMessage;
+use Doctrine\Common\Annotations\AnnotationException;
 use Order;
 use OrderReturn;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopException;
 use ProductDownload;
+use ReflectionException;
 use TaxConfiguration;
 use Tools;
-use Currency;
 
 class OrderLazyArray extends AbstractLazyArray
 {

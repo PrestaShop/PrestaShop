@@ -34,13 +34,9 @@ scenario('Check the addons theme in the Back Office', () => {
         .then(() => client.switchWindow(0));
     });
     test('should check then close the "Symfony" toolbar', () => {
-        return promise
-            .then(() => {
-                if (global.ps_mode_dev) {
-                    client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-                }
-            })
-            .then(() => client.pause(1000));
+      return promise
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
+        .then(() => client.pause(1000));
     });
     test('should click on "Discover" button of the 17th theme', () => {
       return promise

@@ -26,13 +26,13 @@
 
 namespace LegacyTests\Unit\Core\Hook;
 
-use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
-use PrestaShopBundle\Service\Hook\RenderingHookEvent;
-use PrestaShop\PrestaShop\Core\Hook\HookInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
-use PrestaShop\PrestaShop\Core\Hook\RenderedHook;
-use PrestaShop\PrestaShop\Core\Hook\Hook;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
+use PrestaShop\PrestaShop\Core\Hook\Hook;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
+use PrestaShop\PrestaShop\Core\Hook\HookInterface;
+use PrestaShop\PrestaShop\Core\Hook\RenderedHook;
+use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 
 class HookDispatcherTest extends TestCase
 {
@@ -46,7 +46,7 @@ class HookDispatcherTest extends TestCase
      */
     private $hookDispatcher;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->hookDispatcherAdapter = $this->createMock(HookDispatcherAdapter::class);
         $this->hookDispatcher = new HookDispatcher($this->hookDispatcherAdapter);

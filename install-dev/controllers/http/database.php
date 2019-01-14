@@ -24,8 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use Symfony\Component\Yaml\Yaml;
 use PrestaShopBundle\Install\Database;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Step 3 : configure database
@@ -82,6 +82,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
         if (!isset($this->session->database_engine)) {
             $this->session->database_engine = $this->model_database->getBestEngine($this->session->database_server, $this->session->database_name, $this->session->database_login, $this->session->database_password);
         }
+
         return true;
     }
 

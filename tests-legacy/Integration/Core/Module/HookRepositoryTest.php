@@ -24,15 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace LegacyTests\Integration\Core\Module;
 
 use Context;
 use Db;
-use PrestaShop\PrestaShop\Core\Module\HookRepository;
 use LegacyTests\TestCase\IntegrationTestCase;
-use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use LegacyTests\Unit\ContextMocker;
+use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
+use PrestaShop\PrestaShop\Core\Module\HookRepository;
 
 class HookRepositoryTest extends IntegrationTestCase
 {

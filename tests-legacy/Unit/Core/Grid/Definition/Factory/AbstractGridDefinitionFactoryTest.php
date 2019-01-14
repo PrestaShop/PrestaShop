@@ -31,8 +31,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 class AbstractGridDefinitionFactoryTest extends TestCase
@@ -42,7 +42,7 @@ class AbstractGridDefinitionFactoryTest extends TestCase
      */
     private $definitionFactory;
 
-    public function setUp()
+    protected function setUp()
     {
         $definitionFactory = $this->getMockForAbstractClass(AbstractGridDefinitionFactory::class);
 

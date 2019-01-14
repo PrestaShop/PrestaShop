@@ -33,7 +33,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 class CurrencyTest extends AbstractCartCalculationTest
 {
-
     /**
      * isoCode : [a-zA-Z]{2,3}  @see Validate::isLanguageIsoCode()
      */
@@ -59,14 +58,14 @@ class CurrencyTest extends AbstractCartCalculationTest
 
     protected $defaultCurrencyId;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->defaultCurrencyId = Configuration::get('PS_CURRENCY_DEFAULT');
 
         parent::setUp();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         /*
         // do not delete currencies here : theyr are only soft deleted, and it creates conflicts when recreating with same iso code
@@ -220,7 +219,6 @@ class CurrencyTest extends AbstractCartCalculationTest
             $rate = static::CURRENCY_FIXTURES[$currencyId]['changeRate'];
         }
 
-
         return [
             'empty cart'                             => [
                 'products'      => [],
@@ -256,5 +254,4 @@ class CurrencyTest extends AbstractCartCalculationTest
             ],
         ];
     }
-
 }

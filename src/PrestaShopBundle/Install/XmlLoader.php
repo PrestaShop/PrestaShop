@@ -26,18 +26,18 @@
 
 namespace PrestaShopBundle\Install;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Pack;
-use PrestaShop\PrestaShop\Adapter\Entity\Tools;
-use PrestashopInstallerException;
-use PrestaShopDatabaseException;
-use PrestaShop\PrestaShop\Adapter\Entity\Tag;
-use PrestaShop\PrestaShop\Adapter\Entity\Shop;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
-use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
-use PrestaShop\PrestaShop\Adapter\Entity\ImageType;
+use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Entity\Image;
 use PrestaShop\PrestaShop\Adapter\Entity\ImageManager;
-use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
+use PrestaShop\PrestaShop\Adapter\Entity\ImageType;
+use PrestaShop\PrestaShop\Adapter\Entity\Pack;
+use PrestaShop\PrestaShop\Adapter\Entity\Shop;
+use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
+use PrestaShop\PrestaShop\Adapter\Entity\Tag;
+use PrestaShop\PrestaShop\Adapter\Entity\Tools;
+use PrestaShopDatabaseException;
+use PrestashopInstallerException;
 
 class XmlLoader
 {

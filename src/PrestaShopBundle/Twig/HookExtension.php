@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Twig;
 
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * This class is used by Twig_Environment and provide some methods callable from a twig template.

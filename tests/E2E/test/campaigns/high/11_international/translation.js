@@ -19,11 +19,7 @@ scenario('Edit a translation', () => {
     test('should click on "Modify" button', () => client.waitForExistAndClick(Translations.modify_button));
     test('should click on "Shop" button', () => {
       return promise
-        .then(() => {
-          if (global.ps_mode_dev) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-          }
-        })
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
         .then(() => client.waitForVisibleAndClick(Translations.shop_button));
     });
     test('should click on "Theme" button', () => client.waitForVisibleAndClick(Translations.theme_button));

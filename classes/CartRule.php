@@ -422,7 +422,7 @@ class CartRuleCore extends ObjectModel
         foreach ($result as &$cart_rule) {
             if ($cart_rule['quantity_per_user']) {
                 $quantity_used = Order::getDiscountsCustomer((int) $id_customer, (int) $cart_rule['id_cart_rule']);
-                if (isset($cart) && isset($cart->id)) {
+                if (isset($cart, $cart->id)) {
                     $quantity_used += $cart->getDiscountsCustomer((int) $cart_rule['id_cart_rule']);
                 }
                 $cart_rule['quantity_for_user'] = $cart_rule['quantity_per_user'] - $quantity_used;
@@ -444,7 +444,7 @@ class CartRuleCore extends ObjectModel
             }
         }
 
-        if (isset($cart) && isset($cart->id)) {
+        if (isset($cart, $cart->id)) {
             foreach ($result as $key => $cart_rule) {
                 if ($cart_rule['product_restriction']) {
                     $cr = new CartRule((int) $cart_rule['id_cart_rule']);
@@ -479,6 +479,7 @@ class CartRuleCore extends ObjectModel
                             AND crc.id_country = ' . (int) $country['id_country']);
                         if ($id_cart_rule) {
                             $result[] = $result_bak[$key];
+
                             break;
                         }
                     }
@@ -707,6 +708,7 @@ class CartRuleCore extends ObjectModel
             foreach ($products as $product) {
                 if (!$product['reduction_applies']) {
                     $is_ok = true;
+
                     break;
                 }
             }
@@ -911,10 +913,12 @@ class CartRuleCore extends ObjectModel
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     ++$condition;
+
                                     break;
                                 }
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+
                             break;
                         case 'products':
                             $cart_products = Db::getInstance()->executeS('
@@ -938,10 +942,12 @@ class CartRuleCore extends ObjectModel
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     ++$condition;
+
                                     break;
                                 }
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+
                             break;
                         case 'categories':
                             $cart_categories = Db::getInstance()->executeS('
@@ -969,6 +975,7 @@ class CartRuleCore extends ObjectModel
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     ++$condition;
+
                                     break;
                                 }
                             }
@@ -977,6 +984,7 @@ class CartRuleCore extends ObjectModel
                                 $matching_product = preg_replace('/^([0-9]+)-[0-9]+$/', '$1-0', $matching_product);
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+
                             break;
                         case 'manufacturers':
                             $cart_manufacturers = Db::getInstance()->executeS('
@@ -998,10 +1006,12 @@ class CartRuleCore extends ObjectModel
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     ++$condition;
+
                                     break;
                                 }
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+
                             break;
                         case 'suppliers':
                             $cart_suppliers = Db::getInstance()->executeS('
@@ -1023,10 +1033,12 @@ class CartRuleCore extends ObjectModel
                                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     ++$condition;
+
                                     break;
                                 }
                             }
                             $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+
                             break;
                     }
                     if (!count($eligible_products_list)) {
@@ -1341,6 +1353,7 @@ class CartRuleCore extends ObjectModel
                         if ($use_cache && (!isset(CartRule::$only_one_gift[$this->id . '-' . $this->gift_product]) || CartRule::$only_one_gift[$this->id . '-' . $this->gift_product] == 0)) {
                             CartRule::$only_one_gift[$this->id . '-' . $this->gift_product] = $id_address;
                         }
+
                         break;
                     }
                 }
@@ -1450,7 +1463,7 @@ class CartRuleCore extends ObjectModel
         if ($type == 'shop') {
             $shops = Context::getContext()->employee->getAssociatedShops();
             if (count($shops)) {
-                $shop_list = ' AND t.id_shop IN (' . implode(array_map('intval', $shops), ',') . ') ';
+                $shop_list = ' AND t.id_shop IN (' . implode(',', array_map('intval', $shops)) . ') ';
             }
         }
 

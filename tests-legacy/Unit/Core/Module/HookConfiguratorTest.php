@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Core\Module;
 
-use Phake;
 use LegacyTests\TestCase\UnitTestCase;
+use Phake;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 
 class HookConfiguratorTest extends UnitTestCase
@@ -35,7 +35,7 @@ class HookConfiguratorTest extends UnitTestCase
     private $hookConfigurator;
     private $hookRepository;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->hookRepository = Phake::mock(
             'PrestaShop\PrestaShop\Core\Module\HookRepository'

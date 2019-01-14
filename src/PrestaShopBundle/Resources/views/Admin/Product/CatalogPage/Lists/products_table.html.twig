@@ -57,7 +57,7 @@
             {{ ps.sortable_column_header("Price (tax excl.)"|trans({}, 'Admin.Catalog.Feature'), 'price', orderBy, sortOrder) }}
           </th>
           <th scope="col" class="text-center" style="width: 9%">
-            {{ ps.sortable_column_header("Price (tax incl.)"|trans({}, 'Admin.Catalog.Feature'), 'price', orderBy, sortOrder) }}
+            {{ "Price (tax incl.)"|trans({}, 'Admin.Catalog.Feature') }}
           </th>
 
           {% if 'PS_STOCK_MANAGEMENT'|configuration %}

@@ -26,9 +26,9 @@
 
 namespace LegacyTests\PrestaShopBundle\Translation\Factory;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Factory\TranslationsFactory;
 use Symfony\Component\Translation\MessageCatalogue;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @group sf
@@ -38,7 +38,7 @@ class TranslationsFactoryTest extends TestCase
     private $factory;
     private $providerMock;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->providerMock = $this->getMockBuilder('PrestaShopBundle\Translation\Provider\AbstractProvider')
             ->disableOriginalConstructor()

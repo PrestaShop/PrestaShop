@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Exception;
 use PrestaShopBundle\Event\ModuleZipManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
-use Exception;
 use Tools;
 use ZipArchive;
 
@@ -140,6 +140,7 @@ class ModuleZipManager
             foreach (iterator_to_array($moduleFolder) as $file) {
                 if ($file->getFileName() === $moduleName . '.php') {
                     $validModuleStructure = true;
+
                     break;
                 }
             }
@@ -147,6 +148,7 @@ class ModuleZipManager
 
         if (!$validModuleStructure) {
             $this->filesystem->remove($sandboxPath);
+
             throw new Exception($this->translator->trans(
                     'This file does not seem to be a valid module zip',
                     array(),

@@ -56,14 +56,18 @@ class GetFileControllerCore extends FrontController
             }
 
             Tools::setCookieLanguage();
-            if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
-                Tools::redirect('index.php?controller=authentication&back=get-file.php&key=' . $key);
-            } elseif (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order')) {
-                $order = new Order((int) Tools::getValue('id_order'));
-                if (!Validate::isLoadedObject($order)) {
-                    $this->displayCustomError('Invalid key.');
-                }
-                if ($order->secure_key != Tools::getValue('secure_key')) {
+            if (!$this->context->customer->isLogged()) {
+                if (!Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
+                    Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
+                } elseif (Tools::getValue('secure_key') && Tools::getValue('id_order')) {
+                    $order = new Order((int) Tools::getValue('id_order'));
+                    if (!Validate::isLoadedObject($order)) {
+                        $this->displayCustomError('Invalid key.');
+                    }
+                    if ($order->secure_key != Tools::getValue('secure_key')) {
+                        $this->displayCustomError('Invalid key.');
+                    }
+                } else {
                     $this->displayCustomError('Invalid key.');
                 }
             }
@@ -88,6 +92,13 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This order has not been paid.');
             }
 
+            // Check whether the order was made by the current user
+            // If the order was made by a guest, skip this step
+            $customer = new Customer((int) $order->id_customer);
+            if (!$customer->is_guest && $order->secure_key !== $this->context->customer->secure_key) {
+                Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
+            }
+
             /* Product no more present in catalog */
             if (!isset($info['id_product_download']) || empty($info['id_product_download'])) {
                 $this->displayCustomError('This product has been deleted.');
@@ -97,7 +108,7 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This file no longer exists.');
             }
 
-            if (isset($info['product_quantity_refunded']) && isset($info['product_quantity_return']) &&
+            if (isset($info['product_quantity_refunded'], $info['product_quantity_return']) &&
                 ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
                 $this->displayCustomError('This product has been refunded.');
             }

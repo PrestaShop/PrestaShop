@@ -90,5 +90,6 @@ function create_multistore()
 function create_multistore_getHttpHost()
 {
     $host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']);
+
     return $host;
 }

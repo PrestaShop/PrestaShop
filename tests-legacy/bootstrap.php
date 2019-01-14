@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 /**
  * 2007-2017 PrestaShop
  *

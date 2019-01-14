@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible of "Improve > Modules > Modules & Services > Alerts" page display.

@@ -26,20 +26,20 @@
 
 namespace LegacyTests\Integration\PrestaShopBundle\Test;
 
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\Translation\Translator;
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Component\Routing\Router;
-use Psr\Log\NullLogger;
-
+use Context;
 use Currency;
 use Employee;
 use Language;
-use Context;
-use Theme;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Psr\Log\NullLogger;
+
 use Shop;
+use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
+use Symfony\Component\Routing\Router;
+use Symfony\Component\Translation\Translator;
+use Theme;
 
 /**
  * Responsible of e2e and integration tests using Symfony.
@@ -64,7 +64,7 @@ class LightWebTestCase extends TestCase
      */
     protected $translator;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->client = self::createClient();
@@ -81,10 +81,10 @@ class LightWebTestCase extends TestCase
             ->getMock();
 
         $contextMock->method('getTranslator')
-            ->will(self::returnValue($this->translator));
+            ->will($this->returnValue($this->translator));
 
         $contextMock->method('getContext')
-            ->will(self::returnValue($contextMock));
+            ->will($this->returnValue($contextMock));
 
         $contextMock->employee = $employeeMock;
 
@@ -133,7 +133,7 @@ class LightWebTestCase extends TestCase
             ->getMock();
 
         $currencyDataProviderMock->method('getDefaultCurrencyIsoCode')
-            ->will(self::returnValue('en'));
+            ->will($this->returnValue('en'));
 
         $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
             ->setMethods([
@@ -154,7 +154,7 @@ class LightWebTestCase extends TestCase
 
         $legacyContextMock->method('getLanguages')
             ->will(
-                self::returnValue(
+                $this->returnValue(
                     [
                         [
                             'id_lang' => '1',
@@ -176,7 +176,7 @@ class LightWebTestCase extends TestCase
 
         $legacyContextMock->method('getLanguage')
             ->will(
-                self::returnValue($languageMock)
+                $this->returnValue($languageMock)
             );
 
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
@@ -198,7 +198,7 @@ class LightWebTestCase extends TestCase
         );
 
         $configurationMock->method('get')
-            ->will(self::returnValueMap($values));
+            ->will($this->returnValueMap($values));
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
     }

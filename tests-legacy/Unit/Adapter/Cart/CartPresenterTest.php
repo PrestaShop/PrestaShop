@@ -27,8 +27,8 @@
 namespace LegacyTests\Unit\Adapter\Cart;
 
 use Configuration;
-use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use LegacyTests\TestCase\UnitTestCase;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 
 class CartPresenterTest extends UnitTestCase
 {
@@ -39,7 +39,7 @@ class CartPresenterTest extends UnitTestCase
 
     private $previousSeparator;
 
-    public function setup()
+    protected function setup()
     {
         parent::setup();
         $this->previousSeparator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
@@ -47,7 +47,7 @@ class CartPresenterTest extends UnitTestCase
         $this->cartPresenter = new CartPresenter();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         Configuration::set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', $this->previousSeparator);
         parent::tearDown();

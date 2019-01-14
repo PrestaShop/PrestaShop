@@ -32,7 +32,6 @@ use Product;
 
 class EntityTest extends IntegrationTestCase
 {
-
     /**
      * @var ContextMocker
      */

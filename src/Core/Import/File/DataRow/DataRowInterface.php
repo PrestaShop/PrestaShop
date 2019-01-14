@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
 
+use ArrayAccess;
 use Countable;
 use IteratorAggregate;
 use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCellInterface;
-use ArrayAccess;
 
 /**
  * Interface DataRowInterface describes a data row from imported file.

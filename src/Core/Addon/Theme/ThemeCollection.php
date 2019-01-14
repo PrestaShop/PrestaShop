@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-use PrestaShop\PrestaShop\Core\Addon\Theme as Addon;
 use ArrayAccess;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use PrestaShop\PrestaShop\Core\Addon\Theme as Addon;
 
 /**
  * An ArrayCollection is a Collection implementation that wraps a regular PHP array.

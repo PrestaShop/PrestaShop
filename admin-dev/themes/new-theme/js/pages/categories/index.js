@@ -41,6 +41,7 @@ import ChoiceTable from "../../components/choice-table";
 import TextWithLengthCounter from "../../components/form/text-with-length-counter";
 import NameToLinkRewriteCopier from "./name-to-link-rewrite-copier";
 import ChoiceTree from "../../components/form/choice-tree";
+import FormSubmitButton from "../../components/form-submit-button";
 
 const $ = window.$;
 
@@ -64,6 +65,7 @@ $(() => {
   new ChoiceTable();
   new TextWithLengthCounter();
   new NameToLinkRewriteCopier();
+  new FormSubmitButton();
 
   new ChoiceTree('#category_id_parent');
   new ChoiceTree('#category_shop_association').enableAutoCheckChildren();

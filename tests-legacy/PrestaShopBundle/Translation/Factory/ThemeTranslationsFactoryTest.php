@@ -26,9 +26,9 @@
 
 namespace LegacyTests\PrestaShopBundle\Translation\Factory;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Factory\ThemeTranslationsFactory;
 use Symfony\Component\Translation\MessageCatalogue;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @group sf
@@ -48,7 +48,7 @@ class ThemeTranslationsFactoryTest extends TestCase
 
     private $translations;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->themeProviderMock = $this->getMockBuilder('PrestaShopBundle\Translation\Provider\ThemeProvider')
             ->disableOriginalConstructor()
@@ -231,7 +231,6 @@ class ThemeTranslationsFactoryTest extends TestCase
 
         return $providerMock;
     }
-
 
     protected function assertPropertiesTranslations($locale)
     {

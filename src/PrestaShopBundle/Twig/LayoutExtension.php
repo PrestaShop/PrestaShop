@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Twig;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template.

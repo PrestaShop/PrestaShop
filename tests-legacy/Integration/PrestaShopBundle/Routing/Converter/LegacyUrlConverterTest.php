@@ -26,10 +26,10 @@
 
 namespace LegacyTests\Integration\PrestaShopBundle\Routing\Converter;
 
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use LegacyTests\Integration\PrestaShopBundle\Test\LightWebTestCase;
 use Link;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use ReflectionClass;
 
 /**
@@ -40,7 +40,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /** @var Link */
     private $link;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->initContainerInstance();
@@ -267,6 +267,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
         $caughtException = null;
         $caughtExceptionMessage = '';
+
         try {
             $parameters = [
                 'controller' => $controller,
@@ -440,7 +441,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
             $parameters['token'],
             $parameters['_token']
         );
-        
+
         if (null !== $ignoredParameters) {
             foreach ($ignoredParameters as $ignoredParameter) {
                 unset($parameters[$ignoredParameter]);

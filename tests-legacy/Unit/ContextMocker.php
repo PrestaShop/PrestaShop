@@ -26,6 +26,7 @@
 
 namespace LegacyTests\Unit;
 
+use Address;
 use Cache;
 use Carrier;
 use Cart;
@@ -33,16 +34,17 @@ use CartRule;
 use Configuration;
 use Context;
 use Currency;
+use Customer;
 use Language;
 use Link;
+use ObjectModel;
+use Pack;
 use Phake;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Product;
 use Shop;
-use Smarty;
 use SpecificPrice;
 use Tools;
-use Pack;
 
 /**
  * This helper class provides methods to initialize context for front controller tests
@@ -64,7 +66,6 @@ use Pack;
  */
 class ContextMocker
 {
-
     /**
      * @var \Context
      */
@@ -78,6 +79,8 @@ class ContextMocker
      */
     public function mockContext()
     {
+        global $smarty;
+
         // need to reset loooot of things
         Product::flushPriceCache();
         SpecificPrice::flushCache();
@@ -92,9 +95,12 @@ class ContextMocker
         SymfonyContainer::resetStaticCache();
         Pack::resetStaticCache();
         Tools::$round_mode = null;
+        Customer::resetAddressCache();
+        Address::resetStaticCache();
+        ObjectModel::resetStaticCache();
 
         $this->contextBackup = Context::getContext();
-        $context             = clone($this->contextBackup);
+        $context             = clone $this->contextBackup;
         Context::setInstanceForTesting($context);
         $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
@@ -110,7 +116,7 @@ class ContextMocker
             ? 'https://' : 'http://';
         $context->link     = new Link($protocol_link, $protocol_content);
         $context->currency = new Currency(1, 1, 1);
-        $context->smarty   = new Smarty();
+        $context->smarty   = $smarty;
 
         return $this;
     }

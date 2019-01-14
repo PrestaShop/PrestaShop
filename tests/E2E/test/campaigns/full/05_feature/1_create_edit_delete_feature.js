@@ -11,17 +11,23 @@ let productData = {
   price: '5',
   image_name: 'image_test.jpg',
   reference: 'feat',
-  feature: {
-    name: 'Feature',
-    value: 'Feature Value'
-  }
+  feature: [
+    {
+      name: 'Feature',
+      value: 'Value 1'
+    }, {
+      name: 'Feature',
+      value: 'Value 2'
+    }, {
+      name: 'Feature',
+      value: 'Value 3'
+    }
+  ]
 };
 
 let featureData = {
   name: 'Feature',
-  values: {
-    1: 'Feature Value'
-  }
+  values: ['Value 1', 'Value 2', 'Value 3']
 };
 
 require('../../high/05_feature/1_create_edit_delete_feature');

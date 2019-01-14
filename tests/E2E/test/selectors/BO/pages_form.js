@@ -3,9 +3,9 @@ module.exports = {
     calendar_form: '//*[@id="calendar_form"]',
     Orders: {
       order_form: '//*[@id="form-order"]',
-      invoice_form: '//*[@id="main-div"]//form[@name="generate_by_date"]',
+      status_block: '//*[@id="by-status-block"]',
       order_slip_form: '//*[@id="form-order_slip"]',
-      delivery_form: '//*[@id="delivery_pdf_fieldset"]',
+      delivery_pdf_fieldset: '//*[@id="delivery_pdf_fieldset"]',
       shopping_cart_form: '//*[@id="form-cart"]',
     },
     Catalog: {
@@ -99,7 +99,7 @@ module.exports = {
       employee_form: '//*[@id="form-employee"]', //team page
       profiles_form: '//*[@id="form-profile"]',
       permissions_form: '//*[@id="access_form"]',
-      request_sql_form: '//*[@id="form-request_sql"]', //database page
+      request_sql_form: '//*[@id="sql_request_grid_panel"]', //database page
       log_form: '//*[@id="logs_grid_panel"]',
       webservice_form: '//*[@id="form-webservice_account"]',
       multistore_form: '//*[@id="form-shop_group"]',

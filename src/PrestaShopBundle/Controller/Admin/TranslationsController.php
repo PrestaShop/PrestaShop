@@ -28,11 +28,11 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Admin controller for the International pages.

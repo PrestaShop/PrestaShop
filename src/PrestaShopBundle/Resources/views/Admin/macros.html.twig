@@ -89,19 +89,49 @@
 {% endmacro %}
 
 {# Show form widget with errors rendered below it #}
-{% macro form_widget_with_error(form, vars) %}
+{% macro form_widget_with_error(form, vars, extraVars) %}
   {% set vars = vars|default({}) %}
-  {% set attr = vars.attr|default({}) %}
-  {% set errors = form.vars.errors %}
-
-  {% set attr = attr|merge({'class': (attr.class is defined ? attr.class : '') ~ (errors|length > 0 ? ' is-invalid' : '')} ) %}
-  {% set vars = vars|merge({'attr': attr}) %}
+  {% set extraVars = extraVars|default({}) %}
 
   {{ form_widget(form, vars) }}
 
+  {% if extraVars.help is defined %}
+    <small class="form-text">{{ extraVars.help }}</small>
+  {% endif %}
+
   {% for error in form.vars.errors %}
-    <div class="invalid-feedback">
+    <div class="text-danger">
       {{ error.message }}
     </div>
   {% endfor %}
+{% endmacro %}
+
+ {#
+  Helper function to render most common structure for single input
+
+  @param form - form view to render
+  @param vars - custom vars that are passed to form_widget
+  @param form - parameters that are not related to form_widget, but are needed for input (label, help text & etc.)
+ #}
+{% macro form_group_row(form, vars, extraVars) %}
+  {% import '@PrestaShop/Admin/macros.html.twig' as self %}
+
+  {% set class = extraVars.class|default('') %}
+
+  <div class="form-group row {{ class }}">
+    {% set extraVars = extraVars|default({}) %}
+
+    {% if extraVars.label is defined %}
+      <label for="{{ form.vars.id }}" class="form-control-label">
+        {% if form.vars.required %}
+          <span class="text-danger">*</span>
+        {% endif %}
+        {{ extraVars.label }}
+      </label>
+    {% endif %}
+
+    <div class="col-sm">
+      {{ self.form_widget_with_error(form, vars, extraVars) }}
+    </div>
+  </div>
 {% endmacro %}

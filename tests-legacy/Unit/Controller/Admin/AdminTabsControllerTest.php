@@ -26,18 +26,18 @@
 
 namespace LegacyTests\Unit\Controller\Admin;
 
+use AdminTabsController;
+use DbQuery;
 use LegacyTests\TestCase\UnitTestCase;
 use Phake;
-use Tools;
 use Tab;
-use DbQuery;
-use AdminTabsController;
+use Tools;
 
 class AdminTabsControllerTest extends UnitTestCase
 {
     private $controller;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

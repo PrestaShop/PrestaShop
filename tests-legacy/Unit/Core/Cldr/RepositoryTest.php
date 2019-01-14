@@ -26,19 +26,19 @@
 
 namespace LegacyTests\Unit\Core\Cldr;
 
-use LegacyTests\TestCase\UnitTestCase;
+use ICanBoogie\CLDR\Currency;
 use ICanBoogie\CLDR\FileProvider;
 use ICanBoogie\CLDR\Repository;
 use ICanBoogie\CLDR\RunTimeProvider;
 use ICanBoogie\CLDR\WebProvider;
-use ICanBoogie\CLDR\Currency;
+use LegacyTests\TestCase\UnitTestCase;
 
 class RepositoryTest extends UnitTestCase
 {
     private $locale;
     private $region;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->cldrCacheFolder = _PS_CACHE_DIR_.'cldr-test';
         $this->locale = 'fr';

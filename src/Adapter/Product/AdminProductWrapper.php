@@ -26,31 +26,31 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use AdminProductsController;
 use Attachment;
+use Category;
+use Combination;
+use Configuration;
+use Context;
+use Customer;
+use Db;
+use Hook;
+use Image;
+use Language;
+use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShopBundle\Utils\FloatParser;
-use SpecificPrice;
-use Customer;
-use Combination;
-use Image;
-use SpecificPriceRule;
 use Product;
 use ProductDownload;
-use AdminProductsController;
+use Shop;
+use ShopUrl;
+use SpecificPrice;
+use SpecificPriceRule;
+use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
-use StockAvailable;
-use Hook;
 use Validate;
-use Db;
-use Shop;
-use Language;
-use ObjectModel;
-use Configuration;
-use Context;
-use ShopUrl;
-use Category;
 
 /**
  * Admin controller wrapper for new Architecture, about Product admin controller.

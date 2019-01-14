@@ -27,8 +27,8 @@
 namespace LegacyTests\Unit\Core\Cart\Adding\CartRule;
 
 use Configuration;
-use Product;
 use LegacyTests\Unit\Core\Cart\AbstractCartTest;
+use Product;
 
 class AddStandardProductTest extends AbstractCartTest
 {

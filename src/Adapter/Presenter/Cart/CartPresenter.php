@@ -26,21 +26,21 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
+use Cart;
+use CartRule;
+use Configuration;
+use Context;
+use Hook;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
-use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use Context;
-use Cart;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
-use Configuration;
 use Symfony\Component\Translation\TranslatorInterface;
 use TaxConfiguration;
-use CartRule;
 use Tools;
-use Hook;
 
 class CartPresenter implements PresenterInterface
 {
@@ -215,10 +215,12 @@ class CartPresenter implements PresenterInterface
                                                 $field['image'] = $this->imageRetriever->getCustomizationImage(
                                                     $data['value']
                                                 );
+
                                                 break;
                                             case Product::CUSTOMIZE_TEXTFIELD:
                                                 $field['type'] = 'text';
                                                 $field['text'] = $data['value'];
+
                                                 break;
                                             default:
                                                 $field['type'] = null;
@@ -460,12 +462,12 @@ class CartPresenter implements PresenterInterface
             'vouchers' => $vouchers,
             'discounts' => $discounts,
             'minimalPurchase' => $minimalPurchase,
-            'minimalPurchaseRequired' => ($this->priceFormatter->convertAmount($productsTotalExcludingTax) < $minimalPurchase) ?
+            'minimalPurchaseRequired' => ($productsTotalExcludingTax < $minimalPurchase) ?
                 $this->translator->trans(
                     'A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).',
                     array(
-                        '%amount%' => $this->priceFormatter->convertAndFormat($minimalPurchase),
-                        '%total%' => $this->priceFormatter->convertAndFormat($productsTotalExcludingTax),
+                        '%amount%' => $this->priceFormatter->format($minimalPurchase),
+                        '%total%' => $this->priceFormatter->format($productsTotalExcludingTax),
                     ),
                     'Shop.Theme.Checkout'
                 ) :

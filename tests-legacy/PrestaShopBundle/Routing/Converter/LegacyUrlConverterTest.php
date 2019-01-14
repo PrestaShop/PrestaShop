@@ -29,8 +29,8 @@ namespace LegacyTests\PrestaShopBundle\Routing\Converter;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Routing\Converter\Exception\ArgumentException;
 use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
-use PrestaShopBundle\Routing\Converter\RouterProvider;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
+use PrestaShopBundle\Routing\Converter\RouterProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
@@ -160,6 +160,7 @@ class LegacyUrlConverterTest extends TestCase
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
 
         $caughtException = null;
+
         try {
             $converter->convertByParameters([
                 'controller' => 'AdminProducts',
@@ -476,7 +477,6 @@ class LegacyUrlConverterTest extends TestCase
                 )
                 ->willReturn($routePath);
         }
-
 
         return $mockRouter;
     }

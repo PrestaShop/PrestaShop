@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer;
 
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
+use Manufacturer;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use Symfony\Component\Translation\TranslatorInterface;
-use Manufacturer;
 
 class ManufacturerProductSearchProvider implements ProductSearchProviderInterface
 {

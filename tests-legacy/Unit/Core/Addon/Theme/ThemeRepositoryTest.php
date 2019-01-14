@@ -26,11 +26,11 @@
 
 namespace LegacyTests\Core\Addon;
 
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\Filesystem\Filesystem;
-use PHPUnit\Framework\TestCase;
 use Phake;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ThemeRepositoryTest extends TestCase
 {

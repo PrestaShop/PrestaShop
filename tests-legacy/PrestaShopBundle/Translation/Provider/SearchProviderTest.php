@@ -26,8 +26,8 @@
 
 namespace LegacyTests\PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Translation\Provider\SearchProvider;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Translation\Provider\SearchProvider;
 
 /**
  * @group sf
@@ -38,7 +38,7 @@ class SearchProviderTest extends TestCase
     private $provider;
     private static $resourcesDir;
 
-    public function setUp()
+    protected function setUp()
     {
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
             ->getMock();

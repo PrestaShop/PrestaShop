@@ -33,14 +33,13 @@ use CartRule;
 use Configuration;
 use Country;
 use Db;
+use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use RangePrice;
 use State;
-use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use Zone;
 
 abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 {
-
     const ZONE_FIXTURES = [
         1 => [
             'name' => 'zone #1',
@@ -148,7 +147,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
      */
     protected $addresses = [];
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -177,7 +176,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         $this->cart->id_carrier          = 0;
         $this->cart->id_address_delivery = 0;

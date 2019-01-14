@@ -25,11 +25,7 @@ scenario('Display all product', () => {
       return promise
         .then(() => client.isVisible(ProductList.pagination_products))
         .then(() => client.getProductsNumber(ProductList.pagination_products))
-        .then(() => {
-          if (global.ps_mode_dev) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        });
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
 
     test('should set "100" to items per page ', () => {

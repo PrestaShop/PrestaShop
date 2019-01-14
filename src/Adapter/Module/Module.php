@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Module as LegacyModule;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
-use Module as LegacyModule;
 
 /**
  * This class is the interface to the legacy Module class.
@@ -405,6 +405,7 @@ class Module implements ModuleInterface
             if (file_exists($logo_path)) {
                 $this->attributes->set('img', __PS_BASE_URI__ . basename(_PS_MODULE_DIR_) . '/' . $this->get('name') . '/' . $logo);
                 $this->attributes->set('logo', $logo);
+
                 break;
             }
         }

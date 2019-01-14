@@ -28,15 +28,14 @@ namespace LegacyTests\Unit\Core\Cart\Adding\CartRule;
 
 use Configuration;
 use Customization;
-use Product;
 use LegacyTests\Unit\Core\Cart\AbstractCartTest;
+use Product;
 
 class AddCustomizationTest extends AbstractCartTest
 {
-
     protected $customizations = [];
 
-    public function tearDown()
+    protected function tearDown()
     {
         foreach ($this->customizations as $customization) {
             $customization->delete();
@@ -116,5 +115,4 @@ class AddCustomizationTest extends AbstractCartTest
 
         Configuration::set('PS_ORDER_OUT_OF_STOCK', $oldOrderOutOfStock);
     }
-
 }

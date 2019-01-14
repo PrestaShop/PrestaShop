@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\ORM\EntityManagerInterface;
 
 class UpdateSchemaCommand extends ContainerAwareCommand
 {
@@ -216,6 +216,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                 $conn->executeQuery($sql);
             } catch (\Exception $e) {
                 $conn->rollBack();
+
                 throw($e);
             }
         }

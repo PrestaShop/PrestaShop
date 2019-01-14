@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Integration\classes;
 
-use LegacyTests\TestCase\IntegrationTestCase;
 use Configuration;
+use LegacyTests\TestCase\IntegrationTestCase;
 
 class ConfigurationCoreTest extends IntegrationTestCase
 {
@@ -60,7 +60,7 @@ class ConfigurationCoreTest extends IntegrationTestCase
         }
     }
 
-    public function teardown()
+    protected function teardown()
     {
     }
 

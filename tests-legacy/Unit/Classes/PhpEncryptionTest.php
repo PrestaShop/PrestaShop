@@ -34,7 +34,7 @@ class PhpEncryptionTest extends TestCase
     const FOO = 'foo';
     private $engine;
 
-    public function setUp()
+    protected function setUp()
     {
         $randomKey = PhpEncryption::createNewRandomKey();
         $this->engine = new PhpEncryption($randomKey);

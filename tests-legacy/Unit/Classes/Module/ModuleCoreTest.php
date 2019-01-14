@@ -49,7 +49,7 @@ class ModuleCoreTest extends TestCase
 									</div>
 								</div>';
 
-    public function setUp()
+    protected function setUp()
     {
         if (!defined('_PS_VERSION_')) {
             define('_PS_VERSION_', '1.6.1.0');

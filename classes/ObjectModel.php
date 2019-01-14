@@ -186,6 +186,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
+     * reset static cache (eg unit testing purpose).
+     */
+    public static function resetStaticCache()
+    {
+        static::$loaded_classes = array();
+    }
+
+    /**
      * Returns object validation rules (fields validity).
      *
      * @param string $class Child class name for static use (optional)
@@ -537,6 +545,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $this->date_upd = date('Y-m-d H:i:s');
         }
 
+        $id_shop_list = Shop::getCompleteListOfShopsID();
+
         if (Shop::isTableAssociated($this->def['table'])) {
             $id_shop_list = Shop::getContextListShopID();
             if (count($this->id_shop_list)) {
@@ -574,7 +584,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         if (!empty($this->def['multilang'])) {
             $fields = $this->getFieldsLang();
             if ($fields && is_array($fields)) {
-                $shops = Shop::getCompleteListOfShopsID();
                 $asso = Shop::getAssoTable($this->def['table'] . '_lang');
                 foreach ($fields as $field) {
                     foreach (array_keys($field) as $key) {
@@ -585,7 +594,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     $field[$this->def['primary']] = (int) $this->id;
 
                     if ($asso !== false && $asso['type'] == 'fk_shop') {
-                        foreach ($shops as $id_shop) {
+                        foreach ($id_shop_list as $id_shop) {
                             $field['id_shop'] = (int) $id_shop;
                             $result &= Db::getInstance()->insert($this->def['table'] . '_lang', $field);
                         }
@@ -1313,7 +1322,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
-        if (isset($this->{$ws_params_attribute_name}['retrieveData']) && isset($this->{$ws_params_attribute_name}['retrieveData']['retrieveMethod'])) {
+        if (isset($this->{$ws_params_attribute_name}['retrieveData'], $this->{$ws_params_attribute_name}['retrieveData']['retrieveMethod'])) {
             unset($default_resource_parameters['retrieveData']['retrieveMethod']);
         }
 
@@ -1741,7 +1750,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public function isMultiShopField($field)
     {
-        return isset($this->def['fields'][$field]) && isset($this->def['fields'][$field]['shop']) && $this->def['fields'][$field]['shop'];
+        return !empty($this->def['fields'][$field]['shop']);
     }
 
     /**

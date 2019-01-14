@@ -53,7 +53,7 @@ abstract class ApiTestCase extends WebTestCase
      */
     protected static $container;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -72,7 +72,7 @@ abstract class ApiTestCase extends WebTestCase
         self::$client = $client;
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
 
@@ -252,12 +252,15 @@ abstract class ApiTestCase extends WebTestCase
         switch ($expectedStatusCode) {
             case 200:
                 $message = 'It should return a response with "OK" Status.';
+
                 break;
             case 400:
                 $message = 'It should return a response with "Bad Request" Status.';
+
                 break;
             case 404:
                 $message = 'It should return a response with "Not Found" Status.';
+
                 break;
 
             default:

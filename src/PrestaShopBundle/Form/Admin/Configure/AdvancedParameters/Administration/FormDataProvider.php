@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration;
-use PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration;
 use PrestaShop\PrestaShop\Adapter\GeneralConfiguration;
+use PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**

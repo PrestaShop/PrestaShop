@@ -26,11 +26,11 @@
 
 namespace LegacyTests\PrestaShopBundle\Translation\Extractor;
 
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\PhpDumper;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @group sf
@@ -52,7 +52,7 @@ class ThemeExtractorTest extends KernelTestCase
         self::$xliffFolder = self::$rootDir.'/translations';
     }
 
-    public function setUp()
+    protected function setUp()
     {
         self::bootKernel();
 
@@ -64,7 +64,7 @@ class ThemeExtractorTest extends KernelTestCase
         $this->themeExtractor->setThemeProvider($themeProvider);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         if (file_exists(self::$legacyFolder)) {
             $this->filesystem->remove(self::$legacyFolder);

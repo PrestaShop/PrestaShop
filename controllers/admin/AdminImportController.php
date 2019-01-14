@@ -193,6 +193,7 @@ class AdminImportControllerCore extends AdminController
                     'depends_on_stock' => 0,
                     'available_date' => date('Y-m-d'),
                 );
+
                 break;
 
             case $this->entities[$this->trans('Categories', array(), 'Admin.Global')]:
@@ -223,6 +224,7 @@ class AdminImportControllerCore extends AdminController
                     'parent' => Configuration::get('PS_HOME_CATEGORY'),
                     'link_rewrite' => '',
                 );
+
                 break;
 
             case $this->entities[$this->trans('Products', array(), 'Admin.Global')]:
@@ -365,6 +367,7 @@ class AdminImportControllerCore extends AdminController
                     'depends_on_stock' => 0,
                     'is_virtual' => 0,
                 );
+
                 break;
 
             case $this->entities[$this->trans('Customers', array(), 'Admin.Global')]:
@@ -396,6 +399,7 @@ class AdminImportControllerCore extends AdminController
                     'active' => '1',
                     'id_shop' => Configuration::get('PS_SHOP_DEFAULT'),
                 );
+
                 break;
 
             case $this->entities[$this->trans('Addresses', array(), 'Admin.Global')]:
@@ -440,6 +444,7 @@ class AdminImportControllerCore extends AdminController
                     'alias' => 'Alias',
                     'postcode' => 'X',
                 );
+
                 break;
             case $this->entities[$this->trans('Brands', array(), 'Admin.Global')]:
             case $this->entities[$this->trans('Suppliers', array(), 'Admin.Global')]:
@@ -472,6 +477,7 @@ class AdminImportControllerCore extends AdminController
                 self::$default_values = array(
                     'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
                 );
+
                 break;
             case $this->entities[$this->trans('Alias', array(), 'Admin.Shopparameters.Feature')]:
                 //Overwrite required_fields
@@ -489,6 +495,7 @@ class AdminImportControllerCore extends AdminController
                 self::$default_values = array(
                     'active' => '1',
                 );
+
                 break;
             case $this->entities[$this->trans('Store contacts', array(), 'Admin.Advparameters.Feature')]:
                 self::$validators['hours'] = array('AdminImportController', 'split');
@@ -529,6 +536,7 @@ class AdminImportControllerCore extends AdminController
                 self::$default_values = array(
                     'active' => '1',
                 );
+
                 break;
         }
 
@@ -563,6 +571,7 @@ class AdminImportControllerCore extends AdminController
                         'discount_rate' => '0',
                         'is_template' => '0',
                     );
+
                     break;
                 case $this->entities[$this->trans('Supply Order Details', array(), 'Admin.Advparameters.Feature')]:
                     // required fields
@@ -588,6 +597,7 @@ class AdminImportControllerCore extends AdminController
                         'discount_rate' => '0',
                         'tax_rate' => '0',
                     );
+
                     break;
             }
         }
@@ -758,21 +768,28 @@ class AdminImportControllerCore extends AdminController
             switch ($_FILES['file']['error']) {
                 case UPLOAD_ERR_INI_SIZE:
                     $_FILES['file']['error'] = $this->trans('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.', array(), 'Admin.Advparameters.Notification');
+
                     break;
                 case UPLOAD_ERR_FORM_SIZE:
                     $_FILES['file']['error'] = $this->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', array(), 'Admin.Advparameters.Notification')
                     . '<br/><a href="' . $this->context->link->getAdminLink('AdminMeta') . '" >
 					<code>php_value post_max_size 20M</code> ' .
                     $this->trans('(click to open "Generators" page)', array(), 'Admin.Advparameters.Notification') . '</a>';
+
                     break;
+
                 break;
                 case UPLOAD_ERR_PARTIAL:
                     $_FILES['file']['error'] = $this->trans('The uploaded file was only partially uploaded.', array(), 'Admin.Advparameters.Notification');
+
                     break;
+
                 break;
                 case UPLOAD_ERR_NO_FILE:
                     $_FILES['file']['error'] = $this->trans('No file was uploaded.', array(), 'Admin.Advparameters.Notification');
+
                     break;
+
                 break;
             }
         } elseif (!preg_match('#([^\.]*?)\.(csv|xls[xt]?|o[dt]s)$#is', $_FILES['file']['name'])) {
@@ -857,6 +874,7 @@ class AdminImportControllerCore extends AdminController
                     'href' => '#',
                     'desc' => $this->trans('Import .CSV data', array(), 'Admin.Advparameters.Feature'),
                 );
+
                 break;
         }
     }
@@ -969,7 +987,7 @@ class AdminImportControllerCore extends AdminController
                 $uniqid_path = _PS_UPLOAD_DIR_ . uniqid();
             } while (file_exists($uniqid_path));
             file_put_contents($uniqid_path, $field);
-            $fd = fopen($uniqid_path, 'r');
+            $fd = fopen($uniqid_path, 'rb');
         }
 
         if ($fd === false) {
@@ -1160,18 +1178,23 @@ class AdminImportControllerCore extends AdminController
             case 'products':
                 $image_obj = new Image($id_image);
                 $path = $image_obj->getPathForCreation();
+
                 break;
             case 'categories':
                 $path = _PS_CAT_IMG_DIR_ . (int) $id_entity;
+
                 break;
             case 'manufacturers':
                 $path = _PS_MANU_IMG_DIR_ . (int) $id_entity;
+
                 break;
             case 'suppliers':
                 $path = _PS_SUPP_IMG_DIR_ . (int) $id_entity;
+
                 break;
             case 'stores':
                 $path = _PS_STORE_IMG_DIR_ . (int) $id_entity;
+
                 break;
         }
 
@@ -1312,6 +1335,7 @@ class AdminImportControllerCore extends AdminController
 
             if (count($line) == 1 && $line[0] == null) {
                 $this->warnings[] = $this->trans('There is an empty row in the file that won\'t be imported.', array(), 'Admin.Advparameters.Notification');
+
                 continue;
             }
 
@@ -1591,6 +1615,7 @@ class AdminImportControllerCore extends AdminController
 
             if (count($line) == 1 && $line[0] == null) {
                 $this->warnings[] = $this->trans('There is an empty row in the file that won\'t be imported.', array(), 'Admin.Advparameters.Notification');
+
                 continue;
             }
 
@@ -1642,6 +1667,7 @@ class AdminImportControllerCore extends AdminController
             // skip elements until reaches offset
             if ($i < $offset) {
                 ++$i;
+
                 continue;
             }
 
@@ -1821,7 +1847,7 @@ class AdminImportControllerCore extends AdminController
             if ($product->tax_rate) {
                 $product->price = (float) number_format($product->price / (1 + $product->tax_rate / 100), 6, '.', '');
             }
-        } elseif (isset($product->price_tin) && isset($product->price_tex)) {
+        } elseif (isset($product->price_tin, $product->price_tex)) {
             $product->price = $product->price_tex;
         }
 
@@ -2131,6 +2157,7 @@ class AdminImportControllerCore extends AdminController
                         $is_tag_added = Tag::addTags($key, $product->id, $tags, $this->multiple_value_separator);
                         if (!$is_tag_added) {
                             $this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->trans('Tags list is invalid', array(), 'Admin.Advparameters.Notification'));
+
                             break;
                         }
                     }
@@ -2149,6 +2176,7 @@ class AdminImportControllerCore extends AdminController
                                 array($str),
                                 'Admin.Notifications.Error'
                             ));
+
                             break;
                         }
                     }
@@ -2402,6 +2430,7 @@ class AdminImportControllerCore extends AdminController
 
             if (count($line) == 1 && $line[0] == null) {
                 $this->warnings[] = $this->trans('There is an empty row in the file that won\'t be imported.', array(), 'Admin.Advparameters.Notification');
+
                 continue;
             }
 
@@ -2537,6 +2566,7 @@ class AdminImportControllerCore extends AdminController
                         foreach ($images as $row) {
                             if ($row['position'] == (int) $position) {
                                 $id_image[] = (int) $row['id_image'];
+
                                 break;
                             }
                         }
@@ -2889,6 +2919,7 @@ class AdminImportControllerCore extends AdminController
 
             if (count($line) == 1 && $line[0] == null) {
                 $this->warnings[] = $this->trans('There is an empty row in the file that won\'t be imported.', array(), 'Admin.Advparameters.Notification');
+
                 continue;
             }
 
@@ -2947,6 +2978,7 @@ class AdminImportControllerCore extends AdminController
                     if (Validate::isLoadedObject($my_group)) {
                         $customer_groups[] = (int) $group;
                     }
+
                     continue;
                 }
                 $my_group = Group::searchByName($group);
@@ -3145,6 +3177,7 @@ class AdminImportControllerCore extends AdminController
 
             if (count($line) == 1 && $line[0] == null) {
                 $this->warnings[] = $this->trans('There is an empty row in the file that won\'t be imported.', array(), 'Admin.Advparameters.Notification');
+
                 continue;
             }
 
@@ -3461,6 +3494,7 @@ class AdminImportControllerCore extends AdminController
 
             if (count($line) == 1 && $line[0] == null) {
                 $this->warnings[] = $this->trans('There is an empty row in the file that won\'t be imported.', array(), 'Admin.Advparameters.Notification');
+
                 continue;
             }
 
@@ -3574,6 +3608,7 @@ class AdminImportControllerCore extends AdminController
 
             if (count($line) == 1 && $line[0] == null) {
                 $this->warnings[] = $this->trans('There is an empty row in the file that won\'t be imported.', array(), 'Admin.Advparameters.Notification');
+
                 continue;
             }
 
@@ -3683,6 +3718,7 @@ class AdminImportControllerCore extends AdminController
 
             if (count($line) == 1 && $line[0] == null) {
                 $this->warnings[] = $this->trans('There is an empty row in the file that won\'t be imported.', array(), 'Admin.Advparameters.Notification');
+
                 continue;
             }
 
@@ -3759,6 +3795,7 @@ class AdminImportControllerCore extends AdminController
 
             if (count($line) == 1 && $line[0] == null) {
                 $this->warnings[] = $this->trans('There is an empty row in the file that won\'t be imported.', array(), 'Admin.Advparameters.Notification');
+
                 continue;
             }
 
@@ -4240,7 +4277,7 @@ class AdminImportControllerCore extends AdminController
             if (!mb_check_encoding(file_get_contents($file), 'UTF-8')) {
                 $this->convert = true;
             }
-            $handle = fopen($file, 'r');
+            $handle = fopen($file, 'rb');
         }
 
         if (!$handle) {
@@ -4323,6 +4360,7 @@ class AdminImportControllerCore extends AdminController
                         unlink(_PS_CAT_IMG_DIR_ . $d);
                     }
                 }
+
                 break;
             case $this->entities[$this->trans('Products', array(), 'Admin.Global')]:
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product`');
@@ -4364,6 +4402,7 @@ class AdminImportControllerCore extends AdminController
                 if (!file_exists(_PS_PROD_IMG_DIR_)) {
                     mkdir(_PS_PROD_IMG_DIR_);
                 }
+
                 break;
             case $this->entities[$this->trans('Combinations', array(), 'Admin.Global')]:
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute`');
@@ -4378,12 +4417,15 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_combination`');
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_image`');
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'stock_available` WHERE id_product_attribute != 0');
+
                 break;
             case $this->entities[$this->trans('Customers', array(), 'Admin.Global')]:
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'customer`');
+
                 break;
             case $this->entities[$this->trans('Addresses', array(), 'Admin.Global')]:
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'address`');
+
                 break;
             case $this->entities[$this->trans('Brands', array(), 'Admin.Global')]:
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'manufacturer`');
@@ -4394,6 +4436,7 @@ class AdminImportControllerCore extends AdminController
                         unlink(_PS_MANU_IMG_DIR_ . $d);
                     }
                 }
+
                 break;
             case $this->entities[$this->trans('Suppliers', array(), 'Admin.Global')]:
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'supplier`');
@@ -4404,9 +4447,11 @@ class AdminImportControllerCore extends AdminController
                         unlink(_PS_SUPP_IMG_DIR_ . $d);
                     }
                 }
+
                 break;
             case $this->entities[$this->trans('Alias', array(), 'Admin.Shopparameters.Feature')]:
                 Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'alias`');
+
                 break;
         }
         Image::clearTmpDir();
@@ -4506,6 +4551,7 @@ class AdminImportControllerCore extends AdminController
                         Category::regenerateEntireNtree();
                     }
                     $clearCache = true;
+
                     break;
                 case $this->entities[$import_type = $this->trans('Products', array(), 'Admin.Global')]:
                     if (!defined('PS_MASS_PRODUCT_CREATION')) {
@@ -4514,31 +4560,39 @@ class AdminImportControllerCore extends AdminController
                     $moreStepLabels = array($this->trans('Linking Accessories...', array(), 'Admin.Advparameters.Notification'));
                     $doneCount += $this->productImport($offset, $limit, $crossStepsVariables, $validateOnly, $moreStep);
                     $clearCache = true;
+
                     break;
                 case $this->entities[$import_type = $this->trans('Customers', array(), 'Admin.Global')]:
                     $doneCount += $this->customerImport($offset, $limit, $validateOnly);
+
                     break;
                 case $this->entities[$import_type = $this->trans('Addresses', array(), 'Admin.Global')]:
                     $doneCount += $this->addressImport($offset, $limit, $validateOnly);
+
                     break;
                 case $this->entities[$import_type = $this->trans('Combinations', array(), 'Admin.Global')]:
                     $doneCount += $this->attributeImport($offset, $limit, $crossStepsVariables, $validateOnly);
                     $clearCache = true;
+
                     break;
                 case $this->entities[$import_type = $this->trans('Brands', array(), 'Admin.Global')]:
                     $doneCount += $this->manufacturerImport($offset, $limit, $validateOnly);
                     $clearCache = true;
+
                     break;
                 case $this->entities[$import_type = $this->trans('Suppliers', array(), 'Admin.Global')]:
                     $doneCount += $this->supplierImport($offset, $limit, $validateOnly);
                     $clearCache = true;
+
                     break;
                 case $this->entities[$import_type = $this->trans('Alias', array(), 'Admin.Shopparameters.Feature')]:
                     $doneCount += $this->aliasImport($offset, $limit, $validateOnly);
+
                     break;
                 case $this->entities[$import_type = $this->trans('Store contacts', array(), 'Admin.Advparameters.Feature')]:
                     $doneCount += $this->storeContactImport($offset, $limit, $validateOnly);
                     $clearCache = true;
+
                     break;
             }
 
@@ -4549,11 +4603,13 @@ class AdminImportControllerCore extends AdminController
                         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                             $doneCount += $this->supplyOrdersImport($offset, $limit, $validateOnly);
                         }
+
                         break;
                     case $this->entities[$import_type = $this->trans('Supply Order Details', array(), 'Admin.Advparameters.Feature')]:
                         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                             $doneCount += $this->supplyOrdersDetailsImport($offset, $limit, $crossStepsVariables, $validateOnly);
                         }
+
                         break;
                 }
             }

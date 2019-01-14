@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
  * This class is responsible of managing the data manipulated using forms

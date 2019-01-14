@@ -26,7 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Context;
 use Doctrine\Common\Cache\CacheProvider;
+use Employee;
+use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
@@ -35,9 +38,6 @@ use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
-use Module as LegacyModule;
-use Context;
-use Employee;
 use Tools;
 
 /**
@@ -392,10 +392,12 @@ class AdminModuleDataProvider implements ModuleInterface
                             }
                         }
                     }
+
                     break;
                 case 'name':
                     // exact given name (should return 0 or 1 result)
                     $search_result[] = $value;
+
                     break;
                 default:
                     // "the switch statement is considered a looping structure for the purposes of continue."

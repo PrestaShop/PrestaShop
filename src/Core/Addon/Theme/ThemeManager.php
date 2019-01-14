@@ -26,25 +26,25 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
-use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
-use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PrestaShopBundle\Service\TranslationService;
-use PrestaShopBundle\Translation\Provider\TranslationFinderTrait;
-use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Yaml\Parser;
-use Tools;
-use Shop;
 use Employee;
 use Exception;
+use Language;
+use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
+use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
+use PrestaShopBundle\Service\TranslationService;
+use PrestaShopBundle\Translation\Provider\TranslationFinderTrait;
 use PrestaShopException;
 use PrestaShopLogger;
-use Language;
+use Shop;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Yaml\Parser;
+use Tools;
 
 class ThemeManager implements AddonManagerInterface
 {
@@ -355,6 +355,7 @@ class ThemeManager implements AddonManagerInterface
         $theme = new Theme($theme_data);
         if (!$this->themeValidator->isValid($theme)) {
             $this->filesystem->remove($sandboxPath);
+
             throw new PrestaShopException(
                 $this->translator->trans('This theme is not valid for PrestaShop 1.7', [], 'Admin.Design.Notification')
             );
@@ -453,6 +454,7 @@ class ThemeManager implements AddonManagerInterface
                 $lang = $translationService->findLanguageByLocale($locale);
             } catch (Exception $exception) {
                 PrestaShopLogger::addLog('ThemeManager->importTranslationToDatabase() - Locale ' . $locale . ' does not exists');
+
                 continue;
             }
 

@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Command;
 
+use DOMDocument;
+use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use DOMDocument;
-use SimpleXMLElement;
 
 /**
  * This script will update the tax rule groups for virtual products from all EU localization packs.

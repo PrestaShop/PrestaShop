@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Meta;
 
-use PrestaShopException;
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopException;
 use ShopUrl;
 
 /**
@@ -86,6 +86,7 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         $errors = [];
+
         try {
             if ($this->validateConfiguration($configuration)) {
                 $this->mainShopUrl->domain = $configuration['domain'];

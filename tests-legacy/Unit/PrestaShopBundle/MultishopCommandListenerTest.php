@@ -28,8 +28,8 @@ namespace LegacyTests\Unit\PrestaShopBundle;
 
 use LegacyTests\TestCase\UnitTestCase;
 use LegacyTests\Unit\ContextMocker;
-use PrestaShopBundle\EventListener\MultishopCommandListener;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShopBundle\EventListener\MultishopCommandListener;
 use Shop;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -54,7 +54,7 @@ class MultishopCommandListenerTest extends UnitTestCase
      */
     protected $contextMocker;
 
-    public function setUp()
+    protected function setUp()
     {
 
         $this->contextMocker = new ContextMocker();
@@ -68,12 +68,11 @@ class MultishopCommandListenerTest extends UnitTestCase
         $this->multishopContext = $this->sfKernel->getContainer()->get('prestashop.adapter.shop.context');
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
         $this->contextMocker->resetContext();
     }
-
 
     public function testDefaultMultishopContext()
     {

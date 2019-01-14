@@ -26,9 +26,9 @@
 
 namespace LegacyTests\PrestaShopBundle\Translation\Provider;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Component\Filesystem\Filesystem;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @group sf
@@ -38,7 +38,7 @@ class ThemeProviderTest extends TestCase
     private $provider;
     private static $resourcesDir;
 
-    public function setUp()
+    protected function setUp()
     {
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
             ->getMock();

@@ -26,12 +26,12 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to create a product, with or without attribute field.
@@ -86,6 +86,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                             'name' => $this->categoryAdapter->getBreadCrumb($category->id),
                             'image' => $category->image,
                         ];
+
                         break;
 
                     default:
@@ -95,6 +96,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                             'name' => reset($product->name) . ' (ref:' . $product->reference . ')',
                             'image' => $product->image,
                         ];
+
                         break;
                 }
                 ++$i;

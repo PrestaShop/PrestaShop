@@ -26,17 +26,16 @@
 
 namespace LegacyTests\Unit\Core\Cart\Calculation\Products;
 
-use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use Configuration;
+use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 class CartGiftWrappingTest extends AbstractCartCalculationTest
 {
-
     const GIFT_WRAPPING_PRICE = 5.3;
     protected $previousGiftWrapping;
     protected $previousGiftWrappingPrice;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->previousGiftWrapping      = Configuration::get('PS_GIFT_WRAPPING');
@@ -45,7 +44,7 @@ class CartGiftWrappingTest extends AbstractCartCalculationTest
         Configuration::set('PS_GIFT_WRAPPING_PRICE', static::GIFT_WRAPPING_PRICE);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
         Configuration::set('PS_GIFT_WRAPPING', $this->previousGiftWrapping);

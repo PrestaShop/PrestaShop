@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Classes;
 
-use LegacyTests\TestCase\IntegrationTestCase;
 use Configuration;
+use LegacyTests\TestCase\IntegrationTestCase;
 use Search;
 
 class SearchCoreTest extends IntegrationTestCase

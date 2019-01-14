@@ -27,13 +27,12 @@
 namespace LegacyTests\Unit\Core\Cart\Calculation\Modes;
 
 use Configuration;
-use Order;
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
+use Order;
 use Tools;
 
 class RoundingTypeTest extends AbstractCartCalculationTest
 {
-
     /**
      * Order::ROUND_ITEM
      * Order::ROUND_LINE
@@ -41,7 +40,7 @@ class RoundingTypeTest extends AbstractCartCalculationTest
      */
     protected $defaultRoundingType;
 
-    public function setUp()
+    protected function setUp()
     {
         // using Configuration instead of Adapter\Configuration because of different behavior
         $this->defaultRoundingType = Configuration::get('PS_ROUND_TYPE');
@@ -49,7 +48,7 @@ class RoundingTypeTest extends AbstractCartCalculationTest
         parent::setUp();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         // using Configuration instead of Adapter\Configuration because of different behavior
         Configuration::set('PS_ROUND_TYPE', $this->defaultRoundingType);

@@ -228,7 +228,7 @@ class PrestaShopBackupCore
             $backupfile .= '.gz';
             $fp = @gzopen($backupfile, 'w');
         } else {
-            $fp = @fopen($backupfile, 'w');
+            $fp = @fopen($backupfile, 'wb');
         }
 
         if ($fp === false) {
@@ -298,6 +298,7 @@ class PrestaShopBackupCore
                                         } else {
                                             $s .= 'NULL,';
                                         }
+
                                         break;
                                     }
                                 }

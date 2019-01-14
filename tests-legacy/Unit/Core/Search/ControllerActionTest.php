@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Core\Search;
 
 use PHPUnit\Framework\TestCase;
@@ -37,7 +38,7 @@ class ControllerActionTest extends TestCase
      */
     public function testGetFromString($fqcn, $result)
     {
-        self::assertEquals($result, ControllerAction::fromString($fqcn));
+        $this->assertEquals($result, ControllerAction::fromString($fqcn));
     }
 
     /**

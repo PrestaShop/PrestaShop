@@ -23,11 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Core\Foundation;
 
-use PrestaShop\PrestaShop\Core\Foundation\Version;
-use PrestaShop\PrestaShop\Core\Foundation\Exception\InvalidVersionException;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\InvalidVersionException;
+use PrestaShop\PrestaShop\Core\Foundation\Version;
 
 class VersionTest extends TestCase
 {
@@ -53,7 +54,7 @@ class VersionTest extends TestCase
     const ANOTHER_MINOR_VERSION = 3;
     const ANOTHER_RELEASE_VERSION = 4;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->version = new Version(
             self::VERSION,

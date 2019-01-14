@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Twig;
 
+use Doctrine\Common\Util\Inflector;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Doctrine\Common\Util\Inflector;
 
 class TranslationsExtension extends \Twig_Extension
 {

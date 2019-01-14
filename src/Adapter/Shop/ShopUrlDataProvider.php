@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShopException;
-use Validate;
 use ShopUrl;
+use Validate;
 
 /**
  * Class ShopUrlDataProvider is responsible for providing data from shop_url table.

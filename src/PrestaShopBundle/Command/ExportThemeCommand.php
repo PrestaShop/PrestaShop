@@ -29,8 +29,8 @@ namespace PrestaShopBundle\Command;
 \Smarty_Autoloader::register();
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ExportThemeCommand extends ContainerAwareCommand

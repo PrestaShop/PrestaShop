@@ -23,11 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Adapter\Module;
 
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use LegacyTests\TestCase\UnitTestCase;
 use Phake;
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 
 class AdminModuleDataProviderTest extends UnitTestCase
 {
@@ -40,7 +41,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
     private $adminModuleDataProvider;
     private $moduleDataProviderS;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -185,7 +186,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->assertEquals($modules2, $modules);
     }
 
-    public function teardown()
+    protected function teardown()
     {
         parent::teardown();
 

@@ -28,12 +28,12 @@ namespace LegacyTests\Unit\Core\Foundation\Database;
 
 use LegacyTests\TestCase\UnitTestCase;
 use Phake;
-use PrestaShop\PrestaShop\Core\Foundation\Database\EntityRepository;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityMetaData;
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityRepository;
 
 class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         $mockEntityManager = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager');
 

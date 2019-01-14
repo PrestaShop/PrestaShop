@@ -26,16 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Db;
 use Doctrine\ORM\EntityManager;
+use Module as LegacyModule;
 use PhpParser;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
-use Db;
 use Validate;
-use Module as LegacyModule;
 
 /**
  * This class will provide data from DB / ORM about Module.
@@ -182,7 +182,21 @@ class ModuleDataProvider
     public function isInstalled($name)
     {
         // ToDo: Load list of all installed modules ?
-        return (bool) Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"');
+        return (bool) $this->getModuleIdByName($name);
+    }
+
+    /**
+     * Returns the Module Id
+     *
+     * @param string $name The technical module name
+     *
+     * @return int the Module Id, or 0 if not found
+     */
+    public function getModuleIdByName($name)
+    {
+        return (int) Db::getInstance()->getValue(
+            'SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"'
+        );
     }
 
     /**
@@ -205,6 +219,7 @@ class ModuleDataProvider
         }
 
         $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::PREFER_PHP7);
+
         try {
             $parser->parse(file_get_contents($file_path));
         } catch (PhpParser\Error $exception) {

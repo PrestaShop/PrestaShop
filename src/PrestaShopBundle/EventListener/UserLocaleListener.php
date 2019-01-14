@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Language;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class UserLocaleListener
 {

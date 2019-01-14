@@ -26,13 +26,12 @@
 
 namespace LegacyTests\Unit\Controller\FrontController;
 
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use LegacyTests\TestCase\IntegrationTestCase;
 use LegacyTests\Unit\ContextMocker;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
 class ProductControllerTest extends IntegrationTestCase
 {
-
     /**
      * @var ContextMocker
      */
@@ -40,7 +39,7 @@ class ProductControllerTest extends IntegrationTestCase
 
     private $controller;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->contextMocker = new ContextMocker();
@@ -48,7 +47,7 @@ class ProductControllerTest extends IntegrationTestCase
         $this->controller = new \ProductControllerCore();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
         $this->contextMocker->resetContext();

@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerProductSearchProvider;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerProductSearchProvider;
 
 class ManufacturerControllerCore extends ProductListingFrontController
 {
@@ -195,5 +195,23 @@ class ManufacturerControllerCore extends ProductListingFrontController
     public function getListingLabel()
     {
         return $this->label;
+    }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+        $breadcrumb['links'][] = [
+            'title' => $this->getTranslator()->trans('Brands', [], 'Shop.Theme.Global'),
+            'url' => $this->context->link->getPageLink('manufacturer', true),
+        ];
+
+        if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
+            $breadcrumb['links'][] = [
+                'title' => $this->manufacturer->name,
+                'url' => $this->context->link->getManufacturerLink($this->manufacturer),
+            ];
+        }
+
+        return $breadcrumb;
     }
 }

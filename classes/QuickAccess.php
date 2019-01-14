@@ -90,6 +90,7 @@ class QuickAccessCore extends ObjectModel
                 $url = Context::getContext()->shop->getBaseURL();
                 if (!$url) {
                     unset($quickAccess[$index]);
+
                     continue;
                 }
                 $quickAccess[$index]['link'] = $url;

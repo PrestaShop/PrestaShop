@@ -548,13 +548,6 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.shop.traffic_seo.meta:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        tags:
-            - { name: form.type }
-
     form.type.catalog.abstract_category:
         class: 'PrestaShopBundle\Form\Admin\Catalog\Category\AbstractCategoryType'
         abstract: true
@@ -664,5 +657,18 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.customer_required_fields").getChoices()'
+        tags:
+            - { name: form.type }
+
+    prestashop.bundle.form.admin.sell.customer.customer:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Customer\CustomerType'
+        arguments:
+            - '@=service("prestashop.adapter.form.choice_provider.gender_by_id_choice_provider").getChoices()'
+            - '@=service("prestashop.adapter.form.choice_provider.group_by_id_choice_provider").getChoices()'
+            - '@=service("prestashop.adapter.form.choice_provider.risk_by_id_choice_provider").getChoices()'
+            - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_CUSTOMER_OPTIN")'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }

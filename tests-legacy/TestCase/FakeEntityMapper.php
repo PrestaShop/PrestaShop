@@ -23,11 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\TestCase;
 
-use PrestaShop\PrestaShop\Adapter\EntityMapper;
 use Exception;
 use ObjectModel;
+use PrestaShop\PrestaShop\Adapter\EntityMapper;
 
 class FakeEntityMapper extends EntityMapper
 {
@@ -92,7 +93,6 @@ class FakeEntityMapper extends EntityMapper
             }
         }
     }
-
 
     private function buildCacheId($id, $class_name, $id_lang, $id_shop)
     {

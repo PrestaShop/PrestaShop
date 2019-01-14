@@ -27,14 +27,14 @@
 namespace LegacyTests\Unit\Core\Foundation\Database\EntityManager;
 
 use LegacyTests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager\QueryBuilder;
 use Phake;
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager\QueryBuilder;
 
 class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestCase
 {
     private $queryBuilder;
 
-    public function setUp()
+    protected function setUp()
     {
         $mockDb = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface');
 

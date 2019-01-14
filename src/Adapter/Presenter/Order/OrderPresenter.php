@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
-use Order;
 use Exception;
+use Order;
+use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 
 class OrderPresenter implements PresenterInterface
 {

@@ -55,8 +55,7 @@ class ServerRequirementsCheckerTest extends TestCase
      */
     private $mockedPhpExtensionChecker;
 
-
-    public function setUp()
+    protected function setUp()
     {
         $this->mockedTranslator = $this->createMock(TranslatorInterface::class);
         $this->mockedTranslator
@@ -67,7 +66,6 @@ class ServerRequirementsCheckerTest extends TestCase
         $this->mockedHostingInformation = $this->createMock(HostingInformation::class);
         $this->mockedPhpExtensionChecker = $this->createMock(PhpExtensionCheckerInterface::class);
     }
-
 
     public function testErrorIsReturnedWhenNonApacheWebServerIsUsed()
     {

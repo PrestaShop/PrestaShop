@@ -23,11 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
+use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
-use PrestaShopBundle\Translation\TranslatorComponent as Translator;
-use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 
 /**
  * Class ContextCore.
@@ -183,16 +183,19 @@ class ContextCore
                             if ($this->isMobile() && !$this->isTablet()) {
                                 $this->mobile_device = true;
                             }
+
                             break;
                         case 2: // Only for touchpads
                             if ($this->isTablet() && !$this->isMobile()) {
                                 $this->mobile_device = true;
                             }
+
                             break;
                         case 3: // For touchpad or mobile devices
                             if ($this->isMobile() || $this->isTablet()) {
                                 $this->mobile_device = true;
                             }
+
                             break;
                     }
                 }
@@ -250,8 +253,7 @@ class ContextCore
             }
         }
 
-        return isset($_SERVER['HTTP_USER_AGENT'])
-            && isset(Context::getContext()->cookie)
+        return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
             && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
             && !Context::getContext()->cookie->no_mobile;

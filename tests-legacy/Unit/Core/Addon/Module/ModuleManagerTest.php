@@ -26,10 +26,10 @@
 
 namespace LegacyTests\Core\Addon\Module;
 
-use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
-use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 
 class ModuleManagerTest extends TestCase
 {
@@ -47,7 +47,7 @@ class ModuleManagerTest extends TestCase
     private $employeeS;
     private $cacheClearerS;
 
-    public function setUp()
+    protected function setUp()
     {
         // Mocks
         $this->initMocks();
@@ -63,7 +63,7 @@ class ModuleManagerTest extends TestCase
         );
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         // destroy Mocks
         $this->destroyMocks();
@@ -309,7 +309,7 @@ class ModuleManagerTest extends TestCase
 
     private function mockCacheClearer()
     {
-        $this->cacheClearerS = $this->getMockBuilder(CacheClearer::class)
+        $this->cacheClearerS = $this->getMockBuilder(CacheClearerInterface::class)
             ->getMock();
     }
 

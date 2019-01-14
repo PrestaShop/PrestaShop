@@ -27,8 +27,8 @@
 namespace LegacyTests\Unit\Classes\Tax;
 
 use Address;
-use Phake;
 use LegacyTests\TestCase\UnitTestCase;
+use Phake;
 use Tax;
 use TaxCalculator;
 use TaxRulesTaxManager;

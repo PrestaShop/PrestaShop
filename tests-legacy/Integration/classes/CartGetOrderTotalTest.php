@@ -27,9 +27,6 @@
 
 namespace LegacyTests\Integration\classes;
 
-use LegacyTests\TestCase\IntegrationTestCase;
-use PHPUnit_Framework_Assert as Assert;
-use Exception;
 use Address;
 use Carrier;
 use Cart;
@@ -38,14 +35,17 @@ use Configuration;
 use Context;
 use Currency;
 use Db;
+use Exception;
 use Group;
-use Order;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\TestCase\IntegrationTestCase;
+use Order;
+use PHPUnit\Framework\Assert as Assert;
 use Product;
-use Tools;
 use Tax;
-use TaxRulesGroup;
 use TaxRule;
+use TaxRulesGroup;
+use Tools;
 
 class CartGetOrderTotalTest extends IntegrationTestCase
 {
@@ -90,7 +90,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      * Methods starting with get should cache their result for performance,
      * methods starting with make should create a new object each time.
      */
-
     private static function deactivateCurrentCartRules()
     {
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart_rule SET active = 0');
@@ -123,21 +122,27 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         switch ($modeStr) {
             case 'up':
                 $mode = PS_ROUND_UP;
+
                 break;
             case 'down':
                 $mode = PS_ROUND_DOWN;
+
                 break;
             case 'half_up':
                 $mode = PS_ROUND_HALF_UP;
+
                 break;
             case 'half_down':
                 $mode = PS_ROUND_HALF_DOWN;
+
                 break;
             case 'half_even':
                 $mode = PS_ROUND_HALF_DOWN;
+
                 break;
             case 'hald_odd':
                 $mode = PS_ROUND_HALF_ODD;
+
                 break;
             default:
                 throw new Exception(sprintf('Unknown rounding mode `%s`.', $modeStr));
@@ -155,12 +160,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         switch ($typeStr) {
             case 'item':
                 $type = Order::ROUND_ITEM;
+
                 break;
             case 'line':
                 $type = Order::ROUND_LINE;
+
                 break;
             case 'total':
                 $type = Order::ROUND_TOTAL;
+
                 break;
             default:
                 throw new Exception(sprintf('Unknown rounding type `%s`.', $typeStr));
@@ -239,6 +247,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $product->price = $price;
         $product->link_rewrite = Tools::link_rewrite($name);
         Assert::assertTrue($product->save());
+
         return $product;
     }
 
@@ -252,6 +261,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $address->alias = microtime().getmypid();
         $address->city = 'Levallois';
         Assert::assertTrue($address->save());
+
         return $address;
     }
 
@@ -262,6 +272,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cart->id_address_invoice = self::$id_address;
         Assert::assertTrue($cart->save());
         Context::getContext()->cart = $cart;
+
         return $cart;
     }
 
@@ -366,7 +377,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     /**
      * Provide sensible defaults for tests that don't specify them.
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -467,7 +478,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $id_carrier = self::getIdCarrier('free');
 
         $product = self::makeProduct('Yo Product', 10, self::getIdTaxRulesGroup(20));
-
 
         self::makeCartRule(5, 'before tax')->id;
         $cart = self::makeCart();

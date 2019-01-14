@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter;
 
-use Doctrine\Common\Util\Inflector;
-use ArrayObject;
-use ArrayIterator;
-use Iterator;
 use ArrayAccess;
+use ArrayIterator;
+use ArrayObject;
 use Countable;
+use Doctrine\Common\Util\Inflector;
+use Iterator;
 use JsonSerializable;
-use ReflectionException;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use RuntimeException;
 
@@ -211,6 +211,15 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     public function __unset($name)
     {
         $this->offsetUnset($name);
+    }
+
+    /**
+     * Needed to ensure that any changes to this object won't bleed to other instances
+     */
+    public function __clone()
+    {
+        $this->arrayAccessList = clone $this->arrayAccessList;
+        $this->arrayAccessIterator = clone $this->arrayAccessIterator;
     }
 
     /**
