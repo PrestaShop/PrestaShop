@@ -31,13 +31,10 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 
 /**
- * Class AbstractMailTemplateTransformation
+ * Class AbstractTransformation is a basic abstract class for TransformationInterface
  */
-abstract class AbstractMailTemplateTransformation implements MailTemplateTransformationInterface
+abstract class AbstractTransformation implements TransformationInterface
 {
-    /** @var MailTemplateInterface */
-    protected $template;
-
     /** @var Language */
     protected $language;
 
@@ -46,6 +43,7 @@ abstract class AbstractMailTemplateTransformation implements MailTemplateTransfo
 
     /**
      * @param string $type
+     *
      * @throws InvalidArgumentException
      */
     public function __construct($type)
@@ -63,21 +61,11 @@ abstract class AbstractMailTemplateTransformation implements MailTemplateTransfo
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setTemplate(MailTemplateInterface $template)
-    {
-        $this->template = $template;
-
-        return $this;
     }
 
     /**
