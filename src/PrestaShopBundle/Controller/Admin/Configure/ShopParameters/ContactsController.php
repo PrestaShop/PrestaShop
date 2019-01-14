@@ -124,16 +124,16 @@ class ContactsController extends FrameworkBundleAdminController
      *
      * @param int $contactId
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function editAction($contactId)
     {
-        $legacyLink = $this->getAdminLink('AdminContacts', [
-            'id_contact' => $contactId,
-            'updatecontact' => 1,
-        ]);
+        $contactFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.contact_form_builder');
+        $contactForm = $contactFormBuilder->getFormFor($contactId);
 
-        return $this->redirect($legacyLink);
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/edit.html.twig', [
+            'contactForm' => $contactForm->createView(),
+        ]);
     }
 
     /**
