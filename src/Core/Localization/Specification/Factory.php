@@ -184,14 +184,11 @@ class Factory
     /**
      * Get a NumberSymbolList object from a CLDR NumberSymbolsData object.
      *
-     * @param NumberSymbolsData $symbolsData
-     *                                       Data that will be used to build the NumberSymbolList object
+     * @param NumberSymbolsData $symbolsData Data that will be used to build the NumberSymbolList object
      *
-     * @return NumberSymbolList
-     *                          An immutable NumberSymbolList object
+     * @return NumberSymbolList An immutable NumberSymbolList object
      *
-     * @throws LocalizationException
-     *                               If passed data is invalid
+     * @throws LocalizationException If passed data is invalid
      */
     protected function getNumberSymbolList(NumberSymbolsData $symbolsData)
     {
@@ -248,11 +245,9 @@ class Factory
      * e.g.: with    #,##0.### => No secondary group. Will return primary group size.
      * e.g.: with #,##,##0.### => Secondary group size is 2, primary group size is 3.
      *
-     * @param string $pattern
-     *                        The CLDR number formatting pattern
+     * @param string $pattern The CLDR number formatting pattern
      *
-     * @return int
-     *             The secondary group size of the passed pattern
+     * @return int The secondary group size of the passed pattern
      */
     protected function getSecondaryGroupSize($pattern)
     {
@@ -270,8 +265,7 @@ class Factory
     {
         $parts = explode('.', $pattern);
         $integerPart = $parts[0];
-        $groups = explode(',', $integerPart);
 
-        return $groups;
+        return explode(',', $integerPart);
     }
 }

@@ -3,13 +3,13 @@ parameters:
 
 services:
     _defaults:
-      public: true
+        public: true
 
     # Localization
     prestashop.core.cldr.repository:
-      class: 'PrestaShop\PrestaShop\Core\Cldr\Repository'
-      arguments:
-        - '@=service("prestashop.adapter.legacy.context").getLanguage()'
+        class: 'PrestaShop\PrestaShop\Core\Cldr\Repository'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getLanguage()'
 
     prestashop.core.localization.cache.adapter:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
