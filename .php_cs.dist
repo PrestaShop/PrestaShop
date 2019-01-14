@@ -52,6 +52,10 @@ return PhpCsFixer\Config::create()
         'no_short_echo_tag' => true,
         'random_api_migration' => true,
         'pow_to_exponentiation' => true,
+        'doctrine_annotation_spaces' => true,
+        'doctrine_annotation_indentation' => true,
+        'doctrine_annotation_braces' => true,
+        'doctrine_annotation_array_assignment' => true,
     ])
     ->setLineEnding("\n")
     ->setFinder($finder)
