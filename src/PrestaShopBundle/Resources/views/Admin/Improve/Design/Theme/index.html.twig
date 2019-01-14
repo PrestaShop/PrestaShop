@@ -107,12 +107,13 @@
           </div>
         </div>
         <div class="card-footer">
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-primary">
-              <i class="material-icons">save</i>
-              {{ 'Save'|trans({}, 'Admin.Actions') }}
-            </button>
-          </div>
+          <a class="btn btn-outline-primary" href="{{ themeCatalogUrl }}" target="_blank">
+            {{ 'Visit the theme catalog'|trans({}, 'Admin.Design.Feature') }}
+          </a>
+          <button class="btn btn-primary float-right">
+            <i class="material-icons">save</i>
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
         </div>
       </div>
       {{ form_end(shopLogosForm) }}

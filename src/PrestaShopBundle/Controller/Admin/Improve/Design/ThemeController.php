@@ -75,10 +75,25 @@ class ThemeController extends AbstractAdminController
      */
     public function indexAction(Request $request)
     {
+        $isHostMode = $this->get('prestashop.adapter.hosting_information')->isHostMode();
+        $isoCode = strtoupper($this->get('prestashop.adapter.legacy.context')->getLanguage()->iso_code);
+
+        $themeCatalogUrl = sprintf(
+            '%s%s',
+            'https://addons.prestashop.com/en/3-templates-prestashop',
+            http_build_query([
+                'utm_source' => 'back-office',
+                'utm_medium' => 'theme-button',
+                'utm_campaign' => 'back-office-' . $isoCode,
+                'utm_content' => $isHostMode ? 'cloud' : 'download',
+            ])
+        );
+
         $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
         $installedRtlLanguageChecker = $this->get('prestashop.adapter.language.rtl.installed_language_checker');
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
+            'themeCatalogUrl' => $themeCatalogUrl,
             'baseShopUrl' => $this->get('prestashop.adapter.shop.url.base_url_provider')->getUrl(),
             'shopLogosForm' => $this->getLogosUploadForm()->createView(),
             'logoProvider' => $this->get('prestashop.core.shop.logo.logo_provider'),
