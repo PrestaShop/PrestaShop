@@ -803,7 +803,7 @@ class ToolsCore
     /**
      * Returns a well formatted number.
      *
-     * @deprecated Since 1.7.5.0. Please use Locale::formatNumber() instead
+     * @deprecated Since 1.7.6.0. Please use Locale::formatNumber() instead
      * @see PrestaShop\PrestaShop\Core\Localization\Locale
      *
      * @param float $number
