@@ -21,7 +21,7 @@ return PhpCsFixer\Config::create()
             'noise_remaining_usages' => false,
             'noise_remaining_usages_exclude' => [],
         ],
-        //PHPDoc summary should not be changed. 
+        // PHPDoc summary should not be changed. 
         'phpdoc_summary' => false,
         // All items of the given phpdoc tags must be left-aligned. 
         'phpdoc_align' => [
@@ -61,7 +61,7 @@ return PhpCsFixer\Config::create()
         'method_chaining_indentation' => true,
         // DocBlocks must start with two asterisks, multiline comments must start with a single asterisk, after the opening slash. Both must end with a single asterisk before the closing slash.
         'multiline_comment_opening_closing' => true,
-        // Forbid multi-line whitespace before the closing semicolon or move the semicolon to the new line for chained calls.
+        // Forbid multi-line whitespace before the closing semicolon.
         'multiline_whitespace_before_semicolons' => [
             'strategy' => 'no_multi_line',
         ],
@@ -85,15 +85,15 @@ return PhpCsFixer\Config::create()
         'doctrine_annotation_indentation' => true,
         // Doctrine annotations without arguments must use the configured syntax. 
         'doctrine_annotation_braces' => true,
-        // doctrine_annotation_array_assignment
+        // Doctrine annotations must use configured operator for assignment in arrays.
         'doctrine_annotation_array_assignment' => true,
         // All multi-line strings must use correct line ending. 
         'string_line_ending' => true,
-        // List (array destructuring) long syntax. Short requires PHP >= 7.1. 
+        // Convert to long list (array destructuring). Short requires PHP >= 7.1. 
         'list_syntax' => [
             'syntax' => 'long',
         ],
-        // Use short PHP arrays. 
+        // Convert to short PHP arrays. 
         'array_syntax' => [
             'short',
         ],
