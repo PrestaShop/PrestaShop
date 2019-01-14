@@ -28,44 +28,48 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 use Language;
 
-class MailTemplateParametersBuilder implements MailTemplateParametersBuilderInterface
+class MailLayoutVariablesBuilder implements MailLayoutVariablesBuilderInterface
 {
     /** @var array */
-    private $defaultParameters;
+    private $defaultVariables;
 
-    /** @var array */
+    /**
+     * This is a non exhaustive list of language which need a specific font
+     * so that their characters are correctly displayed.
+     *
+     * @var array
+     */
     private $languageDefaultFonts = array(
         'fa' => 'Tahoma',
         'ar' => 'Tahoma',
     );
 
     /**
-     * @param array $defaultParameters
+     * @param array $defaultVariables
      */
-    public function __construct(array $defaultParameters = [])
+    public function __construct(array $defaultVariables = [])
     {
-        $this->defaultParameters = $defaultParameters;
+        $this->defaultVariables = $defaultVariables;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildParameters(MailTemplateInterface $template, Language $language)
+    public function buildVariables(MailLayoutInterface $layout, Language $language)
     {
         $languageDefaultFont = '';
         if (isset($this->languageDefaultFonts[$language->iso_code])) {
             $languageDefaultFont = $this->languageDefaultFonts[$language->iso_code] . ',';
         }
 
-        $parameters = array_merge($this->defaultParameters, [
+        $variables = array_merge($this->defaultVariables, [
             'languageIsRTL' => (bool) $language->is_rtl,
             'languageDefaultFont' => $languageDefaultFont,
-            'templateTheme' => $template->getTheme(),
-            'templateName' => $template->getName(),
-            'templateModuleName' => $template->getModuleName(),
+            'templateName' => $layout->getName(),
+            'templateModuleName' => $layout->getModuleName(),
             'locale' => $language->locale,
         ]);
 
-        return $parameters;
+        return $variables;
     }
 }

@@ -26,24 +26,27 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-use Language;
-
 /**
- * MailTemplateParametersBuilderInterface is used by the MailTemplateRendererInterface
- * to render the mails, it returns an array of generic template parameters like:
- *  - templateType: the type of template (HTML, RAW)
- *  - templateTheme: the associated mail theme
- *  - templateModuleName: name of the associated module
- *  - locale: the locale in which the template is generated
- *  - emailPublicWebRoot: public mail root for assets
+ * Interface MailLayoutCollectionInterface contains a list of layouts used to generate
+ * mail templates. Modules can add their own layouts to this collection if they want
+ * their templates to be generated automatically.
  */
-interface MailTemplateParametersBuilderInterface
+interface MailLayoutCollectionInterface extends \IteratorAggregate, \Countable
 {
     /**
-     * @param MailTemplateInterface $template
-     * @param Language $language
+     * @param MailLayoutInterface $layout
      *
-     * @return array
+     * @return bool
      */
-    public function buildParameters(MailTemplateInterface $template, Language $language);
+    public function contains($layout);
+
+    /**
+     * @param MailLayoutInterface $layout
+     */
+    public function add($layout);
+
+    /**
+     * @param MailLayoutInterface $layout
+     */
+    public function remove($layout);
 }

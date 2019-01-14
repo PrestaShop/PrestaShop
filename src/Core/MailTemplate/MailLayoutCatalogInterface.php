@@ -26,37 +26,32 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+
 /**
- * Interface MailTemplateInterface describe a mail template. A mail template
- * is a static file (in html or txt format) used by the Mail class to send
- * transactional emails.
+ * Interface MailLayoutCatalogInterface is used to list the available themes to generate
+ * mail templates. It also allows you to list the available layouts for a specific theme.
+ * Layouts are divided in two categories "core" and "modules" layouts.
  */
-interface MailTemplateInterface
+interface MailLayoutCatalogInterface
 {
-    const CORE_CATEGORY = 'core';
-    const MODULES_CATEGORY = 'modules';
-
-    const HTML_TYPE = 'html';
-    const TXT_TYPE = 'txt';
+    /**
+     * Returns the list of existing themes.
+     *
+     * @throws InvalidException
+     *
+     * @return string[]
+     */
+    public function listThemes();
 
     /**
-     * Whether the template is used by the core or modules
+     * Returns a collection of layouts via a MailLayoutCollectionInterface
      *
-     * @return string
-     */
-    public function getCategory();
-
-    /**
-     * Whether the template is an html or txt type
+     * @param string $theme
      *
-     * @return string
-     */
-    public function getType();
-
-    /**
-     * Returns the absolute path to the template file.
+     * @throws InvalidException
      *
-     * @return string
+     * @return MailLayoutCollectionInterface
      */
-    public function getPath();
+    public function listLayouts($theme);
 }
