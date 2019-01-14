@@ -88,7 +88,10 @@ class ControllerTest extends TestCase
          * @var Controller $testedController
          */
         $testedController = new $controllerClass();
-        $testedController->setContainer($this->prophesizeSfContainer()->reveal());
+        $refController = new \ReflectionObject($testedController);
+        $refProperty = $refController->getProperty( 'container' );
+        $refProperty->setAccessible( true );
+        $refProperty->setValue($testedController, $this->prophesizeSfContainer()->reveal());
 
         if (!defined('_PS_BASE_URL_')) {
             define('_PS_BASE_URL_', '');
