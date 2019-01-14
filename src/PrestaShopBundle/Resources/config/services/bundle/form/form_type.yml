@@ -550,7 +550,7 @@ services:
             - '@=service("prestashop.adapter.legacy.configuration").get("PS_REWRITING_SETTINGS")'
         tags:
             - { name: form.type }
-            -
+
     form.type.shop.traffic_seo.meta:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType'
         arguments:
