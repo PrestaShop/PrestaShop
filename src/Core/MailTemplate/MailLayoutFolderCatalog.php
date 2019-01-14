@@ -31,17 +31,15 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * This is a basic mail templates catalog, not a lot of intelligence it is based
+ * This is a basic mail layouts catalog, not a lot of intelligence it is based
  * simply on existing files on the $mailThemesFolder (no database, or config files).
  */
-class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
+class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
 {
     /** @var string */
     private $mailThemesFolder;
 
     /**
-     * MailTemplateFolderCatalog constructor.
-     *
      * @param string $mailThemesFolder
      */
     public function __construct($mailThemesFolder)
@@ -59,7 +57,7 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
      */
     public function listThemes()
     {
-        $this->checkTemplatesFolder();
+        $this->checkThemesFolder();
 
         $finder = new Finder();
         $finder->directories()->in($this->mailThemesFolder)->depth(0);
@@ -79,98 +77,93 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
     /**
      * {@inheritdoc}
      */
-    public function listTemplates($theme)
+    public function listLayouts($theme)
     {
-        $this->checkTemplatesFolder();
+        $this->checkThemesFolder();
 
-        $collection = new MailTemplateCollection();
-        $this->listCoreTemplates($collection, $theme);
-        $this->listModulesTemplates($collection, $theme);
+        $collection = new MailLayoutCollection();
+        $this->listCoreLayouts($collection, $theme);
+        $this->listModulesLayouts($collection, $theme);
 
         return $collection;
     }
 
     /**
-     * @param MailTemplateCollectionInterface $collection
+     * @param MailLayoutCollectionInterface $collection
      * @param string $theme
      */
-    private function listCoreTemplates(MailTemplateCollectionInterface $collection, $theme)
+    private function listCoreLayouts(MailLayoutCollectionInterface $collection, $theme)
     {
-        $coreTemplatesFolder = implode(DIRECTORY_SEPARATOR, [
+        $coreLayoutsFolder = implode(DIRECTORY_SEPARATOR, [
             $this->mailThemesFolder,
             $theme,
             MailTemplateInterface::CORE_CATEGORY,
         ]);
-        if (!is_dir($coreTemplatesFolder)) {
+        if (!is_dir($coreLayoutsFolder)) {
             return;
         }
 
-        $this->addTemplatesFromFolder($collection, $coreTemplatesFolder, $theme, MailTemplateInterface::CORE_CATEGORY);
+        $this->addLayoutsFromFolder($collection, $coreLayoutsFolder);
     }
 
     /**
-     * @param MailTemplateCollectionInterface $collection
+     * @param MailLayoutCollectionInterface $collection
      * @param string $theme
      */
-    private function listModulesTemplates(MailTemplateCollectionInterface $collection, $theme)
+    private function listModulesLayouts(MailLayoutCollectionInterface $collection, $theme)
     {
-        $moduleTemplatesFolder = implode(DIRECTORY_SEPARATOR, [
+        $moduleLayoutsFolder = implode(DIRECTORY_SEPARATOR, [
             $this->mailThemesFolder,
             $theme,
             MailTemplateInterface::MODULES_CATEGORY,
         ]);
-        if (!is_dir($moduleTemplatesFolder)) {
+        if (!is_dir($moduleLayoutsFolder)) {
             return;
         }
 
         $moduleFinder = new Finder();
-        $moduleFinder->directories()->in($moduleTemplatesFolder)->depth(0);
+        $moduleFinder->directories()->in($moduleLayoutsFolder)->depth(0);
 
         /* @var SplFileInfo $fileInfo */
         foreach ($moduleFinder as $moduleFileInfo) {
             $moduleName = $moduleFileInfo->getFilename();
-            $moduleFolder = implode(DIRECTORY_SEPARATOR, [$moduleTemplatesFolder, $moduleName]);
-            $this->addTemplatesFromFolder($collection, $moduleFolder, $theme, MailTemplateInterface::MODULES_CATEGORY, $moduleName);
+            $moduleFolder = implode(DIRECTORY_SEPARATOR, [$moduleLayoutsFolder, $moduleName]);
+            $this->addLayoutsFromFolder($collection, $moduleFolder, $moduleName);
         }
     }
 
     /**
-     * @param MailTemplateCollectionInterface $collection
+     * @param MailLayoutCollectionInterface $collection
      * @param string $folder
-     * @param string $theme
-     * @param string $category
-     * @param string|null $moduleName
+     * @param string $moduleName
      */
-    private function addTemplatesFromFolder(
-        MailTemplateCollectionInterface $collection,
+    private function addLayoutsFromFolder(
+        MailLayoutCollectionInterface $collection,
         $folder,
-        $theme,
-        $category,
-        $moduleName = null
+        $moduleName = ''
     ) {
-        $templateFiles = [];
+        $layoutFiles = [];
         $finder = new Finder();
         $finder->files()->in($folder)->sortByName();
         /** @var SplFileInfo $fileInfo */
         foreach ($finder as $fileInfo) {
-            $templateName = preg_replace('/\..+/', '', $fileInfo->getBasename());
-            if (!isset($templateFiles[$templateName])) {
-                $templateFiles[$templateName] = [
+            //Get filename without any extension (ex: account.html.twig -> account)
+            $layoutName = preg_replace('/\..+/', '', $fileInfo->getBasename());
+            if (!isset($layoutFiles[$layoutName])) {
+                $layoutFiles[$layoutName] = [
                     MailTemplateInterface::HTML_TYPE => '',
                     MailTemplateInterface::TXT_TYPE => '',
                 ];
             }
             $templateType = $this->getTemplateType($fileInfo);
-            $templateFiles[$templateName][$templateType] = $fileInfo->getRealPath();
+            $layoutFiles[$layoutName][$templateType] = $fileInfo->getRealPath();
         }
 
-        foreach ($templateFiles as $templateName => $templates) {
-            $collection->add(new MailTemplate(
-                $theme,
-                $category,
-                $templateName,
-                $templates[MailTemplateInterface::HTML_TYPE],
-                $templates[MailTemplateInterface::TXT_TYPE],
+        foreach ($layoutFiles as $layoutName => $layouts) {
+            $collection->add(new MailLayout(
+                $layoutName,
+                $layouts[MailTemplateInterface::HTML_TYPE],
+                $layouts[MailTemplateInterface::TXT_TYPE],
                 $moduleName
             ));
         }
@@ -195,7 +188,7 @@ class MailTemplateFolderCatalog implements MailTemplateCatalogInterface
     /**
      * @throws InvalidException
      */
-    private function checkTemplatesFolder()
+    private function checkThemesFolder()
     {
         if (!is_dir($this->mailThemesFolder)) {
             throw new InvalidException(sprintf(

@@ -27,17 +27,11 @@
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 /**
- * Class MailTemplate is the default implementation of MailTemplateInterface,
- * it is a simple data container with no logic.
+ * Class MailLayout is the default implementation of MailLayoutInterface,
+ * it is a simple immutable data container with no logic.
  */
-class MailTemplate implements MailTemplateInterface
+class MailLayout implements MailLayoutInterface
 {
-    /** @var string */
-    private $theme;
-
-    /** @var string */
-    private $category;
-
     /** @var string */
     private $name;
 
@@ -51,25 +45,17 @@ class MailTemplate implements MailTemplateInterface
     private $moduleName;
 
     /**
-     * MailTemplate constructor.
-     *
-     * @param string $theme Which theme this template is associated to
-     * @param string $category Whether the template is used by the core or modules
-     * @param string $name Name of the template to describe its purpose
-     * @param string $htmlPath Absolute path of the html template file
-     * @param string $txtPath Absolute path of the txt template file
-     * @param string $moduleName Which module this template is associated to (if any)
+     * @param string $name Name of the layout to describe its purpose
+     * @param string $htmlPath Absolute path of the html layout file
+     * @param string $txtPath Absolute path of the txt layout file
+     * @param string $moduleName Which module this layout is associated to (if any)
      */
     public function __construct(
-        $theme,
-        $category,
         $name,
         $htmlPath = '',
         $txtPath = '',
         $moduleName = ''
     ) {
-        $this->theme = $theme;
-        $this->category = $category;
         $this->name = $name;
         $this->htmlPath = $htmlPath;
         $this->txtPath = $txtPath;
@@ -79,25 +65,9 @@ class MailTemplate implements MailTemplateInterface
     /**
      * @return string
      */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * @return string
-     */
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTheme()
-    {
-        return $this->theme;
     }
 
     /**

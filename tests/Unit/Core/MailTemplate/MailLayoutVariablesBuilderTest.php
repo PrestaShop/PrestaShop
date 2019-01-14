@@ -27,38 +27,36 @@
 namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateParametersBuilder;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilder;
 use Language;
 
-class MailTemplateParametersBuilderTest extends TestCase
+class MailLayoutVariablesBuilderTest extends TestCase
 {
     public function testConstructor()
     {
-        $builder = new MailTemplateParametersBuilder();
+        $builder = new MailLayoutVariablesBuilder();
         $this->assertNotNull($builder);
 
-        $builder = new MailTemplateParametersBuilder(['locale' => 'en']);
+        $builder = new MailLayoutVariablesBuilder(['locale' => 'en']);
         $this->assertNotNull($builder);
     }
 
     public function testBuildParameters()
     {
-        $templateInfos = [
-            'getTheme' => 'classic',
+        $layoutInfos = [
             'getName' => 'user_account',
             'getModuleName' => null,
         ];
-        $templateMock = $this->buildTemplateMock($templateInfos);
+        $layoutMock = $this->buildLayoutMock($layoutInfos);
         $languageMock = $this->buildLanguageMock();
 
-        $builder = new MailTemplateParametersBuilder();
-        $parameters = $builder->buildParameters($templateMock, $languageMock);
+        $builder = new MailLayoutVariablesBuilder();
+        $parameters = $builder->buildVariables($layoutMock, $languageMock);
 
         $this->assertEquals([
             'templateName' => 'user_account',
-            'templateTheme' => 'classic',
-            'templateModuleName' => null,
+            'templateModuleName' => '',
             'languageIsRTL' => false,
             'languageDefaultFont' => '',
             'locale' => 'en-EN',
@@ -67,25 +65,23 @@ class MailTemplateParametersBuilderTest extends TestCase
 
     public function testBuildParametersWithDefault()
     {
-        $templateInfos = [
-            'getTheme' => 'classic',
+        $layoutInfos = [
             'getName' => 'user_account',
             'getModuleName' => null,
         ];
-        $templateMock = $this->buildTemplateMock($templateInfos);
+        $layoutMock = $this->buildLayoutMock($layoutInfos);
         $languageMock = $this->buildLanguageMock();
 
-        $builder = new MailTemplateParametersBuilder([
+        $builder = new MailLayoutVariablesBuilder([
             'url' => 'http://test.com',
-            'languageDefaultFont' => 'overriddenFont'
+            'languageDefaultFont' => 'overriddenFont',
         ]);
-        $parameters = $builder->buildParameters($templateMock, $languageMock);
+        $parameters = $builder->buildVariables($layoutMock, $languageMock);
 
         $this->assertEquals([
             'url' => 'http://test.com',
             'templateName' => 'user_account',
-            'templateTheme' => 'classic',
-            'templateModuleName' => null,
+            'templateModuleName' => '',
             'languageIsRTL' => false,
             'languageDefaultFont' => '',
             'locale' => 'en-EN',
@@ -94,20 +90,18 @@ class MailTemplateParametersBuilderTest extends TestCase
 
     public function testBuildParametersWithRTL()
     {
-        $templateInfos = [
-            'getTheme' => 'classic',
+        $layoutInfos = [
             'getName' => 'user_account',
             'getModuleName' => 'ps_reminder',
         ];
-        $templateMock = $this->buildTemplateMock($templateInfos);
+        $layoutMock = $this->buildLayoutMock($layoutInfos);
         $languageMock = $this->buildLanguageMock('ar', true);
 
-        $builder = new MailTemplateParametersBuilder();
-        $parameters = $builder->buildParameters($templateMock, $languageMock);
+        $builder = new MailLayoutVariablesBuilder();
+        $parameters = $builder->buildVariables($layoutMock, $languageMock);
 
         $this->assertEquals([
             'templateName' => 'user_account',
-            'templateTheme' => 'classic',
             'templateModuleName' => 'ps_reminder',
             'languageIsRTL' => true,
             'languageDefaultFont' => 'Tahoma,',
@@ -138,23 +132,23 @@ class MailTemplateParametersBuilderTest extends TestCase
     /**
      * @param array $expectedMethods
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|MailLayoutInterface
      */
-    private function buildTemplateMock(array $expectedMethods)
+    private function buildLayoutMock(array $expectedMethods)
     {
-        $templateMock = $this->getMockBuilder(MailTemplateInterface::class)
+        $layoutMock = $this->getMockBuilder(MailLayoutInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         foreach ($expectedMethods as $methodName => $returnValue) {
-            $templateMock
+            $layoutMock
                 ->expects($this->once())
                 ->method($methodName)
                 ->willReturn($returnValue)
             ;
         }
 
-        return $templateMock;
+        return $layoutMock;
     }
 }
