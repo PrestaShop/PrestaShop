@@ -38,3 +38,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\MetaFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.contact_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ContactFormDataProvider'
