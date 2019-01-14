@@ -61,5 +61,6 @@ return PhpCsFixer\Config::create()
         'no_short_echo_tag' => true,
         'no_mixed_echo_print' => true,
     ])
+    ->setLineEnding('\n')
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache');
