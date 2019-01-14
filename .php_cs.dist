@@ -1,9 +1,9 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()->in([
-    __DIR__.'/src',
-    __DIR__.'/classes',
-    __DIR__.'/controllers',
+    __DIR__ . '/src',
+    __DIR__ . '/classes',
+    __DIR__ . '/controllers',
 ]);
 
 return PhpCsFixer\Config::create()
@@ -62,4 +62,4 @@ return PhpCsFixer\Config::create()
     ])
     ->setLineEnding('\n')
     ->setFinder($finder)
-    ->setCacheFile(__DIR__.'/var/.php_cs.cache');
+    ->setCacheFile(__DIR__ . '/var/.php_cs.cache');
