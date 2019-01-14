@@ -189,7 +189,7 @@ class Currency implements CurrencyInterface
     public function getName($localeCode)
     {
         if (!isset($this->names[$localeCode])) {
-            throw new LocalizationException("Unknown locale code : $localeCode");
+            throw new LocalizationException('Unknown locale code : ' . $localeCode);
         }
 
         return $this->names[$localeCode];
