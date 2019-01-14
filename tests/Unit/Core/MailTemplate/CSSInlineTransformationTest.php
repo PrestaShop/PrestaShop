@@ -27,7 +27,6 @@
 namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation;
 use Symfony\Component\DomCrawler\Crawler;
 use DOMElement;
@@ -42,21 +41,15 @@ class CSSInlineTransformationTest extends TestCase
     }
 
     public function testSetters()
-     {
-         $transformation = new CSSInlineTransformation();
+    {
+        $transformation = new CSSInlineTransformation();
 
-         $templateMock = $this->getMockBuilder(MailTemplateInterface::class)
+        $languageMock = $this->getMockBuilder(Language::class)
              ->disableOriginalConstructor()
              ->getMock()
          ;
-         $this->assertEquals($transformation, $transformation->setTemplate($templateMock));
-
-         $languageMock = $this->getMockBuilder(Language::class)
-             ->disableOriginalConstructor()
-             ->getMock()
-         ;
-         $this->assertEquals($transformation, $transformation->setLanguage($languageMock));
-     }
+        $this->assertEquals($transformation, $transformation->setLanguage($languageMock));
+    }
 
     public function testSimpleCss()
     {
@@ -209,27 +202,6 @@ HTML;
     }
 
     /**
-     * @param string $templateType
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateInterface
-     */
-    private function buildTemplateMock($templateType)
-    {
-        $templateMock = $this->getMockBuilder(MailTemplateInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $templateMock
-            ->expects($this->once())
-            ->method('getType')
-            ->willReturn($templateType)
-        ;
-
-        return $templateMock;
-    }
-
-    /**
-     *
      * @return \PHPUnit_Framework_MockObject_MockObject|Language
      */
     private function buildLanguageMock()

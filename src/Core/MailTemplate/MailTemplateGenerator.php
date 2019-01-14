@@ -33,15 +33,15 @@ use Symfony\Component\Filesystem\Filesystem;
 use Language;
 
 /**
- * Class MailTemplateGenerator iterates through the template in the provided catalog,
- * it uses the renderer to output them (with the requested Language) and then export
- * them as files in the specified output folder.
+ * Class MailTemplateGenerator iterates through the layouts in the provided catalog,
+ * it uses the Renderer to display them (with the requested Language) and then export
+ * them as template files in the specified output folder.
  */
 class MailTemplateGenerator
 {
     use LoggerAwareTrait;
 
-    /** @var MailTemplateCatalogInterface */
+    /** @var MailLayoutCatalogInterface */
     private $catalog;
 
     /** @var MailTemplateRendererInterface */
@@ -50,8 +50,12 @@ class MailTemplateGenerator
     /** @var Filesystem */
     private $fileSystem;
 
+    /**
+     * @param MailLayoutCatalogInterface $catalog
+     * @param MailTemplateRendererInterface $renderer
+     */
     public function __construct(
-        MailTemplateCatalogInterface $catalog,
+        MailLayoutCatalogInterface $catalog,
         MailTemplateRendererInterface $renderer
     ) {
         $this->catalog = $catalog;
@@ -93,38 +97,38 @@ class MailTemplateGenerator
             ));
         }
 
-        /** @var MailTemplateCollectionInterface $templates */
-        $templates = $this->catalog->listTemplates($theme);
-        /** @var MailTemplateInterface $template */
-        foreach ($templates as $template) {
-            if (MailTemplateInterface::MODULES_CATEGORY === $template->getCategory() && !empty($template->getModuleName())) {
-                $outputFolder = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $template->getModuleName(), 'mails']);
+        /** @var MailLayoutCollectionInterface $layouts */
+        $layouts = $this->catalog->listLayouts($theme);
+        /** @var MailLayoutInterface $layout */
+        foreach ($layouts as $layout) {
+            if (!empty($layout->getModuleName())) {
+                $outputFolder = implode(DIRECTORY_SEPARATOR, [$modulesOutputFolder, $layout->getModuleName(), 'mails']);
             } else {
                 $outputFolder = $coreOutputFolder;
             }
 
             //Generate HTML template
-            $generatedTemplate = $this->renderer->renderHtml($template, $language);
-            $htmlTemplatePath = $this->generateTemplatePath($template, MailTemplateInterface::HTML_TYPE, $outputFolder);
+            $generatedTemplate = $this->renderer->renderHtml($layout, $language);
+            $htmlTemplatePath = $this->generateTemplatePath($layout, MailTemplateInterface::HTML_TYPE, $outputFolder);
             $this->fileSystem->dumpFile($htmlTemplatePath, $generatedTemplate);
 
             //Generate TXT template
-            $generatedTemplate = $this->renderer->renderTxt($template, $language);
-            $txtTemplatePath = $this->generateTemplatePath($template, MailTemplateInterface::TXT_TYPE, $outputFolder);
+            $generatedTemplate = $this->renderer->renderTxt($layout, $language);
+            $txtTemplatePath = $this->generateTemplatePath($layout, MailTemplateInterface::TXT_TYPE, $outputFolder);
             $this->fileSystem->dumpFile($txtTemplatePath, $generatedTemplate);
-            $this->logger->info(sprintf('Generate template %s at html: %s, txt: %s', $template->getName(), $htmlTemplatePath, $txtTemplatePath));
+            $this->logger->info(sprintf('Generate template %s at html: %s, txt: %s', $layout->getName(), $htmlTemplatePath, $txtTemplatePath));
         }
     }
 
     /**
-     * @param MailTemplateInterface $template
-     * @param string $type
+     * @param MailLayoutInterface $layout
+     * @param string $templateType
      * @param string $outputFolder
      *
      * @return string
      */
-    private function generateTemplatePath(MailTemplateInterface $template, $type, $outputFolder)
+    private function generateTemplatePath(MailLayoutInterface $layout, $templateType, $outputFolder)
     {
-        return implode(DIRECTORY_SEPARATOR, [$outputFolder, $template->getName()]) . '.' . $type;
+        return implode(DIRECTORY_SEPARATOR, [$outputFolder, $layout->getName()]) . '.' . $templateType;
     }
 }

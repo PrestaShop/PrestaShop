@@ -1,0 +1,262 @@
+<?php
+/**
+ * 2007-2018 PrestaShop.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+namespace Tests\Unit\Core\MailTemplate;
+
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutCollectionInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutFolderCatalog;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
+use Symfony\Component\Filesystem\Filesystem;
+
+class MailLayoutFolderCatalogTest extends TestCase
+{
+    /**
+     * @var string
+     */
+    private $tempDir;
+
+    /**
+     * @var Filesystem
+     */
+    private $fs;
+
+    /**
+     * @var array
+     */
+    private $expectedThemes;
+
+    /**
+     * @var array
+     */
+    private $coreLayouts;
+
+    /**
+     * @var array
+     */
+    private $moduleLayouts;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'mail_layouts';
+        $this->fs = new Filesystem();
+        $this->fs->remove($this->tempDir);
+        $this->createThemesFiles();
+    }
+
+    public function testConstructor()
+    {
+        $catalog = new MailLayoutFolderCatalog($this->tempDir);
+        $this->assertNotNull($catalog);
+    }
+
+    public function testListThemes()
+    {
+        $catalog = new MailLayoutFolderCatalog($this->tempDir);
+        $listedThemes = $catalog->listThemes();
+        $this->assertEquals($this->expectedThemes, $listedThemes);
+    }
+
+    public function testListThemesWithoutThemesFolder()
+    {
+        $catalog = new MailLayoutFolderCatalog(implode(
+            DIRECTORY_SEPARATOR,
+            [$this->tempDir, 'invisible']
+        ));
+        $this->assertNotNull($catalog);
+
+        $caughtException = null;
+        try {
+            $catalog->listThemes();
+        } catch (InvalidException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+        $this->assertContains('Invalid mail themes folder', $caughtException->getMessage());
+        $this->assertContains(': no such directory', $caughtException->getMessage());
+    }
+
+    public function testListLayouts()
+    {
+        $catalog = new MailLayoutFolderCatalog($this->tempDir);
+        $layoutCollection = $catalog->listLayouts('classic');
+        $this->assertNotNull($layoutCollection);
+        $this->assertInstanceOf(MailLayoutCollectionInterface::class, $layoutCollection);
+        $this->assertEquals(8, $layoutCollection->count());
+
+        //Check core layouts
+        $coreLayouts = $this->filterCoreLayouts($layoutCollection);
+        $this->assertCount(4, $coreLayouts);
+
+        /** @var MailLayoutInterface $layout */
+        $layout = $coreLayouts[0];
+        $this->assertInstanceOf(MailLayoutInterface::class, $layout);
+        $coreFolder = implode(DIRECTORY_SEPARATOR, [
+            realpath($this->tempDir),
+            'classic',
+            MailTemplateInterface::CORE_CATEGORY,
+        ]);
+        $this->assertEquals(implode(DIRECTORY_SEPARATOR, [$coreFolder, 'account.html.twig']), $layout->getHtmlPath());
+        $this->assertEquals(implode(DIRECTORY_SEPARATOR, [$coreFolder, 'account.txt.twig']), $layout->getTxtPath());
+        $this->assertEquals('account', $layout->getName());
+        $this->assertNotNull($layout->getModuleName());
+        $this->assertEmpty($layout->getModuleName());
+
+        //Check module layouts
+        $modulesLayouts = $this->filterModulesLayouts($layoutCollection);
+        $this->assertCount(4, $modulesLayouts);
+
+        $moduleLayoutsCount = [];
+        /** @var MailLayoutInterface $moduleLayout */
+        foreach ($modulesLayouts as $moduleLayout) {
+            $this->assertNotEmpty($moduleLayout->getModuleName());
+            if (!isset($moduleLayoutsCount[$moduleLayout->getModuleName()])) {
+                $moduleLayoutsCount[$moduleLayout->getModuleName()] = [$moduleLayout->getName()];
+            } else {
+                $moduleLayoutsCount[$moduleLayout->getModuleName()][] = $moduleLayout->getName();
+            }
+        }
+        $this->assertCount(2, $moduleLayoutsCount['followup']);
+        $this->assertEquals(['followup_1', 'followup_2'], $moduleLayoutsCount['followup']);
+        $this->assertCount(2, $moduleLayoutsCount['ps_emailalerts']);
+        $this->assertEquals(['productoutofstock', 'return_slip'], $moduleLayoutsCount['ps_emailalerts']);
+    }
+
+    public function testListLayoutsWithoutCoreFolder()
+    {
+        $catalog = new MailLayoutFolderCatalog($this->tempDir);
+        //No bug occurs if the folder does not exist
+        $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::CORE_CATEGORY]));
+        /** @var MailLayoutCollectionInterface $layouts */
+        $layouts = $catalog->listLayouts('classic');
+        $this->assertEquals(4, $layouts->count());
+    }
+
+    public function testListLayoutsWithoutModulesFolder()
+    {
+        $catalog = new MailLayoutFolderCatalog($this->tempDir);
+        $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::MODULES_CATEGORY]));
+        /** @var MailLayoutCollectionInterface $layouts */
+        $layouts = $catalog->listLayouts('classic');
+        $this->assertEquals(4, $layouts->count());
+    }
+
+    /**
+     * @param MailLayoutCollectionInterface $collection
+     *
+     * @return MailLayoutInterface[]
+     */
+    private function filterCoreLayouts(MailLayoutCollectionInterface $collection)
+    {
+        $layouts = [];
+        /** @var MailLayoutInterface $layout */
+        foreach ($collection as $layout) {
+            if (empty($layout->getModuleName())) {
+                $layouts[] = $layout;
+            }
+        }
+
+        return $layouts;
+    }
+
+    /**
+     * @param MailLayoutCollectionInterface $collection
+     *
+     * @return MailLayoutInterface[]
+     */
+    private function filterModulesLayouts(MailLayoutCollectionInterface $collection)
+    {
+        $layouts = [];
+        /** @var MailLayoutInterface $layout */
+        foreach ($collection as $layout) {
+            if (!empty($layout->getModuleName())) {
+                $layouts[] = $layout;
+            }
+        }
+
+        return $layouts;
+    }
+
+    private function createThemesFiles()
+    {
+        $this->expectedThemes = [
+            'classic',
+            'modern',
+        ];
+        $this->coreLayouts = [
+            'account.html.twig',
+            'password.html.twig',
+            'account.txt.twig',
+            'password.txt.twig',
+            'order_conf.twig',
+            'bank_wire.twig',
+        ];
+        $this->moduleLayouts = [
+            'followup' => [
+                'followup_1.html.twig',
+                'followup_1.txt.twig',
+                'followup_2.twig',
+            ],
+            'ps_emailalerts' => [
+                'return_slip.twig',
+                'productoutofstock.twig',
+            ],
+            'empty_module' => [
+            ],
+        ];
+
+        foreach ($this->expectedThemes as $theme) {
+            //Insert core files
+            $themeFolder = $this->tempDir . DIRECTORY_SEPARATOR . $theme;
+            $coreFolder = implode(DIRECTORY_SEPARATOR, [$themeFolder, MailTemplateInterface::CORE_CATEGORY]);
+            $this->fs->mkdir($coreFolder);
+            foreach ($this->coreLayouts as $layout) {
+                $this->fs->touch(implode(DIRECTORY_SEPARATOR, [$coreFolder, $layout]));
+            }
+
+            //Insert modules files
+            $modulesFolder = $themeFolder . DIRECTORY_SEPARATOR . MailTemplateInterface::MODULES_CATEGORY;
+            foreach ($this->moduleLayouts as $moduleName => $moduleLayouts) {
+                $moduleFolder = $modulesFolder . DIRECTORY_SEPARATOR . $moduleName;
+                $this->fs->mkdir($moduleFolder);
+                foreach ($moduleLayouts as $layout) {
+                    $this->fs->touch(implode(DIRECTORY_SEPARATOR, [$moduleFolder, $layout]));
+                }
+            }
+
+            //Insert components files used in layoutss
+            $componentsFolder = $themeFolder . DIRECTORY_SEPARATOR . 'components';
+            $this->fs->mkdir($componentsFolder);
+            $this->fs->touch($componentsFolder . DIRECTORY_SEPARATOR . 'title.twig');
+            $this->fs->touch($componentsFolder . DIRECTORY_SEPARATOR . 'image.twig');
+        }
+        $this->fs->mkdir($this->tempDir . DIRECTORY_SEPARATOR . 'empty_dir');
+        $this->fs->touch($this->tempDir . DIRECTORY_SEPARATOR . 'useless_file');
+    }
+}

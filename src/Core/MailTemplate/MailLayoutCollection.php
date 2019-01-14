@@ -24,17 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
+namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
 
-class MailTemplateTransformationCollection extends AbstractTypedCollection
+class MailLayoutCollection extends AbstractTypedCollection implements MailLayoutCollectionInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function getType()
     {
-        return MailTemplateTransformationInterface::class;
+        return MailLayoutInterface::class;
     }
 }
