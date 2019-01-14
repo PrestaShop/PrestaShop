@@ -24,39 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\MailTemplate;
+namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
+
+use Language;
 
 /**
- * Interface MailTemplateInterface describe a mail template. A mail template
- * is a static file (in html or txt format) used by the Mail class to send
- * transactional emails.
+ * MailTemplateTransformerInterface is used by the MailTemplateRendererInterface to
+ * apply a transformation on the generated template (textify html, inline css, add a
+ * css or an image per language).
  */
-interface MailTemplateInterface
+interface TransformationInterface
 {
-    const CORE_CATEGORY = 'core';
-    const MODULES_CATEGORY = 'modules';
-
-    const HTML_TYPE = 'html';
-    const TXT_TYPE = 'txt';
-
     /**
-     * Whether the template is used by the core or modules
+     * @param string $templateContent
+     * @param array $templateVariables
      *
      * @return string
      */
-    public function getCategory();
+    public function apply($templateContent, array $templateVariables);
 
     /**
-     * Whether the template is an html or txt type
+     * Returns the type of templates this transformation is associated with,
+     * either html or txt, so that the renderer knows if it has to be applied
+     * or not
      *
      * @return string
      */
     public function getType();
 
     /**
-     * Returns the absolute path to the template file.
+     * @param Language $language
      *
-     * @return string
+     * @return $this
      */
-    public function getPath();
+    public function setLanguage(Language $language);
 }

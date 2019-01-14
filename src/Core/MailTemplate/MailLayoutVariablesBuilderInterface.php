@@ -26,38 +26,23 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use Language;
 
-interface MailTemplateCollectionInterface extends \IteratorAggregate, \Countable
+/**
+ * MailLayoutVariablesBuilderInterface is used by the MailTemplateRendererInterface
+ * to render the mails, it returns an array of generic layout variables like:
+ *  - templateModuleName: name of the associated module
+ *  - languageIsRTL: is the language read from Right To Left
+ *  - locale: the locale in which the template is generated
+ *  - emailPublicWebRoot: public mail root for assets
+ */
+interface MailLayoutVariablesBuilderInterface
 {
     /**
-     * @param MailTemplateInterface $template
+     * @param MailLayoutInterface $layout
+     * @param Language $language
      *
-     * @return bool
+     * @return array
      */
-    public function has(MailTemplateInterface $template);
-
-    /**
-     * @param MailTemplateInterface $template
-     */
-    public function add(MailTemplateInterface $template);
-
-    /**
-     * @param MailTemplateInterface $template
-     *
-     * @throws InvalidException
-     */
-    public function remove(MailTemplateInterface $template);
-
-    /**
-     * @return MailTemplateInterface[]
-     */
-    public function getTemplates();
-
-    /**
-     * @param array $templates
-     *
-     * @throws InvalidException
-     */
-    public function setTemplates($templates = []);
+    public function buildVariables(MailLayoutInterface $layout, Language $language);
 }

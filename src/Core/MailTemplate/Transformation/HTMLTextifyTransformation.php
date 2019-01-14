@@ -26,10 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
-use Html2Text\Html2Text;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
+use Html2Text\Html2Text;
 
-class HTMLTextifyTransformation extends AbstractMailTemplateTransformation
+/**
+ * HTMLTextifyTransformation is used to remove any HTML tags from the template. It
+ * is especially useful when no txt layout is defined and the renderer uses the html
+ * layout as a base. This transformation then removes any html tags but keep the raw
+ * information.
+ */
+class HTMLTextifyTransformation extends AbstractTransformation
 {
     public function __construct()
     {
@@ -45,14 +51,9 @@ class HTMLTextifyTransformation extends AbstractMailTemplateTransformation
         $templateContent = $textifier->getText();
 
         $templateContent = preg_replace('/^\s+/m', '', $templateContent);
-        //$templateContent = preg_replace('/^ +$/m', "", $templateContent);
         $templateContent = preg_replace_callback('/\{\w+\}/', function ($m) {
             return strtolower($m[0]);
         }, $templateContent);
-
-        if (!empty($_SERVER['HTTP_HOST'])) {
-            $templateContent = preg_replace('#\w+://' . preg_quote($_SERVER['HTTP_HOST']) . '/?#i', '', $templateContent);
-        }
 
         return $templateContent;
     }

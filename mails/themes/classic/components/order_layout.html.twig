@@ -70,7 +70,7 @@
       <td align="center">
         <table class="table" bgcolor="#ffffff">
           {% block header %}
-            {% set headerPath = '@MailThemes/'~templateTheme~'/components/header.html.twig' %}
+            {% set headerPath = '@MailThemes/classic/components/header.html.twig' %}
             {% include headerPath %}
           {% endblock header %}
 
@@ -78,7 +78,7 @@
           {% endblock %}
 
           {% block footer %}
-            {% set footerPath = '@MailThemes/'~templateTheme~'/components/footer.html.twig' %}
+            {% set footerPath = '@MailThemes/classic/components/footer.html.twig' %}
             {% include footerPath %}
           {% endblock footer %}
         </table>
