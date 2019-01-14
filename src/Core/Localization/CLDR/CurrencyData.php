@@ -107,15 +107,17 @@ class CurrencyData
         }
 
         if (null !== $currencyData->getDisplayNames()) {
-            foreach ($currencyData->getDisplayNames() as $countContext => $name) {
-                $this->displayNames[$countContext] = $name;
+            if (null === $this->displayNames) {
+                $this->displayNames = [];
             }
+            $this->displayNames = array_merge($this->displayNames, $currencyData->getDisplayNames());
         }
 
         if (null !== $currencyData->getSymbols()) {
-            foreach ($currencyData->getSymbols() as $type => $symbol) {
-                $this->symbols[$type] = $symbol;
+            if (null === $this->symbols) {
+                $this->symbols = [];
             }
+            $this->symbols = array_merge($this->symbols, $currencyData->getSymbols());
         }
 
         return $this;

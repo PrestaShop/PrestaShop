@@ -754,8 +754,8 @@ class ToolsCore
     public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
     {
         @trigger_error(
-            'Tools::displayPrice() is deprecated since version 1.7.5.0. '
-            . 'Use PrestaShop\PrestaShop\Core\Localization\Locale::formatPrice() instead.',
+            'Tools::displayPrice() is deprecated since version 1.7.6.0. '
+            . 'Use ' . Locale::class . '::formatPrice() instead.',
             E_USER_DEPRECATED
         );
 
