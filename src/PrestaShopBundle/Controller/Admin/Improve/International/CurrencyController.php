@@ -408,7 +408,7 @@ class CurrencyController extends FrameworkBundleAdminController
             CannotDisableDefaultCurrencyException::class => $this->trans(
                 'You cannot disable the default currency',
                 'Admin.International.Notification'
-            )
+            ),
         ];
 
         if ($exception instanceof CannotRemoveDefaultCurrencyFromShopAssociationException) {
