@@ -233,6 +233,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function updateCmsCategoryPositionAction(Request $request)
