@@ -32,9 +32,12 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryHandler\GetContactForEditingHandlerInterface;
+use PrestaShopException;
 
 /**
  * Class GetContactForEditingHandler is responsible for getting the data for contact edit page.
+ *
+ * @internal
  */
 final class GetContactForEditingHandler implements GetContactForEditingHandlerInterface
 {
@@ -45,23 +48,37 @@ final class GetContactForEditingHandler implements GetContactForEditingHandlerIn
      */
     public function handle(GetContactForEditing $query)
     {
-        $contact = new Contact($query->getContactId()->getValue());
+        try {
+            $contact = new Contact($query->getContactId()->getValue());
 
-        if (0 >= $contact->id) {
-            throw new ContactNotFoundException(
+            if (0 >= $contact->id) {
+                throw new ContactNotFoundException(
+                    sprintf(
+                        'Contact object with id %s was not found',
+                        var_export($query->getContactId()->getValue(), true)
+                    )
+                );
+            }
+
+            $editableContact = new EditableContact(
+                $query->getContactId()->getValue(),
+                $contact->name,
+                $contact->email,
+                $contact->customer_service,
+                $contact->description,
+                $contact->getAssociatedShops()
+            );
+        } catch (PrestaShopException $e) {
+            throw new ContactException(
                 sprintf(
-                    'Contact object with id %s was not found',
+                    'An unexpected error occurred when retrieving contact with id %s',
                     var_export($query->getContactId()->getValue(), true)
-                )
+                ),
+                0,
+                $e
             );
         }
 
-        return new EditableContact(
-            $query->getContactId()->getValue(),
-            $contact->name,
-            $contact->email,
-            $contact->customer_service,
-            $contact->description
-        );
+        return $editableContact;
     }
 }
