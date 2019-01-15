@@ -34,6 +34,9 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * This is a basic mail layouts catalog, not a lot of intelligence it is based
  * simply on existing files on the $mailThemesFolder (no database, or config files).
+ * If a module includes its own theme folder it can override the default one through
+ * the hook:
+ *  MailLayoutFolderCatalog::GET_MAIL_THEME_FOLDER_HOOK => actionGetMailThemeFolder
  */
 class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
 {
@@ -61,7 +64,7 @@ class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
      *
      * @throws InvalidException
      *
-     * @return string[]
+     * @return MailThemeCollectionInterface
      */
     public function listThemes()
     {
@@ -69,20 +72,20 @@ class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
 
         $finder = new Finder();
         $finder->directories()->in($this->mailThemesFolder)->depth(0);
-        $mailThemes = [];
+        $mailThemes = new MailThemeCollection();
         /** @var SplFileInfo $mailThemeFolder */
         foreach ($finder as $mailThemeFolder) {
             $dirFinder = new Finder();
             $dirFinder->files()->in($mailThemeFolder->getRealPath());
             if ($dirFinder->count() > 0) {
-                $mailThemes[] = $mailThemeFolder->getFilename();
+                $mailThemes[] = new MailTheme($mailThemeFolder->getFilename());
             }
         }
 
         //This hook allows you to add/remove a mail theme
         $this->hookDispatcher->dispatchWithParameters(
             MailLayoutCatalogInterface::LIST_MAIL_THEMES_HOOK,
-            ['mailThemes' => &$mailThemes]
+            ['mailThemes' => $mailThemes]
         );
 
         return $mailThemes;

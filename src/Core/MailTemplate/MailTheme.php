@@ -26,28 +26,25 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-/**
- * Interface MailLayoutCollectionInterface contains a list of layouts used to generate
- * mail templates. Modules can add/remove their own layouts to this collection through
- * the hook:
- *  MailLayoutCatalogInterface::LIST_MAIL_THEME_LAYOUTS_HOOK = actionListMailThemeLayouts
- */
-interface MailLayoutCollectionInterface extends \IteratorAggregate, \Countable
+
+class MailTheme implements MailThemeInterface
 {
-    /**
-     * @param MailLayoutInterface $layout
-     *
-     * @return bool
-     */
-    public function contains($layout);
+    /** @var string */
+    private $name;
 
     /**
-     * @param MailLayoutInterface $layout
+     * @param $name
      */
-    public function add($layout);
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
 
     /**
-     * @param MailLayoutInterface $layout
+     * {@inheritdoc}
      */
-    public function remove($layout);
+    public function getName()
+    {
+        return $this->name;
+    }
 }
