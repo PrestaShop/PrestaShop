@@ -189,6 +189,10 @@ class LanguageController extends AbstractAdminController
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Language code', 'Admin.International.Feature'))]
                 ),
+                LanguageConstraintException::DUPLICATE_ISO_CODE => $this->trans(
+                    'This ISO code is already linked to another language.',
+                    'Admin.International.Notification'
+                ),
             ],
         ];
     }
