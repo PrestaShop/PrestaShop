@@ -107,7 +107,7 @@ class LanguageType extends AbstractType
                 ],
             ])
             ->add('no_picture_image', FileType::class, [
-                'required' => false,
+                'required' => !$options['is_for_editing'],
                 'constraints' => [
                     new Image([
                         'mimeTypesMessage' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
