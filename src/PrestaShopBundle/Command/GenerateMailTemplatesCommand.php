@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Exception\InvalidException;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -33,6 +34,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Language;
+use Employee;
 
 class GenerateMailTemplatesCommand extends ContainerAwareCommand
 {
@@ -88,6 +90,13 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
     private function initContext()
     {
         require_once $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
+        /** @var LegacyContext $legacyContext */
+        $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
+        //We need to have an employee or the module hooks don't work
+        //see LegacyHookSubscriber
+        if (!$legacyContext->getContext()->employee) {
+            $legacyContext->getContext()->employee = new Employee(1);
+        }
     }
 
     /**
