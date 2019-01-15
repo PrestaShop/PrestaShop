@@ -321,7 +321,7 @@ class AttributeGroupCore extends ObjectModel
     /**
      * Get values of current AttributeGroup instance for the webservice.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsProductOptionValues()
     {

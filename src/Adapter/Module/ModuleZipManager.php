@@ -191,7 +191,7 @@ class ModuleZipManager
     /**
      * @param $source
      *
-     * @return null|string
+     * @return string|null
      */
     private function getSandboxPath($source)
     {
@@ -210,7 +210,7 @@ class ModuleZipManager
      *
      * @param string $source
      *
-     * @return null|ModuleZip
+     * @return ModuleZip|null
      */
     private function getSource($source)
     {

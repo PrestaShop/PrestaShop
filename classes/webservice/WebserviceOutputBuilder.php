@@ -161,7 +161,7 @@ class WebserviceOutputBuilderCore
     }
 
     /**
-     * @param null|string $key if null get all header params otherwise the params specified by the key
+     * @param string|null $key if null get all header params otherwise the params specified by the key
      * @throw WebserviceException if the key is corrupted (use Validate::isCleanHtml method)
      * @throw WebserviceException if the asked key does'nt exists.
      *
@@ -368,7 +368,7 @@ class WebserviceOutputBuilderCore
      *
      *        @see WebserviceOutputBuilder::executeEntityGetAndHead
      *
-     * @param null|string $schema_to_display if null display the entities list or entity details
+     * @param string|null $schema_to_display if null display the entities list or entity details
      * @param string|array $fields_to_display the fields allow for the output
      * @param int $depth depth for the tree diagram output
      * @param int $type_of_view use the 2 constants WebserviceOutputBuilder::VIEW_LIST WebserviceOutputBuilder::VIEW_DETAILS

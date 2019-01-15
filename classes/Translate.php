@@ -160,7 +160,7 @@ class TranslateCore
      * @param string $source
      * @param null $sprintf
      * @param bool $js
-     * @param null|string $locale
+     * @param string|null $locale
      *
      * @return mixed|string
      */

@@ -397,7 +397,7 @@ class CurrencyCore extends ObjectModel
      * @param int $idModule Module ID
      * @param null $idShop Shop ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getPaymentCurrencies($idModule, $idShop = null)
     {
@@ -423,7 +423,7 @@ class CurrencyCore extends ObjectModel
      * @param int $idModule Module ID
      * @param null $idShop Shop ID
      *
-     * @return array|null|PDOStatement|resource
+     * @return array|PDOStatement|resource|null
      */
     public static function checkPaymentCurrencies($idModule, $idShop = null)
     {
@@ -451,7 +451,7 @@ class CurrencyCore extends ObjectModel
      *
      * @param int $idCurrency Currency ID
      *
-     * @return array|bool|null|object
+     * @return array|bool|object|null
      */
     public static function getCurrency($idCurrency)
     {

@@ -51,7 +51,7 @@ class CarrierDataProvider
      * @param bool $active Returns only active carriers when true
      * @param bool $delete
      * @param bool|int $id_zone
-     * @param null|string $ids_group
+     * @param string|null $ids_group
      * @param $modules_filters , possible values:
      * PS_CARRIERS_ONLY
      * CARRIERS_MODULE

@@ -578,7 +578,7 @@ abstract class DbCore
      * @param bool $array Return an array instead of a result object (deprecated since 1.5.0.1, use query method instead)
      * @param bool $use_cache
      *
-     * @return array|false|null|mysqli_result|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      *
      * @throws PrestaShopDatabaseException
      */

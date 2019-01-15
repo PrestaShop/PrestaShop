@@ -204,7 +204,7 @@ class StateCore extends ObjectModel
      * @param int $idCountry Country ID
      * @param bool $active true if the state must be active
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getStatesByIdCountry($idCountry, $active = false)
     {
@@ -237,7 +237,7 @@ class StateCore extends ObjectModel
      *
      * @param int $idState State ID
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function getIdZone($idState)
     {

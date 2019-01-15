@@ -154,7 +154,7 @@ class ModuleActivatedListener
      * @param object $controllerObject
      * @param string $methodName
      *
-     * @return null|ModuleActivated
+     * @return ModuleActivated|null
      *
      * @throws AnnotationException
      * @throws \ReflectionException
