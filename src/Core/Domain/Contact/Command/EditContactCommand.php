@@ -110,6 +110,18 @@ class EditContactCommand extends AbstractContactCommand
             );
         }
 
+        foreach ($localisedTitles as $title) {
+            if (!$this->assertIsGenericName($title)) {
+                throw new ContactConstraintException(
+                    sprintf(
+                        'Expected value %s to match given regex /^[^<>={}]*$/u but failed',
+                        var_export($title, true)
+                    ),
+                    ContactConstraintException::INVALID_TITLE
+                );
+            }
+        }
+
         $this->localisedTitles = $localisedTitles;
 
         return $this;
@@ -120,6 +132,7 @@ class EditContactCommand extends AbstractContactCommand
      */
     public function getEmail()
     {
+//        todo: decide about email
         return $this->email;
     }
 
@@ -160,6 +173,7 @@ class EditContactCommand extends AbstractContactCommand
      */
     public function getLocalisedDescription()
     {
+        //todo: clean html validation?
         return $this->localisedDescription;
     }
 
@@ -187,9 +201,21 @@ class EditContactCommand extends AbstractContactCommand
      * @param int[] $shopAssociation
      *
      * @return self
+     *
+     * @throws ContactConstraintException
      */
     public function setShopAssociation(array $shopAssociation)
     {
+        if (!$this->assertArrayContainsAllIntegerValues($shopAssociation)) {
+            throw new ContactConstraintException(
+                sprintf(
+                    'Given shop assocciation %s must contain all integer values',
+                    var_export($shopAssociation, true)
+                ),
+                ContactConstraintException::INVALID_SHOP_ASSOCIATION
+            );
+        }
+
         $this->shopAssociation = $shopAssociation;
 
         return $this;
