@@ -94,7 +94,7 @@ return PhpCsFixer\Config::create()
         ],
         // Convert to short PHP arrays. 
         'array_syntax' => [
-            'short',
+            'syntax' => 'short',
         ],
     ])
     ->setFinder($finder)
