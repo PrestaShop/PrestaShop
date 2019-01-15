@@ -38,7 +38,11 @@ abstract class AbstractContactCommand
      */
     protected function assertIsNotEmptyAndContainsAtLeastOneString(array $values)
     {
-        if (empty($values)) {
+        $filterNonEmptyStrings = function ($value) {
+            return is_string($value) && $value;
+        };
+
+        if (empty($values) || 0 === count(array_filter($values, $filterNonEmptyStrings))) {
             return false;
         }
 
