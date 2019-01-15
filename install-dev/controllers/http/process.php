@@ -100,14 +100,14 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                     ->setProcessFOThemes(array('classic'))
                     ->process();
                 $this->processConfigureShop();
-            } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop'])) {
-                $this->processInstallFixtures();
-            } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['installFixtures']) || $this->session->install_type != 'full')) {
+            } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['configureShop']) || $this->session->install_type != 'full')) {
                 $this->processInstallModules();
             } elseif (Tools::getValue('installModulesAddons') && !empty($this->session->process_validated['installModules'])) {
                 $this->processInstallAddonsModules();
             } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModulesAddons'])) {
                 $this->processInstallTheme();
+            } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installTheme'])) {
+                $this->processInstallFixtures();
             }
         } catch (\Exception $e) {
             $this->ajaxJsonAnswer(false, $e->getMessage());
@@ -322,21 +322,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->process_steps[] = $populate_step;
         $this->process_steps[] = array('key' => 'configureShop', 'lang' => $this->translator->trans('Configure shop information', array(), 'Install'));
 
-        if ($this->session->install_type == 'full') {
-            $fixtures_step = array('key' => 'installFixtures', 'lang' => $this->translator->trans('Install demonstration data', array(), 'Install'));
-            if ($lowMemory || $this->hasLargeFixtures()) {
-                $fixtures_step['subtasks'] = array();
-                $xml_loader = new XmlLoader();
-                $xml_loader->setTranslator($this->translator);
-                $xml_loader->setFixturesPath();
-
-                foreach ($xml_loader->getSortedEntities() as $entity) {
-                    $fixtures_step['subtasks'][] = array('entity' => $entity);
-                }
-            }
-            $this->process_steps[] = $fixtures_step;
-        }
-
         $install_modules = array('key' => 'installModules', 'lang' => $this->translator->trans('Install modules', array(), 'Install'));
         if ($lowMemory) {
             foreach ($this->model_install->getModulesList() as $module) {
@@ -364,6 +349,21 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->process_steps[] = $install_modules;
 
         $this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->translator->trans('Install theme', array(), 'Install'));
+
+        if ($this->session->install_type == 'full') {
+            $fixtures_step = array('key' => 'installFixtures', 'lang' => $this->translator->trans('Install demonstration data', array(), 'Install'));
+            if ($lowMemory || $this->hasLargeFixtures()) {
+                $fixtures_step['subtasks'] = array();
+                $xml_loader = new XmlLoader();
+                $xml_loader->setTranslator($this->translator);
+                $xml_loader->setFixturesPath();
+
+                foreach ($xml_loader->getSortedEntities() as $entity) {
+                    $fixtures_step['subtasks'][] = array('entity' => $entity);
+                }
+            }
+            $this->process_steps[] = $fixtures_step;
+        }
 
         $this->displayTemplate('process');
     }
