@@ -35,9 +35,23 @@
       <div class="card-block row">
         <div class="card-text">
           {{ ps.form_group_row(contactForm.title, {}, {
-            'label': 'Title'|trans({}, 'Admin.Global')
+            'label': 'Title'|trans({}, 'Admin.Global'),
+            'help': 'Contact name (e.g. Customer Support).'|trans({}, 'Admin.Shopparameters.Help')
           }) }}
 
+          {{ ps.form_group_row(contactForm.email, {}, {
+            'label': 'Email address'|trans({}, 'Admin.Global'),
+            'help': 'Emails will be sent to this address.'|trans({}, 'Admin.Shopparameters.Help')
+          }) }}
+
+          {{ ps.form_group_row(contactForm.is_saved_message, {}, {
+            'label': 'Save messages?'|trans({}, 'Admin.Shopparameters.Feature'),
+            'help': 'If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.'|trans({}, 'Admin.Shopparameters.Help')
+          }) }}
+
+          {{ ps.form_group_row(contactForm.description, {}, {
+            'label': 'Description'|trans({}, 'Admin.Global')
+          }) }}
 
           {% block contact_form_rest %}
             {{ form_rest(contactForm) }}

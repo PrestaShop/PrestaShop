@@ -36,7 +36,7 @@ final class ContactFormDataProvider implements FormDataProviderInterface
      */
     public function getData($contactId)
     {
-        return $this->getDataByContactId($contactId);
+        return [];
     }
 
     /**
@@ -44,22 +44,6 @@ final class ContactFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [
-            'title' => 'service',
-        ];
-    }
-
-    /**
-     * Data which is being retrieved by contact id.
-     *
-     * @param int $contactId
-     *
-     * @return array
-     */
-    private function getDataByContactId($contactId)
-    {
-        return [
-            'title' => 'Customer service',
-        ];
+        return null;
     }
 }
