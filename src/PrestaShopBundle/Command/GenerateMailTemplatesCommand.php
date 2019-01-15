@@ -87,7 +87,7 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
      */
     private function initContext()
     {
-        require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
+        require_once $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
     }
 
     /**
