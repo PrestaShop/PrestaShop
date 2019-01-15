@@ -6,7 +6,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer'
     arguments:
       - '@templating.engine.twig'
-      - '@prestashop.core.mail_template.parameters_builder'
+      - '@prestashop.core.mail_template.variables_builder'
+      - '@prestashop.core.hook.dispatcher'
     calls:
       - method: 'addTransformation'
         arguments:

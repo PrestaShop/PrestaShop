@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
 use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
 
-class TransformationCollection extends AbstractTypedCollection
+class TransformationCollection extends AbstractTypedCollection implements TransformationCollectionInterface
 {
     /**
      * {@inheritdoc}
