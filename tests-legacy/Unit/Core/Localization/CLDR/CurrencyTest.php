@@ -48,7 +48,7 @@ class CurrencyTest extends TestCase
      */
     protected function setUp()
     {
-        $currencyData                 = new CurrencyData();
+        $currencyData = new CurrencyData();
         $currencyData->setIsoCode('PCE');
         $currencyData->setNumericIsoCode(333);
         $currencyData->setDecimalDigits(2);
