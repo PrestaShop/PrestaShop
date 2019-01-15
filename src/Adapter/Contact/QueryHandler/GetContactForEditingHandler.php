@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Contact\QueryHandler;
 
 use Contact;
+use PrestaShop\PrestaShop\Core\Domain\Contact\DTO\EditableContact;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
@@ -54,5 +55,13 @@ final class GetContactForEditingHandler implements GetContactForEditingHandlerIn
                 )
             );
         }
+
+        return new EditableContact(
+            $query->getContactId()->getValue(),
+            $contact->name,
+            $contact->email,
+            $contact->customer_service,
+            $contact->description
+        );
     }
 }
