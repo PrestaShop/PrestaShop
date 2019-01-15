@@ -1,0 +1,196 @@
+<?php
+/**
+ * 2007-2018 PrestaShop.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
+
+/**
+ * Class EditContactCommand is responsible for editing contact data.
+ */
+class EditContactCommand extends AbstractContactCommand
+{
+    /**
+     * @var ContactId
+     */
+    private $contactId;
+
+    /**
+     * @var string[]
+     */
+    private $localisedTitles;
+
+    /**
+     * @var string
+     */
+    private $email;
+
+    /**
+     * @var bool
+     */
+    private $isMessagesSavingEnabled;
+
+    /**
+     * @var string[]
+     */
+    private $localisedDescription;
+
+    /**
+     * @var int[]
+     */
+    private $shopAssociation;
+
+    /**
+     * @param int $contactId
+     *
+     * @throws ContactException
+     */
+    public function __construct($contactId)
+    {
+        $this->contactId = new ContactId($contactId);
+    }
+
+    /**
+     * @return ContactId
+     */
+    public function getContactId()
+    {
+        return $this->contactId;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalisedTitles()
+    {
+        return $this->localisedTitles;
+    }
+
+    /**
+     * @param string[] $localisedTitles
+     *
+     * @return self
+     *
+     * @throws ContactConstraintException
+     */
+    public function setLocalisedTitles($localisedTitles)
+    {
+        if (!$this->assertIsNotEmptyAndContainsAtLeastOneString($localisedTitles)) {
+            throw new ContactConstraintException(
+                sprintf(
+                    'Expected to have not empty titles array with at least one value but received %s',
+                    var_export($localisedTitles, true)
+                )
+            );
+        }
+
+        $this->localisedTitles = $localisedTitles;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return self
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMessagesSavingEnabled()
+    {
+        return $this->isMessagesSavingEnabled;
+    }
+
+    /**
+     * @param bool $isMessagesSavingEnabled
+     *
+     * @return self
+     */
+    public function setIsMessagesSavingEnabled($isMessagesSavingEnabled)
+    {
+        $this->isMessagesSavingEnabled = $isMessagesSavingEnabled;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalisedDescription()
+    {
+        return $this->localisedDescription;
+    }
+
+    /**
+     * @param string[] $localisedDescription
+     *
+     * @return self
+     */
+    public function setLocalisedDescription($localisedDescription)
+    {
+        $this->localisedDescription = $localisedDescription;
+
+        return $this;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getShopAssociation()
+    {
+        return $this->shopAssociation;
+    }
+
+    /**
+     * @param int[] $shopAssociation
+     *
+     * @return self
+     */
+    public function setShopAssociation($shopAssociation)
+    {
+        $this->shopAssociation = $shopAssociation;
+
+        return $this;
+    }
+}
