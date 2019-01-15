@@ -741,3 +741,10 @@ services:
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider")'
       tags:
         - { name: form.type }
+
+    form.type.contact:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }
