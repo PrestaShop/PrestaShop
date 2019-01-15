@@ -119,6 +119,10 @@
         "unit-tests": [
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
         ],
+        "integration-tests": [
+            "@composer create-test-db",
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit.xml"
+        ],
         "phpunit-admin": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
