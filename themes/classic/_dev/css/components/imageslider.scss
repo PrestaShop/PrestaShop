@@ -6,32 +6,18 @@
   }
   .carousel-inner {
     height: 340px;
-    @media (max-width: 767px) {
-      height: auto;
-    }
   }
   .carousel-item {
     height: 100%;
     img {
-      @media (max-width: 767px) {
-        max-width: 100%;
-        height: auto;
-      }
-      @media (min-width: 768px) {
       width: 100%;
-      margin-left: 0;
-    }
+      max-width: 100%;
+      height: auto;
     }
     .caption {
       position: absolute;
-      @media (min-width: 768px) {
       bottom: 28px;
       left: 90px;
-      }
-      @media (max-width: 767px) {
-        bottom: 5px;
-        left: 40px;
-      }
       color: white;
       max-width: 340px;
       .caption-description p {
@@ -39,9 +25,7 @@
       }
     }
     figure {
-      @media (max-width: 767px) {
-        margin: 0;
-      }
+      margin: 0;
     }
   }
   .carousel-control {
@@ -70,6 +54,55 @@
     &.left,
     &.right {
       background: none;
+    }
+  }
+}
+
+@include media-breakpoint-down(lg) {
+  .carousel {
+    .carousel-inner {
+      height: auto;
+    }
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .carousel {
+    .carousel-item {
+      .caption {
+        bottom: calc(50% - 2rem);
+        left: 10%;
+      }
+      .caption {
+        .display-1 {
+          font-size: 2rem;
+        }
+      }
+      .caption-description {
+        display: none;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .carousel {
+    .carousel-item {
+      .caption {
+        bottom: calc(50% - 1.5rem);
+      }
+      .caption {
+        .display-1 {
+          font-size: 1.5rem;
+        }
+      }
+    }
+    .carousel-control {
+      .icon-prev, .icon-next {
+        i {
+          font-size: 2rem;
+        }
+      }
     }
   }
 }
