@@ -26,17 +26,45 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Contact\DTO\EditableContact;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
+
 /**
  * Class ContactFormDataProvider
  */
 final class ContactFormDataProvider implements FormDataProviderInterface
 {
     /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     */
+    public function __construct(CommandBusInterface $queryBus)
+    {
+        $this->queryBus = $queryBus;
+    }
+
+    /**
      * {@inheritdoc}
+     *
+     * @throws ContactException
      */
     public function getData($contactId)
     {
-        return [];
+        /** @var EditableContact $editableContact */
+        $editableContact = $this->queryBus->handle(new GetContactForEditing($contactId));
+
+        return [
+            'title' => $editableContact->getLocalisedTitles(),
+            'email' => $editableContact->getEmail(),
+            'is_messages_saving_enabled' => $editableContact->isMessagesSavingEnabled(),
+            'description' => $editableContact->getLocalisedDescription(),
+        ];
     }
 
     /**

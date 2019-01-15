@@ -1,9 +1,14 @@
 services:
-    _defaults:
-        public: true
+  _defaults:
+    public: true
 
-    prestashop.adapter.contact.repository:
-        class: 'PrestaShop\PrestaShop\Adapter\Support\ContactRepository'
+  prestashop.adapter.contact.repository:
+    class: 'PrestaShop\PrestaShop\Adapter\Support\ContactRepository'
 
-    prestashop.adapter.contact.deleter:
-        class: 'PrestaShop\PrestaShop\Adapter\Support\ContactDeleter'
+  prestashop.adapter.contact.deleter:
+    class: 'PrestaShop\PrestaShop\Adapter\Support\ContactDeleter'
+
+  prestashop.adapter.contact.query_handler.get_contact_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\Contact\QueryHandler\GetContactForEditingHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing' }

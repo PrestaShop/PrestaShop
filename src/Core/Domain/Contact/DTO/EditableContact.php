@@ -26,9 +26,100 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Contact\DTO;
 
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
+
 /**
  * Class EditableContact
  */
 class EditableContact
 {
+    /**
+     * @var ContactId
+     */
+    private $contactId;
+
+    /**
+     * @var array|string[]
+     */
+    private $localisedTitles;
+
+    /**
+     * @var string
+     */
+    private $email;
+
+    /**
+     * @var bool
+     */
+    private $isMessagesSavingEnabled;
+
+    /**
+     * @var string[]
+     */
+    private $localisedDescription;
+
+    /**
+     * @param int $contactId
+     * @param string[] $localisedTitles
+     * @param string $email
+     * @param bool $isMessagesSavingEnabled
+     * @param string[] $localisedDescription
+     *
+     * @throws ContactException
+     */
+    public function __construct(
+        $contactId,
+        array $localisedTitles,
+        $email,
+        $isMessagesSavingEnabled,
+        $localisedDescription
+    ) {
+        $this->contactId = new ContactId($contactId);
+        $this->localisedTitles = $localisedTitles;
+//        todo: email value object?
+        $this->email = $email;
+        $this->isMessagesSavingEnabled = $isMessagesSavingEnabled;
+        $this->localisedDescription = $localisedDescription;
+    }
+
+    /**
+     * @return ContactId
+     */
+    public function getContactId()
+    {
+        return $this->contactId;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getLocalisedTitles()
+    {
+        return $this->localisedTitles;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMessagesSavingEnabled()
+    {
+        return $this->isMessagesSavingEnabled;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalisedDescription()
+    {
+        return $this->localisedDescription;
+    }
 }

@@ -51,7 +51,7 @@ class ContactType extends AbstractType
             ->add('email', EmailType::class, [
                 'required' => false,
             ])
-            ->add('is_saved_message', SwitchType::class)
+            ->add('is_messages_saving_enabled', SwitchType::class)
             ->add('description', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'required' => false,
