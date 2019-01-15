@@ -89,7 +89,7 @@ class ControllerTest extends TestCase
          */
         $testedController = new $controllerClass();
         $refController = new \ReflectionObject($testedController);
-        $refProperty = $refController->getProperty( 'container' );
+        $refProperty = $refController->getProperty('container' );
         $refProperty->setAccessible( true );
         $refProperty->setValue($testedController, $this->prophesizeSfContainer()->reveal());
 
