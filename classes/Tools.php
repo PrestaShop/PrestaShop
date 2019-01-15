@@ -32,6 +32,7 @@ use PHPSQLParser\PHPSQLParser;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 
 class ToolsCore
 {
@@ -778,6 +779,13 @@ class ToolsCore
         return $locale->formatPrice($price, $currencyCode);
     }
 
+    /**
+     * Return current locale
+     *
+     * @param Context $context
+     * @return Locale
+     * @throws Exception
+     */
     protected static function getContextLocale(Context $context)
     {
         $locale = $context->currentLocale;
