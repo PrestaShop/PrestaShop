@@ -58,6 +58,10 @@ class EditableContact
      * @var string[]
      */
     private $localisedDescription;
+    /**
+     * @var int[]
+     */
+    private $shopAssociation;
 
     /**
      * @param int $contactId
@@ -65,6 +69,7 @@ class EditableContact
      * @param string $email
      * @param bool $isMessagesSavingEnabled
      * @param string[] $localisedDescription
+     * @param int[] $shopAssociation
      *
      * @throws ContactException
      */
@@ -73,7 +78,8 @@ class EditableContact
         array $localisedTitles,
         $email,
         $isMessagesSavingEnabled,
-        $localisedDescription
+        $localisedDescription,
+        array $shopAssociation
     ) {
         $this->contactId = new ContactId($contactId);
         $this->localisedTitles = $localisedTitles;
@@ -81,6 +87,8 @@ class EditableContact
         $this->email = $email;
         $this->isMessagesSavingEnabled = $isMessagesSavingEnabled;
         $this->localisedDescription = $localisedDescription;
+        $this->contactId = $contactId;
+        $this->shopAssociation = $shopAssociation;
     }
 
     /**
@@ -121,5 +129,13 @@ class EditableContact
     public function getLocalisedDescription()
     {
         return $this->localisedDescription;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getShopAssociation()
+    {
+        return $this->shopAssociation;
     }
 }

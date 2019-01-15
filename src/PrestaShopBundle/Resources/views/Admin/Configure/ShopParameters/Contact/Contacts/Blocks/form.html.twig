@@ -53,6 +53,12 @@
             'label': 'Description'|trans({}, 'Admin.Global')
           }) }}
 
+          {% if contactForm.shop_association is defined %}
+            {{ ps.form_group_row(contactForm.shop_association, {}, {
+              'label': 'Shop association'|trans({}, 'Admin.Global')
+            }) }}
+          {% endif %}
+
           {% block contact_form_rest %}
             {{ form_rest(contactForm) }}
           {% endblock %}
