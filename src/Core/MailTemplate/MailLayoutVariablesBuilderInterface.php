@@ -38,6 +38,8 @@ use Language;
  */
 interface MailLayoutVariablesBuilderInterface
 {
+    const BUILD_LAYOUT_VARIABLES_HOOK = 'actionBuildLayoutVariables';
+
     /**
      * @param MailLayoutInterface $layout
      * @param Language $language

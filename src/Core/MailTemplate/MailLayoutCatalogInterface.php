@@ -35,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidException;
  */
 interface MailLayoutCatalogInterface
 {
+    const LIST_MAIL_THEMES_HOOK = 'actionListMailThemes';
+    const LIST_MAIL_THEME_LAYOUTS_HOOK = 'actionListMailThemeLayouts';
+
     /**
      * Returns the list of existing themes.
      *

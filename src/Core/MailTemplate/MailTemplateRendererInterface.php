@@ -35,6 +35,8 @@ use Language;
  */
 interface MailTemplateRendererInterface
 {
+    const GET_MAIL_TEMPLATE_TRANSFORMATIONS = 'actionGetMailTemplateTransformations';
+
     /**
      * @param MailLayoutInterface $layout
      * @param Language $language

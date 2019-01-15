@@ -27,18 +27,26 @@
 namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilder;
 use Language;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilderInterface;
 
 class MailLayoutVariablesBuilderTest extends TestCase
 {
     public function testConstructor()
     {
-        $builder = new MailLayoutVariablesBuilder();
+        /** @var HookDispatcherInterface $dispatcherMock */
+        $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $builder = new MailLayoutVariablesBuilder($dispatcherMock);
         $this->assertNotNull($builder);
 
-        $builder = new MailLayoutVariablesBuilder(['locale' => 'en']);
+        $builder = new MailLayoutVariablesBuilder($dispatcherMock, ['locale' => 'en']);
         $this->assertNotNull($builder);
     }
 
@@ -51,16 +59,18 @@ class MailLayoutVariablesBuilderTest extends TestCase
         $layoutMock = $this->buildLayoutMock($layoutInfos);
         $languageMock = $this->buildLanguageMock();
 
-        $builder = new MailLayoutVariablesBuilder();
-        $parameters = $builder->buildVariables($layoutMock, $languageMock);
-
-        $this->assertEquals([
+        $expectedVariables = [
             'templateName' => 'user_account',
             'templateModuleName' => '',
             'languageIsRTL' => false,
             'languageDefaultFont' => '',
             'locale' => 'en-EN',
-        ], $parameters);
+        ];
+
+        $builder = new MailLayoutVariablesBuilder($this->createHookDispatcherMock($expectedVariables, $layoutMock));
+        $builtVariables = $builder->buildVariables($layoutMock, $languageMock);
+
+        $this->assertEquals($expectedVariables, $builtVariables);
     }
 
     public function testBuildParametersWithDefault()
@@ -72,20 +82,24 @@ class MailLayoutVariablesBuilderTest extends TestCase
         $layoutMock = $this->buildLayoutMock($layoutInfos);
         $languageMock = $this->buildLanguageMock();
 
-        $builder = new MailLayoutVariablesBuilder([
-            'url' => 'http://test.com',
-            'languageDefaultFont' => 'overriddenFont',
-        ]);
-        $parameters = $builder->buildVariables($layoutMock, $languageMock);
-
-        $this->assertEquals([
+        $expectedVariables = [
             'url' => 'http://test.com',
             'templateName' => 'user_account',
             'templateModuleName' => '',
             'languageIsRTL' => false,
             'languageDefaultFont' => '',
             'locale' => 'en-EN',
-        ], $parameters);
+        ];
+        $builder = new MailLayoutVariablesBuilder(
+            $this->createHookDispatcherMock($expectedVariables, $layoutMock),
+            [
+                'url' => 'http://test.com',
+                'languageDefaultFont' => 'overriddenFont',
+            ]
+        );
+        $builtVariables = $builder->buildVariables($layoutMock, $languageMock);
+
+        $this->assertEquals($expectedVariables, $builtVariables);
     }
 
     public function testBuildParametersWithRTL()
@@ -97,17 +111,50 @@ class MailLayoutVariablesBuilderTest extends TestCase
         $layoutMock = $this->buildLayoutMock($layoutInfos);
         $languageMock = $this->buildLanguageMock('ar', true);
 
-        $builder = new MailLayoutVariablesBuilder();
-        $parameters = $builder->buildVariables($layoutMock, $languageMock);
-
-        $this->assertEquals([
+        $expectedVariables = [
             'templateName' => 'user_account',
             'templateModuleName' => 'ps_reminder',
             'languageIsRTL' => true,
             'languageDefaultFont' => 'Tahoma,',
             'locale' => 'ar-AR',
-        ], $parameters);
+        ];
+        $builder = new MailLayoutVariablesBuilder($this->createHookDispatcherMock($expectedVariables, $layoutMock));
+        $builtVariables = $builder->buildVariables($layoutMock, $languageMock);
+
+        $this->assertEquals($expectedVariables, $builtVariables);
     }
+
+    /**
+     * @param array $expectedVariables
+     * @param MailLayoutInterface $mailLayout
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|HookDispatcherInterface
+     */
+    private function createHookDispatcherMock(array $expectedVariables, MailLayoutInterface $mailLayout)
+    {
+        $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $dispatcherMock
+            ->expects($this->once())
+            ->method('dispatchWithParameters')
+            ->with(
+                $this->equalTo(MailLayoutVariablesBuilderInterface::BUILD_LAYOUT_VARIABLES_HOOK),
+                $this->callback(function(array $hookParameters) use ($expectedVariables, $mailLayout) {
+                    $this->assertEquals($expectedVariables, $hookParameters['mailLayoutVariables']);
+                    $this->assertInstanceOf(MailLayoutInterface::class, $hookParameters['mailLayout']);
+                    $this->assertEquals($mailLayout, $hookParameters['mailLayout']);
+
+                    return true;
+                })
+            )
+        ;
+
+        return $dispatcherMock;
+    }
+
 
     /**
      * @param string $isoCode
