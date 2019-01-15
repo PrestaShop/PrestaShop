@@ -27,10 +27,10 @@ if [ ! -z "$SELENIUM_PORT" ]; then
   COMMAND_PARAMETERS="$COMMAND_PARAMETERS --SELENIUM_PORT=$SELENIUM_PORT"
 fi
 
-if [ ! -z "$TEST_PATH"]; then
-  COMMAND="npm run specific-test",
+if [ ! -z "$TEST_PATH" ]; then
+  COMMAND="npm run specific-test"
 else
-  if [ $1 == "high" ]; then
+  if [ "$1" = "high" ]; then
     COMMAND="npm run high-test"
     shift
   else
