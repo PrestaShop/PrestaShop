@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
@@ -47,25 +48,33 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /** @var MailLayoutVariablesBuilderInterface */
     private $variablesBuilder;
 
+    /** @var HookDispatcherInterface */
+    private $hookDispatcher;
+
     /** @var TransformationInterface[] */
     private $transformations;
 
     /**
      * @param EngineInterface $engine
      * @param MailLayoutVariablesBuilderInterface $variablesBuilder
+     * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
         EngineInterface $engine,
-        MailLayoutVariablesBuilderInterface $variablesBuilder
+        MailLayoutVariablesBuilderInterface $variablesBuilder,
+        HookDispatcherInterface $hookDispatcher
     ) {
         $this->engine = $engine;
         $this->variablesBuilder = $variablesBuilder;
+        $this->hookDispatcher = $hookDispatcher;
         $this->transformations = new TransformationCollection();
     }
 
     /**
      * @param MailLayoutInterface $layout
      * @param Language $language
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
      *
      * @return string
      */
@@ -77,6 +86,8 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /**
      * @param MailLayoutInterface $layout
      * @param Language $language
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
      *
      * @return string
      */
@@ -90,6 +101,8 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param Language $language
      * @param string $templateType
      *
+     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
+     *
      * @return string
      */
     private function render(
@@ -97,27 +110,56 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         Language $language,
         $templateType
     ) {
-        $parameters = $this->variablesBuilder->buildVariables($layout, $language);
+        $layoutVariables = $this->variablesBuilder->buildVariables($layout, $language);
         if (MailTemplateInterface::HTML_TYPE === $templateType) {
             $layoutPath = !empty($layout->getHtmlPath()) ? $layout->getHtmlPath() : $layout->getTxtPath();
         } else {
             $layoutPath = !empty($layout->getTxtPath()) ? $layout->getTxtPath() : $layout->getHtmlPath();
         }
 
-        $renderedTemplate = $this->engine->render($layoutPath, $parameters);
+        $renderedTemplate = $this->engine->render($layoutPath, $layoutVariables);
+        $templateTransformations = $this->getMailTemplateTransformations($layout, $templateType);
+        /** @var TransformationInterface $transformation */
+        foreach ($templateTransformations as $transformation) {
+            $renderedTemplate = $transformation
+                ->setLanguage($language)
+                ->apply($renderedTemplate, $layoutVariables)
+            ;
+        }
+
+        return $renderedTemplate;
+    }
+
+    /**
+     * @param MailLayoutInterface $mailLayout
+     * @param string $templateType
+     *
+     * @return TransformationCollection
+     * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
+     */
+    private function getMailTemplateTransformations(MailLayoutInterface $mailLayout, $templateType)
+    {
+        $templateTransformations = new TransformationCollection();
         /** @var TransformationInterface $transformation */
         foreach ($this->transformations as $transformation) {
             if ($templateType !== $transformation->getType()) {
                 continue;
             }
 
-            $renderedTemplate = $transformation
-                ->setLanguage($language)
-                ->apply($renderedTemplate, $parameters)
-            ;
+            $templateTransformations->add($transformation);
         }
 
-        return $renderedTemplate;
+        //This hook allows to add/remove transformations during a layout rendering
+        $this->hookDispatcher->dispatchWithParameters(
+            MailTemplateRendererInterface::GET_MAIL_TEMPLATE_TRANSFORMATIONS,
+            [
+                'mailLayout' => $mailLayout,
+                'templateType' => $templateType,
+                'templateTransformations' => $templateTransformations,
+            ]
+        );
+
+        return $templateTransformations;
     }
 
     /**

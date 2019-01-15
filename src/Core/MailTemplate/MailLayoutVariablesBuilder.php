@@ -27,11 +27,15 @@
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 use Language;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 class MailLayoutVariablesBuilder implements MailLayoutVariablesBuilderInterface
 {
     /** @var array */
     private $defaultVariables;
+
+    /** @var HookDispatcherInterface */
+    private $hookDispatcher;
 
     /**
      * This is a non exhaustive list of language which need a specific font
@@ -45,31 +49,42 @@ class MailLayoutVariablesBuilder implements MailLayoutVariablesBuilderInterface
     );
 
     /**
+     * @param HookDispatcherInterface $hookDispatcher
      * @param array $defaultVariables
      */
-    public function __construct(array $defaultVariables = [])
+    public function __construct(HookDispatcherInterface $hookDispatcher, array $defaultVariables = [])
     {
+        $this->hookDispatcher = $hookDispatcher;
         $this->defaultVariables = $defaultVariables;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildVariables(MailLayoutInterface $layout, Language $language)
+    public function buildVariables(MailLayoutInterface $mailLayout, Language $language)
     {
         $languageDefaultFont = '';
         if (isset($this->languageDefaultFonts[$language->iso_code])) {
             $languageDefaultFont = $this->languageDefaultFonts[$language->iso_code] . ',';
         }
 
-        $variables = array_merge($this->defaultVariables, [
+        $mailLayoutVariables = array_merge($this->defaultVariables, [
             'languageIsRTL' => (bool) $language->is_rtl,
             'languageDefaultFont' => $languageDefaultFont,
-            'templateName' => $layout->getName(),
-            'templateModuleName' => $layout->getModuleName(),
+            'templateName' => $mailLayout->getName(),
+            'templateModuleName' => $mailLayout->getModuleName(),
             'locale' => $language->locale,
         ]);
 
-        return $variables;
+        //This hook allows to change the variables of a layout
+        $this->hookDispatcher->dispatchWithParameters(
+            MailLayoutVariablesBuilderInterface::BUILD_LAYOUT_VARIABLES_HOOK,
+            [
+                'mailLayout' => $mailLayout,
+                'mailLayoutVariables' => &$mailLayoutVariables,
+            ]
+        );
+
+        return $mailLayoutVariables;
     }
 }
