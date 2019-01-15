@@ -1,5 +1,6 @@
-{#**
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,20 +22,36 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\Query;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 
-{% block javascripts %}
-  {{ parent() }}
+/**
+ * Class GetContactForEditing is responsible for getting the data for contact edit page.
+ */
+class GetContactForEditing
+{
+    /** @var ContactId */
+    private $contactId;
 
-  <script src="{{ asset('themes/new-theme/public/contacts.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * @param int $contactId
+     *
+     * @throws ContactException
+     */
+    public function __construct($contactId)
+    {
+        $this->contactId = new ContactId($contactId);
+    }
+
+    /**
+     * @return ContactId
+     */
+    public function getContactId()
+    {
+        return $this->contactId;
+    }
+}
