@@ -23,7 +23,7 @@ return PhpCsFixer\Config::create()
         ],
         // Don't convert protected variables and methods to private.
         'protected_to_private' => false,
-        // Dont force the class names to match the file name.
+        // Don't force the class names to match the file name.
         'psr4' => false,
         // Don't add leading \ before constant invocation.
         'native_constant_invocation' => false,
@@ -32,7 +32,12 @@ return PhpCsFixer\Config::create()
         // Don't force use of self.
         'self_accessor' => false,
         // Ignore yoda style conditions.
-        'yoda_style' => null,
+        'yoda_style' => [
+            'always_move_variable' => false,
+            'equal' => null,
+            'identical' => null,
+            'less_and_greater' => null,
+        ],
         // All multi-line strings must use correct line ending.
         'string_line_ending' => true,
         // Each line of multi-line DocComments must have an asterisk [PSR-5] and must be aligned with the first one.
