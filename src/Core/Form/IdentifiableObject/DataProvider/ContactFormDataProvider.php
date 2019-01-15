@@ -64,6 +64,7 @@ final class ContactFormDataProvider implements FormDataProviderInterface
             'email' => $editableContact->getEmail(),
             'is_messages_saving_enabled' => $editableContact->isMessagesSavingEnabled(),
             'description' => $editableContact->getLocalisedDescription(),
+            'shop_association' => $editableContact->getShopAssociation(),
         ];
     }
 

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact;
 
+use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -40,6 +41,19 @@ use Symfony\Component\Form\FormBuilderInterface;
 class ContactType extends AbstractType
 {
     use TranslatorAwareTrait;
+
+    /**
+     * @var bool
+     */
+    private $isShopFeatureEnabled;
+
+    /**
+     * @param bool $isShopFeatureEnabled
+     */
+    public function __construct($isShopFeatureEnabled)
+    {
+        $this->isShopFeatureEnabled = $isShopFeatureEnabled;
+    }
 
     /**
      * {@inheritdoc}
@@ -57,5 +71,9 @@ class ContactType extends AbstractType
                 'required' => false,
             ])
         ;
+
+        if ($this->isShopFeatureEnabled) {
+            $builder->add('shop_association', ShopChoiceTreeType::class);
+        }
     }
 }
