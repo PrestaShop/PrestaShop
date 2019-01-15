@@ -14,14 +14,14 @@ admin_contacts_search:
 
 admin_contacts_create:
     path: /new
-    methods: GET
+    methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:create'
         _legacy_controller: AdminContacts
 
 admin_contacts_edit:
     path: /{contactId}/edit
-    methods: GET
+    methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:edit'
         _legacy_controller: AdminContacts
