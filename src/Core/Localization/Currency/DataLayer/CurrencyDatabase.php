@@ -84,7 +84,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
     protected function doRead($currencyDataId)
     {
         if (!$currencyDataId instanceof LocalizedCurrencyId) {
-            throw new LocalizationException('$currencyDataId must be a CurrencyDataIdentifier object');
+            throw new LocalizationException('First parameter must be an instance of ' . LocalizedCurrencyId::class);
         }
 
         $localeCode = $currencyDataId->getLocaleCode();
@@ -123,7 +123,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
     protected function doWrite($currencyDataId, $currencyData)
     {
         if (!$currencyDataId instanceof LocalizedCurrencyId) {
-            throw new LocalizationException('$currencyDataId must be a CurrencyDataIdentifier object');
+            throw new LocalizationException('First parameter must be an instance of ' . LocalizedCurrencyId::class);
         }
 
         $currencyCode = $currencyDataId->getCurrencyCode();
