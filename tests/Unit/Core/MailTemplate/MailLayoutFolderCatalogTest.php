@@ -34,6 +34,10 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutFolderCatalog;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTheme;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailThemeCollection;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailThemeCollectionInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailThemeInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class MailLayoutFolderCatalogTest extends TestCase
@@ -49,7 +53,7 @@ class MailLayoutFolderCatalogTest extends TestCase
     private $fs;
 
     /**
-     * @var array
+     * @var MailThemeCollectionInterface
      */
     private $expectedThemes;
 
@@ -85,6 +89,7 @@ class MailLayoutFolderCatalogTest extends TestCase
 
     public function testListThemes()
     {
+        /** @var HookDispatcherInterface $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
@@ -95,9 +100,12 @@ class MailLayoutFolderCatalogTest extends TestCase
             ->method('dispatchWithParameters')
             ->with(
                 $this->equalTo(MailLayoutCatalogInterface::LIST_MAIL_THEMES_HOOK),
-                $this->equalTo([
-                    'mailThemes' => $this->expectedThemes,
-                ])
+                $this->callback(function(array $hookParams) {
+                    $this->assertInstanceOf(MailThemeCollectionInterface::class, $hookParams['mailThemes']);
+                    $this->assertCount(count($this->expectedThemes), $hookParams['mailThemes']);
+
+                    return true;
+                })
             )
         ;
 
@@ -279,10 +287,10 @@ class MailLayoutFolderCatalogTest extends TestCase
 
     private function createThemesFiles()
     {
-        $this->expectedThemes = [
-            'classic',
-            'modern',
-        ];
+        $this->expectedThemes = new MailThemeCollection([
+            new MailTheme('classic'),
+            new MailTheme('modern'),
+        ]);
         $this->coreLayouts = [
             'account.html.twig',
             'password.html.twig',
@@ -305,9 +313,10 @@ class MailLayoutFolderCatalogTest extends TestCase
             ],
         ];
 
+        /** @var MailThemeInterface $theme */
         foreach ($this->expectedThemes as $theme) {
             //Insert core files
-            $themeFolder = $this->tempDir . DIRECTORY_SEPARATOR . $theme;
+            $themeFolder = $this->tempDir . DIRECTORY_SEPARATOR . $theme->getName();
             $coreFolder = implode(DIRECTORY_SEPARATOR, [$themeFolder, MailTemplateInterface::CORE_CATEGORY]);
             $this->fs->mkdir($coreFolder);
             foreach ($this->coreLayouts as $layout) {
