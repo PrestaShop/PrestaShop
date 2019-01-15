@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
  * This class represents the immutable object of CLDR data for a specific locale, translated in a given language.
  * It is the only data object visible and handleable by "outside" code (meaning non-CLDR code).
  */
-class Locale
+final class Locale implements LocaleInterface
 {
     /**
      * The locale code for this data (either language code or IETF tag).
