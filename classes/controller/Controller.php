@@ -180,7 +180,7 @@ abstract class ControllerCore
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
 
-        if (null === $this->container) {
+        if (null === $this->getContainer()) {
             $this->container = $this->buildContainer();
         }
         $localeRepo = $this->get(self::SERVICE_LOCALE_REPOSITORY);
