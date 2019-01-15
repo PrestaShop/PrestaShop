@@ -40,7 +40,7 @@ use Symfony\Component\Cache\Adapter\AdapterInterface;
  *
  * This currency data layer reads and writes CLDR CurrencyData from a cache adapter
  */
-class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterface
+final class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
     /**
      * Symfony Cache component adapter.
