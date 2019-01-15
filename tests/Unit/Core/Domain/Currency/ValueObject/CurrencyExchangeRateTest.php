@@ -50,7 +50,7 @@ class CurrencyExchangeRateTest extends TestCase
     {
         return [
             [
-                0
+                0,
             ],
             [
                 '-1',
