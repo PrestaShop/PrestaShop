@@ -44,7 +44,7 @@
             'help': 'Emails will be sent to this address.'|trans({}, 'Admin.Shopparameters.Help')
           }) }}
 
-          {{ ps.form_group_row(contactForm.is_saved_message, {}, {
+          {{ ps.form_group_row(contactForm.is_messages_saving_enabled, {}, {
             'label': 'Save messages?'|trans({}, 'Admin.Shopparameters.Feature'),
             'help': 'If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.'|trans({}, 'Admin.Shopparameters.Help')
           }) }}
