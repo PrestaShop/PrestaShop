@@ -71,7 +71,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
         if (Language::getIdByIso($isoCode->getValue())) {
             throw new LanguageConstraintException(
                 sprintf('Language with ISO code "%s" already exists', $isoCode->getValue()),
-                LanguageConstraintException::INVALID_ISO_CODE
+                LanguageConstraintException::DUPLICATE_ISO_CODE
             );
         }
     }

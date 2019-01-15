@@ -40,4 +40,9 @@ class LanguageConstraintException extends LanguageException
      * @var int Code is used when invalid language ISO code in encountered
      */
     const INVALID_ISO_CODE = 2;
+
+    /**
+     * @var int Code is used when duplicate language ISO code in encountered when creating new language
+     */
+    const DUPLICATE_ISO_CODE = 3;
 }

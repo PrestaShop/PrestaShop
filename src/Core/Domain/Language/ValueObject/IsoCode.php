@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Language\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 
 /**
@@ -64,8 +65,9 @@ class IsoCode
     private function assertIsIsoCode($isoCode)
     {
         if (!is_string($isoCode) || !preg_match('/^[a-zA-Z]{2,3}$/', $isoCode)) {
-            throw new LanguageException(
-                sprintf('Invalid language ISO code %s supplied', var_export($isoCode, true))
+            throw new LanguageConstraintException(
+                sprintf('Invalid language ISO code %s supplied', var_export($isoCode, true)),
+                LanguageConstraintException::INVALID_ISO_CODE
             );
         }
     }
