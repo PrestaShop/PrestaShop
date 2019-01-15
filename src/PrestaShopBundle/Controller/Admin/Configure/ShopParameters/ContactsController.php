@@ -126,12 +126,26 @@ class ContactsController extends FrameworkBundleAdminController
      *
      * @param int $contactId
      *
+     * @param Request $request
      * @return Response
      */
-    public function editAction($contactId)
+    public function editAction($contactId, Request $request)
     {
         $contactFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.contact_form_builder');
         $contactForm = $contactFormBuilder->getFormFor($contactId);
+
+        $contactForm->handleRequest($request);
+
+        if ($contactForm->isSubmitted()) {
+            $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
+            $result = $contactFormHandler->handleFor($contactId, $contactForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_contacts_index');
+            }
+        }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/edit.html.twig', [
             'contactForm' => $contactForm->createView(),
