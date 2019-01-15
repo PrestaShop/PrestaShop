@@ -68,6 +68,41 @@ class EditContactCommandTest extends TestCase
                     null,
                     true,
                 ]
+            ],
+            [
+                [
+                    '{}',
+                    'test<=',
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider getIncorrectShopAssociations
+     */
+    public function testItThrowsAnExceptionOnIncorrectShopAssociation($incorrectShopAssociation)
+    {
+        $this->expectException(ContactConstraintException::class);
+        $this->expectExceptionCode(ContactConstraintException::INVALID_SHOP_ASSOCIATION);
+
+        $command = new EditContactCommand(1);
+        $command->setShopAssociation($incorrectShopAssociation);
+    }
+
+    public function getIncorrectShopAssociations()
+    {
+        return [
+            [
+                [
+                    '1',
+                ]
+            ],
+            [
+                [
+                    null,
+                    false,
+                ]
             ]
         ];
     }
