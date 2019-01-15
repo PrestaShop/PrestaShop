@@ -35,6 +35,11 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 class IsoCode
 {
     /**
+     * @var string ISO Code validation pattern
+     */
+    const PATTERN = '/^[a-zA-Z]{2,3}$/';
+
+    /**
      * @var string
      */
     private $isoCode;

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Language;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -36,6 +37,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Builds language's add/edit form
@@ -75,12 +77,20 @@ class LanguageType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
+                    new Regex([
+                        'pattern' => IsoCode::PATTERN,
+                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                    ]),
                 ],
             ])
             ->add('tag_ietf', TextType::class, [
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
+                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
@@ -89,12 +99,20 @@ class LanguageType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
+                    new Regex([
+                        'pattern' => '/^[^<>]+$/',
+                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                    ]),
                 ],
             ])
             ->add('full_date_format', TextType::class, [
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[^<>]+$/',
+                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
