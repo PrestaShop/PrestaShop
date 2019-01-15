@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
 {% block contact_form %}
   {{ form_start(contactForm) }}
     <div class="card">
@@ -32,12 +34,9 @@
       </h3>
       <div class="card-block row">
         <div class="card-text">
-          <div class="form-group row">
-
-            <div class="col-sm">
-              {{ form_widget(contactForm.title) }}
-            </div>
-          </div>
+          {{ ps.form_group_row(contactForm.title, {}, {
+            'label': 'Title'|trans({}, 'Admin.Global')
+          }) }}
 
 
           {% block contact_form_rest %}
