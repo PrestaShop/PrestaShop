@@ -30,10 +30,8 @@ services:
     prestashop.core.admin.url_generator_legacy:
         class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
         factory: ["@prestashop.core.admin.url_generator_factory", forLegacy]
-        calls:
-            - method: 'setMailThemesUri'
-              arguments:
-                - "@prestashop.adapter.legacy.context"
+        arguments:
+            - "@prestashop.adapter.legacy.context"
 
     prestashop.core.admin.url_generator:
         class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
