@@ -43,7 +43,7 @@ interface MailLayoutCatalogInterface
      *
      * @throws InvalidException
      *
-     * @return string[]
+     * @return MailThemeCollectionInterface
      */
     public function listThemes();
 
