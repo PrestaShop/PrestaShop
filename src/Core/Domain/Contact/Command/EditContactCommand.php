@@ -98,14 +98,15 @@ class EditContactCommand extends AbstractContactCommand
      *
      * @throws ContactConstraintException
      */
-    public function setLocalisedTitles($localisedTitles)
+    public function setLocalisedTitles(array $localisedTitles)
     {
         if (!$this->assertIsNotEmptyAndContainsAtLeastOneString($localisedTitles)) {
             throw new ContactConstraintException(
                 sprintf(
                     'Expected to have not empty titles array with at least one value but received %s',
                     var_export($localisedTitles, true)
-                )
+                ),
+                ContactConstraintException::INVALID_TITLE
             );
         }
 
@@ -167,7 +168,7 @@ class EditContactCommand extends AbstractContactCommand
      *
      * @return self
      */
-    public function setLocalisedDescription($localisedDescription)
+    public function setLocalisedDescription(array $localisedDescription)
     {
         $this->localisedDescription = $localisedDescription;
 
@@ -187,7 +188,7 @@ class EditContactCommand extends AbstractContactCommand
      *
      * @return self
      */
-    public function setShopAssociation($shopAssociation)
+    public function setShopAssociation(array $shopAssociation)
     {
         $this->shopAssociation = $shopAssociation;
 
