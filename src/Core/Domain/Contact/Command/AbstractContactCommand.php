@@ -42,10 +42,30 @@ abstract class AbstractContactCommand
             return is_string($value) && $value;
         };
 
-        if (empty($values) || 0 === count(array_filter($values, $filterNonEmptyStrings))) {
-            return false;
-        }
+        return !(empty($values) || 0 === count(array_filter($values, $filterNonEmptyStrings)));
+    }
 
-        return true;
+    /**
+     * @param $value
+     *
+     * @return false|int
+     */
+    protected function assertIsGenericName($value)
+    {
+        return preg_match('/^[^<>={}]*$/u', $value);
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return bool
+     */
+    protected function assertArrayContainsAllIntegerValues(array $values)
+    {
+        $filterAllIntegers = function ($value) {
+            return is_int($value);
+        };
+
+        return !empty($values) && count($values) === count(array_filter($values, $filterAllIntegers));
     }
 }
