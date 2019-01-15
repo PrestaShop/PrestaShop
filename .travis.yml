@@ -27,6 +27,7 @@ env:
   matrix:
     - PRESTASHOP_TEST_TYPE=lint
     - PRESTASHOP_TEST_TYPE=unit
+    - PRESTASHOP_TEST_TYPE=integration
     - PRESTASHOP_TEST_TYPE=e2e
 
 matrix:
@@ -91,6 +92,10 @@ script:
 
   - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
         bash tests/check_unit.sh;
+    fi
+
+  - if [ $PRESTASHOP_TEST_TYPE = "integration" ]; then
+        bash tests/check_integration.sh;
     fi
 
   - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
