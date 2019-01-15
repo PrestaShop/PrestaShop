@@ -2327,7 +2327,15 @@ class ToolsCore
     }
 
     /**
-     * Get domains information
+     * Get domains information with physical and virtual paths
+     *
+     * e.g: [
+     *  prestashop.localhost => [
+     *    physical => "/",
+     *    virtual => "",
+     *    id_shop => "1",
+     *  ]
+     * ]
      *
      * @return array
      */
