@@ -1,4 +1,5 @@
 const {Menu} = require('../../selectors/BO/menu.js');
+const shopParameters = require('../common_scenarios/shop_parameters');
 let promise = Promise.resolve();
 
 module.exports = {
@@ -168,5 +169,47 @@ module.exports = {
       test('should check that the content of "Changelog" tab is not empty', () => client.checkTextValue(ModulePage.ReadMoreModal.changelog_content.replace("%moduleTechName", moduleTechName), '', 'notequal', 1000));
       test('should click on "Close" button in the modal', () => client.waitForExistAndClick(ModulePage.ReadMoreModal.close_modal_button.replace("%moduleTechName", moduleTechName), 2000));
     }, 'common_client');
-  }
+  },
+  installUninstallMboModule: async function (client, ModulePage, AddProductPage, moduleTechName, action) {
+    if (action === 'Uninstall') {
+      test('should go to "Module Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
+      test('should go to "Module Manager" page', () => client.waitForExistAndClick( Menu.Improve.Modules.modules_manager_submenu));
+      test('should click on "Installed Modules" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.installed_modules_tabs));
+      test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName, 2000));
+      test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
+      test('should check if the module ' + moduleTechName + ' was installed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', moduleTechName), 2000));
+      test('should click on "Uninstall" button', async () => {
+        if (isVisible) {
+          await client.scrollTo(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName));
+          await client.waitForExistAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName));
+          await client.scrollTo(ModulePage.uninstall_button.split('%moduleTechName').join(moduleTechName));
+          await client.waitForExistAndClick(ModulePage.uninstall_button.split('%moduleTechName').join(moduleTechName));
+          await client.waitForExistAndClick(ModulePage.uninstall_module_modal, 2000);
+          await client.waitForExistAndClick(AddProductPage.close_validation_button);
+          await client.checkIsNotVisible(ModulePage.backdrop_modale);
+          await client.isNotExisting(ModulePage.installed_module_div.replace('%moduleTechName', moduleTechName));
+          global.mboModule = await false;
+        }
+      });
+      test('should go to the "Dashboard" page', () => client.waitForExistAndClick(Menu.dashboard_menu));
+    }
+    else {
+      test('should go to the "Dashboard" page', () => shopParameters.checkMboModule(client));
+      test('should install the "MBO Module" if not installed', async () => {
+        if (mboModule === false) {
+          await client.waitForExistAndClick(Menu.Improve.Modules.modules_menu);
+          await client.waitForExistAndClick(Menu.Improve.Modules.modules_catalog_submenu);
+          await client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName, 2000);
+          await client.waitForExistAndClick(ModulePage.modules_search_button, 2000);
+          await client.isVisible(ModulePage.install_button.replace("%moduleTechName", moduleTechName), 2000);
+          if (isVisible) {
+            await client.waitForExistAndClick(ModulePage.install_button.replace("%moduleTechName", moduleTechName), 2000);
+            await client.waitForExistAndClick(AddProductPage.close_validation_button);
+            await shopParameters.checkMboModule(client);
+          }
+        }
+        await client.waitForExistAndClick(Menu.dashboard_menu);
+      });
+    }
+  },
 };

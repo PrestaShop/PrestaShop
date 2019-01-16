@@ -112,7 +112,7 @@ class Localize
     /**
      * Parse the language part of a given locale string.
      *
-     * @param null|string $locale The local to parse
+     * @param string|null $locale The local to parse
      *
      * @return string The language parsed from the $locale input
      */
@@ -158,7 +158,7 @@ class Localize
     /**
      * Gets the best locale value, looking after the input, the browser and the environment locales.
      *
-     * @param null|string|Localize $locale
+     * @param string|Localize|null $locale
      *
      * @return string The best fitting locale
      */
@@ -196,7 +196,7 @@ class Localize
     /**
      * Parse the region part of the given locale string.
      *
-     * @param null|string $locale The locale value to parse
+     * @param string|null $locale The locale value to parse
      *
      * @return string The region parsed from the input
      */
@@ -230,7 +230,7 @@ class Localize
      *
      * @param $locale the locale to fix
      *
-     * @return array|null|string the fixed locale format
+     * @return array|string|null the fixed locale format
      */
     private static function canonicalize($locale)
     {

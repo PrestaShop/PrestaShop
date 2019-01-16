@@ -709,7 +709,7 @@ class LanguageCore extends ObjectModel
      * @param string $iso_code Iso code
      * @param bool $no_cache
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function getIdByIso($iso_code, $no_cache = false)
     {

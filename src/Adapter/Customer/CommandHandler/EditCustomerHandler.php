@@ -32,14 +32,15 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
 /**
- * Handles command which edits customer's data
+ * Handles commands which edits given customer with provided data.
+ *
+ * @internal
  */
-final class EditCustomerHandler implements EditCustomerHandlerInterface
+final class EditCustomerHandler extends AbstractCustomerHandler implements EditCustomerHandlerInterface
 {
     /**
      * @var Hashing
@@ -69,12 +70,7 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         $customerId = $command->getCustomerId();
         $customer = new Customer($customerId->getValue());
 
-        if ($customer->id !== $customerId->getValue()) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found', $customerId->getValue())
-            );
-        }
+        $this->assertCustomerWasFound($customerId, $customer);
 
         $this->assertCustomerWithUpdatedEmailDoesNotExist($customer, $command);
         $this->assertCustomerCanAccessDefaultGroup($customer, $command);
@@ -139,6 +135,10 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
 
         if (null !== $command->getDefaultGroupId()) {
             $customer->id_default_group = $command->getDefaultGroupId();
+        }
+
+        if (null !== $command->isNewsletterSubscribed()) {
+            $customer->newsletter = $command->isNewsletterSubscribed();
         }
 
         $this->updateCustomerB2bData($customer, $command);

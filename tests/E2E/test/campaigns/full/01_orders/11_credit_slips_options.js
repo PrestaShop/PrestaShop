@@ -18,8 +18,7 @@ scenario('Generate and check a Credit slips options ', () => {
     test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
     test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
     test('should click on "DOCUMENTS" subtab', async () => {
-      await client.pause(3000);
-      await client.waitForExistAndClick(OrderPage.document_submenu, 2000);
+      await client.waitForExistAndClick(OrderPage.document_submenu, 5000);
       await client.pause(3000);
       await client.getCreditSlipDocumentName(OrderPage.credit_slip_document_name);
     });

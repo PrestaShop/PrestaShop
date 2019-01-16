@@ -142,7 +142,7 @@ class MetaCore extends ObjectModel
     /**
      * Get all Metas.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getMetas()
     {
@@ -154,7 +154,7 @@ class MetaCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getMetasByIdLang($idLang)
     {
@@ -173,7 +173,7 @@ class MetaCore extends ObjectModel
      * @param string $page
      * @param int $idLang Language ID
      *
-     * @return array|bool|null|object
+     * @return array|bool|object|null
      */
     public static function getMetaByPage($page, $idLang)
     {
@@ -194,7 +194,7 @@ class MetaCore extends ObjectModel
      *
      * @param int $idLang
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getAllMeta($idLang)
     {
@@ -269,7 +269,7 @@ class MetaCore extends ObjectModel
      * @param int $idLang
      * @param string $urlRewrite
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function getEquivalentUrlRewrite($newIdLang, $idLang, $urlRewrite)
     {

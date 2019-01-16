@@ -102,4 +102,11 @@ interface ImportConfigInterface
      * @return bool
      */
     public function sendEmail();
+
+    /**
+     * Get number of rows to skip from the beginning of import file.
+     *
+     * @return int
+     */
+    public function getNumberOfRowsToSkip();
 }

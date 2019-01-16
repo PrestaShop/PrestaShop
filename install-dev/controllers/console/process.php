@@ -131,12 +131,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
         }
 
-        if (in_array('fixtures', $steps)) {
-            if (!$this->processInstallFixtures()) {
-                $this->printErrors();
-            }
-        }
-
         if (in_array('modules', $steps)) {
             if (!$this->processInstallModules()) {
                 $this->printErrors();
@@ -151,6 +145,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         if (in_array('theme', $steps)) {
             if (!$this->processInstallTheme()) {
+                $this->printErrors();
+            }
+        }
+
+        if (in_array('fixtures', $steps)) {
+            if (!$this->processInstallFixtures()) {
                 $this->printErrors();
             }
         }

@@ -392,137 +392,77 @@ module.exports = {
     }
   },
 
-  checkProductInListFO(AccessPageFO, productPage, productData) {
-    scenario('Check the created product in the Front Office', () => {
-
-      scenario('Login in the Front Office', client => {
-        test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
-      }, 'product/product');
-
-      scenario('Open the created product', client => {
-        test('should set the language of shop to "English"', () => client.changeLanguage());
-        test('should click on "SEE ALL PRODUCTS" link', () => client.scrollWaitForExistAndClick(productPage.see_all_products));
-        for (let i = 0; i <= pagination; i++) {
-          for (let j = 0; j < 4; j++) {
-            test('should check the ' + productData[j].name + ' product existence in the ' + (Number(i) + 1) + ' page', () => {
-              return promise
-                .then(() => client.pause(4000))
-                .then(() => client.isVisible(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time)));
-            });
-            test('should open the product in new tab if exist', () => client.middleClick(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time), global.isVisible));
-          }
-          if (i !== pagination) {
-            test('should click on "NEXT" button', () => {
-              return promise
-                .then(() => client.isVisible(productPage.pagination_next))
-                .then(() => {
-                  if (global.isVisible) {
-                    client.clickPageNext(productPage.pagination_next);
-                  }
-                });
-            });
-          }
+  async checkProductInListFO(AccessPageFO, productPage, productData, client) {
+    await client.signInFO(AccessPageFO);
+    await client.changeLanguage();
+    await client.scrollWaitForExistAndClick(productPage.see_all_products);
+    for (let i = 0; i <= pagination; i++) {
+      for (let j = 0; j < 4; j++) {
+        await client.pause(4000);
+        await client.isVisible(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time));
+        await client.middleClick(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time), global.isVisible);
+      }
+      if (i !== pagination) {
+        await client.isVisible(productPage.pagination_next);
+        if (global.isVisible) {
+          await client.clickPageNext(productPage.pagination_next);
         }
-      }, 'product/product');
-      scenario('Check "standard" product information', client => {
-        test('should go to the "' + productData[0].name + '" product', () => client.switchWindow(4));
-        test('should check that the product name is equal to "' + (productData[0].name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (productData[0].name + date_time).toUpperCase()));
-        test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, "€12.00", "contain"));
-        test('should check that the product reference is equal to "' + productData[0].reference + '"', () => {
-          return promise
-            .then(() => client.scrollTo(productPage.product_reference))
-            .then(() => client.checkTextValue(productPage.product_reference, productData[0].reference));
-        });
-        test('should check that the product quantity is equal to "5"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[0].quantity));
-      }, 'product/product');
+      }
+    }
+    //Check "standard" product information
+    await client.switchWindow(4);
+    await client.checkTextValue(productPage.product_name, (productData[0].name + date_time).toUpperCase());
+    await client.checkTextValue(productPage.product_price, "€12.00", "contain");
+    await client.scrollTo(productPage.product_reference);
+    await client.checkTextValue(productPage.product_reference, productData[0].reference);
+    await client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[0].quantity);
+    //Check "pack" product information
+    await client.switchWindow(3);
+    await client.checkTextValue(productPage.product_name, (productData[1].name + date_time).toUpperCase());
+    await client.checkTextValue(productPage.product_price, "€12.00", "contain");
+    await client.checkTextValue(productPage.pack_product_name.replace('%P', 1), productData[0].name + date_time);
+    await client.checkTextValue(productPage.pack_product_price.replace('%P', 1), '€12.00');
+    await client.checkTextValue(productPage.pack_product_quantity.replace('%P', 1), 'x 1');
+    await client.scrollTo(productPage.product_reference);
+    await client.checkTextValue(productPage.product_reference, productData[1].reference);
+    await client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[1].quantity);
+    //Check "combination" product information
+    await client.switchWindow(2);
+    await client.checkTextValue(productPage.product_name, (productData[2].name + date_time).toUpperCase());
+    await client.checkTextValue(productPage.product_price, "€12.00", "contain");
+    await client.scrollTo(productPage.product_reference);
+    await client.checkTextValue(productPage.product_reference, productData[2].reference);
+    await client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[2].quantity);
+    //Check "virtual" product information
+    await client.switchWindow(1);
+    await client.checkTextValue(productPage.product_name, (productData[3].name + date_time).toUpperCase());
+    await client.checkTextValue(productPage.product_price, "€12.00", "contain");
+    await client.scrollTo(productPage.product_reference);
+    await client.checkTextValue(productPage.product_reference, productData[3].reference);
+    await client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[3].quantity);
 
-      scenario('Check "pack" product information', client => {
-        test('should go to the "' + productData[1].name + '" product', () => client.switchWindow(3));
-        test('should check that the product name is equal to "' + (productData[1].name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (productData[1].name + date_time).toUpperCase()));
-        test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, "€12.00", "contain"));
-        test('should check that the first product pack name is equal to "standard"', () => client.checkTextValue(productPage.pack_product_name.replace('%P', 1), productData[0].name + date_time));
-        test('should check that the first product pack price is equal to "€12.80"', () => client.checkTextValue(productPage.pack_product_price.replace('%P', 1), '€12.00'));
-        test('should check that the first product pack quantity is equal to "1"', () => client.checkTextValue(productPage.pack_product_quantity.replace('%P', 1), 'x 1'));
-        test('should check that the product reference is equal to "' + productData[1].reference + '"', () => {
-          return promise
-            .then(() => client.scrollTo(productPage.product_reference))
-            .then(() => client.checkTextValue(productPage.product_reference, productData[1].reference));
-        });
-        test('should check that the product quantity is equal to "5"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[1].quantity));
-      }, 'product/product');
-
-      scenario('Check "combination" product information', client => {
-        test('should go to the "' + productData[2].name + '" product', () => client.switchWindow(2));
-        test('should check that the product name is equal to "' + (productData[2].name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (productData[2].name + date_time).toUpperCase()));
-        test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, "€12.00", "contain"));
-        test('should check that the product reference is equal to "' + productData[2].reference + '"', () => {
-          return promise
-            .then(() => client.scrollTo(productPage.product_reference))
-            .then(() => client.checkTextValue(productPage.product_reference, productData[2].reference));
-        });
-        test('should check that the product quantity is equal to "5"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[2].quantity));
-      }, 'product/product');
-
-      scenario('Check "virtual" product information', client => {
-        test('should go to the "' + productData[3].name + '" product', () => client.switchWindow(1));
-        test('should check that the product name is equal to "' + (productData[3].name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (productData[3].name + date_time).toUpperCase()));
-        test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, "€12.00", "contain"));
-        test('should check that the product reference is equal to "' + productData[3].reference + '"', () => {
-          return promise
-            .then(() => client.scrollTo(productPage.product_reference))
-            .then(() => client.checkTextValue(productPage.product_reference, productData[3].reference));
-        });
-        test('should check that the product quantity is equal to "5"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[3].quantity));
-      }, 'product/product');
-
-    }, 'product/product', true);
   },
-  checkAllProduct(AccessPageFO, productPage) {
-    scenario('Check the created product in the Front Office', () => {
-      scenario('Login in the Front Office', client => {
-        test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
-      }, 'product/product');
-      scenario('Check that all product are displayed in the Front Office', client => {
-        test('should set the language of shop to "English"', () => client.changeLanguage());
-        test('should click on "SEE ALL PRODUCTS" link', () => client.scrollWaitForExistAndClick(productPage.see_all_products));
-        for (let i = 0; i <= pagination; i++) {
-          for (let j = 0; j < global.productInfo.length; j++) {
-            test('should check the ' + global.productInfo[j].name + ' existence in the ' + (Number(i) + 1) + ' page', () => {
-              return promise
-                .then(() => client.pause(4000))
-                .then(() => client.isVisible(AccessPageFO.product_name.replace('%PAGENAME', global.productInfo[j].name.substring(0, 23))))
-                .then(() => {
-                  if (global.isVisible) {
-                    global.productInfo[j].status = true;
-                  }
-                });
-            });
-          }
-          if (i !== pagination) {
-            test('should click on "NEXT" button', () => {
-              return promise
-                .then(() => client.isVisible(productPage.pagination_next))
-                .then(() => {
-                  if (global.isVisible) {
-                    client.clickPageNext(productPage.pagination_next);
-                  }
-                });
-            });
-          }
+  async checkAllProduct(AccessPageFO, productPage, client) {
+    await client.signInFO(AccessPageFO);
+    await client.changeLanguage();
+    await client.scrollWaitForExistAndClick(productPage.see_all_products);
+    for (let i = 0; i <= pagination; i++) {
+      for (let j = 0; j < global.productInfo.length; j++) {
+        await client.pause(4000);
+        await client.isVisible(AccessPageFO.product_name.replace('%PAGENAME', global.productInfo[j].name.substring(0, 23)));
+        if (global.isVisible) {
+          global.productInfo[j].status = await true;
         }
-      }, 'product/product');
-      scenario('Verify the existence of all product in the Front Office', client => {
-        test('should check that the product doesn\'t contain false status', () => {
-          return promise
-            .then(() => {
-              for (let i = 0; i < global.productInfo.length; i++) {
-                expect(global.productInfo[i].status, 'the product ' + global.productInfo[i].name + ' doesn\'t in the Front Office').to.equal(true);
-              }
-            })
-            .then(() => client.pause(2000));
-        });
-      }, 'product/product');
-    }, 'product/product', true);
+      }
+      if (i < pagination) {
+        await client.isVisible(productPage.pagination_next);
+        await client.clickPageNext(productPage.pagination_next, 2000);
+      }
+    }
+    for (let i = 0; i < global.productInfo.length; i++) {
+      await expect(global.productInfo[i].status, 'the product ' + global.productInfo[i].name + ' doesn\'t in the Front Office').to.equal(true);
+    }
+    await client.pause(2000);
   },
 
   /**** Example of demo product data ****

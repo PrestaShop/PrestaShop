@@ -59,7 +59,7 @@ class CustomerDataProvider
      *
      * @param int $idCustomer Customer ID
      *
-     * @return mixed|null|string
+     * @return mixed|string|null
      */
     public function getDefaultGroupId($idCustomer)
     {

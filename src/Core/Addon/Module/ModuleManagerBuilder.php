@@ -80,7 +80,7 @@ class ModuleManagerBuilder
     public static $cacheProvider = null;
 
     /**
-     * @return null|ModuleManagerBuilder
+     * @return ModuleManagerBuilder|null
      */
     public static function getInstance()
     {

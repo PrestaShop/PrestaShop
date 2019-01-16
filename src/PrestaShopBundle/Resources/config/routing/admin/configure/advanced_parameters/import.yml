@@ -6,23 +6,30 @@ admin_import:
         _legacy_controller: AdminImport
         _legacy_link: AdminImport
 
-admin_import_show_data:
+admin_import_data_configuration_index:
     path: /data
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:showImportData'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:index'
         _legacy_controller: AdminImport
 
 # This redirect prevents an error (redirects to import first page instead) when
 # trying to access import data page with GET http method.
 # It happens on direct access or when the session token expires and
 # the user clicks "I understand the risk" in the warning page.
-admin_import_show_data_redirect:
+admin_import_data_configuration_index_redirect:
     path: /data
     methods: [GET]
     controller: 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction'
     defaults:
         route: 'admin_import'
+
+admin_import_process:
+    path: /process
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:processImport'
+        _legacy_controller: AdminImport
 
 admin_import_file_upload:
     path: /file/upload
@@ -56,27 +63,27 @@ admin_import_sample_download:
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:sampleDownload
 
-admin_import_save_import_match:
+admin_import_data_configuration_create:
     path: /match
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:saveImportMatch'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:create'
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:saveImportMatch
 
-admin_import_get_import_match:
+admin_import_data_configuration_get:
     path: /match
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:getImportMatch'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:get'
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:getImportMatch
 
-admin_import_delete_import_match:
+admin_import_data_configuration_delete:
   path: /match
   methods: [DELETE]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:deleteImportMatch'
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:delete'
     _legacy_controller: AdminImport
     _legacy_link: AdminImport:deleteImportMatch
 

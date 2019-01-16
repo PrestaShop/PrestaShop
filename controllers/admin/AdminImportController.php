@@ -655,11 +655,15 @@ class AdminImportControllerCore extends AdminController
             }
         }
 
-        // Import form is reworked in Symfony.
-        // If user tries to access legacy form directly,
-        // we redirect him to new form.
-        $symfonyImportForm = $this->context->link->getAdminLink('AdminImport');
-        Tools::redirectAdmin($symfonyImportForm);
+        $request = $this->getSymfonyRequest();
+
+        if ($request && $request->isMethod(\Symfony\Component\HttpFoundation\Request::METHOD_GET)) {
+            // Import form is reworked in Symfony.
+            // If user tries to access legacy form directly,
+            // we redirect him to new form.
+            $symfonyImportForm = $this->context->link->getAdminLink('AdminImport');
+            Tools::redirectAdmin($symfonyImportForm);
+        }
 
         if (!is_dir(AdminImportController::getPath())) {
             return !($this->errors[] = $this->trans('The import directory doesn\'t exist. Please check your file path.', array(), 'Admin.Advparameters.Notification'));
@@ -4786,6 +4790,18 @@ class AdminImportControllerCore extends AdminController
         die(json_encode($results));
     }
 
+    public function initModal()
+    {
+        parent::initModal();
+        $modal_content = $this->context->smarty->fetch('controllers/import/modal_import_progress.tpl');
+        $this->modals[] = array(
+            'modal_id' => 'importProgress',
+            'modal_class' => 'modal-md',
+            'modal_title' => $this->trans('Importing your data...', array(), 'Admin.Advparameters.Notification'),
+            'modal_content' => $modal_content,
+        );
+    }
+
     /**
      * Gets session from symfony container.
      *
@@ -4794,5 +4810,17 @@ class AdminImportControllerCore extends AdminController
     private function getSession()
     {
         return \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()->get('session');
+    }
+
+    /**
+     * Get symfony request object.
+     *
+     * @return \Symfony\Component\HttpFoundation\Request|null
+     */
+    private function getSymfonyRequest()
+    {
+        $requestStack = \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()->get('request_stack');
+
+        return $requestStack->getCurrentRequest();
     }
 }

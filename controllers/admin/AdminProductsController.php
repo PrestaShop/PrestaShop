@@ -2402,7 +2402,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * Post treatment for suppliers.
      *
-     * @param null|int $id_product
+     * @param int|null $id_product
      */
     public function processSuppliers($id_product = null)
     {

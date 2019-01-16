@@ -109,6 +109,9 @@
         "tecnickcom/tcpdf": "^6.2.12",
         "twig/twig": "^1.0||^2.0"
     },
+    "conflict": {
+        "twig/twig": "1.37.0|2.6.1"
+    },
     "repositories": [
         {
             "type": "vcs",
@@ -118,6 +121,7 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.12",
         "johnkary/phpunit-speedtrap": "^1.1",
+        "mikey179/vfsStream": "^1.6",
         "phake/phake": "@stable",
         "phpunit/phpunit": "~5.7",
         "symfony/phpunit-bridge": "^3.0"

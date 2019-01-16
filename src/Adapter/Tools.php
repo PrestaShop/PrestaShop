@@ -204,4 +204,31 @@ class Tools
     {
         return LegacyTools::modRewriteActive();
     }
+
+    /**
+     * Copy content.
+     *
+     * @param string $source
+     * @param string $destination
+     * @param resource|null $streamContext
+     *
+     * @return bool|int
+     */
+    public function copy($source, $destination, $streamContext = null)
+    {
+        return LegacyTools::copy($source, $destination, $streamContext);
+    }
+
+    /**
+     * Sanitize a string.
+     *
+     * @param string $value
+     * @param bool $allowHtml
+     *
+     * @return string
+     */
+    public function sanitize($value, $allowHtml = false)
+    {
+        return LegacyTools::safeOutput($value, $allowHtml);
+    }
 }

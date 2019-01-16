@@ -34,17 +34,15 @@ import SubmitGridExtension from '../../components/grid/extension/submit-grid-act
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 import LinkableItem from "../../components/linkable-item";
 import ChoiceTable from "../../components/choice-table";
+import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import DeleteCustomersBulkActionExtension
+  from "../../components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension";
+import DeleteCustomerRowActionExtension
+  from "../../components/grid/extension/action/row/customer/delete-customer-row-action-extension";
 
 const $ = window.$;
 
 $(() => {
-  // in customer view page
-  // there are a lot of tables
-  // where you click any row
-  // and it redirects user to related page
-  new LinkableItem();
-  new ChoiceTable();
-
   const customerGrid = new Grid('customer');
 
   customerGrid.addExtension(new ReloadListActionExtension());
@@ -55,7 +53,16 @@ $(() => {
   customerGrid.addExtension(new SubmitBulkExtension());
   customerGrid.addExtension(new SubmitGridExtension());
   customerGrid.addExtension(new LinkRowActionExtension());
+  customerGrid.addExtension(new ColumnTogglingExtension());
+  customerGrid.addExtension(new DeleteCustomersBulkActionExtension());
+  customerGrid.addExtension(new DeleteCustomerRowActionExtension());
 
   // needed for "Group access" input in Add/Edit customer forms
   new ChoiceTable();
+
+  // in customer view page
+  // there are a lot of tables
+  // where you click any row
+  // and it redirects user to related page
+  new LinkableItem();
 });

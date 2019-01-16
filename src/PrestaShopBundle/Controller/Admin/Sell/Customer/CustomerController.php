@@ -36,11 +36,20 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailE
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType;
@@ -48,6 +57,7 @@ use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\Form\FormInterface;
+use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,6 +69,12 @@ class CustomerController extends AbstractAdminController
 {
     /**
      * Show customers listing.
+     *
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to view this."
+     * )
      *
      * @param Request $request
      * @param CustomerFilters $filters
@@ -72,12 +88,15 @@ class CustomerController extends AbstractAdminController
         $customerGridFactory = $this->get('prestashop.core.grid.factory.customer');
         $customerGrid = $customerGridFactory->getGrid($filters);
 
+        $deleteCustomerForm = $this->createForm(DeleteCustomersType::class);
+
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerGrid' => $this->presentGrid($customerGrid),
             'customersKpi' => $customersKpiFactory->build(),
             'customerRequiredFieldsForm' => $this->getRequiredFieldsForm()->createView(),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
+            'deleteCustomersForm' => $deleteCustomerForm->createView(),
         ]);
     }
 
@@ -410,5 +429,335 @@ class CustomerController extends AbstractAdminController
                 ),
             ],
         ];
+    }
+
+    /**
+     * Toggle customer status.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $customerId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleStatusAction($customerId)
+    {
+        try {
+            $customerId = new CustomerId((int) $customerId);
+            /** @var EditableCustomer $editableCustomer */
+            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+
+            $editCustomerCommand = new EditCustomerCommand($customerId);
+            $editCustomerCommand->setIsEnabled(!$editableCustomer->isEnabled());
+
+            $this->getCommandBus()->handle($editCustomerCommand);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CustomerException $e) {
+            $this->addFlash('error', $this->handleCustomerException($e));
+        }
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Toggle customer newsletter subscription status.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $customerId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleNewsletterSubscriptionAction($customerId)
+    {
+        try {
+            $customerId = new CustomerId((int) $customerId);
+            /** @var EditableCustomer $editableCustomer */
+            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+
+            $editCustomerCommand = new EditCustomerCommand($customerId);
+            $editCustomerCommand->setNewsletterSubscribed(!$editableCustomer->isNewsletterSubscribed());
+
+            $this->getCommandBus()->handle($editCustomerCommand);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CustomerException $e) {
+            $this->handleCustomerException($e);
+        }
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Toggle customer partner offer subscription status.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $customerId
+     *
+     * @return RedirectResponse
+     */
+    public function togglePartnerOfferSubscriptionAction($customerId)
+    {
+        try {
+            $customerId = new CustomerId((int) $customerId);
+            /** @var EditableCustomer $editableCustomer */
+            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+
+            $editCustomerCommand = new EditCustomerCommand($customerId);
+            $editCustomerCommand->setIsPartnerOffersSubscribed(!$editableCustomer->isPartnerOffersSubscribed());
+
+            $this->getCommandBus()->handle($editCustomerCommand);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CustomerException $e) {
+            $this->addFlash('error', $this->handleCustomerException($e));
+        }
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Delete customers in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteBulkAction(Request $request)
+    {
+        $form = $this->createForm(DeleteCustomersType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            $customerIds = array_map(function ($customerId) {
+                return (int) $customerId;
+            }, $data['customers_to_delete']);
+
+            try {
+                $command = new BulkDeleteCustomerCommand(
+                    $customerIds,
+                    new CustomerDeleteMethod($data['delete_method'])
+                );
+
+                $this->getCommandBus()->handle($command);
+
+                $this->addFlash(
+                    'success',
+                    $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                );
+            } catch (CustomerException $e) {
+                $this->addFlash('error', $this->handleCustomerException($e));
+            }
+        }
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Delete customer.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction(Request $request)
+    {
+        $form = $this->createForm(DeleteCustomersType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            $customerId = (int) reset($data['customers_to_delete']);
+
+            try {
+                $command = new DeleteCustomerCommand(
+                    new CustomerId($customerId),
+                    new CustomerDeleteMethod($data['delete_method'])
+                );
+
+                $this->getCommandBus()->handle($command);
+
+                $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+            } catch (CustomerException $e) {
+                $this->addFlash('error', $this->handleCustomerException($e));
+            }
+        }
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Enable customers in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function enableBulkAction(Request $request)
+    {
+        $customerIds = array_map(function ($customerId) {
+            return (int) $customerId;
+        }, $request->request->get('customer_customers_bulk', []));
+
+        try {
+            $command = new BulkEnableCustomerCommand($customerIds);
+
+            $this->getCommandBus()->handle($command);
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (CustomerException $e) {
+            $this->addFlash('error', $this->handleCustomerException($e));
+        }
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Disable customers in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function disableBulkAction(Request $request)
+    {
+        try {
+            $customerIds = array_map(function ($customerId) {
+                return (int) $customerId;
+            }, $request->request->get('customer_customers_bulk', []));
+
+            $command = new BulkDisableCustomerCommand($customerIds);
+
+            $this->getCommandBus()->handle($command);
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (CustomerException $e) {
+            $this->addFlash('error', $this->handleCustomerException($e));
+        }
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Export filtered customers
+     *
+     * @param CustomerFilters $filters
+     *
+     * @return CsvResponse
+     */
+    public function exportAction(CustomerFilters $filters)
+    {
+        $gridFactory = $this->get('prestashop.core.grid.factory.customer');
+        $grid = $gridFactory->getGrid($filters);
+
+        $headers = [
+            'id_customer' => $this->trans('ID', 'Admin.Global'),
+            'social_title' => $this->trans('Social title', 'Admin.Global'),
+            'firstname' => $this->trans('First name', 'Admin.Global'),
+            'lastname' => $this->trans('Last name', 'Admin.Global'),
+            'email' => $this->trans('Email address', 'Admin.Global'),
+            'company' => $this->trans('Company', 'Admin.Global'),
+            'total_spent' => $this->trans('Sales', 'Admin.Global'),
+            'enabled' => $this->trans('Enabled', 'Admin.Global'),
+            'newsletter' => $this->trans('Newsletter', 'Admin.Global'),
+            'partner_offers' => $this->trans('Partner offers', 'Admin.Orderscustomers.Feature'),
+            'registration' => $this->trans('Registration', 'Admin.Orderscustomers.Feature'),
+            'connect' => $this->trans('Last visit', 'Admin.Orderscustomers.Feature'),
+        ];
+
+        $data = [];
+
+        foreach ($grid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_customer' => $record['id_customer'],
+                'social_title' => '--' === $record['social_title'] ? '' : $record['social_title'],
+                'firstname' => $record['firstname'],
+                'lastname' => $record['firstname'],
+                'email' => $record['firstname'],
+                'company' => '--' === $record['company'] ? '' : $record['company'],
+                'total_spent' => '--' === $record['total_spent'] ? '' : $record['total_spent'],
+                'enabled' => $record['active'],
+                'newsletter' => $record['newsletter'],
+                'partner_offers' => $record['optin'],
+                'registration' => $record['date_add'],
+                'connect' => '--' === $record['connect'] ? '' : $record['connect'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('customer_' . date('Y-m-d_His') . '.csv')
+        ;
+    }
+
+    /**
+     * @param CustomerException $e
+     *
+     * @return string
+     */
+    protected function handleCustomerException(CustomerException $e)
+    {
+        $type = get_class($e);
+
+        $errorMessages = [
+            CustomerNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($errorMessages[$type])) {
+            return $errorMessages[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 }
