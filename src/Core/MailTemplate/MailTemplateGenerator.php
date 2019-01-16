@@ -115,6 +115,7 @@ class MailTemplateGenerator
 
     /**
      * @param string $theme
+     *
      * @throws InvalidException
      */
     private function checkMailTheme($theme)

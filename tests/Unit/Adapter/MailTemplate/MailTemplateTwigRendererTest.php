@@ -289,11 +289,11 @@ class MailTemplateTwigRendererTest extends TestCase
             ->method('dispatchWithParameters')
             ->with(
                 $this->equalTo(MailTemplateRendererInterface::GET_MAIL_LAYOUT_TRANSFORMATIONS),
-                $this->callback(function(array $hookParameters) use ($mailLayout, $templateType, $transformationsCount) {
+                $this->callback(function (array $hookParameters) use ($mailLayout, $templateType, $transformationsCount) {
                     $this->assertEquals($mailLayout, $hookParameters['mailLayout']);
                     $this->assertEquals($templateType, $hookParameters['templateType']);
-                    $this->assertInstanceOf(TransformationCollectionInterface::class, $hookParameters['templateTransformations']);
-                    $this->assertCount($transformationsCount, $hookParameters['templateTransformations']);
+                    $this->assertInstanceOf(TransformationCollectionInterface::class, $hookParameters['layoutTransformations']);
+                    $this->assertCount($transformationsCount, $hookParameters['layoutTransformations']);
 
                     return true;
                 })
