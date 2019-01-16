@@ -195,7 +195,6 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     }
 
     /**
-
      * Get list of all shop IDs.
      *
      * @return array
