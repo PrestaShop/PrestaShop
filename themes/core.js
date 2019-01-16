@@ -184,7 +184,7 @@ function y(){d(),h(),g(),function(){i()(".checkout-step").off("click");var e=i()
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var x=!1;function b(e){x=!1,prestashop.emit("updateProductList",e),window.history.pushState(e,document.title,e.current_url),window.scrollTo(0,0)}function w(){x=!1}i()(document).ready(function(){prestashop.on("updateFacets",function(e){!function(e){if(x);else{var t=[e,e.indexOf("?")>=0?"&":"?","from-xhr"].join("");i.a.get(t,null,null,"json").then(b).fail(w)}}(e)})}),
+var x=!1;function b(e){x=!1,prestashop.emit("updateProductList",e),window.history.pushState(e,document.title,e.current_url)}function w(){x=!1}i()(document).ready(function(){prestashop.on("updateFacets",function(e){!function(e){if(x);else{var t=[e,e.indexOf("?")>=0?"&":"?","from-xhr"].join("");i.a.get(t,null,null,"json").then(b).fail(w)}}(e)})}),
 /**
  * 2007-2018 PrestaShop
  *
