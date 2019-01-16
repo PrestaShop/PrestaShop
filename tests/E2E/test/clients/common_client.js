@@ -726,7 +726,7 @@ class CommonClient {
   }
 
   waitForSymfonyToolbar(AddProductPage, pause = 0) {
-  return this.client
+    return this.client
       .pause(pause)
       .isVisible(AddProductPage.symfony_toolbar, 4000)
       .then((isVisible) => {

@@ -44,7 +44,7 @@ module.exports = {
     Improve: {
       Modules: {
         modules_menu: '//*[@id="subtab-AdminParentModulesSf"]/a',
-        modules_manager_submenu: '#subtab-AdminModulesSf',
+        modules_manager_submenu: '#subtab-AdminModulesSf > a',
         modules_catalog_submenu: '#subtab-AdminParentModulesCatalog > a',
         installed_modules_tabs: '//*[@id="subtab-AdminModulesManage"]',
         catalog_tab: '//*[@id="subtab-AdminModulesCatalog"]',

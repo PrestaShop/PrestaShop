@@ -83,9 +83,9 @@ scenario('Test2: Delivery slips options', () => {
     commonOrder.getDeliveryInformation(0);
     scenario('Check that the option name of the delivery slip is updated successfully', client => {
       test('should click on "DOCUMENTS" tab', () => client.waitForExistAndClick(OrderPage.document_submenu));
-      test('should get the "Delivery slip" Document name', () => client.checkTextValue(OrderPage.delivery_slip_document, 'PR', 'contain'));
-      test('should get the "Delivery slip" Document Number', () => client.checkTextValue(OrderPage.delivery_slip_document, Number(global.tab['delivNumber']) + 1, 'contain'));
-      test('should get the invoice name', () => client.getDocumentName(OrderPage.delivery_slip_document));
+      test('should check the "Delivery slip" Document name', () => client.checkTextValue(OrderPage.delivery_slip_document, 'PR', 'contain'));
+      test('should check the "Delivery slip" Document Number', () => client.checkTextValue(OrderPage.delivery_slip_document, Number(global.tab['delivNumber']) + 1, 'contain'));
+      test('should check the invoice name', () => client.getDocumentName(OrderPage.delivery_slip_document));
       test('should generate the "deliveries" pdf file', () => {
         return promise
           .then(() => client.waitForExistAndClick(OrderPage.delivery_slip_document))

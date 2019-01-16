@@ -78,11 +78,11 @@ scenario('Display each kind of product', () => {
       test('should open the browser', () => client.open());
       test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
     }, 'product/product');
-      commonScenarios.createProduct(AddProductPage, productData[0]);
-      commonScenarios.createProduct(AddProductPage, productData[1]);
-      commonAttributeScenarios.createAttribute(attributeData);
-      commonScenarios.createProduct(AddProductPage, productData[2]);
-      commonScenarios.createProduct(AddProductPage, productData[3]);
+    commonScenarios.createProduct(AddProductPage, productData[0]);
+    commonScenarios.createProduct(AddProductPage, productData[1]);
+    commonAttributeScenarios.createAttribute(attributeData);
+    commonScenarios.createProduct(AddProductPage, productData[2]);
+    commonScenarios.createProduct(AddProductPage, productData[3]);
   }, 'product/product');
 
   scenario('Check the product pagination in the Back Office', client => {
@@ -99,13 +99,10 @@ scenario('Display each kind of product', () => {
         .then(() => client.pause(3000))
         .then(() => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.product_settings_submenu));
     });
-    test('should get the pagination Products per page value and check the created product in the Front Office', () => {
-      return promise
-        .then(() => client.getAttributeInVar(ProductSettings.Pagination.products_per_page_input, "value", "pagination"))
-        .then(() => {
-          global.pagination = Number(Math.trunc(Number(global.productsNumber) / Number(global.tab['pagination'])));
-          commonScenarios.checkProductInListFO(AccessPageFO, productPage, productData);
-        });
+    test('should get the pagination Products per page value and check the created product in the Front Office', async () => {
+      await client.getAttributeInVar(ProductSettings.Pagination.products_per_page_input, "value", "pagination");
+      global.pagination = await Number(Math.trunc(Number(global.productsNumber) / Number(global.tab['pagination'])));
+      await commonScenarios.checkProductInListFO(AccessPageFO, productPage, productData, client);
     });
   }, 'product/product');
-}, 'product/product');
+}, 'product/product', true);

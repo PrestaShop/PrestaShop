@@ -193,8 +193,9 @@ class Product extends CommonClient {
       })
   }
 
-  clickPageNext(selector) {
+  clickPageNext(selector, pause =0 ) {
     return this.client
+      .pause(pause)
       .scrollWaitForExistAndClick(selector);
   }
 
