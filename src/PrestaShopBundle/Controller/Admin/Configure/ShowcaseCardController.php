@@ -58,35 +58,36 @@ class ShowcaseCardController extends FrameworkBundleAdminController
      */
     public function closeShowcaseCardAction(Request $request)
     {
-        if ($request->isMethod('post') && $request->request->get('close')) {
-            try {
-                $employeeId = $this->getContext()->employee->id;
-                $closeShowcaseCard = new CloseShowcaseCardCommand($employeeId, $request->request->get('name'));
-                $this->getCommandBus()->handle($closeShowcaseCard);
-
-                return $this->json(
-                    [
-                        'success' => true,
-                        'message' => '',
-                    ]
-                );
-            } catch (\Exception $e) {
-                return $this->json(
-                    [
-                        'success' => false,
-                        'message' => $e->getMessage(),
-                    ],
-                    ($e instanceof InvalidShowcaseCardNameException) ? Response::HTTP_BAD_REQUEST : Response::HTTP_INTERNAL_SERVER_ERROR
-                );
-            }
+        // check prerequisites
+        if (!$request->isMethod('post') || !$request->request->get('close')) {
+            return $this->json(
+                [
+                    'success' => false,
+                    'message' => '',
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
-        return $this->json(
-            [
-                'success' => false,
-                'message' => '',
-            ],
-            Response::HTTP_BAD_REQUEST
-        );
+        try {
+            $employeeId = $this->getContext()->employee->id;
+            $closeShowcaseCard = new CloseShowcaseCardCommand($employeeId, $request->request->get('name'));
+            $this->getCommandBus()->handle($closeShowcaseCard);
+
+            return $this->json(
+                [
+                    'success' => true,
+                    'message' => '',
+                ]
+            );
+        } catch (\Exception $e) {
+            return $this->json(
+                [
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ],
+                ($e instanceof InvalidShowcaseCardNameException) ? Response::HTTP_BAD_REQUEST : Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }
