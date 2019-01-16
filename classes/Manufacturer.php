@@ -162,7 +162,7 @@ class ManufacturerCore extends ObjectModel
     /**
      * Get Manufacturer Address ID.
      *
-     * @return bool|false|null|string
+     * @return bool|false|string|null
      */
     protected function getManufacturerAddress()
     {
@@ -507,7 +507,7 @@ class ManufacturerCore extends ObjectModel
      *
      * @param int $idLang
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getProductsLite($idLang)
     {
@@ -553,7 +553,7 @@ class ManufacturerCore extends ObjectModel
      *
      * @param int $idLang
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getAddresses($idLang)
     {
@@ -575,7 +575,7 @@ class ManufacturerCore extends ObjectModel
      * Get Manufacturer Addresses
      * (for webservice).
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsAddresses()
     {

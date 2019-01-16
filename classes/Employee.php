@@ -416,7 +416,7 @@ class EmployeeCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param bool $activeOnly Only active Employees
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function countProfile($idProfile, $activeOnly = false)
     {
@@ -505,7 +505,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Get favorite Module list.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function favoriteModulesList()
     {
@@ -577,7 +577,7 @@ class EmployeeCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param bool $activeOnly Only active Employees
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getEmployeesByProfile($idProfile, $activeOnly = false)
     {
@@ -725,7 +725,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Returns the default tab class name.
      *
-     * @return null|string
+     * @return string|null
      */
     public function getDefaultTabClassName()
     {

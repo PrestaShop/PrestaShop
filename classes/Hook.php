@@ -973,7 +973,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * @return null|\PrestaShopBundle\DataCollector\HookRegistry
+     * @return \PrestaShopBundle\DataCollector\HookRegistry|null
      */
     private static function getHookRegistry()
     {

@@ -447,7 +447,7 @@ class CartCore extends ObjectModel
      *                    - FILTER_ACTION_ALL_NOCAP
      * @param bool $autoAdd automaticaly adds cart ruls without code to cart
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Database result
+     * @return array|false|mysqli_result|PDOStatement|resource|null Database result
      */
     public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true)
     {
@@ -1770,7 +1770,7 @@ class CartCore extends ObjectModel
      * @param int $id_customization Customization Id
      * @param null $id_product Unused
      * @param null $id_product_attribute Unused
-     * @param null|int $id_address_delivery Unused
+     * @param int|null $id_address_delivery Unused
      *
      * @return bool Indicates if the Customization was successfully deleted
      * @todo: Remove unused parameters
@@ -4199,7 +4199,7 @@ class CartCore extends ObjectModel
      * @param int $id_customer Customer ID
      * @param bool $with_order Only return Carts that have been converted into an Order
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource DB result
+     * @return array|false|mysqli_result|PDOStatement|resource|null DB result
      */
     public static function getCustomerCarts($id_customer, $with_order = true)
     {
@@ -4371,7 +4371,7 @@ class CartCore extends ObjectModel
     /**
      * Get Cart rows from DB for the webservice.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource DB result
+     * @return array|false|mysqli_result|PDOStatement|resource|null DB result
      */
     public function getWsCartRows()
     {

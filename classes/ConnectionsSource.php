@@ -131,7 +131,7 @@ class ConnectionsSourceCore extends ObjectModel
      *
      * @param int $idOrder Order ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getOrderSources($idOrder)
     {

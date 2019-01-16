@@ -1118,7 +1118,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * @param $combinationId
      *
-     * @return null|ProductController
+     * @return ProductController|null
      */
     public function findProductCombinationById($combinationId)
     {

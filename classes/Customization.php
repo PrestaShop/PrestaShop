@@ -220,7 +220,7 @@ class CustomizationCore extends ObjectModel
      * @param int $idLang Language IOD
      * @param int|null $idShop Shop ID
      *
-     * @return bool|false|null|string
+     * @return bool|false|string|null
      */
     public static function getLabel($idCustomization, $idLang, $idShop = null)
     {
@@ -335,7 +335,7 @@ class CustomizationCore extends ObjectModel
      * Get customized text fields
      * (for webservice).
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsCustomizedDataTextFields()
     {
@@ -356,7 +356,7 @@ class CustomizationCore extends ObjectModel
      * Get customized images data
      * (for webservice).
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsCustomizedDataImages()
     {

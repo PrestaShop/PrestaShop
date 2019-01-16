@@ -586,7 +586,7 @@ class MediaCore
     /**
      * Get backtrack limit.
      *
-     * @return int|null|string
+     * @return int|string|null
      */
     public static function getBackTrackLimit()
     {
