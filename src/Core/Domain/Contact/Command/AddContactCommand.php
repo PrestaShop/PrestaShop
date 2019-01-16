@@ -27,33 +27,26 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Contact\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
-use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 
 /**
- * Class EditContactCommand is responsible for editing contact data.
+ * Class AddContactCommand
  */
-class EditContactCommand extends AbstractContactCommand
+class AddContactCommand extends AbstractContactCommand
 {
-    /**
-     * @var ContactId
-     */
-    private $contactId;
-
     /**
      * @var string[]
      */
     private $localisedTitles;
 
     /**
+     * @var bool
+     */
+    private $isMessageSavingEnabled;
+
+    /**
      * @var string
      */
     private $email;
-
-    /**
-     * @var bool
-     */
-    private $isMessagesSavingEnabled;
 
     /**
      * @var string[]
@@ -66,21 +59,17 @@ class EditContactCommand extends AbstractContactCommand
     private $shopAssociation;
 
     /**
-     * @param int $contactId
+     * @param string[] $localisedTitles
+     * @param bool $isMessageSavingEnabled
      *
-     * @throws ContactException
+     * @throws ContactConstraintException
      */
-    public function __construct($contactId)
+    public function __construct(array $localisedTitles, $isMessageSavingEnabled)
     {
-        $this->contactId = new ContactId($contactId);
-    }
+        $this->assertIsLocalisedTitleValid($localisedTitles);
 
-    /**
-     * @return ContactId
-     */
-    public function getContactId()
-    {
-        return $this->contactId;
+        $this->localisedTitles = $localisedTitles;
+        $this->isMessageSavingEnabled = $isMessageSavingEnabled;
     }
 
     /**
@@ -92,13 +81,91 @@ class EditContactCommand extends AbstractContactCommand
     }
 
     /**
-     * @param string[] $localisedTitles
+     * @return bool
+     */
+    public function isMessageSavingEnabled()
+    {
+        return $this->isMessageSavingEnabled;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return self
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalisedDescription()
+    {
+        return $this->localisedDescription;
+    }
+
+    /**
+     * @param string[] $localisedDescription
+     *
+     * @return self
+     */
+    public function setLocalisedDescription($localisedDescription)
+    {
+        $this->localisedDescription = $localisedDescription;
+
+        return $this;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getShopAssociation()
+    {
+        return $this->shopAssociation;
+    }
+
+    /**
+     * @param int[] $shopAssociation
      *
      * @return self
      *
      * @throws ContactConstraintException
      */
-    public function setLocalisedTitles(array $localisedTitles)
+    public function setShopAssociation($shopAssociation)
+    {
+        if (!$this->assertArrayContainsAllIntegerValues($shopAssociation)) {
+            throw new ContactConstraintException(
+                sprintf(
+                    'Given shop association %s must contain all integer values',
+                    var_export($shopAssociation, true)
+                ),
+                ContactConstraintException::INVALID_SHOP_ASSOCIATION
+            );
+        }
+
+        $this->shopAssociation = $shopAssociation;
+
+        return $this;
+    }
+
+    /**
+     * @param array $localisedTitles
+     *
+     * @throws ContactConstraintException
+     */
+    private function assertIsLocalisedTitleValid(array $localisedTitles)
     {
         if (!$this->assertIsNotEmptyAndContainsAtLeastOneString($localisedTitles)) {
             throw new ContactConstraintException(
@@ -121,103 +188,5 @@ class EditContactCommand extends AbstractContactCommand
                 );
             }
         }
-
-        $this->localisedTitles = $localisedTitles;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail()
-    {
-//        todo: decide about email
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     *
-     * @return self
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isMessagesSavingEnabled()
-    {
-        return $this->isMessagesSavingEnabled;
-    }
-
-    /**
-     * @param bool $isMessagesSavingEnabled
-     *
-     * @return self
-     */
-    public function setIsMessagesSavingEnabled($isMessagesSavingEnabled)
-    {
-        $this->isMessagesSavingEnabled = $isMessagesSavingEnabled;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalisedDescription()
-    {
-        //todo: clean html validation?
-        return $this->localisedDescription;
-    }
-
-    /**
-     * @param string[] $localisedDescription
-     *
-     * @return self
-     */
-    public function setLocalisedDescription(array $localisedDescription)
-    {
-        $this->localisedDescription = $localisedDescription;
-
-        return $this;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getShopAssociation()
-    {
-        return $this->shopAssociation;
-    }
-
-    /**
-     * @param int[] $shopAssociation
-     *
-     * @return self
-     *
-     * @throws ContactConstraintException
-     */
-    public function setShopAssociation(array $shopAssociation)
-    {
-        if (!$this->assertArrayContainsAllIntegerValues($shopAssociation)) {
-            throw new ContactConstraintException(
-                sprintf(
-                    'Given shop association %s must contain all integer values',
-                    var_export($shopAssociation, true)
-                ),
-                ContactConstraintException::INVALID_SHOP_ASSOCIATION
-            );
-        }
-
-        $this->shopAssociation = $shopAssociation;
-
-        return $this;
     }
 }
