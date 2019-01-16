@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -47,7 +48,6 @@ class ShopChoiceTreeType extends AbstractType
     {
         $this->shopTreeChoices = $shopTreeChoices;
     }
-
     /**
      * {@inheritdoc}
      */
