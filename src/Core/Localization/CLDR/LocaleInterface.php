@@ -139,7 +139,7 @@ interface LocaleInterface
      *
      * @param string $currencyCode An ISO 4217 currency code
      *
-     * @return null|CurrencyInterface The wanted CLDR Currency. Null if this currency is not available for this locale.
+     * @return CurrencyInterface|null The wanted CLDR Currency. Null if this currency is not available for this locale.
      */
     public function getCurrency($currencyCode);
 
@@ -149,7 +149,7 @@ interface LocaleInterface
      * @param string $currencyCode
      *                             An ISO 4217 currency code
      *
-     * @return null|CurrencyData
+     * @return CurrencyData|null
      *                           The wanted currency data. Null if this currency is not available for this locale.
      */
     public function getCurrencyData($currencyCode);
