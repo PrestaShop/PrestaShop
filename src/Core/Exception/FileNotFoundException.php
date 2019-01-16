@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Exception;
 
-
 class FileNotFoundException extends CoreException
 {
 }
