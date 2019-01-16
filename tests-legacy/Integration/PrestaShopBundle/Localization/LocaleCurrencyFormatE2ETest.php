@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Localization\Locale;
+namespace LegacyTests\Unit\Core\Localization\Locale;
 
 use Cache;
 use Context;
@@ -32,8 +32,8 @@ use Currency;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Tests\Unit\ContextMocker;
-use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\Unit\ContextMocker;
+use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 
 class LocaleCurrencyFormatE2ETest extends KernelTestCase
 {
@@ -62,6 +62,7 @@ class LocaleCurrencyFormatE2ETest extends KernelTestCase
         parent::setUp();
 
         $this->installCurrency('EUR');
+        $this->installCurrency('RUB');
 
         // instanciate kernel to get DI container
         $kernel = self::createKernel();
@@ -86,7 +87,7 @@ class LocaleCurrencyFormatE2ETest extends KernelTestCase
     public static function setUpBeforeClass()
     {
         Database::restoreTestDB();
-        require_once __DIR__ . '/../../../config/config.inc.php';
+        require_once __DIR__ . '/../../../../config/config.inc.php';
     }
 
     protected function installCurrency($currencyCode)
@@ -165,29 +166,43 @@ class LocaleCurrencyFormatE2ETest extends KernelTestCase
                 'EUR' => [
                     [
                         'price' => 0.0234,
-                        'expected' => '0,02 €',
+                        'expected' => '0,02 €',
                     ],
                     [
                         'price' => 2345,
-                        'expected' => '2 345,00 €',
+                        'expected' => '2 345,00 €',
                     ],
                     [
                         'price' => 2345.326,
-                        'expected' => '2 345,33 €',
+                        'expected' => '2 345,33 €',
                     ],
                 ],
                 'USD' => [
                     [
                         'price' => 0.0234,
-                        'expected' => '0,02 $',
+                        'expected' => '0,02 $',
                     ],
                     [
                         'price' => 2345,
-                        'expected' => '2 345,00 $',
+                        'expected' => '2 345,00 $',
                     ],
                     [
                         'price' => 2345.326,
-                        'expected' => '2 345,33 $',
+                        'expected' => '2 345,33 $',
+                    ],
+                ],
+                'RUB' => [
+                    [
+                        'price' => 0.0234,
+                        'expected' => '0,02 ₽',
+                    ],
+                    [
+                        'price' => 2345,
+                        'expected' => '2 345,00 ₽',
+                    ],
+                    [
+                        'price' => 2345.326,
+                        'expected' => '2 345,33 ₽',
                     ],
                 ],
             ],
@@ -218,6 +233,64 @@ class LocaleCurrencyFormatE2ETest extends KernelTestCase
                     [
                         'price' => 2345.326,
                         'expected' => '$2,345.33',
+                    ],
+                ],
+                'RUB' => [
+                    [
+                        'price' => 0.0234,
+                        'expected' => '₽0.02',
+                    ],
+                    [
+                        'price' => 2345,
+                        'expected' => '₽2,345.00',
+                    ],
+                    [
+                        'price' => 2345.326,
+                        'expected' => '₽2,345.33',
+                    ],
+                ],
+            ],
+            'ru-RU' => [
+                'EUR' => [
+                    [
+                        'price' => 0.0234,
+                        'expected' => '0,02 €',
+                    ],
+                    [
+                        'price' => 2345,
+                        'expected' => '2 345,00 €',
+                    ],
+                    [
+                        'price' => 2345.326,
+                        'expected' => '2 345,33 €',
+                    ],
+                ],
+                'USD' => [
+                    [
+                        'price' => 0.0234,
+                        'expected' => '0,02 $',
+                    ],
+                    [
+                        'price' => 2345,
+                        'expected' => '2 345,00 $',
+                    ],
+                    [
+                        'price' => 2345.326,
+                        'expected' => '2 345,33 $',
+                    ],
+                ],
+                'RUB' => [
+                    [
+                        'price' => 0.0234,
+                        'expected' => '0,02 ₽',
+                    ],
+                    [
+                        'price' => 2345,
+                        'expected' => '2 345,00 ₽',
+                    ],
+                    [
+                        'price' => 2345.326,
+                        'expected' => '2 345,33 ₽',
                     ],
                 ],
             ],
