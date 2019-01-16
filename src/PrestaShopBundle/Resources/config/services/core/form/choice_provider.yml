@@ -130,32 +130,6 @@ services:
       - '@=service("prestashop.core.import.fields_provider_finder")'
       - '@=service("session").get("entity")'
 
-    prestashop.core.form.choice_provider.import_match_configuration:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider'
-      arguments:
-        - '@=service("prestashop.core.admin.import_match.repository").findAll()'
-
-    prestashop.core.form.choice_provider.import_entity_field:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
-      arguments:
-        - '@=service("prestashop.core.import.fields_provider_finder")'
-        - '@=service("session").get("entity")'
-
-    prestashop.core.form.choice_provider.theme_page_layouts:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemePageLayoutsChoiceProvider'
-      arguments:
-        - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'
-
-    prestashop.core.form.choice_provider.theme_zip:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeZipChoiceProvider'
-      arguments:
-        - '@prestashop.adapter.legacy.configuration'
-
-    prestashop.core.form.choice_provider.theme:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeChoiceProvider'
-      arguments:
-        - '@prestashop.adapter.addons.theme.theme_provider'
-
   prestashop.core.form.choice_provider.customer_delete_method:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerDeleteMethodChoiceProvider'
     arguments:
