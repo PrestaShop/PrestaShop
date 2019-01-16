@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 
 /**
- * Interface for service that implements getting customer for editing
+ * Interface for service that gets customer data for editing
  */
 interface GetCustomerForEditingHandlerInterface
 {

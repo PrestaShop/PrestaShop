@@ -77,6 +77,7 @@ class CustomerFormDataProviderTest extends TestCase
                     new Birthday('1990-01-01'),
                     true,
                     true,
+                    true,
                     [1, 2, 3],
                     3,
                     'Demo company',

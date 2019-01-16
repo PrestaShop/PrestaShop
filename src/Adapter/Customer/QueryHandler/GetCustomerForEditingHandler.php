@@ -72,6 +72,7 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
             $birthday,
             (bool) $customer->active,
             (bool) $customer->optin,
+            (bool) $customer->newsletter,
             $customer->getGroups(),
             $customer->id_default_group,
             (string) $customer->company,

@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query\Builder;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -47,14 +48,21 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextShopIds;
 
     /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $criteriaApplicator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator
      * @param int $contextLangId
      * @param int[] $contextShopIds
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator,
         $contextLangId,
         array $contextShopIds
     ) {
@@ -62,6 +70,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->contextLangId = $contextLangId;
         $this->contextShopIds = $contextShopIds;
+        $this->criteriaApplicator = $criteriaApplicator;
     }
 
     /**
@@ -76,6 +85,11 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
         $this->appendTotalSpentQuery($searchQueryBuilder);
         $this->appendLastVisitQuery($searchQueryBuilder);
         $this->applySorting($searchQueryBuilder, $searchCriteria);
+
+        $this->criteriaApplicator->applyPagination(
+            $searchCriteria,
+            $searchQueryBuilder
+        );
 
         return $searchQueryBuilder;
     }
@@ -200,6 +214,16 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
                 $qb->andWhere('c.date_add >= :date_from AND c.date_add <= :date_to');
                 $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
                 $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
+
+                if (isset($filterValue['from'])) {
+                    $qb->andWhere('c.date_add >= :date_from');
+                    $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
+                }
+
+                if (isset($filterValue['to'])) {
+                    $qb->andWhere('c.date_add <= :date_to');
+                    $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
+                }
 
                 continue;
             }

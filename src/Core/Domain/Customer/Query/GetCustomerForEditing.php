@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 /**
  * Gets customer information for editing.
  */
-final class GetCustomerForEditing
+class GetCustomerForEditing
 {
     /**
      * @var CustomerId
