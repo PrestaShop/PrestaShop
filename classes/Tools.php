@@ -783,7 +783,9 @@ class ToolsCore
      * Return current locale
      *
      * @param Context $context
+     *
      * @return Locale
+     *
      * @throws Exception
      */
     protected static function getContextLocale(Context $context)
