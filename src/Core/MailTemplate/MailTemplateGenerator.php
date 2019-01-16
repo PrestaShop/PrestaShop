@@ -74,14 +74,7 @@ class MailTemplateGenerator
      */
     public function generateThemeTemplates($theme, Language $language, $coreOutputFolder, $modulesOutputFolder)
     {
-        $availableThemes = $this->catalog->listThemes();
-        if (!in_array($theme, $availableThemes)) {
-            throw new InvalidException(sprintf(
-                'Invalid theme used "%s", only available themes are: %s',
-                $theme,
-                implode(', ', $availableThemes)
-            ));
-        }
+        $this->checkMailTheme($theme);
 
         if (!is_dir($coreOutputFolder)) {
             throw new InvalidException(sprintf(
@@ -117,6 +110,28 @@ class MailTemplateGenerator
             $txtTemplatePath = $this->generateTemplatePath($layout, MailTemplateInterface::TXT_TYPE, $outputFolder);
             $this->fileSystem->dumpFile($txtTemplatePath, $generatedTemplate);
             $this->logger->info(sprintf('Generate template %s at html: %s, txt: %s', $layout->getName(), $htmlTemplatePath, $txtTemplatePath));
+        }
+    }
+
+    /**
+     * @param string $theme
+     * @throws InvalidException
+     */
+    private function checkMailTheme($theme)
+    {
+        /** @var MailThemeCollectionInterface $availableThemes */
+        $availableThemes = $this->catalog->listThemes();
+        $themeNames = [];
+        /** @var MailThemeInterface $availableTheme */
+        foreach ($availableThemes as $availableTheme) {
+            $themeNames[] = $availableTheme->getName();
+        }
+        if (!in_array($theme, $themeNames)) {
+            throw new InvalidException(sprintf(
+                'Invalid theme used "%s", only available themes are: %s',
+                $theme,
+                implode(', ', $themeNames)
+            ));
         }
     }
 
