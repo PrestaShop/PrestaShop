@@ -53,14 +53,11 @@ scenario('Display all product', () => {
         .then(() => client.pause(3000))
         .then(() => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.product_settings_submenu));
     });
-    test('should get the pagination Products per page value and check the created product in the Front Office', () => {
-      return promise
-        .then(() => client.getAttributeInVar(ProductSettings.Pagination.products_per_page_input, "value", "pagination"))
-        .then(() => {
-          global.pagination = Number(Math.trunc(Number(global.productsNumber) / Number(global.tab['pagination'])));
-          commonScenarios.checkAllProduct(AccessPageFO, productPage);
-        });
+    test('should get the pagination Products per page value and check the created product in the Front Office', async () => {
+      await client.getAttributeInVar(ProductSettings.Pagination.products_per_page_input, "value", "pagination");
+      global.pagination = await Number(Math.trunc(Number(global.productsNumber) / Number(global.tab['pagination'])));
+      await commonScenarios.checkAllProduct(AccessPageFO, productPage, client);
     });
   }, 'product/product');
 
-}, 'product/product');
+}, 'product/product', true);

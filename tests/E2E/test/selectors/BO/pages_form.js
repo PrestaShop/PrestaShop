@@ -50,6 +50,7 @@ module.exports = {
       configuration_link_form: '//*[@id="configuration_form"]',
       menu_module_name: '(//*[@id="psthemecusto"]//div[@data-module_name="menu"])[2]',
       download_theme_button: '//*[@id="download_child_theme"]',
+      prestashop_content_div: '//*[@id="prestastore-content"]',
     },
     Shipping: {
       carrier_form: '//*[@id="form-carrier"]',
