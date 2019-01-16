@@ -86,7 +86,7 @@ class Factory
      *                                 Should we group digits when formatting prices ?
      * @param $currencyDisplayType
      *  Type of display for currency symbol (symbol or ISO code)
-     * @param null|int $maxFractionDigits
+     * @param int $maxFractionDigits|null
      *                                    The decimal precision of the price
      *
      * @return PriceSpecification
