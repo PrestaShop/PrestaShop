@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+const $ = window.$;
+
 export default class LocaleInputErrorPopover {
   constructor() {
     this.initEvents();
@@ -48,7 +50,9 @@ export default class LocaleInputErrorPopover {
     const $localeInputGroup = $formGroup.find('.js-locale-input-group');
     const $errorPopover = $formGroup.find('.js-locale-input-error-popover');
 
-    $errorPopover.css('width', $localeInputGroup.find('.js-locale-input').width());
+    const localeVisibleElementWidth = $localeInputGroup.find('.js-locale-input:visible').width();
+
+    $errorPopover.css('width', localeVisibleElementWidth);
 
     const horizontalDifference = this.getHorizontalDifference($localeInputGroup, $errorPopover);
 

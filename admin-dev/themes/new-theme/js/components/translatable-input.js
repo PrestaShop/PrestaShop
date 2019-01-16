@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import LocaleInputErrorPopover from "./locale-input-error-popover";
+import LocaleInputErrorPopover from './locale-input-error-popover';
 
 const $ = window.$;
 
