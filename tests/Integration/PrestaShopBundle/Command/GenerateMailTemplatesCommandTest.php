@@ -57,7 +57,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
-            'command'  => $command->getName()
+            'command' => $command->getName(),
         ));
     }
 
@@ -72,7 +72,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
-            'command'  => $command->getName(),
+            'command' => $command->getName(),
             'theme' => 'classic',
             'locale' => 'en',
             'coreOutputFolder' => $outputFolder,
@@ -113,11 +113,11 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
-            'command'  => $command->getName(),
+            'command' => $command->getName(),
             'theme' => 'classic',
             'locale' => 'en',
             'coreOutputFolder' => $coreOutputFolder,
-            'modulesOutputFolder' => $modulesOutputFolder
+            'modulesOutputFolder' => $modulesOutputFolder,
         ));
         $this->assertEquals(0, $commandTester->getStatusCode());
 
@@ -175,7 +175,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         /** @var \SplFileInfo $coreFile */
         foreach ($finder as $coreFile) {
             $themeInfos['coreLayouts'][] = $coreFile->getBasename('.html.twig');
-            $themeInfos['coreLayoutsNb']++;
+            ++$themeInfos['coreLayoutsNb'];
         }
 
         $finder = new Finder();
@@ -185,10 +185,10 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
             $themeInfos['modulesLayouts'][$moduleFolder->getBasename()] = [];
             $moduleFinder = new Finder();
             $moduleFinder->in($moduleFolder->getRealPath());
-            /** @var \SplFileInfo $coreFile */
+            /** @var \SplFileInfo $moduleFile */
             foreach ($moduleFinder as $moduleFile) {
                 $themeInfos['modulesLayouts'][$moduleFolder->getBasename()][] = $moduleFile->getBasename('.html.twig');
-                $themeInfos['modulesLayoutsNb']++;
+                ++$themeInfos['modulesLayoutsNb'];
             }
         }
 

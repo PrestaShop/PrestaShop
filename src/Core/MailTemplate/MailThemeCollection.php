@@ -26,13 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-
 use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
 
 class MailThemeCollection extends AbstractTypedCollection implements MailThemeCollectionInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function getType()
     {
