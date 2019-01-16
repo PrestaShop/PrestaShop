@@ -100,7 +100,7 @@ class MailLayoutFolderCatalogTest extends TestCase
             ->method('dispatchWithParameters')
             ->with(
                 $this->equalTo(MailLayoutCatalogInterface::LIST_MAIL_THEMES_HOOK),
-                $this->callback(function(array $hookParams) {
+                $this->callback(function (array $hookParams) {
                     $this->assertInstanceOf(MailThemeCollectionInterface::class, $hookParams['mailThemes']);
                     $this->assertCount(count($this->expectedThemes), $hookParams['mailThemes']);
 
@@ -272,7 +272,7 @@ class MailLayoutFolderCatalogTest extends TestCase
             ->method('dispatchWithParameters')
             ->with(
                 $this->equalTo(MailLayoutCatalogInterface::LIST_MAIL_THEME_LAYOUTS_HOOK),
-                $this->callback(function(array $hookParameters) use ($layoutsCount) {
+                $this->callback(function (array $hookParameters) use ($layoutsCount) {
                     $this->assertEquals('classic', $hookParameters['mailTheme']);
                     $this->assertInstanceOf(MailLayoutCollectionInterface::class, $hookParameters['mailThemeLayouts']);
                     $this->assertCount($layoutsCount, $hookParameters['mailThemeLayouts']);
