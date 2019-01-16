@@ -124,7 +124,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         }
 
         $renderedTemplate = $this->engine->render($layoutPath, $layoutVariables);
-        $templateTransformations = $this->getMailTemplateTransformations($layout, $templateType);
+        $templateTransformations = $this->getMailLayoutTransformations($layout, $templateType);
         /** @var TransformationInterface $transformation */
         foreach ($templateTransformations as $transformation) {
             $renderedTemplate = $transformation
@@ -143,7 +143,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @return TransformationCollection
      * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
      */
-    private function getMailTemplateTransformations(MailLayoutInterface $mailLayout, $templateType)
+    private function getMailLayoutTransformations(MailLayoutInterface $mailLayout, $templateType)
     {
         $templateTransformations = new TransformationCollection();
         /** @var TransformationInterface $transformation */
@@ -157,11 +157,11 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
 
         //This hook allows to add/remove transformations during a layout rendering
         $this->hookDispatcher->dispatchWithParameters(
-            MailTemplateRendererInterface::GET_MAIL_TEMPLATE_TRANSFORMATIONS,
+            MailTemplateRendererInterface::GET_MAIL_LAYOUT_TRANSFORMATIONS,
             [
                 'mailLayout' => $mailLayout,
                 'templateType' => $templateType,
-                'templateTransformations' => $templateTransformations,
+                'layoutTransformations' => $templateTransformations,
             ]
         );
 
