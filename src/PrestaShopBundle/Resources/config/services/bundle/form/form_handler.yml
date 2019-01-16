@@ -148,12 +148,12 @@ services:
             - 'LogsPage'
 
     prestashop.admin.import.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\ImportPageFormHandler'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormHandler'
         arguments:
             - '@prestashop.admin.import.form_builder'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.import.form_data_provider'
-            - 'ImportPage'
+            - 'Import'
 
     prestashop.admin.import_data_configuration.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormHandler'

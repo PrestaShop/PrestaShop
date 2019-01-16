@@ -105,3 +105,8 @@ services:
 
     prestashop.adapter.data_provider.default_route:
         class: PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider
+
+    prestashop.adapter.data_provider.employee:
+        class: PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().employee'

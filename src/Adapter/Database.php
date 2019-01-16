@@ -73,4 +73,30 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
     {
         return Db::getInstance($useMaster)->getValue($sql, $useCache);
     }
+
+    /**
+     * Returns the text of the error message from previous database operation.
+     *
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+        return Db::getInstance()->getMsgError();
+    }
+
+    /**
+     * Enable the cache.
+     */
+    public function enableCache()
+    {
+        Db::getInstance()->enableCache();
+    }
+
+    /**
+     * Disable the cache.
+     */
+    public function disableCache()
+    {
+        Db::getInstance()->disableCache();
+    }
 }

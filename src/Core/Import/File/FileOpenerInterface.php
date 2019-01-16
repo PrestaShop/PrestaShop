@@ -1,5 +1,6 @@
-{#**
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,27 +22,21 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain 'Admin.Advparameters.Feature' %}
+namespace PrestaShop\PrestaShop\Core\Import\File;
 
-{% block content %}
-<div class="row justify-content-center">
-  <div class="col-xl-10">
-    {% block import_data_configuration_panel %}
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/Blocks/import_data_configuration.html.twig' %}
-    {% endblock %}
+use SplFileInfo;
 
-    {% block import_modal %}
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/Blocks/import_modal.html.twig' %}
-    {% endblock %}
-  </div>
-</div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/imports_data.bundle.js') }}"></script>
-{% endblock %}
+/**
+ * Interface FileOpenerInterface describes an import file opener.
+ */
+interface FileOpenerInterface
+{
+    /**
+     * @param SplFileInfo $file
+     *
+     * @return mixed file handle
+     */
+    public function open(SplFileInfo $file);
+}

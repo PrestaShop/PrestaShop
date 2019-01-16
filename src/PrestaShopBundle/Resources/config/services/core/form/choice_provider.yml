@@ -118,3 +118,14 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerRequiredFieldsChoiceProvider'
     arguments:
       - '@translator'
+
+  prestashop.core.form.choice_provider.import_match_configuration:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.admin.import_match.repository").findAll()'
+
+  prestashop.core.form.choice_provider.import_entity_field:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.import.fields_provider_finder")'
+      - '@=service("session").get("entity")'
