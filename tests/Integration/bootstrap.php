@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 define('_PS_IN_TEST_', true);
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
@@ -32,9 +31,9 @@ if (!defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
-require_once dirname(__FILE__).'/../../config/config.inc.php';
+require_once dirname(__FILE__) . '/../../config/config.inc.php';
 
-/**
+/*
  * Following code makes tests run under phpstorm
  * Else we get error : Class 'PHPUnit_Util_Configuration' not found
  * @see https://stackoverflow.com/questions/33299149/phpstorm-8-and-phpunit-problems-with-runinseparateprocess

@@ -141,6 +141,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param string $templateType
      *
      * @return TransformationCollection
+     *
      * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
      */
     private function getMailLayoutTransformations(MailLayoutInterface $mailLayout, $templateType)

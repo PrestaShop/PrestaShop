@@ -142,7 +142,7 @@ class MailLayoutVariablesBuilderTest extends TestCase
             ->method('dispatchWithParameters')
             ->with(
                 $this->equalTo(MailLayoutVariablesBuilderInterface::BUILD_LAYOUT_VARIABLES_HOOK),
-                $this->callback(function(array $hookParameters) use ($expectedVariables, $mailLayout) {
+                $this->callback(function (array $hookParameters) use ($expectedVariables, $mailLayout) {
                     $this->assertEquals($expectedVariables, $hookParameters['mailLayoutVariables']);
                     $this->assertInstanceOf(MailLayoutInterface::class, $hookParameters['mailLayout']);
                     $this->assertEquals($mailLayout, $hookParameters['mailLayout']);
@@ -154,7 +154,6 @@ class MailLayoutVariablesBuilderTest extends TestCase
 
         return $dispatcherMock;
     }
-
 
     /**
      * @param string $isoCode
