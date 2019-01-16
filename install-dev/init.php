@@ -123,11 +123,10 @@ require_once _PS_INSTALL_PATH_.'classes/exception.php';
 require_once _PS_INSTALL_PATH_.'classes/session.php';
 
 @set_time_limit(0);
-// Work around flawed timezone standards conformance, mandatory in PHP 7
-if (!@ini_get('date.timezone') || @ini_get('date.timezone') == 'GMT') {
-    @date_default_timezone_set('Europe/Paris');
-    ini_set('date.timezone', 'UTC');
-}
+// Work around lack of validation for timezone
+// standards conformance, mandatory in PHP 7
+@date_default_timezone_set('Europe/Paris');
+ini_set('date.timezone', 'UTC');
 
 // Try to improve memory limit if it's under 64M
 $current_memory_limit = psinstall_get_memory_limit();
