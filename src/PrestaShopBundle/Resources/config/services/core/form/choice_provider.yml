@@ -160,3 +160,18 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerDeleteMethodChoiceProvider'
     arguments:
       - '@translator'
+
+  prestashop.core.form.choice_provider.theme_page_layouts:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemePageLayoutsChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'
+
+  prestashop.core.form.choice_provider.theme_zip:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeZipChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.core.form.choice_provider.theme:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeChoiceProvider'
+    arguments:
+      - '@prestashop.core.addon.theme.theme_provider'
