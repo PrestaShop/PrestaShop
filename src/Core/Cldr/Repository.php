@@ -253,7 +253,15 @@ class Repository
         $locale = $this->repository->locales[$this->getCulture()];
         $currency = $locale['currencies'][$code];
 
-        return !empty($currency['symbol-alt-narrow']) ? $currency['symbol-alt-narrow'] : $currency['symbol'];
+        if (!empty($currency['symbol-alt-narrow'])) {
+            return $currency['symbol-alt-narrow'];
+        }
+
+        if (!empty($currency['symbol-alt-variant'])) {
+            return $currency['symbol-alt-variant'];
+        }
+
+        return $currency['symbol'];
     }
 
     /**
