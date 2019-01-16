@@ -101,6 +101,7 @@ class MetaType extends AbstractType
                 'choice_translation_domain' => false,
             ])
             ->add('page_title', TranslatableType::class, [
+                'required' => false,
                 'options' => [
                     'constraints' => [
                         new Regex([
@@ -116,6 +117,7 @@ class MetaType extends AbstractType
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
+                'required' => false,
                 'options' => [
                     'constraints' => [
                         new Regex([
@@ -131,6 +133,7 @@ class MetaType extends AbstractType
                 ],
             ])
             ->add('meta_keywords', TranslatableType::class, [
+                'required' => false,
                 'options' => [
                     'constraints' => [
                         new Regex([
