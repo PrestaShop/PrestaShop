@@ -53,46 +53,46 @@ class ImageFileDeleterTest extends TestCase
     public function testItDeletesAllImagesAndDirectories()
     {
         $this->fs->mkdir([
-            $this->root->url().'/p',
-            $this->root->url().'/p/1',
+            $this->root->url() . '/p',
+            $this->root->url() . '/p/1',
         ]);
         $this->fs->touch([
-            $this->root->url().'/p/1/1.jpg',
-            $this->root->url().'/p/1/1-home_default.jpg',
-            $this->root->url().'/p/1/index.php',
-            $this->root->url().'/p/index.php',
+            $this->root->url() . '/p/1/1.jpg',
+            $this->root->url() . '/p/1/1-home_default.jpg',
+            $this->root->url() . '/p/1/index.php',
+            $this->root->url() . '/p/index.php',
         ]);
 
         $imageFileDeleter = new ImageFileDeleter();
-        $imageFileDeleter->deleteFromPath($this->root->url().'/p/', true, true);
+        $imageFileDeleter->deleteFromPath($this->root->url() . '/p/', true, true);
 
-        $this->assertFalse($this->fs->exists($this->root->url().'/p/1'));
-        $this->assertTrue($this->fs->exists($this->root->url().'/p/index.php'));
+        $this->assertFalse($this->fs->exists($this->root->url() . '/p/1'));
+        $this->assertTrue($this->fs->exists($this->root->url() . '/p/index.php'));
     }
 
     public function testItDeletesOnlyNumericImageFiles()
     {
         $deleteFiles = [
-            $this->root->url().'/c/1.jpg',
-            $this->root->url().'/c/1-home_default.jpg',
-            $this->root->url().'/c/1-cart_default.jpg',
-            $this->root->url().'/c/2.jpg',
-            $this->root->url().'/c/2-large_default.jpg',
+            $this->root->url() . '/c/1.jpg',
+            $this->root->url() . '/c/1-home_default.jpg',
+            $this->root->url() . '/c/1-cart_default.jpg',
+            $this->root->url() . '/c/2.jpg',
+            $this->root->url() . '/c/2-large_default.jpg',
         ];
 
         $keepFiles = [
-            $this->root->url().'/c/index.php',
-            $this->root->url().'/c/en.jpg',
-            $this->root->url().'/c/lt.jpg',
-            $this->root->url().'/c/fr.jpg',
+            $this->root->url() . '/c/index.php',
+            $this->root->url() . '/c/en.jpg',
+            $this->root->url() . '/c/lt.jpg',
+            $this->root->url() . '/c/fr.jpg',
         ];
 
-        $this->fs->mkdir($this->root->url().'/c');
+        $this->fs->mkdir($this->root->url() . '/c');
         $this->fs->touch($deleteFiles);
         $this->fs->touch($keepFiles);
 
         $imageFileDeleter = new ImageFileDeleter();
-        $imageFileDeleter->deleteFromPath($this->root->url().'/c/');
+        $imageFileDeleter->deleteFromPath($this->root->url() . '/c/');
 
         foreach ($deleteFiles as $filePath) {
             $this->assertFalse(
@@ -112,18 +112,18 @@ class ImageFileDeleterTest extends TestCase
     public function testItDeletesAllImagesWithAnyName()
     {
         $deleteFiles = [
-            $this->root->url().'/tmp/manufacturer_mini_1_1.jpg',
-            $this->root->url().'/tmp/manufacturer_mini_2_1.jpg',
-            $this->root->url().'/tmp/carrier_mini_1_1.jpg',
-            $this->root->url().'/tmp/carrier_mini_2_1.jpg',
-            $this->root->url().'/tmp/'.str_shuffle(md5(time())).'.jpg',
+            $this->root->url() . '/tmp/manufacturer_mini_1_1.jpg',
+            $this->root->url() . '/tmp/manufacturer_mini_2_1.jpg',
+            $this->root->url() . '/tmp/carrier_mini_1_1.jpg',
+            $this->root->url() . '/tmp/carrier_mini_2_1.jpg',
+            $this->root->url() . '/tmp/' . str_shuffle(md5(time())) . '.jpg',
         ];
 
-        $this->fs->mkdir($this->root->url().'/tmp');
+        $this->fs->mkdir($this->root->url() . '/tmp');
         $this->fs->touch($deleteFiles);
 
         $imageFileDeleter = new ImageFileDeleter();
-        $imageFileDeleter->deleteAllImages($this->root->url().'/tmp/');
+        $imageFileDeleter->deleteAllImages($this->root->url() . '/tmp/');
 
         foreach ($deleteFiles as $filePath) {
             $this->assertFalse(
