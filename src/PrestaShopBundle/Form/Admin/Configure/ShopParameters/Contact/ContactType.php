@@ -31,6 +31,8 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,11 +50,20 @@ class ContactType extends AbstractType
     private $isShopFeatureEnabled;
 
     /**
-     * @param bool $isShopFeatureEnabled
+     * @var DataTransformerInterface
      */
-    public function __construct($isShopFeatureEnabled)
-    {
+    private $stringArrayToIntegerArrayDataTransformer;
+
+    /**
+     * @param bool $isShopFeatureEnabled
+     * @param DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
+     */
+    public function __construct(
+        $isShopFeatureEnabled,
+        DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
+    ) {
         $this->isShopFeatureEnabled = $isShopFeatureEnabled;
+        $this->stringArrayToIntegerArrayDataTransformer = $stringArrayToIntegerArrayDataTransformer;
     }
 
     /**
@@ -74,6 +85,9 @@ class ContactType extends AbstractType
 
         if ($this->isShopFeatureEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class);
+
+            $builder->get('shop_association')
+                ->addModelTransformer($this->stringArrayToIntegerArrayDataTransformer);
         }
     }
 }
