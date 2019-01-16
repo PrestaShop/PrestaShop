@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
@@ -58,13 +59,23 @@ class ProfilesGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectionUrl;
 
     /**
+     * @var AccessibilityCheckerInterface
+     */
+    private $deleteProfileAccessibilityChecker;
+
+    /**
      * @param string $resetActionUrl
      * @param string $redirectionUrl
+     * @param AccessibilityCheckerInterface $deleteProfileAccessibilityChecker
      */
-    public function __construct($resetActionUrl, $redirectionUrl)
-    {
+    public function __construct(
+        $resetActionUrl,
+        $redirectionUrl,
+        AccessibilityCheckerInterface $deleteProfileAccessibilityChecker
+    ) {
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectionUrl = $redirectionUrl;
+        $this->deleteProfileAccessibilityChecker = $deleteProfileAccessibilityChecker;
     }
 
     /**
@@ -130,6 +141,7 @@ class ProfilesGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     [],
                                     'Admin.Notifications.Warning'
                                 ),
+                                'accessibility_checker' => $this->deleteProfileAccessibilityChecker,
                             ])
                         ),
                 ])
