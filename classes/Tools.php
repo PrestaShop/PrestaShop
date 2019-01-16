@@ -43,6 +43,7 @@ class ToolsCore
     protected static $_user_plateform;
     protected static $_user_browser;
     protected static $request;
+    protected static $cldr_cache = [];
 
     public static $round_mode = null;
 
@@ -51,6 +52,14 @@ class ToolsCore
         if ($request) {
             self::$request = $request;
         }
+    }
+
+    /**
+     * Properly clean static cache
+     */
+    public static function resetStaticCache()
+    {
+        static::$cldr_cache = [];
     }
 
     /**
@@ -721,16 +730,15 @@ class ToolsCore
      */
     public static function getCldr(Context $context = null, $language_code = null)
     {
-        static $cldr_cache;
         if ($context && $context->language instanceof Language) {
             $language_code = $context->language->locale;
         }
 
-        if (!empty($cldr_cache[$language_code])) {
-            $cldr = $cldr_cache[$language_code];
+        if (!empty(static::$cldr_cache[$language_code])) {
+            $cldr = static::$cldr_cache[$language_code];
         } else {
             $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository($language_code);
-            $cldr_cache[$language_code] = $cldr;
+            static::$cldr_cache[$language_code] = $cldr;
         }
 
         return $cldr;
