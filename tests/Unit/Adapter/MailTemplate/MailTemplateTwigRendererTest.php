@@ -61,10 +61,42 @@ class MailTemplateTwigRendererTest extends TestCase
         $this->assertNotNull($generator);
     }
 
+    /**
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\FileNotFoundException
+     */
+    public function testFileNotFound()
+    {
+        $templatePaths = [
+            MailTemplateInterface::HTML_TYPE => 'path/to/non_existent_template.html.twig',
+        ];
+        $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
+        $expectedLanguage = $this->createLanguageMock();
+        $mailLayout = $this->createMailLayoutMock($templatePaths);
+        /** @var EngineInterface $engineMock */
+        $engineMock = $this->getMockBuilder(EngineInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        /** @var HookDispatcherInterface $dispatcherMock */
+        $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $generator = new MailTemplateTwigRenderer(
+            $engineMock,
+            $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
+            $dispatcherMock
+        );
+        $this->assertNotNull($generator);
+
+        $generator->renderHtml($mailLayout, $expectedLanguage);
+    }
+
     public function testRenderHtml()
     {
         $templatePaths = [
-            MailTemplateInterface::HTML_TYPE => 'path/to/test_template.html.twig',
+            MailTemplateInterface::HTML_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
         ];
         $expectedTemplate = 'mail_template';
         $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
@@ -86,7 +118,7 @@ class MailTemplateTwigRendererTest extends TestCase
     {
         $templatePaths = [
             MailTemplateInterface::HTML_TYPE => '',
-            MailTemplateInterface::TXT_TYPE => 'path/to/test_template.txt.twig',
+            MailTemplateInterface::TXT_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
         ];
         $expectedTemplate = 'mail_template';
         $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
@@ -107,7 +139,7 @@ class MailTemplateTwigRendererTest extends TestCase
     public function testRenderTxt()
     {
         $templatePaths = [
-            MailTemplateInterface::TXT_TYPE => 'path/to/test_template.txt.twig',
+            MailTemplateInterface::TXT_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
         ];
         $expectedTemplate = 'mail_template';
         $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
@@ -128,7 +160,7 @@ class MailTemplateTwigRendererTest extends TestCase
     public function testRenderTxtFallback()
     {
         $templatePaths = [
-            MailTemplateInterface::HTML_TYPE => 'path/to/test_template.html.twig',
+            MailTemplateInterface::HTML_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
             MailTemplateInterface::TXT_TYPE => '',
         ];
         $expectedTemplate = 'mail_template';
@@ -150,7 +182,7 @@ class MailTemplateTwigRendererTest extends TestCase
     public function testRenderWithTransformations()
     {
         $templatePaths = [
-            MailTemplateInterface::HTML_TYPE => 'path/to/test_template.html.twig',
+            MailTemplateInterface::HTML_TYPE => __DIR__ . '/../../Resources/mails/templates/account.html.twig',
         ];
         $generatedTemplate = 'mail_template';
         $transformedTemplate = 'mail_template_transformed_fr';
