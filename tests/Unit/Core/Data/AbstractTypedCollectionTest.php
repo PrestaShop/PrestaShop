@@ -254,6 +254,19 @@ class AbstractTypedCollectionTest extends TestCase
         $this->assertEquals($elementMock, $collection->get(0));
         $this->assertEquals($elementMock, $collection[0]);
     }
+
+    /**
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\TypeException
+     * @expectedExceptionMessage Invalid element type string, expected Tests\Unit\Core\Data\CollectionTestElement
+     */
+    public function testInvalidString()
+    {
+        $collection = new TestCollection();
+        $this->assertNotNull($collection);
+        $this->assertCount(0, $collection);
+
+        $collection->add('test');
+    }
 }
 
 class TestCollection extends AbstractTypedCollection

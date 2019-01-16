@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilderInterface;
@@ -115,6 +116,11 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
             $layoutPath = !empty($layout->getHtmlPath()) ? $layout->getHtmlPath() : $layout->getTxtPath();
         } else {
             $layoutPath = !empty($layout->getTxtPath()) ? $layout->getTxtPath() : $layout->getHtmlPath();
+        }
+        if (!file_exists($layoutPath)) {
+            throw new FileNotFoundException(
+                sprintf('Could not find layout file: %s', $layoutPath)
+            );
         }
 
         $renderedTemplate = $this->engine->render($layoutPath, $layoutVariables);
