@@ -24,48 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Type;
+namespace PrestaShopBundle\Form\DataTransformer;
 
-use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
+use Symfony\Component\Form\DataTransformerInterface;
 /**
- * Class ShopChoiceTreeType.
+ * Class StringArrayToIntegerArrayTransformer is responsible for  applying reverse transformation when form is being
+ * submitted. If its array, it casts all elements to integer.
  */
-class ShopChoiceTreeType extends AbstractType
+final class StringArrayToIntegerArrayDataTransformer implements DataTransformerInterface
 {
     /**
-     * @var array
-     */
-    private $shopTreeChoices;
-
-    /**
-     * @param array $shopTreeChoices
-     */
-    public function __construct(array $shopTreeChoices)
-    {
-        $this->shopTreeChoices = $shopTreeChoices;
-    }
-    /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function transform($value)
     {
-        $resolver->setDefaults([
-            'choices_tree' => $this->shopTreeChoices,
-            'multiple' => true,
-            'choice_label' => 'name',
-            'choice_value' => 'id_shop',
-        ]);
+        // No transformation is required here due to this data is being sent to template
+        return $value;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function reverseTransform($value)
     {
-        return MaterialChoiceTreeType::class;
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        return array_map(function ($item){
+            return (int) $item;
+        }, $value);
     }
 }
