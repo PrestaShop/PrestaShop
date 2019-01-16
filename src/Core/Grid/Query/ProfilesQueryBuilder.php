@@ -49,18 +49,18 @@ class ProfilesQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int $languageId
+     * @param $contextLanguageId
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        $languageId
+        $contextLanguageId
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->languageId = $languageId;
+        $this->languageId = $contextLanguageId;
     }
 
     /**
@@ -108,7 +108,16 @@ class ProfilesQueryBuilder extends AbstractDoctrineQueryBuilder
             ->setParameter('language', $this->languageId)
         ;
 
+        $allowedFilters = [
+            'id_profile',
+            'name',
+        ];
+
         foreach ($filters as $name => $value) {
+            if (!in_array($name, $allowedFilters, true)) {
+                continue;
+            }
+
             if ('id_profile' === $name) {
                 $qb->andWhere("p.id_profile = :$name");
                 $qb->setParameter($name, $value);
