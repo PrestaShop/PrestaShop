@@ -12,3 +12,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Contact\QueryHandler\GetContactForEditingHandler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing' }
+
+  prestashop.adapter.contact.command_handler.edit_contact:
+    class: 'PrestaShop\PrestaShop\Adapter\Contact\CommandHandler\EditContactHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand' }
