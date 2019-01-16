@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 
 /**
  * Class ContactFormDataHandler
@@ -71,7 +72,9 @@ final class ContactFormDataHandler implements FormDataHandlerInterface
             ->setShopAssociation(is_array($data['shop_association']) ? $data['shop_association'] : [])
         ;
 
+        /** @var ContactId $result */
         $result = $this->commandBus->handle($editContactCommand);
-        
+
+        return $result->getValue();
     }
 }

@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\EditContactHandlerI
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\CannotUpdateContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use PrestaShopException;
 
 /**
@@ -97,5 +98,7 @@ final class EditContactHandler implements EditContactHandlerInterface
                 $e
             );
         }
+
+        return new ContactId((int) $entity->id);
     }
 }
