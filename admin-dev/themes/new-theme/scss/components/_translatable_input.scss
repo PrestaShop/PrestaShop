@@ -26,6 +26,13 @@
 
       .popover-error-list {
         padding-left: 0;
+
+        li {
+          font-family: Open Sans,Helvetica,Arial,sans-serif;
+          font-size: .875rem;
+          font-weight: 400;
+          line-height: 1.5;
+        }
       }
     }
   }
