@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTheme;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailThemeCollection;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Language;
@@ -287,10 +289,15 @@ class MailTemplateGeneratorTest extends TestCase
         ;
 
         if (!empty($availableThemes)) {
+            $themes = new MailThemeCollection();
+            foreach ($availableThemes as $availableTheme) {
+                $themes->add(new MailTheme($availableTheme));
+            }
+
             $catalogMock
                 ->expects($this->once())
                 ->method('listThemes')
-                ->willReturn($availableThemes)
+                ->willReturn($themes)
             ;
         }
 
