@@ -79,5 +79,14 @@ class StringArrayToIntegerArrayDataTransformerTest extends TestCase
             null,
             [],
         ];
+
+        $this->assertEquals(
+            [
+                1,
+                0,
+                0,
+            ],
+            $this->dataTransformer->reverseTransform($data)
+        );
     }
 }
