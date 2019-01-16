@@ -26,11 +26,28 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
+
 /**
  * Class ContactFormDataHandler
  */
 final class ContactFormDataHandler implements FormDataHandlerInterface
 {
+    /**
+     * @var CommandBusInterface
+     */
+    private $commandBus;
+
+    /**
+     * @param CommandBusInterface $commandBus
+     */
+    public function __construct(CommandBusInterface $commandBus)
+    {
+        $this->commandBus = $commandBus;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -41,9 +58,20 @@ final class ContactFormDataHandler implements FormDataHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws ContactException
      */
     public function update($id, array $data)
     {
+        $editContactCommand = (new EditContactCommand((int) $id))
+            ->setLocalisedTitles($data['title'])
+            ->setEmail($data['email'])
+            ->setIsMessagesSavingEnabled($data['is_messages_saving_enabled'])
+            ->setLocalisedDescription($data['description'])
+            ->setShopAssociation(is_array($data['shop_association']) ? $data['shop_association'] : [])
+        ;
 
+        $result = $this->commandBus->handle($editContactCommand);
+        
     }
 }
