@@ -41,19 +41,6 @@ scenario('Check the addons catalog page in the Back Office', () => {
         .then(() => client.checkTextValue(ModulesCatalogPage.module_name, "SEO Expert", 'contain'))
         .then(() => client.switchWindow(0));
     });
-    test('should click on "Discover the payment modules" link', () => {
-      return promise
-        .then(() => client.moveToObject(ModulesCatalogPage.discover_payment_modules_link))
-        .then(() => client.waitForVisibleAndClick(ModulesCatalogPage.discover_payment_modules_link))
-        .then(() => client.pause(2000));
-    });
-    test('should check that the page is well opened', () => {
-      return promise
-        .then(() => client.switchWindow(3))
-        .then(() => client.refresh())
-        .then(() => client.checkTextValue(ModulesCatalogPage.category_name_text, "Payment", 'contain'))
-        .then(() => client.switchWindow(0));
-    });
     test('should click on "View all modules" link', () => {
       return promise
         .then(() => client.scrollWaitForExistAndClick(ModulesCatalogPage.view_all_modules_button))
@@ -61,21 +48,21 @@ scenario('Check the addons catalog page in the Back Office', () => {
     });
     test('should check that the page is well opened', () => {
       return promise
-        .then(() => client.switchWindow(4))
+        .then(() => client.switchWindow(3))
         .then(() => client.refresh())
         .then(() => client.isExisting(ModulesCatalogPage.prestashop_addons_logo, 2000))
         .then(() => client.switchWindow(0));
     });
     test('should search for the modules on the prestashop addons', () => {
       return promise
-        .then(() => client.waitAndSetValue(ModulesCatalogPage.search_addons_input, 'chat'))
+        .then(() => client.waitAndSetValue(ModulesCatalogPage.search_addons_input, 'minimal'))
         .then(() => client.keys('Enter'));
     });
     test('should check that the page is well opened', () => {
       return promise
-        .then(() => client.switchWindow(5))
+        .then(() => client.switchWindow(4))
         .then(() => client.refresh())
-        .then(() => client.checkTextValue(ModulesCatalogPage.search_name, "chat"))
+        .then(() => client.checkTextValue(ModulesCatalogPage.search_name, "minimal"))
         .then(() => client.switchWindow(0));
     });
   }, 'common_client');
