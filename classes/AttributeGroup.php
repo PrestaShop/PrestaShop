@@ -300,7 +300,7 @@ class AttributeGroupCore extends ObjectModel
             Db::getInstance()->execute(
                 '
                 DELETE FROM `' . _DB_PREFIX_ . 'attribute`
-                WHERE `id_attribute_group` = ' . (int)$this->id . '
+                WHERE `id_attribute_group` = ' . (int) $this->id . '
                 AND `id_attribute` NOT IN (' . implode(',', $ids) . ')'
             );
         }
