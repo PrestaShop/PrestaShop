@@ -24,76 +24,80 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class CustomerMessageInformation holds customer message information.
+ * Class CustomerCartInformation.
  */
-class MessageInformation
+class CartInformation
 {
     /**
-     * @var int
+     * @var string
      */
-    private $customerThreadId;
+    private $cartId;
 
     /**
      * @var string
      */
-    private $message;
+    private $cartCreationDate;
 
     /**
      * @var string
      */
-    private $status;
+    private $cartTotal;
 
     /**
      * @var string
      */
-    private $date;
+    private $carrierName;
 
     /**
-     * @param int $customerThreadId
-     * @param string $message
-     * @param string $status
-     * @param string $date
+     * @param string $cartId
+     * @param string $cartCreationDate
+     * @param string $cartTotal
+     * @param string $carrierName
      */
-    public function __construct($customerThreadId, $message, $status, $date)
-    {
-        $this->customerThreadId = $customerThreadId;
-        $this->message = $message;
-        $this->status = $status;
-        $this->date = $date;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCustomerThreadId()
-    {
-        return $this->customerThreadId;
+    public function __construct(
+        $cartId,
+        $cartCreationDate,
+        $cartTotal,
+        $carrierName
+    ) {
+        $this->cartId = $cartId;
+        $this->cartCreationDate = $cartCreationDate;
+        $this->cartTotal = $cartTotal;
+        $this->carrierName = $carrierName;
     }
 
     /**
      * @return string
      */
-    public function getMessage()
+    public function getCartId()
     {
-        return $this->message;
+        return $this->cartId;
     }
 
     /**
      * @return string
      */
-    public function getStatus()
+    public function getCartCreationDate()
     {
-        return $this->status;
+        return $this->cartCreationDate;
     }
 
     /**
      * @return string
      */
-    public function getDate()
+    public function getCartTotal()
     {
-        return $this->date;
+        return $this->cartTotal;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCarrierName()
+    {
+        return $this->carrierName;
     }
 }

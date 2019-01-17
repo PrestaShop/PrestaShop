@@ -24,80 +24,96 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class CustomerCartInformation.
+ * Class DiscountInformation.
  */
-class CartInformation
+class DiscountInformation
 {
     /**
-     * @var string
+     * @var int
      */
-    private $cartId;
+    private $discountId;
 
     /**
      * @var string
      */
-    private $cartCreationDate;
+    private $code;
 
     /**
      * @var string
      */
-    private $cartTotal;
+    private $name;
 
     /**
-     * @var string
+     * @var bool
      */
-    private $carrierName;
+    private $isActive;
 
     /**
-     * @param string $cartId
-     * @param string $cartCreationDate
-     * @param string $cartTotal
-     * @param string $carrierName
+     * @var int
+     */
+    private $availableQuantity;
+
+    /**
+     * @param int $discountId
+     * @param string $code
+     * @param string $name
+     * @param bool $isActive
+     * @param int $availableQuantity
      */
     public function __construct(
-        $cartId,
-        $cartCreationDate,
-        $cartTotal,
-        $carrierName
+        $discountId,
+        $code,
+        $name,
+        $isActive,
+        $availableQuantity
     ) {
-        $this->cartId = $cartId;
-        $this->cartCreationDate = $cartCreationDate;
-        $this->cartTotal = $cartTotal;
-        $this->carrierName = $carrierName;
+        $this->discountId = $discountId;
+        $this->code = $code;
+        $this->name = $name;
+        $this->isActive = $isActive;
+        $this->availableQuantity = $availableQuantity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDiscountId()
+    {
+        return $this->discountId;
     }
 
     /**
      * @return string
      */
-    public function getCartId()
+    public function getCode()
     {
-        return $this->cartId;
+        return $this->code;
     }
 
     /**
      * @return string
      */
-    public function getCartCreationDate()
+    public function getName()
     {
-        return $this->cartCreationDate;
+        return $this->name;
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getCartTotal()
+    public function isActive()
     {
-        return $this->cartTotal;
+        return $this->isActive;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getCarrierName()
+    public function getAvailableQuantity()
     {
-        return $this->carrierName;
+        return $this->availableQuantity;
     }
 }

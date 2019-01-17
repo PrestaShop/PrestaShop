@@ -24,46 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class GroupInformation holds customer group information.
+ * Class CustomerOrders.
  */
-class GroupInformation
+class OrdersInformation
 {
     /**
-     * @var int
+     * @var array|OrderInformation[]
      */
-    private $groupId;
+    private $validOrders;
+
+    /**
+     * @var array|OrderInformation[]
+     */
+    private $invalidOrders;
 
     /**
      * @var string
      */
-    private $name;
+    private $totalSpent;
 
     /**
-     * @param int $groupId
-     * @param string $name
+     * @param string $totalSpent
+     * @param OrderInformation[] $validOrders
+     * @param OrderInformation[] $invalidOrders
      */
-    public function __construct($groupId, $name)
+    public function __construct($totalSpent, array $validOrders, array $invalidOrders)
     {
-        $this->groupId = $groupId;
-        $this->name = $name;
+        $this->validOrders = $validOrders;
+        $this->invalidOrders = $invalidOrders;
+        $this->totalSpent = $totalSpent;
     }
 
     /**
-     * @return int
+     * @return OrderInformation[]
      */
-    public function getGroupId()
+    public function getValidOrders()
     {
-        return $this->groupId;
+        return $this->validOrders;
+    }
+
+    /**
+     * @return OrderInformation[]
+     */
+    public function getInvalidOrders()
+    {
+        return $this->invalidOrders;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getTotalSpent()
     {
-        return $this->name;
+        return $this->totalSpent;
     }
 }

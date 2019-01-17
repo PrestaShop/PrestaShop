@@ -24,20 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\AddressInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\CartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\DiscountInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\GeneralInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\GroupInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\LastConnectionInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\MessageInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\OrdersInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\PersonalInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\ProductsInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\ReferrerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable\SentEmailInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\AddressInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\DiscountInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\GeneralInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\GroupInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\LastConnectionInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\MessageInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\OrdersInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\PersonalInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\ProductsInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\ReferrerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\SentEmailInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**

@@ -24,22 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class BoughtProductInformation holds information about product that customer has bought.
+ * Class ViewedProductInformation holds information about product that customer has viewed.
  */
-class BoughtProductInformation
+class ViewedProductInformation
 {
     /**
      * @var int
      */
-    private $orderId;
-
-    /**
-     * @var string
-     */
-    private $boughtDate;
+    private $productId;
 
     /**
      * @var string
@@ -47,42 +42,28 @@ class BoughtProductInformation
     private $productName;
 
     /**
-     * @var int
+     * @var string
      */
-    private $boughtQuantity;
+    private $productUrl;
 
     /**
-     * @param int $orderId
-     * @param string $boughtDate
+     * @param int $productId
      * @param string $productName
-     * @param int $boughtQuantity
+     * @param string $productUrl
      */
-    public function __construct(
-        $orderId,
-        $boughtDate,
-        $productName,
-        $boughtQuantity
-    ) {
-        $this->orderId = $orderId;
-        $this->boughtDate = $boughtDate;
+    public function __construct($productId, $productName, $productUrl)
+    {
+        $this->productId = $productId;
         $this->productName = $productName;
-        $this->boughtQuantity = $boughtQuantity;
+        $this->productUrl = $productUrl;
     }
 
     /**
      * @return int
      */
-    public function getOrderId()
+    public function getProductId()
     {
-        return $this->orderId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBoughtDate()
-    {
-        return $this->boughtDate;
+        return $this->productId;
     }
 
     /**
@@ -94,10 +75,10 @@ class BoughtProductInformation
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getBoughtQuantity()
+    public function getProductUrl()
     {
-        return $this->boughtQuantity;
+        return $this->productUrl;
     }
 }
