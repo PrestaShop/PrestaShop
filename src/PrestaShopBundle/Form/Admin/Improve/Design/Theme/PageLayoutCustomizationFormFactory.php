@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
-use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizationPage;
+use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**

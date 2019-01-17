@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult;
 
 /**
  * Class LayoutCustomizationPage.
