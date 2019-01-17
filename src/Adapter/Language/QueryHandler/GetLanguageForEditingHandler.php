@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Language\QueryHandler;
 
 use Language;
-use PrestaShop\PrestaShop\Core\Domain\Language\Dto\EditableLanguage;
+use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryHandler\GetLanguageForEditingHandlerInterface;
