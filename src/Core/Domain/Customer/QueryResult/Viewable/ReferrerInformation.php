@@ -24,46 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class CustomerProductsInformation holds information about products that customers has bought and viewed.
+ * Class ReferrerInformation holds information about customer referrer.
  */
-class ProductsInformation
+class ReferrerInformation
 {
     /**
-     * @var BoughtProductInformation[]
+     * @var string
      */
-    private $boughtProductsInformation;
+    private $date;
 
     /**
-     * @var ViewedProductInformation[]
+     * @var string
      */
-    private $viewedProductsInformation;
+    private $name;
 
     /**
-     * @param BoughtProductInformation[] $boughtProductsInformation
-     * @param ViewedProductInformation[] $viewedProductsInformation
+     * @var string
      */
-    public function __construct(array $boughtProductsInformation, array $viewedProductsInformation)
+    private $shop;
+
+    /**
+     * @param string $date
+     * @param string $name
+     * @param string $shop
+     */
+    public function __construct($date, $name, $shop)
     {
-        $this->boughtProductsInformation = $boughtProductsInformation;
-        $this->viewedProductsInformation = $viewedProductsInformation;
+        $this->date = $date;
+        $this->name = $name;
+        $this->shop = $shop;
     }
 
     /**
-     * @return BoughtProductInformation[]
+     * @return string
      */
-    public function getBoughtProductsInformation()
+    public function getDate()
     {
-        return $this->boughtProductsInformation;
+        return $this->date;
     }
 
     /**
-     * @return ViewedProductInformation[]
+     * @return string
      */
-    public function getViewedProductsInformation()
+    public function getName()
     {
-        return $this->viewedProductsInformation;
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShop()
+    {
+        return $this->shop;
     }
 }

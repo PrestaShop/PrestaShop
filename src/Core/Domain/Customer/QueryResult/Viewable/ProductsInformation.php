@@ -24,61 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class ReferrerInformation holds information about customer referrer.
+ * Class CustomerProductsInformation holds information about products that customers has bought and viewed.
  */
-class ReferrerInformation
+class ProductsInformation
 {
     /**
-     * @var string
+     * @var BoughtProductInformation[]
      */
-    private $date;
+    private $boughtProductsInformation;
 
     /**
-     * @var string
+     * @var ViewedProductInformation[]
      */
-    private $name;
+    private $viewedProductsInformation;
 
     /**
-     * @var string
+     * @param BoughtProductInformation[] $boughtProductsInformation
+     * @param ViewedProductInformation[] $viewedProductsInformation
      */
-    private $shop;
-
-    /**
-     * @param string $date
-     * @param string $name
-     * @param string $shop
-     */
-    public function __construct($date, $name, $shop)
+    public function __construct(array $boughtProductsInformation, array $viewedProductsInformation)
     {
-        $this->date = $date;
-        $this->name = $name;
-        $this->shop = $shop;
+        $this->boughtProductsInformation = $boughtProductsInformation;
+        $this->viewedProductsInformation = $viewedProductsInformation;
     }
 
     /**
-     * @return string
+     * @return BoughtProductInformation[]
      */
-    public function getDate()
+    public function getBoughtProductsInformation()
     {
-        return $this->date;
+        return $this->boughtProductsInformation;
     }
 
     /**
-     * @return string
+     * @return ViewedProductInformation[]
      */
-    public function getName()
+    public function getViewedProductsInformation()
     {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getShop()
-    {
-        return $this->shop;
+        return $this->viewedProductsInformation;
     }
 }

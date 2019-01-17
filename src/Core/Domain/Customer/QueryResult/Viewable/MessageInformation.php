@@ -24,46 +24,76 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class GeneralInformation.
+ * Class CustomerMessageInformation holds customer message information.
  */
-class GeneralInformation
+class MessageInformation
 {
     /**
-     * @var string
+     * @var int
      */
-    private $privateNote;
+    private $customerThreadId;
 
     /**
      * @var string
      */
-    private $customerBySameEmailExists;
+    private $message;
 
     /**
-     * @param string $privateNote
-     * @param bool $customerBySameEmailExists
+     * @var string
      */
-    public function __construct($privateNote, $customerBySameEmailExists)
+    private $status;
+
+    /**
+     * @var string
+     */
+    private $date;
+
+    /**
+     * @param int $customerThreadId
+     * @param string $message
+     * @param string $status
+     * @param string $date
+     */
+    public function __construct($customerThreadId, $message, $status, $date)
     {
-        $this->privateNote = $privateNote;
-        $this->customerBySameEmailExists = $customerBySameEmailExists;
+        $this->customerThreadId = $customerThreadId;
+        $this->message = $message;
+        $this->status = $status;
+        $this->date = $date;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCustomerThreadId()
+    {
+        return $this->customerThreadId;
     }
 
     /**
      * @return string
      */
-    public function getPrivateNote()
+    public function getMessage()
     {
-        return $this->privateNote;
+        return $this->message;
     }
 
     /**
      * @return string
      */
-    public function getCustomerBySameEmailExists()
+    public function getStatus()
     {
-        return $this->customerBySameEmailExists;
+        return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 }

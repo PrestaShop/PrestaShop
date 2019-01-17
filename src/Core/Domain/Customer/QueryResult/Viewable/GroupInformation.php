@@ -24,22 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class DiscountInformation.
+ * Class GroupInformation holds customer group information.
  */
-class DiscountInformation
+class GroupInformation
 {
     /**
      * @var int
      */
-    private $discountId;
-
-    /**
-     * @var string
-     */
-    private $code;
+    private $groupId;
 
     /**
      * @var string
@@ -47,50 +42,21 @@ class DiscountInformation
     private $name;
 
     /**
-     * @var bool
-     */
-    private $isActive;
-
-    /**
-     * @var int
-     */
-    private $availableQuantity;
-
-    /**
-     * @param int $discountId
-     * @param string $code
+     * @param int $groupId
      * @param string $name
-     * @param bool $isActive
-     * @param int $availableQuantity
      */
-    public function __construct(
-        $discountId,
-        $code,
-        $name,
-        $isActive,
-        $availableQuantity
-    ) {
-        $this->discountId = $discountId;
-        $this->code = $code;
+    public function __construct($groupId, $name)
+    {
+        $this->groupId = $groupId;
         $this->name = $name;
-        $this->isActive = $isActive;
-        $this->availableQuantity = $availableQuantity;
     }
 
     /**
      * @return int
      */
-    public function getDiscountId()
+    public function getGroupId()
     {
-        return $this->discountId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
+        return $this->groupId;
     }
 
     /**
@@ -99,21 +65,5 @@ class DiscountInformation
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive()
-    {
-        return $this->isActive;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAvailableQuantity()
-    {
-        return $this->availableQuantity;
     }
 }

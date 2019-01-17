@@ -24,61 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
-/**
- * Class ViewedProductInformation holds information about product that customer has viewed.
- */
-class ViewedProductInformation
+class Subscriptions
 {
     /**
-     * @var int
+     * @var bool
      */
-    private $productId;
+    private $isNewsletterSubscribed;
 
     /**
-     * @var string
+     * @var bool
      */
-    private $productName;
+    private $isPartnerOffersSubscribed;
 
     /**
-     * @var string
+     * @param bool $isNewsletterSubscribed
+     * @param bool $isPartnerOffersSubscribed
      */
-    private $productUrl;
-
-    /**
-     * @param int $productId
-     * @param string $productName
-     * @param string $productUrl
-     */
-    public function __construct($productId, $productName, $productUrl)
+    public function __construct($isNewsletterSubscribed, $isPartnerOffersSubscribed)
     {
-        $this->productId = $productId;
-        $this->productName = $productName;
-        $this->productUrl = $productUrl;
+        $this->isNewsletterSubscribed = $isNewsletterSubscribed;
+        $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
     }
 
     /**
-     * @return int
+     * @return bool
      */
-    public function getProductId()
+    public function isNewsletterSubscribed()
     {
-        return $this->productId;
+        return $this->isNewsletterSubscribed;
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getProductName()
+    public function isPartnerOffersSubscribed()
     {
-        return $this->productName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProductUrl()
-    {
-        return $this->productUrl;
+        return $this->isPartnerOffersSubscribed;
     }
 }

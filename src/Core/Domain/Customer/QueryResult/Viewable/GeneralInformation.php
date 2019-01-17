@@ -24,61 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Viewable;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class CustomerOrders.
+ * Class GeneralInformation.
  */
-class OrdersInformation
+class GeneralInformation
 {
     /**
-     * @var array|OrderInformation[]
+     * @var string
      */
-    private $validOrders;
-
-    /**
-     * @var array|OrderInformation[]
-     */
-    private $invalidOrders;
+    private $privateNote;
 
     /**
      * @var string
      */
-    private $totalSpent;
+    private $customerBySameEmailExists;
 
     /**
-     * @param string $totalSpent
-     * @param OrderInformation[] $validOrders
-     * @param OrderInformation[] $invalidOrders
+     * @param string $privateNote
+     * @param bool $customerBySameEmailExists
      */
-    public function __construct($totalSpent, array $validOrders, array $invalidOrders)
+    public function __construct($privateNote, $customerBySameEmailExists)
     {
-        $this->validOrders = $validOrders;
-        $this->invalidOrders = $invalidOrders;
-        $this->totalSpent = $totalSpent;
-    }
-
-    /**
-     * @return OrderInformation[]
-     */
-    public function getValidOrders()
-    {
-        return $this->validOrders;
-    }
-
-    /**
-     * @return OrderInformation[]
-     */
-    public function getInvalidOrders()
-    {
-        return $this->invalidOrders;
+        $this->privateNote = $privateNote;
+        $this->customerBySameEmailExists = $customerBySameEmailExists;
     }
 
     /**
      * @return string
      */
-    public function getTotalSpent()
+    public function getPrivateNote()
     {
-        return $this->totalSpent;
+        return $this->privateNote;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerBySameEmailExists()
+    {
+        return $this->customerBySameEmailExists;
     }
 }
