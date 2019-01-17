@@ -195,7 +195,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      */
     public function getTimezones()
     {
-        if (!is_null($this->cache_timezones)) {
+        if (null !== $this->cache_timezones) {
             return;
         }
 

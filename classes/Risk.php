@@ -72,7 +72,7 @@ class RiskCore extends ObjectModel
      */
     public static function getRisks($idLang = null)
     {
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = Context::getContext()->language->id;
         }
 

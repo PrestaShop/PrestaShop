@@ -535,7 +535,7 @@ class HelperListCore extends Helper
             self::$cache_lang['Name'] = Context::getContext()->getTranslator()->trans('Name:', array(), 'Admin.Global');
         }
 
-        if (!is_null($name)) {
+        if (null !== $name) {
             $name = addcslashes('\n\n' . self::$cache_lang['Name'] . ' ' . $name, '\'');
         }
 
@@ -562,7 +562,7 @@ class HelperListCore extends Helper
         );
 
         if ($this->specificConfirmDelete !== false) {
-            $data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r' . $this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'] . $name);
+            $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'] . $name);
         }
 
         $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));

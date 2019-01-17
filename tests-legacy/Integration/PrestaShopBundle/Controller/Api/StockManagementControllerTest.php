@@ -197,7 +197,7 @@ class StockManagementControllerTest extends ApiTestCase
      */
     private function assertResponseHasTotalPages($parameters, $expectedTotalPages)
     {
-        if (is_null($expectedTotalPages)) {
+        if (null === $expectedTotalPages) {
             return;
         }
 

@@ -391,7 +391,7 @@ class ContextCore
         $translator->addLoader('xlf', new XliffFileLoader());
 
         $sqlTranslationLoader = new SqlTranslationLoader();
-        if (!is_null($this->shop)) {
+        if (null !== $this->shop) {
             $sqlTranslationLoader->setTheme($this->shop->theme);
         }
 
@@ -423,7 +423,7 @@ class ContextCore
     {
         $locations = array(_PS_ROOT_DIR_ . '/app/Resources/translations');
 
-        if (!is_null($this->shop)) {
+        if (null !== $this->shop) {
             $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';
             if (is_dir($activeThemeLocation)) {
                 $locations[] = $activeThemeLocation;

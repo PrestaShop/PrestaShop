@@ -325,7 +325,7 @@ class ThemeExporter
      */
     protected function metadataContainNotes(array $metadata = null)
     {
-        return !is_null($metadata) && array_key_exists('notes', $metadata) && is_array($metadata['notes']) &&
+        return null !== $metadata && array_key_exists('notes', $metadata) && is_array($metadata['notes']) &&
             array_key_exists(0, $metadata['notes']) && is_array($metadata['notes'][0]) &&
             array_key_exists('content', $metadata['notes'][0]);
     }
@@ -337,7 +337,7 @@ class ThemeExporter
      */
     protected function shouldAddFileMetadata($metadata)
     {
-        return is_null($metadata) || !array_key_exists('file', $metadata);
+        return null === $metadata || !array_key_exists('file', $metadata);
     }
 
     /**

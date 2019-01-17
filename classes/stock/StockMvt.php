@@ -212,7 +212,7 @@ class StockMvtCore extends ObjectModel
         $query->where('s.id_product = ' . (int) $id_product . ' AND s.id_product_attribute = ' . (int) $id_product_attribute);
 
         // if filer by warehouse
-        if (!is_null($id_warehouse)) {
+        if (null !== $id_warehouse) {
             $query->where('s.id_warehouse = ' . (int) $id_warehouse);
         }
 

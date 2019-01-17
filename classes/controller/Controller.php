@@ -210,13 +210,13 @@ abstract class ControllerCore
 
     public function __construct()
     {
-        if (is_null($this->display_header)) {
+        if (null === $this->display_header) {
             $this->display_header = true;
         }
-        if (is_null($this->display_header_javascript)) {
+        if (null === $this->display_header_javascript) {
             $this->display_header_javascript = true;
         }
-        if (is_null($this->display_footer)) {
+        if (null === $this->display_footer) {
             $this->display_footer = true;
         }
         $this->context = Context::getContext();

@@ -813,7 +813,7 @@ class WebserviceRequestCore
     protected function authenticate()
     {
         if (!$this->hasErrors()) {
-            if (is_null($this->_key)) {
+            if (null === $this->_key) {
                 $this->setError(401, 'Please enter the authentication key as the login. No password required', 16);
             } else {
                 if (empty($this->_key)) {
@@ -1639,7 +1639,7 @@ class WebserviceRequestCore
                                         $values[] = $entry;
                                     }
                                     $setter = $this->resourceConfiguration['associations'][$association->getName()]['setter'];
-                                    if (!is_null($setter) && $setter && method_exists($object, $setter) && !$object->$setter($values)) {
+                                    if (null !== $setter && $setter && method_exists($object, $setter) && !$object->$setter($values)) {
                                         $this->setError(500, 'Error occurred while setting the ' . $association->getName() . ' value', 85);
 
                                         return false;

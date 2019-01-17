@@ -117,7 +117,7 @@ class CartOld extends Cart
         }
 
         if ($with_shipping || $type == Cart::ONLY_DISCOUNTS) {
-            if (is_null($products) && is_null($id_carrier)) {
+            if (null === $products && null === $id_carrier) {
                 $shipping_fees = $this->getTotalShippingCost(null, (bool) $with_taxes);
             } else {
                 $shipping_fees = $this->getPackageShippingCost((int) $id_carrier, (bool) $with_taxes, null, $products);
@@ -135,7 +135,7 @@ class CartOld extends Cart
         }
 
         $param_product = true;
-        if (is_null($products)) {
+        if (null === $products) {
             $param_product = false;
             $products      = $this->getProducts();
         }
@@ -284,7 +284,7 @@ class CartOld extends Cart
                 // If the cart rule is a free gift, then add the free gift value only if the gift is in this package
                 if (!$this->shouldExcludeGiftsDiscount && (int) $cartRule->gift_product) {
                     $in_order = false;
-                    if (is_null($products)) {
+                    if (null === $products) {
                         $in_order = true;
                     } else {
                         foreach ($products as $product) {

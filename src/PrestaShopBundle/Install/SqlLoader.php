@@ -51,7 +51,7 @@ class SqlLoader
      */
     public function __construct(Db $db = null)
     {
-        if (is_null($db)) {
+        if (null === $db) {
             $db = Db::getInstance();
         }
         $this->db = $db;

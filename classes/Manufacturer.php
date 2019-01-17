@@ -265,7 +265,7 @@ class ManufacturerCore extends ObjectModel
      */
     public static function getLiteManufacturersList($idLang = null, $format = 'default')
     {
-        $idLang = is_null($idLang) ? Context::getContext()->language->id : (int) $idLang;
+        $idLang = null === $idLang ? Context::getContext()->language->id : (int) $idLang;
 
         $manufacturersList = array();
         $manufacturers = Manufacturer::getManufacturers(false, $idLang);

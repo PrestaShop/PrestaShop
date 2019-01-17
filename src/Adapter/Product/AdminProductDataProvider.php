@@ -97,7 +97,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             ));
 
             /** @var $filter AdminFilter */
-            if (is_null($filter)) {
+            if (null === $filter) {
                 $filters = AdminFilter::getProductCatalogEmptyFilter();
             } else {
                 $filters = $filter->getProductCatalogFilter();

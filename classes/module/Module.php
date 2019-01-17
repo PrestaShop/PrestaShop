@@ -2061,7 +2061,7 @@ abstract class ModuleCore implements ModuleInterface
         $sql = 'SELECT `id_module`, `id_shop`
             FROM `' . _DB_PREFIX_ . 'hook_module`
             WHERE `id_hook` = ' . (int) $id_hook . '
-            ' . ((!is_null($shop_list) && $shop_list) ? ' AND `id_shop` IN(' . implode(', ', array_map('intval', $shop_list)) . ')' : '') . '
+            ' . ((null !== $shop_list && $shop_list) ? ' AND `id_shop` IN(' . implode(', ', array_map('intval', $shop_list)) . ')' : '') . '
             ORDER BY `position`';
         $results = Db::getInstance()->executeS($sql);
         $position = array();

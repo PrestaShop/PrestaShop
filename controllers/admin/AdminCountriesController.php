@@ -438,7 +438,7 @@ class AdminCountriesControllerCore extends AdminController
         $country = parent::processSave();
 
         if (!count($this->errors)) {
-            if (is_null($tmp_addr_format->id_country)) {
+            if (null === $tmp_addr_format->id_country) {
                 $tmp_addr_format->id_country = $country->id;
             }
 

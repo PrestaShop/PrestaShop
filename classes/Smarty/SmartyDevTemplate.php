@@ -30,7 +30,7 @@ class SmartyDevTemplateCore extends Smarty_Internal_Template
 
     public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false)
     {
-        if (!is_null($template)) {
+        if (null !== $template) {
             $tpl = $template->template_resource;
         } else {
             $tpl = $this->template_resource;

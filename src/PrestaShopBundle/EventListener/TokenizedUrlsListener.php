@@ -60,7 +60,7 @@ class TokenizedUrlsListener
         $this->username = $username;
         $context = $legacyContext->getContext();
 
-        if (!is_null($context)) {
+        if (null !== $context) {
             if ($context->employee instanceof Employee) {
                 $this->employeeId = $context->employee->id;
             }

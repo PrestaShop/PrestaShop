@@ -101,7 +101,7 @@ class AdminFilterRepository extends EntityRepository
             'action' => $action,
         ]);
 
-        $adminFilter = is_null($adminFilter) ? new AdminFilter() : $adminFilter;
+        $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
 
         $adminFilter->setAction($action)
             ->setController($controller)

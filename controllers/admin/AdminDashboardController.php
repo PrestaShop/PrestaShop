@@ -287,11 +287,11 @@ class AdminDashboardControllerCore extends AdminController
         $stats_compare_from = $this->context->employee->stats_compare_from;
         $stats_compare_to = $this->context->employee->stats_compare_to;
 
-        if (is_null($stats_compare_from) || $stats_compare_from == '0000-00-00') {
+        if (null === $stats_compare_from || $stats_compare_from == '0000-00-00') {
             $stats_compare_from = null;
         }
 
-        if (is_null($stats_compare_to) || $stats_compare_to == '0000-00-00') {
+        if (null === $stats_compare_to || $stats_compare_to == '0000-00-00') {
             $stats_compare_to = null;
         }
 
