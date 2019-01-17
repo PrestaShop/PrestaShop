@@ -22,17 +22,17 @@ git checkout $BRANCH
 mkdir -p "${REPORT_PATH}/campaigns"
 
 cd "${DIR_PATH}/tests/E2E"
-for test_file in test/campaigns/full/* ; do
-  if [ -f "${test_file}" ]; then
+for test_directory in test/campaigns/full/* ; do
+  if [ -d "${test_directory}" ]; then
     docker stop $(docker ps -qa)
 
     docker-compose up -d --build --force-recreate
 
     echo "Run ${TEST_PATH}"
     echo "Wait for docker-compose..."
-    sleep 5
+    sleep 10
 
-    TEST_PATH=${test_file/test\/campaigns\//}
+    TEST_PATH=${test_directory/test\/campaigns\//}
     docker-compose exec -e TEST_PATH=$TEST_PATH tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80 -- bash /tmp/run-tests.sh
 
     if [ -f "mochawesome-report/mochawesome.json" ]; then
