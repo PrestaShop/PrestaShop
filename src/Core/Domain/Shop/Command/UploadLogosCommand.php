@@ -55,7 +55,7 @@ class UploadLogosCommand
     private $uploadedFavicon;
 
     /**
-     * @return null|UploadedFile
+     * @return UploadedFile|null
      */
     public function getUploadedHeaderLogo()
     {
@@ -71,7 +71,7 @@ class UploadLogosCommand
     }
 
     /**
-     * @return null|UploadedFile
+     * @return UploadedFile|null
      */
     public function getUploadedInvoiceLogo()
     {
@@ -87,7 +87,7 @@ class UploadLogosCommand
     }
 
     /**
-     * @return null|UploadedFile
+     * @return UploadedFile|null
      */
     public function getUploadedMailLogo()
     {
@@ -103,7 +103,7 @@ class UploadLogosCommand
     }
 
     /**
-     * @return null|UploadedFile
+     * @return UploadedFile|null
      */
     public function getUploadedFavicon()
     {
