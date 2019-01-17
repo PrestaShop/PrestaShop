@@ -86,6 +86,6 @@ class ShowcaseCard
      */
     private function isSupported($name)
     {
-        return null !== self::SUPPORTED_NAMES[$name];
+        return array_key_exists($name, self::SUPPORTED_NAMES);
     }
 }
