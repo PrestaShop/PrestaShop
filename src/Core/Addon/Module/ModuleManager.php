@@ -307,7 +307,9 @@ class ModuleManager implements AddonManagerInterface
         $this->checkConfirmationGiven(__FUNCTION__, $module);
         $result = $module->onInstall();
 
-        $this->clearCache();
+        if ($result && $this->actionParams->get('cacheClearEnabled', true)) {
+            $this->clearCache();
+        }
         $this->dispatch(ModuleManagementEvent::INSTALL, $module);
 
         return $result;
@@ -348,7 +350,9 @@ class ModuleManager implements AddonManagerInterface
             $result &= $this->removeModuleFromDisk($name);
         }
 
-        $this->clearCache();
+        if ($result && $this->actionParams->get('cacheClearEnabled', true)) {
+            $this->clearCache();
+        }
         $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
 
         return $result;
@@ -395,7 +399,9 @@ class ModuleManager implements AddonManagerInterface
         // Load and execute upgrade files
         $result = $this->moduleUpdater->upgrade($name) && $module->onUpgrade($version);
 
-        $this->clearCache();
+        if ($result && $this->actionParams->get('cacheClearEnabled', true)) {
+            $this->clearCache();
+        }
         $this->dispatch(ModuleManagementEvent::UPGRADE, $module);
 
         return $result;
@@ -444,7 +450,9 @@ class ModuleManager implements AddonManagerInterface
             );
         }
 
-        $this->clearCache();
+        if ($result && $this->actionParams->get('cacheClearEnabled', true)) {
+            $this->clearCache();
+        }
         $this->dispatch(ModuleManagementEvent::DISABLE, $module);
 
         return $result;
@@ -492,7 +500,9 @@ class ModuleManager implements AddonManagerInterface
             );
         }
 
-        $this->clearCache();
+        if ($result && $this->actionParams->get('cacheClearEnabled', true)) {
+            $this->clearCache();
+        }
         $this->dispatch(ModuleManagementEvent::ENABLE, $module);
 
         return $result;
@@ -556,7 +566,9 @@ class ModuleManager implements AddonManagerInterface
             );
         }
 
-        $this->clearCache();
+        if ($result && $this->actionParams->get('cacheClearEnabled', true)) {
+            $this->clearCache();
+        }
 
         return $result;
     }
@@ -619,7 +631,9 @@ class ModuleManager implements AddonManagerInterface
             );
         }
 
-        $this->clearCache();
+        if ($result && $this->actionParams->get('cacheClearEnabled', true)) {
+            $this->clearCache();
+        }
 
         return $result;
     }
