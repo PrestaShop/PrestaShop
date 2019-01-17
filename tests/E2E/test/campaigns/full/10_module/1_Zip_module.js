@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-19"][Name="Installation of a module by zip folder"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {ModulePage} = require('../../../selectors/BO/module_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');

@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-97"][Name="Shopping carts view"]
+ **/
+
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');

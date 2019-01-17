@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-68"][Name="Search a module"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {ModulePage} = require('../../../selectors/BO/module_page');
 const {Menu} = require('../../../selectors/BO/menu.js');

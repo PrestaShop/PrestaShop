@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-141"][Name="Import a localization pack and check you can use it"]
+ **/
+
 const {AccessPageBO} = require('../../../../../selectors/BO/access_page');
 const commonLocalization = require('../../../../common_scenarios/localization');
 const commonCurrency = require('../../../../common_scenarios/currency');

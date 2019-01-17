@@ -3,9 +3,6 @@
  * [id="PS-127"][Name="Change position"]
  * [id="PS-128"][Name="Unhook a module"]
  * [id="PS-129"][Name="Transplant a module"]
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-127
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-128
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-129
  **/
 
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');

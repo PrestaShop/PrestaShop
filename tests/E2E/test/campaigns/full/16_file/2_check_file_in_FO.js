@@ -1,3 +1,9 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-99"][Name="Create a new file"]
+ * [id="PS-100"][Name="Edit a file"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonProductScenarios = require('../../common_scenarios/product');

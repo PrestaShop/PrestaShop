@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-98"][Name="Shopping carts delete"]
+ **/
+
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');

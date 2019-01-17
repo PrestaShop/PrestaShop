@@ -1,3 +1,9 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-35"][Name="Create a category"]
+ * [id="PS-36"][Name="Update Category"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const commonScenarios = require('../../common_scenarios/category');
 const welcomeScenarios = require('../../common_scenarios/welcome');

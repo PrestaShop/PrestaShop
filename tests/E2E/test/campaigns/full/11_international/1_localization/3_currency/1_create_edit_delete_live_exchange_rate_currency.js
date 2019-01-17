@@ -1,3 +1,11 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-148"][Name="Add a currency"]
+ * [id="PS-149"][Name="edit a currency"]
+ * [id="PS-150"][Name="Delete a currency"]
+ * [id="PS-151"][Name="Live exchange rates"]
+ **/
+
 const {AccessPageBO} = require('../../../../../selectors/BO/access_page');
 const commonCurrency = require('../../../../common_scenarios/currency');
 const {Localization} = require('../../../../../selectors/BO/international/localization');

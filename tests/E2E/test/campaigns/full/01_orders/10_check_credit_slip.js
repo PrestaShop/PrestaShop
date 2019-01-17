@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-92"][Name="Check credit slips"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const commonOrder = require('../../common_scenarios/order');
@@ -43,4 +48,3 @@ scenario('Generate and check a Credit slip', () => {
     test('should logout successfully from Back Office', () => client.signOutBO());
   }, 'common_client');
 }, 'order', true);
-

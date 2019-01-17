@@ -1,3 +1,10 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-101"][Name="View a file"]
+ * [id="PS-102"][Name="Delete a file"]
+ * [id="PS-366"][Name="Bulk Action"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const commonFileScenarios = require('../../common_scenarios/file');
 const welcomeScenarios = require('../../common_scenarios/welcome');

@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-48"][Name="Add a new manufacturer adresse"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Brands} = require('../../../selectors/BO/catalogpage/Manufacturers/brands');
 const commonManufacturers = require('../../common_scenarios/manufacturers');

@@ -1,3 +1,9 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-39"][Name="Edit Attrib"]
+ * [id="PS-40"][Name="Delete Attrib"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
