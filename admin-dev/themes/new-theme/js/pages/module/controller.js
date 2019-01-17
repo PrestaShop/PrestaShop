@@ -930,7 +930,6 @@ class AdminModuleController {
   }
 
   doBulkAction(requestedBulkAction) {
-    const self = this;
     // This object is used to check if requested bulkAction is available and give proper
     // url segment to be called for it
     const forceDeletion = $('#force_bulk_deletion').prop('checked');
@@ -954,54 +953,67 @@ class AdminModuleController {
 
     // Loop over all checked bulk checkboxes
     const bulkActionSelectedSelector = this.getBulkCheckboxesCheckedSelector();
+    const bulkModuleAction = bulkActionToUrl[requestedBulkAction];
 
     if ($(bulkActionSelectedSelector).length <= 0) {
       console.warn(window.translate_javascripts['Bulk Action - One module minimum']);
       return false;
     }
 
-    const bulkModulesTechNames = [];
+    const modulesActions = [];
     let moduleTechName;
     $(bulkActionSelectedSelector).each(function bulkActionSelector() {
       moduleTechName = $(this).data('tech-name');
-      bulkModulesTechNames.push({
+      modulesActions.push({
         techName: moduleTechName,
         actionMenuObj: $(this).closest('.module-checkbox-bulk-list').next(),
       });
     });
 
+    this.performModulesAction(modulesActions, bulkModuleAction, forceDeletion);
+
+    return true;
+  }
+
+  performModulesAction(modulesActions, bulkModuleAction, forceDeletion) {
+    const self = this;
+
     let actionMenuObj;
-    let urlActionSegment;
+    let moduleTechName;
     let urlElement;
-    let modulesRequestedCountdown = bulkModulesTechNames.length - 1;
-    if (bulkModulesTechNames.length > 1) {
+    let modulesRequestedCountdown = modulesActions.length - 1;
+    let spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind spinner \"></button>");
+    if (modulesActions.length > 1) {
       //Loop through all the modules except the last one which waits for other
       //requests and then call its request with cache clear enabled
-      $.each(bulkModulesTechNames, function bulkModulesLoop(index, data) {
-        if (index >= bulkModulesTechNames.length - 1) {
+      $.each(modulesActions, function bulkModulesLoop(index, data) {
+        if (index >= modulesActions.length - 1) {
           return;
         }
         requestModuleAction(data, true, countdownModulesRequest);
       });
+      //Display a spinner for the last module
+      const lastModuleAction = modulesActions[modulesActions.length - 1];
+      const actionMenuObj = lastModuleAction.actionMenuObj;
+      actionMenuObj.hide();
+      actionMenuObj.after(spinnerObj);
     } else {
-      requestModuleAction(bulkModulesTechNames[0]);
+      requestModuleAction(modulesActions[0]);
     }
 
     function requestModuleAction(moduleData, disableCacheClear, requestEndCallback) {
       actionMenuObj = moduleData.actionMenuObj;
       moduleTechName = moduleData.techName;
 
-      urlActionSegment = bulkActionToUrl[requestedBulkAction];
-
       if (typeof self.moduleCardController !== 'undefined') {
         // We use jQuery to get the specific link for this action. If found, we send it.
         urlElement = $(
-          self.moduleCardController.moduleActionMenuLinkSelector + urlActionSegment,
+          self.moduleCardController.moduleActionMenuLinkSelector + bulkModuleAction,
           actionMenuObj
         );
         if (urlElement.length > 0) {
           self.moduleCardController._requestToController(
-            urlActionSegment,
+            bulkModuleAction,
             urlElement,
             forceDeletion,
             disableCacheClear,
@@ -1009,7 +1021,7 @@ class AdminModuleController {
           );
         } else {
           $.growl.error({message: window.translate_javascripts['Bulk Action - Request not available for module']
-              .replace('[1]', urlActionSegment)
+              .replace('[1]', bulkModuleAction)
               .replace('[2]', moduleTechName)});
         }
       }
@@ -1020,11 +1032,12 @@ class AdminModuleController {
       //Now that all other modules have performed their action WITHOUT cache clear, we
       //can request the last module request WITH cache clear
       if (modulesRequestedCountdown <= 0) {
-        requestModuleAction(bulkModulesTechNames[bulkModulesTechNames.length - 1]);
+        if (spinnerObj) {
+          spinnerObj.remove();
+        }
+        requestModuleAction(modulesActions[modulesActions.length - 1]);
       }
     }
-
-    return true;
   }
 
   initActionButtons() {
@@ -1052,7 +1065,26 @@ class AdminModuleController {
     // "Upgrade All" button handler
     $('body').on('click', self.upgradeAllSource, (event) => {
       event.preventDefault();
-      $(self.upgradeAllTargets).click();
+
+      if ($(self.upgradeAllTargets).length <= 0) {
+        console.warn(window.translate_javascripts['Upgrade All Action - One module minimum']);
+        return false;
+      }
+
+      const modulesActions = [];
+      let moduleTechName;
+      $(self.upgradeAllTargets).each(function bulkActionSelector() {
+        const moduleItemList = $(this).closest('.module-item-list');
+        moduleTechName = moduleItemList.data('tech-name');
+        modulesActions.push({
+          techName: moduleTechName,
+          actionMenuObj: $('.module-actions', moduleItemList),
+        });
+      });
+
+      this.performModulesAction(modulesActions, 'upgrade');
+
+      return true;
     });
   }
 
