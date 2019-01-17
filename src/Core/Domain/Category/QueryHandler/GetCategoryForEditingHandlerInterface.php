@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 
 /**
  * Interface GetCategoryForEditingHandlerInterface.
@@ -35,6 +36,8 @@ interface GetCategoryForEditingHandlerInterface
 {
     /**
      * @param GetCategoryForEditing $query
+     *
+     * @return EditableCategory
      */
     public function handle(GetCategoryForEditing $query);
 }
