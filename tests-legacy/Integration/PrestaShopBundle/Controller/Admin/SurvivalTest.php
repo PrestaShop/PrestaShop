@@ -34,7 +34,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 /**
  * @group demo
  *
- * To execute these tests: use "./vendor/bin/phpunit -c tests/phpunit-admin.xml --filter=SurvivalTest" command.
+ * To execute these tests: use "./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml --filter=SurvivalTest" command.
  */
 class SurvivalTest extends WebTestCase
 {
@@ -118,8 +118,7 @@ class SurvivalTest extends WebTestCase
         return [
             'administration_page' => ['Administration', 'admin_administration'],
             'admin_performance' => ['Performance', 'admin_performance'],
-            // @todo: restore this test as soon as Import page is fixed
-            //'admin_import' => ['Import', 'admin_import'],
+            'admin_import' => ['Import', 'admin_import'],
             'admin_preferences' => ['Preferences', 'admin_preferences'],
             'admin_order_preferences' => ['Order Preferences', 'admin_order_preferences'],
             'admin_maintenance' => ['Maintenance', 'admin_maintenance'],
