@@ -151,7 +151,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add((new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Global'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
                                 'route' => 'admin_employees_index',
@@ -189,7 +189,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search ID', [], 'Admin.Advparameters.Help'),
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('id_employee')
@@ -199,7 +199,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search first name', [], 'Admin.Advparameters.Help'),
+                        'placeholder' => $this->trans('Search first name', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('firstname')
@@ -209,7 +209,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search last name', [], 'Admin.Advparameters.Help'),
+                        'placeholder' => $this->trans('Search last name', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('lastname')
@@ -219,7 +219,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search email', [], 'Admin.Advparameters.Help'),
+                        'placeholder' => $this->trans('Search email', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('email')
