@@ -192,7 +192,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return null|string
+     * @return string|null
      */
     public function getAddToCartUrl()
     {
@@ -250,7 +250,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return null|string
+     * @return string|null
      */
     public function getDeliveryInformation()
     {
@@ -284,7 +284,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return null|string
+     * @return string|null
      */
     public function getFileSizeFormatted()
     {

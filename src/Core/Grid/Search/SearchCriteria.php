@@ -37,22 +37,22 @@ final class SearchCriteria implements SearchCriteriaInterface
     private $filters;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     private $orderBy;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     private $orderWay;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     private $offset;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     private $limit;
 
