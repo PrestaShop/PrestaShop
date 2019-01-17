@@ -1,0 +1,13 @@
+<phpunit color="true"
+         stopOnFailure="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="true"
+>
+    <testsuites>
+        <testsuite name="Endpoints">
+            <directory>Endpoints</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
