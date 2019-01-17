@@ -114,19 +114,19 @@ before_deploy:
   - |
       if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then
         mkdir -p ${HOME}/.ssh/;
-        echo $GC_INSTANCE_KEY | base64 --decode -i > ${HOME}/.ssh/google_compute_engine;
-        echo $GC_INSTANCE_PUB | base64 --decode -i > ${HOME}/.ssh/google_compute_engine.pub;
-        chmod 600 ${HOME}/.ssh/*;
-        echo $GC_SERVICE_KEY | base64 --decode -i > ${HOME}/gcloud-service-key.json;
-        gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json;
-        gcloud config set project $GC_PROJECT_ID;
+        echo $GC_INSTANCE_KEY | base64 --decode -i > ${HOME}/.ssh/google_compute_engine && \
+        echo $GC_INSTANCE_PUB | base64 --decode -i > ${HOME}/.ssh/google_compute_engine.pub && \
+        chmod 600 ${HOME}/.ssh/* && \
+        echo $GC_SERVICE_KEY | base64 --decode -i > ${HOME}/gcloud-service-key.json && \
+        gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json && \
+        gcloud config set project $GC_PROJECT_ID
       fi
 
 after_deploy:
   - |
     if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then
       [[ $TRAVIS_BRANCH = "develop" ]] && INSTANCE_TYPE="develop" || INSTANCE_TYPE="release";
-      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=TRAVIS_BRANCH=$TRAVIS_BRANCH;
-      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-script=tests/E2E/scripts/run-nightly-tests.sh;
-      gcloud compute instances start --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}";
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=TRAVIS_BRANCH=$TRAVIS_BRANCH && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-tests-script=tests/E2E/scripts/run-nightly-tests.sh && \
+      gcloud compute instances start --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}"
     fi

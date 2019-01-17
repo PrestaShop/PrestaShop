@@ -6,24 +6,29 @@
 # Otherwise it will shutdown your computer.
 #
 
+set -x
+
 BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/TRAVIS_BRANCH -H "Metadata-Flavor: Google")
 DIR_PATH=$(mktemp -d)
-REPORT_PATH=$(mktemp -d)
+REPORT_PATH="${DIR_PATH}/campaigns"
 REPORT_OUTPUT_NAME="$(date +%Y-%m-%d)-${BRANCH}"
+
+exec &> >(tee -a "/var/log/ps-${REPORT_OUTPUT_NAME}.log")
 
 if [ -d $DIR_PATH ]; then
   rm -rf $DIR_PATH
 fi
 
-git clone https://github.com/PrestaShop/PrestaShop.git $DIR_PATH
+git clone https://github.com/PrestaShop/PrestaShop.git $DIR_PATH/prestashop
 
-cd $DIR_PATH
+cd $DIR_PATH/prestashop
 git checkout $BRANCH
-mkdir -p "${REPORT_PATH}/campaigns"
+mkdir -p $REPORT_PATH
 
-cd "${DIR_PATH}/tests/E2E"
+cd "${DIR_PATH}/prestashop/tests/E2E"
 for test_directory in test/campaigns/full/* ; do
   if [ -d "${test_directory}" ]; then
+    docker volume prune -f
     docker stop $(docker ps -qa)
 
     docker-compose up -d --build --force-recreate
@@ -33,10 +38,10 @@ for test_directory in test/campaigns/full/* ; do
     sleep 10
 
     TEST_PATH=${test_directory/test\/campaigns\//}
-    docker-compose exec -e TEST_PATH=$TEST_PATH tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80 -- bash /tmp/run-tests.sh
+    docker-compose exec -T -e TEST_PATH=$TEST_PATH tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80 -- bash /tmp/run-tests.sh
 
     if [ -f "mochawesome-report/mochawesome.json" ]; then
-      cp mochawesome-report/mochawesome.json "${REPORT_PATH}/campaigns/${TEST_PATH//\//-}.json"
+      cp mochawesome-report/mochawesome.json "${REPORT_PATH}/${TEST_PATH//\//-}.json"
     fi
 
     docker-compose down
