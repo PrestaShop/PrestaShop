@@ -973,9 +973,23 @@ class AdminModuleController {
     let actionMenuObj;
     let urlActionSegment;
     let urlElement;
-    $.each(bulkModulesTechNames, function bulkModulesLoop(index, data) {
-      actionMenuObj = data.actionMenuObj;
-      moduleTechName = data.techName;
+    let modulesRequestedCountdown = bulkModulesTechNames.length - 1;
+    if (bulkModulesTechNames.length > 1) {
+      //Loop through all the modules except the last one which waits for other
+      //requests and then call its request with cache clear enabled
+      $.each(bulkModulesTechNames, function bulkModulesLoop(index, data) {
+        if (index >= bulkModulesTechNames.length - 1) {
+          return;
+        }
+        requestModuleAction(data, true, countdownModulesRequest);
+      });
+    } else {
+      requestModuleAction(bulkModulesTechNames[0]);
+    }
+
+    function requestModuleAction(moduleData, disableCacheClear, requestEndCallback) {
+      actionMenuObj = moduleData.actionMenuObj;
+      moduleTechName = moduleData.techName;
 
       urlActionSegment = bulkActionToUrl[requestedBulkAction];
 
@@ -985,20 +999,30 @@ class AdminModuleController {
           self.moduleCardController.moduleActionMenuLinkSelector + urlActionSegment,
           actionMenuObj
         );
-
         if (urlElement.length > 0) {
           self.moduleCardController._requestToController(
             urlActionSegment,
             urlElement,
-            forceDeletion
+            forceDeletion,
+            disableCacheClear,
+            requestEndCallback
           );
         } else {
           $.growl.error({message: window.translate_javascripts['Bulk Action - Request not available for module']
-                                        .replace('[1]', urlActionSegment)
-                                        .replace('[2]', moduleTechName)});
+              .replace('[1]', urlActionSegment)
+              .replace('[2]', moduleTechName)});
         }
       }
-    });
+    }
+
+    function countdownModulesRequest() {
+      modulesRequestedCountdown--;
+      //Now that all other modules have performed their action WITHOUT cache clear, we
+      //can request the last module request WITH cache clear
+      if (modulesRequestedCountdown <= 0) {
+        requestModuleAction(bulkModulesTechNames[bulkModulesTechNames.length - 1]);
+      }
+    }
 
     return true;
   }
