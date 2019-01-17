@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -187,6 +188,9 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('id_employee', NumberType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Advparameters.Help'),
+                    ],
                 ])
                 ->setAssociatedColumn('id_employee')
             )
@@ -194,6 +198,9 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('firstname', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search first name', [], 'Admin.Advparameters.Help'),
+                    ],
                 ])
                 ->setAssociatedColumn('firstname')
             )
@@ -201,6 +208,9 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('lastname', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search last name', [], 'Admin.Advparameters.Help'),
+                    ],
                 ])
                 ->setAssociatedColumn('lastname')
             )
@@ -208,6 +218,9 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('email', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search email', [], 'Admin.Advparameters.Help'),
+                    ],
                 ])
                 ->setAssociatedColumn('email')
             )
