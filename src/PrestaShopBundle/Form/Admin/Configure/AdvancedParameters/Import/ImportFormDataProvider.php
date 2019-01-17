@@ -48,7 +48,7 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
     private $session;
 
     /**
-     * @var null|RequestStack current request
+     * @var RequestStack|null current request
      */
     private $request;
 

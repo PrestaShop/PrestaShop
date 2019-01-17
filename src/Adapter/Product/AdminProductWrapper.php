@@ -552,7 +552,7 @@ class AdminProductWrapper
     /**
      * Get price priority.
      *
-     * @param null|int $idProduct
+     * @param int|null $idProduct
      *
      * @return array
      */

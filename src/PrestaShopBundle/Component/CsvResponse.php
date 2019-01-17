@@ -58,7 +58,7 @@ class CsvResponse extends StreamedResponse
     private $modeType = self::MODE_PAGINATION;
 
     /**
-     * @var null|int
+     * @var int|null
      */
     private $start = null;
 

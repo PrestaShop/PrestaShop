@@ -66,7 +66,7 @@ class HtaccessFileGenerator
     /**
      * Generates htaccess file and its content.
      *
-     * @param null|bool $disableMultiView if null, rely on the Shop configuration
+     * @param bool|null $disableMultiView if null, rely on the Shop configuration
      *
      * @return bool
      */
