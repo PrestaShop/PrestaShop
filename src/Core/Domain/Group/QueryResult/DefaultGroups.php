@@ -24,48 +24,64 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Group\DataTransferObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;
+namespace PrestaShop\PrestaShop\Core\Domain\Group\QueryResult;
 
 /**
- * Class DefaultGroup.
+ * Class DefaultGroups.
  */
-class DefaultGroup
+class DefaultGroups
 {
     /**
-     * @var GroupId
+     * @var DefaultGroup
      */
-    private $groupId;
+    private $visitorsGroup;
 
     /**
-     * @var string
+     * @var DefaultGroup
      */
-    private $name;
+    private $guestsGroup;
 
     /**
-     * @param GroupId $groupId
-     * @param string $name
+     * @var DefaultGroup
      */
-    public function __construct(GroupId $groupId, $name)
-    {
-        $this->groupId = $groupId;
-        $this->name = $name;
+    private $customersGroup;
+
+    /**
+     * @param DefaultGroup $visitorsGroup
+     * @param DefaultGroup $guestsGroup
+     * @param DefaultGroup $customersGroup
+     */
+    public function __construct(
+        DefaultGroup $visitorsGroup,
+        DefaultGroup $guestsGroup,
+        DefaultGroup $customersGroup
+    ) {
+        $this->visitorsGroup = $visitorsGroup;
+        $this->guestsGroup = $guestsGroup;
+        $this->customersGroup = $customersGroup;
     }
 
     /**
-     * @return GroupId
+     * @return DefaultGroup
      */
-    public function getGroupId()
+    public function getVisitorsGroup()
     {
-        return $this->groupId;
+        return $this->visitorsGroup;
     }
 
     /**
-     * @return string
+     * @return DefaultGroup
      */
-    public function getName()
+    public function getGuestsGroup()
     {
-        return $this->name;
+        return $this->guestsGroup;
+    }
+
+    /**
+     * @return DefaultGroup
+     */
+    public function getCustomersGroup()
+    {
+        return $this->customersGroup;
     }
 }
