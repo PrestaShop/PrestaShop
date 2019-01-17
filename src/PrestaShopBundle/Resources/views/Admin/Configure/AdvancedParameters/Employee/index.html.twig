@@ -24,6 +24,13 @@
  *#}
 
 {% set enableSidebar = true %}
+{% set layoutHeaderToolbarBtn = {
+  'add': {
+    'href': path('admin_employees_index'),
+    'desc': 'Add new employee'|trans({}, 'Admin.Advparameters.Feature'),
+    'icon': 'add_circle_outline'
+  }
+} %}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
