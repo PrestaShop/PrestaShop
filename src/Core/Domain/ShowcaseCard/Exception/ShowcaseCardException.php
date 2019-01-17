@@ -1,5 +1,7 @@
+<?php
+
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,42 +20,18 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+namespace PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class ShowcaseCardCloseExtension is responsible for providing helper block closing behavior
+ * Base class for Showcase card exceptions
  */
-export default class ShowcaseCardCloseExtension {
-
-  /**
-   * Extend helper block.
-   *
-   * @param {ShowcaseCard} helperBlock
-   */
-  extend(helperBlock) {
-    const container = helperBlock.getContainer();
-    container.on('click', '.js-remove-helper-block', (evt) => {
-      container.remove();
-
-      const $btn = $(evt.target);
-      const url = $btn.data('closeUrl');
-      const cardName = $btn.data('cardName');
-
-      if (url) {
-        // notify the card was closed
-        $.post(
-          url,
-          {
-            close: 1,
-            name: cardName
-          }
-        );
-      }
-    });
-  }
+class ShowcaseCardException extends DomainException
+{
 }

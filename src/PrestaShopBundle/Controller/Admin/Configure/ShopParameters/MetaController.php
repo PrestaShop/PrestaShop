@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -74,29 +76,38 @@ class MetaController extends FrameworkBundleAdminController
         $helperBlockLinkProvider = $this->get('prestashop.core.helper_doc.meta_page_link_provider');
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
 
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig', [
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
-                    'href' => $this->getAdminLink('AdminMeta', ['addmeta' => '']),
-                    'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
-                    'icon' => 'add_circle_outline',
+        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+            new GetShowcaseCardIsClosed($this->getContext()->employee->id, ShowcaseCard::SEO_URLS_CARD)
+        );
+
+        return $this->render(
+            '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig',
+            [
+                'layoutHeaderToolbarBtn' => [
+                    'add' => [
+                        'href' => $this->getAdminLink('AdminMeta', ['addmeta' => '']),
+                        'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
+                        'icon' => 'add_circle_outline',
+                    ],
                 ],
-            ],
-            'grid' => $presentedGrid,
-            'metaForm' => $metaForm->createView(),
-            'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
-            'routeKeywords' => $defaultRoutesProvider->getKeywords(),
-            'isModRewriteActive' => $tools->isModRewriteActive(),
-            'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
-            'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
-            'isShopContext' => $isShopContext,
-            'isShopFeatureActive' => $isShopFeatureActive,
-            'isHostMode' => $hostingInformation->isHostMode(),
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminMeta'),
-            'helperDocLink' => $helperBlockLinkProvider->getLink(),
-            'indexPageId' => $metaDataProvider->getIdByPage('index'),
-        ]);
+                'grid' => $presentedGrid,
+                'metaForm' => $metaForm->createView(),
+                'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
+                'routeKeywords' => $defaultRoutesProvider->getKeywords(),
+                'isModRewriteActive' => $tools->isModRewriteActive(),
+                'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
+                'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
+                'isShopContext' => $isShopContext,
+                'isShopFeatureActive' => $isShopFeatureActive,
+                'isHostMode' => $hostingInformation->isHostMode(),
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink('AdminMeta'),
+                'helperDocLink' => $helperBlockLinkProvider->getLink(),
+                'indexPageId' => $metaDataProvider->getIdByPage('index'),
+                'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
+                'showcaseCardIsClosed' => $showcaseCardIsClosed,
+            ]
+        );
     }
 
     /**
@@ -132,9 +143,12 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function createAction()
     {
-        $legacyLink = $this->getAdminLink('AdminMeta', [
-            'addmeta' => 1,
-        ]);
+        $legacyLink = $this->getAdminLink(
+            'AdminMeta',
+            [
+                'addmeta' => 1,
+            ]
+        );
 
         return $this->redirect($legacyLink);
     }
@@ -150,10 +164,13 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function editAction($metaId)
     {
-        $legacyLink = $this->getAdminLink('AdminMeta', [
-            'id_meta' => $metaId,
-            'updatemeta' => 1,
-        ]);
+        $legacyLink = $this->getAdminLink(
+            'AdminMeta',
+            [
+                'id_meta' => $metaId,
+                'updatemeta' => 1,
+            ]
+        );
 
         return $this->redirect($legacyLink);
     }
