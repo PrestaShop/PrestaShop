@@ -103,6 +103,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'simplexml' => $this->translator->trans('SimpleXML extension is not loaded', array(), 'Install'),
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
                         'fileinfo' => $this->translator->trans('Fileinfo extension is not enabled', array(), 'Install'),
+                        'intl' => $this->translator->trans('Intl extension is not loaded', array(), 'Install'),
                     ),
                 ),
                 array(
