@@ -8,4 +8,4 @@ _positions:
 
 _theme:
     resource: "theme.yml"
-    prefix: /theme
+    prefix: /themes

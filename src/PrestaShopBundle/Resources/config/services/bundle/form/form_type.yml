@@ -679,3 +679,17 @@ services:
           - '@=service("prestashop.core.form.choice_provider.customer_delete_method").getChoices()'
         tags:
           - { name: form.type }
+
+    form.type.design.theme.import_theme:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.theme_zip").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.design.theme.adapt_theme_to_rtl_languages:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\AdaptThemeToRTLLanguagesType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.theme").getChoices()'
+        tags:
+            - { name: form.type }
