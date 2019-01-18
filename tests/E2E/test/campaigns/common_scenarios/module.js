@@ -226,4 +226,20 @@ module.exports = {
       test('should check if the module "Payments by check" is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', 'ps_checkpayment'), 2000));
     }
   },
+  checkAmazonMarketPlace: async function (client, ModulePage, id) {
+    test('should go to "Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
+    test('should search for the module "Amazon Market Place"', () => {
+      return promise
+        .then(() => client.waitAndSetValue(ModulePage.module_selection_input, 'amazon', 2000))
+        .then(() => client.waitForExistAndClick(ModulePage.selection_search_button));
+    });
+    test('should click on "Discover" button', () => client.waitForExistAndClick(ModulePage.discover_amazon_module_button));
+    test('should verify it opens the addons Amazon market place product page in a new tab', () => {
+      return promise
+        .then(() => client.switchWindow(id))
+        .then(() => client.refresh()) /**Adding refreshing page because sometimes is not well opened we have to refresh it before */
+        .then(() => client.checkTextValue(ModulePage.module_name, "Amazon Market Place Module", 'contain'))
+        .then(() => client.switchWindow(0));
+    });
+  }
 };

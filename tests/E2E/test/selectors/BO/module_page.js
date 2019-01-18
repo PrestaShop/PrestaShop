@@ -51,7 +51,7 @@ module.exports = {
     enable_module: '//form[contains(@action, "action/enable/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-enable"]',
     reset_module: '//form[contains(@action, "action/reset/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-reset"]',
     reset_button_modal: '//*[@id="module-modal-confirm-%moduleTechName-reset"]//a[contains(@class, "module_action_modal_reset")]',
-    backdrop_modale:'//div[contains(@class, "fade show")]',
+    backdrop_modale: '//div[contains(@class, "fade show")]',
     installed_module_div: '//div[@data-tech-name="%moduleTechName"]',
     module_action_href: '(//div[@data-tech-name="%moduleTechName"]//div[contains(@class,"module-actions")]/a) |  (//div[@data-tech-name="%moduleTechName"]//form/button[@data-confirm_modal="module-modal-confirm-%moduleTechName-enable"])',
     //List of modules after search
@@ -63,6 +63,7 @@ module.exports = {
     modules_number_to_configure: '//*[@id="module-short-list-configure"]/span[1]',
     notification_number: '//*[@id="subtab-AdminModulesNotifications"]//span[@class="notification-counter"]',
     selection_tab: '//*[@id="head_tabs"]/a[1]',
+    discover_amazon_module_button: '//*[@id="modules-list-container-all"]//a[contains(@href,"amazon-market-place")]',
     ModuleBankTransferPage: {
       account_owner_input: '//*[@id="BANK_WIRE_OWNER"]',
       account_details_textarea: '//*[@id="BANK_WIRE_DETAILS"]',
@@ -72,7 +73,7 @@ module.exports = {
     MainMenuPage: {
       available_item_list: '//*[@id="availableItems"]//option[@value="CAT%ID"]',
       add_item_button: '//*[@id="addItem"]',
-      selected_item_list : '//*[@id="items"]//option[@value="CAT%ID"]',
+      selected_item_list: '//*[@id="items"]//option[@value="CAT%ID"]',
       save_button: '//*[@id="module_form_submit_btn"]'
     },
     ReadMoreModal: {
