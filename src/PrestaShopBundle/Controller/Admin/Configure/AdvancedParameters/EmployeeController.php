@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkDeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\DeleteEmployeeCommand;
@@ -235,13 +236,25 @@ class EmployeeController extends FrameworkBundleAdminController
         $code = $e->getCode();
 
         $errorMessages = [
-            InvalidEmployeeIdException::class => $this->trans('The object cannot be loaded (the identifier is missing or invalid)', 'Admin.Notifications.Error'),
-            EmployeeNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            InvalidEmployeeIdException::class => $this->trans(
+                'The object cannot be loaded (the identifier is missing or invalid)',
+                'Admin.Notifications.Error'
+            ),
+            EmployeeNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
             AdminEmployeeException::class => [
-                AdminEmployeeException::CANNOT_CHANGE_LAST_ADMIN => $this->trans('You cannot disable or delete the administrator account.', 'Admin.Advparameters.Notification'),
+                AdminEmployeeException::CANNOT_CHANGE_LAST_ADMIN => $this->trans(
+                    'You cannot disable or delete the administrator account.',
+                    'Admin.Advparameters.Notification'
+                ),
             ],
             EmployeeCannotChangeItselfException::class => [
-                EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS => $this->trans('You cannot disable or delete your own account.', 'Admin.Advparameters.Notification'),
+                EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS => $this->trans(
+                    'You cannot disable or delete your own account.',
+                    'Admin.Advparameters.Notification'
+                ),
             ],
             CannotDeleteEmployeeException::class => $this->trans(
                 'Can\'t delete #%id%',
@@ -265,5 +278,42 @@ class EmployeeController extends FrameworkBundleAdminController
         }
 
         return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * Show Employee edit page.
+     *
+     * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_employees_index"
+     * )
+     *
+     * @param int $employeeId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction($employeeId, Request $request)
+    {
+        $employeeForm = $this->getEmployeeFormBuilder()->getFormFor($employeeId);
+        $employeeForm->handleRequest($request);
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig', [
+            'layoutTitle' => $this->trans('Employees', 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'employeeForm' => $employeeForm->createView(),
+        ]);
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    protected function getEmployeeFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.employee_form_builder');
     }
 }

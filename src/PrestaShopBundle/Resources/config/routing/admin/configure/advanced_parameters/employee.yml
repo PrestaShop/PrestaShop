@@ -49,3 +49,12 @@ admin_employees_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkDelete'
     _legacy_controller: AdminEmployees
+
+admin_employees_edit:
+  path: /{employeeId}/edit
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:edit'
+    _legacy_controller: AdminEmployees
+  requirements:
+    employeeId: \d+
