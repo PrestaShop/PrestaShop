@@ -125,7 +125,7 @@ require_once _PS_INSTALL_PATH_.'classes/session.php';
 @set_time_limit(0);
 // Work around lack of validation for timezone
 // standards conformance, mandatory in PHP 7
-if (!in_array(@ini_get('date.timezone'), timezone_identifiers_list()) {
+if (!in_array(@ini_get('date.timezone'), timezone_identifiers_list())) {
     @date_default_timezone_set('UTC');
     ini_set('date.timezone', 'UTC');
 }
