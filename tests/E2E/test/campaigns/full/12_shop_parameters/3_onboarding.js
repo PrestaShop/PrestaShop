@@ -80,5 +80,9 @@ scenario('Welcome Module', () => {
     test('should go to the "Dashboard"', () => client.waitForExistAndClick(Menu.dashboard_menu, 2000));
     moduleCommonScenarios.uninstallModule(client, ModulePage, AddProductPage, "paypal");
   }, 'common_client');
+
+  scenario('Check then install "ps_mbo" module', client => {
+    moduleCommonScenarios.installUninstallMboModule(client, ModulePage, AddProductPage, "ps_mbo", 'install');
+  }, 'onboarding');
 }, 'common_client', true);
 
