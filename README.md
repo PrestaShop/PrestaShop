@@ -56,7 +56,8 @@ Docker will bind your port 8001 to the web server. If you want to use other port
 MySQL credentials can also be found and modified in this file if needed.
 
 **Note:**  Before auto-installing PrestaShop, this container checks the file *config/settings.inc.php* does not exist on startup.
-If you expect the container to (re)install your shop, remove this file if it exists.
+If you expect the container to (re)install your shop, remove this file if it exists. And do not forget to check that your directory
+is owned by `www-data:www-data`.
 
 Documentation
 --------
