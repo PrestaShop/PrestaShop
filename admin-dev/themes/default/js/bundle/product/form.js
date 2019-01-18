@@ -746,6 +746,14 @@ var form = (function() {
   function switchLanguage(iso_code) {
     $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('show active');
     $('div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code).addClass('show active');
+    //Force refresh tinymce editors
+    $('div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code + ' textarea.autoload_rte').each(function(index, textarea) {
+      var editor = tinyMCE.get(textarea.id);
+      if (editor) {
+        //Reset content to force refresh of editor
+        editor.setContent(editor.getContent());
+      }
+    });
   }
 
   function updateMissingTranslatedNames() {
