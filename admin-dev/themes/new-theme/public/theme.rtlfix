@@ -1,1 +1,12 @@
-.sidebar.sidebar-right {-webkit-transform: translate(-100%,0);-moz-transform: translate(-100%,0);-ms-transform: translate(-100%,0);-o-transform: translate(-100%,0);transform: translate(-100%,0);}
+.sidebar.sidebar-right {
+  -webkit-transform: translate(-100%, 0);
+  -moz-transform: translate(-100%, 0);
+  -ms-transform: translate(-100%, 0);
+  -o-transform: translate(-100%, 0);
+  transform: translate(-100%, 0);
+}
+
+/* fix logo position */
+.main-header > .logo {
+  background-position: right;
+}

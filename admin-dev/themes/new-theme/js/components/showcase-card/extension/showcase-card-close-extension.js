@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+const $ = window.$;
+
 /**
  * Class ShowcaseCardCloseExtension is responsible for providing helper block closing behavior
  */
@@ -34,8 +36,24 @@ export default class ShowcaseCardCloseExtension {
    * @param {ShowcaseCard} helperBlock
    */
   extend(helperBlock) {
-    helperBlock.getContainer().on('click', '.js-remove-helper-block', () => {
-      helperBlock.getContainer().remove();
+    const container = helperBlock.getContainer();
+    container.on('click', '.js-remove-helper-block', (evt) => {
+      container.remove();
+
+      const $btn = $(evt.target);
+      const url = $btn.data('closeUrl');
+      const cardName = $btn.data('cardName');
+
+      if (url) {
+        // notify the card was closed
+        $.post(
+          url,
+          {
+            close: 1,
+            name: cardName
+          }
+        );
+      }
     });
   }
 }
