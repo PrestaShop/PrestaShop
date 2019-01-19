@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 class OrderPreferencesController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -62,7 +62,7 @@ class OrderPreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_order_preferences")
      *
