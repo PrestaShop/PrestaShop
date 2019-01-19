@@ -49,7 +49,12 @@ class MochawesomeCombine:
           print('Parsing {}'.format(report))
           f = open(report, 'r')
           raw_data = f.read()
-          parsed_data = json.loads(raw_data)
+          try:
+            parsed_data = json.loads(raw_data)
+          except json.decoder.JSONDecodeError:
+            # Could not load json file
+            continue
+
           if start_time is None or self.convert_to_datetime(parsed_data['stats']['start']) < self.convert_to_datetime(start_time):
               start_time = parsed_data['stats']['start']
 

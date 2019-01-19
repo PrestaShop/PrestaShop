@@ -49,9 +49,10 @@ for test_directory in test/campaigns/full/* ; do
 done
 
 if [ "$(ls ${REPORT_PATH}/campaigns)" ]; then
-  ./scripts/combine-reports.py "${REPORT_PATH}/campaigns" "${REPORT_PATH}/${REPORT_OUTPUT_NAME}.json"
-  nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${REPORT_PATH}/${REPORT_OUTPUT_NAME}.json" -o "${REPORT_PATH}/reports"
-  gsutil cp -r "${REPORT_PATH}/reports" gs://prestashop-core-nightly
+  mkdir -p "${DIR_PATH}/reports"
+  ./scripts/combine-reports.py "${REPORT_PATH}" "${REPORT_PATH}/${REPORT_OUTPUT_NAME}.json"
+  nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${REPORT_PATH}/${REPORT_OUTPUT_NAME}.json" -o "${DIR_PATH}/reports"
+  gsutil cp -r "${DIR_PATH}/reports" gs://prestashop-core-nightly
 fi
 
 halt -p
