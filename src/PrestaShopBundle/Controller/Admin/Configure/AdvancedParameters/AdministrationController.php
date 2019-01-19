@@ -44,7 +44,7 @@ class AdministrationController extends FrameworkBundleAdminController
     /**
      * Show Administration page.
      *
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param FormInterface $form
      *
