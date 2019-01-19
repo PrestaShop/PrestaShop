@@ -39,7 +39,7 @@ class PaymentMethodsController extends FrameworkBundleAdminController
     /**
      * Show payment method modules.
      *
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
