@@ -48,7 +48,7 @@ class PreferencesController extends FrameworkBundleAdminController
      * @param Request $request
      * @param FormInterface|null $form
      *
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return Response
      *
