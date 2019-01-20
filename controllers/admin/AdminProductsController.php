@@ -74,7 +74,7 @@ class AdminProductsControllerCore extends AdminController
         if (Tools::getIsset('id_product')) {
             if (Tools::getIsset('addproduct') || Tools::getIsset('updateproduct')) {
                 $sfContainer = SymfonyContainer::getInstance();
-                if (!is_null($sfContainer)) {
+                if (null !== $sfContainer) {
                     $sfRouter = $sfContainer->get('router');
                     Tools::redirectAdmin($sfRouter->generate(
                         'admin_product_form',
@@ -2170,7 +2170,7 @@ class AdminProductsControllerCore extends AdminController
     {
         // Cache this condition to improve performances
         static $is_activated = null;
-        if (is_null($is_activated)) {
+        if (null === $is_activated) {
             $is_activated = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->id_object;
         }
 
@@ -2179,11 +2179,11 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $def = ObjectModel::getDefinition($this->object);
-        if (!$this->object->isMultiShopField($field) && is_null($id_lang) && isset($def['fields'][$field])) {
+        if (!$this->object->isMultiShopField($field) && null === $id_lang && isset($def['fields'][$field])) {
             return true;
         }
 
-        if (is_null($id_lang)) {
+        if (null === $id_lang) {
             return !empty($_POST['multishop_check'][$field]);
         } else {
             return !empty($_POST['multishop_check'][$field][$id_lang]);

@@ -136,7 +136,7 @@ class TranslationService
      */
     private function requiresThemeTranslationsFactory($theme, $type)
     {
-        return $type === 'themes' && !is_null($theme);
+        return $type === 'themes' && null !== $theme;
     }
 
     /**
@@ -271,7 +271,7 @@ class TranslationService
                 'theme' => $theme,
             ));
 
-        if (is_null($translation)) {
+        if (null === $translation) {
             $translation = new Translation();
             $translation->setDomain($domain);
             $translation->setLang($lang);
@@ -338,7 +338,7 @@ class TranslationService
         $translation = $entityManager->getRepository('PrestaShopBundle:Translation')->findOneBy($searchTranslation);
 
         $resetTranslationSuccessfully = false;
-        if (is_null($translation)) {
+        if (null === $translation) {
             $resetTranslationSuccessfully = true;
         }
 

@@ -985,7 +985,7 @@ abstract class PaymentModuleCore extends Module
         $order->total_shipping_tax_incl = (float) $cart->getPackageShippingCost($carrierId, true, null, $order->product_list);
         $order->total_shipping = $order->total_shipping_tax_incl;
 
-        if (!is_null($carrier) && Validate::isLoadedObject($carrier)) {
+        if (null !== $carrier && Validate::isLoadedObject($carrier)) {
             $order->carrier_tax_rate = $carrier->getTaxesRate(new Address((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
         }
 
@@ -1035,7 +1035,7 @@ abstract class PaymentModuleCore extends Module
         }
 
         // Adding an entry in order_carrier table
-        if (!is_null($carrier)) {
+        if (null !== $carrier) {
             $order_carrier = new OrderCarrier();
             $order_carrier->id_order = (int) $order->id;
             $order_carrier->id_carrier = $carrierId;

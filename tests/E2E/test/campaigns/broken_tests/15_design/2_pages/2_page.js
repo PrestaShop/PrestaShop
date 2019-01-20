@@ -1,3 +1,11 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-123"][Name="Create a CMS page"]
+ * [id="PS-124"][Name="Edit a CMS page"]
+ * [id="PS-125"][Name="Delete a CMS page"]
+ * [id="PS-126"][Name="Bulk actions"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {Pages} = require('../../../../selectors/BO/design/pages');
 const {Menu} = require('../../../../selectors/BO/menu.js');

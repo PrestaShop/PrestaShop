@@ -814,7 +814,7 @@ class XmlLoader
     {
         static $tables = null;
 
-        if (is_null($tables)) {
+        if (null === $tables) {
             $tables = array();
             foreach (Db::getInstance()->executeS('SHOW TABLES') as $row) {
                 $table = current($row);
@@ -866,12 +866,12 @@ class XmlLoader
     {
         static $cache = null;
 
-        if (!is_null($cache)) {
+        if (null !== $cache) {
             return $cache;
         }
 
         $dir = $path;
-        if (is_null($dir)) {
+        if (null === $dir) {
             $dir = _PS_CLASS_DIR_;
         }
 
@@ -887,7 +887,7 @@ class XmlLoader
         }
 
         sort($classes);
-        if (is_null($path)) {
+        if (null === $path) {
             $cache = $classes;
         }
 

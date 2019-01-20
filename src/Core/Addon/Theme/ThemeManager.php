@@ -29,11 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 use Employee;
 use Exception;
 use Language;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeAlreadyExistsException;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
+use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
-use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Provider\TranslationFinderTrait;
 use PrestaShopException;
@@ -380,7 +381,8 @@ class ThemeManager implements AddonManagerInterface
 
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $theme->getName();
         if ($this->filesystem->exists($themePath)) {
-            throw new PrestaShopException(
+            throw new ThemeAlreadyExistsException(
+                $theme->getName(),
                 $this->translator->trans(
                     'There is already a theme named '
                     . $theme->getName()
@@ -434,7 +436,7 @@ class ThemeManager implements AddonManagerInterface
     {
         global $kernel; // sf kernel
 
-        if (!(!is_null($kernel) && $kernel instanceof \Symfony\Component\HttpKernel\KernelInterface)) {
+        if (!(null !== $kernel && $kernel instanceof \Symfony\Component\HttpKernel\KernelInterface)) {
             return;
         }
 

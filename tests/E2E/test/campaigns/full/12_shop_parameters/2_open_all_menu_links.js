@@ -1,3 +1,7 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-20"][Name="Open All menu links"]
+ **/
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {PagesForm} = require('../../../selectors/BO/pages_form.js');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');

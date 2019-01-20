@@ -1,5 +1,5 @@
 module.exports = {
-  Employee:{
+  Employee: {
     new_employee_button: '#page-header-desc-employee-new_employee',
     first_name_input: '#firstname',
     last_name_input: '#lastname',
@@ -19,6 +19,7 @@ module.exports = {
     dropdown_toggle: '//*[@id="form-employee"]//tbody//button',
     delete_link: '//*[@id="form-employee"]//tbody//li/a',
     edit_button: '//*[@id="table-employee"]//a[contains(@class, "edit")]',
-    language_select: '//*[@id="id_lang"]'
+    language_select: '//*[@id="id_lang"]',
+    selected_language_option: '//*[@id="id_lang"]/option[@selected="selected"]',
   }
 };

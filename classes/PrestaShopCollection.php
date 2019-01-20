@@ -536,7 +536,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         }
 
         $this->getAll();
-        if (is_null($offset)) {
+        if (null === $offset) {
             $this->results[] = $value;
         } else {
             $this->results[$offset] = $value;

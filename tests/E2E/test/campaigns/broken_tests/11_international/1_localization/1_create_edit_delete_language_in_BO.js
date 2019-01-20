@@ -1,3 +1,10 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-145"][Name="Add a language"]
+ * [id="PS-146"][Name="Edit a language"]
+ * [id="PS-147"][Name="Delete a language"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../../selectors/FO/access_page');
 const common_scenarios = require('../../../common_scenarios/localization');

@@ -242,7 +242,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
-        if (!is_null($translator)) {
+        if (null !== $translator) {
             $this->translator = $translator;
         }
 
@@ -267,9 +267,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
     protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
-        if (is_null($this->translator)) {
+        if (null === $this->translator) {
             $this->translator = Context::getContext()->getTranslator();
-            if (is_null($this->translator)) {
+            if (null === $this->translator) {
                 return $id;
             }
         }

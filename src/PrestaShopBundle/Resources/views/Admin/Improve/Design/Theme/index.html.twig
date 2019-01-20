@@ -1,0 +1,230 @@
+{#**
+  * 2007-2018 PrestaShop
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the Open Software License (OSL 3.0)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * https://opensource.org/licenses/OSL-3.0
+  * If you did not receive a copy of the license and are unable to
+  * obtain it through the world-wide-web, please send an email
+  * to license@prestashop.com so we can send you a copy immediately.
+  *
+  * DISCLAIMER
+  *
+  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+  * versions in the future. If you wish to customize PrestaShop for your
+  * needs please refer to http://www.prestashop.com for more information.
+  *
+  * @author    PrestaShop SA <contact@prestashop.com>
+  * @copyright 2007-2018 PrestaShop SA
+  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+  * International Registered Trademark & Property of PrestaShop SA
+  *#}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% set layoutTitle = 'Theme & Logo'|trans({}, 'Admin.Navigation.Menu') ~ ' > ' ~ 'Theme'|trans({}, 'Admin.Design.Feature') %}
+{% set layoutHeaderToolbarBtn = {
+  'add': {
+    'href': path('admin_themes_import'),
+    'desc': 'Add new theme'|trans({}, 'Admin.Design.Feature'),
+    'icon': 'add'
+  },
+  'export': {
+    'href': path('admin_themes_export_current'),
+    'desc': 'Export current theme'|trans({}, 'Admin.Design.Feature'),
+    'icon': 'cloud_download'
+  }
+} %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      {{ form_start(shopLogosForm, {'action': path('admin_themes_upload_logos')}) }}
+      <div class="card">
+        <h3 class="card-header">
+          <i class="material-icons">layers</i>
+          {{ 'Your current theme'|trans({}, 'Admin.Design.Feature') }}
+        </h3>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-3">
+              <a href="{{ baseShopUrl }}" target="_blank">
+                <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.name }}" class="img-thumbnail">
+              </a>
+            </div>
+            <div class="col-9">
+              <div class="row">
+                <div class="col">
+                  <p class="h1">{{ currentlyUsedTheme.name }} <span class="small-text text-muted">{{ 'version'|trans({}, 'Admin.Global') }} {{ currentlyUsedTheme.get('version') }}</span></p>
+                  <p class="mb-0">{{ 'Designed by %s'|trans({'%s': currentlyUsedTheme.get('author.name')}, 'Admin.Design.Feature') }}</p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <hr class="mb-3 mt-3">
+                </div>
+
+                <div class="col-6">
+                  <p class="mb-0">{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}</p>
+                  <p class="mb-0 small-text">{{ 'Each page can use a different layout, choose it among the layouts bundled in your theme.'|trans({}, 'Admin.Design.Feature') }}</p>
+                </div>
+
+                <div class="col-6">
+                  {% if isDevModeOn %}
+                    <button class="btn btn-outline-primary float-right ml-1 js-reset-theme-layouts-btn"
+                            type="button"
+                            data-submit-url="{{ path('admin_themes_reset_layouts', {'themeName': currentlyUsedTheme.name}) }}"
+                            data-csrf-token="{{ csrf_token('reset-theme-layouts') }}"
+                    >
+                      <i class="material-icons">settings_backup_restore</i>
+                      {{ 'Reset to defaults'|trans({}, 'Admin.Design.Feature') }}
+                    </button>
+                  {% endif %}
+
+                  <a href="{{ path('admin_theme_customize_layouts') }}"
+                     class="btn btn-outline-primary float-right"
+                  >
+                    <i class="material-icons">settings</i>
+                    {{ 'Choose layouts'|trans({}, 'Admin.Design.Feature') }}
+                  </a>
+                </div>
+
+                <div class="col-12">
+                  <hr class="mb-3 mt-3">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/logo_configuration.html.twig' %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a class="btn btn-outline-primary" href="{{ themeCatalogUrl }}" target="_blank">
+            {{ 'Visit the theme catalog'|trans({}, 'Admin.Design.Feature') }}
+          </a>
+          <button class="btn btn-primary float-right">
+            <i class="material-icons">save</i>
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      </div>
+      {{ form_end(shopLogosForm) }}
+    </div>
+  </div>
+
+  {% if isInstalledRtlLanguage %}
+    <div class="row">
+      <div class="col">
+        {{ form_start(adaptThemeToRtlLanguagesForm, {'action': path('admin_themes_adapt_to_rtl_languages')}) }}
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">language</i>
+            {{ 'Adaptation to Right-to-Left languages'|trans({}, 'Admin.Design.Feature') }}
+          </h3>
+          <div class="card-block row">
+            <div class="card-text">
+              <div class="alert alert-info">
+                <p class="alert-text">
+                  {{ 'Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.'|trans({}, 'Admin.Design.Help') }}
+                </p>
+              </div>
+
+              <div class="form-group row">
+                <label class="form-control-label">
+                  {{ 'Theme to adapt'|trans({}, 'Admin.Design.Feature') }}
+                </label>
+                <div class="col-sm">
+                  {{ form_widget(adaptThemeToRtlLanguagesForm.theme_to_adapt) }}
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="form-control-label">
+                  {{ 'Generate RTL stylesheet'|trans({}, 'Admin.Design.Feature') }}
+                </label>
+                <div class="col-sm">
+                  {{ form_widget(adaptThemeToRtlLanguagesForm.generate_rtl_css) }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">
+                <i class="material-icons">save</i>
+                {{ 'Save'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+          </div>
+        </div>
+        {{ form_end(adaptThemeToRtlLanguagesForm) }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if notUsedThemes is not empty %}
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">settings</i>
+            {{ 'Select a theme for the "%name%" shop'|trans({'%name%': shopName}, 'Admin.Design.Feature') }}
+          </h3>
+          <div class="card-body">
+            {% if not isSingleShopContext %}
+              <div class="alert alert-info mb-0">
+                <p class="alert-text">
+                  {{ 'You must select a shop from the above list if you wish to choose a theme.'|trans({}, 'Admin.Design.Help') }}
+                </p>
+              </div>
+            {% else %}
+              <div class="row">
+                {% for theme in notUsedThemes %}
+                  <div class="col-3">
+                    <div class="card" style="max-width: 350px; max-height: 250px; overflow-y: hidden;">
+                      <h3 class="card-header text-center">
+                        {{ theme.name }}
+                      </h3>
+                      <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.name }}" class="card-img-top">
+                    </div>
+                    <form action="{{ path('admin_themes_enable', {'themeName': theme.name}) }}" method="post" class="d-inline">
+                      <input type="hidden" name="token" value="{{ csrf_token('enable-theme') }}" />
+
+                      <button type="submit" class="btn btn-outline-primary btn-sm">
+                        <i class="material-icons">check</i>
+                        {{ 'Use this theme'|trans({}, 'Admin.Design.Feature') }}
+                      </button>
+                    </form>
+
+                    <form action="{{ path('admin_themes_delete', {'themeName': theme.name}) }}" method="post" class="d-inline">
+                      <input type="hidden" name="token" value="{{ csrf_token('delete-theme') }}" />
+
+                      <button type="submit" class="btn btn-outline-primary btn-sm">
+                        <i class="material-icons">delete</i>
+                        {{ 'Delete this theme'|trans({}, 'Admin.Design.Feature') }}
+                      </button>
+                    </form>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/themes.bundle.js') }}"></script>
+{% endblock %}

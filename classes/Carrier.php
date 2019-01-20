@@ -634,7 +634,7 @@ class CarrierCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'zone` zz ON cz.id_zone = zz.id_zone) ON zz.`id_zone` = c.`id_zone`
 			WHERE 1
 			' . ($active_countries ? 'AND c.active = 1' : '') . '
-			' . (!is_null($contain_states) ? 'AND c.`contains_states` = ' . (int) $contain_states : '') . '
+			' . (null !== $contain_states ? 'AND c.`contains_states` = ' . (int) $contain_states : '') . '
 			ORDER BY cl.name ASC');
 
         $countries = array();
@@ -696,7 +696,7 @@ class CarrierCore extends ObjectModel
     {
         $context = Context::getContext();
         $id_lang = $context->language->id;
-        if (is_null($cart)) {
+        if (null === $cart) {
             $cart = $context->cart;
         }
         if (isset($context->currency)) {
@@ -958,8 +958,8 @@ class CarrierCore extends ObjectModel
             if ($delete) {
                 Db::getInstance()->execute(
                     'DELETE FROM `' . _DB_PREFIX_ . 'delivery`
-                    WHERE ' . (is_null($values['id_shop']) ? 'ISNULL(`id_shop`) ' : 'id_shop = ' . (int) $values['id_shop']) . '
-                    AND ' . (is_null($values['id_shop_group']) ? 'ISNULL(`id_shop`) ' : 'id_shop_group=' . (int) $values['id_shop_group']) . '
+                    WHERE ' . (null === $values['id_shop'] ? 'ISNULL(`id_shop`) ' : 'id_shop = ' . (int) $values['id_shop']) . '
+                    AND ' . (null === $values['id_shop_group'] ? 'ISNULL(`id_shop`) ' : 'id_shop_group=' . (int) $values['id_shop_group']) . '
                     AND id_carrier=' . (int) $values['id_carrier'] .
                     ($values['id_range_price'] !== null ? ' AND id_range_price=' . (int) $values['id_range_price'] : ' AND (ISNULL(`id_range_price`) OR `id_range_price` = 0)') .
                     ($values['id_range_weight'] !== null ? ' AND id_range_weight=' . (int) $values['id_range_weight'] : ' AND (ISNULL(`id_range_weight`) OR `id_range_weight` = 0)') . '
@@ -969,7 +969,7 @@ class CarrierCore extends ObjectModel
 
             $sql .= '(';
             foreach ($values as $v) {
-                if (is_null($v)) {
+                if (null === $v) {
                     $sql .= 'NULL';
                 } elseif (is_int($v) || is_float($v)) {
                     $sql .= $v;
@@ -1483,18 +1483,18 @@ class CarrierCore extends ObjectModel
             $ps_country_default = Configuration::get('PS_COUNTRY_DEFAULT');
         }
 
-        if (is_null($id_shop)) {
+        if (null === $id_shop) {
             $id_shop = Context::getContext()->shop->id;
         }
-        if (is_null($cart)) {
+        if (null === $cart) {
             $cart = Context::getContext()->cart;
         }
 
-        if (is_null($error) || !is_array($error)) {
+        if (null === $error || !is_array($error)) {
             $error = array();
         }
 
-        $id_address = (int) ((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery : $cart->id_address_delivery);
+        $id_address = (int) ((null !== $id_address_delivery && $id_address_delivery != 0) ? $id_address_delivery : $cart->id_address_delivery);
         if ($id_address) {
             $id_zone = Address::getZoneById($id_address);
 

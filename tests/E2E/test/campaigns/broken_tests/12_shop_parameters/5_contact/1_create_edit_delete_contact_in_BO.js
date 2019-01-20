@@ -1,3 +1,11 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-207"][Name="Create a new contact"]
+ * [id="PS-208"][Name="Edit contact"]
+ * [id="PS-209"][Name="Delete contact"]
+ * [id="PS-210"][Name="Bulk actions"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../../selectors/FO/access_page');
 const commonScenarios = require('../../../common_scenarios/contact');

@@ -53,7 +53,7 @@ class AdministrationController extends FrameworkBundleAdminController
      */
     public function indexAction(FormInterface $form = null)
     {
-        $form = is_null($form) ? $this->get('prestashop.adapter.administration.form_handler')->getForm() : $form;
+        $form = null === $form ? $this->get('prestashop.adapter.administration.form_handler')->getForm() : $form;
 
         return [
             'layoutHeaderToolbarBtn' => [],

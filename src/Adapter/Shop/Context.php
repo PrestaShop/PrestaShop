@@ -26,14 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
+use Context as LegacyContext;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
+use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 use Shop;
 use ShopGroup;
 
 /**
  * This class will provide legacy shop context.
  */
-class Context implements MultistoreContextCheckerInterface
+class Context implements MultistoreContextCheckerInterface, ShopContextInterface
 {
     /**
      * Get shops list.
@@ -200,5 +202,13 @@ class Context implements MultistoreContextCheckerInterface
     public function getAllShopIds()
     {
         return Shop::getCompleteListOfShopsID();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getShopName()
+    {
+        return LegacyContext::getContext()->shop->name;
     }
 }

@@ -173,7 +173,7 @@ module.exports = {
   installUninstallMboModule: async function (client, ModulePage, AddProductPage, moduleTechName, action) {
     if (action === 'Uninstall') {
       test('should go to "Module Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
-      test('should go to "Module Manager" page', () => client.waitForExistAndClick( Menu.Improve.Modules.modules_manager_submenu));
+      test('should go to "Module Manager" page', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_manager_submenu));
       test('should click on "Installed Modules" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.installed_modules_tabs));
       test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName, 2000));
       test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
@@ -210,6 +210,20 @@ module.exports = {
         }
         await client.waitForExistAndClick(Menu.dashboard_menu);
       });
+    }
+  },
+  checkExistenceModuleCatalog: function (client, moduleTechName, ModulePage) {
+    test('should go to "Modules > Module Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
+    test('should search for "' + moduleTechName + '" module in the module Catalog tab', () => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName, 2000));
+    test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
+    test('should check if the module "' + moduleTechName + '" is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', moduleTechName), 2000));
+  },
+  checkExistenceModuleManager: function (client, moduleTechName, ModulePage) {
+    test('should go to "Modules > Module Manager" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
+    test('should search for "' + moduleTechName + '" module in the module Modules tab', () => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName, 2000));
+    test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
+    if (moduleTechName === 'check') {
+      test('should check if the module "Payments by check" is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', 'ps_checkpayment'), 2000));
     }
   },
 };

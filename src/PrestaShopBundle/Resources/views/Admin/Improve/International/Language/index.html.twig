@@ -39,6 +39,12 @@
       <div class="alert alert-warning" role="alert">
         <p class="alert-text">{{ 'When you delete a language, all related translations in the database will be deleted.'|trans({}, 'Admin.International.Notification') }}</p>
       </div>
+
+      {% if not isHtaccessFileWriter %}
+        <div class="alert alert-info" role="alert">
+          <p class="alert-text">{{ 'Your .htaccess file must be writable.'|trans({}, 'Admin.International.Notification') }}</p>
+        </div>
+      {% endif %}
     </div>
   </div>
 

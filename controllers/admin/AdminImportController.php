@@ -978,7 +978,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         $separator = Tools::getValue('multiple_value_separator');
-        if (is_null($separator) || trim($separator) == '') {
+        if (null === $separator || trim($separator) == '') {
             $separator = ',';
         }
 

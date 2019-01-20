@@ -130,13 +130,13 @@ class CachingConfiguration implements DataConfigurationInterface
 
         if (
             $configuration['use_cache'] !== $this->isCachingEnabled
-            && !is_null($configuration['caching_system'])
+            && null !== $configuration['caching_system']
         ) {
             $this->phpParameters->setProperty('parameters.ps_cache_enable', $configuration['use_cache']);
         }
 
         if (
-            !is_null($configuration['caching_system'])
+            null !== $configuration['caching_system']
             && $configuration['caching_system'] !== $this->cachingSystem
         ) {
             $this->phpParameters->setProperty('parameters.ps_caching', $configuration['caching_system']);

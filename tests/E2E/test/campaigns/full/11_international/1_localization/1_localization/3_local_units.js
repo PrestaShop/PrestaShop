@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-143"][Name="Local unites: Change the advanced settings and check they are applied"]
+ **/
+
 const {AccessPageBO} = require('../../../../../selectors/BO/access_page');
 const commonLocalization = require('../../../../common_scenarios/localization');
 const {OnBoarding} = require('../../../../../selectors/BO/onboarding');

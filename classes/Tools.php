@@ -258,7 +258,7 @@ class ToolsCore
      */
     public static function getProtocol($use_ssl = null)
     {
-        return !is_null($use_ssl) && $use_ssl ? 'https://' : 'http://';
+        return null !== $use_ssl && $use_ssl ? 'https://' : 'http://';
     }
 
     /**
@@ -2213,7 +2213,7 @@ class ToolsCore
 
     public static function copy($source, $destination, $stream_context = null)
     {
-        if (is_null($stream_context) && !preg_match('/^https?:\/\//', $source)) {
+        if (null === $stream_context && !preg_match('/^https?:\/\//', $source)) {
             return @copy($source, $destination);
         }
 
@@ -2335,14 +2335,14 @@ class ToolsCore
         }
 
         // Default values for parameters
-        if (is_null($path)) {
+        if (null === $path) {
             $path = _PS_ROOT_DIR_ . '/.htaccess';
         }
 
-        if (is_null($cache_control)) {
+        if (null === $cache_control) {
             $cache_control = (int) Configuration::get('PS_HTACCESS_CACHE_CONTROL');
         }
-        if (is_null($disable_multiviews)) {
+        if (null === $disable_multiviews) {
             $disable_multiviews = (bool) Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
         }
 
@@ -2678,7 +2678,7 @@ FileETag none
             }
         }
 
-        if (is_null(Context::getContext())) {
+        if (null === Context::getContext()) {
             $sitemap_file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'index_sitemap.xml';
         } else {
             $sitemap_file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . Context::getContext()->shop->id . '_index_sitemap.xml';
@@ -3114,7 +3114,7 @@ exit;
         switch ($type) {
             case 'by':
                 $list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
-                $value = (is_null($value) || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
+                $value = (null === $value || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
                 $value = (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position');
                 $order_by_prefix = '';
                 if ($prefix) {
@@ -3135,7 +3135,7 @@ exit;
             break;
 
             case 'way':
-                $value = (is_null($value) || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
+                $value = (null === $value || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
                 $list = array(0 => 'asc', 1 => 'desc');
 
                 return (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc');
@@ -3294,7 +3294,7 @@ exit;
      */
     public static function clearSf2Cache($env = null)
     {
-        if (is_null($env)) {
+        if (null === $env) {
             $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
         }
 

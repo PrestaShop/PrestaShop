@@ -1,3 +1,6 @@
+/** This script is based on the scenario described in this test link
+ * [id="PS-104"][Name="Filters in catalog page"]
+ **/
 const {ProductList} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
@@ -5,10 +8,6 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const commonProduct = require('../../common_scenarios/product');
 const promise = Promise.resolve();
 
-/** This script is based on the scenario described in this test link
- * [id="PS-104"][Name="Filters in catalog page"]
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-104
- **/
 scenario('Check the sort of products in the Back Office', client => {
   test('should open browser', () => client.open());
   test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
@@ -136,8 +135,8 @@ scenario('Check the sort of products in the Back Office', client => {
       });
       commonProduct.productList(AddProductPage, ProductList.products_status_icon, 'inactive_status', client);
     }, 'product/product');
-    scenario('Back to default pagination', client => {
-      test('Back to default pagination', () => {
+    scenario('Go back to default pagination', client => {
+      test('should go back to default pagination', () => {
         return promise
           .then(() => client.isVisible(ProductList.pagination_products, 3000))
           .then(() => {

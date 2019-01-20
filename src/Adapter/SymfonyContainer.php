@@ -48,7 +48,7 @@ final class SymfonyContainer
         if (!isset(self::$instance)) {
             global $kernel;
 
-            if (!is_null($kernel) && $kernel instanceof KernelInterface) {
+            if (null !== $kernel && $kernel instanceof KernelInterface) {
                 self::$instance = $kernel->getContainer();
             }
         }

@@ -20,7 +20,7 @@ module.exports = {
       default_currency_list: '#form_configuration_default_currency',
       time_zone_list: '#form_configuration_timezone',
       symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
-      save_configuration_btn: '(//*[@id="main-div"]//button[text()="Save"])[1]',
+      save_configuration_btn: '(//*[@id="main-div"]//button)[2]',
       language_browser_no_label: '//label[@for="form_configuration_detect_language_from_browser_0"]',
       country_browser_no_label: '//label[@for="form_configuration_detect_country_from_browser_0"]',
       language_browser_yes_label: '//label[@for="form_configuration_detect_language_from_browser_1"]',
