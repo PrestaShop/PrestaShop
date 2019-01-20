@@ -18,3 +18,9 @@ services:
           'es': 'http://doc.prestashop.com/display/PS17/SEO+y+URLs'
           'it': 'http://doc.prestashop.com/display/PS17/SEO+e+URL'
           '_fallback': 'http://doc.prestashop.com/display/PS17/SEO+and+URLs'
+        'debug_mode':
+          'en': 'http://doc.prestashop.com/display/PS17/Performance#Performance-Debugmode'
+          'fr': 'http://doc.prestashop.com/pages/viewpage.action?pageId=51840325#Param%%C3%%A8tresdeperformances-Modedebug'
+          'it': 'http://doc.prestashop.com/pages/viewpage.action?pageId=54266514'
+          'es': 'http://doc.prestashop.com/display/PS17/Rendimiento#Rendimiento-ModoDepuraci%%C3%%B3n'
+          '_fallback': 'http://doc.prestashop.com/display/PS17/Performance#Performance-Debugmode'
