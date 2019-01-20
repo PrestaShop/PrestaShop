@@ -1920,9 +1920,7 @@ class OrderCore extends ObjectModel
             GROUP BY c.id_carrier'
         );
         foreach ($results as &$row) {
-            if ($row['carrier_name'] == '0') {
-                $row['carrier_name'] = Carrier::getCarrierNameFromShopName();
-            }
+            $row['carrier_name'] = Cart::replaceZeroByShopName($row['carrier_name'], null);
         }
         return $results;
     }
