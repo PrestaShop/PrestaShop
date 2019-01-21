@@ -114,7 +114,7 @@ class TranslatableType extends AbstractType
 
         $formErrors = $form->getErrors(true);
 
-        if (empty($formErrors)) {
+        if (empty($formErrors) || count($formErrors) <= 1) {
 
             return;
         }

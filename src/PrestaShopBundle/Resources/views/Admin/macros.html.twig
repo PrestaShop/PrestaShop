@@ -119,20 +119,14 @@
   {% if errors|length > 0 %}
     {# for form types which has locales and there are more then 1 error , additional errors are displaying inside popover #}
     {% set errorPopover = null %}
-    {% if form.vars.locales is defined and
-          form.vars.locales is not null and
-          form.vars.locales|length > 1 and
-          errors|length > 1
-    %}
-      {% set popoverErrors = errors|slice(1) %}
-      {% set errors = [errors|first] %}
+    {% if form.vars.errors_by_locale is defined %}
       {% set popoverContainer = 'locale-input-error-popover-container-'~form.vars.id %}
 
       <div class="{{ popoverContainer }}"></div>
 
       {% set popoverErrorContent %}
         <ul class="popover-error-list">
-          {% for popoverError in popoverErrors %}
+          {% for popoverError in errors %}
               <li class="text-danger">
                 {{  popoverError }}
               </li>
@@ -144,25 +138,33 @@
         <span
           class="js-locale-input-error-popover-trigger"
           data-toggle="locale-input-popover"
-          data-placement="top"
+          data-placement="bottom"
           data-html="true"
           data-template='<div class="popover js-locale-input-error-popover" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
           data-content='{{ popoverErrorContent }}'
           data-trigger="hover"
           data-container=".{{ popoverContainer }}"
         >
-          <u>+ {{ '%count% more'|trans({'%count%': popoverErrors|length}, 'Admin.Global') }}</u>
+          {#todo: check translations#}
+          <i class="material-icons">error_outline</i> <u>{{ '%count% errors'|trans({'%count%': errors|length}, 'Admin.Global') }}</u>
         </span>
       {% endset %}
 
     {% endif %}
 
     <div class="invalid-feedback-container">
-      {% for error in errors %}
-        <div class="text-danger">
-          {{ error }} {{ (errorPopover is not null) ? errorPopover : '' }}
-        </div>
-      {% endfor %}
+      {% if errorPopover is not null %}
+          <div class="text-danger">
+            {{ errorPopover }}
+          </div>
+        {% else %}
+          {% for error in errors %}
+            <div class="text-danger">
+              {{ error }}
+            </div>
+          {% endfor %}
+      {% endif %}
+
     </div>
   {% endif %}
 {% endmacro %}
