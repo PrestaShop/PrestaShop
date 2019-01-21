@@ -26,33 +26,48 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceConstraintException;
+
 /**
- * Defines available permissions for Webservice keys
+ * Encapsulates webservice key id value
  */
-class Permission
+class WebserviceKeyId
 {
     /**
-     * @var string Permission to view resource
+     * @var int
      */
-    const VIEW = 'GET';
+    private $webserviceKeyId;
 
     /**
-     * @var string Permission to view resource
+     * @param int $webserviceKeyId
      */
-    const FAST_VIEW = 'HEAD';
+    public function __construct($webserviceKeyId)
+    {
+        $this->assertWebserviceKeyIdIsIntegerGreaterThanZero($webserviceKeyId);
+
+        $this->webserviceKeyId = $webserviceKeyId;
+    }
 
     /**
-     * @var string Permission to modify existing resource
+     * @return int
      */
-    const MODIFY = 'PUT';
+    public function getValue()
+    {
+        return $this->webserviceKeyId;
+    }
 
     /**
-     * @var string Permission to add new resource
+     * @param int $webserviceKeyId
      */
-    const ADD = 'POST';
-
-    /**
-     * @var string Permission to delete existing resource
-     */
-    const DELETE = 'DELETE';
+    private function assertWebserviceKeyIdIsIntegerGreaterThanZero($webserviceKeyId)
+    {
+        if (!is_int($webserviceKeyId) || $webserviceKeyId <= 0) {
+            throw new WebserviceConstraintException(
+                sprintf(
+                    'Webservice key id must be integer greater than 0, but %s given',
+                    var_export($webserviceKeyId, true)
+                )
+            );
+        }
+    }
 }

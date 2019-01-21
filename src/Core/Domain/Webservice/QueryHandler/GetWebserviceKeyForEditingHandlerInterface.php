@@ -24,35 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Webservice\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Webservice\Query\GetWebserviceKeyForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Webservice\QueryResult\EditableWebserviceKey;
 
 /**
- * Defines available permissions for Webservice keys
+ * Interface for service that handles webservice key data retrieving for editing
  */
-class Permission
+interface GetWebserviceKeyForEditingHandlerInterface
 {
     /**
-     * @var string Permission to view resource
+     * @param GetWebserviceKeyForEditing $query
+     *
+     * @return EditableWebserviceKey
      */
-    const VIEW = 'GET';
-
-    /**
-     * @var string Permission to view resource
-     */
-    const FAST_VIEW = 'HEAD';
-
-    /**
-     * @var string Permission to modify existing resource
-     */
-    const MODIFY = 'PUT';
-
-    /**
-     * @var string Permission to add new resource
-     */
-    const ADD = 'POST';
-
-    /**
-     * @var string Permission to delete existing resource
-     */
-    const DELETE = 'DELETE';
+    public function handle(GetWebserviceKeyForEditing $query);
 }

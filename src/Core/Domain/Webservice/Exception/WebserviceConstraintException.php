@@ -24,35 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Webservice\Exception;
 
 /**
- * Defines available permissions for Webservice keys
+ * Is thrown when some constraint is violated in Webservice subdomain
  */
-class Permission
+class WebserviceConstraintException extends WebserviceException
 {
-    /**
-     * @var string Permission to view resource
-     */
-    const VIEW = 'GET';
-
-    /**
-     * @var string Permission to view resource
-     */
-    const FAST_VIEW = 'HEAD';
-
-    /**
-     * @var string Permission to modify existing resource
-     */
-    const MODIFY = 'PUT';
-
-    /**
-     * @var string Permission to add new resource
-     */
-    const ADD = 'POST';
-
-    /**
-     * @var string Permission to delete existing resource
-     */
-    const DELETE = 'DELETE';
 }
