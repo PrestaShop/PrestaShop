@@ -33,7 +33,7 @@ admin_webservice_keys_create:
 
 admin_webservice_keys_edit:
     path: /{webserviceKeyId}/edit
-    methods: GET
+    methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:edit'
         _legacy_controller: AdminWebservice

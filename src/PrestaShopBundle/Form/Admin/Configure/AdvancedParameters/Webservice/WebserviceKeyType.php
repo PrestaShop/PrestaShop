@@ -26,19 +26,25 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice;
 
+use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\Key;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Is used to create form for adding/editing Webservice Key
  */
 class WebserviceKeyType extends AbstractType
 {
+    use TranslatorAwareTrait;
+
     /**
      * @var bool
      */
@@ -75,7 +81,22 @@ class WebserviceKeyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('key', TextType::class)
+            ->add('key', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error')
+                    ]),
+                    new Length([
+                        'min' => Key::LENGTH,
+                        'max' => Key::LENGTH,
+                        'exactMessage' => $this->trans(
+                            'Key length must be 32 character long.',
+                            [],
+                            'Admin.Advparameters.Notification'
+                        ),
+                    ]),
+                ],
+            ])
             ->add('description', TextareaType::class, [
                 'required' => false,
             ])
@@ -95,6 +116,9 @@ class WebserviceKeyType extends AbstractType
         }
     }
 
+    /**
+     * @return array
+     */
     private function getPermissionChoicesForResources()
     {
         $choices = [];
