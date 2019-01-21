@@ -110,6 +110,7 @@ final class ModulesConfigurationProcessor
 
         try {
             $process->mustRun();
+            $this->io->write(sprintf('Module "%s" successfully installed!', $moduleInformation->getName()));
 
             $this->io->write($process->getOutput());
         } catch (ProcessFailedException $exception) {
