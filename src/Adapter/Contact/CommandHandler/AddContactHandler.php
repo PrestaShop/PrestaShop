@@ -45,7 +45,8 @@ final class AddContactHandler implements AddContactHandlerInterface
      */
     public function handle(AddContactCommand $command)
     {
-        //todo: some validations missing
+        //todo: email value object as DTO
+        //todo: Default language constraint validator here and in form
         try {
             $entity = new Contact();
             $entity->name = $command->getLocalisedTitles();
