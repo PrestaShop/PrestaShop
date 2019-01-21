@@ -98,7 +98,6 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             $this->assertDefaultCurrencyIsNotBeingDisabled($command->getCurrencyId()->getValue(), $command->isEnabled());
             $this->assertDefaultCurrencyIsBeingRemovedFromShop(
                 $entity,
-                $command->getCurrencyId()->getValue(),
                 $command->getShopIds()
             );
 
