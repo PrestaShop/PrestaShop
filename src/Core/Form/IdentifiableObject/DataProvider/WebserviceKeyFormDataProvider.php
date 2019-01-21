@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Webservice\QueryResult\EditableWebserviceK
 /**
  * Provides data for webservice key form
  */
-final class WebserviceKeyDataProvider implements FormDataProviderInterface
+final class WebserviceKeyFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var CommandBusInterface

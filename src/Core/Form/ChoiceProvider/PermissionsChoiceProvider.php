@@ -54,7 +54,7 @@ final class PermissionsChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         return [
-            $this->translator->trans('All', [], 'Admin.Global') => Permission::ALL,
+            $this->translator->trans('All', [], 'Admin.Global') => 'all',
             $this->translator->trans('View (GET)', [], 'Admin.Advparameters.Feature') => Permission::VIEW,
             $this->translator->trans('Modify (PUT)', [], 'Admin.Advparameters.Feature') => Permission::MODIFY,
             $this->translator->trans('Add (POST)', [], 'Admin.Advparameters.Feature') => Permission::ADD,

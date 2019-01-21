@@ -31,8 +31,8 @@ admin_webservice_keys_create:
         _legacy_controller: AdminWebservice
 #        _legacy_link: AdminWebservice:addwebservice_account
 
-admin_webservice_list_edit:
-    path: /edit/{webserviceAccountId}
+admin_webservice_keys_edit:
+    path: /{webserviceKeyId}/edit
     methods: GET
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:edit'
@@ -41,7 +41,7 @@ admin_webservice_list_edit:
 #        _legacy_parameters:
 #            id_webservice_account: webserviceAccountId
     requirements:
-        webserviceAccountId: \d+
+        webserviceKeyId: \d+
 
 admin_delete_single_webservice_log:
     path: /delete/{webserviceAccountId}
