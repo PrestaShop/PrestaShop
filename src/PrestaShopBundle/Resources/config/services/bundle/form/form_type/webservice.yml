@@ -8,5 +8,7 @@ services:
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@=service("prestashop.adapter.form.choice_provider.resources_choice_provider").getChoices()'
       - '@=service("prestashop.core.form.choice_provider.permissions_choice_provider").getChoices()'
+    calls:
+      - { method: setTranslator, arguments: ['@translator'] }
     tags:
       - { name: form.type }
