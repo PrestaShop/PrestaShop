@@ -42,10 +42,6 @@ use WebserviceKey;
  */
 final class AddWebserviceKeyHandler extends AbstractWebserviceKeyHandler implements AddWebserviceKeyHandlerInterface
 {
-    public function __construct()
-    {
-    }
-
     /**
      * {@inheritdoc}
      */

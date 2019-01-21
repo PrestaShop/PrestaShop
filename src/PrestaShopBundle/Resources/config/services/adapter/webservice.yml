@@ -15,3 +15,9 @@ services:
       tags:
         - name: tactician.handler
           command: 'PrestaShop\PrestaShop\Core\Domain\Webservice\Query\GetWebserviceKeyForEditing'
+
+    prestashop.adapter.webservice.command_handler.add_webservice_key_handler:
+      class: 'PrestaShop\PrestaShop\Adapter\Webservice\CommandHandler\AddWebserviceKeyHandler'
+      tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Webservice\Command\AddWebserviceKeyCommand'
