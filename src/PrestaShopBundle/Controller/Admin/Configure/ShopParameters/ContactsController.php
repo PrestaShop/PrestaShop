@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -117,12 +120,16 @@ class ContactsController extends FrameworkBundleAdminController
         $contactForm->handleRequest($request);
 
         if ($contactForm->isSubmitted()) {
-            $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
-            $contactFormHandler->handle($contactForm);
+            try {
+                $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
+                $contactFormHandler->handle($contactForm);
 
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_contacts_index');
+                return $this->redirectToRoute('admin_contacts_index');
+            } catch (ContactException $exception) {
+                $this->addFlash('error', $this->handleException($exception));
+            }
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/add.html.twig', [
@@ -149,13 +156,17 @@ class ContactsController extends FrameworkBundleAdminController
         $contactForm->handleRequest($request);
 
         if ($contactForm->isSubmitted()) {
-            $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
-            $result = $contactFormHandler->handleFor((int) $contactId, $contactForm);
+            try {
+                $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
+                $result = $contactFormHandler->handleFor((int) $contactId, $contactForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                if (null !== $result->getIdentifiableObjectId()) {
+                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_contacts_index');
+                    return $this->redirectToRoute('admin_contacts_index');
+                }
+            } catch (ContactException $exception) {
+                $this->addFlash('error', $this->handleException($exception));
             }
         }
 
@@ -215,5 +226,69 @@ class ContactsController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_contacts_index');
+    }
+
+    private function handleException(ContactException $exception)
+    {
+        if (0 !== $exception->getCode()) {
+            return $this->getExceptionByTypeAndErrorCode($exception);
+        }
+
+        return $this->getExceptionByType($exception);
+    }
+
+    private function getExceptionByType(ContactException $exception)
+    {
+        $exceptionDictionary = [
+            ContactNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+        ];
+
+        $type = get_class($exception);
+
+        if (isset($exceptionDictionary[$type])) {
+
+            return $exceptionDictionary[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $exception->getCode());
+    }
+
+    private function getExceptionByTypeAndErrorCode(ContactException $exception)
+    {
+        $exceptionDictionary = [
+            ContactConstraintException::class => [
+                ContactConstraintException::INVALID_SHOP_ASSOCIATION => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '%s',
+                            $this->trans('Shop association', 'Admin.Global')),
+                    ]
+                ),
+                ContactConstraintException::INVALID_TITLE => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '%s',
+                            $this->trans('Title', 'Admin.Global')),
+                    ]
+                ),
+            ],
+        ];
+
+        $type = get_class($exception);
+        $code = $exception->getCode();
+
+        if (isset($exceptionDictionary[$type][$code])) {
+
+            return $exceptionDictionary[$type][$code];
+        }
+
+        return $this->getFallbackErrorMessage($type, $code);
     }
 }
