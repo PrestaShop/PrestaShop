@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    public: true
+
+  form.type.webservice.webservice_key_type:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceKeyType'
+    arguments:
+      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+      - '@=service("prestashop.adapter.form.choice_provider.resources_choice_provider").getChoices()'
+      - '@=service("prestashop.core.form.choice_provider.permissions_choice_provider").getChoices()'
+    tags:
+      - { name: form.type }

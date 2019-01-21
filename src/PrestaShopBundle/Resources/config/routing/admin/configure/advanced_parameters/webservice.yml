@@ -23,9 +23,9 @@ admin_webservice_settings_save:
         _legacy_controller: AdminWebservice
 #        _legacy_link: AdminWebservice:update
 
-admin_webservice_list_create:
-    path: /create
-    methods: GET
+admin_webservice_keys_create:
+    path: /new
+    methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:create'
         _legacy_controller: AdminWebservice

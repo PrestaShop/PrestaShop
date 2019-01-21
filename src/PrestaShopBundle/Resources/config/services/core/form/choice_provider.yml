@@ -149,3 +149,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeChoiceProvider'
     arguments:
       - '@prestashop.core.addon.theme.theme_provider'
+
+  prestashop.core.form.choice_provider.permissions_choice_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PermissionsChoiceProvider'
+    arguments:
+      - '@translator'

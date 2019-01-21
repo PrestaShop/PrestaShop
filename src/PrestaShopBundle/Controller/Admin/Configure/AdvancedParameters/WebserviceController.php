@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceKeyType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -61,12 +62,12 @@ class WebserviceController extends FrameworkBundleAdminController
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);
 
-        $configurationWarnings = $this->lookForWarnings($request);
+        $configurationWarnings = $this->lookForWarnings();
 
-        $twigValues = [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
-                    'href' => $this->generateUrl('admin_webservice_list_create'),
+                    'href' => $this->generateUrl('admin_webservice_keys_create'),
                     'desc' => $this->trans('Add new webservice key', 'Admin.Advparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
@@ -81,26 +82,28 @@ class WebserviceController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'grid' => $presentedGrid,
             'configurationWarnings' => $configurationWarnings,
-        ];
-
-        return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
+        ]);
     }
 
     /**
-     * Redirects to webservice account form where new webservice account record can be created.
+     * Shows Webservice Key form and handles its submit
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @return RedirectResponse
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        //@todo: this action should point to new add page
-        $legacyLink = $this->getAdminLink('AdminWebservice', [
-            'addwebservice_account' => 1,
-        ]);
+        $form = $this->createForm(WebserviceKeyType::class);
+        $form->handleRequest($request);
 
-        return $this->redirect($legacyLink);
+        dump($form->getData());
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/create.html.twig', [
+            'webserviceKeyForm' => $form->createView(),
+        ]);
     }
 
     /**
