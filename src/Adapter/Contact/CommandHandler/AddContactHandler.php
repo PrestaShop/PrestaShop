@@ -49,6 +49,7 @@ final class AddContactHandler implements AddContactHandlerInterface
         try {
             $entity = new Contact();
             $entity->name = $command->getLocalisedTitles();
+            //todo: fill title with data
             $entity->customer_service = $command->isMessageSavingEnabled();
 
             if (null !== $command->getEmail()) {
