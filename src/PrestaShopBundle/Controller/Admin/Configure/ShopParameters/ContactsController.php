@@ -106,15 +106,28 @@ class ContactsController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
      *
-     * @return RedirectResponse
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        $legacyLink = $this->getAdminLink('AdminContacts', [
-            'addcontact' => 1,
-        ]);
+        $contactFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.contact_form_builder');
+        $contactForm = $contactFormBuilder->getForm();
+        $contactForm->handleRequest($request);
 
-        return $this->redirect($legacyLink);
+        if ($contactForm->isSubmitted()) {
+            $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
+            $contactFormHandler->handle($contactForm);
+
+            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_contacts_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/add.html.twig', [
+            'contactForm' => $contactForm->createView(),
+        ]);
     }
 
     /**
@@ -125,6 +138,7 @@ class ContactsController extends FrameworkBundleAdminController
      * @param int $contactId
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function editAction($contactId, Request $request)
