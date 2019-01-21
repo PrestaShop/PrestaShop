@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
@@ -51,10 +52,18 @@ final class ContactFormDataHandler implements FormDataHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws ContactException
      */
     public function create(array $data)
     {
+        $addContactCommand = (new AddContactCommand($data['title'], $data['is_messages_saving_enabled']))
+            ->setEmail($data['email'])
+            ->setLocalisedDescription($data['description'])
+            ->setShopAssociation(is_array($data['shop_association']) ? $data['shop_association'] : [])
+        ;
 
+        $this->commandBus->handle($addContactCommand);
     }
 
     /**

@@ -42,11 +42,20 @@ final class ContactFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @param CommandBusInterface $queryBus
+     * @var array
      */
-    public function __construct(CommandBusInterface $queryBus)
-    {
+    private $contextShopIds;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     * @param array $contextShopIds
+     */
+    public function __construct(
+        CommandBusInterface $queryBus,
+        array $contextShopIds
+    ) {
         $this->queryBus = $queryBus;
+        $this->contextShopIds = $contextShopIds;
     }
 
     /**
@@ -73,6 +82,8 @@ final class ContactFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return null;
+        return [
+            'shop_association' => $this->contextShopIds,
+        ];
     }
 }
