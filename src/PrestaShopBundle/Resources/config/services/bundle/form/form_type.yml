@@ -649,6 +649,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType'
         arguments:
             - "@=service('prestashop.adapter.form.choice_provider.shop_tree_choice_provider').getChoices()"
+            - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
         tags:
             - { name: form.type }
 
@@ -737,7 +738,6 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
         arguments:
           - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-          - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
