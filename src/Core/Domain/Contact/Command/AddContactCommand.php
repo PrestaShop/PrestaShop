@@ -93,6 +93,7 @@ class AddContactCommand extends AbstractContactCommand
      */
     public function getEmail()
     {
+        //todo:
         return $this->email;
     }
 
