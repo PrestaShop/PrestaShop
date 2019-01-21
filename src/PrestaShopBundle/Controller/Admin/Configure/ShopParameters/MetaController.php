@@ -192,7 +192,6 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function editAction($metaId, Request $request)
     {
-        $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
         try {
             $metaForm = $this->getMetaFormBuilder()->getFormFor($metaId);
             $metaForm->handleRequest($request);
