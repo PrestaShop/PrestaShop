@@ -68,7 +68,7 @@ class SerpApp {
     };
     const updateSerpDescription = () => {
       const desc1 = this.watchedDescription.length ? this.watchedDescription.val().innerText || this.watchedDescription.val() : '';
-      const desc2 = this.defaultDescription.length ? this.defaultDescription.val().innerText || this.defaultDescription.val() : '';
+      const desc2 = this.defaultDescription.length ? $(this.defaultDescription.val()).text() || this.defaultDescription.val() : '';
       app.setDescription(desc1 || desc2);
     };
     this.watchedTitle.on('keyup change', updateSerpTitle);
