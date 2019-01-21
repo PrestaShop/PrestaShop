@@ -154,3 +154,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyNameByIsoCodeChoiceProvider'
     arguments:
       - '@=service("prestashop.core.localization.cldr.repository").getAllCurrencies()'
+
+  prestashop.core.form.choice_provider.permissions_choice_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PermissionsChoiceProvider'
+    arguments:
+      - '@translator'

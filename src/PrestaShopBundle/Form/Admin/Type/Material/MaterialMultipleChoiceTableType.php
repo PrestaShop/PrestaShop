@@ -72,6 +72,7 @@ class MaterialMultipleChoiceTableType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['choices'] = $options['choices'];
+        $view->vars['scrollable'] = $options['scrollable'];
     }
 
     /**
@@ -95,13 +96,19 @@ class MaterialMultipleChoiceTableType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired([
-            'multiple_choices',
-            'choices',
-        ]);
+        $resolver
+            ->setRequired([
+                'multiple_choices',
+                'choices',
+            ])
+            ->setDefaults([
+                'scrollable' => true,
+            ])
+        ;
 
         $resolver->setAllowedTypes('choices', 'array');
         $resolver->setAllowedTypes('multiple_choices', 'array');
+        $resolver->setAllowedTypes('scrollable', 'bool');
     }
 
     /**

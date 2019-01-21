@@ -52,7 +52,7 @@
       <div class="col">
         {{ form_start(form, {'action': path('admin_webservice_settings_save') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
 
-        {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/WebservicePage/webservice_settings.html.twig') }}
+        {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
 
         {% block webservice_configuration_form_rest %}
           {{ form_rest(form) }}

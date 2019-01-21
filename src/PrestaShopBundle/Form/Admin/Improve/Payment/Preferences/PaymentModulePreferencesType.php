@@ -102,6 +102,8 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $a = 1;
+
         $builder
             ->add('currency_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Currency restrictions', 'Admin.Payment.Feature'),
