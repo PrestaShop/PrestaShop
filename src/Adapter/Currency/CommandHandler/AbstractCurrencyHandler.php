@@ -27,14 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelLegacyHandler;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 
 /**
  * Class AbstractCurrencyHandler is responsible for encapsulating common behavior for legacy object models.
  *
  * @internal
  */
-abstract class AbstractCurrencyHandler extends AbstractObjectModelLegacyHandler
+abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
 {
     /**
      * Associations conversion rate to given shop ids.

@@ -33,11 +33,11 @@ use PrestaShopDatabaseException;
 use Shop;
 
 /**
- * Class AbstractObjectModelLegacyHandler is responsible for executing legacy code which is common for legacy ObjectModel.
+ * Class AbstractObjectModelHandler is responsible for executing legacy code which is common for legacy ObjectModel.
  *
  * @internal
  */
-abstract class AbstractObjectModelLegacyHandler
+abstract class AbstractObjectModelHandler
 {
     /**
      * This function assigns stores ids to the given object. It removes previously set shop ids and adds new ids instead.
@@ -99,13 +99,7 @@ abstract class AbstractObjectModelLegacyHandler
     /**
      * @param ObjectModel $objectModel
      * @param array $multiStoreColumnAssociation - an array key contains shop id while values contains the mapping of
-     *                                           column and its value. e.g
-     *                                           [
-     *                                           1 => [
-     *                                           'my_column' => 'my_column_value',
-     *                                           'my_another_column' => 'my_another_column_value',
-     *                                           ]
-     *                                           ]
+     * column and its value.
      */
     protected function updateMultiStoreColumns(ObjectModel $objectModel, array $multiStoreColumnAssociation)
     {
