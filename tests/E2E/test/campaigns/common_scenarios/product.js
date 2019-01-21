@@ -160,9 +160,13 @@ module.exports = {
         scenario('Edit product options', client => {
           test('should click on "Options"', () => client.scrollWaitForExistAndClick(AddProductPage.product_options_tab));
           test('should select the attached file to the product', () => {
+            promise = client.scrollTo(AddProductPage.options_add_new_file_button);
+            for (let i = 0; i < productData.options.filename.length; i++) {
+              promise = client.waitForExistAndClick(AddProductPage.attached_file_checkbox.replace('%FileName', productData.options.filename[i] + global.date_time), 1000);
+            }
             return promise
-              .then(() => client.scrollTo(AddProductPage.options_add_new_file_button))
-              .then(() => client.waitForExistAndClick(AddProductPage.attached_file_checkbox.replace('%FileName', productData.options.filename)))
+              .then(() => client.waitForSymfonyToolbar(AddProductPage, 1000))
+              .then(() => client.pause(1000));
           });
         }, 'product/product');
       }

@@ -33,14 +33,14 @@ module.exports = {
     attachments_tab: '//*[@id="main"]//div[@class="product-information"]//a[@aria-controls="attachments"]',
     cloths_category: '//*[@id="category-3"]',
     second_product_clothes_category: '//*[@id="js-product-list"]//article[2]',
-    product_footer_linkwidget:'//*[@id="main"]/div[2]//p[contains(text(),"%DISPLAYFOOTERPRODUCT")]',
-    filename_link: '(//*[@id="attachments"]//a)[1]',
+    product_footer_linkwidget: '//*[@id="main"]/div[2]//p[contains(text(),"%DISPLAYFOOTERPRODUCT")]',
+    filename_link: '(//*[@id="attachments"]//a)[%N]',
     product_tab_list: '//*[@role="tablist"]//li[%I]',
-    second_product_footer_linkwidget:'//*[@id="main"]/div[2]/div/div[2]/p',
+    second_product_footer_linkwidget: '//*[@id="main"]/div[2]/div/div[2]/p',
     widget_after_product_thumbs: '//*[@id="content"]//div[contains(@class,"links")]//p[contains(text(),"%NAME")]',
-    second_widget_after_product_thumbs:'//*[@id="content"]//div[contains(@class,"links")]//div[2]/p',
-    display_footer_product_linkwidget:'//*[@id="main"]/div[2]/div//p[contains(text(),"%DISPLAYFOOTERPRODUCT")]',
-    display_second_footer_product_linkwidget:'//*[@id="main"]/div[2]/div/div[2]/p',
+    second_widget_after_product_thumbs: '//*[@id="content"]//div[contains(@class,"links")]//div[2]/p',
+    display_footer_product_linkwidget: '//*[@id="main"]/div[2]/div//p[contains(text(),"%DISPLAYFOOTERPRODUCT")]',
+    display_second_footer_product_linkwidget: '//*[@id="main"]/div[2]/div/div[2]/p',
     product_page: '//*[@id="product"]',
     breadcrumb_nav: '//*[contains(@class, "breadcrumb")]',
     product_section: '//*[@id="main"]/div[1]/div[%I]',
@@ -52,6 +52,7 @@ module.exports = {
     value_feature_text: '//*[@id="product-details"]/section//dd/br',
     product_value_text: '#product-details > section dd:%B-of-type',
     product_feature_text: '#product-details > section dt:%B-of-type',
-    product_tax_label: '//*[@id="main"]//div[@class="tax-shipping-delivery-label" and (contains(text(),"Tax excluded") or contains(text(),"Tax included") )] '
+    product_tax_label: '//*[@id="main"]//div[@class="tax-shipping-delivery-label" and (contains(text(),"Tax excluded") or contains(text(),"Tax included") )] ',
+    file_description: '//*[@id="attachments"]/section/div/p'
   }
 };
