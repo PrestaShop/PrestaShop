@@ -108,14 +108,12 @@ class TranslatableType extends AbstractType
     private function setErrorsByLocale(FormView $view, FormInterface $form, array $locales)
     {
         if (count($locales) <= 1) {
-
             return;
         }
 
         $formErrors = $form->getErrors(true);
 
         if (empty($formErrors) || count($formErrors) <= 1) {
-
             return;
         }
 
