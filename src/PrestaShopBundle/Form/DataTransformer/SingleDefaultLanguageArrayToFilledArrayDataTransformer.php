@@ -52,14 +52,41 @@ final class SingleDefaultLanguageArrayToFilledArrayDataTransformer implements Da
      */
     public function transform($value)
     {
+        // No transformation is required here due to this data is being sent to template
         return $value;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @param array $values
      */
-    public function reverseTransform($value)
+    public function reverseTransform($values)
     {
-        return $value;
+        if (!$this->assertIsValidForDataTransforming($values)) {
+
+            return $values;
+        }
+
+        $defaultValue = $values[$this->defaultLanguageId];
+        foreach ($values as $languageId => $item) {
+            if (!$item) {
+                $values[$languageId] = $defaultValue;
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * Checks if the value is array and default language key exists in array.
+     *
+     * @param array $values
+     *
+     * @return bool
+     */
+    private function assertIsValidForDataTransforming($values)
+    {
+        return is_array($values) && isset($values[$this->defaultLanguageId]) && $values[$this->defaultLanguageId];
     }
 }
