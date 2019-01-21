@@ -119,7 +119,6 @@ services:
     arguments:
       - '@translator'
 
-<<<<<<< HEAD
   prestashop.core.form.choice_provider.import_match_configuration:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider'
     arguments:
