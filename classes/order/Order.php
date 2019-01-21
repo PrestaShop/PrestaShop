@@ -1922,6 +1922,7 @@ class OrderCore extends ObjectModel
         foreach ($results as &$row) {
             $row['carrier_name'] = Cart::replaceZeroByShopName($row['carrier_name'], null);
         }
+
         return $results;
     }
 
