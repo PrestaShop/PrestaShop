@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,46 +19,50 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Core\Checkout;
+namespace Tests\Core\Checkout;
 
-use LegacyTests\TestCase\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
 
-class TermsAndConditionsTest extends UnitTestCase
+class TermsAndConditionsTest extends TestCase
 {
-    private $terms;
-
-    protected function setUp()
-    {
-        $this->terms = new TermsAndConditions();
-    }
-
     public function testSetTextInsertsLinks()
     {
+        $terms = new TermsAndConditions();
+
         $this->assertEquals(
             'hello <a href="http://www.world.com" id="cta-ho-0">world</a>',
-            $this->terms->setIdentifier('ho')->setText('hello [world]', "http://www.world.com")->format()
+            $terms->setIdentifier('ho')
+                ->setText('hello [world]', 'http://www.world.com')
+                ->format()
         );
     }
 
     public function testSetTextInsertsSeveralLinks()
     {
+        $terms = new TermsAndConditions();
+
         $this->assertEquals(
             'hello <a href="http://www.world.com" id="cta-hey-0">world</a> <a href="http://yay.com" id="cta-hey-1">yay</a>',
-            $this->terms->setIdentifier('hey')->setText('hello [world] [yay]', "http://www.world.com", "http://yay.com")->format()
+            $terms->setIdentifier('hey')
+                ->setText('hello [world] [yay]', 'http://www.world.com', 'http://yay.com')
+                ->format()
         );
     }
 
     public function testSetTextJustDoesntAddLinksWhenMissing()
     {
+        $terms = new TermsAndConditions();
+
         $this->assertEquals(
             'hello world',
-            $this->terms->setText('hello [world]')->format()
+            $terms->setText('hello [world]')
+                ->format()
         );
     }
 }
