@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -42,12 +43,32 @@ class ShopChoiceTreeType extends AbstractType
     private $shopTreeChoices;
 
     /**
-     * @param array $shopTreeChoices
+     * @var DataTransformerInterface
      */
-    public function __construct(array $shopTreeChoices)
-    {
+    private $stringArrayToIntegerArrayDataTransformer;
+
+    /**
+     * @param array $shopTreeChoices
+     * @param DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
+     */
+    public function __construct(
+        array $shopTreeChoices,
+        DataTransformerInterface $stringArrayToIntegerArrayDataTransformer
+    ) {
         $this->shopTreeChoices = $shopTreeChoices;
+        $this->stringArrayToIntegerArrayDataTransformer = $stringArrayToIntegerArrayDataTransformer;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->addModelTransformer($this->stringArrayToIntegerArrayDataTransformer);
+
+        parent::buildForm($builder, $options);
+    }
+
     /**
      * {@inheritdoc}
      */
