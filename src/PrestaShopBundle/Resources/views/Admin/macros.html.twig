@@ -120,6 +120,7 @@
     {# for form types which has locales and there are more then 1 error , additional errors are displaying inside popover #}
     {% set errorPopover = null %}
     {% if form.vars.errors_by_locale is defined %}
+      {% set popoverErrors = form.vars.errors_by_locale %}
       {% set popoverContainer = 'locale-input-error-popover-container-'~form.vars.id %}
 
       <div class="{{ popoverContainer }}"></div>
@@ -127,9 +128,9 @@
       {% set popoverErrorContent %}
         <div class="popover-error-list">
           <ul>
-            {% for popoverError in errors %}
+            {% for popoverError in popoverErrors %}
               <li class="text-danger">
-                {{  popoverError }}
+                {{ '%error_message% - Language: %language_name%'|trans({'%error_message%': popoverError.error_message, '%language_name%': popoverError.locale_name}, 'Admin.Notifications.Error') }}
               </li>
             {% endfor %}
           </ul>
@@ -144,11 +145,10 @@
           data-html="true"
           data-template='<div class="popover js-locale-input-error-popover" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
           data-content='{{ popoverErrorContent }}'
-          data-trigger="click"
+          data-trigger="hover"
           data-container=".{{ popoverContainer }}"
         >
-          {#todo: check translations#}
-          <i class="material-icons">error_outline</i> <u>{{ '%count% errors'|trans({'%count%': errors|length}, 'Admin.Global') }}</u>
+          <i class="material-icons">error_outline</i> <u>{{ '%count% errors'|trans({'%count%': popoverErrors|length}, 'Admin.Global') }}</u>
         </span>
       {% endset %}
 
