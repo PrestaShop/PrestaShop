@@ -746,6 +746,7 @@ services:
     form.type.contact:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
         arguments:
+          - '@prestashop.bundle.form.data_transformer.single_default_language_array_to_filled_array'
           - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }

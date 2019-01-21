@@ -50,11 +50,20 @@ class ContactType extends AbstractType
     private $isShopFeatureEnabled;
 
     /**
+     * @var DataTransformerInterface
+     */
+    private $singleDefaultLanguageArrayToFilledArrayDataTransformer;
+
+    /**
+     * @param DataTransformerInterface $singleDefaultLanguageArrayToFilledArrayDataTransformer
      * @param bool $isShopFeatureEnabled
      */
-    public function __construct($isShopFeatureEnabled)
-    {
+    public function __construct(
+        DataTransformerInterface $singleDefaultLanguageArrayToFilledArrayDataTransformer,
+        $isShopFeatureEnabled
+    ) {
         $this->isShopFeatureEnabled = $isShopFeatureEnabled;
+        $this->singleDefaultLanguageArrayToFilledArrayDataTransformer = $singleDefaultLanguageArrayToFilledArrayDataTransformer;
     }
 
     /**
@@ -73,6 +82,8 @@ class ContactType extends AbstractType
                 'required' => false,
             ])
         ;
+
+        $builder->get('title')->addModelTransformer($this->singleDefaultLanguageArrayToFilledArrayDataTransformer);
 
         if ($this->isShopFeatureEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class);
