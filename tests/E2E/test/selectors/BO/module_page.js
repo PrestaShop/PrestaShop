@@ -62,6 +62,7 @@ module.exports = {
     configure_module: '//*[@id="modules-list-container-notification"]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-configure"]',
     modules_number_to_configure: '//*[@id="module-short-list-configure"]/span[1]',
     notification_number: '//*[@id="subtab-AdminModulesNotifications"]//span[@class="notification-counter"]',
+    update_notification_number_span: '//*[@id="subtab-AdminModulesUpdates"]//span[@class="notification-counter"]',
     selection_tab: '//*[@id="head_tabs"]/a[1]',
     discover_amazon_module_button: '//*[@id="modules-list-container-all"]//a[contains(@href,"amazon-market-place")]',
     ModuleBankTransferPage: {
@@ -95,5 +96,7 @@ module.exports = {
     },
     see_more_link: '//*[@id="main-div"]//button[contains(@class,"see-more")]',
     configure_link: '(//*[@id="main-div"]//div[@data-tech-name="%moduleTechName"]//a[contains(@href,"/action/configure")])',
+    upgrade_module_button: '//*[@id="modules-list-container-update"]//button[contains(@data-confirm_modal,"%moduleTechName-upgrade")]',
+    module_bloc: '(//*[@id="modules-list-container-update"]//div[contains(@class,"module-item-list")])[1]',
   }
 };
