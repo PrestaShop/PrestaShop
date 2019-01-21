@@ -76,6 +76,8 @@ class TranslatableType extends AbstractType
         $view->vars['locales'] = $options['locales'];
         $view->vars['default_locale'] = reset($options['locales']);
         $view->vars['hide_locales'] = 1 >= count($options['locales']);
+
+        $this->setErrorsByLocale($view, $form, $options['locales']);
     }
 
     /**
@@ -101,5 +103,32 @@ class TranslatableType extends AbstractType
     public function getBlockPrefix()
     {
         return 'translatable';
+    }
+
+    private function setErrorsByLocale(FormView $view, FormInterface $form, array $locales)
+    {
+        if (count($locales) <= 1) {
+
+            return;
+        }
+
+        $formErrors = $form->getErrors(true);
+
+        if (empty($formErrors)) {
+
+            return;
+        }
+
+        $errorsByLocale = [];
+        foreach ($formErrors as $key => $formError) {
+            if (isset($locales[$key])) {
+                $errorsByLocale[$locales[$key]['iso_code']] = [
+                    'locale_name' => $locales[$key]['name'],
+                    'error_message' => $formError->getMessage(),
+                ];
+            }
+        }
+
+        $view->vars['errors_by_locale'] = $errorsByLocale;
     }
 }
