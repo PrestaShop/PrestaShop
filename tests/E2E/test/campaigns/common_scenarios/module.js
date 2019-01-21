@@ -241,5 +241,58 @@ module.exports = {
         .then(() => client.checkTextValue(ModulePage.module_name, "Amazon Market Place Module", 'contain'))
         .then(() => client.switchWindow(0));
     });
+  },
+  configureModule: function (client, moduleTechName, ModulePage) {
+    test('should go to "Modules > Module Manager" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
+    test('should click on "Alerts" tab', () => {
+      return promise
+        .then(() => client.pause(4000))
+        .then(() => client.getTextInVar(ModulePage.notification_number, 'notification'))
+        .then(() => client.pause(4000))
+        .then(() => client.waitForExistAndClick(Menu.Improve.Modules.alerts_subTab))
+    });
+    test('should click on "Configure" button for "' + moduleTechName + '"', () => client.waitForExistAndClick(ModulePage.configure_link.replace('%moduleTechName', moduleTechName), 2000));
+    test('should set the "Account owner" input', () => client.waitAndSetValue(ModulePage.ModuleBankTransferPage.account_owner_input, 'Demo'));
+    test('should set the "Account details" textarea', () => client.waitAndSetValue(ModulePage.ModuleBankTransferPage.account_details_textarea, 'Check notification module'));
+    test('should set the "Bank address" textarea', () => client.waitAndSetValue(ModulePage.ModuleBankTransferPage.bank_address_textarea, 'Boulvard street n°9 - 70501'));
+    test('should click on "Save" button', () => client.waitForExistAndClick(ModulePage.ModuleBankTransferPage.save_button));
+    test('should go to "Modules > Module Manager" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
+    test('should click on "Alerts" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.alerts_subTab));
+    test('should check that the "Alerts number" is decremented with 1', () => client.checkTextValue(ModulePage.notification_number, (tab['notification'] - 1).toString(), 'equal', 1000));
+    test('should check that the configured module is not visible in the "Alerts" tab', () => client.checkIsNotVisible(ModulePage.configure_module.replace('%moduleTechName', moduleTechName)));
+  },
+  upgradeModule: function (client, ModulePage) {
+    test('should go to "Modules > Module Manager" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
+    test('should click on "Updates" tab', () => {
+      return promise
+        .then(() => client.pause(4000))
+        .then(() => client.getTextInVar(ModulePage.update_notification_number_span, 'notification_update'))
+        .then(() => client.pause(4000))
+        .then(() => client.waitForExistAndClick(Menu.Improve.Modules.updates_subTab))
+    });
+    test('should click on "Upgrade" button for the first module if there is at least one module to update', async () => {
+      if (tab['notification_update'] > 0) {
+        await client.getAttributeInVar(ModulePage.module_bloc, 'data-tech-name', 'dataTechNameModule');
+        await client.waitForExistAndClick(ModulePage.upgrade_module_button.replace('%moduleTechName', tab['dataTechNameModule']), 2000);
+        await client.pause(2000);
+      } else {
+        await client.pause(0);
+      }
+    });
+    test('should check that the updated module is not visible in the "Updates" tab if there is at least one module to update', async () => {
+      if (tab['notification_update'] > 0) {
+        await client.checkIsNotVisible(ModulePage.upgrade_module_button.replace('%moduleTechName', tab['dataTechNameModule']));
+        await client.refresh();
+      } else {
+        await client.pause(0);
+      }
+    });
+    test('should check that the "Updates number" is decremented with 1 if there is at least one module to update', async () => {
+      if (tab['notification_update'] > 0) {
+        await client.checkTextValue(ModulePage.update_notification_number_span, (tab['notification_update'] - 1).toString(), 'equal', 1000);
+      } else {
+        await client.pause(0);
+      }
+    });
   }
 };
