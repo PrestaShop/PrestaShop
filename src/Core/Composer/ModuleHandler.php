@@ -73,23 +73,13 @@ final class ModuleHandler
             throw new \InvalidArgumentException('The parameter handler needs to be configured through the extra.prestashop-modules setting.');
         }
 
-        $configs = $extras['prestashop'];
+        $config = $extras['prestashop'];
 
-        if (!is_array($configs)) {
+        if (!is_array($config)) {
             throw new \InvalidArgumentException('The extra.prestashop setting must be an array or a configuration object.');
         }
 
-        if (array_keys($configs) !== range(0, count($configs) - 1)) {
-            $configs = array($configs);
-        }
-
         $processor = new ModulesConfigurationProcessor($event->getIO());
-        foreach ($configs as $config) {
-            if (!is_array($config)) {
-                throw new \InvalidArgumentException('The extra.prestashop setting must be an array of configuration objects.');
-            }
-
-            $processor->processUpdate($config, $rootPath);
-        }
+        $processor->processUpdate($config, $rootPath);
     }
 }

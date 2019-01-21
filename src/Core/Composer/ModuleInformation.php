@@ -48,7 +48,7 @@ final class ModuleInformation
         list($owner, $name) = explode('/', $expression);
 
         if (empty($owner) || empty($name)) {
-            ComposerException::invalidModuleExpression($expression);
+            throw ComposerException::invalidModuleExpression($expression);
         }
 
         return new self($owner, $name, $version);
