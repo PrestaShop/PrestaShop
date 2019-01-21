@@ -99,7 +99,7 @@ abstract class AbstractObjectModelHandler
     /**
      * @param ObjectModel $objectModel
      * @param array $multiStoreColumnAssociation - an array key contains shop id while values contains the mapping of
-     * column and its value.
+     *                                           column and its value
      */
     protected function updateMultiStoreColumns(ObjectModel $objectModel, array $multiStoreColumnAssociation)
     {
