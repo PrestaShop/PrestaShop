@@ -99,8 +99,6 @@ class WebserviceController extends FrameworkBundleAdminController
         $form = $this->createForm(WebserviceKeyType::class);
         $form->handleRequest($request);
 
-        dump($form->getData());
-
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/create.html.twig', [
             'webserviceKeyForm' => $form->createView(),
         ]);

@@ -24,35 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Webservice\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\WebserviceKeyId;
 
 /**
- * Defines available permissions for Webservice keys
+ * Get webservice key data for editing
  */
-class Permission
+class GetWebserviceKeyForEditing
 {
     /**
-     * @var string Permission to view resource
+     * @var WebserviceKeyId
      */
-    const VIEW = 'GET';
+    private $webserviceKeyId;
 
     /**
-     * @var string Permission to view resource
+     * @param int $webserviceKeyId
      */
-    const FAST_VIEW = 'HEAD';
+    public function __construct($webserviceKeyId)
+    {
+        $this->webserviceKeyId = new WebserviceKeyId($webserviceKeyId);
+    }
 
     /**
-     * @var string Permission to modify existing resource
+     * @return WebserviceKeyId
      */
-    const MODIFY = 'PUT';
-
-    /**
-     * @var string Permission to add new resource
-     */
-    const ADD = 'POST';
-
-    /**
-     * @var string Permission to delete existing resource
-     */
-    const DELETE = 'DELETE';
+    public function getWebserviceKeyId()
+    {
+        return $this->webserviceKeyId;
+    }
 }
