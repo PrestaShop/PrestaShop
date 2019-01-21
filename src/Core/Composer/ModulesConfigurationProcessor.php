@@ -51,6 +51,7 @@ final class ModulesConfigurationProcessor
      */
     public function processInstallation(array $configuration, $rootPath)
     {
+        $composerExecutable = $rootPath.'/vendor/composer/composer/bin/composer';
         $this->io->write('<info>PrestaShop Module installer</info>');
 
         if (!array_key_exists('native-modules', $configuration) || !array_key_exists('modules-dir', $configuration)) {
@@ -63,7 +64,7 @@ final class ModulesConfigurationProcessor
         foreach ($nativeModules as $moduleName => $moduleVersion) {
             $this->io->write(sprintf('<info>Looked into "%s" module (version %s)</info>', $moduleName, $moduleVersion));
 
-            $this->installModule($moduleName, $moduleVersion, $modulesLocation);
+            $this->installModule($moduleName, $moduleVersion, $modulesLocation, $composerExecutable);
         }
     }
 
@@ -93,7 +94,7 @@ final class ModulesConfigurationProcessor
         }
     }
 
-    private function installModule($moduleName, $moduleVersion, $location)
+    private function installModule($moduleName, $moduleVersion, $location, $composerExecutable)
     {
         $moduleInformation = ModuleInformation::createFromString($moduleName, $moduleVersion);
 
@@ -103,7 +104,7 @@ final class ModulesConfigurationProcessor
             return;
         }
 
-        $command = 'composer create-project '.$moduleName.':'.$moduleVersion;
+        $command = "$composerExecutable create-project ".$moduleName.':'.$moduleVersion;
 
         $process = new Process($command);
         $process->setWorkingDirectory($location);
