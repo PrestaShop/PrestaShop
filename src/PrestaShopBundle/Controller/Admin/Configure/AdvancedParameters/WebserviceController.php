@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -96,8 +98,23 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        $form = $this->createForm(WebserviceKeyType::class);
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.webservice_key_form_handler');
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.webservice_key_form_builder');
+
+        $form = $formBuilder->getForm();
         $form->handleRequest($request);
+
+        try {
+            $result = $formHandler->handle($form);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_webservice');
+            }
+        } catch (WebserviceException $e) {
+            //@todo: handle
+        }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/create.html.twig', [
             'webserviceKeyForm' => $form->createView(),
@@ -109,18 +126,34 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param $webserviceAccountId
+     * @param int $webserviceKeyId
+     * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function editAction($webserviceAccountId)
+    public function editAction($webserviceKeyId, Request $request)
     {
-        $legacyLink = $this->getAdminLink('AdminWebservice', [
-            'id_webservice_account' => $webserviceAccountId,
-            'updatewebservice_account' => 1,
-        ]);
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.webservice_key_form_handler');
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.webservice_key_form_builder');
 
-        return $this->redirect($legacyLink);
+        $form = $formBuilder->getFormFor((int) $webserviceKeyId);
+        $form->handleRequest($request);
+
+        try {
+            $result = $formHandler->handleFor((int) $webserviceKeyId, $form);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_webservice');
+            }
+        } catch (WebserviceException $e) {
+            //@todo: handle
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/edit.html.twig', [
+            'webserviceKeyForm' => $form->createView(),
+        ]);
     }
 
     /**
