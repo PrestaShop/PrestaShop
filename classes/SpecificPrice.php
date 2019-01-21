@@ -210,10 +210,10 @@ class SpecificPriceCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT `id_specific_price`
-			FROM `' . _DB_PREFIX_ . 'specific_price`
-			WHERE `id_product` = ' . (int) $id_product . '
-			AND id_product_attribute=' . (int) $id_product_attribute . '
-			AND id_cart=' . (int) $id_cart);
+			FROM `'._DB_PREFIX_.'specific_price`
+			WHERE `id_product` = '.(int)$id_product.
+			(($id_product_attribute !== false) ? ' AND id_product_attribute='.(int)$id_product_attribute : '')
+			.' AND id_cart='.(int)$id_cart);
     }
 
     /**
