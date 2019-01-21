@@ -76,7 +76,7 @@ class WebserviceKeyType extends AbstractType
     {
         $builder
             ->add('key', TextType::class)
-            ->add('key_description', TextareaType::class, [
+            ->add('description', TextareaType::class, [
                 'required' => false,
             ])
             ->add('status', SwitchType::class, [
