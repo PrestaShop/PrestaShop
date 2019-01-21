@@ -24,8 +24,15 @@
       border-radius: 5px;
       box-shadow: 0px 1px 10px lightgrey;
 
+      .popover-body {
+        padding: 15px 15px 15px 15px;
+      }
+
       .popover-error-list {
-        padding-left: 0;
+        ul {
+          padding-left: 18px;
+          margin-bottom: 0;
+        }
 
         li {
           font-family: Open Sans,Helvetica,Arial,sans-serif;

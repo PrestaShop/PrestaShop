@@ -125,13 +125,15 @@
       <div class="{{ popoverContainer }}"></div>
 
       {% set popoverErrorContent %}
-        <ul class="popover-error-list">
-          {% for popoverError in errors %}
+        <div class="popover-error-list">
+          <ul>
+            {% for popoverError in errors %}
               <li class="text-danger">
                 {{  popoverError }}
               </li>
-          {% endfor %}
-        </ul>
+            {% endfor %}
+          </ul>
+        </div>
       {% endset %}
 
       {% set errorPopover %}
@@ -142,7 +144,7 @@
           data-html="true"
           data-template='<div class="popover js-locale-input-error-popover" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
           data-content='{{ popoverErrorContent }}'
-          data-trigger="hover"
+          data-trigger="click"
           data-container=".{{ popoverContainer }}"
         >
           {#todo: check translations#}
