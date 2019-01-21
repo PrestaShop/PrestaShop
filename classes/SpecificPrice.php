@@ -707,10 +707,13 @@ class SpecificPriceCore extends ObjectModel
      *
      * @return bool
      */
-    public function duplicate($id_product = false)
+    public function duplicate($id_product = false, $attributes_associations = array())
     {
         if ($id_product) {
             $this->id_product = (int) $id_product;
+        }
+        if ($this->id_product_attribute && isset($attributes_associations[$this->id_product_attribute])) {
+            $this->id_product_attribute = $attributes_associations[$this->id_product_attribute];
         }
         unset($this->id);
         // specific price row may already have been created for catalog specific price rule

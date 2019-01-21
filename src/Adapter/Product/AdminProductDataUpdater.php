@@ -196,11 +196,11 @@ class AdminProductDataUpdater implements ProductInterface
         if ($product->add()
             && Category::duplicateProductCategories($id_product_old, $product->id)
             && Product::duplicateSuppliers($id_product_old, $product->id)
-            && ($combination_images = Product::duplicateAttributes($id_product_old, $product->id)) !== false
+            && ($combination_images = Product::duplicateAttributes($id_product_old, $product->id, $attributes_associations)) !== false
             && GroupReduction::duplicateReduction($id_product_old, $product->id)
             && Product::duplicateAccessories($id_product_old, $product->id)
             && Product::duplicateFeatures($id_product_old, $product->id)
-            && Product::duplicateSpecificPrices($id_product_old, $product->id)
+            && Product::duplicateSpecificPrices($id_product_old, $product->id, $attributes_associations)
             && Pack::duplicate($id_product_old, $product->id)
             && Product::duplicateCustomizationFields($id_product_old, $product->id)
             && Product::duplicateTags($id_product_old, $product->id)

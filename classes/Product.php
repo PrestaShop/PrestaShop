@@ -4248,7 +4248,7 @@ class ProductCore extends ObjectModel
      * @param int $id_product_old Old product id
      * @param int $id_product_new New product id
      */
-    public static function duplicateAttributes($id_product_old, $id_product_new)
+    public static function duplicateAttributes($id_product_old, $id_product_new, &$attributes_associations = array())
     {
         $return = true;
         $combination_images = array();
@@ -4289,6 +4289,7 @@ class ProductCore extends ObjectModel
             $return &= $combination->save();
 
             $id_product_attribute_new = (int) $combination->id;
+            $attributes_associations[$id_product_attribute_old] = $id_product_attribute_new;
 
             if ($result_images = Product::_getAttributeImageAssociations($id_product_attribute_old)) {
                 $combination_images['old'][$id_product_attribute_old] = $result_images;
@@ -4569,11 +4570,11 @@ class ProductCore extends ObjectModel
         return $customizations;
     }
 
-    public static function duplicateSpecificPrices($old_product_id, $product_id)
+    public static function duplicateSpecificPrices($old_product_id, $product_id, $attributes_associations = array())
     {
         foreach (SpecificPrice::getIdsByProductId((int) $old_product_id) as $data) {
             $specific_price = new SpecificPrice((int) $data['id_specific_price']);
-            if (!$specific_price->duplicate((int) $product_id)) {
+            if (!$specific_price->duplicate((int)$product_id, $attributes_associations)) {
                 return false;
             }
         }
