@@ -102,7 +102,7 @@ class MetaController extends FrameworkBundleAdminController
                 'isHostMode' => $hostingInformation->isHostMode(),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminMeta'),
-                'helperDocLink' => $helperBlockLinkProvider->getLink(),
+                'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),
                 'indexPageId' => $metaDataProvider->getIdByPage('index'),
                 'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
                 'showcaseCardIsClosed' => $showcaseCardIsClosed,
