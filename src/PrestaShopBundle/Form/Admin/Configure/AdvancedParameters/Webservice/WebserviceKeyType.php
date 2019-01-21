@@ -103,7 +103,7 @@ class WebserviceKeyType extends AbstractType
             ->add('status', SwitchType::class, [
                 'required' => false,
             ])
-            ->add('resource_permissions', MaterialMultipleChoiceTableType::class, [
+            ->add('permissions', MaterialMultipleChoiceTableType::class, [
                 'required' => false,
                 'choices' => $this->resourceChoices,
                 'multiple_choices' => $this->getPermissionChoicesForResources(),
