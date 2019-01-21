@@ -55,4 +55,4 @@ if [ "$(ls ${REPORT_PATH})" ]; then
   gsutil cp -r "${DIR_PATH}/reports" gs://prestashop-core-nightly
 fi
 
-halt -p
+shutdown -h now
