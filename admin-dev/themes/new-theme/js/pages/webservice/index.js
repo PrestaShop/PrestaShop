@@ -34,6 +34,7 @@ import SubmitRowActionExtension from "../../components/grid/extension/action/row
 import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
 import ChoiceTree from "../../components/form/choice-tree";
 import GeneratableInput from "../../components/generatable-input";
+import MultipleChoiceTable from "../../components/multiple-choice-table";
 
 const $ = window.$;
 
@@ -52,6 +53,10 @@ $(() => {
   // needed for shop association input in form
   new ChoiceTree('#webservice_key_shop_association').enableAutoCheckChildren();
 
+  // needed for permissions input in form
+  new MultipleChoiceTable();
+
+  // needed for key input in form
   const generatableInput = new GeneratableInput();
   generatableInput.attachOn('.js-generator-btn').attachOn('.js-generator-btn');
 });
