@@ -28,9 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Contact\DTO;
 
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
- * Class EditableContact
+ * Class EditableContact is responsible for providing required data form contact form.
  */
 class EditableContact
 {
@@ -45,7 +47,7 @@ class EditableContact
     private $localisedTitles;
 
     /**
-     * @var string
+     * @var Email|null
      */
     private $email;
 
@@ -72,6 +74,7 @@ class EditableContact
      * @param int[] $shopAssociation
      *
      * @throws ContactException
+     * @throws DomainConstraintException
      */
     public function __construct(
         $contactId,
@@ -83,12 +86,11 @@ class EditableContact
     ) {
         $this->contactId = new ContactId($contactId);
         $this->localisedTitles = $localisedTitles;
-//        todo: email value object?
-        $this->email = $email;
         $this->isMessagesSavingEnabled = $isMessagesSavingEnabled;
         $this->localisedDescription = $localisedDescription;
         $this->contactId = $contactId;
         $this->shopAssociation = $shopAssociation;
+        $this->email = $email ? new Email($email) : null;
     }
 
     /**
@@ -108,7 +110,7 @@ class EditableContact
     }
 
     /**
-     * @return string
+     * @return Email|null
      */
     public function getEmail()
     {

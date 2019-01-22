@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Contact\Command;
 
 /**
- * Class AbstractContactCommand
+ * Class AbstractContactCommand is responsible for providing common behavior for AddContactCommand and EditContactCommand.
  */
 abstract class AbstractContactCommand
 {

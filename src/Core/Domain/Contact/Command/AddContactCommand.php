@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
- * Class AddContactCommand
+ * Class AddContactCommand is responsible for adding the contact data.
  */
 class AddContactCommand extends AbstractContactCommand
 {

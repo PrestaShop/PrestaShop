@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 
 /**
- * Interface EditContactHandlerInterface
+ * Interface EditContactHandlerInterface defines contract for EditContactHandler.
  */
 interface EditContactHandlerInterface
 {
