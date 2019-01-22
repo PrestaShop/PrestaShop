@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Contact\Command;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Class EditContactCommand is responsible for editing contact data.
@@ -46,7 +48,7 @@ class EditContactCommand extends AbstractContactCommand
     private $localisedTitles;
 
     /**
-     * @var string
+     * @var Email
      */
     private $email;
 
@@ -128,11 +130,10 @@ class EditContactCommand extends AbstractContactCommand
     }
 
     /**
-     * @return string
+     * @return Email
      */
     public function getEmail()
     {
-//        todo: decide about email
         return $this->email;
     }
 
@@ -140,10 +141,14 @@ class EditContactCommand extends AbstractContactCommand
      * @param string $email
      *
      * @return self
+     *
+     * @throws DomainConstraintException
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        if ($email) {
+            $this->email = new Email($email);
+        }
 
         return $this;
     }

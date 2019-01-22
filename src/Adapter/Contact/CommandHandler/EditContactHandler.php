@@ -72,7 +72,7 @@ final class EditContactHandler implements EditContactHandlerInterface
             }
 
             if (null !== $command->getEmail()) {
-                $entity->email = $command->getEmail();
+                $entity->email = $command->getEmail()->getValue();
             }
 
             if (null !== $command->isMessagesSavingEnabled()) {
