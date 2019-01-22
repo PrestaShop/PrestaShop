@@ -51,7 +51,7 @@ class MochawesomeCombine:
           raw_data = f.read()
           try:
             parsed_data = json.loads(raw_data)
-          except json.decoder.JSONDecodeError:
+          except ValueError:
             # Could not load json file
             continue
 
@@ -117,10 +117,8 @@ class MochawesomeCombine:
         'start': obj['start_time'],
         'end': obj['end_time'],
         'duration': int(
-          (
-            self.convert_to_datetime(obj['end_time']) - self.convert_to_datetime(obj['start_time'])
-          ).total_seconds()
-        ),
+          self.convert_to_datetime(obj['end_time']).timestamp() - self.convert_to_datetime(obj['start_time']).timestamp()
+        ) * 1000,
         'testsRegistered': obj['total_tests'] - obj['total_pending'],
         'skipped': obj['total_skipped'],
         'hasSkipped': obj['total_skipped'] > 0,

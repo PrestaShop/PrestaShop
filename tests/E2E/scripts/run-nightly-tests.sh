@@ -26,7 +26,7 @@ git checkout $BRANCH
 mkdir -p $REPORT_PATH
 
 cd "${DIR_PATH}/prestashop/tests/E2E"
-for test_directory in test/campaigns/full/* ; do
+for test_directory in test/campaigns/full/*; do
   if [ -d "${test_directory}" ]; then
     docker volume prune -f
     docker stop $(docker ps -qa)
@@ -48,7 +48,7 @@ for test_directory in test/campaigns/full/* ; do
   fi
 done
 
-if [ "$(ls ${REPORT_PATH})" ]; then
+if [ ! -z "$(ls ${REPORT_PATH})" ]; then
   mkdir -p "${DIR_PATH}/reports"
   ./scripts/combine-reports.py "${REPORT_PATH}" "${REPORT_PATH}/${REPORT_OUTPUT_NAME}.json"
   nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${REPORT_PATH}/${REPORT_OUTPUT_NAME}.json" -o "${DIR_PATH}/reports"
