@@ -29,6 +29,7 @@ namespace Tests\Unit\Adapter\MailTemplate;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
@@ -36,7 +37,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 use Symfony\Component\Templating\EngineInterface;
-use Language;
 
 class MailTemplateTwigRendererTest extends TestCase
 {
@@ -305,11 +305,11 @@ class MailTemplateTwigRendererTest extends TestCase
 
     /**
      * @param array $variables
-     * @param Language $expectedLanguage
+     * @param LanguageInterface $expectedLanguage
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|MailLayoutVariablesBuilderInterface
      */
-    private function createVariablesBuilderMock(array $variables, Language $expectedLanguage)
+    private function createVariablesBuilderMock(array $variables, LanguageInterface $expectedLanguage)
     {
         $builderMock = $this->getMockBuilder(MailLayoutVariablesBuilderInterface::class)
             ->disableOriginalConstructor()
@@ -330,11 +330,11 @@ class MailTemplateTwigRendererTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Language
+     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
      */
     private function createLanguageMock()
     {
-        $languageMock = $this->getMockBuilder(Language::class)
+        $languageMock = $this->getMockBuilder(LanguageInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 

@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
-use Language;
 
 /**
  * MailTemplateRendererInterface is used to render a specific MailLayoutInterface
- * with the specified Language.
+ * with the specified LanguageInterface.
  */
 interface MailTemplateRendererInterface
 {
@@ -39,19 +39,19 @@ interface MailTemplateRendererInterface
 
     /**
      * @param MailLayoutInterface $layout
-     * @param Language $language
+     * @param LanguageInterface $language
      *
      * @return string
      */
-    public function renderTxt(MailLayoutInterface $layout, Language $language);
+    public function renderTxt(MailLayoutInterface $layout, LanguageInterface $language);
 
     /**
      * @param MailLayoutInterface $layout
-     * @param Language $language
+     * @param LanguageInterface $language
      *
      * @return string
      */
-    public function renderHtml(MailLayoutInterface $layout, Language $language);
+    public function renderHtml(MailLayoutInterface $layout, LanguageInterface $language);
 
     /**
      * Adds a transformer to the renderer, when template is rendered all transformers
