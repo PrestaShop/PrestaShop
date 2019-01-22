@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
-use Language;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 
 /**
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
  */
 abstract class AbstractTransformation implements TransformationInterface
 {
-    /** @var Language */
+    /** @var LanguageInterface */
     protected $language;
 
     /** @var string */
@@ -71,7 +71,7 @@ abstract class AbstractTransformation implements TransformationInterface
     /**
      * {@inheritdoc}
      */
-    public function setLanguage(Language $language)
+    public function setLanguage(LanguageInterface $language)
     {
         $this->language = $language;
 

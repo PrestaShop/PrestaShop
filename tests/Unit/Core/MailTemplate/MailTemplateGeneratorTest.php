@@ -28,6 +28,7 @@ namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayout;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutCollection;
@@ -40,7 +41,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTheme;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailThemeCollection;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Language;
 
 class MailTemplateGeneratorTest extends TestCase
 {
@@ -259,16 +259,16 @@ class MailTemplateGeneratorTest extends TestCase
         $renderer
             ->expects($this->exactly($this->layouts->count()))
             ->method('renderHtml')
-            ->will($this->returnCallback(function (MailLayoutInterface $layout, Language $language) {
-                return implode('_', [$layout->getName(), 'html', $layout->getModuleName(), $language->iso_code]);
+            ->will($this->returnCallback(function (MailLayoutInterface $layout, LanguageInterface $language) {
+                return implode('_', [$layout->getName(), 'html', $layout->getModuleName(), $language->getIsoCode()]);
             }))
         ;
 
         $renderer
             ->expects($this->exactly($this->layouts->count()))
             ->method('renderTxt')
-            ->will($this->returnCallback(function (MailLayoutInterface $layout, Language $language) {
-                return implode('_', [$layout->getName(), 'txt', $layout->getModuleName(), $language->iso_code]);
+            ->will($this->returnCallback(function (MailLayoutInterface $layout, LanguageInterface $language) {
+                return implode('_', [$layout->getName(), 'txt', $layout->getModuleName(), $language->getIsoCode()]);
             }))
         ;
 
@@ -314,15 +314,21 @@ class MailTemplateGeneratorTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Language
+     * @param string|null $isoCode
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
      */
     private function createLanguageMock($isoCode = null)
     {
-        $languageMock = $this->getMockBuilder(Language::class)
+        $languageMock = $this->getMockBuilder(LanguageInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $languageMock->iso_code = $isoCode;
+        $languageMock
+            ->expects(null !== $isoCode ? $this->atLeastOnce() : $this->any())
+            ->method('getIsoCode')
+            ->willReturn($isoCode)
+        ;
 
         return $languageMock;
     }
