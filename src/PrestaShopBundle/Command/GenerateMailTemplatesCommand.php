@@ -96,7 +96,8 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
         //We need to have an employee or the module hooks don't work
         //see LegacyHookSubscriber
         if (!$legacyContext->getContext()->employee) {
-            $legacyContext->getContext()->employee = new Employee(1);
+            //Even a non existing employee is fine
+            $legacyContext->getContext()->employee = new Employee(42);
         }
     }
 
