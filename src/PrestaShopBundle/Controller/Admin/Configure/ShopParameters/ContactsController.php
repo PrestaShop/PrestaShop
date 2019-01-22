@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
@@ -111,7 +110,11 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Display the Contact creation form.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_contacts_index",
+     *     message="You do not have permission to add this."
+     * )
      *
      * @param Request $request
      *
@@ -144,7 +147,11 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Display the contact edit form.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_contacts_index",
+     *     message="You do not have permission to edit this."
+     * )
      *
      * @param int $contactId
      *
@@ -182,8 +189,13 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Delete a contact.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_contacts")
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_contacts_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @DemoRestricted(redirectRoute="admin_contacts_index")
      *
      * @param int $contactId
      *
@@ -208,8 +220,13 @@ class ContactsController extends FrameworkBundleAdminController
     /**
      * Bulk delete contacts.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_contacts")
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_contacts_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @DemoRestricted(redirectRoute="admin_contacts_index")
      *
      * @param Request $request
      *
@@ -232,6 +249,13 @@ class ContactsController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_contacts_index');
     }
 
+    /**
+     * Handles exceptions by exception type or code.
+     *
+     * @param DomainException $exception
+     *
+     * @return string
+     */
     private function handleException(DomainException $exception)
     {
         if (0 !== $exception->getCode()) {
@@ -241,6 +265,13 @@ class ContactsController extends FrameworkBundleAdminController
         return $this->getExceptionByType($exception);
     }
 
+    /**
+     * Gets exception by its type
+     *
+     * @param DomainException $exception
+     *
+     * @return string
+     */
     private function getExceptionByType(DomainException $exception)
     {
         $exceptionDictionary = [
@@ -260,6 +291,13 @@ class ContactsController extends FrameworkBundleAdminController
         return $this->getFallbackErrorMessage($type, $exception->getCode());
     }
 
+    /**
+     * Gets exception message by its type and code
+     *
+     * @param DomainException $exception
+     *
+     * @return string
+     */
     private function getExceptionByTypeAndErrorCode(DomainException $exception)
     {
         $exceptionDictionary = [
