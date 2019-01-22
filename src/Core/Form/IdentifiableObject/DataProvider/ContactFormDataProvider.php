@@ -70,7 +70,7 @@ final class ContactFormDataProvider implements FormDataProviderInterface
 
         return [
             'title' => $editableContact->getLocalisedTitles(),
-            'email' => $editableContact->getEmail(),
+            'email' => null !== $editableContact->getEmail() ? $editableContact->getEmail()->getValue() : '',
             'is_messages_saving_enabled' => $editableContact->isMessagesSavingEnabled(),
             'description' => $editableContact->getLocalisedDescription(),
             'shop_association' => $editableContact->getShopAssociation(),
