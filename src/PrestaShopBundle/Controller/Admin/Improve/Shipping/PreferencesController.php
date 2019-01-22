@@ -27,8 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Shipping;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Voter\PageVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,7 +41,7 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @Template("@PrestaShop/Admin/Improve/Shipping/Preferences/preferences.html.twig")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return array Template parameters
      */
@@ -52,17 +51,21 @@ class PreferencesController extends FrameworkBundleAdminController
 
         $form = $this->get('prestashop.admin.shipping_preferences.form_handler')->getForm();
 
-        return [
+        return $this->render('@PrestaShop/Admin/Improve/Shipping/Preferences/preferences.html.twig', [
             'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'form' => $form->createView(),
-        ];
+        ]);
     }
 
     /**
      * Handle form submit.
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_shipping_preferences")
      *
      * @param Request $request
      *
@@ -70,24 +73,6 @@ class PreferencesController extends FrameworkBundleAdminController
      */
     public function processFormAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
-            $this->addFlash(
-                'error',
-                $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error')
-            );
-
-            return $this->redirectToRoute('admin_shipping_preferences');
-        }
-
         $formHandler = $this->get('prestashop.admin.shipping_preferences.form_handler');
 
         $form = $formHandler->getForm();
