@@ -35,62 +35,52 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
  */
 class EmailTest extends TestCase
 {
-    public function testItReturnsValidEmail()
+    /**
+     * @dataProvider getValidEmailValues
+     */
+    public function testItCreatesEmailWithValidValues($validEmail)
     {
-        $validEmail = 'myValidEmail@validEmailDomain.com';
-
         $email = new Email($validEmail);
 
         $this->assertEquals($validEmail, $email->getValue());
     }
 
-    public function testItThrowsAnExceptionThenEmailIsNotValidType()
+    /**
+     * @dataProvider getInvalidEmailValues
+     */
+    public function testItThrowsExceptionWhenCreatingEmailWithInvalidValue($invalidEmail)
     {
         $this->expectException(DomainConstraintException::class);
         $this->expectExceptionCode(DomainConstraintException::INVALID_EMAIL);
 
-        $email = new Email(null);
+        new Email($invalidEmail);
     }
 
     /**
-     * @dataProvider getInvalidEmails
+     * @dataProvider getEmailCompareValues
      */
-    public function testItThrowsAnExceptionThenEmailIsNotValid($invalidEmail)
+    public function testEmailComparesValuesCorrectly($firstEmail, $secondEmail, $expectedCompareResult)
     {
-        $this->expectException(DomainConstraintException::class);
-        $this->expectExceptionCode(DomainConstraintException::INVALID_EMAIL);
-
-        $email = new Email($invalidEmail);
+        $this->assertEquals($expectedCompareResult, (new Email($firstEmail))->isEqualTo(new Email($secondEmail)));
     }
 
-    public function getInvalidEmails()
+    public function getValidEmailValues()
     {
-        return [
-            [
-                'plainText',
-            ],
-            [
-
-                'Abc@def"@test.org',
-            ],
-            [
-                'test@123.123.123.123',
-            ],
-        ];
+        yield ['demo.demo@prestashop.com'];
+        yield ['12312321@123.com'];
+        yield ['abc_123o@a.eu'];
     }
 
-    public function testItThrowsAnExceptionThenEmailLengthIsBreached()
+    public function getInvalidEmailValues()
     {
-        $this->expectException(DomainConstraintException::class);
-        $this->expectExceptionCode(DomainConstraintException::INVALID_EMAIL);
+        yield [''];
+        yield [123];
+        yield [sprintf('very_long_email_%s@demo.com', str_repeat('A', 231))];
+    }
 
-        $maxLength = Email::MAX_LENGTH;
-
-        $sample = sprintf(
-            'email@%s.com',
-            str_repeat('t', $maxLength)
-        );
-
-        $email = new Email($sample);
+    public function getEmailCompareValues()
+    {
+        yield ['demo@demo.com', 'demo@demo.com', true];
+        yield ['demo@demo.com', 'no_the_same@demo.com', false];
     }
 }
