@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
+/**
+ * Class MailTheme basic immutable implementation of MailThemeInterface.
+ */
 class MailTheme implements MailThemeInterface
 {
     /** @var string */
