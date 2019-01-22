@@ -29,10 +29,10 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Administration" page display.
@@ -44,7 +44,6 @@ class AdministrationController extends FrameworkBundleAdminController
     /**
      * Show Administration page.
      *
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig")
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param FormInterface $form
@@ -55,7 +54,7 @@ class AdministrationController extends FrameworkBundleAdminController
     {
         $form = null === $form ? $this->get('prestashop.adapter.administration.form_handler')->getForm() : $form;
 
-        return [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Administration', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -65,13 +64,13 @@ class AdministrationController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminAdminPreferences'),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
-        ];
+        ]);
     }
 
     /**
      * Process the Administration configuration form.
      *
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
      * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
