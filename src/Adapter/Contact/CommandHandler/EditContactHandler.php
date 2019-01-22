@@ -59,9 +59,7 @@ final class EditContactHandler implements EditContactHandlerInterface
                 );
             }
 
-//            todo: check default language for title
 //            todo: shop association using legacy ObjectModelHandler
-//            todo: fill empty values with default language values for title
 
             if (null !== $command->getLocalisedTitles()) {
                 $entity->name = $command->getLocalisedTitles();

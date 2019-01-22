@@ -102,10 +102,10 @@ class EditContactCommand extends AbstractContactCommand
      */
     public function setLocalisedTitles(array $localisedTitles)
     {
-        if (!$this->assertIsNotEmptyAndContainsAtLeastOneString($localisedTitles)) {
+        if (!$this->assertIsNotEmptyAndContainsAllNonEmptyStringValues($localisedTitles)) {
             throw new ContactConstraintException(
                 sprintf(
-                    'Expected to have not empty titles array with at least one value but received %s',
+                    'Expected to have not empty titles array but received %s',
                     var_export($localisedTitles, true)
                 ),
                 ContactConstraintException::INVALID_TITLE
