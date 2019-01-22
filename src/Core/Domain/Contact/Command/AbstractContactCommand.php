@@ -36,13 +36,13 @@ abstract class AbstractContactCommand
      *
      * @return bool
      */
-    protected function assertIsNotEmptyAndContainsAtLeastOneString(array $values)
+    protected function assertIsNotEmptyAndContainsAllNonEmptyStringValues(array $values)
     {
         $filterNonEmptyStrings = function ($value) {
             return is_string($value) && $value;
         };
 
-        return !(empty($values) || 0 === count(array_filter($values, $filterNonEmptyStrings)));
+        return !empty($values) && count($values) === count(array_filter($values, $filterNonEmptyStrings));
     }
 
     /**
