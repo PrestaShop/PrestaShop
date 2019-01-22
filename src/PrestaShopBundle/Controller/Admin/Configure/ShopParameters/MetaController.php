@@ -89,7 +89,7 @@ class MetaController extends FrameworkBundleAdminController
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
 
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
-            new GetShowcaseCardIsClosed($this->getContext()->employee->id, ShowcaseCard::SEO_URLS_CARD)
+            new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::SEO_URLS_CARD)
         );
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig', [
