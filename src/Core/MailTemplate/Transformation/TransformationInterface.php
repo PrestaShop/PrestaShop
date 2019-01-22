@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
-use Language;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
 /**
  * MailTemplateTransformerInterface is used by the MailTemplateRendererInterface to
@@ -53,9 +53,9 @@ interface TransformationInterface
     public function getType();
 
     /**
-     * @param Language $language
+     * @param LanguageInterface $language
      *
      * @return $this
      */
-    public function setLanguage(Language $language);
+    public function setLanguage(LanguageInterface $language);
 }

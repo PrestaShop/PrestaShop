@@ -28,9 +28,9 @@ namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilder;
-use Language;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilderInterface;
 
 class MailLayoutVariablesBuilderTest extends TestCase
@@ -159,18 +159,30 @@ class MailLayoutVariablesBuilderTest extends TestCase
      * @param string $isoCode
      * @param bool $isRTL
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|Language
+     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
      */
     private function buildLanguageMock($isoCode = 'en', $isRTL = false)
     {
-        $languageMock = $this->getMockBuilder(Language::class)
+        $languageMock = $this->getMockBuilder(LanguageInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $languageMock->iso_code = $isoCode;
-        $languageMock->locale = sprintf('%s-%s', $isoCode, strtoupper($isoCode));
-        $languageMock->is_rtl = $isRTL;
+        $languageMock
+            ->expects($this->atLeastOnce())
+            ->method('getIsoCode')
+            ->willReturn($isoCode)
+        ;
+        $languageMock
+            ->expects($this->once())
+            ->method('getLocale')
+            ->willReturn(sprintf('%s-%s', $isoCode, strtoupper($isoCode)))
+        ;
+        $languageMock
+            ->expects($this->once())
+            ->method('isRTL')
+            ->willReturn($isRTL)
+        ;
 
         return $languageMock;
     }

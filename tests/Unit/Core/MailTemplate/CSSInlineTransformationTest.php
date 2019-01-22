@@ -27,10 +27,10 @@
 namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation;
 use Symfony\Component\DomCrawler\Crawler;
 use DOMElement;
-use Language;
 
 class CSSInlineTransformationTest extends TestCase
 {
@@ -44,7 +44,7 @@ class CSSInlineTransformationTest extends TestCase
     {
         $transformation = new CSSInlineTransformation();
 
-        $languageMock = $this->getMockBuilder(Language::class)
+        $languageMock = $this->getMockBuilder(LanguageInterface::class)
              ->disableOriginalConstructor()
              ->getMock()
          ;
@@ -202,11 +202,11 @@ HTML;
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Language
+     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
      */
     private function buildLanguageMock()
     {
-        $languageMock = $this->getMockBuilder(Language::class)
+        $languageMock = $this->getMockBuilder(LanguageInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 

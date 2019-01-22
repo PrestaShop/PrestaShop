@@ -33,6 +33,13 @@ namespace PrestaShop\PrestaShop\Core\Language;
 interface LanguageInterface
 {
     /**
+     * Explicit name of the language
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
      * 2-letter iso code
      *
      * @return string

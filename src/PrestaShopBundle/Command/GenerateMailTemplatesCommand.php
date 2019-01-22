@@ -28,12 +28,13 @@ namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Language;
 use Employee;
 
 class GenerateMailTemplatesCommand extends ContainerAwareCommand
@@ -75,7 +76,7 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
         $locale = $input->getArgument('locale');
         $language = $this->getLanguage($locale);
 
-        $output->writeln(sprintf('Exporting mail with theme %s for language %s', $theme, $language->name));
+        $output->writeln(sprintf('Exporting mail with theme %s for language %s', $theme, $language->getName()));
         $output->writeln(sprintf('Core output folder: %s', $coreOutputFolder));
         $output->writeln(sprintf('Modules output folder: %s', $modulesOutputFolder));
 
@@ -102,24 +103,24 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
     /**
      * @param string $locale
      *
-     * @return Language
-     *
+     * @return LanguageInterface
      * @throws InvalidException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
     private function getLanguage($locale)
     {
-        $iso = Language::getIsoByLocale($locale);
-        if (false === $iso) {
+        /** @var LanguageRepositoryInterface $languageRepository */
+        $languageRepository = $this->getContainer()->get('prestashop.core.admin.lang.repository');
+        $language = $languageRepository->getByLocale($locale);
+        if (!$language) {
             $localeParts = explode('-', $locale);
-            $iso = $localeParts[0];
+            $isoCode = strtolower($localeParts[0]);
+            $language = $languageRepository->getByIsoCode($isoCode);
         }
-        $languageId = Language::getIdByIso($iso);
-        if (false === $languageId) {
+
+        if (null === $language) {
             throw new InvalidException(sprintf('Could not find Language for locale: %s', $locale));
         }
 
-        return new Language($languageId);
+        return $language;
     }
 }
