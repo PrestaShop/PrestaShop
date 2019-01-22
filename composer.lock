@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "75d399bd8e2fda116f7d22e6709b860a",
+    "content-hash": "b103805543c907a1caac46b58af0c2c8",
     "packages": [
         {
             "name": "analog/analog",
@@ -60,16 +60,16 @@
         },
         {
             "name": "beberlei/DoctrineExtensions",
-            "version": "v1.1.9",
+            "version": "v1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/DoctrineExtensions.git",
-                "reference": "a41f8b541f2e9b31f7cd43c91d6d88d9963f091c"
+                "reference": "469f65355b034b21c9c755e2d46ff2c06164567b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/a41f8b541f2e9b31f7cd43c91d6d88d9963f091c",
-                "reference": "a41f8b541f2e9b31f7cd43c91d6d88d9963f091c",
+                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/469f65355b034b21c9c755e2d46ff2c06164567b",
+                "reference": "469f65355b034b21c9c755e2d46ff2c06164567b",
                 "shasum": ""
             },
             "require": {
@@ -77,10 +77,10 @@
             },
             "require-dev": {
                 "doctrine/orm": "^2.5",
-                "friendsofphp/php-cs-fixer": "^2.14",
+                "friendsofphp/php-cs-fixer": "^2.2.19",
                 "nesbot/carbon": "*",
-                "phpunit/phpunit": "^5.7",
-                "symfony/yaml": "^4.2",
+                "phpunit/phpunit": "^4.5",
+                "symfony/yaml": "^2.6",
                 "zf1/zend-date": "^1.12",
                 "zf1/zend-registry": "^1.12"
             },
@@ -110,20 +110,20 @@
                 "doctrine",
                 "orm"
             ],
-            "time": "2019-02-04T15:25:09+00:00"
+            "time": "2018-09-26T16:18:17+00:00"
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.1.4",
+            "version": "1.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "558f321c52faeb4828c03e7dc0cfe39a09e09a2d"
+                "reference": "8afa52cd417f4ec417b4bfe86b68106538a87660"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/558f321c52faeb4828c03e7dc0cfe39a09e09a2d",
-                "reference": "558f321c52faeb4828c03e7dc0cfe39a09e09a2d",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/8afa52cd417f4ec417b4bfe86b68106538a87660",
+                "reference": "8afa52cd417f4ec417b4bfe86b68106538a87660",
                 "shasum": ""
             },
             "require": {
@@ -166,7 +166,7 @@
                 "ssl",
                 "tls"
             ],
-            "time": "2019-01-28T09:30:10+00:00"
+            "time": "2018-10-18T06:09:13+00:00"
         },
         {
             "name": "composer/installers",
@@ -857,16 +857,16 @@
         },
         {
             "name": "doctrine/doctrine-bundle",
-            "version": "1.10.2",
+            "version": "1.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "1f99e6645030542079c57d4680601a4a8778a1bd"
+                "reference": "98551d71f515692c2278073e0d483763ac70b341"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/1f99e6645030542079c57d4680601a4a8778a1bd",
-                "reference": "1f99e6645030542079c57d4680601a4a8778a1bd",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/98551d71f515692c2278073e0d483763ac70b341",
+                "reference": "98551d71f515692c2278073e0d483763ac70b341",
                 "shasum": ""
             },
             "require": {
@@ -938,7 +938,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2019-02-06T13:18:04+00:00"
+            "time": "2019-01-07T15:31:08+00:00"
         },
         {
             "name": "doctrine/doctrine-cache-bundle",
@@ -1696,6 +1696,43 @@
                 "stream"
             ],
             "time": "2014-10-12T19:18:40+00:00"
+        },
+        {
+            "name": "html2text/html2text",
+            "version": "4.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mtibben/html2text.git",
+                "reference": "f7555eaf271beea4e1098274d3ff37fbb7b21ea7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mtibben/html2text/zipball/f7555eaf271beea4e1098274d3ff37fbb7b21ea7",
+                "reference": "f7555eaf271beea4e1098274d3ff37fbb7b21ea7",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4"
+            },
+            "suggest": {
+                "ext-mbstring": "For best performance",
+                "symfony/polyfill-mbstring": "If you can't install ext-mbstring"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Html2Text\\": [
+                        "src/",
+                        "test/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Converts HTML to formatted plain text",
+            "time": "2018-08-13T12:05:08+00:00"
         },
         {
             "name": "icanboogie/cldr",
@@ -2899,16 +2936,16 @@
         },
         {
             "name": "pear/archive_tar",
-            "version": "1.4.6",
+            "version": "1.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/Archive_Tar.git",
-                "reference": "b8e33f9063a7cd1d20f079014f8382b3a7aee47e"
+                "reference": "ff716ca697c5e9e8593212cb785ffd03ee11b01f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/b8e33f9063a7cd1d20f079014f8382b3a7aee47e",
-                "reference": "b8e33f9063a7cd1d20f079014f8382b3a7aee47e",
+                "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/ff716ca697c5e9e8593212cb785ffd03ee11b01f",
+                "reference": "ff716ca697c5e9e8593212cb785ffd03ee11b01f",
                 "shasum": ""
             },
             "require": {
@@ -2961,20 +2998,20 @@
                 "archive",
                 "tar"
             ],
-            "time": "2019-02-01T11:10:38+00:00"
+            "time": "2019-01-02T21:45:13+00:00"
         },
         {
             "name": "pear/console_getopt",
-            "version": "v1.4.2",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/Console_Getopt.git",
-                "reference": "6c77aeb625b32bd752e89ee17972d103588b90c0"
+                "reference": "82f05cd1aa3edf34e19aa7c8ca312ce13a6a577f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/Console_Getopt/zipball/6c77aeb625b32bd752e89ee17972d103588b90c0",
-                "reference": "6c77aeb625b32bd752e89ee17972d103588b90c0",
+                "url": "https://api.github.com/repos/pear/Console_Getopt/zipball/82f05cd1aa3edf34e19aa7c8ca312ce13a6a577f",
+                "reference": "82f05cd1aa3edf34e19aa7c8ca312ce13a6a577f",
                 "shasum": ""
             },
             "type": "library",
@@ -3008,7 +3045,7 @@
                 }
             ],
             "description": "More info available on: http://pear.php.net/package/Console_Getopt",
-            "time": "2019-02-06T16:52:33+00:00"
+            "time": "2015-07-20T20:28:12+00:00"
         },
         {
             "name": "pear/pear-core-minimal",
@@ -3108,6 +3145,80 @@
                 "exception"
             ],
             "time": "2015-02-10T20:07:52+00:00"
+        },
+        {
+            "name": "pelago/emogrifier",
+            "version": "v2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MyIntervals/emogrifier.git",
+                "reference": "8ee7fb5ad772915451ed3415c1992bd3697d4983"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MyIntervals/emogrifier/zipball/8ee7fb5ad772915451ed3415c1992bd3697d4983",
+                "reference": "8ee7fb5ad772915451ed3415c1992bd3697d4983",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "php": "^5.5.0 || ~7.0.0 || ~7.1.0 || ~7.2.0 || ~7.3.0",
+                "symfony/css-selector": "^3.4.0 || ^4.0.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.2.0",
+                "phpmd/phpmd": "^2.6.0",
+                "phpunit/phpunit": "^4.8.0",
+                "squizlabs/php_codesniffer": "^3.3.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Pelago\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "John Reeve",
+                    "email": "jreeve@pelagodesign.com"
+                },
+                {
+                    "name": "Cameron Brooks"
+                },
+                {
+                    "name": "Jaime Prado"
+                },
+                {
+                    "name": "Oliver Klee",
+                    "email": "github@oliverklee.de"
+                },
+                {
+                    "name": "Zoli Szabó",
+                    "email": "zoli.szabo+github@gmail.com"
+                },
+                {
+                    "name": "Jake Hotson",
+                    "email": "jake@qzdesign.co.uk"
+                }
+            ],
+            "description": "Converts CSS styles into inline style attributes in your HTML code",
+            "homepage": "https://www.myintervals.com/emogrifier.php",
+            "keywords": [
+                "css",
+                "email",
+                "pre-processing"
+            ],
+            "time": "2018-12-10T10:36:30+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
@@ -3509,20 +3620,20 @@
         },
         {
             "name": "prestashop/gsitemap",
-            "version": "v3.2.2",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/gsitemap.git",
-                "reference": "c32921ab637e00c1d9d3a175f5c1b3944916fb3f"
+                "reference": "919911e2c2280252bf5f75cbeff84682137890d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/c32921ab637e00c1d9d3a175f5c1b3944916fb3f",
-                "reference": "c32921ab637e00c1d9d3a175f5c1b3944916fb3f",
+                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/919911e2c2280252bf5f75cbeff84682137890d5",
+                "reference": "919911e2c2280252bf5f75cbeff84682137890d5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": ">=5.6.0"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -3537,7 +3648,7 @@
             ],
             "description": "PrestaShop module gsitemap",
             "homepage": "https://github.com/PrestaShop/gsitemap",
-            "time": "2018-06-05T09:52:50+00:00"
+            "time": "2018-12-17T09:46:52+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
@@ -4056,16 +4167,16 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v2.1.6",
+            "version": "v2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "bec64f6fb80543983f5c3fee315312de5e0c4c0d"
+                "reference": "a901d458f8f6a90059399a3f40166851e956642b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/bec64f6fb80543983f5c3fee315312de5e0c4c0d",
-                "reference": "bec64f6fb80543983f5c3fee315312de5e0c4c0d",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/a901d458f8f6a90059399a3f40166851e956642b",
+                "reference": "a901d458f8f6a90059399a3f40166851e956642b",
                 "shasum": ""
             },
             "require": {
@@ -4084,7 +4195,7 @@
             ],
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
-            "time": "2019-01-30T15:42:35+00:00"
+            "time": "2018-06-05T12:03:41+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
@@ -6321,16 +6432,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v3.4.22",
+            "version": "v3.4.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "907d4d1d1a419663c3c37cfb33dd65c48fa62d1b"
+                "reference": "c7a57e0bcc3c57ae697f072b3e862487b6fd0030"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/907d4d1d1a419663c3c37cfb33dd65c48fa62d1b",
-                "reference": "907d4d1d1a419663c3c37cfb33dd65c48fa62d1b",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/c7a57e0bcc3c57ae697f072b3e862487b6fd0030",
+                "reference": "c7a57e0bcc3c57ae697f072b3e862487b6fd0030",
                 "shasum": ""
             },
             "require": {
@@ -6472,7 +6583,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2019-02-03T12:23:08+00:00"
+            "time": "2019-01-06T15:54:26+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -6668,16 +6779,16 @@
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.3.2",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "d17708133b6c276d6e42ef887a877866b909d892"
+                "reference": "dc523135366eb68f22268d069ea7749486458562"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/d17708133b6c276d6e42ef887a877866b909d892",
-                "reference": "d17708133b6c276d6e42ef887a877866b909d892",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/dc523135366eb68f22268d069ea7749486458562",
+                "reference": "dc523135366eb68f22268d069ea7749486458562",
                 "shasum": ""
             },
             "require": {
@@ -6708,20 +6819,20 @@
                 "Xdebug",
                 "performance"
             ],
-            "time": "2019-01-28T20:25:53+00:00"
+            "time": "2018-08-31T19:07:57+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.14.1",
+            "version": "v2.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "2e82abd1322897eb8aacb861e5ff551af3888349"
+                "reference": "b788ea0af899cedc8114dca7db119c93b6685da2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/2e82abd1322897eb8aacb861e5ff551af3888349",
-                "reference": "2e82abd1322897eb8aacb861e5ff551af3888349",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/b788ea0af899cedc8114dca7db119c93b6685da2",
+                "reference": "b788ea0af899cedc8114dca7db119c93b6685da2",
                 "shasum": ""
             },
             "require": {
@@ -6768,6 +6879,11 @@
                 "php-cs-fixer"
             ],
             "type": "application",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.14-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "PhpCsFixer\\": "src/"
@@ -6799,7 +6915,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2019-02-10T22:52:33+00:00"
+            "time": "2019-01-04T18:29:47+00:00"
         },
         {
             "name": "johnkary/phpunit-speedtrap",
@@ -8163,16 +8279,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.4.22",
+            "version": "v3.4.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "6a2148bfc6ca0016846a32bdc55a317274283709"
+                "reference": "5dab0d4b2ac99ab22b447b615fdfdc10ec4af3d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/6a2148bfc6ca0016846a32bdc55a317274283709",
-                "reference": "6a2148bfc6ca0016846a32bdc55a317274283709",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/5dab0d4b2ac99ab22b447b615fdfdc10ec4af3d5",
+                "reference": "5dab0d4b2ac99ab22b447b615fdfdc10ec4af3d5",
                 "shasum": ""
             },
             "require": {
@@ -8225,7 +8341,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2019-01-30T13:30:37+00:00"
+            "time": "2019-01-01T13:45:19+00:00"
         },
         {
             "name": "symfony/polyfill-php72",
