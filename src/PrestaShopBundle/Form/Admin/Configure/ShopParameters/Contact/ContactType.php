@@ -36,6 +36,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Email;
 
 /**
  * Class ContactType
@@ -71,10 +72,20 @@ class ContactType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //todo: for translatable type add validation after Traffic & Seo form page pr is merged.
         $builder
             ->add('title', TranslatableType::class)
             ->add('email', EmailType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Email([
+                        'message' => $this->trans(
+                            '%s is invalid.',
+                            [],
+                            'Admin.Notifications.Error'
+                        ),
+                    ])
+                ],
             ])
             ->add('is_messages_saving_enabled', SwitchType::class)
             ->add('description', TranslatableType::class, [
