@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Contact\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Class AddContactCommand
@@ -44,7 +46,7 @@ class AddContactCommand extends AbstractContactCommand
     private $isMessageSavingEnabled;
 
     /**
-     * @var string
+     * @var Email
      */
     private $email;
 
@@ -89,11 +91,10 @@ class AddContactCommand extends AbstractContactCommand
     }
 
     /**
-     * @return string
+     * @return Email
      */
     public function getEmail()
     {
-        //todo:
         return $this->email;
     }
 
@@ -101,10 +102,14 @@ class AddContactCommand extends AbstractContactCommand
      * @param string $email
      *
      * @return self
+     *
+     * @throws DomainConstraintException
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        if ($email) {
+            $this->email = new Email($email);
+        }
 
         return $this;
     }

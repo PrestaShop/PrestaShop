@@ -54,7 +54,7 @@ final class AddContactHandler implements AddContactHandlerInterface
             $entity->customer_service = $command->isMessageSavingEnabled();
 
             if (null !== $command->getEmail()) {
-                $entity->email = $command->getEmail();
+                $entity->email = $command->getEmail()->getValue();
             }
 
             if (null !== $command->getLocalisedDescription()) {
