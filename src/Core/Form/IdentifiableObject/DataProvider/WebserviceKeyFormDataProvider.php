@@ -60,7 +60,7 @@ final class WebserviceKeyFormDataProvider implements FormDataProviderInterface
             'key' => $editableWebserviceKey->getKey(),
             'description' => $editableWebserviceKey->getDescription(),
             'status' => $editableWebserviceKey->getStatus(),
-            'resource_permissions' => $this->normalizeResourcePermissions(
+            'permissions' => $this->normalizeResourcePermissions(
                 $editableWebserviceKey->getResourcePermissions()
             ),
             'shop_association' => $editableWebserviceKey->getAssociatedShops(),

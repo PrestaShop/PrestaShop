@@ -26,12 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice;
 
+use function foo\func;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\Key;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,7 +50,7 @@ class WebserviceKeyType extends AbstractType
     /**
      * @var bool
      */
-    private $isMultistoreFeatureEnabled;
+    private $isMultistoreFeatureUsed;
 
     /**
      * @var array
@@ -61,16 +63,16 @@ class WebserviceKeyType extends AbstractType
     private $permissionChoices;
 
     /**
-     * @param bool $isMultistoreFeatureEnabled
+     * @param bool $isMultistoreFeatureUsed
      * @param array $resourceChoices
      * @param array $permissionChoices
      */
     public function __construct(
-        $isMultistoreFeatureEnabled,
+        $isMultistoreFeatureUsed,
         array $resourceChoices,
         array $permissionChoices
     ) {
-        $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
+        $this->isMultistoreFeatureUsed = $isMultistoreFeatureUsed;
         $this->resourceChoices = $resourceChoices;
         $this->permissionChoices = $permissionChoices;
     }
@@ -84,7 +86,7 @@ class WebserviceKeyType extends AbstractType
             ->add('key', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error')
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                     ]),
                     new Length([
                         'min' => Key::LENGTH,
@@ -99,6 +101,7 @@ class WebserviceKeyType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
+                'empty_data' => '',
             ])
             ->add('status', SwitchType::class, [
                 'required' => false,
@@ -111,8 +114,31 @@ class WebserviceKeyType extends AbstractType
             ])
         ;
 
-        if ($this->isMultistoreFeatureEnabled) {
+        // remove "all" configuration since it's not an actual permission
+        $builder->get('permissions')->addModelTransformer(new CallbackTransformer(
+            function ($value) {
+                return $value;
+            },
+            function ($value) {
+                if (isset($value['all'])) {
+                    unset($value['all']);
+                }
+
+                return $value;
+            }
+        ));
+
+        if ($this->isMultistoreFeatureUsed) {
             $builder->add('shop_association', ShopChoiceTreeType::class);
+
+            $builder->get('shop_association')->addModelTransformer(new CallbackTransformer(
+                function ($value) {
+                    return null === $value ? [] : $value;
+                },
+                function ($value) {
+                    return null === $value ? [] : $value;
+                }
+            ));
         }
     }
 
