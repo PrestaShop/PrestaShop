@@ -59,10 +59,7 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Show currency page.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_currencies_index"
-     * )
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param CurrencyFilters $filters
      *
