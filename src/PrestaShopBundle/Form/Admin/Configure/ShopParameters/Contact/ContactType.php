@@ -31,12 +31,12 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class ContactType
@@ -97,7 +97,19 @@ class ContactType extends AbstractType
         $builder->get('title')->addModelTransformer($this->singleDefaultLanguageArrayToFilledArrayDataTransformer);
 
         if ($this->isShopFeatureEnabled) {
-            $builder->add('shop_association', ShopChoiceTreeType::class);
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            [
+                                sprintf('"%s"', $this->trans('Shop association', [], 'Admin.Global')),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ]);
         }
     }
 }
