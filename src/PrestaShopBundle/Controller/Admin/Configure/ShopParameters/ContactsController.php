@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -127,7 +129,7 @@ class ContactsController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_contacts_index');
-            } catch (ContactException $exception) {
+            } catch (DomainException $exception) {
                 $this->addFlash('error', $this->handleException($exception));
             }
         }
@@ -165,7 +167,7 @@ class ContactsController extends FrameworkBundleAdminController
 
                     return $this->redirectToRoute('admin_contacts_index');
                 }
-            } catch (ContactException $exception) {
+            } catch (DomainException $exception) {
                 $this->addFlash('error', $this->handleException($exception));
             }
         }
@@ -228,7 +230,7 @@ class ContactsController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_contacts_index');
     }
 
-    private function handleException(ContactException $exception)
+    private function handleException(DomainException $exception)
     {
         if (0 !== $exception->getCode()) {
             return $this->getExceptionByTypeAndErrorCode($exception);
@@ -237,7 +239,7 @@ class ContactsController extends FrameworkBundleAdminController
         return $this->getExceptionByType($exception);
     }
 
-    private function getExceptionByType(ContactException $exception)
+    private function getExceptionByType(DomainException $exception)
     {
         $exceptionDictionary = [
             ContactNotFoundException::class => $this->trans(
@@ -256,7 +258,7 @@ class ContactsController extends FrameworkBundleAdminController
         return $this->getFallbackErrorMessage($type, $exception->getCode());
     }
 
-    private function getExceptionByTypeAndErrorCode(ContactException $exception)
+    private function getExceptionByTypeAndErrorCode(DomainException $exception)
     {
         $exceptionDictionary = [
             ContactConstraintException::class => [
@@ -266,7 +268,8 @@ class ContactsController extends FrameworkBundleAdminController
                     [
                         sprintf(
                             '%s',
-                            $this->trans('Shop association', 'Admin.Global')),
+                            $this->trans('Shop association', 'Admin.Global')
+                        ),
                     ]
                 ),
                 ContactConstraintException::INVALID_TITLE => $this->trans(
@@ -275,7 +278,20 @@ class ContactsController extends FrameworkBundleAdminController
                     [
                         sprintf(
                             '%s',
-                            $this->trans('Title', 'Admin.Global')),
+                            $this->trans('Title', 'Admin.Global')
+                        ),
+                    ]
+                ),
+            ],
+            DomainConstraintException::class => [
+                DomainConstraintException::INVALID_EMAIL => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf(
+                            '%s',
+                            $this->trans('Email address', 'Admin.Global')
+                        ),
                     ]
                 ),
             ],
