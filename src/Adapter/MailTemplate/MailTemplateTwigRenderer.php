@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
@@ -35,7 +36,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 use Symfony\Component\Templating\EngineInterface;
-use Language;
 
 /**
  * MailTemplateTwigRenderer is a basic implementation of MailTemplateRendererInterface
@@ -73,33 +73,33 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
 
     /**
      * @param MailLayoutInterface $layout
-     * @param Language $language
+     * @param LanguageInterface $language
      *
      * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
      *
      * @return string
      */
-    public function renderHtml(MailLayoutInterface $layout, Language $language)
+    public function renderHtml(MailLayoutInterface $layout, LanguageInterface $language)
     {
         return $this->render($layout, $language, MailTemplateInterface::HTML_TYPE);
     }
 
     /**
      * @param MailLayoutInterface $layout
-     * @param Language $language
+     * @param LanguageInterface $language
      *
      * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
      *
      * @return string
      */
-    public function renderTxt(MailLayoutInterface $layout, Language $language)
+    public function renderTxt(MailLayoutInterface $layout, LanguageInterface $language)
     {
         return $this->render($layout, $language, MailTemplateInterface::TXT_TYPE);
     }
 
     /**
      * @param MailLayoutInterface $layout
-     * @param Language $language
+     * @param LanguageInterface $language
      * @param string $templateType
      *
      * @throws \PrestaShop\PrestaShop\Core\Exception\TypeException
@@ -108,7 +108,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      */
     private function render(
         MailLayoutInterface $layout,
-        Language $language,
+        LanguageInterface $language,
         $templateType
     ) {
         $layoutVariables = $this->variablesBuilder->buildVariables($layout, $language);

@@ -27,15 +27,15 @@
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
 use Symfony\Component\Filesystem\Filesystem;
-use Language;
 
 /**
  * Class MailTemplateGenerator iterates through the layouts in the provided catalog,
- * it uses the Renderer to display them (with the requested Language) and then export
- * them as template files in the specified output folder.
+ * it uses the Renderer to display them (with the requested LanguageInterface) and
+ * then export them as template files in the specified output folder.
  */
 class MailTemplateGenerator
 {
@@ -66,13 +66,13 @@ class MailTemplateGenerator
 
     /**
      * @param string $theme
-     * @param Language $language
+     * @param LanguageInterface $language
      * @param string $coreOutputFolder
      * @param string $modulesOutputFolder
      *
      * @throws InvalidException
      */
-    public function generateThemeTemplates($theme, Language $language, $coreOutputFolder, $modulesOutputFolder)
+    public function generateThemeTemplates($theme, LanguageInterface $language, $coreOutputFolder, $modulesOutputFolder)
     {
         $this->checkMailTheme($theme);
 

@@ -26,9 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-use Language;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
+/**
+ * MailLayoutVariablesBuilder is a basic implementation of MailLayoutVariablesBuilderInterface
+ *  - it formats the variables for template
+ *  - it is able to inject default fonts for specified languages
+ *  - it includes default variables (set in the constructor)
+ *  - it dispatches a hook to allow overriding its output
+ */
 class MailLayoutVariablesBuilder implements MailLayoutVariablesBuilderInterface
 {
     /** @var array */
@@ -61,19 +68,19 @@ class MailLayoutVariablesBuilder implements MailLayoutVariablesBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildVariables(MailLayoutInterface $mailLayout, Language $language)
+    public function buildVariables(MailLayoutInterface $mailLayout, LanguageInterface $language)
     {
         $languageDefaultFont = '';
-        if (isset($this->languageDefaultFonts[$language->iso_code])) {
-            $languageDefaultFont = $this->languageDefaultFonts[$language->iso_code] . ',';
+        if (isset($this->languageDefaultFonts[$language->getIsoCode()])) {
+            $languageDefaultFont = $this->languageDefaultFonts[$language->getIsoCode()] . ',';
         }
 
         $mailLayoutVariables = array_merge($this->defaultVariables, [
-            'languageIsRTL' => (bool) $language->is_rtl,
+            'languageIsRTL' => (bool) $language->isRTL(),
             'languageDefaultFont' => $languageDefaultFont,
             'templateName' => $mailLayout->getName(),
             'templateModuleName' => $mailLayout->getModuleName(),
-            'locale' => $language->locale,
+            'locale' => $language->getLocale(),
         ]);
 
         //This hook allows to change the variables of a layout
