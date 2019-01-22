@@ -41,11 +41,18 @@ final class WebserviceKeyFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @param CommandBusInterface $queryBus
+     * @var int[]
      */
-    public function __construct(CommandBusInterface $queryBus)
+    private $shopIds;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     * @param int[] $shopIds
+     */
+    public function __construct(CommandBusInterface $queryBus, array $shopIds)
     {
         $this->queryBus = $queryBus;
+        $this->shopIds = $shopIds;
     }
 
     /**
@@ -72,7 +79,10 @@ final class WebserviceKeyFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [];
+        return [
+            'status' => true,
+            'shop_association' => $this->shopIds,
+        ];
     }
 
     /**
