@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Command\AddWebserviceKeyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Webservice\Command\EditWebserviceKeyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\WebserviceKeyId;
 
 /**
@@ -79,7 +80,20 @@ final class WebserviceKeyFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function update($id, array $data)
+    public function update($weserviceKeyId, array $data)
     {
+        $editCommand = new EditWebserviceKeyCommand($weserviceKeyId);
+        $editCommand
+            ->setKey($data['key'])
+            ->setDescription($data['description'])
+            ->setStatus($data['status'])
+            ->setPermissions($data['permissions'])
+        ;
+
+        if (isset($data['shop_association'])) {
+            $editCommand->setShopAssociation($data['shop_association']);
+        }
+
+        $this->commandBus->handle($editCommand);
     }
 }

@@ -90,10 +90,14 @@ class EditWebserviceKeyCommand
 
     /**
      * @param string $key
+     *
+     * @return self
      */
     public function setKey($key)
     {
         $this->key = new Key($key);
+
+        return $this;
     }
 
     /**
@@ -106,10 +110,14 @@ class EditWebserviceKeyCommand
 
     /**
      * @param string $description
+     *
+     * @return self
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
+        return $this;
     }
 
     /**
@@ -122,10 +130,14 @@ class EditWebserviceKeyCommand
 
     /**
      * @param bool $status
+     *
+     * @return self
      */
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
     }
 
     /**
@@ -138,10 +150,14 @@ class EditWebserviceKeyCommand
 
     /**
      * @param array $permissions
+     *
+     * @return self
      */
     public function setPermissions(array $permissions)
     {
         $this->permissions = $permissions;
+
+        return $this;
     }
 
     /**
@@ -154,9 +170,13 @@ class EditWebserviceKeyCommand
 
     /**
      * @param int[] $shopAssociation
+     *
+     * @return self
      */
     public function setShopAssociation(array $shopAssociation)
     {
         $this->shopAssociation = $shopAssociation;
+
+        return $this;
     }
 }
