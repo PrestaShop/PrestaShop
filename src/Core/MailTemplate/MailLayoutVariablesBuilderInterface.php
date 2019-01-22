@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-use Language;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
 /**
  * MailLayoutVariablesBuilderInterface is used by the MailTemplateRendererInterface
@@ -42,9 +42,9 @@ interface MailLayoutVariablesBuilderInterface
 
     /**
      * @param MailLayoutInterface $layout
-     * @param Language $language
+     * @param LanguageInterface $language
      *
      * @return array
      */
-    public function buildVariables(MailLayoutInterface $layout, Language $language);
+    public function buildVariables(MailLayoutInterface $layout, LanguageInterface $language);
 }
