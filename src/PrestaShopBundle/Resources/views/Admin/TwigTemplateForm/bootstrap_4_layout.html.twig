@@ -699,3 +699,18 @@
     {%- endif -%}
   {% endif %}
 {% endblock birthday_widget %}
+
+{% block generatable_text_widget %}
+  <div class="input-group">
+    {{- block('form_widget') -}}
+    <span class="input-group-btn ml-1">
+      <button class="btn btn-outline-secondary js-generator-btn"
+              type="button"
+              data-target-input-id="{{ id }}"
+              data-generated-value-length="{{ generated_value_length }}"
+      >
+        {{ 'Generate!'|trans({}, 'Admin.Advparameters.Feature') }}
+      </button>
+   </span>
+  </div>
+{% endblock generatable_text_widget %}

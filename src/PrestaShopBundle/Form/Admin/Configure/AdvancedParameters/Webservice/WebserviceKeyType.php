@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice;
 
-use function foo\func;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\Key;
+use PrestaShopBundle\Form\Admin\Type\GeneratableTextType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -35,7 +35,6 @@ use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -83,7 +82,8 @@ class WebserviceKeyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('key', TextType::class, [
+            ->add('key', GeneratableTextType::class, [
+                'generated_value_length' => Key::LENGTH,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
