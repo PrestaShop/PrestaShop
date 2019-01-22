@@ -24,35 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Cache;
+namespace Tests\Unit\PrestaShopBundle\Twig\Locator;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Cache\ModuleTemplateCacheWarmer;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Twig\Environment;
+use PrestaShopBundle\Twig\Locator\ModuleTemplateIterator;
 
-// REVIEW ME: Is this class well located?
-
-class ModuleTemplateCacheWarmerTest extends TestCase
+class ModuleTemplateIteratorTest extends TestCase
 {
-    public function testOnlyGenerateTwig()
+    public function testGetIterator()
     {
-        $twigMock = $this
-        ->getMockBuilder(Environment::class)
-        ->disableOriginalConstructor()
-        ->setMethods(array('loadTemplate'))
-        ->getMock();
+        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\Kernel')->disableOriginalConstructor()->getMock();
+        $kernel->expects($this->any())->method('getBundles')->will($this->returnValue(array()));
+        $iterator = new ModuleTemplateIterator($kernel, __DIR__ . '/../Fixtures', array(__DIR__ . '/../Fixtures/modules' => 'Modules'), __DIR__ . '/Fixtures/templates');
 
-        $container = $this->getMockBuilder(ContainerInterface::class)->disableOriginalConstructor()->getMock();
-        $container->expects($this->any())->method('get')->with('twig')->will($this->returnValue($twigMock));
+        $templates = iterator_to_array($iterator->getIterator());
 
-        $cacheWarmer = new ModuleTemplateCacheWarmer($container, null, [__DIR__ . '/../../Twig/Fixtures/modules' => 'Modules']);
-
-        // Actual test: Should only have one file to load
-        $twigMock
-            ->expects($this->once())
-            ->method('loadTemplate');
-
-        $cacheWarmer->warmUp(sys_get_temp_dir());
+        $this->assertEquals(
+            ['@Modules/template.html.twig'],
+            $templates
+        );
     }
 }
