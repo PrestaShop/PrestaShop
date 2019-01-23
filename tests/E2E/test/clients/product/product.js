@@ -193,7 +193,7 @@ class Product extends CommonClient {
       })
   }
 
-  clickPageNext(selector, pause =0 ) {
+  clickPageNext(selector, pause = 0) {
     return this.client
       .pause(pause)
       .scrollWaitForExistAndClick(selector);
@@ -241,7 +241,6 @@ class Product extends CommonClient {
     return this.client
       .scrollWaitForExistAndClick(AddProductPage.catalog_product_name.replace("%ID", global.positionTable[i - 1], 50000))
       .waitForVisible(AddProductPage.product_name_input)
-      //.scrollWaitForExistAndClick(AddProductPage.expand_categories_button)
   }
 
   getSubCategoryNumber(selector, i) {
@@ -330,12 +329,13 @@ class Product extends CommonClient {
     return this.client
       .pause(1000)
       .then(() => {
-          expect(global.productCategories.HOME.Accessories).to.contains(tab['categoryName'])
+        expect(global.productCategories.HOME.Accessories).to.contains(tab['categoryName'])
       });
   }
 
   getCategoriesPageNumber(selector) {
     return this.client
+      .waitForVisible('#' + selector)
       .execute(function (selector) {
         return document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
       }, selector)
@@ -343,7 +343,6 @@ class Product extends CommonClient {
         global.categoriesPageNumber = count.value;
       });
   }
-
 
 
 }

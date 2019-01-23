@@ -53,7 +53,7 @@ module.exports = {
     reset_button_modal: '//*[@id="module-modal-confirm-%moduleTechName-reset"]//a[contains(@class, "module_action_modal_reset")]',
     backdrop_modale: '//div[contains(@class, "fade show")]',
     installed_module_div: '//div[@data-tech-name="%moduleTechName"]',
-    module_action_href: '(//div[@data-tech-name="%moduleTechName"]//div[contains(@class,"module-actions")]/a) |  (//div[@data-tech-name="%moduleTechName"]//form/button[@data-confirm_modal="module-modal-confirm-%moduleTechName-enable"])',
+    module_action_href: '//*[contains(@id,"modules-list-container")]//button[contains(@class, "primary module_action_menu")] | //*[contains(@id,"modules-list-container")]//a[contains(@class, "btn-primary-reverse btn-outline-primary")]',
     //List of modules after search
     list_module: '//*[@id="modules-list-container-all"]/div[%I]',
     modules_number: '[class="module-sorting-search-wording"]',
@@ -98,5 +98,6 @@ module.exports = {
     configure_link: '(//*[@id="main-div"]//div[@data-tech-name="%moduleTechName"]//a[contains(@href,"/action/configure")])',
     upgrade_module_button: '//*[@id="modules-list-container-update"]//button[contains(@data-confirm_modal,"%moduleTechName-upgrade")]',
     module_bloc: '(//*[@id="modules-list-container-update"]//div[contains(@class,"module-item-list")])[1]',
+    check_configure: '//*[@id="cab-getstarted"]/h2',
   }
 };

@@ -7,7 +7,6 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {ShoppingCart} = require('../../../selectors/BO/order');
 const orderCommonScenarios = require('../../common_scenarios/order');
-
 scenario('Export shopping carts in the Back Office', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());

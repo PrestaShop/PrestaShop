@@ -200,7 +200,7 @@ module.exports = {
   checkExportedFile: async function (client) {
     await client.downloadCart(ShoppingCart.export_carts_button);
     await client.checkFile(global.downloadsFolderPath, global.exportCartFileName);
-    if (existingFile) {
+    if (global.existingFile) {
       await client.readFile(global.downloadsFolderPath, global.exportCartFileName, 1000);
       await client.checkExportedFileInfo(1000);
     }
