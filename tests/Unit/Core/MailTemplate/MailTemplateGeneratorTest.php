@@ -27,7 +27,7 @@
 namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayout;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutCatalogInterface;
@@ -114,7 +114,7 @@ class MailTemplateGeneratorTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidException
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
      * @expectedExceptionMessage Invalid theme used "toto", only available themes are: titi, tata
      */
     public function testInvalidTheme()
@@ -150,11 +150,11 @@ class MailTemplateGeneratorTest extends TestCase
         $caughtException = null;
         try {
             $generator->generateThemeTemplates('toto', $this->createLanguageMock(), $fakeFolder, $this->modulesTempDir);
-        } catch (InvalidException $e) {
+        } catch (FileNotFoundException $e) {
             $caughtException = $e;
         }
         $this->assertNotNull($caughtException);
-        $this->assertInstanceOf(InvalidException::class, $caughtException);
+        $this->assertInstanceOf(FileNotFoundException::class, $caughtException);
         $expectedMessage = sprintf(
             'Invalid core output folder "%s"',
             $fakeFolder
@@ -179,11 +179,11 @@ class MailTemplateGeneratorTest extends TestCase
         $caughtException = null;
         try {
             $generator->generateThemeTemplates('toto', $this->createLanguageMock(), $this->coreTempDir, $fakeFolder);
-        } catch (InvalidException $e) {
+        } catch (FileNotFoundException $e) {
             $caughtException = $e;
         }
         $this->assertNotNull($caughtException);
-        $this->assertInstanceOf(InvalidException::class, $caughtException);
+        $this->assertInstanceOf(FileNotFoundException::class, $caughtException);
         $expectedMessage = sprintf(
             'Invalid modules output folder "%s"',
             $fakeFolder

@@ -26,7 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
@@ -70,21 +71,22 @@ class MailTemplateGenerator
      * @param string $coreOutputFolder
      * @param string $modulesOutputFolder
      *
-     * @throws InvalidException
+     * @throws FileNotFoundException
+     * @throws InvalidArgumentException
      */
     public function generateThemeTemplates($theme, LanguageInterface $language, $coreOutputFolder, $modulesOutputFolder)
     {
         $this->checkMailTheme($theme);
 
         if (!is_dir($coreOutputFolder)) {
-            throw new InvalidException(sprintf(
+            throw new FileNotFoundException(sprintf(
                 'Invalid core output folder "%s"',
                 $coreOutputFolder
             ));
         }
 
         if (!is_dir($modulesOutputFolder)) {
-            throw new InvalidException(sprintf(
+            throw new FileNotFoundException(sprintf(
                 'Invalid modules output folder "%s"',
                 $modulesOutputFolder
             ));
@@ -116,7 +118,7 @@ class MailTemplateGenerator
     /**
      * @param string $theme
      *
-     * @throws InvalidException
+     * @throws InvalidArgumentException
      */
     private function checkMailTheme($theme)
     {
@@ -128,7 +130,7 @@ class MailTemplateGenerator
             $themeNames[] = $availableTheme->getName();
         }
         if (!in_array($theme, $themeNames)) {
-            throw new InvalidException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Invalid theme used "%s", only available themes are: %s',
                 $theme,
                 implode(', ', $themeNames)
