@@ -40,10 +40,61 @@
 
   {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/logo_card.html.twig' %}
     {% block card_title %}
-      {#todo: #}
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active show"
+             id="mail-tab"
+             data-toggle="tab"
+             href="#email-configuration"
+             role="tab"
+             aria-controls="home"
+             aria-expanded="true"
+             aria-selected="true"
+          >
+            {{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"
+             id="invoice-tab"
+             data-toggle="tab"
+             href="#invoice-configuration"
+             role="tab"
+             aria-controls="home"
+             aria-expanded="true"
+             aria-selected="true"
+          >
+            {{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}
+          </a>
+        </li>
+      </ul>
     {% endblock %}
     {% block card_content %}
-      {#todo:#}
+      <div class="tab-content">
+        <div class="tab-pane active show" id="email-configuration" role="tabpanel" aria-labelledby="logo-tab">
+          <p class="card-text">
+            {{ 'Will appear on email headers. If undefined, the header logo will be used.'|trans({}, 'Admin.Design.Help') }}
+          </p>
+
+          {{ ps.form_group_row(shopLogosForm.mail_logo) }}
+          {#todo: decide about it#}
+          {% if headerLogoPath == mailLogoPath %}
+            <p class="form-text mt-3">{{ 'Warning: if no email logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Notification') }}</p>
+          {% endif %}
+        </div>
+        <div class="tab-pane" id="invoice-configuration" role="tabpanel" aria-labelledby="logo-tab">
+          <p class="card-text">
+            {{ 'Will appear on invoice headers.'|trans({}, 'Admin.Design.Help') }}
+          </p>
+
+          {{ ps.form_group_row(shopLogosForm.invoice_logo) }}
+          {#todo: decide about it#}
+          {% if headerLogoPath == invoiceLogoPath %}
+            <p class="form-text  mt-3">{{ 'Warning: if no invoice logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Help') }}</p>
+          {% endif %}
+
+        </div>
+      </div>
     {% endblock %}
   {% endembed %}
 
@@ -61,47 +112,6 @@
 
   {#todo: remove below once finished#}
   <div class="clearfix">&nbsp;</div>
-  <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active show"
-         id="logo-tab"
-         data-toggle="tab"
-         href="#logo-configuration"
-         role="tab"
-         aria-controls="home"
-         aria-expanded="true"
-         aria-selected="true"
-      >
-        {{ 'Logo'|trans({}, 'Admin.Global') }}
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link"
-         id="invoice-and-mail-tab"
-         data-toggle="tab"
-         href="#invoice-and-mail-configuration"
-         role="tab"
-         aria-controls="home"
-         aria-expanded="true"
-         aria-selected="true"
-      >
-        {{ 'Invoice & Email Logos'|trans({}, 'Admin.Design.Feature') }}
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link"
-         id="invoice-and-mail-tab"
-         data-toggle="tab"
-         href="#favicon-configuration"
-         role="tab"
-         aria-controls="home"
-         aria-expanded="true"
-         aria-selected="true"
-      >
-        {{ 'Favicons'|trans({}, 'Admin.Design.Feature') }}
-      </a>
-    </li>
-  </ul>
 
   <div class="tab-content">
     <div class="tab-pane active show" id="logo-configuration" role="tabpanel" aria-labelledby="logo-tab">
@@ -124,10 +134,6 @@
         </div>
 
         {{ form_widget(shopLogosForm.mail_logo) }}
-
-        {% if headerLogoPath == mailLogoPath %}
-          <p class="form-text  mt-3">{{ 'Warning: if no email logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Notification') }}</p>
-        {% endif %}
       </div>
 
       <div class="form-group">
@@ -136,12 +142,6 @@
 
           <img src="{{ invoiceLogoPath }}" alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}">
         </div>
-
-        {{ form_widget(shopLogosForm.invoice_logo) }}
-
-        {% if headerLogoPath == invoiceLogoPath %}
-          <p class="form-text  mt-3">{{ 'Warning: if no invoice logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Help') }}</p>
-        {% endif %}
       </div>
     </div>
     <div class="tab-pane" id="favicon-configuration" role="tabpanel" aria-labelledby="favicon-tab">
