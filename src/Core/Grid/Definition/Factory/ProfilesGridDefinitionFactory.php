@@ -46,7 +46,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class ProfilesGridDefinitionFactory responsible for creating Profiles grid definition.
  */
-class ProfilesGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class ProfilesGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
      * @var string
