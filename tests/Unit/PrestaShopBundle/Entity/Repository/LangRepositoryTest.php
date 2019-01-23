@@ -135,7 +135,7 @@ class LangRepositoryTest extends TestCase
             ->willReturn(null)
         ;
 
-        for ($i = 0; $i < $consecutiveCalls; $i++) {
+        for ($i = 0; $i < $consecutiveCalls; ++$i) {
             if ($i % 2 == 0) {
                 $locale = $partialMock->getByIsoCode('en');
             } else {
@@ -151,6 +151,7 @@ class LangRepositoryTest extends TestCase
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|LangRepository
      */
+
     /**
      * @param array $expectedCriteria
      * @param LanguageInterface $language
@@ -188,7 +189,6 @@ class LangRepositoryTest extends TestCase
     }
 
     /**
-     *
      * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
      */
     private function buildLanguageMock()

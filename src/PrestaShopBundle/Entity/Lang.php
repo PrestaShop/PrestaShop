@@ -302,7 +302,7 @@ class Lang implements LanguageInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isRTL()
     {
