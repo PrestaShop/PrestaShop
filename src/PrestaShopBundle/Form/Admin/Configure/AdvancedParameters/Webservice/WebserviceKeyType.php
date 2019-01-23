@@ -111,6 +111,7 @@ class WebserviceKeyType extends AbstractType
                 'choices' => $this->resourceChoices,
                 'multiple_choices' => $this->getPermissionChoicesForResources(),
                 'scrollable' => false,
+                'headers_to_disable' => ['all'],
             ])
         ;
 

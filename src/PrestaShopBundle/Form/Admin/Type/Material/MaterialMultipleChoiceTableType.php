@@ -73,6 +73,7 @@ class MaterialMultipleChoiceTableType extends AbstractType
     {
         $view->vars['choices'] = $options['choices'];
         $view->vars['scrollable'] = $options['scrollable'];
+        $view->vars['headers_to_disable'] = $options['headers_to_disable'];
     }
 
     /**
@@ -100,15 +101,20 @@ class MaterialMultipleChoiceTableType extends AbstractType
             ->setRequired([
                 'multiple_choices',
                 'choices',
+                // in some cases we want to disable
+                // some columns to be not selectable
+                'headers_to_disable',
             ])
             ->setDefaults([
                 'scrollable' => true,
+                'headers_to_disable' => [],
             ])
         ;
 
         $resolver->setAllowedTypes('choices', 'array');
         $resolver->setAllowedTypes('multiple_choices', 'array');
         $resolver->setAllowedTypes('scrollable', 'bool');
+        $resolver->setAllowedTypes('headers_to_disable', 'array');
     }
 
     /**

@@ -597,7 +597,7 @@
             <th>{{ label }}</th>
             {% for child_choice in form %}
               <th class="text-center">
-                {% if child_choice.vars.multiple %}
+                {% if child_choice.vars.multiple and child_choice.vars.name not in headers_to_disable %}
                   <a href="#"
                      class="js-multiple-choice-table-select-column"
                      data-column-num="{{ loop.index + 1 }}"
