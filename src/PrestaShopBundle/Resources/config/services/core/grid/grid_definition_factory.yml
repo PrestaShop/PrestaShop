@@ -45,7 +45,7 @@ services:
         arguments:
             - '@=service("prestashop.core.form.choice_provider.status").getChoices()'
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'webservice', 'action': 'index'})"
-            - "@=service('router').generate('admin_webservice')"
+            - "@=service('router').generate('admin_webservice_keys_index')"
         public: true
 
     prestashop.core.grid.definition.factory.meta:

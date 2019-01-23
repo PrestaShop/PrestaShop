@@ -1,4 +1,4 @@
-admin_webservice:
+admin_webservice_keys_index:
     path: /
     methods: GET
     defaults:

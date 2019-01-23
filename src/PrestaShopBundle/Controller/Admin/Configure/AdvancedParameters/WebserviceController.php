@@ -26,12 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceKeyType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -39,7 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Webservice" page display.
+ * Responsible of "Configure > Advanced Parameters > Webservice" page.
  *
  * @todo: add unit tests
  */
@@ -66,25 +64,15 @@ class WebserviceController extends FrameworkBundleAdminController
 
         $configurationWarnings = $this->lookForWarnings();
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice.html.twig', [
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
-                    'href' => $this->generateUrl('admin_webservice_keys_create'),
-                    'desc' => $this->trans('Add new webservice key', 'Admin.Advparameters.Feature'),
-                    'icon' => 'add_circle_outline',
-                ],
-            ],
-            'layoutTitle' => $this->trans('Webservice', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => false,
-            'requireBulkActions' => false, // temporary
-            'showContentHeader' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
-            'requireFilterStatus' => false,
-            'form' => $form->createView(),
-            'grid' => $presentedGrid,
-            'configurationWarnings' => $configurationWarnings,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
+            [
+                'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
+                'form' => $form->createView(),
+                'grid' => $presentedGrid,
+                'configurationWarnings' => $configurationWarnings,
+            ]
+        );
     }
 
     /**
@@ -110,7 +98,7 @@ class WebserviceController extends FrameworkBundleAdminController
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_webservice');
+                return $this->redirectToRoute('admin_webservice_keys_index');
             }
         } catch (WebserviceException $e) {
             //@todo: handle
@@ -145,7 +133,7 @@ class WebserviceController extends FrameworkBundleAdminController
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_webservice');
+                return $this->redirectToRoute('admin_webservice_keys_index');
             }
         } catch (WebserviceException $e) {
             //@todo: handle
@@ -180,13 +168,13 @@ class WebserviceController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_webservice', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_webservice_keys_index', ['filters' => $filters]);
     }
 
     /**
      * Deletes single record.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param int $webserviceAccountId
@@ -209,13 +197,13 @@ class WebserviceController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
      * Deletes selected records.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param Request $request
@@ -240,13 +228,13 @@ class WebserviceController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
      * Enables status for selected rows.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
@@ -263,13 +251,13 @@ class WebserviceController extends FrameworkBundleAdminController
 
         $statusModifier->setStatus($webserviceToEnable, 1);
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
      * Disables status for selected rows.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
@@ -286,13 +274,13 @@ class WebserviceController extends FrameworkBundleAdminController
 
         $statusModifier->setStatus($webserviceToEnable, 0);
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
      * Toggles webservice account status.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param int $webserviceAccountId
@@ -316,13 +304,13 @@ class WebserviceController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
      * Process the Webservice configuration form.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
@@ -348,7 +336,7 @@ class WebserviceController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
