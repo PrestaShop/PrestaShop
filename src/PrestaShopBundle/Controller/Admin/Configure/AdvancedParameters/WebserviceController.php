@@ -177,16 +177,14 @@ class WebserviceController extends FrameworkBundleAdminController
      * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
-     * @param int $webserviceAccountId
+     * @param int $webserviceKeyId
      *
      * @return RedirectResponse
-     *
-     * @throws \PrestaShopException
      */
-    public function deleteSingleWebserviceAction($webserviceAccountId)
+    public function deleteAction($webserviceKeyId)
     {
         $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
-        $errors = $webserviceEraser->erase([$webserviceAccountId]);
+        $errors = $webserviceEraser->erase([$webserviceKeyId]);
 
         if (!empty($errors)) {
             $this->flashErrors($errors);
@@ -209,10 +207,8 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
-     *
-     * @throws \PrestaShopException
      */
-    public function deleteMultipleWebserviceAction(Request $request)
+    public function bulkDeleteAction(Request $request)
     {
         $webserviceToDelete = $request->request->get('webservice_key_bulk_action');
 
@@ -240,11 +236,8 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
-    public function enableMultipleStatusAction(Request $request)
+    public function bulkEnableAction(Request $request)
     {
         $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
@@ -263,11 +256,8 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
-    public function disableMultipleStatusAction(Request $request)
+    public function bulkDisableAction(Request $request)
     {
         $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
@@ -283,17 +273,14 @@ class WebserviceController extends FrameworkBundleAdminController
      * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
-     * @param int $webserviceAccountId
+     * @param int $webserviceKeyId
      *
      * @return RedirectResponse
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
-    public function toggleStatusAction($webserviceAccountId)
+    public function toggleStatusAction($webserviceKeyId)
     {
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
-        $errors = $statusModifier->toggleStatus($webserviceAccountId);
+        $errors = $statusModifier->toggleStatus($webserviceKeyId);
 
         if (!empty($errors)) {
             $this->flashErrors($errors);
@@ -311,15 +298,13 @@ class WebserviceController extends FrameworkBundleAdminController
      * Process the Webservice configuration form.
      *
      * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
      * @return RedirectResponse
-     *
-     * @throws \Exception
      */
-    public function processFormAction(Request $request)
+    public function saveSettingsAction(Request $request)
     {
         $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', array('controller' => $this));
 

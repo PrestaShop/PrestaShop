@@ -60,7 +60,7 @@
 
     <div class="row justify-content-center">
       <div class="col">
-        {{ form_start(form, {'action': path('admin_webservice_settings_save') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+        {{ form_start(form, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
 
         {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
 

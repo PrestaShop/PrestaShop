@@ -130,8 +130,8 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_webservice_account',
-                    'route' => 'admin_webservice_status_toggle',
-                    'route_param_name' => 'webserviceAccountId',
+                    'route' => 'admin_webservice_keys_toggle_status',
+                    'route_param_name' => 'webserviceKeyId',
                 ])
             )
             ->add(
@@ -154,8 +154,8 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => 'admin_delete_single_webservice_log',
-                                'route_param_name' => 'webserviceAccountId',
+                                'route' => 'admin_webservice_keys_delete',
+                                'route_param_name' => 'webserviceKeyId',
                                 'route_param_field' => 'id_webservice_account',
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
@@ -242,21 +242,21 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('webservice_enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_webservice_bulk_enable',
+                    'submit_route' => 'admin_webservice_keys_bulk_enable',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('webservice_disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_webservice_bulk_disable',
+                    'submit_route' => 'admin_webservice_keys_bulk_disable',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('delete_webservice'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_delete_multiple_webservice_log',
+                    'submit_route' => 'admin_webservice_keys_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             );
