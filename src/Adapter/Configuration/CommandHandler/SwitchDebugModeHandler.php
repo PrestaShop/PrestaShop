@@ -27,15 +27,15 @@
 namespace PrestaShop\PrestaShop\Adapter\Configuration\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\EnableDebugModeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\CommandHandler\EnableDebugModelHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\CommandHandler\SwitchDebugModelHandlerInterface;
 
 /**
- * Handles command that enables debug mode
+ * Handles command that switches debug mode
  *
  * @internal
  */
-final class EnableDebugModeHandler implements EnableDebugModelHandlerInterface
+final class SwitchDebugModeHandler implements SwitchDebugModelHandlerInterface
 {
     /**
      * @var DebugMode
@@ -50,12 +50,16 @@ final class EnableDebugModeHandler implements EnableDebugModelHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(EnableDebugModeCommand $command)
+    public function handle(SwitchDebugModeCommand $command)
     {
-        if ($this->debugMode->isDebugModeEnabled()) {
+        if ($command->enableDebugMode()) {
+            if (!$this->debugMode->isDebugModeEnabled()) {
+                $this->debugMode->enable();
+            }
+
             return;
         }
 
-        $this->debugMode->enable();
+        $this->debugMode->disable();
     }
 }
