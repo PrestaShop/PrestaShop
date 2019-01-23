@@ -65,7 +65,6 @@ class ThemeController extends AbstractAdminController
      *
      * @AdminSecurity(
      *     "is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
      *     message="You do not have permission to edit this."
      * )
      *
