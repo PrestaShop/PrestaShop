@@ -72,7 +72,8 @@ class Key
                     'Webservice key must be string of %d characters length but %s given',
                     self::LENGTH,
                     var_export($key, true)
-                )
+                ),
+                WebserviceConstraintException::INVALID_KEY
             );
         }
     }

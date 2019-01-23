@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
+use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
@@ -100,13 +103,16 @@ class WebserviceController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_webservice_keys_index');
             }
-        } catch (WebserviceException $e) {
-            //@todo: handle
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/create.html.twig', [
-            'webserviceKeyForm' => $form->createView(),
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/create.html.twig',
+            [
+                'webserviceKeyForm' => $form->createView(),
+            ]
+        );
     }
 
     /**
@@ -135,13 +141,16 @@ class WebserviceController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_webservice_keys_index');
             }
-        } catch (WebserviceException $e) {
-            //@todo: handle
+        } catch (DomainException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/edit.html.twig', [
-            'webserviceKeyForm' => $form->createView(),
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/edit.html.twig',
+            [
+                'webserviceKeyForm' => $form->createView(),
+            ]
+        );
     }
 
     /**
@@ -306,7 +315,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function saveSettingsAction(Request $request)
     {
-        $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $this->getFormHandler()->getForm();
         $form->handleRequest($request);
@@ -340,5 +349,20 @@ class WebserviceController extends FrameworkBundleAdminController
         $configurationChecker = $this->get('prestashop.core.webservice.server_requirements_checker');
 
         return $configurationChecker->checkForErrors();
+    }
+
+    /**
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [
+            WebserviceConstraintException::class => [
+                WebserviceConstraintException::INVALID_KEY =>
+                    $this->trans('Key length must be 32 character long.', 'Admin.Advparameters.Notification'),
+            ],
+            DuplicateWebserviceKeyException::class =>
+                $this->trans('This key already exists.', 'Admin.Advparameters.Notification'),
+        ];
     }
 }

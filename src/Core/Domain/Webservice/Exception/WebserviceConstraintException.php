@@ -31,4 +31,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Webservice\Exception;
  */
 class WebserviceConstraintException extends WebserviceException
 {
+    /**
+     * @var string Code is used when invalid webservice key is encountered
+     */
+    const INVALID_KEY = 1;
 }
