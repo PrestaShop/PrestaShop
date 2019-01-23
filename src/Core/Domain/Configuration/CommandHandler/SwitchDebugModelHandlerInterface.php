@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Configuration\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\EnableDebugModeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
 
 /**
- * Interface for service that implements debug mode enabling
+ * Interface for service that implements debug mode switching
  */
-interface EnableDebugModelHandlerInterface
+interface SwitchDebugModelHandlerInterface
 {
-    public function handle(EnableDebugModeCommand $command);
+    public function handle(SwitchDebugModeCommand $command);
 }

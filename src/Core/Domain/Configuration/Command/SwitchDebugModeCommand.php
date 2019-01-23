@@ -27,8 +27,28 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Configuration\Command;
 
 /**
- * Enables debug mode if it's not yet enabled.
+ * Switches debug mode to expected status
  */
-class EnableDebugModeCommand
+class SwitchDebugModeCommand
 {
+    /**
+     * @var bool
+     */
+    private $expectedStatus;
+
+    /**
+     * @param bool $expectedStatus
+     */
+    public function __construct($expectedStatus)
+    {
+        $this->expectedStatus = $expectedStatus;
+    }
+
+    /**
+     * @return bool
+     */
+    public function enableDebugMode()
+    {
+        return true === $this->expectedStatus;
+    }
 }
