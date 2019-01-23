@@ -26,7 +26,7 @@
 const $ = window.$;
 
 /**
- * In Add/Edit page of Webservice key there is permissions table input (permissons as columns / rresources as rows).
+ * In Add/Edit page of Webservice key there is permissions table input (permissons as columns / resources as rows).
  * There is "All" column and once resource is checked under this column
  * every other permission column should be auto-selected for that resource.
  */
