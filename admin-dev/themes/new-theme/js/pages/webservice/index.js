@@ -35,6 +35,7 @@ import ColumnTogglingExtension from "../../components/grid/extension/column-togg
 import ChoiceTree from "../../components/form/choice-tree";
 import GeneratableInput from "../../components/generatable-input";
 import MultipleChoiceTable from "../../components/multiple-choice-table";
+import PermissionsRowSelector from "./permissions-row-selector";
 
 const $ = window.$;
 
@@ -58,5 +59,7 @@ $(() => {
 
   // needed for key input in form
   const generatableInput = new GeneratableInput();
-  generatableInput.attachOn('.js-generator-btn').attachOn('.js-generator-btn');
+  generatableInput.attachOn('.js-generator-btn');
+
+  new PermissionsRowSelector();
 });
