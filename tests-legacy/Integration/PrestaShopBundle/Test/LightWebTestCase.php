@@ -140,6 +140,7 @@ class LightWebTestCase extends TestCase
                 'getContext',
                 'getEmployeeLanguageIso',
                 'getEmployeeCurrency',
+                'getDefaultCurrency',
                 'getRootUrl',
                 'getLanguages',
                 'getLanguage',

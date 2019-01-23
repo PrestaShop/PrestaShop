@@ -92,6 +92,11 @@ class PositionsControllerTest extends WebTestCase
         $this->assertEquals(['This module cannot be loaded.'], $json['data']['errors']);
     }
 
+    /**
+     * This test does not fail because positions is empty (the Module class
+     * can find the position itself anyway) but because bankwire module is already
+     * at the bottom.
+     */
     public function testMoveHookPositionToBottomWithUnavailablePositions()
     {
         $this->client->request(
@@ -127,12 +132,12 @@ class PositionsControllerTest extends WebTestCase
                 'api_improve_design_positions_update'
             ),
             [
-                'moduleId' => $this->moduleId,
-                'hookId' => $this->otherModuleId,
+                'moduleId' => $this->otherModuleId,
+                'hookId' => $this->hookId,
                 'way' => 1,
                 'positions' => [
-                    sprintf('%d_%d', $this->otherModuleId, $this->hookId),
-                    sprintf('%d_%d', $this->moduleId, $this->hookId),
+                    sprintf('%d_%d', $this->hookId, $this->moduleId),
+                    sprintf('%d_%d', $this->hookId, $this->otherModuleId),
                 ],
             ]
         );
@@ -148,6 +153,9 @@ class PositionsControllerTest extends WebTestCase
         $this->assertEquals([], $json['data']);
     }
 
+    /**
+     * @depends testMoveHookPositionToBottom
+     */
     public function testMoveHookPositionToTop()
     {
         $this->client->request(
@@ -156,12 +164,12 @@ class PositionsControllerTest extends WebTestCase
                 'api_improve_design_positions_update'
             ),
             [
-                'moduleId' => $this->moduleId,
+                'moduleId' => $this->otherModuleId,
                 'hookId' => $this->hookId,
                 'way' => 0,
                 'positions' => [
-                    sprintf('%d_%d', $this->moduleId, $this->hookId),
-                    sprintf('%d_%d', $this->otherModuleId, $this->hookId),
+                    sprintf('%d_%d', $this->hookId, $this->otherModuleId),
+                    sprintf('%d_%d', $this->hookId, $this->moduleId),
                 ],
             ]
         );
