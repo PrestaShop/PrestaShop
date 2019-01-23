@@ -27,7 +27,7 @@
 namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailLayoutCollectionInterface;
@@ -132,7 +132,7 @@ class MailLayoutFolderCatalogTest extends TestCase
         $caughtException = null;
         try {
             $catalog->listThemes();
-        } catch (InvalidException $e) {
+        } catch (FileNotFoundException $e) {
             $caughtException = $e;
         }
         $this->assertNotNull($caughtException);
