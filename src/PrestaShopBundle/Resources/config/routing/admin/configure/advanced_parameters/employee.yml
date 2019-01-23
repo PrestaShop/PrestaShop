@@ -9,12 +9,43 @@ admin_employees_search:
   path: /
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:search'
-    _legacy_controller: AdminEmployees
+    _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
+    gridDefinitionFactoryService: prestashop.core.grid.definition.factory.employee
+    redirectRoute: admin_employees_index
 
 admin_employees_save_options:
   path: /save-options
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:saveOptions'
+    _legacy_controller: AdminEmployees
+
+admin_employees_toggle_status:
+  path: /{employeeId}/toggle-status
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:toggleStatus'
+    _legacy_controller: AdminEmployees
+
+admin_employees_bulk_update_status:
+  path: /bulk-update-status/{newStatus}
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusUpdate'
+    _legacy_controller: AdminEmployees
+  requirements:
+    newStatus: enabled|disabled
+
+admin_employees_delete:
+  path: /{employeeId}/delete
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:delete'
+    _legacy_controller: AdminEmployees
+
+admin_employees_bulk_delete:
+  path: /bulk-delete
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkDelete'
     _legacy_controller: AdminEmployees

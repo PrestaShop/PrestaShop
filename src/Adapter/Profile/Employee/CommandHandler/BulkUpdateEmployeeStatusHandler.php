@@ -24,42 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type;
+namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Employee;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkUpdateEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\BulkUpdateEmployeeStatusHandlerInterface;
 
 /**
- * Class BulkAction holds data about single bulk action available in grid.
+ * Class BulkUpdateEmployeeStatusHandler.
  */
-final class SubmitBulkAction extends AbstractBulkAction
+final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeHandler implements BulkUpdateEmployeeStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function handle(BulkUpdateEmployeeStatusCommand $command)
     {
-        return 'submit';
-    }
+        foreach ($command->getEmployeeIds() as $employeeId) {
+            $employee = new Employee($employeeId->getValue());
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setRequired([
-                'submit_route',
-            ])
-            ->setDefaults([
-                'confirm_message' => null,
-                'submit_method' => 'POST',
-                'route_params' => [],
-            ])
-            ->setAllowedTypes('submit_route', 'string')
-            ->setAllowedTypes('confirm_message', ['string', 'null'])
-            ->setAllowedValues('submit_method', ['POST', 'GET'])
-            ->setAllowedTypes('route_params', 'array')
-        ;
+            $this->assertEmployeeWasFoundById($employeeId, $employee);
+            $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
+            $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
+
+            $employee->active = $command->getStatus()->isEnabled();
+            $employee->save();
+        }
     }
 }

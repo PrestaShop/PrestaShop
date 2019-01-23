@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -140,16 +141,17 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_employee',
-                    'route' => 'admin_employees_index',
+                    'route' => 'admin_employees_toggle_status',
                     'route_param_name' => 'employeeId',
                 ])
             )
             ->add(
                 (new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
-                        ->add(
-                            (new LinkRowAction('edit'))
+                        ->add((new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
                                 'route' => 'admin_employees_index',
@@ -167,7 +169,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     [],
                                     'Admin.Notifications.Warning'
                                 ),
-                                'route' => 'admin_employees_index',
+                                'route' => 'admin_employees_delete',
                                 'route_param_name' => 'employeeId',
                                 'route_param_field' => 'id_employee',
                             ])
@@ -186,6 +188,9 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('id_employee', NumberType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('id_employee')
             )
@@ -193,6 +198,9 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('firstname', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search first name', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('firstname')
             )
@@ -200,6 +208,9 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('lastname', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search last name', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('lastname')
             )
@@ -207,6 +218,9 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('email', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search email', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('email')
             )
@@ -227,6 +241,8 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'required' => false,
                     'choice_translation_domain' => false,
                 ])
+            )
+            ->add((new Filter('active', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('active')
             )
             ->add(
@@ -274,21 +290,32 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_employees_index',
+                    'submit_route' => 'admin_employees_bulk_update_status',
+                    'route_params' => [
+                        'newStatus' => 'enabled',
+                    ],
                 ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_employees_index',
+                    'submit_route' => 'admin_employees_bulk_update_status',
+                    'route_params' => [
+                        'newStatus' => 'disabled',
+                    ],
                 ])
             )
             ->add(
                 (new SubmitBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_employees_index',
+                    'submit_route' => 'admin_employees_bulk_delete',
+                    'confirm_message' => $this->trans(
+                        'Delete selected item?',
+                        [],
+                        'Admin.Notifications.Warning'
+                    ),
                 ])
             );
     }

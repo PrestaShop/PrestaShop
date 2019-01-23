@@ -24,42 +24,50 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidEmployeeIdException;
 
 /**
- * Class BulkAction holds data about single bulk action available in grid.
+ * Class EmployeeId.
  */
-final class SubmitBulkAction extends AbstractBulkAction
+class EmployeeId
 {
     /**
-     * {@inheritdoc}
+     * @var int
      */
-    public function getType()
+    private $employeeId;
+
+    /**
+     * @param int $employeeId
+     */
+    public function __construct($employeeId)
     {
-        return 'submit';
+        $this->assertEmployeeId($employeeId);
+
+        $this->employeeId = (int) $employeeId;
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function getValue()
     {
-        $resolver
-            ->setRequired([
-                'submit_route',
-            ])
-            ->setDefaults([
-                'confirm_message' => null,
-                'submit_method' => 'POST',
-                'route_params' => [],
-            ])
-            ->setAllowedTypes('submit_route', 'string')
-            ->setAllowedTypes('confirm_message', ['string', 'null'])
-            ->setAllowedValues('submit_method', ['POST', 'GET'])
-            ->setAllowedTypes('route_params', 'array')
-        ;
+        return $this->employeeId;
+    }
+
+    /**
+     * @param $employeeId
+     *
+     * @throws InvalidEmployeeIdException
+     */
+    private function assertEmployeeId($employeeId)
+    {
+        if (!is_numeric($employeeId) || 0 > $employeeId) {
+            throw new InvalidEmployeeIdException(sprintf(
+                'Invalid employee id %s supplied. Employee id must be positive integer.',
+                var_export($employeeId, true)
+            ));
+        }
     }
 }
