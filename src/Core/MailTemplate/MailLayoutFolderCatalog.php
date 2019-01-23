@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -62,7 +62,7 @@ class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
      * Returns the list of found themes (non empty folders, in the mail themes
      * folder).
      *
-     * @throws InvalidException
+     * @throws FileNotFoundException
      *
      * @return MailThemeCollectionInterface
      */
@@ -219,12 +219,12 @@ class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
     }
 
     /**
-     * @throws InvalidException
+     * @throws FileNotFoundException
      */
     private function checkThemesFolder()
     {
         if (!is_dir($this->mailThemesFolder)) {
-            throw new InvalidException(sprintf(
+            throw new FileNotFoundException(sprintf(
                 'Invalid mail themes folder "%s": no such directory',
                 $this->mailThemesFolder
             ));
@@ -232,12 +232,12 @@ class MailLayoutFolderCatalog implements MailLayoutCatalogInterface
     }
 
     /**
-     * @throws InvalidException
+     * @throws FileNotFoundException
      */
     private function checkThemeFolder($mailThemeFolder)
     {
         if (!is_dir($mailThemeFolder)) {
-            throw new InvalidException(sprintf(
+            throw new FileNotFoundException(sprintf(
                 'Invalid mail theme folder "%s": no such directory',
                 $mailThemeFolder
             ));

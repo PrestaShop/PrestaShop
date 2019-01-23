@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate;
 
-use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 
 /**
  * Interface MailLayoutCatalogInterface is used to list the available themes to generate
@@ -41,7 +41,7 @@ interface MailLayoutCatalogInterface
     /**
      * Returns the list of existing themes.
      *
-     * @throws InvalidException
+     * @throws FileNotFoundException
      *
      * @return MailThemeCollectionInterface
      */
@@ -52,7 +52,7 @@ interface MailLayoutCatalogInterface
      *
      * @param string $theme
      *
-     * @throws InvalidException
+     * @throws FileNotFoundException
      *
      * @return MailLayoutCollectionInterface
      */
