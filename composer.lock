@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b103805543c907a1caac46b58af0c2c8",
+    "content-hash": "78c2af6a64c9786b76b9d4b06f5b4311",
     "packages": [
         {
             "name": "analog/analog",
@@ -1696,43 +1696,6 @@
                 "stream"
             ],
             "time": "2014-10-12T19:18:40+00:00"
-        },
-        {
-            "name": "html2text/html2text",
-            "version": "4.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mtibben/html2text.git",
-                "reference": "f7555eaf271beea4e1098274d3ff37fbb7b21ea7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mtibben/html2text/zipball/f7555eaf271beea4e1098274d3ff37fbb7b21ea7",
-                "reference": "f7555eaf271beea4e1098274d3ff37fbb7b21ea7",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4"
-            },
-            "suggest": {
-                "ext-mbstring": "For best performance",
-                "symfony/polyfill-mbstring": "If you can't install ext-mbstring"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Html2Text\\": [
-                        "src/",
-                        "test/"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "description": "Converts HTML to formatted plain text",
-            "time": "2018-08-13T12:05:08+00:00"
         },
         {
             "name": "icanboogie/cldr",
@@ -5800,6 +5763,56 @@
                 "templating"
             ],
             "time": "2018-09-12T20:54:16+00:00"
+        },
+        {
+            "name": "soundasleep/html2text",
+            "version": "0.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/soundasleep/html2text.git",
+                "reference": "cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/soundasleep/html2text/zipball/cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad",
+                "reference": "cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=4.0",
+                "soundasleep/component-tests": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Html2Text\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "EPL-1.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jevon Wright",
+                    "homepage": "https://jevon.org",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP script to convert HTML into a plain text format",
+            "homepage": "https://github.com/soundasleep/html2text",
+            "keywords": [
+                "email",
+                "html",
+                "php",
+                "text"
+            ],
+            "time": "2017-04-19T22:01:50+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
