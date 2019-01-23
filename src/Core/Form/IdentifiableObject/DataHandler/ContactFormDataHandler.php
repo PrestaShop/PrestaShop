@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
-use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
  * Class ContactFormDataHandler
@@ -53,7 +53,7 @@ final class ContactFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      *
-     * @throws ContactException
+     * @throws DomainException
      */
     public function create(array $data)
     {
@@ -69,7 +69,7 @@ final class ContactFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      *
-     * @throws ContactException
+     * @throws DomainException
      */
     public function update($id, array $data)
     {
