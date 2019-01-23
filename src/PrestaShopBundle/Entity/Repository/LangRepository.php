@@ -71,7 +71,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getByLocale($locale)
     {
@@ -79,7 +79,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getByIsoCode($isoCode)
     {
