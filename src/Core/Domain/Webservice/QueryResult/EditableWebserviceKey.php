@@ -63,6 +63,14 @@ class EditableWebserviceKey
      */
     private $associatedShops;
 
+    /**
+     * @param WebserviceKeyId $webserviceKeyId
+     * @param string $key
+     * @param string $description
+     * @param bool $status
+     * @param array $resourcePermissions
+     * @param array $associatedShops
+     */
     public function __construct(
         WebserviceKeyId $webserviceKeyId,
         $key,
