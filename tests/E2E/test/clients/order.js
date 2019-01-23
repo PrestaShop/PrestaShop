@@ -72,15 +72,6 @@ class Order extends CommonClient {
       .then(() => expect(global.lineFile, "No data").to.be.not.empty)
   }
 
-  checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function (err, stats) {
-      err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
-    });
-    return this.client
-      .pause(pause)
-      .then(() => expect(global.existingFile).to.be.true)
-  }
-
   checkExportedFileInfo(pause = 0) {
     return this.client
       .pause(pause)

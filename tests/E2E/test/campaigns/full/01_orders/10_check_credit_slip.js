@@ -48,3 +48,4 @@ scenario('Generate and check a Credit slip', () => {
     test('should logout successfully from Back Office', () => client.signOutBO());
   }, 'common_client');
 }, 'order', true);
+

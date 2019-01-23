@@ -28,7 +28,7 @@ scenario('Check adding a product to the cart with unavailable quantities', () =>
 
   common_scenarios.createProduct(AddProductPage, productData);
 
-  scenario('Create order in the Front Office', client => {
+  scenario('Create order in the Front Office', () => {
     scenario('Open the browser and connect to the Front Office', client => {
       test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
     }, 'order');
@@ -45,7 +45,5 @@ scenario('Check adding a product to the cart with unavailable quantities', () =>
       test('should click on the product link button', () => client.waitForExistAndClick(CheckoutOrderPage.product_cart_link));
       test('should check the existence of "There are not enough products in stock" warning message', () => client.checkTextValue(productPage.product_availability_message, "Out-of-Stock", "contain"));
     }, 'order');
-
   }, 'order');
-
 }, 'order', true);

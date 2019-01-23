@@ -339,14 +339,14 @@ class CommonClient {
    * @param fileName
    * @returns {*}
    */
-  checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function (err, stats) {
+  async checkFile(folderPath, fileName, pause = 2000) {
+    await fs.stat(folderPath + fileName, function (err, stats) {
       err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
     });
 
     return this.client
       .pause(pause)
-      .then(() => expect(global.existingFile).to.be.true)
+      .then(() => expect(global.existingFile, "Expected File was not find in the folder " + folderPath).to.be.true)
   }
 
   waitForVisible(selector, timeout = 90000) {

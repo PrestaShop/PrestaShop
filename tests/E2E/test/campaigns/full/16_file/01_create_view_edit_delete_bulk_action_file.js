@@ -11,6 +11,7 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonProductScenarios = require('../../common_scenarios/product');
 const commonFileScenarios = require('../../common_scenarios/file');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let fileData = {
     filename: 'Ps Picture',
@@ -53,6 +54,7 @@ scenario('Check the created file in the Front Office', () => {
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   commonFileScenarios.createFile(fileData.filename, fileData.description, fileData.file);
   commonFileScenarios.checkFile(fileData.filename, fileData.description);
   commonFileScenarios.viewFile(global.downloadsFolderPath, fileData.filename, fileData.file);
