@@ -178,6 +178,9 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('key', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search key', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('key')
             )
@@ -185,6 +188,9 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('description', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search description', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('description')
             )
