@@ -1,5 +1,6 @@
-{#**
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,14 +22,19 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<button id="{{ '%s_grid_bulk_action_%s'|format(grid.id, action.id) }}"
-        class="dropdown-item js-bulk-action-submit-btn"
-        type="button"
-        data-form-url="{{ path(action.options.submit_route, action.options.route_params) }}"
-        data-form-method="{{ action.options.submit_method }}"
-        data-confirm-message="{{ action.options.confirm_message }}"
->
-  {{ action.name }}
-</button>
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkUpdateEmployeeStatusCommand;
+
+/**
+ * Interface UpdateEmployeeStatusHandlerInterface.
+ */
+interface BulkUpdateEmployeeStatusHandlerInterface
+{
+    /**
+     * @param BulkUpdateEmployeeStatusCommand $command
+     */
+    public function handle(BulkUpdateEmployeeStatusCommand $command);
+}

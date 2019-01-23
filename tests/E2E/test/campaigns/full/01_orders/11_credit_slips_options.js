@@ -30,11 +30,15 @@ scenario('Generate and check a Credit slips options ', () => {
     });
     test('should download the credit slip', () => client.waitForExistAndClick(OrderPage.credit_slip_document_name));
     test('should check the existence of "prefix value" ', async () => {
-      await client.pause(3000);
-      await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'PrefixTest');
+      await client.checkFile(global.downloadsFolderPath, global.creditSlip + '.pdf', 3000);
+      if (existingFile) {
+        await client.pause(3000);
+        await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'PrefixTest');
+      }
     });
   }, 'order');
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from Back Office', () => client.signOutBO());
   }, 'common_client');
 }, 'common_client', true);
+

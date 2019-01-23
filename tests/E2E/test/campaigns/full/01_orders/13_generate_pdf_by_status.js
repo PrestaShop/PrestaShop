@@ -110,7 +110,12 @@ scenario('Generate a PDF by status', () => {
       for (let i = 1; i <= 2; i++) {
         commonOrder.checkOrderInvoice(client, i)
       }
-      test('should delete the invoice pdf file', () => client.deleteFile(global.downloadsFolderPath, 'invoices.pdf'));
+      test('should delete the invoice pdf file', async () =>{
+        await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
+        if (existingFile) {
+          await  client.deleteFile(global.downloadsFolderPath, 'invoices', '.pdf');
+        }
+      });
     }, 'order');
   }, 'order');
 
@@ -126,7 +131,7 @@ scenario('Generate a PDF by status', () => {
       commonOrder.createOrderFO();
     }, 'order');
     scenario('Go to the created order, change status and Get all information', client => {
-      test('should login successfully in the Back Office', () => client.linkAccess(URL+'/admin-dev'));
+      test('should login successfully in the Back Office', () => client.linkAccess(URL + '/admin-dev'));
       test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       for (let i = 1; i <= 2; i++) {
         test('should go the order n°' + i, () => client.waitForExistAndClick(OrderPage.order_view_button.replace("%ORDERNumber", i)));
@@ -200,7 +205,12 @@ scenario('Generate a PDF by status', () => {
       for (let i = 1; i <= 2; i++) {
         commonOrder.checkOrderInvoice(client, i)
       }
-      test('should delete the invoice pdf file', () => client.deleteFile(global.downloadsFolderPath, 'invoices','.pdf'));
+      test('should delete the invoice pdf file', async () => {
+        await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
+        if (existingFile) {
+         await client.deleteFile(global.downloadsFolderPath, 'invoices', '.pdf');
+        }
+      });
     }, 'order');
   }, 'order');
   scenario('Close symfony toolbar then click on "Stop the OnBoarding" button', client => {
@@ -223,3 +233,4 @@ scenario('Generate a PDF by status', () => {
     test('should click on "Save" button', () => client.waitForExistAndClick(CustomerSettings.groups.save_button));
   }, 'order');
 }, 'order', true);
+
