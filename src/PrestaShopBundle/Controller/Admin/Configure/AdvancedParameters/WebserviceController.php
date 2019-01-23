@@ -357,11 +357,9 @@ class WebserviceController extends FrameworkBundleAdminController
     {
         return [
             WebserviceConstraintException::class => [
-                WebserviceConstraintException::INVALID_KEY =>
-                    $this->trans('Key length must be 32 character long.', 'Admin.Advparameters.Notification'),
+                WebserviceConstraintException::INVALID_KEY => $this->trans('Key length must be 32 character long.', 'Admin.Advparameters.Notification'),
             ],
-            DuplicateWebserviceKeyException::class =>
-                $this->trans('This key already exists.', 'Admin.Advparameters.Notification'),
+            DuplicateWebserviceKeyException::class => $this->trans('This key already exists.', 'Admin.Advparameters.Notification'),
         ];
     }
 }
