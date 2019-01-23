@@ -126,17 +126,15 @@ class ContactsController extends FrameworkBundleAdminController
         $contactForm = $contactFormBuilder->getForm();
         $contactForm->handleRequest($request);
 
-        if ($contactForm->isSubmitted()) {
-            try {
-                $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
-                $contactFormHandler->handle($contactForm);
+        try {
+            $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
+            $contactFormHandler->handle($contactForm);
 
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_contacts_index');
-            } catch (DomainException $exception) {
-                $this->addFlash('error', $this->handleException($exception));
-            }
+            return $this->redirectToRoute('admin_contacts_index');
+        } catch (DomainException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/add.html.twig', [
@@ -166,19 +164,17 @@ class ContactsController extends FrameworkBundleAdminController
 
         $contactForm->handleRequest($request);
 
-        if ($contactForm->isSubmitted()) {
-            try {
-                $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
-                $result = $contactFormHandler->handleFor((int) $contactId, $contactForm);
+        try {
+            $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
+            $result = $contactFormHandler->handleFor((int) $contactId, $contactForm);
 
-                if (null !== $result->getIdentifiableObjectId()) {
-                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                    return $this->redirectToRoute('admin_contacts_index');
-                }
-            } catch (DomainException $exception) {
-                $this->addFlash('error', $this->handleException($exception));
+                return $this->redirectToRoute('admin_contacts_index');
             }
+        } catch (DomainException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/edit.html.twig', [
