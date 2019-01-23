@@ -105,6 +105,7 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
      * @param string $locale
      *
      * @return LanguageInterface
+     *
      * @throws InvalidArgumentException
      */
     private function getLanguage($locale)
