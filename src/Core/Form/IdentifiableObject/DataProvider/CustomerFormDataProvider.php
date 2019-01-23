@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 
 /**
@@ -82,7 +81,7 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
     public function getData($customerId)
     {
         /** @var EditableCustomer $editableCustomer */
-        $editableCustomer = $this->queryBus->handle(new GetCustomerForEditing(new CustomerId((int) $customerId)));
+        $editableCustomer = $this->queryBus->handle(new GetCustomerForEditing((int) $customerId));
         $birthday = $editableCustomer->getBirthday();
 
         $data = [

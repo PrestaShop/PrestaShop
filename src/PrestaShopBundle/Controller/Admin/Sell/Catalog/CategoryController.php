@@ -50,6 +50,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
+use PrestaShop\PrestaShop\Core\Domain\Group\QueryResult\DefaultGroups;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -288,7 +289,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_category_edit', [
-                    'categoryId' => $categoryId->getValue(),
+                    'categoryId' => $categoryId,
                 ]);
             } catch (CategoryException $e) {
                 $this->addFlash('error', $this->handleEditException($e));
@@ -400,7 +401,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand(new CategoryId((int) $categoryId)));
+            $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand((int) $categoryId));
 
             $this->addFlash(
                 'success',
@@ -441,8 +442,8 @@ class CategoryController extends FrameworkBundleAdminController
 
         try {
             $this->getCommandBus()->handle(new DeleteCategoryMenuThumbnailImageCommand(
-                new CategoryId((int) $categoryId),
-                new MenuThumbnailId((int) $menuThumbnailId)
+                (int) $categoryId,
+                (int) $menuThumbnailId
             ));
 
             $this->addFlash(
