@@ -32,4 +32,4 @@ services:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation'
 
   prestashop.core.mail_template.transformation.html_textify:
-    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLTextifyTransformation'
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLToTextTransformation'
