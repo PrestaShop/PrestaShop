@@ -31,6 +31,8 @@ use WebserviceRequest;
 
 /**
  * Provides resources that can be accessed by webservice request
+ *
+ * @internal
  */
 final class ResourcesChoiceProvider implements FormChoiceProviderInterface
 {

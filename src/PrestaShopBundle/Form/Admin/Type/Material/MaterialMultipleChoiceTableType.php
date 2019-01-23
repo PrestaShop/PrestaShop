@@ -102,7 +102,7 @@ class MaterialMultipleChoiceTableType extends AbstractType
                 'multiple_choices',
                 'choices',
                 // in some cases we want to disable
-                // some columns to be not selectable
+                // header for columns
                 'headers_to_disable',
             ])
             ->setDefaults([
