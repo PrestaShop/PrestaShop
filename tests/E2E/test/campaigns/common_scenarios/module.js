@@ -1,5 +1,6 @@
 const {Menu} = require('../../selectors/BO/menu.js');
 const shopParameters = require('../common_scenarios/shop_parameters');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
 let promise = Promise.resolve();
 
 module.exports = {
@@ -122,23 +123,122 @@ module.exports = {
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     test('should go to "Dashboard" page', () => client.waitForExistAndClick(Menu.dashboard_menu));
   },
-  sortModule: function (client, ModulePage, sortType, attribute) {
-    test('should select sort by "' + sortType + '"', () => client.waitAndSelectByValue(ModulePage.sort_select, sortType));
-    test('should check sort modules by "' + sortType + '"', () => {
-      for (let i = 0; i < (parseInt((tab["modules_number"].match(/[0-9]+/g)[0]))); i++) {
-        promise = client.getModuleAttr(ModulePage.module_list, attribute, i)
+  sortModule: function (client, ModulePage, installedMbo, byCategory, sortBy, sortType, attribute, isNumber, increasing) {
+    test('should select sort by "' + sortBy + '"', async () => {
+      global.moduleInfo = [];
+      global.moduleSort = [];
+      for (let i = 0; i < (parseInt(tab['modules_number'])); i++) {
+        if (installedMbo && attribute === 'data-price') {
+          if (byCategory === 1) {
+            await client.getModulePrice(ModulePage.category_price_module_span.replace('%IND', tab['categoryRef']), attribute, i, false);
+          } else {
+            await client.getModulePrice(ModulePage.price_module_span, attribute, i, false);
+          }
+        } else {
+          if (byCategory === 1) {
+            await client.getModuleField(ModulePage.category_module_list.replace('%IND', tab['categoryRef']), attribute, i, false);
+          } else {
+            await client.getModuleField(ModulePage.module_list, attribute, i, false);
+          }
+        }
       }
-      if (sortType === "name") {
-        return promise
-          .then(() => client.checkSortByName((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
-      } else if (sortType === "price") {
-        return promise
-          .then(() => client.checkSortByIncPrice((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
-      } else {
-        return promise
-          .then(() => client.checkSortDesc((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
+      await client.waitAndSelectByValue(ModulePage.sort_select, sortType);
+    });
+    test('should check that modules are well sorted by "' + sortBy + '"', async () => {
+      for (let i = 0; i < (parseInt(tab['modules_number'])); i++) {
+        if (installedMbo && attribute === 'data-price') {
+          if (byCategory === 1) {
+            await client.getModulePrice(ModulePage.category_price_module_span.replace('%IND', tab['categoryRef']), attribute, i, true);
+          } else {
+            await client.getModulePrice(ModulePage.price_module_span, attribute, i, true);
+          }
+        } else {
+          if (byCategory === 1) {
+            await client.getModuleField(ModulePage.category_module_list.replace('%IND', tab['categoryRef']), attribute, i, true);
+          } else {
+            await client.getModuleField(ModulePage.module_list, attribute, i, true);
+          }
+        }
+      }
+      await client.checkSortModule(isNumber, increasing);
+    });
+  },
+  searchModuleCategory: function (client, ModulePage, moduleTechName, page = 'manager', exist = true) {
+    if (page === 'catalog') {
+      test('should click on "Modules Catalog" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.catalog_tab));
+    } else {
+      test('should go to "Module Manager" page', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_manager_submenu));
+    }
+    test('should select "Administration" from categories list', () => {
+      return promise
+        .then(() => client.waitForExistAndClick(ModulePage.categories_list))
+        .then(() => client.waitForExistAndClick(ModulePage.categories_option_link.replace('%CAT', 'Administration')));
+    });
+    test('should search for the module "' + moduleTechName + '"', () => {
+      return promise
+        .then(() => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName))
+        .then(() => client.waitForExistAndClick(ModulePage.selection_search_button));
+    });
+    if (exist) {
+      test('should check if the module "' + moduleTechName + '" is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', moduleTechName), 2000));
+    } else {
+      test('should check if the module "' + moduleTechName + '" is not displayed', () => client.checkIsNotVisible(ModulePage.installed_module_div.replace('%moduleTechName', moduleTechName), 2000));
+    }
+  },
+  filterCategory: async function (client, ModulePage) {
+    test('should filter by categories one by one then verify if the modules displayed are only modules of the selected category', async () => {
+      for (let i = 0; i < global.moduleCategoryNumber; i++) {
+        await client.waitForExistAndClick(ModulePage.categories_list);
+        await client.getTextInVar(ModulePage.categories_element_number_span.replace('%ID', i + 3), 'modules_number_by_category');
+        await client.getAttributeInVar(ModulePage.categories_element_option.replace('%ID', i + 3), 'data-category-ref', 'categoryRef');
+        await client.waitForExistAndClick(ModulePage.categories_element_option.replace('%ID', i + 3));
+        await client.waitForSymfonyToolbar(AddProductPage, 3000);
+        await client.isVisible(ModulePage.see_more_by_category_link.replace('%ID', tab['categoryRef']), 3000);
+        if (global.isVisible) {
+          await client.scrollWaitForVisibleAndClick(ModulePage.see_more_by_category_link.replace('%ID', tab['categoryRef']));
+          await client.scrollTo(ModulePage.module_selection_input);
+        }
+        if (tab['modules_number_by_category'] > 0) {
+          await client.checkModuleNumberByCategory(ModulePage.module_list_container_bloc.replace('%ID', tab['categoryRef']), tab['modules_number_by_category']);
+        } else {
+          await client.waitForVisible(ModulePage.module_list_container_empty_bloc.replace('%ID', tab['categoryRef']));
+        }
       }
     });
+  },
+  DisableEnableModule: async function (client, ModulePage) {
+    test('should click on "Disable" button for the first module', async () => {
+      await client.getAttributeInVar(ModulePage.first_module_bloc, 'data-tech-name', 'moduleTechName');
+      await client.getModuleButtonName(ModulePage, tab['moduleTechName'], ModulePage.module_action_link);
+      await client.clickOnDisableModuleButton(ModulePage, tab['moduleTechName']);
+      await client.waitForVisibleAndClick(ModulePage.confirmation_disable_module);
+      await client.waitForExistAndClick(AddProductPage.close_validation_button);
+      await client.refresh(); //To verify
+    });
+    test('should select "Disabled Modules" from "Status" list', async () => {
+      await client.waitForExistAndClick(ModulePage.status_list);
+      await client.waitForExistAndClick(ModulePage.status_option_link.replace('%ID', 0));
+    });
+    test('should search for the module "' + tab['moduleTechName'] + '"', async () => {
+      await client.waitAndSetValue(ModulePage.module_selection_input, tab['moduleTechName']);
+      await client.waitForExistAndClick(ModulePage.selection_search_button);
+    });
+    test('should check if the disabled  module is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', tab['moduleTechName']), 2000));
+    test('should click on "Enable" button', async () => {
+      await client.getModuleButtonName(ModulePage, tab['moduleTechName']);
+      await client.clickOnEnableModuleButton(ModulePage, tab['moduleTechName']);
+      await client.waitForExistAndClick(AddProductPage.close_validation_button);
+      await client.refresh(); //To verify
+    });
+    test('should select "Enabled Modules" from "Status" list', async () => {
+      await client.waitForExistAndClick(ModulePage.status_list);
+      await client.waitForExistAndClick(ModulePage.status_option_link.replace('%ID', 1));
+    });
+    test('should search for the module "' + tab['moduleTechName'] + '"', async () => {
+      await client.waitAndSetValue(ModulePage.module_selection_input, tab['moduleTechName']);
+      await client.waitForExistAndClick(ModulePage.selection_search_button);
+    });
+    test('should check if the enabled module is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', tab['moduleTechName']), 2000));
   },
   clickOnReadMore: function (ModulePage, moduleName, moduleTechName) {
     //BOOM: 9722
