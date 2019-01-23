@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Exception\InvalidException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
@@ -105,7 +105,7 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
      * @param string $locale
      *
      * @return LanguageInterface
-     * @throws InvalidException
+     * @throws InvalidArgumentException
      */
     private function getLanguage($locale)
     {
@@ -119,7 +119,7 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
         }
 
         if (null === $language) {
-            throw new InvalidException(sprintf('Could not find Language for locale: %s', $locale));
+            throw new InvalidArgumentException(sprintf('Could not find Language for locale: %s', $locale));
         }
 
         return $language;
