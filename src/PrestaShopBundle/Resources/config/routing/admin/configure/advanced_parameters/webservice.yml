@@ -4,8 +4,7 @@ admin_webservice_keys_index:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:index'
         _legacy_controller: AdminWebservice
-#@todo: uncomment when grid and entity form are done.
-#        _legacy_link: AdminWebservice
+        _legacy_link: AdminWebservice
 
 admin_webservice_keys_search:
   path: /
@@ -13,7 +12,7 @@ admin_webservice_keys_search:
   defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:search'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:search
+        _legacy_link: AdminWebservice:submitFilterwebservice_account
 
 admin_webservice_save_settings:
     path: /settings
@@ -21,7 +20,7 @@ admin_webservice_save_settings:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:saveSettings'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:update
+        _legacy_link: AdminWebservice:submitOptionswebservice_account
 
 admin_webservice_keys_create:
     path: /new
@@ -29,7 +28,7 @@ admin_webservice_keys_create:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:create'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:addwebservice_account
+        _legacy_link: AdminWebservice:addwebservice_account
 
 admin_webservice_keys_edit:
     path: /{webserviceKeyId}/edit
@@ -37,9 +36,9 @@ admin_webservice_keys_edit:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:edit'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:updatewebservice_account
-#        _legacy_parameters:
-#            id_webservice_account: webserviceAccountId
+        _legacy_link: AdminWebservice:updatewebservice_account
+        _legacy_parameters:
+            id_webservice_account: webserviceAccountId
     requirements:
         webserviceKeyId: \d+
 
@@ -49,9 +48,9 @@ admin_webservice_keys_delete:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:delete'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:deletewebservice_account
-#        _legacy_parameters:
-#            id_webservice_account: webserviceAccountId
+        _legacy_link: AdminWebservice:deletewebservice_account
+        _legacy_parameters:
+            id_webservice_account: webserviceAccountId
     requirements:
       webserviceKeyId: \d+
 
@@ -61,7 +60,7 @@ admin_webservice_keys_bulk_delete:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:bulkDelete'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:submitBulkdeletewebservice_account
+        _legacy_link: AdminWebservice:submitBulkdeletewebservice_account
 
 admin_webservice_keys_toggle_status:
     path: /{webserviceKeyId}/toggle-status
@@ -69,9 +68,9 @@ admin_webservice_keys_toggle_status:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:toggleStatus'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:status
-#        _legacy_parameters:
-#            id_webservice_account: webserviceAccountId
+        _legacy_link: AdminWebservice:statuswebservice_account
+        _legacy_parameters:
+            id_webservice_account: webserviceKeyId
     requirements:
         webserviceKeyId: \d+
 
@@ -81,7 +80,7 @@ admin_webservice_keys_bulk_enable:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:bulkEnable'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:submitBulkenableSelectionwebservice_account
+        _legacy_link: AdminWebservice:submitBulkenableSelectionwebservice_account
 
 admin_webservice_keys_bulk_disable:
     path: /bulk-disable
@@ -89,4 +88,4 @@ admin_webservice_keys_bulk_disable:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:bulkDisable'
         _legacy_controller: AdminWebservice
-#        _legacy_link: AdminWebservice:submitBulkdisableSelectionwebservice_account
+        _legacy_link: AdminWebservice:submitBulkdisableSelectionwebservice_account
