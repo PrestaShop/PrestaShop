@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\SearchByIdType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -176,13 +177,7 @@ final class ProfilesGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_profile', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                    ],
-                ])
+            ->add((new Filter('id_profile', SearchByIdType::class))
                 ->setAssociatedColumn('id_profile')
             )
             ->add((new Filter('name', TextType::class))
