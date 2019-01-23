@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\EnableDebugModeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -44,7 +44,7 @@ class ErrorController extends FrameworkBundleAdminController
      */
     public function enableDebugModeAction(Request $request)
     {
-        $this->getCommandBus()->handle(new EnableDebugModeCommand());
+        $this->getCommandBus()->handle(new SwitchDebugModeCommand(true));
 
         return $this->redirect(
             $request->request->get('_redirect_url')
