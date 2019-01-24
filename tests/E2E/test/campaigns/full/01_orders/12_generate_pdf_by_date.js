@@ -12,9 +12,7 @@ const {Invoices} = require('../../../selectors/BO/order');
 const commonOrder = require('../../common_scenarios/order');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
-
 let promise = Promise.resolve();
-
 global.orderInfo = [];
 
 scenario('Generate a PDF by date', () => {
@@ -107,7 +105,7 @@ scenario('Generate a PDF by date', () => {
       for (let i = 1; i <= 2; i++) {
         test('should check the "Delivery Address " of the product n°' + i, async () => {
           await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
-          if (existingFile) {
+          if (global.existingFile) {
             await client.checkDocument(global.downloadsFolderPath, 'invoices', 'My Company');
             await client.checkDocument(global.downloadsFolderPath, 'invoices', '16, Main street');
             await client.checkDocument(global.downloadsFolderPath, 'invoices', '75002 Paris');
@@ -116,7 +114,7 @@ scenario('Generate a PDF by date', () => {
         });
         test('should check the "invoice" information of the product n°' + i, async () => {
           await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
-          if (existingFile) {
+          if (global.existingFile) {
             await client.checkDocument(global.downloadsFolderPath, 'invoices', 'John DOE');
             await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].invoiceDate);
             await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].OrderRef);
@@ -137,7 +135,7 @@ scenario('Generate a PDF by date', () => {
       }
       test('should delete the invoice pdf file', async () => {
         await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
-        if (existingFile) {
+        if (global.existingFile) {
           await client.deleteFile(global.downloadsFolderPath, 'invoices', '.pdf');
         }
       });

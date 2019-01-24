@@ -179,7 +179,7 @@ module.exports = {
       test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
       test('should check if the module ' + moduleTechName + ' was installed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', moduleTechName), 2000));
       test('should click on "Uninstall" button', async () => {
-        if (isVisible) {
+        if (global.isVisible) {
           await client.scrollTo(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName));
           await client.waitForExistAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName));
           await client.scrollTo(ModulePage.uninstall_button.split('%moduleTechName').join(moduleTechName));
@@ -202,7 +202,7 @@ module.exports = {
           await client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName, 2000);
           await client.waitForExistAndClick(ModulePage.modules_search_button, 2000);
           await client.isVisible(ModulePage.install_button.replace("%moduleTechName", moduleTechName), 2000);
-          if (isVisible) {
+          if (global.isVisible) {
             await client.waitForExistAndClick(ModulePage.install_button.replace("%moduleTechName", moduleTechName), 2000);
             await client.waitForExistAndClick(AddProductPage.close_validation_button);
             await shopParameters.checkMboModule(client);
@@ -294,5 +294,30 @@ module.exports = {
         await client.pause(0);
       }
     });
+  },
+  installAndCheckAbondonedCartProModule: function (ModulePage) {
+    scenario('Install "abondoned cart pro" module by uploading a ZIP file', client => {
+      test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
+      test('should click on "Upload a module" button', () => client.waitForExistAndClick(ModulePage.upload_button));
+      test('should add zip file', () => client.addFile(ModulePage.zip_file_input, "abandoned-cart-pro.zip"));
+      test('should verify that the module is installed', () => {
+        return promise
+          .then(() => client.waitForVisible(ModulePage.success_install_message))
+          .then(() => client.checkTextValue(ModulePage.module_import_success, "Module installed!"));
+      });
+      test('should click on close modal button', () => client.waitForExistAndClick(ModulePage.close_modal_button));
+      test('should search for "abandoned cart pro" module in the installed module tab', () => {
+        return promise
+          .then(() => client.refresh())
+          .then(() => client.waitAndSetValue(ModulePage.modules_search_input, "cartabandonmentpro"));
+      });
+      test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button, 1000));
+      test('should click on "Configure" button', () => {
+        return promise
+          .then(() => client.getModuleButtonName(ModulePage, 'cartabandonmentpro'))
+          .then(() => client.clickOnConfigureModuleButton(ModulePage, 'cartabandonmentpro'));
+      });
+      test('should verify you are on the configuration page of the module ', () => client.checkTextValue(ModulePage.check_configure, 'Thanks to Cart Abandonment Pro module', 'equal', 1000));
+    }, 'module');
   }
 };

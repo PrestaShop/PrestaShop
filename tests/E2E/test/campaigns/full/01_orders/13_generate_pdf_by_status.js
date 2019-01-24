@@ -112,7 +112,7 @@ scenario('Generate a PDF by status', () => {
       }
       test('should delete the invoice pdf file', async () =>{
         await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
-        if (existingFile) {
+        if (global.existingFile) {
           await  client.deleteFile(global.downloadsFolderPath, 'invoices', '.pdf');
         }
       });
@@ -207,7 +207,7 @@ scenario('Generate a PDF by status', () => {
       }
       test('should delete the invoice pdf file', async () => {
         await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
-        if (existingFile) {
+        if (global.existingFile) {
          await client.deleteFile(global.downloadsFolderPath, 'invoices', '.pdf');
         }
       });

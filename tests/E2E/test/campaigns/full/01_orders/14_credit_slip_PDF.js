@@ -70,7 +70,7 @@ scenario('Filter by a date which there is no order with credit slip generated', 
   commonOrder.disableMerchandise();
   test('should delete "order-slips" file', async () => {
     await client.checkFile(global.downloadsFolderPath, 'order-slips.pdf');
-    if (existingFile) {
+    if (global.existingFile) {
       await client.deleteFile(global.downloadsFolderPath, 'order-slips', '.pdf', 2000);
     }
   });

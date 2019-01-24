@@ -177,7 +177,7 @@ module.exports = {
   getShoppingCartsInfo: async function (client) {
     let idColumn;
     await client.isVisible(ShoppingCart.checkbox_input);
-    if (isVisible) {
+    if (global.isVisible) {
       idColumn = 2;
     } else {
       idColumn = 1;
@@ -200,7 +200,7 @@ module.exports = {
   checkExportedFile: async function (client) {
     await client.downloadCart(ShoppingCart.export_carts_button);
     await client.checkFile(global.downloadsFolderPath, global.exportCartFileName);
-    if (existingFile) {
+    if (global.existingFile) {
       await client.readFile(global.downloadsFolderPath, global.exportCartFileName, 1000);
       await client.checkExportedFileInfo(1000);
     }
@@ -294,7 +294,7 @@ module.exports = {
     scenario('Check the credit slip information', client => {
       test('should check the "Billing Address" ', async () => {
         await client.checkFile(global.downloadsFolderPath, global.creditSlip + ".pdf");
-        if (existingFile) {
+        if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'My Company');
           await client.checkDocument(global.downloadsFolderPath, global.creditSlip, '16, Main street');
           await client.checkDocument(global.downloadsFolderPath, global.creditSlip, '75002 Paris');
@@ -303,7 +303,7 @@ module.exports = {
       });
       test('should check all the "information" ', async () => {
         await client.checkFile(global.downloadsFolderPath, global.creditSlip + ".pdf");
-        if (existingFile) {
+        if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.tab['accountName']);
           await client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].invoiceDate);
           await client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].orderRef);
@@ -319,7 +319,7 @@ module.exports = {
       });
       test('should check the "Tax detail" ', async () => {
         await client.checkFile(global.downloadsFolderPath, global.creditSlip + ".pdf");
-        if (existingFile) {
+        if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'Products');
         }
       });
@@ -336,13 +336,13 @@ module.exports = {
   checkOrderInvoice: function (client, i) {
     test('should check the Customer name of the ' + i + ' product', async () => {
       await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
-      if (existingFile) {
+      if (global.existingFile) {
         client.checkDocument(global.downloadsFolderPath, 'invoices', 'John DOE');
       }
     });
     test('should check the "Delivery Address " of the product n°' + i, async () => {
       await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
-      if (existingFile) {
+      if (global.existingFile) {
         await client.checkDocument(global.downloadsFolderPath, 'invoices', 'My Company');
         await client.checkDocument(global.downloadsFolderPath, 'invoices', 'My Company');
         await client.checkDocument(global.downloadsFolderPath, 'invoices', '16, Main street');
@@ -352,7 +352,7 @@ module.exports = {
     });
     test('should check the "invoice" information of the product n°' + i, async () => {
       await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
-      if (existingFile) {
+      if (global.existingFile) {
         await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].invoiceDate);
         await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].OrderRef);
         await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductRef);

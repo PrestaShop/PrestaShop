@@ -7,7 +7,6 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {ShoppingCart} = require('../../../selectors/BO/order');
 const orderCommonScenarios = require('../../common_scenarios/order');
-
 scenario('Export shopping carts in the Back Office', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
@@ -23,7 +22,7 @@ scenario('Export shopping carts in the Back Office', () => {
     test('should export the "Shopping Carts" then check the exported file information', () => orderCommonScenarios.checkExportedFile(client));
     test('should delete the downloaded file', async () => {
       await client.checkFile(global.downloadsFolderPath, global.exportCartFileName);
-      if (existingFile) {
+      if (global.existingFile) {
         await client.deleteFile(global.downloadsFolderPath, global.exportCartFileName, "", 2000);
       }
     });

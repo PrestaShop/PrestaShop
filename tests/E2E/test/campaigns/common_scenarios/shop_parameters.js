@@ -40,7 +40,7 @@ module.exports = {
   async checkMboModule(client) {
     await client.pause(2000);
     await client.isVisible(OnBoarding.welcome_modal);
-    if (isVisible) {
+    if (global.isVisible) {
       await client.closeBoarding(OnBoarding.popup_close_button)
     }
     await client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu);
@@ -117,7 +117,7 @@ module.exports = {
   },
   async verifyWelcomingModule(client) {
     await client.isVisible(OnBoarding.start_button, 1000);
-    if (isVisible) {
+    if (global.isVisible) {
       await client.waitForExistAndClick(OnBoarding.later_button, 1000);
       await client.isNotExisting(OnBoarding.welcome_modal, 1000);
       await client.waitForExistAndClick(OnBoarding.resume_button, 2000);

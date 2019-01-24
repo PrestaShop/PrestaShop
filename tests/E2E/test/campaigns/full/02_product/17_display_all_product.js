@@ -1,3 +1,7 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-24"][Name="Display all products"]
+ **/
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
@@ -59,5 +63,5 @@ scenario('Display all product', () => {
       await commonScenarios.checkAllProduct(AccessPageFO, productPage, client);
     });
   }, 'product/product');
-
 }, 'product/product', true);
+

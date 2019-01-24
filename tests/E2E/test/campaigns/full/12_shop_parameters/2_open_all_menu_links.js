@@ -131,7 +131,7 @@ scenario('Open all menu links in the Back Office', () => {
         return promise
           .then(() => client.isVisible(Menu.Configure.ShopParameters.merchant_expertise_submenu))
           .then(() => {
-            if (isVisible) {
+            if (global.isVisible) {
               common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.merchant_expertise_submenu, PagesForm.ShopParameters.gamification_box, "Merchant Expertise", "Gamification")
             }
           });
