@@ -35,4 +35,9 @@ class DefaultLanguageException extends LanguageException
      * @var string Code is used when deleting default language
      */
     const CANNOT_DELETE_ERROR = 1;
+
+    /**
+     * @var string Code is uswed when disabling default language
+     */
+    const CANNOT_DISABLE_ERROR = 2;
 }
