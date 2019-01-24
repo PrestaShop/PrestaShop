@@ -24,7 +24,11 @@ services:
 
     prestashop.twig.extension.layout:
         class: PrestaShopBundle\Twig\LayoutExtension
-        arguments: ["@prestashop.adapter.legacy.context", "%kernel.environment%"]
+        arguments:
+          - "@prestashop.adapter.legacy.context"
+          - "%kernel.environment%"
+          - "@prestashop.adapter.legacy.configuration"
+          - "@prestashop.adapter.data_provider.currency"
         tags:
             - { name: twig.extension }
 
