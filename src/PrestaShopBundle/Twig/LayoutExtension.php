@@ -76,7 +76,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * @return array the base globals available in twig templates
      */
     public function getGlobals()
-    {var_dump(get_class($this->currencyDataProvider));
+    {
         /*
          * As this is a twig extension we need to be very resilient and prevent it from crashing
          * the environment, for example the command debug:twig should not fail because of this extension
