@@ -5,10 +5,18 @@ import sys
 import uuid
 import glob
 import json
+import time
 from datetime import datetime, timedelta
 
 
 class MochawesomeCombine:
+  def to_seconds(self, date):
+    '''
+    Convert a date to timestamp
+    '''
+    return time.mktime(date.timetuple())
+
+
   def convert_to_datetime(self, dt_str):
     '''
     Convert Javascrpt DateTime with timezone in Python datetime
@@ -117,7 +125,7 @@ class MochawesomeCombine:
         'start': obj['start_time'],
         'end': obj['end_time'],
         'duration': int(
-          self.convert_to_datetime(obj['end_time']).timestamp() - self.convert_to_datetime(obj['start_time']).timestamp()
+          self.to_seconds(self.convert_to_datetime(obj['end_time'])) - self.to_seconds(self.convert_to_datetime(obj['start_time']))
         ) * 1000,
         'testsRegistered': obj['total_tests'] - obj['total_pending'],
         'skipped': obj['total_skipped'],
