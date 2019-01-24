@@ -333,7 +333,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_languages_index',
+                    'submit_route' => 'admin_languages_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             );
