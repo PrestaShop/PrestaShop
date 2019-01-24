@@ -92,7 +92,6 @@ abstract class ApiTestCase extends WebTestCase
                 'getContext',
                 'getEmployeeLanguageIso',
                 'getEmployeeCurrency',
-                'getDefaultCurrency',
                 'getRootUrl',
                 'getLanguage',
             ))
@@ -103,7 +102,6 @@ abstract class ApiTestCase extends WebTestCase
 
         $legacyContextMock->method('getEmployeeLanguageIso')->willReturn(null);
         $legacyContextMock->method('getEmployeeCurrency')->willReturn(null);
-        $legacyContextMock->method('getDefaultCurrency')->willReturn(null);
         $legacyContextMock->method('getRootUrl')->willReturn(null);
         $legacyContextMock->method('getLanguage')->willReturn(new Language());
 
