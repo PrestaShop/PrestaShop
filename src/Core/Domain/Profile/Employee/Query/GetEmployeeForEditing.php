@@ -24,20 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EditableEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 
 /**
- * Interface for service that gets employee data for editing
+ * Gets employee information for editing.
  */
-interface GetEmployeeForEditingHandlerInterface
+class GetEmployeeForEditing
 {
     /**
-     * @param GetEmployeeForEditing $query
-     *
-     * @return EditableEmployee
+     * @var EmployeeId
      */
-    public function handle(GetEmployeeForEditing $query);
+    private $employeeId;
+
+    /**
+     * @param EmployeeId $employeeId
+     */
+    public function __construct(EmployeeId $employeeId)
+    {
+        $this->employeeId = $employeeId;
+    }
+
+    /**
+     * @return EmployeeId
+     */
+    public function getEmployeeId()
+    {
+        return $this->employeeId;
+    }
 }
