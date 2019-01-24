@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use AdminController;
 use AdminLegacyLayoutControllerCore;
-use Configuration;
 use Context;
 use Currency;
 use Employee;
@@ -37,7 +36,6 @@ use RuntimeException;
 use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
 use Tab;
-use Tools;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -47,13 +45,23 @@ use Tools;
 class LegacyContext
 {
     /** @var Currency */
-    private $defaultCurrency;
-
-    /** @var Currency */
     private $employeeCurrency;
 
     /** @var string */
     private $mailThemesUri;
+
+    /** @var Tools */
+    private $tools;
+
+    /**
+     * This constructor must remain empty to avoid BC breaks. If you need to
+     * inject services please implement a setter and use the method injection
+     * instead.
+     */
+    public function __construct()
+    {
+        $this->tools = new Tools();
+    }
 
     /**
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\context class,
@@ -155,11 +163,12 @@ class LegacyContext
     /**
      * Url to the mail themes folder
      *
+     * @since 1.7.6
      * @return string
      */
     public function getMailThemesUrl()
     {
-        return Tools::getShopDomain(true) . __PS_BASE_URI__ . $this->mailThemesUri;
+        return $this->tools->getShopDomain(true) . __PS_BASE_URI__ . $this->mailThemesUri;
     }
 
     /**
@@ -252,8 +261,6 @@ class LegacyContext
     /**
      * Returns Currency set for the current employee.
      *
-     * @param bool $defaultFallback
-     *
      * @return Currency
      */
     public function getEmployeeCurrency()
@@ -263,20 +270,6 @@ class LegacyContext
         }
 
         return $this->employeeCurrency;
-    }
-
-    /**
-     * Returns default cCurrency set in Configuration
-     *
-     * @return Currency
-     */
-    public function getDefaultCurrency()
-    {
-        if (null === $this->defaultCurrency) {
-            $this->defaultCurrency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
-        }
-
-        return $this->defaultCurrency;
     }
 
     /**
