@@ -23,6 +23,6 @@ services:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkDeleteEmployeeCommand }
 
   prestashop.adapter.employee.query_handler.get_employee_for_editing:
-    class: 'PrestaShop\PrestaShop\Adapter\Employee\QueryHandler\GetEmployeeForEditingHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeForEditingHandler'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing }
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query\GetEmployeeForEditing }

@@ -24,50 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query\GetEmployeeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\QueryResult\EditableEmployee;
 
 /**
- * Defines Employee ID with it's constraints.
+ * Interface for service that gets employee data for editing
  */
-class EmployeeId
+interface GetEmployeeForEditingHandlerInterface
 {
     /**
-     * @var int
+     * @param GetEmployeeForEditing $query
+     *
+     * @return EditableEmployee
      */
-    private $employeeId;
-
-    /**
-     * @param int $employeeId
-     */
-    public function __construct($employeeId)
-    {
-        $this->assertIntegerIsGreaterThanZero($employeeId);
-
-        $this->employeeId = $employeeId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->employeeId;
-    }
-
-    /**
-     * @param int $employeeId
-     */
-    private function assertIntegerIsGreaterThanZero($employeeId)
-    {
-        if (!is_int($employeeId) || 0 > $employeeId) {
-            throw new EmployeeException(
-                sprintf(
-                    'Employee id %s is invalid. Employee id must be number that is greater than zero.',
-                    var_export($employeeId, true)
-                )
-            );
-        }
-    }
+    public function handle(GetEmployeeForEditing $query);
 }

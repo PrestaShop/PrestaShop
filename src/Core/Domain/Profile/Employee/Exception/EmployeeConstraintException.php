@@ -24,33 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception;
 
 /**
- * Gets employee information for editing.
+ * Is thrown when employee constraint is violated
  */
-class GetEmployeeForEditing
+class EmployeeConstraintException extends EmployeeException
 {
     /**
-     * @var EmployeeId
+     * @var int Code is used when invalid email is provided for employee
      */
-    private $employeeId;
+    const INVALID_EMAIL = 1;
 
     /**
-     * @param EmployeeId $employeeId
+     * @var int Code is used when invalid first name is provided for employee
      */
-    public function __construct(EmployeeId $employeeId)
-    {
-        $this->employeeId = $employeeId;
-    }
+    const INVALID_FIRST_NAME = 2;
 
     /**
-     * @return EmployeeId
+     * @var int Code is used when invalid last name is provided for employee
      */
-    public function getEmployeeId()
-    {
-        return $this->employeeId;
-    }
+    const INVALID_LAST_NAME = 3;
 }

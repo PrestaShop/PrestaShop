@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidEmployeeIdException;
 
 /**
- * Class EmployeeId.
+ * Defines Employee ID with it's constraints.
  */
 class EmployeeId
 {
@@ -43,9 +43,9 @@ class EmployeeId
      */
     public function __construct($employeeId)
     {
-        $this->assertEmployeeId($employeeId);
+        $this->assertIntegerIsGreaterThanZero($employeeId);
 
-        $this->employeeId = (int) $employeeId;
+        $this->employeeId = $employeeId;
     }
 
     /**
@@ -57,11 +57,11 @@ class EmployeeId
     }
 
     /**
-     * @param $employeeId
+     * @param int $employeeId
      *
      * @throws InvalidEmployeeIdException
      */
-    private function assertEmployeeId($employeeId)
+    private function assertIntegerIsGreaterThanZero($employeeId)
     {
         if (!is_numeric($employeeId) || 0 > $employeeId) {
             throw new InvalidEmployeeIdException(sprintf(

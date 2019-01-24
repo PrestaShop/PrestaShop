@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeConstraintException;
 
 /**
  * Stores employee's first name
