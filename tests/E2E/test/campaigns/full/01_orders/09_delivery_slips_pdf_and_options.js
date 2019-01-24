@@ -46,22 +46,22 @@ scenario('Test1: Delivery slips PDF', () => {
     for (let i = 1; i <= 3; i++) {
       test('should check the Customer name of the ' + i + ' product', async () => {
         await client.checkFile(global.downloadsFolderPath, 'deliveries.pdf');
-        if (existingFile) {
+        if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', 'John DOE');
         }
       });
       test('should check the "Delivery Address" of the product n°' + i, async () => {
         await client.checkFile(global.downloadsFolderPath, 'deliveries.pdf');
-        if (existingFile) {
+        if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', 'My Company');
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', '16, Main street');
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', '75002 Paris');
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', 'France');
         }
       });
-      test('should check the "invoice" information of the product n°' + i, async () => {
+      test('should check the "Delivery" information of the product n°' + i, async () => {
         await client.checkFile(global.downloadsFolderPath, 'deliveries.pdf');
-        if (existingFile) {
+        if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].invoiceDate);
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].OrderRef);
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].ProductRef);
@@ -111,16 +111,16 @@ scenario('Test2: Delivery slips options', () => {
       });
       test('should check the "Delivery Address" of the order ', async () => {
         await client.checkFile(global.downloadsFolderPath, 'deliveries.pdf');
-        if (existingFile) {
+        if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', 'My Company');
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', '16, Main street');
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', '75002 Paris');
           await client.checkDocument(global.downloadsFolderPath, 'deliveries', 'France');
         }
       });
-      test('should check the "invoice" information', async () => {
-        await client.checkFile(global.downloadsFolderPath, 'deliveries.pdf');
-        if (existingFile) {
+      test('should check the "Invoice" information', async () => {
+        await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + '.pdf');
+        if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE');
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].invoiceDate)
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].OrderRef);
@@ -141,8 +141,8 @@ scenario('Test2: Delivery slips options', () => {
     test('should Disable the product image', () => client.waitForExistAndClick(DeliverySlip.disable_product_image));
     test('should click on "Save" button', () => client.waitForExistAndClick(DeliverySlip.save_button));
     test('should delete the "delivery" file', async () => {
-     await client.checkFile(global.downloadsFolderPath, 'deliveries.pdf');
-      if (existingFile) {
+      await client.checkFile(global.downloadsFolderPath, 'deliveries.pdf');
+      if (global.existingFile) {
         await client.deleteFile(downloadsFolderPath, "deliveries", ".pdf", 2000);
       }
     });

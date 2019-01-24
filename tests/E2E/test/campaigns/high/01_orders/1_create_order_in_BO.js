@@ -72,7 +72,7 @@ scenario('Create order in the Back Office', () => {
       test('should download the invoice document', () => client.downloadDocument(OrderPage.download_invoice_button));
       test('should check the "invoice file" information ', async () => {
         await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + ".pdf");
-        if (existingFile) {
+        if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName);
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE');
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.basic_price);
@@ -86,7 +86,7 @@ scenario('Create order in the Back Office', () => {
       test('should download the delivery invoice document', () => client.downloadDocument(OrderPage.download_delivery_button));
       test('should check the "delivery file" information', async () => {
         await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + ".pdf");
-        if (existingFile) {
+        if (global.existingFile) {
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName);
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE');
           await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "P1" + global.date_time + " - Size : M- Color : Beige");

@@ -179,7 +179,7 @@ module.exports = {
       test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
       test('should check if the module ' + moduleTechName + ' was installed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', moduleTechName), 2000));
       test('should click on "Uninstall" button', async () => {
-        if (isVisible) {
+        if (global.isVisible) {
           await client.scrollTo(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName));
           await client.waitForExistAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName));
           await client.scrollTo(ModulePage.uninstall_button.split('%moduleTechName').join(moduleTechName));
@@ -202,7 +202,7 @@ module.exports = {
           await client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName, 2000);
           await client.waitForExistAndClick(ModulePage.modules_search_button, 2000);
           await client.isVisible(ModulePage.install_button.replace("%moduleTechName", moduleTechName), 2000);
-          if (isVisible) {
+          if (global.isVisible) {
             await client.waitForExistAndClick(ModulePage.install_button.replace("%moduleTechName", moduleTechName), 2000);
             await client.waitForExistAndClick(AddProductPage.close_validation_button);
             await shopParameters.checkMboModule(client);

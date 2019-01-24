@@ -22,7 +22,7 @@ scenario('Export shopping carts in the Back Office', () => {
     test('should export the "Shopping Carts" then check the exported file information', () => orderCommonScenarios.checkExportedFile(client));
     test('should delete the downloaded file', async () => {
       await client.checkFile(global.downloadsFolderPath, global.exportCartFileName);
-      if (existingFile) {
+      if (global.existingFile) {
         await client.deleteFile(global.downloadsFolderPath, global.exportCartFileName, "", 2000);
       }
     });

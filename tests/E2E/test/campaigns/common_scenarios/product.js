@@ -108,7 +108,7 @@ module.exports = {
             return promise
               .then(() => client.isVisible(AddProductPage.var_selected))
               .then(() => {
-                if (global.ps_mode_dev && !isVisible) {
+                if (global.ps_mode_dev && !global.isVisible) {
                   client.refresh();
                 } else {
                   client.pause(0);
@@ -547,7 +547,7 @@ module.exports = {
       return promise
         .then(() => client.isVisible(productSelector))
         .then(() => {
-          if (global.ps_mode_dev && !isVisible) {
+          if (global.ps_mode_dev && !global.isVisible) {
             client.waitForExistAndClick(selector)
           } else {
             client.pause(0);
@@ -625,6 +625,4 @@ module.exports = {
     await client.waitForExistAndClick(ProductList.filter_by_category_button);
     await client.waitForExistAndClick(ProductList.unselect_filter_link);
   },
-
-
 };

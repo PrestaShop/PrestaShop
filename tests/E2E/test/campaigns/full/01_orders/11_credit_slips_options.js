@@ -7,7 +7,6 @@ const {CreditSlip} = require('../../../selectors/BO/order');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {Menu} = require('../../../selectors/BO/menu.js');
-let promise = Promise.resolve();
 require('./10_check_credit_slip');
 scenario('Generate and check a Credit slips options ', () => {
   scenario('Open the browser and login successfully in the Back Office ', client => {
@@ -31,7 +30,7 @@ scenario('Generate and check a Credit slips options ', () => {
     test('should download the credit slip', () => client.waitForExistAndClick(OrderPage.credit_slip_document_name));
     test('should check the existence of "prefix value" ', async () => {
       await client.checkFile(global.downloadsFolderPath, global.creditSlip + '.pdf', 3000);
-      if (existingFile) {
+      if (global.existingFile) {
         await client.pause(3000);
         await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'PrefixTest');
       }
