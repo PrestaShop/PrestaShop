@@ -183,6 +183,19 @@ class Tools
     }
 
     /**
+     * Returns domain name according to configuration and ignoring ssl.
+     *
+     * @param bool $http if true, return domain name with protocol
+     * @param bool $entities if true, convert special chars to HTML entities
+     *
+     * @return string domain
+     */
+    public static function getShopDomain($http = false, $entities = false)
+    {
+        return LegacyTools::getShopDomain($http, $entities);
+    }
+
+    /**
      * Return domain name according to configuration and depending on ssl activation.
      *
      * @param bool $http if true, return domain name with protocol
