@@ -50,3 +50,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkToggleLanguagesStatusCommand'
+
+  prestashop.adapter.language.command_handler.bulk_delete_languages_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\BulkDeleteLanguagesHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand'
