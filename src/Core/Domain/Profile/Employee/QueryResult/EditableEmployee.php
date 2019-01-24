@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
 
 /**
  * Stores editable data of an employee.

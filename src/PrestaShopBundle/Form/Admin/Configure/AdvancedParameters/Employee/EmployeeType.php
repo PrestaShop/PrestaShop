@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
