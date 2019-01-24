@@ -28,31 +28,29 @@ namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
 use Configuration;
 use Language;
-use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\BulkDeleteLanguagesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\DeleteLanguageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 
 /**
- * Deletes languages using legacy Language object model
+ * Deletes language using legacy object model
  *
  * @internal
  */
-final class BulkDeleteLanguagesHandler extends AbstractLanguageHandler implements BulkDeleteLanguagesHandlerInterface
+final class DeleteLanguageHandler extends AbstractLanguageHandler implements DeleteLanguageHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkDeleteLanguagesCommand $command)
+    public function handle(DeleteLanguageCommand $command)
     {
-        foreach ($command->getLanguageIds() as $languageId) {
-            $language = $this->getLegacyLanguageObject($languageId);
+        $language = $this->getLegacyLanguageObject($command->getLanguageId());
 
-            $this->assertDefaultLanguageIsNotBeingDeleted($language);
+        $this->assertDefaultLanguageIsNotBeingDeleted($language);
 
-            if (false === $language->delete()) {
-                throw new LanguageException(sprintf('Failed to delele language "%s"', $language->iso_code));
-            }
+        if (false === $language->delete()) {
+            throw new LanguageException(sprintf('Failed to delele language "%s"', $language->iso_code));
         }
     }
 
