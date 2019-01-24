@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCusto
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
@@ -47,7 +48,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
@@ -152,8 +152,8 @@ class CustomerController extends AbstractAdminController
         $this->addGroupSelectionToRequest($request);
 
         try {
-            /** @var CustomerInformation $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing(new CustomerId((int) $customerId)));
+            /** @var ViewableCustomer $customerInformation */
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
 
             $customerFormOptions = [
                 'is_password_required' => false,
@@ -201,8 +201,8 @@ class CustomerController extends AbstractAdminController
     public function viewAction($customerId, Request $request)
     {
         try {
-            /** @var CustomerInformation $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing(new CustomerId((int) $customerId)));
+            /** @var ViewableCustomer $customerInformation */
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
         } catch (CustomerNotFoundException $e) {
             $this->addFlash(
                 'error',
@@ -256,7 +256,7 @@ class CustomerController extends AbstractAdminController
 
             try {
                 $this->getCommandBus()->handle(new SavePrivateNoteForCustomerCommand(
-                    new CustomerId((int) $customerId),
+                    (int) $customerId,
                     $data['note']
                 ));
 
@@ -289,7 +289,7 @@ class CustomerController extends AbstractAdminController
     public function transformGuestToCustomerAction($customerId)
     {
         try {
-            $this->getCommandBus()->handle(new TransformGuestToCustomerCommand(new CustomerId((int) $customerId)));
+            $this->getCommandBus()->handle(new TransformGuestToCustomerCommand((int) $customerId));
 
             $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
         } catch (CustomerException $e) {
@@ -447,11 +447,10 @@ class CustomerController extends AbstractAdminController
     public function toggleStatusAction($customerId)
     {
         try {
-            $customerId = new CustomerId((int) $customerId);
             /** @var EditableCustomer $editableCustomer */
-            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
 
-            $editCustomerCommand = new EditCustomerCommand($customerId);
+            $editCustomerCommand = new EditCustomerCommand((int) $customerId);
             $editCustomerCommand->setIsEnabled(!$editableCustomer->isEnabled());
 
             $this->getCommandBus()->handle($editCustomerCommand);
@@ -483,11 +482,10 @@ class CustomerController extends AbstractAdminController
     public function toggleNewsletterSubscriptionAction($customerId)
     {
         try {
-            $customerId = new CustomerId((int) $customerId);
             /** @var EditableCustomer $editableCustomer */
-            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
 
-            $editCustomerCommand = new EditCustomerCommand($customerId);
+            $editCustomerCommand = new EditCustomerCommand((int) $customerId);
             $editCustomerCommand->setNewsletterSubscribed(!$editableCustomer->isNewsletterSubscribed());
 
             $this->getCommandBus()->handle($editCustomerCommand);
@@ -519,11 +517,10 @@ class CustomerController extends AbstractAdminController
     public function togglePartnerOfferSubscriptionAction($customerId)
     {
         try {
-            $customerId = new CustomerId((int) $customerId);
             /** @var EditableCustomer $editableCustomer */
-            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
 
-            $editCustomerCommand = new EditCustomerCommand($customerId);
+            $editCustomerCommand = new EditCustomerCommand((int) $customerId);
             $editCustomerCommand->setIsPartnerOffersSubscribed(!$editableCustomer->isPartnerOffersSubscribed());
 
             $this->getCommandBus()->handle($editCustomerCommand);

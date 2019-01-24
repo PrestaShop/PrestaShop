@@ -24,14 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\AddressInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\DiscountInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\GeneralInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\GroupInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\LastConnectionInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\MessageInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\OrdersInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\PersonalInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\ProductsInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\ReferrerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable\SentEmailInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
  * Class CustomerInformation stores customer information for viewing in Back Office.
  */
-class CustomerInformation
+class ViewableCustomer
 {
     /**
      * @var CustomerId

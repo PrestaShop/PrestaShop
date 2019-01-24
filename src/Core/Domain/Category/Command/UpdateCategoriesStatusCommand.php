@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
- * Class ChangeCategoriesStatusCommand updates provided categories status to new given status.
+ * Updates provided categories to new status
  */
 class UpdateCategoriesStatusCommand
 {
@@ -48,16 +48,17 @@ class UpdateCategoriesStatusCommand
 
     /**
      * @param int[] $categoryIds
-     * @param CategoryStatus $newStatus
+     * @param string $newStatus
      *
      * @throws CategoryConstraintException
      * @throws CategoryException
      */
-    public function __construct(array $categoryIds, CategoryStatus $newStatus)
+    public function __construct(array $categoryIds, $newStatus)
     {
         $this
             ->setCategoryIds($categoryIds)
-            ->setNewStatus($newStatus);
+            ->setNewStatus($newStatus)
+        ;
     }
 
     /**
@@ -98,13 +99,13 @@ class UpdateCategoriesStatusCommand
     }
 
     /**
-     * @param CategoryStatus $newStatus
+     * @param string $newStatus
      *
      * @return self
      */
-    private function setNewStatus(CategoryStatus $newStatus)
+    private function setNewStatus($newStatus)
     {
-        $this->newStatus = $newStatus;
+        $this->newStatus = new CategoryStatus($newStatus);
 
         return $this;
     }

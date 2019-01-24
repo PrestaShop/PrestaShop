@@ -24,61 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Group\QueryResult;
+
+use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;
 
 /**
- * Class CustomerOrders.
+ * Class DefaultGroup.
  */
-class OrdersInformation
+class DefaultGroup
 {
     /**
-     * @var array|OrderInformation[]
+     * @var GroupId
      */
-    private $validOrders;
-
-    /**
-     * @var array|OrderInformation[]
-     */
-    private $invalidOrders;
+    private $groupId;
 
     /**
      * @var string
      */
-    private $totalSpent;
+    private $name;
 
     /**
-     * @param string $totalSpent
-     * @param OrderInformation[] $validOrders
-     * @param OrderInformation[] $invalidOrders
+     * @param GroupId $groupId
+     * @param string $name
      */
-    public function __construct($totalSpent, array $validOrders, array $invalidOrders)
+    public function __construct(GroupId $groupId, $name)
     {
-        $this->validOrders = $validOrders;
-        $this->invalidOrders = $invalidOrders;
-        $this->totalSpent = $totalSpent;
+        $this->groupId = $groupId;
+        $this->name = $name;
     }
 
     /**
-     * @return OrderInformation[]
+     * @return GroupId
      */
-    public function getValidOrders()
+    public function getGroupId()
     {
-        return $this->validOrders;
-    }
-
-    /**
-     * @return OrderInformation[]
-     */
-    public function getInvalidOrders()
-    {
-        return $this->invalidOrders;
+        return $this->groupId;
     }
 
     /**
      * @return string
      */
-    public function getTotalSpent()
+    public function getName()
     {
-        return $this->totalSpent;
+        return $this->name;
     }
 }

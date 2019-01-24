@@ -24,80 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class CustomerCartInformation.
+ * Class ReferrerInformation holds information about customer referrer.
  */
-class CartInformation
+class ReferrerInformation
 {
     /**
      * @var string
      */
-    private $cartId;
+    private $date;
 
     /**
      * @var string
      */
-    private $cartCreationDate;
+    private $name;
 
     /**
      * @var string
      */
-    private $cartTotal;
+    private $shop;
 
     /**
-     * @var string
+     * @param string $date
+     * @param string $name
+     * @param string $shop
      */
-    private $carrierName;
-
-    /**
-     * @param string $cartId
-     * @param string $cartCreationDate
-     * @param string $cartTotal
-     * @param string $carrierName
-     */
-    public function __construct(
-        $cartId,
-        $cartCreationDate,
-        $cartTotal,
-        $carrierName
-    ) {
-        $this->cartId = $cartId;
-        $this->cartCreationDate = $cartCreationDate;
-        $this->cartTotal = $cartTotal;
-        $this->carrierName = $carrierName;
+    public function __construct($date, $name, $shop)
+    {
+        $this->date = $date;
+        $this->name = $name;
+        $this->shop = $shop;
     }
 
     /**
      * @return string
      */
-    public function getCartId()
+    public function getDate()
     {
-        return $this->cartId;
+        return $this->date;
     }
 
     /**
      * @return string
      */
-    public function getCartCreationDate()
+    public function getName()
     {
-        return $this->cartCreationDate;
+        return $this->name;
     }
 
     /**
      * @return string
      */
-    public function getCartTotal()
+    public function getShop()
     {
-        return $this->cartTotal;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCarrierName()
-    {
-        return $this->carrierName;
+        return $this->shop;
     }
 }

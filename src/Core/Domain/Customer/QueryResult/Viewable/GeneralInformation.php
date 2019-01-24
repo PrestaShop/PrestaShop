@@ -24,61 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class ViewedProductInformation holds information about product that customer has viewed.
+ * Class GeneralInformation.
  */
-class ViewedProductInformation
+class GeneralInformation
 {
     /**
-     * @var int
+     * @var string
      */
-    private $productId;
+    private $privateNote;
 
     /**
      * @var string
      */
-    private $productName;
+    private $customerBySameEmailExists;
 
     /**
-     * @var string
+     * @param string $privateNote
+     * @param bool $customerBySameEmailExists
      */
-    private $productUrl;
-
-    /**
-     * @param int $productId
-     * @param string $productName
-     * @param string $productUrl
-     */
-    public function __construct($productId, $productName, $productUrl)
+    public function __construct($privateNote, $customerBySameEmailExists)
     {
-        $this->productId = $productId;
-        $this->productName = $productName;
-        $this->productUrl = $productUrl;
-    }
-
-    /**
-     * @return int
-     */
-    public function getProductId()
-    {
-        return $this->productId;
+        $this->privateNote = $privateNote;
+        $this->customerBySameEmailExists = $customerBySameEmailExists;
     }
 
     /**
      * @return string
      */
-    public function getProductName()
+    public function getPrivateNote()
     {
-        return $this->productName;
+        return $this->privateNote;
     }
 
     /**
      * @return string
      */
-    public function getProductUrl()
+    public function getCustomerBySameEmailExists()
     {
-        return $this->productUrl;
+        return $this->customerBySameEmailExists;
     }
 }

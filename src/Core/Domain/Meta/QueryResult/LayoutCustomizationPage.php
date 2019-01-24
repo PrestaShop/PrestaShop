@@ -24,46 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult;
 
 /**
- * Class GeneralInformation.
+ * Class LayoutCustomizationPage.
  */
-class GeneralInformation
+class LayoutCustomizationPage
 {
     /**
      * @var string
      */
-    private $privateNote;
+    private $page;
 
     /**
      * @var string
      */
-    private $customerBySameEmailExists;
+    private $description;
 
     /**
-     * @param string $privateNote
-     * @param bool $customerBySameEmailExists
+     * @var string
      */
-    public function __construct($privateNote, $customerBySameEmailExists)
+    private $title;
+
+    /**
+     * @param string $page
+     * @param string $title
+     * @param string $description
+     */
+    public function __construct($page, $title, $description)
     {
-        $this->privateNote = $privateNote;
-        $this->customerBySameEmailExists = $customerBySameEmailExists;
+        $this->page = $page;
+        $this->description = $description;
+        $this->title = $title;
     }
 
     /**
      * @return string
      */
-    public function getPrivateNote()
+    public function getPage()
     {
-        return $this->privateNote;
+        return $this->page;
     }
 
     /**
      * @return string
      */
-    public function getCustomerBySameEmailExists()
+    public function getTitle()
     {
-        return $this->customerBySameEmailExists;
+        return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

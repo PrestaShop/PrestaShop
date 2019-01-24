@@ -24,46 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
-/**
- * Class CustomerProductsInformation holds information about products that customers has bought and viewed.
- */
-class ProductsInformation
+class Subscriptions
 {
     /**
-     * @var BoughtProductInformation[]
+     * @var bool
      */
-    private $boughtProductsInformation;
+    private $isNewsletterSubscribed;
 
     /**
-     * @var ViewedProductInformation[]
+     * @var bool
      */
-    private $viewedProductsInformation;
+    private $isPartnerOffersSubscribed;
 
     /**
-     * @param BoughtProductInformation[] $boughtProductsInformation
-     * @param ViewedProductInformation[] $viewedProductsInformation
+     * @param bool $isNewsletterSubscribed
+     * @param bool $isPartnerOffersSubscribed
      */
-    public function __construct(array $boughtProductsInformation, array $viewedProductsInformation)
+    public function __construct($isNewsletterSubscribed, $isPartnerOffersSubscribed)
     {
-        $this->boughtProductsInformation = $boughtProductsInformation;
-        $this->viewedProductsInformation = $viewedProductsInformation;
+        $this->isNewsletterSubscribed = $isNewsletterSubscribed;
+        $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
     }
 
     /**
-     * @return BoughtProductInformation[]
+     * @return bool
      */
-    public function getBoughtProductsInformation()
+    public function isNewsletterSubscribed()
     {
-        return $this->boughtProductsInformation;
+        return $this->isNewsletterSubscribed;
     }
 
     /**
-     * @return ViewedProductInformation[]
+     * @return bool
      */
-    public function getViewedProductsInformation()
+    public function isPartnerOffersSubscribed()
     {
-        return $this->viewedProductsInformation;
+        return $this->isPartnerOffersSubscribed;
     }
 }

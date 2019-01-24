@@ -24,17 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Group\DataTransferObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class DefaultGroup.
+ * Class GroupInformation holds customer group information.
  */
-class DefaultGroup
+class GroupInformation
 {
     /**
-     * @var GroupId
+     * @var int
      */
     private $groupId;
 
@@ -44,17 +42,17 @@ class DefaultGroup
     private $name;
 
     /**
-     * @param GroupId $groupId
+     * @param int $groupId
      * @param string $name
      */
-    public function __construct(GroupId $groupId, $name)
+    public function __construct($groupId, $name)
     {
         $this->groupId = $groupId;
         $this->name = $name;
     }
 
     /**
-     * @return GroupId
+     * @return int
      */
     public function getGroupId()
     {

@@ -28,8 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Group\QueryHandler;
 
 use Group;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Group\DataTransferObject\DefaultGroup;
-use PrestaShop\PrestaShop\Core\Domain\Group\DefaultGroups;
+use PrestaShop\PrestaShop\Core\Domain\Group\QueryResult\DefaultGroup;
+use PrestaShop\PrestaShop\Core\Domain\Group\QueryResult\DefaultGroups;
 use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
 use PrestaShop\PrestaShop\Core\Domain\Group\QueryHandler\GetDefaultGroupsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;

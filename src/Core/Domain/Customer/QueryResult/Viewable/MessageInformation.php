@@ -24,45 +24,69 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class SentEmailInformation holds information about email sent to customer.
+ * Class CustomerMessageInformation holds customer message information.
  */
-class SentEmailInformation
+class MessageInformation
 {
+    /**
+     * @var int
+     */
+    private $customerThreadId;
+
+    /**
+     * @var string
+     */
+    private $message;
+
+    /**
+     * @var string
+     */
+    private $status;
+
     /**
      * @var string
      */
     private $date;
 
     /**
-     * @var string
-     */
-    private $language;
-
-    /**
-     * @var string
-     */
-    private $subject;
-
-    /**
-     * @var string
-     */
-    private $template;
-
-    /**
+     * @param int $customerThreadId
+     * @param string $message
+     * @param string $status
      * @param string $date
-     * @param string $language
-     * @param string $subject
-     * @param string $template
      */
-    public function __construct($date, $language, $subject, $template)
+    public function __construct($customerThreadId, $message, $status, $date)
     {
+        $this->customerThreadId = $customerThreadId;
+        $this->message = $message;
+        $this->status = $status;
         $this->date = $date;
-        $this->language = $language;
-        $this->subject = $subject;
-        $this->template = $template;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCustomerThreadId()
+    {
+        return $this->customerThreadId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
@@ -71,29 +95,5 @@ class SentEmailInformation
     public function getDate()
     {
         return $this->date;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 }

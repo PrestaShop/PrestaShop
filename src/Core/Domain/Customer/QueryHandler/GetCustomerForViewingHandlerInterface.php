@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 
 /**
@@ -37,7 +37,7 @@ interface GetCustomerForViewingHandlerInterface
     /**
      * @param GetCustomerForViewing $query
      *
-     * @return CustomerInformation
+     * @return ViewableCustomer
      */
     public function handle(GetCustomerForViewing $query);
 }

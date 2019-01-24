@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
- * Class EnableCategoriesCommand enables provides categories.
+ * Enables given categories
  */
 class EnableCategoriesCommand extends UpdateCategoriesStatusCommand
 {
@@ -43,6 +43,6 @@ class EnableCategoriesCommand extends UpdateCategoriesStatusCommand
      */
     public function __construct(array $categoryIds)
     {
-        parent::__construct($categoryIds, new CategoryStatus(CategoryStatus::ENABLED));
+        parent::__construct($categoryIds, CategoryStatus::ENABLED);
     }
 }

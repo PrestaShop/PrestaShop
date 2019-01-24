@@ -24,76 +24,64 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Group\QueryResult;
 
 /**
- * Class CustomerMessageInformation holds customer message information.
+ * Class DefaultGroups.
  */
-class MessageInformation
+class DefaultGroups
 {
     /**
-     * @var int
+     * @var DefaultGroup
      */
-    private $customerThreadId;
+    private $visitorsGroup;
 
     /**
-     * @var string
+     * @var DefaultGroup
      */
-    private $message;
+    private $guestsGroup;
 
     /**
-     * @var string
+     * @var DefaultGroup
      */
-    private $status;
+    private $customersGroup;
 
     /**
-     * @var string
+     * @param DefaultGroup $visitorsGroup
+     * @param DefaultGroup $guestsGroup
+     * @param DefaultGroup $customersGroup
      */
-    private $date;
-
-    /**
-     * @param int $customerThreadId
-     * @param string $message
-     * @param string $status
-     * @param string $date
-     */
-    public function __construct($customerThreadId, $message, $status, $date)
-    {
-        $this->customerThreadId = $customerThreadId;
-        $this->message = $message;
-        $this->status = $status;
-        $this->date = $date;
+    public function __construct(
+        DefaultGroup $visitorsGroup,
+        DefaultGroup $guestsGroup,
+        DefaultGroup $customersGroup
+    ) {
+        $this->visitorsGroup = $visitorsGroup;
+        $this->guestsGroup = $guestsGroup;
+        $this->customersGroup = $customersGroup;
     }
 
     /**
-     * @return int
+     * @return DefaultGroup
      */
-    public function getCustomerThreadId()
+    public function getVisitorsGroup()
     {
-        return $this->customerThreadId;
+        return $this->visitorsGroup;
     }
 
     /**
-     * @return string
+     * @return DefaultGroup
      */
-    public function getMessage()
+    public function getGuestsGroup()
     {
-        return $this->message;
+        return $this->guestsGroup;
     }
 
     /**
-     * @return string
+     * @return DefaultGroup
      */
-    public function getStatus()
+    public function getCustomersGroup()
     {
-        return $this->status;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDate()
-    {
-        return $this->date;
+        return $this->customersGroup;
     }
 }

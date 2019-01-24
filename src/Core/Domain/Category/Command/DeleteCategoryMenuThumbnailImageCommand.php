@@ -45,13 +45,13 @@ class DeleteCategoryMenuThumbnailImageCommand
     private $menuThumbnailId;
 
     /**
-     * @param CategoryId $categoryId
-     * @param MenuThumbnailId $menuThumbnailId
+     * @param int $categoryId
+     * @param int $menuThumbnailId
      */
-    public function __construct(CategoryId $categoryId, MenuThumbnailId $menuThumbnailId)
+    public function __construct($categoryId, $menuThumbnailId)
     {
-        $this->categoryId = $categoryId;
-        $this->menuThumbnailId = $menuThumbnailId;
+        $this->categoryId = new CategoryId($categoryId);
+        $this->menuThumbnailId = new MenuThumbnailId($menuThumbnailId);
     }
 
     /**

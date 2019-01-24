@@ -24,61 +24,80 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class ReferrerInformation holds information about customer referrer.
+ * Class CustomerCartInformation.
  */
-class ReferrerInformation
+class CartInformation
 {
     /**
      * @var string
      */
-    private $date;
+    private $cartId;
 
     /**
      * @var string
      */
-    private $name;
+    private $cartCreationDate;
 
     /**
      * @var string
      */
-    private $shop;
+    private $cartTotal;
 
     /**
-     * @param string $date
-     * @param string $name
-     * @param string $shop
+     * @var string
      */
-    public function __construct($date, $name, $shop)
-    {
-        $this->date = $date;
-        $this->name = $name;
-        $this->shop = $shop;
+    private $carrierName;
+
+    /**
+     * @param string $cartId
+     * @param string $cartCreationDate
+     * @param string $cartTotal
+     * @param string $carrierName
+     */
+    public function __construct(
+        $cartId,
+        $cartCreationDate,
+        $cartTotal,
+        $carrierName
+    ) {
+        $this->cartId = $cartId;
+        $this->cartCreationDate = $cartCreationDate;
+        $this->cartTotal = $cartTotal;
+        $this->carrierName = $carrierName;
     }
 
     /**
      * @return string
      */
-    public function getDate()
+    public function getCartId()
     {
-        return $this->date;
+        return $this->cartId;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getCartCreationDate()
     {
-        return $this->name;
+        return $this->cartCreationDate;
     }
 
     /**
      * @return string
      */
-    public function getShop()
+    public function getCartTotal()
     {
-        return $this->shop;
+        return $this->cartTotal;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCarrierName()
+    {
+        return $this->carrierName;
     }
 }

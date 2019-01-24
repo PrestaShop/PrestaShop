@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 use Category;
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryForEditingHandlerInterface;

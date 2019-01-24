@@ -24,43 +24,76 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
-class Subscriptions
+/**
+ * Class SentEmailInformation holds information about email sent to customer.
+ */
+class SentEmailInformation
 {
     /**
-     * @var bool
+     * @var string
      */
-    private $isNewsletterSubscribed;
+    private $date;
 
     /**
-     * @var bool
+     * @var string
      */
-    private $isPartnerOffersSubscribed;
+    private $language;
 
     /**
-     * @param bool $isNewsletterSubscribed
-     * @param bool $isPartnerOffersSubscribed
+     * @var string
      */
-    public function __construct($isNewsletterSubscribed, $isPartnerOffersSubscribed)
+    private $subject;
+
+    /**
+     * @var string
+     */
+    private $template;
+
+    /**
+     * @param string $date
+     * @param string $language
+     * @param string $subject
+     * @param string $template
+     */
+    public function __construct($date, $language, $subject, $template)
     {
-        $this->isNewsletterSubscribed = $isNewsletterSubscribed;
-        $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
+        $this->date = $date;
+        $this->language = $language;
+        $this->subject = $subject;
+        $this->template = $template;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isNewsletterSubscribed()
+    public function getDate()
     {
-        return $this->isNewsletterSubscribed;
+        return $this->date;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isPartnerOffersSubscribed()
+    public function getLanguage()
     {
-        return $this->isPartnerOffersSubscribed;
+        return $this->language;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
     }
 }

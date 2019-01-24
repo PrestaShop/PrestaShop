@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class CustomerOrderInformation.
+ * Class BoughtProductInformation holds information about product that customer has bought.
  */
-class OrderInformation
+class BoughtProductInformation
 {
     /**
      * @var int
@@ -39,44 +39,34 @@ class OrderInformation
     /**
      * @var string
      */
-    private $orderPlacedDate;
+    private $boughtDate;
 
     /**
      * @var string
      */
-    private $paymentMethodName;
-
-    /**
-     * @var string
-     */
-    private $orderStatus;
+    private $productName;
 
     /**
      * @var int
      */
-    private $orderProductsCount;
-
-    /**
-     * @var string
-     */
-    private $totalPaid;
+    private $boughtQuantity;
 
     /**
      * @param int $orderId
-     * @param string $orderPlacedDate
-     * @param string $paymentMethodName
-     * @param string $orderStatus
-     * @param int $orderProductsCount
-     * @param string $totalPaid
+     * @param string $boughtDate
+     * @param string $productName
+     * @param int $boughtQuantity
      */
-    public function __construct($orderId, $orderPlacedDate, $paymentMethodName, $orderStatus, $orderProductsCount, $totalPaid)
-    {
+    public function __construct(
+        $orderId,
+        $boughtDate,
+        $productName,
+        $boughtQuantity
+    ) {
         $this->orderId = $orderId;
-        $this->orderPlacedDate = $orderPlacedDate;
-        $this->paymentMethodName = $paymentMethodName;
-        $this->orderStatus = $orderStatus;
-        $this->orderProductsCount = $orderProductsCount;
-        $this->totalPaid = $totalPaid;
+        $this->boughtDate = $boughtDate;
+        $this->productName = $productName;
+        $this->boughtQuantity = $boughtQuantity;
     }
 
     /**
@@ -90,40 +80,24 @@ class OrderInformation
     /**
      * @return string
      */
-    public function getOrderPlacedDate()
+    public function getBoughtDate()
     {
-        return $this->orderPlacedDate;
+        return $this->boughtDate;
     }
 
     /**
      * @return string
      */
-    public function getPaymentMethodName()
+    public function getProductName()
     {
-        return $this->paymentMethodName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrderStatus()
-    {
-        return $this->orderStatus;
+        return $this->productName;
     }
 
     /**
      * @return int
      */
-    public function getOrderProductsCount()
+    public function getBoughtQuantity()
     {
-        return $this->orderProductsCount;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTotalPaid()
-    {
-        return $this->totalPaid;
+        return $this->boughtQuantity;
     }
 }

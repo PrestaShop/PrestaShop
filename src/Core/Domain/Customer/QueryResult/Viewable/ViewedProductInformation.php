@@ -24,61 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class LayoutCustomizationPage.
+ * Class ViewedProductInformation holds information about product that customer has viewed.
  */
-class LayoutCustomizationPage
+class ViewedProductInformation
 {
     /**
-     * @var string
+     * @var int
      */
-    private $page;
+    private $productId;
 
     /**
      * @var string
      */
-    private $description;
+    private $productName;
 
     /**
      * @var string
      */
-    private $title;
+    private $productUrl;
 
     /**
-     * @param string $page
-     * @param string $title
-     * @param string $description
+     * @param int $productId
+     * @param string $productName
+     * @param string $productUrl
      */
-    public function __construct($page, $title, $description)
+    public function __construct($productId, $productName, $productUrl)
     {
-        $this->page = $page;
-        $this->description = $description;
-        $this->title = $title;
+        $this->productId = $productId;
+        $this->productName = $productName;
+        $this->productUrl = $productUrl;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductId()
+    {
+        return $this->productId;
     }
 
     /**
      * @return string
      */
-    public function getPage()
+    public function getProductName()
     {
-        return $this->page;
+        return $this->productName;
     }
 
     /**
      * @return string
      */
-    public function getTitle()
+    public function getProductUrl()
     {
-        return $this->title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
+        return $this->productUrl;
     }
 }

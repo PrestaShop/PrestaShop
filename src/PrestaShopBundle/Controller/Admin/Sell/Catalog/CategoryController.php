@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EnableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteImageException;
@@ -47,11 +47,10 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
-use PrestaShop\PrestaShop\Core\Domain\Group\DefaultGroups;
 use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
+use PrestaShop\PrestaShop\Core\Domain\Group\QueryResult\DefaultGroups;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -246,17 +245,15 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function editAction($categoryId, Request $request)
     {
-        $categoryId = new CategoryId((int) $categoryId);
-
         /** @var EditableCategory $editableCategory */
-        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing((int) $categoryId));
 
         if ($editableCategory->isRootCategory()) {
-            return $this->redirectToRoute('admin_category_edit_root', ['categoryId' => $categoryId->getValue()]);
+            return $this->redirectToRoute('admin_category_edit_root', ['categoryId' => $categoryId]);
         }
 
         $categoryFormOptions = [
-            'id_category' => $categoryId->getValue(),
+            'id_category' => (int) $categoryId,
         ];
 
         $categoryFormData = [
@@ -279,7 +276,7 @@ class CategoryController extends FrameworkBundleAdminController
             $data = $categoryForm->getData();
 
             try {
-                $command = new EditCategoryCommand($categoryId);
+                $command = new EditCategoryCommand((int) $categoryId);
 
                 $this->populateCommandWithFormData($command, $data);
 
@@ -292,7 +289,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_category_edit', [
-                    'categoryId' => $categoryId->getValue(),
+                    'categoryId' => $categoryId,
                 ]);
             } catch (CategoryException $e) {
                 $this->addFlash('error', $this->handleEditException($e));
@@ -327,13 +324,11 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function editRootAction($categoryId, Request $request)
     {
-        $categoryId = new CategoryId((int) $categoryId);
-
         /** @var EditableCategory $editableCategory */
-        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing((int) $categoryId));
 
         if (!$editableCategory->isRootCategory()) {
-            return $this->redirectToRoute('admin_category_edit', ['categoryId' => $categoryId->getValue()]);
+            return $this->redirectToRoute('admin_category_edit', ['categoryId' => $categoryId]);
         }
 
         $rootCategoryForm = $this->createForm(RootCategoryType::class, [
@@ -353,7 +348,7 @@ class CategoryController extends FrameworkBundleAdminController
             $data = $rootCategoryForm->getData();
 
             try {
-                $command = new EditRootCategoryCommand($categoryId);
+                $command = new EditRootCategoryCommand((int) $categoryId);
 
                 $this->populateCommandWithFormData($command, $data);
 
@@ -406,7 +401,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand(new CategoryId((int) $categoryId)));
+            $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand((int) $categoryId));
 
             $this->addFlash(
                 'success',
@@ -447,8 +442,8 @@ class CategoryController extends FrameworkBundleAdminController
 
         try {
             $this->getCommandBus()->handle(new DeleteCategoryMenuThumbnailImageCommand(
-                new CategoryId((int) $categoryId),
-                new MenuThumbnailId((int) $menuThumbnailId)
+                (int) $categoryId,
+                (int) $menuThumbnailId
             ));
 
             $this->addFlash(
@@ -609,7 +604,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         try {
-            $command = new ToggleCategoryStatusCommand(new CategoryId((int) $categoryId));
+            $command = new ToggleCategoryStatusCommand((int) $categoryId);
 
             $this->getCommandBus()->handle($command);
 
@@ -644,9 +639,11 @@ class CategoryController extends FrameworkBundleAdminController
     public function processBulkStatusEnableAction(Request $request)
     {
         try {
-            $command = new EnableCategoriesCommand(
-                $request->request->get('categories_bulk')
-            );
+            $categoryIds = array_map(function ($categoryId) {
+                return (int) $categoryId;
+            }, $request->request->get('categories_bulk'));
+
+            $command = new EnableCategoriesCommand($categoryIds);
 
             $this->getCommandBus()->handle($command);
 
@@ -678,9 +675,11 @@ class CategoryController extends FrameworkBundleAdminController
     public function processBulkStatusDisableAction(Request $request)
     {
         try {
-            $command = new DisableCategoriesCommand(
-                $request->request->get('categories_bulk')
-            );
+            $categoryIds = array_map(function ($categoryId) {
+                return (int) $categoryId;
+            }, $request->request->get('categories_bulk'));
+
+            $command = new DisableCategoriesCommand($categoryIds);
 
             $this->getCommandBus()->handle($command);
 
@@ -717,10 +716,13 @@ class CategoryController extends FrameworkBundleAdminController
         if ($deleteCategoriesForm->isSubmitted()) {
             try {
                 $categoriesDeleteData = $deleteCategoriesForm->getData();
+                $categoryIds = array_map(function ($categoryId) {
+                    return (int) $categoryId;
+                }, $categoriesDeleteData['categories_to_delete']);
 
                 $command = new BulkDeleteCategoriesCommand(
-                    $categoriesDeleteData['categories_to_delete'],
-                    new CategoryDeleteMode($categoriesDeleteData['delete_mode'])
+                    $categoryIds,
+                    $categoriesDeleteData['delete_mode']
                 );
 
                 $this->getCommandBus()->handle($command);
@@ -761,8 +763,8 @@ class CategoryController extends FrameworkBundleAdminController
 
             try {
                 $command = new DeleteCategoryCommand(
-                    new CategoryId((int) reset($categoriesDeleteData['categories_to_delete'])),
-                    new CategoryDeleteMode($categoriesDeleteData['delete_mode'])
+                    (int) reset($categoriesDeleteData['categories_to_delete']),
+                    $categoriesDeleteData['delete_mode']
                 );
 
                 $this->getCommandBus()->handle($command);

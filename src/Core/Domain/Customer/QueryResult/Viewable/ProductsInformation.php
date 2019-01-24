@@ -24,66 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Group;
-
-use PrestaShop\PrestaShop\Core\Domain\Group\DataTransferObject\DefaultGroup;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Viewable;
 
 /**
- * Class DefaultGroups.
+ * Class CustomerProductsInformation holds information about products that customers has bought and viewed.
  */
-class DefaultGroups
+class ProductsInformation
 {
     /**
-     * @var DefaultGroup
+     * @var BoughtProductInformation[]
      */
-    private $visitorsGroup;
+    private $boughtProductsInformation;
 
     /**
-     * @var DefaultGroup
+     * @var ViewedProductInformation[]
      */
-    private $guestsGroup;
+    private $viewedProductsInformation;
 
     /**
-     * @var DefaultGroup
+     * @param BoughtProductInformation[] $boughtProductsInformation
+     * @param ViewedProductInformation[] $viewedProductsInformation
      */
-    private $customersGroup;
-
-    /**
-     * @param DefaultGroup $visitorsGroup
-     * @param DefaultGroup $guestsGroup
-     * @param DefaultGroup $customersGroup
-     */
-    public function __construct(
-        DefaultGroup $visitorsGroup,
-        DefaultGroup $guestsGroup,
-        DefaultGroup $customersGroup
-    ) {
-        $this->visitorsGroup = $visitorsGroup;
-        $this->guestsGroup = $guestsGroup;
-        $this->customersGroup = $customersGroup;
+    public function __construct(array $boughtProductsInformation, array $viewedProductsInformation)
+    {
+        $this->boughtProductsInformation = $boughtProductsInformation;
+        $this->viewedProductsInformation = $viewedProductsInformation;
     }
 
     /**
-     * @return DefaultGroup
+     * @return BoughtProductInformation[]
      */
-    public function getVisitorsGroup()
+    public function getBoughtProductsInformation()
     {
-        return $this->visitorsGroup;
+        return $this->boughtProductsInformation;
     }
 
     /**
-     * @return DefaultGroup
+     * @return ViewedProductInformation[]
      */
-    public function getGuestsGroup()
+    public function getViewedProductsInformation()
     {
-        return $this->guestsGroup;
-    }
-
-    /**
-     * @return DefaultGroup
-     */
-    public function getCustomersGroup()
-    {
-        return $this->customersGroup;
+        return $this->viewedProductsInformation;
     }
 }

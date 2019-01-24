@@ -45,14 +45,14 @@ class SavePrivateNoteForCustomerCommand
     private $privateNote;
 
     /**
-     * @param CustomerId $customerId
+     * @param int $customerId
      * @param string $privateNote
      */
-    public function __construct(CustomerId $customerId, $privateNote)
+    public function __construct($customerId, $privateNote)
     {
         $this->assertPrivateNoteIsString($privateNote);
 
-        $this->customerId = $customerId;
+        $this->customerId = new CustomerId($customerId);
         $this->privateNote = $privateNote;
     }
 
