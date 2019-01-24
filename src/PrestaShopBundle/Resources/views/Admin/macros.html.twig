@@ -199,7 +199,6 @@
             {% endfor %}
           </div>
       {% endif %}
-
     </div>
   {% endif %}
 {% endmacro %}
@@ -220,7 +219,7 @@
 
     {% if extraVars.label is defined %}
       <label for="{{ form.vars.id }}" class="form-control-label">
-        {% if form.vars.required %}
+        {% if form.vars.required is defined and form.vars.required %}
           <span class="text-danger">*</span>
         {% endif %}
         {{ extraVars.label }}

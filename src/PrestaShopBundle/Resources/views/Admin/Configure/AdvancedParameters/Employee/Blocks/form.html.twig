@@ -41,6 +41,45 @@
         {{ ps.form_group_row(employeeForm.lastname, {}, {
           'label': 'Last name'|trans({}, 'Admin.Global')
         }) }}
+
+        {{ ps.form_group_row(employeeForm.avatar) }}
+
+        <div class="form-group row">
+          <label class="form-control-label"></label>
+          <div class="col-sm">
+            <div class="alert alert-info" role="alert">
+              <p class="alert-text">
+                {{ 'Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.'|trans({}, 'Admin.Advparameters.Help')|replace({ '%url%': '<a href="http://www.prestashop.com/forums/index.php?app=core&module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>', '%email%': employeeForm.email.vars.value })|raw }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {{ ps.form_group_row(employeeForm.email, {}, {
+          'label': 'Email address'|trans({}, 'Admin.Global')
+        }) }}
+
+        {{ ps.form_group_row(employeeForm.change_password, { attr: { class: 'btn-outline-secondary' } }, {
+          'label': 'Password'|trans({}, 'Admin.Global')
+        }) }}
+
+        {{ ps.form_group_row(employeeForm.prestashop_addons, { attr: { class: 'btn-outline-secondary' } }, {
+          'label': 'PrestaShop Addons'
+        }) }}
+
+        {{ ps.form_group_row(employeeForm.optin, {}, {
+          'label': 'Subscribe to PrestaShop newsletter'|trans,
+          'help': 'PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.'|trans({}, 'Admin.Advparameters.Help')
+        }) }}
+
+        {{ ps.form_group_row(employeeForm.default_page, {}, {
+          'label': 'Default page'|trans,
+          'help': 'This page will be displayed just after login.'|trans({}, 'Admin.Advparameters.Help')
+        }) }}
+
+        {{ ps.form_group_row(employeeForm.language, {}, {
+          'label': 'Language'|trans({}, 'Admin.Global')
+        }) }}
       </div>
 
       {{ form_rest(employeeForm) }}

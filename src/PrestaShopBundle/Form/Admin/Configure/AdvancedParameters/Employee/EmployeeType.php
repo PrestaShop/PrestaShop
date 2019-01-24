@@ -28,10 +28,17 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
+use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
+use PrestaShopBundle\Form\Admin\Type\ClickableAvatarType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -75,6 +82,26 @@ final class EmployeeType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('avatar', ClickableAvatarType::class)
+            ->add('email', EmailType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                    ]),
+                    new Email([
+                        'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ])
+            ->add('change_password', ChangePasswordType::class)
+            ->add('prestashop_addons', ButtonType::class, [
+                'label' => $this->trans('Sign in', [], 'Admin.Advparameters.Feature')
+            ])
+            ->add('optin', SwitchType::class, [
+                'required' => false,
+            ])
+            ->add('default_page', ChoiceType::class)
+            ->add('language', ChoiceType::class)
         ;
     }
 }

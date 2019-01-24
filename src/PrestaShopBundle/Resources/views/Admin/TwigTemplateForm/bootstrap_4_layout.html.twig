@@ -714,3 +714,9 @@
    </span>
   </div>
 {% endblock generatable_text_widget %}
+
+{% block clickable_avatar_widget %}
+  <a href="{{ click_url }}" target="_blank">
+    <img src="{{ image_url }}" alt="{{ image_alt }}">
+  </a>
+{% endblock %}
