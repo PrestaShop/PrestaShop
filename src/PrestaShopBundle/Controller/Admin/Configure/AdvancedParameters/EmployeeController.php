@@ -224,6 +224,43 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
+     * Show Employee edit page.
+     *
+     * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_employees_index"
+     * )
+     *
+     * @param int $employeeId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction($employeeId, Request $request)
+    {
+        $employeeForm = $this->getEmployeeFormBuilder()->getFormFor($employeeId);
+        $employeeForm->handleRequest($request);
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig', [
+            'layoutTitle' => $this->trans('Employees', 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'employeeForm' => $employeeForm->createView(),
+        ]);
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    protected function getEmployeeFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.employee_form_builder');
+    }
+
+    /**
      * Get human readable error message for thrown employee exception.
      *
      * @param EmployeeException $e
@@ -278,42 +315,5 @@ class EmployeeController extends FrameworkBundleAdminController
         }
 
         return $this->getFallbackErrorMessage($type, $e->getCode());
-    }
-
-    /**
-     * Show Employee edit page.
-     *
-     * @DemoRestricted(redirectRoute="admin_employees_index")
-     * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_employees_index"
-     * )
-     *
-     * @param int $employeeId
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function editAction($employeeId, Request $request)
-    {
-        $employeeForm = $this->getEmployeeFormBuilder()->getFormFor($employeeId);
-        $employeeForm->handleRequest($request);
-
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig', [
-            'layoutTitle' => $this->trans('Employees', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'employeeForm' => $employeeForm->createView(),
-        ]);
-    }
-
-    /**
-     * @return FormBuilderInterface
-     */
-    protected function getEmployeeFormBuilder()
-    {
-        return $this->get('prestashop.core.form.identifiable_object.builder.employee_form_builder');
     }
 }
