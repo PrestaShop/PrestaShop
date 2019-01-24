@@ -36,7 +36,7 @@
         "nikic/php-parser": "^2.1",
         "paragonie/random_compat": "^1.4|^2.0",
         "pear/archive_tar": "~1.4.2",
-        "phpoffice/phpexcel": "~1.8",
+        "phpoffice/phpspreadsheet": "~1.5",
         "prestashop/decimal": "^1.0.0",
         "prestashop/translationtools-bundle": "~2.0",
         "sensio/distribution-bundle": "^5.0.19",
