@@ -25,12 +25,24 @@ cd $DIR_PATH/prestashop
 git checkout $BRANCH
 mkdir -p $REPORT_PATH
 
+echo "Clear docker..."
+docker system prune -f
+docker image prune -f
+docker volume prune -f
+
+
 cd "${DIR_PATH}/prestashop/tests/E2E"
 for test_directory in test/campaigns/full/*; do
   if [ -d "${test_directory}" ]; then
-    docker volume prune -f
-    docker stop $(docker ps -qa)
+    if [ -z "$(docker ps -qa)" ]; then
+      # Make sure all containers are stopped
+      docker stop $(docker ps -qa)
+    fi
 
+    echo "Try to clear docker-compose instances..."
+    docker-compose down -v -t 100 || true
+
+    echo "Boot docker-compose instances..."
     docker-compose up -d --build --force-recreate
 
     echo "Run ${TEST_PATH}"
@@ -43,15 +55,15 @@ for test_directory in test/campaigns/full/*; do
     if [ -f "mochawesome-report/mochawesome.json" ]; then
       cp mochawesome-report/mochawesome.json "${REPORT_PATH}/${TEST_PATH//\//-}.json"
     fi
-
-    docker-compose down
   fi
 done
 
+echo "Check for reports..."
 if [ -n "$(ls ${REPORT_PATH})" ]; then
   mkdir -p "${DIR_PATH}/reports"
   ./scripts/combine-reports.py "${REPORT_PATH}" "${REPORT_PATH}/${REPORT_OUTPUT_NAME}.json"
   nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${REPORT_PATH}/${REPORT_OUTPUT_NAME}.json" -o "${DIR_PATH}/reports"
+  cp "${REPORT_PATH}/${REPORT_OUTPUT_NAME}.json" "${DIR_PATH}/reports"
   gsutil cp -r "${DIR_PATH}/reports" gs://prestashop-core-nightly
 fi
 
