@@ -33,7 +33,9 @@ use ImageType;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CopyingNoPictureException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use Shop;
 
 /**
@@ -201,5 +203,24 @@ abstract class AbstractLanguageHandler
             true,
             Db::INSERT_IGNORE
         );
+    }
+
+    /**
+     * @param LanguageId $languageId
+     *
+     * @return Language
+     */
+    protected function getLegacyLanguageObject(LanguageId $languageId)
+    {
+        $language = new Language($languageId->getValue());
+
+        if ($languageId->getValue() !== $language->id) {
+            throw new LanguageNotFoundException(
+                $languageId,
+                sprintf('Language with id "%s" was not found', $languageId->getValue())
+            );
+        }
+
+        return $language;
     }
 }
