@@ -37,3 +37,10 @@ admin_languages_delete:
     _legacy_controller: AdminLanguages
   requirements:
     languageId: \d+
+
+admin_languages_bulk_delete:
+  path: /bulk-delete
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:bulkDelete'
+    _legacy_controller: AdminLanguages

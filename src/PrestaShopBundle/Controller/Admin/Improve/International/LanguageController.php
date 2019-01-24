@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CopyingNoPictureException;
@@ -166,6 +167,31 @@ class LanguageController extends AbstractAdminController
     }
 
     /**
+     * Deletes languages in bulk action
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        $languageIds = $this->getBulkLanguagesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteLanguagesCommand($languageIds));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } catch (LanguageException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_languages_index');
+    }
+
+    /**
      * @param LanguageException $e
      *
      * @return array
@@ -220,6 +246,10 @@ class LanguageController extends AbstractAdminController
                     'This ISO code is already linked to another language.',
                     'Admin.International.Notification'
                 ),
+                LanguageConstraintException::EMPTY_BULK_DELETE =>  $this->trans(
+                    'You must select at least one element to delete.',
+                    'Admin.Notifications.Error'
+                ),
             ],
             DefaultLanguageException::class => [
                 DefaultLanguageException::CANNOT_DELETE_ERROR => $this->trans(
@@ -236,5 +266,27 @@ class LanguageController extends AbstractAdminController
                 ),
             ],
         ];
+    }
+
+    /**
+     * Get language ids from request for bulk action
+     *
+     * @param Request $request
+     *
+     * @return int[]
+     */
+    private function getBulkLanguagesFromRequest(Request $request)
+    {
+        $languageIds = $request->request->get('language_language_bulk');
+
+        if (!is_array($languageIds)) {
+            return [];
+        }
+
+        foreach ($languageIds as $i => $languageId) {
+            $languageIds[$i] = (int) $languageId;
+        }
+
+        return $languageIds;
     }
 }
