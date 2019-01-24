@@ -646,7 +646,7 @@ class CartCore extends ObjectModel
                         stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
                         p.`available_date`, p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
                         CONCAT(LPAD(cp.`id_product`, 10, 0), LPAD(IFNULL(cp.`id_product_attribute`, 0), 10, 0), IFNULL(cp.`id_address_delivery`, 0), IFNULL(cp.`id_customization`, 0)) AS unique_id, cp.id_address_delivery,
-                        product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
+                        product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference, p.additional_delivery_times, pl.`delivery_in_stock`, pl.`delivery_out_stock`');
 
         // Build FROM
         $sql->from('cart_product', 'cp');
