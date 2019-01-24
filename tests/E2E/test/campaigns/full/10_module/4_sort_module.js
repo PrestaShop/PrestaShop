@@ -8,34 +8,119 @@ const {ModulePage} = require('../../../selectors/BO/module_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const moduleCommonScenarios = require('../../common_scenarios/module');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-let promise = Promise.resolve();
 
 scenario('Check sort module by "Name"', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'module');
-  scenario('Uninstall "ps_mbo" module', client => {
-    moduleCommonScenarios.uninstallModule(client, ModulePage, AddProductPage, 'ps_mbo');
-  }, 'common_client');
-  scenario('Check the sort module by name ', client => {
-    test('should go to "Modules Catalog" page', () => {
-      return promise
-        .then(() => client.waitForExistAndClick(Menu.dashboard_menu, 2000))
-        .then(() => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
-    });
-    test('should click on "Modules Catalog" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_catalog_submenu));
-    test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, 'contact form'));
-    test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
-    test('should get module number', () => client.getTextInVar(ModulePage.modules_number, "modules_number"));
-    moduleCommonScenarios.sortModule(client, ModulePage, "name", "data-name");
-    moduleCommonScenarios.sortModule(client, ModulePage, "price", "data-price");
-    moduleCommonScenarios.sortModule(client, ModulePage, "price-desc", "data-price");
-    moduleCommonScenarios.sortModule(client, ModulePage, "scoring-desc", "data-scoring");
+  scenario('Check then install "ps_mbo" module', client => {
+    moduleCommonScenarios.installUninstallMboModule(client, ModulePage, AddProductPage, "ps_mbo", 'install');
+  }, 'onboarding');
+  scenario('Check the sort module by name, increasing price, decreasing price and popularity', client => {
+    test('should go to "Modules > Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
+    test('should get module number', () => client.getModuleNumber(ModulePage.modules_number_span, 'modules_number'));
+    /**
+     * This error is based on the bug described in this ticket
+     * https://github.com/PrestaShop/ps_mbo/issues/82
+     **/
+    moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Name', 'displayName', 'data-name', false, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Increasing price', 'price', 'data-price', true, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Decreasing price', 'price-desc', 'data-price', true, false);
+    /**
+     * This error is based on the bug described in this ticket
+     * https://github.com/PrestaShop/ps_mbo/issues/83
+     **/
+    moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Popularity', 'scoring-desc', 'data-scoring', true, false);
   }, 'module');
-  scenario('Install "ps_mbo" module', client => {
-    moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, 'ps_mbo');
-  }, 'common_client');
+  scenario('Select specific category then check the sort module by name, increasing price, decreasing price', client => {
+    test('should select "Administration" from categories list', async () => {
+      await client.waitForExistAndClick(ModulePage.categories_list);
+      await client.getTextInVar(ModulePage.categories_option_number_span.replace('%CAT', 'Administration'), "category_modules_number");
+      await client.getAttributeInVar(ModulePage.categories_by_name_option.replace('%CAT', 'Administration'), 'data-category-display-ref-menu', 'categoryRef');
+      await client.waitForExistAndClick(ModulePage.categories_option_link.replace('%CAT', 'Administration'));
+    });
+    test('should get module number', () => client.getModuleNumber(ModulePage.modules_number_span, 'modules_number'));
+
+    /**
+     * This error is based on the bug described in this ticket
+     * https://github.com/PrestaShop/ps_mbo/issues/82
+     **/
+    moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Name', 'displayName', 'data-name', false, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Increasing price', 'price', 'data-price', true, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Decreasing price', 'price-desc', 'data-price', true, false);
+    test('should verify if the modules displayed are only modules of the selected category', () => client.checkNumberModule(ModulePage.modules_number_span, tab['modules_number']));
+  }, 'module');
+  scenario('Select category then search module that is in the selected category in module catalog page', client => {
+    moduleCommonScenarios.searchModuleCategory(client, ModulePage, 'autoupgrade', 'catalog');
+  }, 'module');
+  scenario('Select category then search module that is not in the selected category in module catalog page', client => {
+    moduleCommonScenarios.searchModuleCategory(client, ModulePage, 'ps_brandlist', 'catalog', false);
+  }, 'module');
+  scenario('Sort by each category then verify displayed modules', client => {
+    test('should go to "Module Manager" page', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_manager_submenu));
+    test('should get the number of categories in the list', () => client.getCategoryNumber(ModulePage.category_list));
+    moduleCommonScenarios.filterCategory(client, ModulePage);
+  }, 'module');
+  scenario('Sort by each category then verify displayed modules', client => {
+    test('should go to "Module Manager" page', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_manager_submenu));
+    moduleCommonScenarios.DisableEnableModule(client, ModulePage);
+  }, 'module');
+  scenario('Select category then search module that is not in the selected category in module manager page', client => {
+    moduleCommonScenarios.searchModuleCategory(client, ModulePage, 'ps_banner', 'manager', false);
+  }, 'module');
+  scenario('Select category then search module that is in the selected category in module manager page', client => {
+    moduleCommonScenarios.searchModuleCategory(client, ModulePage, 'statsstock');
+  }, 'module');
+  scenario('Check then uninstall "ps_mbo" module', client => {
+    moduleCommonScenarios.installUninstallMboModule(client, ModulePage, AddProductPage, "ps_mbo", 'Uninstall');
+  }, 'onboarding');
+  scenario('Check the sort module by name, increasing price, decreasing price and popularity', client => {
+    test('should go to "Modules > Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
+    test('should get module number', () => client.getModuleNumber(ModulePage.modules_number_span, 'modules_number'));
+    moduleCommonScenarios.sortModule(client, ModulePage, false, 0, 'Name', 'name', 'data-name', false, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, false, 0, 'Increasing price', 'price', 'data-price', true, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, false, 0, 'Decreasing price', 'price-desc', 'data-price', true, false);
+    moduleCommonScenarios.sortModule(client, ModulePage, false, 0, 'Popularity', 'scoring-desc', 'data-scoring', true, false);
+  }, 'module');
+  scenario('Select specific category then check the sort module by name, increasing price, decreasing price', client => {
+    test('should select "Administration" from categories list', async () => {
+      await client.waitForExistAndClick(ModulePage.categories_list);
+      await client.getTextInVar(ModulePage.categories_option_number_span.replace('%CAT', 'Administration'), "category_modules_number");
+      await client.getAttributeInVar(ModulePage.categories_by_name_option.replace('%CAT', 'Administration'), 'data-category-ref', 'categoryRef');
+      await client.waitForExistAndClick(ModulePage.categories_option_link.replace('%CAT', 'Administration'));
+    });
+    test('should get module number', () => client.getModuleNumber(ModulePage.modules_number_span, 'modules_number'));
+    moduleCommonScenarios.sortModule(client, ModulePage, false, 1, 'Name', 'name', 'data-name', false, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, false, 1, 'Increasing price', 'price', 'data-price', true, true);
+    moduleCommonScenarios.sortModule(client, ModulePage, false, 1, 'Decreasing price', 'price-desc', 'data-price', true, false);
+    test('should verify if the modules displayed are only modules of the selected category', () => client.checkNumberModule(ModulePage.modules_number_span, tab['modules_number']));
+  }, 'module');
+  scenario('Select category then search module who is in the selected category in module catalog page', client => {
+    moduleCommonScenarios.searchModuleCategory(client, ModulePage, 'autoupgrade', 'catalog');
+  }, 'module');
+  scenario('Select category then search module who is not in the selected category in module catalog page', client => {
+    moduleCommonScenarios.searchModuleCategory(client, ModulePage, 'ps_brandlist', 'catalog', false);
+  }, 'module');
+  scenario('Sort by each category then verify displayed modules', client => {
+    test('should go to "Modules > Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
+    test('should go to "Module Manager" page', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_manager_submenu));
+    test('should get the number of categories in the list', () => client.getCategoryNumber(ModulePage.category_list));
+    moduleCommonScenarios.filterCategory(client, ModulePage);
+  }, 'module');
+  scenario('Sort by each category then verify displayed modules', client => {
+    test('should go to "Module Manager" page', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_manager_submenu));
+    moduleCommonScenarios.DisableEnableModule(client, ModulePage);
+  }, 'module');
+  scenario('Select category then search module who is not in the selected category in module manager page', client => {
+    moduleCommonScenarios.searchModuleCategory(client, ModulePage, 'ps_banner', 'manager', false);
+  }, 'module');
+  scenario('Select category then search module who is in the selected category in module manager page', client => {
+    moduleCommonScenarios.searchModuleCategory(client, ModulePage, 'statsstock');
+  }, 'module');
+  scenario('Check then install "ps_mbo" module', client => {
+    moduleCommonScenarios.installUninstallMboModule(client, ModulePage, AddProductPage, "ps_mbo", 'install');
+  }, 'onboarding');
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'module');

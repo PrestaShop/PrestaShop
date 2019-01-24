@@ -47,7 +47,7 @@ module.exports = {
         modules_manager_submenu: '#subtab-AdminModulesSf > a',
         modules_catalog_submenu: '#subtab-AdminParentModulesCatalog > a',
         installed_modules_tabs: '//*[@id="subtab-AdminModulesManage"]',
-        catalog_tab: '//*[@id="subtab-AdminModulesCatalog"]',
+        catalog_tab: '//*[@id="subtab-AdminModulesCatalog"] | //*[@id="subtab-AdminPsMboModule"]',
         modules_selections_submenu: '#subtab-AdminAddonsCatalog',
         selection_tab: '#subtab-AdminAddonsCatalog',
         alerts_subTab: '//*[@id="subtab-AdminModulesNotifications"]',
