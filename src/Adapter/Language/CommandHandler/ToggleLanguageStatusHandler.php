@@ -47,7 +47,7 @@ final class ToggleLanguageStatusHandler extends AbstractLanguageHandler implemen
     {
         $language = $this->getLegacyLanguageObject($command->getLanguageId());
 
-        $this->assertDefaultLanguageIsNotBeingDisable($language, $command);
+        $this->assertLanguageIsNotDefault($language, $command);
 
         $language->active = $command->getStatus();
 
@@ -64,7 +64,7 @@ final class ToggleLanguageStatusHandler extends AbstractLanguageHandler implemen
      * @param Language $language
      * @param ToggleLanguageStatusCommand $command
      */
-    private function assertDefaultLanguageIsNotBeingDisable(Language $language, ToggleLanguageStatusCommand $command)
+    private function assertLanguageIsNotDefault(Language $language, ToggleLanguageStatusCommand $command)
     {
         if (true === $command->getStatus()) {
             return;

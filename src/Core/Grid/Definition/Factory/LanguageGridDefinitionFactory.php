@@ -187,7 +187,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     [],
                                     'Admin.Notifications.Warning'
                                 ),
-                                'route' => 'admin_languages_index',
+                                'route' => 'admin_languages_delete',
                                 'route_param_name' => 'languageId',
                                 'route_param_field' => 'id_lang',
                             ])

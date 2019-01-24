@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
 use Configuration;
+use Context;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\BulkDeleteLanguagesHandlerInterface;
@@ -48,7 +49,8 @@ final class BulkDeleteLanguagesHandler extends AbstractLanguageHandler implement
         foreach ($command->getLanguageIds() as $languageId) {
             $language = $this->getLegacyLanguageObject($languageId);
 
-            $this->assertDefaultLanguageIsNotBeingDeleted($language);
+            $this->assertLanguageIsNotDefault($language);
+            $this->assertLanguageIsNotInUse($language);
 
             if (false === $language->delete()) {
                 throw new LanguageException(sprintf('Failed to delele language "%s"', $language->iso_code));
@@ -59,12 +61,25 @@ final class BulkDeleteLanguagesHandler extends AbstractLanguageHandler implement
     /**
      * @param Language $language
      */
-    private function assertDefaultLanguageIsNotBeingDeleted(Language $language)
+    private function assertLanguageIsNotDefault(Language $language)
     {
         if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
             throw new DefaultLanguageException(
                 sprintf('Default language "%s" cannot be deleted', $language->iso_code),
                 DefaultLanguageException::CANNOT_DELETE_ERROR
+            );
+        }
+    }
+
+    /**
+     * @param Language $language
+     */
+    private function assertLanguageIsNotInUse(Language $language)
+    {
+        if ($language->id === (int) Context::getContext()->language->id) {
+            throw new DefaultLanguageException(
+                sprintf('Used language "%s" cannot be deleted', $language->iso_code),
+                DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR
             );
         }
     }
