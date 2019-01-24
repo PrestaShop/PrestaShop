@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Language\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 /**
@@ -59,6 +60,13 @@ class BulkDeleteLanguagesCommand
      */
     private function setLanguageIds(array $languageIds)
     {
+        if (empty($languageIds)) {
+            throw new LanguageConstraintException(
+                'At least one language must be provided for deleting',
+                LanguageConstraintException::EMPTY_BULK_DELETE
+            );
+        }
+
         foreach ($languageIds as $languageId) {
             $this->languageIds[] = new LanguageId($languageId);
         }
