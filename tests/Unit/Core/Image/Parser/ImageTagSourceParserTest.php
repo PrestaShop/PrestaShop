@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Unit\Core\Image\Parser;
+namespace Tests\Unit\Core\Image\Parser;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParser;
