@@ -68,7 +68,7 @@
         "phake/phake": "@stable",
         "phpunit/phpunit": "~5.7",
         "symfony/phpunit-bridge": "^3.0",
-        "prestashop/composer-script-handler": "*"
+        "prestashop/composer-script-handler": "~0.2.1"
     },
     "autoload-dev": {
         "psr-4": {
@@ -98,8 +98,7 @@
             "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
-            "PrestaShop\\Composer\\ScriptHandler::update"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
             "@php ./tests-legacy/create-test-db.php",
@@ -168,11 +167,13 @@
               "prestashop/ps_customtext": "^4",
               "prestashop/ps_emailsubscription": "^2",
               "prestashop/ps_facetedsearch": "^2",
+              "prestashop/ps_faviconnotificationbo": "^1",
               "prestashop/ps_featuredproducts": "^2",
               "prestashop/ps_imageslider": "^3",
               "prestashop/ps_languageselector": "^2",
               "prestashop/ps_legalcompliance": "^3",
               "prestashop/ps_linklist": "^2",
+              "prestashop/ps_mainmenu": "^2",
               "prestashop/ps_searchbar": "^2",
               "prestashop/ps_sharebuttons": "^2",
               "prestashop/ps_shoppingcart": "^2",
