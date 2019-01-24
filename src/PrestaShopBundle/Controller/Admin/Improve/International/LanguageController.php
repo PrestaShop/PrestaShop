@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CopyingNoPictureException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingException;
@@ -35,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -139,6 +143,29 @@ class LanguageController extends AbstractAdminController
     }
 
     /**
+     * Deletes language
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
+     * @DemoRestricted(redirectRoute="admin_languages_index")
+     *
+     * @param int $languageId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($languageId)
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteLanguageCommand((int) $languageId));
+
+            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+        } catch (LanguageException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_languages_index');
+    }
+
+    /**
      * @param LanguageException $e
      *
      * @return array
@@ -191,6 +218,20 @@ class LanguageController extends AbstractAdminController
                 ),
                 LanguageConstraintException::DUPLICATE_ISO_CODE => $this->trans(
                     'This ISO code is already linked to another language.',
+                    'Admin.International.Notification'
+                ),
+            ],
+            DefaultLanguageException::class => [
+                DefaultLanguageException::CANNOT_DELETE_ERROR => $this->trans(
+                    'You cannot delete the default language.',
+                    'Admin.International.Notification'
+                ),
+                DefaultLanguageException::CANNOT_DISABLE_ERROR => $this->trans(
+                    'You cannot change the status of the default language.',
+                    'Admin.International.Notification'
+                ),
+                DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR => $this->trans(
+                    'You cannot delete the language currently in use. Please select a different language.',
                     'Admin.International.Notification'
                 ),
             ],

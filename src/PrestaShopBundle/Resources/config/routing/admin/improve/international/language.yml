@@ -26,3 +26,14 @@ admin_languages_edit:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Language:edit'
     _legacy_controller: AdminLanguages
+  requirements:
+    languageId: \d+
+
+admin_languages_delete:
+  path: /{languageId}/delete
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:delete'
+    _legacy_controller: AdminLanguages
+  requirements:
+    languageId: \d+
