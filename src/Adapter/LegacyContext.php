@@ -164,6 +164,7 @@ class LegacyContext
      * Url to the mail themes folder
      *
      * @since 1.7.6
+     *
      * @return string
      */
     public function getMailThemesUrl()
