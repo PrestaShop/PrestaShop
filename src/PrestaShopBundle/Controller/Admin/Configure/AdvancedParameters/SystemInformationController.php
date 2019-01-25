@@ -68,6 +68,8 @@ class SystemInformationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
      * @return JsonResponse
      */
     public function displayCheckFilesAction()
