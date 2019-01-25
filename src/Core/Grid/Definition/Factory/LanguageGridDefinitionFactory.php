@@ -158,7 +158,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_lang',
-                    'route' => 'admin_languages_index',
+                    'route' => 'admin_languages_toggle_status',
                     'route_param_name' => 'languageId',
                 ])
             )
