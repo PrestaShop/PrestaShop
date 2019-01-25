@@ -173,6 +173,9 @@ class LanguageController extends AbstractAdminController
     /**
      * Deletes languages in bulk action
      *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
+     * @DemoRestricted(redirectRoute="admin_languages_index")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -197,6 +200,9 @@ class LanguageController extends AbstractAdminController
 
     /**
      * Toggles language status
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
+     * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param int $languageId
      *
@@ -226,6 +232,9 @@ class LanguageController extends AbstractAdminController
 
     /**
      * Toggles languages status in bulk action
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_languages_index")
+     * @DemoRestricted(redirectRoute="admin_languages_index")
      *
      * @param Request $request
      * @param string $status
