@@ -977,54 +977,44 @@ class AdminModuleController {
 
   performModulesAction(modulesActions, bulkModuleAction, forceDeletion) {
     const self = this;
+    if (typeof self.moduleCardController === 'undefined') {
+      return;
+    }
 
-    let actionMenuObj;
-    let moduleTechName;
-    let urlElement;
-    let modulesRequestedCountdown = modulesActions.length - 1;
+    //First let's filter modules that can't perform this action
+    let actionMenuLinks = filterAllowedActions(modulesActions);
+    if (!actionMenuLinks.length) {
+      return;
+    }
+
+    let modulesRequestedCountdown = actionMenuLinks.length - 1;
     let spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind spinner \"></button>");
-    if (modulesActions.length > 1) {
+    if (actionMenuLinks.length > 1) {
       //Loop through all the modules except the last one which waits for other
       //requests and then call its request with cache clear enabled
-      $.each(modulesActions, function bulkModulesLoop(index, data) {
-        if (index >= modulesActions.length - 1) {
+      $.each(actionMenuLinks, function bulkModulesLoop(index, actionMenuLink) {
+        if (index >= actionMenuLinks.length - 1) {
           return;
         }
-        requestModuleAction(data, true, countdownModulesRequest);
+        requestModuleAction(actionMenuLink, true, countdownModulesRequest);
       });
       //Display a spinner for the last module
-      const lastModuleAction = modulesActions[modulesActions.length - 1];
-      const actionMenuObj = lastModuleAction.actionMenuObj;
+      const lastMenuLink = actionMenuLinks[actionMenuLinks.length - 1];
+      const actionMenuObj = lastMenuLink.closest(self.moduleCardController.moduleItemActionsSelector);
       actionMenuObj.hide();
       actionMenuObj.after(spinnerObj);
     } else {
-      requestModuleAction(modulesActions[0]);
+      requestModuleAction(actionMenuLinks[0]);
     }
 
-    function requestModuleAction(moduleData, disableCacheClear, requestEndCallback) {
-      actionMenuObj = moduleData.actionMenuObj;
-      moduleTechName = moduleData.techName;
-
-      if (typeof self.moduleCardController !== 'undefined') {
-        // We use jQuery to get the specific link for this action. If found, we send it.
-        urlElement = $(
-          self.moduleCardController.moduleActionMenuLinkSelector + bulkModuleAction,
-          actionMenuObj
-        );
-        if (urlElement.length > 0) {
-          self.moduleCardController._requestToController(
-            bulkModuleAction,
-            urlElement,
-            forceDeletion,
-            disableCacheClear,
-            requestEndCallback
-          );
-        } else {
-          $.growl.error({message: window.translate_javascripts['Bulk Action - Request not available for module']
-              .replace('[1]', bulkModuleAction)
-              .replace('[2]', moduleTechName)});
-        }
-      }
+    function requestModuleAction(actionMenuLink, disableCacheClear, requestEndCallback) {
+      self.moduleCardController._requestToController(
+        bulkModuleAction,
+        actionMenuLink,
+        forceDeletion,
+        disableCacheClear,
+        requestEndCallback
+      );
     }
 
     function countdownModulesRequest() {
@@ -1034,9 +1024,34 @@ class AdminModuleController {
       if (modulesRequestedCountdown <= 0) {
         if (spinnerObj) {
           spinnerObj.remove();
+          spinnerObj = null;
         }
-        requestModuleAction(modulesActions[modulesActions.length - 1]);
+
+        const lastMenuLink = actionMenuLinks[actionMenuLinks.length - 1];
+        const actionMenuObj = lastMenuLink.closest(self.moduleCardController.moduleItemActionsSelector);
+        actionMenuObj.fadeIn();
+        requestModuleAction(lastMenuLink);
       }
+    }
+
+    function filterAllowedActions(modulesActions) {
+      let actionMenuLinks = [];
+      let actionMenuLink;
+      $.each(modulesActions, function filterAllowedModules(index, moduleData) {
+        actionMenuLink = $(
+          self.moduleCardController.moduleActionMenuLinkSelector + bulkModuleAction,
+          moduleData.actionMenuObj
+        );
+        if (actionMenuLink.length > 0) {
+          actionMenuLinks.push(actionMenuLink);
+        } else {
+          $.growl.error({message: window.translate_javascripts['Bulk Action - Request not available for module']
+              .replace('[1]', bulkModuleAction)
+              .replace('[2]', moduleData.techName)});
+        }
+      });
+
+      return actionMenuLinks;
     }
   }
 

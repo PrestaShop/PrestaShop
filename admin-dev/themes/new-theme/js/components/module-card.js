@@ -222,7 +222,7 @@ export default class ModuleCard {
     return (event.result !== false); // explicit false must be set from handlers to stop propagation of the click event.
   };
 
-  _requestToController(action, element, forceDeletion, disableCacheClear, requestCallback) {
+  _requestToController(action, element, forceDeletion, disableCacheClear, callback) {
     var self = this;
     var jqElementObj = element.closest(this.moduleItemActionsSelector);
     var form = element.closest("form");
@@ -286,11 +286,15 @@ export default class ModuleCard {
           jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
         }
       }
+    }).fail(function() {
+      const moduleItem = jqElementObj.closest('module-item-list');
+      const techName = moduleItem.data('techName');
+      $.growl.error({message: "Could not perform action "+action+" for module "+techName});
     }).always(function () {
       jqElementObj.fadeIn();
       spinnerObj.remove();
-      if (requestCallback) {
-        requestCallback();
+      if (callback) {
+        callback();
       }
     });
 
