@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkToggleLanguagesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLanguageException;
@@ -210,6 +211,36 @@ class LanguageController extends AbstractAdminController
             $this->getCommandBus()->handle(new ToggleLanguageStatusCommand(
                 (int) $languageId,
                 !$editableLanguage->isActive()
+            ));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (LanguageException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_languages_index');
+    }
+
+    /**
+     * Toggles languages status in bulk action
+     *
+     * @param Request $request
+     * @param string $status
+     *
+     * @return RedirectResponse
+     */
+    public function bulkToggleStatusAction(Request $request, $status)
+    {
+        $languageIds = $this->getBulkLanguagesFromRequest($request);
+        $expectedStatus = 'enable' === $status;
+
+        try {
+            $this->getCommandBus()->handle(new BulkToggleLanguagesStatusCommand(
+                $languageIds,
+                $expectedStatus
             ));
 
             $this->addFlash(
