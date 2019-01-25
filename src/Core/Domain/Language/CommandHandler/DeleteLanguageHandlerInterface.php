@@ -38,5 +38,3 @@ interface DeleteLanguageHandlerInterface
      */
     public function handle(DeleteLanguageCommand $command);
 }
-
-

@@ -322,7 +322,7 @@ class LanguageController extends AbstractAdminController
                     'This ISO code is already linked to another language.',
                     'Admin.International.Notification'
                 ),
-                LanguageConstraintException::EMPTY_BULK_DELETE =>  $this->trans(
+                LanguageConstraintException::EMPTY_BULK_DELETE => $this->trans(
                     'You must select at least one element to delete.',
                     'Admin.Notifications.Error'
                 ),
