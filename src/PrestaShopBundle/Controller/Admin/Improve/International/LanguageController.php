@@ -142,8 +142,12 @@ class LanguageController extends AbstractAdminController
             }
         }
 
+        /** @var EditableLanguage $editableLanguage */
+        $editableLanguage = $this->getQueryBus()->handle(new GetLanguageForEditing((int) $languageId));
+
         return $this->render('@PrestaShop/Admin/Improve/International/Language/edit.html.twig', [
             'languageForm' => $languageForm->createView(),
+            'editableLanguage' => $editableLanguage,
         ]);
     }
 
