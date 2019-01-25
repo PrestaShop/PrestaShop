@@ -47,6 +47,16 @@ admin_languages_bulk_delete:
 
 admin_languages_toggle_status:
   path: /{languageId}/toggle-status
+  methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Language:toggleStatus'
     _legacy_controller: AdminLanguages
+
+admin_languages_bulk_toggle_status:
+  path: /bulk-toggle-status/{status}
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:bulkToggleStatus'
+    _legacy_controller: AdminLanguages
+  requirements:
+    status: enable|disable
