@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CopyingNoPictureException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
@@ -35,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -183,6 +186,35 @@ class LanguageController extends AbstractAdminController
             $this->addFlash(
                 'success',
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } catch (LanguageException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_languages_index');
+    }
+
+    /**
+     * Toggles language status
+     *
+     * @param int $languageId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleStatusAction($languageId)
+    {
+        try {
+            /** @var EditableLanguage $editableLanguage */
+            $editableLanguage = $this->getQueryBus()->handle(new GetLanguageForEditing((int) $languageId));
+
+            $this->getCommandBus()->handle(new ToggleLanguageStatusCommand(
+                (int) $languageId,
+                !$editableLanguage->isActive()
+            ));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (LanguageException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
