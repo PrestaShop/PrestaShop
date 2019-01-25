@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
@@ -51,18 +52,50 @@ class EditableEmployee
     private $lastName;
 
     /**
+     * @var Email
+     */
+    private $email;
+
+    /**
+     * @var bool
+     */
+    private $isSubscribedToNewsletter;
+
+    /**
+     * @var int
+     */
+    private $defaultPageId;
+
+    /**
+     * @var int
+     */
+    private $languageId;
+
+    /**
      * @param EmployeeId $employeeId
      * @param FirstName $firstName
      * @param LastName $lastName
+     * @param Email $email
+     * @param bool $isSubscribedToNewsletter
+     * @param int $defaultPageId
+     * @param int $languageId
      */
     public function __construct(
         EmployeeId $employeeId,
         FirstName $firstName,
-        LastName $lastName
+        LastName $lastName,
+        Email $email,
+        $isSubscribedToNewsletter,
+        $defaultPageId,
+        $languageId
     ) {
         $this->employeeId = $employeeId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
+        $this->email = $email;
+        $this->isSubscribedToNewsletter = $isSubscribedToNewsletter;
+        $this->defaultPageId = $defaultPageId;
+        $this->languageId = $languageId;
     }
 
     /**
@@ -87,5 +120,37 @@ class EditableEmployee
     public function getLastName()
     {
         return $this->lastName;
+    }
+
+    /**
+     * @return Email
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSubscribedToNewsletter()
+    {
+        return $this->isSubscribedToNewsletter;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultPageId()
+    {
+        return $this->defaultPageId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLanguageId()
+    {
+        return $this->languageId;
     }
 }
