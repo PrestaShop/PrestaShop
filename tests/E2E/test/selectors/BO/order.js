@@ -71,8 +71,16 @@ module.exports = {
     product_total_price: '//*[@id="total_order"]/td[2]/strong',
     delivery_slip_document: '//*[@id="documents_table"]//a[contains(@href, "DeliverySlip")]',
     status:'//*[@id="status"]//tr[1]/td[contains(text(),"%STATUS")]',
-    page_title:'//*[@id="content"]//h1[@class="page-title"]'
-
+    page_title:'//*[@id="content"]//h1[@class="page-title"]',
+    shipping_address_bloc: '//*[@id="addressShipping"]',
+    customer_email_link: '//*[@id="content"]//dl/dd[1]/a',
+    customer_account_registred_text: '//*[@id="content"]//dd[@class="text-muted"]',
+    valid_order_placed_number_span: '//*[@id="content"]//dd[3]/span',
+    total_registration_span: '//*[@id="content"]//dd[4]/span',
+    invoice_address_tab: '//*[@id="tabAddresses"]/li[2]/a',
+    invoice_address: '//*[@id="addressInvoice"]',
+    date_shipping: '//*[@id="shipping_table"]//tr/td[1]',
+    weight_shipping: '//*[@id="shipping_table"]//tr/td[4]'
   },
 
   CreateOrder: {
@@ -89,7 +97,39 @@ module.exports = {
     create_order_button: '//*[@id="summary_part"]//button[@name="submitAddOrder"]',
     product_combination: '//*[@class="id_product_attribute"]',
     basic_price_value: '//*[@id="customer_cart"]//tr[1]//input[@class="product_unit_price"]',
-    product_select: '//*[@id="id_product"]'
+    product_select: '//*[@id="id_product"]',
+    new_customer_button: '//*[@id="search-customer-form-group"]//a',
+    detail_customer_button: '//*[@id="customers"]//a',
+    customer_details_header_bloc: '(//*[@id="container-customer"]//div[@class="panel-heading"])[1]',
+    customer_details_email_link: '(//*[@id="container-customer"]//div[@class="panel-heading"])[1]/a',
+    close_detail_link: '//a[@title="Close"]',
+    detail_cart_button: '//*[@id="nonOrderedCarts"]//a[contains(@title,"View")]',
+    use_cart_button: '//*[@id="nonOrderedCarts"]//a[contains(@title,"Use")]',
+    orders_tab: '//*[@id="old_carts_orders_navtab"]/li[2]/a',
+    detail_orders_button: '//*[@id="lastOrders"]//a[contains(@title,"View")]',
+    use_orders_button: '//*[@id="lastOrders"]//a[contains(@class,"duplicate_order")]',
+    total_with_tax: '//*[@id="total_with_taxes"]',
+    delete_product_button: '//*[@id="customer_cart"]//a[contains(@class,"delete_product")]',
+    quantity_arrow_up_button: '//*[@id="customer_cart"]//a[contains(@class,"increaseqty_product")]',
+    quantity_arrow_down_button: '//*[@id="customer_cart"]//a[contains(@class,"decreaseqty_product")]',
+    price_product_column: '//*[@id="customer_cart"]//td[6]',
+    currency_select: '//*[@id="id_currency"]',
+    language_select: '//*[@id="id_lang"]',
+    voucher_input: '//*[@id="voucher"]',
+    delete_voucher_button: '//*[@id="voucher_list"]//a[contains(@class,"delete_discount")]',
+    new_voucher_button: '//*[@id="vouchers_part"]//a',
+    detail_addresses_bloc: '//*[@id="address_delivery_detail"]',
+    shipping_price: '//*[@id="shipping_price"]/b',
+    edit_delivery_address_button: '//*[@id="edit_delivery_address"]',
+    new_address_button: '//*[@id="new_address"]',
+    delivery_address_select: '//*[@id="id_address_delivery"]',
+    invoice_address_select: '//*[@id="id_address_invoice"]',
+    free_shipping_button: '//*[@id="carrier_form"]/div[3]/div//label[@for="free_shipping%S"]',
+    total_products_span: '//*[@id="total_products"]',
+    total_vouchers_span: '//*[@id="total_vouchers"]',
+    total_taxes_span: '//*[@id="total_taxes"]',
+    total_tax_excluded_span: '//*[@id="total_without_taxes"]',
+    total_tax_included_span: '//*[@id="total_with_taxes"]',
   },
 
   ShoppingCart: {
@@ -117,7 +157,8 @@ module.exports = {
     id_shopping_carts: 'table-cart',
     reset_button: '//*[@name="submitResetcart"]',
     checkbox_input: '//*[@id="table-cart"]//input[@name="cartBox[]"]',
-    filter_id_input: '//*[@id="table-cart"]//input[@name="cartFilter_id_cart"]'
+    filter_id_input: '//*[@id="table-cart"]//input[@name="cartFilter_id_cart"]',
+    product_name_cart: '//*[@id="orderProducts"]//tr[%NUMBER]/td[1]',
   },
 
   CreditSlip: {

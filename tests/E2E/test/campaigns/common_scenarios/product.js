@@ -210,7 +210,7 @@ module.exports = {
             .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000))
             .then(() => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.', 3000));
         });
-        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 7000));
+        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 5000));
         test('should check and close the green validation', async () => {
           return promise
             .then(() => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.', 'equal', 2000))

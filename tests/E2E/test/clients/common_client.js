@@ -735,6 +735,14 @@ class CommonClient {
         }
       })
   }
+
+  goToFrame(id) {
+    return this.client.frame(id);
+  }
+
+  closeFrame() {
+    return this.client.frameParent();
+  }
 }
 
 module.exports = CommonClient;
