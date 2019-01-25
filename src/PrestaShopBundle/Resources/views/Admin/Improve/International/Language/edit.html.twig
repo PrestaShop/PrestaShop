@@ -25,6 +25,8 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% set layoutTitle = 'Edit: %value%'|trans({'%value%': editableLanguage.name}, 'Admin.Catalog.Feature') %}
+
 {% block content %}
   <div class="row justify-content-center">
     <div class="col">
