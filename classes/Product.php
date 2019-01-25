@@ -529,6 +529,7 @@ class ProductCore extends ObjectModel
                 'api' => 'products',
                 'fields' => array(
                     'id' => array('required' => true),
+                    'id_product_attribute' => array(),
                     'quantity' => array(),
                 ),
             ),
@@ -6828,7 +6829,7 @@ class ProductCore extends ObjectModel
 
     public function getWsProductBundle()
     {
-        return Db::getInstance()->executeS('SELECT id_product_item as id, quantity FROM ' . _DB_PREFIX_ . 'pack WHERE id_product_pack = ' . (int) $this->id);
+        return Db::getInstance()->executeS('SELECT id_product_item as id, id_product_attribute, quantity FROM ' . _DB_PREFIX_ . 'pack WHERE id_product_pack = ' . (int) $this->id);
     }
 
     public function setWsType($type_str)
