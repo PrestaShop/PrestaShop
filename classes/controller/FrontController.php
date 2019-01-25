@@ -785,8 +785,9 @@ class FrontControllerCore extends Controller
         }
 
         $canonical_url = preg_replace('/#.*$/', '', $canonical_url);
-
-        $match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        $host = Tools::getHttpHost();
+        
+        $match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix() . $host . $_SERVER['REQUEST_URI']);
         if (!preg_match('/^' . Tools::pRegexp(rawurldecode($canonical_url), '/') . '([&?].*)?$/', $match_url)) {
             $params = array();
             $url_details = parse_url($canonical_url);
