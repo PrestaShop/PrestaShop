@@ -320,7 +320,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_languages_bulk_toggle_status',
-                    'submit_route_params' => [
+                    'route_params' => [
                         'status' => 'enable',
                     ],
                 ])
@@ -330,7 +330,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_languages_bulk_toggle_status',
-                    'submit_route_params' => [
+                    'route_params' => [
                         'status' => 'disable',
                     ],
                 ])
