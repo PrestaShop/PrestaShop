@@ -58,6 +58,10 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
         return [
             'firstname' => $editableEmployee->getFirstName()->getValue(),
             'lastname' => $editableEmployee->getLastName()->getValue(),
+            'email' => $editableEmployee->getEmail()->getValue(),
+            'optin' => $editableEmployee->isSubscribedToNewsletter(),
+            'default_page' => $editableEmployee->getDefaultPageId(),
+            'language' => $editableEmployee->getLanguageId(),
         ];
     }
 

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler;
 
 use Employee;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\QueryHandler\GetEmployeeForEditingHandlerInterface;
@@ -34,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\QueryResult\EditableEmplo
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\LastName;
 
+/**
+ * Handles command that gets employee for editing.
+ */
 final class GetEmployeeForEditingHandler implements GetEmployeeForEditingHandlerInterface
 {
     /**
@@ -54,7 +58,11 @@ final class GetEmployeeForEditingHandler implements GetEmployeeForEditingHandler
         return new EditableEmployee(
             $employeeId,
             new FirstName($employee->firstname),
-            new LastName($employee->lastname)
+            new LastName($employee->lastname),
+            new Email($employee->email),
+            (bool) $employee->optin,
+            (int) $employee->default_tab,
+            (int) $employee->id_lang
         );
     }
 }
