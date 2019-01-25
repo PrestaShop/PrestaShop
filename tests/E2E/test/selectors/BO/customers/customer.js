@@ -26,6 +26,8 @@ module.exports = {
     bulk_actions_delete_button: '//*[@id="form-customer"]//div[contains(@class,"bulk-actions")]//a[contains(@onclick,"submitBulkdeletecustomer")]',
     empty_list_icon: '//*[@id="table-customer"]//div[contains(@class,"list-empty-msg")]',
     customer_link: '//*[@id="table-address"]//td[contains(text(),"%ID")]',
-    Partner_offers: '//*[@id="fieldset_0"]//label[contains(@for,"optin_on")]'
+    Partner_offers: '//*[@id="fieldset_0"]//label[contains(@for,"optin_on")]',
+    first_name_value:'//*[@id="table-customer"]//tr[%ID]/td[4]',
+    last_name_value:'//*[@id="table-customer"]//tr[%ID]/td[5]'
   }
 };
