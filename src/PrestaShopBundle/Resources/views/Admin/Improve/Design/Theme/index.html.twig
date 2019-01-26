@@ -43,6 +43,11 @@
   <div id="themes-logo-page">
     <div class="row">
       <div class="col">
+
+        {% if isInstalledRtlLanguage %}
+          {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/rtl_configuration.html.twig' %}
+        {% endif %}
+
         {{ form_start(shopLogosForm, {'action': path('admin_themes_upload_logos')}) }}
         <div class="card">
           <div class="card-header">
@@ -124,56 +129,6 @@
         </div>
       </div>
     </div>
-
-    {% if isInstalledRtlLanguage %}
-      <div class="row">
-        <div class="col">
-          {{ form_start(adaptThemeToRtlLanguagesForm, {'action': path('admin_themes_adapt_to_rtl_languages')}) }}
-          <div class="card">
-            <h3 class="card-header">
-              <i class="material-icons">language</i>
-              {{ 'Adaptation to Right-to-Left languages'|trans({}, 'Admin.Design.Feature') }}
-            </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                <div class="alert alert-info">
-                  <p class="alert-text">
-                    {{ 'Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.'|trans({}, 'Admin.Design.Help') }}
-                  </p>
-                </div>
-
-                <div class="form-group row">
-                  <label class="form-control-label">
-                    {{ 'Theme to adapt'|trans({}, 'Admin.Design.Feature') }}
-                  </label>
-                  <div class="col-sm">
-                    {{ form_widget(adaptThemeToRtlLanguagesForm.theme_to_adapt) }}
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label class="form-control-label">
-                    {{ 'Generate RTL stylesheet'|trans({}, 'Admin.Design.Feature') }}
-                  </label>
-                  <div class="col-sm">
-                    {{ form_widget(adaptThemeToRtlLanguagesForm.generate_rtl_css) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">
-                  <i class="material-icons">save</i>
-                  {{ 'Save'|trans({}, 'Admin.Actions') }}
-                </button>
-              </div>
-            </div>
-          </div>
-          {{ form_end(adaptThemeToRtlLanguagesForm) }}
-        </div>
-      </div>
-    {% endif %}
 
     {% if notUsedThemes is not empty %}
       <div class="row">
