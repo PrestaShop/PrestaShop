@@ -23,6 +23,8 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
 {{ form_start(adaptThemeToRtlLanguagesForm, {'action': path('admin_themes_adapt_to_rtl_languages')}) }}
 <div class="card">
   <h3 class="card-header">
@@ -35,24 +37,15 @@
           {{ 'Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.'|trans({}, 'Admin.Design.Help') }}
         </p>
       </div>
+      
+      {{ ps.form_group_row(adaptThemeToRtlLanguagesForm.theme_to_adapt, {}, {
+        'label': 'Theme to adapt'|trans({}, 'Admin.Design.Feature')
+      }) }}
 
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Theme to adapt'|trans({}, 'Admin.Design.Feature') }}
-        </label>
-        <div class="col-sm">
-          {{ form_widget(adaptThemeToRtlLanguagesForm.theme_to_adapt) }}
-        </div>
-      </div>
+      {{ ps.form_group_row(adaptThemeToRtlLanguagesForm.generate_rtl_css, {}, {
+        'label': 'Generate RTL stylesheet'|trans({}, 'Admin.Design.Feature')
+      }) }}
 
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Generate RTL stylesheet'|trans({}, 'Admin.Design.Feature') }}
-        </label>
-        <div class="col-sm">
-          {{ form_widget(adaptThemeToRtlLanguagesForm.generate_rtl_css) }}
-        </div>
-      </div>
     </div>
   </div>
   <div class="card-footer">
