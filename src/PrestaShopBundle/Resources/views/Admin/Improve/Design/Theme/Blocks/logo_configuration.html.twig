@@ -82,7 +82,6 @@
           <img src="{{ mailLogoPath }}" alt="{{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}">
 
           {{ ps.form_group_row(shopLogosForm.mail_logo, {}, {'help': headerLogoPath == mailLogoPath ? 'Warning: if no email logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Notification') : '' }) }}
-          {#todo: ask Tristan about help message usage#}
         </div>
         <div class="tab-pane" id="invoice-configuration" role="tabpanel" aria-labelledby="logo-tab">
           <p class="card-text">
@@ -92,7 +91,6 @@
           <img src="{{ invoiceLogoPath }}" alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}">
 
           {{ ps.form_group_row(shopLogosForm.invoice_logo, {}, {'help': headerLogoPath == invoiceLogoPath ? 'Warning: if no invoice logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Help') : '' }) }}
-          {#todo: ask Tristan about help message usage#}
         </div>
       </div>
     {% endblock %}
