@@ -24,6 +24,10 @@
       }
 
       .nav-pills {
+        .nav-item {
+          padding-right: 14px;
+        }
+
         border-top: 0;
         border-bottom: 0;
 
@@ -31,18 +35,23 @@
           &.active {
             background-color: inherit;
           }
-          
+
           height: 22px;
           padding-top: 0;
-
+          padding-left: 0;
+          padding-right: 0;
         }
       }
 
       .tab-content {
-        padding-top: 0;
+        padding: 0;
       }
 
       .logo-card-description {
+        &.description-in-tab {
+          padding-top: 17px;
+        }
+
         padding-top: 20px;
         font-family: OpenSans;
         font-size: 12px;
@@ -55,6 +64,7 @@
       }
 
       .logo-image {
+        height: 106px;
         padding-top: 32px;
         padding-bottom: 27px;
       }
