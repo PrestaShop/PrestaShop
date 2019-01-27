@@ -201,24 +201,36 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
             ->add((new Filter('id_cms_category', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('ID', [], 'Admin.Global'),
+                    ],
                 ])
                 ->setAssociatedColumn('id_cms_category')
             )
             ->add((new Filter('name', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Name', [], 'Admin.Global'),
+                    ],
                 ])
                 ->setAssociatedColumn('name')
             )
             ->add((new Filter('description', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Description', [], 'Admin.Global'),
+                    ],
                 ])
                 ->setAssociatedColumn('description')
             )
             ->add((new Filter('position', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Position', [], 'Admin.Global'),
+                    ],
                 ])
                 ->setAssociatedColumn('position')
             )
