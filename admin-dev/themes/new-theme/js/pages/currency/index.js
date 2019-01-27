@@ -45,6 +45,5 @@ $(() => {
   const choiceTree = new ChoiceTree('#currency_shop_association');
   choiceTree.enableAutoCheckChildren();
 
-  // allows scheduling cronjob via ajax for currency exchange rates update from "Live exchange rates" form
   new ExchangeRatesUpdateScheduler();
 });
