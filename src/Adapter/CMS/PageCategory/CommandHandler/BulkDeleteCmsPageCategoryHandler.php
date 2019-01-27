@@ -47,7 +47,6 @@ final class BulkDeleteCmsPageCategoryHandler implements BulkDeleteCmsPageCategor
      */
     public function handle(BulkDeleteCmsPageCategoryCommand $command)
     {
-        $parentId = null;
         try {
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
@@ -59,10 +58,6 @@ final class BulkDeleteCmsPageCategoryHandler implements BulkDeleteCmsPageCategor
                             $cmsPageCategoryId->getValue()
                         )
                     );
-                }
-
-                if (null === $parentId) {
-                    $parentId = (int) $entity->id_parent;
                 }
 
                 if (false === $entity->delete()) {
@@ -82,7 +77,5 @@ final class BulkDeleteCmsPageCategoryHandler implements BulkDeleteCmsPageCategor
                 $e
             );
         }
-
-        return new CmsPageCategoryId($parentId);
     }
 }

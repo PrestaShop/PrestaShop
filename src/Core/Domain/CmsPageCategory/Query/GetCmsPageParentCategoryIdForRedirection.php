@@ -24,19 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
- * Interface BulkDeleteCmsPageCategoryHandlerInterface defines contract for BulkDeleteCmsPageCategoryHandler.
+ * Class GetCmsPageParentCategoryIdForRedirection is responsible for providing cms page categories parent id
+ * for redirecting to the right controller after create, edit, delete, toggle actions.
  */
-interface BulkDeleteCmsPageCategoryHandlerInterface
+class GetCmsPageParentCategoryIdForRedirection
 {
     /**
-     * @param BulkDeleteCmsPageCategoryCommand $command
-     *
-     * @return void
+     * @var CmsPageCategoryId
      */
-    public function handle(BulkDeleteCmsPageCategoryCommand $command);
+    private $cmsPageCategoryId;
+
+    /**
+     * @param int $cmsPageCategoryId
+     *
+     * @throws CmsPageCategoryException
+     */
+    public function __construct($cmsPageCategoryId)
+    {
+        $this->cmsPageCategoryId = new CmsPageCategoryId($cmsPageCategoryId);
+    }
+
+    /**
+     * @return CmsPageCategoryId
+     */
+    public function getCmsPageCategoryId()
+    {
+        return $this->cmsPageCategoryId;
+    }
 }

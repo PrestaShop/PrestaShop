@@ -24,58 +24,53 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler;
 
 use CMSCategory;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\ToggleCmsPageCategoryStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsPageCategoryStatusException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCategoryIdForRedirection;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler\GetCmsPageParentCategoryIdForRedirectionHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShopException;
 
 /**
- * Class ToggleCmsPageCategoryStatusHandler is responsible for turning on and off cms page category status.
+ * Class GetCmsPageParentCategoryIdForRedirectionHandler is responsible for providing cms page categories parent id
+ * for redirecting to the right controller after create, edit, delete, toggle actions.
  */
-final class ToggleCmsPageCategoryStatusHandler implements ToggleCmsPageCategoryStatusHandlerInterface
+final class GetCmsPageParentCategoryIdForRedirectionHandler implements GetCmsPageParentCategoryIdForRedirectionHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws CmsPageCategoryException
      */
-    public function handle(ToggleCmsPageCategoryStatusCommand $command)
+    public function handle(GetCmsPageParentCategoryIdForRedirection $query)
     {
+        $parentId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
         try {
-            $entity = new CMSCategory($command->getCmsPageCategoryId()->getValue());
+            $entity = new CMSCategory($query->getCmsPageCategoryId()->getValue());
 
             if (0 >= $entity->id) {
                 throw new CmsPageCategoryNotFoundException(
                     sprintf(
-                        'Cms category object with id "%s" has not been found for status changing.',
-                        $command->getCmsPageCategoryId()->getValue()
+                        'Unable to retrieve cms page category for redirection with id %s',
+                        $query->getCmsPageCategoryId()->getValue()
                     )
                 );
             }
 
-            if (false === $entity->toggleStatus()) {
-                throw new CannotToggleCmsPageCategoryStatusException(
-                    sprintf(
-                        'Unable to toggle cms category with id "%s"',
-                        $command->getCmsPageCategoryId()->getValue()
-                    )
-                );
-            }
-        } catch (PrestaShopException $exception) {
+            $parentId = (int) $entity->id_parent;
+        } catch (PrestaShopException $e) {
             throw new CmsPageCategoryException(
                 sprintf(
-                    'An error occurred when toggling status for cms page object with id "%s"',
-                    $command->getCmsPageCategoryId()->getValue()
-                ),
-                0,
-                $exception
+                    'An unexpected error occurred when retrieving cms page category for redirection with id %s',
+                    $query->getCmsPageCategoryId()->getValue()
+                )
             );
         }
+
+        return new CmsPageCategoryId($parentId);
     }
 }
