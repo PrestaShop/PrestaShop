@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
  * Interface ToggleCmsPageCategoryStatusHandlerInterface defines contract for ToggleCmsPageCategoryStatusHandler.

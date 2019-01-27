@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkEnableC
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotEnableCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShopException;
 
 /**

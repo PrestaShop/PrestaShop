@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
  * Interface DeleteCmsPageCategoryHandlerInterface defines contract for DeleteCmsPageCategoryHandler.
@@ -36,8 +35,6 @@ interface DeleteCmsPageCategoryHandlerInterface
 {
     /**
      * @param DeleteCmsPageCategoryCommand $command
-     *
-     * @return void
      */
     public function handle(DeleteCmsPageCategoryCommand $command);
 }
