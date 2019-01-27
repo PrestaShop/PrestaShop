@@ -25,9 +25,15 @@
 
 const $ = window.$;
 
+/**
+ * This class triggers events required for turning on or off exchange rates scheduler an displaying the right text
+ * below the switch.
+ */
 export default class ExchangeRatesUpdateScheduler {
   constructor() {
    this._initEvents();
+
+   return {};
   }
 
   _initEvents() {
