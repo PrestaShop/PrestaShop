@@ -60,8 +60,6 @@ final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandler
                 );
             }
 
-            $parentId = (int) $entity->id_parent;
-
             if (false === $entity->delete()) {
                 throw new CannotDeleteCmsPageCategoryException(
                     $command->getCmsPageCategoryId()->getValue(),
@@ -81,7 +79,5 @@ final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandler
                 $exception
             );
         }
-
-        return new CmsPageCategoryId($parentId);
     }
 }

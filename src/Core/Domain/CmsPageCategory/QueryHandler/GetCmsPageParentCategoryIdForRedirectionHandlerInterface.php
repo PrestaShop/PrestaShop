@@ -24,19 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCategoryIdForRedirection;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
- * Interface BulkDeleteCmsPageCategoryHandlerInterface defines contract for BulkDeleteCmsPageCategoryHandler.
+ * Interface GetCmsPageParentCategoryIdForRedirectionHandlerInterface defines contract
+ * for GetCmsPageParentCategoryIdForRedirectionHandler.
  */
-interface BulkDeleteCmsPageCategoryHandlerInterface
+interface GetCmsPageParentCategoryIdForRedirectionHandlerInterface
 {
     /**
-     * @param BulkDeleteCmsPageCategoryCommand $command
+     * @param GetCmsPageParentCategoryIdForRedirection $query
      *
-     * @return void
+     * @return CmsPageCategoryId
      */
-    public function handle(BulkDeleteCmsPageCategoryCommand $command);
+    public function handle(GetCmsPageParentCategoryIdForRedirection $query);
 }
