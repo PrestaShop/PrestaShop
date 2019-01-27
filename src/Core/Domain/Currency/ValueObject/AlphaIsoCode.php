@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 
 /**
- * Class IsoCode
+ * Class AlphaIsoCode
  */
-class IsoCode
+class AlphaIsoCode
 {
     /**
      * @var string

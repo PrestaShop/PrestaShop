@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 
 /**
  * Class EditCurrencyCommand
@@ -43,7 +43,7 @@ class EditCurrencyCommand
     private $currencyId;
 
     /**
-     * @var IsoCode
+     * @var AlphaIsoCode
      */
     private $isoCode;
 
@@ -81,7 +81,7 @@ class EditCurrencyCommand
     }
 
     /**
-     * @return IsoCode
+     * @return AlphaIsoCode
      */
     public function getIsoCode()
     {
@@ -97,7 +97,7 @@ class EditCurrencyCommand
      */
     public function setIsoCode($isoCode)
     {
-        $this->isoCode = new IsoCode($isoCode);
+        $this->isoCode = new AlphaIsoCode($isoCode);
 
         return $this;
     }

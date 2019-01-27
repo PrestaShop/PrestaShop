@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyExc
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ScheduleExchangeRatesUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -124,16 +124,14 @@ class CurrencyController extends FrameworkBundleAdminController
         $currencyForm->handleRequest($request);
 
         try {
-            if ($currencyForm->isSubmitted()) {
-                $result = $this->getCurrencyFormHandler()->handle($currencyForm);
-                if (null !== $result->getIdentifiableObjectId()) {
-                    $this->addFlash(
-                        'success',
-                        $this->trans('Successful creation.', 'Admin.Notifications.Success')
-                    );
+            $result = $this->getCurrencyFormHandler()->handle($currencyForm);
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                );
 
-                    return $this->redirectToRoute('admin_currencies_index');
-                }
+                return $this->redirectToRoute('admin_currencies_index');
             }
         } catch (CurrencyException $exception) {
             $this->addFlash('error', $this->handleException($exception));
@@ -168,14 +166,12 @@ class CurrencyController extends FrameworkBundleAdminController
             $currencyForm = $this->getCurrencyFormBuilder()->getFormFor($currencyId);
             $currencyForm->handleRequest($request);
 
-            if ($currencyForm->isSubmitted()) {
-                $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
+            $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
 
-                if (null !== $result->getIdentifiableObjectId()) {
-                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                    return $this->redirectToRoute('admin_currencies_index');
-                }
+                return $this->redirectToRoute('admin_currencies_index');
             }
         } catch (CurrencyException $exception) {
             $this->addFlash('error', $this->handleException($exception));
@@ -252,7 +248,7 @@ class CurrencyController extends FrameworkBundleAdminController
     }
 
     /**
-     * Updates exchange rates.
+     * Refresh exchange rates.
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
@@ -263,7 +259,7 @@ class CurrencyController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function updateExchangeRatesAction()
+    public function refreshExchangeRatesAction()
     {
         try {
             $this->getCommandBus()->handle(new RefreshExchangeRatesCommand());
@@ -464,8 +460,8 @@ class CurrencyController extends FrameworkBundleAdminController
                         'Admin.International.Notification'
                     ),
             ],
-            ScheduleExchangeRatesUpdateException::class => [
-                ScheduleExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
+            AutomateExchangeRatesUpdateException::class => [
+                AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
                     'Please install the %module_name% module before using this feature.',
                     'Admin.International.Notification',
                     [

@@ -36,18 +36,18 @@ class ExchangeRate
     const DEFAULT_RATE = 1;
 
     /**
-     * @var float
+     * @var float|int
      */
     private $exchangeRate;
 
     /**
-     * @param float $exchangeRate
+     * @param float|int $exchangeRate
      *
      * @throws CurrencyConstraintException
      */
     public function __construct($exchangeRate)
     {
-        $this->assertIsFloatOrZero($exchangeRate);
+        $this->assertIsNumberAndMoreThenZero($exchangeRate);
         $this->exchangeRate = $exchangeRate;
     }
 
@@ -60,13 +60,15 @@ class ExchangeRate
     }
 
     /**
-     * @param float $exchangeRate
+     * @param float|int $exchangeRate
      *
      * @throws CurrencyConstraintException
      */
-    private function assertIsFloatOrZero($exchangeRate)
+    private function assertIsNumberAndMoreThenZero($exchangeRate)
     {
-        if (!is_float($exchangeRate) || 0 >= $exchangeRate) {
+        $isIntegerOrFloat = is_int($exchangeRate) || is_float($exchangeRate);
+
+        if (!$isIntegerOrFloat || 0 >= $exchangeRate) {
             throw new CurrencyConstraintException(
                 sprintf(
                     'Given exchange rate %s is not valid. It must be more then 0',

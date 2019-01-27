@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CannotCreateLiveExchangeUpdateCronTask
+ * Class AutomateExchangeRatesUpdateException
  */
-class ScheduleExchangeRatesUpdateException extends CurrencyException
+class AutomateExchangeRatesUpdateException extends CurrencyException
 {
     const CRON_TASK_CREATION_FAILED = 1;
     const CRON_TASK_MANAGER_MODULE_NOT_INSTALLED = 2;

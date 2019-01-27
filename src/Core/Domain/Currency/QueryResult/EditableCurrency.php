@@ -24,13 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\DTO;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult;
+
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
  * Class EditableCurrency
  */
 class EditableCurrency
 {
+    /**
+     * @var CurrencyId
+     */
+    private $currencyId;
+
     /**
      * @var string
      */
@@ -52,17 +60,34 @@ class EditableCurrency
     private $associatedShopIds;
 
     /**
+     * @param int $currencyId
      * @param string $isoCode
      * @param float $exchangeRate
      * @param bool $isEnabled
      * @param int[] $associatedShopIds
+     *
+     * @throws CurrencyException
      */
-    public function __construct($isoCode, $exchangeRate, $isEnabled, array $associatedShopIds)
-    {
+    public function __construct(
+        $currencyId,
+        $isoCode,
+        $exchangeRate,
+        $isEnabled,
+        array $associatedShopIds
+    ) {
+        $this->currencyId = new CurrencyId($currencyId);
         $this->isoCode = $isoCode;
         $this->exchangeRate = $exchangeRate;
         $this->isEnabled = $isEnabled;
         $this->associatedShopIds = $associatedShopIds;
+    }
+
+    /**
+     * @return CurrencyId
+     */
+    public function getCurrencyId()
+    {
+        return $this->currencyId;
     }
 
     /**
