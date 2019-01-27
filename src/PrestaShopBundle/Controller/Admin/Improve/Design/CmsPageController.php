@@ -393,7 +393,6 @@ class CmsPageController extends FrameworkBundleAdminController
     private function redirectToParentIndexPageByBulkIds(array $cmsPageCategoryIds)
     {
         if (empty($cmsPageCategoryIds)) {
-
             return $this->redirectToRoute('admin_cms_pages_index');
         }
 
@@ -421,7 +420,6 @@ class CmsPageController extends FrameworkBundleAdminController
                     'id_cms_category' => $cmsPageCategoryParentId->getValue(),
                 ];
             }
-
         } catch (CmsPageCategoryException $e) {
         }
 
