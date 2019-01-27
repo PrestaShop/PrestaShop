@@ -8,6 +8,8 @@
     padding: inherit;
 
     .logo-card {
+      border-radius: 0;
+      border: 0;
 
       .logo-card-title {
         font-family: OpenSans;
@@ -37,6 +39,10 @@
         padding-top: 32px;
         padding-bottom: 27px;
       }
+    }
+
+    .logo-card:not(:last-child) {
+      border-right: 1px solid #dedede;
     }
   }
 }
