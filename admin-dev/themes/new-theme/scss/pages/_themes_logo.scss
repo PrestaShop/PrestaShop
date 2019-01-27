@@ -1,5 +1,42 @@
 #themes-logo-page {
+
+  #adapt_theme_to_rtl_languages_theme_to_adapt {
+    width: 300px;
+  }
+
   .logo-configuration-card-body {
     padding: inherit;
+
+    .logo-card {
+
+      .logo-card-title {
+        font-family: OpenSans;
+        font-size: 16px;
+        font-weight: 600;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.3px;
+        text-align: center;
+        color: #4a4a4a;
+      }
+
+      .logo-card-description {
+        padding-top: 20px;
+        font-family: OpenSans;
+        font-size: 12px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.2px;
+        color: #6c868e;
+      }
+
+      .logo-image {
+        padding-top: 32px;
+        padding-bottom: 27px;
+      }
+    }
   }
 }
