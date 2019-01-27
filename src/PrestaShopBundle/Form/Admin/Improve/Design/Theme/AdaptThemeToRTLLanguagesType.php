@@ -59,6 +59,7 @@ class AdaptThemeToRTLLanguagesType extends AbstractType
                 'choices' => $this->themeChoices,
             ])
             ->add('generate_rtl_css', SwitchType::class, [
+                'required' => false,
                 'data' => false,
             ])
         ;
