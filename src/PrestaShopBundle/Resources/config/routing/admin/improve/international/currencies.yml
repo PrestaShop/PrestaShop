@@ -54,10 +54,10 @@ admin_currencies_update_live_exchange_rates:
         _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:updateLiveExchangeRates'
         _legacy_controller: AdminCurrencies
 
-admin_currencies_update_exchange_rates:
-    path: /update-exchange-rates
+admin_currencies_refresh_exchange_rates:
+    path: /refresh-exchange-rates
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:updateExchangeRates'
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:refreshExchangeRates'
         _legacy_controller: AdminCurrencies
 

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\QueryHandler;
 
 use Currency;
-use PrestaShop\PrestaShop\Core\Domain\Currency\DTO\EditableCurrency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\EditableCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetCurrencyForEditingHandlerInterface;
@@ -73,6 +73,7 @@ final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandler
         }
 
         return new EditableCurrency(
+            $entity->id,
             $entity->iso_code,
             $entity->conversion_rate,
             $entity->active,

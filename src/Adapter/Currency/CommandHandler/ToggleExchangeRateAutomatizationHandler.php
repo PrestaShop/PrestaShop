@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleExchangeRateAutomatizationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\ToggleExchangeRateAutomatizationHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ScheduleExchangeRatesUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShopException;
 use Shop;
@@ -123,9 +123,9 @@ final class ToggleExchangeRateAutomatizationHandler implements ToggleExchangeRat
     public function handle(ToggleExchangeRateAutomatizationCommand $command)
     {
         if (!$this->isCronJobModuleInstalled) {
-            throw new ScheduleExchangeRatesUpdateException(
+            throw new AutomateExchangeRatesUpdateException(
                 'Live exchange rates feature cannot be modified because "cronjob" module is not installed',
-                ScheduleExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED
+                AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED
             );
         }
 
@@ -235,7 +235,7 @@ final class ToggleExchangeRateAutomatizationHandler implements ToggleExchangeRat
      * Creates new cronjob for exchange rates auto update.
      *
      * @throws PrestaShopException
-     * @throws ScheduleExchangeRatesUpdateException
+     * @throws AutomateExchangeRatesUpdateException
      * @throws Exception
      */
     private function enableExchangeRatesScheduler()
@@ -243,9 +243,9 @@ final class ToggleExchangeRateAutomatizationHandler implements ToggleExchangeRat
         $cronUrl = $this->getCronUrl();
 
         if (false === $this->createCronJob($cronUrl)) {
-            throw new ScheduleExchangeRatesUpdateException(
+            throw new AutomateExchangeRatesUpdateException(
                 'Failed to create a cron task for live exchange rate update',
-                ScheduleExchangeRatesUpdateException::CRON_TASK_CREATION_FAILED
+                AutomateExchangeRatesUpdateException::CRON_TASK_CREATION_FAILED
             );
         }
     }
