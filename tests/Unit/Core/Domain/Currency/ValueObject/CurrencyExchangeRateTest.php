@@ -61,10 +61,20 @@ class CurrencyExchangeRateTest extends TestCase
         ];
     }
 
-    public function testItGetsExpectedExchangeRate()
+    /**
+     * @dataProvider getCorrectExchangeRates
+     */
+    public function testItGetsExpectedExchangeRate($correctRate)
     {
-        $exchangeRate = new ExchangeRate(1.55);
+        $exchangeRate = new ExchangeRate($correctRate);
 
-        $this->assertEquals(1.55, $exchangeRate->getValue());
+        $this->assertEquals($correctRate, $exchangeRate->getValue());
+    }
+
+    public function getCorrectExchangeRates()
+    {
+        yield [1.55];
+        yield [1];
+        yield [0.55];
     }
 }
