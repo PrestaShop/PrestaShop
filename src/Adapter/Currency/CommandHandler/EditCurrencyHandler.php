@@ -150,7 +150,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
         $qb
             ->select('id_currency')
             ->from('currency')
-            ->where('id_currency !=' . $currencyId)
+            ->where('id_currency !=' . (int) $currencyId)
             ->where('iso_code = "' . pSQL($newIsoCode) . '"')
         ;
 
