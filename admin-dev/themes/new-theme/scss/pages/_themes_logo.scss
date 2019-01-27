@@ -23,6 +23,25 @@
         color: #4a4a4a;
       }
 
+      .nav-pills {
+        border-top: 0;
+        border-bottom: 0;
+
+        .nav-link {
+          &.active {
+            background-color: inherit;
+          }
+          
+          height: 22px;
+          padding-top: 0;
+
+        }
+      }
+
+      .tab-content {
+        padding-top: 0;
+      }
+
       .logo-card-description {
         padding-top: 20px;
         font-family: OpenSans;
