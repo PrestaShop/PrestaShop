@@ -57,18 +57,18 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
     /**
      * @var bool
      */
-    private $isMultiStoreFeature;
+    private $isMultistoreFeatureUsed;
 
     /**
      * @param int $defaultCurrencyId
-     * @param bool $isMultiStoreFeature
+     * @param bool $isMultistoreFeatureUsed
      */
     public function __construct(
         $defaultCurrencyId,
-        $isMultiStoreFeature
+        $isMultistoreFeatureUsed
     ) {
         $this->defaultCurrencyId = (int) $defaultCurrencyId;
-        $this->isMultiStoreFeature = $isMultiStoreFeature;
+        $this->isMultistoreFeatureUsed = $isMultistoreFeatureUsed;
     }
 
     /**
@@ -95,8 +95,8 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 $entity->iso_code,
                 $command->getIsoCode()->getValue()
             );
-            $this->assertDefaultCurrencyIsNotBeingDisabled($command->getCurrencyId()->getValue(), $command->isEnabled());
-            $this->assertDefaultCurrencyIsBeingRemovedFromShop(
+            $this->assertDefaultCurrencyIsNotBeingDisabled($command);
+            $this->assertDefaultCurrencyIsNotBeingRemovedFromShop(
                 $entity,
                 $command->getShopIds()
             );
@@ -170,18 +170,17 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
     /**
      * Prevents from default currency being disabled.
      *
-     * @param int $currencyId
-     * @param bool $isEnabled
+     * @param EditCurrencyCommand $command
      *
      * @throws CannotDisableDefaultCurrencyException
      */
-    private function assertDefaultCurrencyIsNotBeingDisabled($currencyId, $isEnabled)
+    private function assertDefaultCurrencyIsNotBeingDisabled(EditCurrencyCommand $command)
     {
-        if ($currencyId === $this->defaultCurrencyId && !$isEnabled) {
+        if (!$command->isEnabled() && $command->getCurrencyId()->getValue() === $this->defaultCurrencyId) {
             throw new CannotDisableDefaultCurrencyException(
                 sprintf(
                     'Currency with id "%s" is the default currency and cannot be disabled.',
-                    $currencyId
+                    $command->getCurrencyId()->getValue()
                 )
             );
         }
@@ -196,9 +195,9 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
      *
      * @throws CannotRemoveDefaultCurrencyFromShopAssociationException
      */
-    private function assertDefaultCurrencyIsBeingRemovedFromShop(Currency $currency, array $shopIds)
+    private function assertDefaultCurrencyIsNotBeingRemovedFromShop(Currency $currency, array $shopIds)
     {
-        if (!$this->isMultiStoreFeature) {
+        if (!$this->isMultistoreFeatureUsed) {
             return;
         }
 

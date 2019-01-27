@@ -137,14 +137,20 @@ final class ToggleExchangeRateAutomatizationHandler implements ToggleExchangeRat
         try {
             if ($thereIsOneCronRunning && $command->exchangeRateStatus()) {
                 $this->removeConfigurationIfNotFoundOrIsDeactivated($cronId);
+
+                return;
             }
 
             if (!$thereIsOneCronRunning && $command->exchangeRateStatus()) {
                 $this->enableExchangeRatesScheduler();
+
+                return;
             }
 
             if ($thereIsOneCronRunning && !$command->exchangeRateStatus()) {
                 $this->disableExchangeRatesScheduler($cronId);
+
+                return;
             }
         } catch (Exception $exception) {
             throw new CurrencyException(
