@@ -47,7 +47,6 @@ final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategor
      */
     public function handle(BulkEnableCmsPageCategoryCommand $command)
     {
-        $parentId = null;
         try {
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
@@ -59,10 +58,6 @@ final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategor
                             $cmsPageCategoryId->getValue()
                         )
                     );
-                }
-
-                if (null === $parentId) {
-                    $parentId = (int) $entity->id_parent;
                 }
 
                 $entity->active = true;
@@ -83,7 +78,5 @@ final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategor
                 $e
             );
         }
-
-        return new CmsPageCategoryId($parentId);
     }
 }

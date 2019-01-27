@@ -37,7 +37,7 @@ interface DeleteCmsPageCategoryHandlerInterface
     /**
      * @param DeleteCmsPageCategoryCommand $command
      *
-     * @return CmsPageCategoryId
+     * @return void
      */
     public function handle(DeleteCmsPageCategoryCommand $command);
 }

@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsP
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
@@ -155,10 +156,9 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function deleteCmsCategoryAction($cmsCategoryId)
     {
-        $cmsCategoryParentId = null;
+        $redirectResponse = $this->redirectToParentIndexPage((int) $cmsCategoryId);
         try {
-            /** @var CmsPageCategoryId $cmsCategoryParentId */
-            $cmsCategoryParentId = $this->getCommandBus()->handle(
+            $this->getCommandBus()->handle(
                 new DeleteCmsPageCategoryCommand((int) $cmsCategoryId)
             );
 
@@ -170,9 +170,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToIndexPage(
-            null !== $cmsCategoryParentId ? $cmsCategoryParentId->getValue() : 0
-        );
+        return $redirectResponse;
     }
 
     /**
@@ -196,12 +194,12 @@ class CmsPageController extends FrameworkBundleAdminController
     public function deleteBulkCmsCategoryAction(Request $request)
     {
         $cmsCategoriesToDelete = $request->request->get('cms_page_category_bulk');
-        $cmsCategoryParentId = null;
+        $redirectResponse = $this->redirectToParentIndexPageByBulkIds($cmsCategoriesToDelete);
+
         try {
             $cmsCategoriesToDelete = array_map(function ($item) { return (int) $item; }, $cmsCategoriesToDelete);
 
-            /** @var CmsPageCategoryId $cmsCategoryParentId */
-            $cmsCategoryParentId = $this->getCommandBus()->handle(
+            $this->getCommandBus()->handle(
                 new BulkDeleteCmsPageCategoryCommand($cmsCategoriesToDelete)
             );
 
@@ -213,9 +211,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToIndexPage(
-            null !== $cmsCategoryParentId ? $cmsCategoryParentId->getValue() : 0
-        );
+        return $redirectResponse;
     }
 
     /**
@@ -256,7 +252,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $errors = [$e->toArray()];
             $this->flashErrors($errors);
 
-            return $this->redirectToIndexPage($cmsCategoryParentId);
+            return $this->redirectToParentIndexPage((int) $cmsCategoryParentId);
         }
 
         $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
@@ -269,7 +265,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        return $this->redirectToIndexPage($cmsCategoryParentId);
+        return $this->redirectToParentIndexPage((int) $cmsCategoryParentId);
     }
 
     /**
@@ -292,10 +288,8 @@ class CmsPageController extends FrameworkBundleAdminController
      */
     public function toggleCmsCategoryAction($cmsCategoryId)
     {
-        $cmsCategoryParentId = null;
         try {
-            /** @var CmsPageCategoryId $cmsCategoryParentId */
-            $cmsCategoryParentId = $this->getCommandBus()->handle(
+            $this->getCommandBus()->handle(
                 new ToggleCmsPageCategoryStatusCommand((int) $cmsCategoryId)
             );
 
@@ -307,9 +301,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToIndexPage(
-            null !== $cmsCategoryParentId ? $cmsCategoryParentId->getValue() : 0
-        );
+        return $this->redirectToParentIndexPage((int) $cmsCategoryId);
     }
 
     /**
@@ -337,8 +329,7 @@ class CmsPageController extends FrameworkBundleAdminController
         try {
             $cmsCategoriesToEnable = array_map(function ($item) { return (int) $item; }, $cmsCategoriesToEnable);
 
-            /** @var CmsPageCategoryId $cmsCategoryParentId */
-            $cmsCategoryParentId = $this->getCommandBus()->handle(
+            $this->getCommandBus()->handle(
                 new BulkEnableCmsPageCategoryCommand($cmsCategoriesToEnable)
             );
 
@@ -350,9 +341,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToIndexPage(
-            null !== $cmsCategoryParentId ? $cmsCategoryParentId->getValue() : 0
-        );
+        return $this->redirectToParentIndexPageByBulkIds($cmsCategoriesToEnable);
     }
 
     /**
@@ -376,11 +365,9 @@ class CmsPageController extends FrameworkBundleAdminController
     public function bulkCmsPageStatusDisableAction(Request $request)
     {
         $cmsCategoriesToDisable = $request->request->get('cms_page_category_bulk');
-        $cmsCategoryParentId = null;
         try {
             $cmsCategoriesToDisable = array_map(function ($item) { return (int) $item; }, $cmsCategoriesToDisable);
-            /** @var CmsPageCategoryId $cmsCategoryParentId */
-            $cmsCategoryParentId = $this->getCommandBus()->handle(
+            $this->getCommandBus()->handle(
                 new BulkDisableCmsPageCategoryCommand($cmsCategoriesToDisable)
             );
 
@@ -392,9 +379,25 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToIndexPage(
-            null !== $cmsCategoryParentId ? $cmsCategoryParentId->getValue() : 0
-        );
+        return $this->redirectToParentIndexPageByBulkIds($cmsCategoriesToDisable);
+    }
+
+    /**
+     * This function is used for redirecting to the specific cms page category page. It uses bulk action ids which
+     * share the same parent cms category in all cases.
+     *
+     * @param array $cmsPageCategoryIds
+     *
+     * @return RedirectResponse
+     */
+    private function redirectToParentIndexPageByBulkIds(array $cmsPageCategoryIds)
+    {
+        if (empty($cmsPageCategoryIds)) {
+
+            return $this->redirectToRoute('admin_cms_pages_index');
+        }
+
+        return $this->redirectToParentIndexPage((int) $cmsPageCategoryIds[0]);
     }
 
     /**
@@ -404,16 +407,22 @@ class CmsPageController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    private function redirectToIndexPage($cmsPageCategoryId)
+    private function redirectToParentIndexPage($cmsPageCategoryId)
     {
         $routeParameters = [];
-        if (is_int($cmsPageCategoryId) &&
-            $cmsPageCategoryId &&
-            $cmsPageCategoryId !== CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID
-        ) {
-            $routeParameters = [
-                'id_cms_category' => $cmsPageCategoryId,
-            ];
+        try {
+            /** @var CmsPageCategoryId $cmsPageCategoryParentId */
+            $cmsPageCategoryParentId = $this->getQueryBus()->handle(
+                new GetCmsPageParentCategoryIdForRedirection($cmsPageCategoryId)
+            );
+
+            if ($cmsPageCategoryParentId->getValue() !== CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID) {
+                $routeParameters = [
+                    'id_cms_category' => $cmsPageCategoryParentId->getValue(),
+                ];
+            }
+
+        } catch (CmsPageCategoryException $e) {
         }
 
         return $this->redirectToRoute('admin_cms_pages_index', $routeParameters);
