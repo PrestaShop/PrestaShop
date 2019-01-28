@@ -34,43 +34,29 @@
     </div>
     <div class="card-block row">
       <div class="card-text">
-        <div class="form-group row">
-          <label for="{{ currencyForm.iso_code.vars.id }}" class="form-control-label">
-            {{ ps.label_with_help('Currency'|trans({}, 'Admin.Global'), ('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).'|trans({}, 'Admin.International.Help'))) }}
-          </label>
-          <div class="col-sm">
-            {{ ps.form_widget_with_error(currencyForm.iso_code) }}
-          </div>
-        </div>
-        <div class="form-group row">
-          {% set exchangeRateLabel %}
-            {{ 'Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).'|trans({}, 'Admin.International.Help') }}
-          {% endset %}
-          <label for="{{ currencyForm.exchange_rate.vars.id }}" class="form-control-label">
-            {{ ps.label_with_help('Exchange rate'|trans({}, 'Admin.International.Feature'), (exchangeRateLabel)) }}
-          </label>
-          <div class="col-sm">
-            {{ ps.form_widget_with_error(currencyForm.exchange_rate, {'attr': {'maxLength': 11}}) }}
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="{{ currencyForm.active.vars.id }}" class="form-control-label">
-            {{ 'Status'|trans({}, 'Admin.Global') }}
-          </label>
-          <div class="col-sm">
-            {{ ps.form_widget_with_error(currencyForm.active) }}
-          </div>
-        </div>
+
+        {{ ps.form_group_row(currencyForm.iso_code, {}, {
+          'label': 'Currency'|trans({}, 'Admin.Global'),
+          'help': 'ISO code (e.g. USD for Dollars, EUR for Euros, etc.).'|trans({}, 'Admin.International.Help')
+        }) }}
+
+        {% set exchangeRateLabel %}
+          {{ 'Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).'|trans({}, 'Admin.International.Help') }}
+        {% endset %}
+
+        {{ ps.form_group_row(currencyForm.exchange_rate, {}, {
+          'label': 'Exchange rate'|trans({}, 'Admin.International.Feature'),
+          'help': exchangeRateLabel
+        }) }}
+
+        {{ ps.form_group_row(currencyForm.active, {}, {
+          'label': 'Status'|trans({}, 'Admin.Global'),
+        }) }}
 
         {% if isShopFeatureEnabled %}
-          <div class="form-group row">
-            <label for="{{ currencyForm.shop_association.vars.id }}" class="form-control-label">
-              {{ 'Shop association'|trans({}, 'Admin.Global') }}
-            </label>
-            <div class="col-sm">
-              {{ ps.form_widget_with_error(currencyForm.shop_association) }}
-            </div>
-          </div>
+          {{ ps.form_group_row(currencyForm.shop_association, {}, {
+            'label': 'Shop association'|trans({}, 'Admin.Global'),
+          }) }}
         {% endif %}
       </div>
     </div>
@@ -78,7 +64,6 @@
     <div class="card-footer">
       <div class="d-inline-flex">
         <a href="{{ path('admin_currencies_index') }}" class="btn btn-outline-secondary">
-          <i class="material-icons">cancel</i>
           {{ 'Cancel'|trans({}, 'Admin.Actions') }}
         </a>
       </div>
