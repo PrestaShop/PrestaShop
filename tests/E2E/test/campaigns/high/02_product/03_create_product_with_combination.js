@@ -96,7 +96,7 @@ scenario('Create product with combination in the Back Office', client => {
      **/
     test('should check that combination\'s picture is well updated (BOOM-4469)', () => client.checkAttributeValue(AddProductPage.combination_attribute_image.replace('%NUMBER', combinationId), 'src', title_image, 'contain'));
     /**** END ****/
-    test('should click on "Availability preferences" button', () => client.scrollWaitForExistAndClick(AddProductPage.combination_availability_preferences, 50));
+    test('should click on "Availability preferences" button', () => client.scrollWaitForExistAndClick(AddProductPage.combination_availability_preferences.replace('%NUMBER',0), 50));
     test('should set the available label in stock', () => client.waitAndSetValue(AddProductPage.combination_label_in_stock, data.common.qty_msg_stock));
     test('should set the available label out of stock', () => client.waitAndSetValue(AddProductPage.combination_label_out_stock, data.common.qty_msg_unstock));
   }, 'product/create_combinations');

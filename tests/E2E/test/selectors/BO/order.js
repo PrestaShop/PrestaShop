@@ -5,7 +5,7 @@ module.exports = {
     view_order_button: '//*[@id="form-order"]//tr[%NUMBER]//div[contains(@class,"pull-right")]//a',
     order_state_select: '#id_order_state',
     update_status_button: '//*[@id="status"]/form//button[@name="submitState"]',
-    order_quantity: '//*[@id="orderProducts"]//tr[%NUMBER]/td[4]',
+    order_quantity: '//*[@id="orderProducts"]//tr[%NUMBER]/td[4]/span[contains(@class,"show")]',
     order_status: '//*[@id="status"]//table[contains(@class,"history-status")]//tr[1]/td[2]',
     shipping_cost: '//*[@id="shipping_table"]//tr[1]//td[5]/span',
     message_order: '//*[@id="content"]//div[@class="message-body"]//p[@class="message-item-text"]',
@@ -33,7 +33,7 @@ module.exports = {
     total_product_price: '//*[@id="orderProducts"]//tr[%NUMBER]/td[6]',
     first_shopping_cart_checkbox: '//*[@id="table-cart"]//tr[1]//input[@name="cartBox[]"]',
     first_dropdown_button: '//*[@id="table-cart"]/tbody//tr[1]//button[@data-toggle="dropdown"]',
-    total_price_tax_included: '//*[@id="orderProducts"]//td[@class="total_product"]',
+    total_price_tax_included: '//*[@id="orderProducts"]//tr[%NUMBER]/td[@class="total_product"]',
     order_view_button: '//*[@id="form-order"]//table//tr[%ORDERNumber]//td[12]//a',
     partial_refund: '//*[@id="desc-order-partial_refund"]',
     product_total: '//*[@id="documents"]//tr[contains(@id,"orderslip")]/td[4]',
@@ -70,7 +70,8 @@ module.exports = {
     delivery_document_name: '//*[@id="documents_table"]//tr[3]//a',
     product_total_price: '//*[@id="total_order"]/td[2]/strong',
     delivery_slip_document: '//*[@id="documents_table"]//a[contains(@href, "DeliverySlip")]',
-    status:'//*[@id="status"]//tr[1]/td[contains(text(),"%STATUS")]'
+    status:'//*[@id="status"]//tr[1]/td[contains(text(),"%STATUS")]',
+    page_title:'//*[@id="content"]//h1[@class="page-title"]'
 
   },
 

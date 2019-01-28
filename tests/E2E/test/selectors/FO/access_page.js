@@ -56,5 +56,6 @@ module.exports = {
     account: '//*[@id="_desktop_user_info"]/div[@class="user-info"]/a[@class="account"]/span',
     selected_language_by_isocode_option: '//*[@id="_desktop_language_selector"]//select/option[@selected="selected" and @data-iso-code="%ID"]',
     language_bloc: '//*[@id="_desktop_language_selector"]',
+    popular_products_block:'//*[@id="content-hook-order-confirmation-footer"]/section'
   }
 };
