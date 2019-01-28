@@ -6829,7 +6829,7 @@ class ProductCore extends ObjectModel
 
     public function getWsProductBundle()
     {
-        return Db::getInstance()->executeS('SELECT id_product_item as id, id_product_attribute, quantity FROM ' . _DB_PREFIX_ . 'pack WHERE id_product_pack = ' . (int) $this->id);
+        return Db::getInstance()->executeS('SELECT id_product_item as id, id_product_attribute_item as id_product_attribute, quantity FROM ' . _DB_PREFIX_ . 'pack WHERE id_product_pack = ' . (int) $this->id);
     }
 
     public function setWsType($type_str)
@@ -6865,8 +6865,12 @@ class ProductCore extends ObjectModel
         Pack::deleteItems($this->id);
 
         foreach ($items as $item) {
+            // Combination of a product is optional, and can be omitted.
+            if (!isset($item['product_attribute_id'])) {
+                $item['product_attribute_id'] = 0;
+            }
             if ((int) $item['id'] > 0) {
-                Pack::addItem($this->id, (int) $item['id'], (int) $item['quantity']);
+                Pack::addItem($this->id, (int) $item['id'], (int) $item['quantity'], (int) $item['product_attribute_id']);
             }
         }
 
