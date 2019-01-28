@@ -69,6 +69,30 @@
         {{ form_end(shopLogosForm) }}
 
         <div class="card">
+          <div class="card-header">
+            {#todo: new translation#}
+            {{ 'My theme for <<%name%>> shop'|trans({'%name%': shopName}, 'Admin.Design.Feature') }}
+          </div>
+          <div class="card-body">
+            {% if notUsedThemes is not empty %}
+              {% for theme in notUsedThemes %}
+                {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
+                  'themeName': theme.name,
+                  'themeVersion': theme.get('version'),
+                  'themeAuthor': theme.get('author.name')
+                } %}
+                  {% block image %}
+                    <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.name }}">
+                  {% endblock %}
+                {% endembed %}
+              {% endfor %}
+            {% endif %}
+          </div>
+          <div class="card-footer"></div>
+        </div>
+
+        {#todo - remove#}
+        <div class="card">
           <h3 class="card-header">
             <i class="material-icons">layers</i>
             {{ 'Your current theme'|trans({}, 'Admin.Design.Feature') }}
@@ -129,7 +153,8 @@
         </div>
       </div>
     </div>
-
+    {#todo: remove end#}
+    {#todo: remove#}
     {% if notUsedThemes is not empty %}
       <div class="row">
         <div class="col">
@@ -181,6 +206,7 @@
         </div>
       </div>
     {% endif %}
+    {#todo: remove end#}
   </div>
 {% endblock %}
 

@@ -74,4 +74,16 @@
       border-right: 1px solid #dedede;
     }
   }
+
+  .theme-card {
+    max-width: 386px;
+    max-height: 242px;
+    overflow-y: hidden;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+  }
 }
