@@ -59,6 +59,7 @@
         {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/shop_urls_configuration.html.twig' %}
         {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/domain_name_management.html.twig' %}
         {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/url_schema_configuration.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/seo_options_configuration.html.twig' %}
 
         {% block meta_form_rest %}
           {{ form_rest(metaForm) }}
@@ -68,7 +69,7 @@
 
         {{ form_start(robotsForm, {'action': path('admin_metas_generate_robots_file')}) }}
           {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig' %}
-          {{ form_rest(metaForm) }}
+          {{ form_rest(robotsForm) }}
         {{ form_end(robotsForm) }}
       </div>
   </div>
