@@ -102,11 +102,25 @@ class CurrencyType extends AbstractType
                     'Admin.Notifications.Error'
                 ),
             ])
-            ->add('active', SwitchType::class)
+            ->add('active', SwitchType::class, [
+                'required' => false,
+            ])
         ;
 
         if ($this->isShopFeatureEnabled) {
-            $builder->add('shop_association', ShopChoiceTreeType::class);
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            [
+                                sprintf('"%s"', $this->trans('Shop association', [], 'Admin.Global')),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ]);
         }
     }
 }
