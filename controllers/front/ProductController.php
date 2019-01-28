@@ -1295,7 +1295,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $title = $this->product->name;
         if (isset($meta['title'])) {
             $title = $meta['title'];
-        } else if (isset($meta['meta_title'])) {
+        } elseif (isset($meta['meta_title'])) {
             $title = $meta['meta_title'];
         }
         if (!Configuration::get('PS_PRODUCT_ATTRIBUTES_IN_TITLE')) {
