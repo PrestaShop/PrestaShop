@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\EditableCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 
 /**
