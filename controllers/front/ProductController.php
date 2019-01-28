@@ -439,6 +439,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
+            'product_title' => $product['title'],
         )));
     }
 
@@ -1084,6 +1085,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $group_reduction = Group::getReduction((int) $this->context->cookie->id_customer) / 100;
         }
         $product_full['customer_group_discount'] = $group_reduction;
+        $product_full['title'] = $this->getProductPageTitle();
 
         $presenter = $this->getProductPresenter();
 
@@ -1288,7 +1290,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $page['body_classes']['product-customizable'] = true;
         }
         $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);
-        $page['meta']['title'] = $this->getProductPageTitle();
+        $page['meta']['title'] = $this->getProductPageTitle($page['meta']);
 
         return $page;
     }
@@ -1300,22 +1302,22 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     private function getProductPageTitle(array $meta = null)
     {
+        $title = $this->product->name;
         if (isset($meta['title'])) {
             $title = $meta['title'];
         } else if (isset($meta['meta_title'])) {
             $title = $meta['meta_title'];
-        } else {
-            $title = $this->product->name;
+        }
+        if (!Configuration::get('PS_PRODUCT_ATTRIBUTES_IN_TITLE')) {
+            return $title;
         }
 
-        if (Configuration::get('PS_PRODUCT_ATTRIBUTES_IN_TITLE')) {
-            $idProductAttribute = $this->getIdProductAttributeByRequest();
-            if ($idProductAttribute) {
-                $attributes = $this->product->getAttributeCombinationsById($idProductAttribute, $this->context->language->id);
-                if (is_array($attributes) && count($attributes) > 0) {
-                    foreach ($attributes as $attribute) {
-                        $title .= ' ' . $attribute['group_name'] . ' ' . $attribute['attribute_name'];
-                    }
+        $idProductAttribute = $this->getIdProductAttributeByRequestOrGroup();
+        if ($idProductAttribute) {
+            $attributes = $this->product->getAttributeCombinationsById($idProductAttribute, $this->context->language->id);
+            if (is_array($attributes) && count($attributes) > 0) {
+                foreach ($attributes as $attribute) {
+                    $title .= ' ' . $attribute['group_name'] . ' ' . $attribute['attribute_name'];
                 }
             }
         }

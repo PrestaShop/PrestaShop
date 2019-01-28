@@ -34,7 +34,7 @@
       <div class="card-text">
 
         <div class="form-group row">
-          {{ ps.label_with_help(('Display attributes in the product meta title'|trans), ('Enable this option if you want to display attributes in the product meta title.'|trans({}, 'Admin.Shopparameters.Help') ~ ' ' ~ 'You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          {{ ps.label_with_help(('Display attributes in the product meta title'|trans), ('Enable this option if you want to display attributes in the product meta title.'|trans({}, 'Admin.Shopparameters.Help'))) }}
           <div class="col-sm">
             {{ form_errors(metaForm.seo_options.product_attributes_in_title) }}
             {{ form_widget(metaForm.seo_options.product_attributes_in_title) }}
