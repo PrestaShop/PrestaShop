@@ -55,6 +55,11 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
     private $urlSchemaDataConfiguration;
 
     /**
+     * @var DataConfigurationInterface
+     */
+    private $seoOptionsDataConfiguration;
+
+    /**
      * @var RouteValidator
      */
     private $routeValidator;
@@ -75,6 +80,7 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      * @param DataConfigurationInterface $setUpUrlDataConfiguration
      * @param DataConfigurationInterface $shopUrlsDataConfiguration
      * @param DataConfigurationInterface $urlSchemaDataConfiguration
+     * @param DataConfigurationInterface $seoOptionsDataConfiguration
      * @param TranslatorInterface $translator
      * @param RouteValidator $routeValidator
      * @param Validate $validate
@@ -83,6 +89,7 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
         DataConfigurationInterface $setUpUrlDataConfiguration,
         DataConfigurationInterface $shopUrlsDataConfiguration,
         DataConfigurationInterface $urlSchemaDataConfiguration,
+        DataConfigurationInterface $seoOptionsDataConfiguration,
         TranslatorInterface $translator,
         RouteValidator $routeValidator,
         Validate $validate
@@ -90,6 +97,7 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
         $this->setUpUrlDataConfiguration = $setUpUrlDataConfiguration;
         $this->shopUrlsDataConfiguration = $shopUrlsDataConfiguration;
         $this->urlSchemaDataConfiguration = $urlSchemaDataConfiguration;
+        $this->seoOptionsDataConfiguration = $seoOptionsDataConfiguration;
         $this->routeValidator = $routeValidator;
         $this->translator = $translator;
         $this->validate = $validate;
@@ -104,6 +112,7 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
             'set_up_urls' => $this->setUpUrlDataConfiguration->getConfiguration(),
             'shop_urls' => $this->shopUrlsDataConfiguration->getConfiguration(),
             'url_schema' => $this->urlSchemaDataConfiguration->getConfiguration(),
+            'seo_options' => $this->seoOptionsDataConfiguration->getConfiguration(),
         ];
     }
 
@@ -121,7 +130,8 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
         return array_merge(
             $this->setUpUrlDataConfiguration->updateConfiguration($data['set_up_urls']),
             $this->shopUrlsDataConfiguration->updateConfiguration($data['shop_urls']),
-            $this->urlSchemaDataConfiguration->updateConfiguration($data['url_schema'])
+            $this->urlSchemaDataConfiguration->updateConfiguration($data['url_schema']),
+            $this->seoOptionsDataConfiguration->updateConfiguration($data['seo_options'])
         );
     }
 

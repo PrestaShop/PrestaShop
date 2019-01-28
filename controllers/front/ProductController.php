@@ -1278,18 +1278,39 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $page['body_classes']['product-customizable'] = true;
         }
         $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);
+        $page['meta']['title'] = $this->getProductPageTitle();
 
-        $idProductAttribute = $this->getIdProductAttributeByRequest();
-        if ($idProductAttribute) {
-            $attributes = $this->product->getAttributeCombinationsById($idProductAttribute, $this->context->language->id);
-            if (is_array($attributes) && count($attributes) > 0) {
-                foreach ($attributes as $attribute) {
-                    $page['meta']['title'] .= ' ' . $attribute['group_name'] . ' ' . $attribute['attribute_name'];
+        return $page;
+    }
+
+    /**
+     * @param array|null $meta
+     *
+     * @return string
+     */
+    private function getProductPageTitle(array $meta = null)
+    {
+        if (isset($meta['title'])) {
+            $title = $meta['title'];
+        } else if (isset($meta['meta_title'])) {
+            $title = $meta['meta_title'];
+        } else {
+            $title = $this->product->name;
+        }
+
+        if (Configuration::get('PS_PRODUCT_ATTRIBUTES_IN_TITLE')) {
+            $idProductAttribute = $this->getIdProductAttributeByRequest();
+            if ($idProductAttribute) {
+                $attributes = $this->product->getAttributeCombinationsById($idProductAttribute, $this->context->language->id);
+                if (is_array($attributes) && count($attributes) > 0) {
+                    foreach ($attributes as $attribute) {
+                        $title .= ' ' . $attribute['group_name'] . ' ' . $attribute['attribute_name'];
+                    }
                 }
             }
         }
 
-        return $page;
+        return $title;
     }
 
     /**
