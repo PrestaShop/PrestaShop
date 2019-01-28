@@ -86,7 +86,7 @@ class WebserviceKeyType extends AbstractType
                 'generated_value_length' => Key::LENGTH,
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field is required', [], 'Admin.Notifications.Error'),
                     ]),
                     new Length([
                         'min' => Key::LENGTH,
