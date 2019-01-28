@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Meta;
 
-
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -47,17 +46,17 @@ class SEOOptionsDataConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getConfiguration()
     {
         return [
-            'product_attributes_in_title' => $this->configuration->get('PS_PRODUCT_ATTRIBUTES_IN_TITLE')
+            'product_attributes_in_title' => $this->configuration->get('PS_PRODUCT_ATTRIBUTES_IN_TITLE'),
         ];
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
@@ -74,7 +73,7 @@ class SEOOptionsDataConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {
