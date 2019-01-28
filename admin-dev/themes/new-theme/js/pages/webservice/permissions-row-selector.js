@@ -39,7 +39,7 @@ export default class PermissionsRowSelector {
       const isChecked = $checkedBox.is(':checked');
 
       // for each input in same row we need to toggle its value
-      $checkedBox.closest('tr').find('input:not(input[id="' + $checkedBox.attr('id') + '"])').each((i, input) => {
+      $checkedBox.closest('tr').find(`input:not(input[id="${$checkedBox.attr('id')}"])`).each((i, input) => {
         $(input).prop('checked', isChecked);
       });
     });

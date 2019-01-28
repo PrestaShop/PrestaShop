@@ -39,7 +39,7 @@ class AddWebserviceKeyCommand
     private $key;
 
     /**
-     * @var
+     * @var string
      */
     private $description;
 

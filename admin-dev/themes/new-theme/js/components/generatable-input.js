@@ -56,6 +56,13 @@ export default class GeneratableInput {
     };
   }
 
+  /**
+   * Attaches event listener on button than can generate value
+   *
+   * @param {String} generatorBtnSelector
+   *
+   * @private
+   */
   _attachOn(generatorBtnSelector) {
     document.querySelector(generatorBtnSelector).addEventListener('click', (event) => {
       const attributes = event.currentTarget.attributes;
@@ -68,6 +75,15 @@ export default class GeneratableInput {
     });
   }
 
+  /**
+   * Generates random value for input
+   *
+   * @param {Number} length
+   *
+   * @returns {string}
+   *
+   * @private
+   */
   _generateValue(length) {
     const chars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
     let generatedValue = '';
