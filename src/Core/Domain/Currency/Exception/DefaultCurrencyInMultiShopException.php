@@ -27,10 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CannotRemoveDefaultCurrencyFromShopAssociationException
+ * Class DefaultCurrencyInMultiShopException
  */
-class CannotRemoveDefaultCurrencyFromShopAssociationException extends CurrencyException
+class DefaultCurrencyInMultiShopException extends CurrencyException
 {
+    const CANNOT_REMOVE_CURRENCY = 1;
+    const CANNOT_DISABLE_CURRENCY = 2;
+
     /**
      * @var string
      */

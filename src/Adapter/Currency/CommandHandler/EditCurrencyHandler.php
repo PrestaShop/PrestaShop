@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\EditCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRemoveDefaultCurrencyFromShopAssociationException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
@@ -55,20 +55,11 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
     private $defaultCurrencyId;
 
     /**
-     * @var bool
-     */
-    private $isMultistoreFeatureUsed;
-
-    /**
      * @param int $defaultCurrencyId
-     * @param bool $isMultistoreFeatureUsed
      */
-    public function __construct(
-        $defaultCurrencyId,
-        $isMultistoreFeatureUsed
-    ) {
+    public function __construct($defaultCurrencyId)
+    {
         $this->defaultCurrencyId = (int) $defaultCurrencyId;
-        $this->isMultistoreFeatureUsed = $isMultistoreFeatureUsed;
     }
 
     /**
@@ -90,20 +81,20 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 );
             }
 
+            $entity->active = $command->isEnabled();
+            $entity->iso_code = $command->getIsoCode()->getValue();
+            $entity->conversion_rate = $command->getExchangeRate()->getValue();
+
             $this->assertCurrencyWithIsoCodeDoesNotExist(
                 $command->getCurrencyId()->getValue(),
                 $entity->iso_code,
                 $command->getIsoCode()->getValue()
             );
             $this->assertDefaultCurrencyIsNotBeingDisabled($command);
-            $this->assertDefaultCurrencyIsNotBeingRemovedFromShop(
+            $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop(
                 $entity,
                 $command->getShopIds()
             );
-
-            $entity->iso_code = $command->getIsoCode()->getValue();
-            $entity->active = $command->isEnabled();
-            $entity->conversion_rate = $command->getExchangeRate()->getValue();
 
             if (false === $entity->update()) {
                 throw new CannotUpdateCurrencyException(
@@ -188,22 +179,18 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
 
     /**
      * On each shop there might be different default currency. This function prevents from removing shop association
-     * from each shop.
+     * from each shop and checks that the shop is not being disabled as well.
      *
      * @param Currency $currency
      * @param array $shopIds
      *
-     * @throws CannotRemoveDefaultCurrencyFromShopAssociationException
+     * @throws DefaultCurrencyInMultiShopException
      */
-    private function assertDefaultCurrencyIsNotBeingRemovedFromShop(Currency $currency, array $shopIds)
+    private function assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop(Currency $currency, array $shopIds)
     {
-        if (!$this->isMultistoreFeatureUsed) {
-            return;
-        }
+        $allShopIds = Shop::getShops(false, null, true);
 
-        $activeShopIds = Shop::getShops(true, null, true);
-
-        foreach ($activeShopIds as $shopId) {
+        foreach ($allShopIds as $shopId) {
             $shopDefaultCurrencyId = (int) Configuration::get(
                 'PS_CURRENCY_DEFAULT',
                 null,
@@ -217,14 +204,29 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
 
             if (!in_array($shopId, $shopIds)) {
                 $shop = new Shop($shopId);
-                throw new CannotRemoveDefaultCurrencyFromShopAssociationException(
+                throw new DefaultCurrencyInMultiShopException(
                     $currency->name,
                     $shop->name,
                     sprintf(
                         'Currency with id %s cannot be unassigned from shop with id %s because its the default currency.',
                         $currency->id,
                         $shopId
-                    )
+                    ),
+                    DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY
+                );
+            }
+
+            if (!$currency->active) {
+                $shop = new Shop($shopId);
+                throw new DefaultCurrencyInMultiShopException(
+                    $currency->name,
+                    $shop->name,
+                    sprintf(
+                        'Currency with id %s cannot be disabled from shop with id %s because its the default currency.',
+                        $currency->id,
+                        $shopId
+                    ),
+                    DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY
                 );
             }
         }

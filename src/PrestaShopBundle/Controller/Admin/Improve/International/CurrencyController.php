@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesComma
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRefreshExchangeRatesException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRemoveDefaultCurrencyFromShopAssociationException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
@@ -404,19 +404,6 @@ class CurrencyController extends FrameworkBundleAdminController
             ),
         ];
 
-        if ($exception instanceof CannotRemoveDefaultCurrencyFromShopAssociationException) {
-            $error = $this->trans(
-                '%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association',
-                'Admin.International.Notification',
-                [
-                    '%currency%' => $exception->getCurrencyName(),
-                    '%shop_name%' => $exception->getShopName(),
-                ]
-            );
-
-            return $error;
-        }
-
         $exceptionType = get_class($exception);
 
         if (isset($exceptionTypeDictionary[$exceptionType])) {
@@ -470,6 +457,29 @@ class CurrencyController extends FrameworkBundleAdminController
                 ),
             ],
         ];
+
+        if ($exception instanceof DefaultCurrencyInMultiShopException) {
+            switch ($exception->getCode()) {
+                case DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY:
+                    return $this->trans(
+                        '%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association',
+                        'Admin.International.Notification',
+                        [
+                            '%currency%' => $exception->getCurrencyName(),
+                            '%shop_name%' => $exception->getShopName(),
+                        ]
+                    );
+                case DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY:
+                    return $this->trans(
+                        '%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled',
+                        'Admin.International.Notification',
+                        [
+                            '%currency%' => $exception->getCurrencyName(),
+                            '%shop_name%' => $exception->getShopName(),
+                        ]
+                    );
+            }
+        }
 
         $exceptionClass = get_class($exception);
         $exceptionCode = $exception->getCode();
