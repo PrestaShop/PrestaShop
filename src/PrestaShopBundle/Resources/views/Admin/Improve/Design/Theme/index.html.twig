@@ -73,14 +73,27 @@
             {#todo: new translation#}
             {{ 'My theme for <<%name%>> shop'|trans({'%name%': shopName}, 'Admin.Design.Feature') }}
           </div>
-          <div class="card-body">
+          <div class="card-body row">
+
+            {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
+              'themeName': currentlyUsedTheme.name,
+              'themeVersion': currentlyUsedTheme.get('version'),
+              'themeAuthor': currentlyUsedTheme.get('author.name'),
+              'isActive': true
+            } %}
+              {% block image %}
+                <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.name }}">
+              {% endblock %}
+            {% endembed %}
+
             {% if notUsedThemes is not empty %}
               {% for theme in notUsedThemes %}
                 {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
                   'themeName': theme.name,
                   'themeVersion': theme.get('version'),
-                  'themeAuthor': theme.get('author.name')
-                } %}
+                  'themeAuthor': theme.get('author.name'),
+                  'isActive': false
+                }  %}
                   {% block image %}
                     <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.name }}">
                   {% endblock %}

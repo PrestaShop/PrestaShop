@@ -75,15 +75,36 @@
     }
   }
 
+  @mixin theme-card-overlay() {
+    width:100%;
+    height:100%;
+    position:absolute;
+    background-color:#000000;
+    opacity:0.25;
+  }
+
   .theme-card {
+    .active-card-overlay {
+      display: none;
+      @include theme-card-overlay;
+    }
+
+    .active-card-overlay.active {
+      display: block;
+    }
+
     max-width: 386px;
     max-height: 242px;
     overflow-y: hidden;
+    border-radius: 4px;
 
     img {
       max-width: 100%;
       height: auto;
     }
+  }
 
+  .theme-card:hover .active-card-overlay {
+    display: block;
   }
 }
