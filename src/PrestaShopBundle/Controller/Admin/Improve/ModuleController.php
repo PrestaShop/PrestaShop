@@ -384,45 +384,50 @@ class ModuleController extends ModuleAbstractController
             return new JsonResponse($response);
         }
 
+        $actionTitle = str_replace('_', ' ', $action);
+
         try {
             $response[$module]['status'] = $moduleManager->{$action}($module);
-            if ($response[$module]['status'] === null) {
-                $response[$module]['status'] = false;
+
+            if ($response[$module]['status'] === true) {
                 $response[$module]['msg'] = $this->trans(
-                    '%module% did not return a valid response on %action% action.',
+                    '%action% action on module %module% succeeded.',
                     'Admin.Modules.Notification',
                     [
+                        '%action%' => ucfirst($actionTitle),
                         '%module%' => $module,
-                        '%action%' => $action,
                     ]
                 );
+
+                if ($action !== 'uninstall') {
+                    $response[$module]['module_name'] = $module;
+                    $response[$module]['is_configurable'] = (bool) $this
+                        ->get('prestashop.core.admin.module.repository')
+                        ->getModule($module)
+                        ->attributes
+                        ->get('is_configurable');
+                }
             } elseif ($response[$module]['status'] === false) {
                 $error = $moduleManager->getError($module);
                 $response[$module]['msg'] = $this->trans(
                     'Cannot %action% module %module%. %error_details%',
                     'Admin.Modules.Notification',
                     [
-                        '%action%' => str_replace('_', ' ', $action),
+                        '%action%' => $actionTitle,
                         '%module%' => $module,
                         '%error_details%' => $error,
                     ]
                 );
             } else {
+                $response[$module]['status'] = false;
                 $response[$module]['msg'] = $this->trans(
-                    '%action% action on module %module% succeeded.',
+                    '%module% did not return a valid response on %action% action.',
                     'Admin.Modules.Notification',
                     [
-                        '%action%' => ucfirst(str_replace('_', ' ', $action)),
                         '%module%' => $module,
+                        '%action%' => $actionTitle,
                     ]
                 );
-                if ($action != 'uninstall') {
-                    $response[$module]['module_name'] = $module;
-                    $response[$module]['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
-                                                          ->getModule($module)
-                                                          ->attributes
-                                                          ->get('is_configurable');
-                }
             }
         } catch (UnconfirmedModuleActionException $e) {
             $collection = AddonsCollection::createFrom(array($e->getModule()));
@@ -432,8 +437,10 @@ class ModuleController extends ModuleAbstractController
                 [
                     'status' => false,
                     'confirmation_subject' => $e->getSubject(),
-                    'module' => $this->container->get('prestashop.adapter.presenter.module')
-                    ->presentCollection($modules)[0],
+                    'module' => $this
+                        ->container
+                        ->get('prestashop.adapter.presenter.module')
+                        ->presentCollection($modules)[0],
                     'msg' => $this->trans(
                         'Confirmation needed by module %module% on %action% (%subject%).',
                         'Admin.Modules.Notification',
@@ -451,11 +458,12 @@ class ModuleController extends ModuleAbstractController
                 'Exception thrown by module %module% on %action%. %error_details%',
                 'Admin.Modules.Notification',
                 [
-                    '%action%' => str_replace('_', ' ', $action),
+                    '%action%' => $actionTitle,
                     '%module%' => $module,
                     '%error_details%' => $e->getMessage(),
                 ]
             );
+
             $logger = $this->container->get('logger');
             $logger->error($response[$module]['msg']);
         }
