@@ -165,6 +165,7 @@ function updateProduct(event, eventType, updateUrl) {
         $('.product-discounts').replaceWith(data.product_discounts);
         $('.product-additional-info').replaceWith(data.product_additional_info);
         $('#product-details').replaceWith(data.product_details);
+        $(document).attr("title", data.product_title);
         replaceAddToCartSections(data);
         const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
 
