@@ -109,7 +109,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('create', request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
-     *     message="You do not have permission to add this."
+     *     message="You need permission to create this."
      * )
      *
      * @param Request $request
@@ -149,7 +149,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
-     *     message="You do not have permission to edit this."
+     *     message="You need permission to edit this."
      * )
      *
      * @param int $currencyId
@@ -189,7 +189,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
-     *     message="You do not have permission to delete this."
+     *     message="You need permission to delete this."
      * )
      * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
@@ -223,7 +223,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
-     *     message="You do not have permission to edit this."
+     *     message="You need permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
@@ -253,7 +253,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_currencies_index",
-     *     message="You do not have permission to edit this."
+     *     message="You need permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
@@ -296,7 +296,7 @@ class CurrencyController extends FrameworkBundleAdminController
             return $this->json([
                     'status' => false,
                     'message' => $this->trans(
-                        'You do not have permission to update this.',
+                        'You need permission to edit this.',
                         'Admin.Notifications.Error'
                     ),
                 ],
