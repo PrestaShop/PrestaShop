@@ -99,7 +99,7 @@ class CategoryController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'categoriesGrid' => $this->presentGrid($categoryGrid),
             'categoriesKpi' => $categoriesKpiFactory->build(),
-            'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
+            'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons(),
             'currentCategoryView' => $categoryViewData,
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
         ]);
@@ -895,34 +895,22 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     *
      * @return array
      */
-    protected function getCategoryToolbarButtons(Request $request)
+    protected function getCategoryToolbarButtons()
     {
         $toolbarButtons = [];
 
-        if ($this->get('prestashop.adapter.feature.multistore')->isActive()) {
+        if ($this->get('prestashop.adapter.feature.multistore')->isUsed()) {
             $toolbarButtons['add_root'] = [
-                'href' => $this->getAdminLink('AdminCategories', [
-                    'addcategoryroot' => 1,
-                ]),
+                'href' => $this->generateUrl('admin_category_add_root'),
                 'desc' => $this->trans('Add new root category', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle_outline',
             ];
         }
 
-        $urlParams = [
-            'addcategory' => 1,
-        ];
-
-        if ($request->query->has('id_category')) {
-            $urlParams['id_parent'] = $request->query->get('id_category');
-        }
-
         $toolbarButtons['add'] = [
-            'href' => $this->getAdminLink('AdminCategories', $urlParams),
+            'href' => $this->generateUrl('admin_category_add'),
             'desc' => $this->trans('Add new category', 'Admin.Catalog.Feature'),
             'icon' => 'add_circle_outline',
         ];
