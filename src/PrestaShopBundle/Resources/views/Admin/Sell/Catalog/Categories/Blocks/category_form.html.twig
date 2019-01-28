@@ -64,12 +64,14 @@
       </div>
       {% endif %}
 
+      {% if categoryForm.description is defined %}
       <div class="form-group row">
         {{ ps.label_with_help(('Description'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
         <div class="col-sm">
           {{ form_widget(categoryForm.description) }}
         </div>
       </div>
+      {% endif %}
 
       <div class="form-group row">
         {{ ps.label_with_help(('Category Cover Image'|trans), ('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.'|trans({}, 'Admin.Catalog.Help'))) }}

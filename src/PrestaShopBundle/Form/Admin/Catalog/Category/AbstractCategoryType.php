@@ -85,10 +85,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'required' => false,
                 'data' => true,
             ])
-            ->add('description', TranslatableType::class, [
-                'type' => TextareaType::class,
-                'required' => false,
-            ])
             ->add('cover_image', FileType::class, [
                 'required' => false,
             ])
