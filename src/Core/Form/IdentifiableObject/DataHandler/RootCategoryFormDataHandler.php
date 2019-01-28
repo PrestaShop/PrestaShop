@@ -27,15 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Creates/updates category from data submited in category form
+ * Creates/updates root category from data submited in category form
  */
-final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
+final class RootCategoryFormDataHandler extends AbstractCategoryFormDataHandler
 {
     /**
      * @var CommandBusInterface
@@ -55,11 +54,10 @@ final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
      */
     public function create(array $data)
     {
-        $command = new AddCategoryCommand(
+        $command = new AddRootCategoryCommand(
             $data['name'],
             $data['link_rewrite'],
-            (bool) $data['active'],
-            (int) $data['id_parent']
+            $data['active']
         );
 
         $this->populateCommandWithData($command, $data);
@@ -73,19 +71,14 @@ final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
     /**
      * {@inheritdoc}
      */
-    public function update($categoryId, array $data)
+    public function update($rootCategoryId, array $data)
     {
-        $command = new EditCategoryCommand($categoryId);
+        $command = new EditRootCategoryCommand($rootCategoryId);
 
         $this->populateCommandWithData($command, $data);
 
-        if (null !== $data['id_parent']) {
-            $command->setParentCategoryId($data['id_parent']);
-        }
+        $this->commandBus->handle($command);
 
-        /** @var CategoryId $categoryId */
-        $categoryId = $this->commandBus->handle($command);
-
-        return $categoryId->getValue();
+        return $rootCategoryId;
     }
 }
